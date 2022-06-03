@@ -1,0 +1,37 @@
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '15.5'
+
+workspace 'Marlin'
+project 'Marlin.xcodeproj'
+
+use_modular_headers!
+
+def common_pods
+  pod 'MaterialComponents'
+  pod 'MDFInternationalization'
+  pod 'Kingfisher'
+  pod 'PureLayout'
+  pod "Alamofire"
+end
+
+target 'Marlin' do
+    common_pods
+    target 'Tests' do
+      inherit! :search_paths
+      common_pods
+      pod 'OHHTTPStubs'
+      pod 'OHHTTPStubs/Swift'
+      pod 'Quick'
+      pod 'Nimble'
+      pod 'KIF'
+    end
+end
+
+# post_install do |installer|
+#   installer.pods_project.targets.each do |target|
+#     target.build_configurations.each do |config|
+#       config.build_settings.delete 'ARCHS'
+#       config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
+#     end
+#   end
+# end

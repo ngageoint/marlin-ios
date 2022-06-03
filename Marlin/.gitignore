@@ -1,0 +1,10 @@
+.DS_Store
+*.swp
+*~.nib
+
+build/
+*.xcuserstate
+
+Marlin.xcworkspace
+
+Pods
