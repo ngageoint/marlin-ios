@@ -1,0 +1,52 @@
+{
+    "asam": [
+        {
+            "reference": "2022-142",
+            "date": "2022-05-25",
+            "latitude": 12.55000000016662,
+            "longitude": 43.51666666702533,
+            "position": "12°33'00\"N \n43°31'00\"E",
+            "navArea": "IX",
+            "subreg": "62",
+            "hostility": null,
+            "victim": "Survey vessel",
+            "description": "DJIBOUTI: On 25 May, at 1050 local time, an underway survey vessel reported a suspicious approach by a skiff with eight people onboard approximately 5 NM southeast of Perim Island, near position 12-33N 043-31E. Upon sighting of the skiff, the master raised the alarm, anti-piracy measures were implemented, and the security team onboard positioned on the bridge. The skiff came close to within half a nautical mile before aborting the approach. The master reported the incident to the authorities."
+        },
+        {
+            "reference": "2022-138",
+            "date": "2022-05-22",
+            "latitude": 18.544699999765044,
+            "longitude": -93.2135000003035,
+            "position": "18°32'40.92\"N \n93°12'48.6\"W",
+            "navArea": "IV",
+            "subreg": "28",
+            "hostility": null,
+            "victim": "Mexico-flagged offshore support vessel CREST TARAS",
+            "description": "MEXICO: On 22 May, at around midnight local time, five robbers armed with rifles boarded the Mexico-flagged offshore support vessel CREST TARASCO underway along the coast of Tabasco. The robbers fired several shots. The crew were mustered and ordered to shelter in place inside the vessel. The perpetrators stayed onboard for about 45 minutes, stealing 35 sets of breathing apparatuses as well as communications and other valuable equipment, and escaped into their small boat. No crewmembers were reported injured during the incident."
+        },
+        {
+            "reference": "2022-143",
+            "date": "2022-05-21",
+            "latitude": 1.0333333336221244,
+            "longitude": 105.08333333325487,
+            "position": "1°02'00\"N \n105°05'00\"E",
+            "navArea": "XI",
+            "subreg": "71",
+            "hostility": "Boarding",
+            "victim": "Barbados-flagged bulk carrier SELENA",
+            "description": "(Update of entry 2022-137)  INDONESIA: On 21 May, at 0500 local time, four robbers armed with machetes boarded the Barbados-flagged bulk carrier SELENA underway 15 NM east of Mapur Island, near position 01-02N 105-05E. The perpetrators forced their entry into the navigational bridge through the bridge wing door. They threatened the duty officer and demanded to be brought to the master’s cabin. The perpetrators tried to gain access to the master’s cabin but failed. The alarm was raised and off duty crew were ordered through the public address system to lock themselves in their cabins. The crew mustered later and the vessel was searched. There were no sightings of the perpetrators. It was reported that the ship and all crewmembers were safe and nothing was stolen. The vessel continued her voyage."
+        },
+        {
+            "reference": "2022-134",
+            "date": "2022-05-19",
+            "latitude": 14.31666666662062,
+            "longitude": 42.699999999837644,
+            "position": "14°19'00\"N \n42°42'00\"E",
+            "navArea": "IX",
+            "subreg": "62",
+            "hostility": null,
+            "victim": null,
+            "description": "YEMEN: On 19 May, at 1100 local time, there were three unsuccessful boarding attempts against an underway sailing vessel approximately 32 NM southwest of Al Hudaydah, near position 14-19N 042-42E. Three small boats were in close proximity during the incident. The vessel and crew were reported safe and sailed away from the area."
+        },
+    ]
+}

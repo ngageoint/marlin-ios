@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Asam" representedClassName=".Asam" syncable="YES" codeGenerationType="category">
+        <attribute name="asamDescription" optional="YES" attributeType="String"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="hostility" optional="YES" attributeType="String"/>
         <attribute name="latitude" optional="YES" attributeType="Decimal" defaultValueString="0"/>
         <attribute name="longitude" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="navArea" optional="YES" attributeType="String"/>
+        <attribute name="position" optional="YES" attributeType="String"/>
+        <attribute name="reference" optional="YES" attributeType="String"/>
+        <attribute name="subreg" optional="YES" attributeType="String"/>
+        <attribute name="victim" optional="YES" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="reference"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
     <elements>
+        <element name="Asam" positionX="-63" positionY="-9" width="128" height="179"/>
         <element name="Item" positionX="-63" positionY="-18" width="128" height="44"/>
-        <element name="Asam" positionX="-63" positionY="-9" width="128" height="74"/>
     </elements>
 </model>

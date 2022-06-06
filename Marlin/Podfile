@@ -16,7 +16,7 @@ end
 
 target 'Marlin' do
     common_pods
-    target 'Tests' do
+    target 'MarlinTests' do
       inherit! :search_paths
       common_pods
       pod 'OHHTTPStubs'

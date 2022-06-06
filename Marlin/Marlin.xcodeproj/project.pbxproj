@@ -7,8 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7661E683816E96249364A3E9 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 348DEA2A36EB9A84E1E19E2E /* libPods-Tests.a */; };
 		7982FB9B536447055E423E94 /* libPods-Marlin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0F14076A8393C9747AD1FE /* libPods-Marlin.a */; };
+		D7A569C784B0F2D5720432C4 /* libPods-MarlinTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */; };
+		F71DF47E284E68DE00686951 /* asams.json in Resources */ = {isa = PBXBuildFile; fileRef = F71DF47D284E68DE00686951 /* asams.json */; };
+		F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */; };
+		F71DF482284E783600686951 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF481284E783600686951 /* TestHelper.swift */; };
+		F727A684284E351800BD728A /* MSIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A683284E351800BD728A /* MSIError.swift */; };
+		F727A691284E605800BD728A /* MarlinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A690284E605800BD728A /* MarlinTests.swift */; };
+		F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A687284E485500BD728A /* KIF+extensions.swift */; };
+		F727A698284E607100BD728A /* MSITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A685284E476200BD728A /* MSITests.swift */; };
 		F7A54CC42848149700E5F565 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CC32848149700E5F565 /* Tests_iOS.swift */; };
 		F7A54CC62848149700E5F565 /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CC52848149700E5F565 /* Tests_iOSLaunchTests.swift */; };
 		F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CA82848149500E5F565 /* Marlin.xcdatamodeld */; };
@@ -22,6 +29,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		F727A692284E605800BD728A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F7A54CA32848149500E5F565 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F7A54CB12848149700E5F565;
+			remoteInfo = Marlin;
+		};
 		F7A54CC02848149700E5F565 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F7A54CA32848149500E5F565 /* Project object */;
@@ -33,11 +47,21 @@
 
 /* Begin PBXFileReference section */
 		2B0F14076A8393C9747AD1FE /* libPods-Marlin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Marlin.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		34130942F9E50D9E7EF72632 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		348DEA2A36EB9A84E1E19E2E /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3314854FB4F71C576357EF47 /* Pods-MarlinTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarlinTests.debug.xcconfig"; path = "Target Support Files/Pods-MarlinTests/Pods-MarlinTests.debug.xcconfig"; sourceTree = "<group>"; };
 		34DEDF107D4BA2A7D7541968 /* Pods-Marlin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Marlin.debug.xcconfig"; path = "Target Support Files/Pods-Marlin/Pods-Marlin.debug.xcconfig"; sourceTree = "<group>"; };
+		96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MarlinTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C95BD18A52FCC50ED2ED6E21 /* Pods-MarlinTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarlinTests.release.xcconfig"; path = "Target Support Files/Pods-MarlinTests/Pods-MarlinTests.release.xcconfig"; sourceTree = "<group>"; };
 		F32BF352638699CBFE1A8D52 /* Pods-Marlin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Marlin.release.xcconfig"; path = "Target Support Files/Pods-Marlin/Pods-Marlin.release.xcconfig"; sourceTree = "<group>"; };
-		F384519029FC00E3B062FD18 /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
+		F71DF47D284E68DE00686951 /* asams.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = asams.json; sourceTree = "<group>"; };
+		F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extensions.swift"; sourceTree = "<group>"; };
+		F71DF481284E783600686951 /* TestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
+		F727A682284E29AE00BD728A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F727A683284E351800BD728A /* MSIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIError.swift; sourceTree = "<group>"; };
+		F727A685284E476200BD728A /* MSITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSITests.swift; sourceTree = "<group>"; };
+		F727A687284E485500BD728A /* KIF+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KIF+extensions.swift"; sourceTree = "<group>"; };
+		F727A689284E5F9600BD728A /* Marlin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Marlin-Bridging-Header.h"; sourceTree = "<group>"; };
+		F727A68E284E605800BD728A /* MarlinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MarlinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F727A690284E605800BD728A /* MarlinTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTests.swift; sourceTree = "<group>"; };
 		F7A54CA92848149500E5F565 /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		F7A54CAA2848149500E5F565 /* MarlinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinApp.swift; sourceTree = "<group>"; };
 		F7A54CAB2848149500E5F565 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,6 +77,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		F727A68B284E605800BD728A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D7A569C784B0F2D5720432C4 /* libPods-MarlinTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F7A54CAF2848149700E5F565 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -65,7 +97,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7661E683816E96249364A3E9 /* libPods-Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,7 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				2B0F14076A8393C9747AD1FE /* libPods-Marlin.a */,
-				348DEA2A36EB9A84E1E19E2E /* libPods-Tests.a */,
+				96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -86,10 +117,31 @@
 			children = (
 				34DEDF107D4BA2A7D7541968 /* Pods-Marlin.debug.xcconfig */,
 				F32BF352638699CBFE1A8D52 /* Pods-Marlin.release.xcconfig */,
-				34130942F9E50D9E7EF72632 /* Pods-Tests.debug.xcconfig */,
-				F384519029FC00E3B062FD18 /* Pods-Tests.release.xcconfig */,
+				3314854FB4F71C576357EF47 /* Pods-MarlinTests.debug.xcconfig */,
+				C95BD18A52FCC50ED2ED6E21 /* Pods-MarlinTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		F71DF47C284E68C200686951 /* responses */ = {
+			isa = PBXGroup;
+			children = (
+				F71DF47D284E68DE00686951 /* asams.json */,
+			);
+			path = responses;
+			sourceTree = "<group>";
+		};
+		F727A68F284E605800BD728A /* MarlinTests */ = {
+			isa = PBXGroup;
+			children = (
+				F71DF47C284E68C200686951 /* responses */,
+				F727A689284E5F9600BD728A /* Marlin-Bridging-Header.h */,
+				F727A685284E476200BD728A /* MSITests.swift */,
+				F727A687284E485500BD728A /* KIF+extensions.swift */,
+				F727A690284E605800BD728A /* MarlinTests.swift */,
+				F71DF481284E783600686951 /* TestHelper.swift */,
+			);
+			path = MarlinTests;
 			sourceTree = "<group>";
 		};
 		F7A54CA22848149500E5F565 = {
@@ -98,6 +150,7 @@
 				F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */,
 				F7A54CA72848149500E5F565 /* Marlin */,
 				F7A54CC22848149700E5F565 /* Tests iOS */,
+				F727A68F284E605800BD728A /* MarlinTests */,
 				F7A54CB32848149700E5F565 /* Products */,
 				BC66EBA07E9373D21DB95518 /* Pods */,
 				1CC5D4AD4FF5E1519B884B5D /* Frameworks */,
@@ -107,6 +160,7 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
+				F727A682284E29AE00BD728A /* Info.plist */,
 				F7FB156B284AAE3C004ACAC5 /* Networking */,
 				F7B3490828491D6200E10ABF /* CoreData */,
 				F7A54CAA2848149500E5F565 /* MarlinApp.swift */,
@@ -123,6 +177,7 @@
 			children = (
 				F7A54CB22848149700E5F565 /* Marlin.app */,
 				F7A54CBF2848149700E5F565 /* Tests.xctest */,
+				F727A68E284E605800BD728A /* MarlinTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -139,6 +194,7 @@
 		F7B3490828491D6200E10ABF /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -148,6 +204,7 @@
 			children = (
 				F7FB156C284AAF1B004ACAC5 /* MSIRouter.swift */,
 				F7FB156E284AB09C004ACAC5 /* MSI.swift */,
+				F727A683284E351800BD728A /* MSIError.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -155,6 +212,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		F727A68D284E605800BD728A /* MarlinTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F727A694284E605800BD728A /* Build configuration list for PBXNativeTarget "MarlinTests" */;
+			buildPhases = (
+				DED18A34B51E62C55C796ACE /* [CP] Check Pods Manifest.lock */,
+				F727A68A284E605800BD728A /* Sources */,
+				F727A68B284E605800BD728A /* Frameworks */,
+				F727A68C284E605800BD728A /* Resources */,
+				649CD5867C6E32651BCB5385 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F727A693284E605800BD728A /* PBXTargetDependency */,
+			);
+			name = MarlinTests;
+			productName = MarlinTests;
+			productReference = F727A68E284E605800BD728A /* MarlinTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		F7A54CB12848149700E5F565 /* Marlin */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F7A54CDF2848149700E5F565 /* Build configuration list for PBXNativeTarget "Marlin" */;
@@ -178,11 +255,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F7A54CE52848149700E5F565 /* Build configuration list for PBXNativeTarget "Tests" */;
 			buildPhases = (
-				CDFD5728F93C348F481D57B5 /* [CP] Check Pods Manifest.lock */,
 				F7A54CBB2848149700E5F565 /* Sources */,
 				F7A54CBC2848149700E5F565 /* Frameworks */,
 				F7A54CBD2848149700E5F565 /* Resources */,
-				FC4489E63EDCF5245E68CCBE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -204,6 +279,10 @@
 				LastSwiftUpdateCheck = 1340;
 				LastUpgradeCheck = 1340;
 				TargetAttributes = {
+					F727A68D284E605800BD728A = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = F7A54CB12848149700E5F565;
+					};
 					F7A54CB12848149700E5F565 = {
 						CreatedOnToolsVersion = 13.4;
 					};
@@ -228,11 +307,20 @@
 			targets = (
 				F7A54CB12848149700E5F565 /* Marlin */,
 				F7A54CBE2848149700E5F565 /* Tests */,
+				F727A68D284E605800BD728A /* MarlinTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		F727A68C284E605800BD728A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F71DF47E284E68DE00686951 /* asams.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F7A54CB02848149700E5F565 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -251,6 +339,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		649CD5867C6E32651BCB5385 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MarlinTests/Pods-MarlinTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MarlinTests/Pods-MarlinTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MarlinTests/Pods-MarlinTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		A9BE0339705748846E8518E1 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -290,7 +395,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		CDFD5728F93C348F481D57B5 /* [CP] Check Pods Manifest.lock */ = {
+		DED18A34B51E62C55C796ACE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -305,41 +410,37 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Tests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-MarlinTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		FC4489E63EDCF5245E68CCBE /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		F727A68A284E605800BD728A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F727A698284E607100BD728A /* MSITests.swift in Sources */,
+				F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */,
+				F727A691284E605800BD728A /* MarlinTests.swift in Sources */,
+				F71DF482284E783600686951 /* TestHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F7A54CAE2848149700E5F565 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
+				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
 				F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */,
+				F727A684284E351800BD728A /* MSIError.swift in Sources */,
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
 				F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */,
 				F7A54CD72848149700E5F565 /* ContentView.swift in Sources */,
@@ -358,6 +459,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		F727A693284E605800BD728A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F7A54CB12848149700E5F565 /* Marlin */;
+			targetProxy = F727A692284E605800BD728A /* PBXContainerItemProxy */;
+		};
 		F7A54CC12848149700E5F565 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = F7A54CB12848149700E5F565 /* Marlin */;
@@ -366,6 +472,51 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		F727A695284E605800BD728A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3314854FB4F71C576357EF47 /* Pods-MarlinTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZL8G5D9G2H;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.msi.MarlinTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "MarlinTests/Marlin-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Marlin.app/Marlin";
+			};
+			name = Debug;
+		};
+		F727A696284E605800BD728A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C95BD18A52FCC50ED2ED6E21 /* Pods-MarlinTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZL8G5D9G2H;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.msi.MarlinTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "MarlinTests/Marlin-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Marlin.app/Marlin";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		F7A54CDD2848149700E5F565 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -486,6 +637,7 @@
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Marlin/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -517,6 +669,7 @@
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Marlin/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -540,7 +693,6 @@
 		};
 		F7A54CE62848149700E5F565 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 34130942F9E50D9E7EF72632 /* Pods-Tests.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -560,7 +712,6 @@
 		};
 		F7A54CE72848149700E5F565 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F384519029FC00E3B062FD18 /* Pods-Tests.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -582,6 +733,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		F727A694284E605800BD728A /* Build configuration list for PBXNativeTarget "MarlinTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F727A695284E605800BD728A /* Debug */,
+				F727A696284E605800BD728A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F7A54CA62848149500E5F565 /* Build configuration list for PBXProject "Marlin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -15,7 +15,8 @@ enum MSIRouter: URLRequestConvertible
     case updateUser(username: String, parameters: Parameters)
     case destroyUser(username: String)
     
-    static let baseURLString = "https://msi.om.east.paas.nga.mil/api"
+//    static let baseURLString = "https://msi.om.east.paas.nga.mil/api"
+    static let baseURLString = "https://msi.gs.mil/api"
     
     var method: HTTPMethod
     {
@@ -50,7 +51,8 @@ enum MSIRouter: URLRequestConvertible
         case .readAsams:
             return [
                 "sort": "date",
-                "output": "json"
+                "output": "json",
+                "year": "2022"
             ]
         case .readUser(username: let username):
             return [:]
