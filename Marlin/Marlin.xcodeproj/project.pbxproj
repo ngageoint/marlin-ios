@@ -12,6 +12,26 @@
 		F71DF47E284E68DE00686951 /* asams.json in Resources */ = {isa = PBXBuildFile; fileRef = F71DF47D284E68DE00686951 /* asams.json */; };
 		F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */; };
 		F71DF482284E783600686951 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF481284E783600686951 /* TestHelper.swift */; };
+		F71DF4842857942D00686951 /* modus.json in Resources */ = {isa = PBXBuildFile; fileRef = F71DF4832857942D00686951 /* modus.json */; };
+		F71DF4862857954A00686951 /* Modu+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4852857954A00686951 /* Modu+CoreDataClass.swift */; };
+		F71DF4882857B0CC00686951 /* MarlinTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4872857B0CC00686951 /* MarlinTabView.swift */; };
+		F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4892858BF0700686951 /* MarlinMap.swift */; };
+		F71DF4902858C01000686951 /* MarlinMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF48F2858C01000686951 /* MarlinMapView.swift */; };
+		F71DF4922858C09E00686951 /* MapMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4912858C09E00686951 /* MapMixin.swift */; };
+		F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4932858C0EF00686951 /* StyledPolygon.swift */; };
+		F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4952858C18000686951 /* StyledPolyline.swift */; };
+		F71DF4972858CC8100686951 /* asams.json in Resources */ = {isa = PBXBuildFile; fileRef = F71DF47D284E68DE00686951 /* asams.json */; };
+		F71DF4992858DA4700686951 /* AsamMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4982858DA4700686951 /* AsamMap.swift */; };
+		F71DF49C2859025200686951 /* AsamAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF49B2859025200686951 /* AsamAnnotation.swift */; };
+		F71DF49E285910CE00686951 /* BottomSheetEnabled.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF49D285910CE00686951 /* BottomSheetEnabled.swift */; };
+		F71DF4A02859116C00686951 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF49F2859116C00686951 /* Notifications.swift */; };
+		F71DF4A3285911D700686951 /* MarlinBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4A2285911D700686951 /* MarlinBottomSheetViewController.swift */; };
+		F71DF4A52859120A00686951 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4A42859120A00686951 /* BottomSheetView.swift */; };
+		F71DF4A7285912F600686951 /* AsamBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4A6285912F600686951 /* AsamBottomSheet.swift */; };
+		F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4A82859143C00686951 /* UIImageExtensions.swift */; };
+		F71DF4AB2859147900686951 /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4AA2859147900686951 /* UIButtonExtensions.swift */; };
+		F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4AC28591BA200686951 /* UIApplicationExtensions.swift */; };
+		F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4AE285927D600686951 /* MarlinScheme.swift */; };
 		F727A684284E351800BD728A /* MSIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A683284E351800BD728A /* MSIError.swift */; };
 		F727A691284E605800BD728A /* MarlinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A690284E605800BD728A /* MarlinTests.swift */; };
 		F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A687284E485500BD728A /* KIF+extensions.swift */; };
@@ -20,7 +40,7 @@
 		F7A54CC62848149700E5F565 /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CC52848149700E5F565 /* Tests_iOSLaunchTests.swift */; };
 		F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CA82848149500E5F565 /* Marlin.xcdatamodeld */; };
 		F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CAA2848149500E5F565 /* MarlinApp.swift */; };
-		F7A54CD72848149700E5F565 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CAB2848149500E5F565 /* ContentView.swift */; };
+		F7A54CD72848149700E5F565 /* AsamListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CAB2848149500E5F565 /* AsamListView.swift */; };
 		F7A54CD92848149700E5F565 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CAC2848149500E5F565 /* Persistence.swift */; };
 		F7A54CDB2848149700E5F565 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7A54CAD2848149600E5F565 /* Assets.xcassets */; };
 		F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */; };
@@ -55,6 +75,25 @@
 		F71DF47D284E68DE00686951 /* asams.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = asams.json; sourceTree = "<group>"; };
 		F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extensions.swift"; sourceTree = "<group>"; };
 		F71DF481284E783600686951 /* TestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
+		F71DF4832857942D00686951 /* modus.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = modus.json; sourceTree = "<group>"; };
+		F71DF4852857954A00686951 /* Modu+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Modu+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F71DF4872857B0CC00686951 /* MarlinTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTabView.swift; sourceTree = "<group>"; };
+		F71DF4892858BF0700686951 /* MarlinMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinMap.swift; sourceTree = "<group>"; };
+		F71DF48F2858C01000686951 /* MarlinMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinMapView.swift; sourceTree = "<group>"; };
+		F71DF4912858C09E00686951 /* MapMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMixin.swift; sourceTree = "<group>"; };
+		F71DF4932858C0EF00686951 /* StyledPolygon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledPolygon.swift; sourceTree = "<group>"; };
+		F71DF4952858C18000686951 /* StyledPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledPolyline.swift; sourceTree = "<group>"; };
+		F71DF4982858DA4700686951 /* AsamMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamMap.swift; sourceTree = "<group>"; };
+		F71DF49B2859025200686951 /* AsamAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamAnnotation.swift; sourceTree = "<group>"; };
+		F71DF49D285910CE00686951 /* BottomSheetEnabled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetEnabled.swift; sourceTree = "<group>"; };
+		F71DF49F2859116C00686951 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		F71DF4A2285911D700686951 /* MarlinBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinBottomSheetViewController.swift; sourceTree = "<group>"; };
+		F71DF4A42859120A00686951 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
+		F71DF4A6285912F600686951 /* AsamBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamBottomSheet.swift; sourceTree = "<group>"; };
+		F71DF4A82859143C00686951 /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
+		F71DF4AA2859147900686951 /* UIButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
+		F71DF4AC28591BA200686951 /* UIApplicationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtensions.swift; sourceTree = "<group>"; };
+		F71DF4AE285927D600686951 /* MarlinScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinScheme.swift; sourceTree = "<group>"; };
 		F727A682284E29AE00BD728A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F727A683284E351800BD728A /* MSIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIError.swift; sourceTree = "<group>"; };
 		F727A685284E476200BD728A /* MSITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSITests.swift; sourceTree = "<group>"; };
@@ -64,14 +103,14 @@
 		F727A690284E605800BD728A /* MarlinTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTests.swift; sourceTree = "<group>"; };
 		F7A54CA92848149500E5F565 /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		F7A54CAA2848149500E5F565 /* MarlinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinApp.swift; sourceTree = "<group>"; };
-		F7A54CAB2848149500E5F565 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F7A54CAB2848149500E5F565 /* AsamListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamListView.swift; sourceTree = "<group>"; };
 		F7A54CAC2848149500E5F565 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		F7A54CAD2848149600E5F565 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F7A54CB22848149700E5F565 /* Marlin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Marlin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7A54CBF2848149700E5F565 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7A54CC32848149700E5F565 /* Tests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOS.swift; sourceTree = "<group>"; };
 		F7A54CC52848149700E5F565 /* Tests_iOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOSLaunchTests.swift; sourceTree = "<group>"; };
-		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Asam+CoreDataClass.swift"; path = "Marlin/CoreData/Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7FB156C284AAF1B004ACAC5 /* MSIRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIRouter.swift; sourceTree = "<group>"; };
 		F7FB156E284AB09C004ACAC5 /* MSI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -127,8 +166,50 @@
 			isa = PBXGroup;
 			children = (
 				F71DF47D284E68DE00686951 /* asams.json */,
+				F71DF4832857942D00686951 /* modus.json */,
 			);
 			path = responses;
+			sourceTree = "<group>";
+		};
+		F71DF48B2858BF7B00686951 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				F71DF49A2859022B00686951 /* Annotation */,
+				F71DF48C2858BF9200686951 /* Mixins */,
+				F71DF4892858BF0700686951 /* MarlinMap.swift */,
+				F71DF48F2858C01000686951 /* MarlinMapView.swift */,
+				F71DF4932858C0EF00686951 /* StyledPolygon.swift */,
+				F71DF4952858C18000686951 /* StyledPolyline.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		F71DF48C2858BF9200686951 /* Mixins */ = {
+			isa = PBXGroup;
+			children = (
+				F71DF4912858C09E00686951 /* MapMixin.swift */,
+				F71DF4982858DA4700686951 /* AsamMap.swift */,
+				F71DF49D285910CE00686951 /* BottomSheetEnabled.swift */,
+			);
+			path = Mixins;
+			sourceTree = "<group>";
+		};
+		F71DF49A2859022B00686951 /* Annotation */ = {
+			isa = PBXGroup;
+			children = (
+				F71DF49B2859025200686951 /* AsamAnnotation.swift */,
+			);
+			path = Annotation;
+			sourceTree = "<group>";
+		};
+		F71DF4A1285911BE00686951 /* BottomSheets */ = {
+			isa = PBXGroup;
+			children = (
+				F71DF4A2285911D700686951 /* MarlinBottomSheetViewController.swift */,
+				F71DF4A42859120A00686951 /* BottomSheetView.swift */,
+				F71DF4A6285912F600686951 /* AsamBottomSheet.swift */,
+			);
+			path = BottomSheets;
 			sourceTree = "<group>";
 		};
 		F727A68F284E605800BD728A /* MarlinTests */ = {
@@ -147,7 +228,6 @@
 		F7A54CA22848149500E5F565 = {
 			isa = PBXGroup;
 			children = (
-				F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */,
 				F7A54CA72848149500E5F565 /* Marlin */,
 				F7A54CC22848149700E5F565 /* Tests iOS */,
 				F727A68F284E605800BD728A /* MarlinTests */,
@@ -160,14 +240,22 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
+				F71DF4A1285911BE00686951 /* BottomSheets */,
+				F71DF48B2858BF7B00686951 /* Map */,
 				F727A682284E29AE00BD728A /* Info.plist */,
 				F7FB156B284AAE3C004ACAC5 /* Networking */,
 				F7B3490828491D6200E10ABF /* CoreData */,
 				F7A54CAA2848149500E5F565 /* MarlinApp.swift */,
-				F7A54CAB2848149500E5F565 /* ContentView.swift */,
+				F7A54CAB2848149500E5F565 /* AsamListView.swift */,
 				F7A54CAC2848149500E5F565 /* Persistence.swift */,
 				F7A54CAD2848149600E5F565 /* Assets.xcassets */,
 				F7A54CA82848149500E5F565 /* Marlin.xcdatamodeld */,
+				F71DF4872857B0CC00686951 /* MarlinTabView.swift */,
+				F71DF49F2859116C00686951 /* Notifications.swift */,
+				F71DF4A82859143C00686951 /* UIImageExtensions.swift */,
+				F71DF4AA2859147900686951 /* UIButtonExtensions.swift */,
+				F71DF4AC28591BA200686951 /* UIApplicationExtensions.swift */,
+				F71DF4AE285927D600686951 /* MarlinScheme.swift */,
 			);
 			path = Marlin;
 			sourceTree = "<group>";
@@ -194,7 +282,9 @@
 		F7B3490828491D6200E10ABF /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */,
 				F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */,
+				F71DF4852857954A00686951 /* Modu+CoreDataClass.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -317,6 +407,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F71DF4842857942D00686951 /* modus.json in Resources */,
 				F71DF47E284E68DE00686951 /* asams.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -326,6 +417,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7A54CDB2848149700E5F565 /* Assets.xcassets in Resources */,
+				F71DF4972858CC8100686951 /* asams.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -435,15 +527,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F71DF49E285910CE00686951 /* BottomSheetEnabled.swift in Sources */,
+				F71DF4882857B0CC00686951 /* MarlinTabView.swift in Sources */,
 				F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */,
+				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
+				F71DF4862857954A00686951 /* Modu+CoreDataClass.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
+				F71DF4AB2859147900686951 /* UIButtonExtensions.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
+				F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */,
+				F71DF4A7285912F600686951 /* AsamBottomSheet.swift in Sources */,
+				F71DF4A3285911D700686951 /* MarlinBottomSheetViewController.swift in Sources */,
 				F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */,
+				F71DF4992858DA4700686951 /* AsamMap.swift in Sources */,
 				F727A684284E351800BD728A /* MSIError.swift in Sources */,
+				F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */,
+				F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */,
+				F71DF4902858C01000686951 /* MarlinMapView.swift in Sources */,
+				F71DF4A52859120A00686951 /* BottomSheetView.swift in Sources */,
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
+				F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */,
+				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
+				F71DF4A02859116C00686951 /* Notifications.swift in Sources */,
 				F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */,
-				F7A54CD72848149700E5F565 /* ContentView.swift in Sources */,
+				F71DF49C2859025200686951 /* AsamAnnotation.swift in Sources */,
+				F7A54CD72848149700E5F565 /* AsamListView.swift in Sources */,
+				F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

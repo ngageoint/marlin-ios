@@ -12,7 +12,7 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Asam.longitude, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)],
         animation: .default)
     private var asams: FetchedResults<Asam>
 
@@ -25,6 +25,7 @@ struct ContentView: View {
                     } label: {
                         HStack(alignment: .center, spacing: 16) {
                            VStack(alignment: .center, spacing: 8) {
+                               Text(asam.asamDescription ?? "")
                                Text(asam.longitude ?? 0.0, formatter: longitudeFormatter)
                                Text(asam.longitude ?? 0.0, formatter: longitudeFormatter).bold()
                            }
@@ -52,8 +53,8 @@ struct ContentView: View {
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+            let newItem = Asam(context: viewContext)
+            newItem.date = Date()
 
             do {
                 try viewContext.save()

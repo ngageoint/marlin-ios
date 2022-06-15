@@ -36,13 +36,17 @@ struct MarlinApp: App {
     let persistenceController = PersistenceController.shared
     let shared = MSI.shared
     
+    let scheme = MarlinScheme()
+    
     init() {
-        shared.loadAsams()
+        let newest = try? persistenceController.container.viewContext.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)])
+        shared.loadAsams(date: newest?.dateString)
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MarlinTabView()
+                .environmentObject(scheme)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }

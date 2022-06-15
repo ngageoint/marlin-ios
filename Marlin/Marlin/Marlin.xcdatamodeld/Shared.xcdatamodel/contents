@@ -17,11 +17,26 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
-        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    <entity name="Modu" representedClassName=".Modu" syncable="YES" codeGenerationType="category">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="distance" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="latitude" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="longitude" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="navArea" optional="YES" attributeType="String"/>
+        <attribute name="position" optional="YES" attributeType="String"/>
+        <attribute name="region" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="rigStatus" optional="YES" attributeType="String"/>
+        <attribute name="specialStatus" optional="YES" attributeType="String"/>
+        <attribute name="subregion" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="name"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <elements>
         <element name="Asam" positionX="-63" positionY="-9" width="128" height="179"/>
-        <element name="Item" positionX="-63" positionY="-18" width="128" height="44"/>
+        <element name="Modu" positionX="-63" positionY="63" width="128" height="194"/>
     </elements>
 </model>

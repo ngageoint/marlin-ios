@@ -13,9 +13,40 @@ struct PersistenceController {
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for i in 0..<10 {
-            let newItem = Asam(context: viewContext)
-            newItem.longitude = NSDecimalNumber(value: i)
+        
+        let data: Data
+        
+        let filename = "asams.json"
+        
+        guard let file = Bundle.main.url(forResource: filename, withExtension: nil)
+        else {
+            fatalError("Couldn't find \(filename) in main bundle.")
+        }
+        
+        do {
+            data = try Data(contentsOf: file)
+        } catch {
+            fatalError("Couldn't load \(filename) from main bundle:\n\(error)")
+        }
+        
+        do {
+            let decoder = JSONDecoder()
+            let asamContainer = try decoder.decode(AsamPropertyContainer.self, from: data)
+            for asam in asamContainer.asam {
+                let newItem = Asam(context: viewContext)
+                newItem.asamDescription = asam.asamDescription
+                newItem.longitude = NSDecimalNumber(decimal:asam.longitude)
+                newItem.latitude = NSDecimalNumber(decimal:asam.latitude)
+                newItem.date = asam.date
+                newItem.navArea = asam.navArea
+                newItem.reference = asam.reference
+                newItem.subreg = asam.subreg
+                newItem.position = asam.position
+                newItem.hostility = asam.hostility
+                newItem.victim = asam.victim
+            }
+        } catch {
+            fatalError("Couldn't parse \(filename) as \(AsamPropertyContainer.self):\n\(error)")
         }
         do {
             try viewContext.save()

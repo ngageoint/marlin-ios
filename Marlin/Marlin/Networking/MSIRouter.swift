@@ -10,7 +10,8 @@ import Alamofire
 
 enum MSIRouter: URLRequestConvertible
 {
-    case readAsams(parameters: Parameters? = nil)
+    case readAsams(date: String? = nil)
+    case readModus(parameters: Parameters? = nil)
     case readUser(username: String)
     case updateUser(username: String, parameters: Parameters)
     case destroyUser(username: String)
@@ -22,6 +23,8 @@ enum MSIRouter: URLRequestConvertible
     {
         switch self {
         case .readAsams:
+            return .get
+        case .readModus:
             return .get
         case .readUser:
             return .get
@@ -37,6 +40,8 @@ enum MSIRouter: URLRequestConvertible
         switch self {
         case .readAsams:
             return "/publications/asam"
+        case .readModus:
+            return "/publications/modu"
         case .readUser(let username):
             return "/users/\(username)"
         case .updateUser(let username, _):
@@ -48,11 +53,19 @@ enum MSIRouter: URLRequestConvertible
     
     var parameters: Parameters? {
         switch self {
-        case .readAsams:
-            return [
+        case .readAsams(date: let date):
+            var params = [
                 "sort": "date",
                 "output": "json",
-                "year": "2022"
+                "maxOccurDate": AsamProperties.dateFormatter.string(from:Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date())
+            ]
+            if let date = date {
+                params["minOccurDate"] = date
+            }
+            return params
+        case .readModus:
+            return [
+                "output": "json"
             ]
         case .readUser(username: let username):
             return [:]

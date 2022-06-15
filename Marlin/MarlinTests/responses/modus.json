@@ -1,0 +1,17 @@
+{
+    "modu": [
+        {
+            "name": "590021",
+            "date": "2021-04-16",
+            "rigStatus": "Active",
+            "specialStatus": "Specific Berth Requested",
+            "distance": 0.3,
+            "latitude": 53.23333333300002,
+            "longitude": 3.241666667000004,
+            "position": "53°14'00\"N \n3°14'30\"E",
+            "navArea": "HYDROLANT",
+            "region": 3,
+            "subregion": 37
+        }
+    ]
+}

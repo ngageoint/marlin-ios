@@ -20,47 +20,6 @@ public class MSI {
         return Session(configuration: configuration)
     }()
     
-    func loadAsams() {
-        
-        session.request(MSIRouter.readAsams())
-            .validate()
-            .responseDecodable(of: AsamPropertyContainer.self) { response in
-                Task {
-                    print("response.properties \(response)")
-                    let asamCount = response.value?.asam.count
-                    self.logger.debug("Received \(asamCount ?? 0) records.")
-                    if let asams = response.value?.asam {
-                        try await self.importAsams(from: asams)
-                    }
-                }
-            }
-    }
-    
-    private func importAsams(from propertiesList: [AsamProperties]) async throws {
-        guard !propertiesList.isEmpty else { return }
-        
-        let taskContext = newTaskContext()
-        // Add name and author to identify source of persistent history changes.
-        taskContext.name = "importContext"
-        taskContext.transactionAuthor = "importAsams"
-        
-        /// - Tag: performAndWait
-        try await taskContext.perform {
-            // Execute the batch insert.
-            /// - Tag: batchInsertRequest
-            let batchInsertRequest = self.newBatchInsertRequest(with: propertiesList)
-            if let fetchResult = try? taskContext.execute(batchInsertRequest),
-               let batchInsertResult = fetchResult as? NSBatchInsertResult,
-               let success = batchInsertResult.result as? Bool, success {
-                return
-            }
-            self.logger.debug("Failed to execute batch insert request.")
-            throw MSIError.batchInsertError
-        }
-        
-        logger.debug("Successfully inserted data.")
-    }
-    
     private func newTaskContext() -> NSManagedObjectContext {
         // Create a private queue context.
         /// - Tag: newBackgroundContext
@@ -72,18 +31,32 @@ public class MSI {
         return taskContext
     }
     
-    private func newBatchInsertRequest(with propertyList: [AsamProperties]) -> NSBatchInsertRequest {
-        var index = 0
-        let total = propertyList.count
-        
-        // Provide one dictionary at a time when the closure is called.
-        let batchInsertRequest = NSBatchInsertRequest(entity: Asam.entity(), dictionaryHandler: { dictionary in
-            guard index < total else { return true }
-            dictionary.addEntries(from: propertyList[index].dictionaryValue)
-            index += 1
-            return false
-        })
-        return batchInsertRequest
+    func loadAsams(date: String? = nil) {
+        session.request(MSIRouter.readAsams(date: date))
+            .validate()
+            .responseDecodable(of: AsamPropertyContainer.self) { response in
+                Task {
+                    let asamCount = response.value?.asam.count
+                    self.logger.debug("Received \(asamCount ?? 0) records.")
+                    if let asams = response.value?.asam {
+                        try await Asam.batchImport(from: asams, taskContext: self.newTaskContext())
+                    }
+                }
+            }
+    }
+    
+    func loadModus() {
+        session.request(MSIRouter.readModus())
+            .validate()
+            .responseDecodable(of: ModuPropertyContainer.self) { response in
+                Task {
+                    let moduCount = response.value?.modu.count
+                    self.logger.debug("Received \(moduCount ?? 0) records.")
+                    if let modus = response.value?.modu {
+                        try await Modu.batchImport(from: modus, taskContext: self.newTaskContext())
+                    }
+                }
+            }
     }
 }
 
