@@ -62,7 +62,7 @@ extension NSManagedObjectContext {
         
         do {
             try self.persistentStoreCoordinator?.execute(deleteRequest, with: self)
-        } catch let error as NSError {
+        } catch _ as NSError {
             // TODO: handle the error
             return false
         }

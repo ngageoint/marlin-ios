@@ -26,7 +26,7 @@ class AsamMapMixin: NSObject, MapMixin {
     var mapAnnotationFocusedObserver: AnyObject?
     var asamMap: AsamMap?
     var mapView: MKMapView?
-    var scheme: MDCContainerScheming?
+    var scheme: MarlinScheme?
     
     var enlargedLocationView: MKAnnotationView?
     var selectedUserAccuracy: MKOverlay?
@@ -36,12 +36,12 @@ class AsamMapMixin: NSObject, MapMixin {
 //    var locations: Locations?
 //    var user: User?
     
-    init(asamMap: AsamMap, scheme: MDCContainerScheming?) {
+    init(asamMap: AsamMap, scheme: MarlinScheme?) {
         self.asamMap = asamMap
         self.mapView = asamMap.mapView
 //        self.user = user
         self.scheme = scheme
-        asamMap.mapView?.register(AsamAnnotationView.self, forAnnotationViewWithReuseIdentifier: "asam")
+        asamMap.mapView?.register(AsamAnnotationView.self, forAnnotationViewWithReuseIdentifier: AsamAnnotationView.ReuseID)
     }
     
     func cleanupMixin() {

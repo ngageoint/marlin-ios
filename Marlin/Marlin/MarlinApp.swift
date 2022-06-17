@@ -45,7 +45,7 @@ struct MarlinApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MarlinTabView()
+            MarlinTabView(itemWrapper: ItemWrapper())
                 .environmentObject(scheme)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }

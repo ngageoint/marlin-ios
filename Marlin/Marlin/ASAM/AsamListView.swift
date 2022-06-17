@@ -8,8 +8,9 @@
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
+struct AsamListView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject var scheme: MarlinScheme
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)],
@@ -20,34 +21,31 @@ struct ContentView: View {
         NavigationView {
             List {
                 ForEach(asams) { asam in
-                    NavigationLink {
-                        Text("Asam at \(asam.longitude!, formatter: longitudeFormatter)")
-                    } label: {
-                        HStack(alignment: .center, spacing: 16) {
-                           VStack(alignment: .center, spacing: 8) {
-                               Text(asam.asamDescription ?? "")
-                               Text(asam.longitude ?? 0.0, formatter: longitudeFormatter)
-                               Text(asam.longitude ?? 0.0, formatter: longitudeFormatter).bold()
-                           }
+                    
+                    ZStack {
+                        NavigationLink(destination: AsamDetailView(asam: asam)
+                            .navigationTitle(asam.reference ?? "ASAM")
+                            .navigationBarTitleDisplayMode(.inline)) {
+                            EmptyView()
                         }
+                        .opacity(0)
                         
+                        HStack {
+                            AsamSummaryView(asam: asam)
+                        }
+                        .padding(.all, 16)
+                        .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                        .modifier(CardModifier())
                     }
+                    
                 }
-                .onDelete(perform: deleteItems)
-            }.listStyle(.plain)
-            .toolbar {
-#if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-#endif
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Asam", systemImage: "plus")
-                    }
-                }
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
             }
-            Text("Select an item")
+            .navigationTitle("ASAMs")
+            .navigationBarTitleDisplayMode(.inline)
+            .listStyle(.grouped)
         }
     }
 
@@ -96,8 +94,8 @@ private let itemFormatter: DateFormatter = {
     return formatter
 }()
 
-struct ContentView_Previews: PreviewProvider {
+struct AsamListView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        AsamListView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

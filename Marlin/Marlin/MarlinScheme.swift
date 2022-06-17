@@ -45,6 +45,26 @@ class MarlinScheme: ObservableObject {
         UINavigationBar.appearance().barTintColor = containerScheme.colorScheme.onPrimaryColor
         UINavigationBar.appearance().tintColor = containerScheme.colorScheme.onPrimaryColor
         UINavigationBar.appearance().prefersLargeTitles = false
+        
+        UITableView.appearance().backgroundColor = containerScheme.colorScheme.backgroundColor
+        
+        let tabBarAppearance = UITabBarAppearance();
+        tabBarAppearance.selectionIndicatorTintColor = containerScheme.colorScheme.primaryColorVariant.withAlphaComponent(0.87)
+        tabBarAppearance.backgroundColor = containerScheme.colorScheme.surfaceColor
+        setTabBarItemColors(tabBarAppearance.stackedLayoutAppearance, scheme: containerScheme)
+        setTabBarItemColors(tabBarAppearance.inlineLayoutAppearance, scheme: containerScheme)
+        setTabBarItemColors(tabBarAppearance.compactInlineLayoutAppearance, scheme: containerScheme)
+        
+        UITabBar.appearance().standardAppearance = tabBarAppearance;
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+    }
+    
+    private func setTabBarItemColors(_ itemAppearance: UITabBarItemAppearance, scheme: MDCContainerScheming) {
+        itemAppearance.normal.iconColor = scheme.colorScheme.onBackgroundColor.withAlphaComponent(0.6);
+        itemAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: scheme.colorScheme.onBackgroundColor.withAlphaComponent(0.6)]
+        
+        itemAppearance.selected.iconColor = scheme.colorScheme.primaryColorVariant.withAlphaComponent(0.87)
+        itemAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: scheme.colorScheme.primaryColorVariant.withAlphaComponent(0.87)]
     }
     
 }

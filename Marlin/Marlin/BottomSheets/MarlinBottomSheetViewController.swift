@@ -35,12 +35,12 @@ class MarlinBottomSheetViewController: UIViewController {
     
     private var didSetUpConstraints = false;
     private var items: [BottomSheetItem] = [];
-    var scheme: MDCContainerScheming?;
+    var scheme: MarlinScheme?;
     private var rightConstraint: NSLayoutConstraint?;
     private var leftConstraint: NSLayoutConstraint?;
     var currentBottomSheetView: UIHostingController<AsamBottomSheet>?
     var mapView: MKMapView?
-    
+        
     @objc public lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView.newAutoLayout();
         scrollView.accessibilityIdentifier = "feature bottom sheet";
@@ -150,7 +150,7 @@ class MarlinBottomSheetViewController: UIViewController {
         fatalError("This class does not support NSCoding")
     }
     
-    convenience init(items: [BottomSheetItem], mapView: MKMapView?, scheme: MDCContainerScheming?) {
+    convenience init(items: [BottomSheetItem], mapView: MKMapView?, scheme: MarlinScheme?) {
         self.init(frame: CGRect.zero);
         self.scheme = scheme;
         self.items = items;
@@ -170,7 +170,7 @@ class MarlinBottomSheetViewController: UIViewController {
         scrollView.addSubview(stackView);
         self.view.addSubview(scrollView);
         
-        applyTheme(withScheme: scheme);
+        applyTheme(withScheme: scheme?.containerScheme);
         
         populateView();
         
@@ -199,7 +199,6 @@ class MarlinBottomSheetViewController: UIViewController {
         pageControl.currentPageIndicatorTintColor = scheme.colorScheme.primaryColorVariant;
         pageNumberLabel.textColor = scheme.colorScheme.onSurfaceColor.withAlphaComponent(0.6);
         pageNumberLabel.font = scheme.typographyScheme.caption;
-        self.scheme = scheme;
     }
     
     @objc func leftButtonTap() {
@@ -260,7 +259,8 @@ class MarlinBottomSheetViewController: UIViewController {
             self.pageNumberLabel.text = "\(self.pageControl.currentPage+1) of \(self.pageControl.numberOfPages)";
             
             if let bottomSheetItem = item.item as? Asam {
-                self.currentBottomSheetView = UIHostingController(rootView: AsamBottomSheet(asam: bottomSheetItem))// BottomSheetView()
+                let asamBottomSheet = AsamBottomSheetViewController(asam: bottomSheetItem, scheme: self.scheme!)
+                self.currentBottomSheetView = asamBottomSheet
                 self.stackView.addArrangedSubview(self.currentBottomSheetView!.view);
             }
             self.view.setNeedsUpdateConstraints();

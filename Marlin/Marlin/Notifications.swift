@@ -15,6 +15,7 @@ extension Notification.Name {
     public static let DismissBottomSheet = Notification.Name("DismissBottomSheet")
     public static let BottomSheetDismissed = Notification.Name("BottomSheetDismissed")
     public static let MapRequestFocus = Notification.Name("MapRequestFocus")
+    public static let ViewAsam = Notification.Name("ViewAsam")
 }
 
 struct MapAnnotationFocusedNotification {

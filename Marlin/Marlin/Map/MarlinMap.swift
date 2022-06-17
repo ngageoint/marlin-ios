@@ -11,8 +11,10 @@ import SwiftUI
 
 struct MarlinMap: UIViewRepresentable {
     
+    @EnvironmentObject var scheme: MarlinScheme
+    
     func makeUIView(context: Context) -> MarlinMapView {
-        let control = MarlinMapView(scheme: nil)
+        let control = MarlinMapView(scheme: scheme)
         return control
     }
     

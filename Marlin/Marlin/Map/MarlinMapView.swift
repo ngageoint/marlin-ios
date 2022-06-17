@@ -20,13 +20,13 @@ class MarlinMapView: UIView, AsamMap, BottomSheetEnabled {
     func addFilteredAsams() {
         
     }
-    //, GeoPackageBaseMap {
+    
     var mapView: MKMapView?
-    var scheme: MDCContainerScheming?;
+    var scheme: MarlinScheme?;
     var mapMixins: [MapMixin] = []
     var asamMapMixin: AsamMapMixin?
     var bottomSheetMixin: BottomSheetMixin?
-    
+
     
     lazy var mapStack: UIStackView = {
         let mapStack = UIStackView.newAutoLayout()
@@ -41,7 +41,7 @@ class MarlinMapView: UIView, AsamMap, BottomSheetEnabled {
         fatalError("This class does not support NSCoding")
     }
     
-    public init(scheme: MDCContainerScheming?) {
+    public init(scheme: MarlinScheme?) {
         super.init(frame: .zero)
         self.scheme = scheme
         layoutView()
@@ -75,6 +75,8 @@ class MarlinMapView: UIView, AsamMap, BottomSheetEnabled {
         bottomSheetMixin = BottomSheetMixin(bottomSheetEnabled: self)
         mapMixins.append(bottomSheetMixin!)
         initiateMapMixins()
+        
+
     }
     
     func initiateMapMixins() {
@@ -91,7 +93,7 @@ class MarlinMapView: UIView, AsamMap, BottomSheetEnabled {
         mapMixins.removeAll()
     }
     
-    func applyTheme(scheme: MDCContainerScheming?) {
+    func applyTheme(scheme: MarlinScheme?) {
         self.scheme = scheme
         for mixin in mapMixins {
             mixin.applyTheme(scheme: scheme)

@@ -44,6 +44,13 @@
 		F7A54CD92848149700E5F565 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CAC2848149500E5F565 /* Persistence.swift */; };
 		F7A54CDB2848149700E5F565 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7A54CAD2848149600E5F565 /* Assets.xcassets */; };
 		F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */; };
+		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
+		F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59785285A206700F9B32E /* AsamDetailView.swift */; };
+		F7F59789285A277000F9B32E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59788285A277000F9B32E /* Card.swift */; };
+		F7F5978B285BA41000F9B32E /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5978A285BA40F00F9B32E /* Button.swift */; };
+		F7F5978D285BABA100F9B32E /* LatitudeLongitudeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5978C285BABA100F9B32E /* LatitudeLongitudeButton.swift */; };
+		F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5978F285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift */; };
+		F7F59795285BE27400F9B32E /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59794285BE27400F9B32E /* Property.swift */; };
 		F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB156C284AAF1B004ACAC5 /* MSIRouter.swift */; };
 		F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB156E284AB09C004ACAC5 /* MSI.swift */; };
 /* End PBXBuildFile section */
@@ -111,6 +118,13 @@
 		F7A54CC32848149700E5F565 /* Tests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOS.swift; sourceTree = "<group>"; };
 		F7A54CC52848149700E5F565 /* Tests_iOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOSLaunchTests.swift; sourceTree = "<group>"; };
 		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
+		F7F59785285A206700F9B32E /* AsamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDetailView.swift; sourceTree = "<group>"; };
+		F7F59788285A277000F9B32E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		F7F5978A285BA40F00F9B32E /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
+		F7F5978C285BABA100F9B32E /* LatitudeLongitudeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatitudeLongitudeButton.swift; sourceTree = "<group>"; };
+		F7F5978F285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2DExtensions.swift; sourceTree = "<group>"; };
+		F7F59794285BE27400F9B32E /* Property.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Property.swift; sourceTree = "<group>"; };
 		F7FB156C284AAF1B004ACAC5 /* MSIRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIRouter.swift; sourceTree = "<group>"; };
 		F7FB156E284AB09C004ACAC5 /* MSI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -188,7 +202,6 @@
 			isa = PBXGroup;
 			children = (
 				F71DF4912858C09E00686951 /* MapMixin.swift */,
-				F71DF4982858DA4700686951 /* AsamMap.swift */,
 				F71DF49D285910CE00686951 /* BottomSheetEnabled.swift */,
 			);
 			path = Mixins;
@@ -197,7 +210,6 @@
 		F71DF49A2859022B00686951 /* Annotation */ = {
 			isa = PBXGroup;
 			children = (
-				F71DF49B2859025200686951 /* AsamAnnotation.swift */,
 			);
 			path = Annotation;
 			sourceTree = "<group>";
@@ -207,7 +219,6 @@
 			children = (
 				F71DF4A2285911D700686951 /* MarlinBottomSheetViewController.swift */,
 				F71DF4A42859120A00686951 /* BottomSheetView.swift */,
-				F71DF4A6285912F600686951 /* AsamBottomSheet.swift */,
 			);
 			path = BottomSheets;
 			sourceTree = "<group>";
@@ -240,21 +251,22 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
+				F7F59793285BE23F00F9B32E /* Views */,
+				F7F5978E285BACAE00F9B32E /* Extensions */,
+				F7F59787285A275200F9B32E /* MaterialComponents */,
+				F7F59780285A1B6000F9B32E /* MODU */,
+				F7F5977F285A1B2400F9B32E /* ASAM */,
 				F71DF4A1285911BE00686951 /* BottomSheets */,
 				F71DF48B2858BF7B00686951 /* Map */,
 				F727A682284E29AE00BD728A /* Info.plist */,
 				F7FB156B284AAE3C004ACAC5 /* Networking */,
 				F7B3490828491D6200E10ABF /* CoreData */,
 				F7A54CAA2848149500E5F565 /* MarlinApp.swift */,
-				F7A54CAB2848149500E5F565 /* AsamListView.swift */,
 				F7A54CAC2848149500E5F565 /* Persistence.swift */,
 				F7A54CAD2848149600E5F565 /* Assets.xcassets */,
 				F7A54CA82848149500E5F565 /* Marlin.xcdatamodeld */,
 				F71DF4872857B0CC00686951 /* MarlinTabView.swift */,
 				F71DF49F2859116C00686951 /* Notifications.swift */,
-				F71DF4A82859143C00686951 /* UIImageExtensions.swift */,
-				F71DF4AA2859147900686951 /* UIButtonExtensions.swift */,
-				F71DF4AC28591BA200686951 /* UIApplicationExtensions.swift */,
 				F71DF4AE285927D600686951 /* MarlinScheme.swift */,
 			);
 			path = Marlin;
@@ -282,11 +294,60 @@
 		F7B3490828491D6200E10ABF /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */,
 				F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */,
-				F71DF4852857954A00686951 /* Modu+CoreDataClass.swift */,
 			);
 			path = CoreData;
+			sourceTree = "<group>";
+		};
+		F7F5977F285A1B2400F9B32E /* ASAM */ = {
+			isa = PBXGroup;
+			children = (
+				F7A54CAB2848149500E5F565 /* AsamListView.swift */,
+				F71DF4A6285912F600686951 /* AsamBottomSheet.swift */,
+				F71DF4982858DA4700686951 /* AsamMap.swift */,
+				F71DF49B2859025200686951 /* AsamAnnotation.swift */,
+				F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */,
+				F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */,
+				F7F59785285A206700F9B32E /* AsamDetailView.swift */,
+			);
+			path = ASAM;
+			sourceTree = "<group>";
+		};
+		F7F59780285A1B6000F9B32E /* MODU */ = {
+			isa = PBXGroup;
+			children = (
+				F71DF4852857954A00686951 /* Modu+CoreDataClass.swift */,
+			);
+			path = MODU;
+			sourceTree = "<group>";
+		};
+		F7F59787285A275200F9B32E /* MaterialComponents */ = {
+			isa = PBXGroup;
+			children = (
+				F7F59788285A277000F9B32E /* Card.swift */,
+				F7F5978A285BA40F00F9B32E /* Button.swift */,
+			);
+			path = MaterialComponents;
+			sourceTree = "<group>";
+		};
+		F7F5978E285BACAE00F9B32E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F71DF4A82859143C00686951 /* UIImageExtensions.swift */,
+				F71DF4AA2859147900686951 /* UIButtonExtensions.swift */,
+				F71DF4AC28591BA200686951 /* UIApplicationExtensions.swift */,
+				F7F5978F285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		F7F59793285BE23F00F9B32E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F7F5978C285BABA100F9B32E /* LatitudeLongitudeButton.swift */,
+				F7F59794285BE27400F9B32E /* Property.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		F7FB156B284AAE3C004ACAC5 /* Networking */ = {
@@ -529,10 +590,14 @@
 			files = (
 				F71DF49E285910CE00686951 /* BottomSheetEnabled.swift in Sources */,
 				F71DF4882857B0CC00686951 /* MarlinTabView.swift in Sources */,
+				F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */,
 				F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */,
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
+				F7F5978B285BA41000F9B32E /* Button.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
+				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
 				F71DF4862857954A00686951 /* Modu+CoreDataClass.swift in Sources */,
+				F7F59789285A277000F9B32E /* Card.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				F71DF4AB2859147900686951 /* UIButtonExtensions.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
@@ -543,13 +608,16 @@
 				F71DF4992858DA4700686951 /* AsamMap.swift in Sources */,
 				F727A684284E351800BD728A /* MSIError.swift in Sources */,
 				F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */,
+				F7F59795285BE27400F9B32E /* Property.swift in Sources */,
 				F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */,
 				F71DF4902858C01000686951 /* MarlinMapView.swift in Sources */,
 				F71DF4A52859120A00686951 /* BottomSheetView.swift in Sources */,
+				F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */,
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
 				F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */,
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
 				F71DF4A02859116C00686951 /* Notifications.swift in Sources */,
+				F7F5978D285BABA100F9B32E /* LatitudeLongitudeButton.swift in Sources */,
 				F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */,
 				F71DF49C2859025200686951 /* AsamAnnotation.swift in Sources */,
 				F7A54CD72848149700E5F565 /* AsamListView.swift in Sources */,

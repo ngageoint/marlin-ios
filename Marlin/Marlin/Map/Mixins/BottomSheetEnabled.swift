@@ -12,7 +12,7 @@ import MaterialComponents
 protocol BottomSheetEnabled {
     var mapView: MKMapView? { get set }
     var navigationController: UINavigationController?  { get set }
-    var scheme: MDCContainerScheming? { get set }
+    var scheme: MarlinScheme? { get set }
     var bottomSheetMixin: BottomSheetMixin? { get set }
 }
 
