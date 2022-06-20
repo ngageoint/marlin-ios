@@ -34,7 +34,7 @@ public class Modu: NSManagedObject {
         return batchInsertRequest
     }
     
-    static func batchImport(from propertiesList: [ModuProperties], taskContext: NSManagedObjectContext) async throws {
+    static func batchImport(from propertiesList: [ModuProperties], taskContext: NSManagedObjectContext, viewContext: NSManagedObjectContext) async throws {
         guard !propertiesList.isEmpty else { return }
         
         // Add name and author to identify source of persistent history changes.

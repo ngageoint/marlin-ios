@@ -22,17 +22,6 @@ public class MSI {
 //        return Session(configuration: configuration)
     }()
     
-    private func newTaskContext() -> NSManagedObjectContext {
-        // Create a private queue context.
-        /// - Tag: newBackgroundContext
-        let taskContext = PersistenceController.shared.container.newBackgroundContext()
-        taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        // Set unused undoManager to nil for macOS (it is nil by default on iOS)
-        // to reduce resource requirements.
-        taskContext.undoManager = nil
-        return taskContext
-    }
-    
     func loadAsams(date: String? = nil) {
         session.request(MSIRouter.readAsams(date: date))
             .validate()
@@ -41,7 +30,7 @@ public class MSI {
                     let asamCount = response.value?.asam.count
                     self.logger.debug("Received \(asamCount ?? 0) asam records.")
                     if let asams = response.value?.asam {
-                        try await Asam.batchImport(from: asams, taskContext: self.newTaskContext())
+                        try await Asam.batchImport(from: asams, taskContext: PersistenceController.shared.newTaskContext())
                     }
                 }
             }
@@ -55,7 +44,7 @@ public class MSI {
                     let moduCount = response.value?.modu.count
                     self.logger.debug("Received \(moduCount ?? 0) modu records.")
                     if let modus = response.value?.modu {
-                        try await Modu.batchImport(from: modus, taskContext: self.newTaskContext())
+                        try await Modu.batchImport(from: modus, taskContext: PersistenceController.shared.newTaskContext(), viewContext: PersistenceController.shared.container.viewContext)
                     }
                 }
             }
