@@ -1,47 +1,47 @@
 //
-//  AsamDetailView.swift
+//  ModuDetailView.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 6/15/22.
+//  Created by Daniel Barela on 6/17/22.
 //
 
 import SwiftUI
 import MapKit
 
-struct AsamDetailView: View {
-    
+struct ModuDetailView: View {
+        
     @EnvironmentObject var scheme: MarlinScheme
     @State private var region: MKCoordinateRegion
-
-    var asam: Asam
     
-    init(asam: Asam) {
-        self.asam = asam
-        region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: asam.latitude?.doubleValue ?? 0.0, longitude: asam.longitude?.doubleValue ?? 0.0), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
+    var modu: Modu
+    
+    init(modu: Modu) {
+        self.modu = modu
+        region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: modu.latitude?.doubleValue ?? 0.0, longitude: modu.longitude?.doubleValue ?? 0.0), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
     }
     
     var body: some View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-
-                    Map(coordinateRegion: $region, annotationItems: [AsamAnnotation(asam: asam)]) { asam in
-                        MapAnnotation(coordinate: asam.coordinate, anchorPoint: CGPoint(x: 0.5, y: 1)) {
-                            Image("asam_marker")
+                    
+                    Map(coordinateRegion: $region, annotationItems: [ModuAnnotation(modu: modu)]) { modu in
+                        MapAnnotation(coordinate: modu.coordinate, anchorPoint: CGPoint(x: 0.5, y: 1)) {
+                            Image("modu_marker")
                         }
                     }
                     .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     Group {
-                        Text(asam.dateString ?? "")
+                        Text(modu.dateString ?? "")
                             .font(Font(scheme.containerScheme.typographyScheme.overline))
                             .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
                             .opacity(0.45)
-                        Text("\(asam.hostility ?? "")\(asam.hostility != nil ? ": " : "")\(asam.victim ?? "")")
+                        Text("\(modu.name ?? "")")
                             .font(Font(scheme.containerScheme.typographyScheme.headline6))
                             .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
                             .opacity(0.87)
                         HStack(spacing:0) {
-                            LatitudeLongitudeButton(latitude: asam.latitude ?? 0.0, longitude: asam.longitude ?? 0.0)
+                            LatitudeLongitudeButton(latitude: modu.latitude ?? 0.0, longitude: modu.longitude ?? 0.0)
                                 .fixedSize()
                                 .padding(.leading, -16)
                             Spacer()
@@ -65,41 +65,24 @@ struct AsamDetailView: View {
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
             
-            Section("Description") {
-                Text(asam.asamDescription ?? "")
-                    .lineLimit(8)
-                    .font(Font(scheme.containerScheme.typographyScheme.body2))
-                    .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
-                    .opacity(0.6)
-                    .frame(maxWidth:.infinity)
-                    .padding(.all, 16)
-                    .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
-                    .modifier(CardModifier())
-            }
-            .padding(.bottom, -20)
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color.clear)
-            
             Section("Additional Information") {
                 VStack(alignment: .leading, spacing: 8) {
-                    if let hostility = asam.hostility {
-                        Property(property: "Hostility", value: hostility)
+                    if let rigStatus = modu.rigStatus {
+                        Property(property: "Rig Status", value: rigStatus)
                     }
-                    if let victim = asam.victim {
-                        Property(property: "Victim", value: victim)
+                    if let specialStatus = modu.specialStatus {
+                        Property(property: "Special Status", value: specialStatus)
                     }
-                    if let reference = asam.reference {
-                        Property(property: "Reference Number", value: reference)
+                    if let distance = modu.distance, distance != 0 {
+                        Property(property: "Distance", value: "\(distance)")
                     }
-                    if let dateString = asam.dateString {
-                        Property(property: "Date of Occurence", value: dateString)
+                    if let navArea = modu.navArea {
+                        Property(property: "Navigational Area", value: navArea)
                     }
-                    if let subregion = asam.subreg {
-                        Property(property: "Geographical Subregion", value: subregion)
+                    if let subregion = modu.subregion {
+                        Property(property: "Charting Subregion", value: "\(subregion)")
                     }
-                    if let navarea = asam.navArea {
-                        Property(property: "Navigational Area", value: navarea)
-                    }
+                    
                 }
                 .padding(.all, 16)
                 .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
@@ -110,17 +93,17 @@ struct AsamDetailView: View {
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
         }
-            
+        
         .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
         .listStyle(.grouped)
         
     }
 }
 
-struct AsamDetailView_Previews: PreviewProvider {
+struct ModuDetailView_Previews: PreviewProvider {
     static var previews: some View {
         let context = PersistenceController.preview.container.viewContext
-        let asam = try? context.fetchFirst(Asam.self)
-        return AsamDetailView(asam: asam!)
+        let modu = try? context.fetchFirst(Modu.self)
+        return ModuDetailView(modu: modu!)
     }
 }

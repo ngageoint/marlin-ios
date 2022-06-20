@@ -11,6 +11,13 @@ import OSLog
 
 public class Modu: NSManagedObject {
     
+    var dateString: String? {
+        if let date = date {
+            return ModuProperties.dateFormatter.string(from: date)
+        }
+        return nil
+    }
+    
     static func newBatchInsertRequest(with propertyList: [ModuProperties]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
@@ -58,6 +65,12 @@ struct ModuPropertyContainer: Decodable {
 
 /// A struct encapsulating the properties of a Quake.
 struct ModuProperties: Decodable {
+    
+    static let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }()
     
     // MARK: Codable
     

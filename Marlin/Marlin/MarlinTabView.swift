@@ -9,21 +9,26 @@ import SwiftUI
 
 class ItemWrapper : ObservableObject {
     @Published var asam: Asam?
+    @Published var modu: Modu?
 }
 
 struct MarlinTabView: View {
     
-    var viewAsamNotificationObserver: Any?
-
     @EnvironmentObject var scheme: MarlinScheme
     
     @StateObject var itemWrapper: ItemWrapper
     @State var selection: String? = nil
     
-    let pub = NotificationCenter.default.publisher(for: .ViewAsam)
+    let asamPub = NotificationCenter.default.publisher(for: .ViewAsam)
+    let moduPub = NotificationCenter.default.publisher(for: .ViewModu)
     
     var body: some View {
         TabView {
+            ModuListView()
+                .tabItem {
+                    Label("MODUs", image: "modu")
+                }
+            
             AsamListView()
                 .tabItem {
                     Label("ASAMs", image: "asam")
@@ -34,6 +39,15 @@ struct MarlinTabView: View {
                     NavigationLink(tag: "asam", selection: $selection) {
                         if let asam = itemWrapper.asam {
                             AsamDetailView(asam: asam)
+                        } else {
+                            EmptyView()
+                        }
+                    } label: {
+                        EmptyView()
+                    }.hidden()
+                    NavigationLink(tag: "modu", selection: $selection) {
+                        if let modu = itemWrapper.modu {
+                            ModuDetailView(modu: modu)
                         } else {
                             EmptyView()
                         }
@@ -64,9 +78,13 @@ struct MarlinTabView: View {
             
 
         }
-        .onReceive(pub) { output in
+        .onReceive(asamPub) { output in
             print("view asam recieved \(output)")
             viewAsam(output.object as! Asam)
+        }
+        .onReceive(moduPub) { output in
+            print("view modu recieved \(output)")
+            viewModu(output.object as! Modu)
         }
 //        .accentColor(Color(scheme.containerScheme.colorScheme.primaryColorVariant))
     }
@@ -76,8 +94,13 @@ struct MarlinTabView: View {
         NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
         itemWrapper.asam = asam
         selection = "asam"
-//        let ovc = ObservationViewCardCollectionViewController(observation: observation, scheme: scheme)
-//        navigationController?.pushViewController(ovc, animated: true)
+    }
+    
+    func viewModu(_ modu: Modu) {
+        NotificationCenter.default.post(name: .MapAnnotationFocused, object: nil)
+        NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
+        itemWrapper.modu = modu
+        selection = "modu"
     }
     
     private func showHamburger() {

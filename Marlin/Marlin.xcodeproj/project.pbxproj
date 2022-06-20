@@ -51,6 +51,12 @@
 		F7F5978D285BABA100F9B32E /* LatitudeLongitudeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5978C285BABA100F9B32E /* LatitudeLongitudeButton.swift */; };
 		F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5978F285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift */; };
 		F7F59795285BE27400F9B32E /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59794285BE27400F9B32E /* Property.swift */; };
+		F7F59797285D15B900F9B32E /* ModuListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59796285D15B900F9B32E /* ModuListView.swift */; };
+		F7F59799285D166700F9B32E /* ModuDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59798285D166700F9B32E /* ModuDetailView.swift */; };
+		F7F5979B285D177400F9B32E /* ModuAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979A285D177400F9B32E /* ModuAnnotation.swift */; };
+		F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */; };
+		F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979E285D185000F9B32E /* ModuMap.swift */; };
+		F7F597A1285D189500F9B32E /* ModuBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A0285D189500F9B32E /* ModuBottomSheet.swift */; };
 		F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB156C284AAF1B004ACAC5 /* MSIRouter.swift */; };
 		F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB156E284AB09C004ACAC5 /* MSI.swift */; };
 /* End PBXBuildFile section */
@@ -125,6 +131,12 @@
 		F7F5978C285BABA100F9B32E /* LatitudeLongitudeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatitudeLongitudeButton.swift; sourceTree = "<group>"; };
 		F7F5978F285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2DExtensions.swift; sourceTree = "<group>"; };
 		F7F59794285BE27400F9B32E /* Property.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Property.swift; sourceTree = "<group>"; };
+		F7F59796285D15B900F9B32E /* ModuListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuListView.swift; sourceTree = "<group>"; };
+		F7F59798285D166700F9B32E /* ModuDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDetailView.swift; sourceTree = "<group>"; };
+		F7F5979A285D177400F9B32E /* ModuAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuAnnotation.swift; sourceTree = "<group>"; };
+		F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuSummaryView.swift; sourceTree = "<group>"; };
+		F7F5979E285D185000F9B32E /* ModuMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuMap.swift; sourceTree = "<group>"; };
+		F7F597A0285D189500F9B32E /* ModuBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuBottomSheet.swift; sourceTree = "<group>"; };
 		F7FB156C284AAF1B004ACAC5 /* MSIRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIRouter.swift; sourceTree = "<group>"; };
 		F7FB156E284AB09C004ACAC5 /* MSI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -317,6 +329,12 @@
 			isa = PBXGroup;
 			children = (
 				F71DF4852857954A00686951 /* Modu+CoreDataClass.swift */,
+				F7F59796285D15B900F9B32E /* ModuListView.swift */,
+				F7F59798285D166700F9B32E /* ModuDetailView.swift */,
+				F7F5979A285D177400F9B32E /* ModuAnnotation.swift */,
+				F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */,
+				F7F5979E285D185000F9B32E /* ModuMap.swift */,
+				F7F597A0285D189500F9B32E /* ModuBottomSheet.swift */,
 			);
 			path = MODU;
 			sourceTree = "<group>";
@@ -590,6 +608,7 @@
 			files = (
 				F71DF49E285910CE00686951 /* BottomSheetEnabled.swift in Sources */,
 				F71DF4882857B0CC00686951 /* MarlinTabView.swift in Sources */,
+				F7F59799285D166700F9B32E /* ModuDetailView.swift in Sources */,
 				F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */,
 				F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */,
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
@@ -604,10 +623,13 @@
 				F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */,
 				F71DF4A7285912F600686951 /* AsamBottomSheet.swift in Sources */,
 				F71DF4A3285911D700686951 /* MarlinBottomSheetViewController.swift in Sources */,
+				F7F5979B285D177400F9B32E /* ModuAnnotation.swift in Sources */,
 				F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */,
+				F7F597A1285D189500F9B32E /* ModuBottomSheet.swift in Sources */,
 				F71DF4992858DA4700686951 /* AsamMap.swift in Sources */,
 				F727A684284E351800BD728A /* MSIError.swift in Sources */,
 				F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */,
+				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
 				F7F59795285BE27400F9B32E /* Property.swift in Sources */,
 				F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */,
 				F71DF4902858C01000686951 /* MarlinMapView.swift in Sources */,
@@ -616,6 +638,8 @@
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
 				F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */,
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
+				F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */,
+				F7F59797285D15B900F9B32E /* ModuListView.swift in Sources */,
 				F71DF4A02859116C00686951 /* Notifications.swift in Sources */,
 				F7F5978D285BABA100F9B32E /* LatitudeLongitudeButton.swift in Sources */,
 				F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */,

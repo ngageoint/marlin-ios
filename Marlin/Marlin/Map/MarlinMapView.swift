@@ -14,10 +14,14 @@ protocol OverlayRenderable {
     var renderer: MKOverlayRenderer { get }
 }
 
-class MarlinMapView: UIView, AsamMap, BottomSheetEnabled {
+class MarlinMapView: UIView, AsamMap, ModuMap, BottomSheetEnabled {
     var navigationController: UINavigationController?
     
     func addFilteredAsams() {
+        
+    }
+    
+    func addFilteredModus() {
         
     }
     
@@ -25,6 +29,7 @@ class MarlinMapView: UIView, AsamMap, BottomSheetEnabled {
     var scheme: MarlinScheme?;
     var mapMixins: [MapMixin] = []
     var asamMapMixin: AsamMapMixin?
+    var moduMapMixin: ModuMapMixin?
     var bottomSheetMixin: BottomSheetMixin?
 
     
@@ -72,6 +77,8 @@ class MarlinMapView: UIView, AsamMap, BottomSheetEnabled {
         self.mapView?.addGestureRecognizer(singleTapGestureRecognizer)
         asamMapMixin = AsamMapMixin(asamMap: self, scheme: scheme)
         mapMixins.append(asamMapMixin!)
+        moduMapMixin = ModuMapMixin(moduMap: self, scheme: scheme)
+        mapMixins.append(moduMapMixin!)
         bottomSheetMixin = BottomSheetMixin(bottomSheetEnabled: self)
         mapMixins.append(bottomSheetMixin!)
         initiateMapMixins()

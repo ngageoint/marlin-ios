@@ -39,8 +39,12 @@ struct MarlinApp: App {
     let scheme = MarlinScheme()
     
     init() {
-        let newest = try? persistenceController.container.viewContext.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)])
-        shared.loadAsams(date: newest?.dateString)
+        let newestAsam = try? persistenceController.container.viewContext.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)])
+        shared.loadAsams(date: newestAsam?.dateString)
+        
+        let newestModu = try? persistenceController.container.viewContext.fetchFirst(Modu.self, sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)])
+        shared.loadModus(date: newestModu?.dateString)
+        
     }
 
     var body: some Scene {

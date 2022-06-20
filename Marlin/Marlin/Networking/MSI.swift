@@ -17,7 +17,9 @@ public class MSI {
     static let shared = MSI()
     lazy var configuration: URLSessionConfiguration = URLSessionConfiguration.af.default
     lazy var session: Session = {
-        return Session(configuration: configuration)
+        let manager = ServerTrustManager(evaluators: ["msi.gs.mil": DisabledTrustEvaluator()])
+        return Session(configuration: configuration, serverTrustManager: manager)
+//        return Session(configuration: configuration)
     }()
     
     private func newTaskContext() -> NSManagedObjectContext {
@@ -37,7 +39,7 @@ public class MSI {
             .responseDecodable(of: AsamPropertyContainer.self) { response in
                 Task {
                     let asamCount = response.value?.asam.count
-                    self.logger.debug("Received \(asamCount ?? 0) records.")
+                    self.logger.debug("Received \(asamCount ?? 0) asam records.")
                     if let asams = response.value?.asam {
                         try await Asam.batchImport(from: asams, taskContext: self.newTaskContext())
                     }
@@ -45,13 +47,13 @@ public class MSI {
             }
     }
     
-    func loadModus() {
-        session.request(MSIRouter.readModus())
+    func loadModus(date: String? = nil) {
+        session.request(MSIRouter.readModus(date: date))
             .validate()
             .responseDecodable(of: ModuPropertyContainer.self) { response in
                 Task {
                     let moduCount = response.value?.modu.count
-                    self.logger.debug("Received \(moduCount ?? 0) records.")
+                    self.logger.debug("Received \(moduCount ?? 0) modu records.")
                     if let modus = response.value?.modu {
                         try await Modu.batchImport(from: modus, taskContext: self.newTaskContext())
                     }

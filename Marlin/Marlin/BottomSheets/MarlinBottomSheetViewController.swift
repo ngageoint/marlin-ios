@@ -38,7 +38,8 @@ class MarlinBottomSheetViewController: UIViewController {
     var scheme: MarlinScheme?;
     private var rightConstraint: NSLayoutConstraint?;
     private var leftConstraint: NSLayoutConstraint?;
-    var currentBottomSheetView: UIHostingController<AsamBottomSheet>?
+    var currentAsamBottomSheetView: UIHostingController<AsamBottomSheet>?
+    var currentModuBottomSheetView: UIHostingController<ModuBottomSheet>?
     var mapView: MKMapView?
         
     @objc public lazy var scrollView: UIScrollView = {
@@ -253,15 +254,25 @@ class MarlinBottomSheetViewController: UIViewController {
         NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: item.annotationView?.annotation, mapView: mapView))
         
         UIView.transition(with: self.view, duration: 0.3, options: .transitionCrossDissolve, animations: {
-            if self.currentBottomSheetView?.view.superview != nil {
-                self.currentBottomSheetView?.view.removeFromSuperview();
+            if self.currentAsamBottomSheetView?.view.superview != nil {
+                self.currentAsamBottomSheetView?.view.removeFromSuperview();
             }
+            if self.currentModuBottomSheetView?.view.superview != nil {
+                self.currentModuBottomSheetView?.view.removeFromSuperview();
+            }
+            self.currentAsamBottomSheetView = nil
+            self.currentModuBottomSheetView = nil
+            
             self.pageNumberLabel.text = "\(self.pageControl.currentPage+1) of \(self.pageControl.numberOfPages)";
             
             if let bottomSheetItem = item.item as? Asam {
                 let asamBottomSheet = AsamBottomSheetViewController(asam: bottomSheetItem, scheme: self.scheme!)
-                self.currentBottomSheetView = asamBottomSheet
-                self.stackView.addArrangedSubview(self.currentBottomSheetView!.view);
+                self.currentAsamBottomSheetView = asamBottomSheet
+                self.stackView.addArrangedSubview(self.currentAsamBottomSheetView!.view);
+            } else if let bottomSheetItem = item.item as? Modu {
+                let moduBottomSheet = ModuBottomSheetViewController(modu: bottomSheetItem, scheme: self.scheme!)
+                self.currentModuBottomSheetView = moduBottomSheet
+                self.stackView.addArrangedSubview(self.currentModuBottomSheetView!.view);
             }
             self.view.setNeedsUpdateConstraints();
         }, completion: nil)

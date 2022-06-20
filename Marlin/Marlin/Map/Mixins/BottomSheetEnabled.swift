@@ -117,6 +117,13 @@ class BottomSheetMixin: NSObject, MapMixin {
                     let bottomSheetItem = BottomSheetItem(item: observation, actionDelegate: nil, annotationView: annotation.annotationView)
                     items.append(bottomSheetItem)
                 }
+            } else if let annotation = annotation as? ModuAnnotation {
+                let observation = annotation.modu
+                if !dedup.contains(observation) {
+                    _ = dedup.insert(observation)
+                    let bottomSheetItem = BottomSheetItem(item: observation, actionDelegate: nil, annotationView: annotation.annotationView)
+                    items.append(bottomSheetItem)
+                }
             }
 //            else if let annotation = annotation as? LocationAnnotation {
 //                if let user = annotation.user, !dedup.contains(user) {

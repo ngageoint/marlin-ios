@@ -11,7 +11,7 @@ import Alamofire
 enum MSIRouter: URLRequestConvertible
 {
     case readAsams(date: String? = nil)
-    case readModus(parameters: Parameters? = nil)
+    case readModus(date: String? = nil)
     
 //    static let baseURLString = "https://msi.om.east.paas.nga.mil/api"
     static let baseURLString = "https://msi.gs.mil/api"
@@ -48,10 +48,15 @@ enum MSIRouter: URLRequestConvertible
                 params["minOccurDate"] = date
             }
             return params
-        case .readModus:
-            return [
+        case .readModus(date: let date):
+            var params = [
+                "maxSourceDate": ModuProperties.dateFormatter.string(from:Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date()),
                 "output": "json"
             ]
+            if let date = date {
+                params["minSourceDate"] = date
+            }
+            return params
         }
     }
     
