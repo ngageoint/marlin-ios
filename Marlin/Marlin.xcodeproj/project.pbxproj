@@ -56,6 +56,7 @@
 		F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */; };
 		F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979E285D185000F9B32E /* ModuMap.swift */; };
 		F7F597A1285D189500F9B32E /* ModuBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A0285D189500F9B32E /* ModuBottomSheet.swift */; };
+		F7F597A3286238F400F9B32E /* MSIMapCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A2286238F400F9B32E /* MSIMapCluster.swift */; };
 		F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB156C284AAF1B004ACAC5 /* MSIRouter.swift */; };
 		F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB156E284AB09C004ACAC5 /* MSI.swift */; };
 /* End PBXBuildFile section */
@@ -135,6 +136,7 @@
 		F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuSummaryView.swift; sourceTree = "<group>"; };
 		F7F5979E285D185000F9B32E /* ModuMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuMap.swift; sourceTree = "<group>"; };
 		F7F597A0285D189500F9B32E /* ModuBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuBottomSheet.swift; sourceTree = "<group>"; };
+		F7F597A2286238F400F9B32E /* MSIMapCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIMapCluster.swift; sourceTree = "<group>"; };
 		F7FB156C284AAF1B004ACAC5 /* MSIRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIRouter.swift; sourceTree = "<group>"; };
 		F7FB156E284AB09C004ACAC5 /* MSI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -203,6 +205,7 @@
 				F71DF4892858BF0700686951 /* MarlinMap.swift */,
 				F71DF4932858C0EF00686951 /* StyledPolygon.swift */,
 				F71DF4952858C18000686951 /* StyledPolyline.swift */,
+				F7F597A2286238F400F9B32E /* MSIMapCluster.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -642,6 +645,7 @@
 				F71DF49C2859025200686951 /* AsamAnnotation.swift in Sources */,
 				F7A54CD72848149700E5F565 /* AsamListView.swift in Sources */,
 				F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */,
+				F7F597A3286238F400F9B32E /* MSIMapCluster.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

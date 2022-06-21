@@ -12,6 +12,10 @@ import MapKit
 
 class Modu: NSManagedObject, MKAnnotation, AnnotationWithView {
     
+    var color: UIColor {
+        return UIColor(red: 0.00, green: 0.29, blue: 0.68, alpha: 1.00)
+    }
+    
     var coordinate: CLLocationCoordinate2D {
         if let latitude = latitude, let longitude = longitude {
             return CLLocationCoordinate2D(latitude: latitude.doubleValue, longitude: longitude.doubleValue)

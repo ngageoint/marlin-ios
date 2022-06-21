@@ -26,7 +26,6 @@ struct MarlinTabView: View {
         TabView {
             NavigationView {
                 VStack {
-
                     MarlinMap()
                         .mixin(AsamMap())
                         .mixin(ModuMap())
@@ -42,10 +41,6 @@ struct MarlinTabView: View {
                                         self.showHamburger()
                                     }
                             }
-                        }
-                        .onAppear {
-                            print("xxx on appear")
-//                            self.something
                         }
                     NavigationLink(tag: "asam", selection: $selection) {
                         if let asam = itemWrapper.asam {
@@ -66,8 +61,6 @@ struct MarlinTabView: View {
                         EmptyView()
                     }.hidden()
                 }
-            }.onAppear {
-                print("xxx make a navigation view")
             }
         .tabItem {
                 Label("Map", systemImage: "map.fill")
@@ -86,23 +79,13 @@ struct MarlinTabView: View {
                 .tabItem {
                     Label("ASAMs", image: "asam")
                 }
-            
-
-            
-
         }
         .onReceive(asamPub) { output in
-            print("view asam recieved \(output)")
             viewAsam(output.object as! Asam)
         }
         .onReceive(moduPub) { output in
-            print("view modu recieved \(output)")
             viewModu(output.object as! Modu)
         }
-        .onAppear {
-            print("xxx make a tab view")
-        }
-//        .accentColor(Color(scheme.containerScheme.colorScheme.primaryColorVariant))
     }
     
     func viewAsam(_ asam: Asam) {
@@ -122,11 +105,3 @@ struct MarlinTabView: View {
     private func showHamburger() {
     }
 }
-
-//struct MarlinTabView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        Group {
-//            MarlinTabView(itemWrapper: ItemWrapper()).environmentObject(MarlinScheme.init()).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-//        }
-//    }
-//}

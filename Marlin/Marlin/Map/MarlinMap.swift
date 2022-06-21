@@ -19,11 +19,6 @@ struct MarlinMap: UIViewRepresentable {
     
     @EnvironmentObject var scheme: MarlinScheme
     
-//    @FetchRequest(
-//        sortDescriptors: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)],
-//        animation: .default)
-//    var asams: FetchedResults<Asam>
-    
     var mutatingWrapper = MutatingWrapper()
     
     class MutatingWrapper {
@@ -37,40 +32,20 @@ struct MarlinMap: UIViewRepresentable {
         mutatingWrapper.mixins.append(mixin)
         return self
     }
-    
-    public func something() {
-        
-    }
-    
-    func dismantleUIView(_ uiView: MKMapView, coordinator: Coordinator) {
-        print("xxx dismantle ui view")
-    }
         
     func makeUIView(context: Context) -> MKMapView {
-        print("xxx make ui view already Created? \(mutatingWrapper.created)")
-//        if mutatingWrapper.mapView == nil {
-//            mutatingWrapper.mapView =
-////            mutatingWrapper.mapView?.delegate = context.coordinator
-//        }
-            
-            let singleTapGestureRecognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.singleTapGensture(tapGestureRecognizer:)))
-                singleTapGestureRecognizer.numberOfTapsRequired = 1
-                singleTapGestureRecognizer.delaysTouchesBegan = true
-                singleTapGestureRecognizer.cancelsTouchesInView = true
-                singleTapGestureRecognizer.delegate = context.coordinator
-            mutatingWrapper.mapView.addGestureRecognizer(singleTapGestureRecognizer)
-            
-//            DispatchQueue.main.async {
-//                mutatingWrapper.mapView = mapView
-//            }
-            
-        
+        let singleTapGestureRecognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.singleTapGensture(tapGestureRecognizer:)))
+            singleTapGestureRecognizer.numberOfTapsRequired = 1
+            singleTapGestureRecognizer.delaysTouchesBegan = true
+            singleTapGestureRecognizer.cancelsTouchesInView = true
+            singleTapGestureRecognizer.delegate = context.coordinator
+        mutatingWrapper.mapView.addGestureRecognizer(singleTapGestureRecognizer)
+        mutatingWrapper.mapView.register(ClusterAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
         mutatingWrapper.mapView.delegate = context.coordinator
         return mutatingWrapper.mapView
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
-        print("xxxx update ui view already updated? \(mutatingWrapper.updated) mapview \(uiView)")
         if !mutatingWrapper.updated {
             mutatingWrapper.updated = true
             for mixin in mutatingWrapper.mixins {
@@ -98,23 +73,22 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         mapAnnotationFocusedSink =
         NotificationCenter.default.publisher(for: .MapAnnotationFocused)
             .compactMap {$0.object as? MapAnnotationFocusedNotification}
-//            .map({$0.annotation})
             .sink(receiveValue: { [weak self] in
                 self?.focusAnnotation(notification:$0)
             })
     }
     
     func focusAnnotation(notification: MapAnnotationFocusedNotification) {
-        print("xxx notification annotation is \(notification.annotation)")
         guard let annotation = notification.annotation as? AnnotationWithView, let annotationView = annotation.annotationView else {
             if let enlargedLocationView = enlargedLocationView {
                 // shrink the old focused view
-                print("xxx shrink the old focused one")
-                enlargedLocationView.transform = enlargedLocationView.transform.scaledBy(x: 0.5, y: 0.5)
-                if let image = enlargedLocationView.image {
-                    enlargedLocationView.centerOffset = CGPoint(x: 0, y: -(image.size.height / 2.0))
-                } else {
-                    enlargedLocationView.center = CGPoint(x: 0, y: enlargedLocationView.center.y / 2.0)
+                UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut) {
+                    enlargedLocationView.transform = enlargedLocationView.transform.scaledBy(x: 0.5, y: 0.5)
+                    if let image = enlargedLocationView.image {
+                        enlargedLocationView.centerOffset = CGPoint(x: 0, y: -(image.size.height / 2.0))
+                    } else {
+                        enlargedLocationView.center = CGPoint(x: 0, y: enlargedLocationView.center.y / 2.0)
+                    }
                 }
             }
             self.enlargedLocationView = nil
@@ -126,26 +100,37 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             return
         } else if let enlargedLocationView = enlargedLocationView {
             // shrink the old focused view
-            enlargedLocationView.transform = enlargedLocationView.transform.scaledBy(x: 0.5, y: 0.5)
-            if let image = enlargedLocationView.image {
-                enlargedLocationView.centerOffset = CGPoint(x: 0, y: -(image.size.height / 2.0))
-            } else {
-                enlargedLocationView.center = CGPoint(x: 0, y: enlargedLocationView.center.y / 2.0)
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut) {
+                enlargedLocationView.transform = enlargedLocationView.transform.scaledBy(x: 0.5, y: 0.5)
+                if let image = enlargedLocationView.image {
+                    enlargedLocationView.centerOffset = CGPoint(x: 0, y: -(image.size.height / 2.0))
+                } else {
+                    enlargedLocationView.center = CGPoint(x: 0, y: enlargedLocationView.center.y / 2.0)
+                }
             }
         }
         
-        self.enlargedLocationView = annotationView
-        annotationView.transform = annotationView.transform.scaledBy(x: 2.0, y: 2.0)
-        if let image = annotationView.image {
-            annotationView.centerOffset = CGPoint(x: 0, y: -(image.size.height))
-        } else {
-            annotationView.centerOffset = CGPoint(x: 0, y: annotationView.center.y * 2.0)
+        if ((annotation as? MKClusterAnnotation) != nil) {
+            return
         }
+        
+        self.enlargedLocationView = annotationView
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut) {
+            annotationView.transform = annotationView.transform.scaledBy(x: 2.0, y: 2.0)
+            if let image = annotationView.image {
+                annotationView.centerOffset = CGPoint(x: 0, y: -(image.size.height))
+            } else {
+                annotationView.centerOffset = CGPoint(x: 0, y: annotationView.center.y * 2.0)
+            }
+            if let mkannotation = annotation as? MKAnnotation {
+                notification.mapView?.setCenter(mkannotation.coordinate, animated: false)
+            }
+        }
+        
     }
     
     @objc func singleTapGensture(tapGestureRecognizer: UITapGestureRecognizer) {
         if tapGestureRecognizer.state == .ended {
-            print("xxx single tap gesture recognizer")
             self.mapTap(tapPoint: tapGestureRecognizer.location(in: marlinMap.mutatingWrapper.mapView), gesture: tapGestureRecognizer, mapView: marlinMap.mutatingWrapper.mapView)
         }
     }
@@ -164,7 +149,12 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             if let mkAnnotation = annotation as? MKAnnotation, let view = mapView.view(for: mkAnnotation) {
                 let location = gesture.location(in: view)
                 if view.bounds.contains(location) {
-                    annotationsTapped.append(annotation)
+                    if let annotation = annotation as? MKClusterAnnotation {
+                        mapView.showAnnotations(annotation.memberAnnotations, animated: true)
+                        return
+                    } else {
+                        annotationsTapped.append(annotation)
+                    }
                 }
             }
         }

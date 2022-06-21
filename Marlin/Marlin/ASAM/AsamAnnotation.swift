@@ -10,6 +10,7 @@ import MapKit
 
 protocol AnnotationWithView {
     var annotationView: MKAnnotationView? { get set }
+    var color: UIColor { get }
 }
 
 class AsamAnnotationView: MKAnnotationView {
@@ -23,5 +24,11 @@ class AsamAnnotationView: MKAnnotationView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override var annotation: MKAnnotation? {
+        willSet {
+            clusteringIdentifier = "msi"
+        }
     }
 }

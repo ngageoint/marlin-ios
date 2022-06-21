@@ -12,6 +12,10 @@ import OSLog
 import MapKit
 
 class Asam: NSManagedObject, MKAnnotation, AnnotationWithView {
+    var color: UIColor {
+        return .black
+    }
+    
     var coordinate: CLLocationCoordinate2D {
         if let latitude = latitude, let longitude = longitude {
             return CLLocationCoordinate2D(latitude: latitude.doubleValue, longitude: longitude.doubleValue)
