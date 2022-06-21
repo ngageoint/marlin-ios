@@ -8,29 +8,8 @@
 import Foundation
 import MapKit
 
-class AsamAnnotation: NSObject, MKAnnotation, Identifiable {
-    var coordinate: CLLocationCoordinate2D
-    var asam: Asam
-    var annotationView: MKAnnotationView?
-    var id: ObjectIdentifier
-    
-    init(asam: Asam) {
-        self.asam = asam
-        self.id = asam.id
-        if let latitude = asam.latitude, let longitude = asam.longitude {
-            coordinate = CLLocationCoordinate2D(latitude: latitude.doubleValue, longitude: longitude.doubleValue)
-        } else {
-            coordinate = kCLLocationCoordinate2DInvalid
-        }
-    }
-    
-    func view(on: MKMapView) -> MKAnnotationView {
-        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: AsamAnnotationView.ReuseID, for: self)
-        
-        annotationView.image = UIImage(named: "asam_marker")
-        self.annotationView = annotationView
-        return annotationView
-    }
+protocol AnnotationWithView {
+    var annotationView: MKAnnotationView? { get set }
 }
 
 class AsamAnnotationView: MKAnnotationView {

@@ -10,8 +10,8 @@ import MapKit
 import MaterialComponents
 //import geopackage_ios
 
-protocol MapMixin {
-    func setupMixin()
+protocol MapMixin: AnyObject {
+    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap, scheme: MarlinScheme?)
     func cleanupMixin()
     func renderer(overlay: MKOverlay) -> MKOverlayRenderer?
     func traitCollectionUpdated(previous: UITraitCollection?)

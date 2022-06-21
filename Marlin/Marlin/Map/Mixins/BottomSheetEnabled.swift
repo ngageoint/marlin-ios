@@ -17,15 +17,16 @@ protocol BottomSheetEnabled {
 }
 
 class BottomSheetMixin: NSObject, MapMixin {
-    var bottomSheetEnabled: BottomSheetEnabled
+//    var bottomSheetEnabled: BottomSheetEnabled
+    var mapView: MKMapView?
     var mapItemsTappedObserver: Any?
     var mapViewDisappearingObserver: Any?
     var mageBottomSheet: MarlinBottomSheetViewController?
     var bottomSheet:MDCBottomSheetController?
     
-    init(bottomSheetEnabled: BottomSheetEnabled) {
-        self.bottomSheetEnabled = bottomSheetEnabled
-    }
+//    init() {
+//        self.bottomSheetEnabled = bottomSheetEnabled
+//    }
     
     func cleanupMixin() {
         if let mapItemsTappedObserver = mapItemsTappedObserver {
@@ -34,9 +35,10 @@ class BottomSheetMixin: NSObject, MapMixin {
         mapItemsTappedObserver = nil
     }
     
-    func setupMixin() {
+    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap, scheme: MarlinScheme? = nil) {
+        self.mapView = mapView
         mapItemsTappedObserver = NotificationCenter.default.addObserver(forName: .MapItemsTapped, object: nil, queue: .main) { [weak self] notification in
-            if let mapView = self?.bottomSheetEnabled.mapView, self?.isVisible(view: mapView) == true, let notification = notification.object as? MapItemsTappedNotification, notification.mapView == mapView {
+            if self?.isVisible(view: mapView) == true, let notification = notification.object as? MapItemsTappedNotification, notification.mapView == mapView {
                 var bottomSheetItems: [BottomSheetItem] = []
                 bottomSheetItems += self?.handleTappedAnnotations(annotations: notification.annotations) ?? []
                 bottomSheetItems += self?.handleTappedItems(items: notification.items) ?? []
@@ -44,7 +46,7 @@ class BottomSheetMixin: NSObject, MapMixin {
                     return
                 }
                 
-                let mageBottomSheet = MarlinBottomSheetViewController(items: bottomSheetItems, mapView: mapView, scheme: self?.bottomSheetEnabled.scheme)
+                let mageBottomSheet = MarlinBottomSheetViewController(items: bottomSheetItems, mapView: mapView, scheme: scheme)
                 let bottomSheetNav = UINavigationController(rootViewController: mageBottomSheet)
                 let bottomSheet = MDCBottomSheetController(contentViewController: bottomSheetNav)
                 bottomSheet.navigationController?.navigationBar.isTranslucent = true
@@ -110,18 +112,18 @@ class BottomSheetMixin: NSObject, MapMixin {
         }
         
         for annotation in annotations {
-            if let annotation = annotation as? AsamAnnotation {
-                let observation = annotation.asam
-                if !dedup.contains(observation) {
-                    _ = dedup.insert(observation)
-                    let bottomSheetItem = BottomSheetItem(item: observation, actionDelegate: nil, annotationView: annotation.annotationView)
+            if let cluster = annotation as? MKClusterAnnotation {
+                items.append(contentsOf: self.createBottomSheetItems(annotations: cluster.memberAnnotations, dedup: &dedup))
+            } else if let asam = annotation as? Asam {
+                if !dedup.contains(asam) {
+                    _ = dedup.insert(asam)
+                    let bottomSheetItem = BottomSheetItem(item: asam, actionDelegate: nil, annotationView: asam.annotationView)
                     items.append(bottomSheetItem)
                 }
-            } else if let annotation = annotation as? ModuAnnotation {
-                let observation = annotation.modu
-                if !dedup.contains(observation) {
-                    _ = dedup.insert(observation)
-                    let bottomSheetItem = BottomSheetItem(item: observation, actionDelegate: nil, annotationView: annotation.annotationView)
+            } else if let modu = annotation as? Modu {
+                if !dedup.contains(modu) {
+                    _ = dedup.insert(modu)
+                    let bottomSheetItem = BottomSheetItem(item: modu, actionDelegate: nil, annotationView: modu.annotationView)
                     items.append(bottomSheetItem)
                 }
             }
@@ -153,7 +155,8 @@ class BottomSheetMixin: NSObject, MapMixin {
 
 extension BottomSheetMixin : MDCBottomSheetControllerDelegate {
     func bottomSheetControllerDidDismissBottomSheet(_ controller: MDCBottomSheetController) {
-        NotificationCenter.default.post(name: .MapAnnotationFocused, object: nil)
+        print("xxx bottom sheet dismiss being sent")
+        NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: nil, mapView: mapView))
         mageBottomSheet = nil
         bottomSheet = nil
         if let mapViewDisappearingObserver = mapViewDisappearingObserver {

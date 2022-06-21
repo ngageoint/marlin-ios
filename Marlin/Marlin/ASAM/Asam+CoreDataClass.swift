@@ -9,8 +9,28 @@
 import Foundation
 import CoreData
 import OSLog
+import MapKit
 
-public class Asam: NSManagedObject {
+class Asam: NSManagedObject, MKAnnotation, AnnotationWithView {
+    var coordinate: CLLocationCoordinate2D {
+        if let latitude = latitude, let longitude = longitude {
+            return CLLocationCoordinate2D(latitude: latitude.doubleValue, longitude: longitude.doubleValue)
+        } else {
+            return kCLLocationCoordinate2DInvalid
+        }
+    }
+    
+    func view(on: MKMapView) -> MKAnnotationView {
+        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: AsamAnnotationView.ReuseID, for: self)
+        let image = UIImage(named: "asam_marker")
+        annotationView.image = image
+        annotationView.centerOffset = CGPoint(x: 0, y: -(image!.size.height/2.0))
+        self.annotationView = annotationView
+        return annotationView
+    }
+    
+    var annotationView: MKAnnotationView?
+    
     var dateString: String? {
         if let date = date {
             return AsamProperties.dateFormatter.string(from: date)

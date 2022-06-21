@@ -24,18 +24,29 @@ struct MarlinTabView: View {
     
     var body: some View {
         TabView {
-            ModuListView()
-                .tabItem {
-                    Label("MODUs", image: "modu")
-                }
-            
-            AsamListView()
-                .tabItem {
-                    Label("ASAMs", image: "asam")
-                }
-            
             NavigationView {
                 VStack {
+
+                    MarlinMap()
+                        .mixin(AsamMap())
+                        .mixin(ModuMap())
+                        .mixin(BottomSheetMixin())
+                        .navigationTitle("Marlin")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .navigationBarBackButtonHidden(true)
+                        .toolbar {
+                            ToolbarItem (placement: .navigation)  {
+                                Image(systemName: "line.3.horizontal")
+                                    .foregroundColor(Color(scheme.containerScheme.colorScheme.onPrimaryColor))
+                                    .onTapGesture {
+                                        self.showHamburger()
+                                    }
+                            }
+                        }
+                        .onAppear {
+                            print("xxx on appear")
+//                            self.something
+                        }
                     NavigationLink(tag: "asam", selection: $selection) {
                         if let asam = itemWrapper.asam {
                             AsamDetailView(asam: asam)
@@ -54,27 +65,29 @@ struct MarlinTabView: View {
                     } label: {
                         EmptyView()
                     }.hidden()
-                MarlinMap()
-                    .navigationTitle("Marlin")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .navigationBarBackButtonHidden(true)
-                    .toolbar {
-                        ToolbarItem (placement: .navigation)  {
-                            Image(systemName: "line.3.horizontal")
-                                .foregroundColor(Color(scheme.containerScheme.colorScheme.onPrimaryColor))
-                                .onTapGesture {
-                                    self.showHamburger()
-                                }
-                        }
-                    }
                 }
-            }.tabItem {
+            }.onAppear {
+                print("xxx make a navigation view")
+            }
+        .tabItem {
                 Label("Map", systemImage: "map.fill")
             }
             // this affects text buttons, image buttons need .foregroundColor set on them
             .tint(Color(scheme.containerScheme.colorScheme.onPrimaryColor))
             .navigationViewStyle(.stack)
             .statusBar(hidden: false)
+            
+            ModuListView()
+                .tabItem {
+                    Label("MODUs", image: "modu")
+                }
+            
+            AsamListView()
+                .tabItem {
+                    Label("ASAMs", image: "asam")
+                }
+            
+
             
 
         }
@@ -86,18 +99,21 @@ struct MarlinTabView: View {
             print("view modu recieved \(output)")
             viewModu(output.object as! Modu)
         }
+        .onAppear {
+            print("xxx make a tab view")
+        }
 //        .accentColor(Color(scheme.containerScheme.colorScheme.primaryColorVariant))
     }
     
     func viewAsam(_ asam: Asam) {
-        NotificationCenter.default.post(name: .MapAnnotationFocused, object: nil)
+        NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: nil, mapView: nil))
         NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
         itemWrapper.asam = asam
         selection = "asam"
     }
     
     func viewModu(_ modu: Modu) {
-        NotificationCenter.default.post(name: .MapAnnotationFocused, object: nil)
+        NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: nil, mapView: nil))
         NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
         itemWrapper.modu = modu
         selection = "modu"
@@ -107,10 +123,10 @@ struct MarlinTabView: View {
     }
 }
 
-struct MarlinTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            MarlinTabView(itemWrapper: ItemWrapper()).environmentObject(MarlinScheme.init()).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-        }
-    }
-}
+//struct MarlinTabView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Group {
+//            MarlinTabView(itemWrapper: ItemWrapper()).environmentObject(MarlinScheme.init()).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+//        }
+//    }
+//}

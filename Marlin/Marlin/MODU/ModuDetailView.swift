@@ -25,7 +25,7 @@ struct ModuDetailView: View {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     
-                    Map(coordinateRegion: $region, annotationItems: [ModuAnnotation(modu: modu)]) { modu in
+                    Map(coordinateRegion: $region, annotationItems: [modu]) { modu in
                         MapAnnotation(coordinate: modu.coordinate, anchorPoint: CGPoint(x: 0.5, y: 1)) {
                             Image("modu_marker")
                         }

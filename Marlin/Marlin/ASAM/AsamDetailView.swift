@@ -25,7 +25,7 @@ struct AsamDetailView: View {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
 
-                    Map(coordinateRegion: $region, annotationItems: [AsamAnnotation(asam: asam)]) { asam in
+                    Map(coordinateRegion: $region, annotationItems: [asam]) { asam in
                         MapAnnotation(coordinate: asam.coordinate, anchorPoint: CGPoint(x: 0.5, y: 1)) {
                             Image("asam_marker")
                         }

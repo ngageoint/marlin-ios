@@ -16,7 +16,6 @@
 		F71DF4862857954A00686951 /* Modu+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4852857954A00686951 /* Modu+CoreDataClass.swift */; };
 		F71DF4882857B0CC00686951 /* MarlinTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4872857B0CC00686951 /* MarlinTabView.swift */; };
 		F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4892858BF0700686951 /* MarlinMap.swift */; };
-		F71DF4902858C01000686951 /* MarlinMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF48F2858C01000686951 /* MarlinMapView.swift */; };
 		F71DF4922858C09E00686951 /* MapMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4912858C09E00686951 /* MapMixin.swift */; };
 		F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4932858C0EF00686951 /* StyledPolygon.swift */; };
 		F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4952858C18000686951 /* StyledPolyline.swift */; };
@@ -92,7 +91,6 @@
 		F71DF4852857954A00686951 /* Modu+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Modu+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F71DF4872857B0CC00686951 /* MarlinTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTabView.swift; sourceTree = "<group>"; };
 		F71DF4892858BF0700686951 /* MarlinMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinMap.swift; sourceTree = "<group>"; };
-		F71DF48F2858C01000686951 /* MarlinMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinMapView.swift; sourceTree = "<group>"; };
 		F71DF4912858C09E00686951 /* MapMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMixin.swift; sourceTree = "<group>"; };
 		F71DF4932858C0EF00686951 /* StyledPolygon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledPolygon.swift; sourceTree = "<group>"; };
 		F71DF4952858C18000686951 /* StyledPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledPolyline.swift; sourceTree = "<group>"; };
@@ -203,7 +201,6 @@
 				F71DF49A2859022B00686951 /* Annotation */,
 				F71DF48C2858BF9200686951 /* Mixins */,
 				F71DF4892858BF0700686951 /* MarlinMap.swift */,
-				F71DF48F2858C01000686951 /* MarlinMapView.swift */,
 				F71DF4932858C0EF00686951 /* StyledPolygon.swift */,
 				F71DF4952858C18000686951 /* StyledPolyline.swift */,
 			);
@@ -632,7 +629,6 @@
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
 				F7F59795285BE27400F9B32E /* Property.swift in Sources */,
 				F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */,
-				F71DF4902858C01000686951 /* MarlinMapView.swift in Sources */,
 				F71DF4A52859120A00686951 /* BottomSheetView.swift in Sources */,
 				F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */,
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,

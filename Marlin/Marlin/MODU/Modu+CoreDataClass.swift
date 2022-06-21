@@ -8,8 +8,28 @@
 import Foundation
 import CoreData
 import OSLog
+import MapKit
 
-public class Modu: NSManagedObject {
+class Modu: NSManagedObject, MKAnnotation, AnnotationWithView {
+    
+    var coordinate: CLLocationCoordinate2D {
+        if let latitude = latitude, let longitude = longitude {
+            return CLLocationCoordinate2D(latitude: latitude.doubleValue, longitude: longitude.doubleValue)
+        } else {
+            return kCLLocationCoordinate2DInvalid
+        }
+    }
+    
+    func view(on: MKMapView) -> MKAnnotationView {
+        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: ModuAnnotationView.ReuseID, for: self)
+        let image = UIImage(named: "modu_marker")
+        annotationView.image = image
+        annotationView.centerOffset = CGPoint(x: 0, y: -(image!.size.height/2.0))
+        self.annotationView = annotationView
+        return annotationView
+    }
+    
+    var annotationView: MKAnnotationView?
     
     var dateString: String? {
         if let date = date {
