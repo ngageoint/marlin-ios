@@ -7,6 +7,7 @@
 
 import CoreData
 import OSLog
+import Combine
 
 class PersistenceController {
     let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "persistence")
@@ -109,30 +110,40 @@ class PersistenceController {
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        container.viewContext.transactionAuthor = PersistenceController.authorName
+        if !inMemory {
+            do {
+                try container.viewContext.setQueryGenerationFrom(.current)
+            } catch {
+                // log any errors
+            }
+        }
+        
         return container
     }()
     /// A peristent history token used for fetching transactions from the store.
     private var lastToken: NSPersistentHistoryToken?
     private var inMemory: Bool = false
+    
+    private lazy var historyRequestQueue = DispatchQueue(label: "history")
+    var subscriptions = Set<AnyCancellable>()
 
     private init(inMemory: Bool = false) {
         self.inMemory = inMemory
+        
+        NotificationCenter.default
+            .publisher(for: .NSPersistentStoreRemoteChange)
+            .sink { value in
+                self.fetchPersistentHistoryTransactionsAndChanges()
+            }
+            .store(in: &subscriptions)
+        
         // Observe Core Data remote change notifications on the queue where the changes were made.
         notificationToken = NotificationCenter.default.addObserver(forName: .NSPersistentStoreRemoteChange, object: nil, queue: nil) { note in
             self.logger.debug("Received a persistent store remote change notification.")
-            Task {
-                await self.fetchPersistentHistory()
-            }
+            self.fetchPersistentHistoryTransactionsAndChanges()
         }
-        
-    }
-    
-    func fetchPersistentHistory() async {
-        do {
-            try await fetchPersistentHistoryTransactionsAndChanges()
-        } catch {
-            logger.debug("\(error.localizedDescription)")
-        }
+        loadHistoryToken()
     }
     
     func newTaskContext() -> NSManagedObjectContext {
@@ -146,28 +157,75 @@ class PersistenceController {
         return taskContext
     }
     
+    private lazy var tokenFileURL: URL = {
+        let url = NSPersistentContainer.defaultDirectoryURL()
+            .appendingPathComponent("MSICoreDataToken", isDirectory: true)
+        do {
+            try FileManager.default
+                .createDirectory(
+                    at: url,
+                    withIntermediateDirectories: true,
+                    attributes: nil)
+        } catch {
+            // log any errors
+        }
+        return url.appendingPathComponent("token.data", isDirectory: false)
+    }()
     
-    private func fetchPersistentHistoryTransactionsAndChanges() async throws {
-        let taskContext = newTaskContext()
-        taskContext.name = "persistentHistoryContext"
-        logger.debug("Start fetching persistent history changes from the store...")
-        
-        try await taskContext.perform {
-            // Execute the persistent history change since the last transaction.
-            /// - Tag: fetchHistory
-            let changeRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: self.lastToken)
-            let historyResult = try taskContext.execute(changeRequest) as? NSPersistentHistoryResult
-            if let history = historyResult?.result as? [NSPersistentHistoryTransaction],
-               !history.isEmpty {
-                self.mergePersistentHistoryChanges(from: history)
-                return
+    private func storeHistoryToken(_ token: NSPersistentHistoryToken) {
+        do {
+            let data = try NSKeyedArchiver
+                .archivedData(withRootObject: token, requiringSecureCoding: true)
+            try data.write(to: tokenFileURL)
+            lastToken = token
+        } catch {
+            // log any errors
+        }
+    }
+    
+    private func loadHistoryToken() {
+        do {
+            let tokenData = try Data(contentsOf: tokenFileURL)
+            lastToken = try NSKeyedUnarchiver
+                .unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: tokenData)
+        } catch {
+            // log any errors
+        }
+    }
+    
+    private static let authorName = "MSI"
+    private static let remoteDataImportAuthorName = "MSI Data Import"
+    
+    private func fetchPersistentHistoryTransactionsAndChanges() {
+        historyRequestQueue.async { [self] in
+
+            let taskContext = newTaskContext()
+            taskContext.name = "persistentHistoryContext"
+            logger.debug("Start fetching persistent history changes from the store...")
+            
+            try? taskContext.performAndWait { [self] in
+                taskContext.transactionAuthor = PersistenceController.remoteDataImportAuthorName
+                // Execute the persistent history change since the last transaction.
+                /// - Tag: fetchHistory
+                let changeRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: self.lastToken)
+                if let historyFetchRequest = NSPersistentHistoryTransaction.fetchRequest {
+                    historyFetchRequest.predicate =
+                    NSPredicate(format: "%K != %@", "author", PersistenceController.authorName)
+                    changeRequest.fetchRequest = historyFetchRequest
+                }
+                let historyResult = try taskContext.execute(changeRequest) as? NSPersistentHistoryResult
+                if let history = historyResult?.result as? [NSPersistentHistoryTransaction],
+                   !history.isEmpty {
+                    self.mergePersistentHistoryChanges(from: history)
+                    return
+                }
+                
+                self.logger.debug("No persistent history transactions found.")
+                throw MSIError.persistentHistoryChangeError
             }
             
-            self.logger.debug("No persistent history transactions found.")
-            throw MSIError.persistentHistoryChangeError
+            logger.debug("Finished merging history changes.")
         }
-        
-        logger.debug("Finished merging history changes.")
     }
     
     private func mergePersistentHistoryChanges(from history: [NSPersistentHistoryTransaction]) {
@@ -179,6 +237,10 @@ class PersistenceController {
             for transaction in history {
                 viewContext.mergeChanges(fromContextDidSave: transaction.objectIDNotification())
                 self.lastToken = transaction.token
+            }
+            
+            if let newToken = history.last?.token {
+                self.storeHistoryToken(newToken)
             }
         }
     }

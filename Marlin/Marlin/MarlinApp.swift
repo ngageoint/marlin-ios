@@ -45,6 +45,7 @@ struct MarlinApp: App {
         let newestModu = try? persistenceController.container.viewContext.fetchFirst(Modu.self, sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)])
         shared.loadModus(date: newestModu?.dateString)
         
+        shared.loadNavigationalWarnings()
     }
 
     var body: some Scene {

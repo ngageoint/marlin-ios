@@ -23,42 +23,9 @@ class MSITests: KIFSpec {
             
             beforeEach {
                 TestHelpers.clearData()
-                
-//                var cleared = false;
-//                while (!cleared) {
-//                    let clearMap = TestHelpers.clearAndSetUpStack()
-//                    cleared = (clearMap[String(describing: Layer.self)] ?? false)
-//
-//                    if (!cleared) {
-//                        cleared = Layer.mr_findAll(in: NSManagedObjectContext.mr_default())?.count == 0
-//                    }
-//
-//                    if (!cleared) {
-//                        Thread.sleep(forTimeInterval: 0.5);
-//                    }
-//
-//                }
-//
-//                if let staticLayerObserver = staticLayerObserver {
-//                    NotificationCenter.default.removeObserver(staticLayerObserver, name: .StaticLayerLoaded, object: nil)
-//                }
-//
-//                expect(Layer.mr_findAll(in: NSManagedObjectContext.mr_default())?.count).toEventually(equal(0), timeout: DispatchTimeInterval.seconds(2), pollInterval: DispatchTimeInterval.milliseconds(200), description: "Layers still exist in default");
-//
-//                expect(Layer.mr_findAll(in: NSManagedObjectContext.mr_rootSaving())?.count).toEventually(equal(0), timeout: DispatchTimeInterval.seconds(10), pollInterval: DispatchTimeInterval.milliseconds(200), description: "Layers still exist in root");
-//
-//                UserDefaults.standard.baseServerUrl = "https://magetest";
-//                UserDefaults.standard.serverMajorVersion = 6;
-//                UserDefaults.standard.serverMinorVersion = 0;
-//
-//                MageCoreDataFixtures.addEvent(remoteId: 1, name: "Event", formsJsonFile: "oneForm")
-//                Server.setCurrentEventId(1);
-//                NSManagedObject.mr_setDefaultBatchSize(0);
             }
             
             afterEach {
-//                NSManagedObject.mr_setDefaultBatchSize(20);
-//                TestHelpers.clearAndSetUpStack();
                 HTTPStubs.removeAllStubs();
                 TestHelpers.clearData()
             }
@@ -119,6 +86,18 @@ class MSITests: KIFSpec {
                 expect(try? persistenceController.container.viewContext.countOfObjects(Asam.self)).toEventually(equal(0))
                 
             }
+        }
+        
+        describe("MODU Tests") {
+            
+            beforeEach {
+                TestHelpers.clearData()
+            }
+            
+            afterEach {
+                HTTPStubs.removeAllStubs();
+                TestHelpers.clearData()
+            }
             
             it("should pull MODUS") {
                 print("running a test")
@@ -144,6 +123,44 @@ class MSITests: KIFSpec {
                 let formatter = DateFormatter()
                 formatter.dateFormat = "yyyy-MM-dd"
                 expect(modu?.date).to(equal(formatter.date(from:"2021-04-16")))
+            }
+        }
+        
+        fdescribe("Navigational Warnings Tests") {
+            
+            beforeEach {
+                TestHelpers.clearData()
+            }
+            
+            afterEach {
+                HTTPStubs.removeAllStubs();
+                TestHelpers.clearData()
+            }
+            
+            it("should pull Navigational Warnings") {
+                print("running a test")
+                var stubCalled = false;
+                stub(condition: isMethodGET() &&
+                     isHost("msi.gs.mil") &&
+                     isScheme("https") &&
+                     isPath("/api/publications/broadcast-warn")
+                ) { (request) -> HTTPStubsResponse in
+                    stubCalled = true;
+                    let stubPath = OHPathForFile("navwarnings.json", MSITests.self);
+                    return HTTPStubsResponse(fileAtPath: stubPath!, statusCode: 200, headers: ["Content-Type": "application/json"]);
+                }
+                
+                MSI.shared.loadNavigationalWarnings()
+                expect(stubCalled).toEventually(beTrue());
+                
+                let persistenceController = PersistenceController.shared
+                expect(try? persistenceController.container.viewContext.countOfObjects(NavigationalWarning.self)).toEventually(equal(1))
+                let nw = persistenceController.container.viewContext.fetchFirst(NavigationalWarning.self, key: "msgNumber", value: "947")
+                expect(nw?.msgNumber).to(equal(947))
+                print("issue date \(nw?.issueDate)")
+//                let formatter = DateFormatter()
+//                formatter.dateFormat = "yyyy-MM-dd"
+//                expect(modu?.date).to(equal(formatter.date(from:"2021-04-16")))
             }
         }
     }

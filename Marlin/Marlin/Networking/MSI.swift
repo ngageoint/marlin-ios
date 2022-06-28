@@ -49,5 +49,23 @@ public class MSI {
                 }
             }
     }
+    
+    func loadNavigationalWarnings(date: String? = nil) {
+        let queue = DispatchQueue(label: "com.test.api", qos: .background)
+
+        session.request(MSIRouter.readNavigationalWarnings)
+            .validate()
+            .responseDecodable(of: NavigationalWarningPropertyContainer.self, queue: queue) { response in
+                queue.async( execute:{
+                Task.detached {
+                    let navigationalWarningCount = response.value?.broadcastWarn.count
+                    self.logger.debug("Received \(navigationalWarningCount ?? 0) navigational warning records.")
+                    if let navigationalWarnings = response.value?.broadcastWarn {
+                        try await NavigationalWarning.batchImport(from: navigationalWarnings, taskContext: PersistenceController.shared.newTaskContext(), viewContext: PersistenceController.shared.container.viewContext)
+                    }
+                }
+                })
+            }
+    }
 }
 

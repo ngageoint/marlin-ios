@@ -62,7 +62,7 @@ struct MarlinTabView: View {
                     }.hidden()
                 }
             }
-        .tabItem {
+            .tabItem {
                 Label("Map", systemImage: "map.fill")
             }
             // this affects text buttons, image buttons need .foregroundColor set on them
@@ -79,6 +79,12 @@ struct MarlinTabView: View {
                 .tabItem {
                     Label("ASAMs", image: "asam")
                 }
+            NavigationalWarningListView()
+                .tabItem {
+                    Label("Warnings", systemImage: "exclamationmark.triangle.fill")
+                }
+            
+
         }
         .onReceive(asamPub) { output in
             viewAsam(output.object as! Asam)

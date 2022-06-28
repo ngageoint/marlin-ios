@@ -12,6 +12,7 @@ enum MSIRouter: URLRequestConvertible
 {
     case readAsams(date: String? = nil)
     case readModus(date: String? = nil)
+    case readNavigationalWarnings
     
 //    static let baseURLString = "https://msi.om.east.paas.nga.mil/api"
     static let baseURLString = "https://msi.gs.mil/api"
@@ -23,6 +24,8 @@ enum MSIRouter: URLRequestConvertible
             return .get
         case .readModus:
             return .get
+        case .readNavigationalWarnings:
+            return .get
         }
     }
     
@@ -33,6 +36,8 @@ enum MSIRouter: URLRequestConvertible
             return "/publications/asam"
         case .readModus:
             return "/publications/modu"
+        case .readNavigationalWarnings:
+            return "/publications/broadcast-warn"
         }
     }
     
@@ -57,6 +62,10 @@ enum MSIRouter: URLRequestConvertible
                 params["minSourceDate"] = date
             }
             return params
+        case .readNavigationalWarnings:
+            return [
+                "output": "json"
+            ]
         }
     }
     

@@ -43,6 +43,7 @@
 		F7A54CD92848149700E5F565 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CAC2848149500E5F565 /* Persistence.swift */; };
 		F7A54CDB2848149700E5F565 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7A54CAD2848149600E5F565 /* Assets.xcassets */; };
 		F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */; };
+		F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
 		F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59785285A206700F9B32E /* AsamDetailView.swift */; };
 		F7F59789285A277000F9B32E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59788285A277000F9B32E /* Card.swift */; };
@@ -57,6 +58,13 @@
 		F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979E285D185000F9B32E /* ModuMap.swift */; };
 		F7F597A1285D189500F9B32E /* ModuBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A0285D189500F9B32E /* ModuBottomSheet.swift */; };
 		F7F597A3286238F400F9B32E /* MSIMapCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A2286238F400F9B32E /* MSIMapCluster.swift */; };
+		F7F597A62862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A52862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift */; };
+		F7F597A82864BF9D00F9B32E /* navwarnings.json in Resources */ = {isa = PBXBuildFile; fileRef = F7F597A72864BF9D00F9B32E /* navwarnings.json */; };
+		F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A92864DD3900F9B32E /* NavigationalWarningSummaryView.swift */; };
+		F7F597AC2864DD5200F9B32E /* NavigationalWarningListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597AB2864DD5200F9B32E /* NavigationalWarningListView.swift */; };
+		F7F597AE2864DE2900F9B32E /* NavigationalWarningDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597AD2864DE2800F9B32E /* NavigationalWarningDetailView.swift */; };
+		F7F597B02866241100F9B32E /* NavigationalWarningsAreaDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597AF2866241100F9B32E /* NavigationalWarningsAreaDataSource.swift */; };
+		F7F597B22866248700F9B32E /* NavigationalWarningNavAreaListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597B12866248700F9B32E /* NavigationalWarningNavAreaListView.swift */; };
 		F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB156C284AAF1B004ACAC5 /* MSIRouter.swift */; };
 		F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB156E284AB09C004ACAC5 /* MSI.swift */; };
 /* End PBXBuildFile section */
@@ -123,6 +131,7 @@
 		F7A54CC32848149700E5F565 /* Tests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOS.swift; sourceTree = "<group>"; };
 		F7A54CC52848149700E5F565 /* Tests_iOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOSLaunchTests.swift; sourceTree = "<group>"; };
 		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreaUnreadBadge.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
 		F7F59785285A206700F9B32E /* AsamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDetailView.swift; sourceTree = "<group>"; };
 		F7F59788285A277000F9B32E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
@@ -137,6 +146,13 @@
 		F7F5979E285D185000F9B32E /* ModuMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuMap.swift; sourceTree = "<group>"; };
 		F7F597A0285D189500F9B32E /* ModuBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuBottomSheet.swift; sourceTree = "<group>"; };
 		F7F597A2286238F400F9B32E /* MSIMapCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIMapCluster.swift; sourceTree = "<group>"; };
+		F7F597A52862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F7F597A72864BF9D00F9B32E /* navwarnings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = navwarnings.json; sourceTree = "<group>"; };
+		F7F597A92864DD3900F9B32E /* NavigationalWarningSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningSummaryView.swift; sourceTree = "<group>"; };
+		F7F597AB2864DD5200F9B32E /* NavigationalWarningListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningListView.swift; sourceTree = "<group>"; };
+		F7F597AD2864DE2800F9B32E /* NavigationalWarningDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningDetailView.swift; sourceTree = "<group>"; };
+		F7F597AF2866241100F9B32E /* NavigationalWarningsAreaDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningsAreaDataSource.swift; sourceTree = "<group>"; };
+		F7F597B12866248700F9B32E /* NavigationalWarningNavAreaListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningNavAreaListView.swift; sourceTree = "<group>"; };
 		F7FB156C284AAF1B004ACAC5 /* MSIRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIRouter.swift; sourceTree = "<group>"; };
 		F7FB156E284AB09C004ACAC5 /* MSI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -193,6 +209,7 @@
 			children = (
 				F71DF47D284E68DE00686951 /* asams.json */,
 				F71DF4832857942D00686951 /* modus.json */,
+				F7F597A72864BF9D00F9B32E /* navwarnings.json */,
 			);
 			path = responses;
 			sourceTree = "<group>";
@@ -263,6 +280,7 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
+				F7F597A4286271E100F9B32E /* NavigationalWarning */,
 				F7F59793285BE23F00F9B32E /* Views */,
 				F7F5978E285BACAE00F9B32E /* Extensions */,
 				F7F59787285A275200F9B32E /* MaterialComponents */,
@@ -274,9 +292,7 @@
 				F7FB156B284AAE3C004ACAC5 /* Networking */,
 				F7B3490828491D6200E10ABF /* CoreData */,
 				F7A54CAA2848149500E5F565 /* MarlinApp.swift */,
-				F7A54CAC2848149500E5F565 /* Persistence.swift */,
 				F7A54CAD2848149600E5F565 /* Assets.xcassets */,
-				F7A54CA82848149500E5F565 /* Marlin.xcdatamodeld */,
 				F71DF4872857B0CC00686951 /* MarlinTabView.swift */,
 				F71DF49F2859116C00686951 /* Notifications.swift */,
 				F71DF4AE285927D600686951 /* MarlinScheme.swift */,
@@ -306,6 +322,8 @@
 		F7B3490828491D6200E10ABF /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				F7A54CA82848149500E5F565 /* Marlin.xcdatamodeld */,
+				F7A54CAC2848149500E5F565 /* Persistence.swift */,
 				F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */,
 			);
 			path = CoreData;
@@ -366,6 +384,20 @@
 				F7F59794285BE27400F9B32E /* Property.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		F7F597A4286271E100F9B32E /* NavigationalWarning */ = {
+			isa = PBXGroup;
+			children = (
+				F7F597A52862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift */,
+				F7F597A92864DD3900F9B32E /* NavigationalWarningSummaryView.swift */,
+				F7F597AB2864DD5200F9B32E /* NavigationalWarningListView.swift */,
+				F7F597AD2864DE2800F9B32E /* NavigationalWarningDetailView.swift */,
+				F7F597AF2866241100F9B32E /* NavigationalWarningsAreaDataSource.swift */,
+				F7F597B12866248700F9B32E /* NavigationalWarningNavAreaListView.swift */,
+				F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */,
+			);
+			path = NavigationalWarning;
 			sourceTree = "<group>";
 		};
 		F7FB156B284AAE3C004ACAC5 /* Networking */ = {
@@ -486,6 +518,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F7F597A82864BF9D00F9B32E /* navwarnings.json in Resources */,
 				F71DF4842857942D00686951 /* modus.json in Resources */,
 				F71DF47E284E68DE00686951 /* asams.json in Resources */,
 			);
@@ -609,6 +642,7 @@
 				F71DF49E285910CE00686951 /* BottomSheetEnabled.swift in Sources */,
 				F71DF4882857B0CC00686951 /* MarlinTabView.swift in Sources */,
 				F7F59799285D166700F9B32E /* ModuDetailView.swift in Sources */,
+				F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */,
 				F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */,
 				F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */,
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
@@ -618,6 +652,7 @@
 				F71DF4862857954A00686951 /* Modu+CoreDataClass.swift in Sources */,
 				F7F59789285A277000F9B32E /* Card.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
+				F7F597B22866248700F9B32E /* NavigationalWarningNavAreaListView.swift in Sources */,
 				F71DF4AB2859147900686951 /* UIButtonExtensions.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
 				F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */,
@@ -631,9 +666,13 @@
 				F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */,
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
 				F7F59795285BE27400F9B32E /* Property.swift in Sources */,
+				F7F597B02866241100F9B32E /* NavigationalWarningsAreaDataSource.swift in Sources */,
 				F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */,
+				F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */,
+				F7F597AE2864DE2900F9B32E /* NavigationalWarningDetailView.swift in Sources */,
 				F71DF4A52859120A00686951 /* BottomSheetView.swift in Sources */,
 				F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */,
+				F7F597AC2864DD5200F9B32E /* NavigationalWarningListView.swift in Sources */,
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
 				F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */,
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
@@ -644,6 +683,7 @@
 				F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */,
 				F71DF49C2859025200686951 /* AsamAnnotation.swift in Sources */,
 				F7A54CD72848149700E5F565 /* AsamListView.swift in Sources */,
+				F7F597A62862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift in Sources */,
 				F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */,
 				F7F597A3286238F400F9B32E /* MSIMapCluster.swift in Sources */,
 			);

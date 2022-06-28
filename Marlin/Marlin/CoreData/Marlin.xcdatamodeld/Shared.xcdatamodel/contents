@@ -35,8 +35,30 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
+    <entity name="NavigationalWarning" representedClassName=".NavigationalWarning" syncable="YES" codeGenerationType="category">
+        <attribute name="authority" optional="YES" attributeType="String"/>
+        <attribute name="cancelDate" optional="YES" attributeType="String"/>
+        <attribute name="cancelMsgNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="cancelMsgYear" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="cancelNavArea" optional="YES" attributeType="String"/>
+        <attribute name="issueDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="msgNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="msgYear" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="navArea" attributeType="String"/>
+        <attribute name="status" optional="YES" attributeType="String"/>
+        <attribute name="subregion" optional="YES" attributeType="String"/>
+        <attribute name="text" optional="YES" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="msgYear"/>
+                <constraint value="msgNumber"/>
+                <constraint value="navArea"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
     <elements>
         <element name="Asam" positionX="-63" positionY="-9" width="128" height="179"/>
         <element name="Modu" positionX="-63" positionY="63" width="128" height="194"/>
+        <element name="NavigationalWarning" positionX="-63" positionY="108" width="128" height="209"/>
     </elements>
 </model>

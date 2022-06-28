@@ -1,0 +1,21 @@
+{
+    "broadcast-warn": [
+        {
+            "msgYear": 2020,
+            "msgNumber": 947,
+            "navArea": "P",
+            "subregion": "GEN",
+            "text": "201616Z MAR 20\nNGA MARITIME SAFETY OFFICE STATUS AND SUPPORT.\nCOVID-19 UPDATE.\n 1. NGA IS EXECUTING A MISSION CRITICAL POSTURE\n    FOR MANNING AND SUPPORT DURING THE COVID-19\n    PANDEMIC. NGA WILL MAINTAIN THE REQUISITE\n    STAFFING AND CAPACITY TO OPERATE THE 24/7\n    NAVSAFETY WATCH, PUBLISH THE WEEKLY NOTICE\n    TO MARINERS AND PROVIDE DNC CRITICAL\n    CORRECTIONS.\n 2. ALL OTHER SERVICES AND PRODUCTS WILL BE\n    SUPPORTED ON A CASE BY CASE BASIS AS MISSION\n    NEEDS DICTATE.\n 3. NGA REMAINS ACCESSIBLE THROUGH ITS NORMAL\n    POINTS OF CONTACT.\n 4. FOR URGENT SERVICE, CONTACT NGA NAVSAFETY,\n    DSN: 547 5455,\n    COMM: 800 362 6289 OR 571 557 5455,\n    E-MAIL: NAVSAFETY@NGA.MIL OR\n    MSG TO NGA NAVSAFETY WASHINGTON DC.\n",
+            "status": "A",
+            "issueDate": "201628Z MAR 2020",
+            "authority": "SFH 201459Z MAR 20.",
+            "cancelDate": null,
+            "cancelNavArea": null,
+            "cancelMsgYear": null,
+            "cancelMsgNumber": null,
+            "year": 2020,
+            "area": "P",
+            "number": 947
+        }
+    ]
+}

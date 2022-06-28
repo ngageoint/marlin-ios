@@ -17,6 +17,7 @@ extension Notification.Name {
     public static let MapRequestFocus = Notification.Name("MapRequestFocus")
     public static let ViewAsam = Notification.Name("ViewAsam")
     public static let ViewModu = Notification.Name("ViewModu")
+    public static let ViewNavigationalWarning = Notification.Name("ViewNavigationalWarning")
 }
 
 struct MapAnnotationFocusedNotification {
