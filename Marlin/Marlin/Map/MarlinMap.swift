@@ -18,6 +18,7 @@ protocol OverlayRenderable {
 struct MarlinMap: UIViewRepresentable {
     
     @EnvironmentObject var scheme: MarlinScheme
+    @Environment(\.colorScheme) var colorScheme
     
     var mutatingWrapper = MutatingWrapper()
     
@@ -42,15 +43,18 @@ struct MarlinMap: UIViewRepresentable {
         mutatingWrapper.mapView.addGestureRecognizer(singleTapGestureRecognizer)
         mutatingWrapper.mapView.register(ClusterAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
         mutatingWrapper.mapView.delegate = context.coordinator
+        if !mutatingWrapper.created {
+            mutatingWrapper.created = true
+            for mixin in mutatingWrapper.mixins {
+                mixin.setupMixin(mapView: mutatingWrapper.mapView, marlinMap: self, scheme: scheme)
+            }
+        }
         return mutatingWrapper.mapView
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
-        if !mutatingWrapper.updated {
-            mutatingWrapper.updated = true
-            for mixin in mutatingWrapper.mixins {
-                mixin.setupMixin(mapView: uiView, marlinMap: self, scheme: scheme)
-            }
+        for mixin in mutatingWrapper.mixins {
+            mixin.updateMixin()
         }
     }
     
@@ -206,6 +210,12 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
         for mixin in marlinMap.mutatingWrapper.mixins {
             mixin.didChangeUserTrackingMode(mapView: mapView, animated: animated)
+        }
+    }
+    
+    func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        for mixin in marlinMap.mutatingWrapper.mixins {
+            mixin.traitCollectionUpdated(previous: previousTraitCollection)
         }
     }
 

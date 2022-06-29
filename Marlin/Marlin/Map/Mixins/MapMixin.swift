@@ -8,10 +8,12 @@
 import Foundation
 import MapKit
 import MaterialComponents
+import SwiftUI
 //import geopackage_ios
 
 protocol MapMixin: AnyObject {
     func setupMixin(mapView: MKMapView, marlinMap: MarlinMap, scheme: MarlinScheme?)
+    func updateMixin()
     func cleanupMixin()
     func renderer(overlay: MKOverlay) -> MKOverlayRenderer?
     func traitCollectionUpdated(previous: UITraitCollection?)
@@ -24,6 +26,10 @@ protocol MapMixin: AnyObject {
 }
 
 extension MapMixin {
+    
+    func updateMixin() {
+        
+    }
     
     func cleanupMixin() {
     }

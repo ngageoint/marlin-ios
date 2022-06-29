@@ -1,5 +1,12 @@
 PODS:
   - Alamofire (5.6.1)
+  - crs-ios (1.0.3)
+  - geopackage-ios (7.2.1):
+    - ogc-api-features-json-ios (~> 4.0.1)
+    - sf-proj-ios (~> 5.0.3)
+    - sf-wkb-ios (~> 4.0.1)
+    - sf-wkt-ios (~> 2.0.1)
+    - tiff-ios (~> 4.0.0)
   - KIF (3.8.6):
     - KIF/Core (= 3.8.6)
   - KIF/Core (3.8.6)
@@ -650,6 +657,8 @@ PODS:
     - MotionInterchange (~> 3.0)
   - MotionInterchange (3.0.0)
   - Nimble (10.0.0)
+  - ogc-api-features-json-ios (4.0.1):
+    - sf-geojson-ios (~> 4.0.2)
   - OHHTTPStubs (9.1.0):
     - OHHTTPStubs/Default (= 9.1.0)
   - OHHTTPStubs/Core (9.1.0)
@@ -665,11 +674,27 @@ PODS:
   - OHHTTPStubs/OHPathHelpers (9.1.0)
   - OHHTTPStubs/Swift (9.1.0):
     - OHHTTPStubs/Default
+  - proj-ios (1.0.3):
+    - crs-ios (~> 1.0.3)
+    - proj4-ios (~> 4.9.3)
+  - proj4-ios (4.9.3)
   - PureLayout (3.1.9)
   - Quick (5.0.1)
+  - sf-geojson-ios (4.0.2):
+    - sf-ios (~> 4.0.1)
+  - sf-ios (4.0.1)
+  - sf-proj-ios (5.0.3):
+    - proj-ios (~> 1.0.3)
+    - sf-ios (~> 4.0.1)
+  - sf-wkb-ios (4.0.1):
+    - sf-ios (~> 4.0.1)
+  - sf-wkt-ios (2.0.1):
+    - sf-ios (~> 4.0.1)
+  - tiff-ios (4.0.0)
 
 DEPENDENCIES:
   - Alamofire
+  - geopackage-ios
   - KIF
   - Kingfisher
   - MaterialComponents
@@ -683,6 +708,8 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
+    - crs-ios
+    - geopackage-ios
     - KIF
     - Kingfisher
     - MaterialComponents
@@ -691,12 +718,23 @@ SPEC REPOS:
     - MotionAnimator
     - MotionInterchange
     - Nimble
+    - ogc-api-features-json-ios
     - OHHTTPStubs
+    - proj-ios
+    - proj4-ios
     - PureLayout
     - Quick
+    - sf-geojson-ios
+    - sf-ios
+    - sf-proj-ios
+    - sf-wkb-ios
+    - sf-wkt-ios
+    - tiff-ios
 
 SPEC CHECKSUMS:
   Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
+  crs-ios: b02a1ce24228f85cfc945507fc58b7a35b7bbb88
+  geopackage-ios: a4b2aebe2733944cab1f1de623f0b1c9d8fbc4f4
   KIF: e2e1bab222b6c9523a0a88caab31f8524fe82404
   Kingfisher: 184d4d1a8c36666e663caf8e08abe87898595c53
   MaterialComponents: 1a9b2d9d45b1601ae544de85089adc4c464306d4
@@ -705,10 +743,19 @@ SPEC CHECKSUMS:
   MotionAnimator: 5f99d7c9592928c0f28a66283eda9c3b657dc480
   MotionInterchange: 13adae439b377e31d1674cc165539d50e1d1566a
   Nimble: 5316ef81a170ce87baf72dd961f22f89a602ff84
+  ogc-api-features-json-ios: 74fdd1cdc97161811051ea7a18a8cfe793be5c35
   OHHTTPStubs: 90eac6d8f2c18317baeca36698523dc67c513831
+  proj-ios: b9b0fced7abed627750164b140fc4629bc76ca17
+  proj4-ios: fa2f3ab9ba9ba727bd10bc12aea735d0c3927ef4
   PureLayout: 5fb5e5429519627d60d079ccb1eaa7265ce7cf88
   Quick: 749aa754fd1e7d984f2000fe051e18a3a9809179
+  sf-geojson-ios: 7401e4d2a99de963285f615f94b8a0d2585733bd
+  sf-ios: e71cb132b84fe91405ecf51578f2d0903fabd7b5
+  sf-proj-ios: 15f13310cfd0e40d4c6841adc1a53d1eb94614d1
+  sf-wkb-ios: abb68b4bc7c3a3d921c52208a88d2da54bde8098
+  sf-wkt-ios: 6d445ec129678901065417fc5a404b167027a684
+  tiff-ios: fb3f51fcd3400ea1dd8f710d2a7832a18d112580
 
-PODFILE CHECKSUM: ddad041e78d0f63dc8fd54b1b719b868a704ff7d
+PODFILE CHECKSUM: fbd438366b65417bfdad77467a0f205315ed9a3c
 
 COCOAPODS: 1.11.3

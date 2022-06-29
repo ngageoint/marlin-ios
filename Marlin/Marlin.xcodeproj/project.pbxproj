@@ -44,6 +44,11 @@
 		F7A54CDB2848149700E5F565 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7A54CAD2848149600E5F565 /* Assets.xcassets */; };
 		F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */; };
 		F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */; };
+		F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C2286C860900758F1C /* GeoPackageMap.swift */; };
+		F7D671C5286C8A3100758F1C /* GeoPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C4286C8A3100758F1C /* GeoPackage.swift */; };
+		F7D671C8286C907F00758F1C /* ExceptionCatcher in Frameworks */ = {isa = PBXBuildFile; productRef = F7D671C7286C907F00758F1C /* ExceptionCatcher */; };
+		F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C9286C945500758F1C /* BaseMapOverlay.swift */; };
+		F7D671CC286C98B200758F1C /* natural_earth_1_100.gpkg in Resources */ = {isa = PBXBuildFile; fileRef = F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
 		F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59785285A206700F9B32E /* AsamDetailView.swift */; };
 		F7F59789285A277000F9B32E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59788285A277000F9B32E /* Card.swift */; };
@@ -132,6 +137,10 @@
 		F7A54CC52848149700E5F565 /* Tests_iOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOSLaunchTests.swift; sourceTree = "<group>"; };
 		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreaUnreadBadge.swift; sourceTree = "<group>"; };
+		F7D671C2286C860900758F1C /* GeoPackageMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageMap.swift; sourceTree = "<group>"; };
+		F7D671C4286C8A3100758F1C /* GeoPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackage.swift; sourceTree = "<group>"; };
+		F7D671C9286C945500758F1C /* BaseMapOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMapOverlay.swift; sourceTree = "<group>"; };
+		F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */ = {isa = PBXFileReference; lastKnownFileType = file; path = natural_earth_1_100.gpkg; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
 		F7F59785285A206700F9B32E /* AsamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDetailView.swift; sourceTree = "<group>"; };
 		F7F59788285A277000F9B32E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
@@ -171,6 +180,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7982FB9B536447055E423E94 /* libPods-Marlin.a in Frameworks */,
+				F7D671C8286C907F00758F1C /* ExceptionCatcher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,6 +233,7 @@
 				F71DF4932858C0EF00686951 /* StyledPolygon.swift */,
 				F71DF4952858C18000686951 /* StyledPolyline.swift */,
 				F7F597A2286238F400F9B32E /* MSIMapCluster.swift */,
+				F7D671C9286C945500758F1C /* BaseMapOverlay.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -280,6 +291,8 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
+				F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */,
+				F7D671C1286C85EF00758F1C /* GeoPackage */,
 				F7F597A4286271E100F9B32E /* NavigationalWarning */,
 				F7F59793285BE23F00F9B32E /* Views */,
 				F7F5978E285BACAE00F9B32E /* Extensions */,
@@ -327,6 +340,15 @@
 				F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */,
 			);
 			path = CoreData;
+			sourceTree = "<group>";
+		};
+		F7D671C1286C85EF00758F1C /* GeoPackage */ = {
+			isa = PBXGroup;
+			children = (
+				F7D671C2286C860900758F1C /* GeoPackageMap.swift */,
+				F7D671C4286C8A3100758F1C /* GeoPackage.swift */,
+			);
+			path = GeoPackage;
 			sourceTree = "<group>";
 		};
 		F7F5977F285A1B2400F9B32E /* ASAM */ = {
@@ -448,6 +470,9 @@
 			dependencies = (
 			);
 			name = Marlin;
+			packageProductDependencies = (
+				F7D671C7286C907F00758F1C /* ExceptionCatcher */,
+			);
 			productName = "Marlin (iOS)";
 			productReference = F7A54CB22848149700E5F565 /* Marlin.app */;
 			productType = "com.apple.product-type.application";
@@ -502,6 +527,9 @@
 				Base,
 			);
 			mainGroup = F7A54CA22848149500E5F565;
+			packageReferences = (
+				F7D671C6286C907F00758F1C /* XCRemoteSwiftPackageReference "ExceptionCatcher" */,
+			);
 			productRefGroup = F7A54CB32848149700E5F565 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -529,6 +557,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7A54CDB2848149700E5F565 /* Assets.xcassets in Resources */,
+				F7D671CC286C98B200758F1C /* natural_earth_1_100.gpkg in Resources */,
 				F71DF4972858CC8100686951 /* asams.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -642,11 +671,14 @@
 				F71DF49E285910CE00686951 /* BottomSheetEnabled.swift in Sources */,
 				F71DF4882857B0CC00686951 /* MarlinTabView.swift in Sources */,
 				F7F59799285D166700F9B32E /* ModuDetailView.swift in Sources */,
+				F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */,
+				F7D671C5286C8A3100758F1C /* GeoPackage.swift in Sources */,
 				F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */,
 				F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */,
 				F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */,
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
 				F7F5978B285BA41000F9B32E /* Button.swift in Sources */,
+				F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
 				F71DF4862857954A00686951 /* Modu+CoreDataClass.swift in Sources */,
@@ -1012,6 +1044,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F7D671C6286C907F00758F1C /* XCRemoteSwiftPackageReference "ExceptionCatcher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/ExceptionCatcher";
+			requirement = {
+				kind = exactVersion;
+				version = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F7D671C7286C907F00758F1C /* ExceptionCatcher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F7D671C6286C907F00758F1C /* XCRemoteSwiftPackageReference "ExceptionCatcher" */;
+			productName = ExceptionCatcher;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		F7A54CA82848149500E5F565 /* Marlin.xcdatamodeld */ = {

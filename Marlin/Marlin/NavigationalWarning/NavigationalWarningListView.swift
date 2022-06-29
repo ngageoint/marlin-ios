@@ -21,6 +21,7 @@ struct NavigationalWarningListView: View {
         NavigationView {
             List {
                 MarlinMap()
+                    .mixin(GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth"))
                     .frame(minHeight: 250, maxHeight: 250)
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 ForEach(navigationalWarningsSections) { section in
