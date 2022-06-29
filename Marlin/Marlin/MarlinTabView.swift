@@ -30,6 +30,7 @@ struct MarlinTabView: View {
                         .mixin(AsamMap())
                         .mixin(ModuMap())
                         .mixin(BottomSheetMixin())
+                        .mixin(UserTrackingMap())
                         .navigationTitle("Marlin")
                         .navigationBarTitleDisplayMode(.inline)
                         .navigationBarBackButtonHidden(true)

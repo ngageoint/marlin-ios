@@ -39,6 +39,17 @@ struct MarlinApp: App {
     let scheme = MarlinScheme()
     
     init() {
+        
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            
+            if let error = error {
+                // Handle the error here.
+            }
+            
+            // Enable or disable features based on the authorization.
+        }
+        
         let newestAsam = try? persistenceController.container.viewContext.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)])
         shared.loadAsams(date: newestAsam?.dateString)
         

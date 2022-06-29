@@ -25,6 +25,17 @@ struct MarlinMap: UIViewRepresentable {
     class MutatingWrapper {
         var mixins: [MapMixin] = []
         var mapView: MKMapView = MKMapView()
+        var containerView: UIView = UIView()
+        var lowerRightButtonStack: UIStackView = {
+            let buttonStack = UIStackView.newAutoLayout()
+            buttonStack.alignment = .fill
+            buttonStack.distribution = .fill
+            buttonStack.spacing = 10
+            buttonStack.axis = .vertical
+            buttonStack.translatesAutoresizingMaskIntoConstraints = false
+            buttonStack.isLayoutMarginsRelativeArrangement = true
+            return buttonStack
+        }()
         var created = false
         var updated = false
     }
@@ -34,7 +45,7 @@ struct MarlinMap: UIViewRepresentable {
         return self
     }
         
-    func makeUIView(context: Context) -> MKMapView {
+    func makeUIView(context: Context) -> UIView {
         let singleTapGestureRecognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.singleTapGensture(tapGestureRecognizer:)))
             singleTapGestureRecognizer.numberOfTapsRequired = 1
             singleTapGestureRecognizer.delaysTouchesBegan = true
@@ -43,16 +54,23 @@ struct MarlinMap: UIViewRepresentable {
         mutatingWrapper.mapView.addGestureRecognizer(singleTapGestureRecognizer)
         mutatingWrapper.mapView.register(ClusterAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
         mutatingWrapper.mapView.delegate = context.coordinator
+        mutatingWrapper.mapView.showsUserLocation = true
+
         if !mutatingWrapper.created {
             mutatingWrapper.created = true
             for mixin in mutatingWrapper.mixins {
                 mixin.setupMixin(mapView: mutatingWrapper.mapView, marlinMap: self, scheme: scheme)
             }
         }
-        return mutatingWrapper.mapView
+        mutatingWrapper.containerView.addSubview(mutatingWrapper.mapView)
+        mutatingWrapper.mapView.autoPinEdgesToSuperviewEdges()
+        mutatingWrapper.containerView.addSubview(mutatingWrapper.lowerRightButtonStack)
+        mutatingWrapper.lowerRightButtonStack.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
+        mutatingWrapper.lowerRightButtonStack.autoPinEdge(toSuperviewEdge: .bottom, withInset: 24)
+        return mutatingWrapper.containerView
     }
     
-    func updateUIView(_ uiView: MKMapView, context: Context) {
+    func updateUIView(_ uiView: UIView, context: Context) {
         for mixin in mutatingWrapper.mixins {
             mixin.updateMixin()
         }
@@ -67,12 +85,21 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     var marlinMap: MarlinMap
     var enlargedLocationView: MKAnnotationView?
     var mapAnnotationFocusedSink: AnyCancellable?
-
+    var locationManager = CLLocationManager()
     
     init(_ marlinMap: MarlinMap) {
         self.marlinMap = marlinMap
         
         super.init()
+        
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
+        // Check for Location Services
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.startUpdatingLocation()
+        }
 
         mapAnnotationFocusedSink =
         NotificationCenter.default.publisher(for: .MapAnnotationFocused)
@@ -219,4 +246,27 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         }
     }
 
+}
+
+extension MarlinMapCoordinator: CLLocationManagerDelegate {
+    
+    func checkLocationAuthorization(authorizationStatus: CLAuthorizationStatus? = nil) {
+        switch (authorizationStatus) {
+        case .authorizedAlways, .authorizedWhenInUse:
+            locationManager.startUpdatingLocation()
+        case .restricted, .denied:
+            // show alert instructing how to turn on permissions
+            print("Location Servies: Denied / Restricted")
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        case .none:
+            locationManager.requestWhenInUseAuthorization()
+        @unknown default:
+            print("who knows")
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        self.checkLocationAuthorization(authorizationStatus: status)
+    }
 }

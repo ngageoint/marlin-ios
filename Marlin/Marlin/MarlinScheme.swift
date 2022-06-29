@@ -11,8 +11,21 @@ import MaterialComponents
 class MarlinScheme: ObservableObject {
     
     let containerScheme = MDCContainerScheme();
+    let disabledScheme = MDCContainerScheme()
     
     init() {
+        
+        disabledScheme.colorScheme.primaryColorVariant = MDCPalette.grey.tint300;
+        disabledScheme.colorScheme.primaryColor = MDCPalette.grey.tint300;
+        disabledScheme.colorScheme.secondaryColor = MDCPalette.grey.tint300;
+        disabledScheme.colorScheme.onSecondaryColor = MDCPalette.grey.tint500;
+        disabledScheme.colorScheme.surfaceColor = MDCPalette.grey.tint300;
+        disabledScheme.colorScheme.onSurfaceColor = MDCPalette.grey.tint500;
+        disabledScheme.colorScheme.backgroundColor = MDCPalette.grey.tint300;
+        disabledScheme.colorScheme.onBackgroundColor = MDCPalette.grey.tint500;
+        disabledScheme.colorScheme.errorColor = .systemRed;
+        disabledScheme.colorScheme.onPrimaryColor = MDCPalette.grey.tint500;
+                
         containerScheme.colorScheme.primaryColorVariant = UIColor(named: "primaryVariant") ?? MDCPalette.blue.tint600
         containerScheme.colorScheme.primaryColor = UIColor(named: "primary") ?? MDCPalette.blue.tint600
         containerScheme.colorScheme.secondaryColor = UIColor(named: "secondary") ?? (MDCPalette.orange.accent700 ?? .systemFill)
