@@ -73,6 +73,7 @@ class NavigationalWarning: NSManagedObject {
             index += 1
             return false
         })
+        batchInsertRequest.resultType = .statusOnly
         return batchInsertRequest
     }
     
@@ -85,6 +86,7 @@ class NavigationalWarning: NSManagedObject {
         
         /// - Tag: performAndWait
         try await taskContext.perform {
+            _ = taskContext.truncateAll(NavigationalWarning.self)
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
             let batchInsertRequest = NavigationalWarning.newBatchInsertRequest(with: propertiesList)
@@ -93,11 +95,8 @@ class NavigationalWarning: NSManagedObject {
                let success = batchInsertResult.result as? Bool, success {
                 return
             }
-            //            self.logger.debug("Failed to execute batch insert request.")
             throw MSIError.batchInsertError
         }
-        
-        //        logger.debug("Successfully inserted data.")
     }
 }
 
