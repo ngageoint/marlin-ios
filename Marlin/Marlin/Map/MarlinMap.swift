@@ -20,13 +20,27 @@ struct MarlinMap: UIViewRepresentable {
     @EnvironmentObject var scheme: MarlinScheme
     @Environment(\.colorScheme) var colorScheme
     
+    @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
+        
     var mutatingWrapper = MutatingWrapper()
     
     class MutatingWrapper {
+        var osmOverlay: MKTileOverlay?
+
         var mixins: [MapMixin] = []
         var mapView: MKMapView = MKMapView()
         var containerView: UIView = UIView()
         var lowerRightButtonStack: UIStackView = {
+            let buttonStack = UIStackView.newAutoLayout()
+            buttonStack.alignment = .fill
+            buttonStack.distribution = .fill
+            buttonStack.spacing = 10
+            buttonStack.axis = .vertical
+            buttonStack.translatesAutoresizingMaskIntoConstraints = false
+            buttonStack.isLayoutMarginsRelativeArrangement = true
+            return buttonStack
+        }()
+        var upperRightButtonStack: UIStackView = {
             let buttonStack = UIStackView.newAutoLayout()
             buttonStack.alignment = .fill
             buttonStack.distribution = .fill
@@ -67,10 +81,25 @@ struct MarlinMap: UIViewRepresentable {
         mutatingWrapper.containerView.addSubview(mutatingWrapper.lowerRightButtonStack)
         mutatingWrapper.lowerRightButtonStack.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
         mutatingWrapper.lowerRightButtonStack.autoPinEdge(toSuperviewEdge: .bottom, withInset: 24)
+        mutatingWrapper.containerView.addSubview(mutatingWrapper.upperRightButtonStack)
+        mutatingWrapper.upperRightButtonStack.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
+        mutatingWrapper.upperRightButtonStack.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
         return mutatingWrapper.containerView
     }
     
     func updateUIView(_ uiView: UIView, context: Context) {
+        if mapType == ExtraMapTypes.osm.rawValue {
+            if mutatingWrapper.osmOverlay == nil {
+                mutatingWrapper.osmOverlay = MKTileOverlay(urlTemplate: "https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png")
+                mutatingWrapper.osmOverlay?.canReplaceMapContent = true
+                mutatingWrapper.mapView.addOverlay(mutatingWrapper.osmOverlay!)
+            }
+        } else if let mkmapType = MKMapType(rawValue: UInt(mapType)) {
+            mutatingWrapper.mapView.mapType = mkmapType
+            if let osmOverlay = mutatingWrapper.osmOverlay {
+                mutatingWrapper.mapView.removeOverlay(osmOverlay)
+            }
+        }
         for mixin in mutatingWrapper.mixins {
             mixin.updateMixin()
         }

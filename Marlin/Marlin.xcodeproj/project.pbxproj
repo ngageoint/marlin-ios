@@ -49,7 +49,10 @@
 		F7D671C8286C907F00758F1C /* ExceptionCatcher in Frameworks */ = {isa = PBXBuildFile; productRef = F7D671C7286C907F00758F1C /* ExceptionCatcher */; };
 		F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C9286C945500758F1C /* BaseMapOverlay.swift */; };
 		F7D671CC286C98B200758F1C /* natural_earth_1_100.gpkg in Resources */ = {isa = PBXBuildFile; fileRef = F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */; };
-		F7D671CE286CF1F800758F1C /* UserTrackingMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671CD286CF1F800758F1C /* UserTrackingMap.swift */; };
+		F7D671D2286DD20800758F1C /* FloatingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671D1286DD20800758F1C /* FloatingButton.swift */; };
+		F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671D5286DFAA800758F1C /* UserTrackingButton.swift */; };
+		F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671D7286E163E00758F1C /* MapSettings.swift */; };
+		F7D671DA286E3B3D00758F1C /* ExtraMapTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671D9286E3B3D00758F1C /* ExtraMapTypes.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
 		F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59785285A206700F9B32E /* AsamDetailView.swift */; };
 		F7F59789285A277000F9B32E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59788285A277000F9B32E /* Card.swift */; };
@@ -142,7 +145,10 @@
 		F7D671C4286C8A3100758F1C /* GeoPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackage.swift; sourceTree = "<group>"; };
 		F7D671C9286C945500758F1C /* BaseMapOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMapOverlay.swift; sourceTree = "<group>"; };
 		F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */ = {isa = PBXFileReference; lastKnownFileType = file; path = natural_earth_1_100.gpkg; sourceTree = "<group>"; };
-		F7D671CD286CF1F800758F1C /* UserTrackingMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingMap.swift; sourceTree = "<group>"; };
+		F7D671D1286DD20800758F1C /* FloatingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingButton.swift; sourceTree = "<group>"; };
+		F7D671D5286DFAA800758F1C /* UserTrackingButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTrackingButton.swift; sourceTree = "<group>"; };
+		F7D671D7286E163E00758F1C /* MapSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettings.swift; sourceTree = "<group>"; };
+		F7D671D9286E3B3D00758F1C /* ExtraMapTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtraMapTypes.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
 		F7F59785285A206700F9B32E /* AsamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDetailView.swift; sourceTree = "<group>"; };
 		F7F59788285A277000F9B32E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
@@ -236,6 +242,9 @@
 				F71DF4952858C18000686951 /* StyledPolyline.swift */,
 				F7F597A2286238F400F9B32E /* MSIMapCluster.swift */,
 				F7D671C9286C945500758F1C /* BaseMapOverlay.swift */,
+				F7D671D5286DFAA800758F1C /* UserTrackingButton.swift */,
+				F7D671D7286E163E00758F1C /* MapSettings.swift */,
+				F7D671D9286E3B3D00758F1C /* ExtraMapTypes.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -245,7 +254,6 @@
 			children = (
 				F71DF4912858C09E00686951 /* MapMixin.swift */,
 				F71DF49D285910CE00686951 /* BottomSheetEnabled.swift */,
-				F7D671CD286CF1F800758F1C /* UserTrackingMap.swift */,
 			);
 			path = Mixins;
 			sourceTree = "<group>";
@@ -387,6 +395,7 @@
 			children = (
 				F7F59788285A277000F9B32E /* Card.swift */,
 				F7F5978A285BA40F00F9B32E /* Button.swift */,
+				F7D671D1286DD20800758F1C /* FloatingButton.swift */,
 			);
 			path = MaterialComponents;
 			sourceTree = "<group>";
@@ -688,6 +697,7 @@
 				F7F59789285A277000F9B32E /* Card.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				F7F597B22866248700F9B32E /* NavigationalWarningNavAreaListView.swift in Sources */,
+				F7D671DA286E3B3D00758F1C /* ExtraMapTypes.swift in Sources */,
 				F71DF4AB2859147900686951 /* UIButtonExtensions.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
 				F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */,
@@ -700,11 +710,11 @@
 				F727A684284E351800BD728A /* MSIError.swift in Sources */,
 				F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */,
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
+				F7D671D2286DD20800758F1C /* FloatingButton.swift in Sources */,
 				F7F59795285BE27400F9B32E /* Property.swift in Sources */,
 				F7F597B02866241100F9B32E /* NavigationalWarningsAreaDataSource.swift in Sources */,
 				F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */,
 				F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */,
-				F7D671CE286CF1F800758F1C /* UserTrackingMap.swift in Sources */,
 				F7F597AE2864DE2900F9B32E /* NavigationalWarningDetailView.swift in Sources */,
 				F71DF4A52859120A00686951 /* BottomSheetView.swift in Sources */,
 				F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */,
@@ -712,6 +722,8 @@
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
 				F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */,
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
+				F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */,
+				F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */,
 				F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */,
 				F7F59797285D15B900F9B32E /* ModuListView.swift in Sources */,
 				F71DF4A02859116C00686951 /* Notifications.swift in Sources */,

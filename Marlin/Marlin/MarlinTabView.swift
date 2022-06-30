@@ -22,27 +22,57 @@ struct MarlinTabView: View {
     let asamPub = NotificationCenter.default.publisher(for: .ViewAsam)
     let moduPub = NotificationCenter.default.publisher(for: .ViewModu)
     
+    var marlinMap = MarlinMap()
+    
     var body: some View {
         TabView {
             NavigationView {
                 VStack {
-                    MarlinMap()
-                        .mixin(AsamMap())
-                        .mixin(ModuMap())
-                        .mixin(BottomSheetMixin())
-                        .mixin(UserTrackingMap())
-                        .navigationTitle("Marlin")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .navigationBarBackButtonHidden(true)
-                        .toolbar {
-                            ToolbarItem (placement: .navigation)  {
-                                Image(systemName: "line.3.horizontal")
-                                    .foregroundColor(Color(scheme.containerScheme.colorScheme.onPrimaryColor))
-                                    .onTapGesture {
-                                        self.showHamburger()
+                    ZStack(alignment: .topLeading) {
+                        marlinMap
+                            .mixin(AsamMap())
+                            .mixin(ModuMap())
+                            .mixin(BottomSheetMixin())
+                            .navigationTitle("Marlin")
+                            .navigationBarTitleDisplayMode(.inline)
+                            .navigationBarBackButtonHidden(true)
+                            .toolbar {
+                                ToolbarItem (placement: .navigation)  {
+                                    Image(systemName: "line.3.horizontal")
+                                        .foregroundColor(Color(scheme.containerScheme.colorScheme.onPrimaryColor))
+                                        .onTapGesture {
+                                            self.showHamburger()
+                                        }
+                                }
+                            }
+                        // top of map
+                        VStack {
+                            HStack(alignment: .top, spacing: 0) {
+                                Spacer()
+                                // top right button stack
+                                VStack(alignment: .trailing, spacing: 16) {
+                                    NavigationLink {
+                                        MapSettings()
+                                    } label: {
+                                        MaterialFloatingButton(imageName: .constant("square.3.stack.3d"))
                                     }
+                                    .offset(x: -8, y: 16)
+                                    .fixedSize()
+                                }
+                        }
+                        Spacer()
+                        // bottom of map
+                            HStack(alignment: .bottom, spacing: 0) {
+                                Spacer()
+                                // bottom right button stack
+                                VStack(alignment: .trailing, spacing: 16) {
+                                    UserTrackingButton(mapView: marlinMap.mutatingWrapper.mapView)
+                                        .offset(x: -8, y: -24)
+                                        .fixedSize()
+                                }
                             }
                         }
+                    }
                     NavigationLink(tag: "asam", selection: $selection) {
                         if let asam = itemWrapper.asam {
                             AsamDetailView(asam: asam)
@@ -84,8 +114,6 @@ struct MarlinTabView: View {
                 .tabItem {
                     Label("Warnings", systemImage: "exclamationmark.triangle.fill")
                 }
-            
-
         }
         .onReceive(asamPub) { output in
             viewAsam(output.object as! Asam)
