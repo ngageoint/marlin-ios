@@ -42,7 +42,6 @@ struct ModuSummaryView: View {
             HStack(spacing:0) {
                 if showMoreDetails {
                     MaterialButton(title: "More Details") {
-                        print("more details")
                         NotificationCenter.default.post(name: .ViewModu, object: self.modu)
                     }
                     .fixedSize()
@@ -57,7 +56,8 @@ struct ModuSummaryView: View {
                     print("share button")
                 }.fixedSize()
                 MaterialButton(image: UIImage(systemName: "scope")) {
-                    print("share button")
+                    NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+                    NotificationCenter.default.post(name: .FocusModu, object: self.modu)
                 }.fixedSize().padding(.trailing, -16)
             }
         }

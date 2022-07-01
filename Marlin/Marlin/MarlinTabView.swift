@@ -18,14 +18,16 @@ struct MarlinTabView: View {
     
     @StateObject var itemWrapper: ItemWrapper
     @State var selection: String? = nil
+    @State private var selectedTab = "map"
     
     let asamPub = NotificationCenter.default.publisher(for: .ViewAsam)
     let moduPub = NotificationCenter.default.publisher(for: .ViewModu)
+    let mapFocus = NotificationCenter.default.publisher(for: .MapRequestFocus)
     
     var marlinMap = MarlinMap()
     
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             NavigationView {
                 VStack {
                     ZStack(alignment: .topLeading) {
@@ -93,6 +95,7 @@ struct MarlinTabView: View {
                     }.hidden()
                 }
             }
+            .tag("map")
             .tabItem {
                 Label("Map", systemImage: "map.fill")
             }
@@ -105,21 +108,27 @@ struct MarlinTabView: View {
                 .tabItem {
                     Label("MODUs", image: "modu")
                 }
+                .tag("moduList")
             
             AsamListView()
                 .tabItem {
                     Label("ASAMs", image: "asam")
                 }
+                .tag("asamList")
             NavigationalWarningListView()
                 .tabItem {
                     Label("Warnings", systemImage: "exclamationmark.triangle.fill")
                 }
+                .tag("warningList")
         }
         .onReceive(asamPub) { output in
             viewAsam(output.object as! Asam)
         }
         .onReceive(moduPub) { output in
             viewModu(output.object as! Modu)
+        }
+        .onReceive(mapFocus) { output in
+            selectedTab = "map"
         }
     }
     

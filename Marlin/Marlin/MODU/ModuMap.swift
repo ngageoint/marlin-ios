@@ -9,15 +9,24 @@ import Foundation
 import MapKit
 import MaterialComponents
 import CoreData
+import Combine
 
 class ModuMap: NSObject, MapMixin {
     var mapView: MKMapView?
-    
+    var focusModuSink: AnyCancellable?
+
     var fetchedResultsController: NSFetchedResultsController<Modu>?
     
     func setupMixin(mapView: MKMapView, marlinMap: MarlinMap, scheme: MarlinScheme? = nil) {
         self.mapView = mapView
         mapView.register(ModuAnnotationView.self, forAnnotationViewWithReuseIdentifier: ModuAnnotationView.ReuseID)
+        
+        focusModuSink =
+        NotificationCenter.default.publisher(for: .FocusModu)
+            .compactMap {$0.object as? Modu}
+            .sink(receiveValue: { [weak self] in
+                self?.focusModu(modu: $0)
+            })
 
         let fetchRequest = Modu.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Modu.date, ascending: true)]
@@ -32,6 +41,10 @@ class ModuMap: NSObject, MapMixin {
             print("\(fetchError), \(fetchError.localizedDescription)")
         }
         addInitialModus(modus: fetchedResultsController?.fetchedObjects)
+    }
+    
+    func focusModu(modu: Modu) {
+        mapView?.setRegion(MKCoordinateRegion(center: modu.coordinate, latitudinalMeters: 10000, longitudinalMeters: 10000), animated: true)
     }
     
     func addInitialModus(modus: [Modu]?) {

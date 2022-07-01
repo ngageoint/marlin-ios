@@ -52,7 +52,8 @@ struct AsamSummaryView: View {
                     print("share button")
                 }.fixedSize()
                 MaterialButton(image: UIImage(systemName: "scope")) {
-                    print("share button")
+                    NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+                    NotificationCenter.default.post(name: .FocusAsam, object: self.asam)
                 }.fixedSize().padding(.trailing, -16)
             }
         }

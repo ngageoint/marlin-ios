@@ -49,7 +49,8 @@ struct ModuDetailView: View {
                                 print("share button")
                             }.fixedSize()
                             MaterialButton(image: UIImage(systemName: "scope")) {
-                                print("share button")
+                                NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+                                NotificationCenter.default.post(name: .FocusModu, object: self.modu)
                             }.fixedSize().padding(.trailing, -16)
                         }.padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)

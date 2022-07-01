@@ -13,6 +13,7 @@ import Combine
 
 class AsamMap: NSObject, MapMixin {
     var mapView: MKMapView?
+    var focusAsamSink: AnyCancellable?
     
     var fetchedResultsController: NSFetchedResultsController<Asam>?
     
@@ -22,6 +23,13 @@ class AsamMap: NSObject, MapMixin {
     func setupMixin(mapView: MKMapView, marlinMap: MarlinMap, scheme: MarlinScheme? = nil) {
         self.mapView = mapView
         mapView.register(AsamAnnotationView.self, forAnnotationViewWithReuseIdentifier: AsamAnnotationView.ReuseID)
+        
+        focusAsamSink =
+        NotificationCenter.default.publisher(for: .FocusAsam)
+            .compactMap {$0.object as? Asam}
+            .sink(receiveValue: { [weak self] in
+                self?.focusAsam(asam: $0)
+            })
         
         let fetchRequest = Asam.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Asam.date, ascending: true)]
@@ -37,6 +45,10 @@ class AsamMap: NSObject, MapMixin {
         }
 
         addInitialAsams(asams: fetchedResultsController?.fetchedObjects)
+    }
+    
+    func focusAsam(asam: Asam) {
+        mapView?.setRegion(MKCoordinateRegion(center: asam.coordinate, latitudinalMeters: 10000, longitudinalMeters: 10000), animated: true)
     }
     
     func addInitialAsams(asams: [Asam]?) {
