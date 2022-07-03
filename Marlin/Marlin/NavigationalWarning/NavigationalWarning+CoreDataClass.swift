@@ -49,6 +49,13 @@ class NavigationalWarning: NSManagedObject {
         return nil
     }
     
+    var cancelDateString: String? {
+        if let date = cancelDate {
+            return NavigationalWarningProperties.dateFormatter.string(from: date)
+        }
+        return nil
+    }
+    
     var navAreaName: String {
         guard let navArea = navArea else {
             return ""
@@ -98,6 +105,19 @@ class NavigationalWarning: NSManagedObject {
             throw MSIError.batchInsertError
         }
     }
+    
+    override var description: String {
+        return "Navigational Warning\n\n" +
+        "\(dateString ?? "")}\n\n" +
+        "\(navAreaName) \(msgNumber)/\(msgYear) (\(subregion ?? ""))\n\n" +
+        "\(text ?? "")\n\n" +
+        "Status: \(status ?? "")\n" +
+        "Authority: \(authority ?? "")\n" +
+        "Cancel Date: \(cancelDateString ?? "")\n" +
+        "Cancel Year: \(cancelMsgNumber)\n" +
+        "Cancel Year: \(cancelMsgYear)\n"
+
+    }
 }
 
 struct NavigationalWarningPropertyContainer: Decodable {
@@ -143,7 +163,7 @@ struct NavigationalWarningProperties: Decodable {
     
     let cancelMsgNumber: Int?
     let authority: String?
-    let cancelDate: String?
+    let cancelDate: Date?
     let cancelMsgYear: Int?
     let cancelNavArea: String?
     let issueDate: Date?
@@ -180,12 +200,19 @@ struct NavigationalWarningProperties: Decodable {
         self.navArea = navArea
         self.cancelMsgNumber = try? values.decode(Int.self, forKey: .cancelMsgNumber)
         self.authority = try? values.decode(String.self, forKey: .authority)
-        self.cancelDate = try? values.decode(String.self, forKey: .cancelDate)
         self.cancelMsgYear = try? values.decode(Int.self, forKey: .cancelMsgYear)
         self.cancelNavArea = try? values.decode(String.self, forKey: .cancelNavArea)
         self.status = try? values.decode(String.self, forKey: .status)
         self.subregion = try? values.decode(String.self, forKey: .subregion)
         self.text = try? values.decode(String.self, forKey: .text)
+
+        var parsedCancelDate: Date? = nil
+        if let cancelDateString = try? values.decode(String.self, forKey: .cancelDate) {
+            if let date = NavigationalWarningProperties.apiToDateFormatter.date(from: cancelDateString) {
+                parsedCancelDate = date
+            }
+        }
+        self.cancelDate = parsedCancelDate
         
         var parsedDate: Date? = nil
         if let dateString = try? values.decode(String.self, forKey: .issueDate) {

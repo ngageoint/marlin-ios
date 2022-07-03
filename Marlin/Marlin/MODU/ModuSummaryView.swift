@@ -39,27 +39,7 @@ struct ModuSummaryView: View {
                 .font(Font(scheme.containerScheme.typographyScheme.body2))
                 .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
                 .opacity(0.6)
-            HStack(spacing:0) {
-                if showMoreDetails {
-                    MaterialButton(title: "More Details") {
-                        NotificationCenter.default.post(name: .ViewModu, object: self.modu)
-                    }
-                    .fixedSize()
-                    .padding(.leading, -16)
-                } else {
-                    LatitudeLongitudeButton(latitude: modu.latitude ?? 0.0, longitude: modu.longitude ?? 0.0)
-                        .fixedSize()
-                        .padding(.leading, -16)
-                }
-                Spacer()
-                MaterialButton(image: UIImage(systemName: "square.and.arrow.up")) {
-                    print("share button")
-                }.fixedSize()
-                MaterialButton(image: UIImage(systemName: "scope")) {
-                    NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
-                    NotificationCenter.default.post(name: .FocusModu, object: self.modu)
-                }.fixedSize().padding(.trailing, -16)
-            }
+            ModuActionBar(modu: modu, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }
 }

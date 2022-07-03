@@ -75,11 +75,23 @@ class Modu: NSManagedObject, MKAnnotation, AnnotationWithView {
                let success = batchInsertResult.result as? Bool, success {
                 return
             }
-//            self.logger.debug("Failed to execute batch insert request.")
             throw MSIError.batchInsertError
         }
-        
-//        logger.debug("Successfully inserted data.")
+    }
+    
+    override var description: String {
+        return "MODU\n\n" +
+        "Name: \(name ?? "")\n" +
+        "Date: \(dateString ?? "")\n" +
+        "Latitude: \(latitude ?? 0.0)\n" +
+        "Longitude: \(longitude ?? 0.0)\n" +
+        "Position: \(position ?? "")\n" +
+        "Rig Status: \(rigStatus ?? "")\n" +
+        "Special Status: \(specialStatus ?? "")\n" +
+        "distance: \(distance ?? 0.0)\n" +
+        "Navigation Area: \(navArea ?? "")\n" +
+        "Region: \(region)\n" +
+        "Sub Region: \(subregion)\n"
     }
 }
 

@@ -37,7 +37,7 @@
     </entity>
     <entity name="NavigationalWarning" representedClassName=".NavigationalWarning" syncable="YES" codeGenerationType="category">
         <attribute name="authority" optional="YES" attributeType="String"/>
-        <attribute name="cancelDate" optional="YES" attributeType="String"/>
+        <attribute name="cancelDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="cancelMsgNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="cancelMsgYear" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="cancelNavArea" optional="YES" attributeType="String"/>

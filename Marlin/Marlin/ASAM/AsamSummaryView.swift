@@ -34,28 +34,7 @@ struct AsamSummaryView: View {
                 .font(Font(scheme.containerScheme.typographyScheme.body2))
                 .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
                 .opacity(0.6)
-            HStack(spacing:0) {
-                if showMoreDetails {
-                    MaterialButton(title: "More Details") {
-                        print("more details")
-                        NotificationCenter.default.post(name: .ViewAsam, object: self.asam)
-                    }
-                    .fixedSize()
-                    .padding(.leading, -16)
-                } else {
-                    LatitudeLongitudeButton(latitude: asam.latitude ?? 0.0, longitude: asam.longitude ?? 0.0)
-                        .fixedSize()
-                        .padding(.leading, -16)
-                }
-                Spacer()
-                MaterialButton(image: UIImage(systemName: "square.and.arrow.up")) {
-                    print("share button")
-                }.fixedSize()
-                MaterialButton(image: UIImage(systemName: "scope")) {
-                    NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
-                    NotificationCenter.default.post(name: .FocusAsam, object: self.asam)
-                }.fixedSize().padding(.trailing, -16)
-            }
+            AsamActionBar(asam: asam, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }
 }

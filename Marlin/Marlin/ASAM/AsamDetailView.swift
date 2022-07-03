@@ -40,19 +40,8 @@ struct AsamDetailView: View {
                             .font(Font(scheme.containerScheme.typographyScheme.headline6))
                             .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
                             .opacity(0.87)
-                        HStack(spacing:0) {
-                            LatitudeLongitudeButton(latitude: asam.latitude ?? 0.0, longitude: asam.longitude ?? 0.0)
-                                .fixedSize()
-                                .padding(.leading, -16)
-                            Spacer()
-                            MaterialButton(image: UIImage(systemName: "square.and.arrow.up")) {
-                                print("share button")
-                            }.fixedSize()
-                            MaterialButton(image: UIImage(systemName: "scope")) {
-                                NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
-                                NotificationCenter.default.post(name: .FocusAsam, object: self.asam)
-                            }.fixedSize().padding(.trailing, -16)
-                        }.padding(.bottom, 16)
+                        AsamActionBar(asam: asam)
+                            .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
                 }
                 

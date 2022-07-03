@@ -12,11 +12,9 @@ struct NavigationalWarningSummaryView: View {
     @EnvironmentObject var scheme: MarlinScheme
     
     var navigationalWarning: NavigationalWarning
-    var showMoreDetails: Bool = false
     
-    init(navigationalWarning: NavigationalWarning, showMoreDetails: Bool = false) {
+    init(navigationalWarning: NavigationalWarning) {
         self.navigationalWarning = navigationalWarning
-        self.showMoreDetails = showMoreDetails
     }
     
     var body: some View {
@@ -35,23 +33,7 @@ struct NavigationalWarningSummaryView: View {
                 .font(Font(scheme.containerScheme.typographyScheme.body2))
                 .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
                 .opacity(0.6)
-            HStack(spacing:0) {
-                if showMoreDetails {
-                    MaterialButton(title: "More Details") {
-                        print("more details")
-                        NotificationCenter.default.post(name: .ViewNavigationalWarning, object: self.navigationalWarning)
-                    }
-                    .fixedSize()
-                    .padding(.leading, -16)
-                }
-                Spacer()
-                MaterialButton(image: UIImage(systemName: "square.and.arrow.up")) {
-                    print("share button")
-                }.fixedSize()
-                MaterialButton(image: UIImage(systemName: "scope")) {
-                    print("share button")
-                }.fixedSize().padding(.trailing, -16)
-            }
+            NavigationalWarningActionBar(navigationalWarning: navigationalWarning)
         }
     }
 }

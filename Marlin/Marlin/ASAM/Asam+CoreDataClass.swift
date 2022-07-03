@@ -75,13 +75,22 @@ class Asam: NSManagedObject, MKAnnotation, AnnotationWithView {
                let success = batchInsertResult.result as? Bool, success {
                 return
             }
-//            self.logger.debug("Failed to execute batch insert request.")
             throw MSIError.batchInsertError
         }
-        
-//        logger.debug("Successfully inserted data.")
     }
     
+    override var description: String {
+        return "ASAM\n\n" +
+        "Reference: \(reference ?? "")\n" +
+        "Date: \(dateString ?? "")\n" +
+        "Latitude: \(latitude ?? 0.0)\n" +
+        "Longitude: \(longitude ?? 0.0)\n" +
+        "Navigate Area: \(navArea ?? "")\n" +
+        "Subregion: \(subreg ?? "")\n" +
+        "Description: \(asamDescription ?? "")\n" +
+        "Hostility: \(hostility ?? "")\n" +
+        "Victim: \(victim ?? "")\n"
+    }
 }
 
 struct AsamPropertyContainer: Decodable {

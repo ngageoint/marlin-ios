@@ -35,21 +35,13 @@ struct NavigationalWarningDetailView: View {
                     if let authority = navigationalWarning.authority {
                         Property(property: "Authority", value: authority)
                     }
-                    if let cancelDate = navigationalWarning.cancelDate {
-                        Property(property: "Cancel Date", value: cancelDate)
+                    if let cancelDateString = navigationalWarning.cancelDateString {
+                        Property(property: "Cancel Date", value: cancelDateString)
                     }
                     if let cancelNavArea = navigationalWarning.cancelNavArea, let cancelMsgNumber = navigationalWarning.cancelMsgNumber, let cancelMsgYear = navigationalWarning.cancelMsgYear, let navAreaEnum = NavigationalWarningNavArea(rawValue: cancelNavArea){
                         Property(property: "Cancelled By", value: "\(navAreaEnum.description) \(cancelMsgNumber)/\(cancelMsgYear)")
                     }
-                    HStack(spacing:0) {
-                        Spacer()
-                        MaterialButton(image: UIImage(systemName: "square.and.arrow.up")) {
-                            print("share button")
-                        }.fixedSize()
-                        MaterialButton(image: UIImage(systemName: "scope")) {
-                            print("share button")
-                        }.fixedSize().padding(.trailing, -16)
-                    }
+                    NavigationalWarningActionBar(navigationalWarning: navigationalWarning)
                 }
                 .padding(.all, 16)
                 .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
@@ -63,10 +55,11 @@ struct NavigationalWarningDetailView: View {
             
             Section("Text") {
                 Text(navigationalWarning.text ?? "")
+                    .multilineTextAlignment(.leading)
                     .font(Font(scheme.containerScheme.typographyScheme.body2))
                     .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
                     .opacity(0.6)
-                    .frame(maxWidth:.infinity)
+                    .frame(maxWidth:.infinity, alignment: .leading)
                     .padding(.all, 16)
                     .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
                     .modifier(CardModifier())

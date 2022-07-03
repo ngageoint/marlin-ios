@@ -39,13 +39,13 @@ struct NavigationalWarningNavAreaListView: View {
                                 NavigationalWarningSummaryView(navigationalWarning: navigationalWarning)
                             }
                             .padding(.all, 16)
-                            
                             .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
                             .modifier(CardModifier())
                             .background(GeometryReader {
                                 return Color.clear.preference(key: ViewOffsetKey.self,
                                                               value: -$0.frame(in: .named("scroll")).origin.y)
                             })
+
                             .onPreferenceChange(ViewOffsetKey.self) { offset in
                                 if offset > 0 {
                                     firstUnseenNavigationalWarning = navigationalWarning

@@ -40,19 +40,8 @@ struct ModuDetailView: View {
                             .font(Font(scheme.containerScheme.typographyScheme.headline6))
                             .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
                             .opacity(0.87)
-                        HStack(spacing:0) {
-                            LatitudeLongitudeButton(latitude: modu.latitude ?? 0.0, longitude: modu.longitude ?? 0.0)
-                                .fixedSize()
-                                .padding(.leading, -16)
-                            Spacer()
-                            MaterialButton(image: UIImage(systemName: "square.and.arrow.up")) {
-                                print("share button")
-                            }.fixedSize()
-                            MaterialButton(image: UIImage(systemName: "scope")) {
-                                NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
-                                NotificationCenter.default.post(name: .FocusModu, object: self.modu)
-                            }.fixedSize().padding(.trailing, -16)
-                        }.padding(.bottom, 16)
+                        ModuActionBar(modu: modu)
+                            .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
                 }
                 

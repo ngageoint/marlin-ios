@@ -141,6 +141,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     func focusAnnotation(notification: MapAnnotationFocusedNotification) {
         guard let annotation = notification.annotation as? AnnotationWithView, let annotationView = annotation.annotationView else {
             if let enlargedLocationView = enlargedLocationView {
+                self.enlargedLocationView = nil
                 // shrink the old focused view
                 UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut) {
                     enlargedLocationView.transform = enlargedLocationView.transform.scaledBy(x: 0.5, y: 0.5)
@@ -151,7 +152,6 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
                     }
                 }
             }
-            self.enlargedLocationView = nil
             return
         }
         
