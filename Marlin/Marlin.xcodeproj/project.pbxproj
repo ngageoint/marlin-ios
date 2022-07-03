@@ -60,8 +60,6 @@
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
 		F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59785285A206700F9B32E /* AsamDetailView.swift */; };
 		F7F59789285A277000F9B32E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59788285A277000F9B32E /* Card.swift */; };
-		F7F5978B285BA41000F9B32E /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5978A285BA40F00F9B32E /* Button.swift */; };
-		F7F5978D285BABA100F9B32E /* LatitudeLongitudeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5978C285BABA100F9B32E /* LatitudeLongitudeButton.swift */; };
 		F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5978F285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift */; };
 		F7F59795285BE27400F9B32E /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59794285BE27400F9B32E /* Property.swift */; };
 		F7F59797285D15B900F9B32E /* ModuListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59796285D15B900F9B32E /* ModuListView.swift */; };
@@ -160,8 +158,6 @@
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
 		F7F59785285A206700F9B32E /* AsamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDetailView.swift; sourceTree = "<group>"; };
 		F7F59788285A277000F9B32E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
-		F7F5978A285BA40F00F9B32E /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
-		F7F5978C285BABA100F9B32E /* LatitudeLongitudeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatitudeLongitudeButton.swift; sourceTree = "<group>"; };
 		F7F5978F285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2DExtensions.swift; sourceTree = "<group>"; };
 		F7F59794285BE27400F9B32E /* Property.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Property.swift; sourceTree = "<group>"; };
 		F7F59796285D15B900F9B32E /* ModuListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuListView.swift; sourceTree = "<group>"; };
@@ -404,7 +400,6 @@
 			isa = PBXGroup;
 			children = (
 				F7F59788285A277000F9B32E /* Card.swift */,
-				F7F5978A285BA40F00F9B32E /* Button.swift */,
 				F7D671D1286DD20800758F1C /* FloatingButton.swift */,
 				F7D671DD286F877C00758F1C /* MaterialButtonStyle.swift */,
 			);
@@ -425,7 +420,6 @@
 		F7F59793285BE23F00F9B32E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				F7F5978C285BABA100F9B32E /* LatitudeLongitudeButton.swift */,
 				F7F59794285BE27400F9B32E /* Property.swift */,
 			);
 			path = Views;
@@ -703,7 +697,6 @@
 				F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */,
 				F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */,
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
-				F7F5978B285BA41000F9B32E /* Button.swift in Sources */,
 				F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
@@ -742,7 +735,6 @@
 				F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */,
 				F7F59797285D15B900F9B32E /* ModuListView.swift in Sources */,
 				F71DF4A02859116C00686951 /* Notifications.swift in Sources */,
-				F7F5978D285BABA100F9B32E /* LatitudeLongitudeButton.swift in Sources */,
 				F7D671DE286F877C00758F1C /* MaterialButtonStyle.swift in Sources */,
 				F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */,
 				F71DF49C2859025200686951 /* AsamAnnotation.swift in Sources */,
