@@ -10,10 +10,15 @@ import CoreData
 import OSLog
 import MapKit
 
-class Modu: NSManagedObject, MKAnnotation, AnnotationWithView {
+class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
     
+    static var isMappable: Bool = true
+    static var dataSourceName: String = "MODU"
+    static var key: String = "Modu"
+    
+    static var color: UIColor = UIColor(red: 0.00, green: 0.29, blue: 0.68, alpha: 1.00)
     var color: UIColor {
-        return UIColor(red: 0.00, green: 0.29, blue: 0.68, alpha: 1.00)
+        return Modu.color
     }
     
     var coordinate: CLLocationCoordinate2D {
@@ -142,7 +147,6 @@ struct ModuProperties: Decodable {
         let rawLatitude = try? values.decode(Decimal.self, forKey: .latitude)
         let rawLongitude = try? values.decode(Decimal.self, forKey: .longitude)
         
-        // Ignore earthquakes with missing data.
         guard let name = rawName,
               let latitude = rawLatitude,
               let longitude = rawLongitude

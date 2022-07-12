@@ -11,9 +11,16 @@ import CoreData
 import OSLog
 import MapKit
 
-class Asam: NSManagedObject, MKAnnotation, AnnotationWithView {
+class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
+    
+    static var isMappable: Bool = true
+    static var dataSourceName: String = "ASAM"
+    static var key: String = "Asam"
+    
+    static var color: UIColor = .black
+    
     var color: UIColor {
-        return .black
+        return Asam.color
     }
     
     var coordinate: CLLocationCoordinate2D {
@@ -97,7 +104,6 @@ struct AsamPropertyContainer: Decodable {
     let asam: [AsamProperties]
 }
 
-/// A struct encapsulating the properties of a Quake.
 struct AsamProperties: Decodable {
     
     static let dateFormatter: DateFormatter = {
@@ -138,7 +144,6 @@ struct AsamProperties: Decodable {
         let rawLatitude = try? values.decode(Decimal.self, forKey: .latitude)
         let rawLongitude = try? values.decode(Decimal.self, forKey: .longitude)
         
-        // Ignore earthquakes with missing data.
         guard let reference = rawReference,
               let latitude = rawLatitude,
               let longitude = rawLongitude
