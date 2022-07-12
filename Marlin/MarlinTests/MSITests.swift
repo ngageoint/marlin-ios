@@ -126,7 +126,7 @@ class MSITests: KIFSpec {
             }
         }
         
-        fdescribe("Navigational Warnings Tests") {
+        describe("Navigational Warnings Tests") {
             
             beforeEach {
                 TestHelpers.clearData()
@@ -161,6 +161,51 @@ class MSITests: KIFSpec {
 //                let formatter = DateFormatter()
 //                formatter.dateFormat = "yyyy-MM-dd"
 //                expect(modu?.date).to(equal(formatter.date(from:"2021-04-16")))
+            }
+        }
+        
+        fdescribe("Lights Tests") {
+            
+            beforeEach {
+                TestHelpers.clearData()
+            }
+            
+            afterEach {
+                HTTPStubs.removeAllStubs();
+//                TestHelpers.clearData()
+            }
+            
+            it("should parse the position") {
+                print("running a test")
+                let position = "60°03'31.4\"N \n43°09'27.4\"W"
+                let coordinate = LightsProperties.parsePosition(position: position)
+                print("xxx coordinate \(coordinate)")
+            }
+            
+            fit("should pull LIghts") {
+                print("running a test")
+                var stubCalled = false;
+                stub(condition: isMethodGET() &&
+                     isHost("msi.gs.mil") &&
+                     isScheme("https") &&
+                     isPath("/api/publications/ngalol/lights-buoys")
+                ) { (request) -> HTTPStubsResponse in
+                    stubCalled = true;
+                    let stubPath = OHPathForFile("lights.json", MSITests.self);
+                    return HTTPStubsResponse(fileAtPath: stubPath!, statusCode: 200, headers: ["Content-Type": "application/json"]);
+                }
+                
+                MSI.shared.loadLights()
+                expect(stubCalled).toEventually(beTrue());
+                
+                let persistenceController = PersistenceController.shared
+                expect(try? persistenceController.container.viewContext.countOfObjects(Lights.self)).toEventually(equal(4))
+                let nw = persistenceController.container.viewContext.fetchFirst(Lights.self, key: "noticeNumber", value: "201507")
+                expect(nw?.noticeNumber).to(equal(201507))
+                print("xxx coordinate \(nw?.coordinate)")
+                //                let formatter = DateFormatter()
+                //                formatter.dateFormat = "yyyy-MM-dd"
+                //                expect(modu?.date).to(equal(formatter.date(from:"2021-04-16")))
             }
         }
     }

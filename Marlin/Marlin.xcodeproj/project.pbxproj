@@ -9,6 +9,21 @@
 /* Begin PBXBuildFile section */
 		7982FB9B536447055E423E94 /* libPods-Marlin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0F14076A8393C9747AD1FE /* libPods-Marlin.a */; };
 		D7A569C784B0F2D5720432C4 /* libPods-MarlinTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */; };
+		F707BA722874B9F4006A94C4 /* userDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = F707BA712874B9F4006A94C4 /* userDefaults.plist */; };
+		F707BA742875DD22006A94C4 /* DataDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA732875DD22006A94C4 /* DataDetailView.swift */; };
+		F707BA7728760EE7006A94C4 /* Lights+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7628760EE7006A94C4 /* Lights+CoreDataClass.swift */; };
+		F707BA79287632E1006A94C4 /* LightsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA78287632E1006A94C4 /* LightsListView.swift */; };
+		F707BA7B28763309006A94C4 /* LightSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7A28763309006A94C4 /* LightSummaryView.swift */; };
+		F707BA7D2877329E006A94C4 /* LightActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7C2877329E006A94C4 /* LightActionBar.swift */; };
+		F707BA7F287736A8006A94C4 /* lights.json in Resources */ = {isa = PBXBuildFile; fileRef = F707BA7E287736A8006A94C4 /* lights.json */; };
+		F707BA81287768FA006A94C4 /* LightDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA80287768FA006A94C4 /* LightDetailView.swift */; };
+		F707BA8328786F11006A94C4 /* LightCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA8228786F11006A94C4 /* LightCircle.swift */; };
+		F707BA852878DBFF006A94C4 /* AdaptiveImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA842878DBFF006A94C4 /* AdaptiveImage.swift */; };
+		F707BA87287C6596006A94C4 /* LightCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA86287C6596006A94C4 /* LightCard.swift */; };
+		F707BA89287C68E7006A94C4 /* RaconCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA88287C68E7006A94C4 /* RaconCard.swift */; };
+		F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA8A287C6D18006A94C4 /* MorseCode.swift */; };
+		F707BA8D287C89ED006A94C4 /* LightMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA8C287C89ED006A94C4 /* LightMap.swift */; };
+		F707BA8F287DC999006A94C4 /* LightTileOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA8E287DC999006A94C4 /* LightTileOverlay.swift */; };
 		F71DF47E284E68DE00686951 /* asams.json in Resources */ = {isa = PBXBuildFile; fileRef = F71DF47D284E68DE00686951 /* asams.json */; };
 		F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */; };
 		F71DF482284E783600686951 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF481284E783600686951 /* TestHelper.swift */; };
@@ -57,6 +72,12 @@
 		F7D671E02871BFEC00758F1C /* ModuActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671DF2871BFEC00758F1C /* ModuActionBar.swift */; };
 		F7D671E22871C29A00758F1C /* AsamActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671E12871C29A00758F1C /* AsamActionBar.swift */; };
 		F7D671E42871C5F900758F1C /* NavigationalWarningActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671E32871C5F900758F1C /* NavigationalWarningActionBar.swift */; };
+		F7D671E72871D46000758F1C /* SideMenuContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671E62871D46000758F1C /* SideMenuContent.swift */; };
+		F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671E82871D4C700758F1C /* SideMenu.swift */; };
+		F7D671EB2871D73200758F1C /* HamburgerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671EA2871D73200758F1C /* HamburgerButton.swift */; };
+		F7D671ED2874737F00758F1C /* DataSourceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671EC2874737F00758F1C /* DataSourceCell.swift */; };
+		F7D671EF287475BC00758F1C /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671EE287475BC00758F1C /* DataSource.swift */; };
+		F7D671F1287484FE00758F1C /* MarlinUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671F0287484FE00758F1C /* MarlinUserDefaults.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
 		F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59785285A206700F9B32E /* AsamDetailView.swift */; };
 		F7F59789285A277000F9B32E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59788285A277000F9B32E /* Card.swift */; };
@@ -104,6 +125,21 @@
 		96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MarlinTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C95BD18A52FCC50ED2ED6E21 /* Pods-MarlinTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarlinTests.release.xcconfig"; path = "Target Support Files/Pods-MarlinTests/Pods-MarlinTests.release.xcconfig"; sourceTree = "<group>"; };
 		F32BF352638699CBFE1A8D52 /* Pods-Marlin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Marlin.release.xcconfig"; path = "Target Support Files/Pods-Marlin/Pods-Marlin.release.xcconfig"; sourceTree = "<group>"; };
+		F707BA712874B9F4006A94C4 /* userDefaults.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = userDefaults.plist; sourceTree = "<group>"; };
+		F707BA732875DD22006A94C4 /* DataDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDetailView.swift; sourceTree = "<group>"; };
+		F707BA7628760EE7006A94C4 /* Lights+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Lights+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F707BA78287632E1006A94C4 /* LightsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsListView.swift; sourceTree = "<group>"; };
+		F707BA7A28763309006A94C4 /* LightSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightSummaryView.swift; sourceTree = "<group>"; };
+		F707BA7C2877329E006A94C4 /* LightActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightActionBar.swift; sourceTree = "<group>"; };
+		F707BA7E287736A8006A94C4 /* lights.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = lights.json; sourceTree = "<group>"; };
+		F707BA80287768FA006A94C4 /* LightDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightDetailView.swift; sourceTree = "<group>"; };
+		F707BA8228786F11006A94C4 /* LightCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightCircle.swift; sourceTree = "<group>"; };
+		F707BA842878DBFF006A94C4 /* AdaptiveImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveImage.swift; sourceTree = "<group>"; };
+		F707BA86287C6596006A94C4 /* LightCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightCard.swift; sourceTree = "<group>"; };
+		F707BA88287C68E7006A94C4 /* RaconCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaconCard.swift; sourceTree = "<group>"; };
+		F707BA8A287C6D18006A94C4 /* MorseCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseCode.swift; sourceTree = "<group>"; };
+		F707BA8C287C89ED006A94C4 /* LightMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightMap.swift; sourceTree = "<group>"; };
+		F707BA8E287DC999006A94C4 /* LightTileOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightTileOverlay.swift; sourceTree = "<group>"; };
 		F71DF47D284E68DE00686951 /* asams.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = asams.json; sourceTree = "<group>"; };
 		F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extensions.swift"; sourceTree = "<group>"; };
 		F71DF481284E783600686951 /* TestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
@@ -155,6 +191,12 @@
 		F7D671DF2871BFEC00758F1C /* ModuActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuActionBar.swift; sourceTree = "<group>"; };
 		F7D671E12871C29A00758F1C /* AsamActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamActionBar.swift; sourceTree = "<group>"; };
 		F7D671E32871C5F900758F1C /* NavigationalWarningActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningActionBar.swift; sourceTree = "<group>"; };
+		F7D671E62871D46000758F1C /* SideMenuContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuContent.swift; sourceTree = "<group>"; };
+		F7D671E82871D4C700758F1C /* SideMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenu.swift; sourceTree = "<group>"; };
+		F7D671EA2871D73200758F1C /* HamburgerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HamburgerButton.swift; sourceTree = "<group>"; };
+		F7D671EC2874737F00758F1C /* DataSourceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceCell.swift; sourceTree = "<group>"; };
+		F7D671EE287475BC00758F1C /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
+		F7D671F0287484FE00758F1C /* MarlinUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinUserDefaults.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
 		F7F59785285A206700F9B32E /* AsamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDetailView.swift; sourceTree = "<group>"; };
 		F7F59788285A277000F9B32E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
@@ -226,12 +268,31 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		F707BA7528760894006A94C4 /* Lights */ = {
+			isa = PBXGroup;
+			children = (
+				F707BA7628760EE7006A94C4 /* Lights+CoreDataClass.swift */,
+				F707BA78287632E1006A94C4 /* LightsListView.swift */,
+				F707BA7A28763309006A94C4 /* LightSummaryView.swift */,
+				F707BA7C2877329E006A94C4 /* LightActionBar.swift */,
+				F707BA80287768FA006A94C4 /* LightDetailView.swift */,
+				F707BA8228786F11006A94C4 /* LightCircle.swift */,
+				F707BA86287C6596006A94C4 /* LightCard.swift */,
+				F707BA88287C68E7006A94C4 /* RaconCard.swift */,
+				F707BA8A287C6D18006A94C4 /* MorseCode.swift */,
+				F707BA8C287C89ED006A94C4 /* LightMap.swift */,
+				F707BA8E287DC999006A94C4 /* LightTileOverlay.swift */,
+			);
+			path = Lights;
+			sourceTree = "<group>";
+		};
 		F71DF47C284E68C200686951 /* responses */ = {
 			isa = PBXGroup;
 			children = (
 				F71DF47D284E68DE00686951 /* asams.json */,
 				F71DF4832857942D00686951 /* modus.json */,
 				F7F597A72864BF9D00F9B32E /* navwarnings.json */,
+				F707BA7E287736A8006A94C4 /* lights.json */,
 			);
 			path = responses;
 			sourceTree = "<group>";
@@ -306,6 +367,8 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
+				F707BA7528760894006A94C4 /* Lights */,
+				F7D671E52871D44E00758F1C /* SideMenu */,
 				F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */,
 				F7D671C1286C85EF00758F1C /* GeoPackage */,
 				F7F597A4286271E100F9B32E /* NavigationalWarning */,
@@ -324,6 +387,9 @@
 				F71DF4872857B0CC00686951 /* MarlinTabView.swift */,
 				F71DF49F2859116C00686951 /* Notifications.swift */,
 				F71DF4AE285927D600686951 /* MarlinScheme.swift */,
+				F7D671EE287475BC00758F1C /* DataSource.swift */,
+				F7D671F0287484FE00758F1C /* MarlinUserDefaults.swift */,
+				F707BA712874B9F4006A94C4 /* userDefaults.plist */,
 			);
 			path = Marlin;
 			sourceTree = "<group>";
@@ -364,6 +430,16 @@
 				F7D671C4286C8A3100758F1C /* GeoPackage.swift */,
 			);
 			path = GeoPackage;
+			sourceTree = "<group>";
+		};
+		F7D671E52871D44E00758F1C /* SideMenu */ = {
+			isa = PBXGroup;
+			children = (
+				F7D671E62871D46000758F1C /* SideMenuContent.swift */,
+				F7D671E82871D4C700758F1C /* SideMenu.swift */,
+				F7D671EC2874737F00758F1C /* DataSourceCell.swift */,
+			);
+			path = SideMenu;
 			sourceTree = "<group>";
 		};
 		F7F5977F285A1B2400F9B32E /* ASAM */ = {
@@ -421,6 +497,9 @@
 			isa = PBXGroup;
 			children = (
 				F7F59794285BE27400F9B32E /* Property.swift */,
+				F7D671EA2871D73200758F1C /* HamburgerButton.swift */,
+				F707BA732875DD22006A94C4 /* DataDetailView.swift */,
+				F707BA842878DBFF006A94C4 /* AdaptiveImage.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -566,6 +645,7 @@
 			files = (
 				F7F597A82864BF9D00F9B32E /* navwarnings.json in Resources */,
 				F71DF4842857942D00686951 /* modus.json in Resources */,
+				F707BA7F287736A8006A94C4 /* lights.json in Resources */,
 				F71DF47E284E68DE00686951 /* asams.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -577,6 +657,7 @@
 				F7A54CDB2848149700E5F565 /* Assets.xcassets in Resources */,
 				F7D671CC286C98B200758F1C /* natural_earth_1_100.gpkg in Resources */,
 				F71DF4972858CC8100686951 /* asams.json in Resources */,
+				F707BA722874B9F4006A94C4 /* userDefaults.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -688,8 +769,12 @@
 			files = (
 				F71DF49E285910CE00686951 /* BottomSheetEnabled.swift in Sources */,
 				F7D671E42871C5F900758F1C /* NavigationalWarningActionBar.swift in Sources */,
+				F7D671ED2874737F00758F1C /* DataSourceCell.swift in Sources */,
+				F707BA8F287DC999006A94C4 /* LightTileOverlay.swift in Sources */,
 				F71DF4882857B0CC00686951 /* MarlinTabView.swift in Sources */,
+				F707BA7728760EE7006A94C4 /* Lights+CoreDataClass.swift in Sources */,
 				F7F59799285D166700F9B32E /* ModuDetailView.swift in Sources */,
+				F707BA7B28763309006A94C4 /* LightSummaryView.swift in Sources */,
 				F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */,
 				F7D671C5286C8A3100758F1C /* GeoPackage.swift in Sources */,
 				F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */,
@@ -697,10 +782,17 @@
 				F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */,
 				F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */,
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
+				F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */,
+				F707BA79287632E1006A94C4 /* LightsListView.swift in Sources */,
 				F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */,
+				F707BA87287C6596006A94C4 /* LightCard.swift in Sources */,
+				F7D671EB2871D73200758F1C /* HamburgerButton.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
+				F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */,
+				F7D671F1287484FE00758F1C /* MarlinUserDefaults.swift in Sources */,
 				F71DF4862857954A00686951 /* Modu+CoreDataClass.swift in Sources */,
+				F7D671E72871D46000758F1C /* SideMenuContent.swift in Sources */,
 				F7F59789285A277000F9B32E /* Card.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				F7F597B22866248700F9B32E /* NavigationalWarningNavAreaListView.swift in Sources */,
@@ -712,12 +804,14 @@
 				F71DF4A3285911D700686951 /* MarlinBottomSheetViewController.swift in Sources */,
 				F7F5979B285D177400F9B32E /* ModuAnnotation.swift in Sources */,
 				F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */,
+				F7D671EF287475BC00758F1C /* DataSource.swift in Sources */,
 				F7F597A1285D189500F9B32E /* ModuBottomSheet.swift in Sources */,
 				F71DF4992858DA4700686951 /* AsamMap.swift in Sources */,
 				F727A684284E351800BD728A /* MSIError.swift in Sources */,
 				F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */,
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
 				F7D671D2286DD20800758F1C /* FloatingButton.swift in Sources */,
+				F707BA8328786F11006A94C4 /* LightCircle.swift in Sources */,
 				F7F59795285BE27400F9B32E /* Property.swift in Sources */,
 				F7F597B02866241100F9B32E /* NavigationalWarningsAreaDataSource.swift in Sources */,
 				F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */,
@@ -729,18 +823,24 @@
 				F7F597AC2864DD5200F9B32E /* NavigationalWarningListView.swift in Sources */,
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
 				F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */,
+				F707BA8D287C89ED006A94C4 /* LightMap.swift in Sources */,
+				F707BA852878DBFF006A94C4 /* AdaptiveImage.swift in Sources */,
+				F707BA89287C68E7006A94C4 /* RaconCard.swift in Sources */,
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
 				F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */,
+				F707BA742875DD22006A94C4 /* DataDetailView.swift in Sources */,
 				F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */,
 				F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */,
 				F7F59797285D15B900F9B32E /* ModuListView.swift in Sources */,
 				F71DF4A02859116C00686951 /* Notifications.swift in Sources */,
 				F7D671DE286F877C00758F1C /* MaterialButtonStyle.swift in Sources */,
+				F707BA7D2877329E006A94C4 /* LightActionBar.swift in Sources */,
 				F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */,
 				F71DF49C2859025200686951 /* AsamAnnotation.swift in Sources */,
 				F7A54CD72848149700E5F565 /* AsamListView.swift in Sources */,
 				F7F597A62862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift in Sources */,
 				F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */,
+				F707BA81287768FA006A94C4 /* LightDetailView.swift in Sources */,
 				F7F597A3286238F400F9B32E /* MSIMapCluster.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,0 +1,37 @@
+
+{"ngalol":[
+    {
+        "volumeNumber":"PUB 110","aidType":"Lighted Aids","geopoliticalHeading":"GREENLAND","regionHeading":"ANGMAGSSALIK:","subregionHeading":null,"localHeading":null,"precedingNote":null,"featureNumber":"4\nL5000","name":"-Outer.","position":"65°35'32.1\"N \n37°34'08.9\"W","charNo":1,"characteristic":"Fl.W.\nperiod 5s \nfl. 1.0s, ec. 4.0s \n","heightFeetMeters":"36\n11","range":"7","structure":"Yellow pedestal, red band; 7.\n","remarks":null,"postNote":null,"noticeNumber":201507,"removeFromList":"N","deleteFlag":"Y","noticeWeek":"07","noticeYear":"2015"
+        
+    },{
+        "volumeNumber":"PUB 110","aidType":"Lighted Aids","geopoliticalHeading":"GREENLAND","regionHeading":null,"subregionHeading":null,"localHeading":null,"precedingNote":null,"featureNumber":"6","name":"Kulusuk, NW Coast, RACON.","position":"65°33'53.89\"N \n37°12'25.7\"W","charNo":1,"characteristic":"T(- )\nperiod 60s \n","heightFeetMeters":null,"range":null,"structure":null,"remarks":"(3 & 10cm).\n","postNote":null,"noticeNumber":201507,"removeFromList":"N","deleteFlag":"Y","noticeWeek":"07","noticeYear":"2015"
+    },{
+        "volumeNumber":"PUB 110","aidType":"Lighted Aids","geopoliticalHeading":"GREENLAND","regionHeading":null,"subregionHeading":null,"localHeading":null,"precedingNote":null,"featureNumber":"8\nL5100","name":"Prins Christians Sund.","position":"60°03'31.4\"N \n43°09'27.4\"W","charNo":1,"characteristic":"Fl.W.R.G.\nperiod 5s \nfl. 1.0s, ec. 4.0s \n","heightFeetMeters":"295\n90","range":"W. 14 \nR. 11 \nG. 11","structure":"Orange tower; 15.\n","remarks":"W. 000°-180°, R.-255°, G.-263°, W.-288°, R.-295°, G.-000°.\n","postNote":null,"noticeNumber":201507,"removeFromList":"N","deleteFlag":"Y","noticeWeek":"07","noticeYear":"2015"
+    },{
+        "volumeNumber":"PUB 110","aidType":"Lighted Aids","geopoliticalHeading":"GREENLAND","regionHeading":null,"subregionHeading":null,"localHeading":null,"precedingNote":null,"featureNumber":"8\nL5100","name":"RACON","position":"60°03'31.4\"N \n43°09'27.4\"W","charNo":2,"characteristic":"T(- )\nperiod 60s \n","heightFeetMeters":null,"range":null,"structure":null,"remarks":"(3 & 10cm).\n","postNote":null,"noticeNumber":201507,"removeFromList":"N","deleteFlag":"Y","noticeWeek":"07","noticeYear":"2015"
+    }, {
+        "volumeNumber": "PUB 113",
+        "aidType": "Lighted Aids",
+        "geopoliticalHeading": "FRANCE-WEST COAST",
+        "regionHeading": "GIRONDE:",
+        "subregionHeading": null,
+        "localHeading": null,
+        "precedingNote": null,
+        "featureNumber": "1480\nD1300",
+        "name": "-Plateau de Cordouan.",
+        "position": "45°35'10.63\"N \n1°10'23.75\"W",
+        "charNo": 1,
+        "characteristic": "Oc.(2+1)W.R.G.\nperiod 12s \nfl. 3.6s, ec. 1.2s \nfl. 3.6s, ec. 1.2s \nfl. 1.2s, ec. 1.2s \n",
+        "heightFeetMeters": "197\n60",
+        "range": "W. 19 \nR. 16 \nG. 15",
+        "structure": "White tower, gray top; 223.\n",
+        "remarks": "W. 014°-126°, G.-178°30`, W.-250°, W.(unintensified)-267°, R.(unintensified)-294°30`, R.-014°.\n",
+        "postNote": null,
+        "noticeNumber": 201548,
+        "removeFromList": "N",
+        "deleteFlag": "Y",
+        "noticeWeek": "48",
+        "noticeYear": "2015"
+    }
+    ]
+}
