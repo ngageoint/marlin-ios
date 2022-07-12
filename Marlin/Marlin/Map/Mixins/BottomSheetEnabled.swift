@@ -155,7 +155,6 @@ class BottomSheetMixin: NSObject, MapMixin {
 
 extension BottomSheetMixin : MDCBottomSheetControllerDelegate {
     func bottomSheetControllerDidDismissBottomSheet(_ controller: MDCBottomSheetController) {
-        print("xxx bottom sheet dismiss being sent")
         NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: nil, mapView: mapView))
         mageBottomSheet = nil
         bottomSheet = nil

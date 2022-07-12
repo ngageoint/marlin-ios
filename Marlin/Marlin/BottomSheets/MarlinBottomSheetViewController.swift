@@ -252,7 +252,6 @@ class MarlinBottomSheetViewController: UIViewController {
     
     func populateView() {
         let item = self.items[self.pageControl.currentPage];
-        print("xxx posting map focused notification")
         NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: item.annotationView?.annotation, mapView: mapView))
         
         UIView.transition(with: self.view, duration: 0.3, options: .transitionCrossDissolve, animations: {

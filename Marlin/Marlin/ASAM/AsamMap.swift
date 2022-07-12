@@ -13,8 +13,8 @@ import Combine
 
 class AsamMap: NSObject, MapMixin {
     var mapView: MKMapView?
-    var focusAsamSink: AnyCancellable?
-    
+    var cancellable = Set<AnyCancellable>()
+
     var fetchedResultsController: NSFetchedResultsController<Asam>?
     
     func cleanupMixin() {
@@ -24,12 +24,12 @@ class AsamMap: NSObject, MapMixin {
         self.mapView = mapView
         mapView.register(AsamAnnotationView.self, forAnnotationViewWithReuseIdentifier: AsamAnnotationView.ReuseID)
         
-        focusAsamSink =
         NotificationCenter.default.publisher(for: .FocusAsam)
             .compactMap {$0.object as? Asam}
             .sink(receiveValue: { [weak self] in
                 self?.focusAsam(asam: $0)
             })
+            .store(in: &cancellable)
         
         let fetchRequest = Asam.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Asam.date, ascending: true)]
@@ -44,7 +44,26 @@ class AsamMap: NSObject, MapMixin {
             print("\(fetchError), \(fetchError.localizedDescription)")
         }
 
-        addInitialAsams(asams: fetchedResultsController?.fetchedObjects)
+        UserDefaults.standard
+            .publisher(for: \.showOnMapAsam)
+            .removeDuplicates()
+            .handleEvents(receiveOutput: { show in
+                print("Show Asams: \(show)")
+            })
+            .sink() { [weak self] in
+                self?.toggleAsams(showAsams: $0)
+            }
+            .store(in: &cancellable)
+    }
+    
+    func toggleAsams(showAsams: Bool) {
+        if let asams = fetchedResultsController?.fetchedObjects {
+            if showAsams {
+                mapView?.addAnnotations(asams)
+            } else {
+                mapView?.removeAnnotations(asams)
+            }
+        }
     }
     
     func focusAsam(asam: Asam) {

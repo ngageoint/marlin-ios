@@ -113,9 +113,7 @@ class GeoPackage: NSObject {
                 var geometryColumnName: String?
                 var featureDataTypes: [String : String] = [:]
                 var values: [String : Any] = [:]
-                
-                var coordinate = location
-                
+                                
                 for i in 0...featureRow.columnCount() {
                     let value = featureRow.value(with: i)
                     let columnName = columnName(dataColumnsDao: dataColumnsDao, featureRow: featureRow, columnName: featureRow.columnName(with: i))
@@ -136,7 +134,6 @@ class GeoPackage: NSObject {
                 }
             }
         }
-        print("xxx feature rows \(featureRows)")
         return featureRows
     }
 }

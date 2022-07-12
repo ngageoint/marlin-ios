@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct NavigationalWarningActionBar: View {
+    @EnvironmentObject var scheme: MarlinScheme
+
     var navigationalWarning: NavigationalWarning
     
     var body: some View {
@@ -21,6 +23,7 @@ struct NavigationalWarningActionBar: View {
                     title: {},
                     icon: { Image(systemName: "square.and.arrow.up")
                             .renderingMode(.template)
+                            .foregroundColor(Color(scheme.containerScheme.colorScheme.primaryColorVariant))
                     })
             }
         }

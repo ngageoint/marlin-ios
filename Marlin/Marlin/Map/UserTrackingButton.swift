@@ -11,16 +11,15 @@ import MapKit
 struct UserTrackingButton: View {
     @EnvironmentObject var scheme: MarlinScheme
     var mapView: MKMapView
-    var locationManager: CLLocationManager?
     
     @State var imageName: String = "location"
     @State var appearDisabled: Bool = false
     @ObservedObject var coordinator: Coordinator
     
-    init(mapView: MKMapView, locationManager: CLLocationManager? = CLLocationManager()) {
+    init(mapView: MKMapView) {
         self.mapView = mapView
-        self.locationManager = locationManager
         self.coordinator = Coordinator()
+        coordinator.setDelegate()
     }
 
     var body: some View {
@@ -29,9 +28,6 @@ struct UserTrackingButton: View {
         }
         .onReceive(coordinator.$locationAuthorizationStatus) { status in
             setupTrackingButton(locationAuthorizationStatus: status)
-        }
-        .onAppear {
-            locationManager?.delegate = self.coordinator
         }
     }
     
@@ -72,6 +68,12 @@ struct UserTrackingButton: View {
     
     class Coordinator: NSObject, ObservableObject, CLLocationManagerDelegate {
         @Published var locationAuthorizationStatus: CLAuthorizationStatus = .notDetermined
+        var locationManager: CLLocationManager?
+        
+        func setDelegate() {
+            locationManager = CLLocationManager()
+            locationManager?.delegate = self
+        }
         
         func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
             locationAuthorizationStatus = manager.authorizationStatus

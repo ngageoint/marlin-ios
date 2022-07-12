@@ -10,7 +10,7 @@ import MapKit
 import MaterialComponents
 
 struct ModuActionBar: View {
-    
+    @EnvironmentObject var scheme: MarlinScheme
     var modu: Modu
     var showMoreDetailsButton = false
     var showFocusButton = true
@@ -19,9 +19,10 @@ struct ModuActionBar: View {
         HStack(spacing:0) {
             if showMoreDetailsButton {
                 Button(action: {
-                    NotificationCenter.default.post(name: .ViewModu, object: self.modu)
+                    NotificationCenter.default.post(name: .ViewDataSource, object: self.modu)
                 }) {
                     Text("More Details")
+                        .foregroundColor(Color(scheme.containerScheme.colorScheme.primaryColorVariant))
                 }
             } else {
                 let coordinateButtonTitle = CLLocationCoordinate2D(latitude: modu.latitude?.doubleValue ?? 0.0, longitude: modu.longitude?.doubleValue ?? 0.0).toDisplay()
@@ -31,6 +32,7 @@ struct ModuActionBar: View {
                     MDCSnackbarManager.default.show(MDCSnackbarMessage(text: "Location \(coordinateButtonTitle) copied to clipboard"))
                 }) {
                     Text(coordinateButtonTitle)
+                        .foregroundColor(Color(scheme.containerScheme.colorScheme.primaryColorVariant))
                 }
             }
             
@@ -44,6 +46,7 @@ struct ModuActionBar: View {
                         title: {},
                         icon: { Image(systemName: "square.and.arrow.up")
                                 .renderingMode(.template)
+                                .foregroundColor(Color(scheme.containerScheme.colorScheme.primaryColorVariant))
                         })
                 }
                 if showFocusButton {
@@ -55,6 +58,7 @@ struct ModuActionBar: View {
                             title: {},
                             icon: { Image(systemName: "scope")
                                     .renderingMode(.template)
+                                    .foregroundColor(Color(scheme.containerScheme.colorScheme.primaryColorVariant))
                             })
                     }
                 }

@@ -67,5 +67,22 @@ public class MSI {
                 })
             }
     }
+    
+    func loadLights(date: String? = nil) {
+        let queue = DispatchQueue(label: "com.test.api", qos: .background)
+        
+        session.request(MSIRouter.readLights(volume: "110"))
+            .validate()
+            .responseDecodable(of: LightsPropertyContainer.self, queue: queue) { response in
+                queue.async( execute:{
+                    Task.detached {
+                        let lightsCount = response.value?.ngalol.count
+                        if let lights = response.value?.ngalol {
+                            try await Lights.batchImport(from: lights, taskContext: PersistenceController.shared.newTaskContext())
+                        }
+                    }
+                })
+            }
+    }
 }
 

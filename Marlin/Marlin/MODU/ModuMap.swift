@@ -13,7 +13,7 @@ import Combine
 
 class ModuMap: NSObject, MapMixin {
     var mapView: MKMapView?
-    var focusModuSink: AnyCancellable?
+    var cancellable = Set<AnyCancellable>()
 
     var fetchedResultsController: NSFetchedResultsController<Modu>?
     
@@ -21,12 +21,12 @@ class ModuMap: NSObject, MapMixin {
         self.mapView = mapView
         mapView.register(ModuAnnotationView.self, forAnnotationViewWithReuseIdentifier: ModuAnnotationView.ReuseID)
         
-        focusModuSink =
         NotificationCenter.default.publisher(for: .FocusModu)
             .compactMap {$0.object as? Modu}
             .sink(receiveValue: { [weak self] in
                 self?.focusModu(modu: $0)
             })
+            .store(in: &cancellable)
 
         let fetchRequest = Modu.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Modu.date, ascending: true)]
@@ -40,7 +40,27 @@ class ModuMap: NSObject, MapMixin {
             print("Unable to Perform Fetch Request")
             print("\(fetchError), \(fetchError.localizedDescription)")
         }
-        addInitialModus(modus: fetchedResultsController?.fetchedObjects)
+        
+        UserDefaults.standard
+            .publisher(for: \.showOnMapModu)
+            .removeDuplicates()
+            .handleEvents(receiveOutput: { show in
+                print("Show Modus: \(show)")
+            })
+            .sink() { [weak self] in
+                self?.toggleModus(showModus: $0)
+            }
+            .store(in: &cancellable)
+    }
+    
+    func toggleModus(showModus: Bool) {
+        if let modus = fetchedResultsController?.fetchedObjects {
+            if showModus {
+                mapView?.addAnnotations(modus)
+            } else {
+                mapView?.removeAnnotations(modus)
+            }
+        }
     }
     
     func focusModu(modu: Modu) {
