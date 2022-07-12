@@ -91,8 +91,9 @@ struct MarlinMap: UIViewRepresentable {
         if mapType == ExtraMapTypes.osm.rawValue {
             if mutatingWrapper.osmOverlay == nil {
                 mutatingWrapper.osmOverlay = MKTileOverlay(urlTemplate: "https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png")
+                mutatingWrapper.osmOverlay?.tileSize = CGSize(width: 512, height: 512)
                 mutatingWrapper.osmOverlay?.canReplaceMapContent = true
-                mutatingWrapper.mapView.addOverlay(mutatingWrapper.osmOverlay!)
+                mutatingWrapper.mapView.addOverlay(mutatingWrapper.osmOverlay!, level: .aboveRoads)
             }
         } else if let mkmapType = MKMapType(rawValue: UInt(mapType)) {
             mutatingWrapper.mapView.mapType = mkmapType
