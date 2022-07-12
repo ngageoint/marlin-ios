@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 @main
 struct AppLauncher {
@@ -31,6 +32,10 @@ struct TestApp: App {
     }
 }
 
+class AppState: ObservableObject {
+    @Published var popToRoot: Bool = false
+}
+
 struct MarlinApp: App {
     
     let persistenceController = PersistenceController.shared
@@ -50,6 +55,9 @@ struct MarlinApp: App {
             // Enable or disable features based on the authorization.
         }
         
+        // set up default user defaults
+        UserDefaults.registerMarlinDefaults()
+        
         let newestAsam = try? persistenceController.container.viewContext.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)])
         shared.loadAsams(date: newestAsam?.dateString)
         
@@ -57,12 +65,15 @@ struct MarlinApp: App {
         shared.loadModus(date: newestModu?.dateString)
         
         shared.loadNavigationalWarnings()
+        
+//        shared.loadLights()
     }
 
     var body: some Scene {
         WindowGroup {
             MarlinTabView(itemWrapper: ItemWrapper())
                 .environmentObject(scheme)
+                .environmentObject(AppState())
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
