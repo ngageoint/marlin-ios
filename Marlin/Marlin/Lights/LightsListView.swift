@@ -36,7 +36,7 @@ struct LightsListView: View {
                     ForEach(section) { light in
                          
                         ZStack {
-                            NavigationLink(destination: LightDetailView(featureNumber: light.featureNumber ?? "")
+                            NavigationLink(destination: LightDetailView(featureNumber: light.featureNumber ?? "", volumeNumber: light.volumeNumber ?? "")
                                 .navigationTitle("\(light.name ?? "")" )
                                 .navigationBarTitleDisplayMode(.inline)) {
                                     EmptyView()

@@ -15,12 +15,14 @@ struct LightDetailView: View {
     
     @FetchRequest var lights : FetchedResults<Lights>
     var featureNumber: String
+    var volumeNumber: String
     
-    init(featureNumber: String) {
+    init(featureNumber: String, volumeNumber: String) {
         self.featureNumber = featureNumber
+        self.volumeNumber = volumeNumber
         _region = State(initialValue: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10)))
         
-        let predicate = NSPredicate(format: "featureNumber == %@", self.featureNumber)
+        let predicate = NSPredicate(format: "featureNumber == %@ AND volumeNumber == %@", self.featureNumber, self.volumeNumber)
 
         //Intialize the FetchRequest property wrapper
         self._lights = FetchRequest(entity: Lights.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Lights.characteristicNumber, ascending: true)], predicate: predicate)
@@ -94,6 +96,6 @@ struct LightDetailView: View {
 
 struct LightDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        LightDetailView(featureNumber: "1")
+        LightDetailView(featureNumber: "1", volumeNumber: "110")
     }
 }

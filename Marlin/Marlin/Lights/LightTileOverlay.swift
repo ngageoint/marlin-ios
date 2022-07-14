@@ -29,7 +29,10 @@ class LightTileOverlay: MKTileOverlay {
         fetchRequest.predicate = NSPredicate(
             format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minQueryLat, maxQueryLat, minQueryLon, maxQueryLon
         )
-        let context = PersistenceController.shared.container.viewContext
+        
+        let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.automaticallyMergesChangesFromParent = false
+        context.parent = PersistenceController.shared.container.viewContext
         let objects = try? context.fetch(fetchRequest)
         
         if objects == nil || objects?.count == 0 {
@@ -43,12 +46,10 @@ class LightTileOverlay: MKTileOverlay {
         }
         if let objects = objects {
             for object in objects {
-                if object.lightSectors != nil {
-                let mapImage = object.mapImage
-                    let xPosition = (((object.longitude - minTileLon) / (maxTileLon - minTileLon)) * self.tileSize.width)
-                    let yPosition = self.tileSize.height - (((object.latitude - minTileLat) / (maxTileLat - minTileLat)) * self.tileSize.height)
-                    mapImage.draw(in: CGRect(x: (xPosition - (mapImage.size.width / 2)), y: (yPosition - (mapImage.size.height / 2)), width: mapImage.size.width, height: mapImage.size.height))
-                }
+                let mapImage = object.mapImage()
+                let xPosition = (((object.longitude - minTileLon) / (maxTileLon - minTileLon)) * self.tileSize.width)
+                let yPosition = self.tileSize.height - (((object.latitude - minTileLat) / (maxTileLat - minTileLat)) * self.tileSize.height)
+                mapImage.draw(in: CGRect(x: (xPosition - (mapImage.size.width / 2)), y: (yPosition - (mapImage.size.height / 2)), width: mapImage.size.width, height: mapImage.size.height))
             }
         }
         

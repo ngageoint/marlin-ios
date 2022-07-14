@@ -50,6 +50,7 @@ struct RaconCard: View {
                 }
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             }.frame(maxWidth: .infinity)
+            Text(racon.description)
         }
         .padding(.all, 16)
         .background(Color(scheme.containerScheme.colorScheme.surfaceColor))

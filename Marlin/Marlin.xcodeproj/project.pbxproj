@@ -17,13 +17,16 @@
 		F707BA7D2877329E006A94C4 /* LightActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7C2877329E006A94C4 /* LightActionBar.swift */; };
 		F707BA7F287736A8006A94C4 /* lights.json in Resources */ = {isa = PBXBuildFile; fileRef = F707BA7E287736A8006A94C4 /* lights.json */; };
 		F707BA81287768FA006A94C4 /* LightDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA80287768FA006A94C4 /* LightDetailView.swift */; };
-		F707BA8328786F11006A94C4 /* LightCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA8228786F11006A94C4 /* LightCircle.swift */; };
+		F707BA8328786F11006A94C4 /* LightColorImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA8228786F11006A94C4 /* LightColorImage.swift */; };
 		F707BA852878DBFF006A94C4 /* AdaptiveImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA842878DBFF006A94C4 /* AdaptiveImage.swift */; };
 		F707BA87287C6596006A94C4 /* LightCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA86287C6596006A94C4 /* LightCard.swift */; };
 		F707BA89287C68E7006A94C4 /* RaconCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA88287C68E7006A94C4 /* RaconCard.swift */; };
 		F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA8A287C6D18006A94C4 /* MorseCode.swift */; };
 		F707BA8D287C89ED006A94C4 /* LightMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA8C287C89ED006A94C4 /* LightMap.swift */; };
 		F707BA8F287DC999006A94C4 /* LightTileOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA8E287DC999006A94C4 /* LightTileOverlay.swift */; };
+		F707BA91287F1767006A94C4 /* RaconImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA90287F1767006A94C4 /* RaconImage.swift */; };
+		F707BA9328805476006A94C4 /* PersistedMapState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA9228805476006A94C4 /* PersistedMapState.swift */; };
+		F707BA9528807BD3006A94C4 /* LightBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA9428807BD3006A94C4 /* LightBottomSheet.swift */; };
 		F71DF47E284E68DE00686951 /* asams.json in Resources */ = {isa = PBXBuildFile; fileRef = F71DF47D284E68DE00686951 /* asams.json */; };
 		F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */; };
 		F71DF482284E783600686951 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF481284E783600686951 /* TestHelper.swift */; };
@@ -133,13 +136,16 @@
 		F707BA7C2877329E006A94C4 /* LightActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightActionBar.swift; sourceTree = "<group>"; };
 		F707BA7E287736A8006A94C4 /* lights.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = lights.json; sourceTree = "<group>"; };
 		F707BA80287768FA006A94C4 /* LightDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightDetailView.swift; sourceTree = "<group>"; };
-		F707BA8228786F11006A94C4 /* LightCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightCircle.swift; sourceTree = "<group>"; };
+		F707BA8228786F11006A94C4 /* LightColorImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightColorImage.swift; sourceTree = "<group>"; };
 		F707BA842878DBFF006A94C4 /* AdaptiveImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveImage.swift; sourceTree = "<group>"; };
 		F707BA86287C6596006A94C4 /* LightCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightCard.swift; sourceTree = "<group>"; };
 		F707BA88287C68E7006A94C4 /* RaconCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaconCard.swift; sourceTree = "<group>"; };
 		F707BA8A287C6D18006A94C4 /* MorseCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseCode.swift; sourceTree = "<group>"; };
 		F707BA8C287C89ED006A94C4 /* LightMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightMap.swift; sourceTree = "<group>"; };
 		F707BA8E287DC999006A94C4 /* LightTileOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightTileOverlay.swift; sourceTree = "<group>"; };
+		F707BA90287F1767006A94C4 /* RaconImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaconImage.swift; sourceTree = "<group>"; };
+		F707BA9228805476006A94C4 /* PersistedMapState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedMapState.swift; sourceTree = "<group>"; };
+		F707BA9428807BD3006A94C4 /* LightBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightBottomSheet.swift; sourceTree = "<group>"; };
 		F71DF47D284E68DE00686951 /* asams.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = asams.json; sourceTree = "<group>"; };
 		F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extensions.swift"; sourceTree = "<group>"; };
 		F71DF481284E783600686951 /* TestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
@@ -276,12 +282,14 @@
 				F707BA7A28763309006A94C4 /* LightSummaryView.swift */,
 				F707BA7C2877329E006A94C4 /* LightActionBar.swift */,
 				F707BA80287768FA006A94C4 /* LightDetailView.swift */,
-				F707BA8228786F11006A94C4 /* LightCircle.swift */,
+				F707BA8228786F11006A94C4 /* LightColorImage.swift */,
 				F707BA86287C6596006A94C4 /* LightCard.swift */,
 				F707BA88287C68E7006A94C4 /* RaconCard.swift */,
 				F707BA8A287C6D18006A94C4 /* MorseCode.swift */,
 				F707BA8C287C89ED006A94C4 /* LightMap.swift */,
 				F707BA8E287DC999006A94C4 /* LightTileOverlay.swift */,
+				F707BA90287F1767006A94C4 /* RaconImage.swift */,
+				F707BA9428807BD3006A94C4 /* LightBottomSheet.swift */,
 			);
 			path = Lights;
 			sourceTree = "<group>";
@@ -319,6 +327,7 @@
 			children = (
 				F71DF4912858C09E00686951 /* MapMixin.swift */,
 				F71DF49D285910CE00686951 /* BottomSheetEnabled.swift */,
+				F707BA9228805476006A94C4 /* PersistedMapState.swift */,
 			);
 			path = Mixins;
 			sourceTree = "<group>";
@@ -800,10 +809,12 @@
 				F71DF4AB2859147900686951 /* UIButtonExtensions.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
 				F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */,
+				F707BA9528807BD3006A94C4 /* LightBottomSheet.swift in Sources */,
 				F71DF4A7285912F600686951 /* AsamBottomSheet.swift in Sources */,
 				F71DF4A3285911D700686951 /* MarlinBottomSheetViewController.swift in Sources */,
 				F7F5979B285D177400F9B32E /* ModuAnnotation.swift in Sources */,
 				F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */,
+				F707BA91287F1767006A94C4 /* RaconImage.swift in Sources */,
 				F7D671EF287475BC00758F1C /* DataSource.swift in Sources */,
 				F7F597A1285D189500F9B32E /* ModuBottomSheet.swift in Sources */,
 				F71DF4992858DA4700686951 /* AsamMap.swift in Sources */,
@@ -811,7 +822,7 @@
 				F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */,
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
 				F7D671D2286DD20800758F1C /* FloatingButton.swift in Sources */,
-				F707BA8328786F11006A94C4 /* LightCircle.swift in Sources */,
+				F707BA8328786F11006A94C4 /* LightColorImage.swift in Sources */,
 				F7F59795285BE27400F9B32E /* Property.swift in Sources */,
 				F7F597B02866241100F9B32E /* NavigationalWarningsAreaDataSource.swift in Sources */,
 				F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */,
@@ -821,6 +832,7 @@
 				F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */,
 				F7D671E02871BFEC00758F1C /* ModuActionBar.swift in Sources */,
 				F7F597AC2864DD5200F9B32E /* NavigationalWarningListView.swift in Sources */,
+				F707BA9328805476006A94C4 /* PersistedMapState.swift in Sources */,
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
 				F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */,
 				F707BA8D287C89ED006A94C4 /* LightMap.swift in Sources */,

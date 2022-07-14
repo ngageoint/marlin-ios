@@ -11,9 +11,10 @@ import MapKit
 import OSLog
 
 class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
-    static let whiteSector = UIColor(red: 1.00, green: 1.00, blue: 0.0, alpha: 0.87)
-    static let greenSector = UIColor(red: 0.05, green: 0.89, blue: 0.1, alpha: 1.00)
-    static let redSector = UIColor(red: 0.98, green: 0.0, blue: 0.0, alpha: 1.00)
+    static let whiteLight = UIColor(red: 1.00, green: 1.00, blue: 0.0, alpha: 0.87)
+    static let greenLight = UIColor(red: 0.05, green: 0.89, blue: 0.1, alpha: 1.00)
+    static let redLight = UIColor(red: 0.98, green: 0.0, blue: 0.0, alpha: 1.00)
+    static let raconColor = UIColor(red: 0.71, green: 0.17, blue: 0.71, alpha: 1.00)
     
     static var isMappable: Bool = true
     static var dataSourceName: String = "Lights"
@@ -81,7 +82,7 @@ class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
         }
         var sectors: [LightSector] = []
         
-        let pattern = #"(?<color>[A-Z]+)\.?(?<unintensified>(\(unintensified\))?)( (?<startdeg>(\d*))°)?(?<startminutes>[0-9]*)'?(-(?<enddeg>(\d*))°)(?<endminutes>[0-9]*)`?"#
+        let pattern = #"(?<visible>(Visible)?)((?<color>[A-Z]+)?)\.?(?<unintensified>(\(unintensified\))?)( (?<startdeg>(\d*))°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))°)(?<endminutes>[0-9]*)[\`']?"#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
                               in: remarks)
@@ -94,20 +95,29 @@ class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
             var color: String = ""
             var end: Double = 0.0
             var start: Double?
-            for component in ["color", "startdeg", "startminutes", "enddeg", "endminutes"] {
+            var visibleColor: UIColor?
+            for component in ["visible", "color", "startdeg", "startminutes", "enddeg", "endminutes"] {
 
                 
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
                    let range = Range(nsrange, in: remarks)
                 {
-                    if component == "color" {
+                    if component == "visible" {
+                        visibleColor = lightColors?[0]
+                    } else if component == "color" {
                         color = "\(remarks[range])"
                     } else if component == "startdeg" {
-                        start = (Double(remarks[range]) ?? 0.0)
+                        if start != nil {
+                            start = start! + (Double(remarks[range]) ?? 0.0)
+                        } else {
+                            start = (Double(remarks[range]) ?? 0.0)
+                        }
                     } else if component == "startminutes" {
                         if start != nil {
                             start = start! + (Double(remarks[range]) ?? 0.0) / 60
+                        } else {
+                            start = (Double(remarks[range]) ?? 0.0) / 60
                         }
                     } else if component == "enddeg" {
                         end = (Double(remarks[range]) ?? 0.0)
@@ -118,13 +128,13 @@ class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
             }
             let uicolor: UIColor = {
                 if color == "W" {
-                    return Lights.whiteSector
+                    return Lights.whiteLight
                 } else if color == "R" {
-                    return Lights.redSector
+                    return Lights.redLight
                 } else if color == "G" {
-                    return Lights.greenSector
+                    return Lights.greenLight
                 }
-                return UIColor.clear
+                return visibleColor ?? UIColor.clear
             }()
             if let start = start {
                 sectors.append(LightSector(startDegrees: start, endDegrees: end, color: uicolor, text: color))
@@ -136,29 +146,94 @@ class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
             }
             previousEnd = end
         })
+        if sectors.isEmpty {
+            return nil
+        }
         return sectors
     }
     
     var morseCode: String? {
-        return "- • - "
+        guard !isLight, let characteristic = characteristic, let firstIndex = characteristic.firstIndex(of: "("), let lastIndex = characteristic.lastIndex(of: ")") else {
+            return nil
+        }
+        
+        return "\(characteristic) \(String(characteristic[firstIndex..<lastIndex]))"
     }
     
-    var mapImage: UIImage {
-        if let lightSectors = lightSectors {
-            return LightColorImage(frame: CGRect(x: 0, y: 0, width: 200, height: 200), sectors: lightSectors, arcWidth: 6, arcRadius: 50, includeSectorDashes: true, includeLetters: true, darkMode: false) ?? UIImage()
+    var morseLetter: String {
+        if isLight {
+            return ""
+        }
+        if let first = characteristic?.first {
+            return String(first)
+        }
+        return ""
+    }
+    
+    func mapImage(marker: Bool = false) -> UIImage {
+        if marker {
+            if isLight {
+                if let lightSectors = lightSectors {
+                    return LightColorImage.dynamicAsset(
+                        lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 100, height: 100), sectors: lightSectors, arcWidth: 3, arcRadius: 25, includeSectorDashes: true, includeLetters: true) ?? UIImage(),
+                        darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 100, height: 100), sectors: lightSectors, arcWidth: 3, arcRadius: 25, includeSectorDashes: true, includeLetters: true, darkMode: true) ?? UIImage()
+                    )
+                } else if let lightColors = lightColors {
+                    return LightColorImage.dynamicAsset(
+                        lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 10, height: 10), colors: lightColors, arcWidth: 1.5) ?? UIImage(),
+                        darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 10, height: 10), colors: lightColors, arcWidth: 1.5, darkMode: true) ?? UIImage()
+                    )
+                }
+            }
+        } else {
+            if isLight {
+                if let lightSectors = lightSectors {
+                    return LightColorImage.dynamicAsset(
+                        lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 200, height: 200), sectors: lightSectors, arcWidth: 6, arcRadius: 50, includeSectorDashes: true, includeLetters: true, darkMode: false) ?? UIImage(),
+                        darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 200, height: 200), sectors: lightSectors, arcWidth: 6, arcRadius: 50, includeSectorDashes: true, includeLetters: true, darkMode: true) ?? UIImage()
+                    )
+                } else if let lightColors = lightColors {
+                    return LightColorImage.dynamicAsset(
+                        lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 20, height: 20), colors: lightColors, arcWidth: 3, darkMode: false) ?? UIImage(),
+                        darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 20, height: 20), colors: lightColors, arcWidth: 3, darkMode: true) ?? UIImage()
+                    )
+                }
+            } else {
+                return RaconImage(frame: CGRect(x: 0, y: 0, width: 100, height: 40), text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false) ?? UIImage()
+            }
         }
         return UIImage()
     }
     
+    var lightColors: [UIColor]? {
+        var lightColors: [UIColor] = []
+        guard let characteristic = characteristic else {
+            return nil
+        }
+        
+        if characteristic.contains("W.") {
+            lightColors.append(Lights.whiteLight)
+        }
+        if characteristic.contains("R.") {
+            lightColors.append(Lights.redLight)
+        }
+        if characteristic.contains("G.") {
+            lightColors.append(Lights.greenLight)
+        }
+        
+        if lightColors.isEmpty {
+            return nil
+        }
+        return lightColors
+    }
+    
     func view(on: MKMapView) -> MKAnnotationView {
         let annotationView = on.dequeueReusableAnnotationView(withIdentifier: LightAnnotationView.ReuseID, for: self)
-        if let lightSectors = lightSectors {
-            let image = LightColorImage.dynamicAsset(frame: CGRect(x: 0, y: 0, width: 100, height: 100), sectors: lightSectors, arcWidth: 3, arcRadius: 25, includeSectorDashes: true, includeLetters: true)
-            if let lav = annotationView as? LightAnnotationView {
-                lav.combinedImage = image
-            } else {
-                annotationView.image = image
-            }
+        let image = self.mapImage(marker: true)
+        if let lav = annotationView as? LightAnnotationView {
+            lav.combinedImage = image
+        } else {
+            annotationView.image = image
         }
         self.annotationView = annotationView
         return annotationView

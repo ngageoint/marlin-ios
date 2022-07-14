@@ -17,6 +17,7 @@ class LightMap: NSObject, MapMixin {
     var light: Lights?
     var showLightsAsTiles: Bool = true
     var fetchedResultsController: NSFetchedResultsController<Lights>?
+    var lightOverlay: LightTileOverlay?
     
     public init(light: Lights? = nil, showLightsAsTiles: Bool = true) {
         self.light = light
@@ -40,26 +41,16 @@ class LightMap: NSObject, MapMixin {
         if let light = light {
             mapView.addAnnotation(light)
         } else {
-            // show all the lights
-            if showLightsAsTiles {
-                let lightOverlay = LightTileOverlay()
-                lightOverlay.minimumZ = 10
-                mapView.addOverlay(lightOverlay)
-            } else {
-                let fetchRequest = Lights.fetchRequest()
-                fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Lights.featureNumber, ascending: true)]
-
-                fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-                fetchedResultsController?.delegate = self
-                do {
-                    try fetchedResultsController?.performFetch()
-                    toggleLights(showLights: true)
-                } catch {
-                    let fetchError = error as NSError
-                    print("Unable to Perform Fetch Request")
-                    print("\(fetchError), \(fetchError.localizedDescription)")
+            UserDefaults.standard
+                .publisher(for: \.showOnMapLights)
+                .removeDuplicates()
+                .handleEvents(receiveOutput: { show in
+                    print("Show Lights: \(show)")
+                })
+                .sink() { [weak self] in
+                    self?.toggleLights(showLights: $0)
                 }
-            }
+                .store(in: &cancellable)
         }
     }
     
@@ -75,18 +66,64 @@ class LightMap: NSObject, MapMixin {
         return annotationView;
     }
     
+    func items(at location: CLLocationCoordinate2D) -> [Any]? {
+        let screenPercentage = 0.03
+        let tolerance = (self.mapView?.region.span.longitudeDelta ?? 0.0) * Double(screenPercentage)
+        let minLon = location.longitude - tolerance
+        let maxLon = location.longitude + tolerance
+        let minLat = location.latitude - tolerance
+        let maxLat = location.latitude + tolerance
+        
+        let fetchRequest: NSFetchRequest<Lights>
+        fetchRequest = Lights.fetchRequest()
+        
+        fetchRequest.predicate = NSPredicate(
+            format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
+        )
+        
+        let context = PersistenceController.shared.container.viewContext
+        return try? context.fetch(fetchRequest)
+    }
+    
     func toggleLights(showLights: Bool) {
-        if let lights = fetchedResultsController?.fetchedObjects {
+        if showLightsAsTiles {
             if showLights {
-                mapView?.addAnnotations(lights)
+                let lightOverlay = LightTileOverlay()
+                lightOverlay.minimumZ = 6
+                mapView?.addOverlay(lightOverlay)
+                self.lightOverlay = lightOverlay
             } else {
-                mapView?.removeAnnotations(lights)
+                if let lightOverlay = lightOverlay {
+                    mapView?.removeOverlay(lightOverlay)
+                }
+            }
+        } else {
+            if fetchedResultsController == nil {
+                let fetchRequest = Lights.fetchRequest()
+                fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Lights.featureNumber, ascending: true)]
+                
+                fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+                fetchedResultsController?.delegate = self
+                do {
+                    try fetchedResultsController?.performFetch()
+                } catch {
+                    let fetchError = error as NSError
+                    print("Unable to Perform Fetch Request")
+                    print("\(fetchError), \(fetchError.localizedDescription)")
+                }
+            }
+            if let lights = fetchedResultsController?.fetchedObjects {
+                if showLights {
+                    mapView?.addAnnotations(lights)
+                } else {
+                    mapView?.removeAnnotations(lights)
+                }
             }
         }
     }
     
     func focusLight(light: Lights) {
-        mapView?.setRegion(MKCoordinateRegion(center: light.coordinate, latitudinalMeters: 10000, longitudinalMeters: 10000), animated: true)
+        mapView?.setRegion(MKCoordinateRegion(center: light.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000), animated: true)
     }
     
     func addInitialLights(lights: [Lights]?) {

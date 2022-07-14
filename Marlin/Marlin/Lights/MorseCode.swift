@@ -15,9 +15,11 @@ struct MorseCode: View {
         HStack(alignment: .top, spacing: 8) {
             if let split = code.split(separator: " ") {
                 ForEach(split, id: \.self) { letter in
-                    Rectangle()
-                        .frame(width: letter == "-" ? 24 : 8, height: 5, alignment: .center)
-                        .background(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                    if letter == "-" || letter == "•" {
+                        Rectangle()
+                            .frame(width: letter == "-" ? 24 : 8, height: 5, alignment: .center)
+                            .background(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                    }
                 }
             }
         }

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 import UIKit
 
 struct LightSector {
@@ -17,6 +16,60 @@ struct LightSector {
 }
 
 class LightColorImage : UIImage {
+    
+    convenience init?(frame: CGRect, colors: [UIColor], arcWidth: CGFloat? = nil, arcRadius: CGFloat? = nil, darkMode: Bool = false) {
+        let strokeWidth = 0.5
+        let rect = frame
+        let radius = arcRadius ?? min(rect.width / 2.0, rect.height / 2.0) - ((arcWidth ?? strokeWidth) / 2.0)
+        let wholeColor = UIColor.lightGray
+        let diameter = radius * 2.0
+        
+        let renderer = UIGraphicsImageRenderer(size: frame.size)
+        let image = renderer.image { _ in
+            // Fill full circle with wholeColor
+            if arcWidth == nil {
+                wholeColor.setStroke()
+                let outerBoundary = UIBezierPath(ovalIn: CGRect(x: strokeWidth / 2.0, y: strokeWidth / 2.0, width: diameter, height: diameter ))
+                outerBoundary.lineWidth = strokeWidth
+                outerBoundary.stroke()
+            }
+            
+            let center = CGPoint(x: rect.width / 2.0, y: rect.height / 2.0)
+            
+            for color in colors {
+                let startAngle = CGFloat(0) * (CGFloat.pi / 180.0)
+                let endAngle = CGFloat(360) * (CGFloat.pi / 180.0)
+                let piePath = UIBezierPath()
+                piePath.addArc(withCenter: center, radius: radius,
+                               startAngle: startAngle, endAngle: endAngle,
+                               clockwise: true)
+                
+
+                if let arcWidth = arcWidth {
+                    piePath.lineWidth = arcWidth
+                    color.setStroke()
+                    piePath.stroke()
+                    let towerLine = UIBezierPath()
+                    towerLine.move(to: center)
+                    
+                    towerLine.addLine(to: CGPoint(x: center.x, y: center.y - radius))
+                    towerLine.lineWidth = arcWidth
+                    towerLine.stroke()
+                } else {
+                    piePath.close()
+                    color.setFill()
+                    piePath.fill()
+                }
+            }
+        }
+        
+        guard  let cgImage = image.cgImage else {
+            return nil
+        }
+        self.init(cgImage: cgImage)
+        
+    }
+    
     convenience init?(frame: CGRect, sectors: [LightSector], arcWidth: CGFloat? = nil, arcRadius: CGFloat? = nil, includeSectorDashes: Bool = false, includeLetters: Bool = true, darkMode: Bool = false) {
         let strokeWidth = 0.5
         let rect = frame
@@ -117,6 +170,18 @@ class LightColorImage : UIImage {
         }
         self.init(cgImage: cgImage)
         
+    }
+    
+    static func dynamicAsset(lightImage: UIImage, darkImage: UIImage) -> UIImage {
+        let imageAsset = UIImageAsset()
+        
+        let lightMode = UITraitCollection(traitsFrom: [.init(userInterfaceStyle: .light)])
+        imageAsset.register(lightImage, with: lightMode)
+        
+        let darkMode = UITraitCollection(traitsFrom: [.init(userInterfaceStyle: .dark)])
+        imageAsset.register(darkImage, with: darkMode)
+
+        return imageAsset.image(with: .current)
     }
     
     static func dynamicAsset(frame: CGRect, sectors: [LightSector], arcWidth: CGFloat? = nil, arcRadius: CGFloat? = nil, includeSectorDashes: Bool = false, includeLetters: Bool = true) -> UIImage {

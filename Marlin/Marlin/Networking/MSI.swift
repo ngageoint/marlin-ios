@@ -71,7 +71,7 @@ public class MSI {
     func loadLights(date: String? = nil) {
         let queue = DispatchQueue(label: "com.test.api", qos: .background)
         
-        session.request(MSIRouter.readLights(volume: "110"))
+        session.request(MSIRouter.readLights(volume: "112"))
             .validate()
             .responseDecodable(of: LightsPropertyContainer.self, queue: queue) { response in
                 queue.async( execute:{

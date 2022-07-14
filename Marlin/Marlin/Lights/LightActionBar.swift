@@ -50,7 +50,7 @@ struct LightActionBar: View {
                 if showFocusButton {
                     Button(action: {
                         NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
-//                        NotificationCenter.default.post(name: .FocusAsam, object: self.asam)
+                        NotificationCenter.default.post(name: .FocusLight, object: self.light)
                     }) {
                         Label(
                             title: {},

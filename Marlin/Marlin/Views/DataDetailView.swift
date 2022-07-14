@@ -17,6 +17,10 @@ struct DataDetailView: View {
             ModuDetailView(modu: modu)
         } else if let navigationalWarning = data as? NavigationalWarning {
             NavigationalWarningDetailView(navigationalWarning: navigationalWarning)
+        } else if let light = data as? Lights {
+            if let featureNumber = light.featureNumber, let volumeNumber = light.volumeNumber {
+                LightDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
+            }
         }
     }
 }

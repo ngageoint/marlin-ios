@@ -46,6 +46,10 @@ extension UserDefaults {
     @objc var showOnMapAsam: Bool {
         bool(forKey: "showOnMapAsam")
     }
+    
+    @objc var showOnMapLights: Bool {
+        bool(forKey: "showOnMapLights")
+    }
 
     @objc var mapRegion: MKCoordinateRegion {
         get {
