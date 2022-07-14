@@ -42,6 +42,7 @@ struct MarlinTabView: View {
                                     .mixin(ModuMap())
                                     .mixin(LightMap())
                                     .mixin(BottomSheetMixin())
+                                    .mixin(PersistedMapState())
                                     .navigationTitle("Marlin")
                                     .navigationBarTitleDisplayMode(.inline)
                                     .navigationBarBackButtonHidden(true)
