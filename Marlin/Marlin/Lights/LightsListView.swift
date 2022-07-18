@@ -17,11 +17,6 @@ struct LightsListView: View {
         predicate: NSPredicate(format: "characteristicNumber = 1")
     )
     var sectionedLights: SectionedFetchResults<String, Lights>
-//    @FetchRequest(
-//        sortDescriptors: [NSSortDescriptor(keyPath: \Lights.featureNumber, ascending: true), NSSortDescriptor(keyPath: \Lights.characteristicNumber, ascending:true)],
-//        animation: .default)
-//    private var lights: FetchedResults<Lights>
-    
     var body: some View {
         NavigationView {
             VStack {
@@ -44,9 +39,7 @@ struct LightsListView: View {
                                 .opacity(0)
                             
                             HStack {
-                                if let featureNumber = light.featureNumber {
-                                    LightSummaryView(light: light)
-                                }
+                                LightSummaryView(light: light)
                             }
                             .padding(.all, 16)
                             .background(Color(scheme.containerScheme.colorScheme.surfaceColor))

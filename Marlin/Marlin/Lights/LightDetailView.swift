@@ -33,7 +33,7 @@ struct LightDetailView: View {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     MarlinMap()
-                        .mixin(LightMap(light: lights[0]))
+                        .mixin(LightMap(lights: lights.map { $0 }))
                     .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     Group {
                         Text("\(lights[0].featureNumber ?? "") \(lights[0].internationalFeature ?? "")")

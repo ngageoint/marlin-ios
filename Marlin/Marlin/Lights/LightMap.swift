@@ -14,13 +14,13 @@ class LightMap: NSObject, MapMixin {
     var mapView: MKMapView?
     var cancellable = Set<AnyCancellable>()
     
-    var light: Lights?
+    var lights: [Lights]?
     var showLightsAsTiles: Bool = true
     var fetchedResultsController: NSFetchedResultsController<Lights>?
     var lightOverlay: LightTileOverlay?
     
-    public init(light: Lights? = nil, showLightsAsTiles: Bool = true) {
-        self.light = light
+    public init(lights: [Lights]? = nil, showLightsAsTiles: Bool = true) {
+        self.lights = lights
         self.showLightsAsTiles = showLightsAsTiles
     }
     
@@ -35,11 +35,14 @@ class LightMap: NSObject, MapMixin {
             })
             .store(in: &cancellable)
         
-        if let light = light {
+        if let lights = lights, lights.count != 0 {
+            let light = lights[0]
             mapView.setRegion(MKCoordinateRegion(center: light.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)), animated: true)
         }
-        if let light = light {
-            mapView.addAnnotation(light)
+        if let lights = lights {
+            for light in lights {
+                mapView.addAnnotation(light)
+            }
         } else {
             UserDefaults.standard
                 .publisher(for: \.showOnMapLights)
@@ -67,6 +70,9 @@ class LightMap: NSObject, MapMixin {
     }
     
     func items(at location: CLLocationCoordinate2D) -> [Any]? {
+        if let lightOverlay = lightOverlay, lightOverlay.zoomLevel < 8 {
+            return nil
+        }
         let screenPercentage = 0.03
         let tolerance = (self.mapView?.region.span.longitudeDelta ?? 0.0) * Double(screenPercentage)
         let minLon = location.longitude - tolerance
@@ -76,9 +82,9 @@ class LightMap: NSObject, MapMixin {
         
         let fetchRequest: NSFetchRequest<Lights>
         fetchRequest = Lights.fetchRequest()
-        
+                
         fetchRequest.predicate = NSPredicate(
-            format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
+            format: "characteristicNumber = 1 AND latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
         )
         
         let context = PersistenceController.shared.container.viewContext
@@ -89,7 +95,7 @@ class LightMap: NSObject, MapMixin {
         if showLightsAsTiles {
             if showLights {
                 let lightOverlay = LightTileOverlay()
-                lightOverlay.minimumZ = 6
+                lightOverlay.minimumZ = 7
                 mapView?.addOverlay(lightOverlay)
                 self.lightOverlay = lightOverlay
             } else {
@@ -183,7 +189,6 @@ class LightAnnotationView: MKAnnotationView {
     /// - Tag: ClusterIdentifier
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-//        clusteringIdentifier = "msi"
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -206,11 +211,4 @@ class LightAnnotationView: MKAnnotationView {
     private func updateImage() {
         image = combinedImage?.imageAsset?.image(with: traitCollection) ?? combinedImage
     }
-
-    
-//    override var annotation: MKAnnotation? {
-//        willSet {
-//            clusteringIdentifier = "msi"
-//        }
-//    }
 }

@@ -60,11 +60,20 @@ struct MarlinMap: UIViewRepresentable {
     }
         
     func makeUIView(context: Context) -> UIView {
+        // double tap recognizer has no action
+        let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: nil)
+        doubleTapRecognizer.numberOfTapsRequired = 2
+        doubleTapRecognizer.numberOfTouchesRequired = 1
+        mutatingWrapper.mapView.addGestureRecognizer(doubleTapRecognizer)
+        
         let singleTapGestureRecognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.singleTapGensture(tapGestureRecognizer:)))
-            singleTapGestureRecognizer.numberOfTapsRequired = 1
-            singleTapGestureRecognizer.delaysTouchesBegan = true
-            singleTapGestureRecognizer.cancelsTouchesInView = true
-            singleTapGestureRecognizer.delegate = context.coordinator
+        singleTapGestureRecognizer.numberOfTapsRequired = 1
+        singleTapGestureRecognizer.numberOfTouchesRequired = 1
+        singleTapGestureRecognizer.delaysTouchesBegan = true
+        singleTapGestureRecognizer.cancelsTouchesInView = true
+        singleTapGestureRecognizer.delegate = context.coordinator
+        singleTapGestureRecognizer.require(toFail: doubleTapRecognizer)
+
         mutatingWrapper.mapView.addGestureRecognizer(singleTapGestureRecognizer)
         mutatingWrapper.mapView.register(ClusterAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
         mutatingWrapper.mapView.delegate = context.coordinator

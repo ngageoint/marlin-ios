@@ -66,7 +66,7 @@ struct MarlinApp: App {
         
         shared.loadNavigationalWarnings()
         
-//        shared.loadLights()
+        shared.loadLights()
     }
 
     var body: some Scene {

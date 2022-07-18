@@ -10,7 +10,44 @@ import MapKit
 import CoreData
 
 class LightTileOverlay: MKTileOverlay {
+    var zoomLevel: Int = 0
+    
+    var clearImage: UIImage {
+        let rect = CGRect(origin: CGPoint(x: 0, y:0), size: CGSize(width: 1, height: 1))
+        UIGraphicsBeginImageContext(rect.size)
+        let context = UIGraphicsGetCurrentContext()!
+        
+        context.setFillColor(UIColor.clear.cgColor)
+        context.fill(rect)
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return image!
+    }
+    
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
+        zoomLevel = path.z
+        if path.z < 8 {
+            let rect = CGRect(origin: .zero, size: self.tileSize)
+            let layer = CALayer()
+            layer.frame = rect
+            layer.backgroundColor = UIColor.clear.cgColor
+
+            UIGraphicsBeginImageContext(layer.bounds.size)
+            layer.render(in: UIGraphicsGetCurrentContext()!)
+
+            let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+            UIGraphicsEndImageContext()
+            guard let cgImage = newImage.cgImage else {
+                result(clearImage.pngData(), nil)
+                return
+            }
+            let data = UIImage(cgImage: cgImage).pngData()
+
+            result(data, nil)
+            return
+        }
         UIGraphicsBeginImageContext(self.tileSize)
 
         let minTileLon = longitude(x: path.x, zoom: path.z)
@@ -40,13 +77,12 @@ class LightTileOverlay: MKTileOverlay {
             let layer = CALayer()
             layer.frame = rect
             layer.backgroundColor = UIColor.clear.cgColor
-
             UIGraphicsBeginImageContext(layer.bounds.size)
             layer.render(in: UIGraphicsGetCurrentContext()!)
         }
         if let objects = objects {
             for object in objects {
-                let mapImage = object.mapImage()
+                let mapImage = object.mapImage(small: path.z < 13)
                 let xPosition = (((object.longitude - minTileLon) / (maxTileLon - minTileLon)) * self.tileSize.width)
                 let yPosition = self.tileSize.height - (((object.latitude - minTileLat) / (maxTileLat - minTileLat)) * self.tileSize.height)
                 mapImage.draw(in: CGRect(x: (xPosition - (mapImage.size.width / 2)), y: (yPosition - (mapImage.size.height / 2)), width: mapImage.size.width, height: mapImage.size.height))
@@ -56,7 +92,7 @@ class LightTileOverlay: MKTileOverlay {
         let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         guard let cgImage = newImage.cgImage else {
-            result(UIImage().pngData(), nil)
+            result(clearImage.pngData(), nil)
             return
         }
         let data = UIImage(cgImage: cgImage).pngData()

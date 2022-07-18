@@ -27,10 +27,6 @@ struct RaconCard: View {
                             .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
                             .opacity(0.87)
                         MorseCode(code: morseCode)
-//                        Text(morseCode)
-//                            .font(Font(scheme.containerScheme.typographyScheme.headline2))
-//                            .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
-//                            .opacity(0.87)
                         Text(racon.characteristic ?? "")
                             .font(Font(scheme.containerScheme.typographyScheme.body2))
                             .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
@@ -50,7 +46,6 @@ struct RaconCard: View {
                 }
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             }.frame(maxWidth: .infinity)
-            Text(racon.description)
         }
         .padding(.all, 16)
         .background(Color(scheme.containerScheme.colorScheme.surfaceColor))

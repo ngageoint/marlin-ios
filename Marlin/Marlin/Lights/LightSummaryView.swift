@@ -20,7 +20,7 @@ struct LightSummaryView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("\(light.featureNumber ?? "") \(light.internationalFeature ?? "")")
+            Text("\(light.featureNumber ?? "") \(light.internationalFeature ?? "") \(light.volumeNumber ?? "")")
                 .font(Font(scheme.containerScheme.typographyScheme.overline))
                 .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
                 .opacity(0.45)

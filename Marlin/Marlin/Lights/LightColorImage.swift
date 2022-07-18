@@ -35,10 +35,11 @@ class LightColorImage : UIImage {
             }
             
             let center = CGPoint(x: rect.width / 2.0, y: rect.height / 2.0)
-            
+            let count = 0
+            let degreesPerColor = 360.0 / CGFloat(colors.count)
             for color in colors {
-                let startAngle = CGFloat(0) * (CGFloat.pi / 180.0)
-                let endAngle = CGFloat(360) * (CGFloat.pi / 180.0)
+                let startAngle = degreesPerColor * CGFloat(count) * (CGFloat.pi / 180.0)
+                let endAngle = degreesPerColor * (CGFloat(count) + 1.0) * (CGFloat.pi / 180.0)
                 let piePath = UIBezierPath()
                 piePath.addArc(withCenter: center, radius: radius,
                                startAngle: startAngle, endAngle: endAngle,
@@ -172,6 +173,10 @@ class LightColorImage : UIImage {
         
     }
     
+}
+
+extension UIImage {
+    
     static func dynamicAsset(lightImage: UIImage, darkImage: UIImage) -> UIImage {
         let imageAsset = UIImageAsset()
         
@@ -184,20 +189,6 @@ class LightColorImage : UIImage {
         return imageAsset.image(with: .current)
     }
     
-    static func dynamicAsset(frame: CGRect, sectors: [LightSector], arcWidth: CGFloat? = nil, arcRadius: CGFloat? = nil, includeSectorDashes: Bool = false, includeLetters: Bool = true) -> UIImage {
-        let imageAsset = UIImageAsset()
-        
-        let lightMode = UITraitCollection(traitsFrom: [.init(userInterfaceStyle: .light)])
-        if let lightImage = LightColorImage(frame: frame, sectors: sectors, arcWidth: arcWidth, arcRadius: arcRadius, includeSectorDashes: includeSectorDashes, includeLetters: includeLetters, darkMode: false) {
-            imageAsset.register(lightImage, with: lightMode)
-        }
-            
-        let darkMode = UITraitCollection(traitsFrom: [.init(userInterfaceStyle: .dark)])
-        if let darkImage = LightColorImage(frame: frame, sectors: sectors, arcWidth: arcWidth, arcRadius: arcRadius, includeSectorDashes: includeSectorDashes, includeLetters: includeLetters, darkMode: true) {
-            imageAsset.register(darkImage, with: darkMode)
-        }
-        return imageAsset.image(with: .current)
-    }
 }
 
 extension String {

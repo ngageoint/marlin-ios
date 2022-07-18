@@ -21,7 +21,7 @@ class RaconImage : UIImage {
 
             let outerPath = UIBezierPath()
             outerPath.addArc(withCenter: center, radius: arcRadius,
-                           startAngle: 0, endAngle: 360,
+                           startAngle: 0, endAngle: 360 * (CGFloat.pi / 180.0),
                            clockwise: true)
             outerPath.lineWidth = arcWidth
             circleColor.setStroke()
@@ -29,7 +29,7 @@ class RaconImage : UIImage {
             
             let innerPath = UIBezierPath()
             innerPath.addArc(withCenter: center, radius: 1.5,
-                             startAngle: 0, endAngle: 360,
+                             startAngle: 0, endAngle: 360 * (CGFloat.pi / 180.0),
                              clockwise: true)
             innerPath.lineWidth = 0.5
             labelColor.setStroke()
@@ -37,7 +37,7 @@ class RaconImage : UIImage {
             
             let centralPath = UIBezierPath()
             centralPath.addArc(withCenter: center, radius: 0.25,
-                             startAngle: 0, endAngle: 360,
+                             startAngle: 0, endAngle: 360 * (CGFloat.pi / 180.0),
                              clockwise: true)
             centralPath.lineWidth = 0.5
             labelColor.setStroke()
@@ -46,7 +46,7 @@ class RaconImage : UIImage {
             if let text = text {
                 // Color text
                 let attributes = [ NSAttributedString.Key.foregroundColor: labelColor,
-                                   NSAttributedString.Key.font: UIFont.systemFont(ofSize: 5)]
+                                   NSAttributedString.Key.font: UIFont.systemFont(ofSize: arcWidth + 1)]
                 
                 let size = text.size(withAttributes: attributes)
                 let rect = CGRect(x: center.x + arcRadius + arcWidth, y: center.y - size.height / 2, width: size.width, height: size.height)
@@ -59,32 +59,5 @@ class RaconImage : UIImage {
         }
         self.init(cgImage: cgImage)
         
-    }
-    
-    static func dynamicAsset(lightImage: UIImage, darkImage: UIImage) -> UIImage {
-        let imageAsset = UIImageAsset()
-        
-        let lightMode = UITraitCollection(traitsFrom: [.init(userInterfaceStyle: .light)])
-        imageAsset.register(lightImage, with: lightMode)
-        
-        let darkMode = UITraitCollection(traitsFrom: [.init(userInterfaceStyle: .dark)])
-        imageAsset.register(darkImage, with: darkMode)
-        
-        return imageAsset.image(with: .current)
-    }
-    
-    static func dynamicAsset(frame: CGRect, sectors: [LightSector], arcWidth: CGFloat? = nil, arcRadius: CGFloat? = nil, includeSectorDashes: Bool = false, includeLetters: Bool = true) -> UIImage {
-        let imageAsset = UIImageAsset()
-        
-        let lightMode = UITraitCollection(traitsFrom: [.init(userInterfaceStyle: .light)])
-        if let lightImage = LightColorImage(frame: frame, sectors: sectors, arcWidth: arcWidth, arcRadius: arcRadius, includeSectorDashes: includeSectorDashes, includeLetters: includeLetters, darkMode: false) {
-            imageAsset.register(lightImage, with: lightMode)
-        }
-        
-        let darkMode = UITraitCollection(traitsFrom: [.init(userInterfaceStyle: .dark)])
-        if let darkImage = LightColorImage(frame: frame, sectors: sectors, arcWidth: arcWidth, arcRadius: arcRadius, includeSectorDashes: includeSectorDashes, includeLetters: includeLetters, darkMode: true) {
-            imageAsset.register(darkImage, with: darkMode)
-        }
-        return imageAsset.image(with: .current)
     }
 }

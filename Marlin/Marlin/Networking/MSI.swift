@@ -70,19 +70,23 @@ public class MSI {
     
     func loadLights(date: String? = nil) {
         let queue = DispatchQueue(label: "com.test.api", qos: .background)
-        
-        session.request(MSIRouter.readLights(volume: "112"))
-            .validate()
-            .responseDecodable(of: LightsPropertyContainer.self, queue: queue) { response in
-                queue.async( execute:{
-                    Task.detached {
-                        let lightsCount = response.value?.ngalol.count
-                        if let lights = response.value?.ngalol {
-                            try await Lights.batchImport(from: lights, taskContext: PersistenceController.shared.newTaskContext())
+        let count = try? PersistenceController.shared.container.viewContext.countOfObjects(Lights.self)
+        print("There are \(count) lights")
+        for lightVolume in Lights.lightVolumes {
+            let newestLight = try? PersistenceController.shared.container.viewContext.fetchFirst(Lights.self, sortBy: [NSSortDescriptor(keyPath: \Lights.noticeNumber, ascending: false)], predicate: NSPredicate(format: "volumeNumber = %@", lightVolume.volumeNumber))
+            
+            session.request(MSIRouter.readLights(volume: lightVolume.volumeQuery, noticeYear: newestLight?.noticeYear, noticeWeek: newestLight?.noticeWeek))
+                .validate()
+                .responseDecodable(of: LightsPropertyContainer.self, queue: queue) { response in
+                    queue.async(execute:{
+                        Task.detached {
+                            if let lights = response.value?.ngalol {
+                                try await Lights.batchImport(from: lights, taskContext: PersistenceController.shared.newTaskContext())
+                            }
                         }
-                    }
-                })
-            }
+                    })
+                }
+        }
     }
 }
 

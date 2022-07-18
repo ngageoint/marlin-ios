@@ -262,8 +262,12 @@ class MarlinBottomSheetViewController: UIViewController {
             if self.currentModuBottomSheetView?.view.superview != nil {
                 self.currentModuBottomSheetView?.view.removeFromSuperview();
             }
+            if self.currentLightBottomSheetView?.view.superview != nil {
+                self.currentLightBottomSheetView?.view.removeFromSuperview();
+            }
             self.currentAsamBottomSheetView = nil
             self.currentModuBottomSheetView = nil
+            self.currentLightBottomSheetView = nil
             
             self.pageNumberLabel.text = "\(self.pageControl.currentPage+1) of \(self.pageControl.numberOfPages)";
             
