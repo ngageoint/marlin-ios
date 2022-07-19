@@ -279,7 +279,7 @@ class MarlinBottomSheetViewController: UIViewController {
                 let moduBottomSheet = ModuBottomSheetViewController(modu: bottomSheetItem, scheme: self.scheme!)
                 self.currentModuBottomSheetView = moduBottomSheet
                 self.stackView.addArrangedSubview(self.currentModuBottomSheetView!.view);
-            } else if let bottomSheetItem = item.item as? Lights {
+            } else if let bottomSheetItem = item.item as? Light {
                 let lightBottomSheet = LightBottomSheetViewController(light: bottomSheetItem, scheme: self.scheme!)
                 self.currentLightBottomSheetView = lightBottomSheet
                 self.stackView.addArrangedSubview(self.currentLightBottomSheetView!.view);

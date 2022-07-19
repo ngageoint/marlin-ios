@@ -60,8 +60,8 @@ class LightTileOverlay: MKTileOverlay {
         let minQueryLat = latitude(y: path.y+2, zoom: path.z)
         let maxQueryLat = latitude(y: path.y-1, zoom: path.z)
         
-        let fetchRequest: NSFetchRequest<Lights>
-        fetchRequest = Lights.fetchRequest()
+        let fetchRequest: NSFetchRequest<Light>
+        fetchRequest = Light.fetchRequest()
         
         fetchRequest.predicate = NSPredicate(
             format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minQueryLat, maxQueryLat, minQueryLon, maxQueryLon

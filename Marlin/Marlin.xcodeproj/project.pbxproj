@@ -11,8 +11,8 @@
 		D7A569C784B0F2D5720432C4 /* libPods-MarlinTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */; };
 		F707BA722874B9F4006A94C4 /* userDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = F707BA712874B9F4006A94C4 /* userDefaults.plist */; };
 		F707BA742875DD22006A94C4 /* DataDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA732875DD22006A94C4 /* DataDetailView.swift */; };
-		F707BA7728760EE7006A94C4 /* Lights+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7628760EE7006A94C4 /* Lights+CoreDataClass.swift */; };
-		F707BA79287632E1006A94C4 /* LightsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA78287632E1006A94C4 /* LightsListView.swift */; };
+		F707BA7728760EE7006A94C4 /* Light+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7628760EE7006A94C4 /* Light+CoreDataClass.swift */; };
+		F707BA79287632E1006A94C4 /* LightListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA78287632E1006A94C4 /* LightListView.swift */; };
 		F707BA7B28763309006A94C4 /* LightSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7A28763309006A94C4 /* LightSummaryView.swift */; };
 		F707BA7D2877329E006A94C4 /* LightActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7C2877329E006A94C4 /* LightActionBar.swift */; };
 		F707BA7F287736A8006A94C4 /* lights.json in Resources */ = {isa = PBXBuildFile; fileRef = F707BA7E287736A8006A94C4 /* lights.json */; };
@@ -134,8 +134,8 @@
 		F32BF352638699CBFE1A8D52 /* Pods-Marlin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Marlin.release.xcconfig"; path = "Target Support Files/Pods-Marlin/Pods-Marlin.release.xcconfig"; sourceTree = "<group>"; };
 		F707BA712874B9F4006A94C4 /* userDefaults.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = userDefaults.plist; sourceTree = "<group>"; };
 		F707BA732875DD22006A94C4 /* DataDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDetailView.swift; sourceTree = "<group>"; };
-		F707BA7628760EE7006A94C4 /* Lights+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Lights+CoreDataClass.swift"; sourceTree = "<group>"; };
-		F707BA78287632E1006A94C4 /* LightsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsListView.swift; sourceTree = "<group>"; };
+		F707BA7628760EE7006A94C4 /* Light+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F707BA78287632E1006A94C4 /* LightListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightListView.swift; sourceTree = "<group>"; };
 		F707BA7A28763309006A94C4 /* LightSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightSummaryView.swift; sourceTree = "<group>"; };
 		F707BA7C2877329E006A94C4 /* LightActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightActionBar.swift; sourceTree = "<group>"; };
 		F707BA7E287736A8006A94C4 /* lights.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = lights.json; sourceTree = "<group>"; };
@@ -282,11 +282,11 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		F707BA7528760894006A94C4 /* Lights */ = {
+		F707BA7528760894006A94C4 /* Light */ = {
 			isa = PBXGroup;
 			children = (
-				F707BA7628760EE7006A94C4 /* Lights+CoreDataClass.swift */,
-				F707BA78287632E1006A94C4 /* LightsListView.swift */,
+				F707BA7628760EE7006A94C4 /* Light+CoreDataClass.swift */,
+				F707BA78287632E1006A94C4 /* LightListView.swift */,
 				F707BA7A28763309006A94C4 /* LightSummaryView.swift */,
 				F707BA7C2877329E006A94C4 /* LightActionBar.swift */,
 				F707BA80287768FA006A94C4 /* LightDetailView.swift */,
@@ -300,7 +300,7 @@
 				F707BA9428807BD3006A94C4 /* LightBottomSheet.swift */,
 				F707BA96288590E2006A94C4 /* FogSignalImage.swift */,
 			);
-			path = Lights;
+			path = Light;
 			sourceTree = "<group>";
 		};
 		F71DF47C284E68C200686951 /* responses */ = {
@@ -386,7 +386,7 @@
 			isa = PBXGroup;
 			children = (
 				F7ADDCE02887025500137D95 /* Location */,
-				F707BA7528760894006A94C4 /* Lights */,
+				F707BA7528760894006A94C4 /* Light */,
 				F7D671E52871D44E00758F1C /* SideMenu */,
 				F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */,
 				F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */,
@@ -802,7 +802,7 @@
 				F7D671ED2874737F00758F1C /* DataSourceCell.swift in Sources */,
 				F707BA8F287DC999006A94C4 /* LightTileOverlay.swift in Sources */,
 				F71DF4882857B0CC00686951 /* MarlinTabView.swift in Sources */,
-				F707BA7728760EE7006A94C4 /* Lights+CoreDataClass.swift in Sources */,
+				F707BA7728760EE7006A94C4 /* Light+CoreDataClass.swift in Sources */,
 				F7F59799285D166700F9B32E /* ModuDetailView.swift in Sources */,
 				F707BA7B28763309006A94C4 /* LightSummaryView.swift in Sources */,
 				F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */,
@@ -813,7 +813,7 @@
 				F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */,
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
 				F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */,
-				F707BA79287632E1006A94C4 /* LightsListView.swift in Sources */,
+				F707BA79287632E1006A94C4 /* LightListView.swift in Sources */,
 				F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */,
 				F707BA87287C6596006A94C4 /* LightCard.swift in Sources */,
 				F7D671EB2871D73200758F1C /* HamburgerButton.swift in Sources */,

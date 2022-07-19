@@ -126,7 +126,7 @@ class BottomSheetMixin: NSObject, MapMixin {
                     let bottomSheetItem = BottomSheetItem(item: modu, actionDelegate: nil, annotationView: modu.annotationView)
                     items.append(bottomSheetItem)
                 }
-            } else if let light = annotation as? Lights {
+            } else if let light = annotation as? Light {
                 if !dedup.contains(light) {
                     _ = dedup.insert(light)
                     let bottomSheetItem = BottomSheetItem(item: light, actionDelegate: nil, annotationView: light.annotationView)

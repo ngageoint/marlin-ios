@@ -14,12 +14,12 @@ class LightMap: NSObject, MapMixin {
     var mapView: MKMapView?
     var cancellable = Set<AnyCancellable>()
     
-    var lights: [Lights]?
+    var lights: [Light]?
     var showLightsAsTiles: Bool = true
-    var fetchedResultsController: NSFetchedResultsController<Lights>?
+    var fetchedResultsController: NSFetchedResultsController<Light>?
     var lightOverlay: LightTileOverlay?
     
-    public init(lights: [Lights]? = nil, showLightsAsTiles: Bool = true) {
+    public init(lights: [Light]? = nil, showLightsAsTiles: Bool = true) {
         self.lights = lights
         self.showLightsAsTiles = showLightsAsTiles
     }
@@ -29,7 +29,7 @@ class LightMap: NSObject, MapMixin {
         mapView.register(LightAnnotationView.self, forAnnotationViewWithReuseIdentifier: LightAnnotationView.ReuseID)
         
         NotificationCenter.default.publisher(for: .FocusLight)
-            .compactMap {$0.object as? Lights}
+            .compactMap {$0.object as? Light}
             .sink(receiveValue: { [weak self] in
                 self?.focusLight(light: $0)
             })
@@ -58,7 +58,7 @@ class LightMap: NSObject, MapMixin {
     }
     
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
-        guard let lightAnnotation = annotation as? Lights else {
+        guard let lightAnnotation = annotation as? Light else {
             return nil
         }
         
@@ -80,8 +80,8 @@ class LightMap: NSObject, MapMixin {
         let minLat = location.latitude - tolerance
         let maxLat = location.latitude + tolerance
         
-        let fetchRequest: NSFetchRequest<Lights>
-        fetchRequest = Lights.fetchRequest()
+        let fetchRequest: NSFetchRequest<Light>
+        fetchRequest = Light.fetchRequest()
                 
         fetchRequest.predicate = NSPredicate(
             format: "characteristicNumber = 1 AND latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
@@ -105,8 +105,8 @@ class LightMap: NSObject, MapMixin {
             }
         } else {
             if fetchedResultsController == nil {
-                let fetchRequest = Lights.fetchRequest()
-                fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Lights.featureNumber, ascending: true)]
+                let fetchRequest = Light.fetchRequest()
+                fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
                 
                 fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
                 fetchedResultsController?.delegate = self
@@ -128,29 +128,29 @@ class LightMap: NSObject, MapMixin {
         }
     }
     
-    func focusLight(light: Lights) {
+    func focusLight(light: Light) {
         mapView?.setRegion(MKCoordinateRegion(center: light.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000), animated: true)
     }
     
-    func addInitialLights(lights: [Lights]?) {
+    func addInitialLights(lights: [Light]?) {
         guard let lights = lights else {
             return
         }
         mapView?.addAnnotations(lights)
     }
     
-    func addLight(light: Lights) {
+    func addLight(light: Light) {
         mapView?.addAnnotation(light)
     }
     
-    func updateLight(light: Lights) {
+    func updateLight(light: Light) {
         mapView?.removeAnnotation(light)
         mapView?.addAnnotation(light)
     }
     
-    func deleteLight(light: Lights) {
+    func deleteLight(light: Light) {
         let annotation = mapView?.annotations.first(where: { annotation in
-            if let annotation = annotation as? Lights {
+            if let annotation = annotation as? Light {
                 return annotation.featureNumber == light.featureNumber && annotation.volumeNumber == light.volumeNumber
             }
             return false
@@ -164,7 +164,7 @@ class LightMap: NSObject, MapMixin {
 
 extension LightMap : NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        guard let light = anObject as? Lights else {
+        guard let light = anObject as? Light else {
             return
         }
         switch(type) {

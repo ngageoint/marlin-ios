@@ -18,7 +18,7 @@ struct SideMenuContent: View {
                 Section("Data Source Tabs (Drag to reorder)") {
                     DataSourceCell<Asam>()
                     DataSourceCell<Modu>()
-                    DataSourceCell<Lights>()
+                    DataSourceCell<Light>()
                 }
                 Section("Data Sources (Drag to add to tabs)") {
                     DataSourceCell<NavigationalWarning>()

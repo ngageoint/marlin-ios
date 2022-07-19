@@ -16,7 +16,7 @@ class FogSignalImage : UIImage {
         let radius = arcRadius ?? min(rect.width / 2.0, rect.height / 2.0) - ((arcWidth ?? strokeWidth) / 2.0)
         let finalArcWidth = arcWidth ?? 2.0
         
-        let circleColor = Lights.raconColor
+        let circleColor = Light.raconColor
         let labelColor = UIColor.label.resolvedColor(with:UITraitCollection(traitsFrom: [.init(userInterfaceStyle: darkMode ? .dark : .light)]))
         
         let renderer = UIGraphicsImageRenderer(size: frame.size)

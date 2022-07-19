@@ -13,7 +13,7 @@ struct LightDetailView: View {
     @EnvironmentObject var scheme: MarlinScheme
     @State private var region: MKCoordinateRegion
     
-    @FetchRequest var lights : FetchedResults<Lights>
+    @FetchRequest var lights : FetchedResults<Light>
     var featureNumber: String
     var volumeNumber: String
     
@@ -25,7 +25,7 @@ struct LightDetailView: View {
         let predicate = NSPredicate(format: "featureNumber == %@ AND volumeNumber == %@", self.featureNumber, self.volumeNumber)
 
         //Intialize the FetchRequest property wrapper
-        self._lights = FetchRequest(entity: Lights.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Lights.characteristicNumber, ascending: true)], predicate: predicate)
+        self._lights = FetchRequest(entity: Light.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Light.characteristicNumber, ascending: true)], predicate: predicate)
     }
     
     var body: some View {

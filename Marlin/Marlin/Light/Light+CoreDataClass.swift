@@ -1,5 +1,5 @@
 //
-//  Lights+CoreDataClass.swift
+//  Light+CoreDataClass.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 7/6/22.
@@ -15,7 +15,7 @@ struct LightVolume {
     var volumeNumber: String
 }
 
-class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
+class Light: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
     static let lightVolumes = [
         LightVolume(volumeQuery: "110", volumeNumber: "PUB 110"),
         LightVolume(volumeQuery: "111", volumeNumber: "PUB 111"),
@@ -41,7 +41,7 @@ class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
     
     static var color: UIColor = .systemYellow
     var color: UIColor {
-        return Lights.color
+        return Light.color
     }
     
     var coordinate: CLLocationCoordinate2D {
@@ -148,11 +148,11 @@ class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
             }
             let uicolor: UIColor = {
                 if color == "W" {
-                    return Lights.whiteLight
+                    return Light.whiteLight
                 } else if color == "R" {
-                    return Lights.redLight
+                    return Light.redLight
                 } else if color == "G" {
-                    return Lights.greenLight
+                    return Light.greenLight
                 }
                 return visibleColor ?? UIColor.clear
             }()
@@ -227,7 +227,7 @@ class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
                 }
             } else {
                 if small {
-                    return LightColorImage(frame: CGRect(x: 0, y: 0, width: 2, height: 2), colors: [Lights.raconColor], arcWidth: 1) ?? clearImage
+                    return LightColorImage(frame: CGRect(x: 0, y: 0, width: 2, height: 2), colors: [Light.raconColor], arcWidth: 1) ?? clearImage
                 } else {
                     return RaconImage(frame: CGRect(x: 0, y: 0, width: 200, height: 40), text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false) ?? clearImage
                 }
@@ -270,7 +270,7 @@ class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
                 }
             } else {
                 if small {
-                    return LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), colors: [Lights.raconColor], arcWidth: 2) ?? clearImage
+                    return LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), colors: [Light.raconColor], arcWidth: 2) ?? clearImage
                 } else {
                     return RaconImage(frame: CGRect(x: 0, y: 0, width: 200, height: 40), arcWidth: 4, arcRadius: 16, text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false) ?? clearImage
                 }
@@ -314,31 +314,31 @@ class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
         }
         
         if characteristic.contains("W.") {
-            lightColors.append(Lights.whiteLight)
+            lightColors.append(Light.whiteLight)
         }
         if characteristic.contains("R.") {
-            lightColors.append(Lights.redLight)
+            lightColors.append(Light.redLight)
         }
         // why does green have so many variants without a .?
         if characteristic.contains("G.") || characteristic.contains("Oc.G") || characteristic.contains("G\n") || characteristic.contains("F.G") || characteristic.contains("Fl.G") || characteristic.contains("(G)") {
-            lightColors.append(Lights.greenLight)
+            lightColors.append(Light.greenLight)
         }
         if characteristic.contains("Y.") {
-            lightColors.append(Lights.yellowLight)
+            lightColors.append(Light.yellowLight)
         }
         if characteristic.contains("Bu.") {
-            lightColors.append(Lights.blueLight)
+            lightColors.append(Light.blueLight)
         }
         if characteristic.contains("Vi.") {
-            lightColors.append(Lights.violetLight)
+            lightColors.append(Light.violetLight)
         }
         if characteristic.contains("Or.") {
-            lightColors.append(Lights.orangeLight)
+            lightColors.append(Light.orangeLight)
         }
         
         if lightColors.isEmpty {
             if characteristic.lowercased().contains("lit") {
-                lightColors.append(Lights.whiteLight)
+                lightColors.append(Light.whiteLight)
             }
         }
         
@@ -370,7 +370,7 @@ class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
         var previousSubregionHeading: String?
         var previousLocalHeading: String?
         // Provide one dictionary at a time when the closure is called.
-        let batchInsertRequest = NSBatchInsertRequest(entity: Lights.entity(), dictionaryHandler: { dictionary in
+        let batchInsertRequest = NSBatchInsertRequest(entity: Light.entity(), dictionaryHandler: { dictionary in
             guard index < total else { return true }
             let propertyDictionary = propertyList[index].dictionaryValue
             let region = propertyDictionary["regionHeading"] as? String ?? previousRegionHeading
@@ -419,7 +419,7 @@ class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
         try await taskContext.perform {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
-            let batchInsertRequest = Lights.newBatchInsertRequest(with: propertiesList)
+            let batchInsertRequest = Light.newBatchInsertRequest(with: propertiesList)
             batchInsertRequest.resultType = .count
             do {
                 let fetchResult = try taskContext.execute(batchInsertRequest)

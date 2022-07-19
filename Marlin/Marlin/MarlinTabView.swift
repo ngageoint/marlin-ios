@@ -110,26 +110,26 @@ struct MarlinTabView: View {
                     
                     ModuListView()
                         .tabItem {
-                            Label("MODUs", image: "modu")
+                            Label(Modu.dataSourceName, image: "modu")
                         }
                         .tag("\(Modu.key)List")
                     
                     AsamListView()
                         .tabItem {
-                            Label("ASAMs", image: "asam")
+                            Label(Asam.dataSourceName, image: "asam")
                         }
                         .tag("\(Asam.key)List")
                     NavigationalWarningListView()
                         .tabItem {
-                            Label("Warnings", systemImage: "exclamationmark.triangle.fill")
+                            Label(NavigationalWarning.dataSourceName, systemImage: "exclamationmark.triangle.fill")
                         }
                         .tag("warningList")
                     
                     LightsListView()
                         .tabItem {
-                            Label("Lights", systemImage: "lightbulb.fill")
+                            Label(Light.dataSourceName, systemImage: "lightbulb.fill")
                         }
-                        .tag("\(Lights.key)List")
+                        .tag("\(Light.key)List")
                 }
                 .onReceive(viewDataSourcePub) { output in
                     if let dataSource = output.object as? DataSource {

@@ -10,7 +10,7 @@ import SwiftUI
 struct RaconCard: View {
     @EnvironmentObject var scheme: MarlinScheme
     
-    @State var racon: Lights
+    @State var racon: Light
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

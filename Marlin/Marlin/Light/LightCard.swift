@@ -10,35 +10,10 @@ import SwiftUI
 struct LightCard: View {
     @EnvironmentObject var scheme: MarlinScheme
 
-    var light: Lights
+    var light: Light
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            //                        if let lightSectors = light.lightSectors, let uiImage = LightColorImage(
-            //                            frame: CGRect(x: 0, y: 0, width: 25, height: 25),
-            //                            sectors: lightSectors), let darkuiImage = LightColorImage(
-            //                                frame: CGRect(x: 0, y: 0, width: 25, height: 25),
-            //                                sectors: lightSectors, darkMode: true) {
-            //                            AdaptiveImage(lightImage: Image(uiImage: uiImage), darkImage: Image(uiImage: darkuiImage))
-            //                            .aspectRatio(contentMode: .fit)
-            //                        }
-            //                        if let lightSectors = light.lightSectors, let uiImage = LightColorImage(
-            //                            frame: CGRect(x: 0, y: 0, width: 50, height: 50),
-            //                            sectors: lightSectors, arcWidth: 3), let darkuiImage = LightColorImage(
-            //                                frame: CGRect(x: 0, y: 0, width: 50, height: 50),
-            //                                sectors: lightSectors, arcWidth: 3, darkMode: true) {
-            //                            AdaptiveImage(lightImage: Image(uiImage: uiImage), darkImage: Image(uiImage: darkuiImage)).aspectRatio(contentMode: .fit)
-            //                        }
-            //
-            //                        if let lightSectors = light.lightSectors, let uiImage = LightColorImage(
-            //                            frame: CGRect(x: 0, y: 0, width: 100, height: 100),
-            //                            sectors: lightSectors, arcWidth: 3, arcRadius: 25, includeSectorDashes: true), let darkuiImage = LightColorImage(
-            //                                frame: CGRect(x: 0, y: 0, width: 100, height: 100),
-            //                                sectors: lightSectors, arcWidth: 3, arcRadius: 25, includeSectorDashes: true, darkMode: true) {
-            //                            AdaptiveImage(lightImage: Image(uiImage: uiImage), darkImage: Image(uiImage: darkuiImage))
-            //
-            //                                .aspectRatio(contentMode: .fit)
-            //                        }
             HStack(alignment: .top, spacing: 8) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(light.name ?? "")

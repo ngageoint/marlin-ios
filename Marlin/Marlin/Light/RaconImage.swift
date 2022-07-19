@@ -12,7 +12,7 @@ class RaconImage : UIImage {
 
     convenience init?(frame: CGRect, arcWidth: Double = 2, arcRadius: Double = 8, text: String? = "Racon", darkMode: Bool = false) {
         let rect = frame
-        let circleColor = Lights.raconColor
+        let circleColor = Light.raconColor
         let labelColor = UIColor.label.resolvedColor(with:UITraitCollection(traitsFrom: [.init(userInterfaceStyle: darkMode ? .dark : .light)]))
         
         let renderer = UIGraphicsImageRenderer(size: frame.size)

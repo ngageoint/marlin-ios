@@ -16,7 +16,7 @@ class TestHelpers {
         print("Modus truncated? \(modusTruncated)")
         let navigationalWarningsTruncated = PersistenceController.shared.container.viewContext.truncateAll(NavigationalWarning.self)
         print("Navigational Warnings truncated? \(navigationalWarningsTruncated)")
-        let lightsTruncated = PersistenceController.shared.container.viewContext.truncateAll(Lights.self)
+        let lightsTruncated = PersistenceController.shared.container.viewContext.truncateAll(Light.self)
         print("Lights truncated? \(lightsTruncated)")
     }
 }

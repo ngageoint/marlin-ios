@@ -11,12 +11,12 @@ struct LightsListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var scheme: MarlinScheme
         
-    @SectionedFetchRequest<String, Lights>(
+    @SectionedFetchRequest<String, Light>(
         sectionIdentifier: \.sectionHeader!,
-        sortDescriptors: [NSSortDescriptor(keyPath: \Lights.sectionHeader, ascending: true), NSSortDescriptor(keyPath: \Lights.featureNumber, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \Light.sectionHeader, ascending: true), NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)],
         predicate: NSPredicate(format: "characteristicNumber = 1")
     )
-    var sectionedLights: SectionedFetchResults<String, Lights>
+    var sectionedLights: SectionedFetchResults<String, Light>
     var body: some View {
         NavigationView {
             VStack {

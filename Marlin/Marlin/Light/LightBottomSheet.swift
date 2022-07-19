@@ -8,10 +8,10 @@
 import SwiftUI
 
 class LightBottomSheetViewController: UIHostingController<LightBottomSheet> {
-    let light: Lights
+    let light: Light
     let scheme: MarlinScheme
     
-    init(light: Lights, scheme: MarlinScheme) {
+    init(light: Light, scheme: MarlinScheme) {
         self.light = light
         self.scheme = scheme
         let lightBottomSheet = LightBottomSheet(light: light, scheme: scheme)
@@ -24,7 +24,7 @@ class LightBottomSheetViewController: UIHostingController<LightBottomSheet> {
 }
 
 struct LightBottomSheet: View {
-    var light: Lights
+    var light: Light
     var scheme: MarlinScheme?
     
     var body: some View {
@@ -41,7 +41,7 @@ struct LightBottomSheet: View {
 struct LightBottomSheet_Previews: PreviewProvider {
     static var previews: some View {
         let context = PersistenceController.preview.container.viewContext
-        let light = try? context.fetchFirst(Lights.self)
+        let light = try? context.fetchFirst(Light.self)
         LightBottomSheet(light: light!)
     }
 }

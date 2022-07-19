@@ -199,8 +199,8 @@ class MSITests: KIFSpec {
                 expect(stubCalled).toEventually(beTrue());
                 
                 let persistenceController = PersistenceController.shared
-                expect(try? persistenceController.container.viewContext.countOfObjects(Lights.self)).toEventually(equal(4))
-                let nw = persistenceController.container.viewContext.fetchFirst(Lights.self, key: "noticeNumber", value: "201507")
+                expect(try? persistenceController.container.viewContext.countOfObjects(Light.self)).toEventually(equal(4))
+                let nw = persistenceController.container.viewContext.fetchFirst(Light.self, key: "noticeNumber", value: "201507")
                 expect(nw?.noticeNumber).to(equal(201507))
                 print("xxx coordinate \(nw?.coordinate)")
                 //                let formatter = DateFormatter()

@@ -10,7 +10,7 @@ import MaterialComponents
 
 struct LightActionBar: View {
     @EnvironmentObject var scheme: MarlinScheme
-    var light: Lights
+    var light: Light
     var showMoreDetailsButton = false
     var showFocusButton = true
     

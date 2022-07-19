@@ -17,7 +17,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="Lights" representedClassName=".Lights" syncable="YES" codeGenerationType="category">
+    <entity name="Light" representedClassName=".Light" syncable="YES" codeGenerationType="category">
         <attribute name="aidType" optional="YES" attributeType="String"/>
         <attribute name="characteristic" optional="YES" attributeType="String"/>
         <attribute name="characteristicNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -94,8 +94,8 @@
     </entity>
     <elements>
         <element name="Asam" positionX="-63" positionY="-9" width="128" height="179"/>
+        <element name="Light" positionX="-63" positionY="144" width="128" height="434"/>
         <element name="Modu" positionX="-63" positionY="63" width="128" height="194"/>
         <element name="NavigationalWarning" positionX="-63" positionY="108" width="128" height="209"/>
-        <element name="Lights" positionX="-63" positionY="144" width="128" height="434"/>
     </elements>
 </model>
