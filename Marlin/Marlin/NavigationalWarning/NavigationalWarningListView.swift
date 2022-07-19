@@ -34,7 +34,7 @@ struct NavigationalWarningListView: View {
             List {
                 MarlinMap()
                     .mixin(navareaMap)
-                    .mixin(GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", index: 1))
+                    .mixin(GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: scheme.dynamicLandColor, index: 1))
                     .frame(minHeight: 250, maxHeight: 250)
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 NavigationalWarningAreasView(currentArea: locationManager.currentNavArea)

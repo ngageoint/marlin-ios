@@ -20,6 +20,13 @@ class MarlinScheme: ObservableObject {
         UIColor(red: 0.64, green: 0.87, blue: 0.93, alpha: 1.00)
     }
     
+    let dynamicLandColor = UIColor { (traits) -> UIColor in
+        // Return one of two colors depending on light or dark mode
+        return traits.userInterfaceStyle == .dark ?
+        UIColor(red: 0.72, green: 0.67, blue: 0.54, alpha: 1.00) :
+        UIColor(red: 0.91, green: 0.87, blue: 0.80, alpha: 1.00)
+    }
+    
     init() {
         
         disabledScheme.colorScheme.primaryColorVariant = MDCPalette.grey.tint300;

@@ -20,16 +20,18 @@ class GeoPackage: NSObject {
     var overlay: BaseMapOverlay?
     var featureTiles: GPKGFeatureTiles?
     var fillColor: UIColor?
+    var polygonColor: UIColor?
     var canReplaceMapContent: Bool = false
     var index: Int = 0
 
-    init(mapView: MKMapView, fileName: String, tableName: String, fillColor: UIColor? = nil, canReplaceMapContent: Bool = false, index: Int = 0) {
+    init(mapView: MKMapView, fileName: String, tableName: String, polygonColor: UIColor? = nil, fillColor: UIColor? = nil, canReplaceMapContent: Bool = false, index: Int = 0) {
         self.mapView = mapView
         self.fileName = fileName
         self.tableName = tableName
         self.fillColor = fillColor
         self.canReplaceMapContent = canReplaceMapContent
         self.index = index
+        self.polygonColor = polygonColor
     }
     
     func addOverlay() {
@@ -57,14 +59,8 @@ class GeoPackage: NSObject {
             
             featureTiles = GPKGFeatureTiles(geoPackage: geoPackage, andFeatureDao: featureDao)
             featureTiles?.indexManager = GPKGFeatureIndexManager(geoPackage: geoPackage, andFeatureDao: featureDao)
-            let style = UITraitCollection.current.userInterfaceStyle
-            if style == .light {
-                featureTiles?.polygonColor = UIColor(red: 0.91, green: 0.87, blue: 0.80, alpha: 1.00)
-                featureTiles?.polygonFillColor = UIColor(red: 0.91, green: 0.87, blue: 0.80, alpha: 1.00)
-            } else {
-                featureTiles?.polygonColor = UIColor(red: 0.72, green: 0.67, blue: 0.54, alpha: 1.00)
-                featureTiles?.polygonFillColor = UIColor(red: 0.72, green: 0.67, blue: 0.54, alpha: 1.00)
-            }
+            featureTiles?.polygonColor = polygonColor
+            featureTiles?.polygonFillColor = polygonColor
             featureTiles?.fillPolygon = true
             featureTiles?.polygonStrokeWidth = 0.3
             featureTiles?.lineStrokeWidth = 0.1
@@ -76,27 +72,20 @@ class GeoPackage: NSObject {
             
             if let overlay = overlay {
                 mapView.insertOverlay(overlay, at: index)
-//                mapView.addOverlay(overlay)
             }
         }
     }
     
     func updateLayers() {
-        let style = UITraitCollection.current.userInterfaceStyle
-        if style == .light {
-            featureTiles?.polygonColor = UIColor(red: 0.91, green: 0.87, blue: 0.80, alpha: 1.00)
-            featureTiles?.polygonFillColor = UIColor(red: 0.91, green: 0.87, blue: 0.80, alpha: 1.00)
-        } else {
-            featureTiles?.polygonColor = UIColor(red: 0.72, green: 0.67, blue: 0.54, alpha: 1.00)
-            featureTiles?.polygonFillColor = UIColor(red: 0.72, green: 0.67, blue: 0.54, alpha: 1.00)
-        }
+        featureTiles?.polygonColor = polygonColor
+        featureTiles?.polygonFillColor = polygonColor
         if let oldOverlay = overlay {
             mapView.removeOverlay(oldOverlay)
             overlay = BaseMapOverlay(featureTiles: featureTiles, fillColor: fillColor)
             overlay?.minZoom = 0
             overlay?.canReplaceMapContent = true
             if let overlay = overlay {
-                mapView.addOverlay(overlay)
+                mapView.insertOverlay(overlay, at: index)
             }
         }
     }
