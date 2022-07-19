@@ -10,25 +10,30 @@ import CoreData
 import OSLog
 import MapKit
 
-enum NavigationalWarningNavArea: String, CaseIterable, CustomStringConvertible {
-    case HYDROPAC = "P"
-    case HYDROLANT = "A"
-    case HYDROARC = "C"
-    case NAVAREA_IV = "4"
-    case NAVAREA_XII = "12"
+struct NavigationalWarningNavArea: Equatable {
+    let name: String
+    let display: String
+    let color: UIColor
+}
+
+extension NavigationalWarningNavArea {//: String, CaseIterable, CustomStringConvertible {
+    static let HYDROPAC = NavigationalWarningNavArea(name: "P", display: "HYDROPAC", color: UIColor(argbValue: 0xFFF5F481))
+    static let HYDROARC = NavigationalWarningNavArea(name: "C", display: "HYDROARC", color: UIColor(argbValue: 0xFF77DFFC))
+    static let HYDROLANT = NavigationalWarningNavArea(name: "A", display: "HYDROLANT", color: UIColor(argbValue: 0xFF7C91F2))
+    static let NAVAREA_IV = NavigationalWarningNavArea(name: "4", display: "NAVAREA IV", color: UIColor(argbValue: 0xFFFDBFBF))
+    static let NAVAREA_XII = NavigationalWarningNavArea(name: "12", display: "NAVAREA XII", color: UIColor(argbValue: 0xFF8BCC6B))
     
-    var description : String {
-        switch self {
-        case .HYDROPAC: return "HYDROPAC"
-        case .HYDROLANT: return "HYDROLANT"
-        case .HYDROARC: return "HYDROARC"
-        case .NAVAREA_IV: return "NAVAREA IV"
-        case .NAVAREA_XII: return "NAVAREA XII"
-        }
+    static func areas() -> [NavigationalWarningNavArea] {
+        return [NavigationalWarningNavArea.HYDROPAC, NavigationalWarningNavArea.HYDROARC, NavigationalWarningNavArea.HYDROLANT, NavigationalWarningNavArea.NAVAREA_IV, NavigationalWarningNavArea.NAVAREA_XII]
     }
     
-    static func fromDisplay(_ display: String) -> NavigationalWarningNavArea? {
-        return self.allCases.first{ "\($0)" == display.replacingOccurrences(of: " ", with: "_") }
+    static func fromId(id: String) -> NavigationalWarningNavArea? {
+        for area in NavigationalWarningNavArea.areas() {
+            if id == area.name {
+                return area
+            }
+        }
+        return nil
     }
 }
 
@@ -42,8 +47,6 @@ class NavigationalWarning: NSManagedObject, DataSource {
     var primaryKey: String {
         return "\(self.navArea ?? "") \(self.msgNumber)/\(self.msgYear)"
     }
-    
-    
     
     var dateString: String? {
         if let date = issueDate {
@@ -64,8 +67,8 @@ class NavigationalWarning: NSManagedObject, DataSource {
             return ""
         }
         
-        if let navAreaEnum = NavigationalWarningNavArea(rawValue: navArea) {
-            return navAreaEnum.description
+        if let navAreaEnum = NavigationalWarningNavArea.fromId(id: navArea) {
+            return navAreaEnum.display
         }
         return ""
     }

@@ -61,6 +61,9 @@
 		F7A54CD72848149700E5F565 /* AsamListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CAB2848149500E5F565 /* AsamListView.swift */; };
 		F7A54CD92848149700E5F565 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CAC2848149500E5F565 /* Persistence.swift */; };
 		F7A54CDB2848149700E5F565 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7A54CAD2848149600E5F565 /* Assets.xcassets */; };
+		F7ADDCDD2885D79900137D95 /* navigation_areas.gpkg in Resources */ = {isa = PBXBuildFile; fileRef = F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */; };
+		F7ADDCDF2885E53E00137D95 /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCDE2885E53E00137D95 /* UIColorExtensions.swift */; };
+		F7ADDCE22887026500137D95 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCE12887026500137D95 /* LocationManager.swift */; };
 		F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */; };
 		F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */; };
 		F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C2286C860900758F1C /* GeoPackageMap.swift */; };
@@ -185,6 +188,9 @@
 		F7A54CBF2848149700E5F565 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7A54CC32848149700E5F565 /* Tests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOS.swift; sourceTree = "<group>"; };
 		F7A54CC52848149700E5F565 /* Tests_iOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOSLaunchTests.swift; sourceTree = "<group>"; };
+		F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */ = {isa = PBXFileReference; lastKnownFileType = file; path = navigation_areas.gpkg; sourceTree = "<group>"; };
+		F7ADDCDE2885E53E00137D95 /* UIColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtensions.swift; sourceTree = "<group>"; };
+		F7ADDCE12887026500137D95 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreaUnreadBadge.swift; sourceTree = "<group>"; };
 		F7D671C2286C860900758F1C /* GeoPackageMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageMap.swift; sourceTree = "<group>"; };
@@ -379,9 +385,11 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
+				F7ADDCE02887025500137D95 /* Location */,
 				F707BA7528760894006A94C4 /* Lights */,
 				F7D671E52871D44E00758F1C /* SideMenu */,
 				F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */,
+				F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */,
 				F7D671C1286C85EF00758F1C /* GeoPackage */,
 				F7F597A4286271E100F9B32E /* NavigationalWarning */,
 				F7F59793285BE23F00F9B32E /* Views */,
@@ -423,6 +431,14 @@
 				F7A54CC52848149700E5F565 /* Tests_iOSLaunchTests.swift */,
 			);
 			path = "Tests iOS";
+			sourceTree = "<group>";
+		};
+		F7ADDCE02887025500137D95 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				F7ADDCE12887026500137D95 /* LocationManager.swift */,
+			);
+			path = Location;
 			sourceTree = "<group>";
 		};
 		F7B3490828491D6200E10ABF /* CoreData */ = {
@@ -501,6 +517,7 @@
 				F71DF4AA2859147900686951 /* UIButtonExtensions.swift */,
 				F71DF4AC28591BA200686951 /* UIApplicationExtensions.swift */,
 				F7F5978F285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift */,
+				F7ADDCDE2885E53E00137D95 /* UIColorExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -669,6 +686,7 @@
 				F7A54CDB2848149700E5F565 /* Assets.xcassets in Resources */,
 				F7D671CC286C98B200758F1C /* natural_earth_1_100.gpkg in Resources */,
 				F71DF4972858CC8100686951 /* asams.json in Resources */,
+				F7ADDCDD2885D79900137D95 /* navigation_areas.gpkg in Resources */,
 				F707BA722874B9F4006A94C4 /* userDefaults.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -832,6 +850,7 @@
 				F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */,
 				F7F597AE2864DE2900F9B32E /* NavigationalWarningDetailView.swift in Sources */,
 				F71DF4A52859120A00686951 /* BottomSheetView.swift in Sources */,
+				F7ADDCE22887026500137D95 /* LocationManager.swift in Sources */,
 				F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */,
 				F7D671E02871BFEC00758F1C /* ModuActionBar.swift in Sources */,
 				F7F597AC2864DD5200F9B32E /* NavigationalWarningListView.swift in Sources */,
@@ -858,6 +877,7 @@
 				F707BA81287768FA006A94C4 /* LightDetailView.swift in Sources */,
 				F7F597A3286238F400F9B32E /* MSIMapCluster.swift in Sources */,
 				F707BA97288590E2006A94C4 /* FogSignalImage.swift in Sources */,
+				F7ADDCDF2885E53E00137D95 /* UIColorExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

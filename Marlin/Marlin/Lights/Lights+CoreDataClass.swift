@@ -72,6 +72,7 @@ class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
         expanded = expanded?.replacingOccurrences(of: "Or.", with: "Orange ")
         expanded = expanded?.replacingOccurrences(of: "F.", with: "Fixed ")
         expanded = expanded?.replacingOccurrences(of: "Q.", with: "Quick Flashing ")
+        expanded = expanded?.replacingOccurrences(of: "L.Fl.", with: "Long Flashing ")
         expanded = expanded?.replacingOccurrences(of: "Fl.", with: "Flashing ")
         expanded = expanded?.replacingOccurrences(of: "R.", with: "Red ")
         expanded = expanded?.replacingOccurrences(of: "fl.", with: "Flash ")
@@ -91,7 +92,6 @@ class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
         expanded = expanded?.replacingOccurrences(of: "V.Q.", with: "Very Quick ")
         expanded = expanded?.replacingOccurrences(of: "Km.", with: "Kilometer ")
         expanded = expanded?.replacingOccurrences(of: "W.", with: "White ")
-        expanded = expanded?.replacingOccurrences(of: "L.Fl.", with: "Long Flashing ")
         expanded = expanded?.replacingOccurrences(of: "Y.", with: "Yellow ")
         return expanded
     }
@@ -426,6 +426,7 @@ class Lights: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
                   if let batchInsertResult = fetchResult as? NSBatchInsertResult,
                    let success = batchInsertResult.result as? Int {
                     print("Inserted \(success) lights")
+                      // if there were already lights in the db for this volume and this was an update and we got back a light we have to go redo the query due to regions not being populated on all returned objects
                     return
                   }
             } catch {

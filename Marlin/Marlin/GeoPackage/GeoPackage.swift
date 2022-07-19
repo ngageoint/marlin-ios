@@ -19,11 +19,17 @@ class GeoPackage: NSObject {
     var geoPackage: GPKGGeoPackage?
     var overlay: BaseMapOverlay?
     var featureTiles: GPKGFeatureTiles?
+    var fillColor: UIColor?
+    var canReplaceMapContent: Bool = false
+    var index: Int = 0
 
-    init(mapView: MKMapView, fileName: String, tableName: String) {
+    init(mapView: MKMapView, fileName: String, tableName: String, fillColor: UIColor? = nil, canReplaceMapContent: Bool = false, index: Int = 0) {
         self.mapView = mapView
         self.fileName = fileName
         self.tableName = tableName
+        self.fillColor = fillColor
+        self.canReplaceMapContent = canReplaceMapContent
+        self.index = index
     }
     
     func addOverlay() {
@@ -49,7 +55,7 @@ class GeoPackage: NSObject {
         if let geoPackage = geoPackage {
             let featureDao = geoPackage.featureDao(withTableName: tableName)
             
-            featureTiles = GPKGFeatureTiles(featureDao: featureDao)
+            featureTiles = GPKGFeatureTiles(geoPackage: geoPackage, andFeatureDao: featureDao)
             featureTiles?.indexManager = GPKGFeatureIndexManager(geoPackage: geoPackage, andFeatureDao: featureDao)
             let style = UITraitCollection.current.userInterfaceStyle
             if style == .light {
@@ -64,12 +70,13 @@ class GeoPackage: NSObject {
             featureTiles?.lineStrokeWidth = 0.1
             featureTiles?.lineColor = UIColor.lightGray
             
-            overlay = BaseMapOverlay(featureTiles: featureTiles)
+            overlay = BaseMapOverlay(featureTiles: featureTiles, fillColor: fillColor)
             overlay?.minZoom = 0
-            overlay?.canReplaceMapContent = true
+            overlay?.canReplaceMapContent = canReplaceMapContent
             
             if let overlay = overlay {
-                mapView.addOverlay(overlay)
+                mapView.insertOverlay(overlay, at: index)
+//                mapView.addOverlay(overlay)
             }
         }
     }
@@ -85,7 +92,7 @@ class GeoPackage: NSObject {
         }
         if let oldOverlay = overlay {
             mapView.removeOverlay(oldOverlay)
-            overlay = BaseMapOverlay(featureTiles: featureTiles)
+            overlay = BaseMapOverlay(featureTiles: featureTiles, fillColor: fillColor)
             overlay?.minZoom = 0
             overlay?.canReplaceMapContent = true
             if let overlay = overlay {
@@ -105,7 +112,7 @@ class GeoPackage: NSObject {
         let dataColumnsDao = GPKGDataColumnsDao(database: geoPackage?.database)
         
         var featureRows: [GPKGFeatureRowData] = []
-        
+                
         let featureIndexResults = featureTiles?.indexManager.query(with: SFGeometryEnvelope())
         while ((featureIndexResults?.moveToNext()) == true) {
             if let featureRow = featureIndexResults?.featureRow() {

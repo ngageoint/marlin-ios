@@ -21,14 +21,20 @@ class GeoPackageMap: NSObject, MapMixin {
     
     var fileName: String
     var tableName: String
+    var fillColor: UIColor?
+    var canReplaceMapContent: Bool = false
+    var index: Int = 0
     
-    init(fileName: String, tableName: String) {
+    init(fileName: String, tableName: String, fillColor: UIColor? = nil, canReplaceMapContent: Bool = false, index: Int = 0) {
         self.fileName = fileName
         self.tableName = tableName
+        self.fillColor = fillColor
+        self.canReplaceMapContent = canReplaceMapContent
+        self.index = index
     }
     
     func setupMixin(mapView: MKMapView, marlinMap: MarlinMap, scheme: MarlinScheme?) {
-        geoPackage = GeoPackage(mapView: mapView, fileName: self.fileName, tableName: self.tableName)
+        geoPackage = GeoPackage(mapView: mapView, fileName: fileName, tableName: tableName, fillColor: fillColor, canReplaceMapContent: canReplaceMapContent, index: index)
         geoPackage?.addOverlay()
     }
     
@@ -37,6 +43,7 @@ class GeoPackageMap: NSObject, MapMixin {
     }
     
     func items(at location: CLLocationCoordinate2D) -> [Any]? {
-        return geoPackage?.getFeaturesAtLocation(location: location)
+        return nil
+//        return geoPackage?.getFeaturesAtLocation(location: location)
     }
 }

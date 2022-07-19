@@ -13,6 +13,13 @@ class MarlinScheme: ObservableObject {
     let containerScheme = MDCContainerScheme();
     let disabledScheme = MDCContainerScheme()
     
+    let dynamicOceanColor = UIColor { (traits) -> UIColor in
+        // Return one of two colors depending on light or dark mode
+        return traits.userInterfaceStyle == .dark ?
+        UIColor(red: 0.21, green: 0.27, blue: 0.40, alpha: 1.00) :
+        UIColor(red: 0.64, green: 0.87, blue: 0.93, alpha: 1.00)
+    }
+    
     init() {
         
         disabledScheme.colorScheme.primaryColorVariant = MDCPalette.grey.tint300;

@@ -38,8 +38,8 @@ struct NavigationalWarningDetailView: View {
                     if let cancelDateString = navigationalWarning.cancelDateString {
                         Property(property: "Cancel Date", value: cancelDateString)
                     }
-                    if let cancelNavArea = navigationalWarning.cancelNavArea, let cancelMsgNumber = navigationalWarning.cancelMsgNumber, let cancelMsgYear = navigationalWarning.cancelMsgYear, let navAreaEnum = NavigationalWarningNavArea(rawValue: cancelNavArea){
-                        Property(property: "Cancelled By", value: "\(navAreaEnum.description) \(cancelMsgNumber)/\(cancelMsgYear)")
+                    if let cancelNavArea = navigationalWarning.cancelNavArea, let cancelMsgNumber = navigationalWarning.cancelMsgNumber, let cancelMsgYear = navigationalWarning.cancelMsgYear, let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea){
+                        Property(property: "Cancelled By", value: "\(navAreaEnum.display) \(cancelMsgNumber)/\(cancelMsgYear)")
                     }
                     NavigationalWarningActionBar(navigationalWarning: navigationalWarning)
                 }
