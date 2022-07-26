@@ -40,7 +40,7 @@ extension NavigationalWarningNavArea {//: String, CaseIterable, CustomStringConv
 class NavigationalWarning: NSManagedObject, DataSource {
     
     static var isMappable: Bool = false
-    static var dataSourceName: String = "Warnings"
+    static var dataSourceName: String = NSLocalizedString("Warnings", comment: "Warnings data source display name")
     static var key: String = "navWarning"
     static var color: UIColor = UIColor(red: 0.00, green: 0.29, blue: 0.68, alpha: 1.00)
     

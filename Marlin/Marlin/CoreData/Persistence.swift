@@ -76,7 +76,7 @@ class PersistenceController {
         guard let description = container.persistentStoreDescriptions.first else {
             fatalError("Failed to retrieve a persistent store description.")
         }
-        
+        print("Peristent store URL \(String(describing: description.url))")
         if inMemory {
             description.url = URL(fileURLWithPath: "/dev/null")
         }

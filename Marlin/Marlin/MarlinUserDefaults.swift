@@ -40,15 +40,15 @@ extension UserDefaults {
     }
     
     @objc var showOnMapModu: Bool {
-        bool(forKey: "showOnMapModu")
+        bool(forKey: "showOnMap\(Modu.key)")
     }
     
     @objc var showOnMapAsam: Bool {
-        bool(forKey: "showOnMapAsam")
+        bool(forKey: "showOnMap\(Asam.key)")
     }
     
     @objc var showOnMapLights: Bool {
-        bool(forKey: "showOnMapLights")
+        bool(forKey: "showOnMap\(Light.key)")
     }
 
     @objc var mapRegion: MKCoordinateRegion {

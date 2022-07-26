@@ -17,16 +17,11 @@ protocol BottomSheetEnabled {
 }
 
 class BottomSheetMixin: NSObject, MapMixin {
-//    var bottomSheetEnabled: BottomSheetEnabled
     var mapView: MKMapView?
     var mapItemsTappedObserver: Any?
     var mapViewDisappearingObserver: Any?
     var mageBottomSheet: MarlinBottomSheetViewController?
     var bottomSheet:MDCBottomSheetController?
-    
-//    init() {
-//        self.bottomSheetEnabled = bottomSheetEnabled
-//    }
     
     func cleanupMixin() {
         if let mapItemsTappedObserver = mapItemsTappedObserver {
@@ -54,7 +49,6 @@ class BottomSheetMixin: NSObject, MapMixin {
                 bottomSheet.trackingScrollView = mageBottomSheet.scrollView
             
                 UIApplication.shared.keyWindow?.rootViewController?.present(bottomSheet, animated: true, completion: nil)
-//                self?.bottomSheetEnabled.navigationController?.present(bottomSheet, animated: true, completion: nil)
                 self?.bottomSheet = bottomSheet
                 self?.mageBottomSheet = mageBottomSheet
                 self?.mapViewDisappearingObserver = NotificationCenter.default.addObserver(forName: .MapViewDisappearing, object: nil, queue: .main) { [weak self] notification in

@@ -2,11 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>showOnMapLights</key>
+	<key>showOnMaplight</key>
 	<true/>
-	<key>showOnMapModu</key>
+	<key>showOnMapmodu</key>
 	<true/>
-	<key>showOnMapAsam</key>
+	<key>showOnMapasam</key>
 	<true/>
+	<key>asamOrder</key>
+	<integer>0</integer>
+	<key>moduOrder</key>
+	<integer>1</integer>
+	<key>lightOrder</key>
+	<integer>2</integer>
+	<key>navWarningOrder</key>
+	<integer>3</integer>
 </dict>
 </plist>

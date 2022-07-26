@@ -11,11 +11,20 @@ import CoreData
 import OSLog
 import MapKit
 
-class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
+class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotation, DataSource {
+    var clusteringIdentifierWhenShrunk: String? = "msi"
+    
+    var enlarged: Bool = false
+    
+    var shouldEnlarge: Bool = false
+    
+    var shouldShrink: Bool = false
+    
+    var clusteringIdentifier: String? = "msi"
     
     static var isMappable: Bool = true
-    static var dataSourceName: String = "ASAM"
-    static var key: String = "Asam"
+    static var dataSourceName: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")
+    static var key: String = "asam"
     
     static var color: UIColor = .black
     
@@ -33,9 +42,6 @@ class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
     
     func view(on: MKMapView) -> MKAnnotationView {
         let annotationView = on.dequeueReusableAnnotationView(withIdentifier: AsamAnnotationView.ReuseID, for: self)
-        let image = UIImage(named: "asam_marker")
-        annotationView.image = image
-        annotationView.centerOffset = CGPoint(x: 0, y: -(image!.size.height/2.0))
         self.annotationView = annotationView
         return annotationView
     }

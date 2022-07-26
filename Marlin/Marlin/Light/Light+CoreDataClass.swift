@@ -16,6 +16,13 @@ struct LightVolume {
 }
 
 class Light: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
+    var enlarged: Bool = false
+    
+    var shouldEnlarge: Bool = false
+    
+    var shouldShrink: Bool = false
+    var clusteringIdentifier: String? = nil
+    
     static let lightVolumes = [
         LightVolume(volumeQuery: "110", volumeNumber: "PUB 110"),
         LightVolume(volumeQuery: "111", volumeNumber: "PUB 111"),
@@ -36,8 +43,8 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
     static let raconColor = UIColor(red: 0.71, green: 0.17, blue: 0.71, alpha: 1.00)
     
     static var isMappable: Bool = true
-    static var dataSourceName: String = "Lights"
-    static var key: String = "Lights"
+    static var dataSourceName: String = NSLocalizedString("Lights", comment: "Lights data source display name")
+    static var key: String = "light"
     
     static var color: UIColor = .systemYellow
     var color: UIColor {

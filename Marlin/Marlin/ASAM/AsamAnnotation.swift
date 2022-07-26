@@ -8,18 +8,18 @@
 import Foundation
 import MapKit
 
-protocol AnnotationWithView {
-    var annotationView: MKAnnotationView? { get set }
-    var color: UIColor { get }
-}
-
 class AsamAnnotationView: MKAnnotationView {
     static let ReuseID = "asam"
     
     /// - Tag: ClusterIdentifier
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-        clusteringIdentifier = "msi"
+        if let annotation = annotation as? EnlargableAnnotation, !annotation.shouldEnlarge {
+            self.clusteringIdentifier = annotation.clusteringIdentifier
+        }
+        let image = UIImage(named: "asam_marker")
+        self.image = image
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -28,7 +28,18 @@ class AsamAnnotationView: MKAnnotationView {
     
     override var annotation: MKAnnotation? {
         willSet {
-            clusteringIdentifier = "msi"
+            guard let annotation = newValue as? EnlargableAnnotation else {
+                if let annotation = newValue as? AnnotationWithView {
+                    clusteringIdentifier = annotation.clusteringIdentifier
+                }
+                return
+            }
+            clusteringIdentifier = ((annotation.enlarged || annotation.shouldEnlarge) && !annotation.shouldShrink) ? nil : annotation.clusteringIdentifierWhenShrunk
+            if let image = image {
+                self.centerOffset = CGPoint(x: 0, y: -(image.size.height/2.0))
+            } else {
+                self.center = CGPoint(x: 0, y: self.center.y / 2.0)
+            }
         }
     }
 }

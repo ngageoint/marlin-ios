@@ -73,14 +73,12 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         locationStatus = status
-//        print(#function, statusString)
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         lastLocation = location
         updateCurrentNavArea()
-//        print(#function, location)
     }
     
     func updateCurrentNavArea() {
@@ -94,7 +92,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
         if resultSet.moveToNext() {
             if let code = resultSet.row().value(withColumn: "code") as? String {
-                print("xxx code is \(code)")
                 currentNavArea = NavigationalWarningNavArea.fromId(id: code)
             }
         }

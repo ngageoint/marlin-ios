@@ -122,7 +122,7 @@ struct MarlinMap: UIViewRepresentable {
 
 class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDelegate {
     var marlinMap: MarlinMap
-    var enlargedLocationView: MKAnnotationView?
+    var focusedAnnotation: AnnotationWithView?
     var mapAnnotationFocusedSink: AnyCancellable?
     var locationManager = CLLocationManager()
     
@@ -149,51 +149,62 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     }
     
     func focusAnnotation(notification: MapAnnotationFocusedNotification) {
-        guard let annotation = notification.annotation as? AnnotationWithView, let annotationView = annotation.annotationView else {
-            if let enlargedLocationView = enlargedLocationView {
-                self.enlargedLocationView = nil
-                // shrink the old focused view
-                UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut) {
-                    enlargedLocationView.transform = enlargedLocationView.transform.scaledBy(x: 0.5, y: 0.5)
-                    if let image = enlargedLocationView.image {
-                        enlargedLocationView.centerOffset = CGPoint(x: 0, y: -(image.size.height / 2.0))
-                    } else {
-                        enlargedLocationView.center = CGPoint(x: 0, y: enlargedLocationView.center.y / 2.0)
-                    }
+        guard let annotation = notification.annotation as? AnnotationWithView, annotation.annotationView != nil else {
+            if let focusedAnnotation = focusedAnnotation {
+                self.focusedAnnotation = nil
+                if let enlargedAnnotation = focusedAnnotation as? EnlargableAnnotation {
+                    // shrink the old focused view
+                    marlinMap.mutatingWrapper.mapView.removeAnnotation(enlargedAnnotation)
+                    enlargedAnnotation.markForShrinking()
+                    marlinMap.mutatingWrapper.mapView.addAnnotation(enlargedAnnotation)
                 }
             }
             return
         }
         
-        if annotationView == enlargedLocationView {
+        if annotation.annotationView == focusedAnnotation?.annotationView {
             // already focused, ignore
             return
-        } else if let enlargedLocationView = enlargedLocationView {
+        } else if let focusedAnnotation = focusedAnnotation, let enlargedAnnotation = focusedAnnotation as? EnlargableAnnotation  {
             // shrink the old focused view
-            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut) {
-                enlargedLocationView.transform = enlargedLocationView.transform.scaledBy(x: 0.5, y: 0.5)
-                if let image = enlargedLocationView.image {
-                    enlargedLocationView.centerOffset = CGPoint(x: 0, y: -(image.size.height / 2.0))
-                } else {
-                    enlargedLocationView.center = CGPoint(x: 0, y: enlargedLocationView.center.y / 2.0)
-                }
-            }
+            marlinMap.mutatingWrapper.mapView.removeAnnotation(enlargedAnnotation)
+            enlargedAnnotation.markForShrinking()
+            marlinMap.mutatingWrapper.mapView.addAnnotation(enlargedAnnotation)
         }
         
         if ((annotation as? MKClusterAnnotation) != nil) {
             return
         }
         
-        self.enlargedLocationView = annotationView
+        self.focusedAnnotation = annotation
+        marlinMap.mutatingWrapper.mapView.removeAnnotation(annotation)
+        annotation.clusteringIdentifier = nil
+        (annotation as? EnlargableAnnotation)?.markForEnlarging()
+        marlinMap.mutatingWrapper.mapView.addAnnotation(annotation)
         UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut) {
-            annotationView.transform = annotationView.transform.scaledBy(x: 2.0, y: 2.0)
-            if let image = annotationView.image {
-                annotationView.centerOffset = CGPoint(x: 0, y: -(image.size.height))
-            } else {
-                annotationView.centerOffset = CGPoint(x: 0, y: annotationView.center.y * 2.0)
+            notification.mapView?.setCenter(annotation.coordinate, animated: false)
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
+        for view in views {
+            
+            guard let annotation = view.annotation as? EnlargableAnnotation else {
+                continue
             }
-            if let mkannotation = annotation as? MKAnnotation {
-                notification.mapView?.setCenter(mkannotation.coordinate, animated: false)
+            
+            if annotation.shouldEnlarge {
+                UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut) {
+                    annotation.enlargeAnnoation()
+                }
+            }
+            
+            if annotation.shouldShrink {
+                // have to enlarge it without animmation because it is added to the map at the original size
+                annotation.enlargeAnnoation()
+                UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut) {
+                    annotation.shrinkAnnotation()
+                }
             }
         }
         
@@ -220,8 +231,12 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
                 let location = gesture.location(in: view)
                 if view.bounds.contains(location) {
                     if let annotation = annotation as? MKClusterAnnotation {
-                        mapView.showAnnotations(annotation.memberAnnotations, animated: true)
-                        return
+                        if mapView.zoomLevel >= MKMapView.MAX_CLUSTER_ZOOM {
+                            annotationsTapped.append(contentsOf: annotation.memberAnnotations)
+                        } else {
+                            mapView.showAnnotations(annotation.memberAnnotations, animated: true)
+                            return
+                        }
                     } else {
                         annotationsTapped.append(annotation)
                     }

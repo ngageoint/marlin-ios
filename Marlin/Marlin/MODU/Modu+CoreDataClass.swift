@@ -10,11 +10,19 @@ import CoreData
 import OSLog
 import MapKit
 
-class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
+class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotation, DataSource {
+    var clusteringIdentifierWhenShrunk: String? = "msi"
+    var enlarged: Bool = false
+    
+    var shouldEnlarge: Bool = false
+    
+    var shouldShrink: Bool = false
+    
+    var clusteringIdentifier: String? = "msi"
     
     static var isMappable: Bool = true
-    static var dataSourceName: String = "MODU"
-    static var key: String = "Modu"
+    static var dataSourceName: String = NSLocalizedString("MODU", comment: "MODU data source display name")
+    static var key: String = "modu"
     
     static var color: UIColor = UIColor(red: 0.00, green: 0.29, blue: 0.68, alpha: 1.00)
     var color: UIColor {
@@ -31,9 +39,6 @@ class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
     
     func view(on: MKMapView) -> MKAnnotationView {
         let annotationView = on.dequeueReusableAnnotationView(withIdentifier: ModuAnnotationView.ReuseID, for: self)
-        let image = UIImage(named: "modu_marker")
-        annotationView.image = image
-        annotationView.centerOffset = CGPoint(x: 0, y: -(image!.size.height/2.0))
         self.annotationView = annotationView
         return annotationView
     }

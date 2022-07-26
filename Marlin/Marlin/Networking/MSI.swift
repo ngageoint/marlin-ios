@@ -71,7 +71,7 @@ public class MSI {
     func loadLights(date: String? = nil) {
         let queue = DispatchQueue(label: "com.test.api", qos: .background)
         let count = try? PersistenceController.shared.container.viewContext.countOfObjects(Light.self)
-        print("There are \(count) lights")
+        print("There are \(count ?? 0) lights")
         for lightVolume in Light.lightVolumes {
             let newestLight = try? PersistenceController.shared.container.viewContext.fetchFirst(Light.self, sortBy: [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)], predicate: NSPredicate(format: "volumeNumber = %@", lightVolume.volumeNumber))
             

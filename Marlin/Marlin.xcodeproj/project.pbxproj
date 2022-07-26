@@ -64,6 +64,10 @@
 		F7ADDCDD2885D79900137D95 /* navigation_areas.gpkg in Resources */ = {isa = PBXBuildFile; fileRef = F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */; };
 		F7ADDCDF2885E53E00137D95 /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCDE2885E53E00137D95 /* UIColorExtensions.swift */; };
 		F7ADDCE22887026500137D95 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCE12887026500137D95 /* LocationManager.swift */; };
+		F7ADDCE528872BF300137D95 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F7ADDCE728872BF300137D95 /* Localizable.strings */; };
+		F7ADDCEA288F14DA00137D95 /* MKMapViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCE9288F14DA00137D95 /* MKMapViewExtensions.swift */; };
+		F7ADDCEC28902D1500137D95 /* EnlargableAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCEB28902D1500137D95 /* EnlargableAnnotation.swift */; };
+		F7ADDCEE28902D5300137D95 /* AnnotationWithView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCED28902D5300137D95 /* AnnotationWithView.swift */; };
 		F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */; };
 		F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */; };
 		F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C2286C860900758F1C /* GeoPackageMap.swift */; };
@@ -191,6 +195,11 @@
 		F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */ = {isa = PBXFileReference; lastKnownFileType = file; path = navigation_areas.gpkg; sourceTree = "<group>"; };
 		F7ADDCDE2885E53E00137D95 /* UIColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtensions.swift; sourceTree = "<group>"; };
 		F7ADDCE12887026500137D95 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		F7ADDCE628872BF300137D95 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F7ADDCE828872C5300137D95 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		F7ADDCE9288F14DA00137D95 /* MKMapViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKMapViewExtensions.swift; sourceTree = "<group>"; };
+		F7ADDCEB28902D1500137D95 /* EnlargableAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnlargableAnnotation.swift; sourceTree = "<group>"; };
+		F7ADDCED28902D5300137D95 /* AnnotationWithView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationWithView.swift; sourceTree = "<group>"; };
 		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreaUnreadBadge.swift; sourceTree = "<group>"; };
 		F7D671C2286C860900758F1C /* GeoPackageMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageMap.swift; sourceTree = "<group>"; };
@@ -344,6 +353,8 @@
 		F71DF49A2859022B00686951 /* Annotation */ = {
 			isa = PBXGroup;
 			children = (
+				F7ADDCEB28902D1500137D95 /* EnlargableAnnotation.swift */,
+				F7ADDCED28902D5300137D95 /* AnnotationWithView.swift */,
 			);
 			path = Annotation;
 			sourceTree = "<group>";
@@ -410,6 +421,7 @@
 				F7D671EE287475BC00758F1C /* DataSource.swift */,
 				F7D671F0287484FE00758F1C /* MarlinUserDefaults.swift */,
 				F707BA712874B9F4006A94C4 /* userDefaults.plist */,
+				F7ADDCE728872BF300137D95 /* Localizable.strings */,
 			);
 			path = Marlin;
 			sourceTree = "<group>";
@@ -518,6 +530,7 @@
 				F71DF4AC28591BA200686951 /* UIApplicationExtensions.swift */,
 				F7F5978F285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift */,
 				F7ADDCDE2885E53E00137D95 /* UIColorExtensions.swift */,
+				F7ADDCE9288F14DA00137D95 /* MKMapViewExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -651,6 +664,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"es-419",
 			);
 			mainGroup = F7A54CA22848149500E5F565;
 			packageReferences = (
@@ -684,6 +698,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7A54CDB2848149700E5F565 /* Assets.xcassets in Resources */,
+				F7ADDCE528872BF300137D95 /* Localizable.strings in Resources */,
 				F7D671CC286C98B200758F1C /* natural_earth_1_100.gpkg in Resources */,
 				F71DF4972858CC8100686951 /* asams.json in Resources */,
 				F7ADDCDD2885D79900137D95 /* navigation_areas.gpkg in Resources */,
@@ -802,6 +817,7 @@
 				F7D671ED2874737F00758F1C /* DataSourceCell.swift in Sources */,
 				F707BA8F287DC999006A94C4 /* LightTileOverlay.swift in Sources */,
 				F71DF4882857B0CC00686951 /* MarlinTabView.swift in Sources */,
+				F7ADDCEE28902D5300137D95 /* AnnotationWithView.swift in Sources */,
 				F707BA7728760EE7006A94C4 /* Light+CoreDataClass.swift in Sources */,
 				F7F59799285D166700F9B32E /* ModuDetailView.swift in Sources */,
 				F707BA7B28763309006A94C4 /* LightSummaryView.swift in Sources */,
@@ -817,6 +833,7 @@
 				F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */,
 				F707BA87287C6596006A94C4 /* LightCard.swift in Sources */,
 				F7D671EB2871D73200758F1C /* HamburgerButton.swift in Sources */,
+				F7ADDCEC28902D1500137D95 /* EnlargableAnnotation.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
 				F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */,
@@ -854,6 +871,7 @@
 				F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */,
 				F7D671E02871BFEC00758F1C /* ModuActionBar.swift in Sources */,
 				F7F597AC2864DD5200F9B32E /* NavigationalWarningListView.swift in Sources */,
+				F7ADDCEA288F14DA00137D95 /* MKMapViewExtensions.swift in Sources */,
 				F707BA9328805476006A94C4 /* PersistedMapState.swift in Sources */,
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
 				F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */,
@@ -905,6 +923,18 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		F7ADDCE728872BF300137D95 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F7ADDCE628872BF300137D95 /* en */,
+				F7ADDCE828872C5300137D95 /* es-419 */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		F727A695284E605800BD728A /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -955,6 +985,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -1013,6 +1044,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
