@@ -13,4 +13,6 @@ protocol DataSource {
     static var dataSourceName: String { get }
     static var key: String { get }
     static var color: UIColor { get }
+    static var imageName: String? { get }
+    static var systemImageName: String? { get }
 }

@@ -10,7 +10,17 @@ import CoreData
 import OSLog
 import MapKit
 
-class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotation, DataSource {
+extension Modu: DataSource {
+    static var isMappable: Bool = true
+    static var dataSourceName: String = NSLocalizedString("MODU", comment: "MODU data source display name")
+    static var key: String = "modu"
+    static var imageName: String? = "modu"
+    static var systemImageName: String? = nil
+    
+    static var color: UIColor = UIColor(red: 0.00, green: 0.29, blue: 0.68, alpha: 1.00)
+}
+
+class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotation {
     var clusteringIdentifierWhenShrunk: String? = "msi"
     var enlarged: Bool = false
     
@@ -20,11 +30,6 @@ class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
     
     var clusteringIdentifier: String? = "msi"
     
-    static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("MODU", comment: "MODU data source display name")
-    static var key: String = "modu"
-    
-    static var color: UIColor = UIColor(red: 0.00, green: 0.29, blue: 0.68, alpha: 1.00)
     var color: UIColor {
         return Modu.color
     }

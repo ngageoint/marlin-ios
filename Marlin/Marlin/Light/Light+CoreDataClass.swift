@@ -15,7 +15,16 @@ struct LightVolume {
     var volumeNumber: String
 }
 
-class Light: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
+extension Light: DataSource {
+    static var isMappable: Bool = true
+    static var dataSourceName: String = NSLocalizedString("Lights", comment: "Lights data source display name")
+    static var key: String = "light"
+    static var imageName: String? = nil
+    static var systemImageName: String? = "lightbulb.fill"
+    static var color: UIColor = .systemYellow
+}
+
+class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
     var enlarged: Bool = false
     
     var shouldEnlarge: Bool = false
@@ -41,12 +50,7 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
     static let violetLight = UIColor(argbValue: 0xffaf52de)
     static let orangeLight = UIColor(argbValue: 0xffff9500)
     static let raconColor = UIColor(argbValue: 0xffb52bb5)
-    
-    static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("Lights", comment: "Lights data source display name")
-    static var key: String = "light"
-    
-    static var color: UIColor = .systemYellow
+
     var color: UIColor {
         return Light.color
     }

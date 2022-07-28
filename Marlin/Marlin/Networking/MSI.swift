@@ -14,6 +14,8 @@ public class MSI {
     
     let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "persistence")
     
+    let persistenceController = PersistenceController.shared
+
     static let shared = MSI()
     lazy var configuration: URLSessionConfiguration = URLSessionConfiguration.af.default
     lazy var session: Session = {
@@ -22,8 +24,16 @@ public class MSI {
 //        return Session(configuration: configuration)
     }()
     
-    func loadAsams(date: String? = nil) {
-        session.request(MSIRouter.readAsams(date: date))
+    func loadAllData() {
+        loadAsams()
+        loadModus()
+        loadNavigationalWarnings()
+        loadLights()
+    }
+    
+    func loadAsams() {
+        let newestAsam = try? persistenceController.container.viewContext.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)])
+        session.request(MSIRouter.readAsams(date: newestAsam?.dateString))
             .validate()
             .responseDecodable(of: AsamPropertyContainer.self) { response in
                 Task {
@@ -36,8 +46,10 @@ public class MSI {
             }
     }
     
-    func loadModus(date: String? = nil) {
-        session.request(MSIRouter.readModus(date: date))
+    func loadModus() {
+        let newestModu = try? persistenceController.container.viewContext.fetchFirst(Modu.self, sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)])
+        
+        session.request(MSIRouter.readModus(date: newestModu?.dateString))
             .validate()
             .responseDecodable(of: ModuPropertyContainer.self) { response in
                 Task {

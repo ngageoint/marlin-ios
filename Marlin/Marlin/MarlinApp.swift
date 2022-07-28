@@ -58,15 +58,7 @@ struct MarlinApp: App {
         // set up default user defaults
         UserDefaults.registerMarlinDefaults()
         
-        let newestAsam = try? persistenceController.container.viewContext.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)])
-        shared.loadAsams(date: newestAsam?.dateString)
-
-        let newestModu = try? persistenceController.container.viewContext.fetchFirst(Modu.self, sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)])
-        shared.loadModus(date: newestModu?.dateString)
-
-        shared.loadNavigationalWarnings()
-
-        shared.loadLights()
+        shared.loadAllData()
     }
 
     var body: some Scene {

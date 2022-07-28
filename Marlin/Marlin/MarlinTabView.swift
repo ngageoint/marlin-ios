@@ -93,6 +93,16 @@ struct MarlinTabView: View {
                             }
                             .isDetailLink(false)
                             .hidden()
+                            
+                            ForEach(dataSourceList.nonTabs) { dataSource in
+                                NavigationLink(tag: "\(dataSource.key)List", selection: $selection) {
+                                    createListView(dataSource: dataSource)
+                                } label: {
+                                    EmptyView()
+                                }
+                                .isDetailLink(false)
+                                .hidden()
+                            }
                         }
                         .onReceive(self.appState.$popToRoot) { popToRoot in
                             if popToRoot {
@@ -111,31 +121,18 @@ struct MarlinTabView: View {
                     .statusBar(hidden: false)
                     
                     ForEach(dataSourceList.tabs, id: \.self) { dataSource in
-                        if dataSource.key == Asam.key {
-                            AsamListView()
-                                .tabItem {
-                                    Label(Asam.dataSourceName, image: "asam")
+                        
+                        createListView(dataSource: dataSource)
+                            .tabItem {
+                                if let imageName = dataSource.dataSource.imageName {
+                                    Label(dataSource.dataSource.dataSourceName, image: imageName)
+                                } else if let imageName = dataSource.dataSource.systemImageName {
+                                    Label(dataSource.dataSource.dataSourceName, systemImage: imageName)
+                                } else {
+                                    Label(dataSource.dataSource.dataSourceName, systemImage: "list.bullet.rectangle.fill")
                                 }
-                                .tag("\(Asam.key)List")
-                        } else if dataSource.key == Modu.key {
-                            ModuListView()
-                                .tabItem {
-                                    Label(Modu.dataSourceName, image: "modu")
-                                }
-                                .tag("\(Modu.key)List")
-                        } else if dataSource.key == Light.key {
-                            LightsListView()
-                                .tabItem {
-                                    Label(Light.dataSourceName, systemImage: "lightbulb.fill")
-                                }
-                                .tag("\(Light.key)List")
-                        } else if dataSource.key == NavigationalWarning.key {
-                            NavigationalWarningListView()
-                                .tabItem {
-                                    Label(NavigationalWarning.dataSourceName, systemImage: "exclamationmark.triangle.fill")
-                                }
-                                .tag("warningList")
-                        }
+                            }
+                            .tag("\(dataSource.key)List")
                     }
                 }
                 .onReceive(viewDataSourcePub) { output in
@@ -148,8 +145,15 @@ struct MarlinTabView: View {
                     self.appState.popToRoot = true
                 }
                 .onReceive(switchTabPub) { output in
-                    if let output = output {
-                        selectedTab = "\(output)List"
+                    if let output = output as? String {
+                        if dataSourceList.tabs.contains(where: { item in
+                            item.key == output
+                        }) {
+                            selectedTab = "\(output)List"
+                        } else {
+                            selectedTab = "map"
+                            selection = "\(output)List"
+                        }
                         self.menuOpen = false
                     }
                 }
@@ -160,6 +164,19 @@ struct MarlinTabView: View {
                          dataSourceList: dataSourceList
                 )
             }
+        }
+    }
+    
+    @ViewBuilder
+    func createListView(dataSource: DataSourceItem) -> some View {
+        if dataSource.key == Asam.key {
+            AsamListView()
+        } else if dataSource.key == Modu.key {
+            ModuListView()
+        } else if dataSource.key == Light.key {
+            LightsListView()
+        } else if dataSource.key == NavigationalWarning.key {
+            NavigationalWarningListView()
         }
     }
     

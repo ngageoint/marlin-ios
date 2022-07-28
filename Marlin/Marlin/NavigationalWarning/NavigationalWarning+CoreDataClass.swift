@@ -16,7 +16,7 @@ struct NavigationalWarningNavArea: Equatable {
     let color: UIColor
 }
 
-extension NavigationalWarningNavArea {//: String, CaseIterable, CustomStringConvertible {
+extension NavigationalWarningNavArea {
     static let HYDROPAC = NavigationalWarningNavArea(name: "P", display: "HYDROPAC", color: UIColor(argbValue: 0xFFF5F481))
     static let HYDROARC = NavigationalWarningNavArea(name: "C", display: "HYDROARC", color: UIColor(argbValue: 0xFF77DFFC))
     static let HYDROLANT = NavigationalWarningNavArea(name: "A", display: "HYDROLANT", color: UIColor(argbValue: 0xFF7C91F2))
@@ -37,12 +37,16 @@ extension NavigationalWarningNavArea {//: String, CaseIterable, CustomStringConv
     }
 }
 
-class NavigationalWarning: NSManagedObject, DataSource {
-    
+extension NavigationalWarning: DataSource {
     static var isMappable: Bool = false
     static var dataSourceName: String = NSLocalizedString("Warnings", comment: "Warnings data source display name")
     static var key: String = "navWarning"
     static var color: UIColor = UIColor(red: 0.00, green: 0.29, blue: 0.68, alpha: 1.00)
+    static var imageName: String? = nil
+    static var systemImageName: String? = "exclamationmark.triangle.fill"
+}
+
+class NavigationalWarning: NSManagedObject {
     
     var primaryKey: String {
         return "\(self.navArea ?? "") \(self.msgNumber)/\(self.msgYear)"

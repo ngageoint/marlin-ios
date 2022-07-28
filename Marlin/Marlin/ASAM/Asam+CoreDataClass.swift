@@ -10,8 +10,19 @@ import Foundation
 import CoreData
 import OSLog
 import MapKit
+import SwiftUI
 
-class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotation, DataSource {
+extension Asam: DataSource {
+    static var isMappable: Bool = true
+    static var dataSourceName: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")
+    static var key: String = "asam"
+    static var imageName: String? = "asam"
+    static var systemImageName: String? = nil
+    
+    static var color: UIColor = .black
+}
+
+class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotation {
     var clusteringIdentifierWhenShrunk: String? = "msi"
     
     var enlarged: Bool = false
@@ -21,12 +32,6 @@ class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
     var shouldShrink: Bool = false
     
     var clusteringIdentifier: String? = "msi"
-    
-    static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")
-    static var key: String = "asam"
-    
-    static var color: UIColor = .black
     
     var color: UIColor {
         return Asam.color
