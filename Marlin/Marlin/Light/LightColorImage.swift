@@ -35,7 +35,7 @@ class LightColorImage : UIImage {
             }
             
             let center = CGPoint(x: rect.width / 2.0, y: rect.height / 2.0)
-            let count = 0
+            var count = 0
             let degreesPerColor = 360.0 / CGFloat(colors.count)
             for color in colors {
                 let startAngle = degreesPerColor * CGFloat(count) * (CGFloat.pi / 180.0)
@@ -61,6 +61,7 @@ class LightColorImage : UIImage {
                     color.setFill()
                     piePath.fill()
                 }
+                count += 1
             }
         }
         
@@ -154,7 +155,8 @@ class LightColorImage : UIImage {
                     let text = sector.text
                     let size = text.size(withAttributes: attributes)
                     
-                    let midPointAngle = CGFloat(sector.startDegrees) + CGFloat(sector.endDegrees - sector.startDegrees) / 2.0
+                    let endDegrees = sector.endDegrees > sector.startDegrees ? sector.endDegrees : sector.endDegrees + 360.0
+                    let midPointAngle = CGFloat(sector.startDegrees) + CGFloat(endDegrees - sector.startDegrees) / 2.0
                     var textRadius = radius
                     if let arcWidth = arcWidth{
                         textRadius -= arcWidth * 1.75
