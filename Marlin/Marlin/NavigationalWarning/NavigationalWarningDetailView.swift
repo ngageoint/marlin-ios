@@ -68,10 +68,11 @@ struct NavigationalWarningDetailView: View {
             .listRowSeparator(.hidden)
             .listRowBackground(Color.clear)
         }
-        .listStyle(.grouped)
-        .padding(.top, -24)
+        .listStyle(.plain)
+        .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
         .navigationTitle("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
         .navigationBarTitleDisplayMode(.inline)
+        .padding([.leading, .trailing], -8)
     }
 }
 

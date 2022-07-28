@@ -39,8 +39,9 @@ struct NavigationalWarningNavAreaListView: View {
                         } label: {
                             HStack {
                                 NavigationalWarningSummaryView(navigationalWarning: navigationalWarning)
+                                    .padding(.all, 16)
                             }
-                            .padding(.all, 16)
+                            
                             .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
                             .modifier(CardModifier())
                             .background(GeometryReader {
