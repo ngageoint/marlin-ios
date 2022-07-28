@@ -34,7 +34,17 @@ struct LightBottomSheet: View {
             } else {
                 LightSummaryView(light: light, showMoreDetails: true)
             }
-        }.padding(.all, 16)
+        }
+        .padding(.all, 16)
+        .background(
+            HStack {
+                Rectangle()
+                    .fill(Color(Light.color))
+                    .frame(maxWidth: 6, maxHeight: .infinity)
+                Spacer()
+            }
+            .padding(.top, -100)
+        )
     }
 }
 

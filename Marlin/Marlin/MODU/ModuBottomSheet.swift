@@ -36,7 +36,17 @@ struct ModuBottomSheet: View {
             } else {
                 ModuSummaryView(modu: modu, showMoreDetails: true)
             }
-        }.padding(.all, 16)
+        }
+        .padding(.all, 16)
+        .background(
+            HStack {
+                Rectangle()
+                    .fill(Color(Modu.color))
+                    .frame(maxWidth: 6, maxHeight: .infinity)
+                Spacer()
+            }
+            .padding(.top, -100)
+        )
     }
 }
 

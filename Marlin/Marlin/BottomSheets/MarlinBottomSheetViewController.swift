@@ -232,7 +232,7 @@ class MarlinBottomSheetViewController: UIViewController {
             stackView.autoPinEdge(toSuperviewEdge: .left)
             stackView.autoPinEdge(toSuperviewEdge: .right)
             stackView.autoPinEdge(toSuperviewEdge: .top)
-            stackView.autoPinEdge(toSuperviewMargin: .bottom)
+            stackView.autoPinEdge(toSuperviewEdge: .bottom)
             stackView.autoMatch(.width, to: .width, of: scrollView);
             stackView.autoAlignAxis(toSuperviewAxis: .vertical)
             didSetUpConstraints = true;

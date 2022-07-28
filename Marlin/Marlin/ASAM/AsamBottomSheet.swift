@@ -35,7 +35,18 @@ struct AsamBottomSheet: View {
             } else {
                 AsamSummaryView(asam: asam, showMoreDetails: true)
             }
-        }.padding(.all, 16)
+        }
+        .padding(.all, 16)
+        .ignoresSafeArea()
+        .background(
+            HStack {
+                Rectangle()
+                    .fill(Color(Asam.color))
+                    .frame(maxWidth: 6, maxHeight: .infinity)
+                Spacer()
+            }
+            .padding(.top, -100)
+        )
     }
 }
 
