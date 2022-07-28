@@ -21,7 +21,7 @@ extension Light: DataSource {
     static var key: String = "light"
     static var imageName: String? = nil
     static var systemImageName: String? = "lightbulb.fill"
-    static var color: UIColor = .systemYellow
+    static var color: UIColor = UIColor(argbValue: 0xFFFFC500)
 }
 
 class Light: NSManagedObject, MKAnnotation, AnnotationWithView {

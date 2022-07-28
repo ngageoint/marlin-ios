@@ -17,7 +17,7 @@ extension Modu: DataSource {
     static var imageName: String? = "modu"
     static var systemImageName: String? = nil
     
-    static var color: UIColor = UIColor(red: 0.00, green: 0.29, blue: 0.68, alpha: 1.00)
+    static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
 }
 
 class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotation {

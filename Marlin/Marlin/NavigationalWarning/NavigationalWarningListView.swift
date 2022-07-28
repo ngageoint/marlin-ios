@@ -7,20 +7,6 @@
 
 import SwiftUI
 
-struct NavigationalWarningListViewBackground: View {
-    
-    @State var color: Color
-    
-    var body: some View {
-        HStack {
-            Rectangle()
-                .fill(color)
-                .frame(maxWidth: 6, maxHeight: .infinity)
-            Spacer()
-        }.padding([.leading, .top, .bottom], -8)
-    }
-}
-
 struct NavigationalWarningListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var scheme: MarlinScheme
@@ -87,7 +73,14 @@ struct NavigationalWarningAreasView: View {
             .padding(.leading, 8)
             .padding(.top, 8)
             .padding(.bottom, 8)
-            .background(NavigationalWarningListViewBackground(color: Color(NavigationalWarningNavArea.fromId(id: section.id)?.color ?? UIColor.clear)))
+            .background(
+                HStack {
+                    Rectangle()
+                        .fill(Color(NavigationalWarningNavArea.fromId(id: section.id)?.color ?? UIColor.clear))
+                        .frame(maxWidth: 6, maxHeight: .infinity)
+                    Spacer()
+                }.padding([.leading, .top, .bottom], -8)
+            )
         }
         .listRowBackground(Color(scheme.containerScheme.colorScheme.surfaceColor))
         .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
@@ -114,7 +107,14 @@ struct NavigationalWarningAreasView: View {
             .padding(.leading, 8)
             .padding(.top, 8)
             .padding(.bottom, 8)
-            .background(NavigationalWarningListViewBackground(color: Color(NavigationalWarningNavArea.fromId(id: section.id)?.color ?? UIColor.clear)))
+            .background(
+                HStack {
+                    Rectangle()
+                        .fill(Color(NavigationalWarningNavArea.fromId(id: section.id)?.color ?? UIColor.clear))
+                        .frame(maxWidth: 6, maxHeight: .infinity)
+                    Spacer()
+                }.padding([.leading, .top, .bottom], -8)
+            )
         }
         .listRowBackground(Color(scheme.containerScheme.colorScheme.surfaceColor))
         .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))

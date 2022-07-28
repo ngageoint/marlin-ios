@@ -37,7 +37,16 @@ struct DataSourceCell: View {
             .padding([.leading, .top, .bottom, .trailing], 16)
             Divider()
         }
-        .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+        .background(
+            
+            HStack {
+                Rectangle()
+                    .fill(Color(dataSourceItem.dataSource.color))
+                    .frame(maxWidth: 6, maxHeight: .infinity)
+                Spacer()
+                }
+                .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+        )
 
     }
 }
