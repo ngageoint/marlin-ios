@@ -70,6 +70,8 @@ struct NavigationalWarningDetailView: View {
         }
         .listStyle(.grouped)
         .padding(.top, -24)
+        .navigationTitle("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

@@ -30,22 +30,20 @@ struct NavigationalWarningListView: View {
     var navareaMap = GeoPackageMap(fileName: "navigation_areas", tableName: "navigation_areas", index: 0)
     
     var body: some View {
-        NavigationView {
-            List {
-                MarlinMap()
-                    .mixin(navareaMap)
-                    .mixin(GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: scheme.dynamicLandColor, index: 1))
-                    .frame(minHeight: 250, maxHeight: 250)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                NavigationalWarningAreasView(currentArea: locationManager.currentNavArea)
-                    .listRowBackground(Color(scheme.containerScheme.colorScheme.surfaceColor))
-                    .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
-            }
-            .navigationTitle("Navigational Warnings")
-            .navigationBarTitleDisplayMode(.inline)
-            .listStyle(.grouped)
-            .padding(.top, -36)
+        List {
+            MarlinMap()
+                .mixin(navareaMap)
+                .mixin(GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: scheme.dynamicLandColor, index: 1))
+                .frame(minHeight: 250, maxHeight: 250)
+                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            NavigationalWarningAreasView(currentArea: locationManager.currentNavArea)
+                .listRowBackground(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
         }
+        .listStyle(.plain)
+        .navigationTitle("Navigational Warnings")
+        .navigationBarTitleDisplayMode(.inline)
+        .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
     }
 }
 
@@ -69,7 +67,7 @@ struct NavigationalWarningAreasView: View {
         ForEach(currentNavigationalWarningsSections) { section in
             NavigationLink {
                 NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(section), navArea: section.id)
-                    .navigationTitle(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigational Warnings")
+                    
             } label: {
                 HStack {
                     VStack(alignment: .leading) {
@@ -97,7 +95,6 @@ struct NavigationalWarningAreasView: View {
         ForEach(navigationalWarningsSections) { section in
             NavigationLink {
                 NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(section), navArea: section.id)
-                    .navigationTitle(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigational Warnings")
             } label: {
                 HStack {
                     VStack(alignment: .leading) {

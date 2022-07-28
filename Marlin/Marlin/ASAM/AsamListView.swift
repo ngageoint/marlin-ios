@@ -18,35 +18,34 @@ struct AsamListView: View {
     private var asams: FetchedResults<Asam>
 
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(asams) { asam in
-                    
-                    ZStack {
-                        NavigationLink(destination: AsamDetailView(asam: asam)
-                            .navigationTitle(asam.reference ?? "ASAM")
-                            .navigationBarTitleDisplayMode(.inline)) {
-                            EmptyView()
-                        }
-                        .opacity(0)
-                        
-                        HStack {
-                            AsamSummaryView(asam: asam)
-                        }
-                        .padding(.all, 16)
-                        .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
-                        .modifier(CardModifier())
+        List {
+            ForEach(asams) { asam in
+                
+                ZStack {
+                    NavigationLink(destination: AsamDetailView(asam: asam)
+                        .navigationTitle(asam.reference ?? "ASAM")
+                        .navigationBarTitleDisplayMode(.inline)) {
+                        EmptyView()
                     }
+                    .opacity(0)
                     
+                    HStack {
+                        AsamSummaryView(asam: asam)
+                    }
+                    .padding(.all, 16)
+                    .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                    .modifier(CardModifier())
                 }
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+                
             }
-            .navigationTitle("ASAMs")
-            .navigationBarTitleDisplayMode(.inline)
-            .listStyle(.grouped)
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
+            .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
         }
+        .navigationTitle("ASAMs")
+        .navigationBarTitleDisplayMode(.inline)
+        .listStyle(.plain)
+        .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
     }
 }
 

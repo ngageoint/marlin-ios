@@ -95,11 +95,13 @@ struct MarlinTabView: View {
                             .hidden()
                             
                             ForEach(dataSourceList.nonTabs) { dataSource in
+                                
                                 NavigationLink(tag: "\(dataSource.key)List", selection: $selection) {
                                     createListView(dataSource: dataSource)
                                 } label: {
                                     EmptyView()
                                 }
+                                
                                 .isDetailLink(false)
                                 .hidden()
                             }
@@ -121,18 +123,19 @@ struct MarlinTabView: View {
                     .statusBar(hidden: false)
                     
                     ForEach(dataSourceList.tabs, id: \.self) { dataSource in
-                        
-                        createListView(dataSource: dataSource)
-                            .tabItem {
-                                if let imageName = dataSource.dataSource.imageName {
-                                    Label(dataSource.dataSource.dataSourceName, image: imageName)
-                                } else if let imageName = dataSource.dataSource.systemImageName {
-                                    Label(dataSource.dataSource.dataSourceName, systemImage: imageName)
-                                } else {
-                                    Label(dataSource.dataSource.dataSourceName, systemImage: "list.bullet.rectangle.fill")
-                                }
+                        NavigationView {
+                            createListView(dataSource: dataSource)
+                        }
+                        .tabItem {
+                            if let imageName = dataSource.dataSource.imageName {
+                                Label(dataSource.dataSource.dataSourceName, image: imageName)
+                            } else if let imageName = dataSource.dataSource.systemImageName {
+                                Label(dataSource.dataSource.dataSourceName, systemImage: imageName)
+                            } else {
+                                Label(dataSource.dataSource.dataSourceName, systemImage: "list.bullet.rectangle.fill")
                             }
-                            .tag("\(dataSource.key)List")
+                        }
+                        .tag("\(dataSource.key)List")
                     }
                 }
                 .onReceive(viewDataSourcePub) { output in

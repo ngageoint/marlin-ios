@@ -21,9 +21,11 @@ struct NavigationalWarningNavAreaListView: View {
     @StateObject var scrollViewHelper = ScrollViewHelper()
     
     @StateObject var dataSource = NavigationalWarningsAreaDataSource()
+    var navArea: String
     var warnings: [NavigationalWarning]
     init(warnings: [NavigationalWarning], navArea: String) {
         self.warnings = warnings
+        self.navArea = navArea
         self._lastSeen = AppStorage(wrappedValue: "", "lastSeen-\(navArea)")
     }
     
@@ -124,6 +126,8 @@ struct NavigationalWarningNavAreaListView: View {
         .onAppear {
             shouldSavePosition = false
         }
+        .navigationTitle(NavigationalWarningNavArea.fromId(id: navArea)?.display ?? "Navigational Warnings")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

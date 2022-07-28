@@ -18,8 +18,7 @@ struct LightsListView: View {
     )
     var sectionedLights: SectionedFetchResults<String, Light>
     var body: some View {
-        NavigationView {
-            VStack {
+        VStack {
             List(sectionedLights) { section in
                 
                 Section(header: HStack {
@@ -56,7 +55,6 @@ struct LightsListView: View {
             .navigationBarTitleDisplayMode(.inline)
             .listStyle(.plain)
             .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
-            }
         }
     }
 }
