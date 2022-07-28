@@ -42,7 +42,7 @@ class ModuMap: NSObject, MapMixin {
         }
         
         UserDefaults.standard
-            .publisher(for: \.showOnMapModu)
+            .publisher(for: \.showOnMapmodu)
             .removeDuplicates()
             .handleEvents(receiveOutput: { show in
                 print("Show Modus: \(show)")

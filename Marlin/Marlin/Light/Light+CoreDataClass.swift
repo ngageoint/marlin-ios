@@ -33,14 +33,14 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
         LightVolume(volumeQuery: "116", volumeNumber: "PUB 116")
     ]
     
-    static let whiteLight = UIColor(red: 1.00, green: 1.00, blue: 0.0, alpha: 0.87)
-    static let greenLight = UIColor(red: 0.05, green: 0.89, blue: 0.1, alpha: 1.00)
-    static let redLight = UIColor(red: 0.98, green: 0.0, blue: 0.0, alpha: 1.00)
-    static let yellowLight = UIColor(red: 1.00, green: 1.00, blue: 0.0, alpha: 1.0)
-    static let blueLight = UIColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 1.0)
-    static let violetLight = UIColor.systemPurple
-    static let orangeLight = UIColor.systemOrange
-    static let raconColor = UIColor(red: 0.71, green: 0.17, blue: 0.71, alpha: 1.00)
+    static let whiteLight = UIColor(argbValue: 0xdeffff00)
+    static let greenLight = UIColor(argbValue: 0xff0de319)
+    static let redLight = UIColor(argbValue: 0xfffa0000)
+    static let yellowLight = UIColor(argbValue: 0xffffff00)
+    static let blueLight = UIColor(argbValue: 0xff0000ff)
+    static let violetLight = UIColor(argbValue: 0xffaf52de)
+    static let orangeLight = UIColor(argbValue: 0xffff9500)
+    static let raconColor = UIColor(argbValue: 0xffb52bb5)
     
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("Lights", comment: "Lights data source display name")
@@ -180,11 +180,12 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, DataSource {
     }
     
     var morseCode: String? {
-        guard !isLight, let characteristic = characteristic, let firstIndex = characteristic.firstIndex(of: "("), let lastIndex = characteristic.lastIndex(of: ")") else {
+        guard !isLight, let characteristic = characteristic, let leftParen = characteristic.firstIndex(of: "("), let lastIndex = characteristic.lastIndex(of: ")") else {
             return nil
         }
         
-        return "\(characteristic) \(String(characteristic[firstIndex..<lastIndex]))"
+        let firstIndex = characteristic.index(after: leftParen)
+        return "\(String(characteristic[firstIndex..<lastIndex]))"
     }
     
     var morseLetter: String {
@@ -611,7 +612,7 @@ struct LightsProperties: Decodable {
         self.removeFromList = try? values.decode(String.self, forKey: .removeFromList)
         self.structure = try? values.decode(String.self, forKey: .structure)
         self.subregionHeading = try? values.decode(String.self, forKey: .subregionHeading)
-//        self.sectionHeader = self.geopoliticalHeading
+
         if let position = self.position {
             let coordinate = LightsProperties.parsePosition(position: position)
             self.longitude = coordinate.longitude

@@ -17,10 +17,12 @@ struct MarlinTabView: View {
     @EnvironmentObject var scheme: MarlinScheme
     @EnvironmentObject var appState: AppState
     
-    @StateObject var itemWrapper: ItemWrapper
+    @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
     @State var selection: String? = nil
     @State private var selectedTab = "map"
     @State var menuOpen: Bool = false
+    
+    @StateObject var dataSourceList: DataSourceList = DataSourceList()
     
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource)
     let mapFocus = NotificationCenter.default.publisher(for: .MapRequestFocus)
@@ -108,28 +110,33 @@ struct MarlinTabView: View {
                     .navigationViewStyle(.stack)
                     .statusBar(hidden: false)
                     
-                    ModuListView()
-                        .tabItem {
-                            Label(Modu.dataSourceName, image: "modu")
+                    ForEach(dataSourceList.tabs, id: \.self) { dataSource in
+                        if dataSource.key == Asam.key {
+                            AsamListView()
+                                .tabItem {
+                                    Label(Asam.dataSourceName, image: "asam")
+                                }
+                                .tag("\(Asam.key)List")
+                        } else if dataSource.key == Modu.key {
+                            ModuListView()
+                                .tabItem {
+                                    Label(Modu.dataSourceName, image: "modu")
+                                }
+                                .tag("\(Modu.key)List")
+                        } else if dataSource.key == Light.key {
+                            LightsListView()
+                                .tabItem {
+                                    Label(Light.dataSourceName, systemImage: "lightbulb.fill")
+                                }
+                                .tag("\(Light.key)List")
+                        } else if dataSource.key == NavigationalWarning.key {
+                            NavigationalWarningListView()
+                                .tabItem {
+                                    Label(NavigationalWarning.dataSourceName, systemImage: "exclamationmark.triangle.fill")
+                                }
+                                .tag("warningList")
                         }
-                        .tag("\(Modu.key)List")
-                    
-                    AsamListView()
-                        .tabItem {
-                            Label(Asam.dataSourceName, image: "asam")
-                        }
-                        .tag("\(Asam.key)List")
-                    NavigationalWarningListView()
-                        .tabItem {
-                            Label(NavigationalWarning.dataSourceName, systemImage: "exclamationmark.triangle.fill")
-                        }
-                        .tag("warningList")
-                    
-                    LightsListView()
-                        .tabItem {
-                            Label(Light.dataSourceName, systemImage: "lightbulb.fill")
-                        }
-                        .tag("\(Light.key)List")
+                    }
                 }
                 .onReceive(viewDataSourcePub) { output in
                     if let dataSource = output.object as? DataSource {
@@ -149,7 +156,9 @@ struct MarlinTabView: View {
                 
                 SideMenu(width: geometry.size.width - 56,
                      isOpen: self.menuOpen,
-                     menuClose: self.openMenu)
+                     menuClose: self.openMenu,
+                         dataSourceList: dataSourceList
+                )
             }
         }
     }

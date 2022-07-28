@@ -13,6 +13,8 @@ struct SideMenu: View {
     let isOpen: Bool
     let menuClose: () -> Void
     
+    @ObservedObject var dataSourceList: DataSourceList
+    
     var body: some View {
         ZStack {
             GeometryReader { _ in
@@ -27,12 +29,14 @@ struct SideMenu: View {
             }
             
             HStack {
-                SideMenuContent()
+                SideMenuContent(dataSourceList: dataSourceList)
                     .frame(width: self.width)
-                    .background(Color.white)
+                    .background(Color.white // any non-transparent background
+                        .shadow(color: Color(UIColor.label).opacity(0.3), radius: self.isOpen ? 8 : 0, x: 0, y: 0)
+                    )
                     .offset(x: self.isOpen ? 0 : -self.width, y: 0)
                     .animation(.default, value: self.isOpen)
-                    .shadow(color: Color(UIColor.label).opacity(0.3), radius: self.isOpen ? 8 : 0, x: 0, y: 0)
+                    
                 Spacer()
             }
         }

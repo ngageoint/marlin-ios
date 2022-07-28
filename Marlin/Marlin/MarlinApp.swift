@@ -60,18 +60,18 @@ struct MarlinApp: App {
         
         let newestAsam = try? persistenceController.container.viewContext.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)])
         shared.loadAsams(date: newestAsam?.dateString)
-        
+
         let newestModu = try? persistenceController.container.viewContext.fetchFirst(Modu.self, sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)])
         shared.loadModus(date: newestModu?.dateString)
-        
+
         shared.loadNavigationalWarnings()
-        
+
         shared.loadLights()
     }
 
     var body: some Scene {
         WindowGroup {
-            MarlinTabView(itemWrapper: ItemWrapper())
+            MarlinTabView()
                 .environmentObject(scheme)
                 .environmentObject(AppState())
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)

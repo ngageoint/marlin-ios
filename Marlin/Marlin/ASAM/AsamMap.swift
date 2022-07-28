@@ -44,8 +44,7 @@ class AsamMap: NSObject, MapMixin {
             print("\(fetchError), \(fetchError.localizedDescription)")
         }
 
-        UserDefaults.standard
-            .publisher(for: \.showOnMapAsam)
+        UserDefaults.standard.publisher(for: \.showOnMapasam)
             .removeDuplicates()
             .handleEvents(receiveOutput: { show in
                 print("Show Asams: \(show)")

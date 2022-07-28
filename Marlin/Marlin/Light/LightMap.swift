@@ -45,7 +45,7 @@ class LightMap: NSObject, MapMixin {
             }
         } else {
             UserDefaults.standard
-                .publisher(for: \.showOnMapLights)
+                .publisher(for: \.showOnMaplight)
                 .removeDuplicates()
                 .handleEvents(receiveOutput: { show in
                     print("Show Lights: \(show)")

@@ -7,37 +7,43 @@
 
 import SwiftUI
 
-struct DataSourceCell<T>: View where T: DataSource {
+struct DataSourceCell: View {
     @EnvironmentObject var scheme: MarlinScheme
     
-    @AppStorage<Bool> var showOnMap: Bool
-    
-    init() {
-        self._showOnMap = AppStorage(wrappedValue: false, "showOnMap\(T.key)")
-    }
+    @ObservedObject var dataSourceItem: DataSourceItem
     
     var body: some View {
-        HStack {
-            Text(T.dataSourceName)
-            Spacer()
-            if T.isMappable {
-                Image(systemName: showOnMap ? "mappin.circle.fill" : "mappin.slash.circle.fill")
-                    .renderingMode(.template)
-                    .foregroundColor(Color(showOnMap ? scheme.containerScheme.colorScheme.primaryColor : scheme.disabledScheme.colorScheme.primaryColor))
-                    .onTapGesture {
-                        self.showOnMap = !self.showOnMap
-                    }
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .center) {
+                Text(dataSourceItem.dataSource.dataSourceName)
+                    .font(Font(scheme.containerScheme.typographyScheme.body1))
+                    .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                    .opacity(0.87)
+                    
+                Spacer()
+                if dataSourceItem.dataSource.isMappable {
+                    Image(systemName: dataSourceItem.showOnMap ? "mappin.circle.fill" : "mappin.slash.circle.fill")
+                        .renderingMode(.template)
+                        .foregroundColor(Color(dataSourceItem.showOnMap ? scheme.containerScheme.colorScheme.primaryColor : scheme.disabledScheme.colorScheme.primaryColor))
+                        .onTapGesture {
+                            dataSourceItem.showOnMap = !dataSourceItem.showOnMap
+                        }
+                }
             }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                NotificationCenter.default.post(name: .SwitchTabs, object: dataSourceItem.key)
+            }
+            .padding([.leading, .top, .bottom, .trailing], 16)
+            Divider()
         }
-        .contentShape(Rectangle())
-        .onTapGesture {
-            NotificationCenter.default.post(name: .SwitchTabs, object: T.key)
-        }
+        .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+
     }
 }
 
 struct DataSourceCell_Previews: PreviewProvider {
     static var previews: some View {
-        DataSourceCell<Asam>()
+        DataSourceCell(dataSourceItem: DataSourceItem(dataSource: Asam.self))
     }
 }

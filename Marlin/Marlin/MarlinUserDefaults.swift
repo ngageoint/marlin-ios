@@ -39,15 +39,15 @@ extension UserDefaults {
         setValue(regionData, forKey: key);
     }
     
-    @objc var showOnMapModu: Bool {
+    @objc var showOnMapmodu: Bool {
         bool(forKey: "showOnMap\(Modu.key)")
     }
     
-    @objc var showOnMapAsam: Bool {
+    @objc var showOnMapasam: Bool {
         bool(forKey: "showOnMap\(Asam.key)")
     }
     
-    @objc var showOnMapLights: Bool {
+    @objc var showOnMaplight: Bool {
         bool(forKey: "showOnMap\(Light.key)")
     }
 
