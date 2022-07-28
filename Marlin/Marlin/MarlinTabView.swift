@@ -48,15 +48,7 @@ struct MarlinTabView: View {
                                     .navigationTitle("Marlin")
                                     .navigationBarTitleDisplayMode(.inline)
                                     .navigationBarBackButtonHidden(true)
-                                    .toolbar {
-                                        ToolbarItem (placement: .navigationBarLeading)  {
-                                            Image(systemName: "line.3.horizontal")
-                                                .foregroundColor(Color(scheme.containerScheme.colorScheme.onPrimaryColor))
-                                                .onTapGesture {
-                                                    self.openMenu()
-                                                }
-                                        }
-                                    }
+                                    .modifier(Hamburger(menuOpen: $menuOpen))
                                 VStack {
                                     // top of map
                                     HStack(alignment: .top, spacing: 0) {
@@ -125,6 +117,7 @@ struct MarlinTabView: View {
                     ForEach(dataSourceList.tabs, id: \.self) { dataSource in
                         NavigationView {
                             createListView(dataSource: dataSource)
+                                .modifier(Hamburger(menuOpen: $menuOpen))
                         }
                         .tabItem {
                             if let imageName = dataSource.dataSource.imageName {
@@ -164,7 +157,7 @@ struct MarlinTabView: View {
                 SideMenu(width: geometry.size.width - 56,
                      isOpen: self.menuOpen,
                      menuClose: self.openMenu,
-                         dataSourceList: dataSourceList
+                     dataSourceList: dataSourceList
                 )
             }
         }

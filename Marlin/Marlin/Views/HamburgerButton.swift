@@ -7,6 +7,24 @@
 
 import SwiftUI
 
+struct Hamburger: ViewModifier {
+    @EnvironmentObject var scheme: MarlinScheme
+    @Binding var menuOpen: Bool
+    
+    func body(content: Content) -> some View {
+        content.toolbar {
+            ToolbarItem (placement: .navigationBarLeading)  {
+                Image(systemName: "line.3.horizontal")
+                    .foregroundColor(Color(scheme.containerScheme.colorScheme.onPrimaryColor))
+                    .onTapGesture {
+                        menuOpen.toggle()
+                    }
+            }
+        }
+    }
+}
+
+
 struct HamburgerButton: View {
         
     @State private var isRotating = false
