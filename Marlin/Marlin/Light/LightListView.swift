@@ -31,7 +31,7 @@ struct LightsListView: View {
                          
                         ZStack {
                             NavigationLink(destination: LightDetailView(featureNumber: light.featureNumber ?? "", volumeNumber: light.volumeNumber ?? "")
-                                .navigationTitle("\(light.name ?? "")" )
+                                .navigationTitle("\(light.name ?? Light.dataSourceName)" )
                                 .navigationBarTitleDisplayMode(.inline)) {
                                     EmptyView()
                                 }
@@ -51,7 +51,7 @@ struct LightsListView: View {
                     .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
                 }
             }
-            .navigationTitle("Lights")
+            .navigationTitle(Light.dataSourceName)
             .navigationBarTitleDisplayMode(.inline)
             .listStyle(.plain)
             .background(Color(scheme.containerScheme.colorScheme.backgroundColor))

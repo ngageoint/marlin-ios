@@ -23,7 +23,7 @@ struct AsamListView: View {
                 
                 ZStack {
                     NavigationLink(destination: AsamDetailView(asam: asam)
-                        .navigationTitle(asam.reference ?? "ASAM")
+                        .navigationTitle(asam.reference ?? Asam.dataSourceName)
                         .navigationBarTitleDisplayMode(.inline)) {
                         EmptyView()
                     }
@@ -42,7 +42,7 @@ struct AsamListView: View {
             .listRowBackground(Color.clear)
             .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
         }
-        .navigationTitle("ASAMs")
+        .navigationTitle(Asam.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
         .listStyle(.plain)
         .background(Color(scheme.containerScheme.colorScheme.backgroundColor))

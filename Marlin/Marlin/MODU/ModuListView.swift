@@ -24,7 +24,7 @@ struct ModuListView: View {
                 
                 ZStack {
                     NavigationLink(destination: ModuDetailView(modu: modu)
-                        .navigationTitle(modu.name ?? "MODU")
+                        .navigationTitle(modu.name ?? Modu.dataSourceName)
                         .navigationBarTitleDisplayMode(.inline)) {
                             EmptyView()
                         }
@@ -43,7 +43,7 @@ struct ModuListView: View {
             .listRowBackground(Color.clear)
             .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
         }
-        .navigationTitle("MODUs")
+        .navigationTitle(Modu.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
         .listStyle(.plain)
         .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
