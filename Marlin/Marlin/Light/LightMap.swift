@@ -95,6 +95,7 @@ class LightMap: NSObject, MapMixin {
         if showLightsAsTiles {
             if showLights {
                 let lightOverlay = LightTileOverlay()
+                lightOverlay.tileSize = CGSize(width: 512, height: 512)
                 lightOverlay.minimumZ = 7
                 mapView?.addOverlay(lightOverlay)
                 self.lightOverlay = lightOverlay

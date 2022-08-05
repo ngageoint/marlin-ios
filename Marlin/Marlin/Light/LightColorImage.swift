@@ -17,7 +17,7 @@ struct LightSector {
 
 class LightColorImage : UIImage {
     
-    convenience init?(frame: CGRect, colors: [UIColor], arcWidth: CGFloat? = nil, arcRadius: CGFloat? = nil, darkMode: Bool = false) {
+    convenience init?(frame: CGRect, colors: [UIColor], arcWidth: CGFloat? = nil, outerStroke: Bool = true, arcRadius: CGFloat? = nil, drawTower: Bool = true, darkMode: Bool = false) {
         let strokeWidth = 0.5
         let rect = frame
         let radius = arcRadius ?? min(rect.width / 2.0, rect.height / 2.0) - ((arcWidth ?? strokeWidth) / 2.0)
@@ -28,10 +28,13 @@ class LightColorImage : UIImage {
         let image = renderer.image { _ in
             // Fill full circle with wholeColor
             if arcWidth == nil {
-                wholeColor.setStroke()
-                let outerBoundary = UIBezierPath(ovalIn: CGRect(x: strokeWidth / 2.0, y: strokeWidth / 2.0, width: diameter, height: diameter ))
-                outerBoundary.lineWidth = strokeWidth
-                outerBoundary.stroke()
+                if outerStroke {
+
+                    wholeColor.setStroke()
+                    let outerBoundary = UIBezierPath(ovalIn: CGRect(x: strokeWidth / 2.0, y: strokeWidth / 2.0, width: diameter, height: diameter ))
+                    outerBoundary.lineWidth = strokeWidth
+                    outerBoundary.stroke()
+                }
             }
             
             let center = CGPoint(x: rect.width / 2.0, y: rect.height / 2.0)
@@ -50,12 +53,14 @@ class LightColorImage : UIImage {
                     piePath.lineWidth = arcWidth
                     color.setStroke()
                     piePath.stroke()
-                    let towerLine = UIBezierPath()
-                    towerLine.move(to: center)
-                    
-                    towerLine.addLine(to: CGPoint(x: center.x, y: center.y - radius))
-                    towerLine.lineWidth = arcWidth
-                    towerLine.stroke()
+                    if drawTower {
+                        let towerLine = UIBezierPath()
+                        towerLine.move(to: center)
+                        
+                        towerLine.addLine(to: CGPoint(x: center.x, y: center.y - radius))
+                        towerLine.lineWidth = arcWidth
+                        towerLine.stroke()
+                    }
                 } else {
                     piePath.close()
                     color.setFill()
@@ -72,7 +77,7 @@ class LightColorImage : UIImage {
         
     }
     
-    convenience init?(frame: CGRect, sectors: [LightSector], arcWidth: CGFloat? = nil, arcRadius: CGFloat? = nil, includeSectorDashes: Bool = false, includeLetters: Bool = true, darkMode: Bool = false) {
+    convenience init?(frame: CGRect, sectors: [LightSector], arcWidth: CGFloat? = nil, arcRadius: CGFloat? = nil, outerStroke: Bool = true, includeSectorDashes: Bool = false, includeLetters: Bool = true, darkMode: Bool = false) {
         let strokeWidth = 0.5
         let rect = frame
         let radius = arcRadius ?? min(rect.width / 2.0, rect.height / 2.0) - ((arcWidth ?? strokeWidth) / 2.0)
@@ -84,10 +89,13 @@ class LightColorImage : UIImage {
         let image = renderer.image { _ in
             // Fill full circle with wholeColor
             if arcWidth == nil {
-                wholeColor.setStroke()
-                let outerBoundary = UIBezierPath(ovalIn: CGRect(x: strokeWidth / 2.0, y: strokeWidth / 2.0, width: diameter, height: diameter ))
-                outerBoundary.lineWidth = strokeWidth
-                outerBoundary.stroke()
+                if outerStroke {
+                    wholeColor.setStroke()
+
+                    let outerBoundary = UIBezierPath(ovalIn: CGRect(x: strokeWidth / 2.0, y: strokeWidth / 2.0, width: diameter, height: diameter ))
+                    outerBoundary.lineWidth = strokeWidth
+                    outerBoundary.stroke()
+                }
             }
             
             let center = CGPoint(x: rect.width / 2.0, y: rect.height / 2.0)

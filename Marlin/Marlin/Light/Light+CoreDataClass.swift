@@ -249,8 +249,8 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
                 if let lightSectors = lightSectors {
                     if small {
                         return LightColorImage.dynamicAsset(
-                            lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), sectors: lightSectors, arcWidth: 2, arcRadius: 2, includeSectorDashes: false, includeLetters: false) ?? clearImage,
-                            darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), sectors: lightSectors, arcWidth: 2, arcRadius: 2, includeSectorDashes: false, includeLetters: false, darkMode: true) ?? clearImage
+                            lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), sectors: lightSectors, outerStroke: false, includeSectorDashes: false, includeLetters: false) ?? clearImage,
+                            darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), sectors: lightSectors, outerStroke: false, includeSectorDashes: false, includeLetters: false, darkMode: true) ?? clearImage
                         )
                     } else {
                         return LightColorImage.dynamicAsset(
@@ -261,8 +261,8 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
                 } else if let lightColors = lightColors {
                     if small {
                         return LightColorImage.dynamicAsset(
-                            lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), colors: lightColors, arcWidth: 2) ?? clearImage,
-                            darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), colors: lightColors, arcWidth: 2, darkMode: true) ?? clearImage
+                            lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), colors: lightColors, outerStroke: false) ?? clearImage,
+                            darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), colors: lightColors, outerStroke: false, darkMode: true) ?? clearImage
                         )
                     } else {
                         return LightColorImage.dynamicAsset(
@@ -282,7 +282,7 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
                 }
             } else {
                 if small {
-                    return LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), colors: [Light.raconColor], arcWidth: 2) ?? clearImage
+                    return LightColorImage(frame: CGRect(x: 0, y: 0, width: 20, height: 20), colors: [Light.raconColor], arcWidth: 2, arcRadius: 4, drawTower: false) ?? clearImage
                 } else {
                     return RaconImage(frame: CGRect(x: 0, y: 0, width: 200, height: 40), arcWidth: 4, arcRadius: 16, text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false) ?? clearImage
                 }
