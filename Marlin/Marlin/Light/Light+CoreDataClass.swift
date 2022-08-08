@@ -306,10 +306,10 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
     }
     
     var isFogSignal: Bool {
-        guard let name = name else {
+        guard let remarks = remarks else {
             return false
         }
-        return name.lowercased().contains("fog signal")
+        return remarks.lowercased().contains("bl.")
     }
     
     var isPillar: Bool {
@@ -450,30 +450,30 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
     
     override var description: String {
         return "LIGHT\n\n" +
-        "aidType \(aidType)\n" +
-        "characteristic \(characteristic)\n" +
+        "aidType \(aidType ?? "")\n" +
+        "characteristic \(characteristic ?? "")\n" +
         "characteristicNumber \(characteristicNumber)\n" +
-        "deleteFlag \(deleteFlag)\n" +
-        "featureNumber \(featureNumber)\n" +
-        "geopoliticalHeading \(geopoliticalHeading)\n" +
+        "deleteFlag \(deleteFlag ?? "")\n" +
+        "featureNumber \(featureNumber ?? "")\n" +
+        "geopoliticalHeading \(geopoliticalHeading ?? "")\n" +
         "heightFeet \(heightFeet)\n" +
         "heightMeters \(heightMeters)\n" +
-        "internationalFeature \(internationalFeature)\n" +
-        "localHeading \(localHeading)\n" +
-        "name \(name)\n" +
+        "internationalFeature \(internationalFeature ?? "")\n" +
+        "localHeading \(localHeading ?? "")\n" +
+        "name \(name ?? "")\n" +
         "noticeNumber \(noticeNumber)\n" +
-        "noticeWeek \(noticeWeek)\n" +
-        "noticeYear \(noticeYear)\n" +
-        "position \(position)\n" +
-        "postNote \(postNote)\n" +
-        "precedingNote \(precedingNote)\n" +
-        "range \(range)\n" +
-        "regionHeading \(regionHeading)\n" +
-        "remarks \(remarks)\n" +
-        "removeFromList \(removeFromList)\n" +
-        "structure \(structure)\n" +
-        "subregionHeading \(subregionHeading)\n" +
-        "volumeNumber \(volumeNumber)"
+        "noticeWeek \(noticeWeek ?? "")\n" +
+        "noticeYear \(noticeYear ?? "")\n" +
+        "position \(position ?? "")\n" +
+        "postNote \(postNote ?? "")\n" +
+        "precedingNote \(precedingNote ?? "")\n" +
+        "range \(range ?? "")\n" +
+        "regionHeading \(regionHeading ?? "")\n" +
+        "remarks \(remarks ?? "")\n" +
+        "removeFromList \(removeFromList ?? "")\n" +
+        "structure \(structure ?? "")\n" +
+        "subregionHeading \(subregionHeading ?? "")\n" +
+        "volumeNumber \(volumeNumber ?? "")"
         
         
 //        return "ASAM\n\n" +
