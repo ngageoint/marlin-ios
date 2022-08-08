@@ -47,13 +47,15 @@
 		F71DF4A52859120A00686951 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4A42859120A00686951 /* BottomSheetView.swift */; };
 		F71DF4A7285912F600686951 /* AsamBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4A6285912F600686951 /* AsamBottomSheet.swift */; };
 		F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4A82859143C00686951 /* UIImageExtensions.swift */; };
-		F71DF4AB2859147900686951 /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4AA2859147900686951 /* UIButtonExtensions.swift */; };
 		F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4AC28591BA200686951 /* UIApplicationExtensions.swift */; };
 		F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4AE285927D600686951 /* MarlinScheme.swift */; };
 		F727A684284E351800BD728A /* MSIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A683284E351800BD728A /* MSIError.swift */; };
 		F727A691284E605800BD728A /* MarlinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A690284E605800BD728A /* MarlinTests.swift */; };
 		F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A687284E485500BD728A /* KIF+extensions.swift */; };
 		F727A698284E607100BD728A /* MSITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A685284E476200BD728A /* MSITests.swift */; };
+		F740AA77289D68D800754293 /* MarlinCompactWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F740AA76289D68D800754293 /* MarlinCompactWidth.swift */; };
+		F740AA79289D6DED00754293 /* MarlinRegularWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F740AA78289D6DED00754293 /* MarlinRegularWidth.swift */; };
+		F740AA7B28A1555F00754293 /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F740AA7A28A1555F00754293 /* UIButtonExtensions.swift */; };
 		F7A54CC42848149700E5F565 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CC32848149700E5F565 /* Tests_iOS.swift */; };
 		F7A54CC62848149700E5F565 /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CC52848149700E5F565 /* Tests_iOSLaunchTests.swift */; };
 		F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CA82848149500E5F565 /* Marlin.xcdatamodeld */; };
@@ -89,6 +91,8 @@
 		F7D671ED2874737F00758F1C /* DataSourceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671EC2874737F00758F1C /* DataSourceCell.swift */; };
 		F7D671EF287475BC00758F1C /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671EE287475BC00758F1C /* DataSource.swift */; };
 		F7D671F1287484FE00758F1C /* MarlinUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671F0287484FE00758F1C /* MarlinUserDefaults.swift */; };
+		F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89D28946C8900E7CCE2 /* RailItem.swift */; };
+		F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
 		F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59785285A206700F9B32E /* AsamDetailView.swift */; };
 		F7F59789285A277000F9B32E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59788285A277000F9B32E /* Card.swift */; };
@@ -173,7 +177,6 @@
 		F71DF4A42859120A00686951 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
 		F71DF4A6285912F600686951 /* AsamBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamBottomSheet.swift; sourceTree = "<group>"; };
 		F71DF4A82859143C00686951 /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
-		F71DF4AA2859147900686951 /* UIButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
 		F71DF4AC28591BA200686951 /* UIApplicationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtensions.swift; sourceTree = "<group>"; };
 		F71DF4AE285927D600686951 /* MarlinScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinScheme.swift; sourceTree = "<group>"; };
 		F727A682284E29AE00BD728A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -183,6 +186,9 @@
 		F727A689284E5F9600BD728A /* Marlin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Marlin-Bridging-Header.h"; sourceTree = "<group>"; };
 		F727A68E284E605800BD728A /* MarlinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MarlinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F727A690284E605800BD728A /* MarlinTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTests.swift; sourceTree = "<group>"; };
+		F740AA76289D68D800754293 /* MarlinCompactWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinCompactWidth.swift; sourceTree = "<group>"; };
+		F740AA78289D6DED00754293 /* MarlinRegularWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinRegularWidth.swift; sourceTree = "<group>"; };
+		F740AA7A28A1555F00754293 /* UIButtonExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
 		F7A54CA92848149500E5F565 /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		F7A54CAA2848149500E5F565 /* MarlinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinApp.swift; sourceTree = "<group>"; };
 		F7A54CAB2848149500E5F565 /* AsamListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamListView.swift; sourceTree = "<group>"; };
@@ -220,6 +226,8 @@
 		F7D671EC2874737F00758F1C /* DataSourceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceCell.swift; sourceTree = "<group>"; };
 		F7D671EE287475BC00758F1C /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		F7D671F0287484FE00758F1C /* MarlinUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinUserDefaults.swift; sourceTree = "<group>"; };
+		F7E8C89D28946C8900E7CCE2 /* RailItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailItem.swift; sourceTree = "<group>"; };
+		F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceRail.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
 		F7F59785285A206700F9B32E /* AsamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDetailView.swift; sourceTree = "<group>"; };
 		F7F59788285A277000F9B32E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
@@ -525,8 +533,8 @@
 		F7F5978E285BACAE00F9B32E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F740AA7A28A1555F00754293 /* UIButtonExtensions.swift */,
 				F71DF4A82859143C00686951 /* UIImageExtensions.swift */,
-				F71DF4AA2859147900686951 /* UIButtonExtensions.swift */,
 				F71DF4AC28591BA200686951 /* UIApplicationExtensions.swift */,
 				F7F5978F285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift */,
 				F7ADDCDE2885E53E00137D95 /* UIColorExtensions.swift */,
@@ -542,6 +550,10 @@
 				F7D671EA2871D73200758F1C /* HamburgerButton.swift */,
 				F707BA732875DD22006A94C4 /* DataDetailView.swift */,
 				F707BA842878DBFF006A94C4 /* AdaptiveImage.swift */,
+				F7E8C89D28946C8900E7CCE2 /* RailItem.swift */,
+				F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */,
+				F740AA76289D68D800754293 /* MarlinCompactWidth.swift */,
+				F740AA78289D6DED00754293 /* MarlinRegularWidth.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -828,11 +840,13 @@
 				F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */,
 				F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */,
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
+				F740AA79289D6DED00754293 /* MarlinRegularWidth.swift in Sources */,
 				F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */,
 				F707BA79287632E1006A94C4 /* LightListView.swift in Sources */,
 				F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */,
 				F707BA87287C6596006A94C4 /* LightCard.swift in Sources */,
 				F7D671EB2871D73200758F1C /* HamburgerButton.swift in Sources */,
+				F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */,
 				F7ADDCEC28902D1500137D95 /* EnlargableAnnotation.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
@@ -844,7 +858,7 @@
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				F7F597B22866248700F9B32E /* NavigationalWarningNavAreaListView.swift in Sources */,
 				F7D671DA286E3B3D00758F1C /* ExtraMapTypes.swift in Sources */,
-				F71DF4AB2859147900686951 /* UIButtonExtensions.swift in Sources */,
+				F740AA77289D68D800754293 /* MarlinCompactWidth.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
 				F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */,
 				F707BA9528807BD3006A94C4 /* LightBottomSheet.swift in Sources */,
@@ -871,10 +885,12 @@
 				F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */,
 				F7D671E02871BFEC00758F1C /* ModuActionBar.swift in Sources */,
 				F7F597AC2864DD5200F9B32E /* NavigationalWarningListView.swift in Sources */,
+				F740AA7B28A1555F00754293 /* UIButtonExtensions.swift in Sources */,
 				F7ADDCEA288F14DA00137D95 /* MKMapViewExtensions.swift in Sources */,
 				F707BA9328805476006A94C4 /* PersistedMapState.swift in Sources */,
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
 				F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */,
+				F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */,
 				F707BA8D287C89ED006A94C4 /* LightMap.swift in Sources */,
 				F707BA852878DBFF006A94C4 /* AdaptiveImage.swift in Sources */,
 				F707BA89287C68E7006A94C4 /* RaconCard.swift in Sources */,
