@@ -15,9 +15,7 @@ struct MaterialFloatingButton: UIViewRepresentable {
     @Binding var appearDisabled: Bool
     let action: () -> Void
     let shape: MDCFloatingButtonShape
-    
-    @EnvironmentObject var scheme: MarlinScheme
-    
+        
     init(title: String? = nil, imageName: Binding<String>, appearDisabled: Binding<Bool> = .constant(false), shape: MDCFloatingButtonShape = .mini, action: @escaping () -> Void = {}) {
         self.title = title
         self.action = action
@@ -29,10 +27,10 @@ struct MaterialFloatingButton: UIViewRepresentable {
     func makeUIView(context: Context) -> MDCFloatingButton {
         let button = MDCFloatingButton(shape: self.shape)
         button.addTarget(context.coordinator, action: #selector(Coordinator.buttonTapped), for: .touchUpInside)
-        button.rippleColor = scheme.containerScheme.colorScheme.primaryColorVariant
-        button.backgroundColor = scheme.containerScheme.colorScheme.surfaceColor;
-        button.tintColor = scheme.containerScheme.colorScheme.primaryColorVariant;
-        button.setImageTintColor(scheme.containerScheme.colorScheme.primaryColorVariant, for: .normal)
+        button.rippleColor = UIColor(Color.primaryColorVariant)
+        button.backgroundColor = UIColor(Color.surfaceColor)
+        button.tintColor = UIColor(Color.primaryColorVariant)
+        button.setImageTintColor(UIColor(Color.primaryColorVariant), for: .normal)
         return button
     }
     
@@ -44,11 +42,13 @@ struct MaterialFloatingButton: UIViewRepresentable {
         uiView.setImage(UIImage(systemName: imageName), for: .normal)
         
         if appearDisabled {
-            uiView.applySecondaryTheme(withScheme: scheme.disabledScheme)
+            uiView.backgroundColor = UIColor(Color.disabledColor)
+            uiView.tintColor = UIColor(Color.onSurfaceColor)
+            uiView.setImageTintColor(UIColor(Color.onSurfaceColor), for: .normal)
         } else {
-            uiView.backgroundColor = scheme.containerScheme.colorScheme.surfaceColor;
-            uiView.tintColor = scheme.containerScheme.colorScheme.primaryColorVariant;
-            uiView.setImageTintColor(scheme.containerScheme.colorScheme.primaryColorVariant, for: .normal)
+            uiView.backgroundColor = UIColor(Color.surfaceColor)
+            uiView.tintColor = UIColor(Color.primaryColorVariant)
+            uiView.setImageTintColor(UIColor(Color.primaryColorVariant), for: .normal)
         }
     }
     

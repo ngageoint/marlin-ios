@@ -15,7 +15,6 @@ enum ButtonType {
 }
 
 struct MaterialButtonLabelStyle: LabelStyle {
-    @EnvironmentObject var scheme: MarlinScheme
     
     let color: Color
 
@@ -23,18 +22,16 @@ struct MaterialButtonLabelStyle: LabelStyle {
         HStack {
             configuration.icon
                 .foregroundColor(color)
-                .font(Font(scheme.containerScheme.typographyScheme.headline6))
+                .font(Font.headline6)
             configuration.title
                 .foregroundColor(color)
-                .font(Font(scheme.containerScheme.typographyScheme.body1))
+                .font(Font.title)
         }
     }
 }
 
 struct MaterialButtonStyle: ButtonStyle {
-    
-    @EnvironmentObject var scheme: MarlinScheme
-    
+        
     let cornerRadius: CGFloat = 4.0
     let maxWidth: Bool = false
     let type: ButtonType
@@ -46,9 +43,9 @@ struct MaterialButtonStyle: ButtonStyle {
         } else if type == .text {
             borderWidth = 0.0
         }
-        var foregroundColor = Color(scheme.containerScheme.colorScheme.primaryColor)
+        var foregroundColor = Color.primaryColor
         if type == ButtonType.contained {
-            foregroundColor = Color(scheme.containerScheme.colorScheme.onPrimaryColor)
+            foregroundColor = Color.onPrimaryColor
         }
         
         return configuration
@@ -56,7 +53,7 @@ struct MaterialButtonStyle: ButtonStyle {
             .labelStyle(MaterialButtonLabelStyle(color: foregroundColor))
             .frame(minWidth: 44.0, maxWidth: maxWidth ? .infinity : nil, minHeight: 44.0)
             .padding([.trailing, .leading], 4)
-            .font(Font(scheme.containerScheme.typographyScheme.body2))
+            .font(Font.body2)
             .foregroundColor(foregroundColor)
             .background(
                 GeometryReader { metrics in
@@ -64,20 +61,20 @@ struct MaterialButtonStyle: ButtonStyle {
                     ZStack {
                         if type == .contained {
                         // Solid fill
-                            RoundedRectangle(cornerRadius: cornerRadius).fill(Color(scheme.containerScheme.colorScheme.primaryColor)).shadow(color: Color(.sRGB, white: 0, opacity: 0.3), radius: (configuration.isPressed ? 8 : 2), x: 0, y: 2)
+                            RoundedRectangle(cornerRadius: cornerRadius).fill(Color.primaryColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.3), radius: (configuration.isPressed ? 8 : 2), x: 0, y: 2)
                             
                             // tap effect
                             Circle().fill(Color.white).scaleEffect(configuration.isPressed ? scale : 0.0001).opacity(configuration.isPressed ? 0.32 : 0.0).cornerRadius(cornerRadius)
                         } else if type == .text {
                             // tap effect
-                            Circle().fill(Color(scheme.containerScheme.colorScheme.primaryColor)).scaleEffect(configuration.isPressed ? scale : 0.0001).opacity(configuration.isPressed ? 0.16 : 0.0).cornerRadius(cornerRadius)
+                            Circle().fill(Color.primaryColor).scaleEffect(configuration.isPressed ? scale : 0.0001).opacity(configuration.isPressed ? 0.16 : 0.0).cornerRadius(cornerRadius)
                         }
                     }
                 }
             )
             .overlay(
                 // border
-                RoundedRectangle(cornerRadius: cornerRadius).stroke(Color(scheme.containerScheme.colorScheme.primaryColor), lineWidth: borderWidth).opacity(0.2)
+                RoundedRectangle(cornerRadius: cornerRadius).stroke(Color.primaryColor, lineWidth: borderWidth).opacity(0.2)
             )
     }
     

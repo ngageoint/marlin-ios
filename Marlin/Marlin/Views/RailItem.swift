@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct RailItem: View {
-    @EnvironmentObject var scheme: MarlinScheme
-    
+struct RailItem: View {    
     var imageName: String?
     var systemImageName: String?
     var itemText: String?
@@ -24,7 +22,7 @@ struct RailItem: View {
             }
             if let itemText = itemText {
                 Text(itemText)
-                    .font(Font(scheme.containerScheme.typographyScheme.caption))
+                    .font(Font.caption)
             }
         }
         .frame(minWidth: 72, idealWidth: 72, maxWidth: 72, minHeight: 72, idealHeight: 72, maxHeight: 72)

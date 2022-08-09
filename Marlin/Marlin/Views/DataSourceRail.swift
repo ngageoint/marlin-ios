@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct DataSourceRail: View {
-    @EnvironmentObject var scheme: MarlinScheme
     @ObservedObject var dataSourceList: DataSourceList
     
     @Binding var activeRailItem: DataSourceItem?
@@ -22,13 +21,13 @@ struct DataSourceRail: View {
                             .onTapGesture {
                                 activeRailItem = dataSourceItem
                             }
-                            .foregroundColor(activeRailItem == dataSourceItem ? Color(scheme.containerScheme.colorScheme.primaryColorVariant.withAlphaComponent(0.87)) : Color(scheme.containerScheme.colorScheme.onSurfaceColor.withAlphaComponent(0.6)))
+                            .foregroundColor(activeRailItem == dataSourceItem ? Color.primaryColorVariant.opacity(0.87) : Color.onSurfaceColor.opacity(0.6))
                     } else if let imageName = dataSourceItem.dataSource.imageName {
                         RailItem(imageName: imageName, itemText: dataSourceItem.dataSource.dataSourceName)
                             .onTapGesture {
                                 activeRailItem = dataSourceItem
                             }
-                            .foregroundColor(activeRailItem == dataSourceItem ? Color(scheme.containerScheme.colorScheme.primaryColorVariant.withAlphaComponent(0.87)) : Color(scheme.containerScheme.colorScheme.onSurfaceColor.withAlphaComponent(0.6)))
+                            .foregroundColor(activeRailItem == dataSourceItem ? Color.primaryColorVariant.opacity(0.87) : Color.onSurfaceColor.opacity(0.6))
                     }
                 }
                 ForEach(dataSourceList.nonTabs) { dataSourceItem in
@@ -37,13 +36,13 @@ struct DataSourceRail: View {
                             .onTapGesture {
                                 activeRailItem = dataSourceItem
                             }
-                            .foregroundColor(activeRailItem == dataSourceItem ? Color(scheme.containerScheme.colorScheme.primaryColorVariant.withAlphaComponent(0.87)) : Color(scheme.containerScheme.colorScheme.onSurfaceColor.withAlphaComponent(0.6)))
+                            .foregroundColor(activeRailItem == dataSourceItem ? Color.primaryColorVariant.opacity(0.87) : Color.onSurfaceColor.opacity(0.6))
                     } else if let imageName = dataSourceItem.dataSource.imageName {
                         RailItem(imageName: imageName, itemText: dataSourceItem.dataSource.dataSourceName)
                             .onTapGesture {
                                 activeRailItem = dataSourceItem
                             }
-                            .foregroundColor(activeRailItem == dataSourceItem ? Color(scheme.containerScheme.colorScheme.primaryColorVariant.withAlphaComponent(0.87)) : Color(scheme.containerScheme.colorScheme.onSurfaceColor.withAlphaComponent(0.6)))
+                            .foregroundColor(activeRailItem == dataSourceItem ? Color.primaryColorVariant.opacity(0.87) : Color.onSurfaceColor.opacity(0.6))
                     }
                 }
             }
@@ -51,7 +50,7 @@ struct DataSourceRail: View {
         }
         .frame(minWidth: 72, idealWidth: 72, maxWidth: 72)
         .background(
-            Color(scheme.containerScheme.colorScheme.surfaceColor)
+            Color.surfaceColor
                 .shadow(color: Color(UIColor.label).opacity(0.3), radius: 1, x: 0, y: 0)
                 .mask(Rectangle().padding(.trailing, -4))
         )

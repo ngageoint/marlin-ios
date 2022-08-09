@@ -10,7 +10,6 @@ import MapKit
 
 struct LightDetailView: View {
     
-    @EnvironmentObject var scheme: MarlinScheme
     @State private var region: MKCoordinateRegion
     
     @FetchRequest var lights : FetchedResults<Light>
@@ -37,32 +36,32 @@ struct LightDetailView: View {
                     .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     Group {
                         Text("\(lights[0].featureNumber ?? "") \(lights[0].internationalFeature ?? "")")
-                            .font(Font(scheme.containerScheme.typographyScheme.overline))
-                            .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                            .font(Font.overline)
+                            .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.45)
                         Text("\(lights[0].name ?? "")")
-                            .font(Font(scheme.containerScheme.typographyScheme.headline6))
-                            .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                            .font(Font.headline6)
+                            .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.87)
                         Text(lights[0].sectionHeader ?? "")
-                            .font(Font(scheme.containerScheme.typographyScheme.body2))
-                            .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                            .font(Font.body2)
+                            .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.6)
                         Text(lights[0].structure ?? "")
-                            .font(Font(scheme.containerScheme.typographyScheme.body2))
-                            .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                            .font(Font.body2)
+                            .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.6)
                         if lights[0].heightFeet != 0 {
                             Text("Focal Plane Elevation: \(Int(lights[0].heightFeet))ft (\(Int(lights[0].heightMeters))m)")
-                                .font(Font(scheme.containerScheme.typographyScheme.body2))
-                                .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                                .font(Font.body2)
+                                .foregroundColor(Color.onSurfaceColor)
                                 .opacity(0.6)
                         }
                         LightActionBar(light: lights[0], showMoreDetailsButton: false, showFocusButton: true)
                     }.padding([.leading, .trailing], 16)
                 }
                 .frame(maxWidth:.infinity)
-                .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                .background(Color.surfaceColor)
                 .modifier(CardModifier())
                 .onAppear {
                     self.region = MKCoordinateRegion(center: self.lights[0].coordinate, span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))

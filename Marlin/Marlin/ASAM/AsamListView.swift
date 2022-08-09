@@ -10,7 +10,6 @@ import CoreData
 
 struct AsamListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var scheme: MarlinScheme
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)],
@@ -33,7 +32,7 @@ struct AsamListView: View {
                         AsamSummaryView(asam: asam)
                     }
                     .padding(.all, 16)
-                    .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                    .background(Color.surfaceColor)
                     .modifier(CardModifier())
                 }
                 
@@ -45,7 +44,7 @@ struct AsamListView: View {
         .navigationTitle(Asam.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
         .listStyle(.plain)
-        .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
+        .background(Color.backgroundColor)
     }
 }
 

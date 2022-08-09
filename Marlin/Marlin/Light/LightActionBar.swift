@@ -9,7 +9,6 @@ import SwiftUI
 import MaterialComponents
 
 struct LightActionBar: View {
-    @EnvironmentObject var scheme: MarlinScheme
     var light: Light
     var showMoreDetailsButton = false
     var showFocusButton = true
@@ -30,7 +29,7 @@ struct LightActionBar: View {
                     MDCSnackbarManager.default.show(MDCSnackbarMessage(text: "Location \(coordinateButtonTitle) copied to clipboard"))
                 }) {
                     Text(coordinateButtonTitle)
-                        .foregroundColor(Color(scheme.containerScheme.colorScheme.primaryColorVariant))
+                        .foregroundColor(Color.primaryColorVariant)
                 }
             }
             
@@ -44,7 +43,7 @@ struct LightActionBar: View {
                         title: {},
                         icon: { Image(systemName: "square.and.arrow.up")
                                 .renderingMode(.template)
-                                .foregroundColor(Color(scheme.containerScheme.colorScheme.primaryColorVariant))
+                                .foregroundColor(Color.primaryColorVariant)
                         })
                 }
                 if showFocusButton {
@@ -56,7 +55,7 @@ struct LightActionBar: View {
                             title: {},
                             icon: { Image(systemName: "scope")
                                     .renderingMode(.template)
-                                    .foregroundColor(Color(scheme.containerScheme.colorScheme.primaryColorVariant))
+                                    .foregroundColor(Color.primaryColorVariant)
                             })
                     }
                 }

@@ -24,7 +24,7 @@ class LightMap: NSObject, MapMixin {
         self.showLightsAsTiles = showLightsAsTiles
     }
     
-    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap, scheme: MarlinScheme?) {
+    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap) {
         self.mapView = mapView
         mapView.register(LightAnnotationView.self, forAnnotationViewWithReuseIdentifier: LightAnnotationView.ReuseID)
         

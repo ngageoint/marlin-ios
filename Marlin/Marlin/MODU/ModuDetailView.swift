@@ -10,7 +10,6 @@ import MapKit
 
 struct ModuDetailView: View {
         
-    @EnvironmentObject var scheme: MarlinScheme
     @State private var region: MKCoordinateRegion
     
     var modu: Modu
@@ -33,19 +32,19 @@ struct ModuDetailView: View {
                     .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     Group {
                         Text(modu.dateString ?? "")
-                            .font(Font(scheme.containerScheme.typographyScheme.overline))
-                            .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                            .font(Font.overline)
+                            .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.45)
                         Text("\(modu.name ?? "")")
-                            .font(Font(scheme.containerScheme.typographyScheme.headline6))
-                            .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                            .font(Font.headline6)
+                            .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.87)
                         ModuActionBar(modu: modu)
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
                 }
                 
-                .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                .background(Color.surfaceColor)
                 .modifier(CardModifier())
             } header: {
                 EmptyView().frame(width: 0, height: 0, alignment: .leading)
@@ -75,7 +74,7 @@ struct ModuDetailView: View {
                     
                 }
                 .padding(.all, 16)
-                .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                .background(Color.surfaceColor)
                 .modifier(CardModifier())
                 .frame(maxWidth: .infinity)
             }

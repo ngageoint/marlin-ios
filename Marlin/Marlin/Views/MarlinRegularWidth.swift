@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MarlinRegularWidth: View {
-    @EnvironmentObject var scheme: MarlinScheme
     @State var activeRailItem: DataSourceItem? = nil
     
     @ObservedObject var dataSourceList: DataSourceList
@@ -22,7 +21,7 @@ struct MarlinRegularWidth: View {
                 .onAppear {
                     activeRailItem = dataSourceList.tabs[0]
                 }
-                .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                .background(Color.surfaceColor)
                 .padding(.horizontal, 2)
             
             VStack {
@@ -34,7 +33,7 @@ struct MarlinRegularWidth: View {
                 }
             }
             .frame(width: 256)
-            .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
+            .background(Color.backgroundColor)
             
             NavigationView {
                 ZStack(alignment: .topLeading) {

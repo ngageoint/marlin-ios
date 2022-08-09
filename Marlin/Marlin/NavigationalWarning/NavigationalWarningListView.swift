@@ -9,8 +9,6 @@ import SwiftUI
 
 struct NavigationalWarningListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var scheme: MarlinScheme
-    
     @StateObject var locationManager = LocationManager()
 
     var navareaMap = GeoPackageMap(fileName: "navigation_areas", tableName: "navigation_areas", index: 0)
@@ -19,23 +17,22 @@ struct NavigationalWarningListView: View {
         List {
             MarlinMap()
                 .mixin(navareaMap)
-                .mixin(GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: scheme.dynamicLandColor, index: 1))
+                .mixin(GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: Color.dynamicLandColor, index: 1))
                 .frame(minHeight: 250, maxHeight: 250)
                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
             NavigationalWarningAreasView(currentArea: locationManager.currentNavArea)
-                .listRowBackground(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                .listRowBackground(Color.surfaceColor)
                 .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
         }
         .listStyle(.plain)
         .navigationTitle("Navigational Warnings")
         .navigationBarTitleDisplayMode(.inline)
-        .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
+        .background(Color.backgroundColor)
     }
 }
 
 struct NavigationalWarningAreasView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var scheme: MarlinScheme
     
     @SectionedFetchRequest<String, NavigationalWarning>
     var currentNavigationalWarningsSections: SectionedFetchResults<String, NavigationalWarning>
@@ -58,12 +55,12 @@ struct NavigationalWarningAreasView: View {
                 HStack {
                     VStack(alignment: .leading) {
                         Text(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "")
-                            .font(Font(scheme.containerScheme.typographyScheme.body1))
-                            .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                            .font(Font.body1)
+                            .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.87)
                         Text("\(section.count) Active")
-                            .font(Font(scheme.containerScheme.typographyScheme.body2))
-                            .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                            .font(Font.body2)
+                            .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.6)
                     }
                     Spacer()
@@ -82,7 +79,7 @@ struct NavigationalWarningAreasView: View {
                 }.padding([.leading, .top, .bottom], -8)
             )
         }
-        .listRowBackground(Color(scheme.containerScheme.colorScheme.surfaceColor))
+        .listRowBackground(Color.surfaceColor)
         .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
         
         ForEach(navigationalWarningsSections) { section in
@@ -92,12 +89,12 @@ struct NavigationalWarningAreasView: View {
                 HStack {
                     VStack(alignment: .leading) {
                         Text(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "")
-                            .font(Font(scheme.containerScheme.typographyScheme.body1))
-                            .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                            .font(Font.body1)
+                            .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.87)
                         Text("\(section.count) Active")
-                            .font(Font(scheme.containerScheme.typographyScheme.body2))
-                            .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                            .font(Font.body2)
+                            .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.6)
                     }
                     Spacer()
@@ -116,7 +113,7 @@ struct NavigationalWarningAreasView: View {
                 }.padding([.leading, .top, .bottom], -8)
             )
         }
-        .listRowBackground(Color(scheme.containerScheme.colorScheme.surfaceColor))
+        .listRowBackground(Color.surfaceColor)
         .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
     }
 }

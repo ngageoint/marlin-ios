@@ -12,7 +12,7 @@ import SwiftUI
 //import geopackage_ios
 
 protocol MapMixin: AnyObject {
-    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap, scheme: MarlinScheme?)
+    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap)
     func updateMixin()
     func cleanupMixin()
     func renderer(overlay: MKOverlay) -> MKOverlayRenderer?

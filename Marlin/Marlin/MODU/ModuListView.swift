@@ -11,7 +11,6 @@ import CoreData
 
 struct ModuListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var scheme: MarlinScheme
     
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)],
@@ -34,7 +33,7 @@ struct ModuListView: View {
                         ModuSummaryView(modu: modu)
                     }
                     .padding(.all, 16)
-                    .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                    .background(Color.surfaceColor)
                     .modifier(CardModifier())
                 }
                 
@@ -46,7 +45,7 @@ struct ModuListView: View {
         .navigationTitle(Modu.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
         .listStyle(.plain)
-        .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
+        .background(Color.backgroundColor)
     }
 }
 

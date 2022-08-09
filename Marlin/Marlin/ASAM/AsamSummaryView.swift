@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct AsamSummaryView: View {
-    
-    @EnvironmentObject var scheme: MarlinScheme
-    
+        
     var asam: Asam
     var showMoreDetails: Bool = false
     
@@ -22,17 +20,17 @@ struct AsamSummaryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(asam.dateString ?? "")
-                .font(Font(scheme.containerScheme.typographyScheme.overline))
-                .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                .font(Font.overline)
+                .foregroundColor(Color.onSurfaceColor)
                 .opacity(0.45)
             Text("\(asam.hostility ?? "")\(asam.hostility != nil ? ": " : "")\(asam.victim ?? "")")
-                .font(Font(scheme.containerScheme.typographyScheme.headline6))
-                .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                .font(Font.headline6)
+                .foregroundColor(Color.onSurfaceColor)
                 .opacity(0.87)
             Text(asam.asamDescription ?? "")
                 .lineLimit(8)
-                .font(Font(scheme.containerScheme.typographyScheme.body2))
-                .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                .font(Font.body2)
+                .foregroundColor(Color.onSurfaceColor)
                 .opacity(0.6)
             AsamActionBar(asam: asam, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }

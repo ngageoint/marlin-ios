@@ -9,7 +9,6 @@ import SwiftUI
 import MapKit
 
 struct UserTrackingButton: View {
-    @EnvironmentObject var scheme: MarlinScheme
     var mapView: MKMapView
     
     @State var imageName: String = "location"

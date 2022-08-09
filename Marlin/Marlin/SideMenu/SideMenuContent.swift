@@ -114,9 +114,7 @@ class DataSourceItem: ObservableObject, Identifiable, Hashable, Equatable {
     }
 }
 
-struct SideMenuContent: View {
-    @EnvironmentObject var scheme: MarlinScheme
-    
+struct SideMenuContent: View {    
     @State var isEditMode: EditMode = .active
     @State var draggedItem : String?
     @State var validDropTarget: Bool = false
@@ -125,18 +123,18 @@ struct SideMenuContent: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Color(scheme.containerScheme.colorScheme.primaryColor)
+            Color.primaryColor
                 .frame(maxWidth: .infinity, maxHeight: 80)
             HStack {
                 Text("Data Source Tabs (Drag to reorder)")
                     .padding([.leading, .top, .bottom, .trailing], 8)
-                    .font(Font(scheme.containerScheme.typographyScheme.overline))
-                    .foregroundColor(Color(scheme.containerScheme.colorScheme.onBackgroundColor.withAlphaComponent(0.6)))
+                    .font(Font.overline)
+                    .foregroundColor(Color.onBackgroundColor.opacity(0.6))
                 Spacer()
             }
             .padding(.top, 16)
             .padding(.bottom, 8)
-            .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
+            .background(Color.backgroundColor)
         
             if dataSourceList.tabs.count != 0 {
                 ForEach(dataSourceList.tabs, id: \.self) { dataSource in
@@ -151,8 +149,8 @@ struct SideMenuContent: View {
             } else {
                 Text("Drag here to add a tab")
                     .padding([.leading, .top, .bottom, .trailing], 8)
-                    .font(Font(scheme.containerScheme.typographyScheme.overline))
-                    .foregroundColor(Color(scheme.containerScheme.colorScheme.onBackgroundColor.withAlphaComponent(0.6)))
+                    .font(Font.overline)
+                    .foregroundColor(Color.onBackgroundColor.opacity(0.6))
                     .frame(maxWidth: .infinity)
                     .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyNonTabFirst)
                     .padding()
@@ -160,20 +158,20 @@ struct SideMenuContent: View {
                         RoundedRectangle(cornerRadius: 15)
                             .strokeBorder(Color.gray, style: StrokeStyle(dash: [10]))
                             .padding([.trailing, .leading], 8)
-                            .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
+                            .background(Color.backgroundColor)
                             .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyTabFirst)
                     )
             }
             HStack {
                 Text("Other Data Sources (Drag to add to tabs)")
                     .padding([.leading, .top, .bottom, .trailing], 8)
-                    .font(Font(scheme.containerScheme.typographyScheme.overline))
-                    .foregroundColor(Color(scheme.containerScheme.colorScheme.onBackgroundColor.withAlphaComponent(0.6)))
+                    .font(Font.overline)
+                    .foregroundColor(Color.onBackgroundColor.opacity(0.6))
                 Spacer()
             }
             .padding(.top, 16)
             .padding(.bottom, 8)
-            .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
+            .background(Color.backgroundColor)
             
             if dataSourceList.nonTabs.count != 0 {
                 ForEach(dataSourceList.nonTabs, id: \.self) { dataSource in
@@ -188,8 +186,8 @@ struct SideMenuContent: View {
             } else {
                 Text("Drag here to remove a tab")
                     .padding([.leading, .top, .bottom, .trailing], 8)
-                    .font(Font(scheme.containerScheme.typographyScheme.overline))
-                    .foregroundColor(Color(scheme.containerScheme.colorScheme.onBackgroundColor.withAlphaComponent(0.6)))
+                    .font(Font.overline)
+                    .foregroundColor(Color.onBackgroundColor.opacity(0.6))
                     .frame(maxWidth: .infinity)
                     .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyNonTabFirst)
                     .padding()
@@ -197,7 +195,7 @@ struct SideMenuContent: View {
                         RoundedRectangle(cornerRadius: 15)
                             .strokeBorder(Color.gray, style: StrokeStyle(dash: [10]))
                             .padding([.trailing, .leading], 8)
-                            .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
+                            .background(Color.backgroundColor)
                             .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyNonTabFirst)
                     )
             }
@@ -205,7 +203,7 @@ struct SideMenuContent: View {
             Spacer()
         }
         .frame(maxHeight: .infinity)
-        .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
+        .background(Color.backgroundColor)
         .ignoresSafeArea()
         .onDrop(of: [.text], isTargeted: nil) { provider in
             draggedItem = nil

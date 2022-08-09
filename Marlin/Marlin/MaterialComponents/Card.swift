@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct CardModifier: ViewModifier {
-    @EnvironmentObject var scheme: MarlinScheme
     
     func body(content: Content) -> some View {
         content
@@ -20,7 +19,6 @@ struct CardModifier: ViewModifier {
 }
 
 struct UnreadModifier: ViewModifier {
-    @EnvironmentObject var scheme: MarlinScheme
     
     func body(content: Content) -> some View {
         content            
@@ -28,15 +26,15 @@ struct UnreadModifier: ViewModifier {
             .padding(.bottom, 16)
             .padding(.leading, 24)
             .padding(.trailing, 24)
-            .font(Font(scheme.containerScheme.typographyScheme.body2))
+            .font(Font.body2)
             .background(
                 RoundedRectangle(cornerRadius: 16)
-                .fill(Color(scheme.containerScheme.colorScheme.primaryColor))
+                .fill(Color.primaryColor)
                 .padding(8)
                 .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
 
             )
-            .foregroundColor(Color(scheme.containerScheme.colorScheme.onPrimaryColor))
+            .foregroundColor(Color.onPrimaryColor)
 
     }
     

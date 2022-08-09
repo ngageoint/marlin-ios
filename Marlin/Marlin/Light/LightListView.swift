@@ -9,7 +9,6 @@ import SwiftUI
 
 struct LightsListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var scheme: MarlinScheme
         
     @SectionedFetchRequest<String, Light>(
         sectionIdentifier: \.sectionHeader!,
@@ -23,8 +22,8 @@ struct LightsListView: View {
                 
                 Section(header: HStack {
                     Text(section.id)
-                        .font(Font(scheme.containerScheme.typographyScheme.overline))
-                        .foregroundColor(Color(scheme.containerScheme.colorScheme.onBackgroundColor))
+                        .font(Font.overline)
+                        .foregroundColor(Color.onBackgroundColor)
                 }) {
 
                     ForEach(section) { light in
@@ -41,7 +40,7 @@ struct LightsListView: View {
                                 LightSummaryView(light: light)
                             }
                             .padding(.all, 16)
-                            .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                            .background(Color.surfaceColor)
                             .modifier(CardModifier())
                         }
                         
@@ -54,7 +53,7 @@ struct LightsListView: View {
             .navigationTitle(Light.dataSourceName)
             .navigationBarTitleDisplayMode(.inline)
             .listStyle(.plain)
-            .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
+            .background(Color.backgroundColor)
         }
     }
 }

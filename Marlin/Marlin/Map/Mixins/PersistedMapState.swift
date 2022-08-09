@@ -11,7 +11,7 @@ import MapKit
 class PersistedMapState: NSObject, MapMixin {
     var mapView: MKMapView?
     
-    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap, scheme: MarlinScheme?) {
+    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap) {
         self.mapView = mapView
         let region = UserDefaults.standard.mapRegion
         if CLLocationCoordinate2DIsValid(region.center) {

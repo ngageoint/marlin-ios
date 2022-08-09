@@ -7,24 +7,22 @@
 
 import SwiftUI
 
-struct DataSourceCell: View {
-    @EnvironmentObject var scheme: MarlinScheme
-    
+struct DataSourceCell: View {    
     @ObservedObject var dataSourceItem: DataSourceItem
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .center) {
                 Text(dataSourceItem.dataSource.dataSourceName)
-                    .font(Font(scheme.containerScheme.typographyScheme.body1))
-                    .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                    .font(Font.body1)
+                    .foregroundColor(Color.onSurfaceColor)
                     .opacity(0.87)
                     
                 Spacer()
                 if dataSourceItem.dataSource.isMappable {
                     Image(systemName: dataSourceItem.showOnMap ? "mappin.circle.fill" : "mappin.slash.circle.fill")
                         .renderingMode(.template)
-                        .foregroundColor(Color(dataSourceItem.showOnMap ? scheme.containerScheme.colorScheme.primaryColor : scheme.disabledScheme.colorScheme.primaryColor))
+                        .foregroundColor(dataSourceItem.showOnMap ? Color.primaryColor : Color.disabledColor)
                         .onTapGesture {
                             dataSourceItem.showOnMap = !dataSourceItem.showOnMap
                         }
@@ -45,7 +43,7 @@ struct DataSourceCell: View {
                     .frame(maxWidth: 6, maxHeight: .infinity)
                 Spacer()
                 }
-                .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                .background(Color.surfaceColor)
         )
 
     }

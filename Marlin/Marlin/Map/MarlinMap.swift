@@ -17,8 +17,6 @@ protocol OverlayRenderable {
 }
 
 struct MarlinMap: UIViewRepresentable {
-    
-    @EnvironmentObject var scheme: MarlinScheme
     @Environment(\.colorScheme) var colorScheme
     
     @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
@@ -83,7 +81,7 @@ struct MarlinMap: UIViewRepresentable {
         if !mutatingWrapper.created {
             mutatingWrapper.created = true
             for mixin in mutatingWrapper.mixins {
-                mixin.setupMixin(mapView: mutatingWrapper.mapView, marlinMap: self, scheme: scheme)
+                mixin.setupMixin(mapView: mutatingWrapper.mapView, marlinMap: self)
             }
         }
         mutatingWrapper.containerView.addSubview(mutatingWrapper.mapView)

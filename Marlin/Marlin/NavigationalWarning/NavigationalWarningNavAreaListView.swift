@@ -8,9 +8,7 @@
 import SwiftUI
 import Combine
 
-struct NavigationalWarningNavAreaListView: View {
-    @EnvironmentObject var scheme: MarlinScheme
-    
+struct NavigationalWarningNavAreaListView: View {    
     @AppStorage<String> var lastSeen: String
     @State var lastSavedDate: Date = Date(timeIntervalSince1970: 0)
     @State var scrollingTo: ObjectIdentifier?
@@ -42,7 +40,7 @@ struct NavigationalWarningNavAreaListView: View {
                                     .padding(.all, 16)
                             }
                             
-                            .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                            .background(Color.surfaceColor)
                             .modifier(CardModifier())
                             .background(GeometryReader {
                                 return Color.clear.preference(key: ViewOffsetKey.self,
@@ -120,7 +118,7 @@ struct NavigationalWarningNavAreaListView: View {
                     }
                 }
             }
-            .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
+            .background(Color.backgroundColor)
             .coordinateSpace(name: "scroll")
 
         }

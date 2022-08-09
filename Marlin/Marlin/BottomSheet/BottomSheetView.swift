@@ -10,7 +10,6 @@ import Foundation
 import SwiftUI
 
 struct MarlinBottomSheet: View {
-    @EnvironmentObject var scheme: MarlinScheme
     @ObservedObject var itemList: BottomSheetItemList
     @State var selectedItem: Int = 0
     
@@ -48,8 +47,8 @@ struct MarlinBottomSheet: View {
                     VStack(spacing: 2) {
                         HStack {
                             Text("\(selectedItem + 1) of \(pages)")
-                                .font(Font(scheme.containerScheme.typographyScheme.caption))
-                                .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor.withAlphaComponent(0.6)))
+                                .font(Font.caption)
+                                .foregroundColor(Color.onSurfaceColor.opacity(0.6))
                         }
                         HStack(spacing: 8) {
                             Button(action: {
@@ -61,7 +60,7 @@ struct MarlinBottomSheet: View {
                                     title: {},
                                     icon: { Image(systemName: "chevron.left")
                                             .renderingMode(.template)
-                                            .foregroundColor(Color(scheme.containerScheme.colorScheme.primaryColorVariant))
+                                            .foregroundColor(Color.primaryColorVariant)
                                     })
                             }
                             .buttonStyle(MaterialButtonStyle())
@@ -71,14 +70,14 @@ struct MarlinBottomSheet: View {
                                 HStack(spacing: circleMargin) {
                                     ForEach(bottomSheetItems) { _ in
                                         Circle()
-                                            .fill(Color(scheme.containerScheme.colorScheme.onSurfaceColor.withAlphaComponent(0.6)))
+                                            .fill(Color.onSurfaceColor.opacity(0.6))
                                             .frame(width: circleDiameter, height: circleDiameter)
                                     }
                                 }
                                 
                                 // Current page index
                                 Circle()
-                                    .foregroundColor(Color(scheme.containerScheme.colorScheme.primaryColorVariant))
+                                    .foregroundColor(Color.primaryColorVariant)
                                     .frame(width: circleDiameter, height: circleDiameter)
                                     .offset(x: currentPosition)
                                     .animation(.linear(duration: 0.3), value: currentPosition)
@@ -93,7 +92,7 @@ struct MarlinBottomSheet: View {
                                     title: {},
                                     icon: { Image(systemName: "chevron.right")
                                             .renderingMode(.template)
-                                            .foregroundColor(Color(scheme.containerScheme.colorScheme.primaryColorVariant))
+                                            .foregroundColor(Color.primaryColorVariant)
                                     })
                             }
                             .buttonStyle(MaterialButtonStyle())

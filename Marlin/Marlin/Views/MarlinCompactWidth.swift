@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MarlinCompactWidth: View {
-    @EnvironmentObject var scheme: MarlinScheme
     @EnvironmentObject var appState: AppState
     
     @AppStorage("selectedTab") var selectedTab: String = "map"
@@ -98,7 +97,7 @@ struct MarlinCompactWidth: View {
                     Label("Map", systemImage: "map.fill")
                 }
                 // this affects text buttons, image buttons need .foregroundColor set on them
-                .tint(Color(scheme.containerScheme.colorScheme.onPrimaryColor))
+                .tint(Color.onPrimaryColor)
                 .navigationViewStyle(.stack)
                 .statusBar(hidden: false)
                 

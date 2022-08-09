@@ -26,8 +26,6 @@ extension MarlinTabView: BottomSheetDelegate {
 
 struct MarlinTabView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @EnvironmentObject var scheme: MarlinScheme
-    
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     @State var menuOpen: Bool = false
     @State var showBottomSheet: Bool = false
@@ -64,12 +62,12 @@ struct MarlinTabView: View {
                     .navigationTitle("Marlin")
                     .navigationBarTitleDisplayMode(.inline)
                 }
-                .tint(Color(scheme.containerScheme.colorScheme.onPrimaryColor))
+                .tint(Color.onPrimaryColor)
                 .navigationViewStyle(.stack)
             }
         }
         .bottomSheet(isPresented: $showBottomSheet, delegate: self) {
-            MarlinBottomSheet(itemList: bottomSheetItemList).environmentObject(scheme)
+            MarlinBottomSheet(itemList: bottomSheetItemList)
         }
         .onReceive(mapItemsTappedPub) { output in
             guard let notification = output.object as? MapItemsTappedNotification else {

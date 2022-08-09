@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct LightCard: View {
-    @EnvironmentObject var scheme: MarlinScheme
-
     var light: Light
     
     var body: some View {
@@ -17,13 +15,13 @@ struct LightCard: View {
             HStack(alignment: .top, spacing: 8) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(light.name ?? "")
-                        .font(Font(scheme.containerScheme.typographyScheme.headline6))
-                        .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                        .font(Font.headline6)
+                        .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.87)
                         .fixedSize(horizontal: false, vertical: true)
                     Text(light.expandedCharacteristic ?? "")
-                        .font(Font(scheme.containerScheme.typographyScheme.body2))
-                        .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                        .font(Font.body2)
+                        .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.6)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -42,30 +40,30 @@ struct LightCard: View {
             HStack(alignment: .top, spacing: 8) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Range (nm)")
-                        .font(Font(scheme.containerScheme.typographyScheme.body1))
-                        .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                        .font(Font.title)
+                        .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.87)
                     Text(light.range ?? "")
-                        .font(Font(scheme.containerScheme.typographyScheme.body2))
-                        .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                        .font(Font.body2)
+                        .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.6)
                 }
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Remarks")
-                        .font(Font(scheme.containerScheme.typographyScheme.body1))
-                        .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                        .font(Font.title)
+                        .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.87)
                     Text(light.remarks ?? "")
-                        .font(Font(scheme.containerScheme.typographyScheme.body2))
-                        .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                        .font(Font.body2)
+                        .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.6)
                 }
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             }.frame(maxWidth: .infinity)
         }
         .padding(.all, 16)
-        .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+        .background(Color.surfaceColor)
         .modifier(CardModifier())
         .frame(maxWidth: .infinity)
     }

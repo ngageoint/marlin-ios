@@ -6,62 +6,131 @@
 //
 
 import Foundation
-import MaterialComponents
+import SwiftUI
 
-class MarlinScheme: ObservableObject {
+extension Font {
+    static var overline: Font {
+        return Font.system(size: 12, weight: .medium)
+    }
+    static var body1: Font {
+        return Font.system(size: 16, weight: .regular)
+    }
+    static var body2: Font {
+        return Font.system(size: 14, weight: .regular)
+    }
+    static var headline1: Font {
+        return Font.system(size: 96, weight: .light)
+    }
+    static var headline2: Font {
+        return Font.system(size: 60, weight: .light)
+    }
+    static var headline3: Font {
+        return Font.system(size: 48, weight: .regular)
+    }
+    static var headline4: Font {
+        return Font.system(size: 34, weight: .regular)
+    }
+    static var headline5: Font {
+        return Font.system(size: 24, weight: .regular)
+    }
+    static var headline6: Font {
+        return Font.system(size: 16, weight: .regular)
+    }
+    static var subtitle1: Font {
+        return Font.system(size: 16, weight: .regular)
+    }
+    static var subtitle2: Font {
+        return Font.system(size: 14, weight: .regular)
+    }
+}
+
+extension Color {
+    static var primaryColorVariant: Color {
+        return Color("primaryVariant")
+    }
     
-    let containerScheme = MDCContainerScheme();
-    let disabledScheme = MDCContainerScheme()
+    static var primaryColor: Color {
+        return Color("primary")
+    }
     
-    let dynamicOceanColor = UIColor { (traits) -> UIColor in
+    static var onPrimaryColor: Color {
+        return Color("onPrimary")
+    }
+    
+    static var secondaryColor: Color {
+        return Color("secondary")
+    }
+    
+    static var onSecondaryColor: Color {
+        return Color("onSecondary")
+    }
+    
+    static var surfaceColor: Color {
+        return Color("surface")
+    }
+    
+    static var onSurfaceColor: Color {
+        return Color(uiColor: UIColor.label)
+    }
+    
+    static var backgroundColor: Color {
+        return Color("background")
+    }
+    
+    static var onBackgroundColor: Color {
+        return Color(uiColor: UIColor.label)
+    }
+    
+    static var errorColor: Color {
+        return Color.red
+    }
+    
+    static var disabledColor: Color {
+        return Color(uiColor: UIColor(rgbValue: 0x9E9E9E))
+    }
+    
+    static var disabledBackground: Color {
+        return Color(uiColor: UIColor(rgbValue: 0xE0E0E0))
+    }
+    
+    static let dynamicOceanColor = UIColor { (traits) -> UIColor in
         // Return one of two colors depending on light or dark mode
         return traits.userInterfaceStyle == .dark ?
         UIColor(red: 0.21, green: 0.27, blue: 0.40, alpha: 1.00) :
         UIColor(red: 0.64, green: 0.87, blue: 0.93, alpha: 1.00)
     }
     
-    let dynamicLandColor = UIColor { (traits) -> UIColor in
+    static let dynamicLandColor = UIColor { (traits) -> UIColor in
         // Return one of two colors depending on light or dark mode
         return traits.userInterfaceStyle == .dark ?
         UIColor(red: 0.72, green: 0.67, blue: 0.54, alpha: 1.00) :
         UIColor(red: 0.91, green: 0.87, blue: 0.80, alpha: 1.00)
     }
     
+    static var oceanColor: Color {
+        return Color(uiColor: dynamicOceanColor)
+    }
+    
+    static var landColor: Color {
+        return Color(uiColor: dynamicLandColor)
+    }
+
+}
+
+class MarlinScheme: ObservableObject {
+
     init() {
-        
-        disabledScheme.colorScheme.primaryColorVariant = MDCPalette.grey.tint300;
-        disabledScheme.colorScheme.primaryColor = MDCPalette.grey.tint300;
-        disabledScheme.colorScheme.secondaryColor = MDCPalette.grey.tint300;
-        disabledScheme.colorScheme.onSecondaryColor = MDCPalette.grey.tint500;
-        disabledScheme.colorScheme.surfaceColor = MDCPalette.grey.tint300;
-        disabledScheme.colorScheme.onSurfaceColor = MDCPalette.grey.tint500;
-        disabledScheme.colorScheme.backgroundColor = MDCPalette.grey.tint300;
-        disabledScheme.colorScheme.onBackgroundColor = MDCPalette.grey.tint500;
-        disabledScheme.colorScheme.errorColor = .systemRed;
-        disabledScheme.colorScheme.onPrimaryColor = MDCPalette.grey.tint500;
-                
-        containerScheme.colorScheme.primaryColorVariant = UIColor(named: "primaryVariant") ?? MDCPalette.blue.tint600
-        containerScheme.colorScheme.primaryColor = UIColor(named: "primary") ?? MDCPalette.blue.tint600
-        containerScheme.colorScheme.secondaryColor = UIColor(named: "secondary") ?? (MDCPalette.orange.accent700 ?? .systemFill)
-        containerScheme.colorScheme.onSecondaryColor = UIColor(named: "onSecondary") ?? .label
-        containerScheme.colorScheme.surfaceColor = UIColor(named: "surface") ?? UIColor.systemBackground
-        containerScheme.colorScheme.onSurfaceColor = UIColor.label
-        containerScheme.colorScheme.backgroundColor = UIColor(named: "background") ?? UIColor.systemBackground
-        containerScheme.colorScheme.onBackgroundColor = UIColor.label
-        containerScheme.colorScheme.errorColor = .systemRed
-        containerScheme.colorScheme.onPrimaryColor = UIColor(named: "onPrimary") ?? .white
-        
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = containerScheme.colorScheme.primaryColor;
+        appearance.backgroundColor = UIColor(Color.primaryColor);
         
         appearance.titleTextAttributes = [
-            NSAttributedString.Key.foregroundColor: containerScheme.colorScheme.onPrimaryColor,
-            NSAttributedString.Key.backgroundColor: containerScheme.colorScheme.primaryColor
+            NSAttributedString.Key.foregroundColor: UIColor(Color.onPrimaryColor),
+            NSAttributedString.Key.backgroundColor: UIColor(Color.primaryColor)
         ];
         appearance.largeTitleTextAttributes = [
-            NSAttributedString.Key.foregroundColor: containerScheme.colorScheme.onPrimaryColor,
-            NSAttributedString.Key.backgroundColor: containerScheme.colorScheme.primaryColor
+            NSAttributedString.Key.foregroundColor: UIColor(Color.onPrimaryColor),
+            NSAttributedString.Key.backgroundColor: UIColor(Color.primaryColor)
         ];
         
         UINavigationBar.appearance().standardAppearance = appearance
@@ -69,29 +138,29 @@ class MarlinScheme: ObservableObject {
         UINavigationBar.appearance().compactAppearance = appearance
         UINavigationBar.appearance().compactScrollEdgeAppearance = appearance
         
-        UINavigationBar.appearance().barTintColor = containerScheme.colorScheme.onPrimaryColor
-        UINavigationBar.appearance().tintColor = containerScheme.colorScheme.onPrimaryColor
+        UINavigationBar.appearance().barTintColor = UIColor(Color.onPrimaryColor)
+        UINavigationBar.appearance().tintColor = UIColor(Color.onPrimaryColor)
         UINavigationBar.appearance().prefersLargeTitles = false
         
-        UITableView.appearance().backgroundColor = containerScheme.colorScheme.backgroundColor
+        UITableView.appearance().backgroundColor = UIColor(Color.backgroundColor)
         
         let tabBarAppearance = UITabBarAppearance();
-        tabBarAppearance.selectionIndicatorTintColor = containerScheme.colorScheme.primaryColorVariant.withAlphaComponent(0.87)
-        tabBarAppearance.backgroundColor = containerScheme.colorScheme.surfaceColor
-        setTabBarItemColors(tabBarAppearance.stackedLayoutAppearance, scheme: containerScheme)
-        setTabBarItemColors(tabBarAppearance.inlineLayoutAppearance, scheme: containerScheme)
-        setTabBarItemColors(tabBarAppearance.compactInlineLayoutAppearance, scheme: containerScheme)
+        tabBarAppearance.selectionIndicatorTintColor = UIColor(Color.primaryColorVariant).withAlphaComponent(0.87)
+        tabBarAppearance.backgroundColor = UIColor(Color.surfaceColor)
+        setTabBarItemColors(tabBarAppearance.stackedLayoutAppearance)
+        setTabBarItemColors(tabBarAppearance.inlineLayoutAppearance)
+        setTabBarItemColors(tabBarAppearance.compactInlineLayoutAppearance)
         
         UITabBar.appearance().standardAppearance = tabBarAppearance;
         UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
     }
     
-    private func setTabBarItemColors(_ itemAppearance: UITabBarItemAppearance, scheme: MDCContainerScheming) {
-        itemAppearance.normal.iconColor = scheme.colorScheme.onBackgroundColor.withAlphaComponent(0.6);
-        itemAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: scheme.colorScheme.onBackgroundColor.withAlphaComponent(0.6)]
+    private func setTabBarItemColors(_ itemAppearance: UITabBarItemAppearance) {
+        itemAppearance.normal.iconColor = UIColor(Color.onBackgroundColor).withAlphaComponent(0.6);
+        itemAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(Color.onBackgroundColor).withAlphaComponent(0.6)]
         
-        itemAppearance.selected.iconColor = scheme.colorScheme.primaryColorVariant.withAlphaComponent(0.87)
-        itemAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: scheme.colorScheme.primaryColorVariant.withAlphaComponent(0.87)]
+        itemAppearance.selected.iconColor = UIColor(Color.primaryColorVariant).withAlphaComponent(0.87)
+        itemAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(Color.primaryColorVariant).withAlphaComponent(0.87)]
     }
     
 }

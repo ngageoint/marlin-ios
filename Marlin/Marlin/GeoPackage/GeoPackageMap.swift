@@ -35,7 +35,7 @@ class GeoPackageMap: NSObject, MapMixin {
         self.index = index
     }
     
-    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap, scheme: MarlinScheme?) {
+    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap) {
         geoPackage = GeoPackage(mapView: mapView, fileName: fileName, tableName: tableName, polygonColor: polygonColor, fillColor: fillColor, canReplaceMapContent: canReplaceMapContent, index: index)
         geoPackage?.addOverlay()
     }

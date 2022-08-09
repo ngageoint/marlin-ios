@@ -20,7 +20,7 @@ class AsamMap: NSObject, MapMixin {
     func cleanupMixin() {
     }
     
-    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap, scheme: MarlinScheme? = nil) {
+    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap) {
         self.mapView = mapView
         mapView.register(AsamAnnotationView.self, forAnnotationViewWithReuseIdentifier: AsamAnnotationView.ReuseID)
         

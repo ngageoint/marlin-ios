@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct LightSummaryView: View {
-    @EnvironmentObject var scheme: MarlinScheme
     
     var light: Light
     var showMoreDetails: Bool = false
@@ -21,22 +20,22 @@ struct LightSummaryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("\(light.featureNumber ?? "") \(light.internationalFeature ?? "") \(light.volumeNumber ?? "")")
-                .font(Font(scheme.containerScheme.typographyScheme.overline))
-                .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                .font(Font.overline)
+                .foregroundColor(Color.onSurfaceColor)
                 .opacity(0.45)
             Text("\(light.name ?? "")")
-                .font(Font(scheme.containerScheme.typographyScheme.headline6))
-                .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                .font(Font.headline6)
+                .foregroundColor(Color.onSurfaceColor)
                 .opacity(0.87)
             if showMoreDetails {
                 Text(light.sectionHeader ?? "")
-                    .font(Font(scheme.containerScheme.typographyScheme.body2))
-                    .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                    .font(Font.body2)
+                    .foregroundColor(Color.onSurfaceColor)
                     .opacity(0.6)
             }
             Text(light.structure ?? "")
-                .font(Font(scheme.containerScheme.typographyScheme.body2))
-                .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                .font(Font.body2)
+                .foregroundColor(Color.onSurfaceColor)
                 .opacity(0.6)
             LightActionBar(light: light, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }

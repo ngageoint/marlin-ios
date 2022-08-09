@@ -9,8 +9,6 @@ import SwiftUI
 import MapKit
 
 struct AsamDetailView: View {
-    
-    @EnvironmentObject var scheme: MarlinScheme
     @State private var region: MKCoordinateRegion
 
     var asam: Asam
@@ -33,19 +31,19 @@ struct AsamDetailView: View {
                     .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     Group {
                         Text(asam.dateString ?? "")
-                            .font(Font(scheme.containerScheme.typographyScheme.overline))
-                            .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                            .font(Font.overline)
+                            .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.45)
                         Text("\(asam.hostility ?? "")\(asam.hostility != nil ? ": " : "")\(asam.victim ?? "")")
-                            .font(Font(scheme.containerScheme.typographyScheme.headline6))
-                            .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                            .font(Font.headline6)
+                            .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.87)
                         AsamActionBar(asam: asam)
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
                 }
                 
-                .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                .background(Color.surfaceColor)
                 .modifier(CardModifier())
             } header: {
                 EmptyView().frame(width: 0, height: 0, alignment: .leading)
@@ -58,12 +56,12 @@ struct AsamDetailView: View {
             Section("Description") {
                 Text(asam.asamDescription ?? "")
                     .lineLimit(8)
-                    .font(Font(scheme.containerScheme.typographyScheme.body2))
-                    .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                    .font(Font.body2)
+                    .foregroundColor(Color.onSurfaceColor)
                     .opacity(0.6)
                     .frame(maxWidth:.infinity)
                     .padding(.all, 16)
-                    .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                    .background(Color.surfaceColor)
                     .modifier(CardModifier())
             }
             .padding(.bottom, -20)
@@ -92,7 +90,7 @@ struct AsamDetailView: View {
                     }
                 }
                 .padding(.all, 16)
-                .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                .background(Color.surfaceColor)
                 .modifier(CardModifier())
                 .frame(maxWidth: .infinity)
             }

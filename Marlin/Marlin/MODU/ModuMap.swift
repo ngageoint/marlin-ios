@@ -17,7 +17,7 @@ class ModuMap: NSObject, MapMixin {
 
     var fetchedResultsController: NSFetchedResultsController<Modu>?
     
-    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap, scheme: MarlinScheme? = nil) {
+    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap) {
         self.mapView = mapView
         mapView.register(ModuAnnotationView.self, forAnnotationViewWithReuseIdentifier: ModuAnnotationView.ReuseID)
         

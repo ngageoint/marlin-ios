@@ -22,12 +22,12 @@ struct NavigationalWarningDetailView: View {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(navigationalWarning.dateString ?? "")
-                        .font(Font(scheme.containerScheme.typographyScheme.overline))
-                        .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                        .font(Font.overline)
+                        .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.45)
                     Text("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
-                        .font(Font(scheme.containerScheme.typographyScheme.headline6))
-                        .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                        .font(Font.headline6)
+                        .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.87)
                     if let status = navigationalWarning.status {
                         Property(property: "Status", value: status)
@@ -44,7 +44,7 @@ struct NavigationalWarningDetailView: View {
                     NavigationalWarningActionBar(navigationalWarning: navigationalWarning)
                 }
                 .padding(.all, 16)
-                .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                .background(Color.surfaceColor)
                 .modifier(CardModifier())
             } header: {
                 EmptyView().frame(width: 0, height: 0, alignment: .leading)
@@ -56,12 +56,12 @@ struct NavigationalWarningDetailView: View {
             Section("Text") {
                 Text(navigationalWarning.text ?? "")
                     .multilineTextAlignment(.leading)
-                    .font(Font(scheme.containerScheme.typographyScheme.body2))
-                    .foregroundColor(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                    .font(Font.body2)
+                    .foregroundColor(Color.onSurfaceColor)
                     .opacity(0.6)
                     .frame(maxWidth:.infinity, alignment: .leading)
                     .padding(.all, 16)
-                    .background(Color(scheme.containerScheme.colorScheme.surfaceColor))
+                    .background(Color.surfaceColor)
                     .modifier(CardModifier())
             }
             .padding(.bottom, -20)
@@ -69,7 +69,7 @@ struct NavigationalWarningDetailView: View {
             .listRowBackground(Color.clear)
         }
         .listStyle(.plain)
-        .background(Color(scheme.containerScheme.colorScheme.backgroundColor))
+        .background(Color.backgroundColor)
         .navigationTitle("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
         .navigationBarTitleDisplayMode(.inline)
         .padding([.leading, .trailing], -8)

@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct MorseCode: View {
-    @EnvironmentObject var scheme: MarlinScheme
-    
+struct MorseCode: View {    
     var code: String
     var body: some View {
         HStack(alignment: .top, spacing: 8) {
@@ -18,7 +16,7 @@ struct MorseCode: View {
                     if letter == "-" || letter == "•" {
                         Rectangle()
                             .frame(width: letter == "-" ? 24 : 8, height: 5, alignment: .center)
-                            .background(Color(scheme.containerScheme.colorScheme.onSurfaceColor))
+                            .background(Color.onSurfaceColor)
                     }
                 }
             }

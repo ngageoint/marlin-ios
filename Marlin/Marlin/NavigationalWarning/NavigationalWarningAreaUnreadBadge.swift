@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct NavigationalWarningAreaUnreadBadge: View {
-    @EnvironmentObject var scheme: MarlinScheme
-    
+struct NavigationalWarningAreaUnreadBadge: View {    
     @AppStorage<String> var lastSeen: String
     var warnings: [NavigationalWarning]
     
@@ -26,7 +24,7 @@ struct NavigationalWarningAreaUnreadBadge: View {
             let unreadCount = warnings.distance(from: warnings.startIndex, to: lastSeenIndex)
             if unreadCount != 0 {
                 Text("\(unreadCount)")
-                    .font(Font(scheme.containerScheme.typographyScheme.overline))
+                    .font(Font.overline)
                     .monospacedDigit()
                     .bold()
                     .padding(.all, 4)
@@ -36,7 +34,7 @@ struct NavigationalWarningAreaUnreadBadge: View {
             }
         } else {
             Text("\(warnings.count)")
-                .font(Font(scheme.containerScheme.typographyScheme.overline))
+                .font(Font.overline)
                 .monospacedDigit()
                 .bold()
                 .padding(.all, 4)
