@@ -27,11 +27,10 @@ extension Notification.Name {
 
 struct MapAnnotationFocusedNotification {
     var annotation: MKAnnotation?
-    var mapView: MKMapView?
 }
 
 struct MapItemsTappedNotification {
     var annotations: [Any]?
-    var items: [Any]?
+    var items: [DataSource]?
     var mapView: MKMapView?
 }

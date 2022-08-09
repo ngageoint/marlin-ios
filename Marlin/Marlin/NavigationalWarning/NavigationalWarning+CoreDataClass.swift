@@ -44,6 +44,10 @@ extension NavigationalWarning: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFFD32F2F)
     static var imageName: String? = nil
     static var systemImageName: String? = "exclamationmark.triangle.fill"
+    
+    var color: UIColor {
+        return NavigationalWarning.color
+    }
 }
 
 class NavigationalWarning: NSManagedObject {

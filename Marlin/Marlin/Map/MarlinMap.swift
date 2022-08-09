@@ -10,6 +10,7 @@ import UIKit
 import SwiftUI
 import MapKit
 import Combine
+import PureLayout
 
 protocol OverlayRenderable {
     var renderer: MKOverlayRenderer { get }
@@ -181,9 +182,24 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         annotation.clusteringIdentifier = nil
         (annotation as? EnlargableAnnotation)?.markForEnlarging()
         marlinMap.mutatingWrapper.mapView.addAnnotation(annotation)
-        UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut) {
-            notification.mapView?.setCenter(annotation.coordinate, animated: false)
-        }
+        
+        let coordinate = annotation.coordinate
+        let span = self.marlinMap.mutatingWrapper.mapView.region.span
+        let region = MKCoordinateRegion(center: coordinate, span: span)
+        let rect = MKMapRectForCoordinateRegion(region: region)
+        // Adjust padding here
+        let insets = UIEdgeInsets(top: -140, left: 0, bottom: 150, right: 0)
+        self.marlinMap.mutatingWrapper.mapView.setVisibleMapRect(rect, edgePadding: insets, animated: true)
+    }
+    
+    func MKMapRectForCoordinateRegion(region:MKCoordinateRegion) -> MKMapRect {
+        let topLeft = CLLocationCoordinate2D(latitude: region.center.latitude + (region.span.latitudeDelta/2), longitude: region.center.longitude - (region.span.longitudeDelta/2))
+        let bottomRight = CLLocationCoordinate2D(latitude: region.center.latitude - (region.span.latitudeDelta/2), longitude: region.center.longitude + (region.span.longitudeDelta/2))
+        
+        let a = MKMapPoint(topLeft)
+        let b = MKMapPoint(bottomRight)
+        
+        return MKMapRect(origin: MKMapPoint(x:min(a.x,b.x), y:min(a.y,b.y)), size: MKMapSize(width: abs(a.x-b.x), height: abs(a.y-b.y)))
     }
     
     func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
@@ -244,7 +260,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             }
         }
         
-        var items: [Any] = []
+        var items: [DataSource] = []
         for mixin in marlinMap.mutatingWrapper.mixins {
             if let matchedItems = mixin.items(at: tapCoord) {
                 items.append(contentsOf: matchedItems)

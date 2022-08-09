@@ -21,7 +21,7 @@ protocol MapMixin: AnyObject {
     func regionWillChange(mapView: MKMapView, animated: Bool)
     func didChangeUserTrackingMode(mapView: MKMapView, animated: Bool)
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView?
-    func items(at location: CLLocationCoordinate2D) -> [Any]?
+    func items(at location: CLLocationCoordinate2D) -> [DataSource]?
     func applyTheme(scheme: MarlinScheme?)
 }
 
@@ -66,7 +66,7 @@ extension MapMixin {
         return nil
     }
     
-    func items(at location: CLLocationCoordinate2D) -> [Any]? {
+    func items(at location: CLLocationCoordinate2D) -> [DataSource]? {
         return nil
     }
     

@@ -170,7 +170,7 @@ struct MarlinCompactWidth: View {
     }
     
     func viewData(_ data: DataSource) {
-        NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: nil, mapView: nil))
+        NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: nil))
         NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
         itemWrapper.dataSource = data
         selection = "detail"

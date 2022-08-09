@@ -69,7 +69,7 @@ class LightMap: NSObject, MapMixin {
         return annotationView;
     }
     
-    func items(at location: CLLocationCoordinate2D) -> [Any]? {
+    func items(at location: CLLocationCoordinate2D) -> [DataSource]? {
         if let lightOverlay = lightOverlay, lightOverlay.zoomLevel < 8 {
             return nil
         }
