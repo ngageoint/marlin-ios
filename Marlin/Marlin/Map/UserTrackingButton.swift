@@ -22,12 +22,19 @@ struct UserTrackingButton: View {
     }
 
     var body: some View {
-        MaterialFloatingButton(imageName: $imageName, appearDisabled: $appearDisabled) {
+        Button(action: {
             buttonPressed()
+        }) {
+            Label(
+                title: {},
+                icon: { Image(systemName: imageName)
+                        .renderingMode(.template)
+                })
         }
         .onReceive(coordinator.$locationAuthorizationStatus) { status in
             setupTrackingButton(locationAuthorizationStatus: status)
         }
+        .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini))
     }
     
     func buttonPressed() {

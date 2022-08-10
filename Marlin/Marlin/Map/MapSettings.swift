@@ -16,7 +16,7 @@ struct MapSettings: View {
         List {
             Section("Map") {
                 HStack(spacing: 4) {
-                    Text("Standard").font(Font.title)
+                    Text("Standard").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
                     Image(systemName: mapType == MKMapType.standard.rawValue ? "circle.inset.filled": "circle")
@@ -28,7 +28,7 @@ struct MapSettings: View {
                 .padding(.top, 4)
                 .padding(.bottom, 4)
                 HStack(spacing: 4) {
-                    Text("Satellite").font(Font.title)
+                    Text("Satellite").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
                     Image(systemName: mapType == MKMapType.satellite.rawValue ? "circle.inset.filled": "circle")
@@ -40,7 +40,7 @@ struct MapSettings: View {
                 .padding(.top, 4)
                 .padding(.bottom, 4)
                 HStack(spacing: 4) {
-                    Text("Hybrid").font(Font.title)
+                    Text("Hybrid").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
                     Image(systemName: mapType == MKMapType.hybrid.rawValue ? "circle.inset.filled": "circle")
@@ -52,7 +52,7 @@ struct MapSettings: View {
                 .padding(.top, 4)
                 .padding(.bottom, 4)
                 HStack(spacing: 4) {
-                    Text("Satellite Flyover").font(Font.title)
+                    Text("Satellite Flyover").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
                     Image(systemName: mapType == MKMapType.satelliteFlyover.rawValue ? "circle.inset.filled": "circle")
@@ -64,7 +64,7 @@ struct MapSettings: View {
                 .padding(.top, 4)
                 .padding(.bottom, 4)
                 HStack(spacing: 4) {
-                    Text("Hybrid Flyover").font(Font.title)
+                    Text("Hybrid Flyover").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
                     Image(systemName: mapType == MKMapType.hybridFlyover.rawValue ? "circle.inset.filled": "circle")
@@ -76,7 +76,7 @@ struct MapSettings: View {
                 .padding(.top, 4)
                 .padding(.bottom, 4)
                 HStack(spacing: 4) {
-                    Text("Muted").font(Font.title)
+                    Text("Muted").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
                     Image(systemName: mapType == MKMapType.mutedStandard.rawValue ? "circle.inset.filled": "circle")
@@ -88,7 +88,7 @@ struct MapSettings: View {
                 .padding(.top, 4)
                 .padding(.bottom, 4)
                 HStack(spacing: 4) {
-                    Text("Open Street Map").font(Font.title)
+                    Text("Open Street Map").font(Font.body1)
                                 .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
                     Image(systemName: mapType == ExtraMapTypes.osm.rawValue ? "circle.inset.filled": "circle")
@@ -103,7 +103,7 @@ struct MapSettings: View {
             Section("Grids (Coming soon)") {
                 Toggle(isOn: $showMGRSGrid) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("MGRS").font(Font.title)
+                        Text("MGRS").font(Font.body1)
                             .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                         Text("Military Grid Reference System")
                             .font(Font.caption)
@@ -115,7 +115,7 @@ struct MapSettings: View {
                 .tint(Color.primaryColor)
                 Toggle(isOn: $showGARSGrid) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("GARS").font(Font.title)
+                        Text("GARS").font(Font.body1)
                             .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                         Text("Global Area Reference System")
                             .font(Font.caption)

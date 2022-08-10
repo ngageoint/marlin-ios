@@ -7,7 +7,6 @@
 
 import Foundation
 import MapKit
-import MaterialComponents
 import CoreData
 import Combine
 

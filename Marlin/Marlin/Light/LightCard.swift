@@ -40,7 +40,7 @@ struct LightCard: View {
             HStack(alignment: .top, spacing: 8) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Range (nm)")
-                        .font(Font.title)
+                        .font(Font.headline6)
                         .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.87)
                     Text(light.range ?? "")
@@ -51,7 +51,7 @@ struct LightCard: View {
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Remarks")
-                        .font(Font.title)
+                        .font(Font.headline6)
                         .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.87)
                     Text(light.remarks ?? "")

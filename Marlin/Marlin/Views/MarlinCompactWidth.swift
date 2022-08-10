@@ -45,11 +45,17 @@ struct MarlinCompactWidth: View {
                                         NavigationLink {
                                             MapSettings()
                                         } label: {
-                                            MaterialFloatingButton(imageName: .constant("square.3.stack.3d"))
+                                            Label(
+                                                title: {},
+                                                icon: { Image(systemName: "square.3.stack.3d")
+                                                        .renderingMode(.template)
+                                                }
+                                            )
                                         }
                                         .isDetailLink(false)
                                         .offset(x: -8, y: 16)
                                         .fixedSize()
+                                        .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini))
                                     }
                                 }
                                 Spacer()

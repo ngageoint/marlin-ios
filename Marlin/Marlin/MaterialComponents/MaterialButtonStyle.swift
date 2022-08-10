@@ -14,6 +14,16 @@ enum ButtonType {
     case contained
 }
 
+enum FloatingButtonType {
+    case primary
+    case secondary
+}
+
+enum FloatingButtonSize {
+    case mini
+    case regular
+}
+
 struct MaterialButtonLabelStyle: LabelStyle {
     
     let color: Color
@@ -22,11 +32,69 @@ struct MaterialButtonLabelStyle: LabelStyle {
         HStack {
             configuration.icon
                 .foregroundColor(color)
-                .font(Font.headline6)
+                .font(.system(size: 18))
+                .frame(width: 24, height: 24, alignment: .center)
             configuration.title
                 .foregroundColor(color)
-                .font(Font.title)
+                .font(Font.overline)
+                .textCase(.uppercase)
         }
+    }
+}
+
+struct MaterialFloatingButtonStyle: ButtonStyle {
+    let regularSize: CGFloat = 56.0
+    let miniSize: CGFloat = 40.0
+    var finalSize: CGFloat { size == .mini ? miniSize : regularSize }
+    var cornerRadius: CGFloat { finalSize / 2.0}
+    let type: FloatingButtonType
+    let size: FloatingButtonSize
+    let extended: Bool
+    
+    func makeBody(configuration: Configuration) -> some View {
+        let borderWidth = 0.0
+        var foregroundColor = Color.primaryColor
+        if type == .primary {
+            foregroundColor = Color.onPrimaryColor
+        }
+        
+        return configuration
+            .label
+            .labelStyle(MaterialButtonLabelStyle(color: foregroundColor))
+            .frame(minWidth: finalSize, maxWidth: extended ? .infinity : finalSize, minHeight: finalSize, maxHeight: finalSize)
+            .padding([.trailing, .leading], extended ? 16 : 0)
+            .font(Font.body2)
+            .foregroundColor(foregroundColor)
+            .background(
+                GeometryReader { metrics in
+                    let scale = max(metrics.size.width / metrics.size.height, metrics.size.height / metrics.size.width) * 1.1
+                    ZStack {
+                        if type == .primary {
+                            // Solid fill
+                            RoundedRectangle(cornerRadius: cornerRadius).fill(Color.primaryColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.4), radius: (configuration.isPressed ? 8 : 3), x: 0, y: 4)
+                            
+                            // tap effect
+                            Circle().fill(Color.white).scaleEffect(configuration.isPressed ? scale : 0.0001).opacity(configuration.isPressed ? 0.32 : 0.0).cornerRadius(cornerRadius)
+                        } else if type == .secondary {
+                            // Solid fill surface color
+                            RoundedRectangle(cornerRadius: cornerRadius).fill(Color.surfaceColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.4), radius: (configuration.isPressed ? 8 : 3), x: 0, y: 4)
+                            
+                            // tap effect
+                            Circle().fill(Color.primaryColor).scaleEffect(configuration.isPressed ? scale : 0.0001).opacity(configuration.isPressed ? 0.16 : 0.0).cornerRadius(cornerRadius)
+                        }
+                    }
+                }
+            )
+            .overlay(
+                // border
+                RoundedRectangle(cornerRadius: cornerRadius).stroke(Color.primaryColor, lineWidth: borderWidth).opacity(0.2)
+            )
+    }
+    
+    init(type: FloatingButtonType = .primary, size: FloatingButtonSize = .regular, extended: Bool = false) {
+        self.type = type
+        self.size = size
+        self.extended = extended
     }
 }
 

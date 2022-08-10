@@ -21,7 +21,7 @@ struct RaconCard: View {
                 VStack(alignment: .leading, spacing: 8) {
                     if let morseCode = racon.morseCode {
                         Text("Signal")
-                            .font(Font.title)
+                            .font(Font.headline6)
                             .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.87)
                         MorseCode(code: morseCode)
@@ -34,7 +34,7 @@ struct RaconCard: View {
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Remarks")
-                        .font(Font.title)
+                        .font(Font.headline6)
                         .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.87)
                     Text(racon.remarks ?? "")

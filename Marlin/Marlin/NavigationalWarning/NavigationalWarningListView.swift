@@ -59,7 +59,7 @@ struct NavigationalWarningAreasView: View {
                             .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.87)
                         Text("\(section.count) Active")
-                            .font(Font.body2)
+                            .font(Font.caption)
                             .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.6)
                     }
@@ -93,7 +93,7 @@ struct NavigationalWarningAreasView: View {
                             .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.87)
                         Text("\(section.count) Active")
-                            .font(Font.body2)
+                            .font(Font.caption)
                             .foregroundColor(Color.onSurfaceColor)
                             .opacity(0.6)
                     }

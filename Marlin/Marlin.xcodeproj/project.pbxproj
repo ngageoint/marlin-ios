@@ -73,7 +73,6 @@
 		F7D671C8286C907F00758F1C /* ExceptionCatcher in Frameworks */ = {isa = PBXBuildFile; productRef = F7D671C7286C907F00758F1C /* ExceptionCatcher */; };
 		F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C9286C945500758F1C /* BaseMapOverlay.swift */; };
 		F7D671CC286C98B200758F1C /* natural_earth_1_100.gpkg in Resources */ = {isa = PBXBuildFile; fileRef = F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */; };
-		F7D671D2286DD20800758F1C /* FloatingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671D1286DD20800758F1C /* FloatingButton.swift */; };
 		F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671D5286DFAA800758F1C /* UserTrackingButton.swift */; };
 		F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671D7286E163E00758F1C /* MapSettings.swift */; };
 		F7D671DA286E3B3D00758F1C /* ExtraMapTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671D9286E3B3D00758F1C /* ExtraMapTypes.swift */; };
@@ -203,7 +202,6 @@
 		F7D671C4286C8A3100758F1C /* GeoPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackage.swift; sourceTree = "<group>"; };
 		F7D671C9286C945500758F1C /* BaseMapOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMapOverlay.swift; sourceTree = "<group>"; };
 		F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */ = {isa = PBXFileReference; lastKnownFileType = file; path = natural_earth_1_100.gpkg; sourceTree = "<group>"; };
-		F7D671D1286DD20800758F1C /* FloatingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingButton.swift; sourceTree = "<group>"; };
 		F7D671D5286DFAA800758F1C /* UserTrackingButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTrackingButton.swift; sourceTree = "<group>"; };
 		F7D671D7286E163E00758F1C /* MapSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettings.swift; sourceTree = "<group>"; };
 		F7D671D9286E3B3D00758F1C /* ExtraMapTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtraMapTypes.swift; sourceTree = "<group>"; };
@@ -510,7 +508,6 @@
 			isa = PBXGroup;
 			children = (
 				F7F59788285A277000F9B32E /* Card.swift */,
-				F7D671D1286DD20800758F1C /* FloatingButton.swift */,
 				F7D671DD286F877C00758F1C /* MaterialButtonStyle.swift */,
 			);
 			path = MaterialComponents;
@@ -854,7 +851,6 @@
 				F727A684284E351800BD728A /* MSIError.swift in Sources */,
 				F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */,
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
-				F7D671D2286DD20800758F1C /* FloatingButton.swift in Sources */,
 				F707BA8328786F11006A94C4 /* LightColorImage.swift in Sources */,
 				F7F59795285BE27400F9B32E /* Property.swift in Sources */,
 				F7F597B02866241100F9B32E /* NavigationalWarningsAreaDataSource.swift in Sources */,
