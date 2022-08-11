@@ -24,16 +24,14 @@ struct MarlinRegularWidth: View {
                 .background(Color.surfaceColor)
                 .padding(.horizontal, 2)
             
-            VStack {
-                if let activeRailItem = activeRailItem {
-                    NavigationView {
-                        createListView(dataSource: activeRailItem)
-                    }
-                    .navigationViewStyle(.stack)
+            if let activeRailItem = activeRailItem {
+                NavigationView {
+                    createListView(dataSource: activeRailItem)
                 }
+                .navigationViewStyle(.stack)
+                .frame(width: 256)
+                .background(Color.backgroundColor)
             }
-            .frame(width: 256)
-            .background(Color.backgroundColor)
             
             NavigationView {
                 ZStack(alignment: .topLeading) {
