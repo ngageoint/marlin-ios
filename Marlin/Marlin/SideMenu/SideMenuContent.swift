@@ -114,7 +114,9 @@ class DataSourceItem: ObservableObject, Identifiable, Hashable, Equatable {
     }
 }
 
-struct SideMenuContent: View {    
+struct SideMenuContent: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     @State var isEditMode: EditMode = .active
     @State var draggedItem : String?
     @State var validDropTarget: Bool = false
@@ -126,7 +128,7 @@ struct SideMenuContent: View {
             Color.primaryColor
                 .frame(maxWidth: .infinity, maxHeight: 80)
             HStack {
-                Text("Data Source Tabs (Drag to reorder)")
+                Text("Data Source \(horizontalSizeClass == .compact ? "Tabs" : "Rail Items") (Drag to reorder)")
                     .padding([.leading, .top, .bottom, .trailing], 8)
                     .font(Font.overline)
                     .foregroundColor(Color.onBackgroundColor.opacity(0.6))
@@ -147,7 +149,7 @@ struct SideMenuContent: View {
                         .onDrop(of: [.plainText], delegate: SideMenuDrop(item: dataSource, tabItems: $dataSourceList.tabs, nonTabItems: $dataSourceList.nonTabs, draggedItem: $draggedItem, validDropTarget: $validDropTarget))
                 }
             } else {
-                Text("Drag here to add a tab")
+                Text("Drag here to add a \(horizontalSizeClass == .compact ? "tabs" : "rail items")")
                     .padding([.leading, .top, .bottom, .trailing], 8)
                     .font(Font.overline)
                     .foregroundColor(Color.onBackgroundColor.opacity(0.6))
@@ -163,7 +165,7 @@ struct SideMenuContent: View {
                     )
             }
             HStack {
-                Text("Other Data Sources (Drag to add to tabs)")
+                Text("Other Data Sources (Drag to add to \(horizontalSizeClass == .compact ? "tabs" : "rail items"))")
                     .padding([.leading, .top, .bottom, .trailing], 8)
                     .font(Font.overline)
                     .foregroundColor(Color.onBackgroundColor.opacity(0.6))
@@ -184,7 +186,7 @@ struct SideMenuContent: View {
                         .onDrop(of: [.plainText], delegate: SideMenuDrop(item: dataSource, tabItems: $dataSourceList.tabs, nonTabItems: $dataSourceList.nonTabs, draggedItem: $draggedItem, validDropTarget: $validDropTarget))
                 }
             } else {
-                Text("Drag here to remove a tab")
+                Text("Drag here to remove a \(horizontalSizeClass == .compact ? "tab" : "rail item")")
                     .padding([.leading, .top, .bottom, .trailing], 8)
                     .font(Font.overline)
                     .foregroundColor(Color.onBackgroundColor.opacity(0.6))

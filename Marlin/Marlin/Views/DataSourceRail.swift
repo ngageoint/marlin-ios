@@ -30,21 +30,6 @@ struct DataSourceRail: View {
                             .foregroundColor(activeRailItem == dataSourceItem ? Color.primaryColorVariant.opacity(0.87) : Color.onSurfaceColor.opacity(0.6))
                     }
                 }
-                ForEach(dataSourceList.nonTabs) { dataSourceItem in
-                    if let systemImageName = dataSourceItem.dataSource.systemImageName {
-                        RailItem(systemImageName: systemImageName, itemText: dataSourceItem.dataSource.dataSourceName)
-                            .onTapGesture {
-                                activeRailItem = dataSourceItem
-                            }
-                            .foregroundColor(activeRailItem == dataSourceItem ? Color.primaryColorVariant.opacity(0.87) : Color.onSurfaceColor.opacity(0.6))
-                    } else if let imageName = dataSourceItem.dataSource.imageName {
-                        RailItem(imageName: imageName, itemText: dataSourceItem.dataSource.dataSourceName)
-                            .onTapGesture {
-                                activeRailItem = dataSourceItem
-                            }
-                            .foregroundColor(activeRailItem == dataSourceItem ? Color.primaryColorVariant.opacity(0.87) : Color.onSurfaceColor.opacity(0.6))
-                    }
-                }
             }
             Spacer()
         }
