@@ -18,13 +18,13 @@ class BottomSheetItemList: ObservableObject {
     @Published var bottomSheetItems: [BottomSheetItem]?
 }
 
-extension MarlinTabView: BottomSheetDelegate {
+extension MarlinView: BottomSheetDelegate {
     func bottomSheetDidDismiss() {
         NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: nil))
     }
 }
 
-struct MarlinTabView: View {
+struct MarlinView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     @State var menuOpen: Bool = false

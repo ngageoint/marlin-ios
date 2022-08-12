@@ -32,7 +32,7 @@
 		F71DF482284E783600686951 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF481284E783600686951 /* TestHelper.swift */; };
 		F71DF4842857942D00686951 /* modus.json in Resources */ = {isa = PBXBuildFile; fileRef = F71DF4832857942D00686951 /* modus.json */; };
 		F71DF4862857954A00686951 /* Modu+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4852857954A00686951 /* Modu+CoreDataClass.swift */; };
-		F71DF4882857B0CC00686951 /* MarlinTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4872857B0CC00686951 /* MarlinTabView.swift */; };
+		F71DF4882857B0CC00686951 /* MarlinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4872857B0CC00686951 /* MarlinView.swift */; };
 		F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4892858BF0700686951 /* MarlinMap.swift */; };
 		F71DF4922858C09E00686951 /* MapMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4912858C09E00686951 /* MapMixin.swift */; };
 		F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4932858C0EF00686951 /* StyledPolygon.swift */; };
@@ -161,7 +161,7 @@
 		F71DF481284E783600686951 /* TestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
 		F71DF4832857942D00686951 /* modus.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = modus.json; sourceTree = "<group>"; };
 		F71DF4852857954A00686951 /* Modu+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Modu+CoreDataClass.swift"; sourceTree = "<group>"; };
-		F71DF4872857B0CC00686951 /* MarlinTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTabView.swift; sourceTree = "<group>"; };
+		F71DF4872857B0CC00686951 /* MarlinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinView.swift; sourceTree = "<group>"; };
 		F71DF4892858BF0700686951 /* MarlinMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinMap.swift; sourceTree = "<group>"; };
 		F71DF4912858C09E00686951 /* MapMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMixin.swift; sourceTree = "<group>"; };
 		F71DF4932858C0EF00686951 /* StyledPolygon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledPolygon.swift; sourceTree = "<group>"; };
@@ -418,7 +418,7 @@
 				F7B3490828491D6200E10ABF /* CoreData */,
 				F7A54CAA2848149500E5F565 /* MarlinApp.swift */,
 				F7A54CAD2848149600E5F565 /* Assets.xcassets */,
-				F71DF4872857B0CC00686951 /* MarlinTabView.swift */,
+				F71DF4872857B0CC00686951 /* MarlinView.swift */,
 				F71DF49F2859116C00686951 /* Notifications.swift */,
 				F71DF4AE285927D600686951 /* MarlinScheme.swift */,
 				F7D671EE287475BC00758F1C /* DataSource.swift */,
@@ -823,7 +823,7 @@
 				F7D671ED2874737F00758F1C /* DataSourceCell.swift in Sources */,
 				F7D5C05928A6A48F000C2C29 /* DataSourceList.swift in Sources */,
 				F707BA8F287DC999006A94C4 /* LightTileOverlay.swift in Sources */,
-				F71DF4882857B0CC00686951 /* MarlinTabView.swift in Sources */,
+				F71DF4882857B0CC00686951 /* MarlinView.swift in Sources */,
 				F7ADDCEE28902D5300137D95 /* AnnotationWithView.swift in Sources */,
 				F707BA7728760EE7006A94C4 /* Light+CoreDataClass.swift in Sources */,
 				F7F59799285D166700F9B32E /* ModuDetailView.swift in Sources */,

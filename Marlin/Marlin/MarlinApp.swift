@@ -63,7 +63,7 @@ struct MarlinApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MarlinTabView()
+            MarlinView()
                 .environmentObject(scheme)
                 .environmentObject(AppState())
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
