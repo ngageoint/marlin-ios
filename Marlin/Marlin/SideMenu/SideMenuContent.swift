@@ -25,8 +25,12 @@ class DataSourceList: ObservableObject {
     @AppStorage("userTabs") var userTabs: Int = MAX_TABS
     
     init() {
-        _tabs = Published(initialValue: Array(allTabs.prefix(userTabs)))
-        _nonTabs = Published(initialValue: Array(allTabs.dropFirst(userTabs)))
+        _tabs = Published(initialValue: Array(allTabs.prefix(userTabs).filter({ item in
+            UserDefaults.standard.dataSourceEnabled(item.dataSource)
+        })))
+        _nonTabs = Published(initialValue: Array(allTabs.dropFirst(userTabs).filter({ item in
+            UserDefaults.standard.dataSourceEnabled(item.dataSource)
+        })))
     }
     
     func addItemToTabs(dataSourceItem: DataSourceItem, position: Int) {

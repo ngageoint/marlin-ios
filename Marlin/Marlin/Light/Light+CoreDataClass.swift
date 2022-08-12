@@ -377,6 +377,7 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
     static func newBatchInsertRequest(with propertyList: [LightsProperties]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
+        NSLog("Creating batch insert request of lights for \(total) lights")
         
         var previousRegionHeading: String?
         var previousSubregionHeading: String?

@@ -36,9 +36,6 @@ struct MarlinTabView: View {
     let dismissBottomSheetPub = NotificationCenter.default.publisher(for: .DismissBottomSheet)
     
     var marlinMap = MarlinMap()
-        .mixin(AsamMap())
-        .mixin(ModuMap())
-        .mixin(LightMap())
         .mixin(PersistedMapState())
     
     var body: some View {
@@ -92,6 +89,22 @@ struct MarlinTabView: View {
             if showBottomSheet {
                 showBottomSheet.toggle()
             }
+        }
+        .onAppear {
+            marlinMap
+                .if(UserDefaults.standard.dataSourceEnabled(Asam.self)) { view in
+                    view.mixin(AsamMap())
+                }
+            
+            marlinMap
+                .if(UserDefaults.standard.dataSourceEnabled(Modu.self)) { view in
+                    view.mixin(ModuMap())
+                }
+
+            marlinMap
+                .if(UserDefaults.standard.dataSourceEnabled(Light.self)) { view in
+                    view.mixin(LightMap())
+                }
         }
     }
     

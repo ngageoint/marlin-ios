@@ -53,6 +53,7 @@ struct MarlinMap: UIViewRepresentable {
         var updated = false
     }
     
+    @discardableResult
     func mixin(_ mixin: MapMixin) -> Self {
         mutatingWrapper.mixins.append(mixin)
         return self

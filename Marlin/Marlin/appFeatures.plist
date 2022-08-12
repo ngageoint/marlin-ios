@@ -4,5 +4,13 @@
 <dict>
 	<key>hamburger</key>
 	<false/>
+	<key>asamDataSourceEnabled</key>
+	<true/>
+	<key>moduDataSourceEnabled</key>
+	<true/>
+	<key>lightDataSourceEnabled</key>
+	<true/>
+	<key>navWarningDataSourceEnabled</key>
+	<true/>
 </dict>
 </plist>

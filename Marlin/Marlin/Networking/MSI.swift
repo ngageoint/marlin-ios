@@ -25,10 +25,18 @@ public class MSI {
     }()
     
     func loadAllData() {
-        loadAsams()
-        loadModus()
-        loadNavigationalWarnings()
-        loadLights()
+        if UserDefaults.standard.dataSourceEnabled(Asam.self) {
+            loadAsams()
+        }
+        if UserDefaults.standard.dataSourceEnabled(Modu.self) {
+            loadModus()
+        }
+        if UserDefaults.standard.dataSourceEnabled(NavigationalWarning.self) {
+            loadNavigationalWarnings()
+        }
+        if UserDefaults.standard.dataSourceEnabled(Light.self) {
+            loadLights()
+        }
     }
     
     func loadAsams() {
@@ -87,7 +95,9 @@ public class MSI {
         for lightVolume in Light.lightVolumes {
             let newestLight = try? PersistenceController.shared.container.viewContext.fetchFirst(Light.self, sortBy: [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)], predicate: NSPredicate(format: "volumeNumber = %@", lightVolume.volumeNumber))
             
-            session.request(MSIRouter.readLights(volume: lightVolume.volumeQuery, noticeYear: newestLight?.noticeYear, noticeWeek: newestLight?.noticeWeek))
+            let noticeWeek = Int(newestLight?.noticeWeek ?? "0") ?? 0
+            
+            session.request(MSIRouter.readLights(volume: lightVolume.volumeQuery, noticeYear: newestLight?.noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1)))
                 .validate()
                 .responseDecodable(of: LightsPropertyContainer.self, queue: queue) { response in
                     queue.async(execute:{

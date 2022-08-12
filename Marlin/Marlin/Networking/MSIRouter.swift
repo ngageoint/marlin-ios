@@ -82,7 +82,7 @@ enum MSIRouter: URLRequestConvertible
                 let week = calendar.component(.weekOfYear, from: Date())
                 let year = calendar.component(.year, from: Date())
                 params["minNoticeNumber"] = "\(noticeYear)\(noticeWeek)"
-                params["maxNoticeNumber"] = "\(year)\(week+1)"
+                params["maxNoticeNumber"] = "\(year)\(String(format: "%02d", week + 1))"
             }
             return params
         }

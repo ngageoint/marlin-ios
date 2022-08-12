@@ -68,4 +68,8 @@ extension UserDefaults {
     var hamburger: Bool {
         bool(forKey: "hamburger")
     }
+    
+    func dataSourceEnabled(_ dataSource: DataSource.Type) -> Bool {
+        bool(forKey: "\(dataSource.key)DataSourceEnabled")
+    }
 }
