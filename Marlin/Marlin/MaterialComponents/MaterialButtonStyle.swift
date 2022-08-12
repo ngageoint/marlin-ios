@@ -53,7 +53,7 @@ struct MaterialFloatingButtonStyle: ButtonStyle {
     
     func makeBody(configuration: Configuration) -> some View {
         let borderWidth = 0.0
-        var foregroundColor = Color.primaryColor
+        var foregroundColor = Color.primaryColorVariant
         if type == .primary {
             foregroundColor = Color.onPrimaryColor
         }
