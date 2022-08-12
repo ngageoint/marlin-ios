@@ -17,14 +17,37 @@ struct ModuListView: View {
         animation: .default)
     private var modus: FetchedResults<Modu>
     
+    @ObservedObject var focusedItem: ItemWrapper
+    @State var selection: String? = nil
+    
     var body: some View {
+        ZStack {
+        if let focusedModu = focusedItem.dataSource as? Modu {
+            NavigationLink(tag: "detail", selection: $selection) {
+                ModuDetailView(modu: focusedModu)
+                    .navigationTitle(focusedModu.name ?? Modu.dataSourceName)
+                    .navigationBarTitleDisplayMode(.inline)
+            } label: {
+                EmptyView().hidden()
+            }
+            
+            .isDetailLink(false)
+            .onAppear {
+                selection = "detail"
+            }
+            .onChange(of: focusedItem.dataSource as? Modu) { newValue in
+                selection = "detail"
+            }
+        }
+        
         List {
             ForEach(modus) { modu in
                 
                 ZStack {
-                    NavigationLink(destination: ModuDetailView(modu: modu)
-                        .navigationTitle(modu.name ?? Modu.dataSourceName)
-                        .navigationBarTitleDisplayMode(.inline)) {
+                    NavigationLink(destination:
+                                    ModuDetailView(modu: modu)
+                                    .navigationTitle(modu.name ?? Modu.dataSourceName)
+                                    .navigationBarTitleDisplayMode(.inline)) {
                             EmptyView()
                         }
                         .opacity(0)
@@ -46,11 +69,12 @@ struct ModuListView: View {
         .navigationBarTitleDisplayMode(.inline)
         .listStyle(.plain)
         .background(Color.backgroundColor)
+        }
     }
 }
 
 struct ModuListView_Previews: PreviewProvider {
     static var previews: some View {
-        ModuListView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        ModuListView(focusedItem: ItemWrapper()).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

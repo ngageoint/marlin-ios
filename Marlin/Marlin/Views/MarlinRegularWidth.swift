@@ -12,6 +12,11 @@ struct MarlinRegularWidth: View {
     
     @ObservedObject var dataSourceList: DataSourceList
     
+    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource)
+    
+    @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
+    @State var selection: String? = nil
+    
     var marlinMap: MarlinMap
     
     var body: some View {
@@ -76,6 +81,21 @@ struct MarlinRegularWidth: View {
                 .navigationBarHidden(true)
             }.navigationViewStyle(.stack)
         }
+        .onReceive(viewDataSourcePub) { output in
+            if let dataSource = output.object as? DataSource {
+                viewData(dataSource)
+            }
+        }
+    }
+    
+    func viewData(_ data: DataSource) {
+        NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: nil))
+        NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
+        itemWrapper.dataSource = data
+        activeRailItem = dataSourceList.allTabs.first(where: { item in
+            item.dataSource == type(of: data.self)
+        })
+        
     }
     
     @ViewBuilder
@@ -83,7 +103,7 @@ struct MarlinRegularWidth: View {
         if dataSource.key == Asam.key {
             AsamListView()
         } else if dataSource.key == Modu.key {
-            ModuListView()
+            ModuListView(focusedItem: itemWrapper)
         } else if dataSource.key == Light.key {
             LightsListView()
         } else if dataSource.key == NavigationalWarning.key {

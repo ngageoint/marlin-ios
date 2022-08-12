@@ -166,7 +166,7 @@ struct MarlinCompactWidth: View {
         if dataSource.key == Asam.key {
             AsamListView()
         } else if dataSource.key == Modu.key {
-            ModuListView()
+            ModuListView(focusedItem: itemWrapper)
         } else if dataSource.key == Light.key {
             LightsListView()
         } else if dataSource.key == NavigationalWarning.key {
