@@ -100,7 +100,7 @@ struct SideMenuContent: View {
         }
         .frame(maxHeight: .infinity)
         .background(Color.backgroundColor)
-        .ignoresSafeArea()
+        .ignoresSafeArea(.all, edges: [.top, .bottom])
         .onDrop(of: [.text], isTargeted: nil) { provider in
             draggedItem = nil
             validDropTarget = false

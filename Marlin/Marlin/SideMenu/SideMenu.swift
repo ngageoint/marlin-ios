@@ -22,6 +22,7 @@ struct SideMenu: View {
             }
             .background(Color.gray.opacity(0.5))
             .opacity(self.isOpen ? 1.0 : 0.0)
+            .animation(.default, value: self.isOpen)
             .onTapGesture {
                 withAnimation(.easeIn.delay(0.25)) {
                     self.menuClose()

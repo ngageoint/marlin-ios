@@ -52,6 +52,8 @@ struct MarlinTabView: View {
                                      menuClose: self.openMenu,
                                      dataSourceList: dataSourceList
                             )
+                            .opacity(self.menuOpen ? 1 : 0)
+                            .animation(.default, value: self.menuOpen)
                         }
                     }
                     .if(UserDefaults.standard.hamburger) { view in
