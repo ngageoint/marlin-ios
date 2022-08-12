@@ -99,7 +99,7 @@ extension View {
     
     func bottomSheet<Content: View>(
         isPresented: Binding<Bool>,
-        detents: BottomSheet.Detents = .medium,
+        detents: BottomSheet.Detents = .mediumAndLarge,
         shouldScrollExpandSheet: Bool = false,
         largestUndimmedDetent: BottomSheet.LargestUndimmedDetent? = nil,
         showGrabber: Bool = false,
