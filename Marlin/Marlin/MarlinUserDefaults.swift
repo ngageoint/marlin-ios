@@ -14,6 +14,10 @@ extension UserDefaults {
         if let path = Bundle.main.path(forResource: "userDefaults", ofType: "plist"), let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject] {
             UserDefaults.standard.register(defaults: dict)
         }
+        
+        if let path = Bundle.main.path(forResource: "appFeatures", ofType: "plist"), let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject] {
+            UserDefaults.standard.register(defaults: dict)
+        }
     }
     
     @objc func mkcoordinateregion(forKey key: String) -> MKCoordinateRegion {
@@ -58,5 +62,10 @@ extension UserDefaults {
         set {
             setRegion(newValue, forKey: #function)
         }
+    }
+    
+    // MARK: App features
+    var hamburger: Bool {
+        bool(forKey: "hamburger")
     }
 }

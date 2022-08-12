@@ -43,13 +43,12 @@ struct MarlinTabView: View {
     
     var body: some View {
         ZStack {
-
             if horizontalSizeClass == .compact {
                 MarlinCompactWidth(dataSourceList: dataSourceList, marlinMap: marlinMap)
             } else {
                 NavigationView {
                     ZStack {
-                MarlinRegularWidth(dataSourceList: dataSourceList, marlinMap: marlinMap)
+                        MarlinRegularWidth(dataSourceList: dataSourceList, marlinMap: marlinMap)
                         GeometryReader { geometry in
                             SideMenu(width: min(geometry.size.width - 56, 512),
                                      isOpen: self.menuOpen,
@@ -58,7 +57,9 @@ struct MarlinTabView: View {
                             )
                         }
                     }
-                    .modifier(Hamburger(menuOpen: $menuOpen))
+                    .if(UserDefaults.standard.hamburger) { view in
+                        view.modifier(Hamburger(menuOpen: $menuOpen))
+                    }
                     .navigationTitle("Marlin")
                     .navigationBarTitleDisplayMode(.inline)
                 }

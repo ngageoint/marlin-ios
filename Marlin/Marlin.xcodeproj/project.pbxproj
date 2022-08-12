@@ -67,6 +67,8 @@
 		F7ADDCEE28902D5300137D95 /* AnnotationWithView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCED28902D5300137D95 /* AnnotationWithView.swift */; };
 		F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */; };
 		F7D5C05328A2CAAB000C2C29 /* BottomSheetItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05228A2CAAB000C2C29 /* BottomSheetItem.swift */; };
+		F7D5C05528A68C43000C2C29 /* appFeatures.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7D5C05428A68C43000C2C29 /* appFeatures.plist */; };
+		F7D5C05728A68E56000C2C29 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */; };
 		F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */; };
 		F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C2286C860900758F1C /* GeoPackageMap.swift */; };
 		F7D671C5286C8A3100758F1C /* GeoPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C4286C8A3100758F1C /* GeoPackage.swift */; };
@@ -197,6 +199,8 @@
 		F7ADDCED28902D5300137D95 /* AnnotationWithView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationWithView.swift; sourceTree = "<group>"; };
 		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7D5C05228A2CAAB000C2C29 /* BottomSheetItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetItem.swift; sourceTree = "<group>"; };
+		F7D5C05428A68C43000C2C29 /* appFeatures.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = appFeatures.plist; sourceTree = "<group>"; };
+		F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreaUnreadBadge.swift; sourceTree = "<group>"; };
 		F7D671C2286C860900758F1C /* GeoPackageMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageMap.swift; sourceTree = "<group>"; };
 		F7D671C4286C8A3100758F1C /* GeoPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackage.swift; sourceTree = "<group>"; };
@@ -416,6 +420,7 @@
 				F7D671F0287484FE00758F1C /* MarlinUserDefaults.swift */,
 				F707BA712874B9F4006A94C4 /* userDefaults.plist */,
 				F7ADDCE728872BF300137D95 /* Localizable.strings */,
+				F7D5C05428A68C43000C2C29 /* appFeatures.plist */,
 			);
 			path = Marlin;
 			sourceTree = "<group>";
@@ -521,6 +526,7 @@
 				F7F5978F285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift */,
 				F7ADDCDE2885E53E00137D95 /* UIColorExtensions.swift */,
 				F7ADDCE9288F14DA00137D95 /* MKMapViewExtensions.swift */,
+				F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -693,6 +699,7 @@
 			files = (
 				F7A54CDB2848149700E5F565 /* Assets.xcassets in Resources */,
 				F7ADDCE528872BF300137D95 /* Localizable.strings in Resources */,
+				F7D5C05528A68C43000C2C29 /* appFeatures.plist in Resources */,
 				F7D671CC286C98B200758F1C /* natural_earth_1_100.gpkg in Resources */,
 				F71DF4972858CC8100686951 /* asams.json in Resources */,
 				F7ADDCDD2885D79900137D95 /* navigation_areas.gpkg in Resources */,
@@ -865,6 +872,7 @@
 				F7ADDCEA288F14DA00137D95 /* MKMapViewExtensions.swift in Sources */,
 				F707BA9328805476006A94C4 /* PersistedMapState.swift in Sources */,
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
+				F7D5C05728A68E56000C2C29 /* ViewExtensions.swift in Sources */,
 				F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */,
 				F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */,
 				F707BA8D287C89ED006A94C4 /* LightMap.swift in Sources */,

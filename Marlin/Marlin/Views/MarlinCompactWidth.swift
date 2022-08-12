@@ -35,7 +35,9 @@ struct MarlinCompactWidth: View {
                                 .navigationTitle("Marlin")
                                 .navigationBarTitleDisplayMode(.inline)
                                 .navigationBarBackButtonHidden(true)
-                                .modifier(Hamburger(menuOpen: $menuOpen))
+                                .if(UserDefaults.standard.hamburger) { view in
+                                    view.modifier(Hamburger(menuOpen: $menuOpen))
+                                }
                             VStack {
                                 // top of map
                                 HStack(alignment: .top, spacing: 0) {
@@ -110,7 +112,9 @@ struct MarlinCompactWidth: View {
                 ForEach(dataSourceList.tabs, id: \.self) { dataSource in
                     NavigationView {
                         createListView(dataSource: dataSource)
-                            .modifier(Hamburger(menuOpen: $menuOpen))
+                            .if(UserDefaults.standard.hamburger) { view in
+                                view.modifier(Hamburger(menuOpen: $menuOpen))
+                            }
                     }
                     .tabItem {
                         if let imageName = dataSource.dataSource.imageName {

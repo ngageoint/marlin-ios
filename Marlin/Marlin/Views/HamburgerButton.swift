@@ -11,6 +11,7 @@ struct Hamburger: ViewModifier {
     @Binding var menuOpen: Bool
     
     func body(content: Content) -> some View {
+        
         content.toolbar {
             ToolbarItem (placement: .navigationBarLeading)  {
                 Image(systemName: "line.3.horizontal")
