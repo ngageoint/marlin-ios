@@ -14,24 +14,6 @@ struct MarlinBottomSheet: View {
     @State var selectedItem: Int = 0
     
     var pages: Int { itemList.bottomSheetItems?.count ?? 0 }
-    var circleDiameter: CGFloat = 6.0
-    var circleMargin: CGFloat = 4.0
-    
-    private var circleRadius: CGFloat { circleDiameter / 2}
-    private var pageIndex: CGFloat { CGFloat(selectedItem) }
-    
-    private var currentPosition: CGFloat {
-        // Get the first circle position
-        let stackWidth = circleDiameter * CGFloat(pages) + circleMargin * CGFloat(pages - 1)
-        let halfStackWidth = stackWidth / 2
-        let iniPosition = -halfStackWidth + circleRadius
-        
-        // Calculate the distance to get the next circle
-        let distanceToNextPoint = circleDiameter + circleMargin
-        
-        // Use the pageIndex to get the current position
-        return iniPosition + (pageIndex * distanceToNextPoint)
-    }
     
     @ViewBuilder
     private var rectangle: some View {
@@ -44,59 +26,38 @@ struct MarlinBottomSheet: View {
         VStack {
             if let bottomSheetItems = itemList.bottomSheetItems {
                 if bottomSheetItems.count > 1 {
-                    VStack(spacing: 2) {
-                        HStack {
-                            Text("\(selectedItem + 1) of \(pages)")
-                                .font(Font.caption)
-                                .foregroundColor(Color.onSurfaceColor.opacity(0.6))
-                        }
-                        HStack(spacing: 8) {
-                            Button(action: {
-                                withAnimation {
-                                    selectedItem = max(0, selectedItem - 1)
-                                }
-                            }) {
-                                Label(
-                                    title: {},
-                                    icon: { Image(systemName: "chevron.left")
-                                            .renderingMode(.template)
-                                            .foregroundColor(Color.primaryColorVariant)
-                                    })
+                    HStack(spacing: 8) {
+                        Button(action: {
+                            withAnimation {
+                                selectedItem = max(0, selectedItem - 1)
                             }
-                            .buttonStyle(MaterialButtonStyle())
+                        }) {
+                            Label(
+                                title: {},
+                                icon: { Image(systemName: "chevron.left")
+                                        .renderingMode(.template)
+                                        .foregroundColor(selectedItem != 0 ? Color.primaryColorVariant : Color.disabledColor)
+                                })
+                        }
+                        .buttonStyle(MaterialButtonStyle())
+                    
+                        Text("\(selectedItem + 1) of \(pages)")
+                            .font(Font.caption)
+                            .foregroundColor(Color.onSurfaceColor.opacity(0.6))
                         
-                            ZStack {
-                                // Total number of pages
-                                HStack(spacing: circleMargin) {
-                                    ForEach(bottomSheetItems) { _ in
-                                        Circle()
-                                            .fill(Color.onSurfaceColor.opacity(0.6))
-                                            .frame(width: circleDiameter, height: circleDiameter)
-                                    }
-                                }
-                                
-                                // Current page index
-                                Circle()
-                                    .foregroundColor(Color.primaryColorVariant)
-                                    .frame(width: circleDiameter, height: circleDiameter)
-                                    .offset(x: currentPosition)
-                                    .animation(.linear(duration: 0.3), value: currentPosition)
+                        Button(action: {
+                            withAnimation {
+                                selectedItem = min(pages - 1, selectedItem + 1)
                             }
-                            
-                            Button(action: {
-                                withAnimation {
-                                    selectedItem = min(pages - 1, selectedItem + 1)
-                                }
-                            }) {
-                                Label(
-                                    title: {},
-                                    icon: { Image(systemName: "chevron.right")
-                                            .renderingMode(.template)
-                                            .foregroundColor(Color.primaryColorVariant)
-                                    })
-                            }
-                            .buttonStyle(MaterialButtonStyle())
+                        }) {
+                            Label(
+                                title: {},
+                                icon: { Image(systemName: "chevron.right")
+                                        .renderingMode(.template)
+                                        .foregroundColor(pages - 1 != selectedItem ? Color.primaryColorVariant : Color.disabledColor)
+                                })
                         }
+                        .buttonStyle(MaterialButtonStyle())
                     }
                 }
             
