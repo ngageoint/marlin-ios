@@ -70,6 +70,7 @@
 		F7D5C05528A68C43000C2C29 /* appFeatures.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7D5C05428A68C43000C2C29 /* appFeatures.plist */; };
 		F7D5C05728A68E56000C2C29 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */; };
 		F7D5C05928A6A48F000C2C29 /* DataSourceList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05828A6A48F000C2C29 /* DataSourceList.swift */; };
+		F7D5C05B28A6B458000C2C29 /* StructureImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05A28A6B458000C2C29 /* StructureImage.swift */; };
 		F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */; };
 		F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C2286C860900758F1C /* GeoPackageMap.swift */; };
 		F7D671C5286C8A3100758F1C /* GeoPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C4286C8A3100758F1C /* GeoPackage.swift */; };
@@ -203,6 +204,7 @@
 		F7D5C05428A68C43000C2C29 /* appFeatures.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = appFeatures.plist; sourceTree = "<group>"; };
 		F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		F7D5C05828A6A48F000C2C29 /* DataSourceList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceList.swift; sourceTree = "<group>"; };
+		F7D5C05A28A6B458000C2C29 /* StructureImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructureImage.swift; sourceTree = "<group>"; };
 		F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreaUnreadBadge.swift; sourceTree = "<group>"; };
 		F7D671C2286C860900758F1C /* GeoPackageMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageMap.swift; sourceTree = "<group>"; };
 		F7D671C4286C8A3100758F1C /* GeoPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackage.swift; sourceTree = "<group>"; };
@@ -309,6 +311,7 @@
 				F707BA8E287DC999006A94C4 /* LightTileOverlay.swift */,
 				F707BA90287F1767006A94C4 /* RaconImage.swift */,
 				F707BA96288590E2006A94C4 /* FogSignalImage.swift */,
+				F7D5C05A28A6B458000C2C29 /* StructureImage.swift */,
 			);
 			path = Light;
 			sourceTree = "<group>";
@@ -832,6 +835,7 @@
 				F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */,
 				F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */,
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
+				F7D5C05B28A6B458000C2C29 /* StructureImage.swift in Sources */,
 				F740AA79289D6DED00754293 /* MarlinRegularWidth.swift in Sources */,
 				F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */,
 				F707BA79287632E1006A94C4 /* LightListView.swift in Sources */,

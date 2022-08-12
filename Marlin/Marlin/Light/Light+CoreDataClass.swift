@@ -67,6 +67,23 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
         return !name.contains("RACON") && !remarks.contains("(3 & 10cm)")
     }
     
+    var isRacon: Bool {
+        guard let name = self.name else {
+            return false
+        }
+        let remarks = remarks ?? ""
+        return name.contains("RACON") || remarks.contains("(3 & 10cm)")
+    }
+    
+    var isBuoy: Bool {
+        let structure = structure ?? ""
+        return structure.lowercased().contains("pillar") ||
+        structure.lowercased().contains("spar") ||
+        structure.lowercased().contains("conical") ||
+        structure.lowercased().contains("can")
+    }
+
+    
     var expandedCharacteristic: String? {
         var expanded = characteristic
         expanded = expanded?.replacingOccurrences(of: "Al.", with: "Alternating ")
@@ -202,93 +219,67 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
         return ""
     }
     
-    func mapImage(marker: Bool = false, small: Bool = false) -> UIImage {
-        if marker {
-            if isLight {
-                if let lightSectors = lightSectors {
-                    if small {
-                        return LightColorImage.dynamicAsset(
-                            lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 2, height: 2), sectors: lightSectors, arcWidth: 1, arcRadius: 1, includeSectorDashes: false, includeLetters: false) ?? clearImage,
-                            darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 2, height: 2), sectors: lightSectors, arcWidth: 1, arcRadius: 1, includeSectorDashes: false, includeLetters: false, darkMode: true) ?? clearImage
-                        )
-                    } else {
-                        return LightColorImage.dynamicAsset(
-                            lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 100, height: 100), sectors: lightSectors, arcWidth: 3, arcRadius: 25, includeSectorDashes: true, includeLetters: true) ?? clearImage,
-                            darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 100, height: 100), sectors: lightSectors, arcWidth: 3, arcRadius: 25, includeSectorDashes: true, includeLetters: true, darkMode: true) ?? clearImage
-                        )
-                    }
-                } else if let lightColors = lightColors {
-                    if small {
-                        return LightColorImage.dynamicAsset(
-                            lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 2, height: 2), colors: lightColors, arcWidth: 1) ?? clearImage,
-                            darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 2, height: 2), colors: lightColors, arcWidth: 1, darkMode: true) ?? clearImage
-                        )
-                    } else {
-                        return LightColorImage.dynamicAsset(
-                            lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 10, height: 10), colors: lightColors, arcWidth: 1.5) ?? clearImage,
-                            darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 10, height: 10), colors: lightColors, arcWidth: 1.5, darkMode: true) ?? clearImage
-                        )
-                    }
-                } else if isFogSignal {
-                    return UIImage.dynamicAsset(
-                        lightImage: FogSignalImage(frame: CGRect(x: 0, y: 0, width: 15, height: 15), arcWidth: 1.5) ?? clearImage,
-                        darkImage: FogSignalImage(frame: CGRect(x: 0, y: 0, width: 15, height: 15), arcWidth: 1.5) ?? clearImage
-                    )
-                } else if isPillar {
-                    
-                }
-            } else {
-                if small {
-                    return LightColorImage(frame: CGRect(x: 0, y: 0, width: 2, height: 2), colors: [Light.raconColor], arcWidth: 1) ?? clearImage
-                } else {
-                    return RaconImage(frame: CGRect(x: 0, y: 0, width: 200, height: 40), text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false) ?? clearImage
-                }
-            }
-        } else {
-            if isLight {
-                if let lightSectors = lightSectors {
-                    if small {
-                        return LightColorImage.dynamicAsset(
-                            lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), sectors: lightSectors, outerStroke: false, includeSectorDashes: false, includeLetters: false) ?? clearImage,
-                            darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), sectors: lightSectors, outerStroke: false, includeSectorDashes: false, includeLetters: false, darkMode: true) ?? clearImage
-                        )
-                    } else {
-                        return LightColorImage.dynamicAsset(
-                            lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 200, height: 200), sectors: lightSectors, arcWidth: 6, arcRadius: 50, includeSectorDashes: true, includeLetters: true, darkMode: false) ?? clearImage,
-                            darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 200, height: 200), sectors: lightSectors, arcWidth: 6, arcRadius: 50, includeSectorDashes: true, includeLetters: true, darkMode: true) ?? clearImage
-                        )
-                    }
-                } else if let lightColors = lightColors {
-                    if small {
-                        return LightColorImage.dynamicAsset(
-                            lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), colors: lightColors, outerStroke: false) ?? clearImage,
-                            darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 4, height: 4), colors: lightColors, outerStroke: false, darkMode: true) ?? clearImage
-                        )
-                    } else {
-                        return LightColorImage.dynamicAsset(
-                            lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 20, height: 20), colors: lightColors, arcWidth: 3, darkMode: false) ?? clearImage,
-                            darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 20, height: 20), colors: lightColors, arcWidth: 3, darkMode: true) ?? clearImage
-                        )
-                    }
-                } else if isFogSignal {
-                    return UIImage.dynamicAsset(
-                        lightImage: FogSignalImage(frame: CGRect(x: 0, y: 0, width: 25, height: 25), arcWidth: 1) ?? clearImage,
-                        darkImage: FogSignalImage(frame: CGRect(x: 0, y: 0, width: 25, height: 25), arcWidth: 1) ?? clearImage
-                    )
-                } else if isPillar {
-                    
-                } else {
-                    return LightColorImage(frame: CGRect(x: 0, y: 0, width: 200, height: 200), colors: [UIColor.black], arcWidth: 100, darkMode: false) ?? clearImage
-                }
-            } else {
-                if small {
-                    return LightColorImage(frame: CGRect(x: 0, y: 0, width: 20, height: 20), colors: [Light.raconColor], arcWidth: 2, arcRadius: 4, drawTower: false) ?? clearImage
-                } else {
-                    return RaconImage(frame: CGRect(x: 0, y: 0, width: 200, height: 40), arcWidth: 4, arcRadius: 16, text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false) ?? clearImage
-                }
-            }
+    func mapImage(marker: Bool = false, small: Bool = false) -> [UIImage] {
+        let scale = marker ? 1 : 2
+        
+        var images: [UIImage] = []
+        
+        if isFogSignal {
+            images.append(FogSignalImage(frame: CGRect(x: 0, y: 0, width: 15 * scale, height: 15 * scale), arcWidth: 1.5 * CGFloat(scale)) ?? clearImage)
         }
-        return clearImage
+        
+        if isBuoy && !small {
+            images.append(StructureImage(frame: CGRect(x: 0, y: 0, width: 15 * scale, height: 15 * scale), structure: structure) ?? clearImage)
+        }
+        
+        if let lightSectors = lightSectors {
+            let sectorImage = sectorImage(lightSectors: lightSectors, scale: scale, small: small)
+            images.append(sectorImage)
+        } else if let lightColors = lightColors {
+            let colorImage = colorImage(lightColors: lightColors, scale: scale, small: small)
+            images.append(colorImage)
+        }
+        
+        if isRacon {
+            let raconImage = raconImage(scale: scale, small: small)
+            images.append(raconImage)
+        }
+        
+        return images
+    }
+    
+    func raconImage(scale: Int, small: Bool = false) -> UIImage {
+        if small {
+            return LightColorImage(frame: CGRect(x: 0, y: 0, width: 10 * scale, height: 10 * scale), colors: [Light.raconColor], arcWidth: 1 * CGFloat(scale), arcRadius: 2 * CGFloat(scale), drawTower: false) ?? clearImage
+        } else {
+            return UIImage.dynamicAsset(
+                lightImage: RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 20 * scale), arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false) ?? clearImage,
+                darkImage: RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 20 * scale), arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: true) ?? clearImage)
+        }
+    }
+    
+    func sectorImage(lightSectors: [LightSector], scale: Int, small: Bool = false) -> UIImage {
+        if small {
+            return UIImage.dynamicAsset(lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 2 * scale, height: 2 * scale), sectors: lightSectors, outerStroke: false, includeSectorDashes: false, includeLetters: false) ?? clearImage,
+                darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 2 * scale, height: 2 * scale), sectors: lightSectors, outerStroke: false, includeSectorDashes: false, includeLetters: false, darkMode: true) ?? clearImage)
+            
+        } else {
+            return UIImage.dynamicAsset(lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 100 * scale), sectors: lightSectors, arcWidth: 3 * CGFloat(scale), arcRadius: 25 * CGFloat(scale), includeSectorDashes: true, includeLetters: true, darkMode: false) ?? clearImage,
+                darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 100 * scale), sectors: lightSectors, arcWidth: 3 * CGFloat(scale), arcRadius: 25 * CGFloat(scale), includeSectorDashes: true, includeLetters: true, darkMode: true) ?? clearImage
+            )
+        }
+    }
+    
+    func colorImage(lightColors: [UIColor], scale: Int, small: Bool = false) -> UIImage {
+        if small {
+            return UIImage.dynamicAsset(lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 2 * scale, height: 2 * scale), colors: lightColors, outerStroke: false) ?? clearImage,
+                darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 2 * scale, height: 2 * scale), colors: lightColors, outerStroke: false, darkMode: true) ?? clearImage
+            )
+        } else {
+            return UIImage.dynamicAsset(lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 10 * scale, height: 10 * scale), colors: lightColors, arcWidth: 1.5 * CGFloat(scale), darkMode: false) ?? clearImage,
+                                        darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 10 * scale, height: 10 * scale), colors: lightColors, arcWidth: 1.5 * CGFloat(scale), darkMode: true) ?? clearImage
+            )
+        }
     }
     
     var clearImage: UIImage {
@@ -310,13 +301,6 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
             return false
         }
         return remarks.lowercased().contains("bl.")
-    }
-    
-    var isPillar: Bool {
-        guard let structure = structure else {
-            return false
-        }
-        return structure.contains("pillar")
     }
     
     var lightColors: [UIColor]? {
@@ -362,7 +346,24 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
     
     func view(on: MKMapView) -> MKAnnotationView {
         let annotationView = on.dequeueReusableAnnotationView(withIdentifier: LightAnnotationView.ReuseID, for: self)
-        let image = self.mapImage(marker: true)
+        let images = self.mapImage(marker: true)
+        
+        let largestSize = images.reduce(CGSize(width: 0, height: 0)) { partialResult, image in
+            return CGSize(width: max(partialResult.width, image.size.width), height: max(partialResult.height, image.size.height))
+        }
+        
+        UIGraphicsBeginImageContext(largestSize)
+        for image in images {
+            image.draw(at: CGPoint(x: (largestSize.width / 2.0) - (image.size.width / 2.0), y: (largestSize.height / 2.0) - (image.size.height / 2.0)))
+        }
+        
+        let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        guard let cgImage = newImage.cgImage else {
+            return annotationView
+        }
+        let image = UIImage(cgImage: cgImage)
+        
         if let lav = annotationView as? LightAnnotationView {
             lav.combinedImage = image
         } else {

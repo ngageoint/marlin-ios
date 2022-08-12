@@ -82,10 +82,12 @@ class LightTileOverlay: MKTileOverlay {
         }
         if let objects = objects {
             for object in objects {
-                let mapImage = object.mapImage(small: path.z < 13)
-                let xPosition = (((object.longitude - minTileLon) / (maxTileLon - minTileLon)) * self.tileSize.width)
-                let yPosition = self.tileSize.height - (((object.latitude - minTileLat) / (maxTileLat - minTileLat)) * self.tileSize.height)
-                mapImage.draw(in: CGRect(x: (xPosition - (mapImage.size.width / 2)), y: (yPosition - (mapImage.size.height / 2)), width: mapImage.size.width, height: mapImage.size.height))
+                let mapImages = object.mapImage(small: path.z < 13)
+                for mapImage in mapImages {
+                    let xPosition = (((object.longitude - minTileLon) / (maxTileLon - minTileLon)) * self.tileSize.width)
+                    let yPosition = self.tileSize.height - (((object.latitude - minTileLat) / (maxTileLat - minTileLat)) * self.tileSize.height)
+                    mapImage.draw(in: CGRect(x: (xPosition - (mapImage.size.width / 2)), y: (yPosition - (mapImage.size.height / 2)), width: mapImage.size.width, height: mapImage.size.height))
+                }
             }
         }
         
