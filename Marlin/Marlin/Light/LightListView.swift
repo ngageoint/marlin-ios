@@ -16,8 +16,28 @@ struct LightsListView: View {
         predicate: NSPredicate(format: "characteristicNumber = 1")
     )
     var sectionedLights: SectionedFetchResults<String, Light>
+    @ObservedObject var focusedItem: ItemWrapper
+    @State var selection: String? = nil
+    
     var body: some View {
-        VStack {
+        ZStack {
+            if let focusedLight = focusedItem.dataSource as? Light {
+                NavigationLink(tag: "detail", selection: $selection) {
+                    LightDetailView(featureNumber: focusedLight.featureNumber ?? "", volumeNumber: focusedLight.volumeNumber ?? "")
+                        .navigationTitle("\(focusedLight.name ?? Light.dataSourceName)" )
+                        .navigationBarTitleDisplayMode(.inline)
+                } label: {
+                    EmptyView().hidden()
+                }
+                
+                .isDetailLink(false)
+                .onAppear {
+                    selection = "detail"
+                }
+                .onChange(of: focusedItem.dataSource as? Modu) { newValue in
+                    selection = "detail"
+                }
+            }
             List(sectionedLights) { section in
                 
                 Section(header: HStack {
@@ -60,6 +80,6 @@ struct LightsListView: View {
 
 struct LightsListView_Previews: PreviewProvider {
     static var previews: some View {
-        LightsListView()
+        LightsListView(focusedItem: ItemWrapper())
     }
 }

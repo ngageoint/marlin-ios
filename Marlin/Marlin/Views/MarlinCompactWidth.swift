@@ -164,11 +164,11 @@ struct MarlinCompactWidth: View {
     @ViewBuilder
     func createListView(dataSource: DataSourceItem) -> some View {
         if dataSource.key == Asam.key {
-            AsamListView()
+            AsamListView(focusedItem: itemWrapper)
         } else if dataSource.key == Modu.key {
             ModuListView(focusedItem: itemWrapper)
         } else if dataSource.key == Light.key {
-            LightsListView()
+            LightsListView(focusedItem: itemWrapper)
         } else if dataSource.key == NavigationalWarning.key {
             NavigationalWarningListView()
         }
