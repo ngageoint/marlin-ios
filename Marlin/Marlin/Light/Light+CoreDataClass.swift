@@ -476,18 +476,6 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
         "structure \(structure ?? "")\n" +
         "subregionHeading \(subregionHeading ?? "")\n" +
         "volumeNumber \(volumeNumber ?? "")"
-        
-        
-//        return "ASAM\n\n" +
-//        "Reference: \(reference ?? "")\n" +
-//        "Date: \(dateString ?? "")\n" +
-//        "Latitude: \(latitude ?? 0.0)\n" +
-//        "Longitude: \(longitude ?? 0.0)\n" +
-//        "Navigate Area: \(navArea ?? "")\n" +
-//        "Subregion: \(subreg ?? "")\n" +
-//        "Description: \(asamDescription ?? "")\n" +
-//        "Hostility: \(hostility ?? "")\n" +
-//        "Victim: \(victim ?? "")\n"
     }
 }
 
