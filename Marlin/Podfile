@@ -7,10 +7,6 @@ project 'Marlin.xcodeproj'
 use_modular_headers!
 
 def common_pods
-  pod 'MaterialComponents'
-  pod 'MDFInternationalization'
-  pod 'Kingfisher'
-  pod 'PureLayout'
   pod "Alamofire"
   pod 'geopackage-ios'
 end

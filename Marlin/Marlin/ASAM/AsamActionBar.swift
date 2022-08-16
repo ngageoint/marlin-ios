@@ -7,7 +7,6 @@
 
 import SwiftUI
 import MapKit
-import MaterialComponents
 
 struct AsamActionBar: View {
     var asam: Asam

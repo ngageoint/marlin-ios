@@ -7,7 +7,6 @@
 
 import SwiftUI
 import MapKit
-import MaterialComponents
 
 struct ModuActionBar: View {
     var modu: Modu

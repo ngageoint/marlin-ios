@@ -10,7 +10,6 @@ import UIKit
 import SwiftUI
 import MapKit
 import Combine
-import PureLayout
 
 protocol OverlayRenderable {
     var renderer: MKOverlayRenderer { get }
@@ -30,7 +29,7 @@ struct MarlinMap: UIViewRepresentable {
         var mapView: MKMapView = MKMapView()
         var containerView: UIView = UIView()
         var lowerRightButtonStack: UIStackView = {
-            let buttonStack = UIStackView.newAutoLayout()
+            let buttonStack = UIStackView()
             buttonStack.alignment = .fill
             buttonStack.distribution = .fill
             buttonStack.spacing = 10
@@ -40,7 +39,7 @@ struct MarlinMap: UIViewRepresentable {
             return buttonStack
         }()
         var upperRightButtonStack: UIStackView = {
-            let buttonStack = UIStackView.newAutoLayout()
+            let buttonStack = UIStackView()
             buttonStack.alignment = .fill
             buttonStack.distribution = .fill
             buttonStack.spacing = 10
@@ -88,13 +87,18 @@ struct MarlinMap: UIViewRepresentable {
             }
         }
         mutatingWrapper.containerView.addSubview(mutatingWrapper.mapView)
-        mutatingWrapper.mapView.autoPinEdgesToSuperviewEdges()
+        mutatingWrapper.mapView.translatesAutoresizingMaskIntoConstraints = false
+        
+        mutatingWrapper.mapView.topAnchor.constraint(equalTo: mutatingWrapper.containerView.topAnchor, constant: 0).isActive = true
+        mutatingWrapper.mapView.bottomAnchor.constraint(equalTo: mutatingWrapper.containerView.bottomAnchor, constant: 0).isActive = true
+        mutatingWrapper.mapView.leadingAnchor.constraint(equalTo: mutatingWrapper.containerView.leadingAnchor, constant: 0).isActive = true
+        mutatingWrapper.mapView.trailingAnchor.constraint(equalTo: mutatingWrapper.containerView.trailingAnchor, constant: 0).isActive = true
         mutatingWrapper.containerView.addSubview(mutatingWrapper.lowerRightButtonStack)
-        mutatingWrapper.lowerRightButtonStack.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
-        mutatingWrapper.lowerRightButtonStack.autoPinEdge(toSuperviewEdge: .bottom, withInset: 24)
+        mutatingWrapper.lowerRightButtonStack.trailingAnchor.constraint(equalTo: mutatingWrapper.containerView.trailingAnchor, constant: 8).isActive = true
+        mutatingWrapper.lowerRightButtonStack.bottomAnchor.constraint(equalTo: mutatingWrapper.containerView.bottomAnchor, constant: 24).isActive = true
         mutatingWrapper.containerView.addSubview(mutatingWrapper.upperRightButtonStack)
-        mutatingWrapper.upperRightButtonStack.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
-        mutatingWrapper.upperRightButtonStack.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
+        mutatingWrapper.upperRightButtonStack.trailingAnchor.constraint(equalTo: mutatingWrapper.containerView.trailingAnchor, constant: 8).isActive = true
+        mutatingWrapper.upperRightButtonStack.bottomAnchor.constraint(equalTo: mutatingWrapper.containerView.topAnchor, constant: 8).isActive = true
         return mutatingWrapper.containerView
     }
     

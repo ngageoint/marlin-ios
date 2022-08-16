@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import MaterialComponents
 
 struct LightActionBar: View {
     var light: Light

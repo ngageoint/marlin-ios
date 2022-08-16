@@ -9,7 +9,6 @@ import Foundation
 import Quick
 import KIF
 import Nimble
-import Kingfisher
 import OHHTTPStubs
 
 @testable import Marlin
@@ -79,7 +78,7 @@ class MSITests: KIFSpec {
                     return HTTPStubsResponse(jsonObject: [], statusCode: 200, headers: ["Content-Type": "application/json"])
                 }
                 
-                MSI.shared.loadAsams(date: "2022-02-02")
+//                MSI.shared.loadAsams(date: "2022-02-02")
                 expect(stubCalled).toEventually(beTrue());
                 
                 let persistenceController = PersistenceController.shared
