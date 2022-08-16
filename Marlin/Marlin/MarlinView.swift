@@ -31,9 +31,13 @@ struct MarlinView: View {
     @State var showBottomSheet: Bool = false
     @StateObject var bottomSheetItemList: BottomSheetItemList = BottomSheetItemList()
     
+    @State var showSnackbar: Bool = false
+    @State var snackbarModel: SnackbarModel?
+    
     let mapItemsTappedPub = NotificationCenter.default.publisher(for: .MapItemsTapped)
     let mapViewDisappearingPub = NotificationCenter.default.publisher(for: .MapViewDisappearing)
     let dismissBottomSheetPub = NotificationCenter.default.publisher(for: .DismissBottomSheet)
+    let snackbarPub = NotificationCenter.default.publisher(for: .SnackbarNotification)
     
     var marlinMap = MarlinMap()
         .mixin(PersistedMapState())
@@ -68,6 +72,22 @@ struct MarlinView: View {
         }
         .bottomSheet(isPresented: $showBottomSheet, delegate: self) {
             MarlinBottomSheet(itemList: bottomSheetItemList)
+        }
+        .snackbar(isPresented: $showSnackbar) {
+            Group {
+                if let snackbarModel = snackbarModel {
+                    SnackbarContent(snackbarModel: snackbarModel)
+                } else {
+                    EmptyView()
+                }
+            }
+        }
+        .onReceive(snackbarPub) { output in
+            guard let notification = output.object as? SnackbarNotification else {
+                return
+            }
+            self.snackbarModel = notification.snackbarModel
+            showSnackbar.toggle()
         }
         .onReceive(mapItemsTappedPub) { output in
             guard let notification = output.object as? MapItemsTappedNotification else {

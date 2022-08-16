@@ -111,7 +111,7 @@ struct MaterialButtonStyle: ButtonStyle {
         } else if type == .text {
             borderWidth = 0.0
         }
-        var foregroundColor = Color.primaryColor
+        var foregroundColor = Color.primaryColorVariant
         if type == ButtonType.contained {
             foregroundColor = Color.onPrimaryColor
         }

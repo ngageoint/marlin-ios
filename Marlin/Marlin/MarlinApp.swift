@@ -48,9 +48,9 @@ struct MarlinApp: App {
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             
-            if let error = error {
-                // Handle the error here.
-            }
+//            if let error = error {
+//                // Handle the error here.
+//            }
             
             // Enable or disable features based on the authorization.
         }
@@ -67,6 +67,7 @@ struct MarlinApp: App {
                 .environmentObject(scheme)
                 .environmentObject(AppState())
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .background(Color.surfaceColor)
         }
     }
 }

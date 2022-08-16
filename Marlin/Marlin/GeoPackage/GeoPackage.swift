@@ -110,16 +110,16 @@ class GeoPackage: NSObject {
                 var featureDataTypes: [String : String] = [:]
                 var values: [String : Any] = [:]
                 
-                var coordinate = location
+//                var coordinate = location
                 
                 for i in 0...featureRow.columnCount() {
                     let value = featureRow.value(with: i)
                     let columnName = columnName(dataColumnsDao: dataColumnsDao, featureRow: featureRow, columnName: featureRow.columnName(with: i))
                     if i == geometryColumn {
                         geometryColumnName = columnName
-                        if let geometry = value as? GPKGGeometryData, let centroid = geometry.geometry.centroid() {
-                            coordinate = CLLocationCoordinate2D(latitude: centroid.y.doubleValue, longitude: centroid.x.doubleValue)
-                        }
+//                        if let geometry = value as? GPKGGeometryData, let centroid = geometry.geometry.centroid() {
+//                            coordinate = CLLocationCoordinate2D(latitude: centroid.y.doubleValue, longitude: centroid.x.doubleValue)
+//                        }
                     }
                     
                     featureDataTypes[columnName] = GPKGDataTypes.name(featureRow.featureColumns.column(with: i).dataType)

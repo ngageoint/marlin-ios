@@ -630,7 +630,7 @@ struct LightsProperties: Decodable {
         
         if characteristic == "" && remarks == nil && name == "" {
             let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "parsing")
-            logger.debug("Ignored due to no name, remarks, and characteristic")
+            logger.debug("Ignored \(featureNumber ) \(volumeNumber ) due to no name, remarks, and characteristic")
             
             throw MSIError.missingData
         }

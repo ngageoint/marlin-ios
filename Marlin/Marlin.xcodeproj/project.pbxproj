@@ -71,6 +71,7 @@
 		F7D5C05728A68E56000C2C29 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */; };
 		F7D5C05928A6A48F000C2C29 /* DataSourceList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05828A6A48F000C2C29 /* DataSourceList.swift */; };
 		F7D5C05B28A6B458000C2C29 /* StructureImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05A28A6B458000C2C29 /* StructureImage.swift */; };
+		F7D5C05D28AA7A1F000C2C29 /* Snackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05C28AA7A1F000C2C29 /* Snackbar.swift */; };
 		F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */; };
 		F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C2286C860900758F1C /* GeoPackageMap.swift */; };
 		F7D671C5286C8A3100758F1C /* GeoPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C4286C8A3100758F1C /* GeoPackage.swift */; };
@@ -205,6 +206,7 @@
 		F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		F7D5C05828A6A48F000C2C29 /* DataSourceList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceList.swift; sourceTree = "<group>"; };
 		F7D5C05A28A6B458000C2C29 /* StructureImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructureImage.swift; sourceTree = "<group>"; };
+		F7D5C05C28AA7A1F000C2C29 /* Snackbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snackbar.swift; sourceTree = "<group>"; };
 		F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreaUnreadBadge.swift; sourceTree = "<group>"; };
 		F7D671C2286C860900758F1C /* GeoPackageMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageMap.swift; sourceTree = "<group>"; };
 		F7D671C4286C8A3100758F1C /* GeoPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackage.swift; sourceTree = "<group>"; };
@@ -520,6 +522,7 @@
 			children = (
 				F7F59788285A277000F9B32E /* Card.swift */,
 				F7D671DD286F877C00758F1C /* MaterialButtonStyle.swift */,
+				F7D5C05C28AA7A1F000C2C29 /* Snackbar.swift */,
 			);
 			path = MaterialComponents;
 			sourceTree = "<group>";
@@ -843,6 +846,7 @@
 				F707BA87287C6596006A94C4 /* LightCard.swift in Sources */,
 				F7D671EB2871D73200758F1C /* HamburgerButton.swift in Sources */,
 				F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */,
+				F7D5C05D28AA7A1F000C2C29 /* Snackbar.swift in Sources */,
 				F7D5C05328A2CAAB000C2C29 /* BottomSheetItem.swift in Sources */,
 				F7ADDCEC28902D1500137D95 /* EnlargableAnnotation.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,

@@ -26,7 +26,10 @@ struct LightActionBar: View {
                 
                 Button(action: {
                     UIPasteboard.general.string = coordinateButtonTitle
-                    MDCSnackbarManager.default.show(MDCSnackbarMessage(text: "Location \(coordinateButtonTitle) copied to clipboard"))
+                    NotificationCenter.default.post(name: .SnackbarNotification,
+                                                    object: SnackbarNotification(snackbarModel:
+                                                                                    SnackbarModel(message: "Location \(coordinateButtonTitle) copied to clipboard"))
+                    )
                 }) {
                     Text(coordinateButtonTitle)
                         .foregroundColor(Color.primaryColorVariant)

@@ -18,11 +18,10 @@ extension Notification.Name {
     public static let FocusLight = Notification.Name("FocusLight")
     public static let FocusAsam = Notification.Name("FocusAsam")
     public static let FocusModu = Notification.Name("FocusModu")
-//    public static let ViewAsam = Notification.Name("ViewAsam")
-//    public static let ViewModu = Notification.Name("ViewModu")
     public static let ViewDataSource = Notification.Name("ViewDataSource")
     public static let ViewNavigationalWarning = Notification.Name("ViewNavigationalWarning")
     public static let SwitchTabs = Notification.Name("SwitchTabs")
+    public static let SnackbarNotification = Notification.Name("Snackbar")
 }
 
 struct MapAnnotationFocusedNotification {
@@ -33,4 +32,8 @@ struct MapItemsTappedNotification {
     var annotations: [Any]?
     var items: [DataSource]?
     var mapView: MKMapView?
+}
+
+struct SnackbarNotification {
+    var snackbarModel: SnackbarModel?
 }
