@@ -14,6 +14,7 @@ enum MSIRouter: URLRequestConvertible
     case readModus(date: String? = nil)
     case readNavigationalWarnings
     case readLights(volume: String, noticeYear: String? = nil, noticeWeek: String? = nil)
+    case readPorts
     
 //    static let baseURLString = "https://msi.om.east.paas.nga.mil/api"
     static let baseURLString = "https://msi.gs.mil/api"
@@ -29,6 +30,8 @@ enum MSIRouter: URLRequestConvertible
             return .get
         case .readLights:
             return .get
+        case .readPorts:
+            return .get
         }
     }
     
@@ -43,6 +46,8 @@ enum MSIRouter: URLRequestConvertible
             return "/publications/broadcast-warn"
         case .readLights:
             return "/publications/ngalol/lights-buoys"
+        case .readPorts:
+            return "/publications/world-port-index"
         }
     }
     
@@ -85,6 +90,11 @@ enum MSIRouter: URLRequestConvertible
                 params["maxNoticeNumber"] = "\(year)\(String(format: "%02d", week + 1))"
             }
             return params
+        
+        case .readPorts:
+            return [
+                "output": "json"
+            ]
         }
     }
     

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21G72" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Asam" representedClassName=".Asam" syncable="YES" codeGenerationType="category">
         <attribute name="asamDescription" optional="YES" attributeType="String"/>
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -92,10 +92,128 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
+    <entity name="Port" representedClassName=".Port" syncable="YES" codeGenerationType="category">
+        <attribute name="alternateName" optional="YES" attributeType="String"/>
+        <attribute name="anchorageDepth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="cargoPierDepth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="channelDepth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="chartNumber" optional="YES" attributeType="String"/>
+        <attribute name="chemicalHoldingTank" optional="YES" attributeType="String"/>
+        <attribute name="cmAir" optional="YES" attributeType="String"/>
+        <attribute name="cmRadio" optional="YES" attributeType="String"/>
+        <attribute name="cmRadioTel" optional="YES" attributeType="String"/>
+        <attribute name="cmRail" optional="YES" attributeType="String"/>
+        <attribute name="cmTelephone" optional="YES" attributeType="String"/>
+        <attribute name="countryCode" optional="YES" attributeType="String"/>
+        <attribute name="countryName" optional="YES" attributeType="String"/>
+        <attribute name="craneContainer" optional="YES" attributeType="String"/>
+        <attribute name="craneFixed" optional="YES" attributeType="String"/>
+        <attribute name="craneFloating" optional="YES" attributeType="String"/>
+        <attribute name="craneMobile" optional="YES" attributeType="String"/>
+        <attribute name="degauss" optional="YES" attributeType="String"/>
+        <attribute name="dirtyBallast" optional="YES" attributeType="String"/>
+        <attribute name="dnc" optional="YES" attributeType="String"/>
+        <attribute name="dodWaterBody" optional="YES" attributeType="String"/>
+        <attribute name="drydock" optional="YES" attributeType="String"/>
+        <attribute name="entranceWidth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="erIce" optional="YES" attributeType="String"/>
+        <attribute name="erOther" optional="YES" attributeType="String"/>
+        <attribute name="erSwell" optional="YES" attributeType="String"/>
+        <attribute name="erTide" optional="YES" attributeType="String"/>
+        <attribute name="etaMessage" optional="YES" attributeType="String"/>
+        <attribute name="firstPortOfEntry" optional="YES" attributeType="String"/>
+        <attribute name="garbageDisposal" optional="YES" attributeType="String"/>
+        <attribute name="globalId" optional="YES" attributeType="String"/>
+        <attribute name="goodHoldingGround" optional="YES" attributeType="String"/>
+        <attribute name="harborSize" optional="YES" attributeType="String"/>
+        <attribute name="harborType" optional="YES" attributeType="String"/>
+        <attribute name="harborUse" optional="YES" attributeType="String"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="latitudeDms" optional="YES" attributeType="String"/>
+        <attribute name="lifts0" optional="YES" attributeType="String"/>
+        <attribute name="lifts25" optional="YES" attributeType="String"/>
+        <attribute name="lifts50" optional="YES" attributeType="String"/>
+        <attribute name="lifts100" optional="YES" attributeType="String"/>
+        <attribute name="liquifiedNaturalGasTerminalDepth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="loAnchor" optional="YES" attributeType="String"/>
+        <attribute name="loBeachMoor" optional="YES" attributeType="String"/>
+        <attribute name="loBreakBulk" optional="YES" attributeType="String"/>
+        <attribute name="loContainer" optional="YES" attributeType="String"/>
+        <attribute name="loDangCargo" optional="YES" attributeType="String"/>
+        <attribute name="loIceMoor" optional="YES" attributeType="String"/>
+        <attribute name="loLiquidBulk" optional="YES" attributeType="String"/>
+        <attribute name="loLongTerm" optional="YES" attributeType="String"/>
+        <attribute name="loMedMoor" optional="YES" attributeType="String"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longitudeDms" optional="YES" attributeType="String"/>
+        <attribute name="loOilTerm" optional="YES" attributeType="String"/>
+        <attribute name="loOther" optional="YES" attributeType="String"/>
+        <attribute name="loRoro" optional="YES" attributeType="String"/>
+        <attribute name="loSolidBulk" optional="YES" attributeType="String"/>
+        <attribute name="loWharves" optional="YES" attributeType="String"/>
+        <attribute name="maxVesselBeam" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="maxVesselDraft" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="maxVesselLength" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="medFacilities" optional="YES" attributeType="String"/>
+        <attribute name="navArea" optional="YES" attributeType="String"/>
+        <attribute name="offshoreMaxVesselBeam" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="offshoreMaxVesselDraft" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="offshoreMaxVesselLength" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="oilTerminalDepth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="overheadLimits" optional="YES" attributeType="String"/>
+        <attribute name="portName" optional="YES" attributeType="String"/>
+        <attribute name="portNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="portSecurity" optional="YES" attributeType="String"/>
+        <attribute name="ptAdvisable" optional="YES" attributeType="String"/>
+        <attribute name="ptAvailable" optional="YES" attributeType="String"/>
+        <attribute name="ptCompulsory" optional="YES" attributeType="String"/>
+        <attribute name="ptLocalAssist" optional="YES" attributeType="String"/>
+        <attribute name="publicationNumber" optional="YES" attributeType="String"/>
+        <attribute name="qtOther" optional="YES" attributeType="String"/>
+        <attribute name="qtPratique" optional="YES" attributeType="String"/>
+        <attribute name="qtSanitation" optional="YES" attributeType="String"/>
+        <attribute name="railway" optional="YES" attributeType="String"/>
+        <attribute name="regionName" optional="YES" attributeType="String"/>
+        <attribute name="regionNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="repairCode" optional="YES" attributeType="String"/>
+        <attribute name="s57Enc" optional="YES" attributeType="String"/>
+        <attribute name="s101Enc" optional="YES" attributeType="String"/>
+        <attribute name="searchAndRescue" optional="YES" attributeType="String"/>
+        <attribute name="shelter" optional="YES" attributeType="String"/>
+        <attribute name="srDiving" optional="YES" attributeType="String"/>
+        <attribute name="srElectrical" optional="YES" attributeType="String"/>
+        <attribute name="srElectricalRepair" optional="YES" attributeType="String"/>
+        <attribute name="srIceBreaking" optional="YES" attributeType="String"/>
+        <attribute name="srLongshore" optional="YES" attributeType="String"/>
+        <attribute name="srNavigationalEquipment" optional="YES" attributeType="String"/>
+        <attribute name="srSteam" optional="YES" attributeType="String"/>
+        <attribute name="suAviationFuel" optional="YES" attributeType="String"/>
+        <attribute name="suDeck" optional="YES" attributeType="String"/>
+        <attribute name="suDiesel" optional="YES" attributeType="String"/>
+        <attribute name="suEngine" optional="YES" attributeType="String"/>
+        <attribute name="suFuel" optional="YES" attributeType="String"/>
+        <attribute name="suProvisions" optional="YES" attributeType="String"/>
+        <attribute name="suWater" optional="YES" attributeType="String"/>
+        <attribute name="tide" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="trafficSeparationScheme" optional="YES" attributeType="String"/>
+        <attribute name="tugsAssist" optional="YES" attributeType="String"/>
+        <attribute name="tugsSalvage" optional="YES" attributeType="String"/>
+        <attribute name="turningArea" optional="YES" attributeType="String"/>
+        <attribute name="ukcMgmtSystem" optional="YES" attributeType="String"/>
+        <attribute name="unloCode" optional="YES" attributeType="String"/>
+        <attribute name="usRep" optional="YES" attributeType="String"/>
+        <attribute name="vesselTrafficService" optional="YES" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="portNumber"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
     <elements>
         <element name="Asam" positionX="-63" positionY="-9" width="128" height="179"/>
         <element name="Light" positionX="-63" positionY="144" width="128" height="434"/>
         <element name="Modu" positionX="-63" positionY="63" width="128" height="194"/>
         <element name="NavigationalWarning" positionX="-63" positionY="108" width="128" height="209"/>
+        <element name="Port" positionX="-63" positionY="153" width="128" height="1679"/>
     </elements>
 </model>

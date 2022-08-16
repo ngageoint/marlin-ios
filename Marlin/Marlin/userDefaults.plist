@@ -8,6 +8,8 @@
 	<true/>
 	<key>showOnMapasam</key>
 	<true/>
+	<key>showOnMapport</key>
+	<string>1</string>
 	<key>asamOrder</key>
 	<integer>0</integer>
 	<key>moduOrder</key>
@@ -16,6 +18,8 @@
 	<integer>2</integer>
 	<key>navWarningOrder</key>
 	<integer>4</integer>
+	<key>portOrder</key>
+	<integer>5</integer>
 	<key>userTabs</key>
 	<integer>3</integer>
 </dict>

@@ -12,5 +12,7 @@
 	<true/>
 	<key>navWarningDataSourceEnabled</key>
 	<true/>
+	<key>portDataSourceEnabled</key>
+	<true/>
 </dict>
 </plist>

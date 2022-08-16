@@ -21,7 +21,6 @@ public class MSI {
     lazy var session: Session = {
         let manager = ServerTrustManager(evaluators: ["msi.gs.mil": DisabledTrustEvaluator()])
         return Session(configuration: configuration, serverTrustManager: manager)
-//        return Session(configuration: configuration)
     }()
     
     func loadAllData() {
@@ -36,6 +35,9 @@ public class MSI {
         }
         if UserDefaults.standard.dataSourceEnabled(Light.self) {
             loadLights()
+        }
+        if UserDefaults.standard.dataSourceEnabled(Port.self) {
+            loadPorts(resetData: true)
         }
     }
     
@@ -81,7 +83,7 @@ public class MSI {
                     let navigationalWarningCount = response.value?.broadcastWarn.count
                     self.logger.debug("Received \(navigationalWarningCount ?? 0) navigational warning records.")
                     if let navigationalWarnings = response.value?.broadcastWarn {
-                        try await NavigationalWarning.batchImport(from: navigationalWarnings, taskContext: PersistenceController.shared.newTaskContext(), viewContext: PersistenceController.shared.container.viewContext)
+                        try await NavigationalWarning.batchImport(from: navigationalWarnings, taskContext: PersistenceController.shared.newTaskContext())
                     }
                 }
                 })
@@ -109,6 +111,28 @@ public class MSI {
                     })
                 }
         }
+    }
+    
+    func loadPorts(resetData: Bool = false) {
+        let portCount = try? persistenceController.container.viewContext.countOfObjects(Port.self)
+        if portCount != 0 && !resetData {
+            return
+        }
+        let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
+        
+        session.request(MSIRouter.readPorts)
+            .validate()
+            .responseDecodable(of: PortPropertyContainer.self, queue: queue) { response in
+                queue.async( execute:{
+                    Task.detached {
+                        let portCount = response.value?.ports.count
+                        self.logger.debug("Received \(portCount ?? 0) port records.")
+                        if let ports = response.value?.ports {
+                            try await Port.batchImport(from: ports, taskContext: PersistenceController.shared.newTaskContext())
+                        }
+                    }
+                })
+            }
     }
 }
 
