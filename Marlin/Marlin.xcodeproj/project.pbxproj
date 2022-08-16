@@ -27,6 +27,7 @@
 		F707BA91287F1767006A94C4 /* RaconImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA90287F1767006A94C4 /* RaconImage.swift */; };
 		F707BA9328805476006A94C4 /* PersistedMapState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA9228805476006A94C4 /* PersistedMapState.swift */; };
 		F707BA97288590E2006A94C4 /* FogSignalImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA96288590E2006A94C4 /* FogSignalImage.swift */; };
+		F71CC6E728AC06C5000A326C /* BoolExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6E628AC06C5000A326C /* BoolExtensions.swift */; };
 		F71DF47E284E68DE00686951 /* asams.json in Resources */ = {isa = PBXBuildFile; fileRef = F71DF47D284E68DE00686951 /* asams.json */; };
 		F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */; };
 		F71DF482284E783600686951 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF481284E783600686951 /* TestHelper.swift */; };
@@ -157,6 +158,7 @@
 		F707BA90287F1767006A94C4 /* RaconImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaconImage.swift; sourceTree = "<group>"; };
 		F707BA9228805476006A94C4 /* PersistedMapState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedMapState.swift; sourceTree = "<group>"; };
 		F707BA96288590E2006A94C4 /* FogSignalImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FogSignalImage.swift; sourceTree = "<group>"; };
+		F71CC6E628AC06C5000A326C /* BoolExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolExtensions.swift; sourceTree = "<group>"; };
 		F71DF47D284E68DE00686951 /* asams.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = asams.json; sourceTree = "<group>"; };
 		F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extensions.swift"; sourceTree = "<group>"; };
 		F71DF481284E783600686951 /* TestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
@@ -536,6 +538,7 @@
 				F7ADDCDE2885E53E00137D95 /* UIColorExtensions.swift */,
 				F7ADDCE9288F14DA00137D95 /* MKMapViewExtensions.swift */,
 				F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */,
+				F71CC6E628AC06C5000A326C /* BoolExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -858,6 +861,7 @@
 				F7F59789285A277000F9B32E /* Card.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				F7F597B22866248700F9B32E /* NavigationalWarningNavAreaListView.swift in Sources */,
+				F71CC6E728AC06C5000A326C /* BoolExtensions.swift in Sources */,
 				F7D671DA286E3B3D00758F1C /* ExtraMapTypes.swift in Sources */,
 				F740AA77289D68D800754293 /* MarlinCompactWidth.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
