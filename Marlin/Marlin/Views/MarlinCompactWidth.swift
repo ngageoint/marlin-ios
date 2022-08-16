@@ -182,6 +182,7 @@ struct MarlinCompactWidth: View {
         NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: nil))
         NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
         itemWrapper.dataSource = data
+        itemWrapper.date = Date()
         selection = "detail"
     }
 }

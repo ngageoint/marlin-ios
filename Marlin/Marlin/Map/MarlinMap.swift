@@ -78,6 +78,8 @@ struct MarlinMap: UIViewRepresentable {
         mutatingWrapper.mapView.register(ClusterAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
         mutatingWrapper.mapView.delegate = context.coordinator
         mutatingWrapper.mapView.showsUserLocation = true
+        mutatingWrapper.mapView.isPitchEnabled = false
+        mutatingWrapper.mapView.showsCompass = false
 
         if !mutatingWrapper.created {
             mutatingWrapper.created = true

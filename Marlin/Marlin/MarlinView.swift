@@ -12,6 +12,7 @@ class ItemWrapper : ObservableObject {
     @Published var asam: Asam?
     @Published var modu: Modu?
     @Published var dataSource: DataSource?
+    @Published var date: Date?
 }
 
 class BottomSheetItemList: ObservableObject {

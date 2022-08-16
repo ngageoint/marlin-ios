@@ -20,9 +20,11 @@ struct ModuListView: View {
     @ObservedObject var focusedItem: ItemWrapper
     @State var selection: String? = nil
     
+    var watchFocusedItem: Bool = false
+    
     var body: some View {
         ZStack {
-        if let focusedModu = focusedItem.dataSource as? Modu {
+        if watchFocusedItem, let focusedModu = focusedItem.dataSource as? Modu {
             NavigationLink(tag: "detail", selection: $selection) {
                 ModuDetailView(modu: focusedModu)
                     .navigationTitle(focusedModu.name ?? Modu.dataSourceName)
@@ -35,8 +37,10 @@ struct ModuListView: View {
             .onAppear {
                 selection = "detail"
             }
-            .onChange(of: focusedItem.dataSource as? Modu) { newValue in
-                selection = "detail"
+            .onChange(of: focusedItem.date) { newValue in
+                if watchFocusedItem, let _ = focusedItem.dataSource as? Modu {
+                    selection = "detail"
+                }
             }
         }
         

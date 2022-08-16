@@ -19,9 +19,11 @@ struct AsamListView: View {
     @ObservedObject var focusedItem: ItemWrapper
     @State var selection: String? = nil
     
+    var watchFocusedItem: Bool = false
+    
     var body: some View {
         ZStack {
-            if let focusedAsam = focusedItem.dataSource as? Asam {
+            if watchFocusedItem, let focusedAsam = focusedItem.dataSource as? Asam {
                 NavigationLink(tag: "detail", selection: $selection) {
                     AsamDetailView(asam: focusedAsam)
                         .navigationTitle(focusedAsam.reference ?? Asam.dataSourceName)
@@ -34,8 +36,10 @@ struct AsamListView: View {
                 .onAppear {
                     selection = "detail"
                 }
-                .onChange(of: focusedItem.dataSource as? Modu) { newValue in
-                    selection = "detail"
+                .onChange(of: focusedItem.date) { newValue in
+                    if watchFocusedItem, let _ = focusedItem.dataSource as? Asam {
+                        selection = "detail"
+                    }
                 }
             }
             List {

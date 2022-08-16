@@ -19,9 +19,11 @@ struct LightsListView: View {
     @ObservedObject var focusedItem: ItemWrapper
     @State var selection: String? = nil
     
+    var watchFocusedItem: Bool = false
+
     var body: some View {
         ZStack {
-            if let focusedLight = focusedItem.dataSource as? Light {
+            if watchFocusedItem, let focusedLight = focusedItem.dataSource as? Light {
                 NavigationLink(tag: "detail", selection: $selection) {
                     LightDetailView(featureNumber: focusedLight.featureNumber ?? "", volumeNumber: focusedLight.volumeNumber ?? "")
                         .navigationTitle("\(focusedLight.name ?? Light.dataSourceName)" )
@@ -34,8 +36,10 @@ struct LightsListView: View {
                 .onAppear {
                     selection = "detail"
                 }
-                .onChange(of: focusedItem.dataSource as? Modu) { newValue in
-                    selection = "detail"
+                .onChange(of: focusedItem.date) { newValue in
+                    if watchFocusedItem, let _ = focusedItem.dataSource as? Light {
+                        selection = "detail"
+                    }
                 }
             }
             List(sectionedLights) { section in

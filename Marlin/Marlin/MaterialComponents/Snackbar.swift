@@ -78,7 +78,6 @@ struct Snackbar<Presenting, Content>: View where Presenting: View, Content: View
                     .background(RoundedRectangle(cornerRadius: 4.0)
                         .border(Color.onSurfaceColor.opacity(0.45), width: 1.0)
                     )
-//                    .frame(width: 344.0, height: 48.0)// min(geometry.size.width - 16, 344.0), height: 48.0)
                     .opacity(self.isPresented ? 1 : 0)
 
                     .if(horizontalSizeClass == .regular) { view in
@@ -87,11 +86,11 @@ struct Snackbar<Presenting, Content>: View where Presenting: View, Content: View
                     .if(horizontalSizeClass == .compact) { view in
                         view.frame(width: geometry.size.width - 16, height: 48.0)
                     }
-            } //ZStack (outer)
-            .padding(.bottom)
-        } //GeometryReader
-    } //body
-} //Toast
+                    .padding(.bottom)
+            }
+        }
+    }
+}
 
 extension View {
     func snackbar<Content>(isPresented: Binding<Bool>, content: @escaping () -> Content) -> some View where Content: View {

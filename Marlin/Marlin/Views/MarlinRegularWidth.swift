@@ -92,6 +92,7 @@ struct MarlinRegularWidth: View {
         NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: nil))
         NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
         itemWrapper.dataSource = data
+        itemWrapper.date = Date()
         activeRailItem = dataSourceList.allTabs.first(where: { item in
             item.dataSource == type(of: data.self)
         })
@@ -101,11 +102,11 @@ struct MarlinRegularWidth: View {
     @ViewBuilder
     func createListView(dataSource: DataSourceItem) -> some View {
         if dataSource.key == Asam.key {
-            AsamListView(focusedItem: itemWrapper)
+            AsamListView(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == Modu.key {
-            ModuListView(focusedItem: itemWrapper)
+            ModuListView(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == Light.key {
-            LightsListView(focusedItem: itemWrapper)
+            LightsListView(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == NavigationalWarning.key {
             NavigationalWarningListView()
         }
