@@ -116,6 +116,8 @@ struct MarlinCompactWidth: View {
                                 view.modifier(Hamburger(menuOpen: $menuOpen))
                             }
                     }
+                    // This must be set or navigation links that are nested more than 2 deep will auto pop off
+                    .navigationViewStyle(.stack)
                     .tabItem {
                         if let imageName = dataSource.dataSource.imageName {
                             Label(dataSource.dataSource.dataSourceName, image: imageName)
