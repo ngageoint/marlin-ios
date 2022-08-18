@@ -13,7 +13,7 @@ struct LightsListView: View {
     @SectionedFetchRequest<String, Light>(
         sectionIdentifier: \.sectionHeader!,
         sortDescriptors: [NSSortDescriptor(keyPath: \Light.sectionHeader, ascending: true), NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)],
-        predicate: NSPredicate(format: "characteristicNumber = 1")
+        predicate: NSPredicate(format: "characteristicNumber = 1")// AND volumeNumber = 'PUB 116'")
     )
     var sectionedLights: SectionedFetchResults<String, Light>
     @ObservedObject var focusedItem: ItemWrapper
@@ -28,6 +28,9 @@ struct LightsListView: View {
                     LightDetailView(featureNumber: focusedLight.featureNumber ?? "", volumeNumber: focusedLight.volumeNumber ?? "")
                         .navigationTitle("\(focusedLight.name ?? Light.dataSourceName)" )
                         .navigationBarTitleDisplayMode(.inline)
+                        .onDisappear {
+                            focusedItem.dataSource = nil
+                        }
                 } label: {
                     EmptyView().hidden()
                 }
@@ -41,6 +44,7 @@ struct LightsListView: View {
                         selection = "detail"
                     }
                 }
+                
             }
             List(sectionedLights) { section in
                 

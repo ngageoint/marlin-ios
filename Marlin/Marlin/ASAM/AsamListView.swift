@@ -28,6 +28,9 @@ struct AsamListView: View {
                     AsamDetailView(asam: focusedAsam)
                         .navigationTitle(focusedAsam.reference ?? Asam.dataSourceName)
                         .navigationBarTitleDisplayMode(.inline)
+                        .onDisappear {
+                            focusedItem.dataSource = nil
+                        }
                 } label: {
                     EmptyView().hidden()
                 }
@@ -41,6 +44,7 @@ struct AsamListView: View {
                         selection = "detail"
                     }
                 }
+                
             }
             List {
                 ForEach(asams) { asam in

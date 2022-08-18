@@ -29,6 +29,9 @@ struct ModuListView: View {
                 ModuDetailView(modu: focusedModu)
                     .navigationTitle(focusedModu.name ?? Modu.dataSourceName)
                     .navigationBarTitleDisplayMode(.inline)
+                    .onDisappear {
+                        focusedItem.dataSource = nil
+                    }
             } label: {
                 EmptyView().hidden()
             }
