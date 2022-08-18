@@ -13,7 +13,8 @@ class DataSourceList: ObservableObject {
         DataSourceItem(dataSource: Asam.self),
         DataSourceItem(dataSource: Modu.self),
         DataSourceItem(dataSource: Light.self),
-        DataSourceItem(dataSource: NavigationalWarning.self)
+        DataSourceItem(dataSource: NavigationalWarning.self),
+        DataSourceItem(dataSource: Port.self)
     ].sorted(by: { one, two in
         return one.order < two.order
     })

@@ -16,12 +16,110 @@ extension Port: DataSource {
     }
     
     static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("Port", comment: "Port data source display name")
+    static var dataSourceName: String = NSLocalizedString("Ports", comment: "Port data source display name")
     static var key: String = "port"
     static var imageName: String? = "port"
     static var systemImageName: String? = nil
     
     static var color: UIColor = UIColor(argbValue: 0xFF5856d6)
+}
+
+enum SizeEnum: String, CaseIterable, CustomStringConvertible {
+    case V
+    case S
+    case M
+    case L
+    case unknown
+    
+    static func fromValue(_ value: String?) -> SizeEnum {
+        guard let value = value else {
+            return .unknown
+        }
+        return SizeEnum(rawValue: value) ?? .unknown
+    }
+    
+    var description: String {
+        switch self {
+        case .V:
+            return "Very Small"
+        case .S:
+            return "Small"
+        case .M:
+            return "Medium"
+        case .L:
+            return "Large"
+        case .unknown:
+            return ""
+        }
+    }
+}
+
+enum YNUEnum: String, CaseIterable, CustomStringConvertible {
+    case Y
+    case N
+    case U
+    case UNK
+    case unknown
+    
+    static func fromValue(_ value: String?) -> YNUEnum {
+        guard let value = value else {
+            return .unknown
+        }
+        return YNUEnum(rawValue: value) ?? .unknown
+    }
+    
+    var description: String {
+        switch self {
+        case .Y:
+            return "Yes"
+        case .N:
+            return "No"
+        default:
+            return "Unknown"
+        }
+    }
+}
+
+enum ConditionEnum: String, CaseIterable, CustomStringConvertible {
+    case E
+    case G
+    case F
+    case P
+    case N
+    case unknown
+    
+    static func fromValue(_ value: String?) -> ConditionEnum {
+        guard let value = value else {
+            return .unknown
+        }
+        return ConditionEnum(rawValue: value) ?? .unknown
+    }
+    
+    var description: String {
+        switch self {
+        case .E:
+            return "Excellent"
+        case .G:
+            return "Good"
+        case .F:
+            return "Fair"
+        case .P:
+            return "Poor"
+        case .N:
+            return "None"
+        default:
+            return ""
+        }
+    }
+}
+
+extension Int64 {
+    var zeroIsEmptyString: String {
+        if self == 0 {
+            return ""
+        }
+        return "\(self)"
+    }
 }
 
 class Port: NSManagedObject, MKAnnotation, AnnotationWithView {
@@ -36,6 +134,158 @@ class Port: NSManagedObject, MKAnnotation, AnnotationWithView {
     
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    
+    func distanceTo(_ location: CLLocation) -> Double {
+        location.distance(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
+    }
+    
+    var nameAndLocationKeyValues: [KeyValue] {
+        return [
+            KeyValue(key: "World Port Index Number", value: "\(portNumber)"),
+            KeyValue(key: "Region Name", value: "\(regionName ?? "") - \(regionNumber)"),
+            KeyValue(key: "Main Port Name", value: portName),
+            KeyValue(key: "Alternate Port Name", value: alternateName),
+            KeyValue(key: "UN/LOCODE", value: unloCode),
+            KeyValue(key: "Country", value: countryName),
+            KeyValue(key: "World Water Body", value: dodWaterBody),
+            KeyValue(key: "Sailing Directions or Publication", value: publicationNumber),
+            KeyValue(key: "Standard Nautical Chart", value: chartNumber),
+            KeyValue(key: "IHO S-57 Electronic Navigational Chart", value: s57Enc),
+            KeyValue(key: "IHO S-101 Electronic Navigational Chart", value: s101Enc),
+            KeyValue(key: "Digital Nautical Chart", value: dnc)
+        ]
+    }
+    
+    var depthKeyValues: [KeyValue] {
+        return [
+            KeyValue(key: "Tidal Range (m)", value: "\(tide.zeroIsEmptyString)"),
+            KeyValue(key: "Entrance Width (m)", value: "\(entranceWidth.zeroIsEmptyString)"),
+            KeyValue(key: "Channel Depth (m)", value: "\(channelDepth.zeroIsEmptyString)"),
+            KeyValue(key: "Anchorage Depth (m)", value: "\(anchorageDepth.zeroIsEmptyString)"),
+            KeyValue(key: "Cargo Pier Depth (m)", value: "\(cargoPierDepth.zeroIsEmptyString)"),
+            KeyValue(key: "Oil Terminal Depth (m)", value: "\(oilTerminalDepth.zeroIsEmptyString)"),
+            KeyValue(key: "Liquified Natural Gas Terminal Depth (m)", value: "\(liquifiedNaturalGasTerminalDepth.zeroIsEmptyString)")
+            ]
+    }
+    
+    var maximumVesselSizeKeyValues: [KeyValue] {
+        return [
+            KeyValue(key: "Maximum Vessel Length (m)", value: "\(maxVesselLength.zeroIsEmptyString)"),
+            KeyValue(key: "Maximum Vessel Beam (m)", value: "\(maxVesselBeam.zeroIsEmptyString)"),
+            KeyValue(key: "Maximum Vessel Draft (m)", value: "\(maxVesselDraft.zeroIsEmptyString)"),
+            KeyValue(key: "Offshore Maximum Vessel Length (m)", value: "\(offshoreMaxVesselLength.zeroIsEmptyString)"),
+            KeyValue(key: "Offshore Maximum Vessel Beam (m)", value: "\(offshoreMaxVesselBeam.zeroIsEmptyString)"),
+            KeyValue(key: "Offshore Maximum Vessel Draft (m)", value: "\(offshoreMaxVesselDraft.zeroIsEmptyString)")
+            ]
+    }
+    
+    var physicalEnvironmentKeyValues: [KeyValue] {
+        return [
+            KeyValue(key: "Harbor Size", value: "\(SizeEnum.fromValue(harborSize))"),
+            KeyValue(key: "Harbor Type", value: harborType),
+            KeyValue(key: "Harbor Use", value: harborUse),
+            KeyValue(key: "Shelter", value: "\(ConditionEnum.fromValue(shelter))"),
+            KeyValue(key: "Entrance Restriction - Tide", value: "\(YNUEnum.fromValue(erTide))"),
+            KeyValue(key: "Entrance Restriction - Heavy Swell", value: "\(YNUEnum.fromValue(erSwell))"),
+            KeyValue(key: "Entrance Restriction - Ice", value: "\(YNUEnum.fromValue(erIce))"),
+            KeyValue(key: "Entrance Restriction - Other", value: "\(YNUEnum.fromValue(erOther))"),
+            KeyValue(key: "Overhead Limits", value: "\(YNUEnum.fromValue(overheadLimits))"),
+            KeyValue(key: "Underkeel Clearance Management System", value: "\(YNUEnum.fromValue(ukcMgmtSystem))"),
+            KeyValue(key: "Good Holding Ground", value: "\(YNUEnum.fromValue(goodHoldingGround))"),
+            KeyValue(key: "Turning Area", value: "\(YNUEnum.fromValue(turningArea))")
+        ]
+    }
+    
+    var approachKeyValues: [KeyValue] {
+        return [
+            KeyValue(key: "Port Security", value: "\(YNUEnum.fromValue(portSecurity))"),
+            KeyValue(key: "Estimated Time Of Arrival Message", value: "\(YNUEnum.fromValue(etaMessage))"),
+            KeyValue(key: "Quarantine - Pratique", value: "\(YNUEnum.fromValue(qtPratique))"),
+            KeyValue(key: "Quarantine - Sanitation", value: "\(YNUEnum.fromValue(qtSanitation))"),
+            KeyValue(key: "Quarantine - Other", value: "\(YNUEnum.fromValue(qtOther))"),
+            KeyValue(key: "Traffic Separation Scheme", value: "\(YNUEnum.fromValue(trafficSeparationScheme))"),
+            KeyValue(key: "Vessel Traffic Service", value: "\(YNUEnum.fromValue(vesselTrafficService))"),
+            KeyValue(key: "First Port Of Entry", value: "\(YNUEnum.fromValue(firstPortOfEntry))"),
+        ]
+    }
+    
+    var pilotsTugsCommunicationsKeyValues: [KeyValue] {
+        return [
+            KeyValue(key: "Pilotage - Compulsory", value: "\(YNUEnum.fromValue(ptCompulsory))"),
+            KeyValue(key: "Pilotage - Available", value: "\(YNUEnum.fromValue(ptAvailable))"),
+            KeyValue(key: "Pilotage - Local Assistance", value: "\(YNUEnum.fromValue(ptLocalAssist))"),
+            KeyValue(key: "Pilotage - Advisable", value: "\(YNUEnum.fromValue(ptAdvisable))"),
+            KeyValue(key: "Tugs - Salvage", value: "\(YNUEnum.fromValue(tugsSalvage))"),
+            KeyValue(key: "Tugs - Assistance", value: "\(YNUEnum.fromValue(tugsAssist))"),
+            KeyValue(key: "Communications - Telephone", value: "\(YNUEnum.fromValue(cmTelephone))"),
+            KeyValue(key: "Communications - Telefax", value: "\(YNUEnum.fromValue(cmTelegraph))"),
+            KeyValue(key: "Communications - Radio", value: "\(YNUEnum.fromValue(cmRadio))"),
+            KeyValue(key: "Communications - Radiotelephone", value: "\(YNUEnum.fromValue(cmRadioTel))"),
+            KeyValue(key: "Communications - Airport", value: "\(YNUEnum.fromValue(cmAir))"),
+            KeyValue(key: "Communications - Rail", value: "\(YNUEnum.fromValue(cmRail))"),
+            KeyValue(key: "Search and Rescue", value: "\(YNUEnum.fromValue(searchAndRescue))"),
+            KeyValue(key: "NAVAREA", value: navArea),
+        ]
+    }
+    
+    var facilitiesKeyValues: [KeyValue] {
+        return [
+            KeyValue(key: "Facilities - Wharves", value: "\(YNUEnum.fromValue(loWharves))"),
+            KeyValue(key: "Facilities - Anchorage", value: "\(YNUEnum.fromValue(loAnchor))"),
+            KeyValue(key: "Facilities - Dangerous Cargo Anchorage", value: "\(YNUEnum.fromValue(loDangCargo))"),
+            KeyValue(key: "Facilities - Med Mooring", value: "\(YNUEnum.fromValue(loMedMoor))"),
+            KeyValue(key: "Facilities - Beach Mooring", value: "\(YNUEnum.fromValue(loBeachMoor))"),
+            KeyValue(key: "Facilities - Ice Mooring", value: "\(YNUEnum.fromValue(loIceMoor))"),
+            KeyValue(key: "Facilities - RoRo", value: "\(YNUEnum.fromValue(loRoro))"),
+            KeyValue(key: "Facilities - Solid Bulk", value: "\(YNUEnum.fromValue(loSolidBulk))"),
+            KeyValue(key: "Facilities - Liquid Bulk", value: "\(YNUEnum.fromValue(loLiquidBulk))"),
+            KeyValue(key: "Facilities - Container", value: "\(YNUEnum.fromValue(loContainer))"),
+            KeyValue(key: "Facilities - Breakbulk", value: "\(YNUEnum.fromValue(loBreakBulk))"),
+            KeyValue(key: "Facilities - Oil Terminal", value: "\(YNUEnum.fromValue(loOilTerm))"),
+            KeyValue(key: "Facilities - LNG Terminal", value: "\(YNUEnum.fromValue(loLongTerm))"),
+            KeyValue(key: "Facilities - Other", value: "\(YNUEnum.fromValue(loOther))"),
+            KeyValue(key: "Medical Facilities", value: "\(YNUEnum.fromValue(medFacilities))"),
+            KeyValue(key: "Garbage Disposal", value: "\(YNUEnum.fromValue(garbageDisposal))"),
+            KeyValue(key: "Chemical Holding Tank Disposal", value: "\(YNUEnum.fromValue(chemicalHoldingTank))"),
+            KeyValue(key: "Degaussing", value: "\(YNUEnum.fromValue(degauss))"),
+            KeyValue(key: "Dirty Ballast Disposal", value: "\(YNUEnum.fromValue(dirtyBallast))"),
+        ]
+    }
+    
+    var cranesKeyValues: [KeyValue] {
+        return [
+            KeyValue(key: "Cranes - Fixed", value: "\(YNUEnum.fromValue(craneFixed))"),
+            KeyValue(key: "Cranes - Mobile", value: "\(YNUEnum.fromValue(craneMobile))"),
+            KeyValue(key: "Cranes - Floating", value: "\(YNUEnum.fromValue(craneFloating))"),
+            KeyValue(key: "Cranes - Container", value: "\(YNUEnum.fromValue(craneContainer))"),
+            KeyValue(key: "Lifts - 100+ Tons", value: "\(YNUEnum.fromValue(lifts100))"),
+            KeyValue(key: "Lifts - 50-100 Tons", value: "\(YNUEnum.fromValue(lifts50))"),
+            KeyValue(key: "Lifts - 25-49 Tons", value: "\(YNUEnum.fromValue(lifts25))"),
+            KeyValue(key: "Lifts - 0-24 Tons", value: "\(YNUEnum.fromValue(lifts0))"),
+        ]
+    }
+    
+    var servicesSuppliesKeyValues: [KeyValue] {
+        return [
+            KeyValue(key: "Services - Longshoremen", value: "\(YNUEnum.fromValue(srLongshore))"),
+            KeyValue(key: "Services - Electricity", value: "\(YNUEnum.fromValue(srElectrical))"),
+            KeyValue(key: "Services - Steam", value: "\(YNUEnum.fromValue(srSteam))"),
+            KeyValue(key: "Services - Navigational Equipment", value: "\(YNUEnum.fromValue(srNavigationalEquipment))"),
+            KeyValue(key: "Services - Electrical Repair", value: "\(YNUEnum.fromValue(srElectricalRepair))"),
+            KeyValue(key: "Services - Ice Breaking", value: "\(YNUEnum.fromValue(srIceBreaking))"),
+            KeyValue(key: "Services - Diving", value: "\(YNUEnum.fromValue(srDiving))"),
+            KeyValue(key: "Supplies - Provisions", value: "\(YNUEnum.fromValue(suProvisions))"),
+            KeyValue(key: "Supplies - Potable Water", value: "\(YNUEnum.fromValue(suWater))"),
+            KeyValue(key: "Supplies - Fuel Oil", value: "\(YNUEnum.fromValue(suFuel))"),
+            KeyValue(key: "Supplies - Diesel Oil", value: "\(YNUEnum.fromValue(suDiesel))"),
+            KeyValue(key: "Supplies - Aviation Fuel", value: "\(YNUEnum.fromValue(suAviationFuel))"),
+            KeyValue(key: "Supplies - Deck", value: "\(YNUEnum.fromValue(suDeck))"),
+            KeyValue(key: "Supplies - Engine", value: "\(YNUEnum.fromValue(suEngine))"),
+            KeyValue(key: "Repair Code", value: repairCode),
+            KeyValue(key: "Dry Dock", value: "\(YNUEnum.fromValue(drydock))"),
+            KeyValue(key: "Railway", value: "\(YNUEnum.fromValue(railway))"),
+        ]
     }
 
     static func newBatchInsertRequest(with propertyList: [PortProperties]) -> NSBatchInsertRequest {
@@ -99,6 +349,7 @@ struct PortProperties: Decodable {
         case cmRadioTel
         case cmRail
         case cmTelephone
+        case cmTelegraph
         case countryCode
         case countryName
         case craneContainer = "cranesContainer"
@@ -209,6 +460,7 @@ struct PortProperties: Decodable {
     let cmRadioTel: String?
     let cmRail: String?
     let cmTelephone: String?
+    let cmTelegraph: String?
     let countryCode: String?
     let countryName: String?
     let craneContainer: String?
@@ -356,6 +608,7 @@ struct PortProperties: Decodable {
         self.cmRadioTel = try? values.decode(String.self, forKey: .cmRadioTel)
         self.cmRail = try? values.decode(String.self, forKey: .cmRail)
         self.cmTelephone = try? values.decode(String.self, forKey: .cmTelephone)
+        self.cmTelegraph = try? values.decode(String.self, forKey: .cmTelegraph)
         self.countryCode = try? values.decode(String.self, forKey: .countryCode)
         self.countryName = try? values.decode(String.self, forKey: .countryName)
         self.craneContainer = try? values.decode(String.self, forKey: .craneContainer)
@@ -483,6 +736,7 @@ struct PortProperties: Decodable {
             "cmRadioTel": cmRadioTel,
             "cmRail": cmRail,
             "cmTelephone": cmTelephone,
+            "cmTelegraph": cmTelegraph,
             "countryCode": countryCode,
             "countryName": countryName,
             "craneContainer": craneContainer,

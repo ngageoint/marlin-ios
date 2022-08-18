@@ -37,7 +37,7 @@ public class MSI {
             loadLights()
         }
         if UserDefaults.standard.dataSourceEnabled(Port.self) {
-            loadPorts(resetData: true)
+            loadPorts(resetData: false)
         }
     }
     

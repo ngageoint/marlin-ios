@@ -171,6 +171,8 @@ struct MarlinCompactWidth: View {
             LightsListView(focusedItem: itemWrapper)
         } else if dataSource.key == NavigationalWarning.key {
             NavigationalWarningListView()
+        } else if dataSource.key == Port.key {
+            PortListView(focusedItem: itemWrapper)
         }
     }
     

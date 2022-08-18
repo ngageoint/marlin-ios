@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NavigationalWarningListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @StateObject var locationManager = LocationManager()
+    @EnvironmentObject var locationManager: LocationManager
 
     var navareaMap = GeoPackageMap(fileName: "navigation_areas", tableName: "navigation_areas", index: 0)
     
