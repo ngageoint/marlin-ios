@@ -43,6 +43,23 @@ extension CLLocationCoordinate2D {
         return degrees;
     }
     
+    func generalDirection(to point: CLLocationCoordinate2D) -> String {
+        let directions = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW", "NW", "NNW"]
+        let bearingCorrection = 360.0 / Double(directions.count * 2)
+        let indexDegrees = 360.0 / Double(directions.count)
+
+        var bearing = self.bearing(to: point)
+        bearing = Double(bearing) + (bearingCorrection)
+        if bearing < 0 {
+            bearing = bearing + 360
+        }
+        if bearing > 360 {
+            bearing = bearing - 360
+        }
+        let index = Int(Double(bearing / indexDegrees).rounded(.down)) % directions.count
+        return directions[index]
+    }
+    
     public func toDisplay() -> String {
 //        if UserDefaults.standard.locationDisplay == .mgrs {
 //            return MGRS.mgrSfromCoordinate(self)

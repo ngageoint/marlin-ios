@@ -29,6 +29,11 @@
 		F707BA97288590E2006A94C4 /* FogSignalImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA96288590E2006A94C4 /* FogSignalImage.swift */; };
 		F71CC6E728AC06C5000A326C /* BoolExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6E628AC06C5000A326C /* BoolExtensions.swift */; };
 		F71CC6EA28AC178F000A326C /* Port+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6E928AC178F000A326C /* Port+CoreDataClass.swift */; };
+		F71CC6EC28AD162B000A326C /* PortListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6EB28AD162B000A326C /* PortListView.swift */; };
+		F71CC6EE28AD163D000A326C /* PortSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6ED28AD163D000A326C /* PortSummaryView.swift */; };
+		F71CC6F028AD1647000A326C /* PortDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6EF28AD1647000A326C /* PortDetailView.swift */; };
+		F71CC6F228AD1D23000A326C /* PortActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6F128AD1D23000A326C /* PortActionBar.swift */; };
+		F71CC6F828AE71BA000A326C /* KeyValueSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6F728AE71BA000A326C /* KeyValueSection.swift */; };
 		F71DF47E284E68DE00686951 /* asams.json in Resources */ = {isa = PBXBuildFile; fileRef = F71DF47D284E68DE00686951 /* asams.json */; };
 		F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */; };
 		F71DF482284E783600686951 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF481284E783600686951 /* TestHelper.swift */; };
@@ -161,6 +166,11 @@
 		F707BA96288590E2006A94C4 /* FogSignalImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FogSignalImage.swift; sourceTree = "<group>"; };
 		F71CC6E628AC06C5000A326C /* BoolExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolExtensions.swift; sourceTree = "<group>"; };
 		F71CC6E928AC178F000A326C /* Port+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F71CC6EB28AD162B000A326C /* PortListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortListView.swift; sourceTree = "<group>"; };
+		F71CC6ED28AD163D000A326C /* PortSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortSummaryView.swift; sourceTree = "<group>"; };
+		F71CC6EF28AD1647000A326C /* PortDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDetailView.swift; sourceTree = "<group>"; };
+		F71CC6F128AD1D23000A326C /* PortActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortActionBar.swift; sourceTree = "<group>"; };
+		F71CC6F728AE71BA000A326C /* KeyValueSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyValueSection.swift; sourceTree = "<group>"; };
 		F71DF47D284E68DE00686951 /* asams.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = asams.json; sourceTree = "<group>"; };
 		F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extensions.swift"; sourceTree = "<group>"; };
 		F71DF481284E783600686951 /* TestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
@@ -326,6 +336,10 @@
 			isa = PBXGroup;
 			children = (
 				F71CC6E928AC178F000A326C /* Port+CoreDataClass.swift */,
+				F71CC6EB28AD162B000A326C /* PortListView.swift */,
+				F71CC6ED28AD163D000A326C /* PortSummaryView.swift */,
+				F71CC6EF28AD1647000A326C /* PortDetailView.swift */,
+				F71CC6F128AD1D23000A326C /* PortActionBar.swift */,
 			);
 			path = Port;
 			sourceTree = "<group>";
@@ -565,6 +579,7 @@
 				F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */,
 				F740AA76289D68D800754293 /* MarlinCompactWidth.swift */,
 				F740AA78289D6DED00754293 /* MarlinRegularWidth.swift */,
+				F71CC6F728AE71BA000A326C /* KeyValueSection.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -839,6 +854,7 @@
 				F7D671E42871C5F900758F1C /* NavigationalWarningActionBar.swift in Sources */,
 				F7D671ED2874737F00758F1C /* DataSourceCell.swift in Sources */,
 				F7D5C05928A6A48F000C2C29 /* DataSourceList.swift in Sources */,
+				F71CC6F028AD1647000A326C /* PortDetailView.swift in Sources */,
 				F707BA8F287DC999006A94C4 /* LightTileOverlay.swift in Sources */,
 				F71DF4882857B0CC00686951 /* MarlinView.swift in Sources */,
 				F7ADDCEE28902D5300137D95 /* AnnotationWithView.swift in Sources */,
@@ -873,6 +889,7 @@
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				F7F597B22866248700F9B32E /* NavigationalWarningNavAreaListView.swift in Sources */,
 				F71CC6E728AC06C5000A326C /* BoolExtensions.swift in Sources */,
+				F71CC6EC28AD162B000A326C /* PortListView.swift in Sources */,
 				F7D671DA286E3B3D00758F1C /* ExtraMapTypes.swift in Sources */,
 				F740AA77289D68D800754293 /* MarlinCompactWidth.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
@@ -883,6 +900,7 @@
 				F7D671EF287475BC00758F1C /* DataSource.swift in Sources */,
 				F71DF4992858DA4700686951 /* AsamMap.swift in Sources */,
 				F727A684284E351800BD728A /* MSIError.swift in Sources */,
+				F71CC6F828AE71BA000A326C /* KeyValueSection.swift in Sources */,
 				F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */,
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
 				F707BA8328786F11006A94C4 /* LightColorImage.swift in Sources */,
@@ -919,10 +937,12 @@
 				F71DF49C2859025200686951 /* AsamAnnotation.swift in Sources */,
 				F7A54CD72848149700E5F565 /* AsamListView.swift in Sources */,
 				F7F597A62862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift in Sources */,
+				F71CC6EE28AD163D000A326C /* PortSummaryView.swift in Sources */,
 				F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */,
 				F707BA81287768FA006A94C4 /* LightDetailView.swift in Sources */,
 				F7F597A3286238F400F9B32E /* MSIMapCluster.swift in Sources */,
 				F707BA97288590E2006A94C4 /* FogSignalImage.swift in Sources */,
+				F71CC6F228AD1D23000A326C /* PortActionBar.swift in Sources */,
 				F7ADDCDF2885E53E00137D95 /* UIColorExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

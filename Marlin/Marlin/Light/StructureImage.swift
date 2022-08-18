@@ -18,7 +18,7 @@ enum StructureType {
 
 class StructureImage: UIImage {
     
-    static let unknownBouyColor = 0x87978B
+    static let unknownBouyColor = 0x5587978B
     
     // structure passed in for future differentiation of structure types
     convenience init?(frame: CGRect, structure: String?, darkMode: Bool = false) {

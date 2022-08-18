@@ -31,5 +31,30 @@ class MarlinTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
+    
+    func testGeneralDirection() {
+//        let directions = ["N", "E", "S", "W"]
+//        let directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+        let directions = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW", "NW", "NNW"]
+//        let bearing = self.bearing(to: point)
+//        let index = Int(bearing.truncatingRemainder(dividingBy: 6.125))
+        
+        let bearingCorrection = 360.0 / Double(directions.count * 2)
+        let indexDegrees = 360.0 / Double(directions.count)
+        
+        for degrees in 0...360 {
+            var bearing = Double(degrees) + (bearingCorrection)
+            if bearing < 0 {
+                bearing = bearing + 360
+            }
+            if bearing > 360 {
+                bearing = bearing - 360
+            }
+            let index = Int(Double(bearing / indexDegrees).rounded(.down)) % directions.count
+
+            let direction = directions[index]
+            print("xxx degrees \(degrees) direction \(direction)")
+        }
+    }
 
 }

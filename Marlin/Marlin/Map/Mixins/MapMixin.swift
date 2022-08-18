@@ -12,7 +12,7 @@ import SwiftUI
 
 protocol MapMixin: AnyObject {
     func setupMixin(mapView: MKMapView, marlinMap: MarlinMap)
-    func updateMixin()
+    func updateMixin(mapView: MKMapView)
     func cleanupMixin()
     func renderer(overlay: MKOverlay) -> MKOverlayRenderer?
     func traitCollectionUpdated(previous: UITraitCollection?)
@@ -26,7 +26,7 @@ protocol MapMixin: AnyObject {
 
 extension MapMixin {
     
-    func updateMixin() {
+    func updateMixin(mapView: MKMapView) {
         
     }
     

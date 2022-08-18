@@ -58,6 +58,7 @@ struct LightDetailView: View {
                                 .opacity(0.6)
                         }
                         LightActionBar(light: lights[0], showMoreDetailsButton: false, showFocusButton: true)
+                            .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
                 }
                 .frame(maxWidth:.infinity)

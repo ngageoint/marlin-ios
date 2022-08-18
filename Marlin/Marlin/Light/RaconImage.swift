@@ -46,7 +46,7 @@ class RaconImage : UIImage {
             if let text = text {
                 // Color text
                 let attributes = [ NSAttributedString.Key.foregroundColor: labelColor,
-                                   NSAttributedString.Key.font: UIFont.systemFont(ofSize: arcWidth + 1)]
+                                   NSAttributedString.Key.font: UIFont.systemFont(ofSize: arcWidth + 4)]
                 
                 let size = text.size(withAttributes: attributes)
                 let rect = CGRect(x: center.x + arcRadius + arcWidth, y: center.y - size.height / 2, width: size.width, height: size.height)

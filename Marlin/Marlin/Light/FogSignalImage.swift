@@ -32,7 +32,7 @@ class FogSignalImage : UIImage {
             outerPath.stroke()
             
             let middlePath = UIBezierPath()
-            middlePath.addArc(withCenter: center, radius: radius - 3,
+            middlePath.addArc(withCenter: center, radius: radius - (radius / 3),
                               startAngle: 315 * (CGFloat.pi / 180.0), endAngle: 0 * (CGFloat.pi / 180.0),
                               clockwise: true)
             middlePath.lineWidth = finalArcWidth
@@ -40,7 +40,7 @@ class FogSignalImage : UIImage {
             middlePath.stroke()
             
             let innerSignalPath = UIBezierPath()
-            innerSignalPath.addArc(withCenter: center, radius: radius - 6,
+            innerSignalPath.addArc(withCenter: center, radius: radius - (radius / 1.5),
                                    startAngle: 315 * (CGFloat.pi / 180.0), endAngle: 0 * (CGFloat.pi / 180.0),
                                    clockwise: true)
             innerSignalPath.lineWidth = finalArcWidth

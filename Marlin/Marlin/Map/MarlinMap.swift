@@ -117,7 +117,7 @@ struct MarlinMap: UIViewRepresentable {
             }
         }
         for mixin in mutatingWrapper.mixins {
-            mixin.updateMixin()
+            mixin.updateMixin(mapView: mutatingWrapper.mapView)
         }
     }
     

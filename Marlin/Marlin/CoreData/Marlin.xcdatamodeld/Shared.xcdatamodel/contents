@@ -103,6 +103,7 @@
         <attribute name="cmRadio" optional="YES" attributeType="String"/>
         <attribute name="cmRadioTel" optional="YES" attributeType="String"/>
         <attribute name="cmRail" optional="YES" attributeType="String"/>
+        <attribute name="cmTelegraph" optional="YES" attributeType="String"/>
         <attribute name="cmTelephone" optional="YES" attributeType="String"/>
         <attribute name="countryCode" optional="YES" attributeType="String"/>
         <attribute name="countryName" optional="YES" attributeType="String"/>
@@ -214,6 +215,6 @@
         <element name="Light" positionX="-63" positionY="144" width="128" height="434"/>
         <element name="Modu" positionX="-63" positionY="63" width="128" height="194"/>
         <element name="NavigationalWarning" positionX="-63" positionY="108" width="128" height="209"/>
-        <element name="Port" positionX="-63" positionY="153" width="128" height="1679"/>
+        <element name="Port" positionX="-63" positionY="153" width="128" height="1694"/>
     </elements>
 </model>

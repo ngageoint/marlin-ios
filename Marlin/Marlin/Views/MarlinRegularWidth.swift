@@ -34,7 +34,7 @@ struct MarlinRegularWidth: View {
                     createListView(dataSource: activeRailItem)
                 }
                 .navigationViewStyle(.stack)
-                .frame(width: 256)
+                .frame(minWidth: 256, idealWidth: 360, maxWidth: 360)
                 .background(Color.backgroundColor)
             }
             

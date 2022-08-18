@@ -25,6 +25,7 @@ class LightMap: NSObject, MapMixin {
     }
     
     func setupMixin(mapView: MKMapView, marlinMap: MarlinMap) {
+        print("xxx map view in setup \(mapView)")
         self.mapView = mapView
         mapView.register(LightAnnotationView.self, forAnnotationViewWithReuseIdentifier: LightAnnotationView.ReuseID)
         
@@ -35,6 +36,31 @@ class LightMap: NSObject, MapMixin {
             })
             .store(in: &cancellable)
         
+//        if let lights = lights, lights.count != 0 {
+//            let light = lights[0]
+//            mapView.setRegion(MKCoordinateRegion(center: light.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)), animated: true)
+//        }
+//        if let lights = lights {
+//            for light in lights {
+//                mapView.addAnnotation(light)
+//            }
+//        } else {
+//            UserDefaults.standard
+//                .publisher(for: \.showOnMaplight)
+//                .removeDuplicates()
+//                .handleEvents(receiveOutput: { show in
+//                    print("Show Lights: \(show)")
+//                })
+//                .sink() { [weak self] in
+//                    self?.toggleLights(showLights: $0)
+//                }
+//                .store(in: &cancellable)
+//        }
+    }
+    
+    func updateMixin(mapView: MKMapView) {
+        print("xxx map view in update \(mapView)")
+        self.mapView = mapView
         if let lights = lights, lights.count != 0 {
             let light = lights[0]
             mapView.setRegion(MKCoordinateRegion(center: light.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)), animated: true)

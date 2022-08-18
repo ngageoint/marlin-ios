@@ -13,6 +13,15 @@ struct DataSourceCell: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .center) {
+                if let systemImageName = dataSourceItem.dataSource.systemImageName {
+                    Image(systemName: systemImageName)
+                        .tint(Color.onSurfaceColor)
+                        .opacity(0.60)
+                } else if let imageName = dataSourceItem.dataSource.imageName {
+                    Image(imageName)
+                        .tint(Color.onSurfaceColor)
+                        .opacity(0.60)
+                }
                 Text(dataSourceItem.dataSource.dataSourceName)
                     .font(Font.body1)
                     .foregroundColor(Color.onSurfaceColor)

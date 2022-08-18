@@ -224,12 +224,12 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
         
         var images: [UIImage] = []
         
-        if isFogSignal {
-            images.append(FogSignalImage(frame: CGRect(x: 0, y: 0, width: 15 * scale, height: 15 * scale), arcWidth: 1.5 * CGFloat(scale)) ?? clearImage)
-        }
-        
         if isBuoy && !small {
             images.append(StructureImage(frame: CGRect(x: 0, y: 0, width: 15 * scale, height: 15 * scale), structure: structure) ?? clearImage)
+        }
+        
+        if isFogSignal {
+            images.append(FogSignalImage(frame: CGRect(x: 0, y: 0, width: 30 * scale, height: 30 * scale), arcWidth: 1.5 * CGFloat(scale)) ?? clearImage)
         }
         
         if let lightSectors = lightSectors {

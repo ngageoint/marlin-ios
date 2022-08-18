@@ -40,7 +40,7 @@ class GeoPackageMap: NSObject, MapMixin {
         geoPackage?.addOverlay()
     }
     
-    func updateMixin() {
+    func updateMixin(mapView: MKMapView) {
         geoPackage?.updateLayers()
     }
     
