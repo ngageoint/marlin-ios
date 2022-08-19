@@ -54,18 +54,18 @@ enum SizeEnum: String, CaseIterable, CustomStringConvertible {
     }
 }
 
-enum YNUEnum: String, CaseIterable, CustomStringConvertible {
+enum DecisionEnum: String, CaseIterable, CustomStringConvertible {
     case Y
     case N
     case U
     case UNK
     case unknown
     
-    static func fromValue(_ value: String?) -> YNUEnum {
+    static func fromValue(_ value: String?) -> DecisionEnum {
         guard let value = value else {
             return .unknown
         }
-        return YNUEnum(rawValue: value) ?? .unknown
+        return DecisionEnum(rawValue: value) ?? .unknown
     }
     
     var description: String {
@@ -74,6 +74,147 @@ enum YNUEnum: String, CaseIterable, CustomStringConvertible {
             return "Yes"
         case .N:
             return "No"
+        default:
+            return "Unknown"
+        }
+    }
+}
+
+enum RepairCodeEnum: String, CaseIterable, CustomStringConvertible {
+    case A
+    case B
+    case C
+    case D
+    case N
+    case unknown
+    
+    static func fromValue(_ value: String?) -> RepairCodeEnum {
+        guard let value = value else {
+            return .unknown
+        }
+        return RepairCodeEnum(rawValue: value) ?? .unknown
+    }
+    
+    var description: String {
+        switch self {
+        case .A:
+            return "Major"
+        case .B:
+            return "Moderate"
+        case .C:
+            return "Limited"
+        case .D:
+            return "Emergency Only"
+        case .N:
+            return "None"
+        default:
+            return "Unknown"
+        }
+    }
+}
+
+enum HarborTypeEnum: String, CaseIterable, CustomStringConvertible {
+    case CB
+    case CN
+    case CT
+    case LC
+    case OR
+    case RB
+    case RN
+    case RT
+    case TH
+    case unknown
+    
+    static func fromValue(_ value: String?) -> HarborTypeEnum {
+        guard let value = value else {
+            return .unknown
+        }
+        return HarborTypeEnum(rawValue: value) ?? .unknown
+    }
+    
+    var description: String {
+        switch self {
+        case .CB:
+            return "Coastal Breakwater"
+        case .CN:
+            return "Coastal Natural"
+        case .CT:
+            return "Coastal Tide Gate"
+        case .LC:
+            return "Lake or Canal"
+        case .OR:
+            return "Open Roadstead"
+        case .RB:
+            return "River Basin"
+        case .RN:
+            return "River Natural"
+        case .RT:
+            return "River Tide Gate"
+        case .TH:
+            return "Typhoon Harbor"
+        default:
+            return "Unknown"
+        }
+    }
+}
+
+enum HarborUseEnum: String, CaseIterable, CustomStringConvertible {
+    case FISH
+    case MIL
+    case CARGO
+    case FERRY
+    case UNK
+    case unknown
+    
+    static func fromValue(_ value: String?) -> HarborUseEnum {
+        guard let value = value else {
+            return .unknown
+        }
+        return HarborUseEnum(rawValue: value) ?? .unknown
+    }
+    
+    var description: String {
+        switch self {
+        case .FISH:
+            return "Fishing"
+        case .MIL:
+            return "Military"
+        case .CARGO:
+            return "Cargo"
+        case .FERRY:
+            return "Ferry"
+        case .UNK:
+            return "Unknown"
+        default:
+            return "Unknown"
+        }
+    }
+}
+
+enum UnderkeelClearanceEnum: String, CaseIterable, CustomStringConvertible {
+    case S
+    case D
+    case N
+    case U
+    case unknown
+    
+    static func fromValue(_ value: String?) -> UnderkeelClearanceEnum {
+        guard let value = value else {
+            return .unknown
+        }
+        return UnderkeelClearanceEnum(rawValue: value) ?? .unknown
+    }
+    
+    var description: String {
+        switch self {
+        case .S:
+            return "Static"
+        case .D:
+            return "Dynamic"
+        case .N:
+            return "None"
+        case .U:
+            return "Unknown"
         default:
             return "Unknown"
         }
@@ -183,108 +324,108 @@ class Port: NSManagedObject, MKAnnotation, AnnotationWithView {
     var physicalEnvironmentKeyValues: [KeyValue] {
         return [
             KeyValue(key: "Harbor Size", value: "\(SizeEnum.fromValue(harborSize))"),
-            KeyValue(key: "Harbor Type", value: harborType),
-            KeyValue(key: "Harbor Use", value: harborUse),
+            KeyValue(key: "Harbor Type", value: "\(HarborTypeEnum.fromValue(harborType))"),
+            KeyValue(key: "Harbor Use", value: "\(HarborUseEnum.fromValue(harborUse))"),
             KeyValue(key: "Shelter", value: "\(ConditionEnum.fromValue(shelter))"),
-            KeyValue(key: "Entrance Restriction - Tide", value: "\(YNUEnum.fromValue(erTide))"),
-            KeyValue(key: "Entrance Restriction - Heavy Swell", value: "\(YNUEnum.fromValue(erSwell))"),
-            KeyValue(key: "Entrance Restriction - Ice", value: "\(YNUEnum.fromValue(erIce))"),
-            KeyValue(key: "Entrance Restriction - Other", value: "\(YNUEnum.fromValue(erOther))"),
-            KeyValue(key: "Overhead Limits", value: "\(YNUEnum.fromValue(overheadLimits))"),
-            KeyValue(key: "Underkeel Clearance Management System", value: "\(YNUEnum.fromValue(ukcMgmtSystem))"),
-            KeyValue(key: "Good Holding Ground", value: "\(YNUEnum.fromValue(goodHoldingGround))"),
-            KeyValue(key: "Turning Area", value: "\(YNUEnum.fromValue(turningArea))")
+            KeyValue(key: "Entrance Restriction - Tide", value: "\(DecisionEnum.fromValue(erTide))"),
+            KeyValue(key: "Entrance Restriction - Heavy Swell", value: "\(DecisionEnum.fromValue(erSwell))"),
+            KeyValue(key: "Entrance Restriction - Ice", value: "\(DecisionEnum.fromValue(erIce))"),
+            KeyValue(key: "Entrance Restriction - Other", value: "\(DecisionEnum.fromValue(erOther))"),
+            KeyValue(key: "Overhead Limits", value: "\(DecisionEnum.fromValue(overheadLimits))"),
+            KeyValue(key: "Underkeel Clearance Management System", value: "\(UnderkeelClearanceEnum.fromValue(ukcMgmtSystem))"),
+            KeyValue(key: "Good Holding Ground", value: "\(DecisionEnum.fromValue(goodHoldingGround))"),
+            KeyValue(key: "Turning Area", value: "\(DecisionEnum.fromValue(turningArea))")
         ]
     }
     
     var approachKeyValues: [KeyValue] {
         return [
-            KeyValue(key: "Port Security", value: "\(YNUEnum.fromValue(portSecurity))"),
-            KeyValue(key: "Estimated Time Of Arrival Message", value: "\(YNUEnum.fromValue(etaMessage))"),
-            KeyValue(key: "Quarantine - Pratique", value: "\(YNUEnum.fromValue(qtPratique))"),
-            KeyValue(key: "Quarantine - Sanitation", value: "\(YNUEnum.fromValue(qtSanitation))"),
-            KeyValue(key: "Quarantine - Other", value: "\(YNUEnum.fromValue(qtOther))"),
-            KeyValue(key: "Traffic Separation Scheme", value: "\(YNUEnum.fromValue(trafficSeparationScheme))"),
-            KeyValue(key: "Vessel Traffic Service", value: "\(YNUEnum.fromValue(vesselTrafficService))"),
-            KeyValue(key: "First Port Of Entry", value: "\(YNUEnum.fromValue(firstPortOfEntry))"),
+            KeyValue(key: "Port Security", value: "\(DecisionEnum.fromValue(portSecurity))"),
+            KeyValue(key: "Estimated Time Of Arrival Message", value: "\(DecisionEnum.fromValue(etaMessage))"),
+            KeyValue(key: "Quarantine - Pratique", value: "\(DecisionEnum.fromValue(qtPratique))"),
+            KeyValue(key: "Quarantine - Sanitation", value: "\(DecisionEnum.fromValue(qtSanitation))"),
+            KeyValue(key: "Quarantine - Other", value: "\(DecisionEnum.fromValue(qtOther))"),
+            KeyValue(key: "Traffic Separation Scheme", value: "\(DecisionEnum.fromValue(trafficSeparationScheme))"),
+            KeyValue(key: "Vessel Traffic Service", value: "\(DecisionEnum.fromValue(vesselTrafficService))"),
+            KeyValue(key: "First Port Of Entry", value: "\(DecisionEnum.fromValue(firstPortOfEntry))"),
         ]
     }
     
     var pilotsTugsCommunicationsKeyValues: [KeyValue] {
         return [
-            KeyValue(key: "Pilotage - Compulsory", value: "\(YNUEnum.fromValue(ptCompulsory))"),
-            KeyValue(key: "Pilotage - Available", value: "\(YNUEnum.fromValue(ptAvailable))"),
-            KeyValue(key: "Pilotage - Local Assistance", value: "\(YNUEnum.fromValue(ptLocalAssist))"),
-            KeyValue(key: "Pilotage - Advisable", value: "\(YNUEnum.fromValue(ptAdvisable))"),
-            KeyValue(key: "Tugs - Salvage", value: "\(YNUEnum.fromValue(tugsSalvage))"),
-            KeyValue(key: "Tugs - Assistance", value: "\(YNUEnum.fromValue(tugsAssist))"),
-            KeyValue(key: "Communications - Telephone", value: "\(YNUEnum.fromValue(cmTelephone))"),
-            KeyValue(key: "Communications - Telefax", value: "\(YNUEnum.fromValue(cmTelegraph))"),
-            KeyValue(key: "Communications - Radio", value: "\(YNUEnum.fromValue(cmRadio))"),
-            KeyValue(key: "Communications - Radiotelephone", value: "\(YNUEnum.fromValue(cmRadioTel))"),
-            KeyValue(key: "Communications - Airport", value: "\(YNUEnum.fromValue(cmAir))"),
-            KeyValue(key: "Communications - Rail", value: "\(YNUEnum.fromValue(cmRail))"),
-            KeyValue(key: "Search and Rescue", value: "\(YNUEnum.fromValue(searchAndRescue))"),
+            KeyValue(key: "Pilotage - Compulsory", value: "\(DecisionEnum.fromValue(ptCompulsory))"),
+            KeyValue(key: "Pilotage - Available", value: "\(DecisionEnum.fromValue(ptAvailable))"),
+            KeyValue(key: "Pilotage - Local Assistance", value: "\(DecisionEnum.fromValue(ptLocalAssist))"),
+            KeyValue(key: "Pilotage - Advisable", value: "\(DecisionEnum.fromValue(ptAdvisable))"),
+            KeyValue(key: "Tugs - Salvage", value: "\(DecisionEnum.fromValue(tugsSalvage))"),
+            KeyValue(key: "Tugs - Assistance", value: "\(DecisionEnum.fromValue(tugsAssist))"),
+            KeyValue(key: "Communications - Telephone", value: "\(DecisionEnum.fromValue(cmTelephone))"),
+            KeyValue(key: "Communications - Telefax", value: "\(DecisionEnum.fromValue(cmTelegraph))"),
+            KeyValue(key: "Communications - Radio", value: "\(DecisionEnum.fromValue(cmRadio))"),
+            KeyValue(key: "Communications - Radiotelephone", value: "\(DecisionEnum.fromValue(cmRadioTel))"),
+            KeyValue(key: "Communications - Airport", value: "\(DecisionEnum.fromValue(cmAir))"),
+            KeyValue(key: "Communications - Rail", value: "\(DecisionEnum.fromValue(cmRail))"),
+            KeyValue(key: "Search and Rescue", value: "\(DecisionEnum.fromValue(searchAndRescue))"),
             KeyValue(key: "NAVAREA", value: navArea),
         ]
     }
     
     var facilitiesKeyValues: [KeyValue] {
         return [
-            KeyValue(key: "Facilities - Wharves", value: "\(YNUEnum.fromValue(loWharves))"),
-            KeyValue(key: "Facilities - Anchorage", value: "\(YNUEnum.fromValue(loAnchor))"),
-            KeyValue(key: "Facilities - Dangerous Cargo Anchorage", value: "\(YNUEnum.fromValue(loDangCargo))"),
-            KeyValue(key: "Facilities - Med Mooring", value: "\(YNUEnum.fromValue(loMedMoor))"),
-            KeyValue(key: "Facilities - Beach Mooring", value: "\(YNUEnum.fromValue(loBeachMoor))"),
-            KeyValue(key: "Facilities - Ice Mooring", value: "\(YNUEnum.fromValue(loIceMoor))"),
-            KeyValue(key: "Facilities - RoRo", value: "\(YNUEnum.fromValue(loRoro))"),
-            KeyValue(key: "Facilities - Solid Bulk", value: "\(YNUEnum.fromValue(loSolidBulk))"),
-            KeyValue(key: "Facilities - Liquid Bulk", value: "\(YNUEnum.fromValue(loLiquidBulk))"),
-            KeyValue(key: "Facilities - Container", value: "\(YNUEnum.fromValue(loContainer))"),
-            KeyValue(key: "Facilities - Breakbulk", value: "\(YNUEnum.fromValue(loBreakBulk))"),
-            KeyValue(key: "Facilities - Oil Terminal", value: "\(YNUEnum.fromValue(loOilTerm))"),
-            KeyValue(key: "Facilities - LNG Terminal", value: "\(YNUEnum.fromValue(loLongTerm))"),
-            KeyValue(key: "Facilities - Other", value: "\(YNUEnum.fromValue(loOther))"),
-            KeyValue(key: "Medical Facilities", value: "\(YNUEnum.fromValue(medFacilities))"),
-            KeyValue(key: "Garbage Disposal", value: "\(YNUEnum.fromValue(garbageDisposal))"),
-            KeyValue(key: "Chemical Holding Tank Disposal", value: "\(YNUEnum.fromValue(chemicalHoldingTank))"),
-            KeyValue(key: "Degaussing", value: "\(YNUEnum.fromValue(degauss))"),
-            KeyValue(key: "Dirty Ballast Disposal", value: "\(YNUEnum.fromValue(dirtyBallast))"),
+            KeyValue(key: "Facilities - Wharves", value: "\(DecisionEnum.fromValue(loWharves))"),
+            KeyValue(key: "Facilities - Anchorage", value: "\(DecisionEnum.fromValue(loAnchor))"),
+            KeyValue(key: "Facilities - Dangerous Cargo Anchorage", value: "\(DecisionEnum.fromValue(loDangCargo))"),
+            KeyValue(key: "Facilities - Med Mooring", value: "\(DecisionEnum.fromValue(loMedMoor))"),
+            KeyValue(key: "Facilities - Beach Mooring", value: "\(DecisionEnum.fromValue(loBeachMoor))"),
+            KeyValue(key: "Facilities - Ice Mooring", value: "\(DecisionEnum.fromValue(loIceMoor))"),
+            KeyValue(key: "Facilities - RoRo", value: "\(DecisionEnum.fromValue(loRoro))"),
+            KeyValue(key: "Facilities - Solid Bulk", value: "\(DecisionEnum.fromValue(loSolidBulk))"),
+            KeyValue(key: "Facilities - Liquid Bulk", value: "\(DecisionEnum.fromValue(loLiquidBulk))"),
+            KeyValue(key: "Facilities - Container", value: "\(DecisionEnum.fromValue(loContainer))"),
+            KeyValue(key: "Facilities - Breakbulk", value: "\(DecisionEnum.fromValue(loBreakBulk))"),
+            KeyValue(key: "Facilities - Oil Terminal", value: "\(DecisionEnum.fromValue(loOilTerm))"),
+            KeyValue(key: "Facilities - LNG Terminal", value: "\(DecisionEnum.fromValue(loLongTerm))"),
+            KeyValue(key: "Facilities - Other", value: "\(DecisionEnum.fromValue(loOther))"),
+            KeyValue(key: "Medical Facilities", value: "\(DecisionEnum.fromValue(medFacilities))"),
+            KeyValue(key: "Garbage Disposal", value: "\(DecisionEnum.fromValue(garbageDisposal))"),
+            KeyValue(key: "Chemical Holding Tank Disposal", value: "\(DecisionEnum.fromValue(chemicalHoldingTank))"),
+            KeyValue(key: "Degaussing", value: "\(DecisionEnum.fromValue(degauss))"),
+            KeyValue(key: "Dirty Ballast Disposal", value: "\(DecisionEnum.fromValue(dirtyBallast))"),
         ]
     }
     
     var cranesKeyValues: [KeyValue] {
         return [
-            KeyValue(key: "Cranes - Fixed", value: "\(YNUEnum.fromValue(craneFixed))"),
-            KeyValue(key: "Cranes - Mobile", value: "\(YNUEnum.fromValue(craneMobile))"),
-            KeyValue(key: "Cranes - Floating", value: "\(YNUEnum.fromValue(craneFloating))"),
-            KeyValue(key: "Cranes - Container", value: "\(YNUEnum.fromValue(craneContainer))"),
-            KeyValue(key: "Lifts - 100+ Tons", value: "\(YNUEnum.fromValue(lifts100))"),
-            KeyValue(key: "Lifts - 50-100 Tons", value: "\(YNUEnum.fromValue(lifts50))"),
-            KeyValue(key: "Lifts - 25-49 Tons", value: "\(YNUEnum.fromValue(lifts25))"),
-            KeyValue(key: "Lifts - 0-24 Tons", value: "\(YNUEnum.fromValue(lifts0))"),
+            KeyValue(key: "Cranes - Fixed", value: "\(DecisionEnum.fromValue(craneFixed))"),
+            KeyValue(key: "Cranes - Mobile", value: "\(DecisionEnum.fromValue(craneMobile))"),
+            KeyValue(key: "Cranes - Floating", value: "\(DecisionEnum.fromValue(craneFloating))"),
+            KeyValue(key: "Cranes - Container", value: "\(DecisionEnum.fromValue(craneContainer))"),
+            KeyValue(key: "Lifts - 100+ Tons", value: "\(DecisionEnum.fromValue(lifts100))"),
+            KeyValue(key: "Lifts - 50-100 Tons", value: "\(DecisionEnum.fromValue(lifts50))"),
+            KeyValue(key: "Lifts - 25-49 Tons", value: "\(DecisionEnum.fromValue(lifts25))"),
+            KeyValue(key: "Lifts - 0-24 Tons", value: "\(DecisionEnum.fromValue(lifts0))"),
         ]
     }
     
     var servicesSuppliesKeyValues: [KeyValue] {
         return [
-            KeyValue(key: "Services - Longshoremen", value: "\(YNUEnum.fromValue(srLongshore))"),
-            KeyValue(key: "Services - Electricity", value: "\(YNUEnum.fromValue(srElectrical))"),
-            KeyValue(key: "Services - Steam", value: "\(YNUEnum.fromValue(srSteam))"),
-            KeyValue(key: "Services - Navigational Equipment", value: "\(YNUEnum.fromValue(srNavigationalEquipment))"),
-            KeyValue(key: "Services - Electrical Repair", value: "\(YNUEnum.fromValue(srElectricalRepair))"),
-            KeyValue(key: "Services - Ice Breaking", value: "\(YNUEnum.fromValue(srIceBreaking))"),
-            KeyValue(key: "Services - Diving", value: "\(YNUEnum.fromValue(srDiving))"),
-            KeyValue(key: "Supplies - Provisions", value: "\(YNUEnum.fromValue(suProvisions))"),
-            KeyValue(key: "Supplies - Potable Water", value: "\(YNUEnum.fromValue(suWater))"),
-            KeyValue(key: "Supplies - Fuel Oil", value: "\(YNUEnum.fromValue(suFuel))"),
-            KeyValue(key: "Supplies - Diesel Oil", value: "\(YNUEnum.fromValue(suDiesel))"),
-            KeyValue(key: "Supplies - Aviation Fuel", value: "\(YNUEnum.fromValue(suAviationFuel))"),
-            KeyValue(key: "Supplies - Deck", value: "\(YNUEnum.fromValue(suDeck))"),
-            KeyValue(key: "Supplies - Engine", value: "\(YNUEnum.fromValue(suEngine))"),
-            KeyValue(key: "Repair Code", value: repairCode),
-            KeyValue(key: "Dry Dock", value: "\(YNUEnum.fromValue(drydock))"),
-            KeyValue(key: "Railway", value: "\(YNUEnum.fromValue(railway))"),
+            KeyValue(key: "Services - Longshoremen", value: "\(DecisionEnum.fromValue(srLongshore))"),
+            KeyValue(key: "Services - Electricity", value: "\(DecisionEnum.fromValue(srElectrical))"),
+            KeyValue(key: "Services - Steam", value: "\(DecisionEnum.fromValue(srSteam))"),
+            KeyValue(key: "Services - Navigational Equipment", value: "\(DecisionEnum.fromValue(srNavigationalEquipment))"),
+            KeyValue(key: "Services - Electrical Repair", value: "\(DecisionEnum.fromValue(srElectricalRepair))"),
+            KeyValue(key: "Services - Ice Breaking", value: "\(DecisionEnum.fromValue(srIceBreaking))"),
+            KeyValue(key: "Services - Diving", value: "\(DecisionEnum.fromValue(srDiving))"),
+            KeyValue(key: "Supplies - Provisions", value: "\(DecisionEnum.fromValue(suProvisions))"),
+            KeyValue(key: "Supplies - Potable Water", value: "\(DecisionEnum.fromValue(suWater))"),
+            KeyValue(key: "Supplies - Fuel Oil", value: "\(DecisionEnum.fromValue(suFuel))"),
+            KeyValue(key: "Supplies - Diesel Oil", value: "\(DecisionEnum.fromValue(suDiesel))"),
+            KeyValue(key: "Supplies - Aviation Fuel", value: "\(DecisionEnum.fromValue(suAviationFuel))"),
+            KeyValue(key: "Supplies - Deck", value: "\(DecisionEnum.fromValue(suDeck))"),
+            KeyValue(key: "Supplies - Engine", value: "\(DecisionEnum.fromValue(suEngine))"),
+            KeyValue(key: "Repair Code", value: "\(RepairCodeEnum.fromValue(repairCode))"),
+            KeyValue(key: "Dry Dock", value: "\(SizeEnum.fromValue(drydock))"),
+            KeyValue(key: "Railway", value: "\(SizeEnum.fromValue(railway))"),
         ]
     }
 
