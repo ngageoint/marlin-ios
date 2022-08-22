@@ -78,6 +78,8 @@ struct PortListView: View {
                     sortedPorts = ports.sorted { first, second in
                         return first.distanceTo(lastLocation) < second.distanceTo(lastLocation)
                     }
+                } else {
+                    sortedPorts = ports.map { $0 }
                 }
             }
             .onChange(of: locationManager.lastLocation) { newValue in
@@ -86,6 +88,8 @@ struct PortListView: View {
                         sortedPorts = ports.sorted { first, second in
                             return first.distanceTo(lastLocation) < second.distanceTo(lastLocation)
                         }
+                    } else {
+                        sortedPorts = ports.map { $0 }
                     }
                 }
             }
