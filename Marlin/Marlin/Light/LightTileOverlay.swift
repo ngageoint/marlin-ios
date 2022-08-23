@@ -29,42 +29,28 @@ class LightTileOverlay: MKTileOverlay {
     
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
         zoomLevel = path.z
-        if path.z < 8 {
-            let rect = CGRect(origin: .zero, size: self.tileSize)
-            let layer = CALayer()
-            layer.frame = rect
-            layer.backgroundColor = UIColor.clear.cgColor
-
-            UIGraphicsBeginImageContext(layer.bounds.size)
-            layer.render(in: UIGraphicsGetCurrentContext()!)
-
-            let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-            UIGraphicsEndImageContext()
-            guard let cgImage = newImage.cgImage else {
-                result(clearImage.pngData() ?? Data(), nil)
-                return
-            }
-            let data = UIImage(cgImage: cgImage).pngData()
-            result(data ?? Data(), nil)
-        }
         DispatchQueue.main.async { [self] in
 
             let minTileLon = longitude(x: path.x, zoom: path.z)
             let maxTileLon = longitude(x: path.x+1, zoom: path.z)
             let minTileLat = latitude(y: path.y+1, zoom: path.z)
             let maxTileLat = latitude(y: path.y, zoom: path.z)
-            let neCorner3857 = getCoordinatesInEPSG3857(longitudeInEPSG4326: maxTileLon, latitudeInEPSG4326: maxTileLat)
-            let swCorner3857 = getCoordinatesInEPSG3857(longitudeInEPSG4326: minTileLon, latitudeInEPSG4326: minTileLat)
+            let neCorner3857 = coord4326To3857(longitude: maxTileLon, latitude: maxTileLat)
+            let swCorner3857 = coord4326To3857(longitude: minTileLon, latitude: minTileLat)
             let minTileX = swCorner3857.x
             let minTileY = swCorner3857.y
             let maxTileX = neCorner3857.x
             let maxTileY = neCorner3857.y
 
-        
-            let minQueryLon = longitude(x: path.x-1, zoom: path.z)
-            let maxQueryLon = longitude(x: path.x+2, zoom: path.z)
-            let minQueryLat = latitude(y: path.y+2, zoom: path.z)
-            let maxQueryLat = latitude(y: path.y-1, zoom: path.z)
+            // border the tile by 20 miles since that is as far as any light i have seen.  if that is wrong, update
+            let tolerance = 20.0 * 1609.344 // miles to meters
+            
+            let neCornerTolerance = coord3857To4326(y: maxTileY + tolerance, x: maxTileX + tolerance)
+            let swCornerTolerance = coord3857To4326(y: minTileY - tolerance, x: minTileX - tolerance)
+            let minQueryLon = swCornerTolerance.lon
+            let maxQueryLon = neCornerTolerance.lon
+            let minQueryLat = swCornerTolerance.lat
+            let maxQueryLat = neCornerTolerance.lat
             
             let fetchRequest: NSFetchRequest<Light>
             fetchRequest = Light.fetchRequest()
@@ -102,7 +88,7 @@ class LightTileOverlay: MKTileOverlay {
                 for object in objects {
                     let mapImages = object.mapImage(small: path.z < 13)
                     for mapImage in mapImages {
-                        let object3857Locaton = getCoordinatesInEPSG3857(longitudeInEPSG4326: object.longitude, latitudeInEPSG4326: object.latitude)
+                        let object3857Locaton = coord4326To3857(longitude: object.longitude, latitude: object.latitude)
                         let xPosition = (((object3857Locaton.x - minTileX) / (maxTileX - minTileX)) * self.tileSize.width)
                         let yPosition = self.tileSize.height - (((object3857Locaton.y - minTileY) / (maxTileY - minTileY)) * self.tileSize.height)
                         mapImage.draw(in: CGRect(x: (xPosition - (mapImage.size.width / 2)), y: (yPosition - (mapImage.size.height / 2)), width: mapImage.size.width, height: mapImage.size.height))
@@ -121,11 +107,25 @@ class LightTileOverlay: MKTileOverlay {
         }
     }
     
-    func getCoordinatesInEPSG3857(longitudeInEPSG4326: Double, latitudeInEPSG4326: Double) -> (x: Double, y: Double) {
-        let longitudeInEPSG3857 = (longitudeInEPSG4326 * 20037508.34 / 180)
-        let latitudeInEPSG3857 = (log(tan((90 + latitudeInEPSG4326) * Double.pi / 360)) / (Double.pi / 180)) * (20037508.34 / 180)
+    func coord4326To3857(longitude: Double, latitude: Double) -> (x: Double, y: Double) {
+        let a = 6378137.0
+        let lambda = longitude / 180 * Double.pi;
+        let phi = latitude / 180 * Double.pi;
+        let x = a * lambda;
+        let y = a * log(tan(Double.pi / 4 + phi / 2));
         
-        return (longitudeInEPSG3857, latitudeInEPSG3857)
+        return (x:x, y:y);
+    }
+    
+    func coord3857To4326(y: Double, x: Double) -> (lat: Double, lon: Double) {
+        let a = 6378137.0
+        let d = -y / a
+        let phi = Double.pi / 2 - 2 * atan(exp(d))
+        let lambda = x / a
+        let lat = phi / Double.pi * 180
+        let lon = lambda / Double.pi * 180
+        
+        return (lat: lat, lon: lon)
     }
     
     func longitude(x: Int, zoom: Int) -> Double {
