@@ -252,33 +252,23 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
         if small {
             return LightColorImage(frame: CGRect(x: 0, y: 0, width: 10 * scale, height: 10 * scale), colors: [Light.raconColor], arcWidth: 1 * CGFloat(scale), arcRadius: 2 * CGFloat(scale), drawTower: false) ?? clearImage
         } else {
-            return UIImage.dynamicAsset(
-                lightImage: RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 20 * scale), arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false) ?? clearImage,
-                darkImage: RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 20 * scale), arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: true) ?? clearImage)
+            return RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 20 * scale), arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false) ?? clearImage
         }
     }
     
     func sectorImage(lightSectors: [LightSector], scale: Int, small: Bool = false) -> UIImage {
         if small {
-            return UIImage.dynamicAsset(lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 2 * scale, height: 2 * scale), sectors: lightSectors, outerStroke: false, includeSectorDashes: false, includeLetters: false) ?? clearImage,
-                darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 2 * scale, height: 2 * scale), sectors: lightSectors, outerStroke: false, includeSectorDashes: false, includeLetters: false, darkMode: true) ?? clearImage)
-            
+            return LightColorImage(frame: CGRect(x: 0, y: 0, width: 2 * scale, height: 2 * scale), sectors: lightSectors, outerStroke: false, includeSectorDashes: false, includeLetters: false) ?? clearImage
         } else {
-            return UIImage.dynamicAsset(lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 100 * scale), sectors: lightSectors, arcWidth: 3 * CGFloat(scale), arcRadius: 25 * CGFloat(scale), includeSectorDashes: true, includeLetters: true, darkMode: false) ?? clearImage,
-                darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 100 * scale), sectors: lightSectors, arcWidth: 3 * CGFloat(scale), arcRadius: 25 * CGFloat(scale), includeSectorDashes: true, includeLetters: true, darkMode: true) ?? clearImage
-            )
+            return LightColorImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 100 * scale), sectors: lightSectors, arcWidth: 3 * CGFloat(scale), arcRadius: 25 * CGFloat(scale), includeSectorDashes: true, includeLetters: true, darkMode: false) ?? clearImage
         }
     }
     
     func colorImage(lightColors: [UIColor], scale: Int, small: Bool = false) -> UIImage {
         if small {
-            return UIImage.dynamicAsset(lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 2 * scale, height: 2 * scale), colors: lightColors, outerStroke: false) ?? clearImage,
-                darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 2 * scale, height: 2 * scale), colors: lightColors, outerStroke: false, darkMode: true) ?? clearImage
-            )
+            return LightColorImage(frame: CGRect(x: 0, y: 0, width: 2 * scale, height: 2 * scale), colors: lightColors, outerStroke: false) ?? clearImage
         } else {
-            return UIImage.dynamicAsset(lightImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 10 * scale, height: 10 * scale), colors: lightColors, arcWidth: 1.5 * CGFloat(scale), darkMode: false) ?? clearImage,
-                                        darkImage: LightColorImage(frame: CGRect(x: 0, y: 0, width: 10 * scale, height: 10 * scale), colors: lightColors, arcWidth: 1.5 * CGFloat(scale), darkMode: true) ?? clearImage
-            )
+            return LightColorImage(frame: CGRect(x: 0, y: 0, width: 10 * scale, height: 10 * scale), colors: lightColors, arcWidth: 1.5 * CGFloat(scale), darkMode: false) ?? clearImage
         }
     }
     
@@ -342,6 +332,10 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
             return nil
         }
         return lightColors
+    }
+    
+    func isSame(_ other: Light) -> Bool {
+        return other.featureNumber == featureNumber && other.volumeNumber == volumeNumber
     }
     
     func view(on: MKMapView) -> MKAnnotationView {
