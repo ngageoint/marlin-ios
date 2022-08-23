@@ -474,7 +474,15 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
 }
 
 struct LightsPropertyContainer: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case ngalol
+    }
     let ngalol: [LightsProperties]
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        ngalol = try container.decode([Throwable<LightsProperties>].self, forKey: .ngalol).compactMap { try? $0.result.get() }
+    }
 }
 
 struct LightsProperties: Decodable {

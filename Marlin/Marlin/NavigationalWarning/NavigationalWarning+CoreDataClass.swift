@@ -135,10 +135,14 @@ class NavigationalWarning: NSManagedObject {
 }
 
 struct NavigationalWarningPropertyContainer: Decodable {
-    let broadcastWarn: [NavigationalWarningProperties]
-    
     private enum CodingKeys: String, CodingKey {
         case broadcastWarn = "broadcast-warn"
+    }
+    let broadcastWarn: [NavigationalWarningProperties]
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        broadcastWarn = try container.decode([Throwable<NavigationalWarningProperties>].self, forKey: .broadcastWarn).compactMap { try? $0.result.get() }
     }
 }
 

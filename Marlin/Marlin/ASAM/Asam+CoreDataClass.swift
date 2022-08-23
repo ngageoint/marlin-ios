@@ -112,7 +112,15 @@ class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
 }
 
 struct AsamPropertyContainer: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case asam
+    }
     let asam: [AsamProperties]
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        asam = try container.decode([Throwable<AsamProperties>].self, forKey: .asam).compactMap { try? $0.result.get() }
+    }
 }
 
 struct AsamProperties: Decodable {

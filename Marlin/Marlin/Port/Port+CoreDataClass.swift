@@ -473,7 +473,15 @@ class Port: NSManagedObject, MKAnnotation, AnnotationWithView {
 }
 
 struct PortPropertyContainer: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case ports
+    }
     let ports: [PortProperties]
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        ports = try container.decode([Throwable<PortProperties>].self, forKey: .ports).compactMap { try? $0.result.get() }
+    }
 }
 
 struct PortProperties: Decodable {

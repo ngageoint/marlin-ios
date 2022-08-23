@@ -111,7 +111,15 @@ class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
 }
 
 struct ModuPropertyContainer: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case modu
+    }
     let modu: [ModuProperties]
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        modu = try container.decode([Throwable<ModuProperties>].self, forKey: .modu).compactMap { try? $0.result.get() }
+    }
 }
 
 /// A struct encapsulating the properties of a Quake.
