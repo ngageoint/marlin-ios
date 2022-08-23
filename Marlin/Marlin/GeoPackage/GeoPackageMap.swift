@@ -35,12 +35,12 @@ class GeoPackageMap: NSObject, MapMixin {
         self.index = index
     }
     
-    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap) {
+    func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
         geoPackage = GeoPackage(mapView: mapView, fileName: fileName, tableName: tableName, polygonColor: polygonColor, fillColor: fillColor, canReplaceMapContent: canReplaceMapContent, index: index)
         geoPackage?.addOverlay()
     }
     
-    func updateMixin(mapView: MKMapView) {
+    func updateMixin(mapView: MKMapView, marlinMap: MarlinMap) {
         geoPackage?.updateLayers()
     }
     

@@ -8,15 +8,14 @@
 import SwiftUI
 import MapKit
 
-struct UserTrackingButton: View {
-    var mapView: MKMapView
-    
+struct UserTrackingButton: View {    
     @State var imageName: String = "location"
     @State var appearDisabled: Bool = false
     @ObservedObject var coordinator: Coordinator
     
-    init(mapView: MKMapView) {
-        self.mapView = mapView
+    @AppStorage("userTrackingMode") var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
+    
+    init() {
         self.coordinator = Coordinator()
         coordinator.setDelegate()
     }
@@ -50,19 +49,18 @@ struct UserTrackingButton: View {
             UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
             return
         }
-        
-        switch mapView.userTrackingMode {
+        switch MKUserTrackingMode(rawValue: userTrackingMode) ?? .none {
         case .none:
-            mapView.setUserTrackingMode(.follow, animated: true)
+            userTrackingMode = MKUserTrackingMode.follow.rawValue
             imageName = "location.fill"
         case .follow:
-            mapView.setUserTrackingMode(.followWithHeading, animated: true)
+            userTrackingMode = MKUserTrackingMode.followWithHeading.rawValue
             imageName = "location.north.line.fill"
         case .followWithHeading:
-            mapView.setUserTrackingMode(.none, animated: true)
+            userTrackingMode = MKUserTrackingMode.none.rawValue
             imageName = "location"
         @unknown default:
-            mapView.setUserTrackingMode(.none, animated: true)
+            userTrackingMode = MKUserTrackingMode.none.rawValue
             imageName = "location"
         }
     }

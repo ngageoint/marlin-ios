@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct MarlinCompactWidth: View {
     @EnvironmentObject var appState: AppState
@@ -16,7 +17,7 @@ struct MarlinCompactWidth: View {
     @State var menuOpen: Bool = false
     @State var selection: String? = nil
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-
+    
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource)
     let mapFocus = NotificationCenter.default.publisher(for: .MapRequestFocus)
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
@@ -66,7 +67,7 @@ struct MarlinCompactWidth: View {
                                     Spacer()
                                     // bottom right button stack
                                     VStack(alignment: .trailing, spacing: 16) {
-                                        UserTrackingButton(mapView: marlinMap.mutatingWrapper.mapView)
+                                        UserTrackingButton()
                                             .offset(x: -8, y: -24)
                                             .fixedSize()
                                     }

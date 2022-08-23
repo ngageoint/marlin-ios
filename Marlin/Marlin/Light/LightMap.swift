@@ -11,76 +11,52 @@ import CoreData
 import Combine
 
 class LightMap: NSObject, MapMixin {
-    var mapView: MKMapView?
+    var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     
     var lights: [Light]?
     var showLightsAsTiles: Bool = true
-    var fetchedResultsController: NSFetchedResultsController<Light>?
+    var fetchRequest: NSFetchRequest<Light>?
     var lightOverlay: LightTileOverlay?
     
-    public init(lights: [Light]? = nil, showLightsAsTiles: Bool = true) {
-        self.lights = lights
+    public init(fetchRequest: NSFetchRequest<Light>? = nil, showLightsAsTiles: Bool = true) {
+        self.fetchRequest = fetchRequest
         self.showLightsAsTiles = showLightsAsTiles
     }
     
-    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap) {
-        print("xxx map view in setup \(mapView)")
-        self.mapView = mapView
+    func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
+        mapState = marlinMap.mapState
+        mapState?.drawLightTiles = showLightsAsTiles
         mapView.register(LightAnnotationView.self, forAnnotationViewWithReuseIdentifier: LightAnnotationView.ReuseID)
         
         NotificationCenter.default.publisher(for: .FocusLight)
-            .compactMap {$0.object as? Light}
+            .compactMap {
+                $0.object as? Light
+            }
             .sink(receiveValue: { [weak self] in
                 self?.focusLight(light: $0)
             })
             .store(in: &cancellable)
+
+        let fetchRequest = Light.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
         
-//        if let lights = lights, lights.count != 0 {
-//            let light = lights[0]
-//            mapView.setRegion(MKCoordinateRegion(center: light.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)), animated: true)
-//        }
-//        if let lights = lights {
-//            for light in lights {
-//                mapView.addAnnotation(light)
-//            }
-//        } else {
-//            UserDefaults.standard
-//                .publisher(for: \.showOnMaplight)
-//                .removeDuplicates()
-//                .handleEvents(receiveOutput: { show in
-//                    print("Show Lights: \(show)")
-//                })
-//                .sink() { [weak self] in
-//                    self?.toggleLights(showLights: $0)
-//                }
-//                .store(in: &cancellable)
-//        }
+        marlinMap.mapState.lightFetchRequest = fetchRequest
+        
+        UserDefaults.standard
+            .publisher(for: \.showOnMaplight)
+            .removeDuplicates()
+            .handleEvents(receiveOutput: { show in
+                print("Show Lights: \(show)")
+            })
+            .sink() { [weak self] in
+                marlinMap.mapState.showLights = $0
+            }
+            .store(in: &cancellable)
     }
     
-    func updateMixin(mapView: MKMapView) {
-        print("xxx map view in update \(mapView)")
-        self.mapView = mapView
-        if let lights = lights, lights.count != 0 {
-            let light = lights[0]
-            mapView.setRegion(MKCoordinateRegion(center: light.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)), animated: true)
-        }
-        if let lights = lights {
-            for light in lights {
-                mapView.addAnnotation(light)
-            }
-        } else {
-            UserDefaults.standard
-                .publisher(for: \.showOnMaplight)
-                .removeDuplicates()
-                .handleEvents(receiveOutput: { show in
-                    print("Show Lights: \(show)")
-                })
-                .sink() { [weak self] in
-                    self?.toggleLights(showLights: $0)
-                }
-                .store(in: &cancellable)
-        }
+    func updateMixin(mapView: MKMapView, marlinMap: MarlinMap) {
+        print("xxx update light map mixin")
     }
     
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
@@ -95,12 +71,12 @@ class LightMap: NSObject, MapMixin {
         return annotationView;
     }
     
-    func items(at location: CLLocationCoordinate2D) -> [DataSource]? {
+    func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
         if let lightOverlay = lightOverlay, lightOverlay.zoomLevel < 8 {
             return nil
         }
         let screenPercentage = 0.03
-        let tolerance = (self.mapView?.region.span.longitudeDelta ?? 0.0) * Double(screenPercentage)
+        let tolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
         let minLon = location.longitude - tolerance
         let maxLon = location.longitude + tolerance
         let minLat = location.latitude - tolerance
@@ -116,97 +92,9 @@ class LightMap: NSObject, MapMixin {
         let context = PersistenceController.shared.container.viewContext
         return try? context.fetch(fetchRequest)
     }
-    
-    func toggleLights(showLights: Bool) {
-        if showLightsAsTiles {
-            if showLights {
-                let lightOverlay = LightTileOverlay()
-                lightOverlay.tileSize = CGSize(width: 512, height: 512)
-                lightOverlay.minimumZ = 7
-                mapView?.addOverlay(lightOverlay)
-                self.lightOverlay = lightOverlay
-            } else {
-                if let lightOverlay = lightOverlay {
-                    mapView?.removeOverlay(lightOverlay)
-                }
-            }
-        } else {
-            if fetchedResultsController == nil {
-                let fetchRequest = Light.fetchRequest()
-                fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
-                
-                fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-                fetchedResultsController?.delegate = self
-                do {
-                    try fetchedResultsController?.performFetch()
-                } catch {
-                    let fetchError = error as NSError
-                    print("Unable to Perform Fetch Request")
-                    print("\(fetchError), \(fetchError.localizedDescription)")
-                }
-            }
-            if let lights = fetchedResultsController?.fetchedObjects {
-                if showLights {
-                    mapView?.addAnnotations(lights)
-                } else {
-                    mapView?.removeAnnotations(lights)
-                }
-            }
-        }
-    }
-    
-    func focusLight(light: Light) {
-        mapView?.setRegion(MKCoordinateRegion(center: light.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000), animated: true)
-    }
-    
-    func addInitialLights(lights: [Light]?) {
-        guard let lights = lights else {
-            return
-        }
-        mapView?.addAnnotations(lights)
-    }
-    
-    func addLight(light: Light) {
-        mapView?.addAnnotation(light)
-    }
-    
-    func updateLight(light: Light) {
-        mapView?.removeAnnotation(light)
-        mapView?.addAnnotation(light)
-    }
-    
-    func deleteLight(light: Light) {
-        let annotation = mapView?.annotations.first(where: { annotation in
-            if let annotation = annotation as? Light {
-                return annotation.featureNumber == light.featureNumber && annotation.volumeNumber == light.volumeNumber
-            }
-            return false
-        })
-        
-        if let annotation = annotation {
-            mapView?.removeAnnotation(annotation)
-        }
-    }
-}
 
-extension LightMap : NSFetchedResultsControllerDelegate {
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        guard let light = anObject as? Light else {
-            return
-        }
-        switch(type) {
-            
-        case .insert:
-            self.addLight(light: light)
-        case .delete:
-            self.deleteLight(light: light)
-        case .move:
-            self.updateLight(light: light)
-        case .update:
-            self.updateLight(light: light)
-        @unknown default:
-            break
-        }
+    func focusLight(light: Light) {
+        mapState?.center = MKCoordinateRegion(center: light.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
     }
 }
 

@@ -11,8 +11,8 @@ import SwiftUI
 //import geopackage_ios
 
 protocol MapMixin: AnyObject {
-    func setupMixin(mapView: MKMapView, marlinMap: MarlinMap)
-    func updateMixin(mapView: MKMapView)
+    func setupMixin(marlinMap: MarlinMap, mapView: MKMapView)
+    func updateMixin(mapView: MKMapView, marlinMap: MarlinMap)
     func cleanupMixin()
     func renderer(overlay: MKOverlay) -> MKOverlayRenderer?
     func traitCollectionUpdated(previous: UITraitCollection?)
@@ -20,15 +20,11 @@ protocol MapMixin: AnyObject {
     func regionWillChange(mapView: MKMapView, animated: Bool)
     func didChangeUserTrackingMode(mapView: MKMapView, animated: Bool)
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView?
-    func items(at location: CLLocationCoordinate2D) -> [DataSource]?
+    func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]?
     func applyTheme(scheme: MarlinScheme?)
 }
 
 extension MapMixin {
-    
-    func updateMixin(mapView: MKMapView) {
-        
-    }
     
     func cleanupMixin() {
     }
@@ -65,7 +61,7 @@ extension MapMixin {
         return nil
     }
     
-    func items(at location: CLLocationCoordinate2D) -> [DataSource]? {
+    func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
         return nil
     }
     

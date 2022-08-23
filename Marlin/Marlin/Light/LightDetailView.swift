@@ -7,33 +7,48 @@
 
 import SwiftUI
 import MapKit
+import CoreData
 
 struct LightDetailView: View {
     
-    @State private var region: MKCoordinateRegion
-    
     @FetchRequest var lights : FetchedResults<Light>
+    var fetchRequest: NSFetchRequest<Light>
     var featureNumber: String
     var volumeNumber: String
+    
+    @StateObject var mapState: MapState = MapState()
     
     init(featureNumber: String, volumeNumber: String) {
         self.featureNumber = featureNumber
         self.volumeNumber = volumeNumber
-        _region = State(initialValue: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10)))
         
         let predicate = NSPredicate(format: "featureNumber == %@ AND volumeNumber == %@", self.featureNumber, self.volumeNumber)
 
         //Intialize the FetchRequest property wrapper
         self._lights = FetchRequest(entity: Light.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Light.characteristicNumber, ascending: true)], predicate: predicate)
+        fetchRequest = Light.fetchRequest()
+        fetchRequest.predicate = predicate
     }
     
     var body: some View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap()
-                        .mixin(LightMap(lights: lights.map { $0 }))
+                    MarlinMap(name: "Light Detail Map", mixins: [LightMap(fetchRequest: fetchRequest, showLightsAsTiles: false)], mapState: mapState)
                     .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                    .onAppear {
+                        mapState.lightAnnotations = lights.map { $0 }
+                        if lights.count > 0 {
+                            mapState.center = MKCoordinateRegion(center: lights[0].coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+                        }
+                    }
+                    .onChange(of: lights.first) { light in
+                        let lights = lights.map { $0 }
+                        mapState.lightAnnotations = lights
+                        if let firstLight = light {
+                            mapState.center = MKCoordinateRegion(center: firstLight.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+                        }
+                    }
                     Group {
                         Text("\(lights[0].featureNumber ?? "") \(lights[0].internationalFeature ?? "")")
                             .font(Font.overline)
@@ -65,7 +80,7 @@ struct LightDetailView: View {
                 .background(Color.surfaceColor)
                 .modifier(CardModifier())
                 .onAppear {
-                    self.region = MKCoordinateRegion(center: self.lights[0].coordinate, span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))
+                    mapState.center = MKCoordinateRegion(center: self.lights[0].coordinate, span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))
                 }
             } header: {
                 EmptyView().frame(width: 0, height: 0, alignment: .leading)

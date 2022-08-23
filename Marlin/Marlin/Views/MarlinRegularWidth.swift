@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct MarlinRegularWidth: View {
     @State var activeRailItem: DataSourceItem? = nil
@@ -16,7 +17,7 @@ struct MarlinRegularWidth: View {
     
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
     @State var selection: String? = nil
-    
+        
     var marlinMap: MarlinMap
     
     var body: some View {
@@ -71,7 +72,7 @@ struct MarlinRegularWidth: View {
                             Spacer()
                             // bottom right button stack
                             VStack(alignment: .trailing, spacing: 16) {
-                                UserTrackingButton(mapView: marlinMap.mutatingWrapper.mapView)
+                                UserTrackingButton()
                                     .offset(x: -8, y: -24)
                                     .fixedSize()
                             }

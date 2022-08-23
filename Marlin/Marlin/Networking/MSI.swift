@@ -99,9 +99,17 @@ public class MSI {
             
             let noticeWeek = Int(newestLight?.noticeWeek ?? "0") ?? 0
             
+            print("Query for lights in volume \(lightVolume) after year:\(newestLight?.noticeYear ?? "") week:\(noticeWeek)")
             session.request(MSIRouter.readLights(volume: lightVolume.volumeQuery, noticeYear: newestLight?.noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1)))
                 .validate()
                 .responseDecodable(of: LightsPropertyContainer.self, queue: queue) { response in
+                    
+                    switch response.result {
+                    case .success:
+                        print("Validation Successful")
+                    case .failure(let error):
+                        print("ERROR: \(error.localizedDescription) \(error)")
+                    }
                     queue.async(execute:{
                         Task.detached {
                             if let lights = response.value?.ngalol {

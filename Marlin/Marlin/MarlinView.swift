@@ -35,22 +35,41 @@ struct MarlinView: View {
     @State var showSnackbar: Bool = false
     @State var snackbarModel: SnackbarModel?
     
+    @StateObject var mapState: MapState = MapState()
+    
+    @AppStorage("userTrackingMode") var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
+
     let mapItemsTappedPub = NotificationCenter.default.publisher(for: .MapItemsTapped)
     let mapViewDisappearingPub = NotificationCenter.default.publisher(for: .MapViewDisappearing)
     let dismissBottomSheetPub = NotificationCenter.default.publisher(for: .DismissBottomSheet)
     let snackbarPub = NotificationCenter.default.publisher(for: .SnackbarNotification)
     
-    var marlinMap = MarlinMap()
-        .mixin(PersistedMapState())
+    var mixins: [MapMixin]
+    
+    init() {
+        var mixins: [MapMixin] = [PersistedMapState()]
+        if UserDefaults.standard.dataSourceEnabled(Asam.self) {
+            mixins.append(AsamMap())
+        }
+        if UserDefaults.standard.dataSourceEnabled(Modu.self) {
+            mixins.append(ModuMap())
+        }
+        if UserDefaults.standard.dataSourceEnabled(Light.self) {
+            mixins.append(LightMap(showLightsAsTiles: true))
+        }
+        self.mixins = mixins
+    }
     
     var body: some View {
         ZStack {
             if horizontalSizeClass == .compact {
-                MarlinCompactWidth(dataSourceList: dataSourceList, marlinMap: marlinMap)
+                
+                MarlinCompactWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
+                )
             } else {
                 NavigationView {
                     ZStack {
-                        MarlinRegularWidth(dataSourceList: dataSourceList, marlinMap: marlinMap)
+                        MarlinRegularWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState))
                         GeometryReader { geometry in
                             SideMenu(width: min(geometry.size.width - 56, 512),
                                      isOpen: self.menuOpen,
@@ -70,6 +89,9 @@ struct MarlinView: View {
                 .tint(Color.onPrimaryColor)
                 .navigationViewStyle(.stack)
             }
+        }
+        .onChange(of: userTrackingMode) { newValue in
+            mapState.userTrackingMode = newValue
         }
         // TODO: this can be replaced with .sheet introduced in ios16 when we are at 17
         .bottomSheet(isPresented: $showBottomSheet, delegate: self) {
@@ -113,22 +135,6 @@ struct MarlinView: View {
             if showBottomSheet {
                 showBottomSheet.toggle()
             }
-        }
-        .onAppear {
-            marlinMap
-                .if(UserDefaults.standard.dataSourceEnabled(Asam.self)) { view in
-                    view.mixin(AsamMap())
-                }
-            
-            marlinMap
-                .if(UserDefaults.standard.dataSourceEnabled(Modu.self)) { view in
-                    view.mixin(ModuMap())
-                }
-
-            marlinMap
-                .if(UserDefaults.standard.dataSourceEnabled(Light.self)) { view in
-                    view.mixin(LightMap())
-                }
         }
     }
     
