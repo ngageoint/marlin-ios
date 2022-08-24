@@ -14,6 +14,20 @@ class ModuMap: NSObject, MapMixin {
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     
+    func getFetchRequest(mapState: MapState) -> NSFetchRequest<NSFetchRequestResult> {
+        if let showModus = mapState.showModus, showModus == true {
+            let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Modu.fetchRequest()
+            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Modu.date, ascending: true)]
+            return fetchRequest
+        } else {
+            let nilFetchRequest: NSFetchRequest<NSFetchRequestResult> = Modu.fetchRequest()
+            nilFetchRequest.predicate = NSPredicate(value: false)
+            nilFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Modu.date, ascending: true)]
+            return nilFetchRequest
+        }
+    }
+    
+    
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
         mapView.register(ModuAnnotationView.self, forAnnotationViewWithReuseIdentifier: ModuAnnotationView.ReuseID)
         
@@ -23,11 +37,6 @@ class ModuMap: NSObject, MapMixin {
                 self?.focusModu(modu: $0)
             })
             .store(in: &cancellable)
-
-        let fetchRequest = Modu.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Modu.date, ascending: true)]
-        
-        marlinMap.mapState.moduFetchRequest = fetchRequest
         
         UserDefaults.standard
             .publisher(for: \.showOnMapmodu)
@@ -35,16 +44,12 @@ class ModuMap: NSObject, MapMixin {
             .handleEvents(receiveOutput: { show in
                 print("Show Modus: \(show)")
             })
-            .sink() { 
+            .sink() { [weak self] in
                 marlinMap.mapState.showModus = $0
+                marlinMap.mapState.fetchRequests[Modu.key] = self?.getFetchRequest(mapState: marlinMap.mapState)
             }
             .store(in: &cancellable)
     }
-    
-    func updateMixin(mapView: MKMapView, marlinMap: MarlinMap) {
-        
-    }
-    
     
     func focusModu(modu: Modu) {
         mapState?.center = MKCoordinateRegion(center: modu.coordinate, latitudinalMeters: 10000, longitudinalMeters: 10000)

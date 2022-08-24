@@ -25,19 +25,12 @@ class MapState: ObservableObject {
     @Published var center: MKCoordinateRegion?
     @Published var overlays: [MKOverlay] = []
     
-    @Published var asamFetchRequest: NSFetchRequest<Asam>?
+    @Published var fetchRequests: [String: NSFetchRequest<NSFetchRequestResult>] = [:]
+    
     @Published var showAsams: Bool?
-    
-    @Published var moduFetchRequest: NSFetchRequest<Modu>?
     @Published var showModus: Bool?
-    
-    @Published var lightFetchRequest: NSFetchRequest<Light>?
     @Published var showLights: Bool?
-    @Published var drawLightTiles: Bool?
-    
-    @Published var portFetchRequest: NSFetchRequest<Port>?
     @Published var showPorts: Bool?
-    @Published var drawPortTiles: Bool?
 }
 
 struct MarlinMap: UIViewRepresentable {
@@ -98,8 +91,8 @@ struct MarlinMap: UIViewRepresentable {
     func updateUIView(_ mapView: MKMapView, context: Context) {
         print("Update ui view")
         context.coordinator.mapView = mapView
-        addDataToMap(context: context)
-        
+        context.coordinator.updateDataSources(fetchRequests: mapState.fetchRequests)
+
         if let center = mapState.center, center.center.latitude != context.coordinator.setCenter?.latitude, center.center.longitude != context.coordinator.setCenter?.longitude {
                 mapView.setRegion(center, animated: true)
             context.coordinator.setCenter = center.center
@@ -153,30 +146,6 @@ struct MarlinMap: UIViewRepresentable {
         mapView.addOverlays(overlaysToAdd)
     }
     
-    func addDataToMap(context: Context) {
-        if let showAsams = mapState.showAsams, showAsams == true {
-            context.coordinator.updateAsamFetchRequest(mapState.asamFetchRequest)
-        } else {
-            let nilFetchRequest = Asam.fetchRequest()
-            nilFetchRequest.predicate = NSPredicate(value: false)
-            nilFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Asam.date, ascending: true)]
-            
-            context.coordinator.updateAsamFetchRequest(nilFetchRequest)
-        }
-        
-        if let showModus = mapState.showModus, showModus == true {
-            context.coordinator.updateModuFetchRequest(mapState.moduFetchRequest)
-        } else {
-            let nilFetchRequest = Modu.fetchRequest()
-            nilFetchRequest.predicate = NSPredicate(value: false)
-            nilFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Modu.date, ascending: true)]
-            
-            context.coordinator.updateModuFetchRequest(nilFetchRequest)
-        }
-        
-        context.coordinator.updateLightFetchRequest(mapState.lightFetchRequest)
-    }
-    
     func MKMapRectForCoordinateRegion(region:MKCoordinateRegion) -> MKMapRect {
         let topLeft = CLLocationCoordinate2D(latitude: region.center.latitude + (region.span.latitudeDelta/2), longitude: region.center.longitude - (region.span.longitudeDelta/2))
         let bottomRight = CLLocationCoordinate2D(latitude: region.center.latitude - (region.span.latitudeDelta/2), longitude: region.center.longitude + (region.span.longitudeDelta/2))
@@ -201,14 +170,11 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     var marlinMap: MarlinMap
     var focusedAnnotation: AnnotationWithView?
     var mapAnnotationFocusedSink: AnyCancellable?
-    
-    var asamFetchedResultsController: NSFetchedResultsController<Asam>?
-    var moduFetchedResultsController: NSFetchedResultsController<Modu>?
-    var lightFetchedResultsController: NSFetchedResultsController<Light>?
-    var portFetchedResultsController: NSFetchedResultsController<Port>?
-    
+
     var setCenter: CLLocationCoordinate2D?
     var trackingModeSet: MKUserTrackingMode?
+    
+    var fetchedResultsControllers: [String : NSFetchedResultsController<NSFetchRequestResult>] = [:]
 
     init(_ marlinMap: MarlinMap) {
         self.marlinMap = marlinMap
@@ -222,79 +188,25 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             })
     }
     
-    func updatePortFetchRequest(_ fetchRequest: NSFetchRequest<Port>?) {
-        guard let fetchRequest = fetchRequest else {
-            return
-        }
-        
-        if portFetchedResultsController == nil {
-            portFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        } else {
-            // is predicate different?
-            if portFetchedResultsController?.fetchRequest.predicate != fetchRequest.predicate {
-                mapView?.removeAnnotations(portFetchedResultsController?.fetchedObjects ?? [])
+    func updateDataSources(fetchRequests: [String : NSFetchRequest<NSFetchRequestResult>]) {
+        for (key, fetchRequest) in fetchRequests {
+            if let controller = fetchedResultsControllers[key] {
+                if controller.fetchRequest.predicate != fetchRequest.predicate {
+                    mapView?.removeAnnotations(controller.fetchedObjects as? [MKAnnotation] ?? [])
+                }
+                controller.fetchRequest.predicate = fetchRequest.predicate
+                fetchedResultsControllers[key] = controller
+                initiateFetchResultsController(fetchedResultsController: controller)
+            } else {
+                let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+                controller.delegate = self
+                fetchedResultsControllers[key] = controller
+                initiateFetchResultsController(fetchedResultsController: controller)
             }
-            portFetchedResultsController?.fetchRequest.predicate = fetchRequest.predicate
         }
-        
-        initiateFetchResultsController(fetchedResultsController: portFetchedResultsController as? NSFetchedResultsController<NSManagedObject>)
     }
     
-    func updateLightFetchRequest(_ fetchRequest: NSFetchRequest<Light>?) {
-        guard let fetchRequest = fetchRequest else {
-            return
-        }
-
-        if lightFetchedResultsController == nil {
-            lightFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        } else {
-            // is predicate different?
-            if lightFetchedResultsController?.fetchRequest.predicate != fetchRequest.predicate {
-                mapView?.removeAnnotations(lightFetchedResultsController?.fetchedObjects ?? [])
-            }
-            lightFetchedResultsController?.fetchRequest.predicate = fetchRequest.predicate
-        }
-        
-        initiateFetchResultsController(fetchedResultsController: lightFetchedResultsController as? NSFetchedResultsController<NSManagedObject>)
-    }
-    
-    func updateModuFetchRequest(_ fetchRequest: NSFetchRequest<Modu>?) {
-        guard let fetchRequest = fetchRequest else {
-            return
-        }
-        
-        if moduFetchedResultsController == nil {
-            moduFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        } else {
-            // is predicate different?
-            if moduFetchedResultsController?.fetchRequest.predicate != fetchRequest.predicate {
-                mapView?.removeAnnotations(moduFetchedResultsController?.fetchedObjects ?? [])
-            }
-            moduFetchedResultsController?.fetchRequest.predicate = fetchRequest.predicate
-        }
-        
-        initiateFetchResultsController(fetchedResultsController: moduFetchedResultsController as? NSFetchedResultsController<NSManagedObject>)
-    }
-    
-    func updateAsamFetchRequest(_ fetchRequest: NSFetchRequest<Asam>?) {
-        guard let fetchRequest = fetchRequest else {
-            return
-        }
-
-        if asamFetchedResultsController == nil {
-            asamFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        } else {
-            // is predicate different?
-            if asamFetchedResultsController?.fetchRequest.predicate != fetchRequest.predicate {
-                mapView?.removeAnnotations(asamFetchedResultsController?.fetchedObjects ?? [])
-            }
-            asamFetchedResultsController?.fetchRequest.predicate = fetchRequest.predicate
-        }
-        
-        initiateFetchResultsController(fetchedResultsController: asamFetchedResultsController as? NSFetchedResultsController<NSManagedObject>)
-    }
-    
-    func initiateFetchResultsController(fetchedResultsController: NSFetchedResultsController<NSManagedObject>?) {
+    func initiateFetchResultsController(fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>?) {
         fetchedResultsController?.delegate = self
         do {
             try fetchedResultsController?.performFetch()
@@ -503,6 +415,11 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        if let mixins = marlinMap.mixins {
+            for mixin in mixins {
+                mixin.regionDidChange(mapView: mapView, animated: animated)
+            }
+        }
     }
     
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {

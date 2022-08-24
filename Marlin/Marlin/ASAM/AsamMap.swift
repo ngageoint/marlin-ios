@@ -14,7 +14,17 @@ class AsamMap: NSObject, MapMixin {
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     
-    func cleanupMixin() {
+    func getFetchRequest(mapState: MapState) -> NSFetchRequest<NSFetchRequestResult> {
+        if let showAsams = mapState.showAsams, showAsams == true {
+            let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Asam.fetchRequest()
+            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Asam.date, ascending: true)]
+            return fetchRequest
+        } else {
+            let nilFetchRequest: NSFetchRequest<NSFetchRequestResult> = Asam.fetchRequest()
+            nilFetchRequest.predicate = NSPredicate(value: false)
+            nilFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Asam.date, ascending: true)]
+            return nilFetchRequest
+        }
     }
     
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
@@ -28,18 +38,14 @@ class AsamMap: NSObject, MapMixin {
             })
             .store(in: &cancellable)
         
-        let fetchRequest = Asam.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Asam.date, ascending: true)]
-        
-        marlinMap.mapState.asamFetchRequest = fetchRequest
-
         UserDefaults.standard.publisher(for: \.showOnMapasam)
             .removeDuplicates()
             .handleEvents(receiveOutput: { show in
                 print("Show Asams: \(show)")
             })
-            .sink() {
+            .sink() { [weak self] in
                 marlinMap.mapState.showAsams = $0
+                marlinMap.mapState.fetchRequests[Asam.key] = self?.getFetchRequest(mapState: marlinMap.mapState)
             }
             .store(in: &cancellable)
     }
@@ -48,11 +54,6 @@ class AsamMap: NSObject, MapMixin {
         mapState?.center = MKCoordinateRegion(center: asam.coordinate, latitudinalMeters: 10000, longitudinalMeters: 10000)
     }
     
-    func updateMixin(mapView: MKMapView, marlinMap: MarlinMap) {
-//        mapState = marlinMap.mapState
-    }
-    
-
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
         guard let asamAnnotation = annotation as? Asam else {
             return nil

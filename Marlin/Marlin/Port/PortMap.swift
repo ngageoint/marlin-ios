@@ -11,6 +11,7 @@ import CoreData
 import Combine
 
 class PortMap: NSObject, MapMixin {
+    var minZoom = 4
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     
@@ -25,7 +26,7 @@ class PortMap: NSObject, MapMixin {
     
     func getFetchRequest(mapState: MapState) -> NSFetchRequest<Port> {
         if let showPorts = mapState.showPorts, showPorts == true {
-            let fetchRequest = Port.fetchRequest()
+            let fetchRequest = self.fetchRequest ?? Port.fetchRequest()
             fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Port.portNumber, ascending: true)]
             return fetchRequest
         } else {
@@ -38,7 +39,6 @@ class PortMap: NSObject, MapMixin {
     
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
         mapState = marlinMap.mapState
-        mapState?.drawPortTiles = showPortsAsTiles
         mapView.register(PortAnnotationView.self, forAnnotationViewWithReuseIdentifier: PortAnnotationView.ReuseID)
         
         NotificationCenter.default.publisher(for: .FocusPort)
@@ -58,27 +58,28 @@ class PortMap: NSObject, MapMixin {
             })
             .sink() { [weak self] in
                 marlinMap.mapState.showPorts = $0
-                if let portOverlay = self?.portOverlay {
-                    marlinMap.mapState.overlays.removeAll { overlay in
-                        if let overlay = overlay as? FetchRequestTileOverlay<Port> {
-                            return overlay == portOverlay
+                if let showPortsAsTiles = self?.showPortsAsTiles, showPortsAsTiles {
+                    if let portOverlay = self?.portOverlay {
+                        marlinMap.mapState.overlays.removeAll { overlay in
+                            if let overlay = overlay as? FetchRequestTileOverlay<Port> {
+                                return overlay == portOverlay
+                            }
+                            return false
                         }
-                        return false
                     }
+                    let newFetchRequest = self?.getFetchRequest(mapState: marlinMap.mapState)
+                    let newOverlay = FetchRequestTileOverlay<Port>()
+                    
+                    newOverlay.tileSize = CGSize(width: 512, height: 512)
+                    newOverlay.minimumZ = self?.minZoom ?? 0
+                    newOverlay.fetchRequest = newFetchRequest
+                    self?.portOverlay = newOverlay
+                    marlinMap.mapState.overlays.append(newOverlay)
+                } else {
+                    marlinMap.mapState.fetchRequests[Light.key] = self?.getFetchRequest(mapState: marlinMap.mapState) as? NSFetchRequest<NSFetchRequestResult>
                 }
-                let newFetchRequest = self?.getFetchRequest(mapState: marlinMap.mapState)
-                let newOverlay = FetchRequestTileOverlay<Port>()
-                
-                newOverlay.tileSize = CGSize(width: 512, height: 512)
-                newOverlay.minimumZ = 4
-                newOverlay.fetchRequest = newFetchRequest
-                self?.portOverlay = newOverlay
-                marlinMap.mapState.overlays.append(newOverlay)
             }
             .store(in: &cancellable)
-    }
-    
-    func updateMixin(mapView: MKMapView, marlinMap: MarlinMap) {
     }
     
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
@@ -94,7 +95,7 @@ class PortMap: NSObject, MapMixin {
     }
     
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
-        if let portOverlay = portOverlay, portOverlay.zoomLevel < 8 {
+        if let portOverlay = portOverlay, portOverlay.zoomLevel < minZoom {
             return nil
         }
         let screenPercentage = 0.03

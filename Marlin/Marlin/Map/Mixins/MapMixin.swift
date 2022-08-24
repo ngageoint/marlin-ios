@@ -14,6 +14,7 @@ protocol MapMixin: AnyObject {
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView)
     func renderer(overlay: MKOverlay) -> MKOverlayRenderer?
     func traitCollectionUpdated(previous: UITraitCollection?)
+    func regionDidChange(mapView: MKMapView, animated: Bool)
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView?
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]?
 }
@@ -51,5 +52,8 @@ extension MapMixin {
     
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
         return nil
+    }
+    
+    func regionDidChange(mapView: MKMapView, animated: Bool) {
     }
 }

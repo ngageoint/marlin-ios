@@ -11,6 +11,7 @@ import CoreData
 import Combine
 
 class LightMap: NSObject, MapMixin {
+    var minZoom = 4
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     
@@ -25,7 +26,7 @@ class LightMap: NSObject, MapMixin {
     
     func getFetchRequest(mapState: MapState) -> NSFetchRequest<Light> {
         if let showLights = mapState.showLights, showLights == true {
-            let fetchRequest = Light.fetchRequest()
+            let fetchRequest = self.fetchRequest ?? Light.fetchRequest()
             fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
             return fetchRequest
         } else {
@@ -38,7 +39,6 @@ class LightMap: NSObject, MapMixin {
     
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
         mapState = marlinMap.mapState
-        mapState?.drawLightTiles = showLightsAsTiles
         
         mapView.register(LightAnnotationView.self, forAnnotationViewWithReuseIdentifier: LightAnnotationView.ReuseID)
         
@@ -72,12 +72,12 @@ class LightMap: NSObject, MapMixin {
                     let newOverlay = FetchRequestTileOverlay<Light>()
                     
                     newOverlay.tileSize = CGSize(width: 512, height: 512)
-                    newOverlay.minimumZ = 4
+                    newOverlay.minimumZ = self?.minZoom ?? 0
                     newOverlay.fetchRequest = newFetchRequest
                     self?.lightOverlay = newOverlay
                     marlinMap.mapState.overlays.append(newOverlay)
                 } else {
-                    marlinMap.mapState.lightFetchRequest = self?.getFetchRequest(mapState: marlinMap.mapState)
+                    marlinMap.mapState.fetchRequests[Light.key] = self?.getFetchRequest(mapState: marlinMap.mapState) as? NSFetchRequest<NSFetchRequestResult>
                 }
                 
             }
@@ -100,9 +100,7 @@ class LightMap: NSObject, MapMixin {
     }
     
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
-        
-        // TODO: fix this
-        if let lightOverlay = lightOverlay, lightOverlay.zoomLevel < 8 {
+        if let lightOverlay = lightOverlay, lightOverlay.zoomLevel < minZoom {
             return nil
         }
         let screenPercentage = 0.03

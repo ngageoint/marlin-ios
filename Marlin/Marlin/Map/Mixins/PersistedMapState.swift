@@ -10,10 +10,6 @@ import MapKit
 
 class PersistedMapState: NSObject, MapMixin {
     
-    func updateMixin(mapView: MKMapView, marlinMap: MarlinMap) {
-        
-    }
-    
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
         let region = UserDefaults.standard.mapRegion
         if CLLocationCoordinate2DIsValid(region.center) {
