@@ -24,7 +24,7 @@ extension Light: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFFFFC500)
 }
 
-class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
+class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
     var enlarged: Bool = false
     
     var shouldEnlarge: Bool = false

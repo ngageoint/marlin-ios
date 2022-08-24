@@ -34,17 +34,14 @@ struct LightDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "Light Detail Map", mixins: [LightMap(fetchRequest: fetchRequest, showLightsAsTiles: true)], mapState: mapState)
+                    MarlinMap(name: "Light Detail Map", mixins: [LightMap(fetchRequest: fetchRequest, showLightsAsTiles: false)], mapState: mapState)
                     .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     .onAppear {
-                        mapState.lightAnnotations = lights.map { $0 }
                         if lights.count > 0 {
                             mapState.center = MKCoordinateRegion(center: lights[0].coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
                         }
                     }
                     .onChange(of: lights.first) { light in
-                        let lights = lights.map { $0 }
-                        mapState.lightAnnotations = lights
                         if let firstLight = light {
                             mapState.center = MKCoordinateRegion(center: firstLight.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
                         }

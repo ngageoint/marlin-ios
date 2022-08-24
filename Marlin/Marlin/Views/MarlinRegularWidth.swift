@@ -72,7 +72,7 @@ struct MarlinRegularWidth: View {
                             Spacer()
                             // bottom right button stack
                             VStack(alignment: .trailing, spacing: 16) {
-                                UserTrackingButton()
+                                UserTrackingButton(mapState: marlinMap.mapState)
                                     .offset(x: -8, y: -24)
                                     .fixedSize()
                             }

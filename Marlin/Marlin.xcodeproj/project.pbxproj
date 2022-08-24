@@ -23,7 +23,7 @@
 		F707BA89287C68E7006A94C4 /* RaconCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA88287C68E7006A94C4 /* RaconCard.swift */; };
 		F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA8A287C6D18006A94C4 /* MorseCode.swift */; };
 		F707BA8D287C89ED006A94C4 /* LightMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA8C287C89ED006A94C4 /* LightMap.swift */; };
-		F707BA8F287DC999006A94C4 /* LightTileOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA8E287DC999006A94C4 /* LightTileOverlay.swift */; };
+		F707BA8F287DC999006A94C4 /* FetchRequestTileOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA8E287DC999006A94C4 /* FetchRequestTileOverlay.swift */; };
 		F707BA91287F1767006A94C4 /* RaconImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA90287F1767006A94C4 /* RaconImage.swift */; };
 		F707BA9328805476006A94C4 /* PersistedMapState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA9228805476006A94C4 /* PersistedMapState.swift */; };
 		F707BA97288590E2006A94C4 /* FogSignalImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA96288590E2006A94C4 /* FogSignalImage.swift */; };
@@ -59,7 +59,6 @@
 		F740AA77289D68D800754293 /* MarlinCompactWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F740AA76289D68D800754293 /* MarlinCompactWidth.swift */; };
 		F740AA79289D6DED00754293 /* MarlinRegularWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F740AA78289D6DED00754293 /* MarlinRegularWidth.swift */; };
 		F79168FE28B56031004FFEBA /* PortMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79168FD28B56031004FFEBA /* PortMap.swift */; };
-		F791690028B560C3004FFEBA /* PortTileOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79168FF28B560C3004FFEBA /* PortTileOverlay.swift */; };
 		F7A54CC42848149700E5F565 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CC32848149700E5F565 /* Tests_iOS.swift */; };
 		F7A54CC62848149700E5F565 /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CC52848149700E5F565 /* Tests_iOSLaunchTests.swift */; };
 		F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CA82848149500E5F565 /* Marlin.xcdatamodeld */; };
@@ -162,7 +161,7 @@
 		F707BA88287C68E7006A94C4 /* RaconCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaconCard.swift; sourceTree = "<group>"; };
 		F707BA8A287C6D18006A94C4 /* MorseCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseCode.swift; sourceTree = "<group>"; };
 		F707BA8C287C89ED006A94C4 /* LightMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightMap.swift; sourceTree = "<group>"; };
-		F707BA8E287DC999006A94C4 /* LightTileOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightTileOverlay.swift; sourceTree = "<group>"; };
+		F707BA8E287DC999006A94C4 /* FetchRequestTileOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchRequestTileOverlay.swift; sourceTree = "<group>"; };
 		F707BA90287F1767006A94C4 /* RaconImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaconImage.swift; sourceTree = "<group>"; };
 		F707BA9228805476006A94C4 /* PersistedMapState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedMapState.swift; sourceTree = "<group>"; };
 		F707BA96288590E2006A94C4 /* FogSignalImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FogSignalImage.swift; sourceTree = "<group>"; };
@@ -200,7 +199,6 @@
 		F740AA76289D68D800754293 /* MarlinCompactWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinCompactWidth.swift; sourceTree = "<group>"; };
 		F740AA78289D6DED00754293 /* MarlinRegularWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinRegularWidth.swift; sourceTree = "<group>"; };
 		F79168FD28B56031004FFEBA /* PortMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortMap.swift; sourceTree = "<group>"; };
-		F79168FF28B560C3004FFEBA /* PortTileOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortTileOverlay.swift; sourceTree = "<group>"; };
 		F7A54CA92848149500E5F565 /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		F7A54CAA2848149500E5F565 /* MarlinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinApp.swift; sourceTree = "<group>"; };
 		F7A54CAB2848149500E5F565 /* AsamListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamListView.swift; sourceTree = "<group>"; };
@@ -328,7 +326,6 @@
 				F707BA88287C68E7006A94C4 /* RaconCard.swift */,
 				F707BA8A287C6D18006A94C4 /* MorseCode.swift */,
 				F707BA8C287C89ED006A94C4 /* LightMap.swift */,
-				F707BA8E287DC999006A94C4 /* LightTileOverlay.swift */,
 				F707BA90287F1767006A94C4 /* RaconImage.swift */,
 				F707BA96288590E2006A94C4 /* FogSignalImage.swift */,
 				F7D5C05A28A6B458000C2C29 /* StructureImage.swift */,
@@ -345,7 +342,6 @@
 				F71CC6EF28AD1647000A326C /* PortDetailView.swift */,
 				F71CC6F128AD1D23000A326C /* PortActionBar.swift */,
 				F79168FD28B56031004FFEBA /* PortMap.swift */,
-				F79168FF28B560C3004FFEBA /* PortTileOverlay.swift */,
 			);
 			path = Port;
 			sourceTree = "<group>";
@@ -374,6 +370,7 @@
 				F7D671D5286DFAA800758F1C /* UserTrackingButton.swift */,
 				F7D671D7286E163E00758F1C /* MapSettings.swift */,
 				F7D671D9286E3B3D00758F1C /* ExtraMapTypes.swift */,
+				F707BA8E287DC999006A94C4 /* FetchRequestTileOverlay.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -861,7 +858,7 @@
 				F7D671ED2874737F00758F1C /* DataSourceCell.swift in Sources */,
 				F7D5C05928A6A48F000C2C29 /* DataSourceList.swift in Sources */,
 				F71CC6F028AD1647000A326C /* PortDetailView.swift in Sources */,
-				F707BA8F287DC999006A94C4 /* LightTileOverlay.swift in Sources */,
+				F707BA8F287DC999006A94C4 /* FetchRequestTileOverlay.swift in Sources */,
 				F71DF4882857B0CC00686951 /* MarlinView.swift in Sources */,
 				F7ADDCEE28902D5300137D95 /* AnnotationWithView.swift in Sources */,
 				F707BA7728760EE7006A94C4 /* Light+CoreDataClass.swift in Sources */,
@@ -909,7 +906,6 @@
 				F71CC6F828AE71BA000A326C /* KeyValueSection.swift in Sources */,
 				F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */,
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
-				F791690028B560C3004FFEBA /* PortTileOverlay.swift in Sources */,
 				F707BA8328786F11006A94C4 /* LightColorImage.swift in Sources */,
 				F7F59795285BE27400F9B32E /* Property.swift in Sources */,
 				F7F597B02866241100F9B32E /* NavigationalWarningsAreaDataSource.swift in Sources */,

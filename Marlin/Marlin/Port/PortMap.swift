@@ -16,11 +16,24 @@ class PortMap: NSObject, MapMixin {
     
     var showPortsAsTiles: Bool = true
     var fetchRequest: NSFetchRequest<Port>?
-    var portOverlay: PortTileOverlay?
+    var portOverlay: FetchRequestTileOverlay<Port>?
     
     public init(fetchRequest: NSFetchRequest<Port>? = nil, showPortsAsTiles: Bool = true) {
         self.fetchRequest = fetchRequest
         self.showPortsAsTiles = showPortsAsTiles
+    }
+    
+    func getFetchRequest(mapState: MapState) -> NSFetchRequest<Port> {
+        if let showPorts = mapState.showPorts, showPorts == true {
+            let fetchRequest = Port.fetchRequest()
+            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Port.portNumber, ascending: true)]
+            return fetchRequest
+        } else {
+            let nilFetchRequest = Port.fetchRequest()
+            nilFetchRequest.predicate = NSPredicate(value: false)
+            nilFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Port.portNumber, ascending: true)]
+            return nilFetchRequest
+        }
     }
     
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
@@ -37,19 +50,30 @@ class PortMap: NSObject, MapMixin {
             })
             .store(in: &cancellable)
         
-        let fetchRequest = Port.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Port.portNumber, ascending: true)]
-        
-        marlinMap.mapState.portFetchRequest = fetchRequest
-        
         UserDefaults.standard
             .publisher(for: \.showOnMapport)
             .removeDuplicates()
             .handleEvents(receiveOutput: { show in
                 print("Show Ports: \(show)")
             })
-            .sink() { 
+            .sink() { [weak self] in
                 marlinMap.mapState.showPorts = $0
+                if let portOverlay = self?.portOverlay {
+                    marlinMap.mapState.overlays.removeAll { overlay in
+                        if let overlay = overlay as? FetchRequestTileOverlay<Port> {
+                            return overlay == portOverlay
+                        }
+                        return false
+                    }
+                }
+                let newFetchRequest = self?.getFetchRequest(mapState: marlinMap.mapState)
+                let newOverlay = FetchRequestTileOverlay<Port>()
+                
+                newOverlay.tileSize = CGSize(width: 512, height: 512)
+                newOverlay.minimumZ = 4
+                newOverlay.fetchRequest = newFetchRequest
+                self?.portOverlay = newOverlay
+                marlinMap.mapState.overlays.append(newOverlay)
             }
             .store(in: &cancellable)
     }

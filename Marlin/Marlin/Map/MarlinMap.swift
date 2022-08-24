@@ -23,9 +23,7 @@ class MapSingleTap: UITapGestureRecognizer {
 class MapState: ObservableObject {
     @Published var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
     @Published var center: MKCoordinateRegion?
-    @Published var mixinRequestsUpdate: Date?
     @Published var overlays: [MKOverlay] = []
-    @Published var lightAnnotations: [Light] = []
     
     @Published var asamFetchRequest: NSFetchRequest<Asam>?
     @Published var showAsams: Bool?
@@ -47,12 +45,8 @@ struct MarlinMap: UIViewRepresentable {
     
     @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
     
-    @State var annotationToShrink: EnlargableAnnotation?
-    @State var focusedAnnotation: AnnotationWithView?
-    
     @ObservedObject var mapState: MapState
-    
-    @State var setCenter: CLLocationCoordinate2D?
+
     var mixins: [MapMixin]?
     var name: String
     
@@ -63,8 +57,6 @@ struct MarlinMap: UIViewRepresentable {
         } else {
             self.mapState = MapState()
         }
-        self.annotationToShrink = annotationToShrink
-        self.focusedAnnotation = focusedAnnotation
         self.mixins = mixins
     }
     
@@ -104,15 +96,18 @@ struct MarlinMap: UIViewRepresentable {
     }
     
     func updateUIView(_ mapView: MKMapView, context: Context) {
+        print("Update ui view")
         context.coordinator.mapView = mapView
         addDataToMap(context: context)
         
-        DispatchQueue.main.async {
-            mapView.userTrackingMode = MKUserTrackingMode(rawValue: mapState.userTrackingMode) ?? .none
-            if let center = mapState.center, center.center.latitude != setCenter?.latitude, center.center.longitude != setCenter?.longitude {
+        if let center = mapState.center, center.center.latitude != context.coordinator.setCenter?.latitude, center.center.longitude != context.coordinator.setCenter?.longitude {
                 mapView.setRegion(center, animated: true)
-                setCenter = center.center
-            }
+            context.coordinator.setCenter = center.center
+        }
+        
+        if context.coordinator.trackingModeSet != MKUserTrackingMode(rawValue: mapState.userTrackingMode) {
+            mapView.userTrackingMode = MKUserTrackingMode(rawValue: mapState.userTrackingMode) ?? .none
+            context.coordinator.trackingModeSet = MKUserTrackingMode(rawValue: mapState.userTrackingMode)
         }
                 
         if mapType == ExtraMapTypes.osm.rawValue {
@@ -129,23 +124,6 @@ struct MarlinMap: UIViewRepresentable {
                 mapView.removeOverlay(osmOverlay)
             }
         }
-        if let mixins = mixins {
-            for mixin in mixins {
-                mixin.updateMixin(mapView: mapView, marlinMap: self)
-            }
-        }
-        
-        let annotationsToRemove = mapView.annotations.filter { annotation in
-            if let light = annotation as? Light {
-                return !mapState.lightAnnotations.contains { stateAnnotation in
-                    return light.isSame(stateAnnotation)
-                }
-            }
-            return false
-        }
-        
-        mapView.removeAnnotations(annotationsToRemove)
-        mapView.addAnnotations(mapState.lightAnnotations)
         
         let overlaysToRemove = mapView.overlays.filter { overlay in
             if let overlay = overlay as? MKTileOverlay {
@@ -158,7 +136,7 @@ struct MarlinMap: UIViewRepresentable {
             }
             return false
         }
-        
+
         let overlaysToAdd = mapState.overlays.filter { overlay in
             if let overlay = overlay as? MKTileOverlay {
                 return !mapView.overlays.contains(where: { mapOverlay in
@@ -170,7 +148,7 @@ struct MarlinMap: UIViewRepresentable {
             }
             return false
         }
-        
+
         mapView.removeOverlays(overlaysToRemove)
         mapView.addOverlays(overlaysToAdd)
     }
@@ -196,25 +174,7 @@ struct MarlinMap: UIViewRepresentable {
             context.coordinator.updateModuFetchRequest(nilFetchRequest)
         }
         
-        if let showLights = mapState.showLights, showLights == true {
-            context.coordinator.updateLightFetchRequest(mapState.lightFetchRequest)
-        } else {
-            let nilFetchRequest = Light.fetchRequest()
-            nilFetchRequest.predicate = NSPredicate(value: false)
-            nilFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
-            
-            context.coordinator.updateLightFetchRequest(nilFetchRequest)
-        }
-        
-        if let showPorts = mapState.showPorts, showPorts == true {
-            context.coordinator.updatePortFetchRequest(mapState.portFetchRequest)
-        } else {
-            let nilFetchRequest = Port.fetchRequest()
-            nilFetchRequest.predicate = NSPredicate(value: false)
-            nilFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Port.portNumber, ascending: true)]
-            
-            context.coordinator.updatePortFetchRequest(nilFetchRequest)
-        }
+        context.coordinator.updateLightFetchRequest(mapState.lightFetchRequest)
     }
     
     func MKMapRectForCoordinateRegion(region:MKCoordinateRegion) -> MKMapRect {
@@ -241,28 +201,19 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     var marlinMap: MarlinMap
     var focusedAnnotation: AnnotationWithView?
     var mapAnnotationFocusedSink: AnyCancellable?
-    var locationManager = CLLocationManager()
     
     var asamFetchedResultsController: NSFetchedResultsController<Asam>?
     var moduFetchedResultsController: NSFetchedResultsController<Modu>?
     var lightFetchedResultsController: NSFetchedResultsController<Light>?
     var portFetchedResultsController: NSFetchedResultsController<Port>?
-    var lightTileOverlay: LightTileOverlay?
-    var portTileOverlay: PortTileOverlay?
+    
+    var setCenter: CLLocationCoordinate2D?
+    var trackingModeSet: MKUserTrackingMode?
 
     init(_ marlinMap: MarlinMap) {
         self.marlinMap = marlinMap
         super.init()
         
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        
-        // Check for Location Services
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.requestWhenInUseAuthorization()
-            locationManager.startUpdatingLocation()
-        }
-
         mapAnnotationFocusedSink =
         NotificationCenter.default.publisher(for: .MapAnnotationFocused)
             .compactMap {$0.object as? MapAnnotationFocusedNotification}
@@ -276,43 +227,17 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             return
         }
         
-        if let drawPortTiles = marlinMap.mapState.drawPortTiles, drawPortTiles {
-            if portTileOverlay == nil {
-                self.portTileOverlay = PortTileOverlay()
-                
-                self.portTileOverlay?.tileSize = CGSize(width: 512, height: 512)
-                self.portTileOverlay?.minimumZ = 4
-                if let portTileOverlay = portTileOverlay {
-                    mapView?.addOverlay(portTileOverlay)
-                }
-            }
-            if portTileOverlay?.predicate != fetchRequest.predicate {
-                if let portTileOverlay = portTileOverlay {
-                    DispatchQueue.main.async { [self] in
-                        mapView?.removeOverlay(portTileOverlay)
-                        self.portTileOverlay = PortTileOverlay()
-                        
-                        self.portTileOverlay?.tileSize = CGSize(width: 512, height: 512)
-                        self.portTileOverlay?.minimumZ = 4
-                        self.portTileOverlay?.predicate = fetchRequest.predicate
-                        mapView?.addOverlay(self.portTileOverlay!)
-                    }
-                }
-            }
-            
+        if portFetchedResultsController == nil {
+            portFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
         } else {
-            if portFetchedResultsController == nil {
-                portFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-            } else {
-                // is predicate different?
-                if portFetchedResultsController?.fetchRequest.predicate != fetchRequest.predicate {
-                    mapView?.removeAnnotations(portFetchedResultsController?.fetchedObjects ?? [])
-                }
-                portFetchedResultsController?.fetchRequest.predicate = fetchRequest.predicate
+            // is predicate different?
+            if portFetchedResultsController?.fetchRequest.predicate != fetchRequest.predicate {
+                mapView?.removeAnnotations(portFetchedResultsController?.fetchedObjects ?? [])
             }
-            
-            initiateFetchResultsController(fetchedResultsController: portFetchedResultsController as? NSFetchedResultsController<NSManagedObject>)
+            portFetchedResultsController?.fetchRequest.predicate = fetchRequest.predicate
         }
+        
+        initiateFetchResultsController(fetchedResultsController: portFetchedResultsController as? NSFetchedResultsController<NSManagedObject>)
     }
     
     func updateLightFetchRequest(_ fetchRequest: NSFetchRequest<Light>?) {
@@ -320,41 +245,17 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             return
         }
 
-        if let drawLightTiles = marlinMap.mapState.drawLightTiles, drawLightTiles {
-            if lightTileOverlay == nil {
-                self.lightTileOverlay = LightTileOverlay()
-
-                self.lightTileOverlay?.tileSize = CGSize(width: 512, height: 512)
-                self.lightTileOverlay?.minimumZ = 4
-                if let lightTileOverlay = lightTileOverlay {
-                    mapView?.addOverlay(lightTileOverlay)
-                }
-            }
-            if lightTileOverlay?.predicate != fetchRequest.predicate {
-                if let lightTileOverlay = lightTileOverlay {
-                    mapView?.removeOverlay(lightTileOverlay)
-                    self.lightTileOverlay = LightTileOverlay()
-                    
-                    self.lightTileOverlay?.tileSize = CGSize(width: 512, height: 512)
-                    self.lightTileOverlay?.minimumZ = 4
-                    self.lightTileOverlay?.predicate = fetchRequest.predicate
-                    mapView?.addOverlay(self.lightTileOverlay!)
-                }
-            }
-            
+        if lightFetchedResultsController == nil {
+            lightFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
         } else {
-            if lightFetchedResultsController == nil {
-                lightFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-            } else {
-                // is predicate different?
-                if lightFetchedResultsController?.fetchRequest.predicate != fetchRequest.predicate {
-                    mapView?.removeAnnotations(lightFetchedResultsController?.fetchedObjects ?? [])
-                }
-                lightFetchedResultsController?.fetchRequest.predicate = fetchRequest.predicate
+            // is predicate different?
+            if lightFetchedResultsController?.fetchRequest.predicate != fetchRequest.predicate {
+                mapView?.removeAnnotations(lightFetchedResultsController?.fetchedObjects ?? [])
             }
-            
-            initiateFetchResultsController(fetchedResultsController: lightFetchedResultsController as? NSFetchedResultsController<NSManagedObject>)
+            lightFetchedResultsController?.fetchRequest.predicate = fetchRequest.predicate
         }
+        
+        initiateFetchResultsController(fetchedResultsController: lightFetchedResultsController as? NSFetchedResultsController<NSManagedObject>)
     }
     
     func updateModuFetchRequest(_ fetchRequest: NSFetchRequest<Modu>?) {
@@ -602,60 +503,23 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        if let mixins = marlinMap.mixins {
-        for mixin in mixins {
-            mixin.regionDidChange(mapView: mapView, animated: animated)
-        }
-        }
     }
     
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
-        if let mixins = marlinMap.mixins {
-        for mixin in mixins {
-            mixin.regionWillChange(mapView: mapView, animated: animated)
-        }
-        }
     }
     
     func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
-        if let mixins = marlinMap.mixins {
-        for mixin in mixins {
-            mixin.didChangeUserTrackingMode(mapView: mapView, animated: animated)
-        }
-        }
+        marlinMap.mapState.userTrackingMode = mode.rawValue
     }
     
     func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         if let mixins = marlinMap.mixins {
-        for mixin in mixins {
-            mixin.traitCollectionUpdated(previous: previousTraitCollection)
-        }
+            for mixin in mixins {
+                mixin.traitCollectionUpdated(previous: previousTraitCollection)
+            }
         }
     }
 
-}
-
-extension MarlinMapCoordinator: CLLocationManagerDelegate {
-    
-    func checkLocationAuthorization(authorizationStatus: CLAuthorizationStatus? = nil) {
-        switch (authorizationStatus) {
-        case .authorizedAlways, .authorizedWhenInUse:
-            locationManager.startUpdatingLocation()
-        case .restricted, .denied:
-            // show alert instructing how to turn on permissions
-            print("Location Servies: Denied / Restricted")
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        case .none:
-            locationManager.requestWhenInUseAuthorization()
-        @unknown default:
-            print("who knows")
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        self.checkLocationAuthorization(authorizationStatus: status)
-    }
 }
 
 extension MarlinMapCoordinator: NSFetchedResultsControllerDelegate {

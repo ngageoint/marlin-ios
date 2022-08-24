@@ -13,3 +13,9 @@ protocol AnnotationWithView: MKAnnotation {
     var color: UIColor { get }
     var clusteringIdentifier: String? { get set }
 }
+
+protocol MapImage {
+    func mapImage(marker: Bool, small: Bool) -> [UIImage]
+    var latitude: Double { get }
+    var longitude: Double { get }
+}

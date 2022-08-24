@@ -263,7 +263,7 @@ extension Int64 {
     }
 }
 
-class Port: NSManagedObject, MKAnnotation, AnnotationWithView {
+class Port: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
     var annotationView: MKAnnotationView?
         
     var enlarged: Bool = false

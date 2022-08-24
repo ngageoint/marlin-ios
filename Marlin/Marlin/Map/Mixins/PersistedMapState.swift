@@ -17,7 +17,9 @@ class PersistedMapState: NSObject, MapMixin {
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
         let region = UserDefaults.standard.mapRegion
         if CLLocationCoordinate2DIsValid(region.center) {
-            marlinMap.mapState.center = region
+            if MKUserTrackingMode(rawValue: marlinMap.mapState.userTrackingMode) ?? MKUserTrackingMode.none == .none {
+                marlinMap.mapState.center = region
+            }
         }
     }
     

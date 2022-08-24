@@ -14,19 +14,32 @@ class LightMap: NSObject, MapMixin {
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     
-    var lights: [Light]?
     var showLightsAsTiles: Bool = true
     var fetchRequest: NSFetchRequest<Light>?
-    var lightOverlay: LightTileOverlay?
+    var lightOverlay: FetchRequestTileOverlay<Light>?
     
     public init(fetchRequest: NSFetchRequest<Light>? = nil, showLightsAsTiles: Bool = true) {
         self.fetchRequest = fetchRequest
         self.showLightsAsTiles = showLightsAsTiles
     }
     
+    func getFetchRequest(mapState: MapState) -> NSFetchRequest<Light> {
+        if let showLights = mapState.showLights, showLights == true {
+            let fetchRequest = Light.fetchRequest()
+            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
+            return fetchRequest
+        } else {
+            let nilFetchRequest = Light.fetchRequest()
+            nilFetchRequest.predicate = NSPredicate(value: false)
+            nilFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
+            return nilFetchRequest
+        }
+    }
+    
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
         mapState = marlinMap.mapState
         mapState?.drawLightTiles = showLightsAsTiles
+        
         mapView.register(LightAnnotationView.self, forAnnotationViewWithReuseIdentifier: LightAnnotationView.ReuseID)
         
         NotificationCenter.default.publisher(for: .FocusLight)
@@ -37,11 +50,6 @@ class LightMap: NSObject, MapMixin {
                 self?.focusLight(light: $0)
             })
             .store(in: &cancellable)
-
-        let fetchRequest = Light.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
-        
-        marlinMap.mapState.lightFetchRequest = fetchRequest
         
         UserDefaults.standard
             .publisher(for: \.showOnMaplight)
@@ -49,14 +57,34 @@ class LightMap: NSObject, MapMixin {
             .handleEvents(receiveOutput: { show in
                 print("Show Lights: \(show)")
             })
-            .sink() { 
+            .sink() { [weak self] in
                 marlinMap.mapState.showLights = $0
+                if let showLightsAsTiles = self?.showLightsAsTiles, showLightsAsTiles {
+                    if let lightOverlay = self?.lightOverlay {
+                        marlinMap.mapState.overlays.removeAll { overlay in
+                            if let overlay = overlay as? FetchRequestTileOverlay<Light> {
+                                return overlay == lightOverlay
+                            }
+                            return false
+                        }
+                    }
+                    let newFetchRequest = self?.getFetchRequest(mapState: marlinMap.mapState)
+                    let newOverlay = FetchRequestTileOverlay<Light>()
+                    
+                    newOverlay.tileSize = CGSize(width: 512, height: 512)
+                    newOverlay.minimumZ = 4
+                    newOverlay.fetchRequest = newFetchRequest
+                    self?.lightOverlay = newOverlay
+                    marlinMap.mapState.overlays.append(newOverlay)
+                } else {
+                    marlinMap.mapState.lightFetchRequest = self?.getFetchRequest(mapState: marlinMap.mapState)
+                }
+                
             }
             .store(in: &cancellable)
     }
     
     func updateMixin(mapView: MKMapView, marlinMap: MarlinMap) {
-        print("xxx update light map mixin")
     }
     
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {

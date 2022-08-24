@@ -27,7 +27,7 @@ extension MarlinView: BottomSheetDelegate {
 
 struct MarlinView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @EnvironmentObject var locationManager: LocationManager
+    var locationManager: LocationManager = LocationManager()
 
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     @State var menuOpen: Bool = false
@@ -70,11 +70,11 @@ struct MarlinView: View {
             if horizontalSizeClass == .compact {
                 
                 MarlinCompactWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
-                )
+                ).environmentObject(locationManager)
             } else {
                 NavigationView {
                     ZStack {
-                        MarlinRegularWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState))
+                        MarlinRegularWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState)).environmentObject(locationManager)
                         GeometryReader { geometry in
                             SideMenu(width: min(geometry.size.width - 56, 512),
                                      isOpen: self.menuOpen,

@@ -65,7 +65,6 @@ struct MarlinApp: App {
         WindowGroup {
             MarlinView()
                 .environmentObject(AppState())
-                .environmentObject(LocationManager())
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .background(Color.surfaceColor)
         }
