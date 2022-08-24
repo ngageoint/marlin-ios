@@ -1,15 +1,15 @@
 //
-//  LightTileOverlay.swift
+//  PortTileOverlay.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 7/12/22.
+//  Created by Daniel Barela on 8/23/22.
 //
 
 import Foundation
 import MapKit
 import CoreData
 
-class LightTileOverlay: MKTileOverlay {
+class PortTileOverlay: MKTileOverlay {
     var zoomLevel: Int = 0
     var predicate: NSPredicate?
     
@@ -43,20 +43,18 @@ class LightTileOverlay: MKTileOverlay {
             let maxTileY = neCorner3857.y
 
             // border the tile by 20 miles since that is as far as any light i have seen.  if that is wrong, update
-            // border has to be at least 30 pixels as well
-            // miles to meters = miles * 1609.344
-            let tolerance = max(20.0 * 1609.344, ((maxTileX - minTileX) / self.tileSize.width) * 30)
-            
+            let tolerance = 20.0 * 1609.344 // miles to meters
+
             let neCornerTolerance = coord3857To4326(y: maxTileY + tolerance, x: maxTileX + tolerance)
             let swCornerTolerance = coord3857To4326(y: minTileY - tolerance, x: minTileX - tolerance)
             let minQueryLon = swCornerTolerance.lon
             let maxQueryLon = neCornerTolerance.lon
             let minQueryLat = swCornerTolerance.lat
             let maxQueryLat = neCornerTolerance.lat
-            
-            let fetchRequest: NSFetchRequest<Light>
-            fetchRequest = Light.fetchRequest()
-            
+
+            let fetchRequest: NSFetchRequest<Port>
+            fetchRequest = Port.fetchRequest()
+
             if let predicate = predicate {
                 fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, NSPredicate(
                     format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minQueryLat, maxQueryLat, minQueryLon, maxQueryLon
@@ -66,13 +64,13 @@ class LightTileOverlay: MKTileOverlay {
                     format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minQueryLat, maxQueryLat, minQueryLon, maxQueryLon
                 )
             }
-            
-                    
+
+
             let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
             context.automaticallyMergesChangesFromParent = false
             context.parent = PersistenceController.shared.container.viewContext
             let objects = try? context.fetch(fetchRequest)
-            print("xxx found \(objects?.count ?? 0) lights")
+            print("xxx found \(objects?.count ?? 0) ports")
 
             UIGraphicsBeginImageContext(self.tileSize)
 
@@ -85,7 +83,6 @@ class LightTileOverlay: MKTileOverlay {
                 layer.render(in: UIGraphicsGetCurrentContext()!)
             }
 
-        
             if let objects = objects {
                 for object in objects {
                     let mapImages = object.mapImage(small: path.z < 13)
@@ -97,7 +94,7 @@ class LightTileOverlay: MKTileOverlay {
                     }
                 }
             }
-            
+
             let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
             UIGraphicsEndImageContext()
             guard let cgImage = newImage.cgImage else {

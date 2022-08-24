@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (5.6.1)
+  - Alamofire (5.6.2)
   - crs-ios (1.0.3)
   - geopackage-ios (7.2.1):
     - ogc-api-features-json-ios (~> 4.0.1)
@@ -7,9 +7,9 @@ PODS:
     - sf-wkb-ios (~> 4.0.1)
     - sf-wkt-ios (~> 2.0.1)
     - tiff-ios (~> 4.0.0)
-  - KIF (3.8.6):
-    - KIF/Core (= 3.8.6)
-  - KIF/Core (3.8.6)
+  - KIF (3.8.7):
+    - KIF/Core (= 3.8.7)
+  - KIF/Core (3.8.7)
   - Nimble (10.0.0)
   - ogc-api-features-json-ios (4.0.1):
     - sf-geojson-ios (~> 4.0.2)
@@ -74,10 +74,10 @@ SPEC REPOS:
     - tiff-ios
 
 SPEC CHECKSUMS:
-  Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
+  Alamofire: d368e1ff8a298e6dde360e35a3e68e6c610e7204
   crs-ios: b02a1ce24228f85cfc945507fc58b7a35b7bbb88
   geopackage-ios: a4b2aebe2733944cab1f1de623f0b1c9d8fbc4f4
-  KIF: e2e1bab222b6c9523a0a88caab31f8524fe82404
+  KIF: 779cdbca106633b94ecee7b036537490ebdbd9de
   Nimble: 5316ef81a170ce87baf72dd961f22f89a602ff84
   ogc-api-features-json-ios: 74fdd1cdc97161811051ea7a18a8cfe793be5c35
   OHHTTPStubs: 90eac6d8f2c18317baeca36698523dc67c513831
@@ -91,6 +91,6 @@ SPEC CHECKSUMS:
   sf-wkt-ios: 6d445ec129678901065417fc5a404b167027a684
   tiff-ios: fb3f51fcd3400ea1dd8f710d2a7832a18d112580
 
-PODFILE CHECKSUM: bcb14d9ffc8e7a41660a10cf55b3d12709988dd2
+PODFILE CHECKSUM: a59adb525541ea04e27a48166ae628ff65621585
 
 COCOAPODS: 1.11.3

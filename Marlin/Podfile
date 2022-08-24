@@ -9,6 +9,9 @@ use_modular_headers!
 def common_pods
   pod "Alamofire"
   pod 'geopackage-ios'
+#  pod 'sf-ios', :git => 'https://github.com/ngageoint/simple-features-ios.git', :branch => 'develop'
+#  pod 'grid-ios', :git => 'https://github.com/ngageoint/grid-ios.git', :branch => 'master'
+#  pod 'gars-ios', :git => 'https://github.com/ngageoint/gars-ios.git', :branch => 'master'
 end
 
 target 'Marlin' do
@@ -24,11 +27,3 @@ target 'Marlin' do
     end
 end
 
-# post_install do |installer|
-#   installer.pods_project.targets.each do |target|
-#     target.build_configurations.each do |config|
-#       config.build_settings.delete 'ARCHS'
-#       config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
-#     end
-#   end
-# end

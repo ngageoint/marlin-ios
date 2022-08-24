@@ -27,6 +27,8 @@ extension MarlinView: BottomSheetDelegate {
 
 struct MarlinView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @EnvironmentObject var locationManager: LocationManager
+
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     @State var menuOpen: Bool = false
     @State var showBottomSheet: Bool = false
@@ -56,6 +58,9 @@ struct MarlinView: View {
         }
         if UserDefaults.standard.dataSourceEnabled(Light.self) {
             mixins.append(LightMap(showLightsAsTiles: true))
+        }
+        if UserDefaults.standard.dataSourceEnabled(Port.self) {
+            mixins.append(PortMap(showPortsAsTiles: true))
         }
         self.mixins = mixins
     }
@@ -95,7 +100,7 @@ struct MarlinView: View {
         }
         // TODO: this can be replaced with .sheet introduced in ios16 when we are at 17
         .bottomSheet(isPresented: $showBottomSheet, delegate: self) {
-            MarlinBottomSheet(itemList: bottomSheetItemList)
+            MarlinBottomSheet(itemList: bottomSheetItemList).environmentObject(locationManager)
         }
         .snackbar(isPresented: $showSnackbar) {
             Group {

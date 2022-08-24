@@ -229,7 +229,7 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView {
         }
         
         if isFogSignal {
-            images.append(FogSignalImage(frame: CGRect(x: 0, y: 0, width: 30 * scale, height: 30 * scale), arcWidth: 1.5 * CGFloat(scale)) ?? clearImage)
+            images.append(FogSignalImage(frame: CGRect(x: 0, y: 0, width: 30 * scale, height: 30 * scale), arcWidth: 1.5 * CGFloat(scale), drawArcs: !small) ?? clearImage)
         }
         
         if let lightSectors = lightSectors {

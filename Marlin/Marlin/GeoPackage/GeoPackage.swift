@@ -34,9 +34,9 @@ class GeoPackage: NSObject {
         self.polygonColor = polygonColor
     }
     
-    func addOverlay() {
+    func getOverlay() -> BaseMapOverlay? {
         guard let manager = GPKGGeoPackageFactory.manager() else {
-            return
+            return nil
         }
         let geoPackagePath = Bundle.main.path(forResource: fileName, ofType: "gpkg")
         if !manager.exists(fileName) {
@@ -45,7 +45,7 @@ class GeoPackage: NSObject {
                     return manager.importGeoPackage(fromPath: geoPackagePath)
                 }
                 if !imported {
-                    return
+                    return nil
                 }
             } catch {
                 print("Error:", error.localizedDescription)
@@ -54,40 +54,39 @@ class GeoPackage: NSObject {
         }
         
         geoPackage = manager.open(fileName)
-        if let geoPackage = geoPackage {
-            let featureDao = geoPackage.featureDao(withTableName: tableName)
-            
-            featureTiles = GPKGFeatureTiles(geoPackage: geoPackage, andFeatureDao: featureDao)
-            featureTiles?.indexManager = GPKGFeatureIndexManager(geoPackage: geoPackage, andFeatureDao: featureDao)
-            featureTiles?.polygonColor = polygonColor
-            featureTiles?.polygonFillColor = polygonColor
-            featureTiles?.fillPolygon = true
-            featureTiles?.polygonStrokeWidth = 0.3
-            featureTiles?.lineStrokeWidth = 0.1
-            featureTiles?.lineColor = UIColor.lightGray
-            
-            overlay = BaseMapOverlay(featureTiles: featureTiles, fillColor: fillColor)
-            overlay?.minZoom = 0
-            overlay?.canReplaceMapContent = canReplaceMapContent
-            
-            if let overlay = overlay {
-                mapView.insertOverlay(overlay, at: index)
-            }
+        guard let geoPackage = geoPackage else {
+            return nil
         }
-    }
-    
-    func updateLayers() {
+        
+        let featureDao = geoPackage.featureDao(withTableName: tableName)
+        
+        featureTiles = GPKGFeatureTiles(geoPackage: geoPackage, andFeatureDao: featureDao)
+        featureTiles?.indexManager = GPKGFeatureIndexManager(geoPackage: geoPackage, andFeatureDao: featureDao)
         featureTiles?.polygonColor = polygonColor
         featureTiles?.polygonFillColor = polygonColor
-        if let oldOverlay = overlay {
-            mapView.removeOverlay(oldOverlay)
-            overlay = BaseMapOverlay(featureTiles: featureTiles, fillColor: fillColor)
-            overlay?.minZoom = 0
-            overlay?.canReplaceMapContent = true
-            if let overlay = overlay {
-                mapView.insertOverlay(overlay, at: index)
-            }
+        featureTiles?.fillPolygon = true
+        featureTiles?.polygonStrokeWidth = 0.3
+        featureTiles?.lineStrokeWidth = 0.1
+        featureTiles?.lineColor = UIColor.lightGray
+        
+        overlay = BaseMapOverlay(featureTiles: featureTiles, fillColor: fillColor)
+        overlay?.minZoom = 0
+        overlay?.canReplaceMapContent = canReplaceMapContent
+        
+        return overlay
+    }
+    
+    func recreateOverlay() -> BaseMapOverlay? {
+        guard let featureTiles = featureTiles else {
+            return nil
         }
+
+        featureTiles.polygonColor = polygonColor
+        featureTiles.polygonFillColor = polygonColor
+        overlay = BaseMapOverlay(featureTiles: featureTiles, fillColor: fillColor)
+        overlay?.minZoom = 0
+        overlay?.canReplaceMapContent = true
+        return overlay
     }
     
     func columnName(dataColumnsDao: GPKGDataColumnsDao?, featureRow: GPKGFeatureRow, columnName: String) -> String {

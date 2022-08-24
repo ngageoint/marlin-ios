@@ -51,7 +51,7 @@ struct PortActionBar: View {
                 if showFocusButton {
                     Button(action: {
                         NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
-//                        NotificationCenter.default.post(name: .FocusLight, object: self.light)
+                        NotificationCenter.default.post(name: .FocusPort, object: self.port)
                     }) {
                         Label(
                             title: {},

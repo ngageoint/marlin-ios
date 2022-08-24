@@ -470,6 +470,56 @@ class Port: NSManagedObject, MKAnnotation, AnnotationWithView {
             throw MSIError.batchInsertError
         }
     }
+    
+    func mapImage(marker: Bool = false, small: Bool = false) -> [UIImage] {
+        let scale = marker ? 1 : 2
+        
+        var images: [UIImage] = []
+        
+        if let portImage = portImage(scale: scale, small: small) {
+    
+            images.append(portImage)
+        }
+        
+        return images
+    }
+    
+    func portImage(scale: Int, small: Bool = false) -> UIImage? {
+//        if small {
+        return LightColorImage(frame: CGRect(x: 0, y: 0, width: 5 * scale, height: 5 * scale), colors: [Port.color], outerStroke: false)
+//        } else {
+//            return RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 20 * scale), arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false)
+//        }
+    }
+    
+    func view(on: MKMapView) -> MKAnnotationView {
+        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: LightAnnotationView.ReuseID, for: self)
+        let images = self.mapImage(marker: true)
+        
+        let largestSize = images.reduce(CGSize(width: 0, height: 0)) { partialResult, image in
+            return CGSize(width: max(partialResult.width, image.size.width), height: max(partialResult.height, image.size.height))
+        }
+        
+        UIGraphicsBeginImageContext(largestSize)
+        for image in images {
+            image.draw(at: CGPoint(x: (largestSize.width / 2.0) - (image.size.width / 2.0), y: (largestSize.height / 2.0) - (image.size.height / 2.0)))
+        }
+        
+        let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        guard let cgImage = newImage.cgImage else {
+            return annotationView
+        }
+        let image = UIImage(cgImage: cgImage)
+        
+        if let lav = annotationView as? LightAnnotationView {
+            lav.combinedImage = image
+        } else {
+            annotationView.image = image
+        }
+        self.annotationView = annotationView
+        return annotationView
+    }
 }
 
 struct PortPropertyContainer: Decodable {

@@ -110,6 +110,8 @@ struct MarlinRegularWidth: View {
             LightsListView(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == NavigationalWarning.key {
             NavigationalWarningListView()
+        } else if dataSource.key == Port.key {
+            PortListView(focusedItem: itemWrapper, watchFocusedItem: true)
         }
     }
 }

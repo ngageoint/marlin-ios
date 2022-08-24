@@ -34,7 +34,7 @@ struct LightDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "Light Detail Map", mixins: [LightMap(fetchRequest: fetchRequest, showLightsAsTiles: false)], mapState: mapState)
+                    MarlinMap(name: "Light Detail Map", mixins: [LightMap(fetchRequest: fetchRequest, showLightsAsTiles: true)], mapState: mapState)
                     .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     .onAppear {
                         mapState.lightAnnotations = lights.map { $0 }

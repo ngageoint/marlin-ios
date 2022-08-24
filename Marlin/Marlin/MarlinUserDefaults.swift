@@ -54,6 +54,10 @@ extension UserDefaults {
     @objc var showOnMaplight: Bool {
         bool(forKey: "showOnMap\(Light.key)")
     }
+    
+    @objc var showOnMapport: Bool {
+        bool(forKey: "showOnMap\(Port.key)")
+    }
 
     @objc var mapRegion: MKCoordinateRegion {
         get {

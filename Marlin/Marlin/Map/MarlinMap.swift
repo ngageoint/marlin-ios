@@ -36,6 +36,10 @@ class MapState: ObservableObject {
     @Published var lightFetchRequest: NSFetchRequest<Light>?
     @Published var showLights: Bool?
     @Published var drawLightTiles: Bool?
+    
+    @Published var portFetchRequest: NSFetchRequest<Port>?
+    @Published var showPorts: Bool?
+    @Published var drawPortTiles: Bool?
 }
 
 struct MarlinMap: UIViewRepresentable {
@@ -143,10 +147,32 @@ struct MarlinMap: UIViewRepresentable {
         mapView.removeAnnotations(annotationsToRemove)
         mapView.addAnnotations(mapState.lightAnnotations)
         
-        for overlay in mapState.overlays {
-            mapView.removeOverlay(overlay)
-            mapView.addOverlay(overlay)
+        let overlaysToRemove = mapView.overlays.filter { overlay in
+            if let overlay = overlay as? MKTileOverlay {
+                return !mapState.overlays.contains(where: { stateOverlay in
+                    if let stateOverlay = stateOverlay as? MKTileOverlay {
+                        return overlay == stateOverlay
+                    }
+                    return false
+                })
+            }
+            return false
         }
+        
+        let overlaysToAdd = mapState.overlays.filter { overlay in
+            if let overlay = overlay as? MKTileOverlay {
+                return !mapView.overlays.contains(where: { mapOverlay in
+                    if let mapOverlay = mapOverlay as? MKTileOverlay {
+                        return overlay == mapOverlay
+                    }
+                    return false
+                })
+            }
+            return false
+        }
+        
+        mapView.removeOverlays(overlaysToRemove)
+        mapView.addOverlays(overlaysToAdd)
     }
     
     func addDataToMap(context: Context) {
@@ -179,6 +205,16 @@ struct MarlinMap: UIViewRepresentable {
             
             context.coordinator.updateLightFetchRequest(nilFetchRequest)
         }
+        
+        if let showPorts = mapState.showPorts, showPorts == true {
+            context.coordinator.updatePortFetchRequest(mapState.portFetchRequest)
+        } else {
+            let nilFetchRequest = Port.fetchRequest()
+            nilFetchRequest.predicate = NSPredicate(value: false)
+            nilFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Port.portNumber, ascending: true)]
+            
+            context.coordinator.updatePortFetchRequest(nilFetchRequest)
+        }
     }
     
     func MKMapRectForCoordinateRegion(region:MKCoordinateRegion) -> MKMapRect {
@@ -210,7 +246,9 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     var asamFetchedResultsController: NSFetchedResultsController<Asam>?
     var moduFetchedResultsController: NSFetchedResultsController<Modu>?
     var lightFetchedResultsController: NSFetchedResultsController<Light>?
+    var portFetchedResultsController: NSFetchedResultsController<Port>?
     var lightTileOverlay: LightTileOverlay?
+    var portTileOverlay: PortTileOverlay?
 
     init(_ marlinMap: MarlinMap) {
         self.marlinMap = marlinMap
@@ -233,6 +271,50 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             })
     }
     
+    func updatePortFetchRequest(_ fetchRequest: NSFetchRequest<Port>?) {
+        guard let fetchRequest = fetchRequest else {
+            return
+        }
+        
+        if let drawPortTiles = marlinMap.mapState.drawPortTiles, drawPortTiles {
+            if portTileOverlay == nil {
+                self.portTileOverlay = PortTileOverlay()
+                
+                self.portTileOverlay?.tileSize = CGSize(width: 512, height: 512)
+                self.portTileOverlay?.minimumZ = 4
+                if let portTileOverlay = portTileOverlay {
+                    mapView?.addOverlay(portTileOverlay)
+                }
+            }
+            if portTileOverlay?.predicate != fetchRequest.predicate {
+                if let portTileOverlay = portTileOverlay {
+                    DispatchQueue.main.async { [self] in
+                        mapView?.removeOverlay(portTileOverlay)
+                        self.portTileOverlay = PortTileOverlay()
+                        
+                        self.portTileOverlay?.tileSize = CGSize(width: 512, height: 512)
+                        self.portTileOverlay?.minimumZ = 4
+                        self.portTileOverlay?.predicate = fetchRequest.predicate
+                        mapView?.addOverlay(self.portTileOverlay!)
+                    }
+                }
+            }
+            
+        } else {
+            if portFetchedResultsController == nil {
+                portFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+            } else {
+                // is predicate different?
+                if portFetchedResultsController?.fetchRequest.predicate != fetchRequest.predicate {
+                    mapView?.removeAnnotations(portFetchedResultsController?.fetchedObjects ?? [])
+                }
+                portFetchedResultsController?.fetchRequest.predicate = fetchRequest.predicate
+            }
+            
+            initiateFetchResultsController(fetchedResultsController: portFetchedResultsController as? NSFetchedResultsController<NSManagedObject>)
+        }
+    }
+    
     func updateLightFetchRequest(_ fetchRequest: NSFetchRequest<Light>?) {
         guard let fetchRequest = fetchRequest else {
             return
@@ -251,8 +333,12 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             if lightTileOverlay?.predicate != fetchRequest.predicate {
                 if let lightTileOverlay = lightTileOverlay {
                     mapView?.removeOverlay(lightTileOverlay)
-                    lightTileOverlay.predicate = fetchRequest.predicate
-                    mapView?.addOverlay(lightTileOverlay)
+                    self.lightTileOverlay = LightTileOverlay()
+                    
+                    self.lightTileOverlay?.tileSize = CGSize(width: 512, height: 512)
+                    self.lightTileOverlay?.minimumZ = 4
+                    self.lightTileOverlay?.predicate = fetchRequest.predicate
+                    mapView?.addOverlay(self.lightTileOverlay!)
                 }
             }
             

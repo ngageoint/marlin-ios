@@ -12,6 +12,7 @@ import SwiftUI
 struct MarlinBottomSheet: View {
     @ObservedObject var itemList: BottomSheetItemList
     @State var selectedItem: Int = 0
+    @EnvironmentObject var locationManager: LocationManager
     
     var pages: Int { itemList.bottomSheetItems?.count ?? 0 }
     
@@ -70,6 +71,9 @@ struct MarlinBottomSheet: View {
                             .transition(.opacity)
                     } else if let light = item.item as? Light {
                         LightSummaryView(light: light, showMoreDetails: true)
+                            .transition(.opacity)
+                    } else if let port = item.item as? Port {
+                        PortSummaryView(port: port, currentLocation: locationManager.lastLocation, showMoreDetails: true)
                             .transition(.opacity)
                     }
                 }

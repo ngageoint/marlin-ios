@@ -1,8 +1,8 @@
 //
-//  LightMap.swift
+//  PortMap.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 7/11/22.
+//  Created by Daniel Barela on 8/23/22.
 //
 
 import Foundation
@@ -10,71 +10,67 @@ import MapKit
 import CoreData
 import Combine
 
-class LightMap: NSObject, MapMixin {
+class PortMap: NSObject, MapMixin {
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     
-    var lights: [Light]?
-    var showLightsAsTiles: Bool = true
-    var fetchRequest: NSFetchRequest<Light>?
-    var lightOverlay: LightTileOverlay?
+    var showPortsAsTiles: Bool = true
+    var fetchRequest: NSFetchRequest<Port>?
+    var portOverlay: PortTileOverlay?
     
-    public init(fetchRequest: NSFetchRequest<Light>? = nil, showLightsAsTiles: Bool = true) {
+    public init(fetchRequest: NSFetchRequest<Port>? = nil, showPortsAsTiles: Bool = true) {
         self.fetchRequest = fetchRequest
-        self.showLightsAsTiles = showLightsAsTiles
+        self.showPortsAsTiles = showPortsAsTiles
     }
     
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
         mapState = marlinMap.mapState
-        mapState?.drawLightTiles = showLightsAsTiles
-        mapView.register(LightAnnotationView.self, forAnnotationViewWithReuseIdentifier: LightAnnotationView.ReuseID)
+        mapState?.drawPortTiles = showPortsAsTiles
+        mapView.register(PortAnnotationView.self, forAnnotationViewWithReuseIdentifier: PortAnnotationView.ReuseID)
         
-        NotificationCenter.default.publisher(for: .FocusLight)
+        NotificationCenter.default.publisher(for: .FocusPort)
             .compactMap {
-                $0.object as? Light
+                $0.object as? Port
             }
             .sink(receiveValue: { [weak self] in
-                self?.focusLight(light: $0)
+                self?.focusPort(port: $0)
             })
             .store(in: &cancellable)
-
-        let fetchRequest = Light.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
         
-        marlinMap.mapState.lightFetchRequest = fetchRequest
+        let fetchRequest = Port.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Port.portNumber, ascending: true)]
+        
+        marlinMap.mapState.portFetchRequest = fetchRequest
         
         UserDefaults.standard
-            .publisher(for: \.showOnMaplight)
+            .publisher(for: \.showOnMapport)
             .removeDuplicates()
             .handleEvents(receiveOutput: { show in
-                print("Show Lights: \(show)")
+                print("Show Ports: \(show)")
             })
             .sink() { 
-                marlinMap.mapState.showLights = $0
+                marlinMap.mapState.showPorts = $0
             }
             .store(in: &cancellable)
     }
     
     func updateMixin(mapView: MKMapView, marlinMap: MarlinMap) {
-        print("xxx update light map mixin")
     }
     
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
-        guard let lightAnnotation = annotation as? Light else {
+        guard let portAnnotation = annotation as? Port else {
             return nil
         }
         
-        let annotationView = lightAnnotation.view(on: mapView)
+        let annotationView = portAnnotation.view(on: mapView)
         annotationView.canShowCallout = false;
         annotationView.isEnabled = false;
-        annotationView.accessibilityLabel = "Light Annotation \(lightAnnotation.featureNumber ?? "")";
+        annotationView.accessibilityLabel = "Port Annotation \(portAnnotation.portNumber)";
         return annotationView;
     }
     
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
-        
-        // TODO: fix this
-        if let lightOverlay = lightOverlay, lightOverlay.zoomLevel < 8 {
+        if let portOverlay = portOverlay, portOverlay.zoomLevel < 8 {
             return nil
         }
         let screenPercentage = 0.03
@@ -84,24 +80,24 @@ class LightMap: NSObject, MapMixin {
         let minLat = location.latitude - tolerance
         let maxLat = location.latitude + tolerance
         
-        let fetchRequest: NSFetchRequest<Light>
-        fetchRequest = Light.fetchRequest()
-                
+        let fetchRequest: NSFetchRequest<Port>
+        fetchRequest = Port.fetchRequest()
+        
         fetchRequest.predicate = NSPredicate(
-            format: "characteristicNumber = 1 AND latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
+            format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
         )
         
         let context = PersistenceController.shared.container.viewContext
         return try? context.fetch(fetchRequest)
     }
-
-    func focusLight(light: Light) {
-        mapState?.center = MKCoordinateRegion(center: light.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+    
+    func focusPort(port: Port) {
+        mapState?.center = MKCoordinateRegion(center: port.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
     }
 }
 
-class LightAnnotationView: MKAnnotationView {
-    static let ReuseID = "light"
+class PortAnnotationView: MKAnnotationView {
+    static let ReuseID = "port"
     
     /// - Tag: ClusterIdentifier
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
