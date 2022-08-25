@@ -83,12 +83,12 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
             format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", queryBounds.swCorner.y, queryBounds.neCorner.y, queryBounds.swCorner.x, queryBounds.neCorner.x
         )
         
-        if let predicate = tileFetchRequest.predicate {
+        if let predicate = fetchRequest.predicate {
             tileFetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, boundsPredicate])
         } else {
             tileFetchRequest.predicate = boundsPredicate
         }
-        
+                
         let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         context.automaticallyMergesChangesFromParent = false
         context.parent = PersistenceController.shared.container.viewContext
