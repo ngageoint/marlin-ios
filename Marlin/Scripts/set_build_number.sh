@@ -5,7 +5,7 @@
 #  Marlin
 #
 
-BRANCH=${1:-'master'}
+BRANCH=${1:-'main'}
 APP_BUILD_NUMBER=$(expr $(git rev-list $BRANCH --count) - $(git rev-list HEAD..$BRANCH --count))
 
 BUILD_NUMBER=${APP_BUILD_NUMBER}
