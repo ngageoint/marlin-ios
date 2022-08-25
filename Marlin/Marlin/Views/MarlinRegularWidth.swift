@@ -14,6 +14,9 @@ struct MarlinRegularWidth: View {
     @ObservedObject var dataSourceList: DataSourceList
     
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource)
+    let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
+        notification.object
+    }
     
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
     @State var selection: String? = nil
@@ -85,6 +88,14 @@ struct MarlinRegularWidth: View {
         .onReceive(viewDataSourcePub) { output in
             if let dataSource = output.object as? DataSource {
                 viewData(dataSource)
+            }
+        }
+        .onReceive(switchTabPub) { output in
+            if let output = output as? String {
+                let dataSource = dataSourceList.allTabs.first { item in
+                    item.key == output
+                }
+                self.activeRailItem = dataSource
             }
         }
     }

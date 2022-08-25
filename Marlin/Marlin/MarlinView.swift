@@ -45,6 +45,9 @@ struct MarlinView: View {
     let mapViewDisappearingPub = NotificationCenter.default.publisher(for: .MapViewDisappearing)
     let dismissBottomSheetPub = NotificationCenter.default.publisher(for: .DismissBottomSheet)
     let snackbarPub = NotificationCenter.default.publisher(for: .SnackbarNotification)
+    let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
+        notification.object
+    }
     
     var mixins: [MapMixin]
     
@@ -83,6 +86,9 @@ struct MarlinView: View {
                             )
                             .opacity(self.menuOpen ? 1 : 0)
                             .animation(.default, value: self.menuOpen)
+                            .onReceive(switchTabPub) { output in
+                                self.menuOpen.toggle()
+                            }
                         }
                     }
                     .if(UserDefaults.standard.hamburger) { view in
