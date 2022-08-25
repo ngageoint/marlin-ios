@@ -241,18 +241,18 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         }
         
         if isRacon {
-            let raconImage = raconImage(scale: scale, small: small)
+            let raconImage = raconImage(scale: scale, sectors: lightSectors, small: small)
             images.append(raconImage)
         }
         
         return images
     }
     
-    func raconImage(scale: Int, small: Bool = false) -> UIImage {
+    func raconImage(scale: Int, sectors: [LightSector]? = nil, small: Bool = false) -> UIImage {
         if small {
             return LightColorImage(frame: CGRect(x: 0, y: 0, width: 10 * scale, height: 10 * scale), colors: [Light.raconColor], arcWidth: 1 * CGFloat(scale), arcRadius: 2 * CGFloat(scale), drawTower: false) ?? clearImage
         } else {
-            return RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 20 * scale), arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false) ?? clearImage
+            return RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 20 * scale), sectors: sectors, arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false) ?? clearImage
         }
     }
     
