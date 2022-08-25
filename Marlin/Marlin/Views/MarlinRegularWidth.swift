@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct MarlinRegularWidth: View {
+    @AppStorage("selectedTab") var selectedTab: String = "map"
     @State var activeRailItem: DataSourceItem? = nil
     
     @ObservedObject var dataSourceList: DataSourceList
@@ -28,10 +29,24 @@ struct MarlinRegularWidth: View {
             DataSourceRail(dataSourceList: dataSourceList, activeRailItem: $activeRailItem)
                 .frame(minWidth: 72, idealWidth: 72, maxWidth: 72)
                 .onAppear {
-                    activeRailItem = dataSourceList.tabs[0]
+                    var found = false
+                    for item in dataSourceList.allTabs {
+                        if "\(item.key)List" == selectedTab {
+                            activeRailItem = item
+                            found = true
+                        }
+                    }
+                    if !found {
+                        activeRailItem = dataSourceList.tabs[0]
+                    }
                 }
                 .background(Color.surfaceColor)
                 .padding(.horizontal, 2)
+                .onChange(of: activeRailItem) { newValue in
+                    if let item = newValue {
+                        selectedTab = "\(item.key)List"
+                    }
+                }
             
             if let activeRailItem = activeRailItem {
                 NavigationView {
