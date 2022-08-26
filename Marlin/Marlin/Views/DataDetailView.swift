@@ -21,6 +21,10 @@ struct DataDetailView: View {
             if let featureNumber = light.featureNumber, let volumeNumber = light.volumeNumber {
                 LightDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
             }
+        } else if let port = data as? Port {
+            PortDetailView(port: port)
+        } else if let radioBeacon = data as? RadioBeacon {
+            RadioBeaconDetailView(radioBeacon: radioBeacon)
         }
     }
 }

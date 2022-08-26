@@ -1,8 +1,8 @@
 //
-//  LightMap.swift
+//  RadioBeaconMap.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 7/11/22.
+//  Created by Daniel Barela on 8/25/22.
 //
 
 import Foundation
@@ -10,29 +10,29 @@ import MapKit
 import CoreData
 import Combine
 
-class LightMap: NSObject, MapMixin {
+class RadioBeaconMap: NSObject, MapMixin {
     var minZoom = 4
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     
-    var showLightsAsTiles: Bool = true
-    var fetchRequest: NSFetchRequest<Light>?
-    var lightOverlay: FetchRequestTileOverlay<Light>?
+    var showRadioBeaconsAsTiles: Bool = true
+    var fetchRequest: NSFetchRequest<RadioBeacon>?
+    var radioBeaconOverlay: FetchRequestTileOverlay<RadioBeacon>?
     
-    public init(fetchRequest: NSFetchRequest<Light>? = nil, showLightsAsTiles: Bool = true) {
+    public init(fetchRequest: NSFetchRequest<RadioBeacon>? = nil, showRadioBeaconsAsTiles: Bool = true) {
         self.fetchRequest = fetchRequest
-        self.showLightsAsTiles = showLightsAsTiles
+        self.showRadioBeaconsAsTiles = showRadioBeaconsAsTiles
     }
     
-    func getFetchRequest(mapState: MapState) -> NSFetchRequest<Light> {
-        if let showLights = mapState.showLights, showLights == true {
-            let fetchRequest = self.fetchRequest ?? Light.fetchRequest()
-            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
+    func getFetchRequest(mapState: MapState) -> NSFetchRequest<RadioBeacon> {
+        if let showRadioBeacons = mapState.showRadioBeacons, showRadioBeacons == true {
+            let fetchRequest = self.fetchRequest ?? RadioBeacon.fetchRequest()
+            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \RadioBeacon.featureNumber, ascending: true)]
             return fetchRequest
         } else {
-            let nilFetchRequest = Light.fetchRequest()
+            let nilFetchRequest = RadioBeacon.fetchRequest()
             nilFetchRequest.predicate = NSPredicate(value: false)
-            nilFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
+            nilFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \RadioBeacon.featureNumber, ascending: true)]
             return nilFetchRequest
         }
     }
@@ -40,44 +40,44 @@ class LightMap: NSObject, MapMixin {
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
         mapState = marlinMap.mapState
         
-        mapView.register(LightAnnotationView.self, forAnnotationViewWithReuseIdentifier: LightAnnotationView.ReuseID)
+        mapView.register(RadioBeaconAnnotationView.self, forAnnotationViewWithReuseIdentifier: RadioBeaconAnnotationView.ReuseID)
         
-        NotificationCenter.default.publisher(for: .FocusLight)
+        NotificationCenter.default.publisher(for: .FocusRadioBeacon)
             .compactMap {
-                $0.object as? Light
+                $0.object as? RadioBeacon
             }
             .sink(receiveValue: { [weak self] in
-                self?.focusLight(light: $0)
+                self?.focusRadioBeacon(radioBeacon: $0)
             })
             .store(in: &cancellable)
         
         UserDefaults.standard
-            .publisher(for: \.showOnMaplight)
+            .publisher(for: \.showOnMapradioBeacon)
             .removeDuplicates()
             .handleEvents(receiveOutput: { show in
-                print("Show Lights: \(show)")
+                print("Show Radio Beacons: \(show)")
             })
             .sink() { [weak self] in
-                marlinMap.mapState.showLights = $0
-                if let showLightsAsTiles = self?.showLightsAsTiles, showLightsAsTiles {
-                    if let lightOverlay = self?.lightOverlay {
+                marlinMap.mapState.showRadioBeacons = $0
+                if let showRadioBeaconsAsTiles = self?.showRadioBeaconsAsTiles, showRadioBeaconsAsTiles {
+                    if let radioBeaconOverlay = self?.radioBeaconOverlay {
                         marlinMap.mapState.overlays.removeAll { overlay in
-                            if let overlay = overlay as? FetchRequestTileOverlay<Light> {
-                                return overlay == lightOverlay
+                            if let overlay = overlay as? FetchRequestTileOverlay<RadioBeacon> {
+                                return overlay == radioBeaconOverlay
                             }
                             return false
                         }
                     }
                     let newFetchRequest = self?.getFetchRequest(mapState: marlinMap.mapState)
-                    let newOverlay = FetchRequestTileOverlay<Light>()
+                    let newOverlay = FetchRequestTileOverlay<RadioBeacon>()
                     
                     newOverlay.tileSize = CGSize(width: 512, height: 512)
                     newOverlay.minimumZ = self?.minZoom ?? 0
                     newOverlay.fetchRequest = newFetchRequest
-                    self?.lightOverlay = newOverlay
+                    self?.radioBeaconOverlay = newOverlay
                     marlinMap.mapState.overlays.append(newOverlay)
                 } else {
-                    marlinMap.mapState.fetchRequests[Light.key] = self?.getFetchRequest(mapState: marlinMap.mapState) as? NSFetchRequest<NSFetchRequestResult>
+                    marlinMap.mapState.fetchRequests[RadioBeacon.key] = self?.getFetchRequest(mapState: marlinMap.mapState) as? NSFetchRequest<NSFetchRequestResult>
                 }
                 
             }
@@ -88,22 +88,22 @@ class LightMap: NSObject, MapMixin {
     }
     
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
-        guard let lightAnnotation = annotation as? Light else {
+        guard let radioBeaconAnnotation = annotation as? RadioBeacon else {
             return nil
         }
         
-        let annotationView = lightAnnotation.view(on: mapView)
+        let annotationView = radioBeaconAnnotation.view(on: mapView)
         annotationView.canShowCallout = false;
         annotationView.isEnabled = false;
-        annotationView.accessibilityLabel = "Light Annotation \(lightAnnotation.featureNumber ?? "")";
+        annotationView.accessibilityLabel = "Radio Beacon Annotation \(radioBeaconAnnotation.featureNumber)";
         return annotationView;
     }
     
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
-        if let lightOverlay = lightOverlay, lightOverlay.zoomLevel < minZoom {
+        if let radioBeaconOverlay = radioBeaconOverlay, radioBeaconOverlay.zoomLevel < minZoom {
             return nil
         }
-        guard let mapState = mapState, let showLights = mapState.showLights, showLights else {
+        guard let mapState = mapState, let showRadioBeacons = mapState.showRadioBeacons, showRadioBeacons else {
             return nil
         }
         let screenPercentage = 0.03
@@ -113,24 +113,24 @@ class LightMap: NSObject, MapMixin {
         let minLat = location.latitude - tolerance
         let maxLat = location.latitude + tolerance
         
-        let fetchRequest: NSFetchRequest<Light>
-        fetchRequest = Light.fetchRequest()
-                
+        let fetchRequest: NSFetchRequest<RadioBeacon>
+        fetchRequest = RadioBeacon.fetchRequest()
+        
         fetchRequest.predicate = NSPredicate(
-            format: "characteristicNumber = 1 AND latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
+            format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
         )
         
         let context = PersistenceController.shared.container.viewContext
         return try? context.fetch(fetchRequest)
     }
-
-    func focusLight(light: Light) {
-        mapState?.center = MKCoordinateRegion(center: light.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+    
+    func focusRadioBeacon(radioBeacon: RadioBeacon) {
+        mapState?.center = MKCoordinateRegion(center: radioBeacon.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
     }
 }
 
-class LightAnnotationView: MKAnnotationView {
-    static let ReuseID = "light"
+class RadioBeaconAnnotationView: MKAnnotationView {
+    static let ReuseID = RadioBeacon.key
     
     /// - Tag: ClusterIdentifier
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {

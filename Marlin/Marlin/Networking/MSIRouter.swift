@@ -15,6 +15,7 @@ enum MSIRouter: URLRequestConvertible
     case readNavigationalWarnings
     case readLights(volume: String, noticeYear: String? = nil, noticeWeek: String? = nil)
     case readPorts
+    case readRadioBeacons(volume: String? = nil, noticeYear: String? = nil, noticeWeek: String? = nil)
     
 //    static let baseURLString = "https://msi.om.east.paas.nga.mil/api"
     static let baseURLString = "https://msi.gs.mil/api"
@@ -32,6 +33,8 @@ enum MSIRouter: URLRequestConvertible
             return .get
         case .readPorts:
             return .get
+        case .readRadioBeacons:
+            return .get
         }
     }
     
@@ -48,6 +51,8 @@ enum MSIRouter: URLRequestConvertible
             return "/publications/ngalol/lights-buoys"
         case .readPorts:
             return "/publications/world-port-index"
+        case .readRadioBeacons:
+            return "/publications/ngalol/radiobeacons"
         }
     }
     
@@ -95,6 +100,23 @@ enum MSIRouter: URLRequestConvertible
             return [
                 "output": "json"
             ]
+        case .readRadioBeacons(volume: let volume, noticeYear: let noticeYear, noticeWeek: let noticeWeek):
+            var params = [
+                "output": "json",
+                "includeRemovals": false
+            ] as [String : Any]
+            if let volume = volume {
+                params["volume"] = volume
+            }
+            if let noticeYear = noticeYear, let noticeWeek = noticeWeek {
+                let calendar = Calendar.current
+                let week = calendar.component(.weekOfYear, from: Date())
+                let year = calendar.component(.year, from: Date())
+                params["minNoticeNumber"] = "\(noticeYear)\(noticeWeek)"
+                params["maxNoticeNumber"] = "\(year)\(String(format: "%02d", week + 1))"
+            }
+            return params
+            
         }
     }
     

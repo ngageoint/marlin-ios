@@ -9,15 +9,27 @@ import SwiftUI
 
 struct MorseCode: View {    
     var code: String
+    
+    init(code: String) {
+        self.code = code.replacingOccurrences(of: "\t", with: "   ", options: .regularExpression)
+        self.code = self.code.replacingOccurrences(of: "\\s", with: " ", options: .regularExpression)
+    }
+    
     var body: some View {
-        HStack(alignment: .top, spacing: 8) {
-            if let split = code.split(separator: " ") {
-                ForEach(split, id: \.self) { letter in
-                    if letter == "-" || letter == "•" {
-                        Rectangle()
-                            .frame(width: letter == "-" ? 24 : 8, height: 5, alignment: .center)
-                            .background(Color.onSurfaceColor)
-                    }
+        HStack(alignment: .top, spacing: 0) {
+            ForEach(Array(code.enumerated()), id: \.offset) { index, letter in
+                if letter == "-" {
+                    Rectangle()
+                        .frame(width: 24, height: 5, alignment: .center)
+                        .foregroundColor(Color.onSurfaceColor)
+                } else if letter == "•" {
+                    Rectangle()
+                        .frame(width: 8, height: 5, alignment: .center)
+                        .foregroundColor(Color.onSurfaceColor)
+                } else {
+                    Rectangle()
+                        .frame(width: 8, height: 5, alignment: .center)
+                        .foregroundColor(Color.clear)
                 }
             }
         }

@@ -76,7 +76,7 @@ class PortMap: NSObject, MapMixin {
                     self?.portOverlay = newOverlay
                     marlinMap.mapState.overlays.append(newOverlay)
                 } else {
-                    marlinMap.mapState.fetchRequests[Light.key] = self?.getFetchRequest(mapState: marlinMap.mapState) as? NSFetchRequest<NSFetchRequestResult>
+                    marlinMap.mapState.fetchRequests[Port.key] = self?.getFetchRequest(mapState: marlinMap.mapState) as? NSFetchRequest<NSFetchRequestResult>
                 }
             }
             .store(in: &cancellable)
@@ -96,6 +96,9 @@ class PortMap: NSObject, MapMixin {
     
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
         if let portOverlay = portOverlay, portOverlay.zoomLevel < minZoom {
+            return nil
+        }
+        guard let mapState = mapState, let showPorts = mapState.showPorts, showPorts else {
             return nil
         }
         let screenPercentage = 0.03

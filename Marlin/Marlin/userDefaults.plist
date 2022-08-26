@@ -9,7 +9,9 @@
 	<key>showOnMapasam</key>
 	<true/>
 	<key>showOnMapport</key>
-	<string>1</string>
+	<true/>
+	<key>showOnMapradioBeacon</key>
+	<true/>
 	<key>asamOrder</key>
 	<integer>0</integer>
 	<key>moduOrder</key>
@@ -20,6 +22,8 @@
 	<integer>4</integer>
 	<key>portOrder</key>
 	<integer>5</integer>
+	<key>radioBeaconOrder</key>
+	<integer>6</integer>
 	<key>userTabs</key>
 	<integer>3</integer>
 </dict>

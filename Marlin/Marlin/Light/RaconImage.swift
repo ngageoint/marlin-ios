@@ -36,15 +36,19 @@ class RaconImage : UIImage {
                     outerPath.addArc(withCenter: center, radius: arcRadius,
                                      startAngle: (sector.startDegrees + 90) * (CGFloat.pi / 180.0), endAngle: (sector.endDegrees + 90) * (CGFloat.pi / 180.0),
                                      clockwise: true)
+                    outerPath.lineWidth = arcWidth
+                    sector.color.setStroke()
+                    outerPath.stroke()
+                    
                 }
             } else {
                 outerPath.addArc(withCenter: center, radius: arcRadius,
                            startAngle: 0, endAngle: 360 * (CGFloat.pi / 180.0),
                            clockwise: true)
+                outerPath.lineWidth = arcWidth
+                circleColor.setStroke()
+                outerPath.stroke()
             }
-            outerPath.lineWidth = arcWidth
-            circleColor.setStroke()
-            outerPath.stroke()
             
             let innerPath = UIBezierPath()
             innerPath.addArc(withCenter: center, radius: 1.5,

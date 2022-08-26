@@ -31,6 +31,7 @@ class MapState: ObservableObject {
     @Published var showModus: Bool?
     @Published var showLights: Bool?
     @Published var showPorts: Bool?
+    @Published var showRadioBeacons: Bool?
 }
 
 struct MarlinMap: UIViewRepresentable {

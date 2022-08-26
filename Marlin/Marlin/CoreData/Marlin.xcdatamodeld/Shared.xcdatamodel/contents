@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21G72" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21G83" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Asam" representedClassName=".Asam" syncable="YES" codeGenerationType="category">
         <attribute name="asamDescription" optional="YES" attributeType="String"/>
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -210,11 +210,42 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
+    <entity name="RadioBeacon" representedClassName=".RadioBeacon" syncable="YES" codeGenerationType="category">
+        <attribute name="aidType" optional="YES" attributeType="String"/>
+        <attribute name="characteristic" optional="YES" attributeType="String"/>
+        <attribute name="deleteFlag" optional="YES" attributeType="String"/>
+        <attribute name="featureNumber" optional="YES" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="frequency" optional="YES" attributeType="String"/>
+        <attribute name="geopoliticalHeading" optional="YES" attributeType="String"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="noticeNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="noticeWeek" optional="YES" attributeType="String"/>
+        <attribute name="noticeYear" optional="YES" attributeType="String"/>
+        <attribute name="position" optional="YES" attributeType="String"/>
+        <attribute name="postNote" optional="YES" attributeType="String"/>
+        <attribute name="precedingNote" optional="YES" attributeType="String"/>
+        <attribute name="range" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="regionHeading" optional="YES" attributeType="String"/>
+        <attribute name="removeFromList" optional="YES" attributeType="String"/>
+        <attribute name="sectionHeader" optional="YES" attributeType="String"/>
+        <attribute name="sequenceText" optional="YES" attributeType="String"/>
+        <attribute name="stationRemark" optional="YES" attributeType="String"/>
+        <attribute name="volumeNumber" optional="YES" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="volumeNumber"/>
+                <constraint value="featureNumber"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
     <elements>
         <element name="Asam" positionX="-63" positionY="-9" width="128" height="179"/>
         <element name="Light" positionX="-63" positionY="144" width="128" height="434"/>
         <element name="Modu" positionX="-63" positionY="63" width="128" height="194"/>
         <element name="NavigationalWarning" positionX="-63" positionY="108" width="128" height="209"/>
         <element name="Port" positionX="-63" positionY="153" width="128" height="1694"/>
+        <element name="RadioBeacon" positionX="-63" positionY="153" width="128" height="359"/>
     </elements>
 </model>

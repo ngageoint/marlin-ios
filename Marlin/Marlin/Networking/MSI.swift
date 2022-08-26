@@ -20,6 +20,7 @@ public class MSI {
     lazy var configuration: URLSessionConfiguration = URLSessionConfiguration.af.default
     lazy var session: Session = {
         let manager = ServerTrustManager(evaluators: ["msi.gs.mil": DisabledTrustEvaluator()])
+        configuration.httpMaximumConnectionsPerHost = 4
         return Session(configuration: configuration, serverTrustManager: manager)
     }()
     
@@ -38,6 +39,9 @@ public class MSI {
         }
         if UserDefaults.standard.dataSourceEnabled(Port.self) {
             loadPorts(resetData: false)
+        }
+        if UserDefaults.standard.dataSourceEnabled(RadioBeacon.self) {
+            loadRadioBeacons()
         }
     }
     
@@ -119,6 +123,35 @@ public class MSI {
                     })
                 }
         }
+    }
+    
+    func loadRadioBeacons(date: String? = nil) {
+        let queue = DispatchQueue(label: "com.test.api", qos: .background)
+        let count = try? PersistenceController.shared.container.viewContext.countOfObjects(RadioBeacon.self)
+        print("There are \(count ?? 0) radio beacons")
+        let newestRadioBeacon = try? PersistenceController.shared.container.viewContext.fetchFirst(RadioBeacon.self, sortBy: [NSSortDescriptor(keyPath: \RadioBeacon.noticeNumber, ascending: false)])
+        
+        let noticeWeek = Int(newestRadioBeacon?.noticeWeek ?? "0") ?? 0
+        
+        print("Query for radio beacons after year:\(newestRadioBeacon?.noticeYear ?? "") week:\(noticeWeek)")
+        session.request(MSIRouter.readRadioBeacons(noticeYear: newestRadioBeacon?.noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1)))
+            .validate()
+            .responseDecodable(of: RadioBeaconPropertyContainer.self, queue: queue) { response in
+                
+                switch response.result {
+                case .success:
+                    print("Validation Successful")
+                case .failure(let error):
+                    print("ERROR: \(error.localizedDescription) \(error)")
+                }
+                queue.async(execute:{
+                    Task.detached {
+                        if let radioBeacons = response.value?.ngalol {
+                            try await RadioBeacon.batchImport(from: radioBeacons, taskContext: PersistenceController.shared.newTaskContext())
+                        }
+                    }
+                })
+            }
     }
     
     func loadPorts(resetData: Bool = false) {

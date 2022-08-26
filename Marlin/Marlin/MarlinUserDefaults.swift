@@ -58,6 +58,10 @@ extension UserDefaults {
     @objc var showOnMapport: Bool {
         bool(forKey: "showOnMap\(Port.key)")
     }
+    
+    @objc var showOnMapradioBeacon: Bool {
+        bool(forKey: "showOnMap\(RadioBeacon.key)")
+    }
 
     @objc var mapRegion: MKCoordinateRegion {
         get {

@@ -65,6 +65,9 @@ struct MarlinView: View {
         if UserDefaults.standard.dataSourceEnabled(Port.self) {
             mixins.append(PortMap(showPortsAsTiles: true))
         }
+        if UserDefaults.standard.dataSourceEnabled(RadioBeacon.self) {
+            mixins.append(RadioBeaconMap(showRadioBeaconsAsTiles: true))
+        }
         self.mixins = mixins
     }
     

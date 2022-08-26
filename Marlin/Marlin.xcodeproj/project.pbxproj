@@ -59,6 +59,12 @@
 		F727A698284E607100BD728A /* MSITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A685284E476200BD728A /* MSITests.swift */; };
 		F740AA77289D68D800754293 /* MarlinCompactWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F740AA76289D68D800754293 /* MarlinCompactWidth.swift */; };
 		F740AA79289D6DED00754293 /* MarlinRegularWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F740AA78289D6DED00754293 /* MarlinRegularWidth.swift */; };
+		F74B9B0728B7CF650097D448 /* RadioBeacon+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0628B7CF650097D448 /* RadioBeacon+CoreDataClass.swift */; };
+		F74B9B0928B7D1640097D448 /* RadioBeaconMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0828B7D1640097D448 /* RadioBeaconMap.swift */; };
+		F74B9B0B28B7D85E0097D448 /* RadioBeaconListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0A28B7D85E0097D448 /* RadioBeaconListView.swift */; };
+		F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0C28B7DA210097D448 /* RadioBeaconSummaryView.swift */; };
+		F74B9B0F28B7DA8B0097D448 /* RadioBeaconActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0E28B7DA8B0097D448 /* RadioBeaconActionBar.swift */; };
+		F74B9B1128B7DACB0097D448 /* RadioBeaconDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B1028B7DACB0097D448 /* RadioBeaconDetailView.swift */; };
 		F79168FE28B56031004FFEBA /* PortMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79168FD28B56031004FFEBA /* PortMap.swift */; };
 		F7A54CC42848149700E5F565 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CC32848149700E5F565 /* Tests_iOS.swift */; };
 		F7A54CC62848149700E5F565 /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CC52848149700E5F565 /* Tests_iOSLaunchTests.swift */; };
@@ -200,6 +206,12 @@
 		F727A690284E605800BD728A /* MarlinTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTests.swift; sourceTree = "<group>"; };
 		F740AA76289D68D800754293 /* MarlinCompactWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinCompactWidth.swift; sourceTree = "<group>"; };
 		F740AA78289D6DED00754293 /* MarlinRegularWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinRegularWidth.swift; sourceTree = "<group>"; };
+		F74B9B0628B7CF650097D448 /* RadioBeacon+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F74B9B0828B7D1640097D448 /* RadioBeaconMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconMap.swift; sourceTree = "<group>"; };
+		F74B9B0A28B7D85E0097D448 /* RadioBeaconListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconListView.swift; sourceTree = "<group>"; };
+		F74B9B0C28B7DA210097D448 /* RadioBeaconSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconSummaryView.swift; sourceTree = "<group>"; };
+		F74B9B0E28B7DA8B0097D448 /* RadioBeaconActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconActionBar.swift; sourceTree = "<group>"; };
+		F74B9B1028B7DACB0097D448 /* RadioBeaconDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconDetailView.swift; sourceTree = "<group>"; };
 		F79168FD28B56031004FFEBA /* PortMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortMap.swift; sourceTree = "<group>"; };
 		F7A54CA92848149500E5F565 /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		F7A54CAA2848149500E5F565 /* MarlinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinApp.swift; sourceTree = "<group>"; };
@@ -425,6 +437,19 @@
 			path = MarlinTests;
 			sourceTree = "<group>";
 		};
+		F74B9B0528B7CDC20097D448 /* RadioBeacon */ = {
+			isa = PBXGroup;
+			children = (
+				F74B9B0628B7CF650097D448 /* RadioBeacon+CoreDataClass.swift */,
+				F74B9B0828B7D1640097D448 /* RadioBeaconMap.swift */,
+				F74B9B0A28B7D85E0097D448 /* RadioBeaconListView.swift */,
+				F74B9B0C28B7DA210097D448 /* RadioBeaconSummaryView.swift */,
+				F74B9B0E28B7DA8B0097D448 /* RadioBeaconActionBar.swift */,
+				F74B9B1028B7DACB0097D448 /* RadioBeaconDetailView.swift */,
+			);
+			path = RadioBeacon;
+			sourceTree = "<group>";
+		};
 		F7A54CA22848149500E5F565 = {
 			isa = PBXGroup;
 			children = (
@@ -441,6 +466,7 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
+				F74B9B0528B7CDC20097D448 /* RadioBeacon */,
 				F71CC6E828AC177A000A326C /* Port */,
 				F7ADDCE02887025500137D95 /* Location */,
 				F707BA7528760894006A94C4 /* Light */,
@@ -907,6 +933,7 @@
 				F707BA79287632E1006A94C4 /* LightListView.swift in Sources */,
 				F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */,
 				F707BA87287C6596006A94C4 /* LightCard.swift in Sources */,
+				F74B9B1128B7DACB0097D448 /* RadioBeaconDetailView.swift in Sources */,
 				F7D671EB2871D73200758F1C /* HamburgerButton.swift in Sources */,
 				F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */,
 				F7D5C05D28AA7A1F000C2C29 /* Snackbar.swift in Sources */,
@@ -917,6 +944,7 @@
 				F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */,
 				F7D671F1287484FE00758F1C /* MarlinUserDefaults.swift in Sources */,
 				F71DF4862857954A00686951 /* Modu+CoreDataClass.swift in Sources */,
+				F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */,
 				F7D671E72871D46000758F1C /* SideMenuContent.swift in Sources */,
 				F7F59789285A277000F9B32E /* Card.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
@@ -924,6 +952,7 @@
 				F71CC6E728AC06C5000A326C /* BoolExtensions.swift in Sources */,
 				F71CC6EC28AD162B000A326C /* PortListView.swift in Sources */,
 				F7D671DA286E3B3D00758F1C /* ExtraMapTypes.swift in Sources */,
+				F74B9B0F28B7DA8B0097D448 /* RadioBeaconActionBar.swift in Sources */,
 				F740AA77289D68D800754293 /* MarlinCompactWidth.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
 				F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */,
@@ -952,7 +981,9 @@
 				F707BA9328805476006A94C4 /* PersistedMapState.swift in Sources */,
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
 				F7D5C05728A68E56000C2C29 /* ViewExtensions.swift in Sources */,
+				F74B9B0928B7D1640097D448 /* RadioBeaconMap.swift in Sources */,
 				F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */,
+				F74B9B0B28B7D85E0097D448 /* RadioBeaconListView.swift in Sources */,
 				F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */,
 				F707BA8D287C89ED006A94C4 /* LightMap.swift in Sources */,
 				F707BA852878DBFF006A94C4 /* AdaptiveImage.swift in Sources */,
@@ -963,6 +994,7 @@
 				F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */,
 				F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */,
 				F7F59797285D15B900F9B32E /* ModuListView.swift in Sources */,
+				F74B9B0728B7CF650097D448 /* RadioBeacon+CoreDataClass.swift in Sources */,
 				F71DF4A02859116C00686951 /* Notifications.swift in Sources */,
 				F7D671DE286F877C00758F1C /* MaterialButtonStyle.swift in Sources */,
 				F707BA7D2877329E006A94C4 /* LightActionBar.swift in Sources */,

@@ -138,6 +138,8 @@ struct MarlinRegularWidth: View {
             NavigationalWarningListView()
         } else if dataSource.key == Port.key {
             PortListView(focusedItem: itemWrapper, watchFocusedItem: true)
+        } else if dataSource.key == RadioBeacon.key {
+            RadioBeaconListView(focusedItem: itemWrapper, watchFocusedItem: true)
         }
     }
 }

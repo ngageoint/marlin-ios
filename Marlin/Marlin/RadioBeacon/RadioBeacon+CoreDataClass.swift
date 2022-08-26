@@ -1,0 +1,531 @@
+//
+//  RadioBeacon+CoreDataClass.swift
+//  Marlin
+//
+//  Created by Daniel Barela on 8/25/22.
+//
+
+import Foundation
+import CoreData
+import MapKit
+import OSLog
+
+struct RadioBeaconVolume {
+    var volumeQuery: String
+    var volumeNumber: String
+}
+
+extension RadioBeacon: DataSource {
+    var color: UIColor {
+        return RadioBeacon.color
+    }
+    static var isMappable: Bool = true
+    static var dataSourceName: String = NSLocalizedString("Beacons", comment: "Radio Beacons data source display name")
+    static var key: String = "radioBeacon"
+    static var imageName: String? = nil
+    static var systemImageName: String? = "antenna.radiowaves.left.and.right"
+    static var color: UIColor = UIColor(argbValue: 0xFF007BFF)
+}
+
+class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
+    
+    var clusteringIdentifier: String? = nil
+    
+    static let radioBeaconVolumes = [
+        RadioBeaconVolume(volumeQuery: "110", volumeNumber: "PUB 110"),
+        RadioBeaconVolume(volumeQuery: "111", volumeNumber: "PUB 111"),
+        RadioBeaconVolume(volumeQuery: "112", volumeNumber: "PUB 112"),
+        RadioBeaconVolume(volumeQuery: "113", volumeNumber: "PUB 113"),
+        RadioBeaconVolume(volumeQuery: "114", volumeNumber: "PUB 114"),
+        RadioBeaconVolume(volumeQuery: "115", volumeNumber: "PUB 115"),
+        RadioBeaconVolume(volumeQuery: "116", volumeNumber: "PUB 116")
+    ]
+    
+    var additionalKeyValues: [KeyValue] {
+        return [
+            KeyValue(key: "Number", value: "\(featureNumber)"),
+            KeyValue(key: "Name & Location", value: name),
+            KeyValue(key: "Position", value: "\(position ?? "")"),
+            KeyValue(key: "Characteristic", value: expandedCharacteristic),
+            KeyValue(key: "Range (nmi)", value: "\(range)"),
+            KeyValue(key: "Sequence", value: sequenceText),
+            KeyValue(key: "Frequency (kHz)", value: frequency),
+            KeyValue(key: "Remarks", value: stationRemark),
+        ]
+    }
+    
+    var expandedCharacteristicWithoutCode: String? {
+        guard let characteristic = characteristic, let range = characteristic.range(of: ").\\n") else {
+            return nil
+        }
+        
+        let lastIndex = range.upperBound
+        
+        var withoutCode = "\(String(characteristic[lastIndex..<characteristic.endIndex]))"
+        withoutCode = withoutCode.replacingOccurrences(of: "aero", with: "aeronautical")
+        withoutCode = withoutCode.replacingOccurrences(of: "si", with: "silence")
+        withoutCode = withoutCode.replacingOccurrences(of: "tr", with: "transmission")
+        return withoutCode
+    }
+    
+    var expandedCharacteristic: String? {
+        var expanded = characteristic
+        expanded = expanded?.replacingOccurrences(of: "aero", with: "aeronautical")
+        expanded = expanded?.replacingOccurrences(of: "si", with: "silence")
+        expanded = expanded?.replacingOccurrences(of: "tr", with: "transmission")
+        return expanded
+    }
+    
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    
+    var morseCode: String? {
+        guard let characteristic = characteristic, let leftParen = characteristic.firstIndex(of: "("), let lastIndex = characteristic.firstIndex(of: ")") else {
+            return nil
+        }
+        
+        let firstIndex = characteristic.index(after: leftParen)
+        return "\(String(characteristic[firstIndex..<lastIndex]))"
+    }
+    
+    var morseLetter: String {
+        guard let characteristic = characteristic, let newline = characteristic.firstIndex(of: "\n") else {
+            return ""
+        }
+        
+        return "\(String(characteristic[characteristic.startIndex..<newline]))"
+    }
+    
+    func mapImage(marker: Bool = false, small: Bool = false) -> [UIImage] {
+        let scale = marker ? 1 : 2
+        
+        var images: [UIImage] = []
+        if let raconImage = raconImage(scale: scale, azimuthCoverage: azimuthCoverage, small: small) {
+            images.append(raconImage)
+        }
+        return images
+    }
+    
+    func raconImage(scale: Int, azimuthCoverage: [LightSector]? = nil, small: Bool = false) -> UIImage? {
+        if small {
+            return LightColorImage(frame: CGRect(x: 0, y: 0, width: 10 * scale, height: 10 * scale), colors: [Light.raconColor], arcWidth: 1 * CGFloat(scale), arcRadius: 2 * CGFloat(scale), drawTower: false)
+        } else {
+            return RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 20 * scale), sectors: azimuthCoverage, arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))", darkMode: false)
+        }
+    }
+    
+    var azimuthCoverage: [LightSector]? {
+        guard let remarks = stationRemark else {
+            return nil
+        }
+        var sectors: [LightSector] = []
+//        Azimuth coverage 270^-170^.
+        let pattern = #"(?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\^)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))\^)?(?<endminutes>[0-9]*)[\`']?\."#
+        let regex = try? NSRegularExpression(pattern: pattern, options: [])
+        let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
+                              in: remarks)
+        var previousEnd: Double = 0.0
+        
+        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, flags, stop in
+            guard let match = match else {
+                return
+            }
+            var end: Double = 0.0
+            var start: Double?
+            for component in ["startdeg", "startminutes", "enddeg", "endminutes"] {
+                
+                
+                let nsrange = match.range(withName: component)
+                if nsrange.location != NSNotFound,
+                   let range = Range(nsrange, in: remarks)
+                {
+                    if component == "startdeg" {
+                        if start != nil {
+                            start = start! + ((Double(remarks[range]) ?? 0.0) - 180)
+                        } else {
+                            start = (Double(remarks[range]) ?? 0.0) - 180
+                        }
+                    } else if component == "startminutes" {
+                        if start != nil {
+                            start = start! + (Double(remarks[range]) ?? 0.0) / 60
+                        } else {
+                            start = (Double(remarks[range]) ?? 0.0) / 60
+                        }
+                    } else if component == "enddeg" {
+                        end = (Double(remarks[range]) ?? 0.0) - 180
+                    } else if component == "endminutes" {
+                        end += (Double(remarks[range]) ?? 0.0) / 60
+                    }
+                }
+            }
+            if let start = start {
+                sectors.append(LightSector(startDegrees: start, endDegrees: end, color: RadioBeacon.color, text: ""))
+            } else {
+                if end < previousEnd {
+                    end += 360
+                }
+                sectors.append(LightSector(startDegrees: previousEnd, endDegrees: end, color: RadioBeacon.color, text: ""))
+            }
+            previousEnd = end
+        })
+        if sectors.isEmpty {
+            return nil
+        }
+        return sectors
+    }
+    
+    
+    func view(on: MKMapView) -> MKAnnotationView {
+        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: RadioBeaconAnnotationView.ReuseID, for: self)
+        let images = self.mapImage(marker: true)
+        
+        let largestSize = images.reduce(CGSize(width: 0, height: 0)) { partialResult, image in
+            return CGSize(width: max(partialResult.width, image.size.width), height: max(partialResult.height, image.size.height))
+        }
+        
+        UIGraphicsBeginImageContext(largestSize)
+        for image in images {
+            image.draw(at: CGPoint(x: (largestSize.width / 2.0) - (image.size.width / 2.0), y: (largestSize.height / 2.0) - (image.size.height / 2.0)))
+        }
+        
+        let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        guard let cgImage = newImage.cgImage else {
+            return annotationView
+        }
+        let image = UIImage(cgImage: cgImage)
+        
+        if let lav = annotationView as? LightAnnotationView {
+            lav.combinedImage = image
+        } else {
+            annotationView.image = image
+        }
+        self.annotationView = annotationView
+        return annotationView
+    }
+    
+    var annotationView: MKAnnotationView?
+    
+    static func newBatchInsertRequest(with propertyList: [RadioBeaconProperties]) -> NSBatchInsertRequest {
+        var index = 0
+        let total = propertyList.count
+        NSLog("Creating batch insert request of radio beacons for \(total) radio beacons")
+        
+        struct PreviousLocation {
+            var previousRegionHeading: String?
+            var previousSubregionHeading: String?
+            var previousLocalHeading: String?
+        }
+        
+        var previousHeadingPerVolume: [String : PreviousLocation] = [:]
+//        var previousRegionHeading: String?
+//        var previousSubregionHeading: String?
+//        var previousLocalHeading: String?
+        // Provide one dictionary at a time when the closure is called.
+        let batchInsertRequest = NSBatchInsertRequest(entity: RadioBeacon.entity(), dictionaryHandler: { dictionary in
+            guard index < total else { return true }
+            let propertyDictionary = propertyList[index].dictionaryValue
+            let volumeNumber = propertyDictionary["volumeNumber"] as? String ?? ""
+            var previousLocation = previousHeadingPerVolume[volumeNumber]
+            let region = propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading
+            let subregion = propertyDictionary["subregionHeading"] as? String ?? previousLocation?.previousSubregionHeading
+            let local = propertyDictionary["localHeading"] as? String ?? previousLocation?.previousSubregionHeading
+            
+            var correctedLocationDictionary: [String:String?] = [
+                "regionHeading": propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading,
+                "subregionHeading": propertyDictionary["subregionHeading"] as? String ?? previousLocation?.previousSubregionHeading,
+                "localHeading": propertyDictionary["localHeading"] as? String ?? previousLocation?.previousSubregionHeading
+            ]
+            correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? "")\(correctedLocationDictionary["regionHeading"] != nil ? ": \(correctedLocationDictionary["regionHeading"] as? String ?? "")" : "")"
+            if let rh = correctedLocationDictionary["regionHeading"] as? String {
+                correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? ""): \(rh)"
+            } else {
+                correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? "")"
+            }
+            
+            if previousLocation?.previousRegionHeading != region {
+                previousLocation?.previousRegionHeading = region
+                previousLocation?.previousSubregionHeading = nil
+                previousLocation?.previousLocalHeading = nil
+            } else if previousLocation?.previousSubregionHeading != subregion {
+                previousLocation?.previousSubregionHeading = subregion
+                previousLocation?.previousLocalHeading = nil
+            } else if previousLocation?.previousLocalHeading != local {
+                previousLocation?.previousLocalHeading = local
+            }
+            previousHeadingPerVolume[volumeNumber] = previousLocation ?? PreviousLocation(previousRegionHeading: region, previousSubregionHeading: subregion, previousLocalHeading: local)
+            
+            dictionary.addEntries(from: propertyDictionary.filter({
+                return $0.value != nil
+            }) as [AnyHashable : Any])
+            dictionary.addEntries(from: correctedLocationDictionary.filter({
+                return $0.value != nil
+            }) as [AnyHashable : Any])
+            index += 1
+            return false
+        })
+        return batchInsertRequest
+    }
+    
+    static func batchImport(from propertiesList: [RadioBeaconProperties], taskContext: NSManagedObjectContext) async throws {
+        guard !propertiesList.isEmpty else { return }
+        
+        // Add name and author to identify source of persistent history changes.
+        taskContext.name = "importContext"
+        taskContext.transactionAuthor = "importLight"
+        
+        /// - Tag: performAndWait
+        try await taskContext.perform {
+            // Execute the batch insert.
+            /// - Tag: batchInsertRequest
+            let batchInsertRequest = RadioBeacon.newBatchInsertRequest(with: propertiesList)
+            batchInsertRequest.resultType = .count
+            do {
+                let fetchResult = try taskContext.execute(batchInsertRequest)
+                if let batchInsertResult = fetchResult as? NSBatchInsertResult,
+                   let success = batchInsertResult.result as? Int {
+                    print("Inserted \(success) radio beacons")
+                    // if there were already lights in the db for this volume and this was an update and we got back a light we have to go redo the query due to regions not being populated on all returned objects
+                    return
+                }
+            } catch {
+                print("error was \(error)")
+            }
+            throw MSIError.batchInsertError
+        }
+    }
+    
+    override var description: String {
+        return "RADIO BEACON\n\n" +
+        "aidType \(aidType ?? "")\n" +
+        "characteristic \(characteristic ?? "")\n" +
+        "deleteFlag \(deleteFlag ?? "")\n" +
+        "featureNumber \(featureNumber)\n" +
+        "geopoliticalHeading \(geopoliticalHeading ?? "")\n" +
+        "latitude \(latitude)\n" +
+        "longitude \(longitude)\n" +
+        "name \(name ?? "")\n" +
+        "noticeNumber \(noticeNumber)\n" +
+        "noticeWeek \(noticeWeek ?? "")\n" +
+        "noticeYear \(noticeYear ?? "")\n" +
+        "position \(position ?? "")\n" +
+        "postNote \(postNote ?? "")\n" +
+        "precedingNote \(precedingNote ?? "")\n" +
+        "range \(range)\n" +
+        "regionHeading \(regionHeading ?? "")\n" +
+        "removeFromList \(removeFromList ?? "")\n" +
+        "sequenceText \(sequenceText ?? "")\n" +
+        "stationRemark \(stationRemark ?? "")\n" +
+        "volumeNumber \(volumeNumber ?? "")"
+    }
+}
+
+struct RadioBeaconPropertyContainer: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case ngalol
+    }
+    let ngalol: [RadioBeaconProperties]
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        ngalol = try container.decode([Throwable<RadioBeaconProperties>].self, forKey: .ngalol).compactMap { try? $0.result.get() }
+    }
+}
+
+struct RadioBeaconProperties: Decodable {
+    
+    static let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }()
+    
+    // MARK: Codable
+    
+    private enum CodingKeys: String, CodingKey {
+        case aidType
+        case characteristic
+        case deleteFlag
+        case featureNumber
+        case frequency
+        case geopoliticalHeading
+        case name
+        case noticeNumber
+        case noticeWeek
+        case noticeYear
+        case position
+        case postNote
+        case precedingNote
+        case range
+        case regionHeading
+        case removeFromList
+        case sequenceText
+        case stationRemark
+        case volumeNumber
+    }
+    
+    let aidType: String?
+    let characteristic: String?
+    let deleteFlag: String?
+    let featureNumber: Int?
+    let frequency: String?
+    let geopoliticalHeading: String?
+    let latitude: Double?
+    let longitude: Double?
+    let name: String?
+    let noticeNumber: Int?
+    let noticeWeek: String?
+    let noticeYear: String?
+    let position: String?
+    let postNote: String?
+    let precedingNote: String?
+    let range: Int?
+    let regionHeading: String?
+    let removeFromList: String?
+    let sequenceText: String?
+    let stationRemark: String?
+    let volumeNumber: String?
+
+    
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        // this potentially is US and international feature number combined with a new line
+        let rawFeatureNumber = try? values.decode(Int.self, forKey: .featureNumber)
+        let rawVolumeNumber = try? values.decode(String.self, forKey: .volumeNumber)
+        let rawPosition = try? values.decode(String.self, forKey: .position)
+        
+        guard let featureNumber = rawFeatureNumber,
+              let volumeNumber = rawVolumeNumber,
+              let position = rawPosition
+        else {
+            let values = "featureNumber = \(rawFeatureNumber?.description ?? "nil"), "
+            + "volumeNumber = \(rawVolumeNumber?.description ?? "nil"), "
+            + "position = \(rawPosition?.description ?? "nil")"
+            
+            let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "parsing")
+            logger.debug("Ignored: \(values)")
+            
+            throw MSIError.missingData
+        }
+        
+        self.volumeNumber = volumeNumber
+        self.position = position
+        self.aidType = try? values.decode(String.self, forKey: .aidType)
+        self.characteristic = try? values.decode(String.self, forKey: .characteristic)
+        self.deleteFlag = try? values.decode(String.self, forKey: .deleteFlag)
+        self.featureNumber = featureNumber
+        self.frequency = try? values.decode(String.self, forKey: .frequency)
+        self.geopoliticalHeading = try? values.decode(String.self, forKey: .geopoliticalHeading)
+        self.name = try? values.decode(String.self, forKey: .name)
+        self.noticeNumber = try? values.decode(Int.self, forKey: .noticeNumber)
+        self.noticeWeek = try? values.decode(String.self, forKey: .noticeWeek)
+        self.noticeYear = try? values.decode(String.self, forKey: .noticeYear)
+        self.postNote = try? values.decode(String.self, forKey: .postNote)
+        self.precedingNote = try? values.decode(String.self, forKey: .precedingNote)
+        if let rangeString = try? values.decode(String.self, forKey: .range) {
+            self.range = Int(rangeString)
+        } else {
+            self.range = nil
+        }
+        if var rawRegionHeading = try? values.decode(String.self, forKey: .regionHeading) {
+            if rawRegionHeading.last == ":" {
+                rawRegionHeading.removeLast()
+            }
+            self.regionHeading = rawRegionHeading
+        } else {
+            self.regionHeading = nil
+        }
+        self.removeFromList = try? values.decode(String.self, forKey: .removeFromList)
+        self.sequenceText = try? values.decode(String.self, forKey: .sequenceText)
+        self.stationRemark = try? values.decode(String.self, forKey: .stationRemark)
+        
+        if let position = self.position {
+            let coordinate = LightsProperties.parsePosition(position: position)
+            self.longitude = coordinate.longitude
+            self.latitude = coordinate.latitude
+        } else {
+            self.longitude = 0.0
+            self.latitude = 0.0
+        }
+    }
+    
+    static func parsePosition(position: String) -> CLLocationCoordinate2D {
+        var latitude = 0.0
+        var longitude = 0.0
+        
+        let pattern = #"(?<latdeg>[0-9]*)°(?<latminutes>[0-9]*)'(?<latseconds>[0-9]*\.?[0-9]*)\"(?<latdirection>[NS]) \n(?<londeg>[0-9]*)°(?<lonminutes>[0-9]*)'(?<lonseconds>[0-9]*\.?[0-9]*)\"(?<londirection>[EW])"#
+        let regex = try? NSRegularExpression(pattern: pattern, options: [])
+        let nsrange = NSRange(position.startIndex..<position.endIndex,
+                              in: position)
+        if let match = regex?.firstMatch(in: position,
+                                         options: [],
+                                         range: nsrange)
+        {
+            for component in ["latdeg", "latminutes", "latseconds", "latdirection"] {
+                let nsrange = match.range(withName: component)
+                if nsrange.location != NSNotFound,
+                   let range = Range(nsrange, in: position)
+                {
+                    if component == "latdeg" {
+                        latitude = Double(position[range]) ?? 0.0
+                    } else if component == "latminutes" {
+                        latitude += (Double(position[range]) ?? 0.0) / 60
+                    } else if component == "latseconds" {
+                        latitude += (Double(position[range]) ?? 0.0) / 3600
+                    } else if component == "latdirection", position[range] == "S" {
+                        latitude *= -1
+                    }
+                }
+            }
+            for component in ["londeg", "lonminutes", "lonseconds", "londirection"] {
+                let nsrange = match.range(withName: component)
+                if nsrange.location != NSNotFound,
+                   let range = Range(nsrange, in: position)
+                {
+                    if component == "londeg" {
+                        longitude = Double(position[range]) ?? 0.0
+                    } else if component == "lonminutes" {
+                        longitude += (Double(position[range]) ?? 0.0) / 60
+                    } else if component == "lonseconds" {
+                        longitude += (Double(position[range]) ?? 0.0) / 3600
+                    } else if component == "londirection", position[range] == "W" {
+                        longitude *= -1
+                    }
+                }
+            }
+        }
+        
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    
+    // The keys must have the same name as the attributes of the Lights entity.
+    var dictionaryValue: [String: Any?] {
+        [
+            "aidType": aidType,
+            "characteristic": characteristic,
+            "deleteFlag": deleteFlag,
+            "featureNumber": featureNumber,
+            "frequency": frequency,
+            "geopoliticalHeading": geopoliticalHeading,
+            "latitude": latitude,
+            "longitude": longitude,
+            "name": name,
+            "noticeNumber": noticeNumber,
+            "noticeWeek": noticeWeek,
+            "noticeYear": noticeYear,
+            "position": position,
+            "postNote": postNote,
+            "precedingNote": precedingNote,
+            "range": range,
+            "regionHeading": regionHeading,
+            "removeFromList": removeFromList,
+            "sequenceText": sequenceText,
+            "stationRemark": stationRemark,
+            "volumeNumber": volumeNumber
+            
+        ]
+    }
+}
+
+

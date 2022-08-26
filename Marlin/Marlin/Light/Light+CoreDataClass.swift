@@ -241,11 +241,71 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         }
         
         if isRacon {
-            let raconImage = raconImage(scale: scale, sectors: lightSectors, small: small)
+            let raconImage = raconImage(scale: scale, sectors: azimuthCoverage, small: small)
             images.append(raconImage)
         }
         
         return images
+    }
+    
+    var azimuthCoverage: [LightSector]? {
+        guard let remarks = remarks else {
+            return nil
+        }
+        var sectors: [LightSector] = []
+        //        Azimuth coverage 270^-170^.
+        let pattern = #"(?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))\°)?(?<endminutes>[0-9]*)[\`']?\..*"#
+        let regex = try? NSRegularExpression(pattern: pattern, options: [])
+        let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
+                              in: remarks)
+        var previousEnd: Double = 0.0
+        
+        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, flags, stop in
+            guard let match = match else {
+                return
+            }
+            var end: Double = 0.0
+            var start: Double?
+            for component in ["startdeg", "startminutes", "enddeg", "endminutes"] {
+                
+                
+                let nsrange = match.range(withName: component)
+                if nsrange.location != NSNotFound,
+                   let range = Range(nsrange, in: remarks)
+                {
+                    if component == "startdeg" {
+                        if start != nil {
+                            start = start! + ((Double(remarks[range]) ?? 0.0))
+                        } else {
+                            start = (Double(remarks[range]) ?? 0.0)
+                        }
+                    } else if component == "startminutes" {
+                        if start != nil {
+                            start = start! + (Double(remarks[range]) ?? 0.0) / 60
+                        } else {
+                            start = (Double(remarks[range]) ?? 0.0) / 60
+                        }
+                    } else if component == "enddeg" {
+                        end = (Double(remarks[range]) ?? 0.0)
+                    } else if component == "endminutes" {
+                        end += (Double(remarks[range]) ?? 0.0) / 60
+                    }
+                }
+            }
+            if let start = start {
+                sectors.append(LightSector(startDegrees: start, endDegrees: end, color: Light.raconColor, text: ""))
+            } else {
+                if end < previousEnd {
+                    end += 360
+                }
+                sectors.append(LightSector(startDegrees: previousEnd, endDegrees: end, color: Light.raconColor, text: ""))
+            }
+            previousEnd = end
+        })
+        if sectors.isEmpty {
+            return nil
+        }
+        return sectors
     }
     
     func raconImage(scale: Int, sectors: [LightSector]? = nil, small: Bool = false) -> UIImage {

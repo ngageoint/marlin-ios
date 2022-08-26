@@ -14,5 +14,7 @@
 	<true/>
 	<key>portDataSourceEnabled</key>
 	<true/>
+	<key>radioBeaconDataSourceEnabled</key>
+	<true/>
 </dict>
 </plist>
