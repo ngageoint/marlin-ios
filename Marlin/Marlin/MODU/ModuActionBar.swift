@@ -23,7 +23,7 @@ struct ModuActionBar: View {
                         .foregroundColor(Color.primaryColorVariant)
                 }
             } else {
-                let coordinateButtonTitle = CLLocationCoordinate2D(latitude: modu.latitude?.doubleValue ?? 0.0, longitude: modu.longitude?.doubleValue ?? 0.0).toDisplay()
+                let coordinateButtonTitle = modu.coordinate.toDisplay()
                 
                 Button(action: {
                     UIPasteboard.general.string = coordinateButtonTitle

@@ -39,8 +39,8 @@ class PersistenceController {
             for asam in asamContainer.asam {
                 let newItem = Asam(context: viewContext)
                 newItem.asamDescription = asam.asamDescription
-                newItem.longitude = NSDecimalNumber(decimal:asam.longitude)
-                newItem.latitude = NSDecimalNumber(decimal:asam.latitude)
+                newItem.longitude = asam.longitude
+                newItem.latitude = asam.latitude
                 newItem.date = asam.date
                 newItem.navArea = asam.navArea
                 newItem.reference = asam.reference

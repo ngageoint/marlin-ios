@@ -11,10 +11,12 @@ struct RadioBeaconSummaryView: View {
     
     var radioBeacon: RadioBeacon
     var showMoreDetails: Bool = false
+    var showSectionHeader: Bool = false
     
-    init(radioBeacon: RadioBeacon, showMoreDetails: Bool = false) {
+    init(radioBeacon: RadioBeacon, showMoreDetails: Bool = false, showSectionHeader: Bool = false) {
         self.radioBeacon = radioBeacon
         self.showMoreDetails = showMoreDetails
+        self.showSectionHeader = showSectionHeader
     }
     
     var body: some View {
@@ -29,6 +31,12 @@ struct RadioBeaconSummaryView: View {
                 .opacity(0.87)
             if showMoreDetails {
                 Text(radioBeacon.geopoliticalHeading ?? "")
+                    .font(Font.body2)
+                    .foregroundColor(Color.onSurfaceColor)
+                    .opacity(0.6)
+            }
+            if showSectionHeader {
+                Text(radioBeacon.sectionHeader ?? "")
                     .font(Font.body2)
                     .foregroundColor(Color.onSurfaceColor)
                     .opacity(0.6)

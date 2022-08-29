@@ -45,6 +45,7 @@ class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         return [
             KeyValue(key: "Number", value: "\(featureNumber)"),
             KeyValue(key: "Name & Location", value: name),
+            KeyValue(key: "Geopolitical Heading", value: geopoliticalHeading),
             KeyValue(key: "Position", value: "\(position ?? "")"),
             KeyValue(key: "Characteristic", value: expandedCharacteristic),
             KeyValue(key: "Range (nmi)", value: "\(range)"),
@@ -97,30 +98,34 @@ class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         return "\(String(characteristic[characteristic.startIndex..<newline]))"
     }
     
-    func mapImage(marker: Bool = false, small: Bool = false) -> [UIImage] {
+    func mapImage(marker: Bool = false, zoomLevel: Int) -> [UIImage] {
         let scale = marker ? 1 : 2
         
         var images: [UIImage] = []
-        if let raconImage = raconImage(scale: scale, azimuthCoverage: azimuthCoverage, small: small) {
+        if let raconImage = raconImage(scale: scale, azimuthCoverage: azimuthCoverage, zoomLevel: zoomLevel) {
             images.append(raconImage)
         }
         return images
     }
     
-    func raconImage(scale: Int, azimuthCoverage: [LightSector]? = nil, small: Bool = false) -> UIImage? {
-        if small {
-            return LightColorImage(frame: CGRect(x: 0, y: 0, width: 10 * scale, height: 10 * scale), colors: [Light.raconColor], arcWidth: 1 * CGFloat(scale), arcRadius: 2 * CGFloat(scale), drawTower: false)
+    func raconImage(scale: Int, azimuthCoverage: [ImageSector]? = nil, zoomLevel: Int) -> UIImage? {
+        let sectors = azimuthCoverage ?? [ImageSector(startDegrees: 0, endDegrees: 360, color: RadioBeacon.color)]
+
+        if zoomLevel > 12 {
+            return RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 20 * scale), sectors: sectors, arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))", darkMode: false)
+        } else if zoomLevel > 7 {
+            return CircleImage(color: RadioBeacon.color, radius: CGFloat(5 * scale), fill: false, arcWidth: 1.5 * CGFloat(scale))
+            
         } else {
-            return RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 20 * scale), sectors: azimuthCoverage, arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))", darkMode: false)
+            return CircleImage(color: RadioBeacon.color, radius: CGFloat(2 * scale), fill: false, arcWidth: 1 * CGFloat(scale))
         }
     }
     
-    var azimuthCoverage: [LightSector]? {
+    var azimuthCoverage: [ImageSector]? {
         guard let remarks = stationRemark else {
             return nil
         }
-        var sectors: [LightSector] = []
-//        Azimuth coverage 270^-170^.
+        var sectors: [ImageSector] = []
         let pattern = #"(?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\^)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))\^)?(?<endminutes>[0-9]*)[\`']?\."#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
@@ -142,9 +147,9 @@ class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
                 {
                     if component == "startdeg" {
                         if start != nil {
-                            start = start! + ((Double(remarks[range]) ?? 0.0) - 180)
+                            start = start! + ((Double(remarks[range]) ?? 0.0) - 90)
                         } else {
-                            start = (Double(remarks[range]) ?? 0.0) - 180
+                            start = (Double(remarks[range]) ?? 0.0) - 90
                         }
                     } else if component == "startminutes" {
                         if start != nil {
@@ -153,19 +158,19 @@ class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
                             start = (Double(remarks[range]) ?? 0.0) / 60
                         }
                     } else if component == "enddeg" {
-                        end = (Double(remarks[range]) ?? 0.0) - 180
+                        end = (Double(remarks[range]) ?? 0.0) - 90
                     } else if component == "endminutes" {
                         end += (Double(remarks[range]) ?? 0.0) / 60
                     }
                 }
             }
             if let start = start {
-                sectors.append(LightSector(startDegrees: start, endDegrees: end, color: RadioBeacon.color, text: ""))
+                sectors.append(ImageSector(startDegrees: start, endDegrees: end, color: RadioBeacon.color))
             } else {
-                if end < previousEnd {
+                if end <= previousEnd {
                     end += 360
                 }
-                sectors.append(LightSector(startDegrees: previousEnd, endDegrees: end, color: RadioBeacon.color, text: ""))
+                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: RadioBeacon.color))
             }
             previousEnd = end
         })
@@ -178,7 +183,7 @@ class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
     
     func view(on: MKMapView) -> MKAnnotationView {
         let annotationView = on.dequeueReusableAnnotationView(withIdentifier: RadioBeaconAnnotationView.ReuseID, for: self)
-        let images = self.mapImage(marker: true)
+        let images = self.mapImage(marker: true, zoomLevel: on.zoomLevel)
         
         let largestSize = images.reduce(CGSize(width: 0, height: 0)) { partialResult, image in
             return CGSize(width: max(partialResult.width, image.size.width), height: max(partialResult.height, image.size.height))

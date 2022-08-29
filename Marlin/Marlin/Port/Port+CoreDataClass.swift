@@ -471,30 +471,35 @@ class Port: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         }
     }
     
-    func mapImage(marker: Bool = false, small: Bool = false) -> [UIImage] {
+    func mapImage(marker: Bool = false, zoomLevel: Int) -> [UIImage] {
         let scale = marker ? 1 : 2
         
         var images: [UIImage] = []
-        
-        if let portImage = portImage(scale: scale, small: small) {
-    
-            images.append(portImage)
+        if zoomLevel > 12 {
+            if let image = CircleImage(color: Port.color, radius: 8 * CGFloat(scale), fill: true) {
+                images.append(image)
+                if let portImage = UIImage(named: "port")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
+                    images.append(portImage)
+                }
+            }
+        } else if zoomLevel > 5 {
+            if let image = CircleImage(color: Port.color, radius: 5 * CGFloat(scale), fill: true) {
+                images.append(image)
+                if let portImage = UIImage(named: "port")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
+                    images.append(portImage)
+                }
+            }
+        } else {
+            if let image = CircleImage(color: Port.color, radius: 2 * CGFloat(scale), fill: true) {
+                images.append(image)
+            }
         }
-        
         return images
     }
     
-    func portImage(scale: Int, small: Bool = false) -> UIImage? {
-//        if small {
-        return LightColorImage(frame: CGRect(x: 0, y: 0, width: 5 * scale, height: 5 * scale), colors: [Port.color], outerStroke: false)
-//        } else {
-//            return RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 20 * scale), arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false)
-//        }
-    }
-    
     func view(on: MKMapView) -> MKAnnotationView {
-        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: LightAnnotationView.ReuseID, for: self)
-        let images = self.mapImage(marker: true)
+        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: PortAnnotationView.ReuseID, for: self)
+        let images = self.mapImage(marker: true, zoomLevel: on.zoomLevel)
         
         let largestSize = images.reduce(CGSize(width: 0, height: 0)) { partialResult, image in
             return CGSize(width: max(partialResult.width, image.size.width), height: max(partialResult.height, image.size.height))

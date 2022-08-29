@@ -103,21 +103,6 @@ struct MarlinMap: UIViewRepresentable {
             mapView.userTrackingMode = MKUserTrackingMode(rawValue: mapState.userTrackingMode) ?? .none
             context.coordinator.trackingModeSet = MKUserTrackingMode(rawValue: mapState.userTrackingMode)
         }
-                
-        if mapType == ExtraMapTypes.osm.rawValue {
-            if context.coordinator.osmOverlay == nil {
-                context.coordinator.osmOverlay = MKTileOverlay(urlTemplate: "https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png")
-                context.coordinator.osmOverlay?.tileSize = CGSize(width: 512, height: 512)
-                context.coordinator.osmOverlay?.canReplaceMapContent = true
-            }
-            mapView.removeOverlay(context.coordinator.osmOverlay!)
-            mapView.addOverlay(context.coordinator.osmOverlay!, level: .aboveRoads)
-        } else if let mkmapType = MKMapType(rawValue: UInt(mapType)) {
-            mapView.mapType = mkmapType
-            if let osmOverlay = context.coordinator.osmOverlay {
-                mapView.removeOverlay(osmOverlay)
-            }
-        }
         
         let overlaysToRemove = mapView.overlays.filter { overlay in
             if let overlay = overlay as? MKTileOverlay {
@@ -145,6 +130,21 @@ struct MarlinMap: UIViewRepresentable {
 
         mapView.removeOverlays(overlaysToRemove)
         mapView.addOverlays(overlaysToAdd)
+        
+        if mapType == ExtraMapTypes.osm.rawValue {
+            if context.coordinator.osmOverlay == nil {
+                context.coordinator.osmOverlay = MKTileOverlay(urlTemplate: "https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png")
+                context.coordinator.osmOverlay?.tileSize = CGSize(width: 512, height: 512)
+                context.coordinator.osmOverlay?.canReplaceMapContent = true
+            }
+            mapView.removeOverlay(context.coordinator.osmOverlay!)
+            mapView.addOverlay(context.coordinator.osmOverlay!, level: .aboveRoads)
+        } else if let mkmapType = MKMapType(rawValue: UInt(mapType)) {
+            mapView.mapType = mkmapType
+            if let osmOverlay = context.coordinator.osmOverlay {
+                mapView.removeOverlay(osmOverlay)
+            }
+        }
     }
     
     func MKMapRectForCoordinateRegion(region:MKCoordinateRegion) -> MKMapRect {

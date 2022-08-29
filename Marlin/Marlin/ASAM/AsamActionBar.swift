@@ -23,7 +23,7 @@ struct AsamActionBar: View {
                         .foregroundColor(Color.primaryColorVariant)
                 }
             } else {
-                let coordinateButtonTitle = CLLocationCoordinate2D(latitude: asam.latitude?.doubleValue ?? 0.0, longitude: asam.longitude?.doubleValue ?? 0.0).toDisplay()
+                let coordinateButtonTitle = asam.coordinate.toDisplay()
                 
                 Button(action: {
                     UIPasteboard.general.string = coordinateButtonTitle

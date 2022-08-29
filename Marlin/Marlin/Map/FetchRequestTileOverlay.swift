@@ -108,7 +108,7 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
         
         if let objects = objects as? [MapImage] {
             for object in objects {
-                let mapImages = object.mapImage(marker: false, small: zoomLevel < 13)
+                let mapImages = object.mapImage(marker: false, zoomLevel: zoomLevel)
                 for mapImage in mapImages {
                     let object3857Location = coord4326To3857(longitude: object.longitude, latitude: object.latitude)
                     let xPosition = (((object3857Location.x - tileBounds3857.swCorner.x) / (tileBounds3857.neCorner.x - tileBounds3857.swCorner.x)) * self.tileSize.width)

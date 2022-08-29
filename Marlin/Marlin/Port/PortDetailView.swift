@@ -7,29 +7,34 @@
 
 import SwiftUI
 import MapKit
+import CoreData
 
 struct PortDetailView: View {
-    @State private var region: MKCoordinateRegion
     @EnvironmentObject var locationManager: LocationManager
-
+    @StateObject var mapState: MapState = MapState()
+    var fetchRequest: NSFetchRequest<Port>
+    
     var port: Port
     
     init(port: Port) {
         self.port = port
-        region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: port.latitude, longitude: port.longitude), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
+        let predicate = NSPredicate(format: "portNumber == %ld", port.portNumber)
+        fetchRequest = Port.fetchRequest()
+        fetchRequest.predicate = predicate
     }
     
     var body: some View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    
-                    Map(coordinateRegion: $region, annotationItems: [port]) { asam in
-                        MapAnnotation(coordinate: port.coordinate, anchorPoint: CGPoint(x: 0.5, y: 1)) {
-                            Image("port")
+                    MarlinMap(name: "Port Detail Map", mixins: [PortMap(fetchRequest: fetchRequest, showPortsAsTiles: false)], mapState: mapState)
+                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                        .onAppear {
+                            mapState.center = MKCoordinateRegion(center: port.coordinate, zoomLevel: 12.0, pixelWidth: 300.0)
                         }
-                    }
-                    .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                        .onChange(of: port) { port in
+                            mapState.center = MKCoordinateRegion(center: port.coordinate, zoomLevel: 12.0, pixelWidth: 300.0)
+                        }
                     PortSummaryView(port: port, currentLocation: locationManager.lastLocation)
                         .padding(.all, 16)
                 }

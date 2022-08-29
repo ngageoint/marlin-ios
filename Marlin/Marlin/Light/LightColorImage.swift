@@ -184,38 +184,3 @@ class LightColorImage : UIImage {
     }
     
 }
-
-extension UIImage {
-    
-    static func dynamicAsset(lightImage: UIImage, darkImage: UIImage) -> UIImage {
-        let imageAsset = UIImageAsset()
-        
-        let lightMode = UITraitCollection(traitsFrom: [.init(userInterfaceStyle: .light)])
-        imageAsset.register(lightImage, with: lightMode)
-        
-        let darkMode = UITraitCollection(traitsFrom: [.init(userInterfaceStyle: .dark)])
-        imageAsset.register(darkImage, with: darkMode)
-
-        return imageAsset.image(with: .current)
-    }
-    
-}
-
-extension String {
-    func drawWithBasePoint(basePoint: CGPoint,
-                           radius: CGFloat,
-                           andAngle angle: CGFloat,
-                           andAttributes attributes: [NSAttributedString.Key : Any]) {
-        let size: CGSize = self.size(withAttributes: attributes)
-        let context: CGContext = UIGraphicsGetCurrentContext()!
-        let t: CGAffineTransform = CGAffineTransform(translationX: basePoint.x, y: basePoint.y)
-        let r: CGAffineTransform = CGAffineTransform(rotationAngle: angle)
-        context.concatenate(t)
-        context.concatenate(r)
-        let rect = CGRect(x: -(size.width / 2), y: radius, width: size.width, height: size.height)
-        self.draw(in: rect, withAttributes: attributes)
-        context.concatenate(r.inverted())
-        context.concatenate(t.inverted())
-    }
-}
-

@@ -20,7 +20,7 @@ extension Modu: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
 }
 
-class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotation {
+class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotation, MapImage {
     var clusteringIdentifierWhenShrunk: String? = "msi"
     var enlarged: Bool = false
     
@@ -35,11 +35,7 @@ class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
     }
     
     var coordinate: CLLocationCoordinate2D {
-        if let latitude = latitude, let longitude = longitude {
-            return CLLocationCoordinate2D(latitude: latitude.doubleValue, longitude: longitude.doubleValue)
-        } else {
-            return kCLLocationCoordinate2DInvalid
-        }
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
     func view(on: MKMapView) -> MKAnnotationView {
@@ -55,6 +51,31 @@ class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
             return ModuProperties.dateFormatter.string(from: date)
         }
         return nil
+    }
+    
+    func mapImage(marker: Bool = false, zoomLevel: Int) -> [UIImage] {
+        let scale = marker ? 1 : 2
+        var images: [UIImage] = []
+        if zoomLevel > 12 {
+            if let image = CircleImage(color: Modu.color, radius: 8 * CGFloat(scale), fill: true) {
+                images.append(image)
+                if let moduImage = UIImage(named: "modu")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
+                    images.append(moduImage)
+                }
+            }
+        } else if zoomLevel > 5 {
+            if let image = CircleImage(color: Modu.color, radius: 4 * CGFloat(scale), fill: true) {
+                images.append(image)
+                if let moduImage = UIImage(named: "modu")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
+                    images.append(moduImage)
+                }
+            }
+        } else {
+            if let image = CircleImage(color: Modu.color, radius: 1 * CGFloat(scale), fill: true) {
+                images.append(image)
+            }
+        }
+        return images
     }
     
     static func newBatchInsertRequest(with propertyList: [ModuProperties]) -> NSBatchInsertRequest {
@@ -98,12 +119,12 @@ class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
         return "MODU\n\n" +
         "Name: \(name ?? "")\n" +
         "Date: \(dateString ?? "")\n" +
-        "Latitude: \(latitude ?? 0.0)\n" +
-        "Longitude: \(longitude ?? 0.0)\n" +
+        "Latitude: \(latitude)\n" +
+        "Longitude: \(longitude)\n" +
         "Position: \(position ?? "")\n" +
         "Rig Status: \(rigStatus ?? "")\n" +
         "Special Status: \(specialStatus ?? "")\n" +
-        "distance: \(distance ?? 0.0)\n" +
+        "distance: \(distance)\n" +
         "Navigation Area: \(navArea ?? "")\n" +
         "Region: \(region)\n" +
         "Sub Region: \(subregion)\n"
@@ -149,9 +170,9 @@ struct ModuProperties: Decodable {
     
     let subregion: Int?
     let region: Int?
-    let longitude: Decimal
-    let latitude: Decimal
-    let distance: Decimal?
+    let longitude: Double
+    let latitude: Double
+    let distance: Double?
     let specialStatus: String?
     let rigStatus: String?
     let position: String?
@@ -162,8 +183,8 @@ struct ModuProperties: Decodable {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let rawName = try? values.decode(String.self, forKey: .name)
-        let rawLatitude = try? values.decode(Decimal.self, forKey: .latitude)
-        let rawLongitude = try? values.decode(Decimal.self, forKey: .longitude)
+        let rawLatitude = try? values.decode(Double.self, forKey: .latitude)
+        let rawLongitude = try? values.decode(Double.self, forKey: .longitude)
         
         guard let name = rawName,
               let latitude = rawLatitude,
@@ -184,7 +205,7 @@ struct ModuProperties: Decodable {
         self.longitude = longitude
         self.subregion = try? values.decode(Int.self, forKey: .subregion)
         self.region = try? values.decode(Int.self, forKey: .region)
-        self.distance = try? values.decode(Decimal.self, forKey: .distance)
+        self.distance = try? values.decode(Double.self, forKey: .distance)
         self.specialStatus = try? values.decode(String.self, forKey: .specialStatus)
         self.rigStatus = try? values.decode(String.self, forKey: .rigStatus)
         self.position = try? values.decode(String.self, forKey: .position)

@@ -20,3 +20,15 @@ extension MKMapView {
     }
     
 }
+
+extension MKCoordinateSpan {
+    init(zoomLevel: Double, pixelWidth: Double) {
+        self.init(latitudeDelta: 0, longitudeDelta: (360.0/pow(2.0, zoomLevel)) * pixelWidth/256.0)
+    }
+}
+
+extension MKCoordinateRegion {
+    init(center: CLLocationCoordinate2D, zoomLevel: Double, pixelWidth: Double) {
+        self.init(center: center, span: MKCoordinateSpan(zoomLevel: zoomLevel, pixelWidth: pixelWidth))
+    }
+}

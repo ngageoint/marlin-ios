@@ -124,11 +124,11 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         return expanded
     }
     
-    var lightSectors: [LightSector]? {
+    var lightSectors: [ImageSector]? {
         guard let remarks = remarks else {
             return nil
         }
-        var sectors: [LightSector] = []
+        var sectors: [ImageSector] = []
         
         let pattern = #"(?<visible>(Visible)?)((?<color>[A-Z]+)?)\.?(?<unintensified>(\(unintensified\))?)( (?<startdeg>(\d*))°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))°)(?<endminutes>[0-9]*)[\`']?"#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
@@ -157,9 +157,9 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
                         color = "\(remarks[range])"
                     } else if component == "startdeg" {
                         if start != nil {
-                            start = start! + (Double(remarks[range]) ?? 0.0)
+                            start = start! + (Double(remarks[range]) ?? 0.0) + 90.0
                         } else {
-                            start = (Double(remarks[range]) ?? 0.0)
+                            start = (Double(remarks[range]) ?? 0.0) + 90.0
                         }
                     } else if component == "startminutes" {
                         if start != nil {
@@ -168,7 +168,7 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
                             start = (Double(remarks[range]) ?? 0.0) / 60
                         }
                     } else if component == "enddeg" {
-                        end = (Double(remarks[range]) ?? 0.0)
+                        end = (Double(remarks[range]) ?? 0.0) + 90.0
                     } else if component == "endminutes" {
                         end += (Double(remarks[range]) ?? 0.0) / 60
                     }
@@ -185,12 +185,12 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
                 return visibleColor ?? UIColor.clear
             }()
             if let start = start {
-                sectors.append(LightSector(startDegrees: start, endDegrees: end, color: uicolor, text: color))
+                sectors.append(ImageSector(startDegrees: start, endDegrees: end, color: uicolor, text: color))
             } else {
-                if end < previousEnd {
+                if end <= previousEnd {
                     end += 360
                 }
-                sectors.append(LightSector(startDegrees: previousEnd, endDegrees: end, color: uicolor, text: color))
+                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: uicolor, text: color))
             }
             previousEnd = end
         })
@@ -219,7 +219,8 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         return ""
     }
     
-    func mapImage(marker: Bool = false, small: Bool = false) -> [UIImage] {
+    func mapImage(marker: Bool = false, zoomLevel: Int) -> [UIImage] {
+        let small = zoomLevel < 13
         let scale = marker ? 1 : 2
         
         var images: [UIImage] = []
@@ -233,26 +234,26 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         }
         
         if let lightSectors = lightSectors {
-            let sectorImage = sectorImage(lightSectors: lightSectors, scale: scale, small: small)
+            let sectorImage = sectorImage(lightSectors: lightSectors, scale: scale, zoomLevel: zoomLevel)
             images.append(sectorImage)
         } else if let lightColors = lightColors {
-            let colorImage = colorImage(lightColors: lightColors, scale: scale, small: small)
+            let colorImage = colorImage(lightColors: lightColors, scale: scale, zoomLevel: zoomLevel)
             images.append(colorImage)
         }
         
         if isRacon {
-            let raconImage = raconImage(scale: scale, sectors: azimuthCoverage, small: small)
+            let raconImage = raconImage(scale: scale, sectors: azimuthCoverage, zoomLevel: zoomLevel)
             images.append(raconImage)
         }
         
         return images
     }
     
-    var azimuthCoverage: [LightSector]? {
+    var azimuthCoverage: [ImageSector]? {
         guard let remarks = remarks else {
             return nil
         }
-        var sectors: [LightSector] = []
+        var sectors: [ImageSector] = []
         //        Azimuth coverage 270^-170^.
         let pattern = #"(?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))\°)?(?<endminutes>[0-9]*)[\`']?\..*"#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
@@ -275,9 +276,9 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
                 {
                     if component == "startdeg" {
                         if start != nil {
-                            start = start! + ((Double(remarks[range]) ?? 0.0))
+                            start = start! + ((Double(remarks[range]) ?? 0.0) + 90)
                         } else {
-                            start = (Double(remarks[range]) ?? 0.0)
+                            start = (Double(remarks[range]) ?? 0.0) + 90
                         }
                     } else if component == "startminutes" {
                         if start != nil {
@@ -286,19 +287,19 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
                             start = (Double(remarks[range]) ?? 0.0) / 60
                         }
                     } else if component == "enddeg" {
-                        end = (Double(remarks[range]) ?? 0.0)
+                        end = (Double(remarks[range]) ?? 0.0) + 90
                     } else if component == "endminutes" {
                         end += (Double(remarks[range]) ?? 0.0) / 60
                     }
                 }
             }
             if let start = start {
-                sectors.append(LightSector(startDegrees: start, endDegrees: end, color: Light.raconColor, text: ""))
+                sectors.append(ImageSector(startDegrees: start, endDegrees: end, color: Light.raconColor))
             } else {
-                if end < previousEnd {
+                if end <= previousEnd {
                     end += 360
                 }
-                sectors.append(LightSector(startDegrees: previousEnd, endDegrees: end, color: Light.raconColor, text: ""))
+                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: Light.raconColor))
             }
             previousEnd = end
         })
@@ -308,27 +309,67 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         return sectors
     }
     
-    func raconImage(scale: Int, sectors: [LightSector]? = nil, small: Bool = false) -> UIImage {
-        if small {
-            return LightColorImage(frame: CGRect(x: 0, y: 0, width: 10 * scale, height: 10 * scale), colors: [Light.raconColor], arcWidth: 1 * CGFloat(scale), arcRadius: 2 * CGFloat(scale), drawTower: false) ?? clearImage
+    func raconImage(scale: Int, sectors: [ImageSector]? = nil, zoomLevel: Int) -> UIImage {
+        if zoomLevel > 12 {
+            return RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 100 * scale), sectors: sectors, arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false) ?? clearImage
+        } else if zoomLevel > 7 {
+            return CircleImage(color: Light.raconColor, radius: CGFloat(2.5 * Double(scale)), fill: false, arcWidth: 1 * CGFloat(scale)) ?? clearImage
+
         } else {
-            return RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 20 * scale), sectors: sectors, arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))\n\(remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false) ?? clearImage
+            return CircleImage(color: Light.raconColor, radius: CGFloat(scale), fill: false, arcWidth: 1 * CGFloat(scale)) ?? clearImage
         }
     }
     
-    func sectorImage(lightSectors: [LightSector], scale: Int, small: Bool = false) -> UIImage {
-        if small {
-            return LightColorImage(frame: CGRect(x: 0, y: 0, width: 2 * scale, height: 2 * scale), sectors: lightSectors, outerStroke: false, includeSectorDashes: false, includeLetters: false) ?? clearImage
+    func sectorImage(lightSectors: [ImageSector], scale: Int, zoomLevel: Int) -> UIImage {
+        if zoomLevel > 12 {
+            return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: 100 * scale, height: 100 * scale), sectors: lightSectors, radius: 25 * CGFloat(scale), fill: false, arcWidth: 3 * CGFloat(scale)) ?? clearImage
+        } else if zoomLevel > 7 {
+            var sectors: [ImageSector] = []
+            if let lightColors = lightColors {
+                var count = 0
+                let degreesPerColor = 360.0 / CGFloat(lightColors.count)
+                for color in lightColors {
+                    sectors.append(ImageSector(startDegrees: degreesPerColor * CGFloat(count), endDegrees: degreesPerColor * (CGFloat(count) + 1.0), color: color))
+                    count += 1
+                }
+            }
+            return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: 5 * scale, height: 5 * scale), sectors: sectors, fill: true, sectorSeparator: false) ?? clearImage
         } else {
-            return LightColorImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 100 * scale), sectors: lightSectors, arcWidth: 3 * CGFloat(scale), arcRadius: 25 * CGFloat(scale), includeSectorDashes: true, includeLetters: true, darkMode: false) ?? clearImage
+            var sectors: [ImageSector] = []
+            if let lightColors = lightColors {
+                var count = 0
+                let degreesPerColor = 360.0 / CGFloat(lightColors.count)
+                for color in lightColors {
+                    sectors.append(ImageSector(startDegrees: degreesPerColor * CGFloat(count), endDegrees: degreesPerColor * (CGFloat(count) + 1.0), color: color))
+                    count += 1
+                }
+            }
+            return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: 2 * scale, height: 2 * scale), sectors: sectors, fill: true, sectorSeparator: false) ?? clearImage
         }
     }
     
-    func colorImage(lightColors: [UIColor], scale: Int, small: Bool = false) -> UIImage {
-        if small {
-            return LightColorImage(frame: CGRect(x: 0, y: 0, width: 2 * scale, height: 2 * scale), colors: lightColors, outerStroke: false) ?? clearImage
-        } else {
+    func colorImage(lightColors: [UIColor], scale: Int, zoomLevel: Int) -> UIImage {
+        
+        if zoomLevel > 12 {
             return LightColorImage(frame: CGRect(x: 0, y: 0, width: 10 * scale, height: 10 * scale), colors: lightColors, arcWidth: 1.5 * CGFloat(scale), darkMode: false) ?? clearImage
+        } else if zoomLevel > 7 {
+            var sectors: [ImageSector] = []
+            var count = 0
+            let degreesPerColor = 360.0 / CGFloat(lightColors.count)
+            for color in lightColors {
+                sectors.append(ImageSector(startDegrees: degreesPerColor * CGFloat(count), endDegrees: degreesPerColor * (CGFloat(count) + 1.0), color: color))
+                count += 1
+            }
+            return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: 5 * scale, height: 5 * scale), sectors: sectors, fill: true, sectorSeparator: false) ?? clearImage
+        } else {
+            var sectors: [ImageSector] = []
+            var count = 0
+            let degreesPerColor = 360.0 / CGFloat(lightColors.count)
+            for color in lightColors {
+                sectors.append(ImageSector(startDegrees: degreesPerColor * CGFloat(count), endDegrees: degreesPerColor * (CGFloat(count) + 1.0), color: color))
+                count += 1
+            }
+            return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: 2 * scale, height: 2 * scale), sectors: sectors, fill: true, sectorSeparator: false) ?? clearImage
         }
     }
     
@@ -400,7 +441,7 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
     
     func view(on: MKMapView) -> MKAnnotationView {
         let annotationView = on.dequeueReusableAnnotationView(withIdentifier: LightAnnotationView.ReuseID, for: self)
-        let images = self.mapImage(marker: true)
+        let images = self.mapImage(marker: true, zoomLevel: on.zoomLevel)
         
         let largestSize = images.reduce(CGSize(width: 0, height: 0)) { partialResult, image in
             return CGSize(width: max(partialResult.width, image.size.width), height: max(partialResult.height, image.size.height))

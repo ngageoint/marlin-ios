@@ -7,28 +7,33 @@
 
 import SwiftUI
 import MapKit
+import CoreData
 
 struct AsamDetailView: View {
-    @State private var region: MKCoordinateRegion
+    @StateObject var mapState: MapState = MapState()
+    var fetchRequest: NSFetchRequest<Asam>
 
     var asam: Asam
     
     init(asam: Asam) {
         self.asam = asam
-        region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: asam.latitude?.doubleValue ?? 0.0, longitude: asam.longitude?.doubleValue ?? 0.0), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
+        let predicate = NSPredicate(format: "reference == %@", asam.reference ?? "")
+        fetchRequest = Asam.fetchRequest()
+        fetchRequest.predicate = predicate
     }
     
     var body: some View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-
-                    Map(coordinateRegion: $region, annotationItems: [asam]) { asam in
-                        MapAnnotation(coordinate: asam.coordinate, anchorPoint: CGPoint(x: 0.5, y: 1)) {
-                            Image("asam_marker")
+                    MarlinMap(name: "Asam Detail Map", mixins: [AsamMap(fetchRequest: fetchRequest, showAsamsAsTiles: false)], mapState: mapState)
+                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                        .onAppear {
+                            mapState.center = MKCoordinateRegion(center: asam.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
                         }
-                    }
-                    .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                        .onChange(of: asam) { asam in
+                            mapState.center = MKCoordinateRegion(center: asam.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
+                        }
                     Group {
                         Text(asam.dateString ?? "")
                             .font(Font.overline)

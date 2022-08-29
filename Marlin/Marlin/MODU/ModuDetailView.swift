@@ -7,29 +7,33 @@
 
 import SwiftUI
 import MapKit
+import CoreData
 
 struct ModuDetailView: View {
-        
-    @State private var region: MKCoordinateRegion
+    @StateObject var mapState: MapState = MapState()
+    var fetchRequest: NSFetchRequest<Modu>
     
     var modu: Modu
     
     init(modu: Modu) {
         self.modu = modu
-        region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: modu.latitude?.doubleValue ?? 0.0, longitude: modu.longitude?.doubleValue ?? 0.0), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
+        let predicate = NSPredicate(format: "name == %@", modu.name ?? "")
+        fetchRequest = Modu.fetchRequest()
+        fetchRequest.predicate = predicate
     }
     
     var body: some View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    
-                    Map(coordinateRegion: $region, annotationItems: [modu]) { modu in
-                        MapAnnotation(coordinate: modu.coordinate, anchorPoint: CGPoint(x: 0.5, y: 1)) {
-                            Image("modu_marker")
+                    MarlinMap(name: "Modu Detail Map", mixins: [ModuMap(fetchRequest: fetchRequest, showModusAsTiles: false)], mapState: mapState)
+                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                        .onAppear {
+                            mapState.center = MKCoordinateRegion(center: modu.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
                         }
-                    }
-                    .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                        .onChange(of: modu) { modu in
+                            mapState.center = MKCoordinateRegion(center: modu.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
+                        }
                     Group {
                         Text(modu.dateString ?? "")
                             .font(Font.overline)

@@ -19,7 +19,6 @@ struct RadioBeaconDetailView: View {
     init(radioBeacon: RadioBeacon) {
         self.radioBeacon = radioBeacon
         let predicate = NSPredicate(format: "featureNumber == %i AND volumeNumber == %@", radioBeacon.featureNumber, radioBeacon.volumeNumber ?? "")
-        print("xxx the predicate is \(predicate)")
         fetchRequest = RadioBeacon.fetchRequest()
         fetchRequest.predicate = predicate
     }
@@ -28,15 +27,15 @@ struct RadioBeaconDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "RadioBeacon Detail Map", mixins: [RadioBeaconMap(fetchRequest: fetchRequest, showRadioBeaconsAsTiles: false)], mapState: mapState)
+                    MarlinMap(name: "RadioBeacon Detail Map", mixins: [RadioBeaconMap(fetchRequest: fetchRequest, showRadioBeaconsAsTiles: true)], mapState: mapState)
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                         .onAppear {
-                            mapState.center = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: radioBeacon.latitude, longitude: radioBeacon.longitude), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
+                            mapState.center = MKCoordinateRegion(center: radioBeacon.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
                         }
                         .onChange(of: radioBeacon) { radioBeacon in
-                            mapState.center = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: radioBeacon.latitude, longitude: radioBeacon.longitude), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
+                            mapState.center = MKCoordinateRegion(center: radioBeacon.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
                         }
-                    RadioBeaconSummaryView(radioBeacon: radioBeacon) //, currentLocation: locationManager.lastLocation)
+                    RadioBeaconSummaryView(radioBeacon: radioBeacon, showSectionHeader: true) //, currentLocation: locationManager.lastLocation)
                         .padding(.all, 16)
                 }
                 

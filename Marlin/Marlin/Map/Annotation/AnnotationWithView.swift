@@ -15,7 +15,7 @@ protocol AnnotationWithView: MKAnnotation {
 }
 
 protocol MapImage {
-    func mapImage(marker: Bool, small: Bool) -> [UIImage]
+    func mapImage(marker: Bool, zoomLevel: Int) -> [UIImage]
     var latitude: Double { get }
     var longitude: Double { get }
 }

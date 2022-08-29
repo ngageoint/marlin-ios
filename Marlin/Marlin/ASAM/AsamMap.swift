@@ -11,16 +11,26 @@ import CoreData
 import Combine
 
 class AsamMap: NSObject, MapMixin {
+    var minZoom = 0
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     
-    func getFetchRequest(mapState: MapState) -> NSFetchRequest<NSFetchRequestResult> {
+    var showAsamsAsTiles: Bool = true
+    var fetchRequest: NSFetchRequest<Asam>?
+    var asamOverlay: FetchRequestTileOverlay<Asam>?
+    
+    public init(fetchRequest: NSFetchRequest<Asam>? = nil, showAsamsAsTiles: Bool = true) {
+        self.fetchRequest = fetchRequest
+        self.showAsamsAsTiles = showAsamsAsTiles
+    }
+    
+    func getFetchRequest(mapState: MapState) -> NSFetchRequest<Asam> {
         if let showAsams = mapState.showAsams, showAsams == true {
-            let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Asam.fetchRequest()
+            let fetchRequest = self.fetchRequest ?? Asam.fetchRequest()
             fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Asam.date, ascending: true)]
             return fetchRequest
         } else {
-            let nilFetchRequest: NSFetchRequest<NSFetchRequestResult> = Asam.fetchRequest()
+            let nilFetchRequest = Asam.fetchRequest()
             nilFetchRequest.predicate = NSPredicate(value: false)
             nilFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Asam.date, ascending: true)]
             return nilFetchRequest
@@ -45,7 +55,26 @@ class AsamMap: NSObject, MapMixin {
             })
             .sink() { [weak self] in
                 marlinMap.mapState.showAsams = $0
-                marlinMap.mapState.fetchRequests[Asam.key] = self?.getFetchRequest(mapState: marlinMap.mapState)
+                if let showAsamsAsTiles = self?.showAsamsAsTiles, showAsamsAsTiles {
+                    if let asamOverlay = self?.asamOverlay {
+                        marlinMap.mapState.overlays.removeAll { overlay in
+                            if let overlay = overlay as? FetchRequestTileOverlay<Asam> {
+                                return overlay == asamOverlay
+                            }
+                            return false
+                        }
+                    }
+                    let newFetchRequest = self?.getFetchRequest(mapState: marlinMap.mapState)
+                    let newOverlay = FetchRequestTileOverlay<Asam>()
+                    
+                    newOverlay.tileSize = CGSize(width: 512, height: 512)
+                    newOverlay.minimumZ = self?.minZoom ?? 0
+                    newOverlay.fetchRequest = newFetchRequest
+                    self?.asamOverlay = newOverlay
+                    marlinMap.mapState.overlays.append(newOverlay)
+                } else {
+                    marlinMap.mapState.fetchRequests[Asam.key] = self?.getFetchRequest(mapState: marlinMap.mapState) as? NSFetchRequest<NSFetchRequestResult>
+                }
             }
             .store(in: &cancellable)
     }

@@ -22,7 +22,7 @@ extension Asam: DataSource {
     static var color: UIColor = .black
 }
 
-class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotation {
+class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotation, MapImage {
     var clusteringIdentifierWhenShrunk: String? = "msi"
     
     var enlarged: Bool = false
@@ -38,11 +38,7 @@ class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
     }
     
     var coordinate: CLLocationCoordinate2D {
-        if let latitude = latitude, let longitude = longitude {
-            return CLLocationCoordinate2D(latitude: latitude.doubleValue, longitude: longitude.doubleValue)
-        } else {
-            return kCLLocationCoordinate2DInvalid
-        }
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
     func view(on: MKMapView) -> MKAnnotationView {
@@ -58,6 +54,31 @@ class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
             return AsamProperties.dateFormatter.string(from: date)
         }
         return nil
+    }
+    
+    func mapImage(marker: Bool = false, zoomLevel: Int) -> [UIImage] {
+        let scale = marker ? 1 : 2
+        var images: [UIImage] = []
+        if zoomLevel > 12 {
+            if let image = CircleImage(color: Asam.color, radius: 8 * CGFloat(scale), fill: true) {
+                images.append(image)
+                if let pirateImage = UIImage(named: "asam")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
+                    images.append(pirateImage)
+                }
+            }
+        } else if zoomLevel > 5 {
+            if let image = CircleImage(color: Asam.color, radius: 4 * CGFloat(scale), fill: true) {
+                images.append(image)
+                if let pirateImage = UIImage(named: "asam")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
+                    images.append(pirateImage)
+                }
+            }
+        } else {
+            if let image = CircleImage(color: Asam.color, radius: 1 * CGFloat(scale), fill: true) {
+                images.append(image)
+            }
+        }
+        return images
     }
     
     static func newBatchInsertRequest(with propertyList: [AsamProperties]) -> NSBatchInsertRequest {
@@ -101,8 +122,8 @@ class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
         return "ASAM\n\n" +
         "Reference: \(reference ?? "")\n" +
         "Date: \(dateString ?? "")\n" +
-        "Latitude: \(latitude ?? 0.0)\n" +
-        "Longitude: \(longitude ?? 0.0)\n" +
+        "Latitude: \(latitude)\n" +
+        "Longitude: \(longitude)\n" +
         "Navigate Area: \(navArea ?? "")\n" +
         "Subregion: \(subreg ?? "")\n" +
         "Description: \(asamDescription ?? "")\n" +
@@ -147,8 +168,8 @@ struct AsamProperties: Decodable {
     }
     
     let reference: String?
-    let latitude: Decimal
-    let longitude: Decimal
+    let latitude: Double
+    let longitude: Double
     let position: String?
     let navArea: String?
     let subreg: String?
@@ -160,8 +181,8 @@ struct AsamProperties: Decodable {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let rawReference = try? values.decode(String.self, forKey: .reference)
-        let rawLatitude = try? values.decode(Decimal.self, forKey: .latitude)
-        let rawLongitude = try? values.decode(Decimal.self, forKey: .longitude)
+        let rawLatitude = try? values.decode(Double.self, forKey: .latitude)
+        let rawLongitude = try? values.decode(Double.self, forKey: .longitude)
         
         guard let reference = rawReference,
               let latitude = rawLatitude,

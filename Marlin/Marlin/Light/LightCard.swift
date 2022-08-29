@@ -9,6 +9,28 @@ import SwiftUI
 
 struct LightCard: View {
     var light: Light
+    var image: Image?
+    
+    init(light: Light) {
+        self.light = light
+        if let lightSectors = light.lightSectors, let uiImage = CircleImage(
+            suggestedFrame: CGRect(x: 0, y: 0, width: 25, height: 25),
+            sectors: lightSectors, outerStroke: UIColor.lightGray, fill: true, sectorSeparator: false) {
+            image = Image(uiImage: uiImage)
+        } else if let lightColors = light.lightColors {
+            var sectors: [ImageSector] = []
+            var count = 0
+            let degreesPerColor = 360.0 / CGFloat(lightColors.count)
+            for color in lightColors {
+                sectors.append(ImageSector(startDegrees: degreesPerColor * CGFloat(count), endDegrees: degreesPerColor * (CGFloat(count) + 1.0), color: color))
+                count += 1
+            }
+            let uiImage = CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: 25, height: 25), sectors: sectors, outerStroke: UIColor.lightGray, fill: true, sectorSeparator: false)
+            if let uiImage = uiImage {
+                image = Image(uiImage: uiImage)
+            }
+        }
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -27,13 +49,8 @@ struct LightCard: View {
                 }
                 Spacer()
                 
-                if let lightSectors = light.lightSectors, let uiImage = LightColorImage(
-                    frame: CGRect(x: 0, y: 0, width: 25, height: 25),
-                    sectors: lightSectors), let darkuiImage = LightColorImage(
-                        frame: CGRect(x: 0, y: 0, width: 25, height: 25),
-                        sectors: lightSectors, darkMode: true) {
-                    AdaptiveImage(lightImage: Image(uiImage: uiImage), darkImage: Image(uiImage: darkuiImage))
-                        .aspectRatio(contentMode: .fit)
+                if let image = image {
+                    image.aspectRatio(contentMode: .fit)
                 }
             }
             

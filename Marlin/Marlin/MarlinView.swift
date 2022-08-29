@@ -53,12 +53,7 @@ struct MarlinView: View {
     
     init() {
         var mixins: [MapMixin] = [PersistedMapState()]
-        if UserDefaults.standard.dataSourceEnabled(Asam.self) {
-            mixins.append(AsamMap())
-        }
-        if UserDefaults.standard.dataSourceEnabled(Modu.self) {
-            mixins.append(ModuMap())
-        }
+
         if UserDefaults.standard.dataSourceEnabled(Light.self) {
             mixins.append(LightMap(showLightsAsTiles: true))
         }
@@ -67,6 +62,12 @@ struct MarlinView: View {
         }
         if UserDefaults.standard.dataSourceEnabled(RadioBeacon.self) {
             mixins.append(RadioBeaconMap(showRadioBeaconsAsTiles: true))
+        }
+        if UserDefaults.standard.dataSourceEnabled(Modu.self) {
+            mixins.append(ModuMap(showModusAsTiles: true))
+        }
+        if UserDefaults.standard.dataSourceEnabled(Asam.self) {
+            mixins.append(AsamMap(showAsamsAsTiles: true))
         }
         self.mixins = mixins
     }

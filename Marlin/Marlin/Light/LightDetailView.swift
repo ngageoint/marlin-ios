@@ -38,12 +38,12 @@ struct LightDetailView: View {
                     .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     .onAppear {
                         if lights.count > 0 {
-                            mapState.center = MKCoordinateRegion(center: lights[0].coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+                            mapState.center = MKCoordinateRegion(center: lights[0].coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
                         }
                     }
                     .onChange(of: lights.first) { light in
                         if let firstLight = light {
-                            mapState.center = MKCoordinateRegion(center: firstLight.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+                            mapState.center = MKCoordinateRegion(center: firstLight.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
                         }
                     }
                     Group {
