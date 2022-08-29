@@ -483,14 +483,14 @@ class Port: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
                 }
             }
         } else if zoomLevel > 5 {
-            if let image = CircleImage(color: Port.color, radius: 5 * CGFloat(scale), fill: true) {
+            if let image = CircleImage(color: Port.color, radius: 4 * CGFloat(scale), fill: true) {
                 images.append(image)
                 if let portImage = UIImage(named: "port")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
                     images.append(portImage)
                 }
             }
         } else {
-            if let image = CircleImage(color: Port.color, radius: 2 * CGFloat(scale), fill: true) {
+            if let image = CircleImage(color: Port.color, radius: 1 * CGFloat(scale), fill: true) {
                 images.append(image)
             }
         }
