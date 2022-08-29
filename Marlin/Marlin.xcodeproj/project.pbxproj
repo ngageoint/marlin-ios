@@ -370,6 +370,19 @@
 			path = Port;
 			sourceTree = "<group>";
 		};
+		F71D285F28BD688800F1775C /* DataSources */ = {
+			isa = PBXGroup;
+			children = (
+				F71CC6E828AC177A000A326C /* Port */,
+				F7F597A4286271E100F9B32E /* NavigationalWarning */,
+				F7F5977F285A1B2400F9B32E /* ASAM */,
+				F7F59780285A1B6000F9B32E /* MODU */,
+				F707BA7528760894006A94C4 /* Light */,
+				F74B9B0528B7CDC20097D448 /* RadioBeacon */,
+			);
+			path = DataSources;
+			sourceTree = "<group>";
+		};
 		F71DF47C284E68C200686951 /* responses */ = {
 			isa = PBXGroup;
 			children = (
@@ -469,20 +482,15 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
-				F74B9B0528B7CDC20097D448 /* RadioBeacon */,
-				F71CC6E828AC177A000A326C /* Port */,
+				F71D285F28BD688800F1775C /* DataSources */,
 				F7ADDCE02887025500137D95 /* Location */,
-				F707BA7528760894006A94C4 /* Light */,
 				F7D671E52871D44E00758F1C /* SideMenu */,
 				F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */,
 				F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */,
 				F7D671C1286C85EF00758F1C /* GeoPackage */,
-				F7F597A4286271E100F9B32E /* NavigationalWarning */,
 				F7F59793285BE23F00F9B32E /* Views */,
 				F7F5978E285BACAE00F9B32E /* Extensions */,
 				F7F59787285A275200F9B32E /* MaterialComponents */,
-				F7F59780285A1B6000F9B32E /* MODU */,
-				F7F5977F285A1B2400F9B32E /* ASAM */,
 				F71DF4A1285911BE00686951 /* BottomSheet */,
 				F71DF48B2858BF7B00686951 /* Map */,
 				F727A682284E29AE00BD728A /* Info.plist */,
@@ -1234,7 +1242,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.0;
+				MARKETING_VERSION = 0.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.msi.Marlin;
 				PRODUCT_NAME = Marlin;
 				SDKROOT = iphoneos;
@@ -1268,7 +1276,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.0;
+				MARKETING_VERSION = 0.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.msi.Marlin;
 				PRODUCT_NAME = Marlin;
 				SDKROOT = iphoneos;
