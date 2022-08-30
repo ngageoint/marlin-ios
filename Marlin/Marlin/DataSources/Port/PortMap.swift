@@ -95,7 +95,7 @@ class PortMap: NSObject, MapMixin {
     }
     
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
-        if let portOverlay = portOverlay, portOverlay.zoomLevel < minZoom {
+        if mapView.zoomLevel < minZoom {
             return nil
         }
         guard let mapState = mapState, let showPorts = mapState.showPorts, showPorts else {

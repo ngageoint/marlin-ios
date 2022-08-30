@@ -79,6 +79,31 @@ class AsamMap: NSObject, MapMixin {
             .store(in: &cancellable)
     }
     
+    func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
+        if mapView.zoomLevel < minZoom {
+            return nil
+        }
+        guard let mapState = mapState, let showAsams = mapState.showAsams, showAsams else {
+            return nil
+        }
+        let screenPercentage = 0.03
+        let tolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
+        let minLon = location.longitude - tolerance
+        let maxLon = location.longitude + tolerance
+        let minLat = location.latitude - tolerance
+        let maxLat = location.latitude + tolerance
+        
+        let fetchRequest: NSFetchRequest<Asam>
+        fetchRequest = Asam.fetchRequest()
+        
+        fetchRequest.predicate = NSPredicate(
+            format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
+        )
+        
+        let context = PersistenceController.shared.container.viewContext
+        return try? context.fetch(fetchRequest)
+    }
+    
     func focusAsam(asam: Asam) {
         mapState?.center = MKCoordinateRegion(center: asam.coordinate, latitudinalMeters: 10000, longitudinalMeters: 10000)
     }

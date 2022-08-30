@@ -100,7 +100,7 @@ class LightMap: NSObject, MapMixin {
     }
     
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
-        if let lightOverlay = lightOverlay, lightOverlay.zoomLevel < minZoom {
+        if mapView.zoomLevel < minZoom {
             return nil
         }
         guard let mapState = mapState, let showLights = mapState.showLights, showLights else {

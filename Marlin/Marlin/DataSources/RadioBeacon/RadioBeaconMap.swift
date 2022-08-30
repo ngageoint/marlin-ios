@@ -100,7 +100,7 @@ class RadioBeaconMap: NSObject, MapMixin {
     }
     
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
-        if let radioBeaconOverlay = radioBeaconOverlay, radioBeaconOverlay.zoomLevel < minZoom {
+        if mapView.zoomLevel < minZoom {
             return nil
         }
         guard let mapState = mapState, let showRadioBeacons = mapState.showRadioBeacons, showRadioBeacons else {

@@ -645,10 +645,8 @@ struct LightsProperties: Decodable {
     let structure: String?
     let subregionHeading: String?
     let volumeNumber: String?
-//    let sectionHeader: String?
     let latitude: Double?
     let longitude: Double?
-//    let lightCharacteristics: Set<LightCaracteristic>
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)

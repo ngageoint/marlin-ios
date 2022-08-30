@@ -201,7 +201,7 @@ class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         }
         let image = UIImage(cgImage: cgImage)
         
-        if let lav = annotationView as? LightAnnotationView {
+        if let lav = annotationView as? RadioBeaconAnnotationView {
             lav.combinedImage = image
         } else {
             annotationView.image = image
@@ -224,9 +224,6 @@ class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         }
         
         var previousHeadingPerVolume: [String : PreviousLocation] = [:]
-//        var previousRegionHeading: String?
-//        var previousSubregionHeading: String?
-//        var previousLocalHeading: String?
         // Provide one dictionary at a time when the closure is called.
         let batchInsertRequest = NSBatchInsertRequest(entity: RadioBeacon.entity(), dictionaryHandler: { dictionary in
             guard index < total else { return true }
