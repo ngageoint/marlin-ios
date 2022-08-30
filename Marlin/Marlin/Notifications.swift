@@ -20,6 +20,7 @@ extension Notification.Name {
     public static let FocusAsam = Notification.Name("FocusAsam")
     public static let FocusModu = Notification.Name("FocusModu")
     public static let FocusPort = Notification.Name("FocusPort")
+    public static let FocusDifferentialGPSStation = Notification.Name("FocusDifferentialGPSStation")
     public static let ViewDataSource = Notification.Name("ViewDataSource")
     public static let ViewNavigationalWarning = Notification.Name("ViewNavigationalWarning")
     public static let SwitchTabs = Notification.Name("SwitchTabs")

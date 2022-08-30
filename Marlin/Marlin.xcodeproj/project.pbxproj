@@ -35,6 +35,12 @@
 		F71CC6F028AD1647000A326C /* PortDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6EF28AD1647000A326C /* PortDetailView.swift */; };
 		F71CC6F228AD1D23000A326C /* PortActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6F128AD1D23000A326C /* PortActionBar.swift */; };
 		F71CC6F828AE71BA000A326C /* KeyValueSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6F728AE71BA000A326C /* KeyValueSection.swift */; };
+		F71D286228BE390800F1775C /* DifferentialGPSStation+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D286128BE390800F1775C /* DifferentialGPSStation+CoreDataClass.swift */; };
+		F71D286428BE431900F1775C /* DifferentialGPSStationMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D286328BE431900F1775C /* DifferentialGPSStationMap.swift */; };
+		F71D286628BE453A00F1775C /* DifferentialGPSStationSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D286528BE453A00F1775C /* DifferentialGPSStationSummaryView.swift */; };
+		F71D286828BE45AC00F1775C /* DifferentialGPSStationActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D286728BE45AC00F1775C /* DifferentialGPSStationActionBar.swift */; };
+		F71D286A28BE467200F1775C /* DifferentialGPSStationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D286928BE467200F1775C /* DifferentialGPSStationDetailView.swift */; };
+		F71D286C28BE46F800F1775C /* DifferentialGPSStationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D286B28BE46F800F1775C /* DifferentialGPSStationListView.swift */; };
 		F71DF47E284E68DE00686951 /* asams.json in Resources */ = {isa = PBXBuildFile; fileRef = F71DF47D284E68DE00686951 /* asams.json */; };
 		F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */; };
 		F71DF482284E783600686951 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF481284E783600686951 /* TestHelper.swift */; };
@@ -181,6 +187,12 @@
 		F71CC6EF28AD1647000A326C /* PortDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDetailView.swift; sourceTree = "<group>"; };
 		F71CC6F128AD1D23000A326C /* PortActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortActionBar.swift; sourceTree = "<group>"; };
 		F71CC6F728AE71BA000A326C /* KeyValueSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyValueSection.swift; sourceTree = "<group>"; };
+		F71D286128BE390800F1775C /* DifferentialGPSStation+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DifferentialGPSStation+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F71D286328BE431900F1775C /* DifferentialGPSStationMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationMap.swift; sourceTree = "<group>"; };
+		F71D286528BE453A00F1775C /* DifferentialGPSStationSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationSummaryView.swift; sourceTree = "<group>"; };
+		F71D286728BE45AC00F1775C /* DifferentialGPSStationActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationActionBar.swift; sourceTree = "<group>"; };
+		F71D286928BE467200F1775C /* DifferentialGPSStationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationDetailView.swift; sourceTree = "<group>"; };
+		F71D286B28BE46F800F1775C /* DifferentialGPSStationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationListView.swift; sourceTree = "<group>"; };
 		F71DF47D284E68DE00686951 /* asams.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = asams.json; sourceTree = "<group>"; };
 		F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extensions.swift"; sourceTree = "<group>"; };
 		F71DF481284E783600686951 /* TestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
@@ -373,6 +385,7 @@
 		F71D285F28BD688800F1775C /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
+				F71D286028BE38CC00F1775C /* DifferentialGPSStation */,
 				F71CC6E828AC177A000A326C /* Port */,
 				F7F597A4286271E100F9B32E /* NavigationalWarning */,
 				F7F5977F285A1B2400F9B32E /* ASAM */,
@@ -381,6 +394,19 @@
 				F74B9B0528B7CDC20097D448 /* RadioBeacon */,
 			);
 			path = DataSources;
+			sourceTree = "<group>";
+		};
+		F71D286028BE38CC00F1775C /* DifferentialGPSStation */ = {
+			isa = PBXGroup;
+			children = (
+				F71D286128BE390800F1775C /* DifferentialGPSStation+CoreDataClass.swift */,
+				F71D286328BE431900F1775C /* DifferentialGPSStationMap.swift */,
+				F71D286528BE453A00F1775C /* DifferentialGPSStationSummaryView.swift */,
+				F71D286728BE45AC00F1775C /* DifferentialGPSStationActionBar.swift */,
+				F71D286928BE467200F1775C /* DifferentialGPSStationDetailView.swift */,
+				F71D286B28BE46F800F1775C /* DifferentialGPSStationListView.swift */,
+			);
+			path = DifferentialGPSStation;
 			sourceTree = "<group>";
 		};
 		F71DF47C284E68C200686951 /* responses */ = {
@@ -951,6 +977,7 @@
 				F7D5C05328A2CAAB000C2C29 /* BottomSheetItem.swift in Sources */,
 				F7ADDCEC28902D1500137D95 /* EnlargableAnnotation.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
+				F71D286428BE431900F1775C /* DifferentialGPSStationMap.swift in Sources */,
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
 				F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */,
 				F7D671F1287484FE00758F1C /* MarlinUserDefaults.swift in Sources */,
@@ -966,6 +993,7 @@
 				F74B9B0F28B7DA8B0097D448 /* RadioBeaconActionBar.swift in Sources */,
 				F740AA77289D68D800754293 /* MarlinCompactWidth.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
+				F71D286A28BE467200F1775C /* DifferentialGPSStationDetailView.swift in Sources */,
 				F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */,
 				F7F5979B285D177400F9B32E /* ModuAnnotation.swift in Sources */,
 				F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */,
@@ -1002,11 +1030,13 @@
 				F707BA89287C68E7006A94C4 /* RaconCard.swift in Sources */,
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
 				F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */,
+				F71D286C28BE46F800F1775C /* DifferentialGPSStationListView.swift in Sources */,
 				F707BA742875DD22006A94C4 /* DataDetailView.swift in Sources */,
 				F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */,
 				F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */,
 				F7F59797285D15B900F9B32E /* ModuListView.swift in Sources */,
 				F74B9B0728B7CF650097D448 /* RadioBeacon+CoreDataClass.swift in Sources */,
+				F71D286228BE390800F1775C /* DifferentialGPSStation+CoreDataClass.swift in Sources */,
 				F71DF4A02859116C00686951 /* Notifications.swift in Sources */,
 				F7D671DE286F877C00758F1C /* MaterialButtonStyle.swift in Sources */,
 				F707BA7D2877329E006A94C4 /* LightActionBar.swift in Sources */,
@@ -1019,9 +1049,11 @@
 				F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */,
 				F707BA81287768FA006A94C4 /* LightDetailView.swift in Sources */,
 				F7F597A3286238F400F9B32E /* MSIMapCluster.swift in Sources */,
+				F71D286628BE453A00F1775C /* DifferentialGPSStationSummaryView.swift in Sources */,
 				F707BA97288590E2006A94C4 /* FogSignalImage.swift in Sources */,
 				F71CC6F228AD1D23000A326C /* PortActionBar.swift in Sources */,
 				F7ADDCDF2885E53E00137D95 /* UIColorExtensions.swift in Sources */,
+				F71D286828BE45AC00F1775C /* DifferentialGPSStationActionBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

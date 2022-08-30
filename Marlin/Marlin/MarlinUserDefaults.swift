@@ -62,6 +62,10 @@ extension UserDefaults {
     @objc var showOnMapradioBeacon: Bool {
         bool(forKey: "showOnMap\(RadioBeacon.key)")
     }
+    
+    @objc var showOnMapdifferentialGPSStation: Bool {
+        bool(forKey: "showOnMap\(DifferentialGPSStation.key)")
+    }
 
     @objc var mapRegion: MKCoordinateRegion {
         get {

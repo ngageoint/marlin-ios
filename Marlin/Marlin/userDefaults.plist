@@ -12,6 +12,8 @@
 	<true/>
 	<key>showOnMapradioBeacon</key>
 	<true/>
+	<key>showOnMapdifferentialGPSStation</key>
+	<true/>
 	<key>asamOrder</key>
 	<integer>0</integer>
 	<key>moduOrder</key>
@@ -24,6 +26,8 @@
 	<integer>5</integer>
 	<key>radioBeaconOrder</key>
 	<integer>6</integer>
+	<key>differentialGPSStationOrder</key>
+	<integer>7</integer>
 	<key>userTabs</key>
 	<integer>3</integer>
 </dict>

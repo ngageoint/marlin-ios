@@ -25,6 +25,8 @@ struct DataDetailView: View {
             PortDetailView(port: port)
         } else if let radioBeacon = data as? RadioBeacon {
             RadioBeaconDetailView(radioBeacon: radioBeacon)
+        } else if let differentialGPSStation = data as? DifferentialGPSStation {
+            DifferentialGPSStationDetailView(differentialGPSStation: differentialGPSStation)
         }
     }
 }

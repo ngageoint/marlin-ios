@@ -16,5 +16,7 @@
 	<true/>
 	<key>radioBeaconDataSourceEnabled</key>
 	<true/>
+	<key>differentialGPSStationDataSourceEnabled</key>
+	<true/>
 </dict>
 </plist>

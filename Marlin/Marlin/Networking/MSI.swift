@@ -43,6 +43,9 @@ public class MSI {
         if UserDefaults.standard.dataSourceEnabled(RadioBeacon.self) {
             loadRadioBeacons()
         }
+        if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) {
+            loadDifferentialGPSStations()
+        }
     }
     
     func loadAsams() {
@@ -148,6 +151,35 @@ public class MSI {
                     Task.detached {
                         if let radioBeacons = response.value?.ngalol {
                             try await RadioBeacon.batchImport(from: radioBeacons, taskContext: PersistenceController.shared.newTaskContext())
+                        }
+                    }
+                })
+            }
+    }
+    
+    func loadDifferentialGPSStations(date: String? = nil) {
+        let queue = DispatchQueue(label: "com.test.api", qos: .background)
+        let count = try? PersistenceController.shared.container.viewContext.countOfObjects(DifferentialGPSStation.self)
+        print("There are \(count ?? 0) differential gps stations")
+        let newestDifferentialGPSStation = try? PersistenceController.shared.container.viewContext.fetchFirst(DifferentialGPSStation.self, sortBy: [NSSortDescriptor(keyPath: \DifferentialGPSStation.noticeNumber, ascending: false)])
+        
+        let noticeWeek = Int(newestDifferentialGPSStation?.noticeWeek ?? "0") ?? 0
+        
+        print("Query for differential gps stations after year:\(newestDifferentialGPSStation?.noticeYear ?? "") week:\(noticeWeek)")
+        session.request(MSIRouter.readDifferentialGPSStations(noticeYear: newestDifferentialGPSStation?.noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1)))
+            .validate()
+            .responseDecodable(of: DifferentialGPSStationPropertyContainer.self, queue: queue) { response in
+                
+                switch response.result {
+                case .success:
+                    print("Validation Successful")
+                case .failure(let error):
+                    print("ERROR: \(error.localizedDescription) \(error)")
+                }
+                queue.async(execute:{
+                    Task.detached {
+                        if let differentialGPSStations = response.value?.ngalol {
+                            try await DifferentialGPSStation.batchImport(from: differentialGPSStations, taskContext: PersistenceController.shared.newTaskContext())
                         }
                     }
                 })

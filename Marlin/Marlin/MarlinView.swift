@@ -54,6 +54,9 @@ struct MarlinView: View {
     init() {
         var mixins: [MapMixin] = [PersistedMapState()]
 
+        if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) {
+            mixins.append(DifferentialGPSStationMap(showAsTiles: true))
+        }
         if UserDefaults.standard.dataSourceEnabled(Light.self) {
             mixins.append(LightMap(showLightsAsTiles: true))
         }

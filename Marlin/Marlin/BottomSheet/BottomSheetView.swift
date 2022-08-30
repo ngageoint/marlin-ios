@@ -78,6 +78,9 @@ struct MarlinBottomSheet: View {
                     } else if let radioBeacon = item.item as? RadioBeacon {
                         RadioBeaconSummaryView(radioBeacon: radioBeacon, showMoreDetails: true)
                             .transition(.opacity)
+                    } else if let differentialGPSStation = item.item as? DifferentialGPSStation {
+                        DifferentialGPSStationSummaryView(differentialGPSStation: differentialGPSStation, showMoreDetails: true)
+                            .transition(.opacity)
                     }
                 }
                     

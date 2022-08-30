@@ -140,6 +140,8 @@ struct MarlinRegularWidth: View {
             PortListView(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == RadioBeacon.key {
             RadioBeaconListView(focusedItem: itemWrapper, watchFocusedItem: true)
+        } else if dataSource.key == DifferentialGPSStation.key {
+            DifferentialGPSStationListView(focusedItem: itemWrapper, watchFocusedItem: true)
         }
     }
 }
