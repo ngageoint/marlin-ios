@@ -18,6 +18,7 @@ struct LightVolume {
 extension Light: DataSource {
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("Lights", comment: "Lights data source display name")
+    static var fullDataSourceName: String = NSLocalizedString("Lights", comment: "Lights data source display name")
     static var key: String = "light"
     static var imageName: String? = nil
     static var systemImageName: String? = "lightbulb.fill"

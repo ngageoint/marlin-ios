@@ -17,6 +17,44 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
+    <entity name="DFRS" representedClassName=".DFRS" syncable="YES" codeGenerationType="category">
+        <attribute name="areaName" optional="YES" attributeType="String"/>
+        <attribute name="frequency" optional="YES" attributeType="String"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="procedureText" optional="YES" attributeType="String"/>
+        <attribute name="range" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="remarks" optional="YES" attributeType="String"/>
+        <attribute name="rxLatitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="rxLongitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="rxPosition" optional="YES" attributeType="String"/>
+        <attribute name="stationName" optional="YES" attributeType="String"/>
+        <attribute name="stationNumber" optional="YES" attributeType="String"/>
+        <attribute name="stationType" optional="YES" attributeType="String"/>
+        <attribute name="txLatitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="txLongitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="txPosition" optional="YES" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="stationNumber"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="DFRSArea" representedClassName=".DFRSArea" syncable="YES" codeGenerationType="category">
+        <attribute name="areaIndex" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="areaName" optional="YES" attributeType="String"/>
+        <attribute name="areaNote" optional="YES" attributeType="String"/>
+        <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="indexNote" optional="YES" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="areaName"/>
+                <constraint value="areaIndex"/>
+                <constraint value="index"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
     <entity name="DifferentialGPSStation" representedClassName=".DifferentialGPSStation" syncable="YES" codeGenerationType="category">
         <attribute name="aidType" optional="YES" attributeType="String"/>
         <attribute name="deleteFlag" optional="YES" attributeType="String"/>
@@ -278,5 +316,7 @@
         <element name="Port" positionX="-63" positionY="153" width="128" height="1694"/>
         <element name="RadioBeacon" positionX="-63" positionY="153" width="128" height="359"/>
         <element name="DifferentialGPSStation" positionX="-63" positionY="153" width="128" height="359"/>
+        <element name="DFRS" positionX="-54" positionY="162" width="128" height="284"/>
+        <element name="DFRSArea" positionX="-36" positionY="171" width="128" height="104"/>
     </elements>
 </model>

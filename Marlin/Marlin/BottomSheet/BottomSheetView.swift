@@ -81,6 +81,9 @@ struct MarlinBottomSheet: View {
                     } else if let differentialGPSStation = item.item as? DifferentialGPSStation {
                         DifferentialGPSStationSummaryView(differentialGPSStation: differentialGPSStation, showMoreDetails: true)
                             .transition(.opacity)
+                    } else if let dfrs = item.item as? DFRS {
+                        DFRSSummaryView(dfrs: dfrs, showMoreDetails: true)
+                            .transition(.opacity)
                     }
                 }
                     

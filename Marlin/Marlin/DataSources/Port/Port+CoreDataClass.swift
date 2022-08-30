@@ -17,6 +17,7 @@ extension Port: DataSource {
     
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("Ports", comment: "Port data source display name")
+    static var fullDataSourceName: String = NSLocalizedString("Ports", comment: "Port data source display name")
     static var key: String = "port"
     static var imageName: String? = "port"
     static var systemImageName: String? = nil

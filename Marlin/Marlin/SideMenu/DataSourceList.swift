@@ -16,7 +16,8 @@ class DataSourceList: ObservableObject {
         DataSourceItem(dataSource: NavigationalWarning.self),
         DataSourceItem(dataSource: Port.self),
         DataSourceItem(dataSource: RadioBeacon.self),
-        DataSourceItem(dataSource: DifferentialGPSStation.self)
+        DataSourceItem(dataSource: DifferentialGPSStation.self),
+        DataSourceItem(dataSource: DFRS.self)
     ].sorted(by: { one, two in
         return one.order < two.order
     })

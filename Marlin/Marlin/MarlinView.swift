@@ -57,6 +57,9 @@ struct MarlinView: View {
         if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) {
             mixins.append(DifferentialGPSStationMap(showAsTiles: true))
         }
+        if UserDefaults.standard.dataSourceEnabled(DFRS.self) {
+            mixins.append(DFRSMap(showAsTiles: true))
+        }
         if UserDefaults.standard.dataSourceEnabled(Light.self) {
             mixins.append(LightMap(showLightsAsTiles: true))
         }

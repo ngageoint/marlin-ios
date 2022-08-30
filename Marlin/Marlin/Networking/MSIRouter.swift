@@ -17,6 +17,8 @@ enum MSIRouter: URLRequestConvertible
     case readPorts
     case readRadioBeacons(volume: String? = nil, noticeYear: String? = nil, noticeWeek: String? = nil)
     case readDifferentialGPSStations(volume: String? = nil, noticeYear: String? = nil, noticeWeek: String? = nil)
+    case readDFRS
+    case readDFRSAreas
     
 //    static let baseURLString = "https://msi.om.east.paas.nga.mil/api"
     static let baseURLString = "https://msi.gs.mil/api"
@@ -38,6 +40,10 @@ enum MSIRouter: URLRequestConvertible
             return .get
         case .readDifferentialGPSStations:
             return .get
+        case .readDFRS:
+            return .get
+        case .readDFRSAreas:
+            return .get
         }
     }
     
@@ -58,6 +64,10 @@ enum MSIRouter: URLRequestConvertible
             return "/publications/ngalol/radiobeacons"
         case .readDifferentialGPSStations:
             return "/publications/ngalol/dgpsstations"
+        case .readDFRS:
+            return "/publications/radio-navaids/dfrs"
+        case .readDFRSAreas:
+            return "/publications/radio-navaids/dfrs/areas"
         }
     }
     
@@ -100,7 +110,6 @@ enum MSIRouter: URLRequestConvertible
                 params["maxNoticeNumber"] = "\(year)\(String(format: "%02d", week + 1))"
             }
             return params
-        
         case .readPorts:
             return [
                 "output": "json"
@@ -137,6 +146,12 @@ enum MSIRouter: URLRequestConvertible
                 params["maxNoticeNumber"] = "\(year)\(String(format: "%02d", week + 1))"
             }
             return params
+        case .readDFRS:
+            return [
+                "output": "json"
+            ]
+        case .readDFRSAreas:
+            return [:]
         }
     }
     

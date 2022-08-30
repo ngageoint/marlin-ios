@@ -66,6 +66,10 @@ extension UserDefaults {
     @objc var showOnMapdifferentialGPSStation: Bool {
         bool(forKey: "showOnMap\(DifferentialGPSStation.key)")
     }
+    
+    @objc var showOnMapdfrs: Bool {
+        bool(forKey: "showOnMap\(DFRS.key)")
+    }
 
     @objc var mapRegion: MKCoordinateRegion {
         get {

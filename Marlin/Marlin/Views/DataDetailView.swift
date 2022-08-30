@@ -27,6 +27,8 @@ struct DataDetailView: View {
             RadioBeaconDetailView(radioBeacon: radioBeacon)
         } else if let differentialGPSStation = data as? DifferentialGPSStation {
             DifferentialGPSStationDetailView(differentialGPSStation: differentialGPSStation)
+        } else if let dfrs = data as? DFRS {
+            DFRSDetailView(dfrs: dfrs)
         }
     }
 }

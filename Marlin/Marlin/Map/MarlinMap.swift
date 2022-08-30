@@ -33,6 +33,7 @@ class MapState: ObservableObject {
     @Published var showPorts: Bool?
     @Published var showRadioBeacons: Bool?
     @Published var showDifferentialGPSStations: Bool?
+    @Published var showDFRS: Bool?
 }
 
 struct MarlinMap: UIViewRepresentable {

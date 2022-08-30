@@ -19,6 +19,7 @@ struct Throwable<T: Decodable>: Decodable {
 protocol DataSource {
     static var isMappable: Bool { get }
     static var dataSourceName: String { get }
+    static var fullDataSourceName: String { get }
     static var key: String { get }
     static var color: UIColor { get }
     static var imageName: String? { get }

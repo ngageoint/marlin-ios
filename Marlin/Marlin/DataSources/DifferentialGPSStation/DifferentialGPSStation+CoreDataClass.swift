@@ -17,6 +17,8 @@ extension DifferentialGPSStation: DataSource {
     }
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("DGPS", comment: "Differential GPS Station data source display name")
+    static var fullDataSourceName: String = NSLocalizedString("Differential GPS Stations", comment: "Differential GPS Station data source display name")
+
     static var key: String = "differentialGPSStation"
     static var imageName: String? = "dgps"
     static var systemImageName: String? = nil

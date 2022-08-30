@@ -22,7 +22,7 @@ struct DataSourceCell: View {
                         .tint(Color.onSurfaceColor)
                         .opacity(0.60)
                 }
-                Text(dataSourceItem.dataSource.dataSourceName)
+                Text(dataSourceItem.dataSource.fullDataSourceName)
                     .font(Font.body1)
                     .foregroundColor(Color.onSurfaceColor)
                     .opacity(0.87)

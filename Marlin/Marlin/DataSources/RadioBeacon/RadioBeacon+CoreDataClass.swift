@@ -21,6 +21,7 @@ extension RadioBeacon: DataSource {
     }
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("Beacons", comment: "Radio Beacons data source display name")
+    static var fullDataSourceName: String = NSLocalizedString("Radio Beacons", comment: "Radio Beacons data source display name")
     static var key: String = "radioBeacon"
     static var imageName: String? = nil
     static var systemImageName: String? = "antenna.radiowaves.left.and.right"

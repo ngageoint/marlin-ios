@@ -14,6 +14,8 @@
 	<true/>
 	<key>showOnMapdifferentialGPSStation</key>
 	<true/>
+	<key>showOnMapdfrs</key>
+	<true/>
 	<key>asamOrder</key>
 	<integer>0</integer>
 	<key>moduOrder</key>
@@ -28,6 +30,8 @@
 	<integer>6</integer>
 	<key>differentialGPSStationOrder</key>
 	<integer>7</integer>
+	<key>dfrsOrder</key>
+	<integer>8</integer>
 	<key>userTabs</key>
 	<integer>3</integer>
 </dict>

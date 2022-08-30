@@ -40,6 +40,7 @@ extension NavigationalWarningNavArea {
 extension NavigationalWarning: DataSource {
     static var isMappable: Bool = false
     static var dataSourceName: String = NSLocalizedString("Warnings", comment: "Warnings data source display name")
+    static var fullDataSourceName: String = NSLocalizedString("Navigational Warnings", comment: "Warnings data source display name")
     static var key: String = "navWarning"
     static var color: UIColor = UIColor(argbValue: 0xFFD32F2F)
     static var imageName: String? = nil

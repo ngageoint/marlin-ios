@@ -46,6 +46,10 @@ public class MSI {
         if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) {
             loadDifferentialGPSStations()
         }
+        if UserDefaults.standard.dataSourceEnabled(DFRS.self) {
+            loadDFRS(resetData: false)
+            loadDFRSAreas(resetData: true)
+        }
     }
     
     func loadAsams() {
@@ -202,6 +206,50 @@ public class MSI {
                         self.logger.debug("Received \(portCount ?? 0) port records.")
                         if let ports = response.value?.ports {
                             try await Port.batchImport(from: ports, taskContext: PersistenceController.shared.newTaskContext())
+                        }
+                    }
+                })
+            }
+    }
+    
+    func loadDFRS(resetData: Bool = false) {
+        let dfrsCount = try? persistenceController.container.viewContext.countOfObjects(DFRS.self)
+        if dfrsCount != 0 && !resetData {
+            return
+        }
+        let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
+        
+        session.request(MSIRouter.readDFRS)
+            .validate()
+            .responseDecodable(of: DFRSPropertyContainer.self, queue: queue) { response in
+                queue.async( execute:{
+                    Task.detached {
+                        let dfrsCount = response.value?.dfrs.count
+                        self.logger.debug("Received \(dfrsCount ?? 0) dfrs records.")
+                        if let dfrs = response.value?.dfrs {
+                            try await DFRS.batchImport(from: dfrs, taskContext: PersistenceController.shared.newTaskContext())
+                        }
+                    }
+                })
+            }
+    }
+    
+    func loadDFRSAreas(resetData: Bool = false) {
+        let dfrsCount = try? persistenceController.container.viewContext.countOfObjects(DFRSArea.self)
+        if dfrsCount != 0 && !resetData {
+            return
+        }
+        let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
+        
+        session.request(MSIRouter.readDFRSAreas)
+            .validate()
+            .responseDecodable(of: DFRSAreaPropertyContainer.self, queue: queue) { response in
+                queue.async( execute:{
+                    Task.detached {
+                        let dfrsCount = response.value?.areas.count
+                        NSLog("Received \(dfrsCount ?? 0) dfrs area records.")
+                        if let areas = response.value?.areas {
+                            try await DFRSArea.batchImport(from: areas, taskContext: PersistenceController.shared.newTaskContext())
                         }
                     }
                 })

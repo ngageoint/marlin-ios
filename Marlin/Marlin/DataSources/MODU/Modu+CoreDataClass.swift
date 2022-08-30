@@ -13,6 +13,7 @@ import MapKit
 extension Modu: DataSource {
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("MODU", comment: "MODU data source display name")
+    static var fullDataSourceName: String = NSLocalizedString("Mobile Offshore Drilling Units", comment: "MODU data source display name")
     static var key: String = "modu"
     static var imageName: String? = "modu"
     static var systemImageName: String? = nil
