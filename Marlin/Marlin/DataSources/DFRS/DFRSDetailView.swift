@@ -12,6 +12,12 @@ import CoreData
 struct DFRSDetailView: View {
     @StateObject var mapState: MapState = MapState()
     
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \DFRSArea.areaName, ascending: true), NSSortDescriptor(keyPath: \DFRSArea.index, ascending: true)],
+        predicate: NSPredicate(format: "areaNote != nil || indexNote != nil"),
+        animation: .default)
+    private var areas: FetchedResults<DFRSArea>
+    
     var fetchRequest: NSFetchRequest<DFRS>
     var dfrs: DFRS
     
@@ -49,6 +55,36 @@ struct DFRSDetailView: View {
             .padding(.bottom, -20)
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
+            
+            let areaNotes = areas.reduce("") { result, area in
+                if area.areaName == dfrs.areaName {
+                    var newResult = "\(result)"
+                    if newResult == "" {
+                        newResult = "\(area.areaNote ?? "")\n\(area.indexNote ?? "")"
+                    } else {
+                        newResult = "\(newResult)\n\(area.indexNote ?? "")"
+                    }
+                    return newResult
+                }
+                return result
+            }
+            
+            if areaNotes != "" {
+                Section("\(dfrs.areaName ?? "") Area Notes") {
+                    Text(areaNotes)
+                        .lineLimit(8)
+                        .font(Font.body2)
+                        .foregroundColor(Color.onSurfaceColor)
+                        .opacity(0.6)
+                        .frame(maxWidth:.infinity)
+                        .padding(.all, 16)
+                        .background(Color.surfaceColor)
+                        .modifier(CardModifier())
+                }
+                .padding(.bottom, -20)
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+            }
             
             KeyValueSection(sectionName: "Additional Information", properties: dfrs.additionalKeyValues)
                 .padding(.bottom, -20)
