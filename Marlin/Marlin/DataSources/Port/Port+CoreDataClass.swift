@@ -9,6 +9,7 @@ import Foundation
 import MapKit
 import CoreData
 import OSLog
+import SwiftUI
 
 extension Port: DataSource {
     var color: UIColor {
@@ -23,6 +24,16 @@ extension Port: DataSource {
     static var systemImageName: String? = nil
     
     static var color: UIColor = UIColor(argbValue: 0xFF5856d6)
+}
+
+extension Port: DataSourceViewBuilder {
+    var detailView: AnyView {
+        AnyView(PortDetailView(port: self))
+    }
+    
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
+        AnyView(PortSummaryView(port: self, showMoreDetails: showMoreDetails))
+    }
 }
 
 enum SizeEnum: String, CaseIterable, CustomStringConvertible {

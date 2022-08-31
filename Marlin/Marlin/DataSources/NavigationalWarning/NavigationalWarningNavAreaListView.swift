@@ -33,10 +33,10 @@ struct NavigationalWarningNavAreaListView: View {
                 LazyVStack (alignment: .leading) {
                     ForEach(dataSource.items) { navigationalWarning in
                         NavigationLink {
-                            NavigationalWarningDetailView(navigationalWarning: navigationalWarning)
+                            navigationalWarning.detailView
                         } label: {
                             HStack {
-                                NavigationalWarningSummaryView(navigationalWarning: navigationalWarning)
+                                navigationalWarning.summaryView()
                                     .padding(.all, 16)
                             }
                             

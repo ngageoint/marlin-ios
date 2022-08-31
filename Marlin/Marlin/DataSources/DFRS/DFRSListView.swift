@@ -30,7 +30,7 @@ struct DFRSListView: View {
         ZStack {
             if watchFocusedItem, let dfrs = focusedItem.dataSource as? DFRS {
                 NavigationLink(tag: "detail", selection: $selection) {
-                    DFRSDetailView(dfrs: dfrs)
+                    dfrs.detailView
                         .navigationTitle("\(dfrs.stationName ?? DFRS.dataSourceName)" )
                         .navigationBarTitleDisplayMode(.inline)
                         .onDisappear {
@@ -81,7 +81,7 @@ struct DFRSListView: View {
                     ForEach(section) { dfrs in
                         
                         ZStack {
-                            NavigationLink(destination: DFRSDetailView(dfrs: dfrs)
+                            NavigationLink(destination: dfrs.detailView
                                 .navigationTitle("\(dfrs.stationName ?? DFRS.dataSourceName)" )
                                 .navigationBarTitleDisplayMode(.inline)) {
                                     EmptyView()
@@ -89,7 +89,7 @@ struct DFRSListView: View {
                                 .opacity(0)
                             
                             HStack {
-                                DFRSSummaryView(dfrs: dfrs)
+                                dfrs.summaryView()
                             }
                             .padding(.all, 16)
                             .background(Color.surfaceColor)

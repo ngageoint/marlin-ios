@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 import OSLog
 import MapKit
+import SwiftUI
 
 extension Modu: DataSource {
     static var isMappable: Bool = true
@@ -19,6 +20,16 @@ extension Modu: DataSource {
     static var systemImageName: String? = nil
     
     static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
+}
+
+extension Modu: DataSourceViewBuilder {
+    var detailView: AnyView {
+        AnyView(ModuDetailView(modu: self))
+    }
+    
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
+        AnyView(ModuSummaryView(modu: self, showMoreDetails: showMoreDetails))
+    }
 }
 
 class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotation, MapImage {

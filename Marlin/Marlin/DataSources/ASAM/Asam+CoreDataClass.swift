@@ -23,6 +23,16 @@ extension Asam: DataSource {
     static var color: UIColor = .black
 }
 
+extension Asam: DataSourceViewBuilder {
+    var detailView: AnyView {
+        AnyView(AsamDetailView(asam: self))
+    }
+    
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
+        AnyView(AsamSummaryView(asam: self, showMoreDetails: showMoreDetails))
+    }
+}
+
 class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotation, MapImage {
     var clusteringIdentifierWhenShrunk: String? = "msi"
     

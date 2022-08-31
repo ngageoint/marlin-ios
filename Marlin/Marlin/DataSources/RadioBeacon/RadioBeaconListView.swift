@@ -24,7 +24,7 @@ struct RadioBeaconListView: View {
         ZStack {
             if watchFocusedItem, let focusedBeacon = focusedItem.dataSource as? RadioBeacon {
                 NavigationLink(tag: "detail", selection: $selection) {
-                    RadioBeaconDetailView(radioBeacon: focusedBeacon)
+                    focusedBeacon.detailView
                         .navigationTitle("\(focusedBeacon.name ?? RadioBeacon.dataSourceName)" )
                         .navigationBarTitleDisplayMode(.inline)
                         .onDisappear {
@@ -56,7 +56,7 @@ struct RadioBeaconListView: View {
                     ForEach(section) { radioBeacon in
                         
                         ZStack {
-                            NavigationLink(destination: RadioBeaconDetailView(radioBeacon: radioBeacon)
+                            NavigationLink(destination: radioBeacon.detailView
                                 .navigationTitle("\(radioBeacon.name ?? RadioBeacon.dataSourceName)" )
                                 .navigationBarTitleDisplayMode(.inline)) {
                                     EmptyView()
@@ -64,7 +64,7 @@ struct RadioBeaconListView: View {
                                 .opacity(0)
                             
                             HStack {
-                                RadioBeaconSummaryView(radioBeacon: radioBeacon)
+                                radioBeacon.summaryView()
                             }
                             .padding(.all, 16)
                             .background(Color.surfaceColor)

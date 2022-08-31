@@ -35,7 +35,7 @@ struct RadioBeaconDetailView: View {
                         .onChange(of: radioBeacon) { radioBeacon in
                             mapState.center = MKCoordinateRegion(center: radioBeacon.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
                         }
-                    RadioBeaconSummaryView(radioBeacon: radioBeacon, showSectionHeader: true) //, currentLocation: locationManager.lastLocation)
+                    radioBeacon.summaryView(showSectionHeader: true)
                         .padding(.all, 16)
                 }
                 

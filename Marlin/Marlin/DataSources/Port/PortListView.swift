@@ -28,7 +28,7 @@ struct PortListView: View {
         ZStack {
             if watchFocusedItem, let focusedPort = focusedItem.dataSource as? Port {
                 NavigationLink(tag: "detail", selection: $selection) {
-                    PortDetailView(port: focusedPort)
+                    focusedPort.detailView
                         .navigationTitle(focusedPort.portName ?? "Port")
                         .navigationBarTitleDisplayMode(.inline)
                 } label: {
@@ -49,7 +49,7 @@ struct PortListView: View {
                 ForEach(sortedPorts) { port in
                     
                     ZStack {
-                        NavigationLink(destination: PortDetailView(port: port)
+                        NavigationLink(destination: port.detailView
                             .navigationTitle(port.portName ?? "Port")
                             .navigationBarTitleDisplayMode(.inline)) {
                                 EmptyView()
@@ -57,7 +57,7 @@ struct PortListView: View {
                             .opacity(0)
                         
                         HStack {
-                            PortSummaryView(port: port, currentLocation: locationManager.lastLocation, showMoreDetails: false)
+                            port.summaryView(showMoreDetails: false, showSectionHeader: false)
                         }
                         .padding(.all, 16)
                         .background(Color.surfaceColor)

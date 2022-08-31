@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 import OSLog
 import MapKit
+import SwiftUI
 
 struct NavigationalWarningNavArea: Equatable {
     let name: String
@@ -48,6 +49,16 @@ extension NavigationalWarning: DataSource {
     
     var color: UIColor {
         return NavigationalWarning.color
+    }
+}
+
+extension NavigationalWarning: DataSourceViewBuilder {
+    var detailView: AnyView {
+        AnyView(NavigationalWarningDetailView(navigationalWarning: self))
+    }
+    
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
+        AnyView(NavigationalWarningSummaryView(navigationalWarning: self))
     }
 }
 

@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 struct Throwable<T: Decodable>: Decodable {
     let result: Result<T, Error>
@@ -26,3 +27,9 @@ protocol DataSource {
     static var systemImageName: String? { get }
     var color: UIColor { get }
 }
+
+protocol DataSourceViewBuilder: DataSource {
+    var detailView: AnyView { get }
+    func summaryView(showMoreDetails: Bool, showSectionHeader: Bool) -> AnyView
+}
+

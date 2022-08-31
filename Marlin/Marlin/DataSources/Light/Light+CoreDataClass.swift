@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 import MapKit
 import OSLog
+import SwiftUI
 
 struct LightVolume {
     var volumeQuery: String
@@ -23,6 +24,19 @@ extension Light: DataSource {
     static var imageName: String? = nil
     static var systemImageName: String? = "lightbulb.fill"
     static var color: UIColor = UIColor(argbValue: 0xFFFFC500)
+}
+
+extension Light: DataSourceViewBuilder {
+    var detailView: AnyView {
+        if let featureNumber = self.featureNumber, let volumeNumber = self.volumeNumber {
+            return AnyView(LightDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber))
+        }
+        return AnyView(EmptyView())
+    }
+    
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
+        AnyView(LightSummaryView(light: self, showMoreDetails: showMoreDetails))
+    }
 }
 
 class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {

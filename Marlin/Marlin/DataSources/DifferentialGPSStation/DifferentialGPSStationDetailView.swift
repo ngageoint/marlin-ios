@@ -34,7 +34,7 @@ struct DifferentialGPSStationDetailView: View {
                         .onChange(of: differentialGPSStation) { differentialGPSStation in
                             mapState.center = MKCoordinateRegion(center: differentialGPSStation.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
                         }
-                    DifferentialGPSStationSummaryView(differentialGPSStation: differentialGPSStation, showSectionHeader: true)
+                    differentialGPSStation.summaryView(showSectionHeader: true)
                         .padding(.all, 16)
                 }
                 

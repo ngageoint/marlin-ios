@@ -9,6 +9,7 @@ import Foundation
 import MapKit
 import CoreData
 import OSLog
+import SwiftUI
 
 extension DFRS: DataSource {
     var color: UIColor {
@@ -23,6 +24,16 @@ extension DFRS: DataSource {
     static var systemImageName: String? = "antenna.radiowaves.left.and.right.circle"
     
     static var color: UIColor = UIColor(argbValue: 0xFF00E676)
+}
+
+extension DFRS: DataSourceViewBuilder {
+    var detailView: AnyView {
+        AnyView(DFRSDetailView(dfrs: self))
+    }
+    
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
+        AnyView(DFRSSummaryView(dfrs: self, showMoreDetails: showMoreDetails, showSectionHeader: showSectionHeader))
+    }
 }
 
 class DFRS: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {

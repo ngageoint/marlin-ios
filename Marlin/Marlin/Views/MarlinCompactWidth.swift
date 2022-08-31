@@ -75,7 +75,9 @@ struct MarlinCompactWidth: View {
                             }
                         }
                         NavigationLink(tag: "detail", selection: $selection) {
-                            DataDetailView(data: itemWrapper.dataSource)
+                            if let data = itemWrapper.dataSource as? DataSourceViewBuilder {
+                                data.detailView
+                            }
                         } label: {
                             EmptyView()
                         }

@@ -25,7 +25,7 @@ struct LightsListView: View {
         ZStack {
             if watchFocusedItem, let focusedLight = focusedItem.dataSource as? Light {
                 NavigationLink(tag: "detail", selection: $selection) {
-                    LightDetailView(featureNumber: focusedLight.featureNumber ?? "", volumeNumber: focusedLight.volumeNumber ?? "")
+                    focusedLight.detailView
                         .navigationTitle("\(focusedLight.name ?? Light.dataSourceName)" )
                         .navigationBarTitleDisplayMode(.inline)
                         .onDisappear {
@@ -57,7 +57,7 @@ struct LightsListView: View {
                     ForEach(section) { light in
                          
                         ZStack {
-                            NavigationLink(destination: LightDetailView(featureNumber: light.featureNumber ?? "", volumeNumber: light.volumeNumber ?? "")
+                            NavigationLink(destination: light.detailView
                                 .navigationTitle("\(light.name ?? Light.dataSourceName)" )
                                 .navigationBarTitleDisplayMode(.inline)) {
                                     EmptyView()
@@ -65,7 +65,7 @@ struct LightsListView: View {
                                 .opacity(0)
                             
                             HStack {
-                                LightSummaryView(light: light)
+                                light.summaryView()
                             }
                             .padding(.all, 16)
                             .background(Color.surfaceColor)

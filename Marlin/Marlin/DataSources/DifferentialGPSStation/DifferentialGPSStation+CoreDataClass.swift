@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import MapKit
 import OSLog
+import SwiftUI
 
 extension DifferentialGPSStation: DataSource {
     var color: UIColor {
@@ -23,6 +24,16 @@ extension DifferentialGPSStation: DataSource {
     static var imageName: String? = "dgps"
     static var systemImageName: String? = nil
     static var color: UIColor = UIColor(argbValue: 0xFFFFB300)
+}
+
+extension DifferentialGPSStation: DataSourceViewBuilder {
+    var detailView: AnyView {
+        AnyView(DifferentialGPSStationDetailView(differentialGPSStation: self))
+    }
+    
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
+        AnyView(DifferentialGPSStationSummaryView(differentialGPSStation: self, showMoreDetails: showMoreDetails, showSectionHeader: showSectionHeader))
+    }
 }
 
 class DifferentialGPSStation: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {

@@ -24,7 +24,7 @@ struct DifferentialGPSStationListView: View {
         ZStack {
             if watchFocusedItem, let differentialGPSStation = focusedItem.dataSource as? DifferentialGPSStation {
                 NavigationLink(tag: "detail", selection: $selection) {
-                    DifferentialGPSStationDetailView(differentialGPSStation: differentialGPSStation)
+                    differentialGPSStation.detailView
                         .navigationTitle("\(differentialGPSStation.name ?? DifferentialGPSStation.dataSourceName)" )
                         .navigationBarTitleDisplayMode(.inline)
                         .onDisappear {
@@ -56,7 +56,7 @@ struct DifferentialGPSStationListView: View {
                     ForEach(section) { differentialGPSStation in
                         
                         ZStack {
-                            NavigationLink(destination: DifferentialGPSStationDetailView(differentialGPSStation: differentialGPSStation)
+                            NavigationLink(destination: differentialGPSStation.detailView
                                 .navigationTitle("\(differentialGPSStation.name ?? DifferentialGPSStation.dataSourceName)" )
                                 .navigationBarTitleDisplayMode(.inline)) {
                                     EmptyView()
@@ -64,7 +64,7 @@ struct DifferentialGPSStationListView: View {
                                 .opacity(0)
                             
                             HStack {
-                                DifferentialGPSStationSummaryView(differentialGPSStation: differentialGPSStation)
+                                differentialGPSStation.summaryView(showMoreDetails: false, showSectionHeader: false)
                             }
                             .padding(.all, 16)
                             .background(Color.surfaceColor)

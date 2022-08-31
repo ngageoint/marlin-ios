@@ -10,7 +10,6 @@
 		7982FB9B536447055E423E94 /* libPods-Marlin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0F14076A8393C9747AD1FE /* libPods-Marlin.a */; };
 		D7A569C784B0F2D5720432C4 /* libPods-MarlinTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */; };
 		F707BA722874B9F4006A94C4 /* userDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = F707BA712874B9F4006A94C4 /* userDefaults.plist */; };
-		F707BA742875DD22006A94C4 /* DataDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA732875DD22006A94C4 /* DataDetailView.swift */; };
 		F707BA7728760EE7006A94C4 /* Light+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7628760EE7006A94C4 /* Light+CoreDataClass.swift */; };
 		F707BA79287632E1006A94C4 /* LightListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA78287632E1006A94C4 /* LightListView.swift */; };
 		F707BA7B28763309006A94C4 /* LightSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7A28763309006A94C4 /* LightSummaryView.swift */; };
@@ -168,7 +167,6 @@
 		C95BD18A52FCC50ED2ED6E21 /* Pods-MarlinTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarlinTests.release.xcconfig"; path = "Target Support Files/Pods-MarlinTests/Pods-MarlinTests.release.xcconfig"; sourceTree = "<group>"; };
 		F32BF352638699CBFE1A8D52 /* Pods-Marlin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Marlin.release.xcconfig"; path = "Target Support Files/Pods-Marlin/Pods-Marlin.release.xcconfig"; sourceTree = "<group>"; };
 		F707BA712874B9F4006A94C4 /* userDefaults.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = userDefaults.plist; sourceTree = "<group>"; };
-		F707BA732875DD22006A94C4 /* DataDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDetailView.swift; sourceTree = "<group>"; };
 		F707BA7628760EE7006A94C4 /* Light+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F707BA78287632E1006A94C4 /* LightListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightListView.swift; sourceTree = "<group>"; };
 		F707BA7A28763309006A94C4 /* LightSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightSummaryView.swift; sourceTree = "<group>"; };
@@ -676,7 +674,6 @@
 			children = (
 				F7F59794285BE27400F9B32E /* Property.swift */,
 				F7D671EA2871D73200758F1C /* HamburgerButton.swift */,
-				F707BA732875DD22006A94C4 /* DataDetailView.swift */,
 				F707BA842878DBFF006A94C4 /* AdaptiveImage.swift */,
 				F7E8C89D28946C8900E7CCE2 /* RailItem.swift */,
 				F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */,
@@ -1063,7 +1060,6 @@
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
 				F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */,
 				F71D286C28BE46F800F1775C /* DifferentialGPSStationListView.swift in Sources */,
-				F707BA742875DD22006A94C4 /* DataDetailView.swift in Sources */,
 				F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */,
 				F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */,
 				F7F59797285D15B900F9B32E /* ModuListView.swift in Sources */,

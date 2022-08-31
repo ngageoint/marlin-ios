@@ -63,26 +63,8 @@ struct MarlinBottomSheet: View {
                 }
             
                 if let item = itemList.bottomSheetItems?[selectedItem] {
-                    if let asam = item.item as? Asam {
-                        AsamSummaryView(asam: asam, showMoreDetails: true)
-                            .transition(.opacity)
-                    } else if let modu = item.item as? Modu {
-                        ModuSummaryView(modu: modu, showMoreDetails: true)
-                            .transition(.opacity)
-                    } else if let light = item.item as? Light {
-                        LightSummaryView(light: light, showMoreDetails: true)
-                            .transition(.opacity)
-                    } else if let port = item.item as? Port {
-                        PortSummaryView(port: port, currentLocation: locationManager.lastLocation, showMoreDetails: true)
-                            .transition(.opacity)
-                    } else if let radioBeacon = item.item as? RadioBeacon {
-                        RadioBeaconSummaryView(radioBeacon: radioBeacon, showMoreDetails: true)
-                            .transition(.opacity)
-                    } else if let differentialGPSStation = item.item as? DifferentialGPSStation {
-                        DifferentialGPSStationSummaryView(differentialGPSStation: differentialGPSStation, showMoreDetails: true)
-                            .transition(.opacity)
-                    } else if let dfrs = item.item as? DFRS {
-                        DFRSSummaryView(dfrs: dfrs, showMoreDetails: true)
+                    if let dataSource = item.item as? DataSourceViewBuilder {
+                        dataSource.summaryView(showMoreDetails: true, showSectionHeader: true)
                             .transition(.opacity)
                     }
                 }

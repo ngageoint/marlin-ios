@@ -42,7 +42,7 @@ struct DFRSDetailView: View {
                                 mapState.center = MKCoordinateRegion(center: dfrs.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
                             }
                     }
-                    DFRSSummaryView(dfrs: dfrs, showSectionHeader: true)
+                    dfrs.summaryView(showMoreDetails: true)
                         .padding(.all, 16)
                 }
                 

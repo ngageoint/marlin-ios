@@ -35,7 +35,7 @@ struct PortDetailView: View {
                         .onChange(of: port) { port in
                             mapState.center = MKCoordinateRegion(center: port.coordinate, zoomLevel: 12.0, pixelWidth: 300.0)
                         }
-                    PortSummaryView(port: port, currentLocation: locationManager.lastLocation)
+                    port.summaryView()
                         .padding(.all, 16)
                 }
                 

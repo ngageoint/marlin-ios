@@ -25,7 +25,7 @@ struct AsamListView: View {
         ZStack {
             if watchFocusedItem, let focusedAsam = focusedItem.dataSource as? Asam {
                 NavigationLink(tag: "detail", selection: $selection) {
-                    AsamDetailView(asam: focusedAsam)
+                    focusedAsam.detailView
                         .navigationTitle(focusedAsam.reference ?? Asam.dataSourceName)
                         .navigationBarTitleDisplayMode(.inline)
                         .onDisappear {
@@ -50,7 +50,7 @@ struct AsamListView: View {
                 ForEach(asams) { asam in
                     
                     ZStack {
-                        NavigationLink(destination: AsamDetailView(asam: asam)
+                        NavigationLink(destination: asam.detailView
                             .navigationTitle(asam.reference ?? Asam.dataSourceName)
                             .navigationBarTitleDisplayMode(.inline)) {
                             EmptyView()
@@ -58,7 +58,7 @@ struct AsamListView: View {
                         .opacity(0)
                         
                         HStack {
-                            AsamSummaryView(asam: asam)
+                            asam.summaryView()
                         }
                         .padding(.all, 16)
                         .background(Color.surfaceColor)

@@ -9,16 +9,15 @@ import SwiftUI
 import MapKit
 
 struct PortSummaryView: View {
+    @EnvironmentObject var locationManager: LocationManager
+
     var port: Port
     var showMoreDetails: Bool = false
-    var currentLocation: CLLocation?
     var measurementFormatter: MeasurementFormatter
     
-    
-    init(port: Port, currentLocation: CLLocation?, showMoreDetails: Bool = false) {
+    init(port: Port, showMoreDetails: Bool = false) {
         self.port = port
         self.showMoreDetails = showMoreDetails
-        self.currentLocation = currentLocation
         self.measurementFormatter = MeasurementFormatter();
         measurementFormatter.unitOptions = .providedUnit;
         measurementFormatter.unitStyle = .short;
@@ -34,7 +33,7 @@ struct PortSummaryView: View {
                         .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.87)
                     Spacer()
-                    if let currentLocation = currentLocation {
+                    if let currentLocation = locationManager.lastLocation {
                         let metersMeasurement = NSMeasurement(doubleValue: port.distanceTo(currentLocation), unit: UnitLength.meters);
                         let convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles);
                         

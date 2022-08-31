@@ -26,7 +26,7 @@ struct ModuListView: View {
         ZStack {
         if watchFocusedItem, let focusedModu = focusedItem.dataSource as? Modu {
             NavigationLink(tag: "detail", selection: $selection) {
-                ModuDetailView(modu: focusedModu)
+                focusedModu.detailView
                     .navigationTitle(focusedModu.name ?? Modu.dataSourceName)
                     .navigationBarTitleDisplayMode(.inline)
                     .onDisappear {
@@ -52,7 +52,7 @@ struct ModuListView: View {
                 
                 ZStack {
                     NavigationLink(destination:
-                                    ModuDetailView(modu: modu)
+                                    modu.detailView
                                     .navigationTitle(modu.name ?? Modu.dataSourceName)
                                     .navigationBarTitleDisplayMode(.inline)) {
                             EmptyView()

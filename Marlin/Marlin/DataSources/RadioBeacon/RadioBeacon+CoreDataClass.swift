@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 import MapKit
 import OSLog
+import SwiftUI
 
 struct RadioBeaconVolume {
     var volumeQuery: String
@@ -26,6 +27,16 @@ extension RadioBeacon: DataSource {
     static var imageName: String? = nil
     static var systemImageName: String? = "antenna.radiowaves.left.and.right"
     static var color: UIColor = UIColor(argbValue: 0xFF007BFF)
+}
+
+extension RadioBeacon: DataSourceViewBuilder {
+    var detailView: AnyView {
+        AnyView(RadioBeaconDetailView(radioBeacon: self))
+    }
+    
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
+        AnyView(RadioBeaconSummaryView(radioBeacon: self, showMoreDetails: showMoreDetails, showSectionHeader: showSectionHeader))
+    }
 }
 
 class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
