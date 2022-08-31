@@ -44,7 +44,7 @@ class DFRS: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
             KeyValue(key: "Rx Position", value: rxPosition),
             KeyValue(key: "Tx Position", value: txPosition),
             KeyValue(key: "Frequency (kHz)", value: frequency),
-            KeyValue(key: "Range (nmi)", value: "\(range)"),
+            KeyValue(key: "Range (nmi)", value: range == 0.0 ? "" : "\(range)"),
             KeyValue(key: "Procedure", value: procedureText),
             KeyValue(key: "Remarks", value: remarks),
             KeyValue(key: "Notes", value: notes)
