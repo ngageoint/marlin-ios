@@ -15,13 +15,13 @@ class AsamMap: NSObject, MapMixin {
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     
-    var showAsamsAsTiles: Bool = true
+    var showAsTiles: Bool = true
     var fetchRequest: NSFetchRequest<Asam>?
     var asamOverlay: FetchRequestTileOverlay<Asam>?
     
-    public init(fetchRequest: NSFetchRequest<Asam>? = nil, showAsamsAsTiles: Bool = true) {
+    public init(fetchRequest: NSFetchRequest<Asam>? = nil, showAsTiles: Bool = true) {
         self.fetchRequest = fetchRequest
-        self.showAsamsAsTiles = showAsamsAsTiles
+        self.showAsTiles = showAsTiles
     }
     
     func getFetchRequest(mapState: MapState) -> NSFetchRequest<Asam> {
@@ -55,7 +55,7 @@ class AsamMap: NSObject, MapMixin {
             })
             .sink() { [weak self] in
                 marlinMap.mapState.showAsams = $0
-                if let showAsamsAsTiles = self?.showAsamsAsTiles, showAsamsAsTiles {
+                if let showAsTiles = self?.showAsTiles, showAsTiles {
                     if let asamOverlay = self?.asamOverlay {
                         marlinMap.mapState.overlays.removeAll { overlay in
                             if let overlay = overlay as? FetchRequestTileOverlay<Asam> {

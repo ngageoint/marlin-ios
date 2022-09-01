@@ -15,13 +15,13 @@ class RadioBeaconMap: NSObject, MapMixin {
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     
-    var showRadioBeaconsAsTiles: Bool = true
+    var showAsTiles: Bool = true
     var fetchRequest: NSFetchRequest<RadioBeacon>?
     var radioBeaconOverlay: FetchRequestTileOverlay<RadioBeacon>?
     
-    public init(fetchRequest: NSFetchRequest<RadioBeacon>? = nil, showRadioBeaconsAsTiles: Bool = true) {
+    public init(fetchRequest: NSFetchRequest<RadioBeacon>? = nil, showAsTiles: Bool = true) {
         self.fetchRequest = fetchRequest
-        self.showRadioBeaconsAsTiles = showRadioBeaconsAsTiles
+        self.showAsTiles = showAsTiles
     }
     
     func getFetchRequest(mapState: MapState) -> NSFetchRequest<RadioBeacon> {
@@ -59,7 +59,7 @@ class RadioBeaconMap: NSObject, MapMixin {
             })
             .sink() { [weak self] in
                 marlinMap.mapState.showRadioBeacons = $0
-                if let showRadioBeaconsAsTiles = self?.showRadioBeaconsAsTiles, showRadioBeaconsAsTiles {
+                if let showAsTiles = self?.showAsTiles, showAsTiles {
                     if let radioBeaconOverlay = self?.radioBeaconOverlay {
                         marlinMap.mapState.overlays.removeAll { overlay in
                             if let overlay = overlay as? FetchRequestTileOverlay<RadioBeacon> {

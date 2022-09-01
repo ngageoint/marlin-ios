@@ -15,13 +15,13 @@ class PortMap: NSObject, MapMixin {
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     
-    var showPortsAsTiles: Bool = true
+    var showAsTiles: Bool = true
     var fetchRequest: NSFetchRequest<Port>?
     var portOverlay: FetchRequestTileOverlay<Port>?
     
-    public init(fetchRequest: NSFetchRequest<Port>? = nil, showPortsAsTiles: Bool = true) {
+    public init(fetchRequest: NSFetchRequest<Port>? = nil, showAsTiles: Bool = true) {
         self.fetchRequest = fetchRequest
-        self.showPortsAsTiles = showPortsAsTiles
+        self.showAsTiles = showAsTiles
     }
     
     func getFetchRequest(mapState: MapState) -> NSFetchRequest<Port> {
@@ -58,7 +58,7 @@ class PortMap: NSObject, MapMixin {
             })
             .sink() { [weak self] in
                 marlinMap.mapState.showPorts = $0
-                if let showPortsAsTiles = self?.showPortsAsTiles, showPortsAsTiles {
+                if let showAsTiles = self?.showAsTiles, showAsTiles {
                     if let portOverlay = self?.portOverlay {
                         marlinMap.mapState.overlays.removeAll { overlay in
                             if let overlay = overlay as? FetchRequestTileOverlay<Port> {

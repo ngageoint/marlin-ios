@@ -61,19 +61,19 @@ struct MarlinView: View {
             mixins.append(DFRSMap(showAsTiles: true))
         }
         if UserDefaults.standard.dataSourceEnabled(Light.self) {
-            mixins.append(LightMap(showLightsAsTiles: true))
+            mixins.append(LightMap(showAsTiles: true))
         }
         if UserDefaults.standard.dataSourceEnabled(Port.self) {
-            mixins.append(PortMap(showPortsAsTiles: true))
+            mixins.append(PortMap(showAsTiles: true))
         }
         if UserDefaults.standard.dataSourceEnabled(RadioBeacon.self) {
-            mixins.append(RadioBeaconMap(showRadioBeaconsAsTiles: true))
+            mixins.append(RadioBeaconMap(showAsTiles: true))
         }
         if UserDefaults.standard.dataSourceEnabled(Modu.self) {
-            mixins.append(ModuMap(showModusAsTiles: true))
+            mixins.append(ModuMap(showAsTiles: true))
         }
         if UserDefaults.standard.dataSourceEnabled(Asam.self) {
-            mixins.append(AsamMap(showAsamsAsTiles: true))
+            mixins.append(AsamMap(showAsTiles: true))
         }
         self.mixins = mixins
     }

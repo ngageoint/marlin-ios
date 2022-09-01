@@ -14,14 +14,14 @@ class ModuMap: NSObject, MapMixin {
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     
-    var showModusAsTiles: Bool = true
+    var showAsTiles: Bool = true
     var fetchRequest: NSFetchRequest<Modu>?
     var moduOverlay: FetchRequestTileOverlay<Modu>?
     var minZoom = 0
     
-    public init(fetchRequest: NSFetchRequest<Modu>? = nil, showModusAsTiles: Bool = true) {
+    public init(fetchRequest: NSFetchRequest<Modu>? = nil, showAsTiles: Bool = true) {
         self.fetchRequest = fetchRequest
-        self.showModusAsTiles = showModusAsTiles
+        self.showAsTiles = showAsTiles
     }
     
     func getFetchRequest(mapState: MapState) -> NSFetchRequest<Modu> {
@@ -56,7 +56,7 @@ class ModuMap: NSObject, MapMixin {
             })
             .sink() { [weak self] in
                 marlinMap.mapState.showModus = $0
-                if let showModusAsTiles = self?.showModusAsTiles, showModusAsTiles {
+                if let showAsTiles = self?.showAsTiles, showAsTiles {
                     if let moduOverlay = self?.moduOverlay {
                         marlinMap.mapState.overlays.removeAll { overlay in
                             if let overlay = overlay as? FetchRequestTileOverlay<Modu> {

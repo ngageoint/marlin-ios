@@ -10,7 +10,6 @@ import MapKit
 import CoreData
 
 struct PortDetailView: View {
-    @EnvironmentObject var locationManager: LocationManager
     @StateObject var mapState: MapState = MapState()
     var fetchRequest: NSFetchRequest<Port>
     
@@ -27,7 +26,7 @@ struct PortDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "Port Detail Map", mixins: [PortMap(fetchRequest: fetchRequest, showPortsAsTiles: false)], mapState: mapState)
+                    MarlinMap(name: "Port Detail Map", mixins: [PortMap(fetchRequest: fetchRequest, showAsTiles: true)], mapState: mapState)
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                         .onAppear {
                             mapState.center = MKCoordinateRegion(center: port.coordinate, zoomLevel: 12.0, pixelWidth: 300.0)

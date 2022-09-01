@@ -26,7 +26,7 @@ struct ModuDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "Modu Detail Map", mixins: [ModuMap(fetchRequest: fetchRequest, showModusAsTiles: false)], mapState: mapState)
+                    MarlinMap(name: "Modu Detail Map", mixins: [ModuMap(fetchRequest: fetchRequest, showAsTiles: false)], mapState: mapState)
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                         .onAppear {
                             mapState.center = MKCoordinateRegion(center: modu.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)

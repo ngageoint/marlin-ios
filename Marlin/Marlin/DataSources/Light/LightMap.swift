@@ -15,13 +15,13 @@ class LightMap: NSObject, MapMixin {
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     
-    var showLightsAsTiles: Bool = true
+    var showAsTiles: Bool = true
     var fetchRequest: NSFetchRequest<Light>?
     var lightOverlay: FetchRequestTileOverlay<Light>?
     
-    public init(fetchRequest: NSFetchRequest<Light>? = nil, showLightsAsTiles: Bool = true) {
+    public init(fetchRequest: NSFetchRequest<Light>? = nil, showAsTiles: Bool = true) {
         self.fetchRequest = fetchRequest
-        self.showLightsAsTiles = showLightsAsTiles
+        self.showAsTiles = showAsTiles
     }
     
     func getFetchRequest(mapState: MapState) -> NSFetchRequest<Light> {
@@ -59,7 +59,7 @@ class LightMap: NSObject, MapMixin {
             })
             .sink() { [weak self] in
                 marlinMap.mapState.showLights = $0
-                if let showLightsAsTiles = self?.showLightsAsTiles, showLightsAsTiles {
+                if let showAsTiles = self?.showAsTiles, showAsTiles {
                     if let lightOverlay = self?.lightOverlay {
                         marlinMap.mapState.overlays.removeAll { overlay in
                             if let overlay = overlay as? FetchRequestTileOverlay<Light> {
