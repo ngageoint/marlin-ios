@@ -46,6 +46,7 @@
 		F71D287528BE96EB00F1775C /* DFRSMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287428BE96EB00F1775C /* DFRSMap.swift */; };
 		F71D287728BE976300F1775C /* DFRSSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287628BE976300F1775C /* DFRSSummaryView.swift */; };
 		F71D287928BE9B7400F1775C /* DFRSListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287828BE9B7400F1775C /* DFRSListView.swift */; };
+		F71D287B28C1401500F1775C /* FetchRequestMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287A28C1401400F1775C /* FetchRequestMap.swift */; };
 		F71DF47E284E68DE00686951 /* asams.json in Resources */ = {isa = PBXBuildFile; fileRef = F71DF47D284E68DE00686951 /* asams.json */; };
 		F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */; };
 		F71DF482284E783600686951 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF481284E783600686951 /* TestHelper.swift */; };
@@ -203,6 +204,7 @@
 		F71D287428BE96EB00F1775C /* DFRSMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSMap.swift; sourceTree = "<group>"; };
 		F71D287628BE976300F1775C /* DFRSSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSSummaryView.swift; sourceTree = "<group>"; };
 		F71D287828BE9B7400F1775C /* DFRSListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSListView.swift; sourceTree = "<group>"; };
+		F71D287A28C1401400F1775C /* FetchRequestMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchRequestMap.swift; sourceTree = "<group>"; };
 		F71DF47D284E68DE00686951 /* asams.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = asams.json; sourceTree = "<group>"; };
 		F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extensions.swift"; sourceTree = "<group>"; };
 		F71DF481284E783600686951 /* TestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
@@ -458,6 +460,7 @@
 				F7D671D7286E163E00758F1C /* MapSettings.swift */,
 				F7D671D9286E3B3D00758F1C /* ExtraMapTypes.swift */,
 				F707BA8E287DC999006A94C4 /* FetchRequestTileOverlay.swift */,
+				F71D287A28C1401400F1775C /* FetchRequestMap.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -1060,6 +1063,7 @@
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
 				F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */,
 				F71D286C28BE46F800F1775C /* DifferentialGPSStationListView.swift in Sources */,
+				F71D287B28C1401500F1775C /* FetchRequestMap.swift in Sources */,
 				F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */,
 				F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */,
 				F7F59797285D15B900F9B32E /* ModuListView.swift in Sources */,

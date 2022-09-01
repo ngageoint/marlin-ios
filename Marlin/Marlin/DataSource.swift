@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import SwiftUI
+import MapKit
 
 struct Throwable<T: Decodable>: Decodable {
     let result: Result<T, Error>
@@ -28,9 +29,12 @@ protocol DataSource {
     var color: UIColor { get }
     static var image: UIImage? { get }
     static var imageScale: CGFloat { get }
+    var coordinate: CLLocationCoordinate2D? { get }
+    func view(on: MKMapView) -> MKAnnotationView?
 }
 
 extension DataSource {
+    
     static var imageScale: CGFloat {
         return 1.0
     }
@@ -41,6 +45,14 @@ extension DataSource {
         } else if let systemImageName = systemImageName {
             return UIImage(systemName: systemImageName)
         }
+        return nil
+    }
+    
+    func view(on: MKMapView) -> MKAnnotationView? {
+        return nil
+    }
+    
+    var coordinate: CLLocationCoordinate2D? {
         return nil
     }
 }

@@ -62,7 +62,7 @@ class DifferentialGPSStation: NSManagedObject, MKAnnotation, AnnotationWithView,
     }
 
     func view(on: MKMapView) -> MKAnnotationView {
-        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: DifferentialGPSStationAnnotationView.ReuseID, for: self)
+        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: DifferentialGPSStation.key, for: self)
         let images = self.mapImage(marker: true, zoomLevel: on.zoomLevel)
         
         let largestSize = images.reduce(CGSize(width: 0, height: 0)) { partialResult, image in
@@ -81,7 +81,7 @@ class DifferentialGPSStation: NSManagedObject, MKAnnotation, AnnotationWithView,
         }
         let image = UIImage(cgImage: cgImage)
         
-        if let lav = annotationView as? DifferentialGPSStationAnnotationView {
+        if let lav = annotationView as? ImageAnnotationView {
             lav.combinedImage = image
         } else {
             annotationView.image = image

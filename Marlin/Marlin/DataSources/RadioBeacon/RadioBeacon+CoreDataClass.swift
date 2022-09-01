@@ -194,7 +194,7 @@ class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
     
     
     func view(on: MKMapView) -> MKAnnotationView {
-        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: RadioBeaconAnnotationView.ReuseID, for: self)
+        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: RadioBeacon.key, for: self)
         let images = self.mapImage(marker: true, zoomLevel: on.zoomLevel)
         
         let largestSize = images.reduce(CGSize(width: 0, height: 0)) { partialResult, image in
@@ -213,7 +213,7 @@ class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         }
         let image = UIImage(cgImage: cgImage)
         
-        if let lav = annotationView as? RadioBeaconAnnotationView {
+        if let lav = annotationView as? ImageAnnotationView {
             lav.combinedImage = image
         } else {
             annotationView.image = image
