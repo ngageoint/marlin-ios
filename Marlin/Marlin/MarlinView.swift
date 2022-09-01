@@ -21,7 +21,7 @@ class BottomSheetItemList: ObservableObject {
 
 extension MarlinView: BottomSheetDelegate {
     func bottomSheetDidDismiss() {
-        NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: nil))
+        NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
     }
 }
 

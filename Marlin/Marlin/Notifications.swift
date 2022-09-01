@@ -12,6 +12,7 @@ extension Notification.Name {
     public static let MapItemsTapped = Notification.Name("MapItemsTapped")
     public static let MapAnnotationFocused = Notification.Name("MapAnnotationFocused")
     public static let MapViewDisappearing = Notification.Name("MapViewDisappearing")
+    public static let FocusMapOnItem = Notification.Name("FocusMapOnItem")
     public static let DismissBottomSheet = Notification.Name("DismissBottomSheet")
     public static let BottomSheetDismissed = Notification.Name("BottomSheetDismissed")
     public static let MapRequestFocus = Notification.Name("MapRequestFocus")
@@ -26,6 +27,10 @@ extension Notification.Name {
     public static let ViewNavigationalWarning = Notification.Name("ViewNavigationalWarning")
     public static let SwitchTabs = Notification.Name("SwitchTabs")
     public static let SnackbarNotification = Notification.Name("Snackbar")
+}
+
+struct FocusMapOnItemNotification {
+    var item: DataSource?
 }
 
 struct MapAnnotationFocusedNotification {

@@ -37,12 +37,9 @@ extension EnlargableAnnotation {
         enlarged = true
         shouldEnlarge = false
         annotationView.clusteringIdentifier = nil
+        let currentOffset = annotationView.centerOffset
         annotationView.transform = annotationView.transform.scaledBy(x: 2.0, y: 2.0)
-        if let image = annotationView.image {
-            annotationView.centerOffset = CGPoint(x: 0, y: -(image.size.height))
-        } else {
-            annotationView.centerOffset = CGPoint(x: 0, y: annotationView.center.y * 2.0)
-        }
+        annotationView.centerOffset = CGPoint(x: currentOffset.x * 2.0, y: currentOffset.y * 2.0)
     }
     
     func shrinkAnnotation() {
@@ -52,11 +49,8 @@ extension EnlargableAnnotation {
         enlarged = false
         shouldShrink = false
         annotationView.clusteringIdentifier = clusteringIdentifier
+        let currentOffset = annotationView.centerOffset
         annotationView.transform = annotationView.transform.scaledBy(x: 0.5, y: 0.5)
-        if let image = annotationView.image {
-            annotationView.centerOffset = CGPoint(x: 0, y: -(image.size.height / 2.0))
-        } else {
-            annotationView.center = CGPoint(x: 0, y: annotationView.center.y / 2.0)
-        }
+        annotationView.centerOffset = CGPoint(x: currentOffset.x * 0.5, y: currentOffset.y * 0.5)
     }
 }

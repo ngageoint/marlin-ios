@@ -81,6 +81,8 @@ struct MarlinMap: UIViewRepresentable {
         mapView.showsCompass = false
         
         context.coordinator.mapView = mapView
+    
+        mapView.register(EnlargedAnnotationView.self, forAnnotationViewWithReuseIdentifier: EnlargedAnnotationView.ReuseID)
 
         if let mixins = mixins {
             for mixin in mixins {
@@ -96,6 +98,7 @@ struct MarlinMap: UIViewRepresentable {
         context.coordinator.mapView = mapView
         context.coordinator.updateDataSources(fetchRequests: mapState.fetchRequests)
 
+        print("xxx update the map center \(mapState.center)")
         if let center = mapState.center, center.center.latitude != context.coordinator.setCenter?.latitude, center.center.longitude != context.coordinator.setCenter?.longitude {
                 mapView.setRegion(center, animated: true)
             context.coordinator.setCenter = center.center
@@ -171,8 +174,8 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
 
     var mapView: MKMapView?
     var marlinMap: MarlinMap
-    var focusedAnnotation: AnnotationWithView?
-    var mapAnnotationFocusedSink: AnyCancellable?
+    var focusedAnnotation: EnlargableAnnotation?
+    var focusMapOnItemSink: AnyCancellable?
 
     var setCenter: CLLocationCoordinate2D?
     var trackingModeSet: MKUserTrackingMode?
@@ -183,11 +186,11 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         self.marlinMap = marlinMap
         super.init()
         
-        mapAnnotationFocusedSink =
-        NotificationCenter.default.publisher(for: .MapAnnotationFocused)
-            .compactMap {$0.object as? MapAnnotationFocusedNotification}
+        focusMapOnItemSink =
+        NotificationCenter.default.publisher(for: .FocusMapOnItem)
+            .compactMap {$0.object as? FocusMapOnItemNotification}
             .sink(receiveValue: { [weak self] in
-                self?.focusAnnotation(notification:$0)
+                self?.focusItem(notification:$0)
             })
     }
     
@@ -265,47 +268,29 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         }
     }
     
-    func focusAnnotation(notification: MapAnnotationFocusedNotification) {
-        guard let annotation = notification.annotation as? AnnotationWithView, annotation.annotationView != nil else {
-            if let focusedAnnotation = focusedAnnotation {
-                self.focusedAnnotation = nil
-                if let enlargedAnnotation = focusedAnnotation as? EnlargableAnnotation {
-                    // shrink the old focused view
-                    mapView?.removeAnnotation(enlargedAnnotation)
-                    enlargedAnnotation.markForShrinking()
-                    mapView?.addAnnotation(enlargedAnnotation)
-                }
+    func focusItem(notification: FocusMapOnItemNotification) {
+        if let focusedAnnotation = focusedAnnotation {
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: {
+                focusedAnnotation.shrinkAnnotation()
+            }) { complete in
+                self.mapView?.removeAnnotation(focusedAnnotation)
             }
+            self.focusedAnnotation = nil
+        }
+        
+        guard let mapItem = notification.item as? MapImage else {
             return
         }
         
-        if annotation.annotationView == focusedAnnotation?.annotationView {
-            // already focused, ignore
-            return
-        } else if let focusedAnnotation = focusedAnnotation, let enlargedAnnotation = focusedAnnotation as? EnlargableAnnotation  {
-            // shrink the old focused view
-            mapView?.removeAnnotation(enlargedAnnotation)
-            enlargedAnnotation.markForShrinking()
-            mapView?.addAnnotation(enlargedAnnotation)
-        }
+        let coordinate = mapItem.coordinate
+        let span = mapView?.region.span ?? MKCoordinateSpan(zoomLevel: 17, pixelWidth: Double(mapView?.frame.size.width ?? UIScreen.main.bounds.width))
+        let adjustedCenter = CLLocationCoordinate2D(latitude: coordinate.latitude - (span.latitudeDelta / 4.0), longitude: coordinate.longitude)
+        mapView?.setCenter(adjustedCenter, animated: true)
         
-        if ((annotation as? MKClusterAnnotation) != nil) {
-            return
-        }
-        
-        self.focusedAnnotation = annotation
-        mapView?.removeAnnotation(annotation)
-        annotation.clusteringIdentifier = nil
-        (annotation as? EnlargableAnnotation)?.markForEnlarging()
-        mapView?.addAnnotation(annotation)
-
-        let coordinate = annotation.coordinate
-        let span = mapView?.region.span ?? MKCoordinateSpan(latitudeDelta: 1000, longitudeDelta: 1000)
-        let region = MKCoordinateRegion(center: coordinate, span: span)
-        let rect = MKMapRectForCoordinateRegion(region: region)
-        // Adjust padding here
-        let insets = UIEdgeInsets(top: -140, left: 0, bottom: 150, right: 0)
-        mapView?.setVisibleMapRect(rect, edgePadding: insets, animated: true)
+        let ea = EnlargedAnnotation(mapImage: mapItem)
+        ea.markForEnlarging()
+        focusedAnnotation = ea
+        mapView?.addAnnotation(ea)
     }
     
     func MKMapRectForCoordinateRegion(region:MKCoordinateRegion) -> MKMapRect {
@@ -345,6 +330,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
                 annotation.enlargeAnnoation()
                 UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut) {
                     annotation.shrinkAnnotation()
+                    mapView.removeAnnotation(annotation)
                 }
             }
         }
@@ -381,7 +367,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         
         var items: [DataSource] = []
         if let mixins = marlinMap.mixins {
-            for mixin in mixins {
+            for mixin in mixins.reversed() {
                 if let matchedItems = mixin.items(at: tapCoord, mapView: mapView) {
                     items.append(contentsOf: matchedItems)
                 }
@@ -407,6 +393,22 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if let enlarged = annotation as? EnlargedAnnotation {
+            let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: EnlargedAnnotationView.ReuseID, for: enlarged)
+            let mapImage = enlarged.mapImage
+            let mapImages = mapImage.mapImage(marker: true, zoomLevel: 100)
+            var finalImage = UIImage.clearImage()
+            for mapImage in mapImages {
+                finalImage = UIImage.combineCentered(image1: finalImage, image2: mapImage) ?? UIImage.clearImage()
+            }
+            annotationView.image = finalImage
+            annotationView.frame.size = CGSize(width: 40, height: 40)
+            annotationView.canShowCallout = false
+            annotationView.isEnabled = false
+            annotationView.accessibilityLabel = "Enlarged"
+            (annotation as? EnlargableAnnotation)?.annotationView = annotationView
+            return annotationView
+        }
         if let mixins = marlinMap.mixins {
             for mixin in mixins {
                 if let view = mixin.viewForAnnotation(annotation: annotation, mapView: mapView){
@@ -460,5 +462,46 @@ extension MarlinMapCoordinator: NSFetchedResultsControllerDelegate {
         @unknown default:
             break
         }
+    }
+}
+
+class EnlargedAnnotation: NSObject, MKAnnotation, EnlargableAnnotation {
+    var enlarged: Bool = false
+    
+    var shouldEnlarge: Bool = false
+    
+    var shouldShrink: Bool = false
+    
+    var clusteringIdentifierWhenShrunk: String? = nil
+    
+    var clusteringIdentifier: String? = nil
+    
+    var annotationView: MKAnnotationView?
+    
+    var color: UIColor {
+        return UIColor.clear
+    }
+    
+    var coordinate: CLLocationCoordinate2D
+    var mapImage: MapImage
+    
+    init(mapImage: MapImage) {
+        coordinate = mapImage.coordinate
+        self.mapImage = mapImage
+    }
+    
+}
+
+class EnlargedAnnotationView: MKAnnotationView {
+    static let ReuseID = "enlarged"
+    
+    /// - Tag: ClusterIdentifier
+    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
+        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

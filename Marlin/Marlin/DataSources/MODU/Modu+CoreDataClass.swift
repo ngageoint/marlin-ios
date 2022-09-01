@@ -20,6 +20,7 @@ extension Modu: DataSource {
     static var systemImageName: String? = nil
     
     static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
+    static var imageScale: CGFloat = 1.5
 }
 
 extension Modu: DataSourceViewBuilder {
@@ -63,31 +64,6 @@ class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
             return ModuProperties.dateFormatter.string(from: date)
         }
         return nil
-    }
-    
-    func mapImage(marker: Bool = false, zoomLevel: Int) -> [UIImage] {
-        let scale = marker ? 1 : 2
-        var images: [UIImage] = []
-        if zoomLevel > 12 {
-            if let image = CircleImage(color: Modu.color, radius: 8 * CGFloat(scale), fill: true) {
-                images.append(image)
-                if let moduImage = UIImage(named: "modu")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
-                    images.append(moduImage)
-                }
-            }
-        } else if zoomLevel > 5 {
-            if let image = CircleImage(color: Modu.color, radius: 4 * CGFloat(scale), fill: true) {
-                images.append(image)
-                if let moduImage = UIImage(named: "modu")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
-                    images.append(moduImage)
-                }
-            }
-        } else {
-            if let image = CircleImage(color: Modu.color, radius: 1 * CGFloat(scale), fill: true) {
-                images.append(image)
-            }
-        }
-        return images
     }
     
     static func newBatchInsertRequest(with propertyList: [ModuProperties]) -> NSBatchInsertRequest {

@@ -24,6 +24,7 @@ extension Port: DataSource {
     static var systemImageName: String? = nil
     
     static var color: UIColor = UIColor(argbValue: 0xFF5856d6)
+    static var imageScale: CGFloat = 1.5
 }
 
 extension Port: DataSourceViewBuilder {
@@ -481,32 +482,6 @@ class Port: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
             }
             throw MSIError.batchInsertError
         }
-    }
-    
-    func mapImage(marker: Bool = false, zoomLevel: Int) -> [UIImage] {
-        let scale = marker ? 1 : 2
-        
-        var images: [UIImage] = []
-        if zoomLevel > 12 {
-            if let image = CircleImage(color: Port.color, radius: 8 * CGFloat(scale), fill: true) {
-                images.append(image)
-                if let portImage = UIImage(named: "port")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
-                    images.append(portImage)
-                }
-            }
-        } else if zoomLevel > 5 {
-            if let image = CircleImage(color: Port.color, radius: 4 * CGFloat(scale), fill: true) {
-                images.append(image)
-                if let portImage = UIImage(named: "port")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
-                    images.append(portImage)
-                }
-            }
-        } else {
-            if let image = CircleImage(color: Port.color, radius: 1 * CGFloat(scale), fill: true) {
-                images.append(image)
-            }
-        }
-        return images
     }
     
     func view(on: MKMapView) -> MKAnnotationView {

@@ -49,7 +49,7 @@ struct DFRSActionBar: View {
                                 .foregroundColor(Color.primaryColorVariant)
                         })
                 }
-                if showFocusButton {
+                if showFocusButton && CLLocationCoordinate2DIsValid(dfrs.coordinate) {
                     Button(action: {
                         NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
                         NotificationCenter.default.post(name: .FocusDFRS, object: self.dfrs)

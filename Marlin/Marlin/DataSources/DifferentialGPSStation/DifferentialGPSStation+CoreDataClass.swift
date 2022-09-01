@@ -60,33 +60,7 @@ class DifferentialGPSStation: NSManagedObject, MKAnnotation, AnnotationWithView,
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
-    
-    func mapImage(marker: Bool = false, zoomLevel: Int) -> [UIImage] {
-        let scale = marker ? 1 : 2
-        
-        var images: [UIImage] = []
-        if zoomLevel > 12 {
-            if let image = CircleImage(color: DifferentialGPSStation.color, radius: 6 * CGFloat(scale), fill: true) {
-                images.append(image)
-                if let portImage = UIImage(named: "dgps")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
-                    images.append(portImage)
-                }
-            }
-        } else if zoomLevel > 5 {
-            if let image = CircleImage(color: DifferentialGPSStation.color, radius: 3 * CGFloat(scale), fill: true) {
-                images.append(image)
-                if let portImage = UIImage(named: "dgps")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
-                    images.append(portImage)
-                }
-            }
-        } else {
-            if let image = CircleImage(color: DifferentialGPSStation.color, radius: 1 * CGFloat(scale), fill: true) {
-                images.append(image)
-            }
-        }
-        return images
-    }
-    
+
     func view(on: MKMapView) -> MKAnnotationView {
         let annotationView = on.dequeueReusableAnnotationView(withIdentifier: DifferentialGPSStationAnnotationView.ReuseID, for: self)
         let images = self.mapImage(marker: true, zoomLevel: on.zoomLevel)

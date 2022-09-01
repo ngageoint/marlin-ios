@@ -26,6 +26,23 @@ protocol DataSource {
     static var imageName: String? { get }
     static var systemImageName: String? { get }
     var color: UIColor { get }
+    static var image: UIImage? { get }
+    static var imageScale: CGFloat { get }
+}
+
+extension DataSource {
+    static var imageScale: CGFloat {
+        return 1.0
+    }
+    
+    static var image: UIImage? {
+        if let imageName = imageName {
+            return UIImage(named: imageName)
+        } else if let systemImageName = systemImageName {
+            return UIImage(systemName: systemImageName)
+        }
+        return nil
+    }
 }
 
 protocol DataSourceViewBuilder: DataSource {

@@ -82,10 +82,14 @@ struct MarlinBottomSheet: View {
             .ignoresSafeArea()
         )
         .onChange(of: selectedItem) { item in
-            NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: itemList.bottomSheetItems?[item].annotationView?.annotation))
+            if let item = itemList.bottomSheetItems?[selectedItem].item {
+                NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: item))
+            }
         }
         .onAppear {
-            NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: itemList.bottomSheetItems?[selectedItem].annotationView?.annotation))
+            if let item = itemList.bottomSheetItems?[selectedItem].item {
+                NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: item))
+            }
         }
     }
 }

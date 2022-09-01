@@ -38,6 +38,7 @@ class ModuMap: NSObject, MapMixin {
     }
     
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
+        mapState = marlinMap.mapState
         mapView.register(ModuAnnotationView.self, forAnnotationViewWithReuseIdentifier: ModuAnnotationView.ReuseID)
         
         NotificationCenter.default.publisher(for: .FocusModu)

@@ -93,31 +93,6 @@ class DFRS: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
     
     var annotationView: MKAnnotationView?
     
-    func mapImage(marker: Bool = false, zoomLevel: Int) -> [UIImage] {
-        let scale = marker ? 1 : 2
-        var images: [UIImage] = []
-        if zoomLevel > 12 {
-            if let image = CircleImage(color: DFRS.color, radius: 4 * CGFloat(scale), fill: true) {
-                images.append(image)
-                if let dfrsImage = UIImage(systemName: "antenna.radiowaves.left.and.right.circle")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
-                    images.append(dfrsImage)
-                }
-            }
-        } else if zoomLevel > 5 {
-            if let image = CircleImage(color: DFRS.color, radius: 4 * CGFloat(scale), fill: true) {
-                images.append(image)
-                if let dfrsImage = UIImage(systemName: "antenna.radiowaves.left.and.right.circle")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
-                    images.append(dfrsImage)
-                }
-            }
-        } else {
-            if let image = CircleImage(color: DFRS.color, radius: 1 * CGFloat(scale), fill: true) {
-                images.append(image)
-            }
-        }
-        return images
-    }
-    
     static func newBatchInsertRequest(with propertyList: [DFRSProperties]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count

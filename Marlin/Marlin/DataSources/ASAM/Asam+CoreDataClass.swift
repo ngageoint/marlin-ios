@@ -21,6 +21,7 @@ extension Asam: DataSource {
     static var systemImageName: String? = nil
     
     static var color: UIColor = .black
+    static var imageScale: CGFloat = 1.5
 }
 
 extension Asam: DataSourceViewBuilder {
@@ -65,31 +66,6 @@ class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
             return AsamProperties.dateFormatter.string(from: date)
         }
         return nil
-    }
-    
-    func mapImage(marker: Bool = false, zoomLevel: Int) -> [UIImage] {
-        let scale = marker ? 1 : 2
-        var images: [UIImage] = []
-        if zoomLevel > 12 {
-            if let image = CircleImage(color: Asam.color, radius: 8 * CGFloat(scale), fill: true) {
-                images.append(image)
-                if let pirateImage = UIImage(named: "asam")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
-                    images.append(pirateImage)
-                }
-            }
-        } else if zoomLevel > 5 {
-            if let image = CircleImage(color: Asam.color, radius: 4 * CGFloat(scale), fill: true) {
-                images.append(image)
-                if let pirateImage = UIImage(named: "asam")?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
-                    images.append(pirateImage)
-                }
-            }
-        } else {
-            if let image = CircleImage(color: Asam.color, radius: 1 * CGFloat(scale), fill: true) {
-                images.append(image)
-            }
-        }
-        return images
     }
     
     static func newBatchInsertRequest(with propertyList: [AsamProperties]) -> NSBatchInsertRequest {

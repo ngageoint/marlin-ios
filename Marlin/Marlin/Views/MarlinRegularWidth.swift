@@ -116,7 +116,7 @@ struct MarlinRegularWidth: View {
     }
     
     func viewData(_ data: DataSource) {
-        NotificationCenter.default.post(name: .MapAnnotationFocused, object: MapAnnotationFocusedNotification(annotation: nil))
+        NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
         NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
         itemWrapper.dataSource = data
         itemWrapper.date = Date()
