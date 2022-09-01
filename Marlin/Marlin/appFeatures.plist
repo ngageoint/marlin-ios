@@ -19,6 +19,6 @@
 	<key>differentialGPSStationDataSourceEnabled</key>
 	<true/>
 	<key>dfrsDataSourceEnabled</key>
-	<true/>
+	<false/>
 </dict>
 </plist>

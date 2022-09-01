@@ -20,7 +20,7 @@ struct MarlinBottomSheet: View {
     private var rectangle: some View {
         Rectangle()
             .fill(Color(itemList.bottomSheetItems?[selectedItem].item.color ?? .clear))
-            .frame(maxWidth: 6, maxHeight: .infinity)
+            .frame(maxWidth: 8, maxHeight: .infinity)
     }
     
     var body: some View {

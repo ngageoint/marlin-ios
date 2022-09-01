@@ -49,7 +49,7 @@ struct DataSourceCell: View {
             HStack {
                 Rectangle()
                     .fill(Color(dataSourceItem.dataSource.color))
-                    .frame(maxWidth: 6, maxHeight: .infinity)
+                    .frame(maxWidth: 8, maxHeight: .infinity)
                 Spacer()
                 }
                 .background(Color.surfaceColor)

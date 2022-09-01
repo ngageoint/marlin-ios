@@ -48,8 +48,12 @@ extension MapImage {
                         images.append(dataSourceImage)
                     }
                 }
-            } else {
+            } else if zoomLevel > 3 {
                 if let image = CircleImage(color: dataSource.color, radius: 1 * scale * type(of:dataSource).imageScale, fill: true) {
+                    images.append(image)
+                }
+            } else {
+                if let image = CircleImage(color: dataSource.color, radius: 0.5 * scale, fill: true) {
                     images.append(image)
                 }
             }
