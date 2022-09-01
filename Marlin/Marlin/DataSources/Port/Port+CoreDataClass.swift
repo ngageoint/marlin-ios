@@ -781,9 +781,6 @@ struct PortProperties: Decodable {
         }
         if let cargoPierDepthString = try? values.decode(String.self, forKey: .cargoPierDepth) {
             self.cargoPierDepth = Int(cargoPierDepthString)
-            if self.cargoPierDepth == nil {
-                print("xxxx depth is nil  \(cargoPierDepthString)")
-            }
         } else {
             self.cargoPierDepth = nil
         }

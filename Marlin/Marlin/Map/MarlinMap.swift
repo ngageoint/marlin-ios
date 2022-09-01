@@ -98,7 +98,6 @@ struct MarlinMap: UIViewRepresentable {
         context.coordinator.mapView = mapView
         context.coordinator.updateDataSources(fetchRequests: mapState.fetchRequests)
 
-        print("xxx update the map center \(mapState.center)")
         if let center = mapState.center, center.center.latitude != context.coordinator.setCenter?.latitude, center.center.longitude != context.coordinator.setCenter?.longitude {
                 mapView.setRegion(center, animated: true)
             context.coordinator.setCenter = center.center
