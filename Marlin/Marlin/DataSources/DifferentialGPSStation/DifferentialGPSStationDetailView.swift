@@ -26,7 +26,7 @@ struct DifferentialGPSStationDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "DifferentialGPSStation Detail Map", mixins: [DifferentialGPSStationMap(fetchRequest: fetchRequest, showAsTiles: true)], mapState: mapState)
+                    MarlinMap(name: "DifferentialGPSStation Detail Map", mixins: [DifferentialGPSStationMap(fetchRequest: fetchRequest)], mapState: mapState)
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                         .onAppear {
                             mapState.center = MKCoordinateRegion(center: differentialGPSStation.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)

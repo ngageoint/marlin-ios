@@ -27,7 +27,7 @@ struct RadioBeaconDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "RadioBeacon Detail Map", mixins: [RadioBeaconMap(fetchRequest: fetchRequest, showAsTiles: true)], mapState: mapState)
+                    MarlinMap(name: "RadioBeacon Detail Map", mixins: [RadioBeaconMap(fetchRequest: fetchRequest)], mapState: mapState)
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                         .onAppear {
                             mapState.center = MKCoordinateRegion(center: radioBeacon.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
