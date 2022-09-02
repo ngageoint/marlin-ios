@@ -14,6 +14,7 @@ struct SettingsView: View {
     @State var tapCount: Int = 1
     
     @AppStorage("lifeSizeLights") var lifeSizeLights = false
+    @AppStorage("showMapScale") var showMapScale = false
     
     var body: some View {
         List {
@@ -57,8 +58,12 @@ struct SettingsView: View {
                         Text("Lights Show Distance")
                     })
                     .padding([.top, .bottom], 8)
-                    .toggleStyle(SwitchToggleStyle(tint: .primaryColorVariant))
-                }
+                    Toggle(isOn: $showMapScale, label: {
+                        Image(systemName: "ruler.fill")
+                        Text("Show Map Scale (requires restart)")
+                    })
+                    .padding([.top, .bottom], 8)
+                }.toggleStyle(SwitchToggleStyle(tint: .primaryColorVariant))
             }
         }
         .navigationTitle("Settings")

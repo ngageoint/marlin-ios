@@ -40,6 +40,7 @@ struct MarlinMap: UIViewRepresentable {
     @Environment(\.colorScheme) var colorScheme
     
     @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
+    @AppStorage("showMapScale") var showMapScale = false
     
     @ObservedObject var mapState: MapState
 
@@ -80,9 +81,11 @@ struct MarlinMap: UIViewRepresentable {
         mapView.isPitchEnabled = false
         mapView.showsCompass = false
         
-        let scale = MKScaleView(mapView: mapView)
-        scale.scaleVisibility = .visible // always visible
-        mapView.addSubview(scale)
+        if showMapScale {
+            let scale = MKScaleView(mapView: mapView)
+            scale.scaleVisibility = .visible // always visible
+            mapView.addSubview(scale)
+        }
         context.coordinator.mapView = mapView
     
         mapView.register(EnlargedAnnotationView.self, forAnnotationViewWithReuseIdentifier: EnlargedAnnotationView.ReuseID)
