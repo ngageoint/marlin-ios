@@ -60,10 +60,14 @@ class DifferentialGPSStation: NSManagedObject, MKAnnotation, AnnotationWithView,
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
+    
+    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?) -> [UIImage] {
+        return defaultMapImage(marker: marker, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+    }
 
     func view(on: MKMapView) -> MKAnnotationView {
         let annotationView = on.dequeueReusableAnnotationView(withIdentifier: DifferentialGPSStation.key, for: self)
-        let images = self.mapImage(marker: true, zoomLevel: on.zoomLevel)
+        let images = self.mapImage(marker: true, zoomLevel: on.zoomLevel, tileBounds3857: nil)
         
         let largestSize = images.reduce(CGSize(width: 0, height: 0)) { partialResult, image in
             return CGSize(width: max(partialResult.width, image.size.width), height: max(partialResult.height, image.size.height))

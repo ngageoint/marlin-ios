@@ -53,6 +53,10 @@ class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
+    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?) -> [UIImage] {
+        return defaultMapImage(marker: marker, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+    }
+    
     func view(on: MKMapView) -> MKAnnotationView {
         let annotationView = on.dequeueReusableAnnotationView(withIdentifier: AsamAnnotationView.ReuseID, for: self)
         self.annotationView = annotationView

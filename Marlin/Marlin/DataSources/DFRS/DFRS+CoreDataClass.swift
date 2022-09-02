@@ -85,6 +85,10 @@ class DFRS: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         return kCLLocationCoordinate2DInvalid
     }
     
+    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?) -> [UIImage] {
+        return defaultMapImage(marker: marker, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+    }
+    
     func view(on: MKMapView) -> MKAnnotationView {
         let annotationView = on.dequeueReusableAnnotationView(withIdentifier: AsamAnnotationView.ReuseID, for: self)
         self.annotationView = annotationView

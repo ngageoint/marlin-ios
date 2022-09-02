@@ -22,7 +22,7 @@ protocol MapImage {
 }
 
 extension MapImage {
-    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil) -> [UIImage] {
+    func defaultMapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil) -> [UIImage] {
         var images: [UIImage] = []
         let scale = UIScreen.main.scale
         if let dataSource = self as? DataSource {

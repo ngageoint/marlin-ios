@@ -110,7 +110,7 @@ class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         return "\(String(characteristic[characteristic.startIndex..<newline]))"
     }
     
-    func mapImage(marker: Bool = false, zoomLevel: Int) -> [UIImage] {
+    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?) -> [UIImage] {
         let scale = marker ? 1 : 2
         
         var images: [UIImage] = []
@@ -195,7 +195,7 @@ class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
     
     func view(on: MKMapView) -> MKAnnotationView {
         let annotationView = on.dequeueReusableAnnotationView(withIdentifier: RadioBeacon.key, for: self)
-        let images = self.mapImage(marker: true, zoomLevel: on.zoomLevel)
+        let images = self.mapImage(marker: true, zoomLevel: on.zoomLevel, tileBounds3857: nil)
         
         let largestSize = images.reduce(CGSize(width: 0, height: 0)) { partialResult, image in
             return CGSize(width: max(partialResult.width, image.size.width), height: max(partialResult.height, image.size.height))
