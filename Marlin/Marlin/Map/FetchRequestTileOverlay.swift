@@ -51,6 +51,8 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
         let maxTileLat = latitude(y: path.y, zoom: path.z)
         let neCorner3857 = coord4326To3857(longitude: maxTileLon, latitude: maxTileLat)
         let swCorner3857 = coord4326To3857(longitude: minTileLon, latitude: minTileLat)
+        let nwCorner3857 = coord4326To3857(longitude: minTileLon, latitude: maxTileLat)
+        let seCorner3857 = coord4326To3857(longitude: maxTileLon, latitude: minTileLat)
         let minTileX = swCorner3857.x
         let minTileY = swCorner3857.y
         let maxTileX = neCorner3857.x
@@ -63,7 +65,7 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
         
         let neCornerTolerance = coord3857To4326(y: maxTileY + tolerance, x: maxTileX + tolerance)
         let swCornerTolerance = coord3857To4326(y: minTileY - tolerance, x: minTileX - tolerance)
-
+        
         DispatchQueue.main.async { [self] in
             drawTile(tileBounds3857: MapBoundingBox(swCorner: swCorner3857, neCorner: neCorner3857), queryBounds: MapBoundingBox(swCorner: (x: swCornerTolerance.lon, y: swCornerTolerance.lat), neCorner: (x: neCornerTolerance.lon, y: neCornerTolerance.lat)), result: result)
         }
@@ -108,7 +110,7 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
         
         if let objects = objects as? [MapImage] {
             for object in objects {
-                let mapImages = object.mapImage(marker: false, zoomLevel: zoomLevel)
+                let mapImages = object.mapImage(marker: false, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
                 for mapImage in mapImages {
                     let object3857Location = coord4326To3857(longitude: object.longitude, latitude: object.latitude)
                     let xPosition = (((object3857Location.x - tileBounds3857.swCorner.x) / (tileBounds3857.neCorner.x - tileBounds3857.swCorner.x)) * self.tileSize.width)

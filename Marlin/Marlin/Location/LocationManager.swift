@@ -9,6 +9,7 @@ import Foundation
 import CoreLocation
 import Combine
 import geopackage_ios
+import sf_ios
 import ExceptionCatcher
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {

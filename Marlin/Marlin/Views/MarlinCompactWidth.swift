@@ -84,6 +84,14 @@ struct MarlinCompactWidth: View {
                         .isDetailLink(false)
                         .hidden()
                         
+                        NavigationLink(tag: "settings", selection: $selection) {
+                            SettingsView()
+                        } label: {
+                            EmptyView()
+                        }
+                        .isDetailLink(false)
+                        .hidden()
+                        
                         ForEach(dataSourceList.nonTabs) { dataSource in
                             
                             NavigationLink(tag: "\(dataSource.key)List", selection: $selection) {
@@ -144,9 +152,12 @@ struct MarlinCompactWidth: View {
             }
             .onReceive(switchTabPub) { output in
                 if let output = output as? String {
-                    if dataSourceList.tabs.contains(where: { item in
-                        item.key == output
-                    }) {
+                    if output == "settings" {
+                        selectedTab = "map"
+                        selection = "settings"
+                    } else if dataSourceList.tabs.contains(where: { item in
+                            item.key == output
+                        }) {
                         selectedTab = "\(output)List"
                     } else {
                         selectedTab = "map"

@@ -80,6 +80,10 @@ extension UserDefaults {
         }
     }
     
+    @objc var lifeSizeLights: Bool {
+        bool(forKey: #function)
+    }
+    
     // MARK: App features
     var hamburger: Bool {
         bool(forKey: "hamburger")

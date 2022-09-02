@@ -15,14 +15,14 @@ protocol AnnotationWithView: MKAnnotation {
 }
 
 protocol MapImage {
-    func mapImage(marker: Bool, zoomLevel: Int) -> [UIImage]
+    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?) -> [UIImage]
     var latitude: Double { get }
     var longitude: Double { get }
     var coordinate: CLLocationCoordinate2D { get }
 }
 
 extension MapImage {
-    func mapImage(marker: Bool, zoomLevel: Int) -> [UIImage] {
+    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil) -> [UIImage] {
         var images: [UIImage] = []
         let scale = UIScreen.main.scale
         if let dataSource = self as? DataSource {

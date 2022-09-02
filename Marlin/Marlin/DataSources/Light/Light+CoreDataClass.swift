@@ -10,6 +10,8 @@ import CoreData
 import MapKit
 import OSLog
 import SwiftUI
+import sf_ios
+import sf_proj_ios
 
 struct LightVolume {
     var volumeQuery: String
@@ -234,11 +236,56 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         return ""
     }
     
-    func mapImage(marker: Bool = false, zoomLevel: Int) -> [UIImage] {
+    func toRadians(degrees: Double) -> Double {
+        return degrees * .pi / 180.0
+    }
+    
+    func toDegrees(radians: Double) -> Double {
+        return radians * 180.0 / .pi
+    }
+
+    func circleCoordinates(center: CLLocationCoordinate2D, radiusMeters: Double) -> [CLLocationCoordinate2D] {
+        var coordinates: [CLLocationCoordinate2D] = []
+        let centerLatRad = toRadians(degrees: center.latitude)
+        let centerLonRad = toRadians(degrees: center.longitude)
+        let dRad = radiusMeters / 6378137
+        
+        for i in 0...360 {
+            let radial = toRadians(degrees: Double(i))
+            let latRad = asin(sin(centerLatRad) * cos(dRad) + cos(centerLatRad) * sin(dRad) * cos(radial))
+            let dlonRad = atan2(sin(radial) * sin(dRad) * cos(centerLatRad), cos(dRad) - sin(centerLatRad) * sin(latRad))
+            let lonRad = fmod((centerLonRad + dlonRad + .pi), 2.0 * .pi) - .pi
+            coordinates.append(CLLocationCoordinate2D(latitude: toDegrees(radians: latRad), longitude: toDegrees(radians: lonRad)))
+        }
+        
+        return coordinates
+    }
+    
+    let TILE_SIZE = 512.0
+    
+    func coordinateToPixel(c: CLLocationCoordinate2D, zoomLevel: Int, tileBounds3857: MapBoundingBox) -> CGPoint {
+        let object3857Location = coord4326To3857(longitude: c.longitude, latitude: c.latitude)
+        let xPosition = (((object3857Location.x - tileBounds3857.swCorner.x) / (tileBounds3857.neCorner.x - tileBounds3857.swCorner.x)) * TILE_SIZE)
+        let yPosition = TILE_SIZE - (((object3857Location.y - tileBounds3857.swCorner.y) / (tileBounds3857.neCorner.y - tileBounds3857.swCorner.y)) * TILE_SIZE)
+        return CGPoint(x:xPosition, y: yPosition)
+    }
+    
+    func coord4326To3857(longitude: Double, latitude: Double) -> (x: Double, y: Double) {
+        let a = 6378137.0
+        let lambda = longitude / 180 * Double.pi;
+        let phi = latitude / 180 * Double.pi;
+        let x = a * lambda;
+        let y = a * log(tan(Double.pi / 4 + phi / 2));
+        
+        return (x:x, y:y);
+    }
+    
+    func mapImage(marker: Bool = false, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil) -> [UIImage] {
+        var images: [UIImage] = []
+        
         let small = zoomLevel < 13
         let scale = marker ? 1 : 2
         
-        var images: [UIImage] = []
         
         if isBuoy && !small {
             images.append(StructureImage(frame: CGRect(x: 0, y: 0, width: 15 * scale, height: 15 * scale), structure: structure) ?? clearImage)
@@ -259,6 +306,38 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         if isRacon {
             let raconImage = raconImage(scale: scale, sectors: azimuthCoverage, zoomLevel: zoomLevel)
             images.append(raconImage)
+        }
+        
+        if UserDefaults.standard.lifeSizeLights, let stringRange = range, let range = Double(stringRange), let tileBounds3857 = tileBounds3857, let lightColors = lightColors {
+            let nauticalMilesMeasurement = NSMeasurement(doubleValue: range, unit: UnitLength.nauticalMiles)
+            let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
+
+            let circleCoordinates = circleCoordinates(center: self.coordinate, radiusMeters: metersMeasurement.value)
+            let size = CGSize(width: TILE_SIZE, height: TILE_SIZE)
+            let renderer = UIGraphicsImageRenderer(size: size)
+            let image = renderer.image { _ in
+                let lightPixel = coordinateToPixel(c: coordinate, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+                let path = UIBezierPath()
+                
+                var pixel = coordinateToPixel(c: circleCoordinates[0], zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+                pixel.x = lightPixel.x - pixel.x + (size.width / 2.0)
+                pixel.y = lightPixel.y - pixel.y + (size.height / 2.0)
+                
+                path.move(to: pixel)
+                for circleCoordinate in circleCoordinates {
+                    pixel = coordinateToPixel(c: circleCoordinate, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+                    pixel.x = lightPixel.x - pixel.x + (size.width / 2.0)
+                    pixel.y = lightPixel.y - pixel.y + (size.height / 2.0)
+                    path.addLine(to: pixel)
+                }
+                path.close()
+                lightColors[0].withAlphaComponent(0.2).setFill()
+                lightColors[0].setStroke()
+                path.fill()
+                path.stroke()
+            }
+            
+            images.append(image)
         }
         
         return images
