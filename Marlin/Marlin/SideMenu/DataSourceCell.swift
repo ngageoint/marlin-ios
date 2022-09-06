@@ -9,24 +9,35 @@ import SwiftUI
 
 struct DataSourceCell: View {    
     @ObservedObject var dataSourceItem: DataSourceItem
+    @EnvironmentObject var appState: AppState
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .center) {
-                if let systemImageName = dataSourceItem.dataSource.systemImageName {
-                    Image(systemName: systemImageName)
-                        .tint(Color.onSurfaceColor)
-                        .opacity(0.60)
-                } else if let imageName = dataSourceItem.dataSource.imageName {
-                    Image(imageName)
-                        .tint(Color.onSurfaceColor)
-                        .opacity(0.60)
+            HStack(alignment: .center, spacing: 8) {
+                
+                if let loading = appState.loadingDataSource[dataSourceItem.key], loading {
+                    HStack(alignment: .center) {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: Color.primaryColorVariant))
+                            .scaleEffect(0.75, anchor: .center)
+                    }
+                } else {
+                    if let systemImageName = dataSourceItem.dataSource.systemImageName {
+                        Image(systemName: systemImageName)
+                            .tint(Color.onSurfaceColor)
+                            .opacity(0.60)
+                    } else if let imageName = dataSourceItem.dataSource.imageName {
+                        Image(imageName)
+                            .tint(Color.onSurfaceColor)
+                            .opacity(0.60)
+                    }
                 }
+                
                 Text(dataSourceItem.dataSource.fullDataSourceName)
                     .font(Font.body1)
                     .foregroundColor(Color.onSurfaceColor)
                     .opacity(0.87)
-                    
+
                 Spacer()
                 if dataSourceItem.dataSource.isMappable {
                     Image(systemName: dataSourceItem.showOnMap ? "mappin.circle.fill" : "mappin.slash.circle.fill")

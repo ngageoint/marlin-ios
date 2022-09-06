@@ -156,16 +156,15 @@ class DifferentialGPSStation: NSManagedObject, MKAnnotation, AnnotationWithView,
             /// - Tag: batchInsertRequest
             let batchInsertRequest = DifferentialGPSStation.newBatchInsertRequest(with: propertiesList)
             batchInsertRequest.resultType = .count
-            do {
-                let fetchResult = try taskContext.execute(batchInsertRequest)
-                if let batchInsertResult = fetchResult as? NSBatchInsertResult,
-                   let success = batchInsertResult.result as? Int {
-                    print("Inserted \(success) DGPS")
-                    // if there were already lights in the db for this volume and this was an update and we got back a light we have to go redo the query due to regions not being populated on all returned objects
-                    return
+            if let fetchResult = try? taskContext.execute(batchInsertRequest),
+               let batchInsertResult = fetchResult as? NSBatchInsertResult {
+                if let count = batchInsertResult.result as? Int, count > 0 {
+                    NSLog("Inserted \(count) DGPS records")
+                    NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceItem(dataSource: DifferentialGPSStation.self))
+                } else {
+                    NSLog("No new DGPS records")
                 }
-            } catch {
-                print("error was \(error)")
+                return
             }
             throw MSIError.batchInsertError
         }

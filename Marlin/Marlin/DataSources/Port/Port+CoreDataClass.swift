@@ -474,15 +474,15 @@ class Port: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
             /// - Tag: batchInsertRequest
             let batchInsertRequest = Port.newBatchInsertRequest(with: propertiesList)
             batchInsertRequest.resultType = .count
-            do {
-                let fetchResult = try taskContext.execute(batchInsertRequest)
-                if let batchInsertResult = fetchResult as? NSBatchInsertResult,
-                   let success = batchInsertResult.result as? Int {
-                    print("Inserted \(success) ports")
-                    return
+            if let fetchResult = try? taskContext.execute(batchInsertRequest),
+               let batchInsertResult = fetchResult as? NSBatchInsertResult {
+                if let count = batchInsertResult.result as? Int, count > 0 {
+                    NSLog("Inserted \(count) Port records")
+                    NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceItem(dataSource: Port.self))
+                } else {
+                    NSLog("No new Port records")
                 }
-            } catch {
-                print("error was \(error)")
+                return
             }
             throw MSIError.batchInsertError
         }

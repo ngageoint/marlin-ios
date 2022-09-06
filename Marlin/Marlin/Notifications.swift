@@ -27,6 +27,7 @@ extension Notification.Name {
     public static let ViewNavigationalWarning = Notification.Name("ViewNavigationalWarning")
     public static let SwitchTabs = Notification.Name("SwitchTabs")
     public static let SnackbarNotification = Notification.Name("Snackbar")
+    public static let DataSourceUpdated = Notification.Name("DataSourceUpdated")
 }
 
 struct FocusMapOnItemNotification {

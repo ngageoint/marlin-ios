@@ -626,12 +626,16 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
             batchInsertRequest.resultType = .count
             do {
                 let fetchResult = try taskContext.execute(batchInsertRequest)
-                  if let batchInsertResult = fetchResult as? NSBatchInsertResult,
-                   let success = batchInsertResult.result as? Int {
-                    print("Inserted \(success) lights")
-                      // if there were already lights in the db for this volume and this was an update and we got back a light we have to go redo the query due to regions not being populated on all returned objects
+                if let batchInsertResult = fetchResult as? NSBatchInsertResult {
+                    if let count = batchInsertResult.result as? Int, count > 0 {
+                          NSLog("Inserted \(count) Light records")
+                          NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceItem(dataSource: Light.self))
+                    } else {
+                        NSLog("No new Light records")
+                    }
+                    // if there were already lights in the db for this volume and this was an update and we got back a light we have to go redo the query due to regions not being populated on all returned objects
                     return
-                  }
+                }
             } catch {
                 print("error was \(error)")
             }

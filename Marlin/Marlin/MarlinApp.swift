@@ -34,6 +34,7 @@ struct TestApp: App {
 
 class AppState: ObservableObject {
     @Published var popToRoot: Bool = false
+    @Published var loadingDataSource: [String : Bool] = [:]
 }
 
 struct MarlinApp: App {
@@ -42,6 +43,7 @@ struct MarlinApp: App {
     let shared = MSI.shared
     
     let scheme = MarlinScheme()
+    let appState = AppState()
     
     init() {
         
@@ -58,13 +60,13 @@ struct MarlinApp: App {
         // set up default user defaults
         UserDefaults.registerMarlinDefaults()
         
-        shared.loadAllData()
+        shared.loadAllData(appState: appState)
     }
 
     var body: some Scene {
         WindowGroup {
             MarlinView()
-                .environmentObject(AppState())
+                .environmentObject(appState)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .background(Color.surfaceColor)
         }

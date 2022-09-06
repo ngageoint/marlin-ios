@@ -24,87 +24,129 @@ public class MSI {
         return Session(configuration: configuration, serverTrustManager: manager)
     }()
     
-    func loadAllData() {
+    func loadAllData(appState: AppState) {
         if UserDefaults.standard.dataSourceEnabled(Asam.self) {
-            loadAsams()
+            loadAsams(appState: appState)
         }
         if UserDefaults.standard.dataSourceEnabled(Modu.self) {
-            loadModus()
+            loadModus(appState: appState)
         }
         if UserDefaults.standard.dataSourceEnabled(NavigationalWarning.self) {
-            loadNavigationalWarnings()
+            loadNavigationalWarnings(appState: appState)
         }
         if UserDefaults.standard.dataSourceEnabled(Light.self) {
-            loadLights()
+            loadLights(appState: appState)
         }
         if UserDefaults.standard.dataSourceEnabled(Port.self) {
-            loadPorts(resetData: false)
+            loadPorts(resetData: false, appState: appState)
         }
         if UserDefaults.standard.dataSourceEnabled(RadioBeacon.self) {
-            loadRadioBeacons()
+            loadRadioBeacons(appState: appState)
         }
         if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) {
-            loadDifferentialGPSStations()
+            loadDifferentialGPSStations(appState: appState)
         }
         if UserDefaults.standard.dataSourceEnabled(DFRS.self) {
-            loadDFRS(resetData: false)
-            loadDFRSAreas(resetData: true)
+            loadDFRS(resetData: false, appState: appState)
+            loadDFRSAreas(resetData: true, appState: appState)
         }
     }
     
-    func loadAsams() {
+    func loadAsams(appState: AppState) {
+        DispatchQueue.main.async {
+            appState.loadingDataSource[Asam.key] = true
+        }
+        let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
+
         let newestAsam = try? persistenceController.container.viewContext.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)])
         session.request(MSIRouter.readAsams(date: newestAsam?.dateString))
             .validate()
-            .responseDecodable(of: AsamPropertyContainer.self) { response in
-                Task {
-                    let asamCount = response.value?.asam.count
-                    self.logger.debug("Received \(asamCount ?? 0) asam records.")
-                    if let asams = response.value?.asam {
-                        try await Asam.batchImport(from: asams, taskContext: PersistenceController.shared.newTaskContext())
+            .responseDecodable(of: AsamPropertyContainer.self, queue: queue) { response in
+                queue.async( execute:{
+                    Task.detached {
+                        let asamCount = response.value?.asam.count
+                        self.logger.debug("Received \(asamCount ?? 0) asam records.")
+                        if let asams = response.value?.asam {
+                            try await Asam.batchImport(from: asams, taskContext: PersistenceController.shared.newTaskContext())
+                        }
+                        DispatchQueue.main.async {
+                            appState.loadingDataSource[Asam.key] = false
+                        }
                     }
-                }
+                })
             }
     }
     
-    func loadModus() {
+    func loadModus(appState: AppState) {
+        DispatchQueue.main.async {
+            appState.loadingDataSource[Modu.key] = false
+        }
+        let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
+
         let newestModu = try? persistenceController.container.viewContext.fetchFirst(Modu.self, sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)])
-        
+                
         session.request(MSIRouter.readModus(date: newestModu?.dateString))
             .validate()
-            .responseDecodable(of: ModuPropertyContainer.self) { response in
-                Task {
-                    let moduCount = response.value?.modu.count
-                    self.logger.debug("Received \(moduCount ?? 0) modu records.")
-                    if let modus = response.value?.modu {
-                        try await Modu.batchImport(from: modus, taskContext: PersistenceController.shared.newTaskContext(), viewContext: PersistenceController.shared.container.viewContext)
+            .responseDecodable(of: ModuPropertyContainer.self, queue: queue) { response in
+                queue.async( execute:{
+                    Task.detached {
+                        let moduCount = response.value?.modu.count
+                        self.logger.debug("Received \(moduCount ?? 0) modu records.")
+                        if let modus = response.value?.modu {
+                            try await Modu.batchImport(from: modus, taskContext: PersistenceController.shared.newTaskContext(), viewContext: PersistenceController.shared.container.viewContext)
+                        }
+                        DispatchQueue.main.async {
+                            appState.loadingDataSource[Modu.key] = false
+                        }
                     }
-                }
+                })
             }
     }
     
-    func loadNavigationalWarnings(date: String? = nil) {
-        let queue = DispatchQueue(label: "com.test.api", qos: .background)
+    func loadNavigationalWarnings(date: String? = nil, appState: AppState) {
+        DispatchQueue.main.async {
+            appState.loadingDataSource[NavigationalWarning.key] = true
+        }
+        let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
 
         session.request(MSIRouter.readNavigationalWarnings)
             .validate()
             .responseDecodable(of: NavigationalWarningPropertyContainer.self, queue: queue) { response in
                 queue.async( execute:{
-                Task.detached {
-                    let navigationalWarningCount = response.value?.broadcastWarn.count
-                    self.logger.debug("Received \(navigationalWarningCount ?? 0) navigational warning records.")
-                    if let navigationalWarnings = response.value?.broadcastWarn {
-                        try await NavigationalWarning.batchImport(from: navigationalWarnings, taskContext: PersistenceController.shared.newTaskContext())
+                    Task.detached {
+                        let navigationalWarningCount = response.value?.broadcastWarn.count
+                        self.logger.debug("Received \(navigationalWarningCount ?? 0) navigational warning records.")
+                        if let navigationalWarnings = response.value?.broadcastWarn {
+                            try await NavigationalWarning.batchImport(from: navigationalWarnings, taskContext: PersistenceController.shared.newTaskContext())
+                        }
+                        
+                        DispatchQueue.main.async {
+                            appState.loadingDataSource[NavigationalWarning.key] = false
+                        }
                     }
-                }
                 })
             }
     }
     
-    func loadLights(date: String? = nil) {
-        let queue = DispatchQueue(label: "com.test.api", qos: .background)
+    func loadLights(date: String? = nil, appState: AppState) {
+        let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
+        DispatchQueue.main.async {
+            appState.loadingDataSource[Light.key] = true
+        }
         let count = try? PersistenceController.shared.container.viewContext.countOfObjects(Light.self)
         print("There are \(count ?? 0) lights")
+        
+        struct Counter {
+            var volumeQueries = 0
+            mutating func increment () -> Int {
+                volumeQueries = volumeQueries + 1
+                return volumeQueries
+            }
+        }
+        
+        struct QueryCounter {
+            static var counter = Counter()
+        }
         for lightVolume in Light.lightVolumes {
             let newestLight = try? PersistenceController.shared.container.viewContext.fetchFirst(Light.self, sortBy: [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)], predicate: NSPredicate(format: "volumeNumber = %@", lightVolume.volumeNumber))
             
@@ -126,14 +168,23 @@ public class MSI {
                             if let lights = response.value?.ngalol {
                                 try await Light.batchImport(from: lights, taskContext: PersistenceController.shared.newTaskContext())
                             }
+                            QueryCounter.counter.volumeQueries += 1
+                            if QueryCounter.counter.volumeQueries == Light.lightVolumes.count {
+                                DispatchQueue.main.async {
+                                    appState.loadingDataSource[Light.key] = false
+                                }
+                            }
                         }
                     })
                 }
         }
     }
     
-    func loadRadioBeacons(date: String? = nil) {
-        let queue = DispatchQueue(label: "com.test.api", qos: .background)
+    func loadRadioBeacons(date: String? = nil, appState: AppState) {
+        let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
+        DispatchQueue.main.async {
+            appState.loadingDataSource[RadioBeacon.key] = true
+        }
         let count = try? PersistenceController.shared.container.viewContext.countOfObjects(RadioBeacon.self)
         print("There are \(count ?? 0) radio beacons")
         let newestRadioBeacon = try? PersistenceController.shared.container.viewContext.fetchFirst(RadioBeacon.self, sortBy: [NSSortDescriptor(keyPath: \RadioBeacon.noticeNumber, ascending: false)])
@@ -156,13 +207,19 @@ public class MSI {
                         if let radioBeacons = response.value?.ngalol {
                             try await RadioBeacon.batchImport(from: radioBeacons, taskContext: PersistenceController.shared.newTaskContext())
                         }
+                        DispatchQueue.main.async {
+                            appState.loadingDataSource[RadioBeacon.key] = false
+                        }
                     }
                 })
             }
     }
     
-    func loadDifferentialGPSStations(date: String? = nil) {
-        let queue = DispatchQueue(label: "com.test.api", qos: .background)
+    func loadDifferentialGPSStations(date: String? = nil, appState: AppState) {
+        DispatchQueue.main.async {
+            appState.loadingDataSource[DifferentialGPSStation.key] = true
+        }
+        let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
         let count = try? PersistenceController.shared.container.viewContext.countOfObjects(DifferentialGPSStation.self)
         print("There are \(count ?? 0) differential gps stations")
         let newestDifferentialGPSStation = try? PersistenceController.shared.container.viewContext.fetchFirst(DifferentialGPSStation.self, sortBy: [NSSortDescriptor(keyPath: \DifferentialGPSStation.noticeNumber, ascending: false)])
@@ -185,15 +242,21 @@ public class MSI {
                         if let differentialGPSStations = response.value?.ngalol {
                             try await DifferentialGPSStation.batchImport(from: differentialGPSStations, taskContext: PersistenceController.shared.newTaskContext())
                         }
+                        DispatchQueue.main.async {
+                            appState.loadingDataSource[DifferentialGPSStation.key] = false
+                        }
                     }
                 })
             }
     }
     
-    func loadPorts(resetData: Bool = false) {
+    func loadPorts(resetData: Bool = false, appState: AppState) {
         let portCount = try? persistenceController.container.viewContext.countOfObjects(Port.self)
         if portCount != 0 && !resetData {
             return
+        }
+        DispatchQueue.main.async {
+            appState.loadingDataSource[Port.key] = true
         }
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
         
@@ -207,12 +270,18 @@ public class MSI {
                         if let ports = response.value?.ports {
                             try await Port.batchImport(from: ports, taskContext: PersistenceController.shared.newTaskContext())
                         }
+                        DispatchQueue.main.async {
+                            appState.loadingDataSource[Port.key] = false
+                        }
                     }
                 })
             }
     }
     
-    func loadDFRS(resetData: Bool = false) {
+    func loadDFRS(resetData: Bool = false, appState: AppState) {
+        DispatchQueue.main.async {
+            appState.loadingDataSource[DFRS.key] = true
+        }
         let dfrsCount = try? persistenceController.container.viewContext.countOfObjects(DFRS.self)
         if dfrsCount != 0 && !resetData {
             return
@@ -229,12 +298,18 @@ public class MSI {
                         if let dfrs = response.value?.dfrs {
                             try await DFRS.batchImport(from: dfrs, taskContext: PersistenceController.shared.newTaskContext())
                         }
+                        DispatchQueue.main.async {
+                            appState.loadingDataSource[DFRS.key] = true
+                        }
                     }
                 })
             }
     }
     
-    func loadDFRSAreas(resetData: Bool = false) {
+    func loadDFRSAreas(resetData: Bool = false, appState: AppState) {
+        DispatchQueue.main.async {
+            appState.loadingDataSource[DFRS.key] = true
+        }
         let dfrsCount = try? persistenceController.container.viewContext.countOfObjects(DFRSArea.self)
         if dfrsCount != 0 && !resetData {
             return
@@ -250,6 +325,9 @@ public class MSI {
                         NSLog("Received \(dfrsCount ?? 0) dfrs area records.")
                         if let areas = response.value?.areas {
                             try await DFRSArea.batchImport(from: areas, taskContext: PersistenceController.shared.newTaskContext())
+                        }
+                        DispatchQueue.main.async {
+                            appState.loadingDataSource[DFRS.key] = true
                         }
                     }
                 })

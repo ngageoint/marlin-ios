@@ -123,9 +123,15 @@ class NavigationalWarning: NSManagedObject {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
             let batchInsertRequest = NavigationalWarning.newBatchInsertRequest(with: propertiesList)
+            batchInsertRequest.resultType = .count
             if let fetchResult = try? taskContext.execute(batchInsertRequest),
-               let batchInsertResult = fetchResult as? NSBatchInsertResult,
-               let success = batchInsertResult.result as? Bool, success {
+               let batchInsertResult = fetchResult as? NSBatchInsertResult {
+                if let count = batchInsertResult.result as? Int, count > 0 {
+                    NSLog("Inserted \(count) NavigationalWarning records")
+                    NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceItem(dataSource: NavigationalWarning.self))
+                } else {
+                    NSLog("No new NavigationalWarning records")
+                }
                 return
             }
             throw MSIError.batchInsertError

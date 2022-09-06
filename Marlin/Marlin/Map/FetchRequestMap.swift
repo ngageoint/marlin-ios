@@ -68,6 +68,19 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
                 .store(in: &cancellable)
         }
         
+        NotificationCenter.default.publisher(for: .DataSourceUpdated)
+            .receive(on: RunLoop.main)
+            .compactMap {
+                $0.object as? DataSourceItem
+            }
+            .sink { item in
+                if item.key == T.key {
+                    print("xxx new data for \(T.key), refresh overlay")
+                    self.refreshOverlay(marlinMap: marlinMap)
+                }
+            }
+            .store(in: &cancellable)
+        
         userDefaultsShowPublisher?
             .removeDuplicates()
             .handleEvents(receiveOutput: { show in
@@ -78,28 +91,32 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
                     marlinMap.mapState[keyPath: showKeyPath] = $0
                 }
                 if let showAsTiles = self?.showAsTiles, showAsTiles {
-                    if let overlay = self?.overlay {
-                        marlinMap.mapState.overlays.removeAll { mapOverlay in
-                            if let mapOverlay = mapOverlay as? FetchRequestTileOverlay<T> {
-                                return mapOverlay == overlay
-                            }
-                            return false
-                        }
-                    }
-                    let newFetchRequest = self?.getFetchRequest(mapState: marlinMap.mapState)
-                    let newOverlay = FetchRequestTileOverlay<T>()
-                    
-                    newOverlay.tileSize = CGSize(width: 512, height: 512)
-                    newOverlay.minimumZ = self?.minZoom ?? 0
-                    newOverlay.fetchRequest = newFetchRequest
-                    self?.overlay = newOverlay
-                    marlinMap.mapState.overlays.append(newOverlay)
+                    self?.refreshOverlay(marlinMap: marlinMap)
                 } else {
                     marlinMap.mapState.fetchRequests[T.key] = self?.getFetchRequest(mapState: marlinMap.mapState) as? NSFetchRequest<NSFetchRequestResult>
                 }
             }
             .store(in: &cancellable)
         
+    }
+    
+    func refreshOverlay(marlinMap: MarlinMap) {
+        if let overlay = self.overlay {
+            marlinMap.mapState.overlays.removeAll { mapOverlay in
+                if let mapOverlay = mapOverlay as? FetchRequestTileOverlay<T> {
+                    return mapOverlay == overlay
+                }
+                return false
+            }
+        }
+        let newFetchRequest = self.getFetchRequest(mapState: marlinMap.mapState)
+        let newOverlay = FetchRequestTileOverlay<T>()
+        
+        newOverlay.tileSize = CGSize(width: 512, height: 512)
+        newOverlay.minimumZ = self.minZoom
+        newOverlay.fetchRequest = newFetchRequest
+        self.overlay = newOverlay
+        marlinMap.mapState.overlays.append(newOverlay)
     }
     
     func focus(item: T) {
