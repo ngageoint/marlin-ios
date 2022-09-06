@@ -75,7 +75,7 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
             }
             .sink { item in
                 if item.key == T.key {
-                    print("xxx new data for \(T.key), refresh overlay")
+                    print("New data for \(T.key), refresh overlay")
                     self.refreshOverlay(marlinMap: marlinMap)
                 }
             }
