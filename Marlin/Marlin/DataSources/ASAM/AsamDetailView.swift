@@ -60,7 +60,6 @@ struct AsamDetailView: View {
             
             Section("Description") {
                 Text(asam.asamDescription ?? "")
-                    .lineLimit(8)
                     .font(Font.body2)
                     .foregroundColor(Color.onSurfaceColor)
                     .opacity(0.6)
