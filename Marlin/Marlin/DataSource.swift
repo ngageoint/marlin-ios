@@ -35,10 +35,6 @@ protocol DataSource {
 
 extension DataSource {
     
-    static var imageScale: CGFloat {
-        return 0.66
-    }
-    
     static var image: UIImage? {
         if let imageName = imageName {
             return UIImage(named: imageName)

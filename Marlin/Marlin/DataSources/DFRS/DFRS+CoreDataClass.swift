@@ -24,6 +24,7 @@ extension DFRS: DataSource {
     static var systemImageName: String? = "antenna.radiowaves.left.and.right.circle"
     
     static var color: UIColor = UIColor(argbValue: 0xFF00E676)
+    static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
 }
 
 extension DFRS: DataSourceViewBuilder {

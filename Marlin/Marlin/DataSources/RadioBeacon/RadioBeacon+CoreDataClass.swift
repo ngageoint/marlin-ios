@@ -27,6 +27,7 @@ extension RadioBeacon: DataSource {
     static var imageName: String? = nil
     static var systemImageName: String? = "antenna.radiowaves.left.and.right"
     static var color: UIColor = UIColor(argbValue: 0xFF007BFF)
+    static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
 }
 
 extension RadioBeacon: DataSourceViewBuilder {

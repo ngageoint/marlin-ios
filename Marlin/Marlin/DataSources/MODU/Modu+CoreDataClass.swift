@@ -20,7 +20,7 @@ extension Modu: DataSource {
     static var systemImageName: String? = nil
     
     static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
-    static var imageScale: CGFloat = 0.75
+    static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.75
 }
 
 extension Modu: DataSourceViewBuilder {

@@ -84,6 +84,13 @@ extension UserDefaults {
         bool(forKey: #function)
     }
     
+    func imageScale(_ key: String) -> CGFloat? {
+        if let size = object(forKey: "\(key)ImageScale") as? Float {
+            return CGFloat(size)
+        }
+        return nil
+    }
+    
     // MARK: App features
     var hamburger: Bool {
         bool(forKey: "hamburger")

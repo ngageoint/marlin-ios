@@ -26,6 +26,7 @@ extension Light: DataSource {
     static var imageName: String? = nil
     static var systemImageName: String? = "lightbulb.fill"
     static var color: UIColor = UIColor(argbValue: 0xFFFFC500)
+    static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.5
 }
 
 extension Light: DataSourceViewBuilder {

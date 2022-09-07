@@ -24,6 +24,7 @@ extension DifferentialGPSStation: DataSource {
     static var imageName: String? = "dgps"
     static var systemImageName: String? = nil
     static var color: UIColor = UIColor(argbValue: 0xFFFFB300)
+    static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
 }
 
 extension DifferentialGPSStation: DataSourceViewBuilder {

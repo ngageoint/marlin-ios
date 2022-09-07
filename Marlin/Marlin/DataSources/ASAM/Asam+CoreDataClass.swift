@@ -21,7 +21,7 @@ extension Asam: DataSource {
     static var systemImageName: String? = nil
     
     static var color: UIColor = .black
-    static var imageScale: CGFloat = 0.75
+    static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.75
 }
 
 extension Asam: DataSourceViewBuilder {
