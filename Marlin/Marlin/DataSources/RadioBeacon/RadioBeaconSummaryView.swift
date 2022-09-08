@@ -29,18 +29,12 @@ struct RadioBeaconSummaryView: View {
                 .font(Font.headline6)
                 .foregroundColor(Color.onSurfaceColor)
                 .opacity(0.87)
-            if showMoreDetails {
-                Text(radioBeacon.geopoliticalHeading ?? "")
-                    .font(Font.body2)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.6)
-            }
-            if showSectionHeader {
+            if showMoreDetails || showSectionHeader {
                 Text(radioBeacon.sectionHeader ?? "")
                     .font(Font.body2)
                     .foregroundColor(Color.onSurfaceColor)
                     .opacity(0.6)
-            }
+            }             
             if let morseCode = radioBeacon.morseCode {
                 Text(radioBeacon.morseLetter)
                     .font(Font.headline6)

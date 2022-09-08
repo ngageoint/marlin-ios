@@ -27,8 +27,8 @@ extension MapImage {
         if let dataSource = self as? DataSource {
             let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * type(of:dataSource).imageScale
             
-            // zoom level 100 is a temporary hack to draw a large image for a real map marker
-            if zoomLevel != 100 {
+            // zoom level 36 is a temporary hack to draw a large image for a real map marker
+            if zoomLevel != 36 {
                 if let image = CircleImage(color: dataSource.color, radius: radius, fill: true) {
                     images.append(image)
                     if let dataSourceImage = type(of:dataSource).image?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){

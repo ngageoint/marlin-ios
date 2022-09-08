@@ -26,7 +26,7 @@ extension Light: DataSource {
     static var imageName: String? = nil
     static var systemImageName: String? = "lightbulb.fill"
     static var color: UIColor = UIColor(argbValue: 0xFFFFC500)
-    static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.5
+    static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
 }
 
 extension Light: DataSourceViewBuilder {
@@ -284,31 +284,6 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
     func mapImage(marker: Bool = false, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil) -> [UIImage] {
         var images: [UIImage] = []
         
-        let small = zoomLevel < 13
-        let scale = marker ? 1 : 2
-        
-        
-        if isBuoy && !small {
-            images.append(StructureImage(frame: CGRect(x: 0, y: 0, width: 15 * scale, height: 15 * scale), structure: structure) ?? clearImage)
-        }
-        
-        if isFogSignal {
-            images.append(FogSignalImage(frame: CGRect(x: 0, y: 0, width: 30 * scale, height: 30 * scale), arcWidth: 1.5 * CGFloat(scale), drawArcs: !small) ?? clearImage)
-        }
-        
-        if let lightSectors = lightSectors {
-            let sectorImage = sectorImage(lightSectors: lightSectors, scale: scale, zoomLevel: zoomLevel)
-            images.append(sectorImage)
-        } else if let lightColors = lightColors {
-            let colorImage = colorImage(lightColors: lightColors, scale: scale, zoomLevel: zoomLevel)
-            images.append(colorImage)
-        }
-        
-        if isRacon {
-            let raconImage = raconImage(scale: scale, sectors: azimuthCoverage, zoomLevel: zoomLevel)
-            images.append(raconImage)
-        }
-        
         if UserDefaults.standard.lifeSizeLights, let stringRange = range, let range = Double(stringRange), let tileBounds3857 = tileBounds3857, let lightColors = lightColors {
             let nauticalMilesMeasurement = NSMeasurement(doubleValue: range, unit: UnitLength.nauticalMiles)
             let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
@@ -339,6 +314,8 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
             }
             
             images.append(image)
+        } else {
+            images.append(contentsOf: LightImage.image(light: self, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857))
         }
         
         return images

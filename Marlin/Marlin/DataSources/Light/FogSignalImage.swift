@@ -50,10 +50,10 @@ class FogSignalImage : UIImage {
             }
             
             let innerPath = UIBezierPath()
-            innerPath.addArc(withCenter: center, radius: 1.5,
+            innerPath.addArc(withCenter: center, radius: min(1.5, radius / 10.0),
                              startAngle: 0, endAngle: 360 * (CGFloat.pi / 180.0),
                              clockwise: true)
-            innerPath.lineWidth = drawArcs ? 0.5 : 2
+            innerPath.lineWidth = drawArcs ? 0.5 : 1.0
             labelColor.setStroke()
             innerPath.stroke()
             

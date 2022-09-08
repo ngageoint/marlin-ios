@@ -122,15 +122,13 @@ class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
     }
     
     func raconImage(scale: Int, azimuthCoverage: [ImageSector]? = nil, zoomLevel: Int) -> UIImage? {
+        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * RadioBeacon.imageScale
         let sectors = azimuthCoverage ?? [ImageSector(startDegrees: 0, endDegrees: 360, color: RadioBeacon.color)]
-
-        if zoomLevel > 12 {
-            return RaconImage(frame: CGRect(x: 0, y: 0, width: 100 * scale, height: 20 * scale), sectors: sectors, arcWidth: Double(2 * scale), arcRadius: Double(8 * scale), text: "Racon (\(morseLetter))", darkMode: false)
-        } else if zoomLevel > 7 {
-            return CircleImage(color: RadioBeacon.color, radius: CGFloat(5 * scale), fill: false, arcWidth: 1.5 * CGFloat(scale))
-            
+        
+        if zoomLevel > 8 {
+            return RaconImage(frame: CGRect(x: 0, y: 0, width: 3 * (radius + 3.0), height: 3 * (radius + 3.0)), sectors: sectors, arcWidth: 3.0, arcRadius: radius + 3.0, text: "Racon (\(morseLetter))", darkMode: false)
         } else {
-            return CircleImage(color: RadioBeacon.color, radius: CGFloat(2 * scale), fill: false, arcWidth: 1 * CGFloat(scale))
+            return CircleImage(color: RadioBeacon.color, radius: radius, fill: false, arcWidth: min(3.0, radius / 2.0))
         }
     }
     

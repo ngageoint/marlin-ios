@@ -15,6 +15,93 @@ struct LightSector {
     var text: String
 }
 
+class LightImage {
+    static func image(light: Light, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil) -> [UIImage] {
+        var images: [UIImage] = []
+        
+        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale
+
+        // if the zoom level is greater than 12 draw the structure
+        if zoomLevel > 12 && light.isBuoy {
+            if let structureImage = StructureImage(frame: CGRect(x: 0, y: 0, width: 3 * radius, height: 3 * radius), structure: light.structure) {
+                images.append(structureImage)
+            }
+        }
+        
+        if light.isFogSignal {
+            if let fogSignalImage = FogSignalImage(frame: CGRect(x: 0, y: 0, width: 5 * radius, height: 5 * radius), arcWidth: min(3, radius / 3.0), drawArcs: zoomLevel > 8) {
+                images.append(fogSignalImage)
+            }
+        }
+        
+        // draw the sectors starting at zoom level 8
+        if zoomLevel > 8, let lightSectors = light.lightSectors {
+            if let sectorImage = sectorImage(light: light, lightSectors: lightSectors, scale: 1, zoomLevel: zoomLevel) {
+                images.append(sectorImage)
+            }
+        } else if let lightColors = light.lightColors {
+            // otherwise just draw the colors
+            if let colorImage = colorImage(light: light, lightColors: lightColors, scale: 1, zoomLevel: zoomLevel) {
+                images.append(colorImage)
+            }
+        }
+        
+        if light.isRacon {
+            if let raconImage = raconImage(light: light, scale: 1, sectors: light.azimuthCoverage, zoomLevel: zoomLevel) {
+                images.append(raconImage)
+            }
+        }
+        
+        return images
+    }
+    
+    static func sectorImage(light: Light, lightSectors: [ImageSector], scale: Int, zoomLevel: Int) -> UIImage? {
+        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale
+        if zoomLevel > 8 {
+            return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: 40 * radius, height: 40 * radius), sectors: lightSectors, radius: 9 * radius, fill: false, arcWidth: radius * 0.75)
+        } else {
+            var sectors: [ImageSector] = []
+            if let lightColors = light.lightColors {
+                var count = 0
+                let degreesPerColor = 360.0 / CGFloat(lightColors.count)
+                for color in lightColors {
+                    sectors.append(ImageSector(startDegrees: degreesPerColor * CGFloat(count), endDegrees: degreesPerColor * (CGFloat(count) + 1.0), color: color))
+                    count += 1
+                }
+            }
+            return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: radius, height: radius), sectors: sectors, fill: true, sectorSeparator: false)
+        }
+    }
+    
+    static func colorImage(light: Light, lightColors: [UIColor], scale: Int, zoomLevel: Int) -> UIImage? {
+        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale
+
+        // if zoom level greater than 12, draw the light more detailed, otherwise, draw a dot
+        if zoomLevel > 12 {
+            return LightColorImage(frame: CGRect(x: 0, y: 0, width: 4 * radius, height: 4 * radius), colors: lightColors, arcWidth: 3.0, darkMode: false)
+        } else {
+            var sectors: [ImageSector] = []
+            var count = 0
+            let degreesPerColor = 360.0 / CGFloat(lightColors.count)
+            for color in lightColors {
+                sectors.append(ImageSector(startDegrees: degreesPerColor * CGFloat(count), endDegrees: degreesPerColor * (CGFloat(count) + 1.0), color: color))
+                count += 1
+            }
+            return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: radius, height: radius), sectors: sectors, fill: true, sectorSeparator: false)
+        }
+    }
+    
+    static func raconImage(light: Light, scale: Int, sectors: [ImageSector]? = nil, zoomLevel: Int) -> UIImage? {
+        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale
+
+        if zoomLevel > 10 {
+            return RaconImage(frame: CGRect(x: 0, y: 0, width: 3 * (radius + 3.0), height: 3 * (radius + 3.0)), sectors: sectors, arcWidth: 3.0, arcRadius: radius + 3.0, text: "Racon (\(light.morseLetter))\n\(light.remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false)
+        } else {
+            return CircleImage(color: Light.raconColor, radius: radius, fill: false, arcWidth: min(3.0, radius / 2.0))
+        }
+    }
+}
+
 class LightColorImage : UIImage {
     
     convenience init?(frame: CGRect, colors: [UIColor], arcWidth: CGFloat? = nil, outerStroke: Bool = true, arcRadius: CGFloat? = nil, drawTower: Bool = true, darkMode: Bool = false) {
