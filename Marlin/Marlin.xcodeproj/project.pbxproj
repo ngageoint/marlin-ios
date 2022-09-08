@@ -1301,7 +1301,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "Set by build phase script";
+				CURRENT_PROJECT_VERSION = debug;
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1318,7 +1318,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.1;
+				MARKETING_VERSION = 0.7.2;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.msi.Marlin;
 				PRODUCT_NAME = Marlin;
 				SDKROOT = iphoneos;
@@ -1335,7 +1335,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "Set by build phase script";
+				CURRENT_PROJECT_VERSION = debug;
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1352,7 +1352,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.1;
+				MARKETING_VERSION = 0.7.2;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.msi.Marlin;
 				PRODUCT_NAME = Marlin;
 				SDKROOT = iphoneos;

@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## 0.7.2
+  * DGPS icon is rendered properly
+  * light map image drawing updates
+
 ## 0.7.1
   * ASAM description is not line limited
   * data source size bug fixes
