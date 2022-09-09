@@ -9,8 +9,8 @@ import SwiftUI
 import MapKit
 
 struct MapSettings: View {
-    @AppStorage("showMGRSGrid") var showMGRSGrid: Bool = false
-    @AppStorage("showGARSGrid") var showGARSGrid: Bool = false
+    @AppStorage("showMGRS") var showMGRS: Bool = false
+    @AppStorage("showGARS") var showGARS: Bool = false
     @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
     var body: some View {
         List {
@@ -101,7 +101,7 @@ struct MapSettings: View {
                 .padding(.bottom, 4)
             }
             Section("Grids (Coming soon)") {
-                Toggle(isOn: $showMGRSGrid) {
+                Toggle(isOn: $showMGRS) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("MGRS").font(Font.body1)
                             .foregroundColor(Color.onSurfaceColor.opacity(0.87))
@@ -113,7 +113,7 @@ struct MapSettings: View {
                     .padding(.bottom, 4)
                 }
                 .tint(Color.primaryColor)
-                Toggle(isOn: $showGARSGrid) {
+                Toggle(isOn: $showGARS) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("GARS").font(Font.body1)
                             .foregroundColor(Color.onSurfaceColor.opacity(0.87))

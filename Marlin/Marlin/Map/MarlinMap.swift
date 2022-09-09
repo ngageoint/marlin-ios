@@ -11,6 +11,8 @@ import SwiftUI
 import MapKit
 import Combine
 import CoreData
+import gars_ios
+import mgrs_ios
 
 protocol OverlayRenderable {
     var renderer: MKOverlayRenderer { get }
@@ -40,6 +42,8 @@ struct MarlinMap: UIViewRepresentable {
     @Environment(\.colorScheme) var colorScheme
     
     @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
+    @AppStorage("showGARS") var showGARS: Bool = false
+    @AppStorage("showMGRS") var showMGRS: Bool = false
     @AppStorage("showMapScale") var showMapScale = false
     
     @ObservedObject var mapState: MapState
@@ -155,6 +159,28 @@ struct MarlinMap: UIViewRepresentable {
                 mapView.removeOverlay(osmOverlay)
             }
         }
+        
+        if showGARS {
+            if context.coordinator.garsOverlay == nil {
+                context.coordinator.garsOverlay = GARSTileOverlay(512, 512)
+            }
+            mapView.addOverlay(context.coordinator.garsOverlay!, level: .aboveRoads)
+        } else {
+            if let garsOverlay = context.coordinator.garsOverlay {
+                mapView.removeOverlay(garsOverlay)
+            }
+        }
+        
+        if showMGRS {
+            if context.coordinator.mgrsOverlay == nil {
+                context.coordinator.mgrsOverlay = MGRSTileOverlay(512, 512)
+            }
+            mapView.addOverlay(context.coordinator.mgrsOverlay!, level: .aboveRoads)
+        } else {
+            if let mgrsOverlay = context.coordinator.mgrsOverlay {
+                mapView.removeOverlay(mgrsOverlay)
+            }
+        }
     }
     
     func MKMapRectForCoordinateRegion(region:MKCoordinateRegion) -> MKMapRect {
@@ -176,6 +202,8 @@ struct MarlinMap: UIViewRepresentable {
 class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     var osmOverlay: MKTileOverlay?
+    var garsOverlay: GARSTileOverlay?
+    var mgrsOverlay: MGRSTileOverlay?
 
     var mapView: MKMapView?
     var marlinMap: MarlinMap

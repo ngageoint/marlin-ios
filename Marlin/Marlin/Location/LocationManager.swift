@@ -8,8 +8,8 @@
 import Foundation
 import CoreLocation
 import Combine
-import geopackage_ios
 import sf_ios
+import geopackage_ios
 import ExceptionCatcher
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
@@ -88,7 +88,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
         let rtree = GPKGRTreeIndexExtension(geoPackage: navAreaGeoPackage)
         let rtreeDao = rtree?.tableDao(with: navAreaFeatureDao)
-        guard let resultSet = rtreeDao?.queryFeatures(with: SFPoint(xValue: lastLocation.coordinate.longitude, andYValue: lastLocation.coordinate.latitude).envelope()) else {
+        guard let point = SFPoint(xValue: lastLocation.coordinate.longitude, andYValue: lastLocation.coordinate.latitude), let resultSet = rtreeDao?.queryFeatures(with: point.envelope()) else {
             return
         }
         if resultSet.moveToNext() {

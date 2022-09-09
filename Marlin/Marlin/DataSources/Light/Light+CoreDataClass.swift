@@ -10,8 +10,6 @@ import CoreData
 import MapKit
 import OSLog
 import SwiftUI
-import sf_ios
-import sf_proj_ios
 
 struct LightVolume {
     var volumeQuery: String
