@@ -100,7 +100,7 @@ struct MapSettings: View {
                 .padding(.top, 4)
                 .padding(.bottom, 4)
             }
-            Section("Grids (Coming soon)") {
+            Section("Grids") {
                 Toggle(isOn: $showMGRS) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("MGRS").font(Font.body1)
