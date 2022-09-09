@@ -1386,7 +1386,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.2;
+				MARKETING_VERSION = 0.7.3;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.msi.Marlin;
 				PRODUCT_NAME = Marlin;
 				SDKROOT = iphoneos;
@@ -1420,7 +1420,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.2;
+				MARKETING_VERSION = 0.7.3;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.msi.Marlin;
 				PRODUCT_NAME = Marlin;
 				SDKROOT = iphoneos;

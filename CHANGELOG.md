@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## 0.7.3
+  * Initial data is loaded locally and then updates are fetched when the user first starts the app
+  * MGRS and GARS grids are now loaded based on the users settings
+
 ## 0.7.2
   * DGPS icon is rendered properly
   * light map image drawing updates
