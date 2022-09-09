@@ -28,6 +28,26 @@ extension RadioBeacon: DataSource {
     static var systemImageName: String? = "antenna.radiowaves.left.and.right"
     static var color: UIColor = UIColor(argbValue: 0xFF007BFF)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
+    static var seedDataFiles: [String]? = ["radioBeacon"]
+    
+    static func batchImport(value: Decodable?) async throws {
+        guard let value = value as? RadioBeaconPropertyContainer else {
+            return
+        }
+        let count = value.ngalol.count
+        NSLog("Received \(count) \(Self.key) records.")
+        try await Self.batchImport(from: value.ngalol, taskContext: PersistenceController.shared.newTaskContext())
+    }
+    
+    static func dataRequest() -> [MSIRouter] {
+        let newestRadioBeacon = try? PersistenceController.shared.container.viewContext.fetchFirst(RadioBeacon.self, sortBy: [NSSortDescriptor(keyPath: \RadioBeacon.noticeNumber, ascending: false)])
+        
+        let noticeWeek = Int(newestRadioBeacon?.noticeWeek ?? "0") ?? 0
+        
+        print("Query for radio beacons after year:\(newestRadioBeacon?.noticeYear ?? "") week:\(noticeWeek)")
+        return [MSIRouter.readRadioBeacons(noticeYear: newestRadioBeacon?.noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1))]
+    }
+    
 }
 
 extension RadioBeacon: DataSourceViewBuilder {

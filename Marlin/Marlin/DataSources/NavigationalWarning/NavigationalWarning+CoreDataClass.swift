@@ -47,8 +47,22 @@ extension NavigationalWarning: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFFD32F2F)
     static var imageName: String? = nil
     static var systemImageName: String? = "exclamationmark.triangle.fill"
-    
+    static var seedDataFiles: [String]? = nil
     static var imageScale: CGFloat = 0.66
+    
+    static func batchImport(value: Decodable?) async throws {
+        guard let value = value as? NavigationalWarningPropertyContainer else {
+            return
+        }
+        let count = value.broadcastWarn.count
+        NSLog("Received \(count) \(Self.key) records.")
+        try await Self.batchImport(from: value.broadcastWarn, taskContext: PersistenceController.shared.newTaskContext())
+    }
+    
+    static func dataRequest() -> [MSIRouter] {
+        return [MSIRouter.readNavigationalWarnings]
+    }
+    
     
     var color: UIColor {
         return NavigationalWarning.color

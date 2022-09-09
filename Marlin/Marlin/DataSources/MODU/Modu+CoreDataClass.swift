@@ -18,9 +18,24 @@ extension Modu: DataSource {
     static var key: String = "modu"
     static var imageName: String? = "modu"
     static var systemImageName: String? = nil
-    
+    static var seedDataFiles: [String]? = ["modu"]
     static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.75
+    
+    static func batchImport(value: Decodable?) async throws {
+        guard let value = value as? ModuPropertyContainer else {
+            return
+        }
+        let count = value.modu.count
+        NSLog("Received \(count) \(Self.key) records.")
+        try await Modu.batchImport(from: value.modu, taskContext: PersistenceController.shared.newTaskContext())
+    }
+    
+    static func dataRequest() -> [MSIRouter] {
+        let newestModu = try? PersistenceController.shared.container.viewContext.fetchFirst(Modu.self, sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)])
+        return [MSIRouter.readModus(date: newestModu?.dateString)]
+    }
+    
 }
 
 extension Modu: DataSourceViewBuilder {
@@ -86,7 +101,7 @@ class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
         return batchInsertRequest
     }
     
-    static func batchImport(from propertiesList: [ModuProperties], taskContext: NSManagedObjectContext, viewContext: NSManagedObjectContext) async throws {
+    static func batchImport(from propertiesList: [ModuProperties], taskContext: NSManagedObjectContext) async throws {
         guard !propertiesList.isEmpty else { return }
         
         // Add name and author to identify source of persistent history changes.

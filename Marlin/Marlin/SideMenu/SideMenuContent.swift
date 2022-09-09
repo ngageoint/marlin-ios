@@ -97,10 +97,6 @@ struct SideMenuContent: View {
             }
             
             HStack {
-                Text("Settings")
-                    .padding([.leading, .top, .bottom, .trailing], 8)
-                    .font(Font.overline)
-                    .foregroundColor(Color.onBackgroundColor.opacity(0.6))
                 Spacer()
             }
             .padding(.top, 16)

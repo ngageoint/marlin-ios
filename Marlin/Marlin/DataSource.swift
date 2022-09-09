@@ -18,7 +18,14 @@ struct Throwable<T: Decodable>: Decodable {
     }
 }
 
-protocol DataSource {
+protocol BatchImportable {
+    static func batchImport(value: Decodable?) async throws
+    static func dataRequest() -> [MSIRouter]
+    static var key: String { get }
+    static var seedDataFiles: [String]? { get }
+}
+
+protocol DataSource: BatchImportable {
     static var isMappable: Bool { get }
     static var dataSourceName: String { get }
     static var fullDataSourceName: String { get }

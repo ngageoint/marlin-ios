@@ -22,9 +22,22 @@ extension DFRS: DataSource {
     static var key: String = "dfrs"
     static var imageName: String? = nil
     static var systemImageName: String? = "antenna.radiowaves.left.and.right.circle"
-    
+    static var seedDataFiles: [String]? = ["dfrs"]
     static var color: UIColor = UIColor(argbValue: 0xFF00E676)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
+    
+    static func batchImport(value: Decodable?) async throws {
+        guard let value = value as? DFRSPropertyContainer else {
+            return
+        }
+        let count = value.dfrs.count
+        NSLog("Received \(count) \(Self.key) records.")
+        try await Self.batchImport(from: value.dfrs, taskContext: PersistenceController.shared.newTaskContext())
+    }
+    
+    static func dataRequest() -> [MSIRouter] {
+        return [MSIRouter.readDFRS]
+    }
 }
 
 extension DFRS: DataSourceViewBuilder {
@@ -351,6 +364,24 @@ struct DFRSProperties: Decodable {
         }
         
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+}
+
+extension DFRSArea: BatchImportable {
+    static var seedDataFiles: [String]? = ["dfrsAreas"]
+    static var key: String = "dfrsAreas"
+    
+    static func batchImport(value: Decodable?) async throws {
+        guard let value = value as? DFRSAreaPropertyContainer else {
+            return
+        }
+        let count = value.areas.count
+        NSLog("Received \(count) DFRS Area records.")
+        try await Self.batchImport(from: value.areas, taskContext: PersistenceController.shared.newTaskContext())
+    }
+    
+    static func dataRequest() -> [MSIRouter] {
+        return [MSIRouter.readDFRSAreas]
     }
 }
 

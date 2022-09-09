@@ -11,6 +11,7 @@ import CoreData
 import OSLog
 import MapKit
 import SwiftUI
+import Alamofire
 
 extension Asam: DataSource {
     static var isMappable: Bool = true
@@ -18,10 +19,25 @@ extension Asam: DataSource {
     static var fullDataSourceName: String = NSLocalizedString("Anti-Shipping Activity Messages", comment: "ASAM data source display name")
     static var key: String = "asam"
     static var imageName: String? = "asam"
+    static var seedDataFiles: [String]? = ["asam"]
     static var systemImageName: String? = nil
     
     static var color: UIColor = .black
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.75
+    
+    static func batchImport(value: Decodable?) async throws {
+        guard let value = value as? AsamPropertyContainer else {
+            return
+        }
+        let count = value.asam.count
+        NSLog("Received \(count) \(Self.key) records.")
+        try await Self.batchImport(from: value.asam, taskContext: PersistenceController.shared.newTaskContext())
+    }
+    
+    static func dataRequest() -> [MSIRouter] {
+        let newestAsam = try? PersistenceController.shared.container.viewContext.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)])
+        return [MSIRouter.readAsams(date: newestAsam?.dateString)]
+    }
 }
 
 extension Asam: DataSourceViewBuilder {

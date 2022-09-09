@@ -18,13 +18,27 @@ extension Port: DataSource {
     
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("Ports", comment: "Port data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Ports", comment: "Port data source display name")
+    static var fullDataSourceName: String = NSLocalizedString("World Ports", comment: "Port data source display name")
     static var key: String = "port"
     static var imageName: String? = "port"
     static var systemImageName: String? = nil
-    
+    static var seedDataFiles: [String]? = ["port"]
     static var color: UIColor = UIColor(argbValue: 0xFF5856d6)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.75
+    
+    static func batchImport(value: Decodable?) async throws {
+        guard let value = value as? PortPropertyContainer else {
+            return
+        }
+        let count = value.ports.count
+        NSLog("Received \(count) \(Self.key) records.")
+        try await Port.batchImport(from: value.ports, taskContext: PersistenceController.shared.newTaskContext())
+    }
+    
+    static func dataRequest() -> [MSIRouter] {
+        return [MSIRouter.readPorts]
+    }
+    
 }
 
 extension Port: DataSourceViewBuilder {

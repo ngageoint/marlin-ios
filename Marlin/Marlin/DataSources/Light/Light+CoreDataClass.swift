@@ -27,6 +27,32 @@ extension Light: DataSource {
     static var systemImageName: String? = "lightbulb.fill"
     static var color: UIColor = UIColor(argbValue: 0xFFFFC500)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
+    static var seedDataFiles: [String]? = ["light110","light111","light112","light113","light114","light115","light116"]
+    
+    static func batchImport(value: Decodable?) async throws {
+        guard let value = value as? LightsPropertyContainer else {
+            return
+        }
+        let count = value.ngalol.count
+        NSLog("Received \(count) \(Self.key) records.")
+        try await Light.batchImport(from: value.ngalol, taskContext: PersistenceController.shared.newTaskContext())
+    }
+    
+    static func dataRequest() -> [MSIRouter] {
+        var requests: [MSIRouter] = []
+        
+        for lightVolume in Light.lightVolumes {
+            let newestLight = try? PersistenceController.shared.container.viewContext.fetchFirst(Light.self, sortBy: [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)], predicate: NSPredicate(format: "volumeNumber = %@", lightVolume.volumeNumber))
+            
+            let noticeWeek = Int(newestLight?.noticeWeek ?? "0") ?? 0
+            
+            print("Query for lights in volume \(lightVolume) after year:\(newestLight?.noticeYear ?? "") week:\(noticeWeek)")
+            
+            requests.append(MSIRouter.readLights(volume: lightVolume.volumeQuery, noticeYear: newestLight?.noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1)))
+        }
+            
+        return requests
+    }
 }
 
 extension Light: DataSourceViewBuilder {

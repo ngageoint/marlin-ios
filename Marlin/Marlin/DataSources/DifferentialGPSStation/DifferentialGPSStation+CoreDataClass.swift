@@ -25,6 +25,26 @@ extension DifferentialGPSStation: DataSource {
     static var systemImageName: String? = nil
     static var color: UIColor = UIColor(argbValue: 0xFFFFB300)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
+    static var seedDataFiles: [String]? = ["dgps"]
+    
+    static func batchImport(value: Decodable?) async throws {
+        guard let value = value as? DifferentialGPSStationPropertyContainer else {
+            return
+        }
+        let count = value.ngalol.count
+        NSLog("Received \(count) \(Self.key) records.")
+        try await Self.batchImport(from: value.ngalol, taskContext: PersistenceController.shared.newTaskContext())
+    }
+    
+    static func dataRequest() -> [MSIRouter] {
+        let newestDifferentialGPSStation = try? PersistenceController.shared.container.viewContext.fetchFirst(DifferentialGPSStation.self, sortBy: [NSSortDescriptor(keyPath: \DifferentialGPSStation.noticeNumber, ascending: false)])
+        
+        let noticeWeek = Int(newestDifferentialGPSStation?.noticeWeek ?? "0") ?? 0
+        
+        print("Query for differential gps stations after year:\(newestDifferentialGPSStation?.noticeYear ?? "") week:\(noticeWeek)")
+        
+        return [MSIRouter.readDifferentialGPSStations(noticeYear: newestDifferentialGPSStation?.noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1))]
+    }
 }
 
 extension DifferentialGPSStation: DataSourceViewBuilder {
