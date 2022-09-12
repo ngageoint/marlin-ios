@@ -56,7 +56,7 @@ extension Light: DataSource {
 extension Light: DataSourceViewBuilder {
     var detailView: AnyView {
         if let featureNumber = self.featureNumber, let volumeNumber = self.volumeNumber {
-            return AnyView(LightDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber))
+            return AnyView(LightDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber).navigationTitle("\(name ?? Light.dataSourceName)" ))
         }
         return AnyView(EmptyView())
     }
@@ -172,7 +172,7 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         }
         var sectors: [ImageSector] = []
         
-        let pattern = #"(?<visible>(Visible)?)((?<color>[A-Z]+)?)\.?(?<unintensified>(\(unintensified\))?)( (?<startdeg>(\d*))°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))°)(?<endminutes>[0-9]*)[\`']?"#
+        let pattern = #"(?<visible>(Visible)?)(?<fullLightObscured>(Partially obscured)?)((?<color>[A-Z]+)?)\.?(?<unintensified>(\(unintensified\))?)(?<obscured>(\(partially obscured\))?)( (?<startdeg>(\d*))°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))°)(?<endminutes>[0-9]*)[\`']?"#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
                               in: remarks)
@@ -186,17 +186,25 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
             var end: Double = 0.0
             var start: Double?
             var visibleColor: UIColor?
-            for component in ["visible", "color", "startdeg", "startminutes", "enddeg", "endminutes"] {
+            var obscured: Bool = false
+            var fullLightObscured: Bool = false
+            for component in ["visible", "fullLightObscured", "color", "unintensified", "obscured", "startdeg", "startminutes", "enddeg", "endminutes"] {
 
                 
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: remarks)
+                   let range = Range(nsrange, in: remarks),
+                   !range.isEmpty
                 {
                     if component == "visible" {
                         visibleColor = lightColors?[0]
+                    } else if component == "fullLightObscured" {
+                        visibleColor = lightColors?[0]
+                        fullLightObscured = true
                     } else if component == "color" {
                         color = "\(remarks[range])"
+                    } else if component == "obscured" {
+                        obscured = true
                     } else if component == "startdeg" {
                         if start != nil {
                             start = start! + (Double(remarks[range]) ?? 0.0) + 90.0
@@ -217,22 +225,31 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
                 }
             }
             let uicolor: UIColor = {
-                if color == "W" {
+                if obscured || fullLightObscured {
+                    return visibleColor ?? (lightColors?[0] ?? .black)
+                } else if color == "W" {
                     return Light.whiteLight
                 } else if color == "R" {
                     return Light.redLight
                 } else if color == "G" {
                     return Light.greenLight
                 }
-                return visibleColor ?? UIColor.clear
+                return visibleColor ?? (lightColors?[0] ?? UIColor.clear)
             }()
             if let start = start {
-                sectors.append(ImageSector(startDegrees: start, endDegrees: end, color: uicolor, text: color))
+                if end < start {
+                    end += 360
+                }
+                sectors.append(ImageSector(startDegrees: start, endDegrees: end, color: uicolor, text: color, obscured: obscured || fullLightObscured))
             } else {
                 if end <= previousEnd {
                     end += 360
                 }
-                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: uicolor, text: color))
+                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: uicolor, text: color, obscured: obscured || fullLightObscured))
+            }
+            if fullLightObscured {
+                // add the sector for the part of the light which is not obscured
+                sectors.append(ImageSector(startDegrees: end, endDegrees: (start ?? 0) + 360, color: visibleColor ?? (lightColors?[0] ?? UIColor.clear)))
             }
             previousEnd = end
         })

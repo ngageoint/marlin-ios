@@ -13,6 +13,7 @@ struct ImageSector {
     var endDegrees: Double
     var color: UIColor
     var text: String?
+    var obscured: Bool = false
 }
 
 class CircleImage: UIImage {
@@ -99,11 +100,22 @@ class CircleImage: UIImage {
                 if fill {
                     piePath.addLine(to: CGPoint(x: finalRadius, y: finalRadius))
                     piePath.close()
-                    sector.color.setFill()
+                    if sector.obscured {
+                        UIColor.lightGray.setFill()
+                    } else {
+                        sector.color.setFill()
+                    }
                     piePath.fill()
+
                 } else {
-                    piePath.lineWidth = strokeWidth
-                    sector.color.setStroke()
+                    if sector.obscured {
+                        piePath.setLineDash([3.0, 3.0], count: 2, phase: 0.0)
+                        piePath.lineWidth = strokeWidth / 2.0
+                        UIColor.lightGray.setStroke()
+                    } else {
+                        piePath.lineWidth = strokeWidth
+                        sector.color.setStroke()
+                    }
                     piePath.stroke()
                 }
                 

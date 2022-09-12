@@ -38,12 +38,12 @@ struct LightDetailView: View {
                     .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     .onAppear {
                         if lights.count > 0 {
-                            mapState.center = MKCoordinateRegion(center: lights[0].coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
+                            mapState.center = MKCoordinateRegion(center: lights[0].coordinate, zoom: 14.5, bounds: CGRect(x: 0, y: 0, width: 600, height: 600))
                         }
                     }
                     .onChange(of: lights.first) { light in
                         if let firstLight = light {
-                            mapState.center = MKCoordinateRegion(center: firstLight.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
+                            mapState.center = MKCoordinateRegion(center: firstLight.coordinate, zoom: 14.5, bounds: CGRect(x: 0, y: 0, width: 600, height: 600))
                         }
                     }
                     Group {
@@ -76,9 +76,6 @@ struct LightDetailView: View {
                 .frame(maxWidth:.infinity)
                 .background(Color.surfaceColor)
                 .modifier(CardModifier())
-                .onAppear {
-                    mapState.center = MKCoordinateRegion(center: self.lights[0].coordinate, span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))
-                }
             } header: {
                 EmptyView().frame(width: 0, height: 0, alignment: .leading)
             }

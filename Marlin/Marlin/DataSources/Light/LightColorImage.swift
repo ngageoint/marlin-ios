@@ -58,7 +58,7 @@ class LightImage {
     static func sectorImage(light: Light, lightSectors: [ImageSector], scale: Int, zoomLevel: Int) -> UIImage? {
         let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale
         if zoomLevel > 8 {
-            return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: 40 * radius, height: 40 * radius), sectors: lightSectors, radius: 9 * radius, fill: false, arcWidth: radius * 0.75)
+            return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: 40 * radius, height: 40 * radius), sectors: lightSectors, radius: 8 * radius, fill: false, arcWidth: radius * 0.75)
         } else {
             var sectors: [ImageSector] = []
             if let lightColors = light.lightColors {
