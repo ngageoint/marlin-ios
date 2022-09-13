@@ -99,7 +99,7 @@ class DFRS: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         return kCLLocationCoordinate2DInvalid
     }
     
-    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?) -> [UIImage] {
+    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {
         return defaultMapImage(marker: marker, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
     }
     

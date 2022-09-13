@@ -429,7 +429,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         if let enlarged = annotation as? EnlargedAnnotation {
             let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: EnlargedAnnotationView.ReuseID, for: enlarged)
             let mapImage = enlarged.mapImage
-            let mapImages = mapImage.mapImage(marker: true, zoomLevel: 36, tileBounds3857: nil)
+            let mapImages = mapImage.mapImage(marker: true, zoomLevel: 36, tileBounds3857: nil, context: nil)
             var finalImage = UIImage.clearImage()
             for mapImage in mapImages {
                 finalImage = UIImage.combineCentered(image1: finalImage, image2: mapImage) ?? UIImage.clearImage()

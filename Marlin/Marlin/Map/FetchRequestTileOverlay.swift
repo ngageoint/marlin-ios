@@ -61,7 +61,7 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
         // border the tile by 20 miles since that is as far as any light i have seen.  if that is wrong, update
         // border has to be at least 30 pixels as well
         // miles to meters = miles * 1609.344
-        let tolerance = max(20.0 * 1609.344, ((maxTileX - minTileX) / self.tileSize.width) * 30)
+        let tolerance = max(30.0 * 1609.344, ((maxTileX - minTileX) / self.tileSize.width) * 30)
         
         let neCornerTolerance = coord3857To4326(y: maxTileY + tolerance, x: maxTileX + tolerance)
         let swCornerTolerance = coord3857To4326(y: minTileY - tolerance, x: minTileX - tolerance)
@@ -103,6 +103,8 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
             let layer = CALayer()
             layer.frame = rect
             layer.backgroundColor = UIColor.clear.cgColor
+//            layer.borderColor = UIColor.red.cgColor
+//            layer.borderWidth = 5
             UIGraphicsBeginImageContext(layer.bounds.size)
             layer.render(in: UIGraphicsGetCurrentContext()!)
         }
@@ -110,7 +112,8 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
         
         if let objects = objects as? [MapImage] {
             for object in objects {
-                let mapImages = object.mapImage(marker: false, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+                // xxx here
+                let mapImages = object.mapImage(marker: false, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: UIGraphicsGetCurrentContext())
                 for mapImage in mapImages {
                     let object3857Location = coord4326To3857(longitude: object.longitude, latitude: object.latitude)
                     let xPosition = (((object3857Location.x - tileBounds3857.swCorner.x) / (tileBounds3857.neCorner.x - tileBounds3857.swCorner.x)) * self.tileSize.width)

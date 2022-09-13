@@ -80,7 +80,11 @@ extension UserDefaults {
         }
     }
     
-    @objc var lifeSizeLights: Bool {
+    @objc var actualRangeLights: Bool {
+        bool(forKey: #function)
+    }
+    
+    @objc var actualRangeSectorLights: Bool {
         bool(forKey: #function)
     }
     

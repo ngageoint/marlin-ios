@@ -14,6 +14,7 @@ struct ImageSector {
     var color: UIColor
     var text: String?
     var obscured: Bool = false
+    var range: Double?
 }
 
 class CircleImage: UIImage {

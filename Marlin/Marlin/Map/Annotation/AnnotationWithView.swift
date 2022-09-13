@@ -15,7 +15,7 @@ protocol AnnotationWithView: MKAnnotation {
 }
 
 protocol MapImage {
-    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?) -> [UIImage]
+    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext?) -> [UIImage]
     var latitude: Double { get }
     var longitude: Double { get }
     var coordinate: CLLocationCoordinate2D { get }

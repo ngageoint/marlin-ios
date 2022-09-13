@@ -34,9 +34,9 @@
 	<integer>8</integer>
 	<key>userTabs</key>
 	<integer>3</integer>
-	<key>lifeSizeLights</key>
+	<key>actualRangeLights</key>
 	<false/>
-	<key>lifeSizeSectorLights</key>
+	<key>actualRangeSectorLights</key>
 	<false/>
 	<key>showGARS</key>
 	<false/>

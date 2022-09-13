@@ -131,7 +131,7 @@ class RadioBeacon: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         return "\(String(characteristic[characteristic.startIndex..<newline]))"
     }
     
-    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?) -> [UIImage] {
+    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {
         let scale = marker ? 1 : 2
         
         var images: [UIImage] = []

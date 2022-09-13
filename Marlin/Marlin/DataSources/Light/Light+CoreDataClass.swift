@@ -84,7 +84,7 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         LightVolume(volumeQuery: "116", volumeNumber: "PUB 116")
     ]
     
-    static let whiteLight = UIColor(argbValue: 0xdeffff00)
+    static let whiteLight = UIColor(argbValue: 0xffffff00)
     static let greenLight = UIColor(argbValue: 0xff0de319)
     static let redLight = UIColor(argbValue: 0xfffa0000)
     static let yellowLight = UIColor(argbValue: 0xffffff00)
@@ -236,20 +236,41 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
                 }
                 return visibleColor ?? (lightColors?[0] ?? UIColor.clear)
             }()
+            var sectorRange: Double? = nil
+            if let rangeString = range {
+                for split in rangeString.split(separator: "\n") {
+                    if split.starts(with: color) {
+                        let pattern = #"[0-9]+$"#
+                        let regex = try? NSRegularExpression(pattern: pattern, options: [])
+                        let rangePart = "\(split)".trimmingCharacters(in: .whitespacesAndNewlines)
+                        let match = regex?.firstMatch(in: rangePart, range: NSRange(rangePart.startIndex..<rangePart.endIndex, in: rangePart))
+                        
+                        if let nsrange = match?.range, nsrange.location != NSNotFound,
+                           let matchRange = Range(nsrange, in: rangePart),
+                           !matchRange.isEmpty
+                        {
+                            let colorRange = rangePart[matchRange]
+                            if !colorRange.isEmpty {
+                                sectorRange = Double(colorRange)
+                            }
+                        }
+                    }
+                }
+            }
             if let start = start {
                 if end < start {
                     end += 360
                 }
-                sectors.append(ImageSector(startDegrees: start, endDegrees: end, color: uicolor, text: color, obscured: obscured || fullLightObscured))
+                sectors.append(ImageSector(startDegrees: start, endDegrees: end, color: uicolor, text: color, obscured: obscured || fullLightObscured, range: sectorRange))
             } else {
                 if end <= previousEnd {
                     end += 360
                 }
-                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: uicolor, text: color, obscured: obscured || fullLightObscured))
+                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: uicolor, text: color, obscured: obscured || fullLightObscured, range: sectorRange))
             }
             if fullLightObscured {
                 // add the sector for the part of the light which is not obscured
-                sectors.append(ImageSector(startDegrees: end, endDegrees: (start ?? 0) + 360, color: visibleColor ?? (lightColors?[0] ?? UIColor.clear)))
+                sectors.append(ImageSector(startDegrees: end, endDegrees: (start ?? 0) + 360, color: visibleColor ?? (lightColors?[0] ?? UIColor.clear), range: sectorRange))
             }
             previousEnd = end
         })
@@ -286,19 +307,32 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         return radians * 180.0 / .pi
     }
 
-    func circleCoordinates(center: CLLocationCoordinate2D, radiusMeters: Double) -> [CLLocationCoordinate2D] {
+    func circleCoordinates(center: CLLocationCoordinate2D, radiusMeters: Double, startDegrees: Double = 0.0, endDegrees: Double = 360.0) -> [CLLocationCoordinate2D] {
+        print("xxx start degrees \(startDegrees) end degrees \(endDegrees)")
         var coordinates: [CLLocationCoordinate2D] = []
         let centerLatRad = toRadians(degrees: center.latitude)
         let centerLonRad = toRadians(degrees: center.longitude)
         let dRad = radiusMeters / 6378137
         
-        for i in 0...360 {
+        let radial = toRadians(degrees: Double(startDegrees))
+        let latRad = asin(sin(centerLatRad) * cos(dRad) + cos(centerLatRad) * sin(dRad) * cos(radial))
+        let dlonRad = atan2(sin(radial) * sin(dRad) * cos(centerLatRad), cos(dRad) - sin(centerLatRad) * sin(latRad))
+        let lonRad = fmod((centerLonRad + dlonRad + .pi), 2.0 * .pi) - .pi
+        coordinates.append(CLLocationCoordinate2D(latitude: toDegrees(radians: latRad), longitude: toDegrees(radians: lonRad)))
+        
+        for i in Int(startDegrees)...Int(endDegrees) {
             let radial = toRadians(degrees: Double(i))
             let latRad = asin(sin(centerLatRad) * cos(dRad) + cos(centerLatRad) * sin(dRad) * cos(radial))
             let dlonRad = atan2(sin(radial) * sin(dRad) * cos(centerLatRad), cos(dRad) - sin(centerLatRad) * sin(latRad))
             let lonRad = fmod((centerLonRad + dlonRad + .pi), 2.0 * .pi) - .pi
             coordinates.append(CLLocationCoordinate2D(latitude: toDegrees(radians: latRad), longitude: toDegrees(radians: lonRad)))
         }
+        
+        let endRadial = toRadians(degrees: Double(endDegrees))
+        let endLatRad = asin(sin(centerLatRad) * cos(dRad) + cos(centerLatRad) * sin(dRad) * cos(endRadial))
+        let endDlonRad = atan2(sin(endRadial) * sin(dRad) * cos(centerLatRad), cos(dRad) - sin(centerLatRad) * sin(endLatRad))
+        let endLonRad = fmod((centerLonRad + endDlonRad + .pi), 2.0 * .pi) - .pi
+        coordinates.append(CLLocationCoordinate2D(latitude: toDegrees(radians: endLatRad), longitude: toDegrees(radians: endLonRad)))
         
         return coordinates
     }
@@ -322,44 +356,76 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         return (x:x, y:y);
     }
     
-    func mapImage(marker: Bool = false, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil) -> [UIImage] {
+    func mapImage(marker: Bool = false, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil, context: CGContext? = nil) -> [UIImage] {
         var images: [UIImage] = []
         
-        if UserDefaults.standard.lifeSizeLights, let stringRange = range, let range = Double(stringRange), let tileBounds3857 = tileBounds3857, let lightColors = lightColors {
-            let nauticalMilesMeasurement = NSMeasurement(doubleValue: range, unit: UnitLength.nauticalMiles)
-            let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
-
-            let circleCoordinates = circleCoordinates(center: self.coordinate, radiusMeters: metersMeasurement.value)
-            let size = CGSize(width: TILE_SIZE, height: TILE_SIZE)
-            let renderer = UIGraphicsImageRenderer(size: size)
-            let image = renderer.image { _ in
-                let lightPixel = coordinateToPixel(c: coordinate, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
-                let path = UIBezierPath()
-                
-                var pixel = coordinateToPixel(c: circleCoordinates[0], zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
-                pixel.x = lightPixel.x - pixel.x + (size.width / 2.0)
-                pixel.y = lightPixel.y - pixel.y + (size.height / 2.0)
-                
-                path.move(to: pixel)
-                for circleCoordinate in circleCoordinates {
-                    pixel = coordinateToPixel(c: circleCoordinate, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
-                    pixel.x = lightPixel.x - pixel.x + (size.width / 2.0)
-                    pixel.y = lightPixel.y - pixel.y + (size.height / 2.0)
-                    path.addLine(to: pixel)
-                }
-                path.close()
-                lightColors[0].withAlphaComponent(0.2).setFill()
-                lightColors[0].setStroke()
-                path.fill()
-                path.stroke()
+        if UserDefaults.standard.actualRangeSectorLights, let tileBounds3857 = tileBounds3857, let lightSectors = lightSectors {
+            if context == nil {
+                let size = CGSize(width: TILE_SIZE, height: TILE_SIZE)
+                UIGraphicsBeginImageContext(size)
             }
-            
-            images.append(image)
+            if let context: CGContext = context ?? UIGraphicsGetCurrentContext() {
+                actualSizeSectorLight(lightSectors: lightSectors, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context)
+            }
+        } else if UserDefaults.standard.actualRangeLights, let stringRange = range, let range = Double(stringRange), let tileBounds3857 = tileBounds3857, let lightColors = lightColors {
+            if context == nil {
+                let size = CGSize(width: TILE_SIZE, height: TILE_SIZE)
+                UIGraphicsBeginImageContext(size)
+            }
+            if let context: CGContext = context ?? UIGraphicsGetCurrentContext() {
+                actualSizeNonSectorLight(lightColors: lightColors, range: range, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context)
+            }
         } else {
             images.append(contentsOf: LightImage.image(light: self, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857))
         }
         
         return images
+    }
+    
+    func actualSizeSectorLight(lightSectors: [ImageSector], zoomLevel: Int, tileBounds3857: MapBoundingBox, context: CGContext) {
+        for sector in lightSectors.sorted(by: { one, two in
+            return one.range ?? 0.0 < two.range ?? 0.0
+        }) {
+            let nauticalMilesMeasurement = NSMeasurement(doubleValue: sector.range ?? 0.0, unit: UnitLength.nauticalMiles)
+            let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
+            
+            let circleCoordinates = circleCoordinates(center: self.coordinate, radiusMeters: metersMeasurement.value, startDegrees: sector.startDegrees + 90.0, endDegrees: sector.endDegrees + 90.0)
+            let path = UIBezierPath()
+            
+            var pixel = coordinateToPixel(c: self.coordinate, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+            path.move(to: pixel)
+            for circleCoordinate in circleCoordinates {
+                pixel = coordinateToPixel(c: circleCoordinate, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+                path.addLine(to: pixel)
+            }
+            path.close()
+            sector.color.withAlphaComponent(0.1).setFill()
+            sector.color.setStroke()
+            path.lineWidth = 3
+            
+            path.fill()
+            path.stroke()
+        }
+    }
+    
+    func actualSizeNonSectorLight(lightColors: [UIColor], range: Double, zoomLevel: Int, tileBounds3857: MapBoundingBox, context: CGContext) {
+        let nauticalMilesMeasurement = NSMeasurement(doubleValue: range, unit: UnitLength.nauticalMiles)
+        let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
+        
+        let circleCoordinates = circleCoordinates(center: self.coordinate, radiusMeters: metersMeasurement.value)
+        let path = UIBezierPath()
+        
+        var pixel = coordinateToPixel(c: circleCoordinates[0], zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+        path.move(to: pixel)
+        for circleCoordinate in circleCoordinates {
+            pixel = coordinateToPixel(c: circleCoordinate, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+            path.addLine(to: pixel)
+        }
+        path.close()
+        lightColors[0].withAlphaComponent(0.1).setFill()
+        lightColors[0].setStroke()
+        path.fill()
+        path.stroke()
     }
     
     var azimuthCoverage: [ImageSector]? {

@@ -308,7 +308,7 @@ class Port: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         location.distance(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
     }
     
-    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?) -> [UIImage] {
+    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {
         return defaultMapImage(marker: marker, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
     }
     

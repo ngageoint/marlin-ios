@@ -13,16 +13,28 @@ struct SettingsView: View {
     let buildVersion = Bundle.main.buildVersionNumber ?? ""
     @State var tapCount: Int = 1
     
-    @AppStorage("lifeSizeLights") var lifeSizeLights = false
     @AppStorage("showMapScale") var showMapScale = false
     
     var body: some View {
         List {
             NavigationLink {
+                DisplaySettings()
+            } label: {
+                Image(systemName: "dial")
+                    .tint(Color.onSurfaceColor)
+                    .opacity(0.60)
+                Text("Display Settings")
+            }
+            
+            NavigationLink {
                 DisclaimerView()
             } label: {
+                Image(systemName: "shield.lefthalf.filled")
+                    .tint(Color.onSurfaceColor)
+                    .opacity(0.60)
                 Text("Disclaimer")
             }
+            
             NavigationLink {
                 VStack {
                     Text("Marlin v\(version)b\(buildVersion)")
@@ -32,9 +44,15 @@ struct SettingsView: View {
                 .padding([.leading, .top, .bottom, .trailing], 16)
                 .navigationTitle("About Marlin v\(version)")
             } label: {
+                Image(systemName: "info.circle")
+                    .tint(Color.onSurfaceColor)
+                    .opacity(0.60)
                 Text("About")
             }
             HStack {
+                Image("marlin_small")
+                    .tint(Color.onSurfaceColor)
+                    .opacity(0.60)
                 Text("Marlin v\(version)")
                 Spacer()
             }
@@ -45,11 +63,6 @@ struct SettingsView: View {
             
             if tapCount > 5 {
                 Section("Developer Tools") {
-                    Toggle(isOn: $lifeSizeLights, label: {
-                        Image(systemName: "lightbulb.fill")
-                        Text("Lights Show Distance")
-                    })
-                    .padding([.top, .bottom], 8)
                     Toggle(isOn: $showMapScale, label: {
                         Image(systemName: "ruler.fill")
                         Text("Show Map Scale (requires restart)")
