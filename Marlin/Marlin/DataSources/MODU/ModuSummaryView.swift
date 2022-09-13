@@ -20,23 +20,15 @@ struct ModuSummaryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(modu.dateString ?? "")
-                .font(Font.overline)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.45)
+                .overline()
             Text("\(modu.name ?? "")")
-                .font(Font.headline6)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.87)
+                .primary()
             Text("Rig Status: \(modu.rigStatus ?? "")")
                 .lineLimit(1)
-                .font(Font.body2)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.6)
+                .secondary()
             Text("Special Status: \(modu.specialStatus ?? "")")
                 .lineLimit(1)
-                .font(Font.body2)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.6)
+                .secondary()
             ModuActionBar(modu: modu, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }

@@ -22,13 +22,9 @@ struct NavigationalWarningDetailView: View {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(navigationalWarning.dateString ?? "")
-                        .font(Font.overline)
-                        .foregroundColor(Color.onSurfaceColor)
-                        .opacity(0.45)
+                        .overline()
                     Text("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
-                        .font(Font.headline6)
-                        .foregroundColor(Color.onSurfaceColor)
-                        .opacity(0.87)
+                        .primary()
                     if let status = navigationalWarning.status {
                         Property(property: "Status", value: status)
                     }
@@ -44,35 +40,25 @@ struct NavigationalWarningDetailView: View {
                     NavigationalWarningActionBar(navigationalWarning: navigationalWarning)
                 }
                 .padding(.all, 16)
-                .background(Color.surfaceColor)
-                .modifier(CardModifier())
+                .card()
             } header: {
                 EmptyView().frame(width: 0, height: 0, alignment: .leading)
             }
-            .padding(.bottom, -20)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
+            .dataSourceSection()
             
             Section("Text") {
                 Text(navigationalWarning.text ?? "")
                     .multilineTextAlignment(.leading)
-                    .font(Font.body2)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.6)
+                    .secondary()
                     .frame(maxWidth:.infinity, alignment: .leading)
                     .padding(.all, 16)
-                    .background(Color.surfaceColor)
-                    .modifier(CardModifier())
+                    .card()
             }
-            .padding(.bottom, -20)
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color.clear)
+            .dataSourceSection()
         }
-        .listStyle(.plain)
-        .background(Color.backgroundColor)
+        .dataSourceDetailList()
         .navigationTitle("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
         .navigationBarTitleDisplayMode(.inline)
-        .padding([.leading, .trailing], -8)
     }
 }
 

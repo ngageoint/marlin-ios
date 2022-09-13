@@ -22,36 +22,24 @@ struct DifferentialGPSStationSummaryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("\(differentialGPSStation.featureNumber) \(differentialGPSStation.volumeNumber ?? "")")
-                .font(Font.overline)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.45)
+                .overline()
             Text("\(differentialGPSStation.name ?? "")")
-                .font(Font.headline6)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.87)
+                .primary()
             if showMoreDetails {
                 Text(differentialGPSStation.geopoliticalHeading ?? "")
-                    .font(Font.body2)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.6)
+                    .secondary()
             }
             if showSectionHeader {
                 Text(differentialGPSStation.sectionHeader ?? "")
-                    .font(Font.body2)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.6)
+                    .secondary()
             }
             if let stationID = differentialGPSStation.stationID, stationID != "" {
                 Text(stationID)
-                    .font(Font.body2)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.6)
+                    .secondary()
             }
             if let remarks = differentialGPSStation.remarks, remarks != "" {
                 Text(remarks)
-                    .font(Font.body2)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.6)
+                    .secondary()
             }
             DifferentialGPSStationActionBar(differentialGPSStation: differentialGPSStation, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }

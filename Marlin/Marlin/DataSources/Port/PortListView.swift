@@ -60,19 +60,15 @@ struct PortListView: View {
                             port.summaryView(showMoreDetails: false, showSectionHeader: false)
                         }
                         .padding(.all, 16)
-                        .background(Color.surfaceColor)
-                        .modifier(CardModifier())
+                        .card()
                     }
                     
                 }
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+                .dataSourceSummaryItem()
             }
             .navigationTitle(Port.dataSourceName)
             .navigationBarTitleDisplayMode(.inline)
-            .listStyle(.plain)
-            .background(Color.backgroundColor)
+            .dataSourceSummaryList()
             .onAppear {
                 if let lastLocation = locationManager.lastLocation {
                     sortedPorts = ports.sorted { first, second in

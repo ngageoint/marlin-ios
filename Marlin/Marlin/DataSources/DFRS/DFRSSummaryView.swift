@@ -22,36 +22,24 @@ struct DFRSSummaryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("\(dfrs.stationNumber ?? "")")
-                .font(Font.overline)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.45)
+                .overline()
             Text("\(dfrs.stationName ?? "")")
-                .font(Font.headline6)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.87)
+                .primary()
             if showMoreDetails {
                 Text(dfrs.areaName ?? "")
-                    .font(Font.body2)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.6)
+                    .secondary()
             }
             if showSectionHeader {
                 Text(dfrs.areaName ?? "")
-                    .font(Font.body2)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.6)
+                    .secondary()
             }
             if let notes = dfrs.notes, notes != "" {
                 Text(notes)
-                    .font(Font.body2)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.6)
+                    .primary()
             }
             if let remarks = dfrs.remarks, remarks != "" {
                 Text(remarks)
-                    .font(Font.body2)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.6)
+                    .secondary()
             }
             DFRSActionBar(dfrs: dfrs, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }

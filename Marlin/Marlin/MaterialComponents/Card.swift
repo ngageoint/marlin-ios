@@ -12,16 +12,23 @@ struct CardModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
+            .background(Color.surfaceColor)
             .cornerRadius(2)
             .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
     }
     
 }
 
+extension View {
+    func card() -> some View {
+        modifier(CardModifier())
+    }
+}
+
 struct UnreadModifier: ViewModifier {
     
     func body(content: Content) -> some View {
-        content            
+        content
             .padding(.top, 16)
             .padding(.bottom, 16)
             .padding(.leading, 24)
@@ -39,3 +46,126 @@ struct UnreadModifier: ViewModifier {
     }
     
 }
+
+struct OverlineModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(Font.overline)
+            .foregroundColor(Color.onSurfaceColor)
+            .opacity(0.45)
+    }
+}
+
+extension View {
+    func overline() -> some View {
+        modifier(OverlineModifier())
+    }
+}
+
+struct PrimaryModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(Font.headline6)
+            .foregroundColor(Color.onSurfaceColor)
+            .opacity(0.87)
+    }
+}
+
+extension View {
+    func primary() -> some View {
+        modifier(PrimaryModifier())
+    }
+}
+
+struct SecondaryModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(Font.body2)
+            .foregroundColor(Color.onSurfaceColor)
+            .opacity(0.6)
+    }
+}
+
+extension View {
+    func secondary() -> some View {
+        modifier(SecondaryModifier())
+    }
+}
+
+struct DataSourceSummaryItemModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
+            .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+    }
+}
+
+extension View {
+    func dataSourceSummaryItem() -> some View {
+        modifier(DataSourceSummaryItemModifier())
+    }
+}
+
+struct DataSourceItemSummaryListModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding([.leading, .trailing], 0)
+            .listStyle(.plain)
+            .background(Color.backgroundColor)
+            .complexModifier {
+                if #available(iOS 16, *) {
+                    $0.scrollContentBackground(.hidden)
+                }
+                else {
+                    $0
+                }
+            }
+    }
+}
+
+extension View {
+    func dataSourceSummaryList() -> some View {
+        modifier(DataSourceItemSummaryListModifier())
+    }
+}
+
+
+struct DataSourceItemSectionModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8))
+            .listRowBackground(Color.backgroundColor)
+            .listRowSeparator(.hidden)
+    }
+}
+
+extension View {
+    func dataSourceSection() -> some View {
+        modifier(DataSourceItemSectionModifier())
+    }
+}
+
+struct DataSourceItemDetailListModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding([.leading, .trailing], 0)
+            .listStyle(.grouped)
+            .background(Color.backgroundColor)
+            .complexModifier {
+                if #available(iOS 16, *) {
+                    $0.scrollContentBackground(.hidden)
+                }
+                else {
+                    $0
+                }
+            }
+    }
+}
+
+extension View {
+    func dataSourceDetailList() -> some View {
+        modifier(DataSourceItemDetailListModifier())
+    }
+}
+

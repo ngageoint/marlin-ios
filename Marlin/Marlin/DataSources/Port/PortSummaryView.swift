@@ -29,31 +29,23 @@ struct PortSummaryView: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(alignment: .center) {
                     Text("\(port.portName ?? "")")
-                        .font(Font.headline6)
-                        .foregroundColor(Color.onSurfaceColor)
-                        .opacity(0.87)
+                        .primary()
                     Spacer()
                     if let currentLocation = locationManager.lastLocation {
                         let metersMeasurement = NSMeasurement(doubleValue: port.distanceTo(currentLocation), unit: UnitLength.meters);
                         let convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles);
                         
                         Text("\(measurementFormatter.string(from: convertedMeasurement)), \(currentLocation.coordinate.generalDirection(to: port.coordinate))")
-                            .font(Font.body2)
-                            .foregroundColor(Color.onSurfaceColor)
-                            .opacity(0.6)
+                            .secondary()
                     }
                 }
                 if let alternateName = port.alternateName {
                     Text("Alternate Name: \(alternateName)")
-                        .font(Font.body2)
-                        .foregroundColor(Color.onSurfaceColor)
-                        .opacity(0.6)
+                        .secondary()
                 }
                 
                 Text("\(port.regionName ?? "")")
-                    .font(Font.body2)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.6)
+                    .secondary()
             }
             PortActionBar(port: port, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }

@@ -24,8 +24,7 @@ struct SideMenuContent: View {
             HStack {
                 Text("Data Source \(horizontalSizeClass == .compact ? "Tabs" : "Rail Items") (Drag to reorder)")
                     .padding([.leading, .top, .bottom, .trailing], 8)
-                    .font(Font.overline)
-                    .foregroundColor(Color.onBackgroundColor.opacity(0.6))
+                    .overline()
                 Spacer()
             }
             .padding(.top, 16)
@@ -45,8 +44,7 @@ struct SideMenuContent: View {
             } else {
                 Text("Drag here to add a \(horizontalSizeClass == .compact ? "tabs" : "rail items")")
                     .padding([.leading, .top, .bottom, .trailing], 8)
-                    .font(Font.overline)
-                    .foregroundColor(Color.onBackgroundColor.opacity(0.6))
+                    .overline()
                     .frame(maxWidth: .infinity)
                     .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyNonTabFirst)
                     .padding()
@@ -61,8 +59,7 @@ struct SideMenuContent: View {
             HStack {
                 Text("Other Data Sources (Drag to add to \(horizontalSizeClass == .compact ? "tabs" : "rail items"))")
                     .padding([.leading, .top, .bottom, .trailing], 8)
-                    .font(Font.overline)
-                    .foregroundColor(Color.onBackgroundColor.opacity(0.6))
+                    .overline()
                 Spacer()
             }
             .padding(.top, 16)
@@ -82,8 +79,7 @@ struct SideMenuContent: View {
             } else {
                 Text("Drag here to remove a \(horizontalSizeClass == .compact ? "tab" : "rail item")")
                     .padding([.leading, .top, .bottom, .trailing], 8)
-                    .font(Font.overline)
-                    .foregroundColor(Color.onBackgroundColor.opacity(0.6))
+                    .overline()
                     .frame(maxWidth: .infinity)
                     .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyNonTabFirst)
                     .padding()

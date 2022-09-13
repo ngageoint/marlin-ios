@@ -113,6 +113,7 @@
 		F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */; };
 		F7B7064328BAADD50026DE88 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B7064228BAADD50026DE88 /* CircleImage.swift */; };
 		F7C3679428CCC8E500AE1265 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C3679328CCC8E500AE1265 /* DisclaimerView.swift */; };
+		F7C3679928D0AEF400AE1265 /* DisplaySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C3679828D0AEF400AE1265 /* DisplaySettings.swift */; };
 		F7D5C05328A2CAAB000C2C29 /* BottomSheetItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05228A2CAAB000C2C29 /* BottomSheetItem.swift */; };
 		F7D5C05528A68C43000C2C29 /* appFeatures.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7D5C05428A68C43000C2C29 /* appFeatures.plist */; };
 		F7D5C05728A68E56000C2C29 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */; };
@@ -295,6 +296,7 @@
 		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7B7064228BAADD50026DE88 /* CircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
 		F7C3679328CCC8E500AE1265 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
+		F7C3679828D0AEF400AE1265 /* DisplaySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySettings.swift; sourceTree = "<group>"; };
 		F7D5C05228A2CAAB000C2C29 /* BottomSheetItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetItem.swift; sourceTree = "<group>"; };
 		F7D5C05428A68C43000C2C29 /* appFeatures.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = appFeatures.plist; sourceTree = "<group>"; };
 		F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
@@ -601,6 +603,7 @@
 				F7D671E52871D44E00758F1C /* SideMenu */,
 				F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */,
 				F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */,
+				F7C3679728D0AECC00AE1265 /* Settings */,
 				F7D671C1286C85EF00758F1C /* GeoPackage */,
 				F7F59793285BE23F00F9B32E /* Views */,
 				F7F5978E285BACAE00F9B32E /* Extensions */,
@@ -659,6 +662,17 @@
 				F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */,
 			);
 			path = CoreData;
+			sourceTree = "<group>";
+		};
+		F7C3679728D0AECC00AE1265 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F7C3679328CCC8E500AE1265 /* DisclaimerView.swift */,
+				F71D287E28C293A000F1775C /* SettingsView.swift */,
+				F71D287C28C2926500F1775C /* SettingsCell.swift */,
+				F7C3679828D0AEF400AE1265 /* DisplaySettings.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		F7D671C1286C85EF00758F1C /* GeoPackage */ = {
@@ -745,9 +759,6 @@
 				F740AA76289D68D800754293 /* MarlinCompactWidth.swift */,
 				F740AA78289D6DED00754293 /* MarlinRegularWidth.swift */,
 				F71CC6F728AE71BA000A326C /* KeyValueSection.swift */,
-				F71D287C28C2926500F1775C /* SettingsCell.swift */,
-				F71D287E28C293A000F1775C /* SettingsView.swift */,
-				F7C3679328CCC8E500AE1265 /* DisclaimerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1090,6 +1101,7 @@
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
 				F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */,
 				F71D288128C29F0200F1775C /* BundleExtensions.swift in Sources */,
+				F7C3679928D0AEF400AE1265 /* DisplaySettings.swift in Sources */,
 				F7D671F1287484FE00758F1C /* MarlinUserDefaults.swift in Sources */,
 				F71DF4862857954A00686951 /* Modu+CoreDataClass.swift in Sources */,
 				F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */,

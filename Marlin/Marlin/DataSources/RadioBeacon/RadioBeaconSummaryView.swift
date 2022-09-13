@@ -22,34 +22,22 @@ struct RadioBeaconSummaryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("\(radioBeacon.featureNumber) \(radioBeacon.volumeNumber ?? "")")
-                .font(Font.overline)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.45)
+                .overline()
             Text("\(radioBeacon.name ?? "")")
-                .font(Font.headline6)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.87)
+                .primary()
             if showMoreDetails || showSectionHeader {
                 Text(radioBeacon.sectionHeader ?? "")
-                    .font(Font.body2)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.6)
+                    .secondary()
             }             
             if let morseCode = radioBeacon.morseCode {
                 Text(radioBeacon.morseLetter)
-                    .font(Font.headline6)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.87)
+                    .primary()
                 MorseCode(code: morseCode)
             }
             Text(radioBeacon.expandedCharacteristicWithoutCode ?? "")
-                .font(Font.body2)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.6)
+                .secondary()
             Text(radioBeacon.stationRemark ?? "")
-                .font(Font.body2)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.6)
+                .secondary()
             RadioBeaconActionBar(radioBeacon: radioBeacon, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }

@@ -45,16 +45,11 @@ struct DFRSDetailView: View {
                     dfrs.summaryView(showMoreDetails: true)
                         .padding(.all, 16)
                 }
-                
-                .background(Color.surfaceColor)
-                .modifier(CardModifier())
+                .card()
             } header: {
                 EmptyView().frame(width: 0, height: 0, alignment: .leading)
             }
-            .padding(.top, -24)
-            .padding(.bottom, -20)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
+            .dataSourceSection()
             
             let areaNotes = areas.reduce("") { result, area in
                 if area.areaName == dfrs.areaName {
@@ -72,27 +67,18 @@ struct DFRSDetailView: View {
             if areaNotes != "" {
                 Section("\(dfrs.areaName ?? "") Area Notes") {
                     Text(areaNotes)
+                        .secondary()
                         .lineLimit(8)
-                        .font(Font.body2)
-                        .foregroundColor(Color.onSurfaceColor)
-                        .opacity(0.6)
                         .frame(maxWidth:.infinity)
                         .padding(.all, 16)
-                        .background(Color.surfaceColor)
-                        .modifier(CardModifier())
+                        .card()
                 }
-                .padding(.bottom, -20)
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.clear)
+                .dataSourceSection()
             }
             
             KeyValueSection(sectionName: "Additional Information", properties: dfrs.additionalKeyValues)
-                .padding(.bottom, -20)
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+                .dataSourceSection()
         }
-        .padding([.trailing, .leading], -8)
-        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
-        .listStyle(.grouped)
+        .dataSourceDetailList()
     }
 }

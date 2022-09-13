@@ -36,42 +36,28 @@ struct AsamDetailView: View {
                         }
                     Group {
                         Text(asam.dateString ?? "")
-                            .font(Font.overline)
-                            .foregroundColor(Color.onSurfaceColor)
-                            .opacity(0.45)
+                            .overline()
                         Text("\(asam.hostility ?? "")\(asam.hostility != nil ? ": " : "")\(asam.victim ?? "")")
-                            .font(Font.headline6)
-                            .foregroundColor(Color.onSurfaceColor)
-                            .opacity(0.87)
+                            .primary()
                         AsamActionBar(asam: asam)
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
                 }
-                
-                .background(Color.surfaceColor)
-                .modifier(CardModifier())
+                .card()
             } header: {
                 EmptyView().frame(width: 0, height: 0, alignment: .leading)
             }
-            .padding(.top, -24)
-            .padding(.bottom, -20)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
-            
+            .dataSourceSection()
+
             Section("Description") {
                 Text(asam.asamDescription ?? "")
-                    .font(Font.body2)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.6)
+                    .secondary()
                     .frame(maxWidth:.infinity)
                     .padding(.all, 16)
-                    .background(Color.surfaceColor)
-                    .modifier(CardModifier())
+                    .card()
             }
-            .padding(.bottom, -20)
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color.clear)
-            
+            .dataSourceSection()
+
             Section("Additional Information") {
                 VStack(alignment: .leading, spacing: 8) {
                     if let hostility = asam.hostility {
@@ -94,18 +80,12 @@ struct AsamDetailView: View {
                     }
                 }
                 .padding(.all, 16)
-                .background(Color.surfaceColor)
-                .modifier(CardModifier())
+                .card()
                 .frame(maxWidth: .infinity)
             }
-            .padding(.bottom, -20)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
+            .dataSourceSection()
         }
-            
-        .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
-        .listStyle(.grouped)
-        
+        .dataSourceDetailList()
     }
 }
 

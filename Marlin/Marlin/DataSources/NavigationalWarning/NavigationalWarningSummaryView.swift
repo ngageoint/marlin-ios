@@ -17,19 +17,13 @@ struct NavigationalWarningSummaryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(navigationalWarning.dateString ?? "")
-                .font(Font.overline)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.45)
+                .overline()
             Text("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
-                .font(Font.headline6)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.87)
+                .primary()
             Text("\(navigationalWarning.text ?? "")")
                 .multilineTextAlignment(.leading)
                 .lineLimit(8)
-                .font(Font.body2)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.6)
+                .secondary()
             NavigationalWarningActionBar(navigationalWarning: navigationalWarning)
         }
     }

@@ -20,23 +20,15 @@ struct LightSummaryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("\(light.featureNumber ?? "") \(light.internationalFeature ?? "") \(light.volumeNumber ?? "")")
-                .font(Font.overline)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.45)
+                .overline()
             Text("\(light.name ?? "")")
-                .font(Font.headline6)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.87)
+                .primary()
             if showMoreDetails {
                 Text(light.sectionHeader ?? "")
-                    .font(Font.body2)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.6)
+                    .secondary()
             }
             Text(light.structure ?? "")
-                .font(Font.body2)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.6)
+                .secondary()
             LightActionBar(light: light, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }

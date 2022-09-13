@@ -119,6 +119,8 @@ struct MarlinCompactWidth: View {
                 .tint(Color.onPrimaryColor)
                 .navigationViewStyle(.stack)
                 .statusBar(hidden: false)
+                // This is deprecated, but in iOS16 this is the only way to set the back button color
+                .accentColor(Color.onPrimaryColor)
                 
                 ForEach(dataSourceList.tabs, id: \.self) { dataSource in
                     NavigationView {
@@ -127,6 +129,8 @@ struct MarlinCompactWidth: View {
                                 view.modifier(Hamburger(menuOpen: $menuOpen))
                             }
                     }
+                    // This is deprecated, but in iOS16 this is the only way to set the back button color
+                    .accentColor(Color.onPrimaryColor)
                     // This must be set or navigation links that are nested more than 2 deep will auto pop off
                     .navigationViewStyle(.stack)
                     .tabItem {

@@ -34,15 +34,13 @@ struct DataSourceCell: View {
                 }
                 
                 Text(dataSourceItem.dataSource.fullDataSourceName)
-                    .font(Font.body1)
-                    .foregroundColor(Color.onSurfaceColor)
-                    .opacity(0.87)
+                    .primary()
 
                 Spacer()
                 if dataSourceItem.dataSource.isMappable {
                     Image(systemName: dataSourceItem.showOnMap ? "mappin.circle.fill" : "mappin.slash.circle.fill")
                         .renderingMode(.template)
-                        .foregroundColor(dataSourceItem.showOnMap ? Color.primaryColor : Color.disabledColor)
+                        .foregroundColor(dataSourceItem.showOnMap ? Color.primaryColorVariant : Color.disabledColor)
                         .onTapGesture {
                             dataSourceItem.showOnMap = !dataSourceItem.showOnMap
                         }

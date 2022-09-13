@@ -37,14 +37,10 @@ struct LightCard: View {
             HStack(alignment: .top, spacing: 8) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(light.name ?? "")
-                        .font(Font.headline6)
-                        .foregroundColor(Color.onSurfaceColor)
-                        .opacity(0.87)
+                        .primary()
                         .fixedSize(horizontal: false, vertical: true)
                     Text(light.expandedCharacteristic ?? "")
-                        .font(Font.body2)
-                        .foregroundColor(Color.onSurfaceColor)
-                        .opacity(0.6)
+                        .secondary()
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer()
@@ -57,31 +53,22 @@ struct LightCard: View {
             HStack(alignment: .top, spacing: 8) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Range (nm)")
-                        .font(Font.headline6)
-                        .foregroundColor(Color.onSurfaceColor)
-                        .opacity(0.87)
+                        .primary()
                     Text(light.range ?? "")
-                        .font(Font.body2)
-                        .foregroundColor(Color.onSurfaceColor)
-                        .opacity(0.6)
+                        .secondary()
                 }
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Remarks")
-                        .font(Font.headline6)
-                        .foregroundColor(Color.onSurfaceColor)
-                        .opacity(0.87)
+                        .primary()
                     Text(light.remarks ?? "")
-                        .font(Font.body2)
-                        .foregroundColor(Color.onSurfaceColor)
-                        .opacity(0.6)
+                        .secondary()
                 }
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             }.frame(maxWidth: .infinity)
         }
         .padding(.all, 16)
-        .background(Color.surfaceColor)
-        .modifier(CardModifier())
+        .card()
         .frame(maxWidth: .infinity)
     }
 }

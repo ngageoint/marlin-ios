@@ -36,6 +36,8 @@
 	<integer>3</integer>
 	<key>lifeSizeLights</key>
 	<false/>
+	<key>lifeSizeSectorLights</key>
+	<false/>
 	<key>showGARS</key>
 	<false/>
 	<key>showMGRS</key>

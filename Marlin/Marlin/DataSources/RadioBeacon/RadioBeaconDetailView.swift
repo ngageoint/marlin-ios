@@ -38,25 +38,16 @@ struct RadioBeaconDetailView: View {
                     radioBeacon.summaryView(showSectionHeader: true)
                         .padding(.all, 16)
                 }
-                
-                .background(Color.surfaceColor)
-                .modifier(CardModifier())
+                .card()
             } header: {
                 EmptyView().frame(width: 0, height: 0, alignment: .leading)
             }
-            .padding(.top, -24)
-            .padding(.bottom, -20)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
+            .dataSourceSection()
             
             KeyValueSection(sectionName: "Additional Information", properties: radioBeacon.additionalKeyValues)
-                .padding(.bottom, -20)
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+                .dataSourceSection()
         }
-        .padding([.trailing, .leading], -8)
-        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
-        .listStyle(.grouped)
+        .dataSourceDetailList()
     }
 }
 

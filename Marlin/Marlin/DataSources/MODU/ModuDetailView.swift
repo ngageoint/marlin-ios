@@ -36,27 +36,18 @@ struct ModuDetailView: View {
                         }
                     Group {
                         Text(modu.dateString ?? "")
-                            .font(Font.overline)
-                            .foregroundColor(Color.onSurfaceColor)
-                            .opacity(0.45)
+                            .overline()
                         Text("\(modu.name ?? "")")
-                            .font(Font.headline6)
-                            .foregroundColor(Color.onSurfaceColor)
-                            .opacity(0.87)
+                            .primary()
                         ModuActionBar(modu: modu)
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
                 }
-                
-                .background(Color.surfaceColor)
-                .modifier(CardModifier())
+                .card()
             } header: {
                 EmptyView().frame(width: 0, height: 0, alignment: .leading)
             }
-            .padding(.top, -24)
-            .padding(.bottom, -20)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
+            .dataSourceSection()
             
             Section("Additional Information") {
                 VStack(alignment: .leading, spacing: 8) {
@@ -78,18 +69,11 @@ struct ModuDetailView: View {
                     
                 }
                 .padding(.all, 16)
-                .background(Color.surfaceColor)
-                .modifier(CardModifier())
-                .frame(maxWidth: .infinity)
+                .card()
             }
-            .padding(.bottom, -20)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
+            .dataSourceSection()
         }
-        
-        .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
-        .listStyle(.grouped)
-        
+        .dataSourceDetailList()
     }
 }
 

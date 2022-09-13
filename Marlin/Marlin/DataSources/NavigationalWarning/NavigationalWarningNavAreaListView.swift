@@ -40,8 +40,7 @@ struct NavigationalWarningNavAreaListView: View {
                                     .padding(.all, 16)
                             }
                             
-                            .background(Color.surfaceColor)
-                            .modifier(CardModifier())
+                            .card()
                             .background(GeometryReader {
                                 return Color.clear.preference(key: ViewOffsetKey.self,
                                                               value: -$0.frame(in: .named("scroll")).origin.y)

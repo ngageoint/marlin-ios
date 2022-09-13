@@ -20,18 +20,12 @@ struct AsamSummaryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(asam.dateString ?? "")
-                .font(Font.overline)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.45)
+                .overline()
             Text("\(asam.hostility ?? "")\(asam.hostility != nil ? ": " : "")\(asam.victim ?? "")")
-                .font(Font.headline6)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.87)
+                .primary()
             Text(asam.asamDescription ?? "")
                 .lineLimit(8)
-                .font(Font.body2)
-                .foregroundColor(Color.onSurfaceColor)
-                .opacity(0.6)
+                .secondary()
             AsamActionBar(asam: asam, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }

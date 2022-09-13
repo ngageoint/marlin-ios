@@ -48,41 +48,27 @@ struct LightDetailView: View {
                     }
                     Group {
                         Text("\(lights[0].featureNumber ?? "") \(lights[0].internationalFeature ?? "")")
-                            .font(Font.overline)
-                            .foregroundColor(Color.onSurfaceColor)
-                            .opacity(0.45)
+                            .overline()
                         Text("\(lights[0].name ?? "")")
-                            .font(Font.headline6)
-                            .foregroundColor(Color.onSurfaceColor)
-                            .opacity(0.87)
+                            .primary()
                         Text(lights[0].sectionHeader ?? "")
-                            .font(Font.body2)
-                            .foregroundColor(Color.onSurfaceColor)
-                            .opacity(0.6)
+                            .secondary()
                         Text(lights[0].structure ?? "")
-                            .font(Font.body2)
-                            .foregroundColor(Color.onSurfaceColor)
-                            .opacity(0.6)
+                            .secondary()
                         if lights[0].heightFeet != 0 {
                             Text("Focal Plane Elevation: \(Int(lights[0].heightFeet))ft (\(Int(lights[0].heightMeters))m)")
-                                .font(Font.body2)
-                                .foregroundColor(Color.onSurfaceColor)
-                                .opacity(0.6)
+                                .secondary()
                         }
                         LightActionBar(light: lights[0], showMoreDetailsButton: false, showFocusButton: true)
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
                 }
                 .frame(maxWidth:.infinity)
-                .background(Color.surfaceColor)
-                .modifier(CardModifier())
+                .card()
             } header: {
                 EmptyView().frame(width: 0, height: 0, alignment: .leading)
             }
-            .padding(.top, -24)
-            .padding(.bottom, -20)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
+            .dataSourceSection()
             
             Section("Characteristics") {
                 ForEach(lights) { light in
@@ -94,12 +80,9 @@ struct LightDetailView: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.bottom, 0)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
+            .dataSourceSection()
         }
-        .padding([.trailing, .leading], -8)
-        .listStyle(.grouped)
+        .dataSourceDetailList()
     }
 }
 

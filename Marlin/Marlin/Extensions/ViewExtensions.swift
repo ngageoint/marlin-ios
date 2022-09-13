@@ -22,4 +22,20 @@ extension View {
             self
         }
     }
+    
+    /**
+       Usage
+     
+     .complexModifier {
+         if #available(iOS 16, *) {
+             $0.toolbarColorScheme(.dark, for: .navigationBar)
+         }
+         else {
+             $0
+         }
+     }
+     */
+    func complexModifier<V: View>(@ViewBuilder _ closure: (Self) -> V) -> some View {
+        closure(self)
+    }
 }

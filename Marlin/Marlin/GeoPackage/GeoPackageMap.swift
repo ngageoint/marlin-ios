@@ -38,7 +38,9 @@ class GeoPackageMap: NSObject, MapMixin {
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
         geoPackage = GeoPackage(mapView: mapView, fileName: fileName, tableName: tableName, polygonColor: polygonColor, fillColor: fillColor, canReplaceMapContent: canReplaceMapContent, index: index)
         if let overlay = geoPackage?.getOverlay() {
-            marlinMap.mapState.overlays.insert(overlay, at: min(index, marlinMap.mapState.overlays.count))
+            DispatchQueue.main.async {
+                marlinMap.mapState.overlays.insert(overlay, at: min(self.index, marlinMap.mapState.overlays.count))
+            }
         }
     }
     

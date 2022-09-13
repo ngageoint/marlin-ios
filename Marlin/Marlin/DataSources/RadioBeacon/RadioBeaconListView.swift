@@ -49,8 +49,7 @@ struct RadioBeaconListView: View {
                 
                 Section(header: HStack {
                     Text(section.id)
-                        .font(Font.overline)
-                        .foregroundColor(Color.onBackgroundColor)
+                        .overline()
                 }) {
                     
                     ForEach(section) { radioBeacon in
@@ -67,20 +66,16 @@ struct RadioBeaconListView: View {
                                 radioBeacon.summaryView()
                             }
                             .padding(.all, 16)
-                            .background(Color.surfaceColor)
-                            .modifier(CardModifier())
+                            .card()
                         }
                         
                     }
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+                    .dataSourceSummaryItem()
                 }
             }
             .navigationTitle(RadioBeacon.dataSourceName)
             .navigationBarTitleDisplayMode(.inline)
-            .listStyle(.plain)
-            .background(Color.backgroundColor)
+            .dataSourceSummaryList()
         }
     }
 }

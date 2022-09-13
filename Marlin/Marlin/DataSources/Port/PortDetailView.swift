@@ -37,65 +37,40 @@ struct PortDetailView: View {
                     port.summaryView()
                         .padding(.all, 16)
                 }
-                
-                .background(Color.surfaceColor)
-                .modifier(CardModifier())
+                .card()
             } header: {
                 EmptyView().frame(width: 0, height: 0, alignment: .leading)
             }
-            .padding(.top, -24)
-            .padding(.bottom, -20)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
+            .dataSourceSection()
             
             KeyValueSection(sectionName: "Name and Location", properties: port.nameAndLocationKeyValues)
-                .padding(.bottom, -20)
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+                .dataSourceSection()
             
             KeyValueSection(sectionName: "Depths", properties: port.depthKeyValues)
-                .padding(.bottom, -20)
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+                .dataSourceSection()
             
             KeyValueSection(sectionName: "Maximum Vessel Size", properties: port.maximumVesselSizeKeyValues)
-                .padding(.bottom, -20)
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+                .dataSourceSection()
             
             KeyValueSection(sectionName: "Physical Environment", properties: port.physicalEnvironmentKeyValues)
-                .padding(.bottom, -20)
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+                .dataSourceSection()
             
             KeyValueSection(sectionName: "Approach", properties: port.approachKeyValues)
-                .padding(.bottom, -20)
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+                .dataSourceSection()
             
             KeyValueSection(sectionName: "Pilots, Tugs, Communications", properties: port.pilotsTugsCommunicationsKeyValues)
-                .padding(.bottom, -20)
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+                .dataSourceSection()
             
             KeyValueSection(sectionName: "Facilities", properties: port.facilitiesKeyValues)
-                .padding(.bottom, -20)
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+                .dataSourceSection()
             
             KeyValueSection(sectionName: "Cranes", properties: port.cranesKeyValues)
-                .padding(.bottom, -20)
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+                .dataSourceSection()
             
             KeyValueSection(sectionName: "Services and Supplies", properties: port.servicesSuppliesKeyValues)
-                .padding(.bottom, -20)
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+                .dataSourceSection()
         }
-        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-        .listStyle(.grouped)
-        .padding([.leading, .trailing], -8)
+        .dataSourceDetailList()
     }
 }
 

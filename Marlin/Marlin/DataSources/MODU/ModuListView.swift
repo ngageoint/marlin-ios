@@ -24,58 +24,54 @@ struct ModuListView: View {
     
     var body: some View {
         ZStack {
-        if watchFocusedItem, let focusedModu = focusedItem.dataSource as? Modu {
-            NavigationLink(tag: "detail", selection: $selection) {
-                focusedModu.detailView
-                    .navigationTitle(focusedModu.name ?? Modu.dataSourceName)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .onDisappear {
-                        focusedItem.dataSource = nil
-                    }
-            } label: {
-                EmptyView().hidden()
-            }
-            
-            .isDetailLink(false)
-            .onAppear {
-                selection = "detail"
-            }
-            .onChange(of: focusedItem.date) { newValue in
-                if watchFocusedItem, let _ = focusedItem.dataSource as? Modu {
+            if watchFocusedItem, let focusedModu = focusedItem.dataSource as? Modu {
+                NavigationLink(tag: "detail", selection: $selection) {
+                    focusedModu.detailView
+                        .navigationTitle(focusedModu.name ?? Modu.dataSourceName)
+                        .navigationBarTitleDisplayMode(.inline)
+                        .onDisappear {
+                            focusedItem.dataSource = nil
+                        }
+                } label: {
+                    EmptyView().hidden()
+                }
+                
+                .isDetailLink(false)
+                .onAppear {
                     selection = "detail"
                 }
-            }
-        }
-        
-        List {
-            ForEach(modus) { modu in
-                
-                ZStack {
-                    NavigationLink(destination:
-                                    modu.detailView
-                                    .navigationTitle(modu.name ?? Modu.dataSourceName)
-                                    .navigationBarTitleDisplayMode(.inline)) {
-                            EmptyView()
-                        }
-                        .opacity(0)
-                    
-                    HStack {
-                        ModuSummaryView(modu: modu)
+                .onChange(of: focusedItem.date) { newValue in
+                    if watchFocusedItem, let _ = focusedItem.dataSource as? Modu {
+                        selection = "detail"
                     }
-                    .padding(.all, 16)
-                    .background(Color.surfaceColor)
-                    .modifier(CardModifier())
                 }
-                
             }
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color.clear)
-            .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
-        }
-        .navigationTitle(Modu.dataSourceName)
-        .navigationBarTitleDisplayMode(.inline)
-        .listStyle(.plain)
-        .background(Color.backgroundColor)
+            
+            List {
+                ForEach(modus) { modu in
+                    
+                    ZStack {
+                        NavigationLink(destination:
+                                        modu.detailView
+                                        .navigationTitle(modu.name ?? Modu.dataSourceName)
+                                        .navigationBarTitleDisplayMode(.inline)) {
+                                EmptyView()
+                            }
+                            .opacity(0)
+                        
+                        HStack {
+                            ModuSummaryView(modu: modu)
+                        }
+                        .padding(.all, 16)
+                        .card()
+                    }
+                    
+                }
+                .dataSourceSummaryItem()
+            }
+            .navigationTitle(Modu.dataSourceName)
+            .navigationBarTitleDisplayMode(.inline)
+            .dataSourceSummaryList()
         }
     }
 }
