@@ -23,6 +23,7 @@ extension Port: DataSource {
     static var imageName: String? = "port"
     static var systemImageName: String? = nil
     static var seedDataFiles: [String]? = ["port"]
+    static var decodableRoot: Decodable.Type = PortPropertyContainer.self
     static var color: UIColor = UIColor(argbValue: 0xFF5856d6)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.75
     

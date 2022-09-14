@@ -20,6 +20,7 @@ extension Asam: DataSource {
     static var key: String = "asam"
     static var imageName: String? = "asam"
     static var seedDataFiles: [String]? = ["asam"]
+    static var decodableRoot: Decodable.Type = AsamPropertyContainer.self
     static var systemImageName: String? = nil
     
     static var color: UIColor = .black

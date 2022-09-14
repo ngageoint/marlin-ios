@@ -9,6 +9,7 @@ import Foundation
 import MapKit
 
 extension Notification.Name {
+    public static let PersistentStoreLoaded = Notification.Name("PersistenStoreLoaded")
     public static let MapItemsTapped = Notification.Name("MapItemsTapped")
     public static let MapAnnotationFocused = Notification.Name("MapAnnotationFocused")
     public static let MapViewDisappearing = Notification.Name("MapViewDisappearing")

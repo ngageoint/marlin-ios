@@ -18,6 +18,10 @@ class PersistedMapState: NSObject, MapMixin {
                     marlinMap.mapState.center = region
                 }
             }
+        } else {
+            DispatchQueue.main.async {
+                marlinMap.mapState.center = MKCoordinateRegion(center: mapView.centerCoordinate, zoom: 4, bounds: UIScreen.main.bounds)
+            }
         }
     }
     

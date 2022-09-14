@@ -84,6 +84,7 @@ struct MarlinMap: UIViewRepresentable {
         mapView.showsUserLocation = true
         mapView.isPitchEnabled = false
         mapView.showsCompass = false
+        mapView.tintColor = UIColor(Color.primaryColorVariant)
         
         if showMapScale {
             let scale = MKScaleView(mapView: mapView)

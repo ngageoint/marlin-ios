@@ -10,6 +10,8 @@ import MapKit
 
 struct MarlinRegularWidth: View {
     @AppStorage("selectedTab") var selectedTab: String = "map"
+    @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = false
+
     @State var activeRailItem: DataSourceItem? = nil
     
     @ObservedObject var dataSourceList: DataSourceList
@@ -96,6 +98,26 @@ struct MarlinRegularWidth: View {
                             }
                         }
                     }
+                    HStack {
+                        Spacer()
+                        Capsule()
+                            .fill(Color.primaryColor)
+                            .frame(width: 175, height: 25)
+                            .overlay(
+                                HStack {
+                                    ProgressView()
+                                        .progressViewStyle(CircularProgressViewStyle(tint: Color.onPrimaryColor))
+                                        .scaleEffect(0.5, anchor: .center)
+                                    Text("Loading initial data")
+                                        .font(Font.overline)
+                                        .foregroundColor(Color.onPrimaryColor)
+                                }
+                            )
+                        Spacer()
+                    }
+                    .animation(.default, value: initialDataLoaded)
+                    .opacity(initialDataLoaded ? 0.0 : 1.0)
+                    .padding(.top, 8)
                 }
                 .navigationBarHidden(true)
             }.navigationViewStyle(.stack)

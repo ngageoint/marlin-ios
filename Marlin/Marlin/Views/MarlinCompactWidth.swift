@@ -12,6 +12,7 @@ struct MarlinCompactWidth: View {
     @EnvironmentObject var appState: AppState
     
     @AppStorage("selectedTab") var selectedTab: String = "map"
+    @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = false
     
     @ObservedObject var dataSourceList: DataSourceList
     @State var menuOpen: Bool = false
@@ -73,6 +74,26 @@ struct MarlinCompactWidth: View {
                                     }
                                 }
                             }
+                            HStack {
+                                Spacer()
+                                Capsule()
+                                    .fill(Color.primaryColor)
+                                    .frame(width: 175, height: 25)
+                                    .overlay(
+                                        HStack {
+                                            ProgressView()
+                                                .progressViewStyle(CircularProgressViewStyle(tint: Color.onPrimaryColor))
+                                                .scaleEffect(0.5, anchor: .center)
+                                            Text("Loading initial data")
+                                                .font(Font.overline)
+                                                .foregroundColor(Color.onPrimaryColor)
+                                        }
+                                    )
+                                Spacer()
+                            }
+                            .animation(.default, value: initialDataLoaded)
+                            .opacity(initialDataLoaded ? 0.0 : 1.0)
+                            .padding(.top, 8)
                         }
                         NavigationLink(tag: "detail", selection: $selection) {
                             if let data = itemWrapper.dataSource as? DataSourceViewBuilder {

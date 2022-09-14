@@ -26,6 +26,7 @@ extension DifferentialGPSStation: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFFFFB300)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     static var seedDataFiles: [String]? = ["dgps"]
+    static var decodableRoot: Decodable.Type = DifferentialGPSStationPropertyContainer.self
     
     static func batchImport(value: Decodable?) async throws {
         guard let value = value as? DifferentialGPSStationPropertyContainer else {
@@ -140,7 +141,6 @@ class DifferentialGPSStation: NSManagedObject, MKAnnotation, AnnotationWithView,
             var correctedLocationDictionary: [String:String?] = [
                 "regionHeading": propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading
             ]
-            correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? "")\(correctedLocationDictionary["regionHeading"] != nil ? ": \(correctedLocationDictionary["regionHeading"] as? String ?? "")" : "")"
             if let rh = correctedLocationDictionary["regionHeading"] as? String {
                 correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? ""): \(rh)"
             } else {

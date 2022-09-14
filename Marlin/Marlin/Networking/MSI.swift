@@ -25,37 +25,51 @@ public class MSI {
         return Session(configuration: configuration, serverTrustManager: manager)
     }()
     
+    let masterDataList: [BatchImportable.Type] = [Asam.self, Modu.self, NavigationalWarning.self, Light.self, Port.self, RadioBeacon.self, DifferentialGPSStation.self, DFRS.self, DFRSArea.self]
+    
+    var appState: AppState?
+    
     func loadAllData(appState: AppState) {
-        if UserDefaults.standard.dataSourceEnabled(Asam.self) {
-            loadAsams(appState: appState)
+        self.appState = appState
+        
+        var initialDataLoadList: [BatchImportable.Type] = []
+        // if we think we need to load the initial data
+        if !UserDefaults.standard.initialDataLoaded {
+            initialDataLoadList = masterDataList.filter { importable in
+                UserDefaults.standard.dataSourceEnabled(importable) && !isLoaded(type: importable) && !(importable.seedDataFiles ?? []).isEmpty
+            }
         }
-        if UserDefaults.standard.dataSourceEnabled(Modu.self) {
-            loadModus(appState: appState)
-        }
-        if UserDefaults.standard.dataSourceEnabled(NavigationalWarning.self) {
-            loadNavigationalWarnings(appState: appState)
-        }
-        if UserDefaults.standard.dataSourceEnabled(Light.self) {
-            loadLights(appState: appState)
-        }
-        if UserDefaults.standard.dataSourceEnabled(Port.self) {
-            loadPorts(resetData: false, appState: appState)
-        }
-        if UserDefaults.standard.dataSourceEnabled(RadioBeacon.self) {
-            loadRadioBeacons(appState: appState)
-        }
-        if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) {
-            loadDifferentialGPSStations(appState: appState)
-        }
-        if UserDefaults.standard.dataSourceEnabled(DFRS.self) {
-            loadDFRS(resetData: false, appState: appState)
-            loadDFRSAreas(resetData: true, appState: appState)
+
+        if !initialDataLoadList.isEmpty {
+            NSLog("Loading initial data from \(initialDataLoadList.count) data sources")
+            NotificationCenter.default.addObserver(self, selector: #selector(managedObjectContextObjectChangedObserver(notification:)), name: .NSManagedObjectContextObjectsDidChange, object: PersistenceController.shared.container.viewContext)
+
+            DispatchQueue.main.async {
+                for importable in initialDataLoadList {
+                    appState.loadingDataSource[importable.key] = true
+                }
+                let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
+                queue.async( execute:{
+                    for importable in initialDataLoadList {
+                        self.loadInitialData(appState: appState, type: importable.decodableRoot, dataType: importable)
+                    }
+                })
+            }
+        } else {
+            let allLoadList: [BatchImportable.Type] = masterDataList.filter { importable in
+                UserDefaults.standard.dataSourceEnabled(importable)
+            }
+
+            NSLog("Fetching new data from the API for \(allLoadList.count) data sources")
+            for importable in allLoadList {
+                self.loadData(appState: appState, type: importable.decodableRoot, dataType: importable)
+            }
         }
     }
     
     actor Counter {
         var value = 0
-        
+
         func increment() -> Int {
             value += 1
             return value
@@ -66,18 +80,37 @@ public class MSI {
         }
     }
     
-    func loadData<T: Decodable, D: NSManagedObject & BatchImportable>(appState: AppState, type: T.Type, dataType: D.Type) {
-        DispatchQueue.main.async {
-            appState.loadingDataSource[D.key] = true
+    @objc func managedObjectContextObjectChangedObserver(notification: Notification) {
+        guard let userInfo = notification.userInfo else { return }
+
+        if let inserts = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, inserts.count > 0 {
+            if let dataSourceItem = inserts.first as? DataSource {
+                DispatchQueue.main.async {
+                    if let appState = self.appState {
+                        appState.loadingDataSource[type(of: dataSourceItem).key] = false
+                        var allLoaded = true
+                        for (_, loading) in appState.loadingDataSource {
+                            if loading {
+                                allLoaded = false
+                            }
+                        }
+                        if allLoaded {
+                            NotificationCenter.default.removeObserver(self, name: .NSManagedObjectContextObjectsDidChange, object: PersistenceController.shared.container.viewContext)
+                            UserDefaults.standard.initialDataLoaded = true
+                            self.loadAllData(appState: appState)
+                        }
+                    }
+                }
+            }
         }
+    }
+    
+    var loadCounters: [String: Counter] = [:]
+    
+    func loadInitialData<T: Decodable, D: NSManagedObject & BatchImportable>(appState: AppState, type: T.Type, dataType: D.Type) {
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
         
-        // if this is an empty database, load the initial data
-        let count = try? PersistenceController.shared.container.viewContext.countOfObjects(D.self)
-        
-        let queryCounter = Counter()
-        let loadCounter = Counter()
-        if count == 0, let seedDataFiles = D.seedDataFiles {
+        if let seedDataFiles = D.seedDataFiles {
             NSLog("Loading initial data for \(D.key)")
             for seedDataFile in seedDataFiles {
                 if let localUrl = Bundle.main.url(forResource: seedDataFile, withExtension: "json") {
@@ -85,30 +118,6 @@ public class MSI {
                         .responseDecodable(of: T.self, queue: queue) { response in
                             queue.async( execute:{
                                 Task.detached {
-                                    var initialLoadObserver: NSObjectProtocol?
-                                    initialLoadObserver = NotificationCenter.default.addObserver(forName: NSManagedObjectContext.didChangeObjectsNotification, object: PersistenceController.shared.container.viewContext, queue: nil) { notification in
-                                        
-                                        guard let userInfo = notification.userInfo else { return }
-                                        
-                                        if let inserts = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, inserts.count > 0 {
-                                            if let _ = inserts.first as? D {
-                                                if let initialLoadObserver = initialLoadObserver {
-                                                    NotificationCenter.default.removeObserver(initialLoadObserver, name: NSManagedObjectContext.didChangeObjectsNotification, object: PersistenceController.shared.container.viewContext)
-                                                }
-                                                
-                                                Task.detached {
-                                                    let sum = await loadCounter.increment()
-                                                    if sum == seedDataFiles.count {
-                                                        DispatchQueue.main.async {
-                                                            appState.loadingDataSource[D.key] = false
-                                                        }
-                                                        MSI.shared.loadData(appState: appState, type: type, dataType: dataType)
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    
                                     try await D.batchImport(value: response.value)
                                 }
                             })
@@ -117,9 +126,17 @@ public class MSI {
             }
             return
         }
-        
+    }
+    
+    func loadData<T: Decodable, D: NSManagedObject & BatchImportable>(appState: AppState, type: T.Type, dataType: D.Type) {
+        DispatchQueue.main.async {
+            appState.loadingDataSource[D.key] = true
+        }
+        let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
+
+        let queryCounter = Counter()
         let requests = D.dataRequest()
-        
+
         for request in requests {
             session.request(request)
                 .validate()
@@ -129,6 +146,7 @@ public class MSI {
                             try await D.batchImport(value: response.value)
                             
                             let sum = await queryCounter.increment()
+                            NSLog("Queried for \(sum) of \(requests.count) for \(dataType.key)")
                             if sum == requests.count {
                                 DispatchQueue.main.async {
                                     appState.loadingDataSource[D.key] = false
@@ -140,40 +158,9 @@ public class MSI {
         }
     }
     
-    func loadAsams(appState: AppState) {
-        MSI.shared.loadData(appState: appState, type: AsamPropertyContainer.self, dataType: Asam.self)
-    }
-    
-    func loadModus(appState: AppState) {
-        MSI.shared.loadData(appState: appState, type: ModuPropertyContainer.self, dataType: Modu.self)
-    }
-    
-    func loadNavigationalWarnings(date: String? = nil, appState: AppState) {
-        MSI.shared.loadData(appState: appState, type: NavigationalWarningPropertyContainer.self, dataType: NavigationalWarning.self)
-    }
-    
-    func loadLights(date: String? = nil, appState: AppState) {
-        MSI.shared.loadData(appState: appState, type: LightsPropertyContainer.self, dataType: Light.self)
-    }
-    
-    func loadPorts(resetData: Bool = false, appState: AppState) {
-        MSI.shared.loadData(appState: appState, type: PortPropertyContainer.self, dataType: Port.self)
-    }
-    
-    func loadRadioBeacons(date: String? = nil, appState: AppState) {
-        MSI.shared.loadData(appState: appState, type: RadioBeaconPropertyContainer.self, dataType: RadioBeacon.self)
-    }
-    
-    func loadDifferentialGPSStations(date: String? = nil, appState: AppState) {
-        MSI.shared.loadData(appState: appState, type: DifferentialGPSStationPropertyContainer.self, dataType: DifferentialGPSStation.self)
-    }
-    
-    func loadDFRS(resetData: Bool = false, appState: AppState) {
-        MSI.shared.loadData(appState: appState, type: DFRSPropertyContainer.self, dataType: DFRS.self)
-    }
-    
-    func loadDFRSAreas(resetData: Bool = false, appState: AppState) {
-        MSI.shared.loadData(appState: appState, type: DFRSAreaPropertyContainer.self, dataType: DFRSArea.self)
+    func isLoaded<D: BatchImportable>(type: D.Type) -> Bool {
+        let count = try? PersistenceController.shared.container.viewContext.countOfObjects(D.self)
+        return (count ?? 0) > 0
     }
 }
 

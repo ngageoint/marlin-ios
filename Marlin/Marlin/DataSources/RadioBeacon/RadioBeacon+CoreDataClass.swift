@@ -29,6 +29,7 @@ extension RadioBeacon: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFF007BFF)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     static var seedDataFiles: [String]? = ["radioBeacon"]
+    static var decodableRoot: Decodable.Type = RadioBeaconPropertyContainer.self
     
     static func batchImport(value: Decodable?) async throws {
         guard let value = value as? RadioBeaconPropertyContainer else {

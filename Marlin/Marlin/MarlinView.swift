@@ -40,6 +40,7 @@ struct MarlinView: View {
     @StateObject var mapState: MapState = MapState()
     
     @AppStorage("userTrackingMode") var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
+    @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = true
 
     let mapItemsTappedPub = NotificationCenter.default.publisher(for: .MapItemsTapped)
     let mapViewDisappearingPub = NotificationCenter.default.publisher(for: .MapViewDisappearing)
@@ -79,7 +80,8 @@ struct MarlinView: View {
     }
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
+            
             if horizontalSizeClass == .compact {
                 
                 MarlinCompactWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)

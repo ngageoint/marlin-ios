@@ -48,6 +48,7 @@ extension NavigationalWarning: DataSource {
     static var imageName: String? = nil
     static var systemImageName: String? = "exclamationmark.triangle.fill"
     static var seedDataFiles: [String]? = nil
+    static var decodableRoot: Decodable.Type = NavigationalWarningPropertyContainer.self
     static var imageScale: CGFloat = 0.66
     
     static func batchImport(value: Decodable?) async throws {

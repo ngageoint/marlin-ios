@@ -39,14 +39,16 @@ class AppState: ObservableObject {
 
 struct MarlinApp: App {
     
-    let persistenceController = PersistenceController.shared
+    let viewContext = PersistenceController.shared.container.viewContext
     let shared = MSI.shared
     
     let scheme = MarlinScheme()
     let appState = AppState()
     
+    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
+    @State var loading = false
+    
     init() {
-        
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             
@@ -59,16 +61,28 @@ struct MarlinApp: App {
         
         // set up default user defaults
         UserDefaults.registerMarlinDefaults()
-        
-        shared.loadAllData(appState: appState)
     }
 
     var body: some Scene {
         WindowGroup {
             MarlinView()
                 .environmentObject(appState)
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environment(\.managedObjectContext, viewContext)
                 .background(Color.surfaceColor)
+                .onAppear {
+                    if PersistenceController.shared.isLoaded, !loading {
+                        NSLog("Marlin view appear, PersistenceController is loaded, load data")
+                        loading = true
+                        shared.loadAllData(appState: appState)
+                    }
+                }
+                .onReceive(persistentStoreLoadedPub) { output in
+                    if !loading {
+                        NSLog("Marlin view recieve notification, PersistenceController is loaded, load data")
+                        loading = true
+                        shared.loadAllData(appState: appState)
+                    }
+                }
         }
     }
 }

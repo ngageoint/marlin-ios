@@ -135,7 +135,7 @@ struct MaterialButtonStyle: ButtonStyle {
                             Circle().fill(Color.white).scaleEffect(configuration.isPressed ? scale : 0.0001).opacity(configuration.isPressed ? 0.32 : 0.0).cornerRadius(cornerRadius)
                         } else if type == .text {
                             // tap effect
-                            Circle().fill(Color.primaryColor).scaleEffect(configuration.isPressed ? scale : 0.0001).opacity(configuration.isPressed ? 0.16 : 0.0).cornerRadius(cornerRadius)
+                            RoundedRectangle(cornerRadius: cornerRadius).fill(Color.primaryColor).scaleEffect(configuration.isPressed ? scale : 0.0001).opacity(configuration.isPressed ? 0.16 : 0.0).cornerRadius(cornerRadius)
                         }
                     }
                 }

@@ -25,7 +25,8 @@ extension Light: DataSource {
     static var systemImageName: String? = "lightbulb.fill"
     static var color: UIColor = UIColor(argbValue: 0xFFFFC500)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
-    static var seedDataFiles: [String]? = ["light110","light111","light112","light113","light114","light115","light116"]
+    static var seedDataFiles: [String]? = ["lights"]//["light110","light111","light112","light113","light114","light115","light116"]
+    static var decodableRoot: Decodable.Type = LightsPropertyContainer.self
     
     static func batchImport(value: Decodable?) async throws {
         guard let value = value as? LightsPropertyContainer else {
@@ -308,7 +309,6 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
     }
 
     func circleCoordinates(center: CLLocationCoordinate2D, radiusMeters: Double, startDegrees: Double = 0.0, endDegrees: Double = 360.0) -> [CLLocationCoordinate2D] {
-        print("xxx start degrees \(startDegrees) end degrees \(endDegrees)")
         var coordinates: [CLLocationCoordinate2D] = []
         let centerLatRad = toRadians(degrees: center.latitude)
         let centerLonRad = toRadians(degrees: center.longitude)
@@ -654,35 +654,46 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         let total = propertyList.count
         NSLog("Creating batch insert request of lights for \(total) lights")
         
-        var previousRegionHeading: String?
-        var previousSubregionHeading: String?
-        var previousLocalHeading: String?
+        struct PreviousLocation {
+            var previousRegionHeading: String?
+            var previousSubregionHeading: String?
+            var previousLocalHeading: String?
+        }
+        
+        var previousHeadingPerVolume: [String : PreviousLocation] = [:]
         // Provide one dictionary at a time when the closure is called.
         let batchInsertRequest = NSBatchInsertRequest(entity: Light.entity(), dictionaryHandler: { dictionary in
             guard index < total else { return true }
             let propertyDictionary = propertyList[index].dictionaryValue
-            let region = propertyDictionary["regionHeading"] as? String ?? previousRegionHeading
-            let subregion = propertyDictionary["subregionHeading"] as? String ?? previousSubregionHeading
-            let local = propertyDictionary["localHeading"] as? String ?? previousSubregionHeading
+            let volumeNumber = propertyDictionary["volumeNumber"] as? String ?? ""
+            var previousLocation = previousHeadingPerVolume[volumeNumber]
+            
+            let region = propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading
+            let subregion = propertyDictionary["subregionHeading"] as? String ?? previousLocation?.previousSubregionHeading
+            let local = propertyDictionary["localHeading"] as? String ?? previousLocation?.previousLocalHeading
             
             var correctedLocationDictionary: [String:String?] = [
-                "regionHeading": propertyDictionary["regionHeading"] as? String ?? previousRegionHeading,
-                "subregionHeading": propertyDictionary["subregionHeading"] as? String ?? previousSubregionHeading,
-                "localHeading": propertyDictionary["localHeading"] as? String ?? previousSubregionHeading
+                "regionHeading": propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading,
+                "subregionHeading": propertyDictionary["subregionHeading"] as? String ?? previousLocation?.previousSubregionHeading,
+                "localHeading": propertyDictionary["localHeading"] as? String ?? previousLocation?.previousLocalHeading
             ]
-            correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? "")\(correctedLocationDictionary["regionHeading"] != nil ? ": \(correctedLocationDictionary["regionHeading"] as? String ?? "")" : "")"
-
-            
-            if previousRegionHeading != region {
-                previousRegionHeading = region
-                previousSubregionHeading = nil
-                previousLocalHeading = nil
-            } else if previousSubregionHeading != subregion {
-                previousSubregionHeading = subregion
-                previousLocalHeading = nil
-            } else if previousLocalHeading != local {
-                previousLocalHeading = local
+            if let rh = correctedLocationDictionary["regionHeading"] as? String {
+                correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? ""): \(rh)"
+            } else {
+                correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? "")"
             }
+            
+            if previousLocation?.previousRegionHeading != region {
+                previousLocation?.previousRegionHeading = region
+                previousLocation?.previousSubregionHeading = nil
+                previousLocation?.previousLocalHeading = nil
+            } else if previousLocation?.previousSubregionHeading != subregion {
+                previousLocation?.previousSubregionHeading = subregion
+                previousLocation?.previousLocalHeading = nil
+            } else if previousLocation?.previousLocalHeading != local {
+                previousLocation?.previousLocalHeading = local
+            }
+            previousHeadingPerVolume[volumeNumber] = previousLocation ?? PreviousLocation(previousRegionHeading: region, previousSubregionHeading: subregion, previousLocalHeading: local)
             
             dictionary.addEntries(from: propertyDictionary.filter({
                 return $0.value != nil

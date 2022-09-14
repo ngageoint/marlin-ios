@@ -19,6 +19,7 @@ extension Modu: DataSource {
     static var imageName: String? = "modu"
     static var systemImageName: String? = nil
     static var seedDataFiles: [String]? = ["modu"]
+    static var decodableRoot: Decodable.Type = ModuPropertyContainer.self
     static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.75
     

@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import SwiftUI
 import MapKit
+import CoreData
 
 struct Throwable<T: Decodable>: Decodable {
     let result: Result<T, Error>
@@ -18,11 +19,12 @@ struct Throwable<T: Decodable>: Decodable {
     }
 }
 
-protocol BatchImportable {
+protocol BatchImportable: NSManagedObject {
     static func batchImport(value: Decodable?) async throws
     static func dataRequest() -> [MSIRouter]
     static var key: String { get }
     static var seedDataFiles: [String]? { get }
+    static var decodableRoot: Decodable.Type { get }
 }
 
 protocol DataSource: BatchImportable {

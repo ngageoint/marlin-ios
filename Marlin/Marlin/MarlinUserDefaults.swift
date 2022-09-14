@@ -88,6 +88,15 @@ extension UserDefaults {
         bool(forKey: #function)
     }
     
+    @objc var initialDataLoaded: Bool {
+        get {
+            bool(forKey: #function)
+        }
+        set {
+            setValue(newValue, forKey: #function)
+        }
+    }
+    
     func imageScale(_ key: String) -> CGFloat? {
         if let size = object(forKey: "\(key)ImageScale") as? Float {
             return CGFloat(size)
@@ -100,7 +109,7 @@ extension UserDefaults {
         bool(forKey: "hamburger")
     }
     
-    func dataSourceEnabled(_ dataSource: DataSource.Type) -> Bool {
+    func dataSourceEnabled(_ dataSource: BatchImportable.Type) -> Bool {
         bool(forKey: "\(dataSource.key)DataSourceEnabled")
     }
 }

@@ -23,6 +23,7 @@ extension DFRS: DataSource {
     static var imageName: String? = nil
     static var systemImageName: String? = "antenna.radiowaves.left.and.right.circle"
     static var seedDataFiles: [String]? = ["dfrs"]
+    static var decodableRoot: Decodable.Type = DFRSPropertyContainer.self
     static var color: UIColor = UIColor(argbValue: 0xFF00E676)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
@@ -370,6 +371,7 @@ struct DFRSProperties: Decodable {
 extension DFRSArea: BatchImportable {
     static var seedDataFiles: [String]? = ["dfrsAreas"]
     static var key: String = "dfrsAreas"
+    static var decodableRoot: Decodable.Type = DFRSAreaPropertyContainer.self
     
     static func batchImport(value: Decodable?) async throws {
         guard let value = value as? DFRSAreaPropertyContainer else {

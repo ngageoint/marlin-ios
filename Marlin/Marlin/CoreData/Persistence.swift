@@ -70,6 +70,8 @@ class PersistenceController {
             NotificationCenter.default.removeObserver(observer)
         }
     }
+    
+    var isLoaded: Bool = false
 
     lazy var container: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Marlin")
@@ -107,6 +109,8 @@ class PersistenceController {
                  */
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
+            self.isLoaded = true
+            NotificationCenter.default.post(name: .PersistentStoreLoaded, object: nil)
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
@@ -116,6 +120,7 @@ class PersistenceController {
                 try container.viewContext.setQueryGenerationFrom(.current)
             } catch {
                 // log any errors
+                NSLog("Errors setting query generation from \(error)")
             }
         }
         
