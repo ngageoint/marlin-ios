@@ -39,16 +39,21 @@ class AppState: ObservableObject {
 
 struct MarlinApp: App {
     
-    let viewContext = PersistenceController.shared.container.viewContext
-    let shared = MSI.shared
+    let persistenceController: PersistenceController
+    let shared: MSI
     
     let scheme = MarlinScheme()
-    let appState = AppState()
+    var appState: AppState
     
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
     @State var loading = false
     
     init() {
+        // set up default user defaults
+        UserDefaults.registerMarlinDefaults()
+        shared = MSI.shared
+        appState = MSI.shared.appState
+        persistenceController = PersistenceController.shared
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             
@@ -59,30 +64,15 @@ struct MarlinApp: App {
             // Enable or disable features based on the authorization.
         }
         
-        // set up default user defaults
-        UserDefaults.registerMarlinDefaults()
+        
     }
 
     var body: some Scene {
         WindowGroup {
             MarlinView()
                 .environmentObject(appState)
-                .environment(\.managedObjectContext, viewContext)
+                .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
                 .background(Color.surfaceColor)
-                .onAppear {
-                    if PersistenceController.shared.isLoaded, !loading {
-                        NSLog("Marlin view appear, PersistenceController is loaded, load data")
-                        loading = true
-                        shared.loadAllData(appState: appState)
-                    }
-                }
-                .onReceive(persistentStoreLoadedPub) { output in
-                    if !loading {
-                        NSLog("Marlin view recieve notification, PersistenceController is loaded, load data")
-                        loading = true
-                        shared.loadAllData(appState: appState)
-                    }
-                }
         }
     }
 }

@@ -17,6 +17,7 @@ public class MSI {
     let persistenceController = PersistenceController.shared
 
     static let shared = MSI()
+    let appState = AppState()
     lazy var configuration: URLSessionConfiguration = URLSessionConfiguration.af.default
     lazy var session: Session = {
         let manager = ServerTrustManager(evaluators: ["msi.gs.mil": DisabledTrustEvaluator()])
@@ -27,11 +28,9 @@ public class MSI {
     
     let masterDataList: [BatchImportable.Type] = [Asam.self, Modu.self, NavigationalWarning.self, Light.self, Port.self, RadioBeacon.self, DifferentialGPSStation.self, DFRS.self, DFRSArea.self]
     
-    var appState: AppState?
     
-    func loadAllData(appState: AppState) {
-        self.appState = appState
-        
+    func loadAllData() {
+        NSLog("Load all data")
         var initialDataLoadList: [BatchImportable.Type] = []
         // if we think we need to load the initial data
         if !UserDefaults.standard.initialDataLoaded {
@@ -46,12 +45,12 @@ public class MSI {
 
             DispatchQueue.main.async {
                 for importable in initialDataLoadList {
-                    appState.loadingDataSource[importable.key] = true
+                    self.appState.loadingDataSource[importable.key] = true
                 }
                 let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
                 queue.async( execute:{
                     for importable in initialDataLoadList {
-                        self.loadInitialData(appState: appState, type: importable.decodableRoot, dataType: importable)
+                        self.loadInitialData(type: importable.decodableRoot, dataType: importable)
                     }
                 })
             }
@@ -62,7 +61,7 @@ public class MSI {
 
             NSLog("Fetching new data from the API for \(allLoadList.count) data sources")
             for importable in allLoadList {
-                self.loadData(appState: appState, type: importable.decodableRoot, dataType: importable)
+                self.loadData(type: importable.decodableRoot, dataType: importable)
             }
         }
     }
@@ -85,20 +84,21 @@ public class MSI {
 
         if let inserts = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, inserts.count > 0 {
             if let dataSourceItem = inserts.first as? DataSource {
+                var allLoaded = true
+                for (dataSource, loading) in self.appState.loadingDataSource {
+                    if loading && type(of: dataSourceItem).key != dataSource {
+                        allLoaded = false
+                    }
+                }
+                if allLoaded {
+                    NotificationCenter.default.removeObserver(self, name: .NSManagedObjectContextObjectsDidChange, object: PersistenceController.shared.container.viewContext)
+                }
                 DispatchQueue.main.async {
-                    if let appState = self.appState {
-                        appState.loadingDataSource[type(of: dataSourceItem).key] = false
-                        var allLoaded = true
-                        for (_, loading) in appState.loadingDataSource {
-                            if loading {
-                                allLoaded = false
-                            }
-                        }
-                        if allLoaded {
-                            NotificationCenter.default.removeObserver(self, name: .NSManagedObjectContextObjectsDidChange, object: PersistenceController.shared.container.viewContext)
-                            UserDefaults.standard.initialDataLoaded = true
-                            self.loadAllData(appState: appState)
-                        }
+                    self.appState.loadingDataSource[type(of: dataSourceItem).key] = false
+                    
+                    if allLoaded {
+                        UserDefaults.standard.initialDataLoaded = true
+                        self.loadAllData()
                     }
                 }
             }
@@ -107,7 +107,7 @@ public class MSI {
     
     var loadCounters: [String: Counter] = [:]
     
-    func loadInitialData<T: Decodable, D: NSManagedObject & BatchImportable>(appState: AppState, type: T.Type, dataType: D.Type) {
+    func loadInitialData<T: Decodable, D: NSManagedObject & BatchImportable>(type: T.Type, dataType: D.Type) {
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
         
         if let seedDataFiles = D.seedDataFiles {
@@ -128,9 +128,9 @@ public class MSI {
         }
     }
     
-    func loadData<T: Decodable, D: NSManagedObject & BatchImportable>(appState: AppState, type: T.Type, dataType: D.Type) {
+    func loadData<T: Decodable, D: NSManagedObject & BatchImportable>(type: T.Type, dataType: D.Type) {
         DispatchQueue.main.async {
-            appState.loadingDataSource[D.key] = true
+            self.appState.loadingDataSource[D.key] = true
         }
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
 
@@ -149,7 +149,7 @@ public class MSI {
                             NSLog("Queried for \(sum) of \(requests.count) for \(dataType.key)")
                             if sum == requests.count {
                                 DispatchQueue.main.async {
-                                    appState.loadingDataSource[D.key] = false
+                                    self.appState.loadingDataSource[D.key] = false
                                 }
                             }
                         }

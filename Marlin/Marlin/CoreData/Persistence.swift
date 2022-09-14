@@ -111,6 +111,10 @@ class PersistenceController {
             }
             self.isLoaded = true
             NotificationCenter.default.post(name: .PersistentStoreLoaded, object: nil)
+            DispatchQueue.main.async {
+                NSLog("Persistent store loaded, load all data")
+                MSI.shared.loadAllData()
+            }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
