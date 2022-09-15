@@ -16,6 +16,24 @@ struct DMSCoordinate {
 }
 
 extension CLLocationCoordinate2D {
+    
+    func toPixel(zoomLevel: Int, tileBounds3857: MapBoundingBox, tileSize: Double) -> CGPoint {
+        let object3857Location = to3857()
+        let xPosition = (((object3857Location.x - tileBounds3857.swCorner.x) / (tileBounds3857.neCorner.x - tileBounds3857.swCorner.x)) * tileSize)
+        let yPosition = tileSize - (((object3857Location.y - tileBounds3857.swCorner.y) / (tileBounds3857.neCorner.y - tileBounds3857.swCorner.y)) * tileSize)
+        return CGPoint(x:xPosition, y: yPosition)
+    }
+    
+    func to3857() -> (x: Double, y: Double) {
+        let a = 6378137.0
+        let lambda = longitude / 180 * Double.pi;
+        let phi = latitude / 180 * Double.pi;
+        let x = a * lambda;
+        let y = a * log(tan(Double.pi / 4 + phi / 2));
+        
+        return (x:x, y:y);
+    }
+    
     func bearing(to point: CLLocationCoordinate2D) -> Double {
         func degreesToRadians(_ degrees: Double) -> Double { return degrees * Double.pi / 180.0 }
         func radiansToDegrees(_ radians: Double) -> Double { return radians * 180.0 / Double.pi }

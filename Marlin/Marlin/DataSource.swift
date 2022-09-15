@@ -28,6 +28,19 @@ protocol BatchImportable: NSManagedObject {
     static func shouldSync() -> Bool
 }
 
+class DataSourceImageCache {
+    static let shared = DataSourceImageCache()
+    var images: [String : UIImage] = [:]
+    
+    func getCachedImage(dataSourceKey: String, zoomLevel: Int) -> UIImage? {
+        return images["\(dataSourceKey)\(zoomLevel)"]
+    }
+    
+    func addCachedImage(dataSourceKey: String, zoomLevel: Int, image: UIImage) {
+        images["\(dataSourceKey)\(zoomLevel)"] = image
+    }
+}
+
 protocol DataSource: BatchImportable {
     static var isMappable: Bool { get }
     static var dataSourceName: String { get }
@@ -41,9 +54,19 @@ protocol DataSource: BatchImportable {
     static var imageScale: CGFloat { get }
     var coordinate: CLLocationCoordinate2D? { get }
     func view(on: MKMapView) -> MKAnnotationView?
+    static func cachedImage(zoomLevel: Int) -> UIImage?
+    static func cacheImage(zoomLevel: Int, image: UIImage)
 }
 
 extension DataSource {
+    
+    static func cachedImage(zoomLevel: Int) -> UIImage? {
+        return DataSourceImageCache.shared.getCachedImage(dataSourceKey: key, zoomLevel: zoomLevel)
+    }
+    
+    static func cacheImage(zoomLevel: Int, image: UIImage) {
+        DataSourceImageCache.shared.addCachedImage(dataSourceKey: key, zoomLevel: zoomLevel, image: image)
+    }
     
     static var image: UIImage? {
         if let imageName = imageName {

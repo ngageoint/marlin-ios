@@ -344,23 +344,6 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
     
     let TILE_SIZE = 512.0
     
-    func coordinateToPixel(c: CLLocationCoordinate2D, zoomLevel: Int, tileBounds3857: MapBoundingBox) -> CGPoint {
-        let object3857Location = coord4326To3857(longitude: c.longitude, latitude: c.latitude)
-        let xPosition = (((object3857Location.x - tileBounds3857.swCorner.x) / (tileBounds3857.neCorner.x - tileBounds3857.swCorner.x)) * TILE_SIZE)
-        let yPosition = TILE_SIZE - (((object3857Location.y - tileBounds3857.swCorner.y) / (tileBounds3857.neCorner.y - tileBounds3857.swCorner.y)) * TILE_SIZE)
-        return CGPoint(x:xPosition, y: yPosition)
-    }
-    
-    func coord4326To3857(longitude: Double, latitude: Double) -> (x: Double, y: Double) {
-        let a = 6378137.0
-        let lambda = longitude / 180 * Double.pi;
-        let phi = latitude / 180 * Double.pi;
-        let x = a * lambda;
-        let y = a * log(tan(Double.pi / 4 + phi / 2));
-        
-        return (x:x, y:y);
-    }
-    
     func mapImage(marker: Bool = false, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil, context: CGContext? = nil) -> [UIImage] {
         var images: [UIImage] = []
         
@@ -397,10 +380,10 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
             let circleCoordinates = circleCoordinates(center: self.coordinate, radiusMeters: metersMeasurement.value, startDegrees: sector.startDegrees + 90.0, endDegrees: sector.endDegrees + 90.0)
             let path = UIBezierPath()
             
-            var pixel = coordinateToPixel(c: self.coordinate, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+            var pixel = self.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
             path.move(to: pixel)
             for circleCoordinate in circleCoordinates {
-                pixel = coordinateToPixel(c: circleCoordinate, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+                pixel = circleCoordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
                 path.addLine(to: pixel)
             }
             path.close()
@@ -420,10 +403,10 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         let circleCoordinates = circleCoordinates(center: self.coordinate, radiusMeters: metersMeasurement.value)
         let path = UIBezierPath()
         
-        var pixel = coordinateToPixel(c: circleCoordinates[0], zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+        var pixel = circleCoordinates[0].toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
         path.move(to: pixel)
         for circleCoordinate in circleCoordinates {
-            pixel = coordinateToPixel(c: circleCoordinate, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857)
+            pixel = circleCoordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
             path.addLine(to: pixel)
         }
         path.close()

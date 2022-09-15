@@ -51,8 +51,6 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
         let maxTileLat = latitude(y: path.y, zoom: path.z)
         let neCorner3857 = coord4326To3857(longitude: maxTileLon, latitude: maxTileLat)
         let swCorner3857 = coord4326To3857(longitude: minTileLon, latitude: minTileLat)
-        let nwCorner3857 = coord4326To3857(longitude: minTileLon, latitude: maxTileLat)
-        let seCorner3857 = coord4326To3857(longitude: maxTileLon, latitude: minTileLat)
         let minTileX = swCorner3857.x
         let minTileY = swCorner3857.y
         let maxTileX = neCorner3857.x
