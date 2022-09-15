@@ -39,6 +39,11 @@ extension DFRS: DataSource {
     static func dataRequest() -> [MSIRouter] {
         return [MSIRouter.readDFRS]
     }
+    
+    static func shouldSync() -> Bool {
+        // sync once every week
+        return UserDefaults.standard.dataSourceEnabled(DFRS.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(DFRS.self)
+    }
 }
 
 extension DFRS: DataSourceViewBuilder {
@@ -384,6 +389,11 @@ extension DFRSArea: BatchImportable {
     
     static func dataRequest() -> [MSIRouter] {
         return [MSIRouter.readDFRSAreas]
+    }
+    
+    static func shouldSync() -> Bool {
+        // sync once every week
+        return UserDefaults.standard.dataSourceEnabled(DFRSArea.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(DFRSArea.self)
     }
 }
 

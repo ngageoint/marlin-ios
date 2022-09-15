@@ -25,6 +25,7 @@ protocol BatchImportable: NSManagedObject {
     static var key: String { get }
     static var seedDataFiles: [String]? { get }
     static var decodableRoot: Decodable.Type { get }
+    static func shouldSync() -> Bool
 }
 
 protocol DataSource: BatchImportable {

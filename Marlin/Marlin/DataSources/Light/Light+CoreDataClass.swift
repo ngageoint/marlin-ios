@@ -52,6 +52,11 @@ extension Light: DataSource {
             
         return requests
     }
+    
+    static func shouldSync() -> Bool {
+        // sync once every week
+        return UserDefaults.standard.dataSourceEnabled(Light.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(Light.self)
+    }
 }
 
 extension Light: DataSourceViewBuilder {

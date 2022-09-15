@@ -112,4 +112,12 @@ extension UserDefaults {
     func dataSourceEnabled(_ dataSource: BatchImportable.Type) -> Bool {
         bool(forKey: "\(dataSource.key)DataSourceEnabled")
     }
+    
+    func lastSyncTimeSeconds(_ dataSource: BatchImportable.Type) -> Double {
+        return double(forKey: "\(dataSource.key)LastSyncTime")
+    }
+    
+    func updateLastSyncTimeSeconds(_ dataSource: BatchImportable.Type) {
+        setValue(Date().timeIntervalSince1970, forKey: "\(dataSource.key)LastSyncTime")
+    }
 }

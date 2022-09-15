@@ -40,6 +40,10 @@ extension Port: DataSource {
         return [MSIRouter.readPorts]
     }
     
+    static func shouldSync() -> Bool {
+        // sync once every week
+        return UserDefaults.standard.dataSourceEnabled(Port.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(Port.self)
+    }
 }
 
 extension Port: DataSourceViewBuilder {

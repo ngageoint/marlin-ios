@@ -68,6 +68,11 @@ extension NavigationalWarning: DataSource {
     var color: UIColor {
         return NavigationalWarning.color
     }
+    
+    static func shouldSync() -> Bool {
+        // sync once every hour
+        return UserDefaults.standard.dataSourceEnabled(NavigationalWarning.self) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(NavigationalWarning.self)
+    }
 }
 
 extension NavigationalWarning: DataSourceViewBuilder {

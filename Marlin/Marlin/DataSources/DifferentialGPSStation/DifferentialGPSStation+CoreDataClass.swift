@@ -46,6 +46,11 @@ extension DifferentialGPSStation: DataSource {
         
         return [MSIRouter.readDifferentialGPSStations(noticeYear: newestDifferentialGPSStation?.noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1))]
     }
+    
+    static func shouldSync() -> Bool {
+        // sync once every week
+        return UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(DifferentialGPSStation.self)
+    }
 }
 
 extension DifferentialGPSStation: DataSourceViewBuilder {

@@ -37,6 +37,11 @@ extension Modu: DataSource {
         return [MSIRouter.readModus(date: newestModu?.dateString)]
     }
     
+    static func shouldSync() -> Bool {
+        // sync once every hour
+        return UserDefaults.standard.dataSourceEnabled(Modu.self) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(Modu.self)
+    }
+    
 }
 
 extension Modu: DataSourceViewBuilder {

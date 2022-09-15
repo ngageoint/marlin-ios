@@ -39,6 +39,11 @@ extension Asam: DataSource {
         let newestAsam = try? PersistenceController.shared.container.viewContext.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)])
         return [MSIRouter.readAsams(date: newestAsam?.dateString)]
     }
+    
+    static func shouldSync() -> Bool {
+        // sync once every hour
+        return UserDefaults.standard.dataSourceEnabled(Asam.self) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(Asam.self)
+    }
 }
 
 extension Asam: DataSourceViewBuilder {

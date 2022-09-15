@@ -56,7 +56,7 @@ public class MSI {
             }
         } else {
             let allLoadList: [BatchImportable.Type] = masterDataList.filter { importable in
-                UserDefaults.standard.dataSourceEnabled(importable)
+                importable.shouldSync()
             }
 
             NSLog("Fetching new data from the API for \(allLoadList.count) data sources")
@@ -150,6 +150,7 @@ public class MSI {
                             if sum == requests.count {
                                 DispatchQueue.main.async {
                                     self.appState.loadingDataSource[D.key] = false
+                                    UserDefaults.standard.updateLastSyncTimeSeconds(D.self)
                                 }
                             }
                         }
