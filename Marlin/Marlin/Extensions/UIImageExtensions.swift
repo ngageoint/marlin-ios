@@ -44,7 +44,13 @@ extension UIImage {
         return imageWithInsets
     }
     
-    static func combineCentered(image1: UIImage, image2: UIImage) -> UIImage? {
+    static func combineCentered(image1: UIImage?, image2: UIImage?) -> UIImage? {
+        guard let image1 = image1 else {
+            return image2
+        }
+        guard let image2 = image2 else {
+            return image1
+        }
         let maxSize = CGSize(width: max(image1.size.width, image2.size.width),
                              height: max(image1.size.height, image2.size.height))
         UIGraphicsBeginImageContextWithOptions(maxSize, false, image1.scale)
@@ -56,20 +62,6 @@ extension UIImage {
         let imageWithInsets = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return imageWithInsets
-    }
-    
-    static func clearImage() -> UIImage {
-        let rect = CGRect(origin: CGPoint(x: 0, y:0), size: CGSize(width: 0, height: 0))
-        UIGraphicsBeginImageContext(rect.size)
-        let context = UIGraphicsGetCurrentContext()!
-        
-        context.setFillColor(UIColor.clear.cgColor)
-        context.fill(rect)
-        
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return image!
     }
     
     func maskWithColor(color: UIColor) -> UIImage? {
