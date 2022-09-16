@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 ## 0.7.5
   * Lights can now be drawn on the map in actual size based on the range
   * Fix crash when loading initial MSI data
+  * Hamburger menu hit box expanded to allow easier taps
+  * Lights are loaded much faster
 
 ## 0.7.4
   * Fixes for how obscured lights are drawn
