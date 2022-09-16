@@ -13,6 +13,8 @@ struct LightsListView: View {
     
     @ObservedObject var focusedItem: ItemWrapper
     @State var selection: String? = nil
+    @State var tappedLight: Light?
+    @State private var showDetail = false
     
     @StateObject var lightsViewModel: LightsViewModel = LightsViewModel()
     
@@ -48,6 +50,17 @@ struct LightsListView: View {
                 }
                 
             }
+            
+            if let tappedLight = tappedLight {
+                
+                if showDetail {
+                    NavigationLink(destination: tappedLight.detailView
+                        .navigationTitle("\(tappedLight.name ?? Light.dataSourceName)" )
+                        .navigationBarTitleDisplayMode(.inline), isActive: self.$showDetail) {
+                        EmptyView()
+                    }.hidden()
+                }
+            }
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
                     ForEach(lightsViewModel.lights, id: \.id) { section in
@@ -64,13 +77,6 @@ struct LightsListView: View {
                                 ForEach(lightsViewModel.lights[section.id].lights) { light in
                                     
                                     ZStack {
-                                        NavigationLink(destination: light.detailView
-                                            .navigationTitle("\(light.name ?? Light.dataSourceName)" )
-                                            .navigationBarTitleDisplayMode(.inline)) {
-                                                EmptyView()
-                                            }
-                                            .opacity(0)
-                                        
                                         HStack {
                                             light.summaryView()
                                                 .onAppear {
@@ -83,6 +89,10 @@ struct LightsListView: View {
                                         .card()
                                     }
                                     .padding(.all, 8)
+                                    .onTapGesture {
+                                        tappedLight = light
+                                        showDetail.toggle()
+                                    }
                                     
                                 }
                                 .dataSourceSummaryItem()
