@@ -55,6 +55,8 @@ public class MSI {
                 })
             }
         } else {
+            UserDefaults.standard.initialDataLoaded = true
+
             let allLoadList: [BatchImportable.Type] = masterDataList.filter { importable in
                 importable.shouldSync()
             }
