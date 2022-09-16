@@ -51,7 +51,8 @@ struct PortActionBar: View {
                 if showFocusButton {
                     Button(action: {
                         NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
-                        NotificationCenter.default.post(name: .FocusPort, object: self.port)
+                        let notification = MapItemsTappedNotification(items: [self.port])
+                        NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
                     }) {
                         Label(
                             title: {},

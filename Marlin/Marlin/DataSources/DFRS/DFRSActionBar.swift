@@ -52,7 +52,8 @@ struct DFRSActionBar: View {
                 if showFocusButton && CLLocationCoordinate2DIsValid(dfrs.coordinate) {
                     Button(action: {
                         NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
-                        NotificationCenter.default.post(name: .FocusDFRS, object: self.dfrs)
+                        let notification = MapItemsTappedNotification(items: [self.dfrs])
+                        NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
                     }) {
                         Label(
                             title: {},

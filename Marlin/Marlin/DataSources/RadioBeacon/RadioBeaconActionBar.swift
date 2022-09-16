@@ -51,7 +51,8 @@ struct RadioBeaconActionBar: View {
                 if showFocusButton {
                     Button(action: {
                         NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
-                        NotificationCenter.default.post(name: .FocusRadioBeacon, object: self.radioBeacon)
+                        let notification = MapItemsTappedNotification(items: [self.radioBeacon])
+                        NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
                     }) {
                         Label(
                             title: {},

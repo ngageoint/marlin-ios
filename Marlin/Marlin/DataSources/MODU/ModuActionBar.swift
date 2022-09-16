@@ -53,7 +53,8 @@ struct ModuActionBar: View {
                 if showFocusButton {
                     Button(action: {
                         NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
-                        NotificationCenter.default.post(name: .FocusModu, object: self.modu)
+                        let notification = MapItemsTappedNotification(items: [self.modu])
+                        NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
                     }) {
                         Label(
                             title: {},

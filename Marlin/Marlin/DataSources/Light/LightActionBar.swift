@@ -51,7 +51,8 @@ struct LightActionBar: View {
                 if showFocusButton {
                     Button(action: {
                         NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
-                        NotificationCenter.default.post(name: .FocusLight, object: self.light)
+                        let notification = MapItemsTappedNotification(items: [self.light])
+                        NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
                     }) {
                         Label(
                             title: {},
