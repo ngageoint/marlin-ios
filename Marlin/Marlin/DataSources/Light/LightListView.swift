@@ -81,7 +81,7 @@ struct LightsListView: View {
                                             light.summaryView()
                                                 .onAppear {
                                                     if section.id == lightsViewModel.lights[lightsViewModel.lights.count - 1].id {
-                                                        lightsViewModel.getLights(for: section.id + 1)
+                                                        lightsViewModel.updateLights(for: section.id + 1)
                                                     }
                                                 }
                                         }

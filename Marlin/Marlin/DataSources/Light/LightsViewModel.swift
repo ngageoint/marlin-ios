@@ -29,26 +29,51 @@ class LightsViewModel: NSObject, NSFetchedResultsControllerDelegate, ObservableO
     var fetchedResultsController: NSFetchedResultsController<Light>
     
     override init() {
-        
-        
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Light.sectionHeader, ascending: true), NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "characteristicNumber = 1")
         self.fetchedResultsController = NSFetchedResultsController<Light>(fetchRequest: fetchRequest,
                                                                    managedObjectContext: PersistenceController.shared.container.viewContext,
                                                                    sectionNameKeyPath: "sectionHeader",
                                                                    cacheName: nil)
-        try? fetchedResultsController.performFetch()
-        
         super.init()
-        getLights(for: 0)
+        self.fetchedResultsController.delegate = self
+        try? fetchedResultsController.performFetch()
+        if let sectionLights = getLights(for: 0) {
+            lights.insert(sectionLights, at: 0)
+        }
     }
     
-    func getLights(for sectionIndex: Int){
-        if lights.count - 1 > sectionIndex {
-            return
+    func updateLights(for sectionIndex: Int) {
+        if let sectionLights = getLights(for: sectionIndex) {
+            lights.insert(sectionLights, at: sectionIndex)
         }
-        if let section = fetchedResultsController.sections?[sectionIndex], let sectionLights = section.objects as? [Light] {
-            lights.append(LightSection(id: sectionIndex, name: section.name, lights: sectionLights))
+    }
+    
+    func getLights(for sectionIndex: Int) -> LightSection? {
+        if lights.count - 1 > sectionIndex {
+            return nil
+        }
+        if let sections = fetchedResultsController.sections, sections.count > sectionIndex {
+            let section = sections[sectionIndex]
+            if let sectionLights = section.objects as? [Light] {
+                return LightSection(id: sectionIndex, name: section.name, lights: sectionLights)
+            }
+        }
+        return nil
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        // update the sections that were already loaded, or load the initial section if none loaded yet
+        if lights.isEmpty {
+            if let sectionLights = getLights(for: 0) {
+                lights.insert(sectionLights, at: 0)
+            }
+        } else {
+            for (index, light) in lights.enumerated() {
+                if let sectionLights = getLights(for: index) {
+                    lights[index] = sectionLights
+                }
+            }
         }
     }
 }
