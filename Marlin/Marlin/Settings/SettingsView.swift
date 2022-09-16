@@ -14,6 +14,7 @@ struct SettingsView: View {
     @State var tapCount: Int = 1
     
     @AppStorage("showMapScale") var showMapScale = false
+    @AppStorage("flyoverMapsEnabled") var flyoverMapsEnabled = false
     
     var body: some View {
         List {
@@ -66,6 +67,11 @@ struct SettingsView: View {
                     Toggle(isOn: $showMapScale, label: {
                         Image(systemName: "ruler.fill")
                         Text("Show Map Scale (requires restart)")
+                    })
+                    .padding([.top, .bottom], 8)
+                    Toggle(isOn: $flyoverMapsEnabled, label: {
+                        Image(systemName: "rotate.3d")
+                        Text("Enable Flyover Map Types")
                     })
                     .padding([.top, .bottom], 8)
                 }.toggleStyle(SwitchToggleStyle(tint: .primaryColorVariant))
