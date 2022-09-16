@@ -25,7 +25,7 @@ extension Port: DataSource {
     static var seedDataFiles: [String]? = ["port"]
     static var decodableRoot: Decodable.Type = PortPropertyContainer.self
     static var color: UIColor = UIColor(argbValue: 0xFF5856d6)
-    static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.75
+    static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
     static func batchImport(value: Decodable?) async throws {
         guard let value = value as? PortPropertyContainer else {

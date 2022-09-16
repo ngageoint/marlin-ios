@@ -21,7 +21,7 @@ extension Modu: DataSource {
     static var seedDataFiles: [String]? = ["modu"]
     static var decodableRoot: Decodable.Type = ModuPropertyContainer.self
     static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
-    static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.75
+    static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
     static func batchImport(value: Decodable?) async throws {
         guard let value = value as? ModuPropertyContainer else {

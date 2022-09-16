@@ -24,7 +24,7 @@ extension Asam: DataSource {
     static var systemImageName: String? = nil
     
     static var color: UIColor = .black
-    static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.75
+    static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
     static func batchImport(value: Decodable?) async throws {
         guard let value = value as? AsamPropertyContainer else {
