@@ -6,20 +6,22 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct LightsListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-        
-    @SectionedFetchRequest<String, Light>(
-        sectionIdentifier: \.sectionHeader!,
-        sortDescriptors: [NSSortDescriptor(keyPath: \Light.sectionHeader, ascending: true), NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)],
-        predicate: NSPredicate(format: "characteristicNumber = 1")// AND volumeNumber = 'PUB 116'")
-    )
-    var sectionedLights: SectionedFetchResults<String, Light>
+    
     @ObservedObject var focusedItem: ItemWrapper
     @State var selection: String? = nil
     
+    @StateObject var lightsViewModel: LightsViewModel = LightsViewModel()
+    
     var watchFocusedItem: Bool = false
+    
+    init(focusedItem: ItemWrapper, watchFocusedItem: Bool = false) {
+        self.watchFocusedItem = watchFocusedItem
+        self.focusedItem = focusedItem
+    }
 
     var body: some View {
         ZStack {
@@ -46,32 +48,46 @@ struct LightsListView: View {
                 }
                 
             }
-            List(sectionedLights) { section in
-                
-                Section(header: HStack {
-                    Text(section.id)
-                        .overline()
-                }) {
-
-                    ForEach(section) { light in
-                         
-                        ZStack {
-                            NavigationLink(destination: light.detailView
-                                .navigationTitle("\(light.name ?? Light.dataSourceName)" )
-                                .navigationBarTitleDisplayMode(.inline)) {
-                                    EmptyView()
-                                }
-                                .opacity(0)
-                            
-                            HStack {
-                                light.summaryView()
-                            }
-                            .padding(.all, 16)
-                            .card()
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
+                    ForEach(lightsViewModel.lights, id: \.id) { section in
+                        Section(header: HStack {
+                            Text(section.name)
+                                .overline()
+                                .padding([.leading, .trailing], 8)
+                                .padding(.top, 12)
+                                .padding(.bottom, 4)
+                            Spacer()
                         }
-                        
+                            .background(Color.backgroundColor)) {
+                                
+                                ForEach(lightsViewModel.lights[section.id].lights) { light in
+                                    
+                                    ZStack {
+                                        NavigationLink(destination: light.detailView
+                                            .navigationTitle("\(light.name ?? Light.dataSourceName)" )
+                                            .navigationBarTitleDisplayMode(.inline)) {
+                                                EmptyView()
+                                            }
+                                            .opacity(0)
+                                        
+                                        HStack {
+                                            light.summaryView()
+                                                .onAppear {
+                                                    if section.id == lightsViewModel.lights[lightsViewModel.lights.count - 1].id {
+                                                        lightsViewModel.getLights(for: section.id + 1)
+                                                    }
+                                                }
+                                        }
+                                        .padding(.all, 16)
+                                        .card()
+                                    }
+                                    .padding(.all, 8)
+                                    
+                                }
+                                .dataSourceSummaryItem()
+                            }
                     }
-                    .dataSourceSummaryItem()
                 }
             }
             .navigationTitle(Light.dataSourceName)
