@@ -12,6 +12,7 @@ struct MapSettings: View {
     @AppStorage("showMGRS") var showMGRS: Bool = false
     @AppStorage("showGARS") var showGARS: Bool = false
     @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
+    @AppStorage("flyoverMapsEnabled") var flyoverMapsEnabled: Bool = false
     var body: some View {
         List {
             Section("Map") {
@@ -51,30 +52,32 @@ struct MapSettings: View {
                 }
                 .padding(.top, 4)
                 .padding(.bottom, 4)
-                HStack(spacing: 4) {
-                    Text("Satellite Flyover").font(Font.body1)
-                        .foregroundColor(Color.onSurfaceColor.opacity(0.87))
-                    Spacer()
-                    Image(systemName: mapType == MKMapType.satelliteFlyover.rawValue ? "circle.inset.filled": "circle")
-                        .foregroundColor(Color.primaryColor)
-                        .onTapGesture {
-                            mapType = Int(MKMapType.satelliteFlyover.rawValue)
-                        }
+                if flyoverMapsEnabled {
+                    HStack(spacing: 4) {
+                        Text("Satellite Flyover").font(Font.body1)
+                            .foregroundColor(Color.onSurfaceColor.opacity(0.87))
+                        Spacer()
+                        Image(systemName: mapType == MKMapType.satelliteFlyover.rawValue ? "circle.inset.filled": "circle")
+                            .foregroundColor(Color.primaryColor)
+                            .onTapGesture {
+                                mapType = Int(MKMapType.satelliteFlyover.rawValue)
+                            }
+                    }
+                    .padding(.top, 4)
+                    .padding(.bottom, 4)
+                    HStack(spacing: 4) {
+                        Text("Hybrid Flyover").font(Font.body1)
+                            .foregroundColor(Color.onSurfaceColor.opacity(0.87))
+                        Spacer()
+                        Image(systemName: mapType == MKMapType.hybridFlyover.rawValue ? "circle.inset.filled": "circle")
+                            .foregroundColor(Color.primaryColor)
+                            .onTapGesture {
+                                mapType = Int(MKMapType.hybridFlyover.rawValue)
+                            }
+                    }
+                    .padding(.top, 4)
+                    .padding(.bottom, 4)
                 }
-                .padding(.top, 4)
-                .padding(.bottom, 4)
-                HStack(spacing: 4) {
-                    Text("Hybrid Flyover").font(Font.body1)
-                        .foregroundColor(Color.onSurfaceColor.opacity(0.87))
-                    Spacer()
-                    Image(systemName: mapType == MKMapType.hybridFlyover.rawValue ? "circle.inset.filled": "circle")
-                        .foregroundColor(Color.primaryColor)
-                        .onTapGesture {
-                            mapType = Int(MKMapType.hybridFlyover.rawValue)
-                        }
-                }
-                .padding(.top, 4)
-                .padding(.bottom, 4)
                 HStack(spacing: 4) {
                     Text("Muted").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
