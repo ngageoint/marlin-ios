@@ -14,11 +14,16 @@ struct Hamburger: ViewModifier {
         
         content.toolbar {
             ToolbarItem (placement: .navigationBarLeading)  {
-                Image(systemName: "line.3.horizontal")
-                    .foregroundColor(Color.onPrimaryColor)
-                    .onTapGesture {
+                HStack {
+                    Button(action: {
                         menuOpen.toggle()
+                    }) {
+                        Image(systemName: "line.3.horizontal")
+                            .imageScale(.large)
+                            .foregroundColor(Color.onPrimaryColor)
                     }
+                    .padding(.all, 10)
+                }
             }
         }
     }
