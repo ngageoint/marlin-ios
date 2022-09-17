@@ -74,8 +74,10 @@ struct LightDetailView: View {
                 ForEach(lights) { light in
                     if light.isLight {
                         LightCard(light: light)
+                            .padding(.bottom, 16)
                     } else {
                         RaconCard(racon: light)
+                            .padding(.bottom, 16)
                     }
                 }
             }
