@@ -503,6 +503,7 @@
 		F71D285F28BD688800F1775C /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
+				F7D671EE287475BC00758F1C /* DataSource.swift */,
 				F71D286F28BE958F00F1775C /* DFRS */,
 				F71D286028BE38CC00F1775C /* DifferentialGPSStation */,
 				F71CC6E828AC177A000A326C /* Port */,
@@ -679,7 +680,6 @@
 				F71DF4872857B0CC00686951 /* MarlinView.swift */,
 				F71DF49F2859116C00686951 /* Notifications.swift */,
 				F71DF4AE285927D600686951 /* MarlinScheme.swift */,
-				F7D671EE287475BC00758F1C /* DataSource.swift */,
 				F7D671F0287484FE00758F1C /* MarlinUserDefaults.swift */,
 				F707BA712874B9F4006A94C4 /* userDefaults.plist */,
 				F7ADDCE728872BF300137D95 /* Localizable.strings */,
