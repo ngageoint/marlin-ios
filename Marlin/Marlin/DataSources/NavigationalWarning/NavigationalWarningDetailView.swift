@@ -10,6 +10,7 @@ import SwiftUI
 struct NavigationalWarningDetailView: View {
     
     @EnvironmentObject var scheme: MarlinScheme
+    @State var showSelectable: Bool = false
     
     var navigationalWarning: NavigationalWarning
     
@@ -46,19 +47,46 @@ struct NavigationalWarningDetailView: View {
             }
             .dataSourceSection()
             
-            Section("Text") {
-                Text(navigationalWarning.text ?? "")
-                    .multilineTextAlignment(.leading)
-                    .secondary()
-                    .frame(maxWidth:.infinity, alignment: .leading)
-                    .padding(.all, 16)
-                    .card()
+            if let text = navigationalWarning.text {
+                Section("Text") {
+                    UITextViewContainer(text:text)
+                        .multilineTextAlignment(.leading)
+                        .textSelection(.enabled)
+                        .tint(Color.purple)
+                        .card()
+                }
+                .dataSourceSection()
             }
-            .dataSourceSection()
         }
         .dataSourceDetailList()
         .navigationTitle("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+struct UITextViewContainer: UIViewRepresentable {
+    let text: String
+    
+    func makeUIView(context: UIViewRepresentableContext<Self>) -> UITextView {
+        let view = UITextView()
+        view.textContainer.widthTracksTextView = true
+        view.textContainerInset = UIEdgeInsets(top: 16, left: 8, bottom: 0, right: 8)
+        view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        view.autoresizingMask = [.flexibleHeight]
+        view.textContainer.lineBreakMode = .byWordWrapping
+        view.isScrollEnabled = false
+        view.isEditable = false
+        view.tintColor = UIColor(Color.primaryColor)
+        view.font = UIFont.systemFont(ofSize: 14.0, weight: .regular)
+        view.textColor = UIColor(Color.onSurfaceColor).withAlphaComponent(0.6)
+        return view
+    }
+    
+    func updateUIView(_ uiView: UITextView, context: UIViewRepresentableContext<Self>) {
+        uiView.text = self.text
+        if uiView.frame.size != .zero {
+            uiView.isScrollEnabled = false
+        }
     }
 }
 
