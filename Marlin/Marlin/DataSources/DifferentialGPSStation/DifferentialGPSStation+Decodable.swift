@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import OSLog
+import CoreLocation
 
 struct DifferentialGPSStationPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {

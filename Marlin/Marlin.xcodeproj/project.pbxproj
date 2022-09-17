@@ -166,6 +166,11 @@
 		F7FFB2EC28D6249400C31AA3 /* DifferentialGPSStation+Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2EB28D6249400C31AA3 /* DifferentialGPSStation+Annotation.swift */; };
 		F7FFB2EE28D624FE00C31AA3 /* DifferentialGPSStation+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2ED28D624FE00C31AA3 /* DifferentialGPSStation+MapImage.swift */; };
 		F7FFB2F028D626DC00C31AA3 /* DifferentialGPSStation+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2EF28D626DC00C31AA3 /* DifferentialGPSStation+Decodable.swift */; };
+		F7FFB2F228D627E800C31AA3 /* Port+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2F128D627E700C31AA3 /* Port+DataSource.swift */; };
+		F7FFB2F428D62A5000C31AA3 /* Port+Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2F328D62A5000C31AA3 /* Port+Annotation.swift */; };
+		F7FFB2F628D6340B00C31AA3 /* Port+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2F528D6340B00C31AA3 /* Port+MapImage.swift */; };
+		F7FFB2F828D6344000C31AA3 /* Port+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2F728D6344000C31AA3 /* Port+Decodable.swift */; };
+		F7FFB2FA28D6349900C31AA3 /* Port+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2F928D6349900C31AA3 /* Port+DataSourceViewBuilder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -353,6 +358,11 @@
 		F7FFB2EB28D6249400C31AA3 /* DifferentialGPSStation+Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DifferentialGPSStation+Annotation.swift"; sourceTree = "<group>"; };
 		F7FFB2ED28D624FE00C31AA3 /* DifferentialGPSStation+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DifferentialGPSStation+MapImage.swift"; sourceTree = "<group>"; };
 		F7FFB2EF28D626DC00C31AA3 /* DifferentialGPSStation+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DifferentialGPSStation+Decodable.swift"; sourceTree = "<group>"; };
+		F7FFB2F128D627E700C31AA3 /* Port+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+DataSource.swift"; sourceTree = "<group>"; };
+		F7FFB2F328D62A5000C31AA3 /* Port+Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+Annotation.swift"; sourceTree = "<group>"; };
+		F7FFB2F528D6340B00C31AA3 /* Port+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+MapImage.swift"; sourceTree = "<group>"; };
+		F7FFB2F728D6344000C31AA3 /* Port+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+Decodable.swift"; sourceTree = "<group>"; };
+		F7FFB2F928D6349900C31AA3 /* Port+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -442,6 +452,11 @@
 				F71CC6EF28AD1647000A326C /* PortDetailView.swift */,
 				F71CC6F128AD1D23000A326C /* PortActionBar.swift */,
 				F79168FD28B56031004FFEBA /* PortMap.swift */,
+				F7FFB2F128D627E700C31AA3 /* Port+DataSource.swift */,
+				F7FFB2F328D62A5000C31AA3 /* Port+Annotation.swift */,
+				F7FFB2F528D6340B00C31AA3 /* Port+MapImage.swift */,
+				F7FFB2F728D6344000C31AA3 /* Port+Decodable.swift */,
+				F7FFB2F928D6349900C31AA3 /* Port+DataSourceViewBuilder.swift */,
 			);
 			path = Port;
 			sourceTree = "<group>";
@@ -1090,6 +1105,7 @@
 				F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */,
 				F7D671E22871C29A00758F1C /* AsamActionBar.swift in Sources */,
 				F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */,
+				F7FFB2F228D627E800C31AA3 /* Port+DataSource.swift in Sources */,
 				F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */,
 				F7FFB2EC28D6249400C31AA3 /* DifferentialGPSStation+Annotation.swift in Sources */,
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
@@ -1128,6 +1144,7 @@
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				F7F597B22866248700F9B32E /* NavigationalWarningNavAreaListView.swift in Sources */,
 				F71CC6E728AC06C5000A326C /* BoolExtensions.swift in Sources */,
+				F7FFB2F428D62A5000C31AA3 /* Port+Annotation.swift in Sources */,
 				F71CC6EC28AD162B000A326C /* PortListView.swift in Sources */,
 				F7FFB2EA28D623B000C31AA3 /* DifferentialGPSStation+DataSource.swift in Sources */,
 				F7D671DA286E3B3D00758F1C /* ExtraMapTypes.swift in Sources */,
@@ -1157,6 +1174,7 @@
 				F7F597AE2864DE2900F9B32E /* NavigationalWarningDetailView.swift in Sources */,
 				F71DF4A52859120A00686951 /* BottomSheetView.swift in Sources */,
 				F71D287F28C293A000F1775C /* SettingsView.swift in Sources */,
+				F7FFB2FA28D6349900C31AA3 /* Port+DataSourceViewBuilder.swift in Sources */,
 				F7ADDCE22887026500137D95 /* LocationManager.swift in Sources */,
 				F7B7064328BAADD50026DE88 /* CircleImage.swift in Sources */,
 				F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */,
@@ -1173,6 +1191,7 @@
 				F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */,
 				F707BA8D287C89ED006A94C4 /* LightMap.swift in Sources */,
 				F707BA852878DBFF006A94C4 /* AdaptiveImage.swift in Sources */,
+				F7FFB2F828D6344000C31AA3 /* Port+Decodable.swift in Sources */,
 				F707BA89287C68E7006A94C4 /* RaconCard.swift in Sources */,
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
 				F7FFB2EE28D624FE00C31AA3 /* DifferentialGPSStation+MapImage.swift in Sources */,
@@ -1194,6 +1213,7 @@
 				F71CC6EE28AD163D000A326C /* PortSummaryView.swift in Sources */,
 				F79168FE28B56031004FFEBA /* PortMap.swift in Sources */,
 				F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */,
+				F7FFB2F628D6340B00C31AA3 /* Port+MapImage.swift in Sources */,
 				F707BA81287768FA006A94C4 /* LightDetailView.swift in Sources */,
 				F7F597A3286238F400F9B32E /* MSIMapCluster.swift in Sources */,
 				F71D286628BE453A00F1775C /* DifferentialGPSStationSummaryView.swift in Sources */,
