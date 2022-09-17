@@ -171,6 +171,9 @@
 		F7FFB2F628D6340B00C31AA3 /* Port+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2F528D6340B00C31AA3 /* Port+MapImage.swift */; };
 		F7FFB2F828D6344000C31AA3 /* Port+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2F728D6344000C31AA3 /* Port+Decodable.swift */; };
 		F7FFB2FA28D6349900C31AA3 /* Port+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2F928D6349900C31AA3 /* Port+DataSourceViewBuilder.swift */; };
+		F7FFB2FC28D6361800C31AA3 /* NavigationalWarning+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2FB28D6361800C31AA3 /* NavigationalWarning+DataSource.swift */; };
+		F7FFB2FE28D6373F00C31AA3 /* NavigationalWarning+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2FD28D6373F00C31AA3 /* NavigationalWarning+DataSourceViewBuilder.swift */; };
+		F7FFB30028D6376100C31AA3 /* NavigationalWarning+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2FF28D6376100C31AA3 /* NavigationalWarning+Decodable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -363,6 +366,9 @@
 		F7FFB2F528D6340B00C31AA3 /* Port+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+MapImage.swift"; sourceTree = "<group>"; };
 		F7FFB2F728D6344000C31AA3 /* Port+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+Decodable.swift"; sourceTree = "<group>"; };
 		F7FFB2F928D6349900C31AA3 /* Port+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
+		F7FFB2FB28D6361800C31AA3 /* NavigationalWarning+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+DataSource.swift"; sourceTree = "<group>"; };
+		F7FFB2FD28D6373F00C31AA3 /* NavigationalWarning+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
+		F7FFB2FF28D6376100C31AA3 /* NavigationalWarning+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+Decodable.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -804,6 +810,9 @@
 				F7F597B12866248700F9B32E /* NavigationalWarningNavAreaListView.swift */,
 				F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */,
 				F7D671E32871C5F900758F1C /* NavigationalWarningActionBar.swift */,
+				F7FFB2FB28D6361800C31AA3 /* NavigationalWarning+DataSource.swift */,
+				F7FFB2FD28D6373F00C31AA3 /* NavigationalWarning+DataSourceViewBuilder.swift */,
+				F7FFB2FF28D6376100C31AA3 /* NavigationalWarning+Decodable.swift */,
 			);
 			path = NavigationalWarning;
 			sourceTree = "<group>";
@@ -1109,6 +1118,7 @@
 				F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */,
 				F7FFB2EC28D6249400C31AA3 /* DifferentialGPSStation+Annotation.swift in Sources */,
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
+				F7FFB2FE28D6373F00C31AA3 /* NavigationalWarning+DataSourceViewBuilder.swift in Sources */,
 				F7D5C05B28A6B458000C2C29 /* StructureImage.swift in Sources */,
 				F71D287328BE969500F1775C /* DFRSDetailView.swift in Sources */,
 				F740AA79289D6DED00754293 /* MarlinRegularWidth.swift in Sources */,
@@ -1131,6 +1141,7 @@
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
 				F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */,
 				F71D288128C29F0200F1775C /* BundleExtensions.swift in Sources */,
+				F7FFB30028D6376100C31AA3 /* NavigationalWarning+Decodable.swift in Sources */,
 				F7C3679928D0AEF400AE1265 /* DisplaySettings.swift in Sources */,
 				F70DA69128D3976D00B9C720 /* LightsViewModel.swift in Sources */,
 				F7D671F1287484FE00758F1C /* MarlinUserDefaults.swift in Sources */,
@@ -1139,6 +1150,7 @@
 				F7D671E72871D46000758F1C /* SideMenuContent.swift in Sources */,
 				F7F59789285A277000F9B32E /* Card.swift in Sources */,
 				F71D287128BE95E100F1775C /* DFRSActionBar.swift in Sources */,
+				F7FFB2FC28D6361800C31AA3 /* NavigationalWarning+DataSource.swift in Sources */,
 				F71D287728BE976300F1775C /* DFRSSummaryView.swift in Sources */,
 				F7FFB2E628D6217900C31AA3 /* DFRSArea+Decodable.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
