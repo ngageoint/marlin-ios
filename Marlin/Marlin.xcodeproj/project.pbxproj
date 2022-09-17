@@ -71,7 +71,6 @@
 		F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4952858C18000686951 /* StyledPolyline.swift */; };
 		F71DF4972858CC8100686951 /* asams.json in Resources */ = {isa = PBXBuildFile; fileRef = F71DF47D284E68DE00686951 /* asams.json */; };
 		F71DF4992858DA4700686951 /* AsamMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4982858DA4700686951 /* AsamMap.swift */; };
-		F71DF49C2859025200686951 /* AsamAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF49B2859025200686951 /* AsamAnnotation.swift */; };
 		F71DF4A02859116C00686951 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF49F2859116C00686951 /* Notifications.swift */; };
 		F71DF4A52859120A00686951 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4A42859120A00686951 /* BottomSheetView.swift */; };
 		F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4A82859143C00686951 /* UIImageExtensions.swift */; };
@@ -142,7 +141,6 @@
 		F7F59795285BE27400F9B32E /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59794285BE27400F9B32E /* Property.swift */; };
 		F7F59797285D15B900F9B32E /* ModuListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59796285D15B900F9B32E /* ModuListView.swift */; };
 		F7F59799285D166700F9B32E /* ModuDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59798285D166700F9B32E /* ModuDetailView.swift */; };
-		F7F5979B285D177400F9B32E /* ModuAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979A285D177400F9B32E /* ModuAnnotation.swift */; };
 		F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */; };
 		F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979E285D185000F9B32E /* ModuMap.swift */; };
 		F7F597A3286238F400F9B32E /* MSIMapCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A2286238F400F9B32E /* MSIMapCluster.swift */; };
@@ -156,6 +154,13 @@
 		F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB156C284AAF1B004ACAC5 /* MSIRouter.swift */; };
 		F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB156E284AB09C004ACAC5 /* MSI.swift */; };
 		F7FF8A0A28D2064900502E9E /* lights.json in Resources */ = {isa = PBXBuildFile; fileRef = F7FF8A0928D2064900502E9E /* lights.json */; };
+		F7FFB2DA28D61B3A00C31AA3 /* DFRS+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2D928D61B3A00C31AA3 /* DFRS+DataSource.swift */; };
+		F7FFB2DC28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2DB28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift */; };
+		F7FFB2DE28D61BE300C31AA3 /* DFRS+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2DD28D61BE300C31AA3 /* DFRS+MapImage.swift */; };
+		F7FFB2E028D61C6F00C31AA3 /* DFRS+Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2DF28D61C6F00C31AA3 /* DFRS+Annotation.swift */; };
+		F7FFB2E228D6202E00C31AA3 /* DFRSArea+BatchImportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2E128D6202E00C31AA3 /* DFRSArea+BatchImportable.swift */; };
+		F7FFB2E428D6213C00C31AA3 /* DFRS+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2E328D6213C00C31AA3 /* DFRS+Decodable.swift */; };
+		F7FFB2E628D6217900C31AA3 /* DFRSArea+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2E528D6217900C31AA3 /* DFRSArea+Decodable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -243,7 +248,6 @@
 		F71DF4932858C0EF00686951 /* StyledPolygon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledPolygon.swift; sourceTree = "<group>"; };
 		F71DF4952858C18000686951 /* StyledPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledPolyline.swift; sourceTree = "<group>"; };
 		F71DF4982858DA4700686951 /* AsamMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamMap.swift; sourceTree = "<group>"; };
-		F71DF49B2859025200686951 /* AsamAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamAnnotation.swift; sourceTree = "<group>"; };
 		F71DF49F2859116C00686951 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		F71DF4A42859120A00686951 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
 		F71DF4A82859143C00686951 /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
@@ -319,7 +323,6 @@
 		F7F59794285BE27400F9B32E /* Property.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Property.swift; sourceTree = "<group>"; };
 		F7F59796285D15B900F9B32E /* ModuListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuListView.swift; sourceTree = "<group>"; };
 		F7F59798285D166700F9B32E /* ModuDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDetailView.swift; sourceTree = "<group>"; };
-		F7F5979A285D177400F9B32E /* ModuAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuAnnotation.swift; sourceTree = "<group>"; };
 		F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuSummaryView.swift; sourceTree = "<group>"; };
 		F7F5979E285D185000F9B32E /* ModuMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuMap.swift; sourceTree = "<group>"; };
 		F7F597A2286238F400F9B32E /* MSIMapCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIMapCluster.swift; sourceTree = "<group>"; };
@@ -333,6 +336,13 @@
 		F7FB156C284AAF1B004ACAC5 /* MSIRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIRouter.swift; sourceTree = "<group>"; };
 		F7FB156E284AB09C004ACAC5 /* MSI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSI.swift; sourceTree = "<group>"; };
 		F7FF8A0928D2064900502E9E /* lights.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = lights.json; sourceTree = "<group>"; };
+		F7FFB2D928D61B3A00C31AA3 /* DFRS+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DFRS+DataSource.swift"; sourceTree = "<group>"; };
+		F7FFB2DB28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DFRS+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
+		F7FFB2DD28D61BE300C31AA3 /* DFRS+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DFRS+MapImage.swift"; sourceTree = "<group>"; };
+		F7FFB2DF28D61C6F00C31AA3 /* DFRS+Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DFRS+Annotation.swift"; sourceTree = "<group>"; };
+		F7FFB2E128D6202E00C31AA3 /* DFRSArea+BatchImportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DFRSArea+BatchImportable.swift"; sourceTree = "<group>"; };
+		F7FFB2E328D6213C00C31AA3 /* DFRS+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DFRS+Decodable.swift"; sourceTree = "<group>"; };
+		F7FFB2E528D6217900C31AA3 /* DFRSArea+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DFRSArea+Decodable.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -464,6 +474,13 @@
 				F71D287428BE96EB00F1775C /* DFRSMap.swift */,
 				F71D287628BE976300F1775C /* DFRSSummaryView.swift */,
 				F71D287828BE9B7400F1775C /* DFRSListView.swift */,
+				F7FFB2D928D61B3A00C31AA3 /* DFRS+DataSource.swift */,
+				F7FFB2DB28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift */,
+				F7FFB2DD28D61BE300C31AA3 /* DFRS+MapImage.swift */,
+				F7FFB2DF28D61C6F00C31AA3 /* DFRS+Annotation.swift */,
+				F7FFB2E128D6202E00C31AA3 /* DFRSArea+BatchImportable.swift */,
+				F7FFB2E328D6213C00C31AA3 /* DFRS+Decodable.swift */,
+				F7FFB2E528D6217900C31AA3 /* DFRSArea+Decodable.swift */,
 			);
 			path = DFRS;
 			sourceTree = "<group>";
@@ -685,7 +702,6 @@
 			children = (
 				F7A54CAB2848149500E5F565 /* AsamListView.swift */,
 				F71DF4982858DA4700686951 /* AsamMap.swift */,
-				F71DF49B2859025200686951 /* AsamAnnotation.swift */,
 				F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */,
 				F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */,
 				F7F59785285A206700F9B32E /* AsamDetailView.swift */,
@@ -700,7 +716,6 @@
 				F71DF4852857954A00686951 /* Modu+CoreDataClass.swift */,
 				F7F59796285D15B900F9B32E /* ModuListView.swift */,
 				F7F59798285D166700F9B32E /* ModuDetailView.swift */,
-				F7F5979A285D177400F9B32E /* ModuAnnotation.swift */,
 				F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */,
 				F7F5979E285D185000F9B32E /* ModuMap.swift */,
 				F7D671DF2871BFEC00758F1C /* ModuActionBar.swift */,
@@ -1050,6 +1065,7 @@
 				F707BA8F287DC999006A94C4 /* FetchRequestTileOverlay.swift in Sources */,
 				F71DF4882857B0CC00686951 /* MarlinView.swift in Sources */,
 				F7ADDCEE28902D5300137D95 /* AnnotationWithView.swift in Sources */,
+				F7FFB2DE28D61BE300C31AA3 /* DFRS+MapImage.swift in Sources */,
 				F707BA7728760EE7006A94C4 /* Light+CoreDataClass.swift in Sources */,
 				F7F59799285D166700F9B32E /* ModuDetailView.swift in Sources */,
 				F707BA7B28763309006A94C4 /* LightSummaryView.swift in Sources */,
@@ -1073,6 +1089,8 @@
 				F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */,
 				F7D5C05D28AA7A1F000C2C29 /* Snackbar.swift in Sources */,
 				F7D5C05328A2CAAB000C2C29 /* BottomSheetItem.swift in Sources */,
+				F7FFB2E228D6202E00C31AA3 /* DFRSArea+BatchImportable.swift in Sources */,
+				F7FFB2E028D61C6F00C31AA3 /* DFRS+Annotation.swift in Sources */,
 				F7ADDCEC28902D1500137D95 /* EnlargableAnnotation.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
 				F71D286428BE431900F1775C /* DifferentialGPSStationMap.swift in Sources */,
@@ -1089,6 +1107,7 @@
 				F7F59789285A277000F9B32E /* Card.swift in Sources */,
 				F71D287128BE95E100F1775C /* DFRSActionBar.swift in Sources */,
 				F71D287728BE976300F1775C /* DFRSSummaryView.swift in Sources */,
+				F7FFB2E628D6217900C31AA3 /* DFRSArea+Decodable.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				F7F597B22866248700F9B32E /* NavigationalWarningNavAreaListView.swift in Sources */,
 				F71CC6E728AC06C5000A326C /* BoolExtensions.swift in Sources */,
@@ -1099,7 +1118,6 @@
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
 				F71D286A28BE467200F1775C /* DifferentialGPSStationDetailView.swift in Sources */,
 				F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */,
-				F7F5979B285D177400F9B32E /* ModuAnnotation.swift in Sources */,
 				F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */,
 				F707BA91287F1767006A94C4 /* RaconImage.swift in Sources */,
 				F7D671EF287475BC00758F1C /* DataSource.swift in Sources */,
@@ -1107,11 +1125,13 @@
 				F727A684284E351800BD728A /* MSIError.swift in Sources */,
 				F71CC6F828AE71BA000A326C /* KeyValueSection.swift in Sources */,
 				F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */,
+				F7FFB2E428D6213C00C31AA3 /* DFRS+Decodable.swift in Sources */,
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
 				F707BA8328786F11006A94C4 /* LightColorImage.swift in Sources */,
 				F71D287528BE96EB00F1775C /* DFRSMap.swift in Sources */,
 				F7F59795285BE27400F9B32E /* Property.swift in Sources */,
 				F7F597B02866241100F9B32E /* NavigationalWarningsAreaDataSource.swift in Sources */,
+				F7FFB2DA28D61B3A00C31AA3 /* DFRS+DataSource.swift in Sources */,
 				F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */,
 				F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */,
 				F71D286E28BE8CB800F1775C /* DFRS+CoreDataClass.swift in Sources */,
@@ -1149,7 +1169,6 @@
 				F7D671DE286F877C00758F1C /* MaterialButtonStyle.swift in Sources */,
 				F707BA7D2877329E006A94C4 /* LightActionBar.swift in Sources */,
 				F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */,
-				F71DF49C2859025200686951 /* AsamAnnotation.swift in Sources */,
 				F7A54CD72848149700E5F565 /* AsamListView.swift in Sources */,
 				F7F597A62862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift in Sources */,
 				F71CC6EE28AD163D000A326C /* PortSummaryView.swift in Sources */,
@@ -1162,6 +1181,7 @@
 				F71CC6F228AD1D23000A326C /* PortActionBar.swift in Sources */,
 				F7ADDCDF2885E53E00137D95 /* UIColorExtensions.swift in Sources */,
 				F71D286828BE45AC00F1775C /* DifferentialGPSStationActionBar.swift in Sources */,
+				F7FFB2DC28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

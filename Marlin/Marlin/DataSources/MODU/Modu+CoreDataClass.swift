@@ -77,7 +77,7 @@ class Modu: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
     }
     
     func view(on: MKMapView) -> MKAnnotationView {
-        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: ModuAnnotationView.ReuseID, for: self)
+        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: Modu.key, for: self)
         self.annotationView = annotationView
         return annotationView
     }

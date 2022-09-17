@@ -80,7 +80,7 @@ class Asam: NSManagedObject, MKAnnotation, AnnotationWithView, EnlargableAnnotat
     }
     
     func view(on: MKMapView) -> MKAnnotationView {
-        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: AsamAnnotationView.ReuseID, for: self)
+        let annotationView = on.dequeueReusableAnnotationView(withIdentifier: Asam.key, for: self)
         self.annotationView = annotationView
         return annotationView
     }
