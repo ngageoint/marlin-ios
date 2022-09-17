@@ -189,6 +189,11 @@
 		F7FFB31A28D63EF600C31AA3 /* Light+Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31928D63EF600C31AA3 /* Light+Annotation.swift */; };
 		F7FFB31C28D63F5500C31AA3 /* Light+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31B28D63F5500C31AA3 /* Light+MapImage.swift */; };
 		F7FFB31E28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31D28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift */; };
+		F7FFB32028D640FA00C31AA3 /* RadioBeacon+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31F28D640FA00C31AA3 /* RadioBeacon+DataSource.swift */; };
+		F7FFB32228D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB32128D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift */; };
+		F7FFB32428D641DE00C31AA3 /* RadioBeacon+Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB32328D641DE00C31AA3 /* RadioBeacon+Annotation.swift */; };
+		F7FFB32628D6422F00C31AA3 /* RadioBeacon+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB32528D6422F00C31AA3 /* RadioBeacon+MapImage.swift */; };
+		F7FFB32828D6427200C31AA3 /* RadioBeacon+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB32728D6427200C31AA3 /* RadioBeacon+Decodable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -399,6 +404,11 @@
 		F7FFB31928D63EF600C31AA3 /* Light+Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+Annotation.swift"; sourceTree = "<group>"; };
 		F7FFB31B28D63F5500C31AA3 /* Light+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+MapImage.swift"; sourceTree = "<group>"; };
 		F7FFB31D28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
+		F7FFB31F28D640FA00C31AA3 /* RadioBeacon+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+DataSource.swift"; sourceTree = "<group>"; };
+		F7FFB32128D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
+		F7FFB32328D641DE00C31AA3 /* RadioBeacon+Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+Annotation.swift"; sourceTree = "<group>"; };
+		F7FFB32528D6422F00C31AA3 /* RadioBeacon+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+MapImage.swift"; sourceTree = "<group>"; };
+		F7FFB32728D6427200C31AA3 /* RadioBeacon+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+Decodable.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -651,6 +661,11 @@
 				F74B9B0C28B7DA210097D448 /* RadioBeaconSummaryView.swift */,
 				F74B9B0E28B7DA8B0097D448 /* RadioBeaconActionBar.swift */,
 				F74B9B1028B7DACB0097D448 /* RadioBeaconDetailView.swift */,
+				F7FFB31F28D640FA00C31AA3 /* RadioBeacon+DataSource.swift */,
+				F7FFB32128D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift */,
+				F7FFB32328D641DE00C31AA3 /* RadioBeacon+Annotation.swift */,
+				F7FFB32528D6422F00C31AA3 /* RadioBeacon+MapImage.swift */,
+				F7FFB32728D6427200C31AA3 /* RadioBeacon+Decodable.swift */,
 			);
 			path = RadioBeacon;
 			sourceTree = "<group>";
@@ -1201,6 +1216,7 @@
 				F7F59789285A277000F9B32E /* Card.swift in Sources */,
 				F71D287128BE95E100F1775C /* DFRSActionBar.swift in Sources */,
 				F7FFB2FC28D6361800C31AA3 /* NavigationalWarning+DataSource.swift in Sources */,
+				F7FFB32228D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift in Sources */,
 				F71D287728BE976300F1775C /* DFRSSummaryView.swift in Sources */,
 				F7FFB2E628D6217900C31AA3 /* DFRSArea+Decodable.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
@@ -1221,12 +1237,15 @@
 				F7D671EF287475BC00758F1C /* DataSource.swift in Sources */,
 				F71DF4992858DA4700686951 /* AsamMap.swift in Sources */,
 				F727A684284E351800BD728A /* MSIError.swift in Sources */,
+				F7FFB32428D641DE00C31AA3 /* RadioBeacon+Annotation.swift in Sources */,
 				F71CC6F828AE71BA000A326C /* KeyValueSection.swift in Sources */,
 				F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */,
 				F7FFB30228D6383900C31AA3 /* Asam+DataSource.swift in Sources */,
 				F7FFB2E428D6213C00C31AA3 /* DFRS+Decodable.swift in Sources */,
 				F7FFB30828D63A9F00C31AA3 /* Asam+MapImage.swift in Sources */,
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
+				F7FFB32028D640FA00C31AA3 /* RadioBeacon+DataSource.swift in Sources */,
+				F7FFB32628D6422F00C31AA3 /* RadioBeacon+MapImage.swift in Sources */,
 				F707BA8328786F11006A94C4 /* LightColorImage.swift in Sources */,
 				F71D287528BE96EB00F1775C /* DFRSMap.swift in Sources */,
 				F7F59795285BE27400F9B32E /* Property.swift in Sources */,
@@ -1267,6 +1286,7 @@
 				F7FFB2EE28D624FE00C31AA3 /* DifferentialGPSStation+MapImage.swift in Sources */,
 				F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */,
 				F71D286C28BE46F800F1775C /* DifferentialGPSStationListView.swift in Sources */,
+				F7FFB32828D6427200C31AA3 /* RadioBeacon+Decodable.swift in Sources */,
 				F71D287B28C1401500F1775C /* FetchRequestMap.swift in Sources */,
 				F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */,
 				F71D287D28C2926500F1775C /* SettingsCell.swift in Sources */,
