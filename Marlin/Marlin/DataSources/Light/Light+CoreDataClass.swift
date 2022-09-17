@@ -16,19 +16,6 @@ struct LightVolume {
     var volumeNumber: String
 }
 
-extension Light: DataSourceViewBuilder {
-    var detailView: AnyView {
-        if let featureNumber = self.featureNumber, let volumeNumber = self.volumeNumber {
-            return AnyView(LightDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber).navigationTitle("\(name ?? Light.dataSourceName)" ))
-        }
-        return AnyView(EmptyView())
-    }
-    
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
-        AnyView(LightSummaryView(light: self, showMoreDetails: showMoreDetails))
-    }
-}
-
 class Light: NSManagedObject {
     var enlarged: Bool = false
     

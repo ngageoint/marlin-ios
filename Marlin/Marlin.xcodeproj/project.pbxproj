@@ -188,6 +188,7 @@
 		F7FFB31828D63EBC00C31AA3 /* Light+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31728D63EBC00C31AA3 /* Light+Decodable.swift */; };
 		F7FFB31A28D63EF600C31AA3 /* Light+Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31928D63EF600C31AA3 /* Light+Annotation.swift */; };
 		F7FFB31C28D63F5500C31AA3 /* Light+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31B28D63F5500C31AA3 /* Light+MapImage.swift */; };
+		F7FFB31E28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31D28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -397,6 +398,7 @@
 		F7FFB31728D63EBC00C31AA3 /* Light+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+Decodable.swift"; sourceTree = "<group>"; };
 		F7FFB31928D63EF600C31AA3 /* Light+Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+Annotation.swift"; sourceTree = "<group>"; };
 		F7FFB31B28D63F5500C31AA3 /* Light+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+MapImage.swift"; sourceTree = "<group>"; };
+		F7FFB31D28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -468,6 +470,7 @@
 				F7FFB31728D63EBC00C31AA3 /* Light+Decodable.swift */,
 				F7FFB31928D63EF600C31AA3 /* Light+Annotation.swift */,
 				F7FFB31B28D63F5500C31AA3 /* Light+MapImage.swift */,
+				F7FFB31D28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift */,
 			);
 			path = Light;
 			sourceTree = "<group>";
@@ -1239,6 +1242,7 @@
 				F7ADDCE22887026500137D95 /* LocationManager.swift in Sources */,
 				F7B7064328BAADD50026DE88 /* CircleImage.swift in Sources */,
 				F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */,
+				F7FFB31E28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift in Sources */,
 				F7D671E02871BFEC00758F1C /* ModuActionBar.swift in Sources */,
 				F7F597AC2864DD5200F9B32E /* NavigationalWarningListView.swift in Sources */,
 				F7FFB31C28D63F5500C31AA3 /* Light+MapImage.swift in Sources */,
