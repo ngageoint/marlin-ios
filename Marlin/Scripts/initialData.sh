@@ -6,7 +6,7 @@
 #  Created by Daniel Barela on 9/8/22.
 #
 
-SAVE_DIR=../Marlin/DataSources/SeedData
+SAVE_DIR=../Marlin/Resources/SeedData
 
 echo "Downloading initial ASAM data file"
 curl -o $SAVE_DIR/asam.json "https://msi.gs.mil/api/publications/asam?sort=date&output=json"

@@ -503,7 +503,6 @@
 		F71D285F28BD688800F1775C /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
-				F71D288628CA1B7C00F1775C /* SeedData */,
 				F71D286F28BE958F00F1775C /* DFRS */,
 				F71D286028BE38CC00F1775C /* DifferentialGPSStation */,
 				F71CC6E828AC177A000A326C /* Port */,
@@ -665,8 +664,6 @@
 				F71D285F28BD688800F1775C /* DataSources */,
 				F7ADDCE02887025500137D95 /* Location */,
 				F7D671E52871D44E00758F1C /* SideMenu */,
-				F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */,
-				F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */,
 				F7C3679728D0AECC00AE1265 /* Settings */,
 				F7D671C1286C85EF00758F1C /* GeoPackage */,
 				F7F59793285BE23F00F9B32E /* Views */,
@@ -687,6 +684,7 @@
 				F707BA712874B9F4006A94C4 /* userDefaults.plist */,
 				F7ADDCE728872BF300137D95 /* Localizable.strings */,
 				F7D5C05428A68C43000C2C29 /* appFeatures.plist */,
+				F7FFB33128D6440A00C31AA3 /* Resources */,
 			);
 			path = Marlin;
 			sourceTree = "<group>";
@@ -949,6 +947,16 @@
 				F71D287828BE9B7400F1775C /* DFRSListView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		F7FFB33128D6440A00C31AA3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */,
+				F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */,
+				F71D288628CA1B7C00F1775C /* SeedData */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
