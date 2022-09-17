@@ -414,6 +414,15 @@ class Light: NSManagedObject, MKAnnotation, AnnotationWithView, MapImage {
         lightColors[0].setStroke()
         path.fill()
         path.stroke()
+        
+        // put a dot in the middle
+        pixel = self.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * 0.5
+        let centerDot = UIBezierPath(arcCenter: pixel, radius: radius, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: true)
+        centerDot.lineWidth = 0.5
+        centerDot.stroke()
+        lightColors[0].setFill()
+        centerDot.fill()
     }
     
     var azimuthCoverage: [ImageSector]? {
