@@ -174,6 +174,11 @@
 		F7FFB2FC28D6361800C31AA3 /* NavigationalWarning+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2FB28D6361800C31AA3 /* NavigationalWarning+DataSource.swift */; };
 		F7FFB2FE28D6373F00C31AA3 /* NavigationalWarning+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2FD28D6373F00C31AA3 /* NavigationalWarning+DataSourceViewBuilder.swift */; };
 		F7FFB30028D6376100C31AA3 /* NavigationalWarning+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2FF28D6376100C31AA3 /* NavigationalWarning+Decodable.swift */; };
+		F7FFB30228D6383900C31AA3 /* Asam+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB30128D6383900C31AA3 /* Asam+DataSource.swift */; };
+		F7FFB30428D6389700C31AA3 /* Asam+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB30328D6389700C31AA3 /* Asam+Decodable.swift */; };
+		F7FFB30628D63A7200C31AA3 /* Asam+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB30528D63A7200C31AA3 /* Asam+DataSourceViewBuilder.swift */; };
+		F7FFB30828D63A9F00C31AA3 /* Asam+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB30728D63A9F00C31AA3 /* Asam+MapImage.swift */; };
+		F7FFB30A28D63ACE00C31AA3 /* Asam+Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB30928D63ACE00C31AA3 /* Asam+Annotation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -369,6 +374,11 @@
 		F7FFB2FB28D6361800C31AA3 /* NavigationalWarning+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+DataSource.swift"; sourceTree = "<group>"; };
 		F7FFB2FD28D6373F00C31AA3 /* NavigationalWarning+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
 		F7FFB2FF28D6376100C31AA3 /* NavigationalWarning+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+Decodable.swift"; sourceTree = "<group>"; };
+		F7FFB30128D6383900C31AA3 /* Asam+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+DataSource.swift"; sourceTree = "<group>"; };
+		F7FFB30328D6389700C31AA3 /* Asam+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+Decodable.swift"; sourceTree = "<group>"; };
+		F7FFB30528D63A7200C31AA3 /* Asam+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
+		F7FFB30728D63A9F00C31AA3 /* Asam+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+MapImage.swift"; sourceTree = "<group>"; };
+		F7FFB30928D63ACE00C31AA3 /* Asam+Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+Annotation.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -742,6 +752,11 @@
 				F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */,
 				F7F59785285A206700F9B32E /* AsamDetailView.swift */,
 				F7D671E12871C29A00758F1C /* AsamActionBar.swift */,
+				F7FFB30128D6383900C31AA3 /* Asam+DataSource.swift */,
+				F7FFB30328D6389700C31AA3 /* Asam+Decodable.swift */,
+				F7FFB30528D63A7200C31AA3 /* Asam+DataSourceViewBuilder.swift */,
+				F7FFB30728D63A9F00C31AA3 /* Asam+MapImage.swift */,
+				F7FFB30928D63ACE00C31AA3 /* Asam+Annotation.swift */,
 			);
 			path = ASAM;
 			sourceTree = "<group>";
@@ -1143,6 +1158,7 @@
 				F71D288128C29F0200F1775C /* BundleExtensions.swift in Sources */,
 				F7FFB30028D6376100C31AA3 /* NavigationalWarning+Decodable.swift in Sources */,
 				F7C3679928D0AEF400AE1265 /* DisplaySettings.swift in Sources */,
+				F7FFB30628D63A7200C31AA3 /* Asam+DataSourceViewBuilder.swift in Sources */,
 				F70DA69128D3976D00B9C720 /* LightsViewModel.swift in Sources */,
 				F7D671F1287484FE00758F1C /* MarlinUserDefaults.swift in Sources */,
 				F71DF4862857954A00686951 /* Modu+CoreDataClass.swift in Sources */,
@@ -1173,7 +1189,9 @@
 				F727A684284E351800BD728A /* MSIError.swift in Sources */,
 				F71CC6F828AE71BA000A326C /* KeyValueSection.swift in Sources */,
 				F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */,
+				F7FFB30228D6383900C31AA3 /* Asam+DataSource.swift in Sources */,
 				F7FFB2E428D6213C00C31AA3 /* DFRS+Decodable.swift in Sources */,
+				F7FFB30828D63A9F00C31AA3 /* Asam+MapImage.swift in Sources */,
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
 				F707BA8328786F11006A94C4 /* LightColorImage.swift in Sources */,
 				F71D287528BE96EB00F1775C /* DFRSMap.swift in Sources */,
@@ -1200,7 +1218,9 @@
 				F74B9B0928B7D1640097D448 /* RadioBeaconMap.swift in Sources */,
 				F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */,
 				F74B9B0B28B7D85E0097D448 /* RadioBeaconListView.swift in Sources */,
+				F7FFB30428D6389700C31AA3 /* Asam+Decodable.swift in Sources */,
 				F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */,
+				F7FFB30A28D63ACE00C31AA3 /* Asam+Annotation.swift in Sources */,
 				F707BA8D287C89ED006A94C4 /* LightMap.swift in Sources */,
 				F707BA852878DBFF006A94C4 /* AdaptiveImage.swift in Sources */,
 				F7FFB2F828D6344000C31AA3 /* Port+Decodable.swift in Sources */,
