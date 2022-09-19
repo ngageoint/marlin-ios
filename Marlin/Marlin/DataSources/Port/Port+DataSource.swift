@@ -34,7 +34,7 @@ extension Port: BatchImportable {
         }
         let count = value.ports.count
         NSLog("Received \(count) \(Self.key) records.")
-        try await Port.batchImport(from: value.ports, taskContext: PersistenceController.shared.newTaskContext())
+        try await Port.importRecords(from: value.ports, taskContext: PersistenceController.shared.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -62,7 +62,7 @@ extension Port: BatchImportable {
         return batchInsertRequest
     }
     
-    static func batchImport(from propertiesList: [PortProperties], taskContext: NSManagedObjectContext) async throws {
+    static func importRecords(from propertiesList: [PortProperties], taskContext: NSManagedObjectContext) async throws {
         guard !propertiesList.isEmpty else { return }
         
         // Add name and author to identify source of persistent history changes.

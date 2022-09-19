@@ -34,7 +34,7 @@ extension DifferentialGPSStation: BatchImportable {
         }
         let count = value.ngalol.count
         NSLog("Received \(count) \(Self.key) records.")
-        try await Self.batchImport(from: value.ngalol, taskContext: PersistenceController.shared.newTaskContext())
+        try await Self.importRecords(from: value.ngalol, taskContext: PersistenceController.shared.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -98,7 +98,7 @@ extension DifferentialGPSStation: BatchImportable {
         return batchInsertRequest
     }
     
-    static func batchImport(from propertiesList: [DifferentialGPSStationProperties], taskContext: NSManagedObjectContext) async throws {
+    static func importRecords(from propertiesList: [DifferentialGPSStationProperties], taskContext: NSManagedObjectContext) async throws {
         guard !propertiesList.isEmpty else { return }
         
         // Add name and author to identify source of persistent history changes.

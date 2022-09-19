@@ -36,7 +36,7 @@ extension NavigationalWarning: BatchImportable {
         }
         let count = value.broadcastWarn.count
         NSLog("Received \(count) \(Self.key) records.")
-        try await Self.batchImport(from: value.broadcastWarn, taskContext: PersistenceController.shared.newTaskContext())
+        try await Self.importRecords(from: value.broadcastWarn, taskContext: PersistenceController.shared.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -65,7 +65,7 @@ extension NavigationalWarning: BatchImportable {
         return batchInsertRequest
     }
     
-    static func batchImport(from propertiesList: [NavigationalWarningProperties], taskContext: NSManagedObjectContext) async throws {
+    static func importRecords(from propertiesList: [NavigationalWarningProperties], taskContext: NSManagedObjectContext) async throws {
         guard !propertiesList.isEmpty else { return }
         
         // Add name and author to identify source of persistent history changes.
