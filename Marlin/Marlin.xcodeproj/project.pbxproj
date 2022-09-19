@@ -116,7 +116,6 @@
 		F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */; };
 		F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C2286C860900758F1C /* GeoPackageMap.swift */; };
 		F7D671C5286C8A3100758F1C /* GeoPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C4286C8A3100758F1C /* GeoPackage.swift */; };
-		F7D671C8286C907F00758F1C /* ExceptionCatcher in Frameworks */ = {isa = PBXBuildFile; productRef = F7D671C7286C907F00758F1C /* ExceptionCatcher */; };
 		F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C9286C945500758F1C /* BaseMapOverlay.swift */; };
 		F7D671CC286C98B200758F1C /* natural_earth_1_100.gpkg in Resources */ = {isa = PBXBuildFile; fileRef = F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */; };
 		F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671D5286DFAA800758F1C /* UserTrackingButton.swift */; };
@@ -194,6 +193,7 @@
 		F7FFB32428D641DE00C31AA3 /* RadioBeacon+Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB32328D641DE00C31AA3 /* RadioBeacon+Annotation.swift */; };
 		F7FFB32628D6422F00C31AA3 /* RadioBeacon+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB32528D6422F00C31AA3 /* RadioBeacon+MapImage.swift */; };
 		F7FFB32828D6427200C31AA3 /* RadioBeacon+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB32728D6427200C31AA3 /* RadioBeacon+Decodable.swift */; };
+		F7FFB33428D8A58D00C31AA3 /* ExceptionCatcher in Frameworks */ = {isa = PBXBuildFile; productRef = F7FFB33328D8A58D00C31AA3 /* ExceptionCatcher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -425,7 +425,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7982FB9B536447055E423E94 /* libPods-Marlin.a in Frameworks */,
-				F7D671C8286C907F00758F1C /* ExceptionCatcher in Frameworks */,
+				F7FFB33428D8A58D00C31AA3 /* ExceptionCatcher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -999,7 +999,7 @@
 			);
 			name = Marlin;
 			packageProductDependencies = (
-				F7D671C7286C907F00758F1C /* ExceptionCatcher */,
+				F7FFB33328D8A58D00C31AA3 /* ExceptionCatcher */,
 			);
 			productName = "Marlin (iOS)";
 			productReference = F7A54CB22848149700E5F565 /* Marlin.app */;
@@ -1057,7 +1057,7 @@
 			);
 			mainGroup = F7A54CA22848149500E5F565;
 			packageReferences = (
-				F7D671C6286C907F00758F1C /* XCRemoteSwiftPackageReference "ExceptionCatcher" */,
+				F7FFB33228D8A58D00C31AA3 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */,
 			);
 			productRefGroup = F7A54CB32848149700E5F565 /* Products */;
 			projectDirPath = "";
@@ -1740,20 +1740,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		F7D671C6286C907F00758F1C /* XCRemoteSwiftPackageReference "ExceptionCatcher" */ = {
+		F7FFB33228D8A58D00C31AA3 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/ExceptionCatcher";
 			requirement = {
-				kind = exactVersion;
-				version = 2.0.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F7D671C7286C907F00758F1C /* ExceptionCatcher */ = {
+		F7FFB33328D8A58D00C31AA3 /* ExceptionCatcher */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F7D671C6286C907F00758F1C /* XCRemoteSwiftPackageReference "ExceptionCatcher" */;
+			package = F7FFB33228D8A58D00C31AA3 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */;
 			productName = ExceptionCatcher;
 		};
 /* End XCSwiftPackageProductDependency section */

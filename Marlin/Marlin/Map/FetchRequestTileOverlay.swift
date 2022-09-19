@@ -71,8 +71,7 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
     
     func drawTile(tileBounds3857: MapBoundingBox, queryBounds: MapBoundingBox, result: @escaping (Data?, Error?) -> Void) {
         guard let fetchRequest = fetchRequest else {
-            let data = clearImage.pngData()
-            result(data ?? Data(), nil)
+            result(nil, nil)
             return
         }
         
@@ -94,23 +93,15 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
         context.parent = PersistenceController.shared.container.viewContext
         let objects = try? context.fetch(tileFetchRequest)
         
-        UIGraphicsBeginImageContext(self.tileSize)
-        
         if objects == nil || objects?.count == 0 {
-            let rect = CGRect(origin: .zero, size: self.tileSize)
-            let layer = CALayer()
-            layer.frame = rect
-            layer.backgroundColor = UIColor.clear.cgColor
-//            layer.borderColor = UIColor.red.cgColor
-//            layer.borderWidth = 5
-            UIGraphicsBeginImageContext(layer.bounds.size)
-            layer.render(in: UIGraphicsGetCurrentContext()!)
+            result(nil, nil)
+            return
         }
         
-        
+        UIGraphicsBeginImageContext(self.tileSize)
+
         if let objects = objects as? [MapImage] {
             for object in objects {
-                // xxx here
                 let mapImages = object.mapImage(marker: false, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: UIGraphicsGetCurrentContext())
                 for mapImage in mapImages {
                     let object3857Location = coord4326To3857(longitude: object.longitude, latitude: object.latitude)
@@ -124,11 +115,11 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
         let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         guard let cgImage = newImage.cgImage else {
-            result(self.clearImage.pngData() ?? Data(), nil)
+            result(nil, nil)
             return
         }
         let data = UIImage(cgImage: cgImage).pngData()
-        result(data ?? Data(), nil)
+        result(data, nil)
     }
     
     func coord4326To3857(longitude: Double, latitude: Double) -> (x: Double, y: Double) {
