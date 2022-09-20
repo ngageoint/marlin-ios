@@ -15,18 +15,10 @@ struct SettingsView: View {
     
     @AppStorage("showMapScale") var showMapScale = false
     @AppStorage("flyoverMapsEnabled") var flyoverMapsEnabled = false
+    @AppStorage("searchEnabled") var searchEnabled = false
     
     var body: some View {
         List {
-            NavigationLink {
-                DisplaySettings()
-            } label: {
-                Image(systemName: "dial")
-                    .tint(Color.onSurfaceColor)
-                    .opacity(0.60)
-                Text("Display Settings")
-            }
-            
             NavigationLink {
                 DisclaimerView()
             } label: {
@@ -64,14 +56,25 @@ struct SettingsView: View {
             
             if tapCount > 5 {
                 Section("Developer Tools") {
+                    Toggle(isOn: $searchEnabled, label: {
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                            Text("Search Enabled")
+                        }
+                    })
+                    .padding([.top, .bottom], 8)
                     Toggle(isOn: $showMapScale, label: {
-                        Image(systemName: "ruler.fill")
-                        Text("Show Map Scale (requires restart)")
+                        HStack {
+                            Image(systemName: "ruler.fill")
+                            Text("Show Map Scale (requires restart)")
+                        }
                     })
                     .padding([.top, .bottom], 8)
                     Toggle(isOn: $flyoverMapsEnabled, label: {
-                        Image(systemName: "rotate.3d")
-                        Text("Enable Flyover Map Types")
+                        HStack {
+                            Image(systemName: "rotate.3d")
+                            Text("Enable Flyover Map Types")
+                        }
                     })
                     .padding([.top, .bottom], 8)
                 }.toggleStyle(SwitchToggleStyle(tint: .primaryColorVariant))
