@@ -43,7 +43,14 @@ extension Light: MapImage {
         }) {
             let nauticalMilesMeasurement = NSMeasurement(doubleValue: sector.range ?? 0.0, unit: UnitLength.nauticalMiles)
             let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
-            
+            if sector.startDegrees >= sector.endDegrees {
+                // this could be an error in the data, or sometimes lights are defined as follows:
+                // characteristic Q.W.R.
+                // remarks R. 289°-007°, W.-007°.
+                // that would mean this light flashes between red and white over those angles
+                // TODO: figure out what to do with multi colored lights over the same sector
+                continue
+            }
             let circleCoordinates = circleCoordinates(center: self.coordinate, radiusMeters: metersMeasurement.value, startDegrees: sector.startDegrees + 90.0, endDegrees: sector.endDegrees + 90.0)
             let path = UIBezierPath()
             
@@ -56,7 +63,7 @@ extension Light: MapImage {
             path.close()
             sector.color.withAlphaComponent(0.1).setFill()
             sector.color.setStroke()
-            path.lineWidth = 3
+            path.lineWidth = 5
             
             path.fill()
             path.stroke()
@@ -76,6 +83,7 @@ extension Light: MapImage {
             pixel = circleCoordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
             path.addLine(to: pixel)
         }
+        path.lineWidth = 4
         path.close()
         lightColors[0].withAlphaComponent(0.1).setFill()
         lightColors[0].setStroke()
@@ -104,6 +112,14 @@ extension Light: MapImage {
         let lonRad = fmod((centerLonRad + dlonRad + .pi), 2.0 * .pi) - .pi
         coordinates.append(CLLocationCoordinate2D(latitude: toDegrees(radians: latRad), longitude: toDegrees(radians: lonRad)))
         
+        if startDegrees >= endDegrees {
+            // this could be an error in the data, or sometimes lights are defined as follows:
+            // characteristic Q.W.R.
+            // remarks R. 289°-007°, W.-007°.
+            // that would mean this light flashes between red and white over those angles
+            // TODO: figure out what to do with multi colored lights over the same sector
+            return coordinates
+        }
         for i in Int(startDegrees)...Int(endDegrees) {
             let radial = toRadians(degrees: Double(i))
             let latRad = asin(sin(centerLatRad) * cos(dRad) + cos(centerLatRad) * sin(dRad) * cos(radial))
