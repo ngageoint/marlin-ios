@@ -27,13 +27,13 @@ extension RadioBeacon: BatchImportable {
     static var seedDataFiles: [String]? = ["radioBeacon"]
     static var decodableRoot: Decodable.Type = RadioBeaconPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws {
+    static func batchImport(value: Decodable?) async throws -> Int {
         guard let value = value as? RadioBeaconPropertyContainer else {
-            return
+            return 0
         }
         let count = value.ngalol.count
         NSLog("Received \(count) \(Self.key) records.")
-        try await Self.importRecords(from: value.ngalol, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Self.importRecords(from: value.ngalol, taskContext: PersistenceController.shared.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -108,15 +108,15 @@ extension RadioBeacon: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [RadioBeaconProperties], taskContext: NSManagedObjectContext) async throws {
-        guard !propertiesList.isEmpty else { return }
+    static func importRecords(from propertiesList: [RadioBeaconProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+        guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.
         taskContext.name = "importContext"
         taskContext.transactionAuthor = "importRadioBeacon"
         
         /// - Tag: performAndWait
-        try await taskContext.perform {
+        return try await taskContext.perform {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
             let batchInsertRequest = RadioBeacon.newBatchInsertRequest(with: propertiesList)
@@ -125,13 +125,12 @@ extension RadioBeacon: BatchImportable {
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
                 if let count = batchInsertResult.result as? Int, count > 0 {
                     NSLog("Inserted \(count) RadioBeacon records")
-                    NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceItem(dataSource: RadioBeacon.self))
+                    return count
                 } else {
                     NSLog("No new RadioBeacon records")
                 }
-                return
+                return 0
             }
-            batchInsertRequest.resultType = .count
             throw MSIError.batchInsertError
         }
     }

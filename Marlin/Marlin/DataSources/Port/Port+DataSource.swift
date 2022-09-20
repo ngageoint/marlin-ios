@@ -28,13 +28,13 @@ extension Port: BatchImportable {
     static var seedDataFiles: [String]? = ["port"]
     static var decodableRoot: Decodable.Type = PortPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws {
+    static func batchImport(value: Decodable?) async throws -> Int {
         guard let value = value as? PortPropertyContainer else {
-            return
+            return 0
         }
         let count = value.ports.count
         NSLog("Received \(count) \(Self.key) records.")
-        try await Port.importRecords(from: value.ports, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Port.importRecords(from: value.ports, taskContext: PersistenceController.shared.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -62,14 +62,14 @@ extension Port: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [PortProperties], taskContext: NSManagedObjectContext) async throws {
-        guard !propertiesList.isEmpty else { return }
+    static func importRecords(from propertiesList: [PortProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+        guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.
         taskContext.name = "importContext"
         taskContext.transactionAuthor = "importPorts"
         
-        try await taskContext.perform {
+        return try await taskContext.perform {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
             let batchInsertRequest = Port.newBatchInsertRequest(with: propertiesList)
@@ -78,11 +78,11 @@ extension Port: BatchImportable {
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
                 if let count = batchInsertResult.result as? Int, count > 0 {
                     NSLog("Inserted \(count) Port records")
-                    NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceItem(dataSource: Port.self))
+                    return count
                 } else {
                     NSLog("No new Port records")
                 }
-                return
+                return 0
             }
             throw MSIError.batchInsertError
         }

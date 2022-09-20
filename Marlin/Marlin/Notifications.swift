@@ -29,6 +29,8 @@ extension Notification.Name {
     public static let SwitchTabs = Notification.Name("SwitchTabs")
     public static let SnackbarNotification = Notification.Name("Snackbar")
     public static let DataSourceUpdated = Notification.Name("DataSourceUpdated")
+    public static let DataSourceLoading = Notification.Name("DataSourceLoading")
+    public static let DataSourceLoaded = Notification.Name("DataSourceLoaded")
 }
 
 struct FocusMapOnItemNotification {

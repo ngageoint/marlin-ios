@@ -28,13 +28,13 @@ extension DFRS: BatchImportable {
     static var seedDataFiles: [String]? = ["dfrs"]
     static var decodableRoot: Decodable.Type = DFRSPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws {
+    static func batchImport(value: Decodable?) async throws -> Int {
         guard let value = value as? DFRSPropertyContainer else {
-            return
+            return 0
         }
         let count = value.dfrs.count
         NSLog("Received \(count) \(Self.key) records.")
-        try await Self.importRecords(from: value.dfrs, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Self.importRecords(from: value.dfrs, taskContext: PersistenceController.shared.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -62,15 +62,15 @@ extension DFRS: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [DFRSProperties], taskContext: NSManagedObjectContext) async throws {
-        guard !propertiesList.isEmpty else { return }
+    static func importRecords(from propertiesList: [DFRSProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+        guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.
         taskContext.name = "importContext"
         taskContext.transactionAuthor = "importDFRS"
         
         /// - Tag: performAndWait
-        try await taskContext.perform {
+        return try await taskContext.perform {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
             let batchInsertRequest = DFRS.newBatchInsertRequest(with: propertiesList)
@@ -79,11 +79,11 @@ extension DFRS: BatchImportable {
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
                 if let count = batchInsertResult.result as? Int, count > 0 {
                     NSLog("Inserted \(count) DFRS records")
-                    NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceItem(dataSource: DFRS.self))
+                    return count
                 } else {
                     NSLog("No new DFRS records")
                 }
-                return
+                return 0
             }
             throw MSIError.batchInsertError
         }

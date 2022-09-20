@@ -70,6 +70,12 @@ public class MSI {
     
     actor Counter {
         var value = 0
+        var total = 0
+        
+        func addToTotal(count: Int) -> Int {
+            total += count
+            return total
+        }
 
         func increment() -> Int {
             value += 1
@@ -133,6 +139,9 @@ public class MSI {
     func loadData<T: Decodable, D: NSManagedObject & BatchImportable>(type: T.Type, dataType: D.Type) {
         DispatchQueue.main.async {
             self.appState.loadingDataSource[D.key] = true
+            if let dataSource = dataType as? DataSource.Type {
+                NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: dataSource))
+            }
         }
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
 
@@ -143,16 +152,23 @@ public class MSI {
             session.request(request)
                 .validate()
                 .responseDecodable(of: T.self, queue: queue) { response in
-                    queue.async( execute:{
+                    queue.async(execute:{
                         Task.detached {
-                            try await D.batchImport(value: response.value)
+                            let count = try await D.batchImport(value: response.value)
                             
                             let sum = await queryCounter.increment()
+                            let totalCount = await queryCounter.addToTotal(count: count)
                             NSLog("Queried for \(sum) of \(requests.count) for \(dataType.key)")
                             if sum == requests.count {
                                 DispatchQueue.main.async {
                                     self.appState.loadingDataSource[D.key] = false
                                     UserDefaults.standard.updateLastSyncTimeSeconds(D.self)
+                                    if let dataSource = dataType as? DataSource.Type {
+                                        NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: dataSource))
+                                        if totalCount != 0 {
+                                            NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceItem(dataSource: dataSource))
+                                        }
+                                    }
                                 }
                             }
                         }

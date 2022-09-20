@@ -13,13 +13,13 @@ extension DFRSArea: BatchImportable {
     static var key: String = "dfrsAreas"
     static var decodableRoot: Decodable.Type = DFRSAreaPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws {
+    static func batchImport(value: Decodable?) async throws -> Int {
         guard let value = value as? DFRSAreaPropertyContainer else {
-            return
+            return 0
         }
         let count = value.areas.count
         NSLog("Received \(count) DFRS Area records.")
-        try await Self.batchImport(from: value.areas, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Self.batchImport(from: value.areas, taskContext: PersistenceController.shared.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -49,22 +49,23 @@ class DFRSArea: NSManagedObject {
         return batchInsertRequest
     }
     
-    static func batchImport(from propertiesList: [DFRSAreaProperties], taskContext: NSManagedObjectContext) async throws {
-        guard !propertiesList.isEmpty else { return }
+    static func batchImport(from propertiesList: [DFRSAreaProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+        guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.
         taskContext.name = "importContext"
         taskContext.transactionAuthor = "importDFRSArea"
         
         /// - Tag: performAndWait
-        try await taskContext.perform {
+        return try await taskContext.perform {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
             let batchInsertRequest = DFRSArea.newBatchInsertRequest(with: propertiesList)
+            batchInsertRequest.resultType = .count
             if let fetchResult = try? taskContext.execute(batchInsertRequest),
                let batchInsertResult = fetchResult as? NSBatchInsertResult,
-               let success = batchInsertResult.result as? Bool, success {
-                return
+               let success = batchInsertResult.result as? Int {
+                return success
             }
             throw MSIError.batchInsertError
         }

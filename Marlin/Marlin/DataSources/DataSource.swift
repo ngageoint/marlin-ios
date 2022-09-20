@@ -20,7 +20,7 @@ struct Throwable<T: Decodable>: Decodable {
 }
 
 protocol BatchImportable: NSManagedObject {
-    static func batchImport(value: Decodable?) async throws
+    static func batchImport(value: Decodable?) async throws -> Int
     static func dataRequest() -> [MSIRouter]
     static var key: String { get }
     static var seedDataFiles: [String]? { get }

@@ -4,6 +4,8 @@
 <dict>
 	<key>flyoverMapsEnabled</key>
 	<false/>
+	<key>searchEnabled</key>
+	<false/>
 	<key>hamburger</key>
 	<true/>
 	<key>asamDataSourceEnabled</key>

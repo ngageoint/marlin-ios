@@ -71,7 +71,7 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
     
     func drawTile(tileBounds3857: MapBoundingBox, queryBounds: MapBoundingBox, result: @escaping (Data?, Error?) -> Void) {
         guard let fetchRequest = fetchRequest else {
-            result(nil, nil)
+            result(Data(), nil)
             return
         }
         
@@ -94,7 +94,7 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
         let objects = try? context.fetch(tileFetchRequest)
         
         if objects == nil || objects?.count == 0 {
-            result(nil, nil)
+            result(Data(), nil)
             return
         }
         
@@ -115,7 +115,7 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
         let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         guard let cgImage = newImage.cgImage else {
-            result(nil, nil)
+            result(Data(), nil)
             return
         }
         let data = UIImage(cgImage: cgImage).pngData()

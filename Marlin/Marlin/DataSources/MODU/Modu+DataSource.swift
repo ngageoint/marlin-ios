@@ -24,13 +24,13 @@ extension Modu: BatchImportable {
     static var seedDataFiles: [String]? = ["modu"]
     static var decodableRoot: Decodable.Type = ModuPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws {
+    static func batchImport(value: Decodable?) async throws -> Int {
         guard let value = value as? ModuPropertyContainer else {
-            return
+            return 0
         }
         let count = value.modu.count
         NSLog("Received \(count) \(Self.key) records.")
-        try await Modu.importRecords(from: value.modu, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Modu.importRecords(from: value.modu, taskContext: PersistenceController.shared.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -59,15 +59,15 @@ extension Modu: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [ModuProperties], taskContext: NSManagedObjectContext) async throws {
-        guard !propertiesList.isEmpty else { return }
+    static func importRecords(from propertiesList: [ModuProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+        guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.
         taskContext.name = "importContext"
         taskContext.transactionAuthor = "importModus"
         
         /// - Tag: performAndWait
-        try await taskContext.perform {
+        return try await taskContext.perform {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
             let batchInsertRequest = Modu.newBatchInsertRequest(with: propertiesList)
@@ -76,11 +76,11 @@ extension Modu: BatchImportable {
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
                 if let count = batchInsertResult.result as? Int, count > 0 {
                     NSLog("Inserted \(count) MODU records")
-                    NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceItem(dataSource: Modu.self))
+                    return count
                 } else {
                     NSLog("No new MODU records")
                 }
-                return
+                return 0
             }
             throw MSIError.batchInsertError
         }

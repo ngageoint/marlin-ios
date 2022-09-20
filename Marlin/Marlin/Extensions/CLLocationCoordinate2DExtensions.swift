@@ -87,6 +87,11 @@ extension CLLocationCoordinate2D {
 //            return String(format: "%.5f, %.5f", self.latitude, self.longitude)
 //        }
     }
+    
+    static func parse(coordinate: String) -> CLLocationCoordinate2D? {
+        
+        return nil
+    }
         
         // Need to parse the following formats:
         // 1. 112233N 0112244W

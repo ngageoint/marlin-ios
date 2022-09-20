@@ -24,13 +24,13 @@ extension Light: BatchImportable {
     static var seedDataFiles: [String]? = ["lights"]//["light110","light111","light112","light113","light114","light115","light116"]
     static var decodableRoot: Decodable.Type = LightsPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws {
+    static func batchImport(value: Decodable?) async throws -> Int {
         guard let value = value as? LightsPropertyContainer else {
-            return
+            return 0
         }
         let count = value.ngalol.count
         NSLog("Received \(count) \(Self.key) records.")
-        try await Light.importRecords(from: value.ngalol, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Light.importRecords(from: value.ngalol, taskContext: PersistenceController.shared.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -112,15 +112,15 @@ extension Light: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [LightsProperties], taskContext: NSManagedObjectContext) async throws {
-        guard !propertiesList.isEmpty else { return }
+    static func importRecords(from propertiesList: [LightsProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+        guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.
         taskContext.name = "importContext"
         taskContext.transactionAuthor = "importLight"
         
         /// - Tag: performAndWait
-        try await taskContext.perform {
+        return try await taskContext.perform {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
             let batchInsertRequest = Light.newBatchInsertRequest(with: propertiesList)
@@ -130,12 +130,12 @@ extension Light: BatchImportable {
                 if let batchInsertResult = fetchResult as? NSBatchInsertResult {
                     if let count = batchInsertResult.result as? Int, count > 0 {
                         NSLog("Inserted \(count) Light records")
-                        NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceItem(dataSource: Light.self))
+                        return count
                     } else {
                         NSLog("No new Light records")
                     }
                     // if there were already lights in the db for this volume and this was an update and we got back a light we have to go redo the query due to regions not being populated on all returned objects
-                    return
+                    return 0
                 }
             } catch {
                 print("error was \(error)")

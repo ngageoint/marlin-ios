@@ -25,13 +25,13 @@ extension Asam: BatchImportable {
     static var seedDataFiles: [String]? = ["asam"]
     static var decodableRoot: Decodable.Type = AsamPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws {
+    static func batchImport(value: Decodable?) async throws -> Int {
         guard let value = value as? AsamPropertyContainer else {
-            return
+            return 0
         }
         let count = value.asam.count
         NSLog("Received \(count) \(Self.key) records.")
-        try await Self.importRecords(from: value.asam, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Self.importRecords(from: value.asam, taskContext: PersistenceController.shared.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -60,15 +60,15 @@ extension Asam: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [AsamProperties], taskContext: NSManagedObjectContext) async throws {
-        guard !propertiesList.isEmpty else { return }
+    static func importRecords(from propertiesList: [AsamProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+        guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.
         taskContext.name = "importContext"
         taskContext.transactionAuthor = "importAsams"
         
         /// - Tag: performAndWait
-        try await taskContext.perform {
+        let count = try await taskContext.perform {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
             let batchInsertRequest = Asam.newBatchInsertRequest(with: propertiesList)
@@ -77,13 +77,14 @@ extension Asam: BatchImportable {
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
                 if let count = batchInsertResult.result as? Int, count > 0 {
                     NSLog("Inserted \(count) ASAM records")
-                    NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceItem(dataSource: Asam.self))
+                    return count
                 } else {
                     NSLog("No new ASAM records")
                 }
-                return
+                return 0
             }
             throw MSIError.batchInsertError
         }
+        return count
     }
 }

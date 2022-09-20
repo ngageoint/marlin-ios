@@ -30,13 +30,13 @@ extension NavigationalWarning: BatchImportable {
     static var seedDataFiles: [String]? = nil
     static var decodableRoot: Decodable.Type = NavigationalWarningPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws {
+    static func batchImport(value: Decodable?) async throws -> Int {
         guard let value = value as? NavigationalWarningPropertyContainer else {
-            return
+            return 0
         }
         let count = value.broadcastWarn.count
         NSLog("Received \(count) \(Self.key) records.")
-        try await Self.importRecords(from: value.broadcastWarn, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Self.importRecords(from: value.broadcastWarn, taskContext: PersistenceController.shared.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -65,15 +65,15 @@ extension NavigationalWarning: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [NavigationalWarningProperties], taskContext: NSManagedObjectContext) async throws {
-        guard !propertiesList.isEmpty else { return }
+    static func importRecords(from propertiesList: [NavigationalWarningProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+        guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.
         taskContext.name = "importContext"
         taskContext.transactionAuthor = "importNavigationalWarnings"
         
         /// - Tag: performAndWait
-        try await taskContext.perform {
+        return try await taskContext.perform {
             _ = taskContext.truncateAll(NavigationalWarning.self)
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
@@ -83,11 +83,11 @@ extension NavigationalWarning: BatchImportable {
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
                 if let count = batchInsertResult.result as? Int, count > 0 {
                     NSLog("Inserted \(count) NavigationalWarning records")
-                    NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceItem(dataSource: NavigationalWarning.self))
+                    return count
                 } else {
                     NSLog("No new NavigationalWarning records")
                 }
-                return
+                return 0
             }
             throw MSIError.batchInsertError
         }

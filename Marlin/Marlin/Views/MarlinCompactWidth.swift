@@ -13,6 +13,11 @@ struct MarlinCompactWidth: View {
     
     @AppStorage("selectedTab") var selectedTab: String = "map"
     @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = false
+    @State var loadingData: Bool = false
+
+    @AppStorage("searchEnabled") var searchEnabled: Bool = false
+    @State var search: String = ""
+    @AppStorage("searchExpanded") var searchExpanded: Bool = false
     
     @ObservedObject var dataSourceList: DataSourceList
     @State var menuOpen: Bool = false
@@ -24,7 +29,9 @@ struct MarlinCompactWidth: View {
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
     }
-    
+    let dataSourceLoadedPub = NotificationCenter.default.publisher(for: .DataSourceLoaded)
+    let dataSourceLoadingPub = NotificationCenter.default.publisher(for: .DataSourceLoading)
+
     var marlinMap: MarlinMap
     
     var body: some View {
@@ -42,7 +49,32 @@ struct MarlinCompactWidth: View {
                                 }
                             VStack {
                                 // top of map
-                                HStack(alignment: .top, spacing: 0) {
+                                HStack(alignment: .top, spacing: 8) {
+                                    // top left button stack
+                                    VStack(alignment: .leading, spacing: 16) {
+                                        if searchEnabled {
+                                            HStack(alignment: .center, spacing: 0) {
+                                                Image(systemName: "magnifyingglass")
+                                                    .font(.system(size: 18))
+                                                    .frame(width: 24, height: 24, alignment: .center)
+                                                    .onTapGesture {
+                                                        searchExpanded.toggle()
+                                                    }
+                                                TextField("Search", text: $search)
+                                                    .frame(maxWidth: searchExpanded ? .infinity : 0)
+                                                
+                                            }
+                                            .frame(minWidth: 40, maxWidth: searchExpanded ? .infinity : 40, minHeight: 40, maxHeight: 40)
+                                            .padding([.leading, .trailing], searchExpanded ? 8 : 0)
+                                            .font(Font.body2)
+                                            .foregroundColor(Color.primaryColorVariant)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 20).fill(Color.surfaceColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.4), radius: 3, x: 0, y: 4)
+                                            )
+                                            .animation(.default, value: searchExpanded)
+                                            .offset(x: 8, y: 16)
+                                        }
+                                    }
                                     Spacer()
                                     // top right button stack
                                     VStack(alignment: .trailing, spacing: 16) {
@@ -94,6 +126,28 @@ struct MarlinCompactWidth: View {
                             .animation(.default, value: initialDataLoaded)
                             .opacity(initialDataLoaded ? 0.0 : 1.0)
                             .padding(.top, 8)
+                            
+                            HStack {
+                                Spacer()
+                                Capsule()
+                                    .fill(Color.primaryColor)
+                                    .frame(width: 150, height: 25)
+                                    .overlay(
+                                        HStack {
+                                            ProgressView()
+                                                .progressViewStyle(CircularProgressViewStyle(tint: Color.onPrimaryColor))
+                                                .scaleEffect(0.5, anchor: .center)
+                                            Text("Updating data")
+                                                .font(Font.overline)
+                                                .foregroundColor(Color.onPrimaryColor)
+                                        }
+                                    )
+                                Spacer()
+                            }
+                            .animation(.easeInOut(duration: 2.0), value: loadingData)
+                            .opacity(loadingData && initialDataLoaded ? 1.0 : 0.0)
+                            .padding(.top, 8)
+                            .transition(.opacity)
                         }
                         NavigationLink(tag: "detail", selection: $selection) {
                             if let data = itemWrapper.dataSource as? DataSourceViewBuilder {
@@ -189,6 +243,30 @@ struct MarlinCompactWidth: View {
                         selection = "\(output)List"
                     }
                     self.menuOpen = false
+                }
+            }
+            .onReceive(dataSourceLoadedPub) { output in
+                print("data source updated pub")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    let loading = dataSourceList.allTabs.contains { dataSourceItem in
+                        return appState.loadingDataSource[dataSourceItem.key] ?? false
+
+                    }
+                    withAnimation {
+                        loadingData = loading
+                    }
+                }
+            }
+            .onReceive(dataSourceLoadingPub) { output in
+                print("data source loading pub")
+                DispatchQueue.main.async {
+                    let loading = dataSourceList.allTabs.contains { dataSourceItem in
+                        return appState.loadingDataSource[dataSourceItem.key] ?? false
+
+                    }
+                    withAnimation {
+                        loadingData = loading
+                    }
                 }
             }
             

@@ -37,9 +37,9 @@
 	<key>userTabs</key>
 	<integer>3</integer>
 	<key>actualRangeLights</key>
-	<false/>
+	<true/>
 	<key>actualRangeSectorLights</key>
-	<false/>
+	<true/>
 	<key>showGARS</key>
 	<false/>
 	<key>showMGRS</key>
