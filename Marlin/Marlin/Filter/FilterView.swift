@@ -127,6 +127,15 @@ struct FilterView: View {
         .padding(.top, 8)
         .onChange(of: selectedProperty) { newValue in
             selectedEnumeration = selectedProperty.enumerationValues?.first?.key ?? ""
+            if selectedProperty.type == .date {
+                selectedComparison = .window
+            }
+        }
+        .onAppear {
+            selectedEnumeration = selectedProperty.enumerationValues?.first?.key ?? ""
+            if selectedProperty.type == .date {
+                selectedComparison = .window
+            }
         }
     }
     
