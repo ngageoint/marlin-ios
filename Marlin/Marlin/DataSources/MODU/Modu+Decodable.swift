@@ -23,12 +23,6 @@ struct ModuPropertyContainer: Decodable {
 /// A struct encapsulating the properties of a Quake.
 struct ModuProperties: Decodable {
     
-    static let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter
-    }()
-    
     // MARK: Codable
     
     private enum CodingKeys: String, CodingKey {
@@ -90,18 +84,12 @@ struct ModuProperties: Decodable {
         
         var parsedDate: Date? = nil
         if let dateString = try? values.decode(String.self, forKey: .date) {
-            if let date = dateFormatter.date(from: dateString) {
+            if let date = Modu.dateFormatter.date(from: dateString) {
                 parsedDate = date
             }
         }
         self.date = parsedDate
     }
-    
-    let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter
-    }()
     
     // The keys must have the same name as the attributes of the Modu entity.
     var dictionaryValue: [String: Any?] {

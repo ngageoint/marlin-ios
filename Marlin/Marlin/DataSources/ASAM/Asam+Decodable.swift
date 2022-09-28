@@ -23,12 +23,6 @@ struct AsamPropertyContainer: Decodable {
 
 struct AsamProperties: Decodable {
     
-    static let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter
-    }()
-    
     // MARK: Codable
     
     private enum CodingKeys: String, CodingKey {
@@ -86,7 +80,7 @@ struct AsamProperties: Decodable {
         self.asamDescription = try? values.decode(String.self, forKey: .asamDescription)
         var parsedDate: Date? = nil
         if let dateString = try? values.decode(String.self, forKey: .date) {
-            if let date = AsamProperties.dateFormatter.date(from: dateString) {
+            if let date = Asam.dateFormatter.date(from: dateString) {
                 parsedDate = date
             }
         }

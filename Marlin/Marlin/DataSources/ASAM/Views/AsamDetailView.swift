@@ -86,6 +86,8 @@ struct AsamDetailView: View {
             .dataSourceSection()
         }
         .dataSourceDetailList()
+        .navigationTitle(asam.reference ?? Asam.dataSourceName)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

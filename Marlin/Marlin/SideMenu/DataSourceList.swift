@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 class DataSourceList: ObservableObject {
     let allTabs: [DataSourceItem] = [
@@ -24,9 +25,12 @@ class DataSourceList: ObservableObject {
     
     @Published var tabs: [DataSourceItem] = []
     @Published var nonTabs: [DataSourceItem] = []
+    @Published var mappedDataSources: [DataSourceItem] = []
     
     static let MAX_TABS = 4
     @AppStorage("userTabs") var userTabs: Int = MAX_TABS
+    
+    var cancellable = Set<AnyCancellable>()
     
     init() {
         _tabs = Published(initialValue: Array(allTabs.prefix(userTabs).filter({ item in
@@ -35,6 +39,20 @@ class DataSourceList: ObservableObject {
         _nonTabs = Published(initialValue: Array(allTabs.dropFirst(userTabs).filter({ item in
             UserDefaults.standard.dataSourceEnabled(item.dataSource)
         })))
+        _mappedDataSources = Published(initialValue: Array(allTabs.filter({ item in
+            UserDefaults.standard.dataSourceEnabled(item.dataSource) && UserDefaults.standard.showOnMap(key: item.key)
+        })))
+        
+        NotificationCenter.default.publisher(for: .MappedDataSourcesUpdated)
+            .sink(receiveValue: { [weak self] _ in
+                guard let allTabs = self?.allTabs else {
+                    return
+                }
+                self?._mappedDataSources = Published(initialValue: Array(allTabs.filter({ item in
+                    UserDefaults.standard.dataSourceEnabled(item.dataSource) && UserDefaults.standard.showOnMap(key: item.key)
+                })))
+            })
+            .store(in: &cancellable)
     }
     
     func addItemToTabs(dataSourceItem: DataSourceItem, position: Int) {
@@ -106,15 +124,23 @@ class DataSourceItem: ObservableObject, Identifiable, Hashable, Equatable {
     
     var id: String { key }
     var key: String { dataSource.key }
-    var dataSource: DataSource.Type
+    var dataSource: any DataSource.Type
     
     @AppStorage<Int> var order: Int
     @AppStorage<Bool> var showOnMap: Bool
+    @AppStorage<Data> var filterData: Data {
+        willSet {
+            DispatchQueue.main.async {
+                self.objectWillChange.send()
+            }
+        }
+    }
     
-    init(dataSource: DataSource.Type) {
+    init(dataSource: any DataSource.Type) {
         self.dataSource = dataSource
         self._order = AppStorage(wrappedValue: 0, "\(dataSource.key)Order")
         self._showOnMap = AppStorage(wrappedValue: dataSource.isMappable, "showOnMap\(dataSource.key)")
+        self._filterData = AppStorage(wrappedValue: Data(), "\(dataSource.key)Filter")
     }
     
     var description: String {

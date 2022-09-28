@@ -22,6 +22,30 @@ extension DFRS: DataSource {
     static var systemImageName: String? = "antenna.radiowaves.left.and.right.circle"
     static var color: UIColor = UIColor(argbValue: 0xFF00E676)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
+    
+    static var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
+        DataSourceProperty(name: "Longitude", key: "longitude", type: .double),
+        DataSourceProperty(name: "Station Number", key: "stationNumber", type: .double),
+        DataSourceProperty(name: "Station Name", key: "stationName", type: .string),
+        DataSourceProperty(name: "Station Type", key: "stationType", type: .string),
+        DataSourceProperty(name: "Area Name", key: "areaName", type: .string),
+        DataSourceProperty(name: "Notes", key: "notes", type: .string),
+        DataSourceProperty(name: "Remarks", key: "remarks", type: .string),
+        DataSourceProperty(name: "Frequency", key: "frequency", type: .string),
+        DataSourceProperty(name: "procedureText", key: "procedureText", type: .string),
+        DataSourceProperty(name: "Range", key: "range", type: .double),
+        DataSourceProperty(name: "Rx Latitude", key: "rxLatitude", type: .double),
+        DataSourceProperty(name: "Rx Longitude", key: "rxLongitude", type: .double),
+        DataSourceProperty(name: "Tx Latitude", key: "txLatitude", type: .double),
+        DataSourceProperty(name: "Tx Longitude", key: "txLongitude", type: .double),
+    ]
+    
+    static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }
 }
 
 extension DFRS: BatchImportable {

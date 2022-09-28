@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## 0.7.7
+  * Filtering
+
 ## 0.7.6
   * Fixed crash caused by a light in Italy not being parsed properly
   * Moved the light map settings to the map settings view

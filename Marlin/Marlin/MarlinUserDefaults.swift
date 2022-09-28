@@ -43,6 +43,10 @@ extension UserDefaults {
         setValue(regionData, forKey: key);
     }
     
+    func showOnMap(key: String) -> Bool {
+        bool(forKey: "showOnMap\(key)")
+    }
+    
     @objc var showOnMapmodu: Bool {
         bool(forKey: "showOnMap\(Modu.key)")
     }
@@ -104,20 +108,65 @@ extension UserDefaults {
         return nil
     }
     
+    @objc var asamFilter: Data? {
+        data(forKey: #function)
+    }
+    
+    @objc var moduFilter: Data? {
+        data(forKey: #function)
+    }
+    
+    @objc var portFilter: Data? {
+        data(forKey: #function)
+    }
+    
+    func filter(_ key: String) -> [DataSourceFilterParameter] {
+        if let data = data(forKey: "\(key)Filter") {
+            do {
+                // Create JSON Decoder
+                let decoder = JSONDecoder()
+                
+                // Decode Note
+                let filter = try decoder.decode([DataSourceFilterParameter].self, from: data)
+
+                return filter
+            } catch {
+                print("Unable to Decode Notes (\(error))")
+            }
+        }
+        return []
+    }
+    
+    func setFilter(_ key: String, filter: [DataSourceFilterParameter]) {
+        do {
+            // Create JSON Encoder
+            let encoder = JSONEncoder()
+            
+            // Encode Note
+            let data = try encoder.encode(filter)
+            
+            // Write/Set Data
+            UserDefaults.standard.set(data, forKey: "\(key)Filter")
+            NotificationCenter.default.post(name: .DataSourceUpdated, object: key)
+        } catch {
+            print("Unable to Encode Array of Notes (\(error))")
+        }
+    }
+    
     // MARK: App features
     var hamburger: Bool {
         bool(forKey: "hamburger")
     }
     
-    func dataSourceEnabled(_ dataSource: BatchImportable.Type) -> Bool {
+    func dataSourceEnabled(_ dataSource: any BatchImportable.Type) -> Bool {
         bool(forKey: "\(dataSource.key)DataSourceEnabled")
     }
     
-    func lastSyncTimeSeconds(_ dataSource: BatchImportable.Type) -> Double {
+    func lastSyncTimeSeconds(_ dataSource: any BatchImportable.Type) -> Double {
         return double(forKey: "\(dataSource.key)LastSyncTime")
     }
     
-    func updateLastSyncTimeSeconds(_ dataSource: BatchImportable.Type) {
+    func updateLastSyncTimeSeconds(_ dataSource: any BatchImportable.Type) {
         setValue(Date().timeIntervalSince1970, forKey: "\(dataSource.key)LastSyncTime")
     }
 }

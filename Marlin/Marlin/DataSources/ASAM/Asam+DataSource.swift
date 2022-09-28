@@ -10,6 +10,12 @@ import UIKit
 import CoreData
 
 extension Asam: DataSource {
+    static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }
+    
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")
     static var fullDataSourceName: String = NSLocalizedString("Anti-Shipping Activity Messages", comment: "ASAM data source display name")
@@ -19,6 +25,18 @@ extension Asam: DataSource {
     
     static var color: UIColor = .black
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
+    
+    static var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Date", key: "date", type: .date),
+        DataSourceProperty(name: "Reference", key: "reference", type: .string),
+        DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
+        DataSourceProperty(name: "Longitude", key: "longitude", type: .double),
+        DataSourceProperty(name: "Navigation Area", key: "navArea", type: .string),
+        DataSourceProperty(name: "Subregion", key: "subreg", type: .string),
+        DataSourceProperty(name: "Description", key: "asamDescription", type: .string),
+        DataSourceProperty(name: "Hostility", key: "hostility", type: .string),
+        DataSourceProperty(name: "Victim", key: "victim", type: .string)
+    ]
 }
 
 extension Asam: BatchImportable {

@@ -26,12 +26,12 @@ public class MSI {
         return Session(configuration: configuration, serverTrustManager: manager)
     }()
     
-    let masterDataList: [BatchImportable.Type] = [Asam.self, Modu.self, NavigationalWarning.self, Light.self, Port.self, RadioBeacon.self, DifferentialGPSStation.self, DFRS.self, DFRSArea.self]
+    let masterDataList: [any BatchImportable.Type] = [Asam.self, Modu.self, NavigationalWarning.self, Light.self, Port.self, RadioBeacon.self, DifferentialGPSStation.self, DFRS.self, DFRSArea.self]
     
     
     func loadAllData() {
         NSLog("Load all data")
-        var initialDataLoadList: [BatchImportable.Type] = []
+        var initialDataLoadList: [any BatchImportable.Type] = []
         // if we think we need to load the initial data
         if !UserDefaults.standard.initialDataLoaded {
             initialDataLoadList = masterDataList.filter { importable in
@@ -57,7 +57,7 @@ public class MSI {
         } else {
             UserDefaults.standard.initialDataLoaded = true
 
-            let allLoadList: [BatchImportable.Type] = masterDataList.filter { importable in
+            let allLoadList: [any BatchImportable.Type] = masterDataList.filter { importable in
                 importable.shouldSync()
             }
 
@@ -91,7 +91,7 @@ public class MSI {
         guard let userInfo = notification.userInfo else { return }
 
         if let inserts = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, inserts.count > 0 {
-            if let dataSourceItem = inserts.first as? DataSource {
+            if let dataSourceItem = inserts.first as? (any DataSource) {
                 var allLoaded = true
                 for (dataSource, loading) in self.appState.loadingDataSource {
                     if loading && type(of: dataSourceItem).key != dataSource {
@@ -139,7 +139,7 @@ public class MSI {
     func loadData<T: Decodable, D: NSManagedObject & BatchImportable>(type: T.Type, dataType: D.Type) {
         DispatchQueue.main.async {
             self.appState.loadingDataSource[D.key] = true
-            if let dataSource = dataType as? DataSource.Type {
+            if let dataSource = dataType as? any DataSource.Type {
                 NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: dataSource))
             }
         }
@@ -163,10 +163,10 @@ public class MSI {
                                 DispatchQueue.main.async {
                                     self.appState.loadingDataSource[D.key] = false
                                     UserDefaults.standard.updateLastSyncTimeSeconds(D.self)
-                                    if let dataSource = dataType as? DataSource.Type {
+                                    if let dataSource = dataType as? any DataSource.Type {
                                         NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: dataSource))
                                         if totalCount != 0 {
-                                            NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceItem(dataSource: dataSource))
+                                            NotificationCenter.default.post(name: .DataSourceUpdated, object: dataSource.key)
                                         }
                                     }
                                 }

@@ -18,6 +18,25 @@ extension Modu: DataSource {
     static var systemImageName: String? = nil
     static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
+    
+    static var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Subregion", key: "subregion", type: .int),
+        DataSourceProperty(name: "Region", key: "region", type: .int),
+        DataSourceProperty(name: "Longitude", key: "longitude", type: .double),
+        DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
+        DataSourceProperty(name: "Distance", key: "distance", type: .double),
+        DataSourceProperty(name: "Special Status", key: "specialStatus", type: .string),
+        DataSourceProperty(name: "Rig Status", key: "rigStatus", type: .string),
+        DataSourceProperty(name: "Nav Area", key: "navArea", type: .string),
+        DataSourceProperty(name: "Name", key: "name", type: .string),
+        DataSourceProperty(name: "Date", key: "date", type: .date),
+    ]
+    
+    static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }
 }
 
 extension Modu: BatchImportable {

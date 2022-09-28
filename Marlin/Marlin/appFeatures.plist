@@ -6,6 +6,8 @@
 	<false/>
 	<key>searchEnabled</key>
 	<false/>
+	<key>filterEnabled</key>
+	<false/>
 	<key>hamburger</key>
 	<true/>
 	<key>asamDataSourceEnabled</key>

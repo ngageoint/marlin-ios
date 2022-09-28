@@ -31,10 +31,11 @@ extension Notification.Name {
     public static let DataSourceUpdated = Notification.Name("DataSourceUpdated")
     public static let DataSourceLoading = Notification.Name("DataSourceLoading")
     public static let DataSourceLoaded = Notification.Name("DataSourceLoaded")
+    public static let MappedDataSourcesUpdated = Notification.Name("MappedDataSourcesUpdated")
 }
 
 struct FocusMapOnItemNotification {
-    var item: DataSource?
+    var item: (any DataSource)?
 }
 
 struct MapAnnotationFocusedNotification {
@@ -43,7 +44,7 @@ struct MapAnnotationFocusedNotification {
 
 struct MapItemsTappedNotification {
     var annotations: [Any]?
-    var items: [DataSource]?
+    var items: [any DataSource]?
     var mapView: MKMapView?
 }
 

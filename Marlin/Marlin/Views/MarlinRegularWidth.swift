@@ -123,7 +123,7 @@ struct MarlinRegularWidth: View {
             }.navigationViewStyle(.stack)
         }
         .onReceive(viewDataSourcePub) { output in
-            if let dataSource = output.object as? DataSource {
+            if let dataSource = output.object as? (any DataSource) {
                 viewData(dataSource)
             }
         }
@@ -137,7 +137,7 @@ struct MarlinRegularWidth: View {
         }
     }
     
-    func viewData(_ data: DataSource) {
+    func viewData(_ data: any DataSource) {
         NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
         NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
         itemWrapper.dataSource = data
@@ -151,15 +151,15 @@ struct MarlinRegularWidth: View {
     @ViewBuilder
     func createListView(dataSource: DataSourceItem) -> some View {
         if dataSource.key == Asam.key {
-            AsamListView(focusedItem: itemWrapper, watchFocusedItem: true)
+            MSIListView<Asam>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(key: "date", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter))
         } else if dataSource.key == Modu.key {
-            ModuListView(focusedItem: itemWrapper, watchFocusedItem: true)
+            MSIListView<Modu>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(key: "date", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.moduFilter))
         } else if dataSource.key == Light.key {
             LightsListView(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == NavigationalWarning.key {
             NavigationalWarningListView()
         } else if dataSource.key == Port.key {
-            PortListView(focusedItem: itemWrapper, watchFocusedItem: true)
+            MSIListView<Port>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(key: "portNumber", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.portFilter))
         } else if dataSource.key == RadioBeacon.key {
             RadioBeaconListView(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == DifferentialGPSStation.key {

@@ -74,6 +74,8 @@ struct ModuDetailView: View {
             .dataSourceSection()
         }
         .dataSourceDetailList()
+        .navigationTitle(modu.name ?? Modu.dataSourceName)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

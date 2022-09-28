@@ -9,11 +9,11 @@ import Foundation
 import MapKit
 
 class BottomSheetItem: NSObject, Identifiable {
-    var item: DataSource
+    var item: any DataSource
     var annotationView: MKAnnotationView?
     var actionDelegate: Any?
     
-    init(item: DataSource, actionDelegate: Any? = nil, annotationView: MKAnnotationView? = nil) {
+    init(item: any DataSource, actionDelegate: Any? = nil, annotationView: MKAnnotationView? = nil) {
         self.item = item;
         self.actionDelegate = actionDelegate;
         self.annotationView = annotationView;

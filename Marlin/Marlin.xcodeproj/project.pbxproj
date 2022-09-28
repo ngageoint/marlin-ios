@@ -30,7 +30,6 @@
 		F713616B28B79D310005C69C /* set_build_number.sh in Resources */ = {isa = PBXBuildFile; fileRef = F713616A28B79D310005C69C /* set_build_number.sh */; };
 		F71CC6E728AC06C5000A326C /* BoolExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6E628AC06C5000A326C /* BoolExtensions.swift */; };
 		F71CC6EA28AC178F000A326C /* Port+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6E928AC178F000A326C /* Port+CoreDataClass.swift */; };
-		F71CC6EC28AD162B000A326C /* PortListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6EB28AD162B000A326C /* PortListView.swift */; };
 		F71CC6EE28AD163D000A326C /* PortSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6ED28AD163D000A326C /* PortSummaryView.swift */; };
 		F71CC6F028AD1647000A326C /* PortDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6EF28AD1647000A326C /* PortDetailView.swift */; };
 		F71CC6F228AD1D23000A326C /* PortActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6F128AD1D23000A326C /* PortActionBar.swift */; };
@@ -93,7 +92,6 @@
 		F7A54CC62848149700E5F565 /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CC52848149700E5F565 /* Tests_iOSLaunchTests.swift */; };
 		F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CA82848149500E5F565 /* Marlin.xcdatamodeld */; };
 		F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CAA2848149500E5F565 /* MarlinApp.swift */; };
-		F7A54CD72848149700E5F565 /* AsamListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CAB2848149500E5F565 /* AsamListView.swift */; };
 		F7A54CD92848149700E5F565 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CAC2848149500E5F565 /* Persistence.swift */; };
 		F7A54CDB2848149700E5F565 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7A54CAD2848149600E5F565 /* Assets.xcassets */; };
 		F7ADDCDD2885D79900137D95 /* navigation_areas.gpkg in Resources */ = {isa = PBXBuildFile; fileRef = F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */; };
@@ -107,6 +105,7 @@
 		F7B7064328BAADD50026DE88 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B7064228BAADD50026DE88 /* CircleImage.swift */; };
 		F7C3679428CCC8E500AE1265 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C3679328CCC8E500AE1265 /* DisclaimerView.swift */; };
 		F7C3679928D0AEF400AE1265 /* DisplaySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C3679828D0AEF400AE1265 /* DisplaySettings.swift */; };
+		F7D2225028E4A27C00F527F2 /* FilterBottomSheetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */; };
 		F7D5C05328A2CAAB000C2C29 /* BottomSheetItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05228A2CAAB000C2C29 /* BottomSheetItem.swift */; };
 		F7D5C05528A68C43000C2C29 /* appFeatures.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7D5C05428A68C43000C2C29 /* appFeatures.plist */; };
 		F7D5C05728A68E56000C2C29 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */; };
@@ -138,7 +137,6 @@
 		F7F59789285A277000F9B32E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59788285A277000F9B32E /* Card.swift */; };
 		F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5978F285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift */; };
 		F7F59795285BE27400F9B32E /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59794285BE27400F9B32E /* Property.swift */; };
-		F7F59797285D15B900F9B32E /* ModuListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59796285D15B900F9B32E /* ModuListView.swift */; };
 		F7F59799285D166700F9B32E /* ModuDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59798285D166700F9B32E /* ModuDetailView.swift */; };
 		F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */; };
 		F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979E285D185000F9B32E /* ModuMap.swift */; };
@@ -195,6 +193,13 @@
 		F7FFB32828D6427200C31AA3 /* RadioBeacon+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB32728D6427200C31AA3 /* RadioBeacon+Decodable.swift */; };
 		F7FFB33428D8A58D00C31AA3 /* ExceptionCatcher in Frameworks */ = {isa = PBXBuildFile; productRef = F7FFB33328D8A58D00C31AA3 /* ExceptionCatcher */; };
 		F7FFB33628D8F5A300C31AA3 /* LightSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB33528D8F5A300C31AA3 /* LightSettingsView.swift */; };
+		F7FFB33828D9EB6900C31AA3 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = F7FFB33728D9EB6800C31AA3 /* CHANGELOG.md */; };
+		F7FFB33A28D9EFDB00C31AA3 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB33928D9EFDB00C31AA3 /* SearchView.swift */; };
+		F7FFB33D28DA061D00C31AA3 /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB33C28DA061D00C31AA3 /* FilterButton.swift */; };
+		F7FFB33F28DA104200C31AA3 /* FilterBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB33E28DA104200C31AA3 /* FilterBottomSheet.swift */; };
+		F7FFB34128DA486500C31AA3 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB34028DA486500C31AA3 /* FilterView.swift */; };
+		F7FFB34328DD06EF00C31AA3 /* MSIListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB34228DD06EF00C31AA3 /* MSIListView.swift */; };
+		F7FFB34528DE18B900C31AA3 /* Badge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB34428DE18B900C31AA3 /* Badge.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -242,7 +247,6 @@
 		F713616A28B79D310005C69C /* set_build_number.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = set_build_number.sh; sourceTree = "<group>"; };
 		F71CC6E628AC06C5000A326C /* BoolExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolExtensions.swift; sourceTree = "<group>"; };
 		F71CC6E928AC178F000A326C /* Port+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+CoreDataClass.swift"; sourceTree = "<group>"; };
-		F71CC6EB28AD162B000A326C /* PortListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortListView.swift; sourceTree = "<group>"; };
 		F71CC6ED28AD163D000A326C /* PortSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortSummaryView.swift; sourceTree = "<group>"; };
 		F71CC6EF28AD1647000A326C /* PortDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDetailView.swift; sourceTree = "<group>"; };
 		F71CC6F128AD1D23000A326C /* PortActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortActionBar.swift; sourceTree = "<group>"; };
@@ -305,7 +309,6 @@
 		F79168FD28B56031004FFEBA /* PortMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortMap.swift; sourceTree = "<group>"; };
 		F7A54CA92848149500E5F565 /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		F7A54CAA2848149500E5F565 /* MarlinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinApp.swift; sourceTree = "<group>"; };
-		F7A54CAB2848149500E5F565 /* AsamListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamListView.swift; sourceTree = "<group>"; };
 		F7A54CAC2848149500E5F565 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		F7A54CAD2848149600E5F565 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F7A54CB22848149700E5F565 /* Marlin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Marlin.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -324,6 +327,7 @@
 		F7B7064228BAADD50026DE88 /* CircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
 		F7C3679328CCC8E500AE1265 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
 		F7C3679828D0AEF400AE1265 /* DisplaySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySettings.swift; sourceTree = "<group>"; };
+		F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterBottomSheetRow.swift; sourceTree = "<group>"; };
 		F7D5C05228A2CAAB000C2C29 /* BottomSheetItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetItem.swift; sourceTree = "<group>"; };
 		F7D5C05428A68C43000C2C29 /* appFeatures.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = appFeatures.plist; sourceTree = "<group>"; };
 		F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
@@ -355,7 +359,6 @@
 		F7F59788285A277000F9B32E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		F7F5978F285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2DExtensions.swift; sourceTree = "<group>"; };
 		F7F59794285BE27400F9B32E /* Property.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Property.swift; sourceTree = "<group>"; };
-		F7F59796285D15B900F9B32E /* ModuListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuListView.swift; sourceTree = "<group>"; };
 		F7F59798285D166700F9B32E /* ModuDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDetailView.swift; sourceTree = "<group>"; };
 		F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuSummaryView.swift; sourceTree = "<group>"; };
 		F7F5979E285D185000F9B32E /* ModuMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuMap.swift; sourceTree = "<group>"; };
@@ -411,6 +414,13 @@
 		F7FFB32528D6422F00C31AA3 /* RadioBeacon+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+MapImage.swift"; sourceTree = "<group>"; };
 		F7FFB32728D6427200C31AA3 /* RadioBeacon+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+Decodable.swift"; sourceTree = "<group>"; };
 		F7FFB33528D8F5A300C31AA3 /* LightSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightSettingsView.swift; sourceTree = "<group>"; };
+		F7FFB33728D9EB6800C31AA3 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
+		F7FFB33928D9EFDB00C31AA3 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		F7FFB33C28DA061D00C31AA3 /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
+		F7FFB33E28DA104200C31AA3 /* FilterBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterBottomSheet.swift; sourceTree = "<group>"; };
+		F7FFB34028DA486500C31AA3 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
+		F7FFB34228DD06EF00C31AA3 /* MSIListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIListView.swift; sourceTree = "<group>"; };
+		F7FFB34428DE18B900C31AA3 /* Badge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Badge.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -589,6 +599,7 @@
 				F7D671D9286E3B3D00758F1C /* ExtraMapTypes.swift */,
 				F707BA8E287DC999006A94C4 /* FetchRequestTileOverlay.swift */,
 				F71D287A28C1401400F1775C /* FetchRequestMap.swift */,
+				F7FFB33928D9EFDB00C31AA3 /* SearchView.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -651,6 +662,7 @@
 		F7A54CA22848149500E5F565 = {
 			isa = PBXGroup;
 			children = (
+				F7FFB33728D9EB6800C31AA3 /* CHANGELOG.md */,
 				F713616928B79D0B0005C69C /* Scripts */,
 				F7A54CA72848149500E5F565 /* Marlin */,
 				F7A54CC22848149700E5F565 /* Tests iOS */,
@@ -664,6 +676,7 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
+				F7FFB33B28DA060400C31AA3 /* Filter */,
 				F71D285F28BD688800F1775C /* DataSources */,
 				F7ADDCE02887025500137D95 /* Location */,
 				F7D671E52871D44E00758F1C /* SideMenu */,
@@ -823,6 +836,8 @@
 				F740AA76289D68D800754293 /* MarlinCompactWidth.swift */,
 				F740AA78289D6DED00754293 /* MarlinRegularWidth.swift */,
 				F71CC6F728AE71BA000A326C /* KeyValueSection.swift */,
+				F7FFB34228DD06EF00C31AA3 /* MSIListView.swift */,
+				F7FFB34428DE18B900C31AA3 /* Badge.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -881,7 +896,6 @@
 		F7FFB32B28D6432E00C31AA3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				F7F59796285D15B900F9B32E /* ModuListView.swift */,
 				F7F59798285D166700F9B32E /* ModuDetailView.swift */,
 				F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */,
 				F7F5979E285D185000F9B32E /* ModuMap.swift */,
@@ -893,7 +907,6 @@
 		F7FFB32C28D6433A00C31AA3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				F7A54CAB2848149500E5F565 /* AsamListView.swift */,
 				F71DF4982858DA4700686951 /* AsamMap.swift */,
 				F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */,
 				F7F59785285A206700F9B32E /* AsamDetailView.swift */,
@@ -919,7 +932,6 @@
 		F7FFB32E28D6435E00C31AA3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				F71CC6EB28AD162B000A326C /* PortListView.swift */,
 				F71CC6ED28AD163D000A326C /* PortSummaryView.swift */,
 				F71CC6EF28AD1647000A326C /* PortDetailView.swift */,
 				F71CC6F128AD1D23000A326C /* PortActionBar.swift */,
@@ -960,6 +972,17 @@
 				F71D288628CA1B7C00F1775C /* SeedData */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		F7FFB33B28DA060400C31AA3 /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				F7FFB33C28DA061D00C31AA3 /* FilterButton.swift */,
+				F7FFB33E28DA104200C31AA3 /* FilterBottomSheet.swift */,
+				F7FFB34028DA486500C31AA3 /* FilterView.swift */,
+				F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */,
+			);
+			path = Filter;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1096,6 +1119,7 @@
 				F7FF8A0A28D2064900502E9E /* lights.json in Resources */,
 				F71D28A028CB667C00F1775C /* dgps.json in Resources */,
 				F7D5C05528A68C43000C2C29 /* appFeatures.plist in Resources */,
+				F7FFB33828D9EB6900C31AA3 /* CHANGELOG.md in Resources */,
 				F71D28A128CB667C00F1775C /* port.json in Resources */,
 				F7D671CC286C98B200758F1C /* natural_earth_1_100.gpkg in Resources */,
 				F71DF4972858CC8100686951 /* asams.json in Resources */,
@@ -1261,6 +1285,7 @@
 				F71D287328BE969500F1775C /* DFRSDetailView.swift in Sources */,
 				F740AA79289D6DED00754293 /* MarlinRegularWidth.swift in Sources */,
 				F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */,
+				F7FFB33F28DA104200C31AA3 /* FilterBottomSheet.swift in Sources */,
 				F707BA79287632E1006A94C4 /* LightListView.swift in Sources */,
 				F7C3679428CCC8E500AE1265 /* DisclaimerView.swift in Sources */,
 				F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */,
@@ -1279,6 +1304,7 @@
 				F71D286428BE431900F1775C /* DifferentialGPSStationMap.swift in Sources */,
 				F71D287928BE9B7400F1775C /* DFRSListView.swift in Sources */,
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
+				F7FFB33D28DA061D00C31AA3 /* FilterButton.swift in Sources */,
 				F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */,
 				F71D288128C29F0200F1775C /* BundleExtensions.swift in Sources */,
 				F7FFB30028D6376100C31AA3 /* NavigationalWarning+Decodable.swift in Sources */,
@@ -1297,14 +1323,16 @@
 				F7FFB2E628D6217900C31AA3 /* DFRSArea+Decodable.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				F7F597B22866248700F9B32E /* NavigationalWarningNavAreaListView.swift in Sources */,
+				F7FFB34128DA486500C31AA3 /* FilterView.swift in Sources */,
 				F71CC6E728AC06C5000A326C /* BoolExtensions.swift in Sources */,
 				F7FFB2F428D62A5000C31AA3 /* Port+Annotation.swift in Sources */,
-				F71CC6EC28AD162B000A326C /* PortListView.swift in Sources */,
 				F7FFB2EA28D623B000C31AA3 /* DifferentialGPSStation+DataSource.swift in Sources */,
 				F7D671DA286E3B3D00758F1C /* ExtraMapTypes.swift in Sources */,
+				F7FFB33A28D9EFDB00C31AA3 /* SearchView.swift in Sources */,
 				F74B9B0F28B7DA8B0097D448 /* RadioBeaconActionBar.swift in Sources */,
 				F740AA77289D68D800754293 /* MarlinCompactWidth.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
+				F7FFB34328DD06EF00C31AA3 /* MSIListView.swift in Sources */,
 				F7FFB2F028D626DC00C31AA3 /* DifferentialGPSStation+Decodable.swift in Sources */,
 				F71D286A28BE467200F1775C /* DifferentialGPSStationDetailView.swift in Sources */,
 				F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */,
@@ -1342,6 +1370,7 @@
 				F7F597AC2864DD5200F9B32E /* NavigationalWarningListView.swift in Sources */,
 				F7FFB31C28D63F5500C31AA3 /* Light+MapImage.swift in Sources */,
 				F71CC6EA28AC178F000A326C /* Port+CoreDataClass.swift in Sources */,
+				F7D2225028E4A27C00F527F2 /* FilterBottomSheetRow.swift in Sources */,
 				F7ADDCEA288F14DA00137D95 /* MKMapViewExtensions.swift in Sources */,
 				F707BA9328805476006A94C4 /* PersistedMapState.swift in Sources */,
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
@@ -1367,14 +1396,13 @@
 				F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */,
 				F71D287D28C2926500F1775C /* SettingsCell.swift in Sources */,
 				F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */,
-				F7F59797285D15B900F9B32E /* ModuListView.swift in Sources */,
 				F74B9B0728B7CF650097D448 /* RadioBeacon+CoreDataClass.swift in Sources */,
 				F71D286228BE390800F1775C /* DifferentialGPSStation+CoreDataClass.swift in Sources */,
 				F71DF4A02859116C00686951 /* Notifications.swift in Sources */,
 				F7D671DE286F877C00758F1C /* MaterialButtonStyle.swift in Sources */,
+				F7FFB34528DE18B900C31AA3 /* Badge.swift in Sources */,
 				F707BA7D2877329E006A94C4 /* LightActionBar.swift in Sources */,
 				F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */,
-				F7A54CD72848149700E5F565 /* AsamListView.swift in Sources */,
 				F7FFB31028D63C4700C31AA3 /* Modu+MapImage.swift in Sources */,
 				F7FFB30E28D63C2700C31AA3 /* Modu+Decodable.swift in Sources */,
 				F7F597A62862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift in Sources */,
@@ -1612,7 +1640,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.6;
+				MARKETING_VERSION = 0.7.7;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.marlin;
 				PRODUCT_NAME = Marlin;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1650,7 +1678,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.6;
+				MARKETING_VERSION = 0.7.7;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.marlin;
 				PRODUCT_NAME = Marlin;
 				PROVISIONING_PROFILE_SPECIFIER = "";

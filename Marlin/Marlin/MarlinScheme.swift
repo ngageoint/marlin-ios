@@ -45,24 +45,48 @@ extension Font {
 }
 
 extension Color {
+    static var primaryUIColorVariant: UIColor {
+        return UIColor(named: "primaryVariant") ?? .systemBackground
+    }
+    
     static var primaryColorVariant: Color {
         return Color("primaryVariant")
+    }
+    
+    static var primaryUIColor: UIColor {
+        return UIColor(named: "primary") ?? .systemBackground
     }
     
     static var primaryColor: Color {
         return Color("primary")
     }
     
+    static var onPrimaryUIColor: UIColor {
+        return UIColor(named: "onPrimary") ?? .label
+    }
+    
     static var onPrimaryColor: Color {
         return Color("onPrimary")
+    }
+    
+    static var secondaryUIColor: UIColor {
+        return UIColor(named: "secondary") ?? .systemBackground
     }
     
     static var secondaryColor: Color {
         return Color("secondary")
     }
     
+    static var onSecondaryUIColor: UIColor {
+        return UIColor(named: "onSecondary") ?? .secondaryLabel
+    }
+    
     static var onSecondaryColor: Color {
         return Color("onSecondary")
+    }
+    
+    static var surfaceUIColor: UIColor {
+        return UIColor(named: "surface") ?? .secondarySystemFill
     }
     
     static var surfaceColor: Color {
@@ -73,8 +97,16 @@ extension Color {
         return Color(uiColor: UIColor.label)
     }
     
+    static var backgroundUIColor: UIColor {
+        return UIColor(named: "background") ?? .systemBackground
+    }
+    
     static var backgroundColor: Color {
         return Color("background")
+    }
+    
+    static var onBackgroundUIColor: UIColor {
+        return UIColor.label
     }
     
     static var onBackgroundColor: Color {
@@ -122,31 +154,31 @@ class MarlinScheme: ObservableObject {
     init() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(Color.primaryColor);
+        appearance.backgroundColor = Color.primaryUIColor;
         
         appearance.titleTextAttributes = [
-            NSAttributedString.Key.foregroundColor: UIColor(Color.onPrimaryColor),
-            NSAttributedString.Key.backgroundColor: UIColor(Color.primaryColor)
+            NSAttributedString.Key.foregroundColor: Color.onPrimaryUIColor,
+            NSAttributedString.Key.backgroundColor: Color.primaryUIColor
         ];
         appearance.largeTitleTextAttributes = [
-            NSAttributedString.Key.foregroundColor: UIColor(Color.onPrimaryColor),
-            NSAttributedString.Key.backgroundColor: UIColor(Color.primaryColor)
+            NSAttributedString.Key.foregroundColor: Color.onPrimaryUIColor,
+            NSAttributedString.Key.backgroundColor: Color.primaryUIColor
         ];
-        
+
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
         UINavigationBar.appearance().compactScrollEdgeAppearance = appearance
-        
-        UINavigationBar.appearance().barTintColor = UIColor(Color.onPrimaryColor)
-        UINavigationBar.appearance().tintColor = UIColor(Color.onPrimaryColor)
+
+        UINavigationBar.appearance().barTintColor = Color.onPrimaryUIColor
+        UINavigationBar.appearance().tintColor = Color.onPrimaryUIColor
         UINavigationBar.appearance().prefersLargeTitles = false
         
-        UITableView.appearance().backgroundColor = UIColor(Color.backgroundColor)
+        UITableView.appearance().backgroundColor = Color.backgroundUIColor
         
         let tabBarAppearance = UITabBarAppearance();
-        tabBarAppearance.selectionIndicatorTintColor = UIColor(Color.primaryColorVariant).withAlphaComponent(0.87)
-        tabBarAppearance.backgroundColor = UIColor(Color.surfaceColor)
+        tabBarAppearance.selectionIndicatorTintColor = Color.primaryUIColorVariant.withAlphaComponent(0.87)
+        tabBarAppearance.backgroundColor = Color.surfaceUIColor
         setTabBarItemColors(tabBarAppearance.stackedLayoutAppearance)
         setTabBarItemColors(tabBarAppearance.inlineLayoutAppearance)
         setTabBarItemColors(tabBarAppearance.compactInlineLayoutAppearance)
@@ -156,11 +188,11 @@ class MarlinScheme: ObservableObject {
     }
     
     private func setTabBarItemColors(_ itemAppearance: UITabBarItemAppearance) {
-        itemAppearance.normal.iconColor = UIColor(Color.onBackgroundColor).withAlphaComponent(0.6);
-        itemAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(Color.onBackgroundColor).withAlphaComponent(0.6)]
+        itemAppearance.normal.iconColor = Color.onBackgroundUIColor.withAlphaComponent(0.6);
+        itemAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Color.onBackgroundUIColor.withAlphaComponent(0.6)]
         
-        itemAppearance.selected.iconColor = UIColor(Color.primaryColorVariant).withAlphaComponent(0.87)
-        itemAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(Color.primaryColorVariant).withAlphaComponent(0.87)]
+        itemAppearance.selected.iconColor = Color.primaryUIColorVariant.withAlphaComponent(0.87)
+        itemAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Color.primaryUIColorVariant.withAlphaComponent(0.87)]
     }
     
 }

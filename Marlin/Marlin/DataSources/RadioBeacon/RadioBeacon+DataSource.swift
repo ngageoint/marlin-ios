@@ -21,6 +21,30 @@ extension RadioBeacon: DataSource {
     static var systemImageName: String? = "antenna.radiowaves.left.and.right"
     static var color: UIColor = UIColor(argbValue: 0xFF007BFF)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
+    
+    static var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
+        DataSourceProperty(name: "Longitude", key: "longitude", type: .double),
+        DataSourceProperty(name: "Feature Number", key: "featureNumber", type: .int),
+        DataSourceProperty(name: "Name", key: "name", type: .string),
+        DataSourceProperty(name: "Range (nm)", key: "range", type: .int),
+        DataSourceProperty(name: "Frequency (kHz)", key: "frequency", type: .string),
+        DataSourceProperty(name: "Station Remark", key: "stationRemark", type: .string),
+        DataSourceProperty(name: "Characteristic", key: "characteristic", type: .string),
+        DataSourceProperty(name: "Sequence Text", key: "sequenceText", type: .string),
+        DataSourceProperty(name: "Notice Number", key: "noticeNumber", type: .int),
+        DataSourceProperty(name: "Notice Week", key: "noticeWeek", type: .string),
+        DataSourceProperty(name: "Notice Year", key: "noticeYear", type: .string),
+        DataSourceProperty(name: "Volume Number", key: "volumeNumber", type: .string),
+        DataSourceProperty(name: "Preceding Note", key: "precedingNote", type: .string),
+        DataSourceProperty(name: "Post Note", key: "postNote", type: .string),
+    ]
+    
+    static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }
 }
 
 extension RadioBeacon: BatchImportable {

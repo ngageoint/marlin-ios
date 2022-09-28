@@ -11,7 +11,7 @@ import MapKit
 class ItemWrapper : ObservableObject {
     @Published var asam: Asam?
     @Published var modu: Modu?
-    @Published var dataSource: DataSource?
+    @Published var dataSource: (any DataSource)?
     @Published var date: Date?
 }
 
@@ -161,7 +161,7 @@ struct MarlinView: View {
         }
     }
     
-    func handleTappedItems(items: [DataSource]?) -> [BottomSheetItem] {
+    func handleTappedItems(items: [any DataSource]?) -> [BottomSheetItem] {
         var bottomSheetItems: [BottomSheetItem] = []
         if let items = items {
             for item in items {

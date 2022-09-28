@@ -19,7 +19,7 @@ struct Throwable<T: Decodable>: Decodable {
     }
 }
 
-protocol BatchImportable: NSManagedObject {
+protocol BatchImportable: NSManagedObject, Identifiable {
     static func batchImport(value: Decodable?) async throws -> Int
     static func dataRequest() -> [MSIRouter]
     static var key: String { get }
@@ -41,7 +41,33 @@ class DataSourceImageCache {
     }
 }
 
+enum DataSourcePropertyType: Codable {
+    case string
+    case date
+    case int
+    case float
+    case double
+    case boolean
+    case enumeration
+}
+
+struct DataSourceProperty: Hashable, Identifiable, Codable {
+    var id: String { key }
+    let name: String
+    let key: String
+    let type: DataSourcePropertyType
+    let enumerationValues: [String: [String]]?
+    
+    init(name: String, key: String, type: DataSourcePropertyType, enumerationValues: [String: [String]]? = nil) {
+        self.name = name
+        self.key = key
+        self.type = type
+        self.enumerationValues = enumerationValues
+    }
+}
+
 protocol DataSource: BatchImportable {
+    static var properties: [DataSourceProperty] { get }
     static var isMappable: Bool { get }
     static var dataSourceName: String { get }
     static var fullDataSourceName: String { get }
@@ -56,6 +82,7 @@ protocol DataSource: BatchImportable {
     func view(on: MKMapView) -> MKAnnotationView?
     static func cachedImage(zoomLevel: Int) -> UIImage?
     static func cacheImage(zoomLevel: Int, image: UIImage)
+    static var dateFormatter: DateFormatter { get }
 }
 
 extension DataSource {

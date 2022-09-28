@@ -23,12 +23,6 @@ struct LightsPropertyContainer: Decodable {
 
 struct LightsProperties: Decodable {
     
-    static let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter
-    }()
-    
     // MARK: Codable
     
     private enum CodingKeys: String, CodingKey {

@@ -201,6 +201,14 @@ enum SizeEnum: String, CaseIterable, CustomStringConvertible {
             return ""
         }
     }
+
+    static var keyValueMap: [String: [String]] {
+        SizeEnum.allCases.reduce(into: [String: [String]]()) {
+            var array: [String] = $0[$1.description] ?? []
+            array.append($1.rawValue)
+            return $0[$1.description] = array
+        }
+    }
 }
 
 enum DecisionEnum: String, CaseIterable, CustomStringConvertible {
@@ -225,6 +233,14 @@ enum DecisionEnum: String, CaseIterable, CustomStringConvertible {
             return "No"
         default:
             return "Unknown"
+        }
+    }
+    
+    static var keyValueMap: [String: [String]] {
+        DecisionEnum.allCases.reduce(into: [String: [String]]()) {
+            var array: [String] = $0[$1.description] ?? []
+            array.append($1.rawValue)
+            return $0[$1.description] = array
         }
     }
 }
@@ -258,6 +274,14 @@ enum RepairCodeEnum: String, CaseIterable, CustomStringConvertible {
             return "None"
         default:
             return "Unknown"
+        }
+    }
+    
+    static var keyValueMap: [String: [String]] {
+        RepairCodeEnum.allCases.reduce(into: [String: [String]]()) {
+            var array: [String] = $0[$1.description] ?? []
+            array.append($1.rawValue)
+            return $0[$1.description] = array
         }
     }
 }
@@ -305,6 +329,14 @@ enum HarborTypeEnum: String, CaseIterable, CustomStringConvertible {
             return "Unknown"
         }
     }
+    
+    static var keyValueMap: [String: [String]] {
+        HarborTypeEnum.allCases.reduce(into: [String: [String]]()) {
+            var array: [String] = $0[$1.description] ?? []
+            array.append($1.rawValue)
+            return $0[$1.description] = array
+        }
+    }
 }
 
 enum HarborUseEnum: String, CaseIterable, CustomStringConvertible {
@@ -338,6 +370,14 @@ enum HarborUseEnum: String, CaseIterable, CustomStringConvertible {
             return "Unknown"
         }
     }
+    
+    static var keyValueMap: [String: [String]] {
+        HarborUseEnum.allCases.reduce(into: [String: [String]]()) {
+            var array: [String] = $0[$1.description] ?? []
+            array.append($1.rawValue)
+            return $0[$1.description] = array
+        }
+    }
 }
 
 enum UnderkeelClearanceEnum: String, CaseIterable, CustomStringConvertible {
@@ -366,6 +406,14 @@ enum UnderkeelClearanceEnum: String, CaseIterable, CustomStringConvertible {
             return "Unknown"
         default:
             return "Unknown"
+        }
+    }
+    
+    static var keyValueMap: [String: [String]] {
+        UnderkeelClearanceEnum.allCases.reduce(into: [String: [String]]()) {
+            var array: [String] = $0[$1.description] ?? []
+            array.append($1.rawValue)
+            return $0[$1.description] = array
         }
     }
 }
@@ -399,6 +447,14 @@ enum ConditionEnum: String, CaseIterable, CustomStringConvertible {
             return "None"
         default:
             return ""
+        }
+    }
+    
+    static var keyValueMap: [String: [String]] {
+        ConditionEnum.allCases.reduce(into: [String: [String]]()) {
+            var array: [String] = $0[$1.description] ?? []
+            array.append($1.rawValue)
+            return $0[$1.description] = array
         }
     }
 }

@@ -10,6 +10,11 @@ import UIKit
 import CoreData
 
 extension NavigationalWarning: DataSource {
+    static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        return dateFormatter
+    }
     
     static var isMappable: Bool = false
     static var dataSourceName: String = NSLocalizedString("Warnings", comment: "Warnings data source display name")
@@ -23,6 +28,8 @@ extension NavigationalWarning: DataSource {
     var color: UIColor {
         return NavigationalWarning.color
     }
+    
+    static var properties: [DataSourceProperty] = []
 }
 
 extension NavigationalWarning: BatchImportable {

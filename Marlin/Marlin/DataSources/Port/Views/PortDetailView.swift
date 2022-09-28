@@ -71,6 +71,8 @@ struct PortDetailView: View {
                 .dataSourceSection()
         }
         .dataSourceDetailList()
+        .navigationTitle(port.portName ?? Port.dataSourceName)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

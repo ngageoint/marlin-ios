@@ -399,7 +399,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             }
         }
         
-        var items: [DataSource] = []
+        var items: [any DataSource] = []
         if let mixins = marlinMap.mixins {
             for mixin in mixins.reversed() {
                 if let matchedItems = mixin.items(at: tapCoord, mapView: mapView) {

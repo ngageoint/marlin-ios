@@ -9,20 +9,19 @@ import SwiftUI
 import MapKit
 
 struct MarlinCompactWidth: View {
+    
     @EnvironmentObject var appState: AppState
     
     @AppStorage("selectedTab") var selectedTab: String = "map"
     @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = false
     @State var loadingData: Bool = false
-
-    @AppStorage("searchEnabled") var searchEnabled: Bool = false
-    @State var search: String = ""
-    @AppStorage("searchExpanded") var searchExpanded: Bool = false
     
     @ObservedObject var dataSourceList: DataSourceList
     @State var menuOpen: Bool = false
     @State var selection: String? = nil
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
+    
+    @State var filterOpen: Bool = false
     
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource)
     let mapFocus = NotificationCenter.default.publisher(for: .MapRequestFocus)
@@ -47,33 +46,13 @@ struct MarlinCompactWidth: View {
                                 .if(UserDefaults.standard.hamburger) { view in
                                     view.modifier(Hamburger(menuOpen: $menuOpen))
                                 }
+                                .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
                             VStack {
                                 // top of map
                                 HStack(alignment: .top, spacing: 8) {
                                     // top left button stack
                                     VStack(alignment: .leading, spacing: 16) {
-                                        if searchEnabled {
-                                            HStack(alignment: .center, spacing: 0) {
-                                                Image(systemName: "magnifyingglass")
-                                                    .font(.system(size: 18))
-                                                    .frame(width: 24, height: 24, alignment: .center)
-                                                    .onTapGesture {
-                                                        searchExpanded.toggle()
-                                                    }
-                                                TextField("Search", text: $search)
-                                                    .frame(maxWidth: searchExpanded ? .infinity : 0)
-                                                
-                                            }
-                                            .frame(minWidth: 40, maxWidth: searchExpanded ? .infinity : 40, minHeight: 40, maxHeight: 40)
-                                            .padding([.leading, .trailing], searchExpanded ? 8 : 0)
-                                            .font(Font.body2)
-                                            .foregroundColor(Color.primaryColorVariant)
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 20).fill(Color.surfaceColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.4), radius: 3, x: 0, y: 4)
-                                            )
-                                            .animation(.default, value: searchExpanded)
-                                            .offset(x: 8, y: 16)
-                                        }
+                                        SearchView()
                                     }
                                     Spacer()
                                     // top right button stack
@@ -221,7 +200,7 @@ struct MarlinCompactWidth: View {
                 }
             }
             .onReceive(viewDataSourcePub) { output in
-                if let dataSource = output.object as? DataSource {
+                if let dataSource = output.object as? (any DataSource) {
                     viewData(dataSource)
                 }
             }
@@ -278,20 +257,23 @@ struct MarlinCompactWidth: View {
                 )
             }
         }
+        .bottomSheet(isPresented: $filterOpen, delegate: self) {
+            FilterBottomSheet(dataSources: $dataSourceList.mappedDataSources)
+        }
     }
     
     @ViewBuilder
     func createListView(dataSource: DataSourceItem) -> some View {
         if dataSource.key == Asam.key {
-            AsamListView(focusedItem: itemWrapper)
+            MSIListView<Asam>(focusedItem: itemWrapper, sortDescriptors: [NSSortDescriptor(key: "date", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter))
         } else if dataSource.key == Modu.key {
-            ModuListView(focusedItem: itemWrapper)
+            MSIListView<Modu>(focusedItem: itemWrapper, sortDescriptors: [NSSortDescriptor(key: "date", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.moduFilter))
         } else if dataSource.key == Light.key {
             LightsListView(focusedItem: itemWrapper)
         } else if dataSource.key == NavigationalWarning.key {
             NavigationalWarningListView()
         } else if dataSource.key == Port.key {
-            PortListView(focusedItem: itemWrapper)
+            MSIListView<Port>(focusedItem: itemWrapper, sortDescriptors: [NSSortDescriptor(key: "portNumber", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.portFilter))
         } else if dataSource.key == RadioBeacon.key {
             RadioBeaconListView(focusedItem: itemWrapper)
         } else if dataSource.key == DifferentialGPSStation.key {
@@ -305,7 +287,7 @@ struct MarlinCompactWidth: View {
         self.menuOpen.toggle()
     }
     
-    func viewData(_ data: DataSource) {
+    func viewData(_ data: any DataSource) {
         NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
         NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
         itemWrapper.dataSource = data
@@ -314,3 +296,8 @@ struct MarlinCompactWidth: View {
     }
 }
 
+extension MarlinCompactWidth: BottomSheetDelegate {
+    func bottomSheetDidDismiss() {
+        filterOpen.toggle()
+    }
+}

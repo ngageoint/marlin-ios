@@ -24,7 +24,7 @@ protocol MapImage {
 extension MapImage {
     func defaultMapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil, context: CGContext? = nil, tileSize: Double) -> [UIImage] {
         var images: [UIImage] = []
-        if let dataSource = self as? DataSource {
+        if let dataSource = self as? (any DataSource) {
             var radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * type(of:dataSource).imageScale
             
             // zoom level 36 is a temporary hack to draw a large image for a real map marker

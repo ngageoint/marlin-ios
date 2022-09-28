@@ -22,6 +22,32 @@ extension DifferentialGPSStation: DataSource {
     static var systemImageName: String? = nil
     static var color: UIColor = UIColor(argbValue: 0xFFFFB300)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
+    
+    static var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
+        DataSourceProperty(name: "Longitude", key: "longitude", type: .double),
+        DataSourceProperty(name: "Number", key: "featureNumber", type: .int),
+        DataSourceProperty(name: "Name", key: "name", type: .string),
+        DataSourceProperty(name: "Geopolitical Heading", key: "geopoliticalHeading", type: .string),
+        DataSourceProperty(name: "Station ID", key: "stationID", type: .int),
+        DataSourceProperty(name: "Range (nmi)", key: "range", type: .int),
+        DataSourceProperty(name: "Frequency (kHz)", key: "frequency", type: .int),
+        DataSourceProperty(name: "Transfer Rate", key: "transferRate", type: .int),
+        DataSourceProperty(name: "Remarks", key: "remarks", type: .string),
+        DataSourceProperty(name: "Notice Number", key: "noticeNumber", type: .int),
+        DataSourceProperty(name: "Notice Week", key: "noticeWeek", type: .string),
+        DataSourceProperty(name: "Notice Year", key: "noticeYear", type: .string),
+        DataSourceProperty(name: "Volume Number", key: "volumeNumber", type: .string),
+        DataSourceProperty(name: "Preceding Note", key: "precedingNote", type: .string),
+        DataSourceProperty(name: "Post Note", key: "postNote", type: .string),
+
+    ]
+    
+    static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }
 }
 
 extension DifferentialGPSStation: BatchImportable {

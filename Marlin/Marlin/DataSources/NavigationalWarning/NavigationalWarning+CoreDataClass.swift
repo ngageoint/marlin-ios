@@ -46,14 +46,14 @@ class NavigationalWarning: NSManagedObject {
     
     var dateString: String? {
         if let date = issueDate {
-            return NavigationalWarningProperties.dateFormatter.string(from: date)
+            return NavigationalWarning.dateFormatter.string(from: date)
         }
         return nil
     }
     
     var cancelDateString: String? {
         if let date = cancelDate {
-            return NavigationalWarningProperties.dateFormatter.string(from: date)
+            return NavigationalWarning.dateFormatter.string(from: date)
         }
         return nil
     }

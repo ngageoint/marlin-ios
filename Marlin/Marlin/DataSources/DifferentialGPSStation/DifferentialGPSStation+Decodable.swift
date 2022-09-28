@@ -23,12 +23,6 @@ struct DifferentialGPSStationPropertyContainer: Decodable {
 
 struct DifferentialGPSStationProperties: Decodable {
     
-    static let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter
-    }()
-    
     // MARK: Codable
     
     private enum CodingKeys: String, CodingKey {

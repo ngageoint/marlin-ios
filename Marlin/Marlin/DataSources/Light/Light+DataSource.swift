@@ -10,6 +10,12 @@ import UIKit
 import CoreData
 
 extension Light: DataSource {
+    static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }
+    
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("Lights", comment: "Lights data source display name")
     static var fullDataSourceName: String = NSLocalizedString("Lights", comment: "Lights data source display name")
@@ -18,6 +24,28 @@ extension Light: DataSource {
     static var systemImageName: String? = "lightbulb.fill"
     static var color: UIColor = UIColor(argbValue: 0xFFFFC500)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
+    
+    static var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
+        DataSourceProperty(name: "Longitude", key: "longitude", type: .double),
+        DataSourceProperty(name: "Feature Number", key: "featureNumber", type: .string),
+        DataSourceProperty(name: "International Feature Number", key: "internationalFeature", type: .string),
+        DataSourceProperty(name: "Name", key: "name", type: .string),
+        DataSourceProperty(name: "Structure", key: "structure", type: .string),
+        DataSourceProperty(name: "Focal Plane Elevation (ft)", key: "heightFeet", type: .double),
+        DataSourceProperty(name: "Focal Plane Elevation (m)", key: "heightMeters", type: .double),
+        // this should be a double
+        DataSourceProperty(name: "Range (nm)", key: "range", type: .string),
+        DataSourceProperty(name: "Remarks", key: "remarks", type: .string),
+        DataSourceProperty(name: "Characteristic", key: "characteristic", type: .string),
+        DataSourceProperty(name: "Signal", key: "characteristic", type: .string),
+        DataSourceProperty(name: "Notice Number", key: "noticeNumber", type: .int),
+        DataSourceProperty(name: "Notice Week", key: "noticeWeek", type: .string),
+        DataSourceProperty(name: "Notice Year", key: "noticeYear", type: .string),
+        DataSourceProperty(name: "Volume Number", key: "volumeNumber", type: .string),
+        DataSourceProperty(name: "Preceding Note", key: "precedingNote", type: .string),
+        DataSourceProperty(name: "Post Note", key: "postNote", type: .string),
+    ]
 }
 
 extension Light: BatchImportable {

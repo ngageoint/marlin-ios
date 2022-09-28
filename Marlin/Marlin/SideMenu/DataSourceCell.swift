@@ -43,6 +43,7 @@ struct DataSourceCell: View {
                         .foregroundColor(dataSourceItem.showOnMap ? Color.primaryColorVariant : Color.disabledColor)
                         .onTapGesture {
                             dataSourceItem.showOnMap = !dataSourceItem.showOnMap
+                            NotificationCenter.default.post(name: .MappedDataSourcesUpdated, object: nil)
                         }
                 }
             }

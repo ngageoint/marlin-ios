@@ -32,7 +32,7 @@ class Asam: NSManagedObject, EnlargableAnnotation {
     
     var dateString: String? {
         if let date = date {
-            return AsamProperties.dateFormatter.string(from: date)
+            return Asam.dateFormatter.string(from: date)
         }
         return nil
     }
@@ -43,7 +43,7 @@ class Asam: NSManagedObject, EnlargableAnnotation {
         "Date: \(dateString ?? "")\n" +
         "Latitude: \(latitude)\n" +
         "Longitude: \(longitude)\n" +
-        "Navigate Area: \(navArea ?? "")\n" +
+        "Navigation Area: \(navArea ?? "")\n" +
         "Subregion: \(subreg ?? "")\n" +
         "Description: \(asamDescription ?? "")\n" +
         "Hostility: \(hostility ?? "")\n" +

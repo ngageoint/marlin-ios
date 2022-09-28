@@ -16,7 +16,8 @@ struct SettingsView: View {
     @AppStorage("showMapScale") var showMapScale = false
     @AppStorage("flyoverMapsEnabled") var flyoverMapsEnabled = false
     @AppStorage("searchEnabled") var searchEnabled = false
-    
+    @AppStorage("filterEnabled") var filterEnabled = false
+
     var body: some View {
         List {
             NavigationLink {
@@ -60,6 +61,13 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "magnifyingglass")
                             Text("Search Enabled")
+                        }
+                    })
+                    .padding([.top, .bottom], 8)
+                    Toggle(isOn: $filterEnabled, label: {
+                        HStack {
+                            Image(systemName: "slider.horizontal.3")
+                            Text("Filter Enabled")
                         }
                     })
                     .padding([.top, .bottom], 8)

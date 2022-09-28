@@ -29,7 +29,7 @@ class Modu: NSManagedObject, EnlargableAnnotation {
     
     var dateString: String? {
         if let date = date {
-            return ModuProperties.dateFormatter.string(from: date)
+            return Modu.dateFormatter.string(from: date)
         }
         return nil
     }
