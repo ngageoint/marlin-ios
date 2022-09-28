@@ -26,6 +26,7 @@ extension RadioBeacon: DataSource {
         DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
         DataSourceProperty(name: "Longitude", key: "longitude", type: .double),
         DataSourceProperty(name: "Feature Number", key: "featureNumber", type: .int),
+        DataSourceProperty(name: "Geopolitical Heading", key: "geopoliticalHeading", type: .string),
         DataSourceProperty(name: "Name", key: "name", type: .string),
         DataSourceProperty(name: "Range (nm)", key: "range", type: .int),
         DataSourceProperty(name: "Frequency (kHz)", key: "frequency", type: .string),

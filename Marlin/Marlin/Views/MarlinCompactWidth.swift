@@ -265,19 +265,19 @@ struct MarlinCompactWidth: View {
     @ViewBuilder
     func createListView(dataSource: DataSourceItem) -> some View {
         if dataSource.key == Asam.key {
-            MSIListView<Asam>(focusedItem: itemWrapper, sortDescriptors: [NSSortDescriptor(key: "date", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter))
+            MSIListView<Asam>(focusedItem: itemWrapper, sortDescriptors: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter))
         } else if dataSource.key == Modu.key {
-            MSIListView<Modu>(focusedItem: itemWrapper, sortDescriptors: [NSSortDescriptor(key: "date", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.moduFilter))
+            MSIListView<Modu>(focusedItem: itemWrapper, sortDescriptors: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.moduFilter))
         } else if dataSource.key == Light.key {
             LightsListView(focusedItem: itemWrapper)
         } else if dataSource.key == NavigationalWarning.key {
             NavigationalWarningListView()
         } else if dataSource.key == Port.key {
-            MSIListView<Port>(focusedItem: itemWrapper, sortDescriptors: [NSSortDescriptor(key: "portNumber", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.portFilter))
+            MSIListView<Port>(focusedItem: itemWrapper, sortDescriptors: [NSSortDescriptor(keyPath: \Port.portNumber, ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.portFilter))
         } else if dataSource.key == RadioBeacon.key {
-            RadioBeaconListView(focusedItem: itemWrapper)
+            MSIListView<RadioBeacon>(focusedItem: itemWrapper, sortDescriptors: [NSSortDescriptor(keyPath: \RadioBeacon.geopoliticalHeading, ascending: true), NSSortDescriptor(keyPath: \RadioBeacon.featureNumber, ascending: true)], filterPublisher: UserDefaults.standard.publisher(for: \.radioBeaconFilter), sectionKeyPath: \RadioBeacon.geopoliticalHeading!)
         } else if dataSource.key == DifferentialGPSStation.key {
-            DifferentialGPSStationListView(focusedItem: itemWrapper)
+            MSIListView<DifferentialGPSStation>(focusedItem: itemWrapper, sortDescriptors: [NSSortDescriptor(keyPath: \DifferentialGPSStation.geopoliticalHeading, ascending: true), NSSortDescriptor(keyPath: \DifferentialGPSStation.featureNumber, ascending: true)], filterPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationFilter), sectionKeyPath: \DifferentialGPSStation.geopoliticalHeading!)
         } else if dataSource.key == DFRS.key {
             DFRSListView(focusedItem: itemWrapper)
         }

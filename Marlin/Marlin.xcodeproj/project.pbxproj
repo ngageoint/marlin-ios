@@ -39,7 +39,6 @@
 		F71D286628BE453A00F1775C /* DifferentialGPSStationSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D286528BE453A00F1775C /* DifferentialGPSStationSummaryView.swift */; };
 		F71D286828BE45AC00F1775C /* DifferentialGPSStationActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D286728BE45AC00F1775C /* DifferentialGPSStationActionBar.swift */; };
 		F71D286A28BE467200F1775C /* DifferentialGPSStationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D286928BE467200F1775C /* DifferentialGPSStationDetailView.swift */; };
-		F71D286C28BE46F800F1775C /* DifferentialGPSStationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D286B28BE46F800F1775C /* DifferentialGPSStationListView.swift */; };
 		F71D286E28BE8CB800F1775C /* DFRS+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D286D28BE8CB800F1775C /* DFRS+CoreDataClass.swift */; };
 		F71D287128BE95E100F1775C /* DFRSActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287028BE95E100F1775C /* DFRSActionBar.swift */; };
 		F71D287328BE969500F1775C /* DFRSDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287228BE969500F1775C /* DFRSDetailView.swift */; };
@@ -83,7 +82,6 @@
 		F740AA79289D6DED00754293 /* MarlinRegularWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F740AA78289D6DED00754293 /* MarlinRegularWidth.swift */; };
 		F74B9B0728B7CF650097D448 /* RadioBeacon+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0628B7CF650097D448 /* RadioBeacon+CoreDataClass.swift */; };
 		F74B9B0928B7D1640097D448 /* RadioBeaconMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0828B7D1640097D448 /* RadioBeaconMap.swift */; };
-		F74B9B0B28B7D85E0097D448 /* RadioBeaconListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0A28B7D85E0097D448 /* RadioBeaconListView.swift */; };
 		F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0C28B7DA210097D448 /* RadioBeaconSummaryView.swift */; };
 		F74B9B0F28B7DA8B0097D448 /* RadioBeaconActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0E28B7DA8B0097D448 /* RadioBeaconActionBar.swift */; };
 		F74B9B1128B7DACB0097D448 /* RadioBeaconDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B1028B7DACB0097D448 /* RadioBeaconDetailView.swift */; };
@@ -256,7 +254,6 @@
 		F71D286528BE453A00F1775C /* DifferentialGPSStationSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationSummaryView.swift; sourceTree = "<group>"; };
 		F71D286728BE45AC00F1775C /* DifferentialGPSStationActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationActionBar.swift; sourceTree = "<group>"; };
 		F71D286928BE467200F1775C /* DifferentialGPSStationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationDetailView.swift; sourceTree = "<group>"; };
-		F71D286B28BE46F800F1775C /* DifferentialGPSStationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationListView.swift; sourceTree = "<group>"; };
 		F71D286D28BE8CB800F1775C /* DFRS+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DFRS+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F71D287028BE95E100F1775C /* DFRSActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSActionBar.swift; sourceTree = "<group>"; };
 		F71D287228BE969500F1775C /* DFRSDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSDetailView.swift; sourceTree = "<group>"; };
@@ -302,7 +299,6 @@
 		F740AA78289D6DED00754293 /* MarlinRegularWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinRegularWidth.swift; sourceTree = "<group>"; };
 		F74B9B0628B7CF650097D448 /* RadioBeacon+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F74B9B0828B7D1640097D448 /* RadioBeaconMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconMap.swift; sourceTree = "<group>"; };
-		F74B9B0A28B7D85E0097D448 /* RadioBeaconListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconListView.swift; sourceTree = "<group>"; };
 		F74B9B0C28B7DA210097D448 /* RadioBeaconSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconSummaryView.swift; sourceTree = "<group>"; };
 		F74B9B0E28B7DA8B0097D448 /* RadioBeaconActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconActionBar.swift; sourceTree = "<group>"; };
 		F74B9B1028B7DACB0097D448 /* RadioBeaconDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconDetailView.swift; sourceTree = "<group>"; };
@@ -868,7 +864,6 @@
 			isa = PBXGroup;
 			children = (
 				F74B9B0828B7D1640097D448 /* RadioBeaconMap.swift */,
-				F74B9B0A28B7D85E0097D448 /* RadioBeaconListView.swift */,
 				F74B9B0C28B7DA210097D448 /* RadioBeaconSummaryView.swift */,
 				F74B9B0E28B7DA8B0097D448 /* RadioBeaconActionBar.swift */,
 				F74B9B1028B7DACB0097D448 /* RadioBeaconDetailView.swift */,
@@ -947,7 +942,6 @@
 				F71D286528BE453A00F1775C /* DifferentialGPSStationSummaryView.swift */,
 				F71D286728BE45AC00F1775C /* DifferentialGPSStationActionBar.swift */,
 				F71D286928BE467200F1775C /* DifferentialGPSStationDetailView.swift */,
-				F71D286B28BE46F800F1775C /* DifferentialGPSStationListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1377,7 +1371,6 @@
 				F7D5C05728A68E56000C2C29 /* ViewExtensions.swift in Sources */,
 				F74B9B0928B7D1640097D448 /* RadioBeaconMap.swift in Sources */,
 				F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */,
-				F74B9B0B28B7D85E0097D448 /* RadioBeaconListView.swift in Sources */,
 				F7FFB30428D6389700C31AA3 /* Asam+Decodable.swift in Sources */,
 				F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */,
 				F7FFB30A28D63ACE00C31AA3 /* Asam+Annotation.swift in Sources */,
@@ -1390,7 +1383,6 @@
 				F7FFB31A28D63EF600C31AA3 /* Light+Annotation.swift in Sources */,
 				F7FFB2EE28D624FE00C31AA3 /* DifferentialGPSStation+MapImage.swift in Sources */,
 				F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */,
-				F71D286C28BE46F800F1775C /* DifferentialGPSStationListView.swift in Sources */,
 				F7FFB32828D6427200C31AA3 /* RadioBeacon+Decodable.swift in Sources */,
 				F71D287B28C1401500F1775C /* FetchRequestMap.swift in Sources */,
 				F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */,

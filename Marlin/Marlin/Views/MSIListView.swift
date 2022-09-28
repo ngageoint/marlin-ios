@@ -21,12 +21,14 @@ struct MSIListView<T: NSManagedObject & DataSourceViewBuilder>: View {
     var userDefaultsShowPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>
     
     var watchFocusedItem: Bool = false
+    var sectionKeyPath: KeyPath<T, String>? = nil
     
-    init(focusedItem: ItemWrapper, watchFocusedItem: Bool = false, sortDescriptors: [NSSortDescriptor], filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>) {
+    init(focusedItem: ItemWrapper, watchFocusedItem: Bool = false, sortDescriptors: [NSSortDescriptor], filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sectionKeyPath: KeyPath<T, String>? = nil) {
         self.sortDescriptors = sortDescriptors
         self.focusedItem = focusedItem
         self.watchFocusedItem = watchFocusedItem
         self.userDefaultsShowPublisher = filterPublisher
+        self.sectionKeyPath = sectionKeyPath
     }
     
     var body: some View {
@@ -52,7 +54,11 @@ struct MSIListView<T: NSManagedObject & DataSourceViewBuilder>: View {
                 }
                 
             }
-            GenericList<T>(filters: filters, sortDescriptors: sortDescriptors)
+            if let sectionKeyPath = sectionKeyPath {
+                GenericSectionedList<T>(filters: filters, sortDescriptors: sortDescriptors, keyPath: sectionKeyPath)
+            } else {
+                GenericList<T>(filters: filters, sortDescriptors: sortDescriptors)
+            }
             
         }
         .modifier(FilterButton(filterOpen: $filterOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)])))
@@ -104,7 +110,6 @@ struct GenericList<T: NSManagedObject & DataSourceViewBuilder>: View {
     var body: some View {
         List {
             ForEach(fetchRequest) { (asam: DataSourceViewBuilder) in
-                //                        asam =  as! Asam
                 ZStack {
                     NavigationLink(destination: asam.detailView
                     ) {
@@ -137,5 +142,55 @@ struct GenericList<T: NSManagedObject & DataSourceViewBuilder>: View {
         }
         let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         _fetchRequest = FetchRequest<T>(sortDescriptors: sortDescriptors, predicate: predicate)
+    }
+}
+
+struct GenericSectionedList<T: NSManagedObject & DataSourceViewBuilder>: View {
+    // That will store our fetch request, so that we can loop over it inside the body.
+    // However, we don’t create the fetch request here, because we still don’t know what we’re searching for.
+    // Instead, we’re going to create custom initializer(s) that accepts filtering information to set the fetchRequest property.
+    @SectionedFetchRequest var fetchRequest: SectionedFetchResults<String, T>
+    
+    var body: some View {
+        List(fetchRequest) { section in
+            
+            Section(header: HStack {
+                Text(section.id)
+                    .overline()
+            }) {
+                ForEach(section) { item in
+                    
+                    ZStack {
+                        NavigationLink(destination: item.detailView) {
+                                EmptyView()
+                            }
+                            .opacity(0)
+                        
+                        HStack {
+                            item.summaryView(showMoreDetails: false, showSectionHeader: false)
+                        }
+                        .padding(.all, 16)
+                        .card()
+                    }
+                    
+                }
+                .dataSourceSummaryItem()
+            }
+        }
+        .navigationTitle(T.dataSourceName)
+        .navigationBarTitleDisplayMode(.inline)
+        .dataSourceSummaryList()
+    }
+    
+    init(filters: [DataSourceFilterParameter], sortDescriptors: [NSSortDescriptor], keyPath: KeyPath<T, String>) {
+        var predicates: [NSPredicate] = []
+        
+        for filter in filters {
+            if let predicate = filter.toPredicate() {
+                predicates.append(predicate)
+            }
+        }
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        _fetchRequest = SectionedFetchRequest(sectionIdentifier: keyPath, sortDescriptors: sortDescriptors, predicate: predicate)
     }
 }

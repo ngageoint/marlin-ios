@@ -120,6 +120,14 @@ extension UserDefaults {
         data(forKey: #function)
     }
     
+    @objc var radioBeaconFilter: Data? {
+        data(forKey: #function)
+    }
+    
+    @objc var differentialGPSStationFilter: Data? {
+        data(forKey: #function)
+    }
+    
     func filter(_ key: String) -> [DataSourceFilterParameter] {
         if let data = data(forKey: "\(key)Filter") {
             do {

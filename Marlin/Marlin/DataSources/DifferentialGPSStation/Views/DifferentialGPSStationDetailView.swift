@@ -47,5 +47,7 @@ struct DifferentialGPSStationDetailView: View {
                 .dataSourceSection()
         }
         .dataSourceDetailList()
+        .navigationTitle("\(differentialGPSStation.name ?? DifferentialGPSStation.dataSourceName)" )
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

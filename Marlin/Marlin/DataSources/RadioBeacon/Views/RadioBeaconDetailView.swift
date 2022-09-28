@@ -48,6 +48,8 @@ struct RadioBeaconDetailView: View {
                 .dataSourceSection()
         }
         .dataSourceDetailList()
+        .navigationTitle("\(radioBeacon.name ?? RadioBeacon.dataSourceName)" )
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
