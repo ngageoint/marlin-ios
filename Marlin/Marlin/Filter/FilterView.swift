@@ -53,7 +53,6 @@ struct FilterView: View {
         self.dataSourceProperties = dataSource.properties
         self._filters = State(initialValue: UserDefaults.standard.filter(dataSource.key))
         self._selectedProperty = State(initialValue: dataSourceProperties[0])
-        print("set the selected property to \(selectedProperty)")
     }
     
     var body: some View {
@@ -78,7 +77,6 @@ struct FilterView: View {
                     Spacer()
                     Button {
                         filters.remove(at: index)
-                        print("action")
                     } label: {
                         Image(systemName: "minus.circle.fill")
                             .tint(Color.red)
@@ -115,7 +113,6 @@ struct FilterView: View {
                     valueString = ""
                     valueDouble = 0.0
                     valueInt = 0
-                    print("action")
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .tint(Color.green)
