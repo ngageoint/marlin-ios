@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## 0.7.6
+  * Fixed crash caused by a light in Italy not being parsed properly
+  * Moved the light map settings to the map settings view
+  * Added a "Updating data" loading message when data is being pulled from MSI
+
 ## 0.7.5
   * Lights can now be drawn on the map in actual size based on the range
   * Fix crash when loading initial MSI data
