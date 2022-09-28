@@ -1612,7 +1612,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.5;
+				MARKETING_VERSION = 0.7.6;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.marlin;
 				PRODUCT_NAME = Marlin;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1650,7 +1650,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.5;
+				MARKETING_VERSION = 0.7.6;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.marlin;
 				PRODUCT_NAME = Marlin;
 				PROVISIONING_PROFILE_SPECIFIER = "";
