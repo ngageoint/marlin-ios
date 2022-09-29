@@ -33,28 +33,25 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
     }
     
     func getFetchRequest(mapState: MapState) -> NSFetchRequest<T> {
-        if let showKeyPath = showKeyPath, let showItems = mapState[keyPath: showKeyPath], showItems == true {
-            let fetchRequest: NSFetchRequest<T> = self.fetchRequest ?? T.fetchRequest() as! NSFetchRequest<T>
+        let fetchRequest: NSFetchRequest<T> = self.fetchRequest ?? T.fetchRequest() as! NSFetchRequest<T>
+        fetchRequest.sortDescriptors = sortDescriptors
+
+        var filterPredicates: [NSPredicate] = []
+        
+        if let presetPredicate = fetchRequest.predicate {
+            filterPredicates.append(presetPredicate)
+        } else if let showKeyPath = showKeyPath, let showItems = mapState[keyPath: showKeyPath], showItems == true {
             let filters = UserDefaults.standard.filter(T.key)
-            var filterPredicates: [NSPredicate] = []
             for filter in filters {
                 if let predicate = filter.toPredicate() {
                     filterPredicates.append(predicate)
                 }
             }
-            if let tilePredicate = tilePredicate {
-                filterPredicates.append(tilePredicate)
-            }
-            fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: filterPredicates)
-
-            fetchRequest.sortDescriptors = sortDescriptors
-            return fetchRequest
         } else {
-            let nilFetchRequest = T.fetchRequest()
-            nilFetchRequest.predicate = NSPredicate(value: false)
-            nilFetchRequest.sortDescriptors = sortDescriptors
-            return nilFetchRequest as! NSFetchRequest<T>
+            filterPredicates.append(NSPredicate(value: false))
         }
+        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: filterPredicates)
+        return fetchRequest
     }
     
     func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
