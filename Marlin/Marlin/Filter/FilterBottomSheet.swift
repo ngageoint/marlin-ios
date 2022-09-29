@@ -92,6 +92,43 @@ enum DataSourceWindowUnits: String, CaseIterable, Identifiable, Codable {
     }
 }
 
+struct DataSourceSortParameter: Identifiable, Hashable, Codable {
+    static func == (lhs: DataSourceSortParameter, rhs: DataSourceSortParameter) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    var id = UUID()
+    
+    let property: DataSourceProperty
+    let ascending: Bool
+}
+
+struct DataSourceSort: Identifiable, Hashable, Codable {
+    static func == (lhs: DataSourceSort, rhs: DataSourceSort) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    var id = UUID()
+    
+    var sortProperties: [DataSourceSortParameter] = []
+    
+    func toNSSortDescriptors() -> [NSSortDescriptor] {
+        var descriptors: [NSSortDescriptor] = []
+        for sortProperty in sortProperties {
+            descriptors.append(NSSortDescriptor(key: sortProperty.property.key, ascending: sortProperty.ascending))
+        }
+        return descriptors
+    }
+}
+
 struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
     static func == (lhs: DataSourceFilterParameter, rhs: DataSourceFilterParameter) -> Bool {
         return lhs.id == rhs.id

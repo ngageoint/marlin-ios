@@ -8,6 +8,8 @@
 	<false/>
 	<key>filterEnabled</key>
 	<false/>
+	<key>sortEnabled</key>
+	<false/>
 	<key>hamburger</key>
 	<true/>
 	<key>asamDataSourceEnabled</key>

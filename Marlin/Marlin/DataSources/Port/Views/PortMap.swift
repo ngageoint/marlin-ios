@@ -11,8 +11,8 @@ import CoreData
 import Combine
 
 class PortMap: FetchRequestMap<Port> {
-    override public init(fetchRequest: NSFetchRequest<Port>? = nil, showAsTiles: Bool = true) {
-        super.init(fetchRequest: fetchRequest, showAsTiles: showAsTiles)
+    override public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
+        super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
         self.showKeyPath = \MapState.showPorts
         self.sortDescriptors = [NSSortDescriptor(keyPath: \Port.portNumber, ascending: true)]
         self.focusNotificationName = .FocusPort

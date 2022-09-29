@@ -11,8 +11,8 @@ import CoreData
 import Combine
 
 class DFRSMap: FetchRequestMap<DFRS> {
-    override public init(fetchRequest: NSFetchRequest<DFRS>? = nil, showAsTiles: Bool = true) {
-        super.init(fetchRequest: fetchRequest, showAsTiles: showAsTiles)
+    override public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
+        super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
         self.showKeyPath = \MapState.showDFRS
         self.sortDescriptors = [NSSortDescriptor(keyPath: \DFRS.stationNumber, ascending: true)]
         self.focusNotificationName = .FocusDFRS

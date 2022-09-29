@@ -15,6 +15,8 @@ struct MSIListView<T: NSManagedObject & DataSourceViewBuilder>: View {
     @State var filters: [DataSourceFilterParameter] = []
     @State var filterCount: Int = 0
     
+    @State var sortOpen: Bool = false
+    
     @ObservedObject var focusedItem: ItemWrapper
     @State var selection: String? = nil
     @State var filterOpen: Bool = false
@@ -23,8 +25,8 @@ struct MSIListView<T: NSManagedObject & DataSourceViewBuilder>: View {
     var watchFocusedItem: Bool = false
     var sectionKeyPath: KeyPath<T, String>? = nil
     
-    init(focusedItem: ItemWrapper, watchFocusedItem: Bool = false, sortDescriptors: [NSSortDescriptor], filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sectionKeyPath: KeyPath<T, String>? = nil) {
-        self.sortDescriptors = sortDescriptors
+    init(focusedItem: ItemWrapper, watchFocusedItem: Bool = false, filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sectionKeyPath: KeyPath<T, String>? = nil) {
+        self.sortDescriptors = T.defaultSort
         self.focusedItem = focusedItem
         self.watchFocusedItem = watchFocusedItem
         self.userDefaultsShowPublisher = filterPublisher
@@ -61,8 +63,8 @@ struct MSIListView<T: NSManagedObject & DataSourceViewBuilder>: View {
             }
             
         }
-        .modifier(FilterButton(filterOpen: $filterOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)])))
-        .bottomSheet(isPresented: $filterOpen, delegate: self) {
+        .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)])))
+        .bottomSheet(isPresented: $filterOpen, detents: .large) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     FilterView(dataSource: T.self)
@@ -74,6 +76,20 @@ struct MSIListView<T: NSManagedObject & DataSourceViewBuilder>: View {
                 
             }
             .navigationTitle("\(T.dataSourceName) Filters")
+            .background(Color.backgroundColor)
+        }
+        .bottomSheet(isPresented: $sortOpen, detents: .large) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    SortView(dataSource: T.self)
+                        .padding(.trailing, 16)
+                        .background(Color.surfaceColor)
+                    
+                    Spacer()
+                }
+                
+            }
+            .navigationTitle("\(T.dataSourceName) Sort")
             .background(Color.backgroundColor)
         }
         .onReceive(userDefaultsShowPublisher) { output in
@@ -92,12 +108,6 @@ struct MSIListView<T: NSManagedObject & DataSourceViewBuilder>: View {
                 print("Unable to Decode Notes (\(error))")
             }
         }
-    }
-}
-
-extension MSIListView: BottomSheetDelegate {
-    func bottomSheetDidDismiss() {
-        filterOpen.toggle()
     }
 }
 

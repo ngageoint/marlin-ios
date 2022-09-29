@@ -11,8 +11,8 @@ import CoreData
 import Combine
 
 class RadioBeaconMap: FetchRequestMap<RadioBeacon> {
-    override public init(fetchRequest: NSFetchRequest<RadioBeacon>? = nil, showAsTiles: Bool = true) {
-        super.init(fetchRequest: fetchRequest, showAsTiles: showAsTiles)
+    override public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
+        super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
         self.showKeyPath = \MapState.showRadioBeacons
         self.sortDescriptors = [NSSortDescriptor(keyPath: \RadioBeacon.featureNumber, ascending: true)]
         self.focusNotificationName = .FocusRadioBeacon

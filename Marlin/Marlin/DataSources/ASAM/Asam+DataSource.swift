@@ -26,6 +26,8 @@ extension Asam: DataSource {
     static var color: UIColor = .black
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
+    static var defaultSort: [NSSortDescriptor] = [NSSortDescriptor(keyPath: \Asam.date, ascending: false)]
+    
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Date", key: "date", type: .date),
         DataSourceProperty(name: "Reference", key: "reference", type: .string),

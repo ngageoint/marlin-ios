@@ -17,6 +17,7 @@ struct SettingsView: View {
     @AppStorage("flyoverMapsEnabled") var flyoverMapsEnabled = false
     @AppStorage("searchEnabled") var searchEnabled = false
     @AppStorage("filterEnabled") var filterEnabled = false
+    @AppStorage("sortEnabled") var sortEnabled = false
 
     var body: some View {
         List {
@@ -68,6 +69,13 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "slider.horizontal.3")
                             Text("Filter Enabled")
+                        }
+                    })
+                    .padding([.top, .bottom], 8)
+                    Toggle(isOn: $sortEnabled, label: {
+                        HStack {
+                            Image(systemName: "arrow.up.arrow.down")
+                            Text("Sort Enabled")
                         }
                     })
                     .padding([.top, .bottom], 8)

@@ -16,8 +16,9 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
     var cancellable = Set<AnyCancellable>()
     
     var showAsTiles: Bool = true
-    var fetchRequest: NSFetchRequest<T>?
+//    var fetchRequest: NSFetchRequest<T>?
     var tilePredicate: NSPredicate?
+    var fetchPredicate: NSPredicate?
     var overlay: FetchRequestTileOverlay<T>?
     
     var showKeyPath: ReferenceWritableKeyPath<MapState, Bool?>?
@@ -26,19 +27,19 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
     
     var focusNotificationName: Notification.Name?
     
-    public init(fetchRequest: NSFetchRequest<T>? = nil, showAsTiles: Bool = true) {
-        self.fetchRequest = fetchRequest
-        self.fetchRequest?.sortDescriptors = sortDescriptors
+    public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
+//        self.fetchRequest = T.fetchRequest() as? NSFetchRequest<T>
         self.showAsTiles = showAsTiles
+        self.fetchPredicate = fetchPredicate
     }
     
     func getFetchRequest(mapState: MapState) -> NSFetchRequest<T> {
-        let fetchRequest: NSFetchRequest<T> = self.fetchRequest ?? T.fetchRequest() as! NSFetchRequest<T>
+        let fetchRequest: NSFetchRequest<T> = T.fetchRequest() as! NSFetchRequest<T>
         fetchRequest.sortDescriptors = sortDescriptors
 
         var filterPredicates: [NSPredicate] = []
         
-        if let presetPredicate = fetchRequest.predicate {
+        if let presetPredicate = fetchPredicate {
             filterPredicates.append(presetPredicate)
         } else if let showKeyPath = showKeyPath, let showItems = mapState[keyPath: showKeyPath], showItems == true {
             let filters = UserDefaults.standard.filter(T.key)

@@ -15,8 +15,8 @@ class LightMap: FetchRequestMap<Light> {
     var userDefaultsShowLightSectorRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
 
     
-    override public init(fetchRequest: NSFetchRequest<Light>? = nil, showAsTiles: Bool = true) {
-        super.init(fetchRequest: fetchRequest, showAsTiles: showAsTiles)
+    override public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
+        super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
         self.showKeyPath = \MapState.showLights
         self.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
         self.focusNotificationName = .FocusLight

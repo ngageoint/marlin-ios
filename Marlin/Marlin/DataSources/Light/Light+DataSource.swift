@@ -25,6 +25,8 @@ extension Light: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFFFFC500)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
+    static var defaultSort: [NSSortDescriptor] = [NSSortDescriptor(keyPath: \Light.sectionHeader, ascending: true), NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
+    
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
         DataSourceProperty(name: "Longitude", key: "longitude", type: .double),

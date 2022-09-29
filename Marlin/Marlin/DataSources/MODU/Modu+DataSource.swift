@@ -19,6 +19,8 @@ extension Modu: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
+    static var defaultSort: [NSSortDescriptor] = [NSSortDescriptor(keyPath: \Modu.date, ascending: false)]
+    
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Subregion", key: "subregion", type: .int),
         DataSourceProperty(name: "Region", key: "region", type: .int),

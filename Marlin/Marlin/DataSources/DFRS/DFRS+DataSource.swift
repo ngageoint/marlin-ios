@@ -23,6 +23,8 @@ extension DFRS: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFF00E676)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
+    static var defaultSort: [NSSortDescriptor] = [NSSortDescriptor(keyPath: \DFRS.areaName, ascending: true), NSSortDescriptor(keyPath: \DFRS.stationNumber, ascending: true)]
+    
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
         DataSourceProperty(name: "Longitude", key: "longitude", type: .double),

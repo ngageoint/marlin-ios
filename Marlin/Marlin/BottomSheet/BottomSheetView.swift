@@ -282,7 +282,11 @@ struct BottomSheet {
                 case .mediumAndLarge:
                     sheet.selectedDetentIdentifier = .medium
                     
-                default: break
+                case .large:
+                    sheet.selectedDetentIdentifier = .large
+                    
+                case .medium:
+                    sheet.selectedDetentIdentifier = .medium
                 }
             }
             

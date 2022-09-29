@@ -11,8 +11,8 @@ import CoreData
 import Combine
 
 class ModuMap: FetchRequestMap<Modu> {
-    override public init(fetchRequest: NSFetchRequest<Modu>? = nil, showAsTiles: Bool = true) {
-        super.init(fetchRequest: fetchRequest, showAsTiles: showAsTiles)
+    override public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
+        super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
         self.showKeyPath = \MapState.showModus
         self.sortDescriptors = [NSSortDescriptor(keyPath: \Modu.date, ascending: true)]
         self.focusNotificationName = .FocusModu

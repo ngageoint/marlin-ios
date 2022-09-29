@@ -151,21 +151,22 @@ struct MarlinRegularWidth: View {
     @ViewBuilder
     func createListView(dataSource: DataSourceItem) -> some View {
         if dataSource.key == Asam.key {
-            MSIListView<Asam>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(key: "date", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter))
-        } else if dataSource.key == Modu.key {
-            MSIListView<Modu>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(key: "date", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.moduFilter))
-        } else if dataSource.key == Light.key {
-            LightsListView(focusedItem: itemWrapper, watchFocusedItem: true)
-        } else if dataSource.key == NavigationalWarning.key {
-            NavigationalWarningListView()
-        } else if dataSource.key == Port.key {
-            MSIListView<Port>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(key: "portNumber", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.portFilter))
-        } else if dataSource.key == RadioBeacon.key {
-            MSIListView<RadioBeacon>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(keyPath: \RadioBeacon.geopoliticalHeading, ascending: true), NSSortDescriptor(keyPath: \RadioBeacon.featureNumber, ascending: true)], filterPublisher: UserDefaults.standard.publisher(for: \.radioBeaconFilter), sectionKeyPath: \RadioBeacon.geopoliticalHeading!)
-        } else if dataSource.key == DifferentialGPSStation.key {
-            MSIListView<DifferentialGPSStation>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(keyPath: \DifferentialGPSStation.geopoliticalHeading, ascending: true), NSSortDescriptor(keyPath: \DifferentialGPSStation.featureNumber, ascending: true)], filterPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationFilter), sectionKeyPath: \DifferentialGPSStation.geopoliticalHeading!)
-        } else if dataSource.key == DFRS.key {
-            DFRSListView(focusedItem: itemWrapper, watchFocusedItem: true)
+            MSIListView<Asam>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter))
         }
+//        else if dataSource.key == Modu.key {
+//            MSIListView<Modu>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(key: "date", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.moduFilter))
+//        } else if dataSource.key == Light.key {
+//            LightsListView(focusedItem: itemWrapper, watchFocusedItem: true)
+//        } else if dataSource.key == NavigationalWarning.key {
+//            NavigationalWarningListView()
+//        } else if dataSource.key == Port.key {
+//            MSIListView<Port>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(key: "portNumber", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.portFilter))
+//        } else if dataSource.key == RadioBeacon.key {
+//            MSIListView<RadioBeacon>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(keyPath: \RadioBeacon.geopoliticalHeading, ascending: true), NSSortDescriptor(keyPath: \RadioBeacon.featureNumber, ascending: true)], filterPublisher: UserDefaults.standard.publisher(for: \.radioBeaconFilter), sectionKeyPath: \RadioBeacon.geopoliticalHeading!)
+//        } else if dataSource.key == DifferentialGPSStation.key {
+//            MSIListView<DifferentialGPSStation>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(keyPath: \DifferentialGPSStation.geopoliticalHeading, ascending: true), NSSortDescriptor(keyPath: \DifferentialGPSStation.featureNumber, ascending: true)], filterPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationFilter), sectionKeyPath: \DifferentialGPSStation.geopoliticalHeading!)
+//        } else if dataSource.key == DFRS.key {
+//            DFRSListView(focusedItem: itemWrapper, watchFocusedItem: true)
+//        }
     }
 }

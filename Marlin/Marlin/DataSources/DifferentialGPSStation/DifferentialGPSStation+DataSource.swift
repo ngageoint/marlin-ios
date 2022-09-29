@@ -23,6 +23,8 @@ extension DifferentialGPSStation: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFFFFB300)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
+    static var defaultSort: [NSSortDescriptor] = [NSSortDescriptor(keyPath: \DifferentialGPSStation.geopoliticalHeading, ascending: true), NSSortDescriptor(keyPath: \DifferentialGPSStation.featureNumber, ascending: true)]
+    
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
         DataSourceProperty(name: "Longitude", key: "longitude", type: .double),

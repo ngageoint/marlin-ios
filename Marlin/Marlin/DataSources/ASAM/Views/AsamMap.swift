@@ -11,8 +11,8 @@ import CoreData
 import Combine
 
 class AsamMap: FetchRequestMap<Asam> {
-    override public init(fetchRequest: NSFetchRequest<Asam>? = nil, showAsTiles: Bool = true) {
-        super.init(fetchRequest: fetchRequest, showAsTiles: showAsTiles)
+    override public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
+        super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
         self.showKeyPath = \MapState.showAsams
         self.sortDescriptors = [NSSortDescriptor(keyPath: \Asam.date, ascending: true)]
         self.focusNotificationName = .FocusAsam

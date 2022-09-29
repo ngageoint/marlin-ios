@@ -23,6 +23,8 @@ extension Port: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFF5856d6)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
+    static var defaultSort: [NSSortDescriptor] = [NSSortDescriptor(keyPath: \Port.portNumber, ascending: false)]
+    
     static var properties: [DataSourceProperty] = [
         // Name and Location
         DataSourceProperty(name: "Latitude", key: "latitude", type: .double),

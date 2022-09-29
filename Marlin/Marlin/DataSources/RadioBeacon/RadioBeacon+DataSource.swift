@@ -22,6 +22,8 @@ extension RadioBeacon: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFF007BFF)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
+    static var defaultSort: [NSSortDescriptor] = [NSSortDescriptor(keyPath: \RadioBeacon.geopoliticalHeading, ascending: true), NSSortDescriptor(keyPath: \RadioBeacon.featureNumber, ascending: true)]
+    
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
         DataSourceProperty(name: "Longitude", key: "longitude", type: .double),

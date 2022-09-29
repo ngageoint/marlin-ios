@@ -161,6 +161,43 @@ extension UserDefaults {
         }
     }
     
+    @objc var asamSort: Data? {
+        data(forKey: #function)
+    }
+    
+    func sort(_ key: String) -> [DataSourceSortParameter] {
+        if let data = data(forKey: "\(key)Sort") {
+            do {
+                // Create JSON Decoder
+                let decoder = JSONDecoder()
+                
+                // Decode Note
+                let sort = try decoder.decode([DataSourceSortParameter].self, from: data)
+                
+                return sort
+            } catch {
+                print("Unable to Decode Notes (\(error))")
+            }
+        }
+        return []
+    }
+    
+    func setSort(_ key: String, sort: [DataSourceSortParameter]) {
+        do {
+            // Create JSON Encoder
+            let encoder = JSONEncoder()
+            
+            // Encode Note
+            let data = try encoder.encode(sort)
+            
+            // Write/Set Data
+            UserDefaults.standard.set(data, forKey: "\(key)Sort")
+            NotificationCenter.default.post(name: .DataSourceUpdated, object: key)
+        } catch {
+            print("Unable to Encode Array of Notes (\(error))")
+        }
+    }
+    
     // MARK: App features
     var hamburger: Bool {
         bool(forKey: "hamburger")

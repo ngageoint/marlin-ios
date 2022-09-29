@@ -22,7 +22,8 @@ struct Hamburger: ViewModifier {
                             .imageScale(.large)
                             .foregroundColor(Color.onPrimaryColor)
                     }
-                    .padding(.all, 10)
+                    .padding([.top, .bottom], 10)
+                    .padding([.trailing, .leading], 5)
                 }
             }
         }
