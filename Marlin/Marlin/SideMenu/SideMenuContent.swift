@@ -14,6 +14,7 @@ struct SideMenuContent: View {
     @State var isEditMode: EditMode = .active
     @State var draggedItem : String?
     @State var validDropTarget: Bool = false
+    @State var lastTab: DataSourceItem?
     
     @ObservedObject var dataSourceList: DataSourceList
     
@@ -36,17 +37,20 @@ struct SideMenuContent: View {
                     DataSourceCell(dataSourceItem: dataSource)
                         .overlay(validDropTarget && draggedItem == dataSource.key ? Color.white.opacity(0.8) : Color.clear)
                         .onDrag {
+                            if !dataSourceList.tabs.isEmpty {
+                                self.lastTab = dataSourceList.tabs[dataSourceList.tabs.count - 1]
+                            }
                             self.draggedItem = dataSource.key
                             return NSItemProvider(object: dataSource.key as NSString)
                         }
-                        .onDrop(of: [.plainText], delegate: SideMenuDrop(item: dataSource, tabItems: $dataSourceList.tabs, nonTabItems: $dataSourceList.nonTabs, draggedItem: $draggedItem, validDropTarget: $validDropTarget))
+                        .onDrop(of: [.plainText], delegate: SideMenuDrop(item: dataSource, tabItems: $dataSourceList.tabs, nonTabItems: $dataSourceList.nonTabs, draggedItem: $draggedItem, validDropTarget: $validDropTarget, lastTab: $lastTab))
                 }
             } else {
                 Text("Drag here to add a \(horizontalSizeClass == .compact ? "tabs" : "rail items")")
                     .padding([.leading, .top, .bottom, .trailing], 8)
                     .overline()
                     .frame(maxWidth: .infinity)
-                    .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyNonTabFirst)
+                    .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyTabFirst)
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 15)
@@ -71,10 +75,13 @@ struct SideMenuContent: View {
                     DataSourceCell(dataSourceItem: dataSource)
                         .overlay(validDropTarget && draggedItem == dataSource.key ? Color.white.opacity(0.8) : Color.clear)
                         .onDrag {
+                            if !dataSourceList.tabs.isEmpty {
+                                self.lastTab = dataSourceList.tabs[dataSourceList.tabs.count - 1]
+                            }
                             self.draggedItem = dataSource.key
                             return NSItemProvider(object: dataSource.key as NSString)
                         }
-                        .onDrop(of: [.plainText], delegate: SideMenuDrop(item: dataSource, tabItems: $dataSourceList.tabs, nonTabItems: $dataSourceList.nonTabs, draggedItem: $draggedItem, validDropTarget: $validDropTarget))
+                        .onDrop(of: [.plainText], delegate: SideMenuDrop(item: dataSource, tabItems: $dataSourceList.tabs, nonTabItems: $dataSourceList.nonTabs, draggedItem: $draggedItem, validDropTarget: $validDropTarget, lastTab: $lastTab))
                 }
             } else {
                 Text("Drag here to remove a \(horizontalSizeClass == .compact ? "tab" : "rail item")")
@@ -159,6 +166,7 @@ struct SideMenuDrop: DropDelegate {
     @Binding var nonTabItems: [DataSourceItem]
     @Binding var draggedItem : String?
     @Binding var validDropTarget : Bool
+    @Binding var lastTab: DataSourceItem?
     @AppStorage("userTabs") var userTabs: Int = 3
     
     func validateDrop(info: DropInfo) -> Bool {
@@ -166,18 +174,20 @@ struct SideMenuDrop: DropDelegate {
             return false
         }
         
-        if tabItems.contains(item) && tabItems.count >= DataSourceList.MAX_TABS && !tabItems.contains(where: { item in
-            item.key == draggedItem
-        }) {
-            validDropTarget = false
-            return false
-        }
         validDropTarget = true
         return true
     }
  
     func performDrop(info: DropInfo) -> Bool {
         draggedItem = nil
+        
+        if tabItems.count > DataSourceList.MAX_TABS {
+            let ds = self.tabItems.removeLast()
+        
+            let to = nonTabItems.startIndex
+            self.nonTabItems.insert(ds, at: to)
+        }
+
         if tabItems.count > 0 {
             for i in 0...(tabItems.count - 1) {
                 tabItems[i].order = i
@@ -192,12 +202,6 @@ struct SideMenuDrop: DropDelegate {
         return true
     }
     func dropEntered(info: DropInfo) {
-        if tabItems.contains(item) && tabItems.count >= DataSourceList.MAX_TABS && !tabItems.contains(where: { item in
-            item.key == draggedItem
-        }) {
-            return
-        }
-        
         guard let draggedItem = self.draggedItem else {
             return
         }
@@ -238,6 +242,14 @@ struct SideMenuDrop: DropDelegate {
                 if let to = to, let ds = ds {
                     self.tabItems.insert(ds, at: to)
                 }
+                
+                // if there are too many tabs
+                if tabItems.count > DataSourceList.MAX_TABS {
+                    let ds = self.tabItems.removeLast()
+                    
+                    let to = nonTabItems.startIndex
+                    self.nonTabItems.insert(ds, at: to)
+                }
             }
         } else {
             // if this item is a non tab
@@ -260,7 +272,6 @@ struct SideMenuDrop: DropDelegate {
                 }
             } else {
                 // if the dragged item is a tab, remove it from the tabs and add it to the nontabs
-                
                 let ds = tabItems.first { item in
                     item.key == draggedItem
                 }
@@ -271,6 +282,17 @@ struct SideMenuDrop: DropDelegate {
                 let to = nonTabItems.firstIndex(of: item)
                 if let to = to, let ds = ds {
                     self.nonTabItems.insert(ds, at: to)
+                }
+                
+                // if the last tab had been moved out of the tab list but can now fit, put it back
+                if let lastTab = lastTab, lastTab.key != draggedItem {
+                    let tabIndex = tabItems.firstIndex(of: lastTab)
+                    if tabItems.count < DataSourceList.MAX_TABS && tabIndex == nil {
+                        self.nonTabItems.removeAll { item in
+                            item.key == lastTab.key
+                        }
+                        tabItems.insert(lastTab, at: tabItems.endIndex)
+                    }
                 }
             }
         }
