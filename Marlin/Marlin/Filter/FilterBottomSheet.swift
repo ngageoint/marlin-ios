@@ -105,6 +105,23 @@ struct DataSourceSortParameter: Identifiable, Hashable, Codable {
     
     let property: DataSourceProperty
     let ascending: Bool
+    let section: Bool
+    
+    init(property: DataSourceProperty, ascending: Bool) {
+        self.property = property
+        self.ascending = ascending
+        self.section = false
+    }
+    
+    init(property: DataSourceProperty, ascending: Bool, section: Bool) {
+        self.property = property
+        self.ascending = ascending
+        self.section = section
+    }
+    
+    func toNSSortDescriptor() -> NSSortDescriptor {
+        return NSSortDescriptor(key: property.key, ascending: ascending)
+    }
 }
 
 struct DataSourceSort: Identifiable, Hashable, Codable {
@@ -123,7 +140,7 @@ struct DataSourceSort: Identifiable, Hashable, Codable {
     func toNSSortDescriptors() -> [NSSortDescriptor] {
         var descriptors: [NSSortDescriptor] = []
         for sortProperty in sortProperties {
-            descriptors.append(NSSortDescriptor(key: sortProperty.property.key, ascending: sortProperty.ascending))
+            descriptors.append(sortProperty.toNSSortDescriptor())
         }
         return descriptors
     }

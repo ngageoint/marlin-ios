@@ -25,28 +25,28 @@ extension Light: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFFFFC500)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
-    static var defaultSort: [NSSortDescriptor] = [NSSortDescriptor(keyPath: \Light.sectionHeader, ascending: true), NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
+    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Section Header", key: #keyPath(Light.sectionHeader), type: .string), ascending: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .int), ascending: true)]
     
     static var properties: [DataSourceProperty] = [
-        DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
-        DataSourceProperty(name: "Longitude", key: "longitude", type: .double),
-        DataSourceProperty(name: "Feature Number", key: "featureNumber", type: .string),
-        DataSourceProperty(name: "International Feature Number", key: "internationalFeature", type: .string),
-        DataSourceProperty(name: "Name", key: "name", type: .string),
-        DataSourceProperty(name: "Structure", key: "structure", type: .string),
-        DataSourceProperty(name: "Focal Plane Elevation (ft)", key: "heightFeet", type: .double),
-        DataSourceProperty(name: "Focal Plane Elevation (m)", key: "heightMeters", type: .double),
+        DataSourceProperty(name: "Latitude", key: #keyPath(Light.latitude), type: .double),
+        DataSourceProperty(name: "Longitude", key: #keyPath(Light.longitude), type: .double),
+        DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .string),
+        DataSourceProperty(name: "International Feature Number", key: #keyPath(Light.internationalFeature), type: .string),
+        DataSourceProperty(name: "Name", key: #keyPath(Light.name), type: .string),
+        DataSourceProperty(name: "Structure", key: #keyPath(Light.structure), type: .string),
+        DataSourceProperty(name: "Focal Plane Elevation (ft)", key: #keyPath(Light.heightFeet), type: .double),
+        DataSourceProperty(name: "Focal Plane Elevation (m)", key: #keyPath(Light.heightMeters), type: .double),
         // this should be a double
-        DataSourceProperty(name: "Range (nm)", key: "range", type: .string),
-        DataSourceProperty(name: "Remarks", key: "remarks", type: .string),
-        DataSourceProperty(name: "Characteristic", key: "characteristic", type: .string),
-        DataSourceProperty(name: "Signal", key: "characteristic", type: .string),
-        DataSourceProperty(name: "Notice Number", key: "noticeNumber", type: .int),
-        DataSourceProperty(name: "Notice Week", key: "noticeWeek", type: .string),
-        DataSourceProperty(name: "Notice Year", key: "noticeYear", type: .string),
-        DataSourceProperty(name: "Volume Number", key: "volumeNumber", type: .string),
-        DataSourceProperty(name: "Preceding Note", key: "precedingNote", type: .string),
-        DataSourceProperty(name: "Post Note", key: "postNote", type: .string),
+        DataSourceProperty(name: "Range (nm)", key: #keyPath(Light.range), type: .string),
+        DataSourceProperty(name: "Remarks", key: #keyPath(Light.remarks), type: .string),
+        DataSourceProperty(name: "Characteristic", key: #keyPath(Light.characteristic), type: .string),
+        DataSourceProperty(name: "Signal", key: #keyPath(Light.characteristic), type: .string),
+        DataSourceProperty(name: "Notice Number", key: #keyPath(Light.noticeNumber), type: .int),
+        DataSourceProperty(name: "Notice Week", key: #keyPath(Light.noticeWeek), type: .string),
+        DataSourceProperty(name: "Notice Year", key: #keyPath(Light.noticeYear), type: .string),
+        DataSourceProperty(name: "Volume Number", key: #keyPath(Light.volumeNumber), type: .string),
+        DataSourceProperty(name: "Preceding Note", key: #keyPath(Light.precedingNote), type: .string),
+        DataSourceProperty(name: "Post Note", key: #keyPath(Light.postNote), type: .string),
     ]
 }
 

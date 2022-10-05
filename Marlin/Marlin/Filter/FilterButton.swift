@@ -38,7 +38,7 @@ struct FilterButton: ViewModifier {
             ToolbarItem (placement: .navigationBarTrailing)  {
                 
                 HStack(spacing: 0) {
-                    if sortEnabled {
+                    if sortEnabled && allowSorting {
                         Button(action: {
                             sortOpen.toggle()
                         }) {

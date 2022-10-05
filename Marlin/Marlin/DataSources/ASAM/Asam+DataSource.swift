@@ -26,18 +26,18 @@ extension Asam: DataSource {
     static var color: UIColor = .black
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
-    static var defaultSort: [NSSortDescriptor] = [NSSortDescriptor(keyPath: \Asam.date, ascending: false)]
+    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), ascending: false)]
     
     static var properties: [DataSourceProperty] = [
-        DataSourceProperty(name: "Date", key: "date", type: .date),
-        DataSourceProperty(name: "Reference", key: "reference", type: .string),
-        DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
-        DataSourceProperty(name: "Longitude", key: "longitude", type: .double),
-        DataSourceProperty(name: "Navigation Area", key: "navArea", type: .string),
-        DataSourceProperty(name: "Subregion", key: "subreg", type: .string),
-        DataSourceProperty(name: "Description", key: "asamDescription", type: .string),
-        DataSourceProperty(name: "Hostility", key: "hostility", type: .string),
-        DataSourceProperty(name: "Victim", key: "victim", type: .string)
+        DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date),
+        DataSourceProperty(name: "Reference", key: #keyPath(Asam.reference), type: .string),
+        DataSourceProperty(name: "Latitude", key: #keyPath(Asam.latitude), type: .double),
+        DataSourceProperty(name: "Longitude", key: #keyPath(Asam.longitude), type: .double),
+        DataSourceProperty(name: "Navigation Area", key: #keyPath(Asam.navArea), type: .string),
+        DataSourceProperty(name: "Subregion", key: #keyPath(Asam.subreg), type: .string),
+        DataSourceProperty(name: "Description", key: #keyPath(Asam.asamDescription), type: .string),
+        DataSourceProperty(name: "Hostility", key: #keyPath(Asam.hostility), type: .string),
+        DataSourceProperty(name: "Victim", key: #keyPath(Asam.victim), type: .string)
     ]
 }
 

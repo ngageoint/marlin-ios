@@ -23,25 +23,25 @@ extension DifferentialGPSStation: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFFFFB300)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
-    static var defaultSort: [NSSortDescriptor] = [NSSortDescriptor(keyPath: \DifferentialGPSStation.geopoliticalHeading, ascending: true), NSSortDescriptor(keyPath: \DifferentialGPSStation.featureNumber, ascending: true)]
+    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(DifferentialGPSStation.geopoliticalHeading), type: .string), ascending: true, section: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(DifferentialGPSStation.featureNumber), type: .int), ascending: true)]
     
     static var properties: [DataSourceProperty] = [
-        DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
-        DataSourceProperty(name: "Longitude", key: "longitude", type: .double),
-        DataSourceProperty(name: "Number", key: "featureNumber", type: .int),
-        DataSourceProperty(name: "Name", key: "name", type: .string),
-        DataSourceProperty(name: "Geopolitical Heading", key: "geopoliticalHeading", type: .string),
-        DataSourceProperty(name: "Station ID", key: "stationID", type: .int),
-        DataSourceProperty(name: "Range (nmi)", key: "range", type: .int),
-        DataSourceProperty(name: "Frequency (kHz)", key: "frequency", type: .int),
-        DataSourceProperty(name: "Transfer Rate", key: "transferRate", type: .int),
-        DataSourceProperty(name: "Remarks", key: "remarks", type: .string),
-        DataSourceProperty(name: "Notice Number", key: "noticeNumber", type: .int),
-        DataSourceProperty(name: "Notice Week", key: "noticeWeek", type: .string),
-        DataSourceProperty(name: "Notice Year", key: "noticeYear", type: .string),
-        DataSourceProperty(name: "Volume Number", key: "volumeNumber", type: .string),
-        DataSourceProperty(name: "Preceding Note", key: "precedingNote", type: .string),
-        DataSourceProperty(name: "Post Note", key: "postNote", type: .string),
+        DataSourceProperty(name: "Latitude", key: #keyPath(DifferentialGPSStation.latitude), type: .double),
+        DataSourceProperty(name: "Longitude", key: #keyPath(DifferentialGPSStation.longitude), type: .double),
+        DataSourceProperty(name: "Number", key: #keyPath(DifferentialGPSStation.featureNumber), type: .int),
+        DataSourceProperty(name: "Name", key: #keyPath(DifferentialGPSStation.name), type: .string),
+        DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(DifferentialGPSStation.geopoliticalHeading), type: .string),
+        DataSourceProperty(name: "Station ID", key: #keyPath(DifferentialGPSStation.stationID), type: .int),
+        DataSourceProperty(name: "Range (nmi)", key: #keyPath(DifferentialGPSStation.range), type: .int),
+        DataSourceProperty(name: "Frequency (kHz)", key: #keyPath(DifferentialGPSStation.frequency), type: .int),
+        DataSourceProperty(name: "Transfer Rate", key: #keyPath(DifferentialGPSStation.transferRate), type: .int),
+        DataSourceProperty(name: "Remarks", key: #keyPath(DifferentialGPSStation.remarks), type: .string),
+        DataSourceProperty(name: "Notice Number", key: #keyPath(DifferentialGPSStation.noticeNumber), type: .int),
+        DataSourceProperty(name: "Notice Week", key: #keyPath(DifferentialGPSStation.noticeWeek), type: .string),
+        DataSourceProperty(name: "Notice Year", key: #keyPath(DifferentialGPSStation.noticeYear), type: .string),
+        DataSourceProperty(name: "Volume Number", key: #keyPath(DifferentialGPSStation.volumeNumber), type: .string),
+        DataSourceProperty(name: "Preceding Note", key: #keyPath(DifferentialGPSStation.precedingNote), type: .string),
+        DataSourceProperty(name: "Post Note", key: #keyPath(DifferentialGPSStation.postNote), type: .string),
 
     ]
     

@@ -19,19 +19,19 @@ extension Modu: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
-    static var defaultSort: [NSSortDescriptor] = [NSSortDescriptor(keyPath: \Modu.date, ascending: false)]
+    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date), ascending: false)]
     
     static var properties: [DataSourceProperty] = [
-        DataSourceProperty(name: "Subregion", key: "subregion", type: .int),
-        DataSourceProperty(name: "Region", key: "region", type: .int),
-        DataSourceProperty(name: "Longitude", key: "longitude", type: .double),
-        DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
-        DataSourceProperty(name: "Distance", key: "distance", type: .double),
-        DataSourceProperty(name: "Special Status", key: "specialStatus", type: .string),
-        DataSourceProperty(name: "Rig Status", key: "rigStatus", type: .string),
-        DataSourceProperty(name: "Nav Area", key: "navArea", type: .string),
-        DataSourceProperty(name: "Name", key: "name", type: .string),
-        DataSourceProperty(name: "Date", key: "date", type: .date),
+        DataSourceProperty(name: "Subregion", key: #keyPath(Modu.subregion), type: .int),
+        DataSourceProperty(name: "Region", key: #keyPath(Modu.region), type: .int),
+        DataSourceProperty(name: "Longitude", key: #keyPath(Modu.longitude), type: .double),
+        DataSourceProperty(name: "Latitude", key: #keyPath(Modu.latitude), type: .double),
+        DataSourceProperty(name: "Distance", key: #keyPath(Modu.distance), type: .double),
+        DataSourceProperty(name: "Special Status", key: #keyPath(Modu.specialStatus), type: .string),
+        DataSourceProperty(name: "Rig Status", key: #keyPath(Modu.rigStatus), type: .string),
+        DataSourceProperty(name: "Nav Area", key: #keyPath(Modu.navArea), type: .string),
+        DataSourceProperty(name: "Name", key: #keyPath(Modu.name), type: .string),
+        DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date),
     ]
     
     static var dateFormatter: DateFormatter {

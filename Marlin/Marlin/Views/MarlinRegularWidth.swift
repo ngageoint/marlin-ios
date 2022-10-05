@@ -151,22 +151,21 @@ struct MarlinRegularWidth: View {
     @ViewBuilder
     func createListView(dataSource: DataSourceItem) -> some View {
         if dataSource.key == Asam.key {
-            MSIListView<Asam>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter))
+            MSIListView<Asam>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+        } else if dataSource.key == Modu.key {
+            MSIListView<Modu>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.moduFilter), sortPublisher: UserDefaults.standard.publisher(for: \.moduSort))
+        } else if dataSource.key == Light.key {
+            MSIListView<Light>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.lightFilter), sortPublisher: UserDefaults.standard.publisher(for: \.lightSort))
+        } else if dataSource.key == NavigationalWarning.key {
+            NavigationalWarningListView()
+        } else if dataSource.key == Port.key {
+            MSIListView<Port>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.portFilter), sortPublisher: UserDefaults.standard.publisher(for: \.portSort))
+        } else if dataSource.key == RadioBeacon.key {
+            MSIListView<RadioBeacon>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.radioBeaconFilter), sortPublisher: UserDefaults.standard.publisher(for: \.radioBeaconSort))
+        } else if dataSource.key == DifferentialGPSStation.key {
+            MSIListView<DifferentialGPSStation>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationFilter), sortPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationSort))
+        } else if dataSource.key == DFRS.key {
+            DFRSListView(focusedItem: itemWrapper, watchFocusedItem: true)
         }
-//        else if dataSource.key == Modu.key {
-//            MSIListView<Modu>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(key: "date", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.moduFilter))
-//        } else if dataSource.key == Light.key {
-//            LightsListView(focusedItem: itemWrapper, watchFocusedItem: true)
-//        } else if dataSource.key == NavigationalWarning.key {
-//            NavigationalWarningListView()
-//        } else if dataSource.key == Port.key {
-//            MSIListView<Port>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(key: "portNumber", ascending: false)], filterPublisher: UserDefaults.standard.publisher(for: \.portFilter))
-//        } else if dataSource.key == RadioBeacon.key {
-//            MSIListView<RadioBeacon>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(keyPath: \RadioBeacon.geopoliticalHeading, ascending: true), NSSortDescriptor(keyPath: \RadioBeacon.featureNumber, ascending: true)], filterPublisher: UserDefaults.standard.publisher(for: \.radioBeaconFilter), sectionKeyPath: \RadioBeacon.geopoliticalHeading!)
-//        } else if dataSource.key == DifferentialGPSStation.key {
-//            MSIListView<DifferentialGPSStation>(focusedItem: itemWrapper, watchFocusedItem: true, sortDescriptors: [NSSortDescriptor(keyPath: \DifferentialGPSStation.geopoliticalHeading, ascending: true), NSSortDescriptor(keyPath: \DifferentialGPSStation.featureNumber, ascending: true)], filterPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationFilter), sectionKeyPath: \DifferentialGPSStation.geopoliticalHeading!)
-//        } else if dataSource.key == DFRS.key {
-//            DFRSListView(focusedItem: itemWrapper, watchFocusedItem: true)
-//        }
     }
 }

@@ -23,24 +23,24 @@ extension DFRS: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFF00E676)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
-    static var defaultSort: [NSSortDescriptor] = [NSSortDescriptor(keyPath: \DFRS.areaName, ascending: true), NSSortDescriptor(keyPath: \DFRS.stationNumber, ascending: true)]
+    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Area Name", key: #keyPath(DFRS.areaName), type: .string), ascending: true), DataSourceSortParameter(property:DataSourceProperty(name: "Station Number", key: #keyPath(DFRS.stationNumber), type: .double), ascending: true)]
     
     static var properties: [DataSourceProperty] = [
-        DataSourceProperty(name: "Latitude", key: "latitude", type: .double),
-        DataSourceProperty(name: "Longitude", key: "longitude", type: .double),
-        DataSourceProperty(name: "Station Number", key: "stationNumber", type: .double),
-        DataSourceProperty(name: "Station Name", key: "stationName", type: .string),
-        DataSourceProperty(name: "Station Type", key: "stationType", type: .string),
-        DataSourceProperty(name: "Area Name", key: "areaName", type: .string),
-        DataSourceProperty(name: "Notes", key: "notes", type: .string),
-        DataSourceProperty(name: "Remarks", key: "remarks", type: .string),
-        DataSourceProperty(name: "Frequency", key: "frequency", type: .string),
-        DataSourceProperty(name: "procedureText", key: "procedureText", type: .string),
-        DataSourceProperty(name: "Range", key: "range", type: .double),
-        DataSourceProperty(name: "Rx Latitude", key: "rxLatitude", type: .double),
-        DataSourceProperty(name: "Rx Longitude", key: "rxLongitude", type: .double),
-        DataSourceProperty(name: "Tx Latitude", key: "txLatitude", type: .double),
-        DataSourceProperty(name: "Tx Longitude", key: "txLongitude", type: .double),
+        DataSourceProperty(name: "Latitude", key: #keyPath(DFRS.latitude), type: .double),
+        DataSourceProperty(name: "Longitude", key: #keyPath(DFRS.longitude), type: .double),
+        DataSourceProperty(name: "Station Number", key: #keyPath(DFRS.stationNumber), type: .double),
+        DataSourceProperty(name: "Station Name", key: #keyPath(DFRS.stationName), type: .string),
+        DataSourceProperty(name: "Station Type", key: #keyPath(DFRS.stationType), type: .string),
+        DataSourceProperty(name: "Area Name", key: #keyPath(DFRS.areaName), type: .string),
+        DataSourceProperty(name: "Notes", key: #keyPath(DFRS.notes), type: .string),
+        DataSourceProperty(name: "Remarks", key: #keyPath(DFRS.remarks), type: .string),
+        DataSourceProperty(name: "Frequency", key: #keyPath(DFRS.frequency), type: .string),
+        DataSourceProperty(name: "procedureText", key: #keyPath(DFRS.procedureText), type: .string),
+        DataSourceProperty(name: "Range", key: #keyPath(DFRS.range), type: .double),
+        DataSourceProperty(name: "Rx Latitude", key: #keyPath(DFRS.rxLatitude), type: .double),
+        DataSourceProperty(name: "Rx Longitude", key: #keyPath(DFRS.rxLongitude), type: .double),
+        DataSourceProperty(name: "Tx Latitude", key: #keyPath(DFRS.txLatitude), type: .double),
+        DataSourceProperty(name: "Tx Longitude", key: #keyPath(DFRS.txLongitude), type: .double),
     ]
     
     static var dateFormatter: DateFormatter {

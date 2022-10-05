@@ -265,19 +265,19 @@ struct MarlinCompactWidth: View {
     @ViewBuilder
     func createListView(dataSource: DataSourceItem) -> some View {
         if dataSource.key == Asam.key {
-            MSIListView<Asam>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter))
+            MSIListView<Asam>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
         } else if dataSource.key == Modu.key {
-            MSIListView<Modu>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.moduFilter))
+            MSIListView<Modu>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.moduFilter), sortPublisher: UserDefaults.standard.publisher(for: \.moduSort))
         } else if dataSource.key == Light.key {
-            LightsListView(focusedItem: itemWrapper)
+            MSIListView<Light>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.lightFilter), sortPublisher: UserDefaults.standard.publisher(for: \.lightSort))
         } else if dataSource.key == NavigationalWarning.key {
             NavigationalWarningListView()
         } else if dataSource.key == Port.key {
-            MSIListView<Port>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.portFilter))
+            MSIListView<Port>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.portFilter), sortPublisher: UserDefaults.standard.publisher(for: \.portSort))
         } else if dataSource.key == RadioBeacon.key {
-            MSIListView<RadioBeacon>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.radioBeaconFilter), sectionKeyPath: \RadioBeacon.geopoliticalHeading!)
+            MSIListView<RadioBeacon>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.radioBeaconFilter), sortPublisher: UserDefaults.standard.publisher(for: \.radioBeaconSort))
         } else if dataSource.key == DifferentialGPSStation.key {
-            MSIListView<DifferentialGPSStation>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationFilter), sectionKeyPath: \DifferentialGPSStation.geopoliticalHeading!)
+            MSIListView<DifferentialGPSStation>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationFilter), sortPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationSort))
         } else if dataSource.key == DFRS.key {
             DFRSListView(focusedItem: itemWrapper)
         }

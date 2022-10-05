@@ -127,6 +127,9 @@ extension UserDefaults {
     @objc var differentialGPSStationFilter: Data? {
         data(forKey: #function)
     }
+    @objc var lightFilter: Data? {
+        data(forKey: #function)
+    }
     
     func filter(_ key: String) -> [DataSourceFilterParameter] {
         if let data = data(forKey: "\(key)Filter") {
@@ -165,6 +168,26 @@ extension UserDefaults {
         data(forKey: #function)
     }
     
+    @objc var moduSort: Data? {
+        data(forKey: #function)
+    }
+    
+    @objc var portSort: Data? {
+        data(forKey: #function)
+    }
+    
+    @objc var radioBeaconSort: Data? {
+        data(forKey: #function)
+    }
+    
+    @objc var differentialGPSStationSort: Data? {
+        data(forKey: #function)
+    }
+    
+    @objc var lightSort: Data? {
+        data(forKey: #function)
+    }
+    
     func sort(_ key: String) -> [DataSourceSortParameter] {
         if let data = data(forKey: "\(key)Sort") {
             do {
@@ -176,7 +199,7 @@ extension UserDefaults {
                 
                 return sort
             } catch {
-                print("Unable to Decode Notes (\(error))")
+                print("Unable to Decode sort (\(error))")
             }
         }
         return []

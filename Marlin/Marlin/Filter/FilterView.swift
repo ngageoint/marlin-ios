@@ -85,7 +85,6 @@ struct FilterView: View {
                 .padding([.top, .bottom], 8)
                 Divider()
             }
-            .padding(.leading, 16)
             
             HStack {
                 VStack(alignment: .leading, spacing: 0) {
@@ -119,9 +118,9 @@ struct FilterView: View {
                 }
 
             }
-            .padding([.top, .bottom, .leading], 8)
+            .padding(.leading, -8)
         }
-        .padding(.top, 8)
+        .padding(.all, 16)
         .onChange(of: selectedProperty) { newValue in
             selectedEnumeration = selectedProperty.enumerationValues?.first?.key ?? ""
             if selectedProperty.type == .date {

@@ -29,7 +29,7 @@ extension NavigationalWarning: DataSource {
         return NavigationalWarning.color
     }
     
-    static var defaultSort: [NSSortDescriptor] = [NSSortDescriptor(keyPath: \NavigationalWarning.navArea, ascending: false), NSSortDescriptor(keyPath: \NavigationalWarning.issueDate, ascending: false)]
+    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Navigational Area", key: "navArea", type: .string), ascending: false), DataSourceSortParameter(property:DataSourceProperty(name: "Issue Date", key: "issueDate", type: .date), ascending: false)]
     
     static var properties: [DataSourceProperty] = []
 }
