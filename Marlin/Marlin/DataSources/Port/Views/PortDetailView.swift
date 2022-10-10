@@ -75,11 +75,3 @@ struct PortDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
-
-struct PortDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let context = PersistenceController.preview.container.viewContext
-        let port = try? context.fetchFirst(Port.self)
-        PortDetailView(port: port!)
-    }
-}

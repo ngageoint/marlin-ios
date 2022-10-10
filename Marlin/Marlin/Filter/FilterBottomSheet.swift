@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+import CoreLocation
+import mgrs_ios
+import sf_ios
 
 class DataSourceFilter: Identifiable {
     let id = UUID()
@@ -35,6 +38,8 @@ enum DataSourceFilterComparison: String, CaseIterable, Identifiable, Codable {
     case startsWith = "starts with"
     case endsWith = "ends with"
     case window = "within"
+    case closeTo = "close to"
+    case nearMe = "near me"
     var id: String { rawValue }
     
     static func dateSubset() -> [DataSourceFilterComparison] {
@@ -51,6 +56,10 @@ enum DataSourceFilterComparison: String, CaseIterable, Identifiable, Codable {
     
     static func enumerationSubset() -> [DataSourceFilterComparison] {
         return [.equals, .notEquals]
+    }
+    
+    static func locationSubset() -> [DataSourceFilterComparison] {
+        return [.nearMe, .closeTo]
     }
     
     func coreDataComparison() -> String {
@@ -161,16 +170,20 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
     let valueDate: Date?
     let valueInt: Int?
     let valueDouble: Double?
+    let valueLatitude: Double?
+    let valueLongitude: Double?
     let windowUnits: DataSourceWindowUnits?
     let comparison: DataSourceFilterComparison
     
-    init(property: DataSourceProperty, comparison: DataSourceFilterComparison, valueString: String? = nil, valueDate: Date? = nil, valueInt: Int? = nil, valueDouble: Double? = nil, windowUnits: DataSourceWindowUnits? = nil) {
+    init(property: DataSourceProperty, comparison: DataSourceFilterComparison, valueString: String? = nil, valueDate: Date? = nil, valueInt: Int? = nil, valueDouble: Double? = nil, valueLatitude: Double? = nil, valueLongitude: Double? = nil, windowUnits: DataSourceWindowUnits? = nil) {
         self.property = property
         self.comparison = comparison
         self.valueString = valueString
         self.valueDate = valueDate
         self.valueInt = valueInt
         self.valueDouble = valueDouble
+        self.valueLatitude = valueLatitude
+        self.valueLongitude = valueLongitude
         self.windowUnits = windowUnits
     }
     
@@ -236,6 +249,39 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
             }
             
             return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %@", value)
+        } else if property.type == .location {
+            var centralLongitude: Double?
+            var centralLatitude: Double?
+            
+            if comparison == .nearMe {
+                if let lastLocation = LocationManager.shared.lastLocation {
+                    centralLongitude = lastLocation.coordinate.longitude
+                    centralLatitude = lastLocation.coordinate.latitude
+                }
+            } else if comparison == .closeTo {
+                centralLongitude = valueLongitude
+                centralLatitude = valueLatitude
+            }
+            
+            guard let distance = valueInt, let latitude = centralLatitude, let longitude = centralLongitude else {
+                NSLog("Nothing to use as location predicate")
+                return nil
+            }
+            
+            var valuePredicates: [NSPredicate] = []
+            
+            let nauticalMilesMeasurement = NSMeasurement(doubleValue: Double(distance), unit: UnitLength.nauticalMiles)
+            let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
+            let metersDistance = metersMeasurement.value
+            
+            if let metersPoint = SFGeometryUtils.degreesToMetersWith(x: longitude, andY: latitude), let x = metersPoint.x as? Double, let y = metersPoint.y as? Double {
+                let southWest = SFGeometryUtils.metersToDegreesWith(x: x - metersDistance, andY: y - metersDistance)
+                let northEast = SFGeometryUtils.metersToDegreesWith(x: x + metersDistance, andY: y + metersDistance)
+                if let southWest = southWest, let northEast = northEast, let maxy = northEast.y as? Double, let miny = southWest.y as? Double, let maxx = southWest.x as? Double, let minx = northEast.x as? Double {
+                    valuePredicates.append(NSPredicate(format: "latitude <= %f AND latitude >= %f AND longitude <= %f AND longitude >= %f", maxy, miny, minx, maxx))
+                }
+            }
+            return NSCompoundPredicate(orPredicateWithSubpredicates: valuePredicates)
         }
         return nil
     }

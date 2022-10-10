@@ -28,5 +28,7 @@
 	<true/>
 	<key>dfrsDataSourceEnabled</key>
 	<false/>
+	<key>forceReloadDate</key>
+	<date>2022-10-10T16:12:04Z</date>
 </dict>
 </plist>

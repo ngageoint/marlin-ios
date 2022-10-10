@@ -30,6 +30,7 @@ extension Asam: DataSource {
     
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date),
+        DataSourceProperty(name: "Location", key: #keyPath(Asam.mgrs10km), type: .location),
         DataSourceProperty(name: "Reference", key: #keyPath(Asam.reference), type: .string),
         DataSourceProperty(name: "Latitude", key: #keyPath(Asam.latitude), type: .double),
         DataSourceProperty(name: "Longitude", key: #keyPath(Asam.longitude), type: .double),

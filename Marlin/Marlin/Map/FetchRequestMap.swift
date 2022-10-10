@@ -16,7 +16,6 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
     var cancellable = Set<AnyCancellable>()
     
     var showAsTiles: Bool = true
-//    var fetchRequest: NSFetchRequest<T>?
     var tilePredicate: NSPredicate?
     var fetchPredicate: NSPredicate?
     var overlay: FetchRequestTileOverlay<T>?
@@ -28,7 +27,6 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
     var focusNotificationName: Notification.Name?
     
     public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
-//        self.fetchRequest = T.fetchRequest() as? NSFetchRequest<T>
         self.showAsTiles = showAsTiles
         self.fetchPredicate = fetchPredicate
     }
@@ -106,6 +104,13 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
                         marlinMap.mapState.fetchRequests[T.key] = self?.getFetchRequest(mapState: marlinMap.mapState) as? NSFetchRequest<NSFetchRequestResult>
                     }
                 }
+            }
+            .store(in: &cancellable)
+        
+        LocationManager.shared.$current10kmMGRS
+            .receive(on: RunLoop.main)
+            .sink() { [weak self] mgrsZone in
+                self?.refreshOverlay(marlinMap: marlinMap)
             }
             .store(in: &cancellable)
     }

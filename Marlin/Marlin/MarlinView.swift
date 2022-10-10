@@ -27,7 +27,7 @@ extension MarlinView: BottomSheetDelegate {
 
 struct MarlinView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    var locationManager: LocationManager = LocationManager()
+    var locationManager: LocationManager = LocationManager.shared
 
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     @State var menuOpen: Bool = false

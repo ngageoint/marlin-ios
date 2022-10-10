@@ -8,6 +8,7 @@
 import Foundation
 import CoreLocation
 import OSLog
+import mgrs_ios
 
 struct AsamPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
@@ -48,6 +49,7 @@ struct AsamProperties: Decodable {
     let victim: String?
     let asamDescription: String?
     let date: Date?
+    let mgrs10km: String?
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -85,6 +87,9 @@ struct AsamProperties: Decodable {
             }
         }
         self.date = parsedDate
+        
+        let mgrsPosition = MGRS.from(longitude, latitude)
+        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
     }
     
     // The keys must have the same name as the attributes of the Asam entity.
@@ -99,7 +104,8 @@ struct AsamProperties: Decodable {
             "hostility": hostility,
             "victim": victim,
             "asamDescription": asamDescription,
-            "date": date
+            "date": date,
+            "mgrs10km": mgrs10km
         ]
     }
 }

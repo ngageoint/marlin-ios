@@ -49,6 +49,7 @@ enum DataSourcePropertyType: Codable {
     case double
     case boolean
     case enumeration
+    case location
 }
 
 struct DataSourceProperty: Hashable, Identifiable, Codable {

@@ -7,6 +7,7 @@
 
 import Foundation
 import OSLog
+import mgrs_ios
 
 struct ModuPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
@@ -50,6 +51,7 @@ struct ModuProperties: Decodable {
     let navArea: String?
     let name: String
     let date: Date?
+    let mgrs10km: String?
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -89,6 +91,9 @@ struct ModuProperties: Decodable {
             }
         }
         self.date = parsedDate
+        
+        let mgrsPosition = MGRS.from(longitude, latitude)
+        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
     }
     
     // The keys must have the same name as the attributes of the Modu entity.

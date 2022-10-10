@@ -10,21 +10,25 @@ import CoreLocation
 import Combine
 import sf_ios
 import geopackage_ios
+import mgrs_ios
 import ExceptionCatcher
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    
+    static let shared = LocationManager()
     
     private let locationManager = CLLocationManager()
     @Published var locationStatus: CLAuthorizationStatus?
     @Published var lastLocation: CLLocation?
     @Published var currentNavArea: NavigationalWarningNavArea?
+    @Published var current10kmMGRS: String?
     
     let navAreaGeoPackageFileName = "navigation_areas"
     let navAreaGeoPackageTableName = "navigation_areas"
     var navAreaGeoPackage: GPKGGeoPackage?
     var navAreaFeatureDao: GPKGFeatureDao?
     
-    override init() {
+    private override init() {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -81,7 +85,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         lastLocation = location
-        updateCurrentNavArea()
+        updateArea()
     }
     
     func updateCurrentNavArea() {
@@ -99,5 +103,17 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
         resultSet.close()
+    }
+    
+    func updateArea() {
+        guard let lastLocation = lastLocation else {
+            return
+        }
+        let mgrsPosition = MGRS.from(lastLocation.coordinate.longitude, lastLocation.coordinate.latitude)
+        let mgrsZone = mgrsPosition.coordinate(.TEN_KILOMETER)
+        if current10kmMGRS != mgrsZone {
+            current10kmMGRS = mgrsZone
+            updateCurrentNavArea()
+        }
     }
 }

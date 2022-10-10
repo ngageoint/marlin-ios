@@ -8,6 +8,7 @@
 import Foundation
 import CoreLocation
 import OSLog
+import mgrs_ios
 
 struct DFRSPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
@@ -56,6 +57,7 @@ struct DFRSProperties: Decodable {
     let txLongitude: Double
     var latitude: Double { txPosition != nil ? txLatitude : rxLatitude }
     var longitude: Double { txPosition != nil ? txLongitude : rxLongitude}
+    var mgrs10km: String?
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -131,6 +133,9 @@ struct DFRSProperties: Decodable {
             self.txLatitude = 0.0
             self.txPosition = nil
         }
+        
+        let mgrsPosition = MGRS.from(longitude, latitude)
+        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
     }
     
     // The keys must have the same name as the attributes of the Asam entity.

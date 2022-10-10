@@ -8,6 +8,7 @@
 import Foundation
 import OSLog
 import CoreLocation
+import mgrs_ios
 
 struct LightsPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
@@ -74,8 +75,9 @@ struct LightsProperties: Decodable {
     let structure: String?
     let subregionHeading: String?
     let volumeNumber: String?
-    let latitude: Double?
-    let longitude: Double?
+    let latitude: Double
+    let longitude: Double
+    let mgrs10km: String?
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -152,6 +154,9 @@ struct LightsProperties: Decodable {
             
             throw MSIError.missingData
         }
+        
+        let mgrsPosition = MGRS.from(longitude, latitude)
+        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
     }
     
     static func parsePosition(position: String) -> CLLocationCoordinate2D {

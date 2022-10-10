@@ -8,6 +8,7 @@
 import Foundation
 import OSLog
 import CoreLocation
+import mgrs_ios
 
 struct RadioBeaconPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
@@ -59,8 +60,8 @@ struct RadioBeaconProperties: Decodable {
     let featureNumber: Int?
     let frequency: String?
     let geopoliticalHeading: String?
-    let latitude: Double?
-    let longitude: Double?
+    let latitude: Double
+    let longitude: Double
     let name: String?
     let noticeNumber: Int?
     let noticeWeek: String?
@@ -74,7 +75,7 @@ struct RadioBeaconProperties: Decodable {
     let sequenceText: String?
     let stationRemark: String?
     let volumeNumber: String?
-    
+    let mgrs10km: String?
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -136,6 +137,9 @@ struct RadioBeaconProperties: Decodable {
             self.longitude = 0.0
             self.latitude = 0.0
         }
+        
+        let mgrsPosition = MGRS.from(longitude, latitude)
+        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
     }
     
     static func parsePosition(position: String) -> CLLocationCoordinate2D {

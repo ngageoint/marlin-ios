@@ -28,6 +28,7 @@ extension DFRS: DataSource {
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Latitude", key: #keyPath(DFRS.latitude), type: .double),
         DataSourceProperty(name: "Longitude", key: #keyPath(DFRS.longitude), type: .double),
+        DataSourceProperty(name: "Location", key: #keyPath(DFRS.mgrs10km), type: .location),
         DataSourceProperty(name: "Station Number", key: #keyPath(DFRS.stationNumber), type: .double),
         DataSourceProperty(name: "Station Name", key: #keyPath(DFRS.stationName), type: .string),
         DataSourceProperty(name: "Station Type", key: #keyPath(DFRS.stationType), type: .string),

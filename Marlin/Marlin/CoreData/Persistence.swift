@@ -93,7 +93,6 @@ class PersistenceController {
         description.setOption(true as NSNumber,
                               forKey: NSPersistentHistoryTrackingKey)
         
-        
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.
@@ -140,6 +139,7 @@ class PersistenceController {
     private init(inMemory: Bool = false) {
         self.inMemory = inMemory
         
+        clearDataIfNecessary()
         NotificationCenter.default
             .publisher(for: .NSPersistentStoreRemoteChange)
             .sink { value in
@@ -153,6 +153,37 @@ class PersistenceController {
             self.fetchPersistentHistoryTransactionsAndChanges()
         }
         loadHistoryToken()
+    }
+    
+    func clearDataIfNecessary() {
+        // if the last time we loaded data was before the forceReloadDate, kill off the data and restart
+        let forceReloadDate = UserDefaults.standard.forceReloadDate
+        let lastLoadDate = UserDefaults.standard.lastLoadDate
+        
+        if let forceReloadDate = forceReloadDate, lastLoadDate < forceReloadDate {
+            NSLog("Delete and reload")
+            do
+            {
+                let storeURL: URL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("Marlin.sqlite")
+                try FileManager.default.removeItem(atPath: storeURL.path)
+                let walURL: URL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("Marlin.sqlite-wal")
+                try FileManager.default.removeItem(atPath: walURL.path)
+                let shmURL: URL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("Marlin.sqlite-shm")
+                try FileManager.default.removeItem(atPath: shmURL.path)
+                let tokenURL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("MSICoreDataToken", isDirectory: true)
+                try FileManager.default.removeItem(atPath: tokenURL.path)
+            }
+            catch
+            {
+                print(error.localizedDescription)
+            }
+            
+            for item in DataSourceList().allTabs {
+                UserDefaults.standard.initialDataLoaded = false
+                UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource)
+            }
+            UserDefaults.standard.lastLoadDate = Date()
+        }
     }
     
     func newTaskContext() -> NSManagedObjectContext {

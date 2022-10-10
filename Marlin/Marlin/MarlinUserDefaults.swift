@@ -101,6 +101,19 @@ extension UserDefaults {
         }
     }
     
+    @objc var lastLoadDate: Date {
+        get {
+            return Date(timeIntervalSince1970: double(forKey: #function))
+        }
+        set {
+            setValue(newValue.timeIntervalSince1970, forKey: #function)
+        }
+    }
+    
+    var forceReloadDate: Date? {
+        return object(forKey: #function) as? Date
+    }
+    
     func imageScale(_ key: String) -> CGFloat? {
         if let size = object(forKey: "\(key)ImageScale") as? Float {
             return CGFloat(size)
@@ -236,5 +249,9 @@ extension UserDefaults {
     
     func updateLastSyncTimeSeconds(_ dataSource: any BatchImportable.Type) {
         setValue(Date().timeIntervalSince1970, forKey: "\(dataSource.key)LastSyncTime")
+    }
+    
+    func clearLastSyncTimeSeconds(_ dataSource: any BatchImportable.Type) {
+        removeObject(forKey: "\(dataSource.key)LastSyncTime")
     }
 }

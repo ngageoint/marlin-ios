@@ -8,6 +8,7 @@
 import Foundation
 import OSLog
 import CoreLocation
+import mgrs_ios
 
 struct DifferentialGPSStationPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
@@ -52,8 +53,8 @@ struct DifferentialGPSStationProperties: Decodable {
     let featureNumber: Int?
     let frequency: Int?
     let geopoliticalHeading: String?
-    let latitude: Double?
-    let longitude: Double?
+    let latitude: Double
+    let longitude: Double
     let name: String?
     let noticeNumber: Int?
     let noticeWeek: String?
@@ -68,7 +69,7 @@ struct DifferentialGPSStationProperties: Decodable {
     let stationID: String?
     let transferRate: Int?
     let volumeNumber: String?
-    
+    let mgrs10km: String?
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -135,6 +136,9 @@ struct DifferentialGPSStationProperties: Decodable {
             self.longitude = 0.0
             self.latitude = 0.0
         }
+        
+        let mgrsPosition = MGRS.from(longitude, latitude)
+        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
     }
     
     static func parsePosition(position: String) -> CLLocationCoordinate2D {

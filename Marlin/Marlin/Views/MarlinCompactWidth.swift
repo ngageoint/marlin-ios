@@ -259,6 +259,17 @@ struct MarlinCompactWidth: View {
         }
         .bottomSheet(isPresented: $filterOpen, detents: .large, delegate: self) {
             FilterBottomSheet(dataSources: $dataSourceList.mappedDataSources)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            filterOpen.toggle()
+                        }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .imageScale(.large)
+                                .foregroundColor(Color.onPrimaryColor.opacity(0.87))
+                        }
+                    }
+                }
         }
     }
     

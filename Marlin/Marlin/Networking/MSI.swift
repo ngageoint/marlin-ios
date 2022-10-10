@@ -14,8 +14,6 @@ public class MSI {
     
     let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "persistence")
     
-    let persistenceController = PersistenceController.shared
-
     static let shared = MSI()
     let appState = AppState()
     lazy var configuration: URLSessionConfiguration = URLSessionConfiguration.af.default
@@ -31,6 +29,7 @@ public class MSI {
     
     func loadAllData() {
         NSLog("Load all data")
+
         var initialDataLoadList: [any BatchImportable.Type] = []
         // if we think we need to load the initial data
         if !UserDefaults.standard.initialDataLoaded {

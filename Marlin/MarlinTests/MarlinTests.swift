@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import mgrs_ios
 
 class MarlinTests: XCTestCase {
 
@@ -32,6 +33,24 @@ class MarlinTests: XCTestCase {
         }
     }
     
+    func testMGRS() {
+        let longitude: Double = 15.3894
+        let latitude: Double = 23.5038
+        let mgrs = MGRS.from(longitude, latitude, .DEGREE)
+        print("xxx gridzone name \(mgrs.gridZone()?.name())")
+        print("xxx hundredkm name \(mgrs.coordinate(.HUNDRED_KILOMETER))")
+        print("xxx tenkm name \(mgrs.coordinate(.TEN_KILOMETER))")
+    }
+    
+    func testMGRS2() {
+        let longitude: Double = -157.868595
+        let latitude: Double = 21.319392
+        let mgrs = MGRS.from(longitude, latitude, .DEGREE)
+        print("xxx gridzone name \(mgrs.gridZone()?.name())")
+        print("xxx hundredkm name \(mgrs.coordinate(.HUNDRED_KILOMETER))")
+        print("xxx tenkm name \(mgrs.coordinate(.TEN_KILOMETER))")
+    }
+    
     func testGeneralDirection() {
 //        let directions = ["N", "E", "S", "W"]
 //        let directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
@@ -53,7 +72,7 @@ class MarlinTests: XCTestCase {
             let index = Int(Double(bearing / indexDegrees).rounded(.down)) % directions.count
 
             let direction = directions[index]
-            print("xxx degrees \(degrees) direction \(direction)")
+//            print("xxx degrees \(degrees) direction \(direction)")
         }
     }
 

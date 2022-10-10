@@ -28,11 +28,3 @@ struct NavigationalWarningSummaryView: View {
         }
     }
 }
-
-struct NavigationalWarningSummaryView_Previews: PreviewProvider {
-    static var previews: some View {
-        let context = PersistenceController.preview.container.viewContext
-        let navigationalWarning = try? context.fetchFirst(NavigationalWarning.self)
-        NavigationalWarningSummaryView(navigationalWarning: navigationalWarning!)
-    }
-}

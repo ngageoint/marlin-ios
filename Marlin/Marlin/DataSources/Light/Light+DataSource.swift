@@ -28,6 +28,7 @@ extension Light: DataSource {
     static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Section Header", key: #keyPath(Light.sectionHeader), type: .string), ascending: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .int), ascending: true)]
     
     static var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Location", key: #keyPath(Light.mgrs10km), type: .location),
         DataSourceProperty(name: "Latitude", key: #keyPath(Light.latitude), type: .double),
         DataSourceProperty(name: "Longitude", key: #keyPath(Light.longitude), type: .double),
         DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .string),

@@ -8,6 +8,7 @@
 import Foundation
 import CoreLocation
 import OSLog
+import mgrs_ios
 
 struct PortPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
@@ -244,6 +245,7 @@ struct PortProperties: Decodable {
     let unloCode: String?
     let usRep: String?
     let vesselTrafficService: String?
+    let mgrs10km: String?
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -403,6 +405,9 @@ struct PortProperties: Decodable {
         self.unloCode = try? values.decode(String.self, forKey: .unloCode)
         self.usRep = try? values.decode(String.self, forKey: .usRep)
         self.vesselTrafficService = try? values.decode(String.self, forKey: .vesselTrafficService)
+        
+        let mgrsPosition = MGRS.from(longitude, latitude)
+        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
     }
     
     // The keys must have the same name as the attributes of the Port entity.
