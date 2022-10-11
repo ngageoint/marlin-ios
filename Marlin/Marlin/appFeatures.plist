@@ -5,11 +5,11 @@
 	<key>flyoverMapsEnabled</key>
 	<false/>
 	<key>searchEnabled</key>
-	<false/>
+	<true/>
 	<key>filterEnabled</key>
-	<false/>
+	<true/>
 	<key>sortEnabled</key>
-	<false/>
+	<true/>
 	<key>hamburger</key>
 	<true/>
 	<key>asamDataSourceEnabled</key>
