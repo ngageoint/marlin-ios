@@ -36,6 +36,8 @@ class MapState: ObservableObject {
     @Published var showRadioBeacons: Bool?
     @Published var showDifferentialGPSStations: Bool?
     @Published var showDFRS: Bool?
+    
+    @Published var searchResults: [MKMapItem]?
 }
 
 struct MarlinMap: UIViewRepresentable {
@@ -407,7 +409,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
                 }
             }
         }
-        
+
         let notification = MapItemsTappedNotification(annotations: annotationsTapped, items: items, mapView: mapView)
         NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
     }

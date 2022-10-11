@@ -52,7 +52,7 @@ struct MarlinCompactWidth: View {
                                 HStack(alignment: .top, spacing: 8) {
                                     // top left button stack
                                     VStack(alignment: .leading, spacing: 16) {
-                                        SearchView()
+                                        SearchView(mapState: marlinMap.mapState)
                                     }
                                     Spacer()
                                     // top right button stack

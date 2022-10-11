@@ -72,6 +72,7 @@
 		F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4A82859143C00686951 /* UIImageExtensions.swift */; };
 		F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4AC28591BA200686951 /* UIApplicationExtensions.swift */; };
 		F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4AE285927D600686951 /* MarlinScheme.swift */; };
+		F71E3E3A28F49ABE002F2019 /* SearchResultsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71E3E3928F49ABE002F2019 /* SearchResultsMap.swift */; };
 		F727A684284E351800BD728A /* MSIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A683284E351800BD728A /* MSIError.swift */; };
 		F727A691284E605800BD728A /* MarlinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A690284E605800BD728A /* MarlinTests.swift */; };
 		F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A687284E485500BD728A /* KIF+extensions.swift */; };
@@ -287,6 +288,7 @@
 		F71DF4A82859143C00686951 /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
 		F71DF4AC28591BA200686951 /* UIApplicationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtensions.swift; sourceTree = "<group>"; };
 		F71DF4AE285927D600686951 /* MarlinScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinScheme.swift; sourceTree = "<group>"; };
+		F71E3E3928F49ABE002F2019 /* SearchResultsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsMap.swift; sourceTree = "<group>"; };
 		F727A682284E29AE00BD728A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F727A683284E351800BD728A /* MSIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIError.swift; sourceTree = "<group>"; };
 		F727A685284E476200BD728A /* MSITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSITests.swift; sourceTree = "<group>"; };
@@ -607,6 +609,7 @@
 			children = (
 				F71DF4912858C09E00686951 /* MapMixin.swift */,
 				F707BA9228805476006A94C4 /* PersistedMapState.swift */,
+				F71E3E3928F49ABE002F2019 /* SearchResultsMap.swift */,
 			);
 			path = Mixins;
 			sourceTree = "<group>";
@@ -1374,6 +1377,7 @@
 				F7D5C05728A68E56000C2C29 /* ViewExtensions.swift in Sources */,
 				F74B9B0928B7D1640097D448 /* RadioBeaconMap.swift in Sources */,
 				F71DF4A92859143C00686951 /* UIImageExtensions.swift in Sources */,
+				F71E3E3A28F49ABE002F2019 /* SearchResultsMap.swift in Sources */,
 				F7FFB30428D6389700C31AA3 /* Asam+Decodable.swift in Sources */,
 				F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */,
 				F76B4A7228EB8AB20012BF4F /* MSIListViewModel.swift in Sources */,
