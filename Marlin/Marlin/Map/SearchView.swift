@@ -112,8 +112,16 @@ struct SearchView: View {
     }
     
     func performSearch(searchText: String) {
+        var realSearch = searchText
+        // check if they maybe entered coordinates
+        if let location = CLLocationCoordinate2D(coordinateString: searchText) {
+            NSLog("This is a location")
+            // just send the location to the search
+            realSearch = "\(location.latitude), \(location.longitude)"
+        }
+        
         let searchRequest = MKLocalSearch.Request()
-        searchRequest.naturalLanguageQuery = searchText
+        searchRequest.naturalLanguageQuery = realSearch
         
         // Set the region to an associated map view's region.
         if let region = mapState.center {
