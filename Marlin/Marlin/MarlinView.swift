@@ -33,7 +33,7 @@ struct MarlinView: View {
     @State var menuOpen: Bool = false
     @State var showBottomSheet: Bool = false
     @StateObject var bottomSheetItemList: BottomSheetItemList = BottomSheetItemList()
-    
+        
     @State var showSnackbar: Bool = false
     @State var snackbarModel: SnackbarModel?
     
@@ -41,6 +41,7 @@ struct MarlinView: View {
     
     @AppStorage("userTrackingMode") var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
     @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = true
+    @AppStorage("disclaimerAccepted") var disclaimerAccepted: Bool = false
 
     let mapItemsTappedPub = NotificationCenter.default.publisher(for: .MapItemsTapped)
     let mapViewDisappearingPub = NotificationCenter.default.publisher(for: .MapViewDisappearing)
@@ -82,35 +83,54 @@ struct MarlinView: View {
     var body: some View {
         ZStack(alignment: .top) {
             
-            if horizontalSizeClass == .compact {
-                
-                MarlinCompactWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
-                ).environmentObject(locationManager)
-            } else {
-                NavigationView {
-                    ZStack {
-                        MarlinRegularWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState)).environmentObject(locationManager)
-                        GeometryReader { geometry in
-                            SideMenu(width: min(geometry.size.width - 56, 512),
-                                     isOpen: self.menuOpen,
-                                     menuClose: self.openMenu,
-                                     dataSourceList: dataSourceList
-                            )
-                            .opacity(self.menuOpen ? 1 : 0)
-                            .animation(.default, value: self.menuOpen)
-                            .onReceive(switchTabPub) { output in
-                                self.menuOpen.toggle()
-                            }
+            if !disclaimerAccepted {
+                VStack(spacing: 16) {
+                    Text("Disclaimer")
+                        .font(.headline5)
+                    ScrollView {
+                        DisclaimerView()
+                        Button("Accept") {
+                            disclaimerAccepted.toggle()
                         }
                     }
-                    .if(UserDefaults.standard.hamburger) { view in
-                        view.modifier(Hamburger(menuOpen: $menuOpen))
-                    }
-                    .navigationTitle("Marlin")
-                    .navigationBarTitleDisplayMode(.inline)
                 }
                 .tint(Color.onPrimaryColor)
-                .navigationViewStyle(.stack)
+                .foregroundColor(Color.onPrimaryColor)
+                .background(
+                    LinearGradient(gradient: Gradient(colors: [.secondaryColor, .primaryColor]), startPoint: .bottom, endPoint: UnitPoint(x: 0.5, y: 0.37))
+                )
+            } else {
+                
+                if horizontalSizeClass == .compact {
+                    
+                    MarlinCompactWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
+                    ).environmentObject(locationManager)
+                } else {
+                    NavigationView {
+                        ZStack {
+                            MarlinRegularWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState)).environmentObject(locationManager)
+                            GeometryReader { geometry in
+                                SideMenu(width: min(geometry.size.width - 56, 512),
+                                         isOpen: self.menuOpen,
+                                         menuClose: self.openMenu,
+                                         dataSourceList: dataSourceList
+                                )
+                                .opacity(self.menuOpen ? 1 : 0)
+                                .animation(.default, value: self.menuOpen)
+                                .onReceive(switchTabPub) { output in
+                                    self.menuOpen.toggle()
+                                }
+                            }
+                        }
+                        .if(UserDefaults.standard.hamburger) { view in
+                            view.modifier(Hamburger(menuOpen: $menuOpen))
+                        }
+                        .navigationTitle("Marlin")
+                        .navigationBarTitleDisplayMode(.inline)
+                    }
+                    .tint(Color.onPrimaryColor)
+                    .navigationViewStyle(.stack)
+                }
             }
         }
         .onChange(of: userTrackingMode) { newValue in

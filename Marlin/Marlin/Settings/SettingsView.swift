@@ -22,7 +22,10 @@ struct SettingsView: View {
     var body: some View {
         List {
             NavigationLink {
-                DisclaimerView()
+                ScrollView {
+                    DisclaimerView()
+                }
+                .navigationTitle("Disclaimer")
             } label: {
                 Image(systemName: "shield.lefthalf.filled")
                     .tint(Color.onSurfaceColor)
