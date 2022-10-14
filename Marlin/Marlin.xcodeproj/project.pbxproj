@@ -73,6 +73,7 @@
 		F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4AC28591BA200686951 /* UIApplicationExtensions.swift */; };
 		F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4AE285927D600686951 /* MarlinScheme.swift */; };
 		F71E3E3A28F49ABE002F2019 /* SearchResultsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71E3E3928F49ABE002F2019 /* SearchResultsMap.swift */; };
+		F71E3E3C28F99626002F2019 /* CurrentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71E3E3B28F99626002F2019 /* CurrentLocation.swift */; };
 		F727A684284E351800BD728A /* MSIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A683284E351800BD728A /* MSIError.swift */; };
 		F727A691284E605800BD728A /* MarlinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A690284E605800BD728A /* MarlinTests.swift */; };
 		F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A687284E485500BD728A /* KIF+extensions.swift */; };
@@ -289,6 +290,7 @@
 		F71DF4AC28591BA200686951 /* UIApplicationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtensions.swift; sourceTree = "<group>"; };
 		F71DF4AE285927D600686951 /* MarlinScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinScheme.swift; sourceTree = "<group>"; };
 		F71E3E3928F49ABE002F2019 /* SearchResultsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsMap.swift; sourceTree = "<group>"; };
+		F71E3E3B28F99626002F2019 /* CurrentLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLocation.swift; sourceTree = "<group>"; };
 		F727A682284E29AE00BD728A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F727A683284E351800BD728A /* MSIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIError.swift; sourceTree = "<group>"; };
 		F727A685284E476200BD728A /* MSITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSITests.swift; sourceTree = "<group>"; };
@@ -840,6 +842,7 @@
 				F7FFB34228DD06EF00C31AA3 /* MSIListView.swift */,
 				F7FFB34428DE18B900C31AA3 /* Badge.swift */,
 				F76B4A7128EB8AB20012BF4F /* MSIListViewModel.swift */,
+				F71E3E3B28F99626002F2019 /* CurrentLocation.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1386,6 +1389,7 @@
 				F7FFB31228D63C8300C31AA3 /* Modu+Annotation.swift in Sources */,
 				F707BA852878DBFF006A94C4 /* AdaptiveImage.swift in Sources */,
 				F7FFB2F828D6344000C31AA3 /* Port+Decodable.swift in Sources */,
+				F71E3E3C28F99626002F2019 /* CurrentLocation.swift in Sources */,
 				F707BA89287C68E7006A94C4 /* RaconCard.swift in Sources */,
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
 				F7FFB31A28D63EF600C31AA3 /* Light+Annotation.swift in Sources */,

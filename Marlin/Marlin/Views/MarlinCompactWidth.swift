@@ -47,8 +47,9 @@ struct MarlinCompactWidth: View {
                                     view.modifier(Hamburger(menuOpen: $menuOpen))
                                 }
                                 .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
-                            VStack {
+                            VStack(spacing: 0) {
                                 // top of map
+                                CurrentLocation()
                                 HStack(alignment: .top, spacing: 8) {
                                     // top left button stack
                                     VStack(alignment: .leading, spacing: 16) {
@@ -164,6 +165,7 @@ struct MarlinCompactWidth: View {
                             self.appState.popToRoot = false
                         }
                     }
+                    //here
                 }
                 .tag("map")
                 .tabItem {

@@ -13,6 +13,7 @@ struct MapSettings: View {
     @AppStorage("showGARS") var showGARS: Bool = false
     @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
     @AppStorage("flyoverMapsEnabled") var flyoverMapsEnabled: Bool = false
+    @AppStorage("showCurrentLocation") var showCurrentLocation: Bool = false
     var body: some View {
         List {
             Section("Map") {
@@ -142,6 +143,21 @@ struct MapSettings: View {
                         .font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                 }
+            }
+            
+            Section("Display") {
+                Toggle(isOn: $showCurrentLocation) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Show Current Location").font(Font.body1)
+                            .foregroundColor(Color.onSurfaceColor.opacity(0.87))
+                        Text("Shows your curent latitude, longitude on the map")
+                            .font(Font.caption)
+                            .foregroundColor(Color.onSurfaceColor.opacity(0.6))
+                    }
+                    .padding(.top, 4)
+                    .padding(.bottom, 4)
+                }
+                .tint(Color.primaryColor)
             }
         }
         .navigationTitle("Map Settings")
