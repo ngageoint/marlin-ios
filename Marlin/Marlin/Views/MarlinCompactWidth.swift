@@ -50,84 +50,12 @@ struct MarlinCompactWidth: View {
                             VStack(spacing: 0) {
                                 // top of map
                                 CurrentLocation()
-                                HStack(alignment: .top, spacing: 8) {
-                                    // top left button stack
-                                    VStack(alignment: .leading, spacing: 16) {
-                                        SearchView(mapState: marlinMap.mapState)
-                                    }
-                                    Spacer()
-                                    // top right button stack
-                                    VStack(alignment: .trailing, spacing: 16) {
-                                        NavigationLink {
-                                            MapSettings()
-                                        } label: {
-                                            Label(
-                                                title: {},
-                                                icon: { Image(systemName: "square.3.stack.3d")
-                                                        .renderingMode(.template)
-                                                }
-                                            )
-                                        }
-                                        .isDetailLink(false)
-                                        .offset(x: -8, y: 16)
-                                        .fixedSize()
-                                        .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini))
-                                    }
-                                }
+                                topButtons()
                                 Spacer()
                                 // bottom of map
-                                HStack(alignment: .bottom, spacing: 0) {
-                                    Spacer()
-                                    // bottom right button stack
-                                    VStack(alignment: .trailing, spacing: 16) {
-                                        UserTrackingButton(mapState: marlinMap.mapState)
-                                            .offset(x: -8, y: -24)
-                                            .fixedSize()
-                                    }
-                                }
+                                bottomButtons()
                             }
-                            HStack {
-                                Spacer()
-                                Capsule()
-                                    .fill(Color.primaryColor)
-                                    .frame(width: 175, height: 25)
-                                    .overlay(
-                                        HStack {
-                                            ProgressView()
-                                                .progressViewStyle(CircularProgressViewStyle(tint: Color.onPrimaryColor))
-                                                .scaleEffect(0.5, anchor: .center)
-                                            Text("Loading initial data")
-                                                .font(Font.overline)
-                                                .foregroundColor(Color.onPrimaryColor)
-                                        }
-                                    )
-                                Spacer()
-                            }
-                            .animation(.default, value: initialDataLoaded)
-                            .opacity(initialDataLoaded ? 0.0 : 1.0)
-                            .padding(.top, 8)
-                            
-                            HStack {
-                                Spacer()
-                                Capsule()
-                                    .fill(Color.primaryColor)
-                                    .frame(width: 150, height: 25)
-                                    .overlay(
-                                        HStack {
-                                            ProgressView()
-                                                .progressViewStyle(CircularProgressViewStyle(tint: Color.onPrimaryColor))
-                                                .scaleEffect(0.5, anchor: .center)
-                                            Text("Updating data")
-                                                .font(Font.overline)
-                                                .foregroundColor(Color.onPrimaryColor)
-                                        }
-                                    )
-                                Spacer()
-                            }
-                            .animation(.easeInOut(duration: 2.0), value: loadingData)
-                            .opacity(loadingData && initialDataLoaded ? 1.0 : 0.0)
-                            .padding(.top, 8)
-                            .transition(.opacity)
+                            loadingCapsule()
                         }
                         NavigationLink(tag: "detail", selection: $selection) {
                             if let data = itemWrapper.dataSource as? DataSourceViewBuilder {
@@ -272,6 +200,71 @@ struct MarlinCompactWidth: View {
                         }
                     }
                 }
+        }
+    }
+    
+    @ViewBuilder
+    func loadingCapsule() -> some View {
+        HStack {
+            Spacer()
+            Capsule()
+                .fill(Color.primaryColor)
+                .frame(width: 175, height: 25)
+                .overlay(
+                    HStack {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: Color.onPrimaryColor))
+                            .scaleEffect(0.5, anchor: .center)
+                        Text("Loading initial data")
+                            .font(Font.overline)
+                            .foregroundColor(Color.onPrimaryColor)
+                    }
+                )
+            Spacer()
+        }
+        .animation(.default, value: initialDataLoaded)
+        .opacity(initialDataLoaded ? 0.0 : 1.0)
+        .padding(.top, 8)
+    }
+    
+    @ViewBuilder
+    func topButtons() -> some View {
+        HStack(alignment: .top, spacing: 8) {
+            // top left button stack
+            VStack(alignment: .leading, spacing: 16) {
+                SearchView(mapState: marlinMap.mapState)
+            }
+            Spacer()
+            // top right button stack
+            VStack(alignment: .trailing, spacing: 16) {
+                NavigationLink {
+                    MapSettings()
+                } label: {
+                    Label(
+                        title: {},
+                        icon: { Image(systemName: "square.3.stack.3d")
+                                .renderingMode(.template)
+                        }
+                    )
+                }
+                .isDetailLink(false)
+                .offset(x: -8, y: 16)
+                .fixedSize()
+                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini))
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func bottomButtons() -> some View {
+        HStack(alignment: .bottom, spacing: 0) {
+            Spacer()
+            // bottom right button stack
+            VStack(alignment: .trailing, spacing: 16) {
+                UserTrackingButton(mapState: marlinMap.mapState)
+                    .offset(x: -8, y: -24)
+                    .fixedSize()
+            }
         }
     }
     
