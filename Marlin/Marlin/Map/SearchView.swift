@@ -58,7 +58,7 @@ struct SearchView: View {
                 }
                 .padding(.top, 8)
                 .padding(.bottom, 8)
-                .padding(.leading, !(mapState.searchResults?.isEmpty ?? false) && !searchExpanded ? 8 : 0)
+                .padding(.leading, !(mapState.searchResults?.isEmpty ?? true) && !searchExpanded ? 8 : 0)
                 if let searchResults = mapState.searchResults, !searchResults.isEmpty {
                     if searchExpanded {
                         Divider()
