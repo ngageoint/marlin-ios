@@ -10,8 +10,8 @@ import MapKit
 import CoreData
 import Combine
 
-class AsamMap: FetchRequestMap<Asam> {
-    override public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
+class AsamMap<T: Asam & MapImage>: FetchRequestMap<T> {
+    override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
         super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
         self.showKeyPath = \MapState.showAsams
         self.sortDescriptors = [NSSortDescriptor(keyPath: \Asam.date, ascending: true)]

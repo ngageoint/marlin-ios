@@ -34,15 +34,17 @@ extension CLLocationCoordinate2D {
         return (x:x, y:y);
     }
     
+    static func degreesToRadians(_ degrees: Double) -> Double { return degrees * Double.pi / 180.0 }
+    static func radiansToDegrees(_ radians: Double) -> Double { return radians * 180.0 / Double.pi }
+    
     func bearing(to point: CLLocationCoordinate2D) -> Double {
-        func degreesToRadians(_ degrees: Double) -> Double { return degrees * Double.pi / 180.0 }
-        func radiansToDegrees(_ radians: Double) -> Double { return radians * 180.0 / Double.pi }
         
-        let lat1 = degreesToRadians(latitude)
-        let lon1 = degreesToRadians(longitude)
         
-        let lat2 = degreesToRadians(point.latitude);
-        let lon2 = degreesToRadians(point.longitude);
+        let lat1 = CLLocationCoordinate2D.degreesToRadians(latitude)
+        let lon1 = CLLocationCoordinate2D.degreesToRadians(longitude)
+        
+        let lat2 = CLLocationCoordinate2D.degreesToRadians(point.latitude);
+        let lon2 = CLLocationCoordinate2D.degreesToRadians(point.longitude);
         
         let dLon = lon2 - lon1;
         
@@ -50,7 +52,7 @@ extension CLLocationCoordinate2D {
         let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon);
         let radiansBearing = atan2(y, x);
         
-        let degrees = radiansToDegrees(radiansBearing)
+        let degrees = CLLocationCoordinate2D.radiansToDegrees(radiansBearing)
         if (degrees > 360) {
             return degrees - 360;
         }

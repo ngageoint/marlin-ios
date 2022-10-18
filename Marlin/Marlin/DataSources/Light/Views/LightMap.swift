@@ -10,13 +10,13 @@ import MapKit
 import CoreData
 import Combine
 
-class LightMap: FetchRequestMap<Light> {
+class LightMap<T: LightProtocol & MapImage>: FetchRequestMap<T> {
     var userDefaultsShowLightRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
     var userDefaultsShowLightSectorRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
 
     
-    override public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
-        super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
+    override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
+        super.init(fetchPredicate: fetchPredicate, objects: objects, showAsTiles: showAsTiles)
         self.showKeyPath = \MapState.showLights
         self.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
         self.focusNotificationName = .FocusLight

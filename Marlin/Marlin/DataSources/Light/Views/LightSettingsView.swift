@@ -9,32 +9,117 @@ import SwiftUI
 import CoreData
 import MapKit
 
+class LightMapViewModel: NSObject, LightMapViewModelProtocol {
+    
+    init(light: Light) {
+        self.characteristicNumber = light.characteristicNumber
+        self.structure = light.structure
+        self.name = light.name
+        self.volumeNumber = light.volumeNumber
+        self.featureNumber = light.featureNumber
+        self.noticeWeek = light.noticeWeek
+        self.noticeYear = light.noticeYear
+        self.latitude = light.latitude
+        self.longitude = light.longitude
+        self.remarks = light.remarks
+        self.characteristic = light.characteristic
+        self.range = light.range
+        coordinate = light.coordinate
+    }
+    
+    init(characteristicNumber: Int64, structure: String? = nil, name: String? = nil, volumeNumber: String? = nil, featureNumber: String? = nil, noticeWeek: String? = nil, noticeYear: String? = nil, latitude: Double, longitude: Double, remarks: String? = nil, characteristic: String? = nil, range: String? = nil) {
+        self.characteristicNumber = characteristicNumber
+        self.structure = structure
+        self.name = name
+        self.volumeNumber = volumeNumber
+        self.featureNumber = featureNumber
+        self.noticeWeek = noticeWeek
+        self.noticeYear = noticeYear
+        self.latitude = latitude
+        self.longitude = longitude
+        self.remarks = remarks
+        self.characteristic = characteristic
+        self.range = range
+        coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    
+    var characteristicNumber: Int64
+    
+    var structure: String?
+    
+    var name: String?
+        
+    var volumeNumber: String?
+    
+    var featureNumber: String?
+        
+    var noticeWeek: String?
+    
+    var noticeYear: String?
+        
+    @objc var latitude: Double
+    
+    @objc var longitude: Double
+    
+    var remarks: String?
+    
+    var characteristic: String?
+    
+    var range: String?
+    
+    
+    
+    func toRadians(degrees: Double) -> Double {
+        return degrees * .pi / 180.0
+    }
+    
+    func toDegrees(radians: Double) -> Double {
+        return radians * 180.0 / .pi
+    }
+    
+    var coordinate: CLLocationCoordinate2D
+    
+    
+}
+
 struct LightSettingsView: View {
     @AppStorage("actualRangeLights") var actualRangeLights = false
     @AppStorage("actualRangeSectorLights") var actualRangeSectorLights = false
     
-    @FetchRequest var lights : FetchedResults<Light>
-    var fetchRequest: NSFetchRequest<Light>
-    
     @StateObject var mapState: MapState = MapState()
+
+    var lights: [LightMapViewModel] = []
     
     init() {
-        let sectorLightFeatureNumber = "14840"
-        let sectorLightVolumeNumber = "PUB 110"
-        let fullLightFeatureNumber = "14836"
-        let fullLightVolumeNumber = "PUB 110"
-        
-        let predicate = NSPredicate(format: "(featureNumber == %@ AND volumeNumber == %@) OR (featureNumber == %@ AND volumeNumber == %@)", sectorLightFeatureNumber, sectorLightVolumeNumber, fullLightFeatureNumber, fullLightVolumeNumber)
-        
-        //Intialize the FetchRequest property wrapper
-        self._lights = FetchRequest(entity: Light.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Light.characteristicNumber, ascending: true)], predicate: predicate)
-        fetchRequest = Light.fetchRequest()
-        fetchRequest.predicate = predicate
+        let light1: LightMapViewModel = LightMapViewModel(
+            characteristicNumber: 1,
+            volumeNumber: "PUB 110",
+            featureNumber: "14840",
+            noticeWeek: "06",
+            noticeYear: "2015",
+            latitude: 16.473,
+            longitude: -61.507,
+            remarks: "R. 120°-163°, W.-170°, G.-200°.\n",
+            characteristic: "Fl.(2)W.R.G.\nperiod 6s \nfl. 1.0s, ec. 1.0s \nfl. 1.0s, ec. 3.0s \n",
+            range: "W. 12 ; R. 9 ; G. 9")
+        let light2: LightMapViewModel = LightMapViewModel(
+            characteristicNumber: 1,
+            volumeNumber: "PUB 110",
+            featureNumber: "14836",
+            noticeWeek: "24",
+            noticeYear: "2019",
+            latitude: 16.41861,
+            longitude: -61.5338,
+            characteristic: "Fl.(3)W.\nperiod 12s \n",
+            range: "10")
+
+        lights.append(light1)
+        lights.append(light2)
     }
     
     var body: some View {
         VStack(spacing: 0) {
-            MarlinMap(name: "Light Detail Map", mixins: [LightMap(fetchPredicate: fetchRequest.predicate)], mapState: mapState)
+            MarlinMap(name: "Light Detail Map", mixins: [LightMap<LightMapViewModel>(objects: lights)], mapState: mapState)
                 .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                 .onAppear {
                     if lights.count > 0 {

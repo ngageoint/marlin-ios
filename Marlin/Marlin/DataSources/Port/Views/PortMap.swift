@@ -10,8 +10,8 @@ import MapKit
 import CoreData
 import Combine
 
-class PortMap: FetchRequestMap<Port> {
-    override public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
+class PortMap<T: Port & MapImage>: FetchRequestMap<T> {
+    override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
         super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
         self.showKeyPath = \MapState.showPorts
         self.sortDescriptors = [NSSortDescriptor(keyPath: \Port.portNumber, ascending: true)]

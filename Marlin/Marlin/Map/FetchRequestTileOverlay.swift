@@ -9,9 +9,9 @@ import Foundation
 import MapKit
 import CoreData
 
-protocol FetchRequestBasedTileOverlay {
-    associatedtype T where T : NSManagedObject
-    var fetchRequest: NSFetchRequest<T>? { get set }
+protocol PredicateBasedTileOverlay {
+    associatedtype T where T : MapImage
+    var predicate: NSPredicate? { get set }
 }
 
 struct MapBoundingBox {
@@ -19,8 +19,10 @@ struct MapBoundingBox {
     var neCorner: (x: Double, y: Double)
 }
 
-class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, FetchRequestBasedTileOverlay {
-    var fetchRequest: NSFetchRequest<T>?
+class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverlay {
+    var predicate: NSPredicate?
+    var sortDescriptors: [NSSortDescriptor]?
+    var objects: [T]?
     var zoomLevel: Int = 0
     
     var clearImage: UIImage {
@@ -37,9 +39,11 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
         return image!
     }
 
-    convenience init(fetchRequest: NSFetchRequest<T>?) {
+    convenience init(predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]? = nil, objects: [T]? = nil) {
         self.init()
-        self.fetchRequest = fetchRequest
+        self.predicate = predicate
+        self.sortDescriptors = sortDescriptors
+        self.objects = objects
     }
     
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
@@ -69,30 +73,46 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
         }
     }
     
-    func drawTile(tileBounds3857: MapBoundingBox, queryBounds: MapBoundingBox, result: @escaping (Data?, Error?) -> Void) {
-        guard let fetchRequest = fetchRequest else {
-            result(Data(), nil)
-            return
+    func getMatchingObjects(predicate: NSPredicate) -> [T]? {
+        if let objects = objects {
+
+            let filteredObjects: [T] = objects.filter { object in
+                return predicate.evaluate(with: object)
+            }
+
+            return filteredObjects
         }
         
-        let tileFetchRequest = T.fetchRequest()
-        tileFetchRequest.sortDescriptors = fetchRequest.sortDescriptors
+        if let M = T.self as? NSManagedObject.Type {
+            
+            let tileFetchRequest = M.fetchRequest()
+            tileFetchRequest.sortDescriptors = sortDescriptors
+            
+            tileFetchRequest.predicate = predicate
+            
+            let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+            context.automaticallyMergesChangesFromParent = false
+            context.parent = PersistenceController.shared.container.viewContext
+            let objects = try? context.fetch(tileFetchRequest)
+            return objects as? [T]
+        }
         
+        return nil
+    }
+    
+    func drawTile(tileBounds3857: MapBoundingBox, queryBounds: MapBoundingBox, result: @escaping (Data?, Error?) -> Void) {
+
         let boundsPredicate = NSPredicate(
             format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", queryBounds.swCorner.y, queryBounds.neCorner.y, queryBounds.swCorner.x, queryBounds.neCorner.x
         )
         
-        if let predicate = fetchRequest.predicate {
-            tileFetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, boundsPredicate])
-        } else {
-            tileFetchRequest.predicate = boundsPredicate
-        }
-                
-        let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        context.automaticallyMergesChangesFromParent = false
-        context.parent = PersistenceController.shared.container.viewContext
-        let objects = try? context.fetch(tileFetchRequest)
+        var finalPredicate: NSPredicate = boundsPredicate
         
+        if let predicate = predicate {
+            finalPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, boundsPredicate])
+        }
+        
+        let objects = getMatchingObjects(predicate: finalPredicate)
         if objects == nil || objects?.count == 0 {
             result(Data(), nil)
             return
@@ -100,7 +120,7 @@ class FetchRequestTileOverlay<T : NSManagedObject & MapImage>: MKTileOverlay, Fe
         
         UIGraphicsBeginImageContext(self.tileSize)
 
-        if let objects = objects as? [MapImage] {
+        if let objects = objects {
             for object in objects {
                 let mapImages = object.mapImage(marker: false, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: UIGraphicsGetCurrentContext())
                 for mapImage in mapImages {

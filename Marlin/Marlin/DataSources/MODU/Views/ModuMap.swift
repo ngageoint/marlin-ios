@@ -10,8 +10,8 @@ import MapKit
 import CoreData
 import Combine
 
-class ModuMap: FetchRequestMap<Modu> {
-    override public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
+class ModuMap<T: Modu & MapImage>: FetchRequestMap<T> {
+    override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil,showAsTiles: Bool = true) {
         super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
         self.showKeyPath = \MapState.showModus
         self.sortDescriptors = [NSSortDescriptor(keyPath: \Modu.date, ascending: true)]

@@ -10,8 +10,8 @@ import MapKit
 import CoreData
 import Combine
 
-class DFRSMap: FetchRequestMap<DFRS> {
-    override public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
+class DFRSMap<T: DFRS & MapImage>: FetchRequestMap<T> {
+    override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
         super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
         self.showKeyPath = \MapState.showDFRS
         self.sortDescriptors = [NSSortDescriptor(keyPath: \DFRS.stationNumber, ascending: true)]

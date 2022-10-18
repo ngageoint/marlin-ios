@@ -19,9 +19,14 @@ protocol MapImage {
     var latitude: Double { get }
     var longitude: Double { get }
     var coordinate: CLLocationCoordinate2D { get }
+    var TILE_SIZE: Double { get }
 }
 
 extension MapImage {
+    var TILE_SIZE: Double {
+        return 512.0
+    }
+    
     func defaultMapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil, context: CGContext? = nil, tileSize: Double) -> [UIImage] {
         var images: [UIImage] = []
         if let dataSource = self as? (any DataSource) {

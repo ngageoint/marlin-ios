@@ -10,8 +10,8 @@ import MapKit
 import CoreData
 import Combine
 
-class RadioBeaconMap: FetchRequestMap<RadioBeacon> {
-    override public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
+class RadioBeaconMap<T: RadioBeacon & MapImage>: FetchRequestMap<T> {
+    override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
         super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
         self.showKeyPath = \MapState.showRadioBeacons
         self.sortDescriptors = [NSSortDescriptor(keyPath: \RadioBeacon.featureNumber, ascending: true)]

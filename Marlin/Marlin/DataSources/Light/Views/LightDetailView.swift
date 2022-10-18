@@ -34,7 +34,7 @@ struct LightDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "Light Detail Map", mixins: [LightMap(fetchPredicate: fetchRequest.predicate)], mapState: mapState)
+                    MarlinMap(name: "Light Detail Map", mixins: [LightMap<Light>(fetchPredicate: fetchRequest.predicate)], mapState: mapState)
                     .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     .onAppear {
                         if lights.count > 0 {

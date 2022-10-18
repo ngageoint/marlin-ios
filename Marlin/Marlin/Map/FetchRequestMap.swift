@@ -10,7 +10,7 @@ import MapKit
 import CoreData
 import Combine
 
-class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, MapMixin {
+class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
     var minZoom = 4
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
@@ -18,7 +18,8 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
     var showAsTiles: Bool = true
     var tilePredicate: NSPredicate?
     var fetchPredicate: NSPredicate?
-    var overlay: FetchRequestTileOverlay<T>?
+    var objects: [T]?
+    var overlay: PredicateTileOverlay<T>?
     
     var showKeyPath: ReferenceWritableKeyPath<MapState, Bool?>?
     var userDefaultsShowPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
@@ -26,13 +27,17 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
     
     var focusNotificationName: Notification.Name?
     
-    public init(fetchPredicate: NSPredicate? = nil, showAsTiles: Bool = true) {
+    public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
         self.showAsTiles = showAsTiles
         self.fetchPredicate = fetchPredicate
+        self.objects = objects
     }
     
-    func getFetchRequest(mapState: MapState) -> NSFetchRequest<T> {
-        let fetchRequest: NSFetchRequest<T> = T.fetchRequest() as! NSFetchRequest<T>
+    func getFetchRequest(mapState: MapState) -> NSFetchRequest<NSManagedObject>? {
+        guard let M = T.self as? any DataSource.Type else {
+            return nil
+        }
+        let fetchRequest: NSFetchRequest<NSManagedObject> = M.fetchRequest() as! NSFetchRequest<NSManagedObject>
         fetchRequest.sortDescriptors = sortDescriptors
 
         var filterPredicates: [NSPredicate] = []
@@ -40,7 +45,7 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
         if let presetPredicate = fetchPredicate {
             filterPredicates.append(presetPredicate)
         } else if let showKeyPath = showKeyPath, let showItems = mapState[keyPath: showKeyPath], showItems == true {
-            let filters = UserDefaults.standard.filter(T.key)
+            let filters = UserDefaults.standard.filter(M.key)
             for filter in filters {
                 if let predicate = filter.toPredicate() {
                     filterPredicates.append(predicate)
@@ -79,8 +84,8 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
                 $0.object as? String
             }
             .sink { item in
-                if item == T.key {
-                    print("New data for \(T.key), refresh overlay")
+                if let M = T.self as? any DataSource.Type, item == M.key {
+                    print("New data for \(M.key), refresh overlay")
                     self.refreshOverlay(marlinMap: marlinMap)
                 }
             }
@@ -92,6 +97,9 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
                 print("Show \(T.self): \(show)")
             })
             .sink() { [weak self] show in
+                guard let M = T.self as? any DataSource.Type else {
+                    return
+                }
                 if let showKeyPath = self?.showKeyPath {
                     DispatchQueue.main.async {
                         marlinMap.mapState[keyPath: showKeyPath] = show
@@ -101,7 +109,7 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
                     self?.refreshOverlay(marlinMap: marlinMap)
                 } else {
                     DispatchQueue.main.async {
-                        marlinMap.mapState.fetchRequests[T.key] = self?.getFetchRequest(mapState: marlinMap.mapState) as? NSFetchRequest<NSFetchRequestResult>
+                        marlinMap.mapState.fetchRequests[M.key] = self?.getFetchRequest(mapState: marlinMap.mapState) as? NSFetchRequest<NSFetchRequestResult>
                     }
                 }
             }
@@ -119,28 +127,25 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
         DispatchQueue.main.async {
             if let overlay = self.overlay {
                 marlinMap.mapState.overlays.removeAll { mapOverlay in
-                    if let mapOverlay = mapOverlay as? FetchRequestTileOverlay<T> {
+                    if let mapOverlay = mapOverlay as? PredicateTileOverlay<T> {
                         return mapOverlay == overlay
                     }
                     return false
                 }
             }
             let newFetchRequest = self.getFetchRequest(mapState: marlinMap.mapState)
-            let newOverlay = FetchRequestTileOverlay<T>()
+            let newOverlay = PredicateTileOverlay<T>(predicate: newFetchRequest?.predicate, sortDescriptors: newFetchRequest?.sortDescriptors, objects: self.objects)
             
             newOverlay.tileSize = CGSize(width: 512, height: 512)
             newOverlay.minimumZ = self.minZoom
-            newOverlay.fetchRequest = newFetchRequest
             self.overlay = newOverlay
             marlinMap.mapState.overlays.append(newOverlay)
         }
     }
     
     func focus(item: T) {
-        if let coordinate = item.coordinate {
-            DispatchQueue.main.async {
-                self.mapState?.center = MKCoordinateRegion(center: coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
-            }
+        DispatchQueue.main.async {
+            self.mapState?.center = MKCoordinateRegion(center: item.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
         }
     }
     
@@ -168,7 +173,9 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
         let minLat = location.latitude - tolerance
         let maxLat = location.latitude + tolerance
         
-        let fetchRequest = self.getFetchRequest(mapState: mapState)
+        guard let fetchRequest = self.getFetchRequest(mapState: mapState) else {
+            return nil
+        }
         var predicates: [NSPredicate] = []
         if let predicate = fetchRequest.predicate {
             predicates.append(predicate)
@@ -179,7 +186,7 @@ class FetchRequestMap<T: NSManagedObject & MapImage & DataSource>: NSObject, Map
         fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         
         let context = PersistenceController.shared.container.viewContext
-        return try? context.fetch(fetchRequest)
+        return try? context.fetch(fetchRequest) as? [any DataSource]
     }
     
 }

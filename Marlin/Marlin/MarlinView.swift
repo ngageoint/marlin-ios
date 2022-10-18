@@ -63,7 +63,7 @@ struct MarlinView: View {
             mixins.append(DFRSMap(showAsTiles: true))
         }
         if UserDefaults.standard.dataSourceEnabled(Light.self) {
-            mixins.append(LightMap(showAsTiles: true))
+            mixins.append(LightMap<Light>(showAsTiles: true))
         }
         if UserDefaults.standard.dataSourceEnabled(Port.self) {
             mixins.append(PortMap(showAsTiles: true))
