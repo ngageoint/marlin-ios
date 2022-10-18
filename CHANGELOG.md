@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 
 ## 0.7.7
   * Filtering
+  * Sorting
+  * Light settings map is not affected by lights not being loaded yet
+  * Fix light range parsing due to MSI API change
+  * Database reset
+  * Updated seed data
 
 ## 0.7.6
   * Fixed crash caused by a light in Italy not being parsed properly
