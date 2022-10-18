@@ -12,6 +12,7 @@ import Combine
 struct SearchView: View {
     @AppStorage("searchEnabled") var searchEnabled: Bool = false
     @State var search: String = ""
+    @FocusState private var searchFocused: Bool
     let searchPublisher = PassthroughSubject<String, Never>()
     @AppStorage("searchExpanded") var searchExpanded: Bool = false
     @ObservedObject var mapState: MapState
@@ -25,9 +26,16 @@ struct SearchView: View {
                         .frame(width: 24, height: 24, alignment: .center)
                         .onTapGesture {
                             searchExpanded.toggle()
+                            searchFocused = searchExpanded
                         }
                     Group {
                         TextField("Search", text: $search)
+                            .focused($searchFocused)
+                            .accentColor(Color.primaryColor)
+                            .submitLabel(SubmitLabel.done)
+                            .onSubmit {
+                                searchFocused.toggle()
+                            }
                             .foregroundColor(Color.onSurfaceColor)
                             .frame(maxWidth: searchExpanded ? .infinity : 0)
                             .onChange(of: search) { search in
