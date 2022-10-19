@@ -170,6 +170,7 @@ struct FilterView: View {
                     Text(property.name).tag(property)
                 }
             }
+            .scaledToFill()
             .labelsHidden()
             .tint(Color.primaryColorVariant)
             
@@ -179,6 +180,7 @@ struct FilterView: View {
                         Text(comparison.rawValue).tag(comparison)
                     }
                 }
+                .scaledToFill()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
             } else if selectedProperty.type == DataSourcePropertyType.date {
@@ -187,6 +189,7 @@ struct FilterView: View {
                         Text(comparison.rawValue).tag(comparison)
                     }
                 }
+                .scaledToFill()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
             } else if selectedProperty.type == DataSourcePropertyType.enumeration {
@@ -195,6 +198,7 @@ struct FilterView: View {
                         Text(comparison.rawValue).tag(comparison)
                     }
                 }
+                .scaledToFill()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
             } else if selectedProperty.type == DataSourcePropertyType.location {
@@ -203,6 +207,7 @@ struct FilterView: View {
                         Text(comparison.rawValue).tag(comparison)
                     }
                 }
+                .scaledToFill()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
             } else {
@@ -211,6 +216,7 @@ struct FilterView: View {
                         Text(comparison.rawValue).tag(comparison)
                     }
                 }
+                .scaledToFill()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
             }
@@ -220,21 +226,21 @@ struct FilterView: View {
     @ViewBuilder
     func inputType(selectedProperty: DataSourceProperty) -> some View {
         if selectedProperty.type == .double || selectedProperty.type == .float {
-            HStack {
+            HStack(spacing: 0) {
                 propertyNameAndComparison()
                 TextField(selectedProperty.name, value: $valueDouble, formatter: doubleFormatter)
                 .keyboardType(.decimalPad)
                 .underlineTextField()
             }
         } else if selectedProperty.type == .int {
-            HStack {
+            HStack(spacing: 0) {
                 propertyNameAndComparison()
                 TextField(selectedProperty.name, value: $valueInt, formatter: intFormatter)
                 .keyboardType(.numberPad)
                 .underlineTextField()
             }
         } else if selectedProperty.type == .date {
-            HStack {
+            HStack(spacing: 0) {
                 propertyNameAndComparison()
                 if selectedComparison == .window {
                     Picker("Window", selection: $windowUnits) {
@@ -242,6 +248,7 @@ struct FilterView: View {
                             Text(unit.rawValue).tag(unit)
                         }
                     }
+                    .scaledToFill()
                     .labelsHidden()
                     .tint(Color.primaryColorVariant)
                 } else {
@@ -256,7 +263,7 @@ struct FilterView: View {
                 }
             }
         } else if selectedProperty.type == .enumeration {
-            HStack {
+            HStack(spacing: 0) {
                 propertyNameAndComparison()
                 if let enumerationValues = selectedProperty.enumerationValues {
                     Picker("Enumeration", selection: $selectedEnumeration) {
@@ -265,6 +272,7 @@ struct FilterView: View {
                             Text(key).tag(key)
                         }
                     }
+                    .scaledToFill()
                     .labelsHidden()
                     .tint(Color.primaryColorVariant)
                 }

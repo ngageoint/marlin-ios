@@ -58,11 +58,15 @@ struct MSIListView<T: NSManagedObject & DataSourceViewBuilder>: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     FilterView(dataSource: T.self)
+                        .padding(.trailing, 16)
+                        .padding(.top, 8)
                         .background(Color.surfaceColor)
                     
-                    Spacer()
                 }
+                .background(Color.surfaceColor)
                 
+                Spacer()
+                    .foregroundColor(Color.backgroundColor)
             }
             .navigationTitle("\(T.dataSourceName) Filters")
             .background(Color.backgroundColor)
