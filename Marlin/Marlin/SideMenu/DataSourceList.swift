@@ -60,7 +60,7 @@ class DataSourceList: ObservableObject {
             item == dataSourceItem
         }
         // set the order of the dropped
-        tabs.insert(dataSourceItem, at: 0)
+        tabs.insert(dataSourceItem, at: position)
         
         // reorder the tab datasources
         for i in 0...(tabs.count - 1) {
@@ -76,13 +76,12 @@ class DataSourceList: ObservableObject {
             }
             
             // reorder the non tabs
-            if nonTabs.count > 1 {
-                for i in (1)...(nonTabs.count - 1) {
-                    nonTabs[i].order = last.order + i
+            if nonTabs.count > 0 {
+                for i in 0...nonTabs.count - 1 {
+                    nonTabs[i].order = i + tabs.count
                 }
             }
         }
-        
         userTabs = tabs.count
     }
     

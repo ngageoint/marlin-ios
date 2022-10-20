@@ -17,7 +17,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     static let shared = LocationManager()
     
-    private let locationManager = CLLocationManager()
+    private var locationManager: CLLocationManager?
     @Published var locationStatus: CLAuthorizationStatus?
     @Published var lastLocation: CLLocation?
     @Published var currentNavArea: NavigationalWarningNavArea?
@@ -30,14 +30,14 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     private override init() {
         super.init()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestWhenInUseAuthorization()
-        DispatchQueue.main.async {
-            self.locationManager.startUpdatingLocation()
-        }
-        
+        locationManager = CLLocationManager()
+        locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager?.delegate = self
         initializeGeoPackage()
+    }
+    
+    func requestAuthorization() {
+        locationManager?.requestWhenInUseAuthorization()
     }
     
     func initializeGeoPackage() {
@@ -80,6 +80,12 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         locationStatus = status
+        NotificationCenter.default.post(Notification(name: .LocationAuthorizationStatusChanged, object: status))
+        if status == .authorizedAlways || status == .authorizedWhenInUse {
+            DispatchQueue.main.async {
+                self.locationManager?.startUpdatingLocation()
+            }
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

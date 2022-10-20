@@ -146,6 +146,14 @@ extension Color {
     static var landColor: Color {
         return Color(uiColor: dynamicLandColor)
     }
+    
+    static var ngaGreen: Color {
+        return Color(uiColor: UIColor(rgbValue: 0x2999A0))
+    }
+    
+    static var ngaBlue: Color {
+        return Color(uiColor: UIColor(rgbValue: 0x154572))
+    }
 
 }
 

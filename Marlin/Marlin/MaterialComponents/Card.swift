@@ -169,3 +169,36 @@ extension View {
     }
 }
 
+struct GradientViewModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .tint(Color.onPrimaryColor)
+            .foregroundColor(Color.onPrimaryColor)
+            .background(
+                LinearGradient(gradient: Gradient(colors: [.secondaryColor, .primaryColor]), startPoint: .bottom, endPoint: UnitPoint(x: 0.5, y: 0.37))
+            )
+    }
+}
+
+extension View {
+    func gradientView() -> some View {
+        modifier(GradientViewModifier())
+    }
+}
+
+struct InverseGradientViewModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .tint(Color.onPrimaryColor)
+            .foregroundColor(Color.onPrimaryColor)
+            .background(
+                LinearGradient(gradient: Gradient(colors: [.primaryColor, .secondaryColor]), startPoint: .bottom, endPoint: UnitPoint(x: 0.5, y: -0.5))
+            )
+    }
+}
+
+extension View {
+    func inverseGradientView() -> some View {
+        modifier(InverseGradientViewModifier())
+    }
+}

@@ -54,17 +54,6 @@ struct MarlinApp: App {
         shared = MSI.shared
         appState = MSI.shared.appState
         persistenceController = PersistenceController.shared
-        let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            
-//            if let error = error {
-//                // Handle the error here.
-//            }
-            
-            // Enable or disable features based on the authorization.
-        }
-        
-        
     }
 
     var body: some Scene {

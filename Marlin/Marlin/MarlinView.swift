@@ -42,6 +42,7 @@ struct MarlinView: View {
     @AppStorage("userTrackingMode") var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
     @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = true
     @AppStorage("disclaimerAccepted") var disclaimerAccepted: Bool = false
+    @AppStorage("onboardingComplete") var onboardingComplete: Bool = false
 
     let mapItemsTappedPub = NotificationCenter.default.publisher(for: .MapItemsTapped)
     let mapViewDisappearingPub = NotificationCenter.default.publisher(for: .MapViewDisappearing)
@@ -83,6 +84,9 @@ struct MarlinView: View {
     var body: some View {
         ZStack(alignment: .top) {
             
+            if !onboardingComplete {
+                OnboardingView(dataSourceList: dataSourceList)
+            } else
             if !disclaimerAccepted {
                 VStack(spacing: 16) {
                     Text("Disclaimer")
@@ -94,11 +98,7 @@ struct MarlinView: View {
                         }
                     }
                 }
-                .tint(Color.onPrimaryColor)
-                .foregroundColor(Color.onPrimaryColor)
-                .background(
-                    LinearGradient(gradient: Gradient(colors: [.secondaryColor, .primaryColor]), startPoint: .bottom, endPoint: UnitPoint(x: 0.5, y: 0.37))
-                )
+                .gradientView()
             } else {
                 
                 if horizontalSizeClass == .compact {

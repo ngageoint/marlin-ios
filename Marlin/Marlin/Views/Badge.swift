@@ -23,3 +23,21 @@ struct Badge: View {
         }
     }
 }
+
+struct CheckBadge: View {
+    @Binding var on: Bool
+    
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+            Color.clear
+            if on {
+                Image(systemName: "checkmark.circle.fill")
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(Color.white, Color.secondaryColor)
+                    .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 1))
+                    .alignmentGuide(.top) { $0[.bottom] }
+                    .alignmentGuide(.trailing) { $0[.trailing] - $0.width * 0.25 }
+            }
+        }
+    }
+}

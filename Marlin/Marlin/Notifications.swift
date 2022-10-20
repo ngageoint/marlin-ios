@@ -32,6 +32,7 @@ extension Notification.Name {
     public static let DataSourceLoading = Notification.Name("DataSourceLoading")
     public static let DataSourceLoaded = Notification.Name("DataSourceLoaded")
     public static let MappedDataSourcesUpdated = Notification.Name("MappedDataSourcesUpdated")
+    public static let LocationAuthorizationStatusChanged = Notification.Name("LocationAuthorizationStatusChanged")
 }
 
 struct FocusMapOnItemNotification {
