@@ -33,38 +33,14 @@ class MSIListViewModel<T: DataSource>: NSObject, NSFetchedResultsControllerDeleg
         filterPublisher
             .removeDuplicates()
             .sink { output in
-            guard let output = output else {
-                return
-            }
-            do {
-                // Create JSON Decoder
-                let decoder = JSONDecoder()
-                
-                let filter = try decoder.decode([DataSourceFilterParameter].self, from: output)
-                self.filters = filter
                 self.setupFetchedResultsController()
-            } catch {
-                print("Unable to Decode filter (\(error))")
             }
-        }
-        .store(in: &cancellable)
+            .store(in: &cancellable)
         
         sortPublisher
             .removeDuplicates()
             .sink { output in
-                let userSort = UserDefaults.standard.sort(T.key)
-                if userSort.isEmpty {
-                    self.sortDescriptors = T.defaultSort
-                } else {
-                    self.sortDescriptors = userSort
-                }
-                if self.sortDescriptors[0].section {
-                    self.sectionKey = self.sortDescriptors[0].property.key
-                } else {
-                    self.sectionKey = nil
-                }
                 self.setupFetchedResultsController()
-
             }
             .store(in: &cancellable)
     }
@@ -81,6 +57,8 @@ class MSIListViewModel<T: DataSource>: NSObject, NSFetchedResultsControllerDeleg
         } else {
             self.sectionKey = nil
         }
+        
+        self.filters = UserDefaults.standard.filter(T.self)
         
         var predicates: [NSPredicate] = []
         

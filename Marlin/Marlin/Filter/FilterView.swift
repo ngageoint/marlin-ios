@@ -56,7 +56,7 @@ struct FilterView: View {
     init(dataSource: any DataSource.Type) {
         self.dataSource = dataSource
         self.dataSourceProperties = dataSource.properties
-        self._filters = State(initialValue: UserDefaults.standard.filter(dataSource.key))
+        self._filters = State(initialValue: UserDefaults.standard.filter(dataSource))
         self._selectedProperty = State(initialValue: dataSourceProperties[0])
     }
     

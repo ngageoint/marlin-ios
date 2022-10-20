@@ -45,7 +45,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         if let presetPredicate = fetchPredicate {
             filterPredicates.append(presetPredicate)
         } else if let showKeyPath = showKeyPath, let showItems = mapState[keyPath: showKeyPath], showItems == true {
-            let filters = UserDefaults.standard.filter(M.key)
+            let filters = UserDefaults.standard.filter(M.self)
             for filter in filters {
                 if let predicate = filter.toPredicate() {
                     filterPredicates.append(predicate)

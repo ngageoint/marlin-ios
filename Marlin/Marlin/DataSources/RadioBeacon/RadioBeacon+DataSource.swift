@@ -23,6 +23,7 @@ extension RadioBeacon: DataSource {
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
     static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(RadioBeacon.geopoliticalHeading), type: .string), ascending: true, section: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(RadioBeacon.featureNumber), type: .int), ascending: true)]
+    static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Location", key: #keyPath(RadioBeacon.mgrs10km), type: .location),

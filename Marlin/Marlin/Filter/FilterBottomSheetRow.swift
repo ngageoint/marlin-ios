@@ -59,10 +59,10 @@ struct FilterBottomSheetRow: View {
             .tint(Color.primaryColorVariant)
         }
         .onReceive(dataSourceUpdatedPub) { output in
-            filterCount = UserDefaults.standard.filter(dataSourceItem.key).count
+            filterCount = UserDefaults.standard.filter(dataSourceItem.dataSource).count
         }
         .onAppear {
-            filterCount = UserDefaults.standard.filter(dataSourceItem.key).count
+            filterCount = UserDefaults.standard.filter(dataSourceItem.dataSource).count
         }
     }
 }

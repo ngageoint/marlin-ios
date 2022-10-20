@@ -26,6 +26,7 @@ extension Light: DataSource {
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
     static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Section Header", key: #keyPath(Light.sectionHeader), type: .string), ascending: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .int), ascending: true)]
+    static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Location", key: #keyPath(Light.mgrs10km), type: .location),

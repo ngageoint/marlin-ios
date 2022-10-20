@@ -24,6 +24,7 @@ extension Port: DataSource {
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
     static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "World Port Index Number", key: #keyPath(Port.portNumber), type: .int), ascending: false)]
+    static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Location", key: #keyPath(Port.mgrs10km), type: .location),

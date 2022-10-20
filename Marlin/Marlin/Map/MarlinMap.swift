@@ -470,7 +470,9 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     }
     
     func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
-        marlinMap.mapState.userTrackingMode = mode.rawValue
+        DispatchQueue.main.async { [self] in
+            marlinMap.mapState.userTrackingMode = mode.rawValue
+        }
     }
     
     func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

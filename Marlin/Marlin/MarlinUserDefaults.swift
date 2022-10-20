@@ -144,8 +144,8 @@ extension UserDefaults {
         data(forKey: #function)
     }
     
-    func filter(_ key: String) -> [DataSourceFilterParameter] {
-        if let data = data(forKey: "\(key)Filter") {
+    func filter(_ dataSource: any DataSource.Type) -> [DataSourceFilterParameter] {
+        if let data = data(forKey: "\(dataSource.key)Filter") {
             do {
                 // Create JSON Decoder
                 let decoder = JSONDecoder()
@@ -158,7 +158,8 @@ extension UserDefaults {
                 print("Unable to Decode Notes (\(error))")
             }
         }
-        return []
+        
+        return dataSource.defaultFilter
     }
     
     func setFilter(_ key: String, filter: [DataSourceFilterParameter]) {

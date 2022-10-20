@@ -79,7 +79,9 @@ struct UserTrackingButton: View {
         @unknown default:
             userTrackingMode = MKUserTrackingMode.none.rawValue
         }
-        mapState?.userTrackingMode = userTrackingMode
+        DispatchQueue.main.async {
+            mapState?.userTrackingMode = userTrackingMode
+        }
     }
     
     func setButtonImage() {

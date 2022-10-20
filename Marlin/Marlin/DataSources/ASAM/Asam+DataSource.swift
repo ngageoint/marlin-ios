@@ -27,6 +27,7 @@ extension Asam: DataSource {
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
     static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), ascending: false)]
+    static var defaultFilter: [DataSourceFilterParameter] = [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last365Days)]
     
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date),

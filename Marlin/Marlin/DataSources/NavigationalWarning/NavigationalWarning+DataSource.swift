@@ -31,6 +31,8 @@ extension NavigationalWarning: DataSource {
     
     static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Navigational Area", key: "navArea", type: .string), ascending: false), DataSourceSortParameter(property:DataSourceProperty(name: "Issue Date", key: "issueDate", type: .date), ascending: false)]
     
+    static var defaultFilter: [DataSourceFilterParameter] = []
+    
     static var properties: [DataSourceProperty] = []
 }
 

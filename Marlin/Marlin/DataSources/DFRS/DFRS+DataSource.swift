@@ -24,6 +24,7 @@ extension DFRS: DataSource {
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
     static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Area Name", key: #keyPath(DFRS.areaName), type: .string), ascending: true), DataSourceSortParameter(property:DataSourceProperty(name: "Station Number", key: #keyPath(DFRS.stationNumber), type: .double), ascending: true)]
+    static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Latitude", key: #keyPath(DFRS.latitude), type: .double),

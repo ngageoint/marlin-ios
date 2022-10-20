@@ -70,6 +70,7 @@ struct DataSourceProperty: Hashable, Identifiable, Codable {
 protocol DataSource: BatchImportable {
     static var properties: [DataSourceProperty] { get }
     static var defaultSort: [DataSourceSortParameter] { get }
+    static var defaultFilter: [DataSourceFilterParameter] { get }
     static var isMappable: Bool { get }
     static var dataSourceName: String { get }
     static var fullDataSourceName: String { get }

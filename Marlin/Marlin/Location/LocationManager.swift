@@ -32,6 +32,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         super.init()
         locationManager = CLLocationManager()
         locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager?.distanceFilter = 10
         locationManager?.delegate = self
         initializeGeoPackage()
     }
@@ -80,6 +81,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         locationStatus = status
+        print("xxx location auth status = \(statusString)")
         NotificationCenter.default.post(Notification(name: .LocationAuthorizationStatusChanged, object: status))
         if status == .authorizedAlways || status == .authorizedWhenInUse {
             DispatchQueue.main.async {

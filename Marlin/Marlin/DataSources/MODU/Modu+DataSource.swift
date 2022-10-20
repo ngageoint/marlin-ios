@@ -20,6 +20,7 @@ extension Modu: DataSource {
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
     static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date), ascending: false)]
+    static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Location", key: #keyPath(Modu.mgrs10km), type: .location),
