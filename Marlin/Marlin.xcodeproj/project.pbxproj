@@ -105,6 +105,7 @@
 		F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */; };
 		F7B7064328BAADD50026DE88 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B7064228BAADD50026DE88 /* CircleImage.swift */; };
 		F7C23DFC2906F1460002A7DF /* Metrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23DFB2906F1460002A7DF /* Metrics.swift */; };
+		F7C23DFE290721680002A7DF /* SubmitReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23DFD290721680002A7DF /* SubmitReportView.swift */; };
 		F7C3679428CCC8E500AE1265 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C3679328CCC8E500AE1265 /* DisclaimerView.swift */; };
 		F7C3679928D0AEF400AE1265 /* DisplaySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C3679828D0AEF400AE1265 /* DisplaySettings.swift */; };
 		F7D2225028E4A27C00F527F2 /* FilterBottomSheetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */; };
@@ -331,6 +332,7 @@
 		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7B7064228BAADD50026DE88 /* CircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
 		F7C23DFB2906F1460002A7DF /* Metrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metrics.swift; sourceTree = "<group>"; };
+		F7C23DFD290721680002A7DF /* SubmitReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitReportView.swift; sourceTree = "<group>"; };
 		F7C3679328CCC8E500AE1265 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
 		F7C3679828D0AEF400AE1265 /* DisplaySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySettings.swift; sourceTree = "<group>"; };
 		F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterBottomSheetRow.swift; sourceTree = "<group>"; };
@@ -868,6 +870,7 @@
 				F7FFB34428DE18B900C31AA3 /* Badge.swift */,
 				F76B4A7128EB8AB20012BF4F /* MSIListViewModel.swift */,
 				F71E3E3B28F99626002F2019 /* CurrentLocation.swift */,
+				F7C23DFD290721680002A7DF /* SubmitReportView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1316,6 +1319,7 @@
 				F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */,
 				F7FFB33F28DA104200C31AA3 /* FilterBottomSheet.swift in Sources */,
 				F7C3679428CCC8E500AE1265 /* DisclaimerView.swift in Sources */,
+				F7C23DFE290721680002A7DF /* SubmitReportView.swift in Sources */,
 				F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */,
 				F707BA87287C6596006A94C4 /* LightCard.swift in Sources */,
 				F74B9B1128B7DACB0097D448 /* RadioBeaconDetailView.swift in Sources */,

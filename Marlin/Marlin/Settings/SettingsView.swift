@@ -31,12 +31,13 @@ struct SettingsView: View {
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)
                 Text("Disclaimer")
+                    .primary()
             }
             
             NavigationLink {
                 VStack {
                     Text("Marlin v\(version)b\(buildVersion)")
-                    .font(Font.headline6)
+                        .primary()
                     Spacer()
                 }
                 .padding([.leading, .top, .bottom, .trailing], 16)
@@ -52,6 +53,7 @@ struct SettingsView: View {
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)
                 Text("Marlin v\(version)")
+                    .primary()
                 Spacer()
             }
             .contentShape(Rectangle())
@@ -65,6 +67,7 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "magnifyingglass")
                             Text("Search Enabled")
+                                .primary()
                         }
                     })
                     .padding([.top, .bottom], 8)
@@ -72,6 +75,7 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "slider.horizontal.3")
                             Text("Filter Enabled")
+                                .primary()
                         }
                     })
                     .padding([.top, .bottom], 8)
@@ -79,6 +83,7 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "arrow.up.arrow.down")
                             Text("Sort Enabled")
+                                .primary()
                         }
                     })
                     .padding([.top, .bottom], 8)
@@ -86,6 +91,7 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "ruler.fill")
                             Text("Show Map Scale (requires restart)")
+                                .primary()
                         }
                     })
                     .padding([.top, .bottom], 8)
@@ -93,6 +99,7 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "rotate.3d")
                             Text("Enable Flyover Map Types")
+                                .primary()
                         }
                     })
                     .padding([.top, .bottom], 8)

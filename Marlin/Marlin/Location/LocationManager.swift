@@ -81,7 +81,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         locationStatus = status
-        print("xxx location auth status = \(statusString)")
         NotificationCenter.default.post(Notification(name: .LocationAuthorizationStatusChanged, object: status))
         if status == .authorizedAlways || status == .authorizedWhenInUse {
             DispatchQueue.main.async {

@@ -105,6 +105,31 @@ struct SideMenuContent: View {
             .padding(.top, 16)
             .padding(.bottom, 8)
             .background(Color.backgroundColor)
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(alignment: .center) {
+                    Image(systemName: "doc.fill.badge.plus")
+                        .tint(Color.onSurfaceColor)
+                        .opacity(0.60)
+                    Text("Submit Report to NGA")
+                        .font(Font.body1)
+                        .foregroundColor(Color.onSurfaceColor)
+                        .opacity(0.87)
+                    Spacer()
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    NotificationCenter.default.post(name: .SwitchTabs, object: "submitReport")
+                }
+                .padding([.leading, .top, .bottom, .trailing], 16)
+                Divider()
+            }
+            .background(Color.surfaceColor)
+            HStack {
+                Spacer()
+            }
+            .padding(.top, 16)
+            .padding(.bottom, 8)
+            .background(Color.backgroundColor)
             SettingsCell()
             Spacer()
         }

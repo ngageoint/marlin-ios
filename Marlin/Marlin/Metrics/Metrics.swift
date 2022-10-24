@@ -41,7 +41,12 @@ class Metrics {
     
     func settingsView() {
         NSLog("Record Settings View")
-//        MatomoTracker.shared.track(view:["app", "sideNavigation", "settings"])
+//        MatomoTracker.shared.track(view:["app", "settings"])
+    }
+    
+    func submitReportView() {
+        NSLog("Record Submit Report View")
+        //        MatomoTracker.shared.track(view:["app", "submitReport"])
     }
     
     func searchView() {

@@ -78,6 +78,14 @@ struct MarlinCompactWidth: View {
                         .isDetailLink(false)
                         .hidden()
                         
+                        NavigationLink(tag: "submitReport", selection: $selection) {
+                            SubmitReportView()
+                        } label: {
+                            EmptyView()
+                        }
+                        .isDetailLink(false)
+                        .hidden()
+                        
                         ForEach(dataSourceList.nonTabs) { dataSource in
                             
                             NavigationLink(tag: "\(dataSource.key)List", selection: $selection) {
@@ -146,6 +154,9 @@ struct MarlinCompactWidth: View {
                     if output == "settings" {
                         selectedTab = "map"
                         selection = "settings"
+                    } else if output == "submitReport" {
+                        selectedTab = "map"
+                        selection = "submitReport"
                     } else if dataSourceList.tabs.contains(where: { item in
                             item.key == output
                         }) {
