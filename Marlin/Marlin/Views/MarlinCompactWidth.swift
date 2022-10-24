@@ -231,9 +231,11 @@ struct MarlinCompactWidth: View {
     func topButtons() -> some View {
         HStack(alignment: .top, spacing: 8) {
             // top left button stack
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 8) {
                 SearchView(mapState: marlinMap.mapState)
             }
+            .padding(.leading, 8)
+            .padding(.top, 16)
             Spacer()
             // top right button stack
             VStack(alignment: .trailing, spacing: 16) {
@@ -248,23 +250,46 @@ struct MarlinCompactWidth: View {
                     )
                 }
                 .isDetailLink(false)
-                .offset(x: -8, y: 16)
                 .fixedSize()
                 .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini))
             }
+            .padding(.trailing, 8)
+            .padding(.top, 16)
         }
     }
     
     @ViewBuilder
     func bottomButtons() -> some View {
         HStack(alignment: .bottom, spacing: 0) {
+            VStack(alignment: .leading, spacing: 8) {
+                ForEach(dataSourceList.allTabs, id: \.self) { dataSource in
+                    if dataSource.dataSource.isMappable {
+                        Button(action: {
+                            dataSource.showOnMap.toggle()
+                        }) {
+                            Label(title: {}) {
+                                if let image = dataSource.dataSource.image {
+                                    Image(uiImage: image)
+                                        .renderingMode(.template)
+                                        .tint(Color.white)
+                                }
+                            }
+                        }
+                        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: dataSource.showOnMap ? Color.white : Color.disabledColor, backgroundColor: dataSource.showOnMap ? Color(uiColor: dataSource.dataSource.color) : Color.disabledBackground))
+                    }
+                }
+            }
+            .padding(.leading, 8)
+            .padding(.bottom, 30)
+            
             Spacer()
             // bottom right button stack
             VStack(alignment: .trailing, spacing: 16) {
                 UserTrackingButton(mapState: marlinMap.mapState)
-                    .offset(x: -8, y: -24)
                     .fixedSize()
             }
+            .padding(.trailing, 8)
+            .padding(.bottom, 30)
         }
     }
     

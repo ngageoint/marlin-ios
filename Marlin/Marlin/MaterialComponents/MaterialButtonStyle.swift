@@ -17,6 +17,7 @@ enum ButtonType {
 enum FloatingButtonType {
     case primary
     case secondary
+    case custom
 }
 
 enum FloatingButtonSize {
@@ -50,13 +51,12 @@ struct MaterialFloatingButtonStyle: ButtonStyle {
     let type: FloatingButtonType
     let size: FloatingButtonSize
     let extended: Bool
+    let foregroundColor: Color
+    let backgroundColor: Color
     
     func makeBody(configuration: Configuration) -> some View {
         let borderWidth = 0.0
-        var foregroundColor = Color.primaryColorVariant
-        if type == .primary {
-            foregroundColor = Color.onPrimaryColor
-        }
+
         
         return configuration
             .label
@@ -71,16 +71,22 @@ struct MaterialFloatingButtonStyle: ButtonStyle {
                     ZStack {
                         if type == .primary {
                             // Solid fill
-                            RoundedRectangle(cornerRadius: cornerRadius).fill(Color.primaryColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.4), radius: (configuration.isPressed ? 8 : 3), x: 0, y: 4)
+                            RoundedRectangle(cornerRadius: cornerRadius).fill(backgroundColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.4), radius: (configuration.isPressed ? 8 : 3), x: 0, y: 4)
                             
                             // tap effect
                             Circle().fill(Color.white).scaleEffect(configuration.isPressed ? scale : 0.0001).opacity(configuration.isPressed ? 0.32 : 0.0).cornerRadius(cornerRadius)
                         } else if type == .secondary {
                             // Solid fill surface color
-                            RoundedRectangle(cornerRadius: cornerRadius).fill(Color.surfaceColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.4), radius: (configuration.isPressed ? 8 : 3), x: 0, y: 4)
+                            RoundedRectangle(cornerRadius: cornerRadius).fill(backgroundColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.4), radius: (configuration.isPressed ? 8 : 3), x: 0, y: 4)
                             
                             // tap effect
                             Circle().fill(Color.primaryColor).scaleEffect(configuration.isPressed ? scale : 0.0001).opacity(configuration.isPressed ? 0.16 : 0.0).cornerRadius(cornerRadius)
+                        } else {
+                            // Solid fill surface color
+                            RoundedRectangle(cornerRadius: cornerRadius).fill(backgroundColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.4), radius: (configuration.isPressed ? 8 : 3), x: 0, y: 4)
+                            
+                            // tap effect
+                            Circle().fill(Color.surfaceColor).scaleEffect(configuration.isPressed ? scale : 0.0001).opacity(configuration.isPressed ? 0.16 : 0.0).cornerRadius(cornerRadius)
                         }
                     }
                 }
@@ -91,10 +97,25 @@ struct MaterialFloatingButtonStyle: ButtonStyle {
             )
     }
     
-    init(type: FloatingButtonType = .primary, size: FloatingButtonSize = .regular, extended: Bool = false) {
+    init(type: FloatingButtonType = .primary, size: FloatingButtonSize = .regular, extended: Bool = false, foregroundColor: Color? = nil, backgroundColor: Color? = nil) {
         self.type = type
         self.size = size
         self.extended = extended
+        if let foregroundColor = foregroundColor {
+            self.foregroundColor = foregroundColor
+        } else if type == .primary {
+            self.foregroundColor = Color.onPrimaryColor
+        } else {
+            self.foregroundColor = Color.primaryColorVariant
+        }
+        
+        if let backgroundColor = backgroundColor {
+            self.backgroundColor = backgroundColor
+        } else if type == .primary {
+            self.backgroundColor = Color.primaryColor
+        } else {
+            self.backgroundColor = Color.surfaceColor
+        }
     }
 }
 

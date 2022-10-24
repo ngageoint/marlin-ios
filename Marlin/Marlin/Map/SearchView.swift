@@ -115,7 +115,6 @@ struct SearchView: View {
                 RoundedRectangle(cornerRadius: 20).fill(Color.surfaceColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.4), radius: 3, x: 0, y: 4)
                     .animation(.default, value: searchExpanded)
             )
-            .offset(x: 8, y: 16)
         }
     }
     
