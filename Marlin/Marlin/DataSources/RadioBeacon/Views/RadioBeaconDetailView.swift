@@ -50,6 +50,9 @@ struct RadioBeaconDetailView: View {
         .dataSourceDetailList()
         .navigationTitle("\(radioBeacon.name ?? RadioBeacon.dataSourceName)" )
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            Metrics.shared.dataSourceDetail(dataSource: RadioBeacon.self)
+        }
     }
 }
 

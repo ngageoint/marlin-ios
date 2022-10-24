@@ -19,7 +19,9 @@ class DataSourceList: ObservableObject {
         DataSourceItem(dataSource: RadioBeacon.self),
         DataSourceItem(dataSource: DifferentialGPSStation.self),
         DataSourceItem(dataSource: DFRS.self)
-    ].sorted(by: { one, two in
+    ].filter({ item in
+        item.enabled
+    }).sorted(by: { one, two in
         return one.order < two.order
     })
     
@@ -134,12 +136,15 @@ class DataSourceItem: ObservableObject, Identifiable, Hashable, Equatable {
             }
         }
     }
+    @AppStorage<Bool> var enabled: Bool
     
     init(dataSource: any DataSource.Type) {
         self.dataSource = dataSource
         self._order = AppStorage(wrappedValue: 0, "\(dataSource.key)Order")
         self._showOnMap = AppStorage(wrappedValue: dataSource.isMappable, "showOnMap\(dataSource.key)")
         self._filterData = AppStorage(wrappedValue: Data(), "\(dataSource.key)Filter")
+        self._enabled = AppStorage(wrappedValue: UserDefaults.standard.dataSourceEnabled(dataSource.self), "\(dataSource.key)DataSourceEnabled")
+        
     }
     
     var description: String {

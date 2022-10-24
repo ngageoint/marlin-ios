@@ -61,6 +61,9 @@ struct NavigationalWarningDetailView: View {
         .dataSourceDetailList()
         .navigationTitle("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            Metrics.shared.dataSourceDetail(dataSource: NavigationalWarning.self)
+        }
     }
 }
 

@@ -2,8 +2,8 @@ PODS:
   - Alamofire (5.6.2)
   - color-ios (1.0.0)
   - crs-ios (1.0.3)
-  - gars-ios (1.1.0):
-    - grid-ios (~> 1.0.2)
+  - gars-ios (1.1.1):
+    - grid-ios (~> 1.0.3)
   - geopackage-ios (7.3.0):
     - color-ios (~> 1.0.0)
     - ogc-api-features-json-ios (~> 4.1.0)
@@ -11,14 +11,17 @@ PODS:
     - sf-wkb-ios (~> 4.1.0)
     - sf-wkt-ios (~> 2.1.0)
     - tiff-ios (~> 4.0.0)
-  - grid-ios (1.0.2):
+  - grid-ios (1.0.3):
     - color-ios (~> 1.0.0)
     - sf-ios (~> 4.1.0)
   - KIF (3.8.7):
     - KIF/Core (= 3.8.7)
   - KIF/Core (3.8.7)
-  - mgrs-ios (1.1.0):
-    - grid-ios (~> 1.0.2)
+  - MatomoTracker (7.5.2):
+    - MatomoTracker/Core (= 7.5.2)
+  - MatomoTracker/Core (7.5.2)
+  - mgrs-ios (1.1.1):
+    - grid-ios (~> 1.0.3)
   - Nimble (10.0.0)
   - ogc-api-features-json-ios (4.1.0):
     - sf-geojson-ios (~> 4.1.0)
@@ -59,6 +62,7 @@ DEPENDENCIES:
   - gars-ios
   - geopackage-ios
   - KIF
+  - MatomoTracker (~> 7.5)
   - mgrs-ios
   - Nimble
   - OHHTTPStubs
@@ -74,6 +78,7 @@ SPEC REPOS:
     - geopackage-ios
     - grid-ios
     - KIF
+    - MatomoTracker
     - mgrs-ios
     - Nimble
     - ogc-api-features-json-ios
@@ -92,11 +97,12 @@ SPEC CHECKSUMS:
   Alamofire: d368e1ff8a298e6dde360e35a3e68e6c610e7204
   color-ios: de6e9f87578f3fa5b688a671d375cc799e52ca41
   crs-ios: b02a1ce24228f85cfc945507fc58b7a35b7bbb88
-  gars-ios: d41cbb5eb51f8e8f6407ec5213772f19830ec0b8
+  gars-ios: dbca28b97624f5e199eaf5cc6011aa716e677993
   geopackage-ios: 4f107db4241c4a6c53f6e5edbfd0e5a4e31163a9
-  grid-ios: 651e86865a7d485b5341766a4dc46e8c25f08ff1
+  grid-ios: bc7f691652c801486e5613096abe0fd684329b9f
   KIF: 779cdbca106633b94ecee7b036537490ebdbd9de
-  mgrs-ios: 6e1718f734ea5ace3ae3748cafa91f096f2b58fd
+  MatomoTracker: 1d98ddc58322fd9d65e1a6886b8e41363047bd13
+  mgrs-ios: aef86a1fed090fc158f5682a9e319a276ad29b23
   Nimble: 5316ef81a170ce87baf72dd961f22f89a602ff84
   ogc-api-features-json-ios: c528d5dbc44d0268efe44425439734f1240b6764
   OHHTTPStubs: 90eac6d8f2c18317baeca36698523dc67c513831
@@ -110,6 +116,6 @@ SPEC CHECKSUMS:
   sf-wkt-ios: c2d988fffb8091d3449d16c74cd215a9cb98f4a6
   tiff-ios: fb3f51fcd3400ea1dd8f710d2a7832a18d112580
 
-PODFILE CHECKSUM: 9b17c4be4a5fa4fd1d010dc3a184d27499ef86c0
+PODFILE CHECKSUM: 85f86a6c5d76e4f84a1cb7cdd59eeb78c287d4e2
 
 COCOAPODS: 1.11.3

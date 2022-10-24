@@ -85,6 +85,9 @@ struct LightDetailView: View {
             .dataSourceSection()
         }
         .dataSourceDetailList()
+        .onAppear {
+            Metrics.shared.dataSourceDetail(dataSource: Light.self)
+        }
     }
 }
 

@@ -179,6 +179,9 @@ struct MarlinView: View {
                 showBottomSheet.toggle()
             }
         }
+        .onAppear {
+            Metrics.shared.appLaunch()
+        }
     }
     
     func handleTappedItems(items: [any DataSource]?) -> [BottomSheetItem] {

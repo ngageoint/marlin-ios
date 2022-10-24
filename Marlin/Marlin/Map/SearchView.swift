@@ -27,6 +27,9 @@ struct SearchView: View {
                         .onTapGesture {
                             searchExpanded.toggle()
                             searchFocused = searchExpanded
+                            if searchExpanded {
+                                Metrics.shared.searchView()
+                            }
                         }
                     Group {
                         TextField("Search", text: $search)

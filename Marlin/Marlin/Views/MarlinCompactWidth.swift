@@ -47,6 +47,9 @@ struct MarlinCompactWidth: View {
                                     view.modifier(Hamburger(menuOpen: $menuOpen))
                                 }
                                 .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
+                                .onAppear {
+                                    Metrics.shared.mapView()
+                                }
                             VStack(spacing: 0) {
                                 // top of map
                                 CurrentLocation()

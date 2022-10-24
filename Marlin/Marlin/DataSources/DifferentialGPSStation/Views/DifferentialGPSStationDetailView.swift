@@ -49,5 +49,8 @@ struct DifferentialGPSStationDetailView: View {
         .dataSourceDetailList()
         .navigationTitle("\(differentialGPSStation.name ?? DifferentialGPSStation.dataSourceName)" )
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            Metrics.shared.dataSourceDetail(dataSource: DifferentialGPSStation.self)
+        }
     }
 }

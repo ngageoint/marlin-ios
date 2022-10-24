@@ -76,6 +76,9 @@ struct ModuDetailView: View {
         .dataSourceDetailList()
         .navigationTitle(modu.name ?? Modu.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            Metrics.shared.dataSourceDetail(dataSource: Modu.self)
+        }
     }
 }
 

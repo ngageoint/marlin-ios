@@ -80,5 +80,8 @@ struct DFRSDetailView: View {
                 .dataSourceSection()
         }
         .dataSourceDetailList()
+        .onAppear {
+            Metrics.shared.dataSourceDetail(dataSource: DFRS.self)
+        }
     }
 }

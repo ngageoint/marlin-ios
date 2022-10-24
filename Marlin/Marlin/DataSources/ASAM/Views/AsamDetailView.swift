@@ -88,6 +88,9 @@ struct AsamDetailView: View {
         .dataSourceDetailList()
         .navigationTitle(asam.reference ?? Asam.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            Metrics.shared.dataSourceDetail(dataSource: Asam.self)
+        }
     }
 }
 

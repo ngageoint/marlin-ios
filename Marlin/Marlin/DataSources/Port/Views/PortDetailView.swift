@@ -73,5 +73,8 @@ struct PortDetailView: View {
         .dataSourceDetailList()
         .navigationTitle(port.portName ?? Port.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            Metrics.shared.dataSourceDetail(dataSource: Port.self)
+        }
     }
 }

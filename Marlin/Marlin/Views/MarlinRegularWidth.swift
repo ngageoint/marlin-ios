@@ -64,6 +64,9 @@ struct MarlinRegularWidth: View {
                     marlinMap
                     
                         .ignoresSafeArea()
+                        .onAppear {
+                            Metrics.shared.mapView()
+                        }
                     VStack {
                         // top of map
                         HStack(alignment: .top, spacing: 0) {

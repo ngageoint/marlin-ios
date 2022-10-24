@@ -163,6 +163,9 @@ struct MapSettings: View {
         .navigationTitle("Map Settings")
         .navigationBarTitleDisplayMode(.inline)
         .listStyle(.grouped)
+        .onAppear {
+            Metrics.shared.mapSettingsView()
+        }
     }
 }
 

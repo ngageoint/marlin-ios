@@ -33,6 +33,7 @@ struct NavigationalWarningListView: View {
             if let lastLocation = locationManager.lastLocation {
                 mapState.center = MKCoordinateRegion(center: lastLocation.coordinate, span: MKCoordinateSpan(latitudeDelta: 30, longitudeDelta: 30))
             }
+            Metrics.shared.dataSourceList(dataSource: NavigationalWarning.self)
         }
     }
 }

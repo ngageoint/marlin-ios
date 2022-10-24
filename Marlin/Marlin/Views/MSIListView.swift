@@ -52,6 +52,9 @@ struct MSIListView<T: NSManagedObject & DataSourceViewBuilder>: View {
                 
             }
             GenericSectionedList<T>(filterPublisher: filterPublisher, sortPublisher: sortPublisher)
+                .onAppear {
+                    Metrics.shared.dataSourceList(dataSource: T.self)
+                }
         }
         .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)])))
         .bottomSheet(isPresented: $filterOpen, detents: .large) {

@@ -16,6 +16,7 @@ struct Hamburger: ViewModifier {
             ToolbarItem (placement: .navigationBarLeading)  {
                 HStack {
                     Button(action: {
+                        Metrics.shared.sideNavigationView()
                         menuOpen.toggle()
                     }) {
                         Image(systemName: "line.3.horizontal")

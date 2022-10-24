@@ -104,6 +104,9 @@ struct SettingsView: View {
         .listStyle(.grouped)
         .listRowBackground(Color.surfaceColor)
         .background(Color.backgroundColor)
+        .onAppear {
+            Metrics.shared.settingsView()
+        }
     }
 }
 
