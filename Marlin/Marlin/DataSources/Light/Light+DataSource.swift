@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import CoreData
+import Alamofire
 
 extension Light: DataSource {
     static var dateFormatter: DateFormatter {
@@ -53,15 +54,38 @@ extension Light: DataSource {
 }
 
 extension Light: BatchImportable {
-    static var seedDataFiles: [String]? = ["lights"]//["light110","light111","light112","light113","light114","light115","light116"]
+    static var seedDataFiles: [String]? = ["lights"]
     static var decodableRoot: Decodable.Type = LightsPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws -> Int {
+    static func getRequeryRequest(initialRequest: URLRequestConvertible) -> URLRequestConvertible? {
+        guard let url = initialRequest.urlRequest?.url else {
+            return nil
+        }
+        let components = URLComponents(string: url.absoluteString)
+        var volume: String? = nil
+        if let queryItems = components?.queryItems {
+            for queryItem in queryItems {
+                if queryItem.name == "volume" {
+                    volume = queryItem.value
+                }
+            }
+        }
+        if let volume = volume {
+            return MSIRouter.readLights(volume: volume)
+        }
+        return nil
+    }
+    
+    static func batchImport(value: Decodable?, initialLoad: Bool = false) async throws -> Int {
         guard let value = value as? LightsPropertyContainer else {
             return 0
         }
         let count = value.ngalol.count
         NSLog("Received \(count) \(Self.key) records.")
+        // if this is not the first load and we got back records, re-query
+        if count != 0 && !initialLoad {
+            return -1
+        }
         return try await Light.importRecords(from: value.ngalol, taskContext: PersistenceController.shared.newTaskContext())
     }
     

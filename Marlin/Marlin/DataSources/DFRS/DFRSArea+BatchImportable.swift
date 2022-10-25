@@ -13,7 +13,7 @@ extension DFRSArea: BatchImportable {
     static var key: String = "dfrsAreas"
     static var decodableRoot: Decodable.Type = DFRSAreaPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws -> Int {
+    static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
         guard let value = value as? DFRSAreaPropertyContainer else {
             return 0
         }

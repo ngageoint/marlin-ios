@@ -10,6 +10,7 @@ import UIKit
 import SwiftUI
 import MapKit
 import CoreData
+import Alamofire
 
 struct Throwable<T: Decodable>: Decodable {
     let result: Result<T, Error>
@@ -20,12 +21,19 @@ struct Throwable<T: Decodable>: Decodable {
 }
 
 protocol BatchImportable: NSManagedObject, Identifiable {
-    static func batchImport(value: Decodable?) async throws -> Int
+    static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int
     static func dataRequest() -> [MSIRouter]
     static var key: String { get }
     static var seedDataFiles: [String]? { get }
     static var decodableRoot: Decodable.Type { get }
     static func shouldSync() -> Bool
+    static func getRequeryRequest(initialRequest: URLRequestConvertible) -> URLRequestConvertible?
+}
+
+extension BatchImportable {
+    static func getRequeryRequest(initialRequest: URLRequestConvertible) -> URLRequestConvertible? {
+        return nil
+    }
 }
 
 class DataSourceImageCache {

@@ -47,7 +47,7 @@ extension Modu: BatchImportable {
     static var seedDataFiles: [String]? = ["modu"]
     static var decodableRoot: Decodable.Type = ModuPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws -> Int {
+    static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
         guard let value = value as? ModuPropertyContainer else {
             return 0
         }

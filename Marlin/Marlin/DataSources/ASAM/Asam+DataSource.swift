@@ -47,7 +47,7 @@ extension Asam: BatchImportable {
     static var seedDataFiles: [String]? = ["asam"]
     static var decodableRoot: Decodable.Type = AsamPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws -> Int {
+    static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
         guard let value = value as? AsamPropertyContainer else {
             return 0
         }

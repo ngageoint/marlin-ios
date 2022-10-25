@@ -165,7 +165,7 @@ extension Port: BatchImportable {
     static var seedDataFiles: [String]? = ["port"]
     static var decodableRoot: Decodable.Type = PortPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws -> Int {
+    static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
         guard let value = value as? PortPropertyContainer else {
             return 0
         }

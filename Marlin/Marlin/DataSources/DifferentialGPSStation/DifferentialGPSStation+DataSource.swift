@@ -58,7 +58,7 @@ extension DifferentialGPSStation: BatchImportable {
     static var seedDataFiles: [String]? = ["dgps"]
     static var decodableRoot: Decodable.Type = DifferentialGPSStationPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws -> Int {
+    static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
         guard let value = value as? DifferentialGPSStationPropertyContainer else {
             return 0
         }

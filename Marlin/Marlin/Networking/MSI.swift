@@ -125,7 +125,7 @@ public class MSI {
                         .responseDecodable(of: T.self, queue: queue) { response in
                             queue.async( execute:{
                                 Task.detached {
-                                    try await D.batchImport(value: response.value)
+                                    try await D.batchImport(value: response.value, initialLoad: true)
                                 }
                             })
                         }
@@ -153,21 +153,52 @@ public class MSI {
                 .responseDecodable(of: T.self, queue: queue) { response in
                     queue.async(execute:{
                         Task.detached {
-                            let count = try await D.batchImport(value: response.value)
+                            let count = try await D.batchImport(value: response.value, initialLoad: false)
                             
-                            let sum = await queryCounter.increment()
-                            let totalCount = await queryCounter.addToTotal(count: count)
-                            NSLog("Queried for \(sum) of \(requests.count) for \(dataType.key)")
-                            if sum == requests.count {
-                                DispatchQueue.main.async {
-                                    self.appState.loadingDataSource[D.key] = false
-                                    UserDefaults.standard.updateLastSyncTimeSeconds(D.self)
-                                    if let dataSource = dataType as? any DataSource.Type {
-                                        NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: dataSource))
-                                        if totalCount != 0 {
-                                            NotificationCenter.default.post(name: .DataSourceUpdated, object: dataSource.key)
+                            if count != -1 {
+                                let sum = await queryCounter.increment()
+                                let totalCount = await queryCounter.addToTotal(count: count)
+                                NSLog("Queried for \(sum) of \(requests.count) for \(dataType.key)")
+                                if sum == requests.count {
+                                    DispatchQueue.main.async {
+                                        self.appState.loadingDataSource[D.key] = false
+                                        UserDefaults.standard.updateLastSyncTimeSeconds(D.self)
+                                        if let dataSource = dataType as? any DataSource.Type {
+                                            NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: dataSource))
+                                            if totalCount != 0 {
+                                                NotificationCenter.default.post(name: .DataSourceUpdated, object: dataSource.key)
+                                            }
                                         }
                                     }
+                                }
+                            } else {
+                                // need to requery
+                                print("Requerying")
+                                if let requeryRequest = D.getRequeryRequest(initialRequest: request) {
+                                    self.session.request(requeryRequest)
+                                        .validate()
+                                        .responseDecodable(of: T.self, queue: queue) { response in
+                                            queue.async(execute:{
+                                                Task.detached {
+                                                    let count = try await D.batchImport(value: response.value, initialLoad: true)
+                                                    let sum = await queryCounter.increment()
+                                                    let totalCount = await queryCounter.addToTotal(count: count)
+                                                    NSLog("Queried for \(sum) of \(requests.count) for \(dataType.key)")
+                                                    if sum == requests.count {
+                                                        DispatchQueue.main.async {
+                                                            self.appState.loadingDataSource[D.key] = false
+                                                            UserDefaults.standard.updateLastSyncTimeSeconds(D.self)
+                                                            if let dataSource = dataType as? any DataSource.Type {
+                                                                NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: dataSource))
+                                                                if totalCount != 0 {
+                                                                    NotificationCenter.default.post(name: .DataSourceUpdated, object: dataSource.key)
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            })
+                                        }
                                 }
                             }
                         }

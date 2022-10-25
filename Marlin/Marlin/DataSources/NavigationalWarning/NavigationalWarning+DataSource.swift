@@ -41,7 +41,7 @@ extension NavigationalWarning: BatchImportable {
     static var seedDataFiles: [String]? = nil
     static var decodableRoot: Decodable.Type = NavigationalWarningPropertyContainer.self
     
-    static func batchImport(value: Decodable?) async throws -> Int {
+    static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
         guard let value = value as? NavigationalWarningPropertyContainer else {
             return 0
         }
