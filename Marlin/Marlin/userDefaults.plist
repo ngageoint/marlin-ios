@@ -32,8 +32,10 @@
 	<integer>6</integer>
 	<key>differentialGPSStationOrder</key>
 	<integer>7</integer>
-	<key>dfrsOrder</key>
+	<key>epubOrder</key>
 	<integer>8</integer>
+	<key>dfrsOrder</key>
+	<integer>9</integer>
 	<key>userTabs</key>
 	<integer>3</integer>
 	<key>actualRangeLights</key>

@@ -147,6 +147,7 @@ struct SearchView: View {
             }
             
             mapState.searchResults = response.mapItems
+            Metrics.shared.search(query: realSearch, resultCount: response.mapItems.count)
         }
     }
 }

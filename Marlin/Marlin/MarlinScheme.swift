@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import QuickLook
 
 extension Font {
     static var overline: Font {
@@ -193,6 +194,37 @@ class MarlinScheme: ObservableObject {
         
         UITabBar.appearance().standardAppearance = tabBarAppearance;
         UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+        
+        // this is used when we preview a file
+        let qlPreviewNavBarAppearance = UINavigationBar.appearance(whenContainedInInstancesOf: [QLPreviewController.self])
+        qlPreviewNavBarAppearance.isTranslucent = true
+        qlPreviewNavBarAppearance.tintColor = UIColor.label
+        qlPreviewNavBarAppearance.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.label,
+            NSAttributedString.Key.backgroundColor: Color.primaryUIColor
+        ];
+        qlPreviewNavBarAppearance.largeTitleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.label,
+            NSAttributedString.Key.backgroundColor: Color.primaryUIColor
+        ];
+        
+        // this is used when we save a file, even though we really use UIDocumentPickerViewController
+        let documentBrowserNavBarAppearance = UINavigationBar.appearance(whenContainedInInstancesOf: [UIDocumentBrowserViewController.self])
+        documentBrowserNavBarAppearance.isTranslucent = false
+        documentBrowserNavBarAppearance.tintColor = Color.onPrimaryUIColor
+        documentBrowserNavBarAppearance.barTintColor = Color.primaryUIColor
+        documentBrowserNavBarAppearance.backgroundColor = Color.primaryUIColor
+        documentBrowserNavBarAppearance.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: Color.onPrimaryUIColor,
+            NSAttributedString.Key.backgroundColor: Color.primaryUIColor
+        ];
+        documentBrowserNavBarAppearance.largeTitleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: Color.onPrimaryUIColor,
+            NSAttributedString.Key.backgroundColor: Color.primaryUIColor
+        ];
+        
+        let toolbarAppearance = UIToolbar.appearance(whenContainedInInstancesOf: [QLPreviewController.self])
+        toolbarAppearance.tintColor = UIColor.label
     }
     
     private func setTabBarItemColors(_ itemAppearance: UITabBarItemAppearance) {

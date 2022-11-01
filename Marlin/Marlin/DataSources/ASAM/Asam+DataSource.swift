@@ -18,7 +18,7 @@ extension Asam: DataSource {
     
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Anti-Shipping Activity Messages", comment: "ASAM data source display name")
+    static var fullDataSourceName: String = NSLocalizedString("Anti-Shipping Activity Messages", comment: "ASAM data source full display name")
     static var key: String = "asam"
     static var imageName: String? = "asam"
     static var systemImageName: String? = nil

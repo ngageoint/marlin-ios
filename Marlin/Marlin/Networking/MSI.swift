@@ -24,7 +24,7 @@ public class MSI {
         return Session(configuration: configuration, serverTrustManager: manager)
     }()
     
-    let masterDataList: [any BatchImportable.Type] = [Asam.self, Modu.self, NavigationalWarning.self, Light.self, Port.self, RadioBeacon.self, DifferentialGPSStation.self, DFRS.self, DFRSArea.self]
+    let masterDataList: [any BatchImportable.Type] = [Asam.self, Modu.self, NavigationalWarning.self, Light.self, Port.self, RadioBeacon.self, DifferentialGPSStation.self, DFRS.self, DFRSArea.self, ElectronicPublication.self]
     
     
     func loadAllData() {
@@ -62,6 +62,7 @@ public class MSI {
 
             NSLog("Fetching new data from the API for \(allLoadList.count) data sources")
             for importable in allLoadList {
+                NSLog("Fetching new data for \(importable.key)")
                 self.loadData(type: importable.decodableRoot, dataType: importable)
             }
         }

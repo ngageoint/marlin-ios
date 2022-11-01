@@ -144,6 +144,10 @@ extension UserDefaults {
         data(forKey: #function)
     }
     
+    @objc var epubFilter: Data? {
+        data(forKey: #function)
+    }
+    
     func filter(_ dataSource: any DataSource.Type) -> [DataSourceFilterParameter] {
         if let data = data(forKey: "\(dataSource.key)Filter") {
             do {
@@ -199,6 +203,10 @@ extension UserDefaults {
     }
     
     @objc var lightSort: Data? {
+        data(forKey: #function)
+    }
+    
+    @objc var epubSort: Data? {
         data(forKey: #function)
     }
     

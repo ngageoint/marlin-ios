@@ -325,6 +325,8 @@ struct MarlinCompactWidth: View {
             MSIListView<DifferentialGPSStation>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationFilter), sortPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationSort))
         } else if dataSource.key == DFRS.key {
             DFRSListView(focusedItem: itemWrapper)
+        } else if dataSource.key == ElectronicPublication.key {
+            ElectronicPublicationsList()
         }
     }
     

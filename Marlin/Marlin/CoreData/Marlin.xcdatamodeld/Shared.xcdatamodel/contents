@@ -88,6 +88,36 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
+    <entity name="ElectronicPublication" representedClassName=".ElectronicPublication" syncable="YES" codeGenerationType="category">
+        <attribute name="contentId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="downloadProgress" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="fileExtension" optional="YES" attributeType="String"/>
+        <attribute name="filenameBase" optional="YES" attributeType="String"/>
+        <attribute name="fileSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="fullFilename" optional="YES" attributeType="String"/>
+        <attribute name="fullPubFlag" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="internalPath" optional="YES" attributeType="String"/>
+        <attribute name="isDownloaded" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isDownloading" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="odsEntryId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pubDownloadDisplayName" optional="YES" attributeType="String"/>
+        <attribute name="pubDownloadId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pubDownloadOrder" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pubsecId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pubsecLastModified" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="pubTypeId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="s3Key" optional="YES" attributeType="String"/>
+        <attribute name="sectionDisplayName" optional="YES" attributeType="String"/>
+        <attribute name="sectionLastModified" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="sectionName" optional="YES" attributeType="String"/>
+        <attribute name="sectionOrder" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="uploadTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="s3Key"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
     <entity name="Light" representedClassName=".Light" syncable="YES" codeGenerationType="category">
         <attribute name="aidType" optional="YES" attributeType="String"/>
         <attribute name="characteristic" optional="YES" attributeType="String"/>

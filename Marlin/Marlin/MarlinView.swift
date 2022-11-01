@@ -37,6 +37,9 @@ struct MarlinView: View {
     @State var showSnackbar: Bool = false
     @State var snackbarModel: SnackbarModel?
     
+    @State private var previewDate: Date = Date()
+    @State private var previewUrl: URL?
+    
     @StateObject var mapState: MapState = MapState()
     
     @AppStorage("userTrackingMode") var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
@@ -49,6 +52,9 @@ struct MarlinView: View {
     let dismissBottomSheetPub = NotificationCenter.default.publisher(for: .DismissBottomSheet)
     let snackbarPub = NotificationCenter.default.publisher(for: .SnackbarNotification)
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
+        notification.object
+    }
+    let documentPreviewPub = NotificationCenter.default.publisher(for: .DocumentPreview).map { notification in
         notification.object
     }
     
@@ -149,6 +155,7 @@ struct MarlinView: View {
                 }
             }
         }
+        .documentPreview(previewUrl: $previewUrl, previewDate: $previewDate) { }
         .onReceive(snackbarPub) { output in
             guard let notification = output.object as? SnackbarNotification else {
                 return
@@ -178,6 +185,12 @@ struct MarlinView: View {
             if showBottomSheet {
                 showBottomSheet.toggle()
             }
+        }
+        .onReceive(documentPreviewPub) { output in
+            if let url = output as? URL {
+                previewUrl = url
+            }
+            previewDate = Date()
         }
         .onAppear {
             Metrics.shared.appLaunch()

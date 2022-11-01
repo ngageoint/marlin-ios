@@ -8,10 +8,7 @@
 
 import Foundation
 import CoreData
-import OSLog
 import MapKit
-import SwiftUI
-import Alamofire
 
 class Asam: NSManagedObject, EnlargableAnnotation {
     var clusteringIdentifierWhenShrunk: String? = "msi"

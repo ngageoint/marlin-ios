@@ -57,7 +57,6 @@ struct NavigationalWarningAreasView: View {
         ForEach(currentNavigationalWarningsSections) { section in
             NavigationLink {
                 NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(section), navArea: section.id)
-                    
             } label: {
                 HStack {
                     VStack(alignment: .leading) {

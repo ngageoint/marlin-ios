@@ -18,7 +18,8 @@ class DataSourceList: ObservableObject {
         DataSourceItem(dataSource: Port.self),
         DataSourceItem(dataSource: RadioBeacon.self),
         DataSourceItem(dataSource: DifferentialGPSStation.self),
-        DataSourceItem(dataSource: DFRS.self)
+        DataSourceItem(dataSource: DFRS.self),
+        DataSourceItem(dataSource: ElectronicPublication.self)
     ].filter({ item in
         item.enabled
     }).sorted(by: { one, two in

@@ -7,6 +7,8 @@
 
 import SwiftUI
 import Combine
+import OSLog
+import MatomoTracker
 
 @main
 struct AppLauncher {
@@ -38,6 +40,7 @@ class AppState: ObservableObject {
 }
 
 struct MarlinApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     
     let persistenceController: PersistenceController
     let shared: MSI
@@ -54,6 +57,7 @@ struct MarlinApp: App {
         shared = MSI.shared
         appState = MSI.shared.appState
         persistenceController = PersistenceController.shared
+        UNUserNotificationCenter.current().delegate = appDelegate
     }
 
     var body: some Scene {
@@ -62,6 +66,34 @@ struct MarlinApp: App {
                 .environmentObject(appState)
                 .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
                 .background(Color.surfaceColor)
+            
         }
+    }
+}
+
+class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        MatomoTracker.shared.dispatch()
+    }
+    
+    public var backgroundCompletionHandler: (() -> Void)? = nil
+    
+    func application(_ application: UIApplication,
+                     handleEventsForBackgroundURLSession identifier: String,
+                     completionHandler: @escaping () -> Void) {
+        backgroundCompletionHandler = completionHandler
+    }
+    
+    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+              let backgroundCompletionHandler = appDelegate.backgroundCompletionHandler else {
+            return
+        }
+        backgroundCompletionHandler()
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        let presentationOption: UNNotificationPresentationOptions = [.sound, .banner, .list]
+        completionHandler(presentationOption)
     }
 }
