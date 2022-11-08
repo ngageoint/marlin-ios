@@ -144,20 +144,30 @@ struct FilterView: View {
         .padding(.trailing, 0)
         .onChange(of: selectedProperty) { newValue in
             selectedEnumeration = selectedProperty.enumerationValues?.first?.key ?? ""
-            if selectedProperty.type == .date {
+            if selectedProperty.type == DataSourcePropertyType.string {
+                selectedComparison = .equals
+            } else if selectedProperty.type == DataSourcePropertyType.date {
                 selectedComparison = .window
-            }
-            if selectedProperty.type == .location {
+            } else if selectedProperty.type == DataSourcePropertyType.enumeration {
+                selectedComparison = .equals
+            } else if selectedProperty.type == DataSourcePropertyType.location {
                 selectedComparison = .nearMe
+            } else {
+                selectedComparison = .equals
             }
         }
         .onAppear {
             selectedEnumeration = selectedProperty.enumerationValues?.first?.key ?? ""
-            if selectedProperty.type == .date {
+            if selectedProperty.type == DataSourcePropertyType.string {
+                selectedComparison = .equals
+            } else if selectedProperty.type == DataSourcePropertyType.date {
                 selectedComparison = .window
-            }
-            if selectedProperty.type == .location {
+            } else if selectedProperty.type == DataSourcePropertyType.enumeration {
+                selectedComparison = .equals
+            } else if selectedProperty.type == DataSourcePropertyType.location {
                 selectedComparison = .nearMe
+            } else {
+                selectedComparison = .equals
             }
         }
     }

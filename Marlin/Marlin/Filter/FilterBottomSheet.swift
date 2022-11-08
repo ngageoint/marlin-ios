@@ -76,8 +76,10 @@ enum DataSourceFilterComparison: String, CaseIterable, Identifiable, Codable {
             return "endswith[cd]"
         case .window:
             return ">="
-        default:
+        case .notEquals, .greaterThan, .greaterThanEqual, .lessThan, .lessThanEqual:
             return rawValue
+        default:
+            return "=="
         }
     }
 }
