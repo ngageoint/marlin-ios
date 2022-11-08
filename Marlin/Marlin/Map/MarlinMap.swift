@@ -240,7 +240,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
                 fetchedResultsControllers[key] = controller
                 initiateFetchResultsController(fetchedResultsController: controller)
             } else {
-                let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.current.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+                let controller = PersistenceController.current.fetchedResultsController(fetchRequest: fetchRequest, sectionNameKeyPath: nil, cacheName: nil)
                 controller.delegate = self
                 fetchedResultsControllers[key] = controller
                 initiateFetchResultsController(fetchedResultsController: controller)

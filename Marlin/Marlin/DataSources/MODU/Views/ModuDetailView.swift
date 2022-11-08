@@ -81,11 +81,3 @@ struct ModuDetailView: View {
         }
     }
 }
-
-struct ModuDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let context = PersistenceController.preview.container.viewContext
-        let modu = try? context.fetchFirst(Modu.self)
-        return ModuDetailView(modu: modu!)
-    }
-}

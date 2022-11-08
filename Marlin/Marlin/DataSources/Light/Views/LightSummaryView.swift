@@ -33,11 +33,3 @@ struct LightSummaryView: View {
         }
     }
 }
-
-struct LightSummaryView_Previews: PreviewProvider {
-    static var previews: some View {
-        let context = PersistenceController.preview.container.viewContext
-        let light = try? context.fetchFirst(Light.self)
-        LightSummaryView(light: light!)
-    }
-}

@@ -9,7 +9,7 @@ import SwiftUI
 import CoreData
 
 struct MSIListView<T: NSManagedObject & DataSourceViewBuilder>: View {
-    @Environment(\.managedObjectContext) private var viewContext
+//    @Environment(\.managedObjectContext) private var viewContext
     
     @State var sortOpen: Bool = false
     

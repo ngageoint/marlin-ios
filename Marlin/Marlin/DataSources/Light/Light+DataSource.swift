@@ -93,7 +93,7 @@ extension Light: BatchImportable {
         var requests: [MSIRouter] = []
         
         for lightVolume in Light.lightVolumes {
-            let newestLight = try? PersistenceController.current.container.viewContext.fetchFirst(Light.self, sortBy: [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)], predicate: NSPredicate(format: "volumeNumber = %@", lightVolume.volumeNumber))
+            let newestLight = try? PersistenceController.current.fetchFirst(Light.self, sortBy: [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)], predicate: NSPredicate(format: "volumeNumber = %@", lightVolume.volumeNumber))
             
             let noticeWeek = Int(newestLight?.noticeWeek ?? "0") ?? 0
             

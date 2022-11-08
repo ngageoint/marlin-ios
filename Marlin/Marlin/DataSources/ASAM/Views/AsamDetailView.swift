@@ -93,11 +93,3 @@ struct AsamDetailView: View {
         }
     }
 }
-
-struct AsamDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let context = PersistenceController.preview.container.viewContext
-        let asam = try? context.fetchFirst(Asam.self)
-        return AsamDetailView(asam: asam!)
-    }
-}

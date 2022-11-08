@@ -68,7 +68,7 @@ extension DifferentialGPSStation: BatchImportable {
     }
     
     static func dataRequest() -> [MSIRouter] {
-        let newestDifferentialGPSStation = try? PersistenceController.current.container.viewContext.fetchFirst(DifferentialGPSStation.self, sortBy: [NSSortDescriptor(keyPath: \DifferentialGPSStation.noticeNumber, ascending: false)])
+        let newestDifferentialGPSStation = try? PersistenceController.current.fetchFirst(DifferentialGPSStation.self, sortBy: [NSSortDescriptor(keyPath: \DifferentialGPSStation.noticeNumber, ascending: false)], predicate: nil)
         
         let noticeWeek = Int(newestDifferentialGPSStation?.noticeWeek ?? "0") ?? 0
         

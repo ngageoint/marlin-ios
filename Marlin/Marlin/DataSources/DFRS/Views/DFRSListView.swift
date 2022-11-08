@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct DFRSListView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    
+struct DFRSListView: View {    
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \DFRSArea.areaName, ascending: true), NSSortDescriptor(keyPath: \DFRSArea.index, ascending: true)],
         predicate: NSPredicate(format: "areaNote != nil || indexNote != nil"),

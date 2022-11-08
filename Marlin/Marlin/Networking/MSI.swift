@@ -40,7 +40,7 @@ public class MSI {
 
         if !initialDataLoadList.isEmpty {
             NSLog("Loading initial data from \(initialDataLoadList.count) data sources")
-            NotificationCenter.default.addObserver(self, selector: #selector(managedObjectContextObjectChangedObserver(notification:)), name: .NSManagedObjectContextObjectsDidChange, object: PersistenceController.current.container.viewContext)
+            PersistenceController.current.addViewContextObserver(self, selector: #selector(managedObjectContextObjectChangedObserver(notification:)), name: .NSManagedObjectContextObjectsDidChange)
 
             DispatchQueue.main.async {
                 for importable in initialDataLoadList {
@@ -101,7 +101,7 @@ public class MSI {
                     }
                 }
                 if allLoaded {
-                    NotificationCenter.default.removeObserver(self, name: .NSManagedObjectContextObjectsDidChange, object: PersistenceController.current.container.viewContext)
+                    PersistenceController.current.removeViewContextObserver(self, name: .NSManagedObjectContextObjectsDidChange)
                 }
                 DispatchQueue.main.async {
                     self.appState.loadingDataSource[type(of: dataSourceItem).key] = false
@@ -224,7 +224,7 @@ public class MSI {
     }
     
     func isLoaded<D: BatchImportable>(type: D.Type) -> Bool {
-        let count = try? PersistenceController.current.container.viewContext.countOfObjects(D.self)
+        let count = try? PersistenceController.current.countOfObjects(D.self)
         return (count ?? 0) > 0
     }
 }

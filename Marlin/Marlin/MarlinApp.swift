@@ -43,7 +43,7 @@ struct MarlinApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     var cancellable = Set<AnyCancellable>()
     
-    let persistenceController: PersistenceController
+    let persistentStore: PersistentStore
     let shared: MSI
     
     let scheme = MarlinScheme()
@@ -63,7 +63,7 @@ struct MarlinApp: App {
             MSI.shared.loadAllData()
         }
         .store(in: &cancellable)
-        persistenceController = PersistenceController.shared
+        persistentStore = PersistenceController.shared
         
         UNUserNotificationCenter.current().delegate = appDelegate
     }
@@ -72,7 +72,7 @@ struct MarlinApp: App {
         WindowGroup {
             MarlinView()
                 .environmentObject(appState)
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environment(\.managedObjectContext, persistentStore.viewContext)
                 .background(Color.surfaceColor)
         }
     }

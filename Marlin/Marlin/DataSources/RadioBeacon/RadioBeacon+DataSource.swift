@@ -70,7 +70,7 @@ extension RadioBeacon: BatchImportable {
     }
     
     static func dataRequest() -> [MSIRouter] {
-        let newestRadioBeacon = try? PersistenceController.current.container.viewContext.fetchFirst(RadioBeacon.self, sortBy: [NSSortDescriptor(keyPath: \RadioBeacon.noticeNumber, ascending: false)])
+        let newestRadioBeacon = try? PersistenceController.current.fetchFirst(RadioBeacon.self, sortBy: [NSSortDescriptor(keyPath: \RadioBeacon.noticeNumber, ascending: false)], predicate: nil)
         
         let noticeWeek = Int(newestRadioBeacon?.noticeWeek ?? "0") ?? 0
         

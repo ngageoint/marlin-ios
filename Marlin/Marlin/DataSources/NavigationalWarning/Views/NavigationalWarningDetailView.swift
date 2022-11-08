@@ -92,11 +92,3 @@ struct UITextViewContainer: UIViewRepresentable {
         }
     }
 }
-
-struct NavigationalWarningDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let context = PersistenceController.preview.container.viewContext
-        let navigationalWarning = try? context.fetchFirst(NavigationalWarning.self)
-        NavigationalWarningDetailView(navigationalWarning: navigationalWarning!)
-    }
-}

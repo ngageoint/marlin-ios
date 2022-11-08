@@ -33,21 +33,21 @@ final class DownloadManager: NSObject {
             return
         }
         urlToDownloadableMap[requestUrl] = downloadable
-        PersistenceController.current.container.viewContext.perform {
+        PersistenceController.current.perform {
             downloadable.objectWillChange.send()
             downloadable.isDownloading = true
             DispatchQueue.main.async {
-                try? PersistenceController.current.container.viewContext.save()
+                try? PersistenceController.current.save()
             }
         }
         if let destinationUrl = URL(string: downloadable.savePath) {
             if (FileManager().fileExists(atPath: destinationUrl.path)) {
-                PersistenceController.current.container.viewContext.perform {
+                PersistenceController.current.perform {
                     downloadable.objectWillChange.send()
                     downloadable.isDownloading = false
                     downloadable.isDownloaded = true
                     DispatchQueue.main.async {
-                        try? PersistenceController.current.container.viewContext.save()
+                        try? PersistenceController.current.save()
                     }
                 }
             } else {
@@ -81,11 +81,11 @@ extension DownloadManager: URLSessionDownloadDelegate {
             return
         }
         let downloadable = urlToDownloadableMap[url]
-        PersistenceController.current.container.viewContext.perform {
+        PersistenceController.current.perform {
             downloadable?.objectWillChange.send()
             downloadable?.downloadProgress = Float(totalBytesWritten)/Float(totalBytesExpectedToWrite)
             DispatchQueue.main.async {
-                try? PersistenceController.current.container.viewContext.save()
+                try? PersistenceController.current.save()
             }
         }
     }
@@ -133,13 +133,13 @@ extension DownloadManager: URLSessionDownloadDelegate {
             
             // Schedule the notification.
             center.add(request)
-            PersistenceController.current.container.viewContext.perform {
+            PersistenceController.current.perform {
                 downloadable.objectWillChange.send()
                 downloadable.isDownloaded = true
                 downloadable.isDownloading = false
                 downloadable.downloadProgress = 1.0
                 DispatchQueue.main.async {
-                    try? PersistenceController.current.container.viewContext.save()
+                    try? PersistenceController.current.save()
                 }
             }
         } catch {

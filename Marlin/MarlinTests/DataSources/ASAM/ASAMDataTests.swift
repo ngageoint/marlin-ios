@@ -14,7 +14,7 @@ import CoreData
 
 final class ASAMDataTests: XCTestCase {
     var cancellable = Set<AnyCancellable>()
-    var persistenceController: PersistenceController = PersistenceController.memory
+    var persistentStore: PersistentStore = PersistenceController.memory
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
     
@@ -33,8 +33,8 @@ final class ASAMDataTests: XCTestCase {
                 completion(nil)
             }
             .store(in: &cancellable)
-            
-        persistenceController.reset()
+        persistentStore = PersistenceController.memory
+        persistentStore.reset()
     }
         
     override func tearDown() {
@@ -73,7 +73,7 @@ final class ASAMDataTests: XCTestCase {
         }
 
         expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
-            let count = try? self.persistenceController.container.viewContext.countOfObjects(Asam.self)
+            let count = try? self.persistentStore.countOfObjects(Asam.self)
             XCTAssertEqual(count, 2)
             return true
         }
@@ -139,7 +139,7 @@ final class ASAMDataTests: XCTestCase {
         }
 
         expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
-            let count = try? self.persistenceController.container.viewContext.countOfObjects(Asam.self)
+            let count = try? self.persistentStore.countOfObjects(Asam.self)
             XCTAssertEqual(count, 1)
             return true
         }
@@ -205,7 +205,7 @@ final class ASAMDataTests: XCTestCase {
         }
 
         expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
-            let count = try? self.persistenceController.container.viewContext.countOfObjects(Asam.self)
+            let count = try? self.persistentStore.countOfObjects(Asam.self)
             XCTAssertEqual(count, 1)
             return true
         }
@@ -271,7 +271,7 @@ final class ASAMDataTests: XCTestCase {
         }
 
         expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
-            let count = try? self.persistenceController.container.viewContext.countOfObjects(Asam.self)
+            let count = try? self.persistentStore.countOfObjects(Asam.self)
             XCTAssertEqual(count, 1)
             return true
         }
@@ -279,5 +279,41 @@ final class ASAMDataTests: XCTestCase {
         MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
 
         waitForExpectations(timeout: 10, handler: nil)
+    }
+    
+    func testDataRequest() {
+
+        let newItem = Asam(context: persistentStore.viewContext)
+        newItem.asamDescription = "description"
+        newItem.longitude = 1.0
+        newItem.latitude = 1.0
+        newItem.date = Date()
+        newItem.navArea = "XI"
+        newItem.reference = "2022-100"
+        newItem.subreg = "71"
+        newItem.position = "1°00'00\"N \n1°00'00\"E"
+        newItem.hostility = "Boarding"
+        newItem.victim = "Boat"
+        try? persistentStore.viewContext.save()
+
+        let requests = Asam.dataRequest()
+        XCTAssertEqual(requests.count, 1)
+        let request = requests[0]
+        XCTAssertEqual(request.method, .get)
+        let parameters = request.parameters
+        XCTAssertEqual(parameters?.count, 2)
+        XCTAssertEqual(parameters?["sort"] as? String, "date")
+        XCTAssertEqual(parameters?["output"] as? String, "json")
+        // no need to check dates here due to comment in MSIRouter
+    }
+    
+    func testShouldSync() {
+        UserDefaults.standard.setValue(false, forKey: "\(Asam.key)DataSourceEnabled")
+        XCTAssertFalse(Asam.shouldSync())
+        UserDefaults.standard.setValue(true, forKey: "\(Asam.key)DataSourceEnabled")
+        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60) - 10, forKey: "\(Asam.key)LastSyncTime")
+        XCTAssertTrue(Asam.shouldSync())
+        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60) + (60 * 10), forKey: "\(Asam.key)LastSyncTime")
+        XCTAssertFalse(Asam.shouldSync())
     }
 }

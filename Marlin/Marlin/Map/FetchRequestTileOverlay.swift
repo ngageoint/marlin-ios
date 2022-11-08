@@ -90,9 +90,7 @@ class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverl
             
             tileFetchRequest.predicate = predicate
             
-            let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-            context.automaticallyMergesChangesFromParent = false
-            context.parent = PersistenceController.current.container.viewContext
+            let context = PersistenceController.current.mainQueueContext()
             let objects = try? context.fetch(tileFetchRequest)
             return objects as? [T]
         }

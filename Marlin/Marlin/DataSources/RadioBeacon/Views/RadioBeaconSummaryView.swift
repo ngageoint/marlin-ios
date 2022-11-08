@@ -42,11 +42,3 @@ struct RadioBeaconSummaryView: View {
         }
     }
 }
-
-struct RadioBeaconSummaryView_Previews: PreviewProvider {
-    static var previews: some View {
-        let context = PersistenceController.preview.container.viewContext
-        let radioBeacon = try? context.fetchFirst(RadioBeacon.self)
-        RadioBeaconSummaryView(radioBeacon: radioBeacon!)
-    }
-}

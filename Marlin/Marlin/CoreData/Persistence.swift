@@ -9,24 +9,162 @@ import CoreData
 import OSLog
 import Combine
 
-class PersistenceController {
-    let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "persistence")
+protocol PersistentStore {
+    func newTaskContext() -> NSManagedObjectContext
+    func fetchFirst<T: NSManagedObject>(_ entityClass:T.Type,
+                                                     sortBy: [NSSortDescriptor]?,
+                                                     predicate: NSPredicate?) throws-> T?
+    func fetch<ResultType: NSFetchRequestResult>(fetchRequest: NSFetchRequest<ResultType>) throws -> [ResultType]
+    func perform(_ block: @escaping () -> Void)
+    func save() throws
+    func fetchedResultsController<ResultType: NSFetchRequestResult>(fetchRequest: NSFetchRequest<ResultType>, sectionNameKeyPath: String?, cacheName name: String?) -> NSFetchedResultsController<ResultType>
+    func addViewContextObserver(_ observer: AnyObject, selector: Selector, name: Notification.Name)
+    func removeViewContextObserver(_ observer: AnyObject, name: Notification.Name)
+    func countOfObjects<T: NSManagedObject>(_ entityClass:T.Type) throws -> Int?
+    func mainQueueContext() -> NSManagedObjectContext
+    func reset()
     
-    static var _current: PersistenceController?
-    static var current: PersistenceController = {
+    var viewContext: NSManagedObjectContext { get }
+}
+
+class PersistenceController {
+    fileprivate static let authorName = "MSI"
+    fileprivate static let remoteDataImportAuthorName = "MSI Data Import"
+    
+    static var _current: PersistentStore?
+    static var current: PersistentStore = {
         return _current ?? shared
     }()
     
-    static var shared: PersistenceController = {
-        _current = PersistenceController()
+    static var shared: PersistentStore = {
+        _current = CoreDataPersistentStore()
         return _current!
     }()
-
-    static var memory: PersistenceController = {
-        _current = PersistenceController(inMemory: true)
+    
+    static var memory: PersistentStore = {
+        _current = CoreDataPersistentStore(inMemory: true)
         return _current!
     }()
+    
+    static func mock(_ implementation: MockPersistentStore) -> PersistentStore {
+        _current = implementation
+        return _current!
+    }
+    
+    static var mock: PersistentStore = {
+        _current = MockPersistentStore()
+        return _current!
+    }()
+}
 
+class MockPersistentStore: PersistentStore {
+    init() {
+        
+    }
+    
+    func newTaskContext() -> NSManagedObjectContext {
+        return NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+    }
+    
+    func fetchFirst<T: NSManagedObject>(_ entityClass:T.Type,
+                                                     sortBy: [NSSortDescriptor]? = nil,
+                                                     predicate: NSPredicate? = nil) throws-> T? {
+        return nil
+    }
+    
+    func perform(_ block: @escaping () -> Void) {
+        
+    }
+    
+    func save() throws {
+        
+    }
+    
+    func fetchedResultsController<ResultType: NSFetchRequestResult>(fetchRequest: NSFetchRequest<ResultType>, sectionNameKeyPath: String?, cacheName name: String?) -> NSFetchedResultsController<ResultType> {
+        return NSFetchedResultsController<ResultType>(fetchRequest: fetchRequest,
+                                                      managedObjectContext: newTaskContext(),
+                                                      sectionNameKeyPath: sectionNameKeyPath,
+                                                      cacheName: nil)
+    }
+    
+    func fetch<ResultType: NSFetchRequestResult>(fetchRequest: NSFetchRequest<ResultType>) throws -> [ResultType] {
+        return []
+    }
+    
+    func addViewContextObserver(_ observer: AnyObject, selector: Selector, name: Notification.Name) {
+        
+    }
+    
+    func removeViewContextObserver(_ observer: AnyObject, name: Notification.Name) {
+        
+    }
+    
+    func countOfObjects<T: NSManagedObject>(_ entityClass:T.Type) throws -> Int? {
+        return nil
+    }
+    
+    func mainQueueContext() -> NSManagedObjectContext {
+        return NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+    }
+    
+    func reset() {
+        
+    }
+    
+    var viewContext: NSManagedObjectContext { self.mainQueueContext() }
+}
+
+class CoreDataPersistentStore: PersistentStore {
+    let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "persistence")
+    
+    func fetchFirst<T: NSManagedObject>(_ entityClass:T.Type,
+                                                     sortBy: [NSSortDescriptor]? = nil,
+                                                     predicate: NSPredicate? = nil) throws-> T? {
+        return try container.viewContext.fetchFirst(entityClass, sortBy: sortBy, predicate: predicate)
+    }
+    
+    func fetch<ResultType: NSFetchRequestResult>(fetchRequest: NSFetchRequest<ResultType>) throws -> [ResultType] {
+        return try container.viewContext.fetch(fetchRequest)
+    }
+    
+    func perform(_ block: @escaping () -> Void) {
+        container.viewContext.perform(block)
+    }
+    
+    func save() throws {
+        try container.viewContext.save()
+    }
+    
+    func fetchedResultsController<ResultType: NSFetchRequestResult>(fetchRequest: NSFetchRequest<ResultType>, sectionNameKeyPath: String?, cacheName name: String?) -> NSFetchedResultsController<ResultType> {
+        return NSFetchedResultsController<ResultType>(fetchRequest: fetchRequest,
+                                                                managedObjectContext: container.viewContext,
+                                                                sectionNameKeyPath: sectionNameKeyPath,
+                                                                cacheName: nil)
+    }
+    
+    func addViewContextObserver(_ observer: AnyObject, selector: Selector, name: Notification.Name) {
+        NotificationCenter.default.addObserver(observer, selector: selector, name: name, object: container.viewContext)
+    }
+    
+    func removeViewContextObserver(_ observer: AnyObject, name: Notification.Name) {
+        NotificationCenter.default.removeObserver(observer, name: name, object: container.viewContext)
+    }
+    
+    func countOfObjects<T: NSManagedObject>(_ entityClass:T.Type) throws -> Int? {
+        return try container.viewContext.countOfObjects(entityClass)
+    }
+    
+    func mainQueueContext() -> NSManagedObjectContext {
+        let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.automaticallyMergesChangesFromParent = false
+        context.parent = container.viewContext
+        return context
+    }
+    
+    var viewContext: NSManagedObjectContext {
+        container.viewContext
+    }
+    
     private var notificationToken: NSObjectProtocol?
     
     deinit {
@@ -115,7 +253,7 @@ class PersistenceController {
     private lazy var historyRequestQueue = DispatchQueue(label: "history")
     var subscriptions = Set<AnyCancellable>()
 
-    private init(inMemory: Bool = false) {
+    fileprivate init(inMemory: Bool = false) {
         self.inMemory = inMemory
         
         clearDataIfNecessary()
@@ -214,9 +352,6 @@ class PersistenceController {
         }
     }
     
-    private static let authorName = "MSI"
-    private static let remoteDataImportAuthorName = "MSI Data Import"
-    
     private func fetchPersistentHistoryTransactionsAndChanges() {
         logger.info("Told to fetch persistent history transactions and changes")
         historyRequestQueue.async { [self] in
@@ -267,8 +402,8 @@ class PersistenceController {
         }
     }
     
-    static var preview: PersistenceController = {
-        let result = PersistenceController(inMemory: true)
+    static var preview: PersistentStore = {
+        let result = CoreDataPersistentStore(inMemory: true)
         let viewContext = result.container.viewContext
         
         let data: Data
