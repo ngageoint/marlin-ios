@@ -98,7 +98,7 @@ struct ElectronicPublicationsList: View {
             }
         }
         .background(Color.backgroundColor)
-        .navigationTitle(ElectronicPublication.fullDataSourceName)
+        .navigationTitle((PublicationTypeEnum(rawValue: Int(section.id)) ?? .unknown).description)
         .navigationBarTitleDisplayMode(.inline)
         .listRowBackground(Color.surfaceColor)
         .listStyle(.grouped)
@@ -142,7 +142,7 @@ struct ElectronicPublicationsList: View {
             }
         }
         .background(Color.backgroundColor)
-        .navigationTitle(ElectronicPublication.fullDataSourceName)
+        .navigationTitle((PublicationTypeEnum(rawValue: Int(section.id)) ?? .unknown).description)
         .navigationBarTitleDisplayMode(.inline)
         .listRowBackground(Color.surfaceColor)
         .listStyle(.grouped)
@@ -197,7 +197,7 @@ struct ElectronicPublicationsList: View {
         .background(Color.backgroundColor)
         .listRowBackground(Color.surfaceColor)
         .listStyle(.plain)
-        .navigationTitle(PublicationTypeEnum.atlasOfPilotCharts.description)
+        .navigationTitle((PublicationTypeEnum(rawValue: Int(section.id)) ?? .unknown).description)
         .navigationBarTitleDisplayMode(.inline)
     }
 }
