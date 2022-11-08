@@ -64,11 +64,11 @@ extension DifferentialGPSStation: BatchImportable {
         }
         let count = value.ngalol.count
         NSLog("Received \(count) \(Self.key) records.")
-        return try await Self.importRecords(from: value.ngalol, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Self.importRecords(from: value.ngalol, taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
-        let newestDifferentialGPSStation = try? PersistenceController.shared.container.viewContext.fetchFirst(DifferentialGPSStation.self, sortBy: [NSSortDescriptor(keyPath: \DifferentialGPSStation.noticeNumber, ascending: false)])
+        let newestDifferentialGPSStation = try? PersistenceController.current.container.viewContext.fetchFirst(DifferentialGPSStation.self, sortBy: [NSSortDescriptor(keyPath: \DifferentialGPSStation.noticeNumber, ascending: false)])
         
         let noticeWeek = Int(newestDifferentialGPSStation?.noticeWeek ?? "0") ?? 0
         
@@ -143,6 +143,7 @@ extension DifferentialGPSStation: BatchImportable {
             batchInsertRequest.resultType = .count
             if let fetchResult = try? taskContext.execute(batchInsertRequest),
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
+                try? taskContext.save()
                 if let count = batchInsertResult.result as? Int, count > 0 {
                     NSLog("Inserted \(count) DGPS records")
                     return count

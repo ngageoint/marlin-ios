@@ -88,7 +88,7 @@ enum PublicationTypeEnum: Int, CaseIterable, CustomStringConvertible {
         case .sightReductionTablesForMarineNavigation:
             return "Sight Reduction Tables for Marine Navigation"
         default:
-            return "Unknown"
+            return "Electronic Publications"
         }
     }
     
@@ -144,11 +144,11 @@ class ElectronicPublication: NSManagedObject, Downloadable {
             guard FileManager().fileExists(atPath: destinationUrl.path) else { return }
             do {
                 try FileManager().removeItem(atPath: destinationUrl.path)
-                PersistenceController.shared.container.viewContext.perform {
+                PersistenceController.current.container.viewContext.perform {
                     self.objectWillChange.send()
                     self.isDownloaded = false
                     DispatchQueue.main.async {
-                        try? PersistenceController.shared.container.viewContext.save()
+                        try? PersistenceController.current.container.viewContext.save()
                     }
                 }
             } catch let error {
@@ -163,11 +163,11 @@ class ElectronicPublication: NSManagedObject, Downloadable {
             downloaded = FileManager().fileExists(atPath: destinationUrl.path)
         }
         if downloaded != self.isDownloaded {
-            PersistenceController.shared.container.viewContext.perform {
+            PersistenceController.current.container.viewContext.perform {
                 self.objectWillChange.send()
                 self.isDownloaded = downloaded
                 DispatchQueue.main.async {
-                    try? PersistenceController.shared.container.viewContext.save()
+                    try? PersistenceController.current.container.viewContext.save()
                 }
             }
         }

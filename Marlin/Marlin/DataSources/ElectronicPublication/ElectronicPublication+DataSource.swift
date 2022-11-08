@@ -48,7 +48,7 @@ extension ElectronicPublication: BatchImportable {
         }
         let count = value.count
         NSLog("Received \(count) Electronic Publication records.")
-        return try await Self.importRecords(from: value, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Self.importRecords(from: value, taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func newBatchInsertRequest(with propertyList: [ElectronicPublicationProperties]) -> NSBatchInsertRequest {
@@ -82,6 +82,7 @@ extension ElectronicPublication: BatchImportable {
             batchInsertRequest.resultType = .count
             if let fetchResult = try? taskContext.execute(batchInsertRequest),
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
+                try? taskContext.save()
                 if let count = batchInsertResult.result as? Int, count > 0 {
                     NSLog("Inserted \(count) EPUB records")
                     return count

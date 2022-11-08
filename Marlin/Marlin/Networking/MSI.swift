@@ -40,7 +40,7 @@ public class MSI {
 
         if !initialDataLoadList.isEmpty {
             NSLog("Loading initial data from \(initialDataLoadList.count) data sources")
-            NotificationCenter.default.addObserver(self, selector: #selector(managedObjectContextObjectChangedObserver(notification:)), name: .NSManagedObjectContextObjectsDidChange, object: PersistenceController.shared.container.viewContext)
+            NotificationCenter.default.addObserver(self, selector: #selector(managedObjectContextObjectChangedObserver(notification:)), name: .NSManagedObjectContextObjectsDidChange, object: PersistenceController.current.container.viewContext)
 
             DispatchQueue.main.async {
                 for importable in initialDataLoadList {
@@ -57,7 +57,9 @@ public class MSI {
             UserDefaults.standard.initialDataLoaded = true
 
             let allLoadList: [any BatchImportable.Type] = masterDataList.filter { importable in
-                importable.shouldSync()
+                let sync = importable.shouldSync()
+                print("xxx should sync \(importable.key) \(sync)")
+                return sync
             }
 
             NSLog("Fetching new data from the API for \(allLoadList.count) data sources")
@@ -99,7 +101,7 @@ public class MSI {
                     }
                 }
                 if allLoaded {
-                    NotificationCenter.default.removeObserver(self, name: .NSManagedObjectContextObjectsDidChange, object: PersistenceController.shared.container.viewContext)
+                    NotificationCenter.default.removeObserver(self, name: .NSManagedObjectContextObjectsDidChange, object: PersistenceController.current.container.viewContext)
                 }
                 DispatchQueue.main.async {
                     self.appState.loadingDataSource[type(of: dataSourceItem).key] = false
@@ -116,6 +118,12 @@ public class MSI {
     var loadCounters: [String: Counter] = [:]
     
     func loadInitialData<T: Decodable, D: NSManagedObject & BatchImportable>(type: T.Type, dataType: D.Type) {
+        DispatchQueue.main.async {
+            self.appState.loadingDataSource[D.key] = true
+            if let dataSource = dataType as? any DataSource.Type {
+                NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: dataSource))
+            }
+        }
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
         
         if let seedDataFiles = D.seedDataFiles {
@@ -127,6 +135,13 @@ public class MSI {
                             queue.async( execute:{
                                 Task.detached {
                                     try await D.batchImport(value: response.value, initialLoad: true)
+                                    DispatchQueue.main.async {
+                                        self.appState.loadingDataSource[D.key] = false
+                                        if let dataSource = dataType as? any DataSource.Type {
+                                            NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: dataSource))
+                                            NotificationCenter.default.post(name: .DataSourceUpdated, object: dataSource.key)
+                                        }
+                                    }
                                 }
                             })
                         }
@@ -209,7 +224,7 @@ public class MSI {
     }
     
     func isLoaded<D: BatchImportable>(type: D.Type) -> Bool {
-        let count = try? PersistenceController.shared.container.viewContext.countOfObjects(D.self)
+        let count = try? PersistenceController.current.container.viewContext.countOfObjects(D.self)
         return (count ?? 0) > 0
     }
 }

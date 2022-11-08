@@ -10,13 +10,13 @@ import Foundation
 
 class TestHelpers {
     static func clearData() {
-        let asamsTruncated = PersistenceController.shared.container.viewContext.truncateAll(Asam.self)
-        print("Asams truncated? \(asamsTruncated)")
-        let modusTruncated = PersistenceController.shared.container.viewContext.truncateAll(Modu.self)
-        print("Modus truncated? \(modusTruncated)")
-        let navigationalWarningsTruncated = PersistenceController.shared.container.viewContext.truncateAll(NavigationalWarning.self)
-        print("Navigational Warnings truncated? \(navigationalWarningsTruncated)")
-        let lightsTruncated = PersistenceController.shared.container.viewContext.truncateAll(Light.self)
-        print("Lights truncated? \(lightsTruncated)")
+//        let asamsTruncated = PersistenceController.shared.container.viewContext.truncateAll(Asam.self)
+//        print("Asams truncated? \(asamsTruncated)")
+//        let modusTruncated = PersistenceController.shared.container.viewContext.truncateAll(Modu.self)
+//        print("Modus truncated? \(modusTruncated)")
+//        let navigationalWarningsTruncated = PersistenceController.shared.container.viewContext.truncateAll(NavigationalWarning.self)
+//        print("Navigational Warnings truncated? \(navigationalWarningsTruncated)")
+//        let lightsTruncated = PersistenceController.shared.container.viewContext.truncateAll(Light.self)
+//        print("Lights truncated? \(lightsTruncated)")
     }
 }

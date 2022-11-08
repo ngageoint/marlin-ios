@@ -66,7 +66,7 @@ struct AsamProperties: Decodable {
             + "longitude = \(rawLongitude?.description ?? "nil")"
             
             let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "parsing")
-            logger.debug("Ignored: \(values)")
+            logger.info("Ignored: \(values)")
             
             throw MSIError.missingData
         }

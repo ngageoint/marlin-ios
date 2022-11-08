@@ -240,7 +240,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
                 fetchedResultsControllers[key] = controller
                 initiateFetchResultsController(fetchedResultsController: controller)
             } else {
-                let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+                let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.current.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
                 controller.delegate = self
                 fetchedResultsControllers[key] = controller
                 initiateFetchResultsController(fetchedResultsController: controller)
@@ -441,7 +441,11 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
                 finalImage = UIImage.combineCentered(image1: finalImage, image2: mapImage)
             }
             annotationView.image = finalImage
-            annotationView.frame.size = CGSize(width: 40, height: 40)
+            var size = CGSize(width: 40, height: 40)
+            let max = max(finalImage?.size.height ?? 40, finalImage?.size.width ?? 40)
+            size.width = size.width * ((finalImage?.size.width ?? 40) / max)
+            size.height = size.height * ((finalImage?.size.height ?? 40) / max)
+            annotationView.frame.size = size
             annotationView.canShowCallout = false
             annotationView.isEnabled = false
             annotationView.accessibilityLabel = "Enlarged"

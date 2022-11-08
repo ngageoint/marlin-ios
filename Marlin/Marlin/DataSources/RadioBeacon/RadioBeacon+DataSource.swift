@@ -66,11 +66,11 @@ extension RadioBeacon: BatchImportable {
         }
         let count = value.ngalol.count
         NSLog("Received \(count) \(Self.key) records.")
-        return try await Self.importRecords(from: value.ngalol, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Self.importRecords(from: value.ngalol, taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
-        let newestRadioBeacon = try? PersistenceController.shared.container.viewContext.fetchFirst(RadioBeacon.self, sortBy: [NSSortDescriptor(keyPath: \RadioBeacon.noticeNumber, ascending: false)])
+        let newestRadioBeacon = try? PersistenceController.current.container.viewContext.fetchFirst(RadioBeacon.self, sortBy: [NSSortDescriptor(keyPath: \RadioBeacon.noticeNumber, ascending: false)])
         
         let noticeWeek = Int(newestRadioBeacon?.noticeWeek ?? "0") ?? 0
         
@@ -156,6 +156,7 @@ extension RadioBeacon: BatchImportable {
             batchInsertRequest.resultType = .count
             if let fetchResult = try? taskContext.execute(batchInsertRequest),
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
+                try? taskContext.save()
                 if let count = batchInsertResult.result as? Int, count > 0 {
                     NSLog("Inserted \(count) RadioBeacon records")
                     return count

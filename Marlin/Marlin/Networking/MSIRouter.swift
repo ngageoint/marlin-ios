@@ -79,14 +79,17 @@ enum MSIRouter: URLRequestConvertible
     var parameters: Parameters? {
         switch self {
         case .readAsams(date: let date):
+            // we cannot reliably query for asams that occured after the date we have because
+            // records can be inserted with an occurance date in the past
+            // we have to query for all records all the time
             var params = [
                 "sort": "date",
                 "output": "json",
-                "maxOccurDate": Asam.dateFormatter.string(from:Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date())
+//                "maxOccurDate": Asam.dateFormatter.string(from:Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date())
             ]
-            if let date = date {
-                params["minOccurDate"] = date
-            }
+//            if let date = date {
+//                params["minOccurDate"] = date
+//            }
             return params
         case .readModus(date: let date):
             var params = [

@@ -86,14 +86,14 @@ extension Light: BatchImportable {
         if count != 0 && !initialLoad {
             return -1
         }
-        return try await Light.importRecords(from: value.ngalol, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Light.importRecords(from: value.ngalol, taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
         var requests: [MSIRouter] = []
         
         for lightVolume in Light.lightVolumes {
-            let newestLight = try? PersistenceController.shared.container.viewContext.fetchFirst(Light.self, sortBy: [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)], predicate: NSPredicate(format: "volumeNumber = %@", lightVolume.volumeNumber))
+            let newestLight = try? PersistenceController.current.container.viewContext.fetchFirst(Light.self, sortBy: [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)], predicate: NSPredicate(format: "volumeNumber = %@", lightVolume.volumeNumber))
             
             let noticeWeek = Int(newestLight?.noticeWeek ?? "0") ?? 0
             
@@ -184,6 +184,7 @@ extension Light: BatchImportable {
             do {
                 let fetchResult = try taskContext.execute(batchInsertRequest)
                 if let batchInsertResult = fetchResult as? NSBatchInsertResult {
+                    try? taskContext.save()
                     if let count = batchInsertResult.result as? Int, count > 0 {
                         NSLog("Inserted \(count) Light records")
                         return count

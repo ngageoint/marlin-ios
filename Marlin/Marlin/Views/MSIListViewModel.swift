@@ -77,7 +77,7 @@ class MSIListViewModel<T: DataSource>: NSObject, NSFetchedResultsControllerDeleg
         fetchRequest.sortDescriptors = sort
         fetchRequest.predicate = predicate
         self.fetchedResultsController = NSFetchedResultsController<NSFetchRequestResult>(fetchRequest: fetchRequest,
-                                                                                         managedObjectContext: PersistenceController.shared.container.viewContext,
+                                                                                         managedObjectContext: PersistenceController.current.container.viewContext,
                                                                                          sectionNameKeyPath: sectionKey,
                                                                                          cacheName: nil)
         self.fetchedResultsController?.delegate = self

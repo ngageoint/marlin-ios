@@ -171,7 +171,7 @@ extension Port: BatchImportable {
         }
         let count = value.ports.count
         NSLog("Received \(count) \(Self.key) records.")
-        return try await Port.importRecords(from: value.ports, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Port.importRecords(from: value.ports, taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -213,6 +213,7 @@ extension Port: BatchImportable {
             batchInsertRequest.resultType = .count
             if let fetchResult = try? taskContext.execute(batchInsertRequest),
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
+                try? taskContext.save()
                 if let count = batchInsertResult.result as? Int, count > 0 {
                     NSLog("Inserted \(count) Port records")
                     return count

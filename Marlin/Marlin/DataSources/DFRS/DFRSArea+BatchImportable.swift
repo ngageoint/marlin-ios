@@ -19,7 +19,7 @@ extension DFRSArea: BatchImportable {
         }
         let count = value.areas.count
         NSLog("Received \(count) DFRS Area records.")
-        return try await Self.batchImport(from: value.areas, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Self.batchImport(from: value.areas, taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -65,6 +65,7 @@ class DFRSArea: NSManagedObject {
             if let fetchResult = try? taskContext.execute(batchInsertRequest),
                let batchInsertResult = fetchResult as? NSBatchInsertResult,
                let success = batchInsertResult.result as? Int {
+                try? taskContext.save()
                 return success
             }
             throw MSIError.batchInsertError

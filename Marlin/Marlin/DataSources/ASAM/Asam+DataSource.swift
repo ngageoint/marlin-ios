@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import CoreData
+import Combine
 
 extension Asam: DataSource {
     static var dateFormatter: DateFormatter {
@@ -53,11 +54,18 @@ extension Asam: BatchImportable {
         }
         let count = value.asam.count
         NSLog("Received \(count) \(Self.key) records.")
-        return try await Self.importRecords(from: value.asam, taskContext: PersistenceController.shared.newTaskContext())
+        
+        
+        let crossReference = Dictionary(grouping: value.asam, by: \.reference)
+        let duplicates = crossReference
+            .filter { $1.count > 1 }
+        
+        print("Found Dupicate ASAMs \(duplicates.keys)")
+        return try await Self.importRecords(from: value.asam, taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
-        let newestAsam = try? PersistenceController.shared.container.viewContext.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)])
+        let newestAsam = try? PersistenceController.current.container.viewContext.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)])
         return [MSIRouter.readAsams(date: newestAsam?.dateString)]
     }
     
@@ -97,6 +105,7 @@ extension Asam: BatchImportable {
             batchInsertRequest.resultType = .count
             if let fetchResult = try? taskContext.execute(batchInsertRequest),
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
+                try? taskContext.save()
                 if let count = batchInsertResult.result as? Int, count > 0 {
                     NSLog("Inserted \(count) ASAM records")
                     return count

@@ -33,21 +33,21 @@ final class DownloadManager: NSObject {
             return
         }
         urlToDownloadableMap[requestUrl] = downloadable
-        PersistenceController.shared.container.viewContext.perform {
+        PersistenceController.current.container.viewContext.perform {
             downloadable.objectWillChange.send()
             downloadable.isDownloading = true
             DispatchQueue.main.async {
-                try? PersistenceController.shared.container.viewContext.save()
+                try? PersistenceController.current.container.viewContext.save()
             }
         }
         if let destinationUrl = URL(string: downloadable.savePath) {
             if (FileManager().fileExists(atPath: destinationUrl.path)) {
-                PersistenceController.shared.container.viewContext.perform {
+                PersistenceController.current.container.viewContext.perform {
                     downloadable.objectWillChange.send()
                     downloadable.isDownloading = false
                     downloadable.isDownloaded = true
                     DispatchQueue.main.async {
-                        try? PersistenceController.shared.container.viewContext.save()
+                        try? PersistenceController.current.container.viewContext.save()
                     }
                 }
             } else {
@@ -81,11 +81,11 @@ extension DownloadManager: URLSessionDownloadDelegate {
             return
         }
         let downloadable = urlToDownloadableMap[url]
-        PersistenceController.shared.container.viewContext.perform {
+        PersistenceController.current.container.viewContext.perform {
             downloadable?.objectWillChange.send()
             downloadable?.downloadProgress = Float(totalBytesWritten)/Float(totalBytesExpectedToWrite)
             DispatchQueue.main.async {
-                try? PersistenceController.shared.container.viewContext.save()
+                try? PersistenceController.current.container.viewContext.save()
             }
         }
     }
@@ -133,13 +133,13 @@ extension DownloadManager: URLSessionDownloadDelegate {
             
             // Schedule the notification.
             center.add(request)
-            PersistenceController.shared.container.viewContext.perform {
+            PersistenceController.current.container.viewContext.perform {
                 downloadable.objectWillChange.send()
                 downloadable.isDownloaded = true
                 downloadable.isDownloading = false
                 downloadable.downloadProgress = 1.0
                 DispatchQueue.main.async {
-                    try? PersistenceController.shared.container.viewContext.save()
+                    try? PersistenceController.current.container.viewContext.save()
                 }
             }
         } catch {

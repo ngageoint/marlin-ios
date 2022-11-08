@@ -23,7 +23,7 @@ struct AppLauncher {
 }
 
 struct TestApp: App {
-    let persistenceController = PersistenceController.shared
+//    let persistenceController = PersistenceController.shared
     
     init() {
         print("doing the tests")
@@ -41,6 +41,7 @@ class AppState: ObservableObject {
 
 struct MarlinApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    var cancellable = Set<AnyCancellable>()
     
     let persistenceController: PersistenceController
     let shared: MSI
@@ -49,6 +50,7 @@ struct MarlinApp: App {
     var appState: AppState
     
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
+        .receive(on: RunLoop.main)
     @State var loading = false
     
     init() {
@@ -56,7 +58,13 @@ struct MarlinApp: App {
         UserDefaults.registerMarlinDefaults()
         shared = MSI.shared
         appState = MSI.shared.appState
+        persistentStoreLoadedPub.sink { notification in
+            NSLog("Persistent store loaded, load all data")
+            MSI.shared.loadAllData()
+        }
+        .store(in: &cancellable)
         persistenceController = PersistenceController.shared
+        
         UNUserNotificationCenter.current().delegate = appDelegate
     }
 
@@ -64,9 +72,8 @@ struct MarlinApp: App {
         WindowGroup {
             MarlinView()
                 .environmentObject(appState)
-                .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .background(Color.surfaceColor)
-            
         }
     }
 }

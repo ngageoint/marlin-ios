@@ -53,11 +53,11 @@ extension Modu: BatchImportable {
         }
         let count = value.modu.count
         NSLog("Received \(count) \(Self.key) records.")
-        return try await Modu.importRecords(from: value.modu, taskContext: PersistenceController.shared.newTaskContext())
+        return try await Modu.importRecords(from: value.modu, taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
-        let newestModu = try? PersistenceController.shared.container.viewContext.fetchFirst(Modu.self, sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)])
+        let newestModu = try? PersistenceController.current.container.viewContext.fetchFirst(Modu.self, sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)])
         return [MSIRouter.readModus(date: newestModu?.dateString)]
     }
     
@@ -97,6 +97,7 @@ extension Modu: BatchImportable {
             batchInsertRequest.resultType = .count
             if let fetchResult = try? taskContext.execute(batchInsertRequest),
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
+                try? taskContext.save()
                 if let count = batchInsertResult.result as? Int, count > 0 {
                     NSLog("Inserted \(count) MODU records")
                     return count

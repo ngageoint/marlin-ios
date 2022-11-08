@@ -185,7 +185,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         
         fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         
-        let context = PersistenceController.shared.container.viewContext
+        let context = PersistenceController.current.container.viewContext
         return try? context.fetch(fetchRequest) as? [any DataSource]
     }
     
