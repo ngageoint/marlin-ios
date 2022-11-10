@@ -149,7 +149,7 @@ struct SortView: View {
             .background(Color.backgroundColor)
             
             HStack {
-                Toggle("Use primary sort field as sections", isOn: $sections)
+                Toggle("Group by primary sort field", isOn: $sections)
                     .secondary()
             }
             .frame(maxWidth: .infinity)
