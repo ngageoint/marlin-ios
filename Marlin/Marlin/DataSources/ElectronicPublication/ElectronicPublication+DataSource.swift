@@ -43,12 +43,12 @@ extension ElectronicPublication: DataSource {
 
 extension ElectronicPublication: BatchImportable {
     static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
-        guard let value = value as? [ElectronicPublicationProperties] else {
+        guard let value = value as? ElectronicPublicationPropertyContainer else {
             return 0
         }
-        let count = value.count
+        let count = value.publications.count
         NSLog("Received \(count) Electronic Publication records.")
-        return try await Self.importRecords(from: value, taskContext: PersistenceController.current.newTaskContext())
+        return try await Self.importRecords(from: value.publications, taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func newBatchInsertRequest(with propertyList: [ElectronicPublicationProperties]) -> NSBatchInsertRequest {
@@ -102,7 +102,7 @@ extension ElectronicPublication: BatchImportable {
     
     static var seedDataFiles: [String]? = nil
     
-    static var decodableRoot: Decodable.Type = [ElectronicPublicationProperties].self
+    static var decodableRoot: Decodable.Type = ElectronicPublicationPropertyContainer.self
     
     static func shouldSync() -> Bool {
         // sync once every week

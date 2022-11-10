@@ -13,9 +13,17 @@ struct ElectronicPublicationPropertyContainer: Decodable {
     }
     let publications: [ElectronicPublicationProperties]
     
-    init(from decoder: Decoder) throws {        
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        publications = try container.decode([Throwable<ElectronicPublicationProperties>].self, forKey: .publications).compactMap { try? $0.result.get()}
+    init(from decoder: Decoder) throws {
+        var container = try decoder.unkeyedContainer()
+        var pubs: [ElectronicPublicationProperties] = []
+        while !container.isAtEnd {
+            if let pub = try? container.decode(Throwable<ElectronicPublicationProperties>.self) {
+                if let pubResult = try? pub.result.get() {
+                    pubs.append(pubResult)
+                }
+            }
+        }
+        publications = pubs
     }
 }
 
