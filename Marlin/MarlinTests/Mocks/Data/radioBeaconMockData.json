@@ -1,0 +1,46 @@
+{
+    "ngalol": [
+        {
+            "volumeNumber": "PUB 110",
+            "aidType": "Radiobeacons",
+            "geopoliticalHeading": "GREENLAND",
+            "regionHeading": null,
+            "precedingNote": null,
+            "featureNumber": 10,
+            "name": "Ittoqqortoormit, Scoresbysund",
+            "position": "70°29'11.99\"N \n21°58'20\"W",
+            "characteristic": "SC\n(• • •  - • - • ).\n",
+            "range": "200",
+            "sequenceText": null,
+            "frequency": "343\nNON, A2A.",
+            "stationRemark": "Aeromarine.",
+            "postNote": null,
+            "noticeNumber": 199706,
+            "removeFromList": "N",
+            "deleteFlag": "N",
+            "noticeWeek": "06",
+            "noticeYear": "1997"
+        },
+        {
+            "volumeNumber": "PUB 110",
+            "aidType": "Radiobeacons",
+            "geopoliticalHeading": "GREENLAND",
+            "regionHeading": null,
+            "precedingNote": null,
+            "featureNumber": 20,
+            "name": "Kulusuk",
+            "position": "65°31'59.99\"N \n37°10'00\"W",
+            "characteristic": "KK\n(- • -   - • - ).\n",
+            "range": "50",
+            "sequenceText": null,
+            "frequency": "283\nNON, A2A.",
+            "stationRemark": "Aeromarine.",
+            "postNote": null,
+            "noticeNumber": 199706,
+            "removeFromList": "N",
+            "deleteFlag": "N",
+            "noticeWeek": "06",
+            "noticeYear": "1997"
+        }
+    ]
+}

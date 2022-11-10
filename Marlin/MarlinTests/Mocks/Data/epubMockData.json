@@ -1,0 +1,47 @@
+
+[
+    {
+        "pubTypeId": 9,
+        "pubDownloadId": 3,
+        "fullPubFlag": false,
+        "pubDownloadOrder": 1,
+        "pubDownloadDisplayName": "Pub. 110 - Greenland, East Coasts of North and South America, and West Indies",
+        "pubsecId": 129,
+        "odsEntryId": 22266,
+        "sectionOrder": 1,
+        "sectionName": "UpdatedPub110bk",
+        "sectionDisplayName": "Pub 110 - Updated to NTM 44/22",
+        "sectionLastModified": "2022-10-24T17:06:57.757+0000",
+        "contentId": 16694312,
+        "internalPath": "NIMA_LOL/Pub110",
+        "filenameBase": "UpdatedPub110bk",
+        "fileExtension": "pdf",
+        "s3Key": "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf",
+        "fileSize": 2389496,
+        "uploadTime": "2022-10-24T17:06:57.757+0000",
+        "fullFilename": "UpdatedPub110bk.pdf",
+        "pubsecLastModified": "2022-10-24T17:06:57.757Z"
+    },
+    {
+        "pubTypeId": 9,
+        "pubDownloadId": 3,
+        "fullPubFlag": false,
+        "pubDownloadOrder": 1,
+        "pubDownloadDisplayName": "Pub. 110 - Greenland, East Coasts of North and South America, and West Indies",
+        "pubsecId": 130,
+        "odsEntryId": 22626,
+        "sectionOrder": 2,
+        "sectionName": "Pub110bk",
+        "sectionDisplayName": "Pub 110",
+        "sectionLastModified": "2022-09-20T15:38:12.825+0000",
+        "contentId": 16694312,
+        "internalPath": "NIMA_LOL/Pub110",
+        "filenameBase": "Pub110bk",
+        "fileExtension": "pdf",
+        "s3Key": "16694312/SFH00000/NIMA_LOL/Pub110/Pub110bk.pdf",
+        "fileSize": 2389497,
+        "uploadTime": "2022-09-20T15:38:12.825+0000",
+        "fullFilename": "Pub110bk.pdf",
+        "pubsecLastModified": "2022-09-20T15:38:12.825Z"
+    }
+]

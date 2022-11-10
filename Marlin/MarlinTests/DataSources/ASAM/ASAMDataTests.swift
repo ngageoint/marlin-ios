@@ -29,7 +29,6 @@ final class ASAMDataTests: XCTestCase {
         persistentStoreLoadedPub
             .removeDuplicates()
             .sink { output in
-                print("xxx persistent store loaded")
                 completion(nil)
             }
             .store(in: &cancellable)

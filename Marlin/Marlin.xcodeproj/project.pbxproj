@@ -80,6 +80,20 @@
 		F727A691284E605800BD728A /* MarlinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A690284E605800BD728A /* MarlinTests.swift */; };
 		F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A687284E485500BD728A /* KIF+extensions.swift */; };
 		F727A698284E607100BD728A /* MSITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A685284E476200BD728A /* MSITests.swift */; };
+		F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */; };
+		F72EAAB9291BF28C00AC6026 /* moduMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAAB8291BF28C00AC6026 /* moduMockData.json */; };
+		F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAABB291C138000AC6026 /* PortDataTests.swift */; };
+		F72EAABE291C197A00AC6026 /* portMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAABD291C197A00AC6026 /* portMockData.json */; };
+		F72EAAC1291C274100AC6026 /* DifferentialGPSStationDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAC0291C274100AC6026 /* DifferentialGPSStationDataTests.swift */; };
+		F72EAAC3291C2D3F00AC6026 /* dgpsMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAAC2291C2D3F00AC6026 /* dgpsMockData.json */; };
+		F72EAAC6291C334200AC6026 /* ElectronicPublicationDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAC5291C334200AC6026 /* ElectronicPublicationDataTests.swift */; };
+		F72EAAC8291C3C3A00AC6026 /* epubMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAAC7291C3C3A00AC6026 /* epubMockData.json */; };
+		F72EAACB291C635100AC6026 /* NavigationalWarningDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAACA291C635100AC6026 /* NavigationalWarningDataTests.swift */; };
+		F72EAACD291C644900AC6026 /* navwarnMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAACC291C644900AC6026 /* navwarnMockData.json */; };
+		F72EAAD0291C669D00AC6026 /* LightDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAACF291C669D00AC6026 /* LightDataTests.swift */; };
+		F72EAAD2291C677E00AC6026 /* lightMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAAD1291C677E00AC6026 /* lightMockData.json */; };
+		F72EAAD5291D526700AC6026 /* RadioBeaconDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAD4291D526700AC6026 /* RadioBeaconDataTests.swift */; };
+		F72EAAD7291D5DB500AC6026 /* radioBeaconMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAAD6291D5DB500AC6026 /* radioBeaconMockData.json */; };
 		F740AA77289D68D800754293 /* MarlinCompactWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F740AA76289D68D800754293 /* MarlinCompactWidth.swift */; };
 		F740AA79289D6DED00754293 /* MarlinRegularWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F740AA78289D6DED00754293 /* MarlinRegularWidth.swift */; };
 		F74B9B0728B7CF650097D448 /* RadioBeacon+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0628B7CF650097D448 /* RadioBeacon+CoreDataClass.swift */; };
@@ -316,6 +330,20 @@
 		F727A689284E5F9600BD728A /* Marlin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Marlin-Bridging-Header.h"; sourceTree = "<group>"; };
 		F727A68E284E605800BD728A /* MarlinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MarlinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F727A690284E605800BD728A /* MarlinTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTests.swift; sourceTree = "<group>"; };
+		F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDataTests.swift; sourceTree = "<group>"; };
+		F72EAAB8291BF28C00AC6026 /* moduMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = moduMockData.json; sourceTree = "<group>"; };
+		F72EAABB291C138000AC6026 /* PortDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDataTests.swift; sourceTree = "<group>"; };
+		F72EAABD291C197A00AC6026 /* portMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = portMockData.json; sourceTree = "<group>"; };
+		F72EAAC0291C274100AC6026 /* DifferentialGPSStationDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationDataTests.swift; sourceTree = "<group>"; };
+		F72EAAC2291C2D3F00AC6026 /* dgpsMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = dgpsMockData.json; sourceTree = "<group>"; };
+		F72EAAC5291C334200AC6026 /* ElectronicPublicationDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationDataTests.swift; sourceTree = "<group>"; };
+		F72EAAC7291C3C3A00AC6026 /* epubMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = epubMockData.json; sourceTree = "<group>"; };
+		F72EAACA291C635100AC6026 /* NavigationalWarningDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningDataTests.swift; sourceTree = "<group>"; };
+		F72EAACC291C644900AC6026 /* navwarnMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = navwarnMockData.json; sourceTree = "<group>"; };
+		F72EAACF291C669D00AC6026 /* LightDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightDataTests.swift; sourceTree = "<group>"; };
+		F72EAAD1291C677E00AC6026 /* lightMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = lightMockData.json; sourceTree = "<group>"; };
+		F72EAAD4291D526700AC6026 /* RadioBeaconDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconDataTests.swift; sourceTree = "<group>"; };
+		F72EAAD6291D5DB500AC6026 /* radioBeaconMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = radioBeaconMockData.json; sourceTree = "<group>"; };
 		F740AA76289D68D800754293 /* MarlinCompactWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinCompactWidth.swift; sourceTree = "<group>"; };
 		F740AA78289D6DED00754293 /* MarlinRegularWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinRegularWidth.swift; sourceTree = "<group>"; };
 		F74B9B0628B7CF650097D448 /* RadioBeacon+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -692,6 +720,62 @@
 			path = MarlinTests;
 			sourceTree = "<group>";
 		};
+		F72EAAB5291BF1DA00AC6026 /* MODU */ = {
+			isa = PBXGroup;
+			children = (
+				F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */,
+			);
+			path = MODU;
+			sourceTree = "<group>";
+		};
+		F72EAABA291C136D00AC6026 /* Port */ = {
+			isa = PBXGroup;
+			children = (
+				F72EAABB291C138000AC6026 /* PortDataTests.swift */,
+			);
+			path = Port;
+			sourceTree = "<group>";
+		};
+		F72EAABF291C26E600AC6026 /* DifferentialGPSStation */ = {
+			isa = PBXGroup;
+			children = (
+				F72EAAC0291C274100AC6026 /* DifferentialGPSStationDataTests.swift */,
+			);
+			path = DifferentialGPSStation;
+			sourceTree = "<group>";
+		};
+		F72EAAC4291C332800AC6026 /* ElectronicPublication */ = {
+			isa = PBXGroup;
+			children = (
+				F72EAAC5291C334200AC6026 /* ElectronicPublicationDataTests.swift */,
+			);
+			path = ElectronicPublication;
+			sourceTree = "<group>";
+		};
+		F72EAAC9291C632C00AC6026 /* NavigationalWarning */ = {
+			isa = PBXGroup;
+			children = (
+				F72EAACA291C635100AC6026 /* NavigationalWarningDataTests.swift */,
+			);
+			path = NavigationalWarning;
+			sourceTree = "<group>";
+		};
+		F72EAACE291C668A00AC6026 /* Light */ = {
+			isa = PBXGroup;
+			children = (
+				F72EAACF291C669D00AC6026 /* LightDataTests.swift */,
+			);
+			path = Light;
+			sourceTree = "<group>";
+		};
+		F72EAAD3291D525300AC6026 /* RadioBeacon */ = {
+			isa = PBXGroup;
+			children = (
+				F72EAAD4291D526700AC6026 /* RadioBeaconDataTests.swift */,
+			);
+			path = RadioBeacon;
+			sourceTree = "<group>";
+		};
 		F74B9B0528B7CDC20097D448 /* RadioBeacon */ = {
 			isa = PBXGroup;
 			children = (
@@ -825,6 +909,13 @@
 		F7C23E152911C7920002A7DF /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
+				F72EAAD3291D525300AC6026 /* RadioBeacon */,
+				F72EAACE291C668A00AC6026 /* Light */,
+				F72EAAC9291C632C00AC6026 /* NavigationalWarning */,
+				F72EAAC4291C332800AC6026 /* ElectronicPublication */,
+				F72EAABF291C26E600AC6026 /* DifferentialGPSStation */,
+				F72EAABA291C136D00AC6026 /* Port */,
+				F72EAAB5291BF1DA00AC6026 /* MODU */,
 				F7C23E162911C79F0002A7DF /* ASAM */,
 			);
 			path = DataSources;
@@ -850,6 +941,13 @@
 			isa = PBXGroup;
 			children = (
 				F7C23E1B2914269D0002A7DF /* asamMockData.json */,
+				F72EAAB8291BF28C00AC6026 /* moduMockData.json */,
+				F72EAABD291C197A00AC6026 /* portMockData.json */,
+				F72EAAC2291C2D3F00AC6026 /* dgpsMockData.json */,
+				F72EAAC7291C3C3A00AC6026 /* epubMockData.json */,
+				F72EAACC291C644900AC6026 /* navwarnMockData.json */,
+				F72EAAD1291C677E00AC6026 /* lightMockData.json */,
+				F72EAAD6291D5DB500AC6026 /* radioBeaconMockData.json */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -1216,11 +1314,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F72EAAB9291BF28C00AC6026 /* moduMockData.json in Resources */,
 				F7F597A82864BF9D00F9B32E /* navwarnings.json in Resources */,
+				F72EAABE291C197A00AC6026 /* portMockData.json in Resources */,
+				F72EAAC3291C2D3F00AC6026 /* dgpsMockData.json in Resources */,
 				F71DF4842857942D00686951 /* modus.json in Resources */,
+				F72EAACD291C644900AC6026 /* navwarnMockData.json in Resources */,
+				F72EAAC8291C3C3A00AC6026 /* epubMockData.json in Resources */,
+				F72EAAD2291C677E00AC6026 /* lightMockData.json in Resources */,
 				F707BA7F287736A8006A94C4 /* lights.json in Resources */,
 				F7C23E1C2914269D0002A7DF /* asamMockData.json in Resources */,
 				F71DF47E284E68DE00686951 /* asams.json in Resources */,
+				F72EAAD7291D5DB500AC6026 /* radioBeaconMockData.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1365,7 +1470,14 @@
 				F727A698284E607100BD728A /* MSITests.swift in Sources */,
 				F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */,
 				F727A691284E605800BD728A /* MarlinTests.swift in Sources */,
+				F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */,
+				F72EAAD5291D526700AC6026 /* RadioBeaconDataTests.swift in Sources */,
+				F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */,
+				F72EAAC1291C274100AC6026 /* DifferentialGPSStationDataTests.swift in Sources */,
+				F72EAAD0291C669D00AC6026 /* LightDataTests.swift in Sources */,
+				F72EAACB291C635100AC6026 /* NavigationalWarningDataTests.swift in Sources */,
 				F71DF482284E783600686951 /* TestHelper.swift in Sources */,
+				F72EAAC6291C334200AC6026 /* ElectronicPublicationDataTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
