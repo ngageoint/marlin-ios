@@ -26,7 +26,7 @@ extension Light: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFFFFC500)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Section Header", key: #keyPath(Light.sectionHeader), type: .string), ascending: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .int), ascending: true)]
+    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Region", key: #keyPath(Light.sectionHeader), type: .string), ascending: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .int), ascending: true)]
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
@@ -50,6 +50,11 @@ extension Light: DataSource {
         DataSourceProperty(name: "Volume Number", key: #keyPath(Light.volumeNumber), type: .string),
         DataSourceProperty(name: "Preceding Note", key: #keyPath(Light.precedingNote), type: .string),
         DataSourceProperty(name: "Post Note", key: #keyPath(Light.postNote), type: .string),
+        DataSourceProperty(name: "Region", key: #keyPath(Light.sectionHeader), type: .string),
+        DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(Light.geopoliticalHeading), type: .string),
+        DataSourceProperty(name: "Region Heading", key: #keyPath(Light.regionHeading), type: .string),
+        DataSourceProperty(name: "Subregion Heading", key: #keyPath(Light.subregionHeading), type: .string),
+        DataSourceProperty(name: "Local Heading", key: #keyPath(Light.localHeading), type: .string)
     ]
 }
 
