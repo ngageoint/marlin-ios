@@ -19,127 +19,129 @@ struct SideMenuContent: View {
     @ObservedObject var dataSourceList: DataSourceList
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Color.primaryColor
-                .frame(maxWidth: .infinity, maxHeight: 80)
-            HStack {
-                Text("Data Source \(horizontalSizeClass == .compact ? "Tabs" : "Rail Items") (Drag to reorder)")
-                    .padding([.leading, .top, .bottom, .trailing], 8)
-                    .overline()
-                Spacer()
-            }
-            .padding(.top, 16)
-            .padding(.bottom, 8)
-            .background(Color.backgroundColor)
-        
-            if dataSourceList.tabs.count != 0 {
-                ForEach(dataSourceList.tabs, id: \.self) { dataSource in
-                    DataSourceCell(dataSourceItem: dataSource)
-                        .overlay(validDropTarget && draggedItem == dataSource.key ? Color.white.opacity(0.8) : Color.clear)
-                        .onDrag {
-                            if !dataSourceList.tabs.isEmpty {
-                                self.lastTab = dataSourceList.tabs[dataSourceList.tabs.count - 1]
-                            }
-                            self.draggedItem = dataSource.key
-                            return NSItemProvider(object: dataSource.key as NSString)
-                        }
-                        .onDrop(of: [.plainText], delegate: SideMenuDrop(item: dataSource, tabItems: $dataSourceList.tabs, nonTabItems: $dataSourceList.nonTabs, draggedItem: $draggedItem, validDropTarget: $validDropTarget, lastTab: $lastTab))
-                }
-            } else {
-                Text("Drag here to add a \(horizontalSizeClass == .compact ? "tabs" : "rail items")")
-                    .padding([.leading, .top, .bottom, .trailing], 8)
-                    .overline()
-                    .frame(maxWidth: .infinity)
-                    .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyTabFirst)
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            .strokeBorder(Color.gray, style: StrokeStyle(dash: [10]))
-                            .padding([.trailing, .leading], 8)
-                            .background(Color.backgroundColor)
-                            .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyTabFirst)
-                    )
-            }
-            HStack {
-                Text("Other Data Sources (Drag to add to \(horizontalSizeClass == .compact ? "tabs" : "rail items"))")
-                    .padding([.leading, .top, .bottom, .trailing], 8)
-                    .overline()
-                Spacer()
-            }
-            .padding(.top, 16)
-            .padding(.bottom, 8)
-            .background(Color.backgroundColor)
-            
-            if dataSourceList.nonTabs.count != 0 {
-                ForEach(dataSourceList.nonTabs, id: \.self) { dataSource in
-                    DataSourceCell(dataSourceItem: dataSource)
-                        .overlay(validDropTarget && draggedItem == dataSource.key ? Color.white.opacity(0.8) : Color.clear)
-                        .onDrag {
-                            if !dataSourceList.tabs.isEmpty {
-                                self.lastTab = dataSourceList.tabs[dataSourceList.tabs.count - 1]
-                            }
-                            self.draggedItem = dataSource.key
-                            return NSItemProvider(object: dataSource.key as NSString)
-                        }
-                        .onDrop(of: [.plainText], delegate: SideMenuDrop(item: dataSource, tabItems: $dataSourceList.tabs, nonTabItems: $dataSourceList.nonTabs, draggedItem: $draggedItem, validDropTarget: $validDropTarget, lastTab: $lastTab))
-                }
-            } else {
-                Text("Drag here to remove a \(horizontalSizeClass == .compact ? "tab" : "rail item")")
-                    .padding([.leading, .top, .bottom, .trailing], 8)
-                    .overline()
-                    .frame(maxWidth: .infinity)
-                    .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyNonTabFirst)
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            .strokeBorder(Color.gray, style: StrokeStyle(dash: [10]))
-                            .padding([.trailing, .leading], 8)
-                            .background(Color.backgroundColor)
-                            .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyNonTabFirst)
-                    )
-            }
-            
-            HStack {
-                Spacer()
-            }
-            .padding(.top, 16)
-            .padding(.bottom, 8)
-            .background(Color.backgroundColor)
+        ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                HStack(alignment: .center) {
-                    Image(systemName: "doc.fill.badge.plus")
-                        .tint(Color.onSurfaceColor)
-                        .opacity(0.60)
-                    Text("Submit Report to NGA")
-                        .font(Font.body1)
-                        .foregroundColor(Color.onSurfaceColor)
-                        .opacity(0.87)
+                Color.primaryColor
+                    .frame(maxWidth: .infinity, maxHeight: 80)
+                HStack {
+                    Text("Data Source \(horizontalSizeClass == .compact ? "Tabs" : "Rail Items") (Drag to reorder)")
+                        .padding([.leading, .top, .bottom, .trailing], 8)
+                        .overline()
                     Spacer()
                 }
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    NotificationCenter.default.post(name: .SwitchTabs, object: "submitReport")
+                .padding(.top, 16)
+                .padding(.bottom, 8)
+                .background(Color.backgroundColor)
+                
+                if dataSourceList.tabs.count != 0 {
+                    ForEach(dataSourceList.tabs, id: \.self) { dataSource in
+                        DataSourceCell(dataSourceItem: dataSource)
+                            .overlay(validDropTarget && draggedItem == dataSource.key ? Color.white.opacity(0.8) : Color.clear)
+                            .onDrag {
+                                if !dataSourceList.tabs.isEmpty {
+                                    self.lastTab = dataSourceList.tabs[dataSourceList.tabs.count - 1]
+                                }
+                                self.draggedItem = dataSource.key
+                                return NSItemProvider(object: dataSource.key as NSString)
+                            }
+                            .onDrop(of: [.plainText], delegate: SideMenuDrop(item: dataSource, tabItems: $dataSourceList.tabs, nonTabItems: $dataSourceList.nonTabs, draggedItem: $draggedItem, validDropTarget: $validDropTarget, lastTab: $lastTab))
+                    }
+                } else {
+                    Text("Drag here to add a \(horizontalSizeClass == .compact ? "tabs" : "rail items")")
+                        .padding([.leading, .top, .bottom, .trailing], 8)
+                        .overline()
+                        .frame(maxWidth: .infinity)
+                        .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyTabFirst)
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 15)
+                                .strokeBorder(Color.gray, style: StrokeStyle(dash: [10]))
+                                .padding([.trailing, .leading], 8)
+                                .background(Color.backgroundColor)
+                                .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyTabFirst)
+                        )
                 }
-                .padding([.leading, .top, .bottom, .trailing], 16)
-                Divider()
-            }
-            .background(Color.surfaceColor)
-            HStack {
+                HStack {
+                    Text("Other Data Sources (Drag to add to \(horizontalSizeClass == .compact ? "tabs" : "rail items"))")
+                        .padding([.leading, .top, .bottom, .trailing], 8)
+                        .overline()
+                    Spacer()
+                }
+                .padding(.top, 16)
+                .padding(.bottom, 8)
+                .background(Color.backgroundColor)
+                
+                if dataSourceList.nonTabs.count != 0 {
+                    ForEach(dataSourceList.nonTabs, id: \.self) { dataSource in
+                        DataSourceCell(dataSourceItem: dataSource)
+                            .overlay(validDropTarget && draggedItem == dataSource.key ? Color.white.opacity(0.8) : Color.clear)
+                            .onDrag {
+                                if !dataSourceList.tabs.isEmpty {
+                                    self.lastTab = dataSourceList.tabs[dataSourceList.tabs.count - 1]
+                                }
+                                self.draggedItem = dataSource.key
+                                return NSItemProvider(object: dataSource.key as NSString)
+                            }
+                            .onDrop(of: [.plainText], delegate: SideMenuDrop(item: dataSource, tabItems: $dataSourceList.tabs, nonTabItems: $dataSourceList.nonTabs, draggedItem: $draggedItem, validDropTarget: $validDropTarget, lastTab: $lastTab))
+                    }
+                } else {
+                    Text("Drag here to remove a \(horizontalSizeClass == .compact ? "tab" : "rail item")")
+                        .padding([.leading, .top, .bottom, .trailing], 8)
+                        .overline()
+                        .frame(maxWidth: .infinity)
+                        .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyNonTabFirst)
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 15)
+                                .strokeBorder(Color.gray, style: StrokeStyle(dash: [10]))
+                                .padding([.trailing, .leading], 8)
+                                .background(Color.backgroundColor)
+                                .onDrop(of: [.plainText], isTargeted: nil, perform: dropOnEmptyNonTabFirst)
+                        )
+                }
+                
+                HStack {
+                    Spacer()
+                }
+                .padding(.top, 16)
+                .padding(.bottom, 8)
+                .background(Color.backgroundColor)
+                VStack(alignment: .leading, spacing: 0) {
+                    HStack(alignment: .center) {
+                        Image(systemName: "doc.fill.badge.plus")
+                            .tint(Color.onSurfaceColor)
+                            .opacity(0.60)
+                        Text("Submit Report to NGA")
+                            .font(Font.body1)
+                            .foregroundColor(Color.onSurfaceColor)
+                            .opacity(0.87)
+                        Spacer()
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        NotificationCenter.default.post(name: .SwitchTabs, object: "submitReport")
+                    }
+                    .padding([.leading, .top, .bottom, .trailing], 16)
+                    Divider()
+                }
+                .background(Color.surfaceColor)
+                HStack {
+                    Spacer()
+                }
+                .padding(.top, 16)
+                .padding(.bottom, 8)
+                .background(Color.backgroundColor)
+                SettingsCell()
                 Spacer()
             }
-            .padding(.top, 16)
-            .padding(.bottom, 8)
+            .frame(maxHeight: .infinity)
             .background(Color.backgroundColor)
-            SettingsCell()
-            Spacer()
-        }
-        .frame(maxHeight: .infinity)
-        .background(Color.backgroundColor)
-        .ignoresSafeArea(.all, edges: [.top, .bottom])
-        .onDrop(of: [.text], isTargeted: nil) { provider in
-            draggedItem = nil
-            validDropTarget = false
-            return true
+            .ignoresSafeArea(.all, edges: [.top, .bottom])
+            .onDrop(of: [.text], isTargeted: nil) { provider in
+                draggedItem = nil
+                validDropTarget = false
+                return true
+            }
         }
     }
     
