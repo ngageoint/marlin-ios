@@ -17,14 +17,17 @@ public class MSI {
     static let shared = MSI()
     let appState = AppState()
     lazy var configuration: URLSessionConfiguration = URLSessionConfiguration.af.default
+    var manager = ServerTrustManager(evaluators: ["msi.gs.mil": DisabledTrustEvaluator()
+                                                           , "msi.om.east.paas.nga.mil": DisabledTrustEvaluator()])
     lazy var session: Session = {
-        let manager = ServerTrustManager(evaluators: ["msi.gs.mil": DisabledTrustEvaluator()])
+        
         configuration.httpMaximumConnectionsPerHost = 4
         configuration.timeoutIntervalForRequest = 120
+        
         return Session(configuration: configuration, serverTrustManager: manager)
     }()
     
-    let masterDataList: [any BatchImportable.Type] = [Asam.self, Modu.self, NavigationalWarning.self, Light.self, Port.self, RadioBeacon.self, DifferentialGPSStation.self, DFRS.self, DFRSArea.self, ElectronicPublication.self]
+    let masterDataList: [any BatchImportable.Type] = [Asam.self, Modu.self, NavigationalWarning.self, Light.self, Port.self, RadioBeacon.self, DifferentialGPSStation.self, DFRS.self, DFRSArea.self, ElectronicPublication.self, NoticeToMariners.self]
     
     
     func loadAllData() {
@@ -32,11 +35,14 @@ public class MSI {
 
         var initialDataLoadList: [any BatchImportable.Type] = []
         // if we think we need to load the initial data
-        if !UserDefaults.standard.initialDataLoaded {
+//        if !UserDefaults.standard.initialDataLoaded {
             initialDataLoadList = masterDataList.filter { importable in
-                UserDefaults.standard.dataSourceEnabled(importable) && !isLoaded(type: importable) && !(importable.seedDataFiles ?? []).isEmpty
+                if let ds = importable as? any DataSource.Type {
+                    return UserDefaults.standard.dataSourceEnabled(ds) && !isLoaded(type: importable) && !(importable.seedDataFiles ?? []).isEmpty
+                }
+                return false
             }
-        }
+//        }
 
         if !initialDataLoadList.isEmpty {
             NSLog("Loading initial data from \(initialDataLoadList.count) data sources")
@@ -58,7 +64,6 @@ public class MSI {
 
             let allLoadList: [any BatchImportable.Type] = masterDataList.filter { importable in
                 let sync = importable.shouldSync()
-                print("xxx should sync \(importable.key) \(sync)")
                 return sync
             }
 

@@ -35,6 +35,8 @@
 	<key>epubOrder</key>
 	<integer>8</integer>
 	<key>dfrsOrder</key>
+	<integer>10</integer>
+	<key>ntmOrder</key>
 	<integer>9</integer>
 	<key>userTabs</key>
 	<integer>3</integer>

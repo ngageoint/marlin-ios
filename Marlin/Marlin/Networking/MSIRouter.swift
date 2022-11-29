@@ -21,7 +21,9 @@ enum MSIRouter: URLRequestConvertible
     case readDFRSAreas
     case readElectronicPublications
     
-    static let baseURLString = "https://msi.gs.mil/api"
+//    static let baseURLString = "https://msi.gs.mil/api"
+    static let baseURLString = "https://msi.om.east.paas.nga.mil/api"
+    static let ntmGraphicKeyBase = "16920957/SFH00000/UNTM"
     
     var method: HTTPMethod
     {

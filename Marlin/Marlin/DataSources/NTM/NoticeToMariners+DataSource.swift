@@ -1,0 +1,138 @@
+//
+//  NoticeToMariners+DataSource.swift
+//  Marlin
+//
+//  Created by Daniel Barela on 11/13/22.
+//
+
+import Foundation
+import UIKit
+import CoreData
+import Combine
+
+/**
+ {
+ "publicationIdentifier": 41791,
+ "noticeNumber": 202247,
+ "title": "Front Cover",
+ "odsKey": "16694429/SFH00000/UNTM/202247/Front_Cover.pdf",
+ "sectionOrder": 20,
+ "limitedDist": false,
+ "odsEntryId": 29431,
+ "odsContentId": 16694429,
+ "internalPath": "UNTM/202247",
+ "filenameBase": "Front_Cover",
+ "fileExtension": "pdf",
+ "fileSize": 63491,
+ "isFullPublication": false,
+ "uploadTime": "2022-11-08T12:28:33.961+0000",
+ "lastModified": "2022-11-08T12:28:33.961Z"
+ }
+ */
+
+extension NoticeToMariners: DataSource {
+    static var properties: [DataSourceProperty] {
+        return []
+    }
+    
+    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Notice Number", key: #keyPath(NoticeToMariners.noticeNumber), type: .int), ascending: false, section: true), DataSourceSortParameter(property:DataSourceProperty(name: "Full Publication", key: #keyPath(NoticeToMariners.isFullPublication), type: .int), ascending: false, section: false), DataSourceSortParameter(property:DataSourceProperty(name: "Section Order", key: #keyPath(NoticeToMariners.sectionOrder), type: .int), ascending: true, section: false)]
+    static var defaultFilter: [DataSourceFilterParameter] = []
+    static var isMappable: Bool = false
+    static var dataSourceName: String = "NTM"
+    static var fullDataSourceName: String = "Notice To Mariners"
+    static var key: String = "ntm"
+    static var color: UIColor = UIColor.red
+    static var imageName: String? = nil
+    static var systemImageName: String? = "speaker.badge.exclamationmark.fill"
+    
+    var color: UIColor {
+        NoticeToMariners.color
+    }
+    
+    static var imageScale: CGFloat = 1.0
+    
+    static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        return dateFormatter
+    }
+}
+
+extension NoticeToMariners: BatchImportable {
+    static var seedDataFiles: [String]? = ["ntm"]
+    static var decodableRoot: Decodable.Type = NoticeToMarinersPropertyContainer.self
+    
+    static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
+        guard let value = value as? NoticeToMarinersPropertyContainer else {
+            return 0
+        }
+        let count = value.pubs.count
+        NSLog("Received \(count) \(Self.key) records.")
+        
+        return try await Self.importRecords(from: value.pubs, taskContext: PersistenceController.current.newTaskContext())
+    }
+    
+    static func dataRequest() -> [MSIRouter] {
+        let newestAsam = try? PersistenceController.current.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)], predicate: nil)
+        return []//MSIRouter.readAsams(date: newestAsam?.dateString)]
+    }
+    
+    static func shouldSync() -> Bool {
+        // sync once every hour
+        return UserDefaults.standard.dataSourceEnabled(NoticeToMariners.self) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.self)
+    }
+    
+    static func newBatchInsertRequest(with propertyList: [NoticeToMarinersProperties]) -> NSBatchInsertRequest {
+        var index = 0
+        let total = propertyList.count
+        
+        // Provide one dictionary at a time when the closure is called.
+        let batchInsertRequest = NSBatchInsertRequest(entity: NoticeToMariners.entity(), dictionaryHandler: { dictionary in
+            guard index < total else { return true }
+            dictionary.addEntries(from: propertyList[index].dictionaryValue.filter({
+                return $0.value != nil
+            }) as [AnyHashable : Any])
+            index += 1
+            return false
+        })
+        return batchInsertRequest
+    }
+    
+    static func importRecords(from propertiesList: [NoticeToMarinersProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+        guard !propertiesList.isEmpty else { return 0 }
+        
+        // Add name and author to identify source of persistent history changes.
+        taskContext.name = "importContext"
+        taskContext.transactionAuthor = "importNoticeToMariners"
+        
+        /// - Tag: performAndWait
+        let count = try await taskContext.perform {
+            // Execute the batch insert.
+            /// - Tag: batchInsertRequest
+            let batchInsertRequest = NoticeToMariners.newBatchInsertRequest(with: propertiesList)
+            batchInsertRequest.resultType = .count
+            do {
+                 let fetchResult = try taskContext.execute(batchInsertRequest)
+                   if let batchInsertResult = fetchResult as? NSBatchInsertResult {
+                    do {
+                        try taskContext.save()
+                    } catch {
+                        NSLog("Error is \(error)")
+                    }
+                    if let count = batchInsertResult.result as? Int, count > 0 {
+                        NSLog("Inserted \(count) NoticeToMariners records")
+                        return count
+                    } else {
+                        NSLog("No new NoticeToMariners records")
+                    }
+                    return 0
+                }
+            } catch {
+                NSLog("error here is \(error)")
+            }
+            throw MSIError.batchInsertError
+        }
+        return count
+    }
+}
+

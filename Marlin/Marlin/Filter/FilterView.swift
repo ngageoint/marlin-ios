@@ -18,153 +18,216 @@ extension View {
     }
 }
 
-struct FilterView: View {
+struct DataSourcePropertyFilterView: View {
     @ObservedObject var locationManager: LocationManager = LocationManager.shared
     
-    @State var filters: [DataSourceFilterParameter] {
-        didSet {
-            UserDefaults.standard.setFilter(dataSource.key, filter: filters)
-        }
-    }
-    
-    var dataSourceProperties: [DataSourceProperty]
-    var dataSource: any DataSource.Type
-    
-    @State private var selectedComparison: DataSourceFilterComparison = .equals
-    @State private var selectedProperty: DataSourceProperty
-    @State private var selectedEnumeration: String = ""
-    @State private var valueString: String = ""
-    @State private var valueDate: Date = Date()
-    @State private var valueInt: Int = 0
-    @State private var valueDouble: Double = 0.0
-    @State private var valueLatitude: Double = 0.0
-    @State private var valueLongitude: Double = 0.0
-    @State private var windowUnits: DataSourceWindowUnits = .last30Days
-    
-    @State private var doubleFormatter: NumberFormatter = {
-        var nf = NumberFormatter()
-        nf.numberStyle = .decimal
-        return nf
-    }()
-    
-    @State private var intFormatter: NumberFormatter = {
-        var nf = NumberFormatter()
-        nf.numberStyle = .none
-        return nf
-    }()
-    
-    init(dataSource: any DataSource.Type) {
-        self.dataSource = dataSource
-        self.dataSourceProperties = dataSource.properties
-        self._filters = State(initialValue: UserDefaults.standard.filter(dataSource))
-        self._selectedProperty = State(initialValue: dataSourceProperties[0])
-    }
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            ForEach(Array(filters.enumerated()), id: \.element) { index, filter in
-                HStack {
-                    if filter.property.type == .date {
-                        if filter.comparison == .window, let windowUnits = filter.windowUnits {
-                            Text("**\(filter.property.name)** within the **\(windowUnits.rawValue)**")
-                        }
-                        if let dateValue = filter.valueDate {
-                            Text("**\(filter.property.name)** \(filter.comparison.rawValue) **\(dataSource.dateFormatter.string(from: dateValue))**")
-                                .primary()
-                        }
-                    } else if filter.property.type == .enumeration {
-                        Text("**\(filter.property.name)** \(filter.comparison.rawValue) **\(filter.valueToString())**")
-                            .primary()
-                    }  else if filter.property.type == .location {
-                        if filter.comparison == .nearMe {
-                            Text("**\(filter.property.name)** within **\(filter.valueInt ?? 0)nm** of my location")
-                                .primary()
-                        } else {
-                            Text("**\(filter.property.name)** within **\(filter.valueInt ?? 0)nm** of **\(filter.valueLatitude ?? 0.0), \(filter.valueLongitude ?? 0.0)**")
-                                .primary()
-                        }
-                    } else {
-                        Text("**\(filter.property.name)** \(filter.comparison.rawValue) **\(filter.valueToString())**")
-                            .primary()
-                    }
-                    Spacer()
-                    Button {
-                        filters.remove(at: index)
-                    } label: {
-                        Image(systemName: "minus.circle.fill")
-                            .tint(Color.red)
-                    }
-                }
-                .padding([.top, .bottom], 8)
-                Divider()
-            }
-            
-            HStack {
-                VStack(alignment: .leading, spacing: 0) {
-                    inputType(selectedProperty: selectedProperty)
-                }
-                Spacer()
-                Button {
-                    if selectedProperty.type == .date {
-                        if selectedComparison == .window {
-                            filters.append(DataSourceFilterParameter(property: selectedProperty, comparison: selectedComparison, windowUnits: windowUnits))
-                        } else {
-                            filters.append(DataSourceFilterParameter(property: selectedProperty, comparison: selectedComparison, valueDate: valueDate))
-                        }
-                    } else if selectedProperty.type == .int {
-                        filters.append(DataSourceFilterParameter(property: selectedProperty, comparison: selectedComparison, valueInt: valueInt))
-                    } else if selectedProperty.type == .float || selectedProperty.type == .double {
-                        filters.append(DataSourceFilterParameter(property: selectedProperty, comparison: selectedComparison, valueDouble: valueDouble))
-                    } else if selectedProperty.type == .enumeration {
-                        filters.append(DataSourceFilterParameter(property: selectedProperty, comparison: selectedComparison, valueString: selectedEnumeration))
-                    } else if selectedProperty.type == .location {
-                        if selectedComparison == .nearMe {
-                            filters.append(DataSourceFilterParameter(property: selectedProperty, comparison: selectedComparison, valueInt: valueInt))
-                        } else if selectedComparison == .closeTo {
-                            filters.append(DataSourceFilterParameter(property: selectedProperty, comparison: selectedComparison, valueInt: valueInt, valueLatitude: valueLatitude, valueLongitude: valueLongitude))
-                        }
-                    } else {
-                        filters.append(DataSourceFilterParameter(property: selectedProperty, comparison: selectedComparison, valueString: valueString))
-                    }
-                    self.selectedProperty = dataSourceProperties[0]
-                    valueDate = Date()
-                    valueString = ""
-                    valueDouble = 0.0
-                    valueInt = 0
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                        .tint(Color.green)
-                }
+    @Binding var filterParameter: DataSourceFilterParameter?
 
-            }
-            .padding(.top, 8)
-            .padding(.leading, -8)
+    var dataSourceProperties: [DataSourceProperty]?
+    @State var dataSourceProperty: DataSourceProperty
+    @State var selectedComparison: DataSourceFilterComparison // = .equals
+    @State var valueString: String = ""
+    @State var valueDate: Date = Date()
+    @State var valueInt: Int? = nil// = 0
+    @State var valueDouble: Double? = nil// = 0.0
+    @State var valueLatitude: Double? = nil// = 0.0
+    @State var valueLongitude: Double? = nil// = 0.0
+    @State var windowUnits: DataSourceWindowUnits = .last30Days
+
+    init(dataSourceProperty: DataSourceProperty? = nil, dataSourceProperties: [DataSourceProperty]? = nil, filterParameter: Binding<DataSourceFilterParameter?>) {
+        if let dataSourceProperty = dataSourceProperty {
+            self._dataSourceProperty = State(initialValue: dataSourceProperty)
+        } else if let dataSourceProperties = dataSourceProperties, !dataSourceProperties.isEmpty {
+            self.dataSourceProperties = dataSourceProperties
+            self._dataSourceProperty = State(initialValue: dataSourceProperties[0])
+        } else {
+            self._dataSourceProperty = State(initialValue: DataSourceProperty(name: "", key: "", type: .string))
         }
-        .padding([.leading, .bottom], 16)
-        .padding(.trailing, 0)
-        .onChange(of: selectedProperty) { newValue in
-            selectedEnumeration = selectedProperty.enumerationValues?.first?.key ?? ""
-            if selectedProperty.type == DataSourcePropertyType.string {
-                selectedComparison = .equals
-            } else if selectedProperty.type == DataSourcePropertyType.date {
-                selectedComparison = .window
-            } else if selectedProperty.type == DataSourcePropertyType.enumeration {
-                selectedComparison = .equals
-            } else if selectedProperty.type == DataSourcePropertyType.location {
-                selectedComparison = .nearMe
+        self._filterParameter = filterParameter
+        
+        if let dataSourceProperty = dataSourceProperty {
+            if dataSourceProperty.type == DataSourcePropertyType.string {
+                _selectedComparison = State(initialValue: .equals)
+            } else if dataSourceProperty.type == DataSourcePropertyType.date {
+                _selectedComparison = State(initialValue: .window)
+            } else if dataSourceProperty.type == DataSourcePropertyType.enumeration {
+                _selectedComparison = State(initialValue: .equals)
+            } else if dataSourceProperty.type == DataSourcePropertyType.location {
+                _selectedComparison = State(initialValue: .nearMe)
             } else {
-                selectedComparison = .equals
+                _selectedComparison = State(initialValue: .equals)
+            }
+        } else {
+            _selectedComparison = State(initialValue: .equals)
+        }
+    }
+
+    var body: some View {
+        HStack {
+            if dataSourceProperty.type == .double || dataSourceProperty.type == .float {
+                HStack(spacing: 0) {
+                    propertyNameAndComparison()
+                    FilterComparison(property: $dataSourceProperty, selectedComparison: $selectedComparison)
+                    TextField(dataSourceProperty.name, value: $valueDouble, format: .number)
+                        .keyboardType(.decimalPad)
+                        .underlineTextField()
+                }
+            } else if dataSourceProperty.type == .int {
+                HStack(spacing: 0) {
+                    propertyNameAndComparison()
+                    FilterComparison(property: $dataSourceProperty, selectedComparison: $selectedComparison)
+                    TextField(dataSourceProperty.name, value: $valueInt, format: .number)
+                        .keyboardType(.numberPad)
+                        .underlineTextField()
+                }
+            } else if dataSourceProperty.type == .date {
+                VStack(alignment: .leading, spacing: 0) {
+                    HStack(spacing: 0) {
+                        propertyNameAndComparison()
+                        FilterComparison(property: $dataSourceProperty, selectedComparison: $selectedComparison)
+                    }
+                    if selectedComparison == .window {
+                        HStack(alignment: .bottom) {
+                            VStack(alignment: .leading, spacing: 0) {
+                                Text("Dynamic Date Window")
+                                    .overline()
+                                    .padding(.leading, 12)
+                                Picker("Window", selection: $windowUnits) {
+                                    ForEach(DataSourceWindowUnits.allCases) { unit in
+                                        Text(unit.rawValue).tag(unit)
+                                    }
+                                }
+                                .clipped()
+                                .scaledToFill()
+                                .labelsHidden()
+                                .tint(Color.primaryColorVariant)
+                                .onAppear {
+                                    windowUnits = .last30Days
+                                }
+                            }
+                        }
+                    } else {
+                        HStack(alignment: .bottom) {
+                            VStack(alignment: .leading, spacing: 0) {
+                                Text("Date")
+                                    .overline()
+                                    .padding(.leading, 12)
+                                DatePicker(
+                                    dataSourceProperty.name,
+                                    selection: $valueDate,
+                                    displayedComponents: [.date]
+                                )
+                                .accentColor(Color.primaryColorVariant)
+                                .padding(.leading, 8)
+                                .labelsHidden()
+                            }
+                        }
+                    }
+                }
+            } else if dataSourceProperty.type == .enumeration {
+                VStack(alignment: .leading, spacing: 0) {
+                    HStack(spacing: 0) {
+                        propertyNameAndComparison()
+                        FilterComparison(property: $dataSourceProperty, selectedComparison: $selectedComparison)
+                    }
+                    if let enumerationValues = dataSourceProperty.enumerationValues {
+                        Picker("Enumeration", selection: $valueString) {
+                            
+                            ForEach(enumerationValues.keys.sorted().map { String($0) }, id: \.self) { key in
+                                Text(key).tag(key)
+                            }
+                        }
+                        .scaledToFill()
+                        .labelsHidden()
+                        .tint(Color.primaryColorVariant)
+                        .onAppear {
+                            let sorted = enumerationValues.keys.sorted()
+                            valueString = sorted.first ?? ""
+                        }
+                    }
+                }
+            } else if dataSourceProperty.type == .location {
+                VStack(alignment: .leading, spacing: 0) {
+                    HStack {
+                        propertyNameAndComparison()
+                        FilterComparison(property: $dataSourceProperty, selectedComparison: $selectedComparison)
+                    }
+                    if selectedComparison == .closeTo {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 0) {
+                                Text("Latitude")
+                                    .overline()
+                                    .padding(.leading, 8)
+                                    .padding(.bottom, -16)
+                                TextField("Latitude", value: $valueLatitude, format: .number)
+                                    .keyboardType(.decimalPad)
+                                    .underlineTextField()
+                            }
+                            VStack(alignment: .leading, spacing: 0) {
+                                Text("Longitude")
+                                    .overline()
+                                    .padding(.leading, 8)
+                                    .padding(.bottom, -16)
+                                TextField("Longitude", value: $valueLongitude, format: .number)
+                                    .keyboardType(.decimalPad)
+                                    .underlineTextField()
+                            }
+                        }
+                        .padding(.leading, 4)
+                    } else if selectedComparison == .nearMe {
+                        if locationManager.lastLocation == nil {
+                            Text("No current location")
+                        }
+                    }
+                    HStack(alignment: .bottom) {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Distance")
+                                .overline()
+                                .padding(.leading, 8)
+                                .padding(.bottom, -16)
+                            TextField("Nautical Miles", value: $valueInt, format: .number)
+                                .keyboardType(.numberPad)
+                                .underlineTextField()
+                        }
+                        Text("nm")
+                            .overline()
+                            .padding(.bottom, 16)
+                    }
+                    .padding(.leading, 4)
+                }
+            } else {
+                HStack(spacing: 0) {
+                    propertyNameAndComparison()
+                    FilterComparison(property: $dataSourceProperty, selectedComparison: $selectedComparison)
+                    TextField(dataSourceProperty.name, text: $valueString)
+                        .keyboardType(.default)
+                        .underlineTextField()
+                }
+            }
+            Spacer()
+            Button {
+                filterParameter = DataSourceFilterParameter(property: dataSourceProperty, comparison: selectedComparison, valueString: valueString, valueDate: valueDate, valueInt: valueInt, valueDouble: valueDouble, valueLatitude: valueLatitude, valueLongitude: valueLongitude, windowUnits: windowUnits)
+                valueDate = Date()
+                valueString = ""
+                valueDouble = nil //0.0
+                valueInt = nil// 0
+                valueLongitude = nil
+                valueLatitude = nil
+                windowUnits = .last30Days
+            } label: {
+                Image(systemName: "plus.circle.fill")
+                    .tint(Color.green)
             }
         }
-        .onAppear {
-            selectedEnumeration = selectedProperty.enumerationValues?.first?.key ?? ""
-            if selectedProperty.type == DataSourcePropertyType.string {
+        .onChange(of: dataSourceProperty) { newValue in
+            if newValue.type == DataSourcePropertyType.string {
                 selectedComparison = .equals
-            } else if selectedProperty.type == DataSourcePropertyType.date {
+            } else if newValue.type == DataSourcePropertyType.date {
                 selectedComparison = .window
-            } else if selectedProperty.type == DataSourcePropertyType.enumeration {
+                windowUnits = .last30Days
+            } else if newValue.type == DataSourcePropertyType.enumeration {
                 selectedComparison = .equals
-            } else if selectedProperty.type == DataSourcePropertyType.location {
+            } else if newValue.type == DataSourcePropertyType.location {
                 selectedComparison = .nearMe
             } else {
                 selectedComparison = .equals
@@ -174,17 +237,35 @@ struct FilterView: View {
     
     @ViewBuilder
     func propertyNameAndComparison() -> some View {
-        HStack {
-            Picker("Property", selection: $selectedProperty) {
-                ForEach(dataSourceProperties) { property in
-                    Text(property.name).tag(property)
+        if let dataSourceProperties = dataSourceProperties, dataSourceProperties.count > 1 {
+            HStack {
+                Picker("Property", selection: $dataSourceProperty) {
+                    if let dataSourceProperties = dataSourceProperties {
+                        ForEach(dataSourceProperties) { property in
+                            Text(property.name).tag(property)
+                        }
+                    }
                 }
+                .scaledToFill()
+                .labelsHidden()
+                .tint(Color.primaryColorVariant)
             }
-            .scaledToFill()
-            .labelsHidden()
-            .tint(Color.primaryColorVariant)
-            
-            if selectedProperty.type == DataSourcePropertyType.string {
+        } else {
+            HStack {
+                Text(dataSourceProperty.name).primary()
+                    .padding(.leading, 8)
+            }
+        }
+    }
+}
+
+struct FilterComparison: View {
+    @Binding var property: DataSourceProperty
+    @Binding var selectedComparison: DataSourceFilterComparison
+
+    var body: some View {
+        Group {
+            if property.type == DataSourcePropertyType.string {
                 Picker("Comparison", selection: $selectedComparison) {
                     ForEach(DataSourceFilterComparison.stringSubset()) { comparison in
                         Text(comparison.rawValue).tag(comparison)
@@ -193,7 +274,7 @@ struct FilterView: View {
                 .scaledToFill()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
-            } else if selectedProperty.type == DataSourcePropertyType.date {
+            } else if property.type == DataSourcePropertyType.date {
                 Picker("Comparison", selection: $selectedComparison) {
                     ForEach(DataSourceFilterComparison.dateSubset()) { comparison in
                         Text(comparison.rawValue).tag(comparison)
@@ -202,7 +283,7 @@ struct FilterView: View {
                 .scaledToFill()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
-            } else if selectedProperty.type == DataSourcePropertyType.enumeration {
+            } else if property.type == DataSourcePropertyType.enumeration {
                 Picker("Comparison", selection: $selectedComparison) {
                     ForEach(DataSourceFilterComparison.enumerationSubset()) { comparison in
                         Text(comparison.rawValue).tag(comparison)
@@ -211,7 +292,7 @@ struct FilterView: View {
                 .scaledToFill()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
-            } else if selectedProperty.type == DataSourcePropertyType.location {
+            } else if property.type == DataSourcePropertyType.location {
                 Picker("Comparison", selection: $selectedComparison) {
                     ForEach(DataSourceFilterComparison.locationSubset()) { comparison in
                         Text(comparison.rawValue).tag(comparison)
@@ -231,119 +312,166 @@ struct FilterView: View {
                 .tint(Color.primaryColorVariant)
             }
         }
+        .onAppear {
+            if property.type == DataSourcePropertyType.string {
+                selectedComparison = .equals
+            } else if property.type == DataSourcePropertyType.date {
+                selectedComparison = .window
+            } else if property.type == DataSourcePropertyType.enumeration {
+                selectedComparison = .equals
+            } else if property.type == DataSourcePropertyType.location {
+                selectedComparison = .nearMe
+            } else {
+                selectedComparison = .equals
+            }
+        }
+        .onChange(of: property) { newValue in
+            if newValue.type == DataSourcePropertyType.string {
+                selectedComparison = .equals
+            } else if newValue.type == DataSourcePropertyType.date {
+                selectedComparison = .window
+            } else if newValue.type == DataSourcePropertyType.enumeration {
+                selectedComparison = .equals
+            } else if newValue.type == DataSourcePropertyType.location {
+                selectedComparison = .nearMe
+            } else {
+                selectedComparison = .equals
+            }
+        }
     }
+}
+
+struct FilterParameterSummaryView: View {
+    var filter: DataSourceFilterParameter
+    var dataSource: DataSource.Type
     
-    @ViewBuilder
-    func inputType(selectedProperty: DataSourceProperty) -> some View {
-        if selectedProperty.type == .double || selectedProperty.type == .float {
-            HStack(spacing: 0) {
-                propertyNameAndComparison()
-                TextField(selectedProperty.name, value: $valueDouble, formatter: doubleFormatter)
-                .keyboardType(.decimalPad)
-                .underlineTextField()
+    var body: some View {
+        if filter.property.type == .date {
+            if filter.comparison == .window, let windowUnits = filter.windowUnits {
+                Text("**\(filter.property.name)** within the **\(windowUnits.rawValue)**")
+                    .primary()
+            } else if let dateValue = filter.valueDate {
+                Text("**\(filter.property.name)** \(filter.comparison.rawValue) **\(dataSource.dateFormatter.string(from: dateValue))**")
+                    .primary()
             }
-        } else if selectedProperty.type == .int {
-            HStack(spacing: 0) {
-                propertyNameAndComparison()
-                TextField(selectedProperty.name, value: $valueInt, formatter: intFormatter)
-                .keyboardType(.numberPad)
-                .underlineTextField()
-            }
-        } else if selectedProperty.type == .date {
-            HStack(spacing: 0) {
-                propertyNameAndComparison()
-                if selectedComparison == .window {
-                    Picker("Window", selection: $windowUnits) {
-                        ForEach(DataSourceWindowUnits.allCases) { unit in
-                            Text(unit.rawValue).tag(unit)
-                        }
-                    }
-                    .scaledToFill()
-                    .labelsHidden()
-                    .tint(Color.primaryColorVariant)
-                } else {
-                    DatePicker(
-                        selectedProperty.name,
-                        selection: $valueDate,
-                        displayedComponents: [.date]
-                    )
-                    .accentColor(Color.primaryColorVariant)
-                    .padding(.leading, 8)
-                    .labelsHidden()
-                }
-            }
-        } else if selectedProperty.type == .enumeration {
-            HStack(spacing: 0) {
-                propertyNameAndComparison()
-                if let enumerationValues = selectedProperty.enumerationValues {
-                    Picker("Enumeration", selection: $selectedEnumeration) {
-                        
-                        ForEach(enumerationValues.keys.sorted().map { String($0) }, id: \.self) { key in
-                            Text(key).tag(key)
-                        }
-                    }
-                    .scaledToFill()
-                    .labelsHidden()
-                    .tint(Color.primaryColorVariant)
-                }
-            }
-        } else if selectedProperty.type == .location {
-            VStack(alignment: .leading, spacing: 0) {
-                propertyNameAndComparison()
-                if selectedComparison == .closeTo {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text("Latitude")
-                                .overline()
-                                .padding(.leading, 8)
-                                .padding(.bottom, -16)
-                            TextField("latitude", value: $valueLatitude, format: .number)
-                                .keyboardType(.decimalPad)
-                                .underlineTextField()
-                        }
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text("Longitude")
-                                .overline()
-                                .padding(.leading, 8)
-                                .padding(.bottom, -16)
-                            TextField("longitude", value: $valueLongitude, format: .number)
-                            .keyboardType(.decimalPad)
-                            .underlineTextField()
-                        }
-                    }
-                    .padding(.leading, 4)
-                } else if selectedComparison == .nearMe {
-                    if locationManager.lastLocation == nil {
-                        Text("No current location")
-                    }
-                }
-                HStack(alignment: .bottom) {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("Distance")
-                            .overline()
-                            .padding(.leading, 8)
-                            .padding(.bottom, -16)
-                        TextField("distance", value: $valueInt, format: .number)
-                            .keyboardType(.numberPad)
-                            .underlineTextField()
-                    }
-                    Text("nm")
-                        .overline()
-                        .padding(.bottom, 16)
-                }
-                .padding(.leading, 4)
+        } else if filter.property.type == .enumeration {
+            Text("**\(filter.property.name)** \(filter.comparison.rawValue) **\(filter.valueToString())**")
+                .primary()
+        }  else if filter.property.type == .location {
+            if filter.comparison == .nearMe {
+                Text("**\(filter.property.name)** within **\(filter.valueInt ?? 0)nm** of my location")
+                    .primary()
+            } else {
+                Text("**\(filter.property.name)** within **\(filter.valueInt ?? 0)nm** of **\(filter.valueLatitude ?? 0.0), \(filter.valueLongitude ?? 0.0)**")
+                    .primary()
             }
         } else {
-            HStack {
-                propertyNameAndComparison()
-            }
-            TextField(
-                selectedProperty.name,
-                text: $valueString
-            )
-            .keyboardType(.default)
-            .underlineTextField()
+            Text("**\(filter.property.name)** \(filter.comparison.rawValue) **\(filter.valueToString())**")
+                .primary()
         }
+    }
+}
+
+struct FilterView: View {
+    @ObservedObject var locationManager: LocationManager = LocationManager.shared
+    
+    @State var filters: [DataSourceFilterParameter] {
+        didSet {
+            UserDefaults.standard.setFilter(dataSource.key, filter: filters)
+        }
+    }
+    
+    var dataSourceProperties: [DataSourceProperty]
+    var dataSource: any DataSource.Type
+    
+    @State private var selectedProperty: DataSourceProperty
+    
+    @State private var filterParameter: DataSourceFilterParameter?
+        
+    @State private var doubleFormatter: NumberFormatter = {
+        var nf = NumberFormatter()
+        nf.numberStyle = .decimal
+        return nf
+    }()
+    
+    @State private var intFormatter: NumberFormatter = {
+        var nf = NumberFormatter()
+        nf.numberStyle = .none
+        return nf
+    }()
+    
+    init(dataSource: any DataSource.Type, useDefaultForEmptyFilter: Bool = false) {
+        self.dataSource = dataSource
+        self.dataSourceProperties = dataSource.properties
+        let savedFilter = UserDefaults.standard.filter(dataSource)
+        if useDefaultForEmptyFilter && savedFilter.isEmpty {
+            self._filters = State(initialValue: dataSource.defaultFilter)
+        } else {
+            self._filters = State(initialValue: savedFilter)
+        }
+        self._selectedProperty = State(initialValue: dataSourceProperties[0])
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if !filters.isEmpty {
+                Text("Current Filter")
+                    .secondary()
+            }
+            ForEach(Array(filters.enumerated()), id: \.element) { index, filter in
+                HStack {
+                    FilterParameterSummaryView(filter: filter, dataSource: dataSource)
+                    Spacer()
+                    Button {
+                        filters.remove(at: index)
+                    } label: {
+                        Image(systemName: "minus.circle.fill")
+                            .tint(Color.red)
+                    }
+                }
+                .padding([.top, .bottom], 8)
+                Divider()
+            }
+            let requiredProperties = dataSourceProperties.filter({ property in
+                property.requiredInFilter
+            })
+            let requiredNotSet = requiredProperties.filter { property in
+                !filters.contains { parameter in
+                    parameter.property.key == property.key
+                }
+            }
+            
+            if !requiredProperties.isEmpty {
+                if !requiredNotSet.isEmpty {
+
+                    ForEach(requiredNotSet) { property in
+                        Text("Add Required Filter Parameters")
+                            .secondary()
+                        DataSourcePropertyFilterView(dataSourceProperty: property, filterParameter: $filterParameter)
+                    }
+                    Divider()
+                } else {
+                    Text("Add Additional Filter Parameters")
+                        .secondary()
+                }
+            }
+            if requiredNotSet.isEmpty {
+                DataSourcePropertyFilterView(dataSourceProperties: dataSourceProperties, filterParameter: $filterParameter)
+                .padding(.top, 8)
+                .padding(.leading, -8)
+            }
+        }
+        .padding([.leading, .bottom], 16)
+        .padding(.trailing, 0)
+        .onAppear {
+            UserDefaults.standard.setFilter(dataSource.key, filter: filters)
+        }
+        .onChange(of: filterParameter, perform: { newValue in
+            if let newValue = newValue {
+                print("filter parameter changed \(newValue)")
+                filters.append(newValue)
+            }
+        })
     }
 }
 

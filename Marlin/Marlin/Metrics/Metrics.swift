@@ -21,64 +21,75 @@ class Metrics {
     
     func appLaunch() {
         NSLog("Record App Launch")
-        MatomoTracker.shared.track(view:["app"])
+        MatomoTracker.shared?.track(view:["app"])
     }
     
     func mapView() {
         NSLog("Record Map View")
-        MatomoTracker.shared.track(view:["app", "map"])
+        MatomoTracker.shared?.track(view:["app", "map"])
     }
     
     func mapSettingsView() {
         NSLog("Record Map Settings View")
-        MatomoTracker.shared.track(view:["app", "map", "settings"])
+        MatomoTracker.shared?.track(view:["app", "map", "settings"])
     }
     
     func sideNavigationView() {
         NSLog("Record Side Navigation View")
-        MatomoTracker.shared.track(view:["app", "sideNavigation"])
+        MatomoTracker.shared?.track(view:["app", "sideNavigation"])
     }
     
     func settingsView() {
         NSLog("Record Settings View")
-        MatomoTracker.shared.track(view:["app", "settings"])
+        MatomoTracker.shared?.track(view:["app", "settings"])
     }
     
     func submitReportView() {
         NSLog("Record Submit Report View")
-        MatomoTracker.shared.track(view:["app", "submitReport"])
+        MatomoTracker.shared?.track(view:["app", "submitReport"])
     }
     
     func searchView() {
         NSLog("Record Search View")
-        MatomoTracker.shared.track(view:["app", "map", "search"])
+        MatomoTracker.shared?.track(view:["app", "map", "search"])
+    }
+    
+    func noticeToMarinersView() {
+        NSLog("Record Notice To Mariners")
+        MatomoTracker.shared?.track(view:["app", "noticeToMariners"])
     }
     
     func dataSourceList(dataSource: any DataSource.Type) {
         NSLog("Record Data Source List \(dataSource.key)")
-        MatomoTracker.shared.track(view:["app", "\(dataSource.key)List"])
+        MatomoTracker.shared?.track(view:["app", "\(dataSource.key)List"])
     }
     
     func dataSourceDetail(dataSource: any DataSource.Type) {
         NSLog("Record Data Source Detail \(dataSource.key)")
-        MatomoTracker.shared.track(view:["app", "\(dataSource.key)List", "\(dataSource.key)Detail"])
+        MatomoTracker.shared?.track(view:["app", "\(dataSource.key)List", "\(dataSource.key)Detail"])
     }
     
     func search(query: String, resultCount: Int) {
         NSLog("Record search")
-        MatomoTracker.shared.trackSearch(query: query, category: nil, resultCount: resultCount)
+        MatomoTracker.shared?.trackSearch(query: query, category: nil, resultCount: resultCount)
     }
     
     func fileDownload(url: URL?) {
         guard let url else {
             return
         }
-        let event = Event(tracker: MatomoTracker.shared, action: ["download"], url: url, eventCategory: "download", eventAction: "download", eventName: nil, eventValue: nil, customTrackingParameters: ["download": url.absoluteString], dimensions: [], isCustomAction: true)
-        MatomoTracker.shared.track(event)
+        if let tracker = MatomoTracker.shared {
+            let event = Event(tracker: tracker, action: ["download"], url: url, eventCategory: "download", eventAction: "download", eventName: nil, eventValue: nil, customTrackingParameters: ["download": url.absoluteString], dimensions: [], isCustomAction: true)
+            MatomoTracker.shared?.track(event)
+        }
+    }
+    
+    func dispatch() {
+        MatomoTracker.shared?.dispatch()
     }
     
 }
 
 extension MatomoTracker {
-    static let shared: MatomoTracker = MatomoTracker(siteId: Metrics.MATOMO_SITEID, baseURL: URL(string: Metrics.MATOMO_URL)!)
+    static let shared: MatomoTracker? = UserDefaults.standard.metricsEnabled ? MatomoTracker(siteId: Metrics.MATOMO_SITEID, baseURL: URL(string: Metrics.MATOMO_URL)!) : nil
 }

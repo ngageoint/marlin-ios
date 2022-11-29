@@ -9,13 +9,13 @@ import Foundation
 import CoreData
 import Combine
 
-struct MSISection<T: DataSource>: Hashable {
+struct MSISection<T: DataSource & BatchImportable>: Hashable {
     let id: Int
     let name: String
     let items: [T]
 }
 
-class MSIListViewModel<T: DataSource>: NSObject, NSFetchedResultsControllerDelegate, ObservableObject {
+class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResultsControllerDelegate, ObservableObject {
     @Published var sections : [MSISection<T>] = []
     var sortDescriptors: [DataSourceSortParameter] = []
     var filters: [DataSourceFilterParameter] = []

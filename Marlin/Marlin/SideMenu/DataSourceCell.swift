@@ -13,25 +13,27 @@ struct DataSourceCell: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .center, spacing: 8) {
+            HStack(alignment: .center, spacing: 0) {
                 
-                if let loading = appState.loadingDataSource[dataSourceItem.key], loading {
-                    HStack(alignment: .center) {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: Color.primaryColorVariant))
-                            .scaleEffect(0.75, anchor: .center)
+                Group {
+                    if let loading = appState.loadingDataSource[dataSourceItem.key], loading {
+                        HStack(alignment: .center) {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: Color.primaryColorVariant))
+                                .scaleEffect(0.75, anchor: .center)
+                        }
+                    } else {
+                        if let systemImageName = dataSourceItem.dataSource.systemImageName {
+                            Image(systemName: systemImageName)
+                                .tint(Color.onSurfaceColor)
+                                .opacity(0.60)
+                        } else if let imageName = dataSourceItem.dataSource.imageName {
+                            Image(imageName)
+                                .tint(Color.onSurfaceColor)
+                                .opacity(0.60)
+                        }
                     }
-                } else {
-                    if let systemImageName = dataSourceItem.dataSource.systemImageName {
-                        Image(systemName: systemImageName)
-                            .tint(Color.onSurfaceColor)
-                            .opacity(0.60)
-                    } else if let imageName = dataSourceItem.dataSource.imageName {
-                        Image(imageName)
-                            .tint(Color.onSurfaceColor)
-                            .opacity(0.60)
-                    }
-                }
+                }.padding([.leading, .trailing], 8)
                 
                 Text(dataSourceItem.dataSource.fullDataSourceName)
                     .primary()

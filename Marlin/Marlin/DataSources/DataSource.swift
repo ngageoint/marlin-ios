@@ -62,21 +62,23 @@ enum DataSourcePropertyType: Codable {
 }
 
 struct DataSourceProperty: Hashable, Identifiable, Codable {
-    var id: String { key }
+    var id: String { "\(name)\(key)" }
     let name: String
     let key: String
     let type: DataSourcePropertyType
     let enumerationValues: [String: [String]]?
+    let requiredInFilter: Bool
     
-    init(name: String, key: String, type: DataSourcePropertyType, enumerationValues: [String: [String]]? = nil) {
+    init(name: String, key: String, type: DataSourcePropertyType, enumerationValues: [String: [String]]? = nil, requiredInFilter: Bool = false) {
         self.name = name
         self.key = key
         self.type = type
         self.enumerationValues = enumerationValues
+        self.requiredInFilter = requiredInFilter
     }
 }
 
-protocol DataSource: BatchImportable {
+protocol DataSource {
     static var properties: [DataSourceProperty] { get }
     static var defaultSort: [DataSourceSortParameter] { get }
     static var defaultFilter: [DataSourceFilterParameter] { get }

@@ -28,7 +28,7 @@ extension DFRSArea: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(DFRSArea.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(DFRSArea.self)
+        return UserDefaults.standard.bool(forKey: "\(DFRSArea.key)DataSourceEnabled") && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.double(forKey: "\(DFRSArea.key)LastSyncTime")
     }
 }
 

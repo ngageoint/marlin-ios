@@ -8,6 +8,7 @@
 import UIKit
 import MapKit
 import geopackage_ios
+import sf_ios
 import sf_proj_ios
 import ExceptionCatcher
 import SwiftUI

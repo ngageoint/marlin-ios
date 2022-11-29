@@ -80,7 +80,7 @@ struct MarlinApp: App {
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
-        MatomoTracker.shared.dispatch()
+        Metrics.shared.dispatch()
     }
     
     public var backgroundCompletionHandler: (() -> Void)? = nil

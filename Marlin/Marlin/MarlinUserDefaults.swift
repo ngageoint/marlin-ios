@@ -148,6 +148,10 @@ extension UserDefaults {
         data(forKey: #function)
     }
     
+    @objc var ntmFilter: Data? {
+        data(forKey: #function)
+    }
+    
     func filter(_ dataSource: any DataSource.Type) -> [DataSourceFilterParameter] {
         if let data = data(forKey: "\(dataSource.key)Filter") {
             do {
@@ -202,6 +206,10 @@ extension UserDefaults {
         data(forKey: #function)
     }
     
+    @objc var ntmSort: Data? {
+        data(forKey: #function)
+    }
+    
     @objc var lightSort: Data? {
         data(forKey: #function)
     }
@@ -248,11 +256,15 @@ extension UserDefaults {
         bool(forKey: "hamburger")
     }
     
-    func dataSourceEnabled(_ dataSource: any BatchImportable.Type) -> Bool {
+    var metricsEnabled: Bool {
+        bool(forKey: #function)
+    }
+    
+    func dataSourceEnabled(_ dataSource: any DataSource.Type) -> Bool {
         bool(forKey: "\(dataSource.key)DataSourceEnabled")
     }
     
-    func lastSyncTimeSeconds(_ dataSource: any BatchImportable.Type) -> Double {
+    func lastSyncTimeSeconds(_ dataSource: any DataSource.Type) -> Double {
         return double(forKey: "\(dataSource.key)LastSyncTime")
     }
     

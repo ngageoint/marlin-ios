@@ -22,7 +22,7 @@ final class LightDataTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -79,6 +79,199 @@ final class LightDataTests: XCTestCase {
         }
         
         MSI.shared.loadInitialData(type: Light.decodableRoot, dataType: Light.self)
+        
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+    
+    func testLoadInitialDataAndUpdate() throws {
+        
+        for seedDataFile in Light.seedDataFiles ?? [] {
+            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
+                return HTTPStubsResponse(
+                    fileAtPath: OHPathForFile("lightMockData.json", type(of: self))!,
+                    statusCode: 200,
+                    headers: ["Content-Type":"application/json"]
+                )
+            }
+        }
+        
+        expectation(forNotification: .DataSourceLoading,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[Light.key] {
+                XCTAssertTrue(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .DataSourceLoaded,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[Light.key] {
+                XCTAssertFalse(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+            let count = try? self.persistentStore.countOfObjects(Light.self)
+            XCTAssertEqual(count, 2)
+            return true
+        }
+        
+        MSI.shared.loadInitialData(type: Light.decodableRoot, dataType: Light.self)
+        
+        waitForExpectations(timeout: 10, handler: nil)
+        
+        stub(condition: isScheme("https") && pathEndsWith("/publications/ngalol/lights-buoys") && !containsQueryParams(["volume": "110"])) { request in
+            let jsonObject = [
+                "ngalol": [
+                ]
+            ]
+            return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
+        }
+        
+        stub(condition: isScheme("https") && pathEndsWith("/publications/ngalol/lights-buoys") && containsQueryParams(["volume": "110", "minNoticeNumber":"201508"])) { request in
+            let jsonObject = [
+                "ngalol": [
+                    [
+                        "volumeNumber": "PUB 110",
+                        "aidType": "Lighted Aids",
+                        "geopoliticalHeading": "GREENLAND",
+                        "regionHeading": "ANGMAGSSALIK:",
+                        "subregionHeading": nil,
+                        "localHeading": nil,
+                        "precedingNote": nil,
+                        "featureNumber": "9",
+                        "name": "-Outer2.",
+                        "position": "65°35'32.1\"N \n37°34'08.9\"W",
+                        "charNo": 1,
+                        "characteristic": "Fl.W.\nperiod 5s \nfl. 1.0s, ec. 4.0s \n",
+                        "heightFeetMeters": "36\n11",
+                        "range": "7",
+                        "structure": "Yellow pedestal, red band; 7.\n",
+                        "remarks": nil,
+                        "postNote": nil,
+                        "noticeNumber": 201507,
+                        "removeFromList": "N",
+                        "deleteFlag": "Y",
+                        "noticeWeek": "07",
+                        "noticeYear": "2022"
+                    ],
+                    [
+                        "volumeNumber": "PUB 110",
+                        "aidType": "Lighted Aids",
+                        "geopoliticalHeading": "GREENLAND",
+                        "regionHeading": nil,
+                        "subregionHeading": nil,
+                        "localHeading": nil,
+                        "precedingNote": nil,
+                        "featureNumber": "6",
+                        "name": "Kulusuk, NW Coast, RACON.",
+                        "position": "65°33'53.89\"N \n37°12'25.7\"W",
+                        "charNo": 1,
+                        "characteristic": "T(- )\nperiod 60s \n",
+                        "heightFeetMeters": nil,
+                        "range": nil,
+                        "structure": nil,
+                        "remarks": "(3 & 10cm).\n",
+                        "postNote": nil,
+                        "noticeNumber": 201507,
+                        "removeFromList": "N",
+                        "deleteFlag": "Y",
+                        "noticeWeek": "07",
+                        "noticeYear": "2015"
+                    ]
+                ]
+            ]
+            return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
+        }
+        
+        stub(condition: isScheme("https") && pathEndsWith("/publications/ngalol/lights-buoys") && containsQueryParams(["volume": "110"]) && !containsQueryParams(["minNoticeNumber":"201508"])) { request in
+            let jsonObject = [
+                "ngalol": [
+                    [
+                        "volumeNumber": "PUB 110",
+                        "aidType": "Lighted Aids",
+                        "geopoliticalHeading": "GREENLAND",
+                        "regionHeading": "ANGMAGSSALIK:",
+                        "subregionHeading": nil,
+                        "localHeading": nil,
+                        "precedingNote": nil,
+                        "featureNumber": "9",
+                        "name": "-Outer2.",
+                        "position": "65°35'32.1\"N \n37°34'08.9\"W",
+                        "charNo": 1,
+                        "characteristic": "Fl.W.\nperiod 5s \nfl. 1.0s, ec. 4.0s \n",
+                        "heightFeetMeters": "36\n11",
+                        "range": "7",
+                        "structure": "Yellow pedestal, red band; 7.\n",
+                        "remarks": nil,
+                        "postNote": nil,
+                        "noticeNumber": 201507,
+                        "removeFromList": "N",
+                        "deleteFlag": "Y",
+                        "noticeWeek": "07",
+                        "noticeYear": "2022"
+                    ],
+                    [
+                        "volumeNumber": "PUB 110",
+                        "aidType": "Lighted Aids",
+                        "geopoliticalHeading": "GREENLAND",
+                        "regionHeading": nil,
+                        "subregionHeading": nil,
+                        "localHeading": nil,
+                        "precedingNote": nil,
+                        "featureNumber": "6",
+                        "name": "Kulusuk, NW Coast, RACON.",
+                        "position": "65°33'53.89\"N \n37°12'25.7\"W",
+                        "charNo": 1,
+                        "characteristic": "T(- )\nperiod 60s \n",
+                        "heightFeetMeters": nil,
+                        "range": nil,
+                        "structure": nil,
+                        "remarks": "(3 & 10cm).\n",
+                        "postNote": nil,
+                        "noticeNumber": 201507,
+                        "removeFromList": "N",
+                        "deleteFlag": "Y",
+                        "noticeWeek": "07",
+                        "noticeYear": "2015"
+                    ]
+                ]
+            ]
+            return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
+        }
+        
+        expectation(forNotification: .DataSourceLoading,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[Light.key] {
+                XCTAssertTrue(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .DataSourceLoaded,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[Light.key] {
+                XCTAssertFalse(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+            let count = try? self.persistentStore.countOfObjects(Light.self)
+            XCTAssertEqual(count, 3)
+            return true
+        }
+        
+        MSI.shared.loadData(type: Light.decodableRoot, dataType: Light.self)
         
         waitForExpectations(timeout: 10, handler: nil)
     }

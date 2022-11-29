@@ -193,12 +193,12 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
     }
     
     func valueToString() -> String {
-        if let valueString = valueString {
-            return valueString
-        } else if let valueInt = valueInt {
+        if let valueInt = valueInt {
             return String(describing: valueInt)
         } else if let valueDouble = valueDouble {
             return String(describing: valueDouble)
+        } else if let valueString = valueString {
+            return valueString
         }
         
         return ""

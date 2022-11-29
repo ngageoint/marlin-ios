@@ -17,19 +17,22 @@ struct FilterButton: ViewModifier {
     @State var filterCount: Int = 0
     @State var filterCounts: [String : Int] = [:]
     var allowSorting: Bool
+    var allowFiltering: Bool
     let dataSourceUpdatedPub = NotificationCenter.default.publisher(for: .DataSourceUpdated)
     
-    init(filterOpen: Binding<Bool>, sortOpen: Binding<Bool>, dataSources: Binding<[DataSourceItem]> = Binding.constant([])) {
+    init(filterOpen: Binding<Bool>, sortOpen: Binding<Bool>, dataSources: Binding<[DataSourceItem]> = Binding.constant([]), allowSorting: Bool = true, allowFiltering: Bool = true) {
         self._filterOpen = filterOpen
         self._dataSources = dataSources
         self._sortOpen = sortOpen
-        allowSorting = true
+        self.allowSorting = allowSorting
+        self.allowFiltering = allowFiltering
     }
     
-    init(filterOpen: Binding<Bool>, dataSources: Binding<[DataSourceItem]> = Binding.constant([])) {
+    init(filterOpen: Binding<Bool>, dataSources: Binding<[DataSourceItem]> = Binding.constant([]), allowSorting: Bool = false, allowFiltering: Bool = true) {
         self._filterOpen = filterOpen
         self._dataSources = dataSources
-        allowSorting = false
+        self.allowSorting = allowSorting
+        self.allowFiltering = allowFiltering
         self._sortOpen = Binding.constant(false)
     }
     
@@ -49,7 +52,7 @@ struct FilterButton: ViewModifier {
                         .padding([.top, .bottom], 10)
                         .padding(.trailing, 5)
                     }
-                    if filterEnabled {
+                    if filterEnabled && allowFiltering {
                         Button(action: {
                             filterOpen.toggle()
                         }) {

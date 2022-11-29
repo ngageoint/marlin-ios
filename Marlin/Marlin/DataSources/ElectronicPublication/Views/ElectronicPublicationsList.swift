@@ -35,25 +35,7 @@ struct ElectronicPublicationsList: View {
                     case .worldPortIndex:
                         completeAndChapters(section: section, completeTitle: "Complete Volume", chapterTitle: "Additional Formats")
                     default:
-                        List {
-                            ForEach(section) { epub in
-                                NavigationLink {
-                                    epub.detailView
-                                } label: {
-                                    HStack {
-                                        epub.summaryView()
-                                            .padding([.top, .bottom], 16)
-                                    }
-                                    
-                                }
-                            }
-                            
-                        }
-                        .background(Color.backgroundColor)
-                        .navigationTitle(ElectronicPublication.fullDataSourceName)
-                        .navigationBarTitleDisplayMode(.inline)
-                        .listRowBackground(Color.surfaceColor)
-                        .listStyle(.plain)
+                        defaultPublications(section: section)
                     }
                 } label: {
                     HStack(spacing: 16) {
@@ -78,6 +60,21 @@ struct ElectronicPublicationsList: View {
         .onAppear {
             Metrics.shared.dataSourceList(dataSource: ElectronicPublication.self)
         }
+    }
+    
+    @ViewBuilder
+    func defaultPublications(section: SectionedFetchResults<Int64, ElectronicPublication>.Element) -> some View {
+        List {
+            ForEach(section) { epub in
+                epub.summaryView()
+                    .padding([.top, .bottom], 16)
+            }
+        }
+        .background(Color.backgroundColor)
+        .navigationTitle((PublicationTypeEnum(rawValue: Int(section.id)) ?? .unknown).description)
+        .navigationBarTitleDisplayMode(.inline)
+        .listRowBackground(Color.surfaceColor)
+        .listStyle(.grouped)
     }
     
     @ViewBuilder

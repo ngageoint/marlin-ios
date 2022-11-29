@@ -21,7 +21,7 @@ final class ModuDataTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         

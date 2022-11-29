@@ -16,13 +16,6 @@ curl -o $SAVE_DIR/modu.json "https://msi.gs.mil/api/publications/modu?output=jso
 
 echo "Downloading initial Light data files"
 curl -o $SAVE_DIR/lights.json "https://msi.gs.mil/api/publications/ngalol/lights-buoys?includeRemovals=false&output=json"
-#curl -o $SAVE_DIR/light110.json "https://msi.gs.mil/api/publications/ngalol/lights-buoys?includeRemovals=false&output=json&volume=110"
-#curl -o $SAVE_DIR/light111.json "https://msi.gs.mil/api/publications/ngalol/lights-buoys?includeRemovals=false&output=json&volume=111"
-#curl -o $SAVE_DIR/light112.json "https://msi.gs.mil/api/publications/ngalol/lights-buoys?includeRemovals=false&output=json&volume=112"
-#curl -o $SAVE_DIR/light113.json "https://msi.gs.mil/api/publications/ngalol/lights-buoys?includeRemovals=false&output=json&volume=113"
-#curl -o $SAVE_DIR/light114.json "https://msi.gs.mil/api/publications/ngalol/lights-buoys?includeRemovals=false&output=json&volume=114"
-#curl -o $SAVE_DIR/light115.json "https://msi.gs.mil/api/publications/ngalol/lights-buoys?includeRemovals=false&output=json&volume=115"
-#curl -o $SAVE_DIR/light116.json "https://msi.gs.mil/api/publications/ngalol/lights-buoys?includeRemovals=false&output=json&volume=116"
 
 echo "Downloading initial Port data file"
 curl -o $SAVE_DIR/port.json "https://msi.gs.mil/api/publications/world-port-index?output=json"
@@ -38,3 +31,9 @@ curl -o $SAVE_DIR/dfrs.json "https://msi.gs.mil/api/publications/radio-navaids/d
 
 echo "Downloading initial DFRS Areas data file"
 curl -o $SAVE_DIR/dfrsAreas.json "https://msi.gs.mil/api/publications/radio-navaids/dfrs/areas"
+
+echo "Downloading initial NTM data"
+curl -o $SAVE_DIR/ntm.json "https://msi.gs.mil/api/publications/ntm/pubs?output=json"
+
+echo "Downloading initial EPUB data"
+curl -o $SAVE_DIR/epub.json "https://msi.gs.mil/api/publications/stored-pubs"

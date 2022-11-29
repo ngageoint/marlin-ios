@@ -34,7 +34,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
     }
     
     func getFetchRequest(mapState: MapState) -> NSFetchRequest<NSManagedObject>? {
-        guard let M = T.self as? any DataSource.Type else {
+        guard let M = T.self as? any BatchImportable.Type, let D = T.self as? any DataSource.Type else {
             return nil
         }
         let fetchRequest: NSFetchRequest<NSManagedObject> = M.fetchRequest() as! NSFetchRequest<NSManagedObject>
@@ -45,7 +45,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         if let presetPredicate = fetchPredicate {
             filterPredicates.append(presetPredicate)
         } else if let showKeyPath = showKeyPath, let showItems = mapState[keyPath: showKeyPath], showItems == true {
-            let filters = UserDefaults.standard.filter(M.self)
+            let filters = UserDefaults.standard.filter(D.self)
             for filter in filters {
                 if let predicate = filter.toPredicate() {
                     filterPredicates.append(predicate)

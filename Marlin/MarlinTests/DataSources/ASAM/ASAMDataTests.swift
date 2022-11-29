@@ -21,7 +21,7 @@ final class ASAMDataTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -80,6 +80,121 @@ final class ASAMDataTests: XCTestCase {
         MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
         
         waitForExpectations(timeout: 10, handler: nil)
+    }
+    
+    func testLoadInitialDataAndUpdate() throws {
+        
+        for seedDataFile in Asam.seedDataFiles ?? [] {
+            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
+                return HTTPStubsResponse(
+                    fileAtPath: OHPathForFile("asamMockData.json", type(of: self))!,
+                    statusCode: 200,
+                    headers: ["Content-Type":"application/json"]
+                )
+            }
+        }
+        
+        expectation(forNotification: .DataSourceLoading,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+                XCTAssertTrue(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .DataSourceLoaded,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+                XCTAssertFalse(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+            let count = try? self.persistentStore.countOfObjects(Asam.self)
+            XCTAssertEqual(count, 2)
+            return true
+        }
+        
+        MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
+        
+        waitForExpectations(timeout: 10, handler: nil)
+        
+        stub(condition: isScheme("https") && pathEndsWith("/publications/asam")) { request in
+            let jsonObject = [
+                "asam": [
+                    [
+                        "reference": "2022-218",
+                        "date": "2022-10-24",
+                        "latitude": 1.1499999999778083,
+                        "longitude": 103.43333333315655,
+                        "position": "1°09'00\"N \n103°26'00\"E",
+                        "navArea": "XI",
+                        "subreg": "71",
+                        "hostility": "Boarding",
+                        "victim": "Marshall Islands bulk carrier GENCO ENDEAVOUR",
+                        "description": "THIS ONE IS NEW"
+                    ],
+                    [
+                        "reference": "2022-216",
+                        "date": "2022-10-21",
+                        "latitude": 14.649999999964734,
+                        "longitude": 49.49999999969782,
+                        "position": "14°39'00\"N \n49°30'00\"E",
+                        "navArea": "IX",
+                        "subreg": "62",
+                        "hostility": "Two drone explosions",
+                        "victim": "Marshall Islands-flagged oil tanker NISSOS KEA",
+                        "description": "UPDATED"
+                    ]
+                ]
+            ]
+            return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
+        }
+        
+        expectation(forNotification: .DataSourceLoading,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+                XCTAssertTrue(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .DataSourceLoaded,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+                XCTAssertFalse(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+            let count = try? self.persistentStore.countOfObjects(Asam.self)
+            XCTAssertEqual(count, 3)
+            return true
+        }
+        
+        MSI.shared.loadData(type: Asam.decodableRoot, dataType: Asam.self)
+        
+        waitForExpectations(timeout: 10, handler: nil)
+        
+        let updatedAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [Asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-216")))
+        
+        XCTAssertEqual(updatedAsam.reference, "2022-216")
+        XCTAssertEqual(updatedAsam.asamDescription, "UPDATED")
+        
+        let newAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [Asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-218")))
+        
+        XCTAssertEqual(newAsam.reference, "2022-218")
+        XCTAssertEqual(newAsam.asamDescription, "THIS ONE IS NEW")
     }
     
     func testRejectInvalidAsamNoReference() throws {

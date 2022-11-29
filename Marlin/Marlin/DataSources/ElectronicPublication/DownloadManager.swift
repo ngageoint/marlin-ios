@@ -65,7 +65,6 @@ final class DownloadManager: NSObject {
 extension DownloadManager: URLSessionDownloadDelegate {
     
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
-        let logger = OSLog(subsystem: "Marlin", category: "background")
         DispatchQueue.main.async {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
                   let backgroundCompletionHandler =
@@ -73,6 +72,25 @@ extension DownloadManager: URLSessionDownloadDelegate {
                 return
             }
             backgroundCompletionHandler()
+        }
+    }
+    
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge) async -> (URLSession.AuthChallengeDisposition, URLCredential?) {
+        let protectionSpace = challenge.protectionSpace
+        guard protectionSpace.authenticationMethod ==
+                NSURLAuthenticationMethodServerTrust, let trust = protectionSpace.serverTrust else {
+            return (.performDefaultHandling, nil)
+        }
+        do {
+            guard let evaluator = try MSI.shared.manager.serverTrustEvaluator(forHost: protectionSpace.host) else {
+                return (.performDefaultHandling, nil)
+            }
+            
+            try evaluator.evaluate(trust, forHost: protectionSpace.host)
+            
+            return (URLSession.AuthChallengeDisposition.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
+        } catch {
+            return (.cancelAuthenticationChallenge, nil)
         }
     }
     
@@ -125,7 +143,7 @@ extension DownloadManager: URLSessionDownloadDelegate {
             let center = UNUserNotificationCenter.current()
             let content = UNMutableNotificationContent()
             content.title = NSString.localizedUserNotificationString(forKey: "Download Complete", arguments: nil)
-            content.body = NSString.localizedUserNotificationString(forKey: "Downloaded the file \(downloadable.title)", arguments: nil)
+            content.body = NSString.localizedUserNotificationString(forKey: "Downloaded the file \(downloadable.title ?? "")", arguments: nil)
             content.sound = UNNotificationSound.default
             content.categoryIdentifier = "mil.nga.msi"
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2.0, repeats: false)

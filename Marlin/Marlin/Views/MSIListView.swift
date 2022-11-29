@@ -8,24 +8,49 @@
 import SwiftUI
 import CoreData
 
-struct MSIListView<T: NSManagedObject & DataSourceViewBuilder>: View {
-//    @Environment(\.managedObjectContext) private var viewContext
+struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: View {
+    //    @Environment(\.managedObjectContext) private var viewContext
     
     @State var sortOpen: Bool = false
     
     @ObservedObject var focusedItem: ItemWrapper
     @State var selection: String? = nil
     @State var filterOpen: Bool = false
+    var allowUserSort: Bool = true
+    var allowUserFilter: Bool = true
+    var sectionHeaderIsSubList: Bool = false
     var filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>
     var sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>
     
     var watchFocusedItem: Bool = false
     
-    init(focusedItem: ItemWrapper, watchFocusedItem: Bool = false, filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>) {
+    let sectionNameBuilder: ((MSISection<T>) -> String)?
+    //    @ViewBuilder let content: any View
+    
+    let content: ((MSISection<T>) -> Content)?
+    
+    init(focusedItem: ItemWrapper, watchFocusedItem: Bool = false, filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, allowUserSort: Bool = true, allowUserFilter: Bool = true, sectionHeaderIsSubList: Bool = false, sectionNameBuilder: ((MSISection<T>) -> String)? = nil) {
         self.focusedItem = focusedItem
         self.watchFocusedItem = watchFocusedItem
         self.filterPublisher = filterPublisher
         self.sortPublisher = sortPublisher
+        self.allowUserSort = allowUserSort
+        self.allowUserFilter = allowUserFilter
+        self.sectionHeaderIsSubList = sectionHeaderIsSubList
+        self.sectionNameBuilder = sectionNameBuilder
+        self.content = nil
+    }
+    
+    init(focusedItem: ItemWrapper, watchFocusedItem: Bool = false, filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, allowUserSort: Bool = true, allowUserFilter: Bool = true, sectionHeaderIsSubList: Bool = false, sectionNameBuilder: ((MSISection<T>) -> String)? = nil, @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
+        self.focusedItem = focusedItem
+        self.watchFocusedItem = watchFocusedItem
+        self.filterPublisher = filterPublisher
+        self.sortPublisher = sortPublisher
+        self.allowUserSort = allowUserSort
+        self.allowUserFilter = allowUserFilter
+        self.sectionHeaderIsSubList = sectionHeaderIsSubList
+        self.sectionNameBuilder = sectionNameBuilder
+        self.content = content
     }
     
     var body: some View {
@@ -51,12 +76,19 @@ struct MSIListView<T: NSManagedObject & DataSourceViewBuilder>: View {
                 }
                 
             }
-            GenericSectionedList<T>(filterPublisher: filterPublisher, sortPublisher: sortPublisher)
-                .onAppear {
-                    Metrics.shared.dataSourceList(dataSource: T.self)
-                }
+            if let content = content {
+                GenericSectionedList<T, Content>(filterPublisher: filterPublisher, sortPublisher: sortPublisher, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder, content: content)
+                    .onAppear {
+                        Metrics.shared.dataSourceList(dataSource: T.self)
+                    }
+            } else {
+                GenericSectionedList<T, Content>(filterPublisher: filterPublisher, sortPublisher: sortPublisher, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder)
+                    .onAppear {
+                        Metrics.shared.dataSourceList(dataSource: T.self)
+                    }
+            }
         }
-        .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)])))
+        .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)]), allowSorting: allowUserSort, allowFiltering: allowUserFilter))
         .bottomSheet(isPresented: $filterOpen, detents: .large) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
@@ -112,65 +144,123 @@ struct MSIListView<T: NSManagedObject & DataSourceViewBuilder>: View {
     }
 }
 
-struct GenericSectionedList<T: NSManagedObject & DataSourceViewBuilder>: View {
+struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, Content: View>: View {
     @StateObject var itemsViewModel: MSIListViewModel<T>
     @State var tappedItem: T?
     @State private var showDetail = false
+    var sectionNameBuilder: ((MSISection<T>) -> String)?
+    let sectionHeaderIsSubList: Bool
+    let content: ((MSISection<T>) -> Content)?
+
+//    let content: ((MSISection<T>) -> any View)?
 
     var body: some View {
         ZStack {
             NavigationLink(destination: AnyView(tappedItem?.detailView), isActive: self.$showDetail) {
                 EmptyView()
             }.hidden()
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
-                    ForEach(itemsViewModel.sections, id: \.id) { section in
-                        Section(header: HStack {
-                            Text(section.name)
-                                .overline()
-                                .padding([.leading, .trailing], 8)
-                                .padding(.top, 12)
-                                .padding(.bottom, 4)
-                            Spacer()
-                        }
-                            .background(Color.backgroundColor)) {
-                                ForEach(section.items) { item in
-                                    
-                                    ZStack {
-                                        NavigationLink(destination: item.detailView) {
-                                            EmptyView()
-                                        }
-                                        .opacity(0)
-                                        
-                                        HStack {
-                                            item.summaryView(showMoreDetails: false, showSectionHeader: false)
-                                        }
-                                        .padding(.all, 16)
-                                        .card()
-                                    }
-                                    .padding(.all, 8)
-                                    .onTapGesture {
-                                        tappedItem = item
-                                        showDetail.toggle()
+                if !sectionHeaderIsSubList {
+                    ScrollView {
+                        
+                        LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
+                            ForEach(itemsViewModel.sections, id: \.id) { section in
+                                Section(header: HStack {
+                                    Text(sectionNameBuilder?(section) ?? section.name)
+                                        .overline()
+                                        .padding([.leading, .trailing], 8)
+                                        .padding(.top, 12)
+                                        .padding(.bottom, 4)
+                                    Spacer()
+                                }
+                                .background(Color.backgroundColor)) {
+                                    itemList(items: section.items)
+                                }
+                                .onAppear {
+                                    if section.id == itemsViewModel.sections[itemsViewModel.sections.count - 1].id {
+                                        itemsViewModel.update(for: section.id + 1)
                                     }
                                 }
-                                .dataSourceSummaryItem()
+                            }
+                        }
+                    }
+                    .dataSourceSummaryList()
+                } else {
+                    List {
+                        ForEach(itemsViewModel.sections, id: \.id) { section in
+                            NavigationLink {
+                                if let content = content {
+                                    content(section)
+                                } else {
+                                    ScrollView {
+                                        LazyVStack(alignment: .leading, spacing: 0) {
+                                            itemList(items: section.items)
+                                        }
+                                    }
+                                    .background(Color.backgroundColor)
+                                    .navigationTitle(sectionNameBuilder?(section) ?? section.name)
+                                    .navigationBarTitleDisplayMode(.inline)
+                                }
+                            } label: {
+                                HStack(spacing: 16) {
+                                    VStack(alignment: .leading) {
+                                        Text(sectionNameBuilder?(section) ?? section.name)
+                                            .primary()
+                                    }
+                                }
+                                .padding(.top, 8)
+                                .padding(.bottom, 8)
                             }
                             .onAppear {
                                 if section.id == itemsViewModel.sections[itemsViewModel.sections.count - 1].id {
                                     itemsViewModel.update(for: section.id + 1)
                                 }
                             }
+                        }
                     }
+                    .listStyle(.plain)
                 }
             }
-            .navigationTitle(T.dataSourceName)
-            .navigationBarTitleDisplayMode(.inline)
-            .dataSourceSummaryList()
-        }
+            
+        .navigationTitle(T.fullDataSourceName)
+        .navigationBarTitleDisplayMode(.inline)
     }
     
-    init(filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>) {
+    @ViewBuilder
+    func itemList(items: [T]) -> some View {
+        ForEach(items) { item in
+            
+            ZStack {
+                NavigationLink(destination: item.detailView) {
+                    EmptyView()
+                }
+                .opacity(0)
+                
+                HStack {
+                    item.summaryView(showMoreDetails: false, showSectionHeader: false)
+                }
+                .padding(.all, 16)
+                .card()
+            }
+            .padding(.all, 8)
+            .onTapGesture {
+                tappedItem = item
+                showDetail.toggle()
+            }
+        }
+        .dataSourceSummaryItem()
+    }
+    
+    init(filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sectionHeaderIsSubList: Bool = false, sectionNameBuilder: ((MSISection<T>) -> String)? = nil, @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
         _itemsViewModel = StateObject(wrappedValue: MSIListViewModel<T>(filterPublisher: filterPublisher, sortPublisher: sortPublisher))
+        self.sectionNameBuilder = sectionNameBuilder
+        self.sectionHeaderIsSubList = sectionHeaderIsSubList
+        self.content = content
+    }
+    
+    init(filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sectionHeaderIsSubList: Bool = false, sectionNameBuilder: ((MSISection<T>) -> String)? = nil) {
+        _itemsViewModel = StateObject(wrappedValue: MSIListViewModel<T>(filterPublisher: filterPublisher, sortPublisher: sortPublisher))
+        self.sectionNameBuilder = sectionNameBuilder
+        self.sectionHeaderIsSubList = sectionHeaderIsSubList
+        self.content = nil
     }
 }

@@ -100,7 +100,7 @@ extension ElectronicPublication: BatchImportable {
         return [MSIRouter.readElectronicPublications]
     }
     
-    static var seedDataFiles: [String]? = nil
+    static var seedDataFiles: [String]? = ["epub"]
     
     static var decodableRoot: Decodable.Type = ElectronicPublicationPropertyContainer.self
     

@@ -299,7 +299,9 @@ class CoreDataPersistentStore: PersistentStore {
             
             for item in DataSourceList().allTabs {
                 UserDefaults.standard.initialDataLoaded = false
-                UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource)
+                if let ds = item.dataSource as? any BatchImportable.Type {
+                    UserDefaults.standard.clearLastSyncTimeSeconds(ds)
+                }
             }
             UserDefaults.standard.lastLoadDate = Date()
         }

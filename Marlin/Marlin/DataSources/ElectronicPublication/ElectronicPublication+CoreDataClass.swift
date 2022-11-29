@@ -107,21 +107,21 @@ protocol Downloadable: NSManagedObject {
     var downloadProgress: Float { get set }
     var remoteLocation: URL? { get }
     var savePath: String { get }
-    var title: String { get }
+    var title: String? { get }
     func checkFileExists() -> Bool
     func deleteFile()
 }
 
 class ElectronicPublication: NSManagedObject, Downloadable {
         
-    var title: String {
+    var title: String? {
         return sectionDisplayName ?? "Electronic Publication"
     }
     var remoteLocation: URL? {
         guard let s3Key else {
             return nil
         }
-        return URL(string: "https://msi.nga.mil/api/publications/download?key=\(s3Key)&type=download")
+        return URL(string: "\(MSIRouter.baseURLString)/publications/download?key=\(s3Key)&type=download")
     }
     var savePath: String {
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
