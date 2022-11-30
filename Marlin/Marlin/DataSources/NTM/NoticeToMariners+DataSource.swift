@@ -10,26 +10,6 @@ import UIKit
 import CoreData
 import Combine
 
-/**
- {
- "publicationIdentifier": 41791,
- "noticeNumber": 202247,
- "title": "Front Cover",
- "odsKey": "16694429/SFH00000/UNTM/202247/Front_Cover.pdf",
- "sectionOrder": 20,
- "limitedDist": false,
- "odsEntryId": 29431,
- "odsContentId": 16694429,
- "internalPath": "UNTM/202247",
- "filenameBase": "Front_Cover",
- "fileExtension": "pdf",
- "fileSize": 63491,
- "isFullPublication": false,
- "uploadTime": "2022-11-08T12:28:33.961+0000",
- "lastModified": "2022-11-08T12:28:33.961Z"
- }
- */
-
 extension NoticeToMariners: DataSource {
     static var properties: [DataSourceProperty] {
         return []
@@ -73,13 +53,13 @@ extension NoticeToMariners: BatchImportable {
     }
     
     static func dataRequest() -> [MSIRouter] {
-        let newestAsam = try? PersistenceController.current.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)], predicate: nil)
-        return []//MSIRouter.readAsams(date: newestAsam?.dateString)]
+        let newestNotice = try? PersistenceController.current.fetchFirst(NoticeToMariners.self, sortBy: [NSSortDescriptor(keyPath: \NoticeToMariners.noticeNumber, ascending: false)], predicate: nil)
+        return [MSIRouter.readNoticeToMariners(noticeNumber: newestNotice?.noticeNumber)]
     }
     
     static func shouldSync() -> Bool {
-        // sync once every hour
-        return UserDefaults.standard.dataSourceEnabled(NoticeToMariners.self) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.self)
+        // sync once every day
+        return UserDefaults.standard.dataSourceEnabled(NoticeToMariners.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24)) > UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.self)
     }
     
     static func newBatchInsertRequest(with propertyList: [NoticeToMarinersProperties]) -> NSBatchInsertRequest {

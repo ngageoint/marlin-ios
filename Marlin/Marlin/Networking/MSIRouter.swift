@@ -20,6 +20,7 @@ enum MSIRouter: URLRequestConvertible
     case readDFRS
     case readDFRSAreas
     case readElectronicPublications
+    case readNoticeToMariners(noticeNumber: Int64? = nil)
     
 //    static let baseURLString = "https://msi.gs.mil/api"
     static let baseURLString = "https://msi.om.east.paas.nga.mil/api"
@@ -48,6 +49,8 @@ enum MSIRouter: URLRequestConvertible
             return .get
         case .readElectronicPublications:
             return .get
+        case .readNoticeToMariners:
+            return .get
         }
     }
     
@@ -74,6 +77,8 @@ enum MSIRouter: URLRequestConvertible
             return "/publications/radio-navaids/dfrs/areas"
         case .readElectronicPublications:
             return "/publications/stored-pubs"
+        case .readNoticeToMariners:
+            return "/publications/ntm/pubs"
         }
     }
     
@@ -160,6 +165,18 @@ enum MSIRouter: URLRequestConvertible
             return [:]
         case .readElectronicPublications:
             return [:]
+        case .readNoticeToMariners(noticeNumber: let noticeNumber):
+            var params = [
+                "output": "json"
+            ]
+            if let noticeNumber = noticeNumber {
+                let calendar = Calendar.current
+                let week = calendar.component(.weekOfYear, from: Date())
+                let year = calendar.component(.year, from: Date())
+                params["minNoticeNumber"] = "\(noticeNumber)"
+                params["maxNoticeNumber"] = "\(year)\(String(format: "%02d", week + 1))"
+            }
+            return params
         }
     }
     
