@@ -99,4 +99,266 @@ final class NoticeToMarinersDataTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
     }
+    
+    func testLoadInitialDataAndUpdateWithNewData() throws {
+        
+        for seedDataFile in NoticeToMariners.seedDataFiles ?? [] {
+            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
+                return HTTPStubsResponse(
+                    fileAtPath: OHPathForFile("ntmMockData.json", type(of: self))!,
+                    statusCode: 200,
+                    headers: ["Content-Type":"application/json"]
+                )
+            }
+        }
+        
+        expectation(forNotification: .DataSourceLoading,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[NoticeToMariners.key] {
+                XCTAssertTrue(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .DataSourceLoaded,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[NoticeToMariners.key] {
+                XCTAssertFalse(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+            let count = try? self.persistentStore.countOfObjects(NoticeToMariners.self)
+            XCTAssertEqual(count, 22)
+            return true
+        }
+        
+        MSI.shared.loadInitialData(type: NoticeToMariners.decodableRoot, dataType: NoticeToMariners.self)
+        
+        waitForExpectations(timeout: 10, handler: nil)
+        
+        stub(condition: isScheme("https") && pathEndsWith("/publications/ntm/pubs") && containsQueryParams(["minNoticeNumber": "202247"])) { request in
+            let jsonObject = [
+                "pubs": [
+                    [
+                        "publicationIdentifier":41791,
+                        "noticeNumber":202248,
+                        "title":"Front Cover",
+                        "odsKey":"16694429/SFH00000/UNTM/202248/Front_Cover.pdf",
+                        "sectionOrder":20,
+                        "limitedDist":false,
+                        "odsEntryId":29432,
+                        "odsContentId":16694429,
+                        "internalPath":"UNTM/202247",
+                        "filenameBase":"Front_Cover",
+                        "fileExtension":"pdf",
+                        "fileSize":63491,
+                        "isFullPublication":false,
+                        "uploadTime":"2022-11-08T12:28:33.961+0000",
+                        "lastModified":"2022-11-08T12:28:33.961Z"
+                    ]
+                ]
+            ]
+            return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
+        }
+        
+        expectation(forNotification: .DataSourceLoading,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[NoticeToMariners.key] {
+                XCTAssertTrue(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .DataSourceLoaded,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[NoticeToMariners.key] {
+                XCTAssertFalse(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+            let count = try? self.persistentStore.countOfObjects(NoticeToMariners.self)
+            XCTAssertEqual(count, 23)
+            return true
+        }
+        
+        MSI.shared.loadData(type: NoticeToMariners.decodableRoot, dataType: NoticeToMariners.self)
+        
+        waitForExpectations(timeout: 10, handler: nil)
+        
+        let newNtm = try! XCTUnwrap(self.persistentStore.fetchFirst(NoticeToMariners.self, sortBy: [NoticeToMariners.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "noticeNumber = %d", 202248)))
+        
+        XCTAssertEqual(newNtm.noticeNumber, 202248)
+    }
+    
+    func testRejectInvalidNoticeToMarinersNoOdsEntryId() throws {
+        for seedDataFile in NoticeToMariners.seedDataFiles ?? [] {
+            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
+                let jsonObject = [
+                    "pubs": [
+                        [
+                            "publicationIdentifier":41791,
+                            "noticeNumber":202248,
+                            "title":"Front Cover",
+                            "odsKey":"16694429/SFH00000/UNTM/202248/Front_Cover.pdf",
+                            "sectionOrder":20,
+                            "limitedDist":false,
+                            "odsEntryId":nil,
+                            "odsContentId":16694429,
+                            "internalPath":"UNTM/202247",
+                            "filenameBase":"Front_Cover",
+                            "fileExtension":"pdf",
+                            "fileSize":63491,
+                            "isFullPublication":false,
+                            "uploadTime":"2022-11-08T12:28:33.961+0000",
+                            "lastModified":"2022-11-08T12:28:33.961Z"
+                        ],[
+                            "publicationIdentifier":41792,
+                            "noticeNumber":202248,
+                            "title":"Front Cover 2",
+                            "odsKey":"16694429/SFH00000/UNTM/202248/Front_Cover2.pdf",
+                            "sectionOrder":20,
+                            "limitedDist":false,
+                            "odsEntryId":29431,
+                            "odsContentId":16694429,
+                            "internalPath":"UNTM/202247",
+                            "filenameBase":"Front_Cover",
+                            "fileExtension":"pdf",
+                            "fileSize":63491,
+                            "isFullPublication":false,
+                            "uploadTime":"2022-11-08T12:28:33.961+0000",
+                            "lastModified":"2022-11-08T12:28:33.961Z"
+                        ]
+                    ]
+                ]
+                return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
+            }
+        }
+        
+        expectation(forNotification: .DataSourceLoading,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[NoticeToMariners.key] {
+                XCTAssertTrue(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .DataSourceLoaded,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[NoticeToMariners.key] {
+                XCTAssertFalse(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+            let count = try? self.persistentStore.countOfObjects(NoticeToMariners.self)
+            XCTAssertEqual(count, 1)
+            return true
+        }
+        
+        MSI.shared.loadInitialData(type: NoticeToMariners.decodableRoot, dataType: NoticeToMariners.self)
+        
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+    
+    func testRejectInvalidNoticeToMarinersNoOdsKey() throws {
+        for seedDataFile in NoticeToMariners.seedDataFiles ?? [] {
+            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
+                let jsonObject = [
+                    "pubs": [
+                        [
+                            "publicationIdentifier":41791,
+                            "noticeNumber":202248,
+                            "title":"Front Cover",
+                            "odsKey":nil,
+                            "sectionOrder":20,
+                            "limitedDist":false,
+                            "odsEntryId":29432,
+                            "odsContentId":16694429,
+                            "internalPath":"UNTM/202247",
+                            "filenameBase":"Front_Cover",
+                            "fileExtension":"pdf",
+                            "fileSize":63491,
+                            "isFullPublication":false,
+                            "uploadTime":"2022-11-08T12:28:33.961+0000",
+                            "lastModified":"2022-11-08T12:28:33.961Z"
+                        ],[
+                            "publicationIdentifier":41792,
+                            "noticeNumber":202248,
+                            "title":"Front Cover 2",
+                            "odsKey":"16694429/SFH00000/UNTM/202248/Front_Cover2.pdf",
+                            "sectionOrder":20,
+                            "limitedDist":false,
+                            "odsEntryId":29431,
+                            "odsContentId":16694429,
+                            "internalPath":"UNTM/202247",
+                            "filenameBase":"Front_Cover",
+                            "fileExtension":"pdf",
+                            "fileSize":63491,
+                            "isFullPublication":false,
+                            "uploadTime":"2022-11-08T12:28:33.961+0000",
+                            "lastModified":"2022-11-08T12:28:33.961Z"
+                        ]
+                    ]
+                ]
+                return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
+            }
+        }
+        
+        expectation(forNotification: .DataSourceLoading,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[NoticeToMariners.key] {
+                XCTAssertTrue(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .DataSourceLoaded,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[NoticeToMariners.key] {
+                XCTAssertFalse(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+            let count = try? self.persistentStore.countOfObjects(NoticeToMariners.self)
+            XCTAssertEqual(count, 1)
+            return true
+        }
+        
+        MSI.shared.loadInitialData(type: NoticeToMariners.decodableRoot, dataType: NoticeToMariners.self)
+        
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+    
+    func testShouldSync() {
+        UserDefaults.standard.setValue(false, forKey: "\(NoticeToMariners.key)DataSourceEnabled")
+        XCTAssertFalse(NoticeToMariners.shouldSync())
+        UserDefaults.standard.setValue(true, forKey: "\(NoticeToMariners.key)DataSourceEnabled")
+        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60 * 24) - 10, forKey: "\(NoticeToMariners.key)LastSyncTime")
+        XCTAssertTrue(NoticeToMariners.shouldSync())
+        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60 * 24) + (60 * 10), forKey: "\(NoticeToMariners.key)LastSyncTime")
+        XCTAssertFalse(NoticeToMariners.shouldSync())
+    }
 }

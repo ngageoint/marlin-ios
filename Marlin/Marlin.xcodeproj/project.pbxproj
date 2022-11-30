@@ -181,6 +181,8 @@
 		F7D8FA2A2924481000E7D0A1 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA292924481000E7D0A1 /* ImageLoader.swift */; };
 		F7D8FA2C2925756F00E7D0A1 /* ChartCorrectionQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA2B2925756F00E7D0A1 /* ChartCorrectionQuery.swift */; };
 		F7D8FA2E2926DB6100E7D0A1 /* epub.json in Resources */ = {isa = PBXBuildFile; fileRef = F7D8FA2D2926DB6100E7D0A1 /* epub.json */; };
+		F7D8FA302936C01F00E7D0A1 /* MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA2F2936C01F00E7D0A1 /* MapImage.swift */; };
+		F7D8FA342936C08200E7D0A1 /* MapImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA332936C08200E7D0A1 /* MapImageTests.swift */; };
 		F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89D28946C8900E7CCE2 /* RailItem.swift */; };
 		F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
@@ -454,6 +456,8 @@
 		F7D8FA292924481000E7D0A1 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		F7D8FA2B2925756F00E7D0A1 /* ChartCorrectionQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartCorrectionQuery.swift; sourceTree = "<group>"; };
 		F7D8FA2D2926DB6100E7D0A1 /* epub.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = epub.json; sourceTree = "<group>"; };
+		F7D8FA2F2936C01F00E7D0A1 /* MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapImage.swift; sourceTree = "<group>"; };
+		F7D8FA332936C08200E7D0A1 /* MapImageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapImageTests.swift; sourceTree = "<group>"; };
 		F7E8C89D28946C8900E7CCE2 /* RailItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailItem.swift; sourceTree = "<group>"; };
 		F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceRail.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
@@ -727,6 +731,7 @@
 				F7ADDCEB28902D1500137D95 /* EnlargableAnnotation.swift */,
 				F7ADDCED28902D5300137D95 /* AnnotationWithView.swift */,
 				F7B7064228BAADD50026DE88 /* CircleImage.swift */,
+				F7D8FA2F2936C01F00E7D0A1 /* MapImage.swift */,
 			);
 			path = Annotation;
 			sourceTree = "<group>";
@@ -751,6 +756,7 @@
 		F727A68F284E605800BD728A /* MarlinTests */ = {
 			isa = PBXGroup;
 			children = (
+				F7D8FA312936C06600E7D0A1 /* Map */,
 				F7C23E192914264E0002A7DF /* Mocks */,
 				F7C23E152911C7920002A7DF /* DataSources */,
 				F71DF47C284E68C200686951 /* responses */,
@@ -1072,6 +1078,22 @@
 				F7D8FA292924481000E7D0A1 /* ImageLoader.swift */,
 			);
 			path = AsyncImage;
+			sourceTree = "<group>";
+		};
+		F7D8FA312936C06600E7D0A1 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				F7D8FA322936C07100E7D0A1 /* Annotation */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		F7D8FA322936C07100E7D0A1 /* Annotation */ = {
+			isa = PBXGroup;
+			children = (
+				F7D8FA332936C08200E7D0A1 /* MapImageTests.swift */,
+			);
+			path = Annotation;
 			sourceTree = "<group>";
 		};
 		F7F5977F285A1B2400F9B32E /* ASAM */ = {
@@ -1565,6 +1587,7 @@
 				F727A698284E607100BD728A /* MSITests.swift in Sources */,
 				F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */,
 				F727A691284E605800BD728A /* MarlinTests.swift in Sources */,
+				F7D8FA342936C08200E7D0A1 /* MapImageTests.swift in Sources */,
 				F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */,
 				F72EAAD5291D526700AC6026 /* RadioBeaconDataTests.swift in Sources */,
 				F7D8FA1D2922F7F300E7D0A1 /* NoticeToMarinersDataTests.swift in Sources */,
@@ -1709,6 +1732,7 @@
 				F7B7064328BAADD50026DE88 /* CircleImage.swift in Sources */,
 				F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */,
 				F7FFB31E28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift in Sources */,
+				F7D8FA302936C01F00E7D0A1 /* MapImage.swift in Sources */,
 				F7D671E02871BFEC00758F1C /* ModuActionBar.swift in Sources */,
 				F7F597AC2864DD5200F9B32E /* NavigationalWarningListView.swift in Sources */,
 				F7FFB31C28D63F5500C31AA3 /* Light+MapImage.swift in Sources */,
