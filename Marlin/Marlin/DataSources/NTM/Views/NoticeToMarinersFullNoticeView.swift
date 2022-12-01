@@ -83,7 +83,6 @@ struct NoticeToMarinersFullNoticeView: View {
                                                 placeholder: { Text("Loading ...").overline() },
                                                 image: { Image(uiImage: $0).resizable() }
                                             )
-                                            .cornerRadius(8.0)
                                             .aspectRatio(contentMode: .fit)
                                             Text("Chart \(item.chartNumber ?? "")").overline()
                                         }
