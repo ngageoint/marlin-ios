@@ -59,6 +59,8 @@ enum DataSourcePropertyType: Codable {
     case boolean
     case enumeration
     case location
+    case latitude
+    case longitude
 }
 
 struct DataSourceProperty: Hashable, Identifiable, Codable {

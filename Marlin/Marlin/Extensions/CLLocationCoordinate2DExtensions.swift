@@ -438,3 +438,51 @@ extension CLLocationCoordinate2D {
         self.init(latitude: latlon[0], longitude: latlon[1])
     }
 }
+
+extension Double {
+    
+    init?(coordinateString: String) {
+        let p = #"(?<deg>-?[0-9]*\.?\d+)[\s°-]*(?<minutes>\d{1,2}\.?\d+)?[\s\`'-]*(?<seconds>\d{1,2}\.?\d+)?[\s\" ]?(?<direction>([NOEWS])?)"#
+        
+        var found: Bool = false
+        var degrees: Double = 0.0
+        var multiplier: Double = 1.0
+
+        do {
+            let regex = try NSRegularExpression(pattern: p)
+            let matches = regex.matches(in: coordinateString, range: NSRange(coordinateString.startIndex..., in: coordinateString))
+            
+            for match in matches {
+                for component in ["direction", "deg", "minutes", "seconds"] {
+                    let nsrange = match.range(withName: component)
+                    if nsrange.location != NSNotFound,
+                       let range = Range(nsrange, in: coordinateString),
+                       !range.isEmpty
+                    {
+                        if component == "direction" {
+                            multiplier = "NEO".contains(coordinateString[range]) ? 1.0 : -1.0
+                        } else if component == "deg" {
+                            found = true
+                            degrees += Double(coordinateString[range]) ?? 0.0
+                        } else if component == "minutes" {
+                            degrees += (Double(coordinateString[range]) ?? 0.0) / 60
+                        } else if component == "seconds" {
+                            degrees += (Double(coordinateString[range]) ?? 0.0) / 3600
+                        }
+                    }
+                }
+                
+                if !found {
+                    return nil
+                }
+            }
+        } catch {
+            print(error)
+            return nil
+        }
+        if !found {
+            return nil
+        }
+        self.init(floatLiteral: multiplier * degrees)
+    }
+}

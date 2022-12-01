@@ -62,6 +62,14 @@ enum DataSourceFilterComparison: String, CaseIterable, Identifiable, Codable {
         return [.nearMe, .closeTo]
     }
     
+    static func latitudeSubset() -> [DataSourceFilterComparison] {
+        return numberSubset()
+    }
+    
+    static func longitudeSubset() -> [DataSourceFilterComparison] {
+        return numberSubset()
+    }
+    
     func coreDataComparison() -> String {
         switch(self) {
         case .equals:
@@ -243,6 +251,10 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
         } else if property.type == .int, let value = valueInt {
             return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %d", value)
         } else if (property.type == .float || property.type == .double), let value = valueDouble {
+            return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %f", value)
+        } else if (property.type == .latitude), let value = valueLatitude {
+            return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %f", value)
+        } else if (property.type == .longitude), let value = valueLongitude {
             return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %f", value)
         } else if property.type == .enumeration, let value = valueString {
             if let queryValues = property.enumerationValues?[value], !queryValues.isEmpty {

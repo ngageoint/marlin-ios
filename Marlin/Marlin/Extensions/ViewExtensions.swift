@@ -38,4 +38,12 @@ extension View {
     func complexModifier<V: View>(@ViewBuilder _ closure: (Self) -> V) -> some View {
         closure(self)
     }
+    
+    func underlineTextField() -> some View {
+        self
+            .padding(.vertical, 10)
+            .overlay(Rectangle().frame(height: 2).padding(.top, 35))
+            .foregroundColor(Color.primaryColorVariant)
+            .padding(10)
+    }
 }
