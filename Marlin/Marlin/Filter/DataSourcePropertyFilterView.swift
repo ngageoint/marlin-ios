@@ -75,6 +75,9 @@ struct DataSourcePropertyFilterView: View {
                                     isValid = false
                                 }
                             }
+                            .onAppear {
+                                isValid = false
+                            }
                         if let validationText = validationText {
                             Text(validationText)
                                 .overline()
@@ -97,6 +100,9 @@ struct DataSourcePropertyFilterView: View {
                                     validationText = "Invalid number"
                                     isValid = false
                                 }
+                            }
+                            .onAppear {
+                                isValid = false
                             }
                         if let validationText = validationText {
                             Text(validationText)
@@ -287,6 +293,9 @@ struct DataSourcePropertyFilterView: View {
                                         validationText = "Distance must be greater than zero"
                                     }
                                 }
+                                .onAppear {
+                                    isValid = false
+                                }
                             if let validationText = validationText {
                                 Text(validationText)
                                     .overline()
@@ -326,6 +335,9 @@ struct DataSourcePropertyFilterView: View {
                                     isValid = false
                                 }
                             }
+                            .onAppear {
+                                isValid = false
+                            }
                         if let validationText = validationText {
                             Text(validationText)
                                 .overline()
@@ -343,6 +355,9 @@ struct DataSourcePropertyFilterView: View {
                             .underlineTextField()
                             .onChange(of: valueString) { newValue in
                                 isValid = !newValue.isEmpty
+                            }
+                            .onAppear {
+                                isValid = false
                             }
                         if let validationText = validationText {
                             Text(validationText)
@@ -364,7 +379,6 @@ struct DataSourcePropertyFilterView: View {
                 valueLatitudeString = ""
                 valueLongitudeString = ""
                 windowUnits = .last30Days
-                isValid = false
                 validationText = nil
             } label: {
                 Image(systemName: "plus.circle.fill")
@@ -394,7 +408,6 @@ struct DataSourcePropertyFilterView: View {
             valueLatitudeString = ""
             valueLongitudeString = ""
             windowUnits = .last30Days
-            isValid = false
             validationText = nil
             
         }
