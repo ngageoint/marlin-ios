@@ -29,8 +29,8 @@ extension Port: DataSource {
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Location", key: #keyPath(Port.mgrs10km), type: .location),
         // Name and Location
-        DataSourceProperty(name: "Latitude", key: #keyPath(Port.latitude), type: .double),
-        DataSourceProperty(name: "Longitude", key: #keyPath(Port.longitude), type: .double),
+        DataSourceProperty(name: "Latitude", key: #keyPath(Port.latitude), type: .latitude),
+        DataSourceProperty(name: "Longitude", key: #keyPath(Port.longitude), type: .longitude),
         DataSourceProperty(name: "World Port Index Number", key: #keyPath(Port.portNumber), type: .int),
         DataSourceProperty(name: "Region Name", key: #keyPath(Port.regionName), type: .string),
         DataSourceProperty(name: "Region Number", key: #keyPath(Port.regionNumber), type: .int),

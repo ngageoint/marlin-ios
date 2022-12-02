@@ -27,8 +27,8 @@ extension RadioBeacon: DataSource {
     
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Location", key: #keyPath(RadioBeacon.mgrs10km), type: .location),
-        DataSourceProperty(name: "Latitude", key: #keyPath(RadioBeacon.latitude), type: .double),
-        DataSourceProperty(name: "Longitude", key: #keyPath(RadioBeacon.longitude), type: .double),
+        DataSourceProperty(name: "Latitude", key: #keyPath(RadioBeacon.latitude), type: .latitude),
+        DataSourceProperty(name: "Longitude", key: #keyPath(RadioBeacon.longitude), type: .longitude),
         DataSourceProperty(name: "Feature Number", key: #keyPath(RadioBeacon.featureNumber), type: .int),
         DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(RadioBeacon.geopoliticalHeading), type: .string),
         DataSourceProperty(name: "Name", key: #keyPath(RadioBeacon.name), type: .string),

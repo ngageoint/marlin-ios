@@ -27,8 +27,8 @@ extension DFRS: DataSource {
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
-        DataSourceProperty(name: "Latitude", key: #keyPath(DFRS.latitude), type: .double),
-        DataSourceProperty(name: "Longitude", key: #keyPath(DFRS.longitude), type: .double),
+        DataSourceProperty(name: "Latitude", key: #keyPath(DFRS.latitude), type: .latitude),
+        DataSourceProperty(name: "Longitude", key: #keyPath(DFRS.longitude), type: .longitude),
         DataSourceProperty(name: "Location", key: #keyPath(DFRS.mgrs10km), type: .location),
         DataSourceProperty(name: "Station Number", key: #keyPath(DFRS.stationNumber), type: .double),
         DataSourceProperty(name: "Station Name", key: #keyPath(DFRS.stationName), type: .string),
@@ -39,10 +39,10 @@ extension DFRS: DataSource {
         DataSourceProperty(name: "Frequency", key: #keyPath(DFRS.frequency), type: .string),
         DataSourceProperty(name: "procedureText", key: #keyPath(DFRS.procedureText), type: .string),
         DataSourceProperty(name: "Range", key: #keyPath(DFRS.range), type: .double),
-        DataSourceProperty(name: "Rx Latitude", key: #keyPath(DFRS.rxLatitude), type: .double),
-        DataSourceProperty(name: "Rx Longitude", key: #keyPath(DFRS.rxLongitude), type: .double),
-        DataSourceProperty(name: "Tx Latitude", key: #keyPath(DFRS.txLatitude), type: .double),
-        DataSourceProperty(name: "Tx Longitude", key: #keyPath(DFRS.txLongitude), type: .double),
+        DataSourceProperty(name: "Rx Latitude", key: #keyPath(DFRS.rxLatitude), type: .latitude),
+        DataSourceProperty(name: "Rx Longitude", key: #keyPath(DFRS.rxLongitude), type: .longitude),
+        DataSourceProperty(name: "Tx Latitude", key: #keyPath(DFRS.txLatitude), type: .latitude),
+        DataSourceProperty(name: "Tx Longitude", key: #keyPath(DFRS.txLongitude), type: .longitude),
     ]
     
     static var dateFormatter: DateFormatter {

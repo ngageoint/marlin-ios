@@ -28,8 +28,8 @@ extension DifferentialGPSStation: DataSource {
     
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Location", key: #keyPath(DifferentialGPSStation.mgrs10km), type: .location),
-        DataSourceProperty(name: "Latitude", key: #keyPath(DifferentialGPSStation.latitude), type: .double),
-        DataSourceProperty(name: "Longitude", key: #keyPath(DifferentialGPSStation.longitude), type: .double),
+        DataSourceProperty(name: "Latitude", key: #keyPath(DifferentialGPSStation.latitude), type: .latitude),
+        DataSourceProperty(name: "Longitude", key: #keyPath(DifferentialGPSStation.longitude), type: .longitude),
         DataSourceProperty(name: "Number", key: #keyPath(DifferentialGPSStation.featureNumber), type: .int),
         DataSourceProperty(name: "Name", key: #keyPath(DifferentialGPSStation.name), type: .string),
         DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(DifferentialGPSStation.geopoliticalHeading), type: .string),

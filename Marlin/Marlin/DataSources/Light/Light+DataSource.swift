@@ -31,8 +31,8 @@ extension Light: DataSource {
     
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Location", key: #keyPath(Light.mgrs10km), type: .location),
-        DataSourceProperty(name: "Latitude", key: #keyPath(Light.latitude), type: .double),
-        DataSourceProperty(name: "Longitude", key: #keyPath(Light.longitude), type: .double),
+        DataSourceProperty(name: "Latitude", key: #keyPath(Light.latitude), type: .latitude),
+        DataSourceProperty(name: "Longitude", key: #keyPath(Light.longitude), type: .longitude),
         DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .string),
         DataSourceProperty(name: "International Feature Number", key: #keyPath(Light.internationalFeature), type: .string),
         DataSourceProperty(name: "Name", key: #keyPath(Light.name), type: .string),
