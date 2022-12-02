@@ -188,6 +188,15 @@
 		F7D8FA3A29391CA700E7D0A1 /* FilterParameterSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA3929391CA700E7D0A1 /* FilterParameterSummaryView.swift */; };
 		F7D8FA3C2939232100E7D0A1 /* FilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA3B2939232100E7D0A1 /* FilterViewModel.swift */; };
 		F7D8FA3E293A8BEB00E7D0A1 /* DataSourcePropertyFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA3D293A8BEB00E7D0A1 /* DataSourcePropertyFilterViewModel.swift */; };
+		F7D8FA40293A920800E7D0A1 /* DoubleFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA3F293A920800E7D0A1 /* DoubleFilter.swift */; };
+		F7D8FA42293A923400E7D0A1 /* FilterPropertyAndComparison.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA41293A923400E7D0A1 /* FilterPropertyAndComparison.swift */; };
+		F7D8FA44293A941100E7D0A1 /* IntFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA43293A941100E7D0A1 /* IntFilter.swift */; };
+		F7D8FA47293A950F00E7D0A1 /* DateFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA46293A950F00E7D0A1 /* DateFilter.swift */; };
+		F7D8FA49293A954D00E7D0A1 /* EnumerationFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA48293A954D00E7D0A1 /* EnumerationFilter.swift */; };
+		F7D8FA4B293A958900E7D0A1 /* LocationFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA4A293A958900E7D0A1 /* LocationFilter.swift */; };
+		F7D8FA4D293A95D000E7D0A1 /* LatitudeLongitudeFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA4C293A95D000E7D0A1 /* LatitudeLongitudeFilter.swift */; };
+		F7D8FA4F293A960E00E7D0A1 /* StringFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA4E293A960E00E7D0A1 /* StringFilter.swift */; };
+		F7D8FA51293A999600E7D0A1 /* BooleanFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA50293A999600E7D0A1 /* BooleanFilter.swift */; };
 		F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89D28946C8900E7CCE2 /* RailItem.swift */; };
 		F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
@@ -468,6 +477,15 @@
 		F7D8FA3929391CA700E7D0A1 /* FilterParameterSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterParameterSummaryView.swift; sourceTree = "<group>"; };
 		F7D8FA3B2939232100E7D0A1 /* FilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewModel.swift; sourceTree = "<group>"; };
 		F7D8FA3D293A8BEB00E7D0A1 /* DataSourcePropertyFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourcePropertyFilterViewModel.swift; sourceTree = "<group>"; };
+		F7D8FA3F293A920800E7D0A1 /* DoubleFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleFilter.swift; sourceTree = "<group>"; };
+		F7D8FA41293A923400E7D0A1 /* FilterPropertyAndComparison.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPropertyAndComparison.swift; sourceTree = "<group>"; };
+		F7D8FA43293A941100E7D0A1 /* IntFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntFilter.swift; sourceTree = "<group>"; };
+		F7D8FA46293A950F00E7D0A1 /* DateFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFilter.swift; sourceTree = "<group>"; };
+		F7D8FA48293A954D00E7D0A1 /* EnumerationFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumerationFilter.swift; sourceTree = "<group>"; };
+		F7D8FA4A293A958900E7D0A1 /* LocationFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFilter.swift; sourceTree = "<group>"; };
+		F7D8FA4C293A95D000E7D0A1 /* LatitudeLongitudeFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatitudeLongitudeFilter.swift; sourceTree = "<group>"; };
+		F7D8FA4E293A960E00E7D0A1 /* StringFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringFilter.swift; sourceTree = "<group>"; };
+		F7D8FA50293A999600E7D0A1 /* BooleanFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooleanFilter.swift; sourceTree = "<group>"; };
 		F7E8C89D28946C8900E7CCE2 /* RailItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailItem.swift; sourceTree = "<group>"; };
 		F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceRail.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
@@ -1106,6 +1124,21 @@
 			path = Annotation;
 			sourceTree = "<group>";
 		};
+		F7D8FA45293A94FC00E7D0A1 /* Fields */ = {
+			isa = PBXGroup;
+			children = (
+				F7D8FA3F293A920800E7D0A1 /* DoubleFilter.swift */,
+				F7D8FA43293A941100E7D0A1 /* IntFilter.swift */,
+				F7D8FA46293A950F00E7D0A1 /* DateFilter.swift */,
+				F7D8FA48293A954D00E7D0A1 /* EnumerationFilter.swift */,
+				F7D8FA4A293A958900E7D0A1 /* LocationFilter.swift */,
+				F7D8FA4C293A95D000E7D0A1 /* LatitudeLongitudeFilter.swift */,
+				F7D8FA4E293A960E00E7D0A1 /* StringFilter.swift */,
+				F7D8FA50293A999600E7D0A1 /* BooleanFilter.swift */,
+			);
+			path = Fields;
+			sourceTree = "<group>";
+		};
 		F7F5977F285A1B2400F9B32E /* ASAM */ = {
 			isa = PBXGroup;
 			children = (
@@ -1312,6 +1345,7 @@
 		F7FFB33B28DA060400C31AA3 /* Filter */ = {
 			isa = PBXGroup;
 			children = (
+				F7D8FA45293A94FC00E7D0A1 /* Fields */,
 				F7FFB33C28DA061D00C31AA3 /* FilterButton.swift */,
 				F7FFB33E28DA104200C31AA3 /* FilterBottomSheet.swift */,
 				F7FFB34028DA486500C31AA3 /* FilterView.swift */,
@@ -1323,6 +1357,7 @@
 				F7D8FA3929391CA700E7D0A1 /* FilterParameterSummaryView.swift */,
 				F7D8FA3B2939232100E7D0A1 /* FilterViewModel.swift */,
 				F7D8FA3D293A8BEB00E7D0A1 /* DataSourcePropertyFilterViewModel.swift */,
+				F7D8FA41293A923400E7D0A1 /* FilterPropertyAndComparison.swift */,
 			);
 			path = Filter;
 			sourceTree = "<group>";
@@ -1658,6 +1693,7 @@
 				F740AA79289D6DED00754293 /* MarlinRegularWidth.swift in Sources */,
 				F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */,
 				F7FFB33F28DA104200C31AA3 /* FilterBottomSheet.swift in Sources */,
+				F7D8FA49293A954D00E7D0A1 /* EnumerationFilter.swift in Sources */,
 				F7C3679428CCC8E500AE1265 /* DisclaimerView.swift in Sources */,
 				F7D8FA2A2924481000E7D0A1 /* ImageLoader.swift in Sources */,
 				F7C23DFE290721680002A7DF /* SubmitReportView.swift in Sources */,
@@ -1710,6 +1746,7 @@
 				F7FFB34328DD06EF00C31AA3 /* MSIListView.swift in Sources */,
 				F7D2225428E5F03500F527F2 /* SortView.swift in Sources */,
 				F7FFB2F028D626DC00C31AA3 /* DifferentialGPSStation+Decodable.swift in Sources */,
+				F7D8FA44293A941100E7D0A1 /* IntFilter.swift in Sources */,
 				F71D286A28BE467200F1775C /* DifferentialGPSStationDetailView.swift in Sources */,
 				F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */,
 				F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */,
@@ -1717,6 +1754,7 @@
 				F7D671EF287475BC00758F1C /* DataSource.swift in Sources */,
 				F71DF4992858DA4700686951 /* AsamMap.swift in Sources */,
 				F7275FDF28FA252800ED8D9A /* LightProtocol.swift in Sources */,
+				F7D8FA4B293A958900E7D0A1 /* LocationFilter.swift in Sources */,
 				F727A684284E351800BD728A /* MSIError.swift in Sources */,
 				F7D8FA142922ABF500E7D0A1 /* NoticeToMariners+Decodable.swift in Sources */,
 				F7FFB32428D641DE00C31AA3 /* RadioBeacon+Annotation.swift in Sources */,
@@ -1730,7 +1768,9 @@
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
 				F7FFB32028D640FA00C31AA3 /* RadioBeacon+DataSource.swift in Sources */,
 				F7FFB32628D6422F00C31AA3 /* RadioBeacon+MapImage.swift in Sources */,
+				F7D8FA42293A923400E7D0A1 /* FilterPropertyAndComparison.swift in Sources */,
 				F707BA8328786F11006A94C4 /* LightColorImage.swift in Sources */,
+				F7D8FA51293A999600E7D0A1 /* BooleanFilter.swift in Sources */,
 				F71D287528BE96EB00F1775C /* DFRSMap.swift in Sources */,
 				F7F59795285BE27400F9B32E /* Property.swift in Sources */,
 				F7D8FA26292447C100E7D0A1 /* AsyncImage.swift in Sources */,
@@ -1761,6 +1801,7 @@
 				F707BA9328805476006A94C4 /* PersistedMapState.swift in Sources */,
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
 				F7D5C05728A68E56000C2C29 /* ViewExtensions.swift in Sources */,
+				F7D8FA40293A920800E7D0A1 /* DoubleFilter.swift in Sources */,
 				F74B9B0928B7D1640097D448 /* RadioBeaconMap.swift in Sources */,
 				F7D8D2EA2922A35F00EA2296 /* NoticeToMariners+CoreDataClass.swift in Sources */,
 				F7D8FA3E293A8BEB00E7D0A1 /* DataSourcePropertyFilterViewModel.swift in Sources */,
@@ -1780,6 +1821,7 @@
 				F7FFB31228D63C8300C31AA3 /* Modu+Annotation.swift in Sources */,
 				F707BA852878DBFF006A94C4 /* AdaptiveImage.swift in Sources */,
 				F7FFB2F828D6344000C31AA3 /* Port+Decodable.swift in Sources */,
+				F7D8FA47293A950F00E7D0A1 /* DateFilter.swift in Sources */,
 				F71E3E3C28F99626002F2019 /* CurrentLocation.swift in Sources */,
 				F707BA89287C68E7006A94C4 /* RaconCard.swift in Sources */,
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
@@ -1794,6 +1836,7 @@
 				F74B9B0728B7CF650097D448 /* RadioBeacon+CoreDataClass.swift in Sources */,
 				F71D286228BE390800F1775C /* DifferentialGPSStation+CoreDataClass.swift in Sources */,
 				F71DF4A02859116C00686951 /* Notifications.swift in Sources */,
+				F7D8FA4D293A95D000E7D0A1 /* LatitudeLongitudeFilter.swift in Sources */,
 				F7D671DE286F877C00758F1C /* MaterialButtonStyle.swift in Sources */,
 				F7FFB34528DE18B900C31AA3 /* Badge.swift in Sources */,
 				F72EAADF291EECF400AC6026 /* NTMActionBar.swift in Sources */,
@@ -1806,6 +1849,7 @@
 				F7D8FA212923F99C00E7D0A1 /* NoticeToMarinersFullNoticeView.swift in Sources */,
 				F79168FE28B56031004FFEBA /* PortMap.swift in Sources */,
 				F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */,
+				F7D8FA4F293A960E00E7D0A1 /* StringFilter.swift in Sources */,
 				F7C23E0A29084F280002A7DF /* ElectronicPublicationSummaryView.swift in Sources */,
 				F7FFB2F628D6340B00C31AA3 /* Port+MapImage.swift in Sources */,
 				F707BA81287768FA006A94C4 /* LightDetailView.swift in Sources */,

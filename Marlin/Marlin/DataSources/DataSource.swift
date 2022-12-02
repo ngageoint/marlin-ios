@@ -61,6 +61,35 @@ enum DataSourcePropertyType: Codable {
     case location
     case latitude
     case longitude
+    
+    func defaultComparison() -> DataSourceFilterComparison {
+        switch (self) {
+            
+        case .string, .enumeration, .int, .double, .float, .boolean, .latitude, .longitude:
+            return .equals
+        case .date:
+            return .window
+        case .location:
+            return .nearMe
+        }
+    }
+    
+    func comparisons() -> [DataSourceFilterComparison] {
+        switch (self) {
+        case .date:
+            return DataSourceFilterComparison.dateSubset()
+        case .enumeration:
+            return DataSourceFilterComparison.enumerationSubset()
+        case .location:
+            return DataSourceFilterComparison.locationSubset()
+        case .double, .float, .int, .latitude, .longitude:
+            return DataSourceFilterComparison.numberSubset()
+        case .string:
+            return DataSourceFilterComparison.stringSubset()
+        case .boolean:
+            return DataSourceFilterComparison.booleanSubset()
+        }
+    }
 }
 
 struct DataSourceProperty: Hashable, Identifiable, Codable {

@@ -70,6 +70,10 @@ enum DataSourceFilterComparison: String, CaseIterable, Identifiable, Codable {
         return numberSubset()
     }
     
+    static func booleanSubset() -> [DataSourceFilterComparison] {
+        return [.equals, .notEquals]
+    }
+    
     func coreDataComparison() -> String {
         switch(self) {
         case .equals:

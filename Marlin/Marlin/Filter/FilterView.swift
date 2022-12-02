@@ -48,7 +48,11 @@ struct FilterView: View {
                     ForEach(requiredNotSet) { property in
                         Text("Add Required Filter Parameters")
                             .secondary()
-                        DataSourcePropertyFilterView(dataSourceProperty: property, filterViewModel: viewModel)
+                        
+                        DataSourcePropertyFilterView(filterViewModel: viewModel)
+                            .onAppear {
+                                viewModel.staticProperty = property
+                            }
                     }
                     Divider()
                 } else {
@@ -58,6 +62,9 @@ struct FilterView: View {
             }
             if requiredNotSet.isEmpty {
                 DataSourcePropertyFilterView(filterViewModel: viewModel)
+                    .onAppear {
+                        viewModel.staticProperty = nil
+                    }
                 .padding(.top, 8)
                 .padding(.leading, -8)
             }
@@ -67,12 +74,6 @@ struct FilterView: View {
         .onAppear {
             UserDefaults.standard.setFilter(viewModel.dataSource.key, filter: viewModel.filters)
         }
-//        .onChange(of: viewModel.filterParameter, perform: { newValue in
-//            if let newValue = newValue {
-//                print("filter parameter changed \(newValue)")
-//                viewModel.filters.append(newValue)
-//            }
-//        })
     }
 }
 

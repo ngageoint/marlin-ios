@@ -17,6 +17,7 @@ class FilterViewModel: ObservableObject {
     
     @Published var selectedProperty: DataSourceProperty?
     @Published var filterParameter: DataSourceFilterParameter?
+    var staticProperty: DataSourceProperty?
     
     init(dataSource: any DataSource.Type, useDefaultForEmptyFilter: Bool = false) {
         self.dataSource = dataSource

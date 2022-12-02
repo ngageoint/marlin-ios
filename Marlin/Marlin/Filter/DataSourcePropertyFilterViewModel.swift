@@ -14,19 +14,7 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
     @Published var startValidating: Bool = false
     @Published var dataSourceProperty: DataSourceProperty {
         didSet {
-            var comparison:DataSourceFilterComparison = .equals
-            if dataSourceProperty.type == DataSourcePropertyType.string {
-                comparison = .equals
-            } else if dataSourceProperty.type == DataSourcePropertyType.date {
-                comparison = .window
-            } else if dataSourceProperty.type == DataSourcePropertyType.enumeration {
-                comparison = .equals
-            } else if dataSourceProperty.type == DataSourcePropertyType.location {
-                comparison = .nearMe
-            } else {
-                comparison = .equals
-            }
-            selectedComparison = comparison
+            selectedComparison = dataSourceProperty.type.defaultComparison()
             valueDate = Date()
             valueString = ""
             valueDouble = nil //0.0
@@ -38,7 +26,7 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
             windowUnits = .last30Days
         }
     }
-    @Published var selectedComparison: DataSourceFilterComparison // = .equals
+    @Published var selectedComparison: DataSourceFilterComparison
     @Published var valueString: String = ""
     @Published var valueDate: Date = Date()
     @Published var valueInt: Int? = nil// = 0
@@ -169,22 +157,7 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
     }
     
     init(dataSourceProperty: DataSourceProperty) {
-        print("xxx init the data source property filter view model")
         self.dataSourceProperty = dataSourceProperty
-        
-        var comparison:DataSourceFilterComparison = .equals
-        if dataSourceProperty.type == DataSourcePropertyType.string {
-            comparison = .equals
-        } else if dataSourceProperty.type == DataSourcePropertyType.date {
-            comparison = .window
-        } else if dataSourceProperty.type == DataSourcePropertyType.enumeration {
-            comparison = .equals
-        } else if dataSourceProperty.type == DataSourcePropertyType.location {
-            comparison = .nearMe
-        } else {
-            comparison = .equals
-        }
-        
-        self.selectedComparison = comparison
+        self.selectedComparison = dataSourceProperty.type.defaultComparison()
     }
 }
