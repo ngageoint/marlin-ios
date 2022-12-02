@@ -16,7 +16,7 @@ struct FilterBottomSheetRow: View {
         VStack(alignment: .leading) {
             DisclosureGroup {
                 let dataSourceType = dataSourceItem.dataSource
-                FilterView(dataSource: dataSourceType)
+                FilterView(viewModel: FilterViewModel(dataSource: dataSourceType))
             } label : {
                 HStack(alignment: .center, spacing: 8) {
                     

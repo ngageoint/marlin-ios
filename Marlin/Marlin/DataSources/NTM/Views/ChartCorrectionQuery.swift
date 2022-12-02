@@ -8,26 +8,14 @@
 import SwiftUI
 
 struct ChartCorrectionQuery: View {
-    let dataSourceUpdatedPub = NotificationCenter.default.publisher(for: .DataSourceUpdated)
-    @State var filterCount: Int = ChartCorrection.defaultFilter.count
-    
-    @State private var selectedComparison: DataSourceFilterComparison = .equals
-    @State private var selectedEnumeration: String = ""
-    @State private var valueString: String = ""
-    @State private var valueDate: Date = Date()
-    @State private var valueInt: Int?// = 0
-    @State private var valueDouble: Double?// = 0.0
-    @State private var valueLatitude: Double?// = 0.0
-    @State private var valueLongitude: Double?// = 0.0
-    @State private var windowUnits: DataSourceWindowUnits? // = .last30Days
-    
+    @AppStorage("\(ChartCorrection.key)Filter") var chartCorrectionFilter: Data?
     @State private var requiredParametersSet: Bool = false
     
-    let properties: [DataSourceProperty] = [DataSourceProperty(name: "Location", key: "location", type: .location), DataSourceProperty(name: "Notice Number", key: "currNoticeNum", type: .int)]
+    let filterViewModel: FilterViewModel = FilterViewModel(dataSource: ChartCorrection.self, useDefaultForEmptyFilter: true)
     
     var body: some View {
         VStack {
-            FilterView(dataSource: ChartCorrection.self, useDefaultForEmptyFilter: true)
+            FilterView(viewModel: filterViewModel)
             
             if requiredParametersSet {
                 NavigationLink {
@@ -40,10 +28,10 @@ struct ChartCorrectionQuery: View {
             }
         }
         .padding(.trailing, 8)
-        .onReceive(dataSourceUpdatedPub) { output in
+        .onAppear {
             checkRequiredParameters()
         }
-        .onAppear {
+        .onChange(of: chartCorrectionFilter) { newValue in
             checkRequiredParameters()
         }
     }
@@ -57,13 +45,4 @@ struct ChartCorrectionQuery: View {
         }
         requiredParametersSet = false
     }
-    
-//    @ViewBuilder
-//    func propertyNameAndComparison(property: DataSourceProperty) -> some View {
-//        HStack {
-//            Text(property.name).primary()
-//            
-//            FilterComparison(property: property, selectedComparison: $selectedComparison)
-//        }
-//    }
 }

@@ -184,7 +184,7 @@ struct ChartCorrectionList: View {
                 if filter.comparison == .equals {
                     queryParameters.append("noticeNumber=\(valueInt)")
                 } else if filter.comparison == .lessThan {
-                    let year = Int(valueInt / 100) % 1000
+                    let year = Int(valueInt / 100)
                     let week = Int(valueInt % 100)
                     var dateComponents = DateComponents()
                     dateComponents.year = year
@@ -203,7 +203,7 @@ struct ChartCorrectionList: View {
                         queryParameters.append("minNoticeNumber=199929")
                     }
                 } else if filter.comparison == .lessThanEqual {
-                    let year = Int(valueInt / 100) % 1000
+                    let year = Int(valueInt / 100)
                     let week = Int(valueInt % 100)
                     var dateComponents = DateComponents()
                     dateComponents.year = year
@@ -222,7 +222,7 @@ struct ChartCorrectionList: View {
                         queryParameters.append("minNoticeNumber=199929")
                     }
                 } else if filter.comparison == .greaterThan {
-                    let year = Int(valueInt / 100) % 1000
+                    let year = Int(valueInt / 100)
                     let week = Int(valueInt % 100)
                     var dateComponents = DateComponents()
                     dateComponents.year = year
@@ -243,7 +243,7 @@ struct ChartCorrectionList: View {
                         queryParameters.append("maxNoticeNumber=\(thisYear)\(String(format: "%02d", thisWeek))")
                     }
                 } else if filter.comparison == .greaterThanEqual {
-                    let year = Int(valueInt / 100) % 1000
+                    let year = Int(valueInt / 100)
                     let week = Int(valueInt % 100)
                     var dateComponents = DateComponents()
                     dateComponents.year = year

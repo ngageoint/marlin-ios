@@ -21,6 +21,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: V
     var sectionHeaderIsSubList: Bool = false
     var filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>
     var sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>
+    var filterViewModel: FilterViewModel
     
     var watchFocusedItem: Bool = false
     
@@ -39,6 +40,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: V
         self.sectionHeaderIsSubList = sectionHeaderIsSubList
         self.sectionNameBuilder = sectionNameBuilder
         self.content = nil
+        self.filterViewModel = FilterViewModel(dataSource: T.self)
     }
     
     init(focusedItem: ItemWrapper, watchFocusedItem: Bool = false, filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, allowUserSort: Bool = true, allowUserFilter: Bool = true, sectionHeaderIsSubList: Bool = false, sectionNameBuilder: ((MSISection<T>) -> String)? = nil, @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
@@ -51,6 +53,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: V
         self.sectionHeaderIsSubList = sectionHeaderIsSubList
         self.sectionNameBuilder = sectionNameBuilder
         self.content = content
+        self.filterViewModel = FilterViewModel(dataSource: T.self)
     }
     
     var body: some View {
@@ -92,7 +95,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: V
         .bottomSheet(isPresented: $filterOpen, detents: .large) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    FilterView(dataSource: T.self)
+                    FilterView(viewModel: filterViewModel)
                         .padding(.trailing, 16)
                         .padding(.top, 8)
                         .background(Color.surfaceColor)

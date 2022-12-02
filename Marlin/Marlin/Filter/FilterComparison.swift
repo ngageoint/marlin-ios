@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct FilterComparison: View {
-    @Binding var property: DataSourceProperty
-    @Binding var selectedComparison: DataSourceFilterComparison
+    @ObservedObject var dataSourcePropertyFilterViewModel: DataSourcePropertyFilterViewModel
+//    var property: DataSourceProperty
+//    var selectedComparison: DataSourceFilterComparison
     
     var body: some View {
         Group {
-            if property.type == DataSourcePropertyType.string {
-                Picker("Comparison", selection: $selectedComparison) {
+            if dataSourcePropertyFilterViewModel.dataSourceProperty.type == DataSourcePropertyType.string {
+                Picker("Comparison", selection: $dataSourcePropertyFilterViewModel.selectedComparison) {
                     ForEach(DataSourceFilterComparison.stringSubset()) { comparison in
                         Text(comparison.rawValue).tag(comparison)
                     }
@@ -22,8 +23,8 @@ struct FilterComparison: View {
                 .scaledToFill()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
-            } else if property.type == DataSourcePropertyType.date {
-                Picker("Comparison", selection: $selectedComparison) {
+            } else if dataSourcePropertyFilterViewModel.dataSourceProperty.type == DataSourcePropertyType.date {
+                Picker("Comparison", selection: $dataSourcePropertyFilterViewModel.selectedComparison) {
                     ForEach(DataSourceFilterComparison.dateSubset()) { comparison in
                         Text(comparison.rawValue).tag(comparison)
                     }
@@ -31,8 +32,8 @@ struct FilterComparison: View {
                 .scaledToFill()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
-            } else if property.type == DataSourcePropertyType.enumeration {
-                Picker("Comparison", selection: $selectedComparison) {
+            } else if dataSourcePropertyFilterViewModel.dataSourceProperty.type == DataSourcePropertyType.enumeration {
+                Picker("Comparison", selection: $dataSourcePropertyFilterViewModel.selectedComparison) {
                     ForEach(DataSourceFilterComparison.enumerationSubset()) { comparison in
                         Text(comparison.rawValue).tag(comparison)
                     }
@@ -40,8 +41,8 @@ struct FilterComparison: View {
                 .scaledToFill()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
-            } else if property.type == DataSourcePropertyType.location {
-                Picker("Comparison", selection: $selectedComparison) {
+            } else if dataSourcePropertyFilterViewModel.dataSourceProperty.type == DataSourcePropertyType.location {
+                Picker("Comparison", selection: $dataSourcePropertyFilterViewModel.selectedComparison) {
                     ForEach(DataSourceFilterComparison.locationSubset()) { comparison in
                         Text(comparison.rawValue).tag(comparison)
                     }
@@ -50,7 +51,7 @@ struct FilterComparison: View {
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
             } else {
-                Picker("Comparison", selection: $selectedComparison) {
+                Picker("Comparison", selection: $dataSourcePropertyFilterViewModel.selectedComparison) {
                     ForEach(DataSourceFilterComparison.numberSubset()) { comparison in
                         Text(comparison.rawValue).tag(comparison)
                     }
@@ -61,29 +62,31 @@ struct FilterComparison: View {
             }
         }
         .onAppear {
-            if property.type == DataSourcePropertyType.string {
-                selectedComparison = .equals
-            } else if property.type == DataSourcePropertyType.date {
-                selectedComparison = .window
-            } else if property.type == DataSourcePropertyType.enumeration {
-                selectedComparison = .equals
-            } else if property.type == DataSourcePropertyType.location {
-                selectedComparison = .nearMe
+            print("xxx filter comparison appear")
+            if dataSourcePropertyFilterViewModel.dataSourceProperty.type == DataSourcePropertyType.string {
+                dataSourcePropertyFilterViewModel.selectedComparison = .equals
+            } else if dataSourcePropertyFilterViewModel.dataSourceProperty.type == DataSourcePropertyType.date {
+                dataSourcePropertyFilterViewModel.selectedComparison = .window
+            } else if dataSourcePropertyFilterViewModel.dataSourceProperty.type == DataSourcePropertyType.enumeration {
+                dataSourcePropertyFilterViewModel.selectedComparison = .equals
+            } else if dataSourcePropertyFilterViewModel.dataSourceProperty.type == DataSourcePropertyType.location {
+                dataSourcePropertyFilterViewModel.selectedComparison = .nearMe
             } else {
-                selectedComparison = .equals
+                dataSourcePropertyFilterViewModel.selectedComparison = .equals
             }
         }
-        .onChange(of: property) { newValue in
+        .onChange(of: dataSourcePropertyFilterViewModel.dataSourceProperty) { newValue in
+            print("xxx filter comparison data source property change")
             if newValue.type == DataSourcePropertyType.string {
-                selectedComparison = .equals
+                dataSourcePropertyFilterViewModel.selectedComparison = .equals
             } else if newValue.type == DataSourcePropertyType.date {
-                selectedComparison = .window
+                dataSourcePropertyFilterViewModel.selectedComparison = .window
             } else if newValue.type == DataSourcePropertyType.enumeration {
-                selectedComparison = .equals
+                dataSourcePropertyFilterViewModel.selectedComparison = .equals
             } else if newValue.type == DataSourcePropertyType.location {
-                selectedComparison = .nearMe
+                dataSourcePropertyFilterViewModel.selectedComparison = .nearMe
             } else {
-                selectedComparison = .equals
+                dataSourcePropertyFilterViewModel.selectedComparison = .equals
             }
         }
     }

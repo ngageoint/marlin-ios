@@ -11,43 +11,20 @@ import CoreLocation
 struct FilterView: View {
     @ObservedObject var locationManager: LocationManager = LocationManager.shared
     
-    @State var filters: [DataSourceFilterParameter] {
-        didSet {
-            UserDefaults.standard.setFilter(dataSource.key, filter: filters)
-        }
-    }
-    
-    var dataSourceProperties: [DataSourceProperty]
-    var dataSource: any DataSource.Type
-    
-    @State private var selectedProperty: DataSourceProperty
-    
-    @State private var filterParameter: DataSourceFilterParameter?
-    
-    init(dataSource: any DataSource.Type, useDefaultForEmptyFilter: Bool = false) {
-        self.dataSource = dataSource
-        self.dataSourceProperties = dataSource.properties
-        let savedFilter = UserDefaults.standard.filter(dataSource)
-        if useDefaultForEmptyFilter && savedFilter.isEmpty {
-            self._filters = State(initialValue: dataSource.defaultFilter)
-        } else {
-            self._filters = State(initialValue: savedFilter)
-        }
-        self._selectedProperty = State(initialValue: dataSourceProperties[0])
-    }
-    
+    @ObservedObject var viewModel: FilterViewModel
+        
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            if !filters.isEmpty {
+            if !viewModel.filters.isEmpty {
                 Text("Current Filter")
                     .secondary()
             }
-            ForEach(Array(filters.enumerated()), id: \.element) { index, filter in
+            ForEach(Array(viewModel.filters.enumerated()), id: \.element) { index, filter in
                 HStack {
-                    FilterParameterSummaryView(filter: filter, dataSource: dataSource)
+                    FilterParameterSummaryView(filter: filter, dataSource: viewModel.dataSource)
                     Spacer()
                     Button {
-                        filters.remove(at: index)
+                        viewModel.filters.remove(at: index)
                     } label: {
                         Image(systemName: "minus.circle.fill")
                             .tint(Color.red)
@@ -56,11 +33,11 @@ struct FilterView: View {
                 .padding([.top, .bottom], 8)
                 Divider()
             }
-            let requiredProperties = dataSourceProperties.filter({ property in
+            let requiredProperties = viewModel.dataSource.properties.filter({ property in
                 property.requiredInFilter
             })
             let requiredNotSet = requiredProperties.filter { property in
-                !filters.contains { parameter in
+                !viewModel.filters.contains { parameter in
                     parameter.property.key == property.key
                 }
             }
@@ -71,7 +48,7 @@ struct FilterView: View {
                     ForEach(requiredNotSet) { property in
                         Text("Add Required Filter Parameters")
                             .secondary()
-                        DataSourcePropertyFilterView(dataSourceProperty: property, filterParameter: $filterParameter)
+                        DataSourcePropertyFilterView(dataSourceProperty: property, filterViewModel: viewModel)
                     }
                     Divider()
                 } else {
@@ -80,7 +57,7 @@ struct FilterView: View {
                 }
             }
             if requiredNotSet.isEmpty {
-                DataSourcePropertyFilterView(dataSourceProperties: dataSourceProperties, filterParameter: $filterParameter)
+                DataSourcePropertyFilterView(filterViewModel: viewModel)
                 .padding(.top, 8)
                 .padding(.leading, -8)
             }
@@ -88,14 +65,14 @@ struct FilterView: View {
         .padding([.leading, .bottom], 16)
         .padding(.trailing, 0)
         .onAppear {
-            UserDefaults.standard.setFilter(dataSource.key, filter: filters)
+            UserDefaults.standard.setFilter(viewModel.dataSource.key, filter: viewModel.filters)
         }
-        .onChange(of: filterParameter, perform: { newValue in
-            if let newValue = newValue {
-                print("filter parameter changed \(newValue)")
-                filters.append(newValue)
-            }
-        })
+//        .onChange(of: viewModel.filterParameter, perform: { newValue in
+//            if let newValue = newValue {
+//                print("filter parameter changed \(newValue)")
+//                viewModel.filters.append(newValue)
+//            }
+//        })
     }
 }
 
