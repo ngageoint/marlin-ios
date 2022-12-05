@@ -203,6 +203,8 @@
 		F7D8FA5A293AA15B00E7D0A1 /* DataSourceSortParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA59293AA15B00E7D0A1 /* DataSourceSortParameter.swift */; };
 		F7D8FA5C293AA16B00E7D0A1 /* DataSourceSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA5B293AA16B00E7D0A1 /* DataSourceSort.swift */; };
 		F7D8FA5E293AA17C00E7D0A1 /* DataSourceFilterParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA5D293AA17C00E7D0A1 /* DataSourceFilterParameter.swift */; };
+		F7D8FA62293AA47B00E7D0A1 /* DataSourcePropertyFilterViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA61293AA47B00E7D0A1 /* DataSourcePropertyFilterViewModelTests.swift */; };
+		F7D8FA64293AB5B000E7D0A1 /* MockDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA63293AB5B000E7D0A1 /* MockDataSource.swift */; };
 		F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89D28946C8900E7CCE2 /* RailItem.swift */; };
 		F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
@@ -498,6 +500,8 @@
 		F7D8FA59293AA15B00E7D0A1 /* DataSourceSortParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceSortParameter.swift; sourceTree = "<group>"; };
 		F7D8FA5B293AA16B00E7D0A1 /* DataSourceSort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceSort.swift; sourceTree = "<group>"; };
 		F7D8FA5D293AA17C00E7D0A1 /* DataSourceFilterParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceFilterParameter.swift; sourceTree = "<group>"; };
+		F7D8FA61293AA47B00E7D0A1 /* DataSourcePropertyFilterViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourcePropertyFilterViewModelTests.swift; sourceTree = "<group>"; };
+		F7D8FA63293AB5B000E7D0A1 /* MockDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataSource.swift; sourceTree = "<group>"; };
 		F7E8C89D28946C8900E7CCE2 /* RailItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailItem.swift; sourceTree = "<group>"; };
 		F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceRail.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
@@ -796,6 +800,7 @@
 		F727A68F284E605800BD728A /* MarlinTests */ = {
 			isa = PBXGroup;
 			children = (
+				F7D8FA5F293AA46000E7D0A1 /* Filter */,
 				F7D8FA312936C06600E7D0A1 /* Map */,
 				F7C23E192914264E0002A7DF /* Mocks */,
 				F7C23E152911C7920002A7DF /* DataSources */,
@@ -1051,6 +1056,7 @@
 			isa = PBXGroup;
 			children = (
 				F7C23E1A291426590002A7DF /* Data */,
+				F7D8FA63293AB5B000E7D0A1 /* MockDataSource.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -1162,6 +1168,22 @@
 				F7D8FA59293AA15B00E7D0A1 /* DataSourceSortParameter.swift */,
 				F7D8FA5B293AA16B00E7D0A1 /* DataSourceSort.swift */,
 				F7D8FA5D293AA17C00E7D0A1 /* DataSourceFilterParameter.swift */,
+			);
+			path = DataSource;
+			sourceTree = "<group>";
+		};
+		F7D8FA5F293AA46000E7D0A1 /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				F7D8FA60293AA46600E7D0A1 /* DataSource */,
+			);
+			path = Filter;
+			sourceTree = "<group>";
+		};
+		F7D8FA60293AA46600E7D0A1 /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				F7D8FA61293AA47B00E7D0A1 /* DataSourcePropertyFilterViewModelTests.swift */,
 			);
 			path = DataSource;
 			sourceTree = "<group>";
@@ -1663,6 +1685,7 @@
 				F727A698284E607100BD728A /* MSITests.swift in Sources */,
 				F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */,
 				F727A691284E605800BD728A /* MarlinTests.swift in Sources */,
+				F7D8FA64293AB5B000E7D0A1 /* MockDataSource.swift in Sources */,
 				F7D8FA342936C08200E7D0A1 /* MapImageTests.swift in Sources */,
 				F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */,
 				F72EAAD5291D526700AC6026 /* RadioBeaconDataTests.swift in Sources */,
@@ -1673,6 +1696,7 @@
 				F72EAACB291C635100AC6026 /* NavigationalWarningDataTests.swift in Sources */,
 				F71DF482284E783600686951 /* TestHelper.swift in Sources */,
 				F72EAAC6291C334200AC6026 /* ElectronicPublicationDataTests.swift in Sources */,
+				F7D8FA62293AA47B00E7D0A1 /* DataSourcePropertyFilterViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

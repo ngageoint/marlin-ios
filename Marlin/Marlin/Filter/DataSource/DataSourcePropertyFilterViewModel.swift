@@ -41,7 +41,7 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
             return nil
         }
         switch dataSourceProperty.type {
-        case .double:
+        case .double, .float:
             if valueDouble == nil {
                 return "Invalid number"
             }
@@ -80,9 +80,8 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
         }
         if let parsed = Double(coordinateString: valueLatitudeString) {
             return "\(parsed)"
-        } else {
-            return "Invalid latitude"
         }
+        return "Invalid Latitude"
     }
     var validationLongitudeText: String? {
         if valueLongitudeString.isEmpty {
@@ -90,9 +89,8 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
         }
         if let parsed = Double(coordinateString: valueLongitudeString) {
             return "\(parsed)"
-        } else {
-            return "Invalid longitude"
         }
+        return "Invalid Longitude"
     }
     var isValid: Bool {
         switch dataSourceProperty.type {
@@ -129,6 +127,7 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
             }
         case .latitude:
             if valueString.isEmpty {
+                valueLatitude = nil
                 return false
             }
             
