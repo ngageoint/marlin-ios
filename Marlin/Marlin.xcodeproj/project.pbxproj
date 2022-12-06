@@ -207,6 +207,7 @@
 		F7D8FA6C293E8DC700E7D0A1 /* DataSourceSortTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA6B293E8DC700E7D0A1 /* DataSourceSortTests.swift */; };
 		F7D8FA6E293E92A900E7D0A1 /* SortViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA6D293E92A900E7D0A1 /* SortViewModel.swift */; };
 		F7D8FA70293EA37900E7D0A1 /* SortViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA6F293EA37900E7D0A1 /* SortViewModelTests.swift */; };
+		F7D8FA72293F8FA100E7D0A1 /* FilterViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA71293F8FA100E7D0A1 /* FilterViewModelTests.swift */; };
 		F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89D28946C8900E7CCE2 /* RailItem.swift */; };
 		F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
@@ -506,6 +507,7 @@
 		F7D8FA6B293E8DC700E7D0A1 /* DataSourceSortTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceSortTests.swift; sourceTree = "<group>"; };
 		F7D8FA6D293E92A900E7D0A1 /* SortViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortViewModel.swift; sourceTree = "<group>"; };
 		F7D8FA6F293EA37900E7D0A1 /* SortViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortViewModelTests.swift; sourceTree = "<group>"; };
+		F7D8FA71293F8FA100E7D0A1 /* FilterViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewModelTests.swift; sourceTree = "<group>"; };
 		F7E8C89D28946C8900E7CCE2 /* RailItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailItem.swift; sourceTree = "<group>"; };
 		F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceRail.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
@@ -1179,6 +1181,7 @@
 			children = (
 				F7D8FA60293AA46600E7D0A1 /* DataSource */,
 				F7D8FA6F293EA37900E7D0A1 /* SortViewModelTests.swift */,
+				F7D8FA71293F8FA100E7D0A1 /* FilterViewModelTests.swift */,
 			);
 			path = Filter;
 			sourceTree = "<group>";
@@ -1698,6 +1701,7 @@
 				F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */,
 				F72EAAD5291D526700AC6026 /* RadioBeaconDataTests.swift in Sources */,
 				F7D8FA70293EA37900E7D0A1 /* SortViewModelTests.swift in Sources */,
+				F7D8FA72293F8FA100E7D0A1 /* FilterViewModelTests.swift in Sources */,
 				F7D8FA1D2922F7F300E7D0A1 /* NoticeToMarinersDataTests.swift in Sources */,
 				F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */,
 				F72EAAC1291C274100AC6026 /* DifferentialGPSStationDataTests.swift in Sources */,

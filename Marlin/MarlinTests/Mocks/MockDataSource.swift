@@ -103,7 +103,7 @@ class MockDataSourceDefaultSort: DataSource {
         DataSourceSortParameter(property: DataSourceProperty(name: "Date", key: "dateProperty", type: .date), ascending: true)
     ]
     
-    static var defaultFilter: [Marlin.DataSourceFilterParameter] = []
+    static var defaultFilter: [Marlin.DataSourceFilterParameter] = [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(MockDataSourceDefaultSort.dateProperty), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last365Days)]
     
     static var isMappable: Bool = true
     
