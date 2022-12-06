@@ -55,4 +55,13 @@ final class FilterViewModelTests: XCTestCase {
         XCTAssertEqual(filterViewModel.filters.count, MockDataSourceDefaultSort.defaultFilter.count + 1)
     }
     
+    func testChartCorrectionModel() {
+        let filterViewModel: FilterViewModel = FilterViewModel(dataSource: ChartCorrection.self, useDefaultForEmptyFilter: true)
+        XCTAssertEqual(filterViewModel.requiredProperties.count, 1)
+        XCTAssertEqual(filterViewModel.requiredNotSet.count, 0)
+        
+        filterViewModel.filters.remove(at: 0)
+        XCTAssertEqual(filterViewModel.requiredProperties.count, 1)
+        XCTAssertEqual(filterViewModel.requiredNotSet.count, 1)
+    }
 }

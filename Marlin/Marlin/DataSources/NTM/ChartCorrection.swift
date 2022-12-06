@@ -30,7 +30,7 @@ struct ChartCorrection: Decodable, Hashable, Identifiable, DataSource {
     ]
     static var defaultSort: [DataSourceSortParameter] = []
     static var defaultFilter: [DataSourceFilterParameter] = [
-        DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .nearMe, valueInt: 500)
+        DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .nearMe, valueInt: 2500)
     ]
     static var isMappable: Bool = false
     static var dataSourceName: String = "Chart Corrections"

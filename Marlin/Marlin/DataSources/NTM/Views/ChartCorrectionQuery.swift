@@ -11,7 +11,7 @@ struct ChartCorrectionQuery: View {
     @AppStorage("\(ChartCorrection.key)Filter") var chartCorrectionFilter: Data?
     @State private var requiredParametersSet: Bool = false
     
-    let filterViewModel: FilterViewModel = FilterViewModel(dataSource: ChartCorrection.self, useDefaultForEmptyFilter: true)
+    var filterViewModel: FilterViewModel = FilterViewModel(dataSource: ChartCorrection.self, useDefaultForEmptyFilter: true)
     
     var body: some View {
         VStack {

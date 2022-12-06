@@ -15,9 +15,21 @@ class FilterViewModel: ObservableObject {
         }
     }
     
+    var requiredProperties: [DataSourceProperty] {
+        dataSource.properties.filter({ property in
+            property.requiredInFilter
+        })
+    }
+    var requiredNotSet: [DataSourceProperty] {
+        requiredProperties.filter { property in
+            !filters.contains { parameter in
+                parameter.property.key == property.key
+            }
+        }
+    }
+    
     @Published var selectedProperty: DataSourceProperty?
     @Published var filterParameter: DataSourceFilterParameter?
-    var staticProperty: DataSourceProperty?
     
     init(dataSource: any DataSource.Type, useDefaultForEmptyFilter: Bool = false) {
         self.dataSource = dataSource

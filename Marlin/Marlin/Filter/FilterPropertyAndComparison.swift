@@ -12,7 +12,7 @@ struct FilterPropertyName: View {
     @ObservedObject var viewModel: DataSourcePropertyFilterViewModel
     
     var body: some View {
-        if filterViewModel.staticProperty == nil, filterViewModel.dataSource.properties.count > 1 {
+        if !viewModel.isStaticProperty, filterViewModel.dataSource.properties.count > 1 {
             HStack {
                 Picker("Property", selection: $viewModel.dataSourceProperty) {
                     if let dataSourceProperties = filterViewModel.dataSource.properties {

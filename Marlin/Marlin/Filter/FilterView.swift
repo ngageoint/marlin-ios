@@ -33,26 +33,13 @@ struct FilterView: View {
                 .padding([.top, .bottom], 8)
                 Divider()
             }
-            let requiredProperties = viewModel.dataSource.properties.filter({ property in
-                property.requiredInFilter
-            })
-            let requiredNotSet = requiredProperties.filter { property in
-                !viewModel.filters.contains { parameter in
-                    parameter.property.key == property.key
-                }
-            }
-            
-            if !requiredProperties.isEmpty {
-                if !requiredNotSet.isEmpty {
-
-                    ForEach(requiredNotSet) { property in
-                        Text("Add Required Filter Parameters")
-                            .secondary()
-                        
-                        DataSourcePropertyFilterView(filterViewModel: viewModel)
-                            .onAppear {
-                                viewModel.staticProperty = property
-                            }
+            if !viewModel.requiredProperties.isEmpty {
+                if !viewModel.requiredNotSet.isEmpty {
+                    Text("Add Required Filter Parameters")
+                        .secondary()
+                    
+                    ForEach(viewModel.requiredNotSet) { property in
+                        DataSourcePropertyFilterView(dataSourceProperty: property, filterViewModel: viewModel)
                     }
                     Divider()
                 } else {
@@ -60,11 +47,8 @@ struct FilterView: View {
                         .secondary()
                 }
             }
-            if requiredNotSet.isEmpty {
+            if viewModel.requiredNotSet.isEmpty {
                 DataSourcePropertyFilterView(filterViewModel: viewModel)
-                    .onAppear {
-                        viewModel.staticProperty = nil
-                    }
                 .padding(.top, 8)
                 .padding(.leading, -8)
             }

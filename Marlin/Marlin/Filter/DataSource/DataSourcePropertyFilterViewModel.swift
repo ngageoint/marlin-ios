@@ -26,6 +26,7 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
             windowUnits = .last30Days
         }
     }
+    var isStaticProperty: Bool = false
     @Published var selectedComparison: DataSourceFilterComparison
     @Published var valueString: String = ""
     @Published var valueDate: Date = Date()
@@ -155,8 +156,9 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
         }
     }
     
-    init(dataSourceProperty: DataSourceProperty) {
+    init(dataSourceProperty: DataSourceProperty, isStaticProperty: Bool = false) {
         self.dataSourceProperty = dataSourceProperty
         self.selectedComparison = dataSourceProperty.type.defaultComparison()
+        self.isStaticProperty = isStaticProperty
     }
 }

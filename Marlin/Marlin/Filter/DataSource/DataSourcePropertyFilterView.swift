@@ -21,7 +21,7 @@ struct DataSourcePropertyFilterView: View {
         }
         self.filterViewModel = filterViewModel
 
-        viewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: prop)
+        viewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: prop, isStaticProperty: dataSourceProperty != nil)
     }
     
     var body: some View {
