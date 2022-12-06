@@ -42,16 +42,48 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
         self.windowUnits = windowUnits
     }
     
-    func valueToString() -> String {
-        if let valueInt = valueInt {
-            return String(describing: valueInt)
-        } else if let valueDouble = valueDouble {
-            return String(describing: valueDouble)
-        } else if let valueString = valueString {
-            return valueString
+    func display() -> String {
+        var stringValue = ""
+        switch (property.type) {
+            
+        case .string:
+            if let valueString = valueString {
+                stringValue = "**\(property.name)** \(comparison.rawValue) **\(valueString)**"
+            }
+        case .date:
+            if comparison == .window, let windowUnits = windowUnits {
+                stringValue = "**\(property.name)** within the **\(windowUnits.rawValue)**"
+            } else if let valueDate = valueDate {
+                stringValue = "**\(property.name)** \(comparison.rawValue) **\(valueDate.formatted())**"
+            }
+        case .int:
+            if let valueInt = valueInt {
+                stringValue = "**\(property.name)** \(comparison.rawValue) **\(valueInt)**"
+            }
+        case .float, .double:
+            if let valueDouble = valueDouble {
+                stringValue = "**\(property.name)** \(comparison.rawValue) **\(valueDouble)**"
+            }
+        case .boolean:
+            if let valueInt = valueInt {
+                stringValue = "**\(property.name)** \(comparison.rawValue) **\(valueInt == 0 ? "False" : "True")**"
+            }
+        case .enumeration:
+            if let valueString = valueString {
+                stringValue = "**\(property.name)** \(comparison.rawValue) **\(valueString)**"
+            }
+        case .location:
+            if comparison == .nearMe {
+                stringValue = "**\(property.name)** within **\(valueInt ?? 0)nm** of my location"
+            } else {
+                stringValue = "**\(property.name)** within **\(valueInt ?? 0)nm** of **\(valueLatitude ?? 0.0)°, \(valueLongitude ?? 0.0)°**"
+            }
+        case .latitude:
+            stringValue = "**\(property.name)** \(comparison.rawValue) **\(valueString ?? "")**"
+        case .longitude:
+            stringValue = "**\(property.name)** \(comparison.rawValue) **\(valueString ?? "")**"
         }
-        
-        return ""
+        return stringValue
     }
     
     func toPredicate() -> NSPredicate? {
@@ -92,6 +124,8 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
             }
         } else if property.type == .int, let value = valueInt {
             return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %d", value)
+        } else if property.type == .boolean, let value = valueInt {
+            return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %d", value)
         } else if (property.type == .float || property.type == .double), let value = valueDouble {
             return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %f", value)
         } else if (property.type == .latitude), let value = valueLatitude {
@@ -126,9 +160,7 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
                 NSLog("Nothing to use as location predicate")
                 return nil
             }
-            
-            var valuePredicates: [NSPredicate] = []
-            
+                        
             let nauticalMilesMeasurement = NSMeasurement(doubleValue: Double(distance), unit: UnitLength.nauticalMiles)
             let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
             let metersDistance = metersMeasurement.value
@@ -136,11 +168,10 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
             if let metersPoint = SFGeometryUtils.degreesToMetersWith(x: longitude, andY: latitude), let x = metersPoint.x as? Double, let y = metersPoint.y as? Double {
                 let southWest = SFGeometryUtils.metersToDegreesWith(x: x - metersDistance, andY: y - metersDistance)
                 let northEast = SFGeometryUtils.metersToDegreesWith(x: x + metersDistance, andY: y + metersDistance)
-                if let southWest = southWest, let northEast = northEast, let maxy = northEast.y as? Double, let miny = southWest.y as? Double, let maxx = southWest.x as? Double, let minx = northEast.x as? Double {
-                    valuePredicates.append(NSPredicate(format: "latitude <= %f AND latitude >= %f AND longitude <= %f AND longitude >= %f", maxy, miny, minx, maxx))
+                if let southWest = southWest, let northEast = northEast, let maxy = northEast.y, let miny = southWest.y, let maxx = southWest.x, let minx = northEast.x {
+                    return NSPredicate(format: "latitude <= %f AND latitude >= %f AND longitude <= %f AND longitude >= %f", maxy, miny, minx, maxx)
                 }
             }
-            return NSCompoundPredicate(orPredicateWithSubpredicates: valuePredicates)
         }
         return nil
     }

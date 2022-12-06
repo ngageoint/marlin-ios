@@ -37,4 +37,8 @@ struct DataSourceSortParameter: Identifiable, Hashable, Codable {
     func toNSSortDescriptor() -> NSSortDescriptor {
         return NSSortDescriptor(key: property.key, ascending: ascending)
     }
+    
+    func display() -> String {
+        return "\(property.name) \(ascending ? "ascending" : "descending") \(section ? "section" : "")"
+    }
 }

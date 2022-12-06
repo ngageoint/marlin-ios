@@ -11,6 +11,14 @@ import CoreLocation
 @testable import Marlin
 
 final class DataSourcePropertyFilterViewModelTests: XCTestCase {
+    
+    override func setUp() {
+        LocationManager.shared.lastLocation = nil
+    }
+    
+    override class func tearDown() {
+        LocationManager.shared.lastLocation = nil
+    }
 
     func testSettingLatitudeToDMS() {
         let model = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Latitude", key: #keyPath(MockDataSource.latitude), type: .latitude))

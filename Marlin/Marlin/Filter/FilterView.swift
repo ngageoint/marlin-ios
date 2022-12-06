@@ -21,7 +21,7 @@ struct FilterView: View {
             }
             ForEach(Array(viewModel.filters.enumerated()), id: \.element) { index, filter in
                 HStack {
-                    FilterParameterSummaryView(filter: filter, dataSource: viewModel.dataSource)
+                    Text(filter.display())
                     Spacer()
                     Button {
                         viewModel.filters.remove(at: index)
