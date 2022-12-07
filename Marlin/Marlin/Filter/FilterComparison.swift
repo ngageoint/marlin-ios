@@ -21,11 +21,5 @@ struct FilterComparison: View {
             .labelsHidden()
             .tint(Color.primaryColorVariant)
         }
-        .onAppear {
-            dataSourcePropertyFilterViewModel.selectedComparison = dataSourcePropertyFilterViewModel.dataSourceProperty.type.defaultComparison()
-        }
-        .onChange(of: dataSourcePropertyFilterViewModel.dataSourceProperty) { newValue in
-            dataSourcePropertyFilterViewModel.selectedComparison = newValue.type.defaultComparison()
-        }
     }
 }

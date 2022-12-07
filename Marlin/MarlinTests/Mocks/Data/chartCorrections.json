@@ -1,0 +1,247 @@
+
+{
+    "chartCorr":[{
+        "chartId":1577,
+        "chartNumber":"104",
+        "intlNumber":"104",
+        "starred":true,
+        "limDist":false,
+        "correctionType":null,
+        "currNoticeNum":"44/96",
+        "noticeAction":"NEW EDITION",
+        "editionNumber":"5",
+        "editionDate":"8/17/96",
+        "lastNoticeNum":null,
+        "correctionText":{
+            "correction":[]
+        },
+        "authority":"NIMA",
+        "region":"10",
+        "subregion":"10",
+        "portCode":201,
+        "classification":"(U)",
+        "priceCategory":"D"
+    },{
+        "chartId":1577,
+        "chartNumber":"104",
+        "intlNumber":"104",
+        "starred":false,
+        "limDist":false,
+        "correctionType":null,
+        "currNoticeNum":"12/98",
+        "noticeAction":null,
+        "editionNumber":"5",
+        "editionDate":"8/17/96",
+        "lastNoticeNum":"44/96",
+        "correctionText":{
+            "correction":[{
+                "action":"Add",
+                "text":"Depth 27 meters\n36°43' N  11°10' W"
+            }]
+        },
+        "authority":"14(142), 15(156)97 Lisboa",
+        "region":"10",
+        "subregion":"10",
+        "portCode":201,
+        "classification":"(U)",
+        "priceCategory":"D"
+    },{
+        "chartId":1577,
+        "chartNumber":"104",
+        "intlNumber":"104",
+        "starred":false,
+        "limDist":false,
+        "correctionType":null,
+        "currNoticeNum":"49/99",
+        "noticeAction":null,
+        "editionNumber":"5",
+        "editionDate":"8/17/96",
+        "lastNoticeNum":"12/98",
+        "correctionText":{
+            "correction":[{
+                "action":"Substitute",
+                "text":"Depth 12 meters for 7 meters\n38°13' N  26°36' W"
+            }]
+        },
+        "authority":"1(52)98 Lisboa",
+        "region":"10",
+        "subregion":"10",
+        "portCode":201,
+        "classification":"(U)",
+        "priceCategory":"D"
+    },{
+        "chartId":1577,
+        "chartNumber":"104",
+        "intlNumber":"104",
+        "starred":false,
+        "limDist":false,
+        "correctionType":null,
+        "currNoticeNum":"10/00",
+        "noticeAction":null,
+        "editionNumber":"5",
+        "editionDate":"8/17/96",
+        "lastNoticeNum":"49/99",
+        "correctionText":{
+            "correction":[{
+                "action":"Delete",
+                "text":"RC at light\n38°47' N  9°30' W"
+            }]
+            
+        },
+        "authority":"21(298)99 Lisboa",
+        "region":"10",
+        "subregion":"10",
+        "portCode":208,
+        "classification":"(U)",
+        "priceCategory":"D"
+    },{
+        "chartId":1577,
+        "chartNumber":"104",
+        "intlNumber":"104",
+        "starred":false,
+        "limDist":false,
+        "correctionType":null,
+        "currNoticeNum":"34/01",
+        "noticeAction":null,
+        "editionNumber":"5",
+        "editionDate":"8/17/96",
+        "lastNoticeNum":"10/00",
+        "correctionText":{
+            "correction":[{
+                "action":"Delete",
+                "text":"RC at light\n37°57' N  8°53' W"
+            },
+            {
+                "action":"Delete",
+                "text":"RC at light\n37°02' N  9°00' W"
+            }]
+            
+        },
+        "authority":"4(145)00 Lisboa; Por LL",
+        "region":"10",
+        "subregion":"10",
+        "portCode":208,
+        "classification":"(U)",
+        "priceCategory":"D"
+    },{
+        "chartId":1577,
+        "chartNumber":"104",
+        "intlNumber":"104",
+        "starred":false,
+        "limDist":false,
+        "correctionType":null,
+        "currNoticeNum":"8/06",
+        "noticeAction":null,
+        "editionNumber":"5",
+        "editionDate":"8/17/96",
+        "lastNoticeNum":"34/01",
+        "correctionText":{
+            "correction":[{
+                "action":"Delete",
+                "text":"RC (AERO) \n33°04' N  16°21' W"
+            },
+            {
+                "action":"Delete",
+                "text":"RC (AERO)\n32°45' N  16°43' W"
+            },
+            {
+                "action":"Delete",
+                "text":"RC (AERO) \n28°03' N  16°33' W"
+            },
+            {
+                "action":"Delete",
+                "text":"RC at light\n28°10' N  15°26' W"
+            },
+            {
+                "action":"Delete",
+                "text":"RC at light\n28°14' N  13°56' W"
+            },
+            {
+                "action":"Delete",
+                "text":"RC (AERO)\n28°57' N  13°38' W"
+            },
+            {
+                "action":"Delete",
+                "text":"RC at light\n33°37' N  7°40' W"
+        }]},
+        "authority":"28(294)05 Cadiz",
+        "region":"10",
+        "subregion":"10",
+        "portCode":201,
+        "classification":"(U)",
+        "priceCategory":"D"
+    },{
+        "chartId":1577,
+        "chartNumber":"104",
+        "intlNumber":"104",
+        "starred":false,
+        "limDist":false,
+        "correctionType":null,
+        "currNoticeNum":"20/06",
+        "noticeAction":null,
+        "editionNumber":"5",
+        "editionDate":"8/17/96",
+        "lastNoticeNum":"8/06",
+        "correctionText":{
+            "correction":[{
+                "action":"Delete",
+                "text":"RC at light\n35°47' N  5°56' W"
+            }]
+        },
+        "authority":"40(400)05 Cadiz",
+        "region":"10",
+        "subregion":"10",
+        "portCode":208,
+        "classification":"(U)",
+        "priceCategory":"D"
+    },{
+        "chartId":1785,
+        "chartNumber":"12",
+        "intlNumber":"12",
+        "starred":false,
+        "limDist":false,
+        "correctionType":null,
+        "currNoticeNum":"51/82",
+        "noticeAction":null,
+        "editionNumber":"1",
+        "editionDate":"9/25/82",
+        "lastNoticeNum":"47/82",
+        "correctionText":{
+            "correction":[{
+                "action":"Add",
+                "text":"Legend \"Rep exting (1982)\" to light\n13°30' N  16°40' W"
+            }]
+        },
+        "authority":"BA LL",
+        "region":"10",
+        "subregion":"12",
+        "portCode":null,
+        "classification":"(U)",
+        "priceCategory":"D"
+    },{
+        "chartId":1785,
+        "chartNumber":"12",
+        "intlNumber":"12",
+        "starred":false,
+        "limDist":false,
+        "correctionType":null,
+        "currNoticeNum":"3/83",
+        "noticeAction":null,
+        "editionNumber":"1",
+        "editionDate":"9/25/82",
+        "lastNoticeNum":"51/82",
+        "correctionText":{
+            "correction":[{
+                "action":"Add",
+                "text":"Depth 542 meters\n31°00' N  12°36' W"
+            }]
+        },
+        "authority":"45(2732)82 Taunton",
+        "region":"10",
+        "subregion":"12",
+        "portCode":null,
+        "classification":"(U)",
+        "priceCategory":"D"
+    }
+]
+}

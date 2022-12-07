@@ -13,11 +13,6 @@ struct SortButton: ViewModifier {
     @Binding var sortOpen: Bool
     @Binding var dataSource: DataSourceItem
     
-    init(sortOpen: Binding<Bool>, dataSource: Binding<DataSourceItem>) {
-        self._sortOpen = sortOpen
-        self._dataSource = dataSource
-    }
-    
     func body(content: Content) -> some View {
         content.toolbar {
             ToolbarItem (placement: .navigationBarTrailing)  {

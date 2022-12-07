@@ -12,11 +12,6 @@ struct AsamSummaryView: View {
     var asam: Asam
     var showMoreDetails: Bool = false
     
-    init(asam: Asam, showMoreDetails: Bool = false) {
-        self.asam = asam
-        self.showMoreDetails = showMoreDetails
-    }
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(asam.dateString ?? "")
