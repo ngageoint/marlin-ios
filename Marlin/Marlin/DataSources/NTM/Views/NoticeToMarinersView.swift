@@ -17,7 +17,7 @@ struct NoticeToMarinersView: View {
                     if let sectionInt = Int(section.name) {
                         return "Notice: \(Int(sectionInt / 100) % 1000)/\(sectionInt % 100)"
                     } else {
-                        return "dunno"
+                        return ""
                     }
                 } content: { section in
                     AnyView(NoticeToMarinersFullNoticeView(noticeNumber: Int64(section.name)))

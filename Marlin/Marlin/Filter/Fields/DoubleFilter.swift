@@ -32,6 +32,7 @@ struct DoubleFilter: View {
                             Button("Done") {
                                 isInputActive = false
                             }
+                            .tint(Color.primaryColorVariant)
                         }
                     }
                 if let validationText = viewModel.validationText {

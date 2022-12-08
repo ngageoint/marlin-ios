@@ -41,6 +41,7 @@ struct LocationFilter: View {
                                     Button("Done") {
                                         isInputActive = false
                                     }
+                                    .tint(Color.primaryColorVariant)
                                 }
                             }
                         if let validationLatitudeText = viewModel.validationLatitudeText {
@@ -68,6 +69,7 @@ struct LocationFilter: View {
                                     Button("Done") {
                                         isInputActive = false
                                     }
+                                    .tint(Color.primaryColorVariant)
                                 }
                             }
                         if let validationLongitudeText = viewModel.validationLongitudeText {
@@ -105,6 +107,7 @@ struct LocationFilter: View {
                                 Button("Done") {
                                     isInputActive = false
                                 }
+                                .tint(Color.primaryColorVariant)
                             }
                         }
                     if let validationText = viewModel.validationText {
