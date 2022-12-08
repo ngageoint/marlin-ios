@@ -11,7 +11,7 @@ import CoreData
 import Combine
 
 class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
-    var minZoom = 4
+    var minZoom = 2
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
     

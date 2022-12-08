@@ -144,7 +144,6 @@ struct OnboardingView: View {
         VStack(alignment: .center, spacing: 0) {
             
             HStack(alignment: .bottom) {
-                Spacer()
                 VStack(alignment: .center, spacing: 16) {
                     Text(title)
                         .font(.headline4)

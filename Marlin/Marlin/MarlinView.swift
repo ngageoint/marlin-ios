@@ -31,11 +31,14 @@ struct MarlinView: View {
 
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     @State var menuOpen: Bool = false
+    @State var selection: String? = nil
     @State var showBottomSheet: Bool = false
     @StateObject var bottomSheetItemList: BottomSheetItemList = BottomSheetItemList()
         
     @State var showSnackbar: Bool = false
     @State var snackbarModel: SnackbarModel?
+    
+    @State var filterOpen: Bool = false
     
     @State private var previewDate: Date = Date()
     @State private var previewUrl: URL?
@@ -109,30 +112,58 @@ struct MarlinView: View {
                 
                 if horizontalSizeClass == .compact {
                     
-                    MarlinCompactWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
+                    MarlinCompactWidth(dataSourceList: dataSourceList, filterOpen: $filterOpen, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
                     ).environmentObject(locationManager)
                 } else {
                     NavigationView {
-                        ZStack {
-                            MarlinRegularWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState)).environmentObject(locationManager)
-                            GeometryReader { geometry in
-                                SideMenu(width: min(geometry.size.width - 56, 512),
-                                         isOpen: self.menuOpen,
-                                         menuClose: self.openMenu,
-                                         dataSourceList: dataSourceList
-                                )
-                                .opacity(self.menuOpen ? 1 : 0)
-                                .animation(.default, value: self.menuOpen)
-                                .onReceive(switchTabPub) { output in
-                                    self.menuOpen.toggle()
+                        VStack {
+                            ZStack {
+                                MarlinRegularWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState)).environmentObject(locationManager)
+                                    .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
+                                
+                                GeometryReader { geometry in
+                                    SideMenu(width: min(geometry.size.width - 56, 512),
+                                             isOpen: self.menuOpen,
+                                             menuClose: self.openMenu,
+                                             dataSourceList: dataSourceList
+                                    )
+                                    .opacity(self.menuOpen ? 1 : 0)
+                                    .animation(.default, value: self.menuOpen)
+                                    .onReceive(switchTabPub) { output in
+                                        if let output = output as? String {
+                                            if output == "settings" {
+                                                selection = "settings"
+                                            } else if output == "submitReport" {
+                                                selection = "submitReport"
+                                            } else {
+                                                selection = "\(output)List"
+                                            }
+                                            self.menuOpen = false
+                                        }
+                                    }
                                 }
                             }
+                            .if(UserDefaults.standard.hamburger) { view in
+                                view.modifier(Hamburger(menuOpen: $menuOpen))
+                            }
+                            .navigationTitle("Marlin")
+                            .navigationBarTitleDisplayMode(.inline)
+                            NavigationLink(tag: "settings", selection: $selection) {
+                                AboutView()
+                            } label: {
+                                EmptyView()
+                            }
+                            .isDetailLink(false)
+                            .hidden()
+                            
+                            NavigationLink(tag: "submitReport", selection: $selection) {
+                                SubmitReportView()
+                            } label: {
+                                EmptyView()
+                            }
+                            .isDetailLink(false)
+                            .hidden()
                         }
-                        .if(UserDefaults.standard.hamburger) { view in
-                            view.modifier(Hamburger(menuOpen: $menuOpen))
-                        }
-                        .navigationTitle("Marlin")
-                        .navigationBarTitleDisplayMode(.inline)
                     }
                     .tint(Color.onPrimaryColor)
                     .navigationViewStyle(.stack)
@@ -145,6 +176,20 @@ struct MarlinView: View {
         // TODO: this can be replaced with .sheet introduced in ios16 when we are at 17
         .bottomSheet(isPresented: $showBottomSheet, delegate: self) {
             MarlinBottomSheet(itemList: bottomSheetItemList).environmentObject(locationManager)
+        }
+        .bottomSheet(isPresented: $filterOpen, detents: .large, delegate: self) {
+            FilterBottomSheet(dataSources: $dataSourceList.mappedDataSources)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            filterOpen.toggle()
+                        }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .imageScale(.large)
+                                .foregroundColor(Color.onPrimaryColor.opacity(0.87))
+                        }
+                    }
+                }
         }
         .snackbar(isPresented: $showSnackbar) {
             Group {

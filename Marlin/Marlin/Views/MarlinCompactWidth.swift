@@ -21,7 +21,7 @@ struct MarlinCompactWidth: View {
     @State var selection: String? = nil
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
     
-    @State var filterOpen: Bool = false
+    @Binding var filterOpen: Bool
     
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource)
     let mapFocus = NotificationCenter.default.publisher(for: .MapRequestFocus)
@@ -200,20 +200,6 @@ struct MarlinCompactWidth: View {
                          dataSourceList: dataSourceList
                 )
             }
-        }
-        .bottomSheet(isPresented: $filterOpen, detents: .large, delegate: self) {
-            FilterBottomSheet(dataSources: $dataSourceList.mappedDataSources)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            filterOpen.toggle()
-                        }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .imageScale(.large)
-                                .foregroundColor(Color.onPrimaryColor.opacity(0.87))
-                        }
-                    }
-                }
         }
     }
     

@@ -9,17 +9,23 @@ import SwiftUI
 import MapKit
 
 struct MarlinRegularWidth: View {
+    @EnvironmentObject var appState: AppState
+
     @AppStorage("selectedTab") var selectedTab: String = "map"
     @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = false
+    @State var loadingData: Bool = false
 
     @State var activeRailItem: DataSourceItem? = nil
     
     @ObservedObject var dataSourceList: DataSourceList
-    
+        
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource)
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
     }
+    let dataSourceLoadedPub = NotificationCenter.default.publisher(for: .DataSourceLoaded)
+    let dataSourceLoadingPub = NotificationCenter.default.publisher(for: .DataSourceLoading)
+    let mapFocus = NotificationCenter.default.publisher(for: .MapRequestFocus)
     
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
     @State var selection: String? = nil
@@ -62,65 +68,20 @@ struct MarlinRegularWidth: View {
             NavigationView {
                 ZStack(alignment: .topLeading) {
                     marlinMap
-                    
                         .ignoresSafeArea()
                         .onAppear {
                             Metrics.shared.mapView()
                         }
-                    VStack {
+                    VStack(spacing: 0) {
                         // top of map
-                        HStack(alignment: .top, spacing: 0) {
-                            Spacer()
-                            // top right button stack
-                            VStack(alignment: .trailing, spacing: 16) {
-                                NavigationLink {
-                                    MapSettings()
-                                } label: {
-                                    Label(
-                                        title: {},
-                                        icon: { Image(systemName: "square.3.stack.3d")
-                                                .renderingMode(.template)
-                                        }
-                                    )
-                                }
-                                .isDetailLink(false)
-                                .offset(x: -8, y: 16)
-                                .fixedSize()
-                                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini))
-                            }
-                        }
+                        CurrentLocation()
+                        topButtons()
                         Spacer()
                         // bottom of map
-                        HStack(alignment: .bottom, spacing: 0) {
-                            Spacer()
-                            // bottom right button stack
-                            VStack(alignment: .trailing, spacing: 16) {
-                                UserTrackingButton(mapState: marlinMap.mapState)
-                                    .offset(x: -8, y: -24)
-                                    .fixedSize()
-                            }
-                        }
+                        bottomButtons()
                     }
-                    HStack {
-                        Spacer()
-                        Capsule()
-                            .fill(Color.primaryColor)
-                            .frame(width: 175, height: 25)
-                            .overlay(
-                                HStack {
-                                    ProgressView()
-                                        .progressViewStyle(CircularProgressViewStyle(tint: Color.onPrimaryColor))
-                                        .scaleEffect(0.5, anchor: .center)
-                                    Text("Loading initial data")
-                                        .font(Font.overline)
-                                        .foregroundColor(Color.onPrimaryColor)
-                                }
-                            )
-                        Spacer()
-                    }
-                    .animation(.default, value: initialDataLoaded)
-                    .opacity(initialDataLoaded ? 0.0 : 1.0)
-                    .padding(.top, 8)
+                    loadingCapsule()
+                    
                 }
                 .navigationBarHidden(true)
             }.navigationViewStyle(.stack)
@@ -138,6 +99,30 @@ struct MarlinRegularWidth: View {
                 self.activeRailItem = dataSource
             }
         }
+        .onReceive(dataSourceLoadedPub) { output in
+            print("data source updated pub")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                let loading = dataSourceList.allTabs.contains { dataSourceItem in
+                    return appState.loadingDataSource[dataSourceItem.key] ?? false
+                    
+                }
+                withAnimation {
+                    loadingData = loading
+                }
+            }
+        }
+        .onReceive(dataSourceLoadingPub) { output in
+            print("data source loading pub")
+            DispatchQueue.main.async {
+                let loading = dataSourceList.allTabs.contains { dataSourceItem in
+                    return appState.loadingDataSource[dataSourceItem.key] ?? false
+                    
+                }
+                withAnimation {
+                    loadingData = loading
+                }
+            }
+        }
     }
     
     func viewData(_ data: any DataSource) {
@@ -149,6 +134,30 @@ struct MarlinRegularWidth: View {
             item.dataSource == type(of: data.self)
         })
         
+    }
+    
+    @ViewBuilder
+    func loadingCapsule() -> some View {
+        HStack {
+            Spacer()
+            Capsule()
+                .fill(Color.primaryColor)
+                .frame(width: 175, height: 25)
+                .overlay(
+                    HStack {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: Color.onPrimaryColor))
+                            .scaleEffect(0.5, anchor: .center)
+                        Text("Loading initial data")
+                            .font(Font.overline)
+                            .foregroundColor(Color.onPrimaryColor)
+                    }
+                )
+            Spacer()
+        }
+        .animation(.default, value: initialDataLoaded)
+        .opacity(initialDataLoaded ? 0.0 : 1.0)
+        .padding(.top, 8)
     }
     
     @ViewBuilder
@@ -171,6 +180,74 @@ struct MarlinRegularWidth: View {
             DFRSListView(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == ElectronicPublication.key {
             ElectronicPublicationsList()
+        } else if dataSource.key == NoticeToMariners.key {
+            NoticeToMarinersView()
+        }
+    }
+    
+    @ViewBuilder
+    func topButtons() -> some View {
+        HStack(alignment: .top, spacing: 8) {
+            // top left button stack
+            VStack(alignment: .leading, spacing: 8) {
+                SearchView(mapState: marlinMap.mapState)
+            }
+            .padding(.leading, 8)
+            .padding(.top, 16)
+            Spacer()
+            // top right button stack
+            VStack(alignment: .trailing, spacing: 16) {
+                NavigationLink {
+                    MapSettings()
+                } label: {
+                    Label(
+                        title: {},
+                        icon: { Image(systemName: "square.3.stack.3d")
+                                .renderingMode(.template)
+                        }
+                    )
+                }
+                .isDetailLink(false)
+                .fixedSize()
+                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini))
+            }
+            .padding(.trailing, 8)
+            .padding(.top, 16)
+        }
+    }
+    
+    @ViewBuilder
+    func bottomButtons() -> some View {
+        HStack(alignment: .bottom, spacing: 0) {
+            VStack(alignment: .leading, spacing: 8) {
+                ForEach(dataSourceList.allTabs, id: \.self) { dataSource in
+                    if dataSource.dataSource.isMappable {
+                        Button(action: {
+                            dataSource.showOnMap.toggle()
+                        }) {
+                            Label(title: {}) {
+                                if let image = dataSource.dataSource.image {
+                                    Image(uiImage: image)
+                                        .renderingMode(.template)
+                                        .tint(Color.white)
+                                }
+                            }
+                        }
+                        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: dataSource.showOnMap ? Color.white : Color.disabledColor, backgroundColor: dataSource.showOnMap ? Color(uiColor: dataSource.dataSource.color) : Color.disabledBackground))
+                    }
+                }
+            }
+            .padding(.leading, 8)
+            .padding(.bottom, 30)
+            
+            Spacer()
+            // bottom right button stack
+            VStack(alignment: .trailing, spacing: 16) {
+                UserTrackingButton(mapState: marlinMap.mapState)
+                    .fixedSize()
+            }
+            .padding(.trailing, 8)
+            .padding(.bottom, 30)
         }
     }
 }
