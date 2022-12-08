@@ -12,6 +12,7 @@ struct LocationFilter: View {
 
     @ObservedObject var filterViewModel: FilterViewModel
     @ObservedObject var viewModel: DataSourcePropertyFilterViewModel
+    @FocusState var isInputActive: Bool
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -31,6 +32,17 @@ struct LocationFilter: View {
                             .onTapGesture(perform: {
                                 viewModel.startValidating = true
                             })
+                            .focused($isInputActive)
+                            .toolbar {
+                                ToolbarItem(placement: .keyboard) {
+                                    Spacer()
+                                }
+                                ToolbarItem(placement: .keyboard) {
+                                    Button("Done") {
+                                        isInputActive = false
+                                    }
+                                }
+                            }
                         if let validationLatitudeText = viewModel.validationLatitudeText {
                             Text(validationLatitudeText)
                                 .overline()
@@ -47,6 +59,17 @@ struct LocationFilter: View {
                             .onTapGesture(perform: {
                                 viewModel.startValidating = true
                             })
+                            .focused($isInputActive)
+                            .toolbar {
+                                ToolbarItem(placement: .keyboard) {
+                                    Spacer()
+                                }
+                                ToolbarItem(placement: .keyboard) {
+                                    Button("Done") {
+                                        isInputActive = false
+                                    }
+                                }
+                            }
                         if let validationLongitudeText = viewModel.validationLongitudeText {
                             Text(validationLongitudeText)
                                 .overline()
@@ -73,6 +96,17 @@ struct LocationFilter: View {
                         .onTapGesture(perform: {
                             viewModel.startValidating = true
                         })
+                        .focused($isInputActive)
+                        .toolbar {
+                            ToolbarItem(placement: .keyboard) {
+                                Spacer()
+                            }
+                            ToolbarItem(placement: .keyboard) {
+                                Button("Done") {
+                                    isInputActive = false
+                                }
+                            }
+                        }
                     if let validationText = viewModel.validationText {
                         Text(validationText)
                             .overline()

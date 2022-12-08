@@ -10,6 +10,7 @@ import SwiftUI
 struct DoubleFilter: View {
     @ObservedObject var filterViewModel: FilterViewModel
     @ObservedObject var viewModel: DataSourcePropertyFilterViewModel
+    @FocusState var isInputActive: Bool
     
     var body: some View {
         HStack(spacing: 0) {
@@ -22,6 +23,17 @@ struct DoubleFilter: View {
                     .onTapGesture(perform: {
                         viewModel.startValidating = true
                     })
+                    .focused($isInputActive)
+                    .toolbar {
+                        ToolbarItem(placement: .keyboard) {
+                            Spacer()
+                        }
+                        ToolbarItem(placement: .keyboard) {
+                            Button("Done") {
+                                isInputActive = false
+                            }
+                        }
+                    }
                 if let validationText = viewModel.validationText {
                     Text(validationText)
                         .overline()
