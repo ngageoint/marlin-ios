@@ -92,7 +92,7 @@ struct LocationFilter: View {
                         .overline()
                         .padding(.leading, 8)
                         .padding(.bottom, -16)
-                    TextField("Nautical Miles", value: $viewModel.valueInt, format: .number)
+                    TextField("Nautical Miles", value: $viewModel.valueInt, format: .number.grouping(.never))
                         .keyboardType(.numberPad)
                         .underlineTextField()
                         .onTapGesture(perform: {

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NoticeToMarinersSummaryView: View {
     
-    var noticeToMariners: NoticeToMariners
+    @ObservedObject var noticeToMariners: NoticeToMariners
     var showMoreDetails: Bool = false
     
     var bcf: ByteCountFormatter {

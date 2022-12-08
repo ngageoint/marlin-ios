@@ -17,7 +17,7 @@ struct DoubleFilter: View {
             FilterPropertyName(filterViewModel: filterViewModel, viewModel: viewModel)
             FilterComparison(dataSourcePropertyFilterViewModel: viewModel)
             VStack(alignment: .leading, spacing: 0) {
-                TextField(viewModel.dataSourceProperty.name, value: $viewModel.valueDouble, format: .number)
+                TextField(viewModel.dataSourceProperty.name, value: $viewModel.valueDouble, format: .number.grouping(.never))
                     .keyboardType(.decimalPad)
                     .underlineTextField()
                     .onTapGesture(perform: {

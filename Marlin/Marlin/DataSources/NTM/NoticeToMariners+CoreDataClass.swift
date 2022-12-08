@@ -55,6 +55,7 @@ class NoticeToMariners: NSManagedObject, Downloadable {
                 PersistenceController.current.perform {
                     self.objectWillChange.send()
                     self.isDownloaded = false
+                    self.downloadProgress = 0.0
                     DispatchQueue.main.async {
                         try? PersistenceController.current.save()
                     }

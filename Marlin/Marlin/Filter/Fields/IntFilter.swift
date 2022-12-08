@@ -17,7 +17,7 @@ struct IntFilter: View {
             FilterPropertyName(filterViewModel: filterViewModel, viewModel: viewModel)
             FilterComparison(dataSourcePropertyFilterViewModel: viewModel)
             VStack(alignment: .leading, spacing: 0) {
-                TextField(viewModel.dataSourceProperty.name, value: $viewModel.valueInt, format: .number)
+                TextField(viewModel.dataSourceProperty.name, value: $viewModel.valueInt, format: .number.grouping(.never))
                     .keyboardType(.numberPad)
                     .underlineTextField()
                     .onTapGesture(perform: {

@@ -10,7 +10,7 @@ import SwiftUI
 
 extension NoticeToMariners: DataSourceViewBuilder {
     var detailView: AnyView {
-        AnyView(NoticeToMarinersFullNoticeView(noticeNumber: self.noticeNumber))
+        AnyView(NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: self.noticeNumber)))
     }
     
     func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {

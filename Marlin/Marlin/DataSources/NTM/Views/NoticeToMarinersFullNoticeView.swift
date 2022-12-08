@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NoticeToMarinersFullNoticeView: View {
-    @ObservedObject var viewModel: NoticeToMarinersFullNoticeViewViewModel
+    @StateObject var viewModel: NoticeToMarinersFullNoticeViewViewModel
 
     @FetchRequest<NoticeToMariners>
     var noticeToMarinersPublications: FetchedResults<NoticeToMariners>
@@ -16,10 +16,9 @@ struct NoticeToMarinersFullNoticeView: View {
     private var gridColumns = Array(repeating: GridItem(.flexible()), count: 3)
     private var numColumns = 3
     
-    init(noticeNumber: Int64? = nil, noticeNumberString: String? = nil) {
-        let viewModel = NoticeToMarinersFullNoticeViewViewModel(noticeNumber: noticeNumber, noticeNumberString: noticeNumberString)
+    init(viewModel: NoticeToMarinersFullNoticeViewViewModel) {
         self._noticeToMarinersPublications = viewModel.createFetchRequest()
-        self.viewModel = viewModel
+        self._viewModel = StateObject(wrappedValue: viewModel)
     }
     
     var body: some View {

@@ -20,7 +20,7 @@ struct NoticeToMarinersView: View {
                         return ""
                     }
                 } content: { section in
-                    AnyView(NoticeToMarinersFullNoticeView(noticeNumber: Int64(section.name)))
+                    AnyView(NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: Int64(section.name))))
                 }
                 .navigationTitle(NoticeToMariners.fullDataSourceName)
                 .navigationBarTitleDisplayMode(.inline)
