@@ -20,7 +20,7 @@ extension DFRS: DataSource {
     static var key: String = "dfrs"
     static var imageName: String? = nil
     static var systemImageName: String? = "antenna.radiowaves.left.and.right.circle"
-    static var color: UIColor = UIColor(argbValue: 0xFF00E676)
+    static var color: UIColor = UIColor(argbValue: 0xFFFFB300)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
     static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Area Name", key: #keyPath(DFRS.areaName), type: .string), ascending: true), DataSourceSortParameter(property:DataSourceProperty(name: "Station Number", key: #keyPath(DFRS.stationNumber), type: .double), ascending: true)]

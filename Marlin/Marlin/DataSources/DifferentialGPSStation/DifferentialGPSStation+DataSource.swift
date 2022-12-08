@@ -20,7 +20,7 @@ extension DifferentialGPSStation: DataSource {
     static var key: String = "differentialGPSStation"
     static var imageName: String? = "dgps"
     static var systemImageName: String? = nil
-    static var color: UIColor = UIColor(argbValue: 0xFFFFB300)
+    static var color: UIColor = UIColor(argbValue: 0xFF00E676)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
     static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(DifferentialGPSStation.geopoliticalHeading), type: .string), ascending: true, section: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(DifferentialGPSStation.featureNumber), type: .int), ascending: true)]

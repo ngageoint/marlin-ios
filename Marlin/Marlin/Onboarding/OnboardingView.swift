@@ -60,6 +60,16 @@ struct OnboardingView: View {
             item.key == DifferentialGPSStation.key
         }
     }
+    private var epubIsTab: Bool {
+        dataSourceList.tabs.contains { item in
+            item.key == ElectronicPublication.key
+        }
+    }
+    private var ntmIsTab: Bool {
+        dataSourceList.tabs.contains { item in
+            item.key == NoticeToMariners.key
+        }
+    }
     
     @AppStorage("showOnMap\(Asam.key)") var asamIsMapped: Bool = false
     @AppStorage("showOnMap\(Modu.key)") var moduIsMapped: Bool = false
@@ -553,6 +563,54 @@ struct OnboardingView: View {
                     }
                 }
                 .overlay(CheckBadge(on: .constant(dgpsIsTab)))
+                VStack(alignment: .center) {
+                    if let image = ElectronicPublication.image {
+                        Image(uiImage: image)
+                            .renderingMode(.template)
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
+                            .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                                .background(Circle().fill(Color(uiColor: ElectronicPublication.color))))
+                    }
+                    Text(ElectronicPublication.dataSourceName)
+                        .foregroundColor(Color.onPrimaryColor)
+                }
+                .frame(width: 100, height: 100)
+                .background(Color.secondaryColor)
+                .cornerRadius(2)
+                .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+                .onTapGesture {
+                    if epubIsTab {
+                        dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: ElectronicPublication.self), position: 0)
+                    } else {
+                        dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: ElectronicPublication.self), position: 0)
+                    }
+                }
+                .overlay(CheckBadge(on: .constant(epubIsTab)))
+                VStack(alignment: .center) {
+                    if let image = NoticeToMariners.image {
+                        Image(uiImage: image)
+                            .renderingMode(.template)
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
+                            .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                                .background(Circle().fill(Color(uiColor: NoticeToMariners.color))))
+                    }
+                    Text(NoticeToMariners.dataSourceName)
+                        .foregroundColor(Color.onPrimaryColor)
+                }
+                .frame(width: 100, height: 100)
+                .background(Color.secondaryColor)
+                .cornerRadius(2)
+                .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+                .onTapGesture {
+                    if ntmIsTab {
+                        dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: NoticeToMariners.self), position: 0)
+                    } else {
+                        dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: NoticeToMariners.self), position: 0)
+                    }
+                }
+                .overlay(CheckBadge(on: .constant(ntmIsTab)))
             }
         }
     }
