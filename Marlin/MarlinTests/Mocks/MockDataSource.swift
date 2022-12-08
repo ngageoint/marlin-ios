@@ -27,8 +27,6 @@ enum MockEnum: String, CaseIterable, CustomStringConvertible {
             return "Yes"
         case .N:
             return "No"
-        default:
-            return "No"
         }
     }
     

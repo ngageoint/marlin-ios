@@ -120,7 +120,7 @@ extension DownloadManager: URLSessionDownloadDelegate {
                 
         guard let httpResponse = downloadTask.response as? HTTPURLResponse,
               (200...299).contains(httpResponse.statusCode) else {
-            print ("server error code \(downloadTask.response)")
+            print ("server error code \(downloadTask.response.debugDescription)")
             return
         }
         

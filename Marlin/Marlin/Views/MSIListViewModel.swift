@@ -116,7 +116,7 @@ class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResu
                 sections.insert(sectionLights, at: 0)
             }
         } else {
-            for (index, section) in sections.enumerated() {
+            for (index, _) in sections.enumerated() {
                 if let sectionLights = get(for: index) {
                     sections[index] = sectionLights
                 }
