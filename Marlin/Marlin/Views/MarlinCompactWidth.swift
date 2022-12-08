@@ -71,7 +71,7 @@ struct MarlinCompactWidth: View {
                         .hidden()
                         
                         NavigationLink(tag: "settings", selection: $selection) {
-                            SettingsView()
+                            AboutView()
                         } label: {
                             EmptyView()
                         }

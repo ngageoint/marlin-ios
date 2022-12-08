@@ -7,8 +7,7 @@
 
 import SwiftUI
 
-struct SettingsView: View {
-    //First get the nsObject by defining as an optional anyObject
+struct AboutView: View {
     let version = Bundle.main.releaseVersionNumber ?? ""
     let buildVersion = Bundle.main.buildVersionNumber ?? ""
     @State var tapCount: Int = 1
@@ -33,21 +32,16 @@ struct SettingsView: View {
                 Text("Disclaimer")
                     .primary()
             }
-            
-            NavigationLink {
-                VStack {
-                    Text("Marlin v\(version)b\(buildVersion)")
-                        .primary()
-                    Spacer()
-                }
-                .padding([.leading, .top, .bottom, .trailing], 16)
-                .navigationTitle("About Marlin v\(version)")
-            } label: {
-                Image(systemName: "info.circle")
+
+            HStack {
+                Image(systemName: "envelope")
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)
-                Text("About")
+                Link("Contact Us", destination: URL(string: "mailto:marlin@nga.mil")!)
+                    .primary()
+                    .tint(Color.onSurfaceColor)
             }
+
             HStack {
                 Image("marlin_small")
                     .tint(Color.onSurfaceColor)
@@ -106,7 +100,7 @@ struct SettingsView: View {
                 }.toggleStyle(SwitchToggleStyle(tint: .primaryColorVariant))
             }
         }
-        .navigationTitle("Settings")
+        .navigationTitle("About")
         .navigationBarTitleDisplayMode(.inline)
         .listStyle(.grouped)
         .listRowBackground(Color.surfaceColor)
@@ -114,11 +108,5 @@ struct SettingsView: View {
         .onAppear {
             Metrics.shared.settingsView()
         }
-    }
-}
-
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
     }
 }
