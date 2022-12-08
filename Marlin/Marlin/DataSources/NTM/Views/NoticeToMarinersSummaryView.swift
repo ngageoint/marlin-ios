@@ -12,12 +12,11 @@ struct NoticeToMarinersSummaryView: View {
     var noticeToMariners: NoticeToMariners
     var showMoreDetails: Bool = false
     
-    let bcf = ByteCountFormatter()
-    
-    init(noticeToMariners: NoticeToMariners) {
-        self.noticeToMariners = noticeToMariners
+    var bcf: ByteCountFormatter {
+        let bcf = ByteCountFormatter()
         bcf.allowedUnits = [.useAll]
         bcf.countStyle = .file
+        return bcf
     }
     
     var body: some View {

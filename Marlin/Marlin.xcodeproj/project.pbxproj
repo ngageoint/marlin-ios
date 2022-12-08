@@ -44,7 +44,7 @@
 		F71D287728BE976300F1775C /* DFRSSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287628BE976300F1775C /* DFRSSummaryView.swift */; };
 		F71D287928BE9B7400F1775C /* DFRSListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287828BE9B7400F1775C /* DFRSListView.swift */; };
 		F71D287B28C1401500F1775C /* FetchRequestMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287A28C1401400F1775C /* FetchRequestMap.swift */; };
-		F71D287D28C2926500F1775C /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287C28C2926500F1775C /* SettingsCell.swift */; };
+		F71D287D28C2926500F1775C /* AboutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287C28C2926500F1775C /* AboutCell.swift */; };
 		F71D287F28C293A000F1775C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287E28C293A000F1775C /* SettingsView.swift */; };
 		F71D288128C29F0200F1775C /* BundleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D288028C29F0200F1775C /* BundleExtensions.swift */; };
 		F71D288828CA26AA00F1775C /* initialData.sh in Resources */ = {isa = PBXBuildFile; fileRef = F71D288728CA26A200F1775C /* initialData.sh */; };
@@ -212,6 +212,9 @@
 		F7D8FA772940EF7400E7D0A1 /* ChartCorrectionListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA762940EF7400E7D0A1 /* ChartCorrectionListViewModel.swift */; };
 		F7D8FA792941005E00E7D0A1 /* ChartCorrectionListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA782941005E00E7D0A1 /* ChartCorrectionListViewModelTests.swift */; };
 		F7D8FA7B29412BA600E7D0A1 /* chartCorrections.json in Resources */ = {isa = PBXBuildFile; fileRef = F7D8FA7A29412BA600E7D0A1 /* chartCorrections.json */; };
+		F7D8FA7D29414FA100E7D0A1 /* NoticeToMarinersFullNoticeViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA7C29414FA100E7D0A1 /* NoticeToMarinersFullNoticeViewViewModel.swift */; };
+		F7D8FA7F294240B400E7D0A1 /* NoticeToMarinersFullNoticeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA7E294240B400E7D0A1 /* NoticeToMarinersFullNoticeViewModelTests.swift */; };
+		F7D8FA8129424F8400E7D0A1 /* ntmGraphics.json in Resources */ = {isa = PBXBuildFile; fileRef = F7D8FA8029424F8400E7D0A1 /* ntmGraphics.json */; };
 		F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89D28946C8900E7CCE2 /* RailItem.swift */; };
 		F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
@@ -343,7 +346,7 @@
 		F71D287628BE976300F1775C /* DFRSSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSSummaryView.swift; sourceTree = "<group>"; };
 		F71D287828BE9B7400F1775C /* DFRSListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSListView.swift; sourceTree = "<group>"; };
 		F71D287A28C1401400F1775C /* FetchRequestMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchRequestMap.swift; sourceTree = "<group>"; };
-		F71D287C28C2926500F1775C /* SettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
+		F71D287C28C2926500F1775C /* AboutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutCell.swift; sourceTree = "<group>"; };
 		F71D287E28C293A000F1775C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F71D288028C29F0200F1775C /* BundleExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleExtensions.swift; sourceTree = "<group>"; };
 		F71D288728CA26A200F1775C /* initialData.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = initialData.sh; sourceTree = "<group>"; };
@@ -516,6 +519,9 @@
 		F7D8FA762940EF7400E7D0A1 /* ChartCorrectionListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartCorrectionListViewModel.swift; sourceTree = "<group>"; };
 		F7D8FA782941005E00E7D0A1 /* ChartCorrectionListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartCorrectionListViewModelTests.swift; sourceTree = "<group>"; };
 		F7D8FA7A29412BA600E7D0A1 /* chartCorrections.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = chartCorrections.json; sourceTree = "<group>"; };
+		F7D8FA7C29414FA100E7D0A1 /* NoticeToMarinersFullNoticeViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersFullNoticeViewViewModel.swift; sourceTree = "<group>"; };
+		F7D8FA7E294240B400E7D0A1 /* NoticeToMarinersFullNoticeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersFullNoticeViewModelTests.swift; sourceTree = "<group>"; };
+		F7D8FA8029424F8400E7D0A1 /* ntmGraphics.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ntmGraphics.json; sourceTree = "<group>"; };
 		F7E8C89D28946C8900E7CCE2 /* RailItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailItem.swift; sourceTree = "<group>"; };
 		F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceRail.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
@@ -896,6 +902,7 @@
 				F7D8FA152922BA3B00E7D0A1 /* NoticeToMariners+DataSourceViewBuilder.swift */,
 				F7D8FA222924394800E7D0A1 /* NTMGraphics.swift */,
 				F7D8FA762940EF7400E7D0A1 /* ChartCorrectionListViewModel.swift */,
+				F7D8FA7C29414FA100E7D0A1 /* NoticeToMarinersFullNoticeViewViewModel.swift */,
 			);
 			path = NTM;
 			sourceTree = "<group>";
@@ -1090,6 +1097,7 @@
 				F72EAAD6291D5DB500AC6026 /* radioBeaconMockData.json */,
 				F7D8FA1E2922F8D700E7D0A1 /* ntmMockData.json */,
 				F7D8FA7A29412BA600E7D0A1 /* chartCorrections.json */,
+				F7D8FA8029424F8400E7D0A1 /* ntmGraphics.json */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -1099,7 +1107,7 @@
 			children = (
 				F7C3679328CCC8E500AE1265 /* DisclaimerView.swift */,
 				F71D287E28C293A000F1775C /* SettingsView.swift */,
-				F71D287C28C2926500F1775C /* SettingsCell.swift */,
+				F71D287C28C2926500F1775C /* AboutCell.swift */,
 				F7C3679828D0AEF400AE1265 /* DisplaySettings.swift */,
 			);
 			path = Settings;
@@ -1130,6 +1138,7 @@
 			children = (
 				F7D8FA1C2922F7F300E7D0A1 /* NoticeToMarinersDataTests.swift */,
 				F7D8FA782941005E00E7D0A1 /* ChartCorrectionListViewModelTests.swift */,
+				F7D8FA7E294240B400E7D0A1 /* NoticeToMarinersFullNoticeViewModelTests.swift */,
 			);
 			path = NoticeToMariners;
 			sourceTree = "<group>";
@@ -1556,6 +1565,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7D8FA1F2922F8D700E7D0A1 /* ntmMockData.json in Resources */,
+				F7D8FA8129424F8400E7D0A1 /* ntmGraphics.json in Resources */,
 				F72EAAB9291BF28C00AC6026 /* moduMockData.json in Resources */,
 				F7D8FA7B29412BA600E7D0A1 /* chartCorrections.json in Resources */,
 				F7F597A82864BF9D00F9B32E /* navwarnings.json in Resources */,
@@ -1730,6 +1740,7 @@
 				F72EAAC1291C274100AC6026 /* DifferentialGPSStationDataTests.swift in Sources */,
 				F72EAAD0291C669D00AC6026 /* LightDataTests.swift in Sources */,
 				F72EAACB291C635100AC6026 /* NavigationalWarningDataTests.swift in Sources */,
+				F7D8FA7F294240B400E7D0A1 /* NoticeToMarinersFullNoticeViewModelTests.swift in Sources */,
 				F71DF482284E783600686951 /* TestHelper.swift in Sources */,
 				F7D8FA68293E5E5E00E7D0A1 /* DataSourceFilterComparisonTests.swift in Sources */,
 				F72EAAC6291C334200AC6026 /* ElectronicPublicationDataTests.swift in Sources */,
@@ -1909,6 +1920,7 @@
 				F707BA8D287C89ED006A94C4 /* LightMap.swift in Sources */,
 				F7C361C12921370B001C7C84 /* NoticeToMariners+DataSource.swift in Sources */,
 				F7C23E0C290850D70002A7DF /* ElectronicPublicationDetailView.swift in Sources */,
+				F7D8FA7D29414FA100E7D0A1 /* NoticeToMarinersFullNoticeViewViewModel.swift in Sources */,
 				F7FFB31228D63C8300C31AA3 /* Modu+Annotation.swift in Sources */,
 				F707BA852878DBFF006A94C4 /* AdaptiveImage.swift in Sources */,
 				F7FFB2F828D6344000C31AA3 /* Port+Decodable.swift in Sources */,
@@ -1922,7 +1934,7 @@
 				F7FFB32828D6427200C31AA3 /* RadioBeacon+Decodable.swift in Sources */,
 				F71D287B28C1401500F1775C /* FetchRequestMap.swift in Sources */,
 				F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */,
-				F71D287D28C2926500F1775C /* SettingsCell.swift in Sources */,
+				F71D287D28C2926500F1775C /* AboutCell.swift in Sources */,
 				F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */,
 				F74B9B0728B7CF650097D448 /* RadioBeacon+CoreDataClass.swift in Sources */,
 				F71D286228BE390800F1775C /* DifferentialGPSStation+CoreDataClass.swift in Sources */,

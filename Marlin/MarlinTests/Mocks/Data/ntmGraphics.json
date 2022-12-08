@@ -1,0 +1,161 @@
+
+{
+    "ntmGraphics": [
+        {
+            "chartNumber": "11323",
+            "priceCategory": "NOS",
+            "subregion": 11,
+            "noticeNumber": 202020,
+            "noticeYear": 2020,
+            "noticeWeek": 20,
+            "graphicType": "Note",
+            "seqNum": 1,
+            "fileName": "N11323_0_0_20200420184016_U.jpg",
+            "fileSize": "97268"
+        },
+        {
+            "chartNumber": "11323",
+            "priceCategory": "NOS",
+            "subregion": 11,
+            "noticeNumber": 202020,
+            "noticeYear": 2020,
+            "noticeWeek": 20,
+            "graphicType": "Depth Tab",
+            "seqNum": 2,
+            "fileName": "D11323_0_0_20200420185016_U.jpg",
+            "fileSize": "66818"
+        },
+        {
+            "chartNumber": "11324",
+            "priceCategory": "NOS",
+            "subregion": 11,
+            "noticeNumber": 202020,
+            "noticeYear": 2020,
+            "noticeWeek": 20,
+            "graphicType": "Note",
+            "seqNum": 1,
+            "fileName": "N11324_0_0_20200420193034_U.jpg",
+            "fileSize": "97218"
+        },
+        {
+            "chartNumber": "11324",
+            "priceCategory": "NOS",
+            "subregion": 11,
+            "noticeNumber": 202020,
+            "noticeYear": 2020,
+            "noticeWeek": 20,
+            "graphicType": "Depth Tab",
+            "seqNum": 2,
+            "fileName": "D11324_0_0_20200420193350_U.jpg",
+            "fileSize": "121428"
+        },
+        {
+            "chartNumber": "11325",
+            "priceCategory": "NOS",
+            "subregion": 11,
+            "noticeNumber": 202020,
+            "noticeYear": 2020,
+            "noticeWeek": 20,
+            "graphicType": "Note",
+            "seqNum": 1,
+            "fileName": "N11325_0_0_20200427153151_U.jpg",
+            "fileSize": "97304"
+        },
+        {
+            "chartNumber": "11325",
+            "priceCategory": "NOS",
+            "subregion": 11,
+            "noticeNumber": 202020,
+            "noticeYear": 2020,
+            "noticeWeek": 20,
+            "graphicType": "Depth Tab",
+            "seqNum": 2,
+            "fileName": "D11325_0_0_20200427154215_U.jpg",
+            "fileSize": "133490"
+        },
+        {
+            "chartNumber": "11326",
+            "priceCategory": "NOS",
+            "subregion": 11,
+            "noticeNumber": 202020,
+            "noticeYear": 2020,
+            "noticeWeek": 20,
+            "graphicType": "Note",
+            "seqNum": 1,
+            "fileName": "N11326_0_0_20200420203239_U.jpg",
+            "fileSize": "98910"
+        },
+        {
+            "chartNumber": "11326",
+            "priceCategory": "NOS",
+            "subregion": 11,
+            "noticeNumber": 202020,
+            "noticeYear": 2020,
+            "noticeWeek": 20,
+            "graphicType": "Note",
+            "seqNum": 1,
+            "fileName": "N11326_0_0_20200420203602_U.jpg",
+            "fileSize": "105165"
+        },
+        {
+            "chartNumber": "11326",
+            "priceCategory": "NOS",
+            "subregion": 11,
+            "noticeNumber": 202020,
+            "noticeYear": 2020,
+            "noticeWeek": 20,
+            "graphicType": "Note",
+            "seqNum": 1,
+            "fileName": "N11326_0_0_20200420204321_U.jpg",
+            "fileSize": "98855"
+        },
+        {
+            "chartNumber": "11328",
+            "priceCategory": "NOS",
+            "subregion": 11,
+            "noticeNumber": 202020,
+            "noticeYear": 2020,
+            "noticeWeek": 20,
+            "graphicType": "Note",
+            "seqNum": 1,
+            "fileName": "N11328_0_0_20200427173247_U.jpg",
+            "fileSize": "97253"
+        },
+        {
+            "chartNumber": "11328",
+            "priceCategory": "NOS",
+            "subregion": 11,
+            "noticeNumber": 202020,
+            "noticeYear": 2020,
+            "noticeWeek": 20,
+            "graphicType": "Depth Tab",
+            "seqNum": 2,
+            "fileName": "D11328_0_0_20200427214707_U.jpg",
+            "fileSize": "51135"
+        },
+        {
+            "chartNumber": "11329",
+            "priceCategory": "NOS",
+            "subregion": 11,
+            "noticeNumber": 202020,
+            "noticeYear": 2020,
+            "noticeWeek": 20,
+            "graphicType": "Chartlet",
+            "seqNum": 1,
+            "fileName": "N11329_0_0_20200427203918_U.jpg",
+            "fileSize": "97618"
+        },
+        {
+            "chartNumber": "11329",
+            "priceCategory": "NOS",
+            "subregion": 11,
+            "noticeNumber": 202020,
+            "noticeYear": 2020,
+            "noticeWeek": 20,
+            "graphicType": "Depth Tab",
+            "seqNum": 2,
+            "fileName": "D11329_0_0_20200427204904_U.jpg",
+            "fileSize": "72495"
+        }
+    ]
+}

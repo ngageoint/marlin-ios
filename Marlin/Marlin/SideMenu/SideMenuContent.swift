@@ -131,7 +131,7 @@ struct SideMenuContent: View {
                 .padding(.top, 16)
                 .padding(.bottom, 8)
                 .background(Color.backgroundColor)
-                SettingsCell()
+                AboutCell()
                 Spacer()
             }
             .frame(maxHeight: .infinity)

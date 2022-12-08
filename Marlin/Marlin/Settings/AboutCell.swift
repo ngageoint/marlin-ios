@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct SettingsCell: View {
+struct AboutCell: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .center) {
-                Image(systemName: "gearshape.fill")
+                Image(systemName: "info.circle")
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)
-                Text("Settings")
+                Text("About")
                     .font(Font.body1)
                     .foregroundColor(Color.onSurfaceColor)
                     .opacity(0.87)
@@ -29,11 +29,5 @@ struct SettingsCell: View {
         }
         
         .background(Color.surfaceColor)
-    }
-}
-
-struct SettingsCell_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsCell()
     }
 }

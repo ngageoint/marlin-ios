@@ -12,12 +12,11 @@ struct NoticeToMarinersDetailView: View {
     var noticeToMariners: NoticeToMariners
     var showMoreDetails: Bool = false
     
-    let bcf = ByteCountFormatter()
-    
-    init(noticeToMariners: NoticeToMariners) {
-        self.noticeToMariners = noticeToMariners
+    var bcf: ByteCountFormatter {
+        let bcf = ByteCountFormatter()
         bcf.allowedUnits = [.useAll]
         bcf.countStyle = .file
+        return bcf
     }
     
     var body: some View {
@@ -30,7 +29,6 @@ struct NoticeToMarinersDetailView: View {
                 Text("Upload Time: \(uploadTime.formatted())")
                     .overline()
             }
-            //            NoticeToMarinersAction(noticeToMariners: electronicPublication)
         }
     }
 }

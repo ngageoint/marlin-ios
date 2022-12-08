@@ -13,8 +13,6 @@ struct NoticeToMarinersView: View {
     var body: some View {
         List {
             NavigationLink {
-                
-                
                 MSIListView<NoticeToMariners, AnyView>(focusedItem: itemWrapper, watchFocusedItem: false, filterPublisher: UserDefaults.standard.publisher(for: \.ntmFilter), sortPublisher: UserDefaults.standard.publisher(for: \.ntmSort), allowUserSort: false, allowUserFilter: false, sectionHeaderIsSubList: true) { section in
                     if let sectionInt = Int(section.name) {
                         return "Notice: \(Int(sectionInt / 100) % 1000)/\(sectionInt % 100)"
@@ -22,14 +20,7 @@ struct NoticeToMarinersView: View {
                         return "dunno"
                     }
                 } content: { section in
-//                    if let first = section.items.first {
-                        AnyView(NoticeToMarinersFullNoticeView(noticeNumber: Int64(section.name)))
-//                    }
-//                    ScrollView {
-//                        LazyVStack(alignment: .leading, spacing: 0) {
-//                            itemList(items: section.items)
-//                        }
-//                    }
+                    AnyView(NoticeToMarinersFullNoticeView(noticeNumber: Int64(section.name)))
                 }
                 .navigationTitle(NoticeToMariners.fullDataSourceName)
                 .navigationBarTitleDisplayMode(.inline)
@@ -64,11 +55,5 @@ struct NoticeToMarinersView: View {
         .onAppear {
             Metrics.shared.noticeToMarinersView()
         }
-    }
-}
-
-struct NoticeToMarinersView_Previews: PreviewProvider {
-    static var previews: some View {
-        NoticeToMarinersView()
     }
 }

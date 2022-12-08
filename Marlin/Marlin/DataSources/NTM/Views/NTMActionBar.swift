@@ -10,11 +10,7 @@ import SwiftUI
 struct NTMActionBar: View {
         
     var ntm: ChartCorrection
-    
-    init(ntm: ChartCorrection) {
-        self.ntm = ntm
-    }
-    
+
     var body: some View {
         HStack(spacing:8) {
             Spacer()
