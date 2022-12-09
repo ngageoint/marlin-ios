@@ -130,7 +130,11 @@ class DataSourceItem: ObservableObject, Identifiable, Hashable, Equatable {
     var dataSource: any DataSource.Type
     
     @AppStorage<Int> var order: Int
-    @AppStorage<Bool> var showOnMap: Bool
+    @AppStorage<Bool> var showOnMap: Bool {
+        didSet {
+            NotificationCenter.default.post(name: .MappedDataSourcesUpdated, object: nil)
+        }
+    }
     @AppStorage<Data> var filterData: Data {
         willSet {
             DispatchQueue.main.async {
