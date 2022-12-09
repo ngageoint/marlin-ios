@@ -45,6 +45,10 @@ struct NoticeToMarinersSummaryView: View {
                         }
                     }
                 } else if !noticeToMariners.isDownloading {
+                    Link(destination: noticeToMariners.remoteLocation!, label: {
+                        Text("Open In Browser")
+                            .buttonStyle(MaterialButtonStyle(type: .text))
+                    })
                     Button("Download") {
                         noticeToMariners.downloadFile()
                     }
