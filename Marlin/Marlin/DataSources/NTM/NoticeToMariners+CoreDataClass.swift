@@ -52,16 +52,17 @@ class NoticeToMariners: NSManagedObject, Downloadable {
             guard FileManager().fileExists(atPath: destinationUrl.path) else { return }
             do {
                 try FileManager().removeItem(atPath: destinationUrl.path)
-                PersistenceController.current.perform {
-                    self.objectWillChange.send()
-                    self.isDownloaded = false
-                    self.downloadProgress = 0.0
-                    DispatchQueue.main.async {
-                        try? PersistenceController.current.save()
-                    }
-                }
             } catch let error {
                 print("Error while deleting file: ", error)
+            }
+        }
+        
+        PersistenceController.current.perform {
+            self.objectWillChange.send()
+            self.isDownloaded = false
+            self.downloadProgress = 0.0
+            DispatchQueue.main.async {
+                try? PersistenceController.current.save()
             }
         }
     }
