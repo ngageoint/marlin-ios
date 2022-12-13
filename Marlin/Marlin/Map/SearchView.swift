@@ -34,12 +34,13 @@ struct SearchView: View {
                     Group {
                         TextField("Search", text: $search)
                             .focused($searchFocused)
-                            .accentColor(Color.primaryColor)
+                            .foregroundColor(Color.primaryColorVariant)
+                            .accentColor(Color.primaryColorVariant)
+                            .tint(Color.primaryColorVariant)
                             .submitLabel(SubmitLabel.done)
                             .onSubmit {
                                 searchFocused.toggle()
                             }
-                            .foregroundColor(Color.onSurfaceColor)
                             .frame(maxWidth: searchExpanded ? .infinity : 0)
                             .onChange(of: search) { search in
                                 searchPublisher.send(search)
@@ -59,7 +60,7 @@ struct SearchView: View {
                                             search = ""
                                             mapState.searchResults = []
                                         }
-                                    
+
                                         .padding(.trailing, 0)
                                 }
                             }
