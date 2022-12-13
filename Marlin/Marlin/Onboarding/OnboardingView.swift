@@ -261,7 +261,7 @@ struct OnboardingView: View {
     
     @ViewBuilder
     func welcomeTab(geometry: GeometryProxy) -> some View {
-        tabContent(geometry: geometry, imageName: "marlin_large", title: "Welcome To Marlin", explanation: "Marlin puts NGA's Maritime Safety Information datasets at your fingertips even when offline. The next few screens will allow you to customize your experience to meet your needs.", buttons: VStack(alignment: .center, spacing: 16) {
+        tabContent(geometry: geometry, imageName: "marlin_large", title: "Welcome to Marlin", explanation: "Marlin puts NGA's Maritime Safety Information datasets at your fingertips even when offline. The next few screens will allow you to customize your experience to meet your needs.", buttons: VStack(alignment: .center, spacing: 16) {
             Button("Let's Go") {
                 nextTab(currentTab: WELCOME_TAB)
             }
