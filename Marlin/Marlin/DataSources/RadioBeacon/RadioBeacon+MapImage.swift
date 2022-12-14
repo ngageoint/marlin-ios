@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 extension RadioBeacon: MapImage {
+    static var cacheTiles: Bool = true
+    
     func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {
         let scale = marker ? 1 : 2
         

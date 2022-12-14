@@ -55,9 +55,6 @@ struct FilterView: View {
         }
         .padding([.leading, .bottom], 16)
         .padding(.trailing, 0)
-        .onAppear {
-            UserDefaults.standard.setFilter(viewModel.dataSource.key, filter: viewModel.filters)
-        }
     }
 }
 

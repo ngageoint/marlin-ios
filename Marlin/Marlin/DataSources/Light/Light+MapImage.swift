@@ -11,6 +11,8 @@ import CoreLocation
 
 extension Light: MapImage {
         
+    static var cacheTiles: Bool = true
+    
     func mapImage(marker: Bool = false, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil, context: CGContext? = nil) -> [UIImage] {
         var images: [UIImage] = []
         

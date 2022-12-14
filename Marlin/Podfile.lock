@@ -17,6 +17,7 @@ PODS:
   - KIF (3.8.7):
     - KIF/Core (= 3.8.7)
   - KIF/Core (3.8.7)
+  - Kingfisher (7.3.2)
   - MatomoTracker (7.5.2):
     - MatomoTracker/Core (= 7.5.2)
   - MatomoTracker/Core (7.5.2)
@@ -62,6 +63,7 @@ DEPENDENCIES:
   - gars-ios
   - geopackage-ios
   - KIF
+  - Kingfisher
   - MatomoTracker (~> 7.5)
   - mgrs-ios
   - Nimble
@@ -78,6 +80,7 @@ SPEC REPOS:
     - geopackage-ios
     - grid-ios
     - KIF
+    - Kingfisher
     - MatomoTracker
     - mgrs-ios
     - Nimble
@@ -101,6 +104,7 @@ SPEC CHECKSUMS:
   geopackage-ios: 4f107db4241c4a6c53f6e5edbfd0e5a4e31163a9
   grid-ios: bc7f691652c801486e5613096abe0fd684329b9f
   KIF: 779cdbca106633b94ecee7b036537490ebdbd9de
+  Kingfisher: 0086ad83719761ba9b2cdaf6ef4d5b4878cbae23
   MatomoTracker: 1d98ddc58322fd9d65e1a6886b8e41363047bd13
   mgrs-ios: aef86a1fed090fc158f5682a9e319a276ad29b23
   Nimble: 5316ef81a170ce87baf72dd961f22f89a602ff84
@@ -116,6 +120,6 @@ SPEC CHECKSUMS:
   sf-wkt-ios: c2d988fffb8091d3449d16c74cd215a9cb98f4a6
   tiff-ios: fb3f51fcd3400ea1dd8f710d2a7832a18d112580
 
-PODFILE CHECKSUM: 85f86a6c5d76e4f84a1cb7cdd59eeb78c287d4e2
+PODFILE CHECKSUM: c1a1bc5eb880c3842c18925cc710c1d67569c31d
 
 COCOAPODS: 1.11.3

@@ -67,7 +67,9 @@ class LightMapViewModel: NSObject, LightMapViewModelProtocol {
     
     var range: String?
     
+    static var key: String = "LightViewModel"
     
+    static var cacheTiles: Bool = false
     
     func toRadians(degrees: Double) -> Double {
         return degrees * .pi / 180.0

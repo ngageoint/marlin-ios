@@ -8,6 +8,7 @@ use_modular_headers!
 
 def common_pods
   pod "Alamofire"
+  pod "Kingfisher"
   pod 'geopackage-ios'
   pod 'mgrs-ios'
   pod 'gars-ios'

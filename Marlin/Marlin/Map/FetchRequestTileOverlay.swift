@@ -8,6 +8,8 @@
 import Foundation
 import MapKit
 import CoreData
+import Kingfisher
+import sf_proj_ios
 
 protocol PredicateBasedTileOverlay {
     associatedtype T where T : MapImage
@@ -24,6 +26,7 @@ class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverl
     var sortDescriptors: [NSSortDescriptor]?
     var objects: [T]?
     var zoomLevel: Int = 0
+    var imageCache: Kingfisher.ImageCache?
     
     var clearImage: UIImage {
         let rect = CGRect(origin: CGPoint(x: 0, y:0), size: CGSize(width: 1, height: 1))
@@ -39,37 +42,67 @@ class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverl
         return image!
     }
 
-    convenience init(predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]? = nil, objects: [T]? = nil) {
+    convenience init(predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]? = nil, objects: [T]? = nil, imageCache: Kingfisher.ImageCache? = nil) {
         self.init()
         self.predicate = predicate
         self.sortDescriptors = sortDescriptors
         self.objects = objects
+        self.imageCache = imageCache
     }
     
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
+        var cacheKey = "\(T.self.key)/\(path.z)/\(path.x)/\(path.y)"
+        if let predicate = predicate {
+            cacheKey = "\(cacheKey)/\(predicate.debugDescription)"
+        }
+
+        if T.cacheTiles, let imageCache = imageCache, imageCache.isCached(forKey: cacheKey) {
+            
+            imageCache.retrieveImage(forKey: cacheKey) { cacheResult in
+                switch cacheResult {
+                case .success(let value):
+                    result(value.image?.pngData(), nil)
+                    
+                case .failure(let error):
+                    print(error)
+                }
+            }
+            return
+        } else {
+            print("Cache miss \(T.self.key)")
+        }
+        
         zoomLevel = path.z
         
         let minTileLon = longitude(x: path.x, zoom: path.z)
         let maxTileLon = longitude(x: path.x+1, zoom: path.z)
         let minTileLat = latitude(y: path.y+1, zoom: path.z)
         let maxTileLat = latitude(y: path.y, zoom: path.z)
-        let neCorner3857 = coord4326To3857(longitude: maxTileLon, latitude: maxTileLat)
-        let swCorner3857 = coord4326To3857(longitude: minTileLon, latitude: minTileLat)
-        let minTileX = swCorner3857.x
-        let minTileY = swCorner3857.y
-        let maxTileX = neCorner3857.x
-        let maxTileY = neCorner3857.y
         
-        // border the tile by 20 miles since that is as far as any light i have seen.  if that is wrong, update
+        guard let neCorner3857 = SFGeometryUtils.degreesToMetersWith(x: maxTileLon, andY: maxTileLat),
+                let swCorner3857 = SFGeometryUtils.degreesToMetersWith(x: minTileLon, andY: minTileLat) else {
+            return
+        }
+        
+        let minTileX = swCorner3857.x.doubleValue
+        let minTileY = swCorner3857.y.doubleValue
+        let maxTileX = neCorner3857.x.doubleValue
+        let maxTileY = neCorner3857.y.doubleValue
+        
+        // border the tile by 40 miles since that is as far as any light i have seen.  if that is wrong, update
         // border has to be at least 30 pixels as well
-        // miles to meters = miles * 1609.344
-        let tolerance = max(30.0 * 1609.344, ((maxTileX - minTileX) / self.tileSize.width) * 30)
+        let nauticalMilesMeasurement = NSMeasurement(doubleValue: 40.0, unit: UnitLength.nauticalMiles)
+        let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters).value
+
+        let tolerance = max(metersMeasurement, ((maxTileY - minTileY) / self.tileSize.width) * 30.0)
         
-        let neCornerTolerance = coord3857To4326(y: maxTileY + tolerance, x: maxTileX + tolerance)
-        let swCornerTolerance = coord3857To4326(y: minTileY - tolerance, x: minTileX - tolerance)
-        
+        guard let neCornerTolerance = SFGeometryUtils.metersToDegreesWith(x: maxTileX + tolerance, andY: maxTileY + tolerance),
+              let swCornerTolerance = SFGeometryUtils.metersToDegreesWith(x: minTileX - tolerance, andY:minTileY - tolerance) else {
+            return
+        }
+
         DispatchQueue.main.async { [self] in
-            drawTile(tileBounds3857: MapBoundingBox(swCorner: swCorner3857, neCorner: neCorner3857), queryBounds: MapBoundingBox(swCorner: (x: swCornerTolerance.lon, y: swCornerTolerance.lat), neCorner: (x: neCornerTolerance.lon, y: neCornerTolerance.lat)), result: result)
+            drawTile(tileBounds3857: MapBoundingBox(swCorner: (x: swCorner3857.x.doubleValue, y: swCorner3857.y.doubleValue), neCorner: (x: neCorner3857.x.doubleValue, y: neCorner3857.y.doubleValue)), queryBounds: MapBoundingBox(swCorner: (x: swCornerTolerance.x.doubleValue, y: swCornerTolerance.y.doubleValue), neCorner: (x: neCornerTolerance.x.doubleValue, y: neCornerTolerance.y.doubleValue)), cacheKey: cacheKey, result: result)
         }
     }
     
@@ -98,11 +131,29 @@ class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverl
         return nil
     }
     
-    func drawTile(tileBounds3857: MapBoundingBox, queryBounds: MapBoundingBox, result: @escaping (Data?, Error?) -> Void) {
+    func drawTile(tileBounds3857: MapBoundingBox, queryBounds: MapBoundingBox, cacheKey: String, result: @escaping (Data?, Error?) -> Void) {
 
-        let boundsPredicate = NSPredicate(
-            format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", queryBounds.swCorner.y, queryBounds.neCorner.y, queryBounds.swCorner.x, queryBounds.neCorner.x
-        )
+        var boundsPredicate: NSPredicate?
+        
+        if queryBounds.swCorner.x < -180 {
+            boundsPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
+                NSPredicate(format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", queryBounds.swCorner.y, queryBounds.neCorner.y, -180.0, queryBounds.neCorner.x),
+                NSPredicate(format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", queryBounds.swCorner.y, queryBounds.neCorner.y, queryBounds.swCorner.x + 360.0, 180.0)
+                ])
+        } else if queryBounds.neCorner.x > 180 {
+            boundsPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
+                NSPredicate(format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", queryBounds.swCorner.y, queryBounds.neCorner.y, queryBounds.swCorner.x, 180.0),
+                NSPredicate(format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", queryBounds.swCorner.y, queryBounds.neCorner.y, -180.0, queryBounds.neCorner.x - 360.0)
+            ])
+        } else {
+            boundsPredicate = NSPredicate(
+                format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", queryBounds.swCorner.y, queryBounds.neCorner.y, queryBounds.swCorner.x, queryBounds.neCorner.x
+            )
+        }
+        
+        guard let boundsPredicate = boundsPredicate else {
+            return
+        }
         
         var finalPredicate: NSPredicate = boundsPredicate
         
@@ -131,6 +182,11 @@ class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverl
         }
         
         let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+
+        if T.cacheTiles {
+            imageCache?.store(newImage, forKey: cacheKey)
+        }
+        
         UIGraphicsEndImageContext()
         guard let cgImage = newImage.cgImage else {
             result(Data(), nil)

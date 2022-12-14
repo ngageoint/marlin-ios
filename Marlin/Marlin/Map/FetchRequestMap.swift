@@ -9,6 +9,7 @@ import Foundation
 import MapKit
 import CoreData
 import Combine
+import Kingfisher
 
 class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
     var minZoom = 2
@@ -27,10 +28,13 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
     
     var focusNotificationName: Notification.Name?
     
+    var imageCache: Kingfisher.ImageCache
+    
     public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
         self.showAsTiles = showAsTiles
         self.fetchPredicate = fetchPredicate
         self.objects = objects
+        imageCache = Kingfisher.ImageCache(name: T.key)
     }
     
     func getFetchRequest(mapState: MapState) -> NSFetchRequest<NSManagedObject>? {
@@ -84,9 +88,16 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
                 $0.object as? String
             }
             .sink { item in
-                if let M = T.self as? any DataSource.Type, item == M.key {
-                    print("New data for \(M.key), refresh overlay")
-                    self.refreshOverlay(marlinMap: marlinMap)
+                if item == T.key {
+                    if T.cacheTiles {
+                        print("New data for \(T.key), refresh overlay, clear the cache")
+                        // Clear the cache
+                        self.imageCache.clearCache(completion: {
+                            self.refreshOverlay(marlinMap: marlinMap)
+                        })
+                    } else {
+                        self.refreshOverlay(marlinMap: marlinMap)
+                    }
                 }
             }
             .store(in: &cancellable)
@@ -134,7 +145,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
                 }
             }
             let newFetchRequest = self.getFetchRequest(mapState: marlinMap.mapState)
-            let newOverlay = PredicateTileOverlay<T>(predicate: newFetchRequest?.predicate, sortDescriptors: newFetchRequest?.sortDescriptors, objects: self.objects)
+            let newOverlay = PredicateTileOverlay<T>(predicate: newFetchRequest?.predicate, sortDescriptors: newFetchRequest?.sortDescriptors, objects: self.objects, imageCache: self.imageCache)
             
             newOverlay.tileSize = CGSize(width: 512, height: 512)
             newOverlay.minimumZ = self.minZoom

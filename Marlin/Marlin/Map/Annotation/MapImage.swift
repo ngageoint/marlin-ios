@@ -15,6 +15,8 @@ protocol MapImage {
     var longitude: Double { get }
     var coordinate: CLLocationCoordinate2D { get }
     var TILE_SIZE: Double { get }
+    static var key: String { get }
+    static var cacheTiles: Bool { get }
 }
 
 extension MapImage {
