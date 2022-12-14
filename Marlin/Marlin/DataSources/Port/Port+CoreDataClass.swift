@@ -171,6 +171,11 @@ class Port: NSManagedObject {
             KeyValue(key: "Railway", value: "\(SizeEnum.fromValue(railway))"),
         ]
     }
+    
+    override var description: String {
+        return "Port\n\n" +
+        "World Port Index Number: \(portNumber)\n"
+    }
 }
 
 enum SizeEnum: String, CaseIterable, CustomStringConvertible {

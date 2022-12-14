@@ -606,4 +606,99 @@ final class LightDataTests: XCTestCase {
         UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60 * 24 * 7) + (60 * 10), forKey: "\(Light.key)LastSyncTime")
         XCTAssertFalse(Light.shouldSync())
     }
+    
+    func testDescription() {
+        let newItem = Light(context: persistentStore.viewContext)
+        newItem.volumeNumber = "PUB 110"
+        newItem.aidType = "Lighted Aids"
+        newItem.geopoliticalHeading = "GREENLAND"
+        newItem.regionHeading = nil
+        newItem.subregionHeading = nil
+        newItem.localHeading = nil
+        newItem.precedingNote = nil
+        newItem.featureNumber = "6"
+        newItem.name = "Kulusuk, NW Coast, RACON."
+        newItem.position = "65°33'53.89\"N \n37°12'25.7\"W"
+        newItem.characteristicNumber = 1
+        newItem.characteristic = "T(- )\nperiod 60s \n"
+        newItem.range = nil
+        newItem.structure = nil
+        newItem.remarks = "(3 & 10cm).\n"
+        newItem.postNote = nil
+        newItem.noticeNumber = 201507
+        newItem.removeFromList = "N"
+        newItem.deleteFlag = "Y"
+        newItem.noticeWeek = "07"
+        newItem.noticeYear = "2015"
+        
+        let description = "LIGHT\n\n" +
+        "aidType Lighted Aids\n" +
+        "characteristic T(- )\n" +
+        "period 60s \n\n" +
+        "characteristicNumber 1\n" +
+        "deleteFlag Y\n" +
+        "featureNumber 6\n" +
+        "geopoliticalHeading GREENLAND\n" +
+        "heightFeet 0.0\n" +
+        "heightMeters 0.0\n" +
+        "internationalFeature \n" +
+        "localHeading \n" +
+        "name Kulusuk, NW Coast, RACON.\n" +
+        "noticeNumber 201507\n" +
+        "noticeWeek 07\n" +
+        "noticeYear 2015\n" +
+        "position 65°33'53.89\"N \n" +
+        "37°12'25.7\"W\n" +
+        "postNote \n" +
+        "precedingNote \n" +
+        "range \n" +
+        "regionHeading \n" +
+        "remarks (3 & 10cm).\n\n" +
+        "removeFromList N\n" +
+        "structure \n" +
+        "subregionHeading \n" +
+        "volumeNumber PUB 110"
+        
+        XCTAssertEqual(description, newItem.description)
+    }
+    
+    func testMapImage() {
+        let newItem = Light(context: persistentStore.viewContext)
+        newItem.volumeNumber = "PUB 110"
+        newItem.aidType = "Lighted Aids"
+        newItem.geopoliticalHeading = "GREENLAND"
+        newItem.regionHeading = nil
+        newItem.subregionHeading = nil
+        newItem.localHeading = nil
+        newItem.precedingNote = nil
+        newItem.featureNumber = "6"
+        newItem.name = "Kulusuk, NW Coast, RACON."
+        newItem.position = "65°33'53.89\"N \n37°12'25.7\"W"
+        newItem.characteristicNumber = 1
+        newItem.characteristic = "T(- )\nperiod 60s \n"
+        newItem.range = nil
+        newItem.structure = nil
+        newItem.remarks = "(3 & 10cm).\n"
+        newItem.postNote = nil
+        newItem.noticeNumber = 201507
+        newItem.removeFromList = "N"
+        newItem.deleteFlag = "Y"
+        newItem.noticeWeek = "07"
+        newItem.noticeYear = "2015"
+        
+        var circleSize: CGSize = .zero
+        var imageSize: CGSize = .zero
+        
+        for i in 1...18 {
+            let images = newItem.mapImage(marker: false, zoomLevel: i, tileBounds3857: MapBoundingBox(swCorner: (x:-10, y:-10), neCorner: (x: 10, y:10)), context: nil)
+            XCTAssertNotNil(images)
+            XCTAssertEqual(images.count, 1)
+            XCTAssertGreaterThan(images[0].size.height, circleSize.height)
+            XCTAssertGreaterThan(images[0].size.width, circleSize.width)
+            circleSize = images[0].size
+            XCTAssertGreaterThan(images[0].size.height, imageSize.height)
+            XCTAssertGreaterThan(images[0].size.width, imageSize.width)
+            imageSize = images[0].size
+        }
+    }
 }

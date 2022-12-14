@@ -323,4 +323,63 @@ final class ModuDataTests: XCTestCase {
         UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60) + (60 * 10), forKey: "\(Modu.key)LastSyncTime")
         XCTAssertFalse(Modu.shouldSync())
     }
+    
+    func testDescription() {
+        let newItem = Modu(context: persistentStore.viewContext)
+        newItem.name = "name"
+        newItem.date = Date()
+        newItem.rigStatus = "Inactive"
+        newItem.specialStatus = "Wide Berth Requested"
+        newItem.longitude = 1.0
+        newItem.latitude = 1.0
+        newItem.position = "1°00'00\"N \n1°00'00\"E"
+        newItem.navArea = "HYDROPAC"
+        newItem.region = 6
+        newItem.subregion = 63
+        
+        let description = "MODU\n\n" +
+        "Name: name\n" +
+        "Date: 2022-12-14\n" +
+        "Latitude: 1.0\n" +
+        "Longitude: 1.0\n" +
+        "Position: 1°00'00\"N \n" +
+        "1°00'00\"E\n" +
+        "Rig Status: Inactive\n" +
+        "Special Status: Wide Berth Requested\n" +
+        "distance: 0.0\n" +
+        "Navigation Area: HYDROPAC\n" +
+        "Region: 6\n" +
+        "Sub Region: 63\n"
+        
+        XCTAssertEqual(description, newItem.description)
+    }
+    
+    func testMapImage() {
+        let newItem = Modu(context: persistentStore.viewContext)
+        newItem.name = "name"
+        newItem.date = Date()
+        newItem.rigStatus = "Inactive"
+        newItem.specialStatus = "Wide Berth Requested"
+        newItem.longitude = 1.0
+        newItem.latitude = 1.0
+        newItem.position = "1°00'00\"N \n1°00'00\"E"
+        newItem.navArea = "HYDROPAC"
+        newItem.region = 6
+        newItem.subregion = 63
+        
+        var circleSize: CGSize = .zero
+        var imageSize: CGSize = .zero
+        
+        for i in 1...18 {
+            let images = newItem.mapImage(marker: false, zoomLevel: i, tileBounds3857: MapBoundingBox(swCorner: (x:-10, y:-10), neCorner: (x: 10, y:10)), context: nil)
+            XCTAssertNotNil(images)
+            XCTAssertEqual(images.count, 2)
+            XCTAssertGreaterThan(images[0].size.height, circleSize.height)
+            XCTAssertGreaterThan(images[0].size.width, circleSize.width)
+            circleSize = images[0].size
+            XCTAssertGreaterThan(images[0].size.height, imageSize.height)
+            XCTAssertGreaterThan(images[0].size.width, imageSize.width)
+            imageSize = images[0].size
+        }
+    }
 }

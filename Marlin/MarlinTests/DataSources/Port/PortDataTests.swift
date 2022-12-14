@@ -912,4 +912,34 @@ final class PortDataTests: XCTestCase {
         XCTAssertFalse(Port.shouldSync())
     }
     
+    func testDescription() {
+        let newItem = Port(context: persistentStore.viewContext)
+        newItem.portNumber = 5
+        
+        let description = "Port\n\n" +
+        "World Port Index Number: 5\n"
+        
+        XCTAssertEqual(description, newItem.description)
+    }
+    
+    func testMapImage() {
+        let newItem = Port(context: persistentStore.viewContext)
+        newItem.portNumber = 5
+        
+        var circleSize: CGSize = .zero
+        var imageSize: CGSize = .zero
+        
+        for i in 1...18 {
+            let images = newItem.mapImage(marker: false, zoomLevel: i, tileBounds3857: MapBoundingBox(swCorner: (x:-10, y:-10), neCorner: (x: 10, y:10)), context: nil)
+            XCTAssertNotNil(images)
+            XCTAssertEqual(images.count, 2)
+            XCTAssertGreaterThan(images[0].size.height, circleSize.height)
+            XCTAssertGreaterThan(images[0].size.width, circleSize.width)
+            circleSize = images[0].size
+            XCTAssertGreaterThan(images[0].size.height, imageSize.height)
+            XCTAssertGreaterThan(images[0].size.width, imageSize.width)
+            imageSize = images[0].size
+        }
+    }
+    
 }

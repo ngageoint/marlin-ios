@@ -11,6 +11,8 @@ import MapKit
 @testable import Marlin
 
 class MockMapImage: MapImage, DataSource {
+    static var cacheTiles: Bool = false
+    
     static var properties: [Marlin.DataSourceProperty] = []
     
     static var defaultSort: [Marlin.DataSourceSortParameter] = []

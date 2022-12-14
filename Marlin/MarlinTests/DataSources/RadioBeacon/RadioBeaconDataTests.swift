@@ -399,4 +399,91 @@ final class RadioBeaconDataTests: XCTestCase {
         UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60 * 24 * 7) + (60 * 10), forKey: "\(RadioBeacon.key)LastSyncTime")
         XCTAssertFalse(RadioBeacon.shouldSync())
     }
+    
+    func testDescription() {
+        let newItem = RadioBeacon(context: persistentStore.viewContext)
+        newItem.volumeNumber = "PUB 110"
+        newItem.aidType = "Radiobeacons"
+        newItem.geopoliticalHeading = "GREENLAND"
+        newItem.regionHeading = nil
+        newItem.precedingNote = nil
+        newItem.featureNumber = 20
+        newItem.name = "Kulusuk"
+        newItem.position = "65°31'59.99\"N \n37°10'00\"W"
+        newItem.characteristic = "KK\n(- • -   - • - ).\n"
+        newItem.range = 50
+        newItem.sequenceText = nil
+        newItem.frequency = "283\nNON, A2A."
+        newItem.stationRemark = "Aeromarine."
+        newItem.postNote = nil
+        newItem.noticeNumber = 199706
+        newItem.removeFromList = "N"
+        newItem.deleteFlag = "N"
+        newItem.noticeWeek = "06"
+        newItem.noticeYear = "1997"
+        
+        let description = "RADIO BEACON\n\n" +
+        "aidType Radiobeacons\n" +
+        "characteristic KK\n" +
+        "(- • -   - • - ).\n\n" +
+        "deleteFlag N\n" +
+        "featureNumber 20\n" +
+        "geopoliticalHeading GREENLAND\n" +
+        "latitude 0.0\n" +
+        "longitude 0.0\n" +
+        "name Kulusuk\n" +
+        "noticeNumber 199706\n" +
+        "noticeWeek 06\n" +
+        "noticeYear 1997\n" +
+        "position 65°31'59.99\"N \n" +
+        "37°10'00\"W\n" +
+        "postNote \n" +
+        "precedingNote \n" +
+        "range 50\n" +
+        "regionHeading \n" +
+        "removeFromList N\n" +
+        "sequenceText \n" +
+        "stationRemark Aeromarine.\n" +
+        "volumeNumber PUB 110"
+        
+        XCTAssertEqual(description, newItem.description)
+    }
+    
+    func testMapImage() {
+        let newItem = RadioBeacon(context: persistentStore.viewContext)
+        newItem.volumeNumber = "PUB 110"
+        newItem.aidType = "Radiobeacons"
+        newItem.geopoliticalHeading = "GREENLAND"
+        newItem.regionHeading = nil
+        newItem.precedingNote = nil
+        newItem.featureNumber = 20
+        newItem.name = "Kulusuk"
+        newItem.position = "65°31'59.99\"N \n37°10'00\"W"
+        newItem.characteristic = "KK\n(- • -   - • - ).\n"
+        newItem.range = 50
+        newItem.sequenceText = nil
+        newItem.frequency = "283\nNON, A2A."
+        newItem.stationRemark = "Aeromarine."
+        newItem.postNote = nil
+        newItem.noticeNumber = 199706
+        newItem.removeFromList = "N"
+        newItem.deleteFlag = "N"
+        newItem.noticeWeek = "06"
+        newItem.noticeYear = "1997"
+        
+        var circleSize: CGSize = .zero
+        var imageSize: CGSize = .zero
+        
+        for i in 1...18 {
+            let images = newItem.mapImage(marker: false, zoomLevel: i, tileBounds3857: MapBoundingBox(swCorner: (x:-10, y:-10), neCorner: (x: 10, y:10)), context: nil)
+            XCTAssertNotNil(images)
+            XCTAssertEqual(images.count, 1)
+            XCTAssertGreaterThan(images[0].size.height, circleSize.height)
+            XCTAssertGreaterThan(images[0].size.width, circleSize.width)
+            circleSize = images[0].size
+            XCTAssertGreaterThan(images[0].size.height, imageSize.height)
+            XCTAssertGreaterThan(images[0].size.width, imageSize.width)
+            imageSize = images[0].size
+        }
+    }
 }

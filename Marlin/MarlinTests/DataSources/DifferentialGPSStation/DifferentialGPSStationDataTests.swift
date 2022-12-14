@@ -382,4 +382,96 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60 * 24 * 7) + (60 * 10), forKey: "\(DifferentialGPSStation.key)LastSyncTime")
         XCTAssertFalse(DifferentialGPSStation.shouldSync())
     }
+    
+    func testDescription() {
+        let newItem = DifferentialGPSStation(context: persistentStore.viewContext)
+        newItem.volumeNumber = "PUB 112"
+        newItem.aidType = "Differential GPS Stations"
+        newItem.geopoliticalHeading = "KOREA"
+        newItem.regionHeading = nil
+        newItem.precedingNote = nil
+        newItem.featureNumber = 7
+        newItem.name = "Chumunjin Dan"
+        newItem.position = "37°53'52.21\"N \n128°50'01.79\"E"
+        newItem.stationID = "T663\nR726\nR727\n"
+        newItem.range = 100
+        newItem.frequency = 295
+        newItem.transferRate = 200
+        newItem.remarks = "Message types: 3, 5, 7, 9, 16."
+        newItem.postNote = nil
+        newItem.noticeNumber = 201134
+        newItem.removeFromList = "N"
+        newItem.deleteFlag = "N"
+        newItem.noticeWeek = "34"
+        newItem.noticeYear = "2011"
+        
+        let description = "Differential GPS Station\n\n" +
+        "aidType Differential GPS Stations\n" +
+        "deleteFlag N\n" +
+        "featureNumber 7\n" +
+        "frequency 295\n" +
+        "geopoliticalHeading KOREA\n" +
+        "latitude 0.0\n" +
+        "longitude 0.0\n" +
+        "name Chumunjin Dan\n" +
+        "noticeNumber 201134\n" +
+        "noticeWeek 34\n" +
+        "noticeYear 2011\n" +
+        "position 37°53'52.21\"N \n" +
+        "128°50'01.79\"E\n" +
+        "postNote \n" +
+        "precedingNote \n" +
+        "range 100\n" +
+        "remarks Message types: 3, 5, 7, 9, 16.\n" +
+        "regionHeading \n" +
+        "removeFromList N\n" +
+        "stationID T663\n" +
+        "R726\n" +
+        "R727\n\n" +
+        
+        "transferRate 200\n" +
+        "volumeNumber PUB 112"
+        
+        print(newItem.description)
+        
+        XCTAssertEqual(description, newItem.description)
+    }
+    
+    func testMapImage() {
+        let newItem = DifferentialGPSStation(context: persistentStore.viewContext)
+        newItem.volumeNumber = "PUB 112"
+        newItem.aidType = "Differential GPS Stations"
+        newItem.geopoliticalHeading = "KOREA"
+        newItem.regionHeading = nil
+        newItem.precedingNote = nil
+        newItem.featureNumber = 7
+        newItem.name = "Chumunjin Dan"
+        newItem.position = "37°53'52.21\"N \n128°50'01.79\"E"
+        newItem.stationID = "T663\nR726\nR727\n"
+        newItem.range = 100
+        newItem.frequency = 295
+        newItem.transferRate = 200
+        newItem.remarks = "Message types: 3, 5, 7, 9, 16."
+        newItem.postNote = nil
+        newItem.noticeNumber = 201134
+        newItem.removeFromList = "N"
+        newItem.deleteFlag = "N"
+        newItem.noticeWeek = "34"
+        newItem.noticeYear = "2011"
+        
+        var circleSize: CGSize = .zero
+        var imageSize: CGSize = .zero
+        
+        for i in 1...18 {
+            let images = newItem.mapImage(marker: false, zoomLevel: i, tileBounds3857: MapBoundingBox(swCorner: (x:-10, y:-10), neCorner: (x: 10, y:10)), context: nil)
+            XCTAssertNotNil(images)
+            XCTAssertEqual(images.count, 2)
+            XCTAssertGreaterThan(images[0].size.height, circleSize.height)
+            XCTAssertGreaterThan(images[0].size.width, circleSize.width)
+            circleSize = images[0].size
+            XCTAssertGreaterThan(images[0].size.height, imageSize.height)
+            XCTAssertGreaterThan(images[0].size.width, imageSize.width)
+            imageSize = images[0].size
+        }
+    }
 }
