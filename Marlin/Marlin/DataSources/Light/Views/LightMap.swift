@@ -34,7 +34,9 @@ class LightMap<T: LightProtocol & MapImage>: FetchRequestMap<T> {
                 print("Show light ranges: \(showLightRanges)")
             })
             .sink() { [weak self] _ in
-                self?.refreshOverlay(marlinMap: marlinMap)
+                self?.imageCache.clearCache(completion: {
+                    self?.refreshOverlay(marlinMap: marlinMap)
+                })
             }
             .store(in: &cancellable)
         
@@ -44,7 +46,9 @@ class LightMap<T: LightProtocol & MapImage>: FetchRequestMap<T> {
                 print("Show light sector ranges: \(showLightSectorRanges)")
             })
             .sink() { [weak self] _ in
-                self?.refreshOverlay(marlinMap: marlinMap)
+                self?.imageCache.clearCache(completion: {
+                    self?.refreshOverlay(marlinMap: marlinMap)
+                })
             }
             .store(in: &cancellable)
         
