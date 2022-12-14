@@ -80,47 +80,55 @@ struct LocationFilter: View {
                     }
                 }
                 .padding(.leading, 4)
+                distanceFilter()
             } else if viewModel.selectedComparison == .nearMe {
                 if locationManager.lastLocation == nil {
                     Text("No current location")
                         .secondary()
+                        .padding([.leading, .top], 12)
+                } else {
+                    distanceFilter()
                 }
             }
-            HStack(alignment: .bottom) {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Distance")
+        }
+    }
+    
+    @ViewBuilder
+    func distanceFilter() -> some View {
+        HStack(alignment: .bottom) {
+            VStack(alignment: .leading, spacing: 0) {
+                Text("Distance")
+                    .overline()
+                    .padding(.leading, 8)
+                    .padding(.bottom, -16)
+                TextField("Nautical Miles", value: $viewModel.valueInt, format: .number.grouping(.never))
+                    .keyboardType(.numberPad)
+                    .underlineTextField()
+                    .onTapGesture(perform: {
+                        viewModel.startValidating = true
+                    })
+                    .focused($isInputActive)
+                    .toolbar {
+                        ToolbarItem(placement: .keyboard) {
+                            Spacer()
+                        }
+                        ToolbarItem(placement: .keyboard) {
+                            Button("Done") {
+                                isInputActive = false
+                            }
+                            .tint(Color.primaryColorVariant)
+                        }
+                    }
+                if let validationText = viewModel.validationText {
+                    Text(validationText)
                         .overline()
                         .padding(.leading, 8)
-                        .padding(.bottom, -16)
-                    TextField("Nautical Miles", value: $viewModel.valueInt, format: .number.grouping(.never))
-                        .keyboardType(.numberPad)
-                        .underlineTextField()
-                        .onTapGesture(perform: {
-                            viewModel.startValidating = true
-                        })
-                        .focused($isInputActive)
-                        .toolbar {
-                            ToolbarItem(placement: .keyboard) {
-                                Spacer()
-                            }
-                            ToolbarItem(placement: .keyboard) {
-                                Button("Done") {
-                                    isInputActive = false
-                                }
-                                .tint(Color.primaryColorVariant)
-                            }
-                        }
-                    if let validationText = viewModel.validationText {
-                        Text(validationText)
-                            .overline()
-                            .padding(.leading, 8)
-                    }
                 }
-                Text("nm")
-                    .overline()
-                    .padding(.bottom, 16)
             }
-            .padding(.leading, 4)
+            Text("nm")
+                .overline()
+                .padding(.bottom, 16)
         }
+        .padding(.leading, 4)
     }
 }

@@ -8,7 +8,6 @@
 import SwiftUI
 import Combine
 import OSLog
-import MatomoTracker
 
 @main
 struct AppLauncher {
