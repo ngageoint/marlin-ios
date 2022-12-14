@@ -18,7 +18,24 @@ struct DMSCoordinate {
 extension CLLocationCoordinate2D {
     
     func toPixel(zoomLevel: Int, tileBounds3857: MapBoundingBox, tileSize: Double) -> CGPoint {
-        let object3857Location = to3857()
+        var object3857Location = to3857()
+        
+        // TODO: this logic should be improved
+        // just check on the edges of the world presuming that no light will span 90 degrees, which none will
+        if longitude < -90 || longitude > 90 {
+            // if the x location has fallen off the left side and this tile is on the other side of the world
+            if object3857Location.x > tileBounds3857.swCorner.x && tileBounds3857.swCorner.x < 0 && object3857Location.x > 0 {
+                let newCoordinate = CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude - 360.0)
+                object3857Location = newCoordinate.to3857()
+            }
+            
+            // if the x value has fallen off the right side and this tile is on the other side of the world
+            if object3857Location.x < tileBounds3857.neCorner.x && tileBounds3857.neCorner.x > 0 && object3857Location.x < 0 {
+                let newCoordinate = CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude + 360.0)
+                object3857Location = newCoordinate.to3857()
+            }
+        }
+        
         let xPosition = (((object3857Location.x - tileBounds3857.swCorner.x) / (tileBounds3857.neCorner.x - tileBounds3857.swCorner.x)) * tileSize)
         let yPosition = tileSize - (((object3857Location.y - tileBounds3857.swCorner.y) / (tileBounds3857.neCorner.y - tileBounds3857.swCorner.y)) * tileSize)
         return CGPoint(x:xPosition, y: yPosition)
