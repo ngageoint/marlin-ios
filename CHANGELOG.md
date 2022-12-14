@@ -4,10 +4,20 @@ Changelog
 All notable changes to this project will be documented in this file.
 
 ---
+## 0.9.1
+  * Lights crossing the date line are fixed
+  * OSM layer is positioned under data layers
+  * Tiles are now cached and the cache is cleared when new data shows up and when the filter is changed
+  * Cursor color in the search field is correct
+  * Location Filter field does not allow you to input a distance if there is no location when “near me” is selected
+  
+## 0.9.0
+  * Notice to Mariners
+  
 ## 0.7.8
   * Onboarding views
   * Default filters
-    * Asam last 365 days
+  * Asam last 365 days
 
 ## 0.7.7
   * Filtering
