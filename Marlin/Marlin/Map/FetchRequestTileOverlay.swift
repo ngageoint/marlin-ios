@@ -10,6 +10,7 @@ import MapKit
 import CoreData
 import Kingfisher
 import sf_proj_ios
+import sf_ios
 
 protocol PredicateBasedTileOverlay {
     associatedtype T where T : MapImage

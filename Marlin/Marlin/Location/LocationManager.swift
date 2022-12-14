@@ -8,7 +8,7 @@
 import Foundation
 import CoreLocation
 import Combine
-import sf_ios
+import sf_proj_ios
 import geopackage_ios
 import mgrs_ios
 import ExceptionCatcher

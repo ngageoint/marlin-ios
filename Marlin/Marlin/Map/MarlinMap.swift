@@ -155,7 +155,7 @@ struct MarlinMap: UIViewRepresentable {
                 context.coordinator.osmOverlay?.canReplaceMapContent = true
             }
             mapView.removeOverlay(context.coordinator.osmOverlay!)
-            mapView.addOverlay(context.coordinator.osmOverlay!, level: .aboveRoads)
+            mapView.insertOverlay(context.coordinator.osmOverlay!, at: 0, level: .aboveRoads)
         } else if let mkmapType = MKMapType(rawValue: UInt(mapType)) {
             mapView.mapType = mkmapType
             if let osmOverlay = context.coordinator.osmOverlay {
