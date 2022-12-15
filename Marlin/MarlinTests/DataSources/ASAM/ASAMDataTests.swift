@@ -503,4 +503,21 @@ final class ASAMDataTests: XCTestCase {
         let summary = newItem.summaryView()
         XCTAssertNotNil(summary)
     }
+    
+    func testDetailView() {
+        let newItem = Asam(context: persistentStore.viewContext)
+        newItem.asamDescription = "description"
+        newItem.longitude = 1.0
+        newItem.latitude = 1.0
+        newItem.date = Date()
+        newItem.navArea = "XI"
+        newItem.reference = "2022-100"
+        newItem.subreg = "71"
+        newItem.position = "1°00'00\"N \n1°00'00\"E"
+        newItem.hostility = "Boarding"
+        newItem.victim = "Boat"
+        
+        let detail = newItem.detailView
+        XCTAssertNotNil(detail)
+    }
 }

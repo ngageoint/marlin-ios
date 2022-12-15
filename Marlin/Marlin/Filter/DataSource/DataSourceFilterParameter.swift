@@ -168,8 +168,8 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
             if let metersPoint = SFGeometryUtils.degreesToMetersWith(x: longitude, andY: latitude), let x = metersPoint.x as? Double, let y = metersPoint.y as? Double {
                 let southWest = SFGeometryUtils.metersToDegreesWith(x: x - metersDistance, andY: y - metersDistance)
                 let northEast = SFGeometryUtils.metersToDegreesWith(x: x + metersDistance, andY: y + metersDistance)
-                if let southWest = southWest, let northEast = northEast, let maxy = northEast.y, let miny = southWest.y, let maxx = southWest.x, let minx = northEast.x {
-                    return NSPredicate(format: "latitude <= %f AND latitude >= %f AND longitude <= %f AND longitude >= %f", maxy, miny, minx, maxx)
+                if let southWest = southWest, let northEast = northEast, let maxy = northEast.y, let miny = southWest.y, let minx = southWest.x, let maxx = northEast.x {
+                    return NSPredicate(format: "latitude <= %f AND latitude >= %f AND longitude <= %f AND longitude >= %f", maxy.floatValue, miny.floatValue, maxx.floatValue, minx.floatValue)
                 }
             }
         }

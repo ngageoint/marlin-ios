@@ -177,15 +177,15 @@ final class DataSourceFilterParameterTests: XCTestCase {
     func testLocationValuePredicate() {
         let p = DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "Location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)
         let predicate = p.toPredicate()
-        //Optional(latitude <= 2.016627 AND latitude >= 1.983373 AND longitude <= 3.016637 AND longitude >= 2.983363)
-        let compare = NSPredicate(format: "latitude <= %f AND latitude >= %f AND longitude <= %f AND longitude >= %f", NSDecimalNumber(2.016627), NSDecimalNumber(1.983373), NSDecimalNumber(3.016637), NSDecimalNumber(2.983363))
-        XCTAssertEqual(predicate?.predicateFormat, compare.predicateFormat)
+        let compare = NSPredicate(format: "latitude <= %f AND latitude >= %f AND longitude <= %f AND longitude >= %f", 2.016627, 1.983373, 3.016637, 2.983363)
+        XCTAssertEqual(predicate?.kifPredicateDescription, compare.kifPredicateDescription)
 
         let p2 = DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "Location", type: .location), comparison: .nearMe, valueInt: 1)
         let predicate2 = p2.toPredicate()
         XCTAssertNil(predicate2)
+
         LocationManager.shared.locationManager(CLLocationManager(), didUpdateLocations: [CLLocation(latitude: 2.0, longitude: 3.0)])
         let predicate3 = p2.toPredicate()
-        XCTAssertEqual(predicate3, compare)
+        XCTAssertEqual(predicate3?.kifPredicateDescription, compare.kifPredicateDescription)
     }
 }

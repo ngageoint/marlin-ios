@@ -63,9 +63,11 @@ class GeoPackage: NSObject {
         
         featureTiles = GPKGFeatureTiles(geoPackage: geoPackage, andFeatureDao: featureDao)
         featureTiles?.indexManager = GPKGFeatureIndexManager(geoPackage: geoPackage, andFeatureDao: featureDao)
-        featureTiles?.polygonColor = polygonColor
-        featureTiles?.polygonFillColor = polygonColor
-        featureTiles?.fillPolygon = true
+        if let polygonColor = polygonColor {
+            featureTiles?.lineColor = polygonColor
+            featureTiles?.polygonFillColor = polygonColor
+            featureTiles?.fillPolygon = true
+        }
         featureTiles?.polygonStrokeWidth = 0.3
         featureTiles?.lineStrokeWidth = 0.1
         featureTiles?.lineColor = UIColor.lightGray
@@ -82,8 +84,11 @@ class GeoPackage: NSObject {
             return nil
         }
 
-        featureTiles.polygonColor = polygonColor
-        featureTiles.polygonFillColor = polygonColor
+        if let polygonColor = polygonColor {
+            featureTiles.lineColor = polygonColor
+            featureTiles.polygonFillColor = polygonColor
+            featureTiles.fillPolygon = true
+        }
         overlay = BaseMapOverlay(featureTiles: featureTiles, fillColor: fillColor)
         overlay?.minZoom = 0
         overlay?.canReplaceMapContent = true

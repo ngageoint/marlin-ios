@@ -1,12 +1,12 @@
 PODS:
-  - Alamofire (5.6.2)
+  - Alamofire (5.6.4)
   - color-ios (1.0.0)
   - crs-ios (1.0.3)
   - gars-ios (1.1.1):
     - grid-ios (~> 1.0.3)
-  - geopackage-ios (7.3.0):
+  - geopackage-ios (7.4.0):
     - color-ios (~> 1.0.0)
-    - ogc-api-features-json-ios (~> 4.1.0)
+    - ogc-api-features-json-ios (~> 4.2.1)
     - sf-proj-ios (~> 5.1.0)
     - sf-wkb-ios (~> 4.1.0)
     - sf-wkt-ios (~> 2.1.0)
@@ -17,15 +17,15 @@ PODS:
   - KIF (3.8.7):
     - KIF/Core (= 3.8.7)
   - KIF/Core (3.8.7)
-  - Kingfisher (7.3.2)
+  - Kingfisher (7.4.1)
   - MatomoTracker (7.5.2):
     - MatomoTracker/Core (= 7.5.2)
   - MatomoTracker/Core (7.5.2)
-  - mgrs-ios (1.1.1):
+  - mgrs-ios (1.1.2):
     - grid-ios (~> 1.0.3)
-  - Nimble (10.0.0)
-  - ogc-api-features-json-ios (4.1.0):
-    - sf-geojson-ios (~> 4.1.0)
+  - Nimble (11.2.1)
+  - ogc-api-features-json-ios (4.2.1):
+    - sf-geojson-ios (~> 4.2.1)
   - OHHTTPStubs (9.1.0):
     - OHHTTPStubs/Default (= 9.1.0)
   - OHHTTPStubs/Core (9.1.0)
@@ -45,8 +45,8 @@ PODS:
     - crs-ios (~> 1.0.3)
     - proj4-ios (~> 4.9.3)
   - proj4-ios (4.9.3)
-  - Quick (5.0.1)
-  - sf-geojson-ios (4.1.0):
+  - Quick (6.1.0)
+  - sf-geojson-ios (4.2.1):
     - sf-ios (~> 4.1.0)
   - sf-ios (4.1.0)
   - sf-proj-ios (5.1.0):
@@ -97,23 +97,23 @@ SPEC REPOS:
     - tiff-ios
 
 SPEC CHECKSUMS:
-  Alamofire: d368e1ff8a298e6dde360e35a3e68e6c610e7204
+  Alamofire: 4e95d97098eacb88856099c4fc79b526a299e48c
   color-ios: de6e9f87578f3fa5b688a671d375cc799e52ca41
   crs-ios: b02a1ce24228f85cfc945507fc58b7a35b7bbb88
   gars-ios: dbca28b97624f5e199eaf5cc6011aa716e677993
-  geopackage-ios: 4f107db4241c4a6c53f6e5edbfd0e5a4e31163a9
+  geopackage-ios: a70f603c5a49165b940ab80bf2fa572faa77b7e2
   grid-ios: bc7f691652c801486e5613096abe0fd684329b9f
   KIF: 779cdbca106633b94ecee7b036537490ebdbd9de
-  Kingfisher: 0086ad83719761ba9b2cdaf6ef4d5b4878cbae23
+  Kingfisher: cd762a593a61b2fbecf7645c00f9a801a3ebfc9c
   MatomoTracker: 1d98ddc58322fd9d65e1a6886b8e41363047bd13
-  mgrs-ios: aef86a1fed090fc158f5682a9e319a276ad29b23
-  Nimble: 5316ef81a170ce87baf72dd961f22f89a602ff84
-  ogc-api-features-json-ios: c528d5dbc44d0268efe44425439734f1240b6764
+  mgrs-ios: c5184c4888a72a4e75c3959779042f960b6ae113
+  Nimble: 516ac503a0fafaa8e41dbb4a70a61be421fa893a
+  ogc-api-features-json-ios: 3671cdf6f0c0b4f55aaa44bca984177a04d06a30
   OHHTTPStubs: 90eac6d8f2c18317baeca36698523dc67c513831
   proj-ios: b9b0fced7abed627750164b140fc4629bc76ca17
   proj4-ios: fa2f3ab9ba9ba727bd10bc12aea735d0c3927ef4
-  Quick: 749aa754fd1e7d984f2000fe051e18a3a9809179
-  sf-geojson-ios: 3808a5dfb5505c30d5a9d614f42b814da638066a
+  Quick: 6676ffb409bf04abba2ff23902af2407bfc6ac90
+  sf-geojson-ios: 5bd694af38d316037d3bc3d79579a0c3abd341bd
   sf-ios: 02f985b929472e3b8a42924a5a352ee0fcf589fe
   sf-proj-ios: ae6a661e6e01ad7cb1d555110cc64d1bf8887c71
   sf-wkb-ios: 02fecc1ca79d1661bad77279c196a55f741173f6
