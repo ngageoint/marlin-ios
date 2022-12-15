@@ -89,7 +89,7 @@ struct ChartCorrectionList: View {
                         Text("Current Notice: \(currNoticeNum)")
                             .secondary()
                         Spacer()
-                        if ntm.noticeYear >= 99 || ntm.noticeYear <= Int(Calendar.current.component(.year, from: Date()) / 100) % 1000  {
+                        if (ntm.noticeYear >= 99 && ntm.noticeWeek >= 29) || ntm.noticeYear <= Int(Calendar.current.component(.year, from: Date()) / 100) % 1000  {
                             NavigationLink {
                                 NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumberString: ntm.currNoticeNum))
                             } label: {
