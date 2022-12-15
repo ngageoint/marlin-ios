@@ -13,9 +13,11 @@ struct DoubleFilter: View {
     @FocusState var isInputActive: Bool
     
     var body: some View {
-        HStack(spacing: 0) {
-            FilterPropertyName(filterViewModel: filterViewModel, viewModel: viewModel)
-            FilterComparison(dataSourcePropertyFilterViewModel: viewModel)
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                FilterPropertyName(filterViewModel: filterViewModel, viewModel: viewModel)
+                FilterComparison(dataSourcePropertyFilterViewModel: viewModel)
+            }
             VStack(alignment: .leading, spacing: 0) {
                 TextField(viewModel.dataSourceProperty.name, value: $viewModel.valueDouble, format: .number.grouping(.never))
                     .keyboardType(.decimalPad)
