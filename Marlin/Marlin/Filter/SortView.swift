@@ -111,6 +111,7 @@ struct SortView: View {
                         Text(property.name).tag(Optional(property))
                     }
                 }
+                .fixedSize()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
                 
@@ -118,10 +119,12 @@ struct SortView: View {
                     Text("Ascending").tag(true)
                     Text("Descending").tag(false)
                 }
+                .fixedSize()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
                 
                 Spacer()
+                    .background(Color.red)
                 Button {
                     viewModel.addSortProperty()
                 } label: {
