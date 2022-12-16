@@ -188,6 +188,17 @@ public class MSI {
                                             NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: dataSource))
                                             if totalCount != 0 {
                                                 NotificationCenter.default.post(name: .DataSourceUpdated, object: dataSource.key)
+                                                let center = UNUserNotificationCenter.current()
+                                                let content = UNMutableNotificationContent()
+                                                content.title = NSString.localizedUserNotificationString(forKey: "New \(dataSource.fullDataSourceName) Data", arguments: nil)
+                                                content.body = NSString.localizedUserNotificationString(forKey: "\(totalCount) new \(dataSource.fullDataSourceName) records were added or updated.", arguments: nil)
+                                                content.sound = UNNotificationSound.default
+                                                content.categoryIdentifier = "mil.nga.msi"
+                                                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2.0, repeats: false)
+                                                let request = UNNotificationRequest.init(identifier: "new\(dataSource.key)Data", content: content, trigger: trigger)
+                                                
+                                                // Schedule the notification.
+                                                center.add(request)
                                             }
                                         }
                                     }
@@ -213,6 +224,17 @@ public class MSI {
                                                                 NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: dataSource))
                                                                 if totalCount != 0 {
                                                                     NotificationCenter.default.post(name: .DataSourceUpdated, object: dataSource.key)
+                                                                    let center = UNUserNotificationCenter.current()
+                                                                    let content = UNMutableNotificationContent()
+                                                                    content.title = NSString.localizedUserNotificationString(forKey: "New \(dataSource.fullDataSourceName) Data", arguments: nil)
+                                                                    content.body = NSString.localizedUserNotificationString(forKey: "\(totalCount) new \(dataSource.fullDataSourceName) records were added or updated.", arguments: nil)
+                                                                    content.sound = UNNotificationSound.default
+                                                                    content.categoryIdentifier = "mil.nga.msi"
+                                                                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2.0, repeats: false)
+                                                                    let request = UNNotificationRequest.init(identifier: "new\(dataSource.key)Data", content: content, trigger: trigger)
+                                                                    
+                                                                    // Schedule the notification.
+                                                                    center.add(request)
                                                                 }
                                                             }
                                                         }
