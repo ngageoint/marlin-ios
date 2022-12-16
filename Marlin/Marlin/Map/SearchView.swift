@@ -87,6 +87,14 @@ struct SearchView: View {
                                             Text("\(searchResult.placemark.title ?? "")")
                                                 .secondary()
                                             Text("\(searchResult.placemark.location?.coordinate.latitude ?? 0.0),\(searchResult.placemark.location?.coordinate.longitude ?? 0.0)")
+                                                .onTapGesture {
+                                                    UIPasteboard.general.string = "\(searchResult.placemark.location?.coordinate.latitude ?? 0.0),\(searchResult.placemark.location?.coordinate.longitude ?? 0.0)"
+                                                    NotificationCenter.default.post(
+                                                        name: .SnackbarNotification,
+                                                        object: SnackbarNotification(
+                                                            snackbarModel: SnackbarModel(message: "Location \(searchResult.placemark.location?.coordinate.latitude ?? 0.0),\(searchResult.placemark.location?.coordinate.longitude ?? 0.0) copied to clipboard"))
+                                                    )
+                                                }
                                         }
                                         Spacer()
                                         Button(action: {
