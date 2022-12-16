@@ -110,10 +110,30 @@ struct NavigationalWarningNavAreaListView: View {
                         if unreadCount != 0 {
                             Text("\(unreadCount) Unread Warnings")
                                 .modifier(UnreadModifier())
+                                .onTapGesture {
+                                    DispatchQueue.main.async {
+                                        withAnimation(Animation.easeInOut(duration: 1).delay(1)) {
+                                            if let firstId = dataSource.items.first?.id {
+                                                scrollingTo = firstId
+                                                proxy.scrollTo(firstId)
+                                            }
+                                        }
+                                    }
+                                }
                         }
                     } else {
                         Text("\(dataSource.items.count) Unread Warnings")
                             .modifier(UnreadModifier())
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation(Animation.easeInOut(duration: 1).delay(1)) {
+                                        if let firstId = dataSource.items.first?.id {
+                                            scrollingTo = firstId
+                                            proxy.scrollTo(firstId)
+                                        }
+                                    }
+                                }
+                            }
                     }
                 }
             }
