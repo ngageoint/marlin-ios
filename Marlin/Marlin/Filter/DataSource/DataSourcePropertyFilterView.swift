@@ -25,7 +25,7 @@ struct DataSourcePropertyFilterView: View {
     }
     
     var body: some View {
-        HStack {
+        HStack (alignment: viewModel.dataSourceProperty.type == .location ? .bottom : .center) {
             switch viewModel.dataSourceProperty.type {
             case .double, .float:
                 DoubleFilter(filterViewModel: filterViewModel, viewModel: viewModel)
@@ -52,6 +52,7 @@ struct DataSourcePropertyFilterView: View {
                     .tint(Color.green)
             }
             .disabled(!viewModel.isValid)
+            .padding(.bottom, viewModel.dataSourceProperty.type == .location ? 12 : 0)
         }
     }
 }

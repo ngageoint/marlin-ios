@@ -19,7 +19,7 @@ enum DataSourceFilterComparison: String, CaseIterable, Identifiable, Codable {
     case startsWith = "starts with"
     case endsWith = "ends with"
     case window = "within"
-    case closeTo = "close to"
+    case closeTo = "near"
     case nearMe = "near me"
     var id: String { rawValue }
     

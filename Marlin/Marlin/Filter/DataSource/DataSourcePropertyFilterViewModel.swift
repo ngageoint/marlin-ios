@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import MapKit
 
 class DataSourcePropertyFilterViewModel: ObservableObject {
     @ObservedObject var locationManager: LocationManager = LocationManager.shared
@@ -34,9 +35,59 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
     @Published var valueDouble: Double? = nil
     var valueLatitude: Double? = nil// = 0.0
     var valueLongitude: Double? = nil// = 0.0
-    @Published var valueLongitudeString: String = ""
-    @Published var valueLatitudeString: String = ""
+    @Published var valueLongitudeString: String = "" {
+        didSet {
+            if let parsed = Double(coordinateString: valueLongitudeString) {
+                valueLongitude = parsed
+            }
+        }
+    }
+    @Published var valueLatitudeString: String = "" {
+        didSet {
+            if let parsed = Double(coordinateString: valueLatitudeString) {
+                valueLatitude = parsed
+            }
+        }
+    }
     @Published var windowUnits: DataSourceWindowUnits = .last30Days
+    
+    private var latitudeDelta: Double = 0.5
+    private var longitudeDelta: Double = 0.5
+        
+    var region: MKCoordinateRegion {
+        get {
+            MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: valueLatitude ?? 0.0, longitude: valueLongitude ?? 0.0), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+        }
+        set {
+            DispatchQueue.main.async {
+                self.valueLongitudeString = "\(newValue.center.longitude)"
+                self.valueLatitudeString = "\(newValue.center.latitude)"
+                self.longitudeDelta = newValue.span.longitudeDelta
+                self.latitudeDelta = newValue.span.latitudeDelta
+            }
+        }
+    }
+    
+    private var _currentRegion: MKCoordinateRegion?
+    var currentRegion: MKCoordinateRegion {
+        get {
+            MKCoordinateRegion(center: locationManager.lastLocation?.coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+        }
+        set {
+            _currentRegion = newValue
+        }
+    }
+
+    private var _readableRegion: MKCoordinateRegion?
+    var readableRegion: MKCoordinateRegion {
+        get {
+            MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: valueLatitude ?? 0.0, longitude: valueLongitude ?? 0.0), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+        }
+        set {
+            _readableRegion = newValue
+        }
+    }
+    
     var validationText: String? {
         if !startValidating {
             return nil
