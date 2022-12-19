@@ -39,8 +39,7 @@ extension Light: DataSource {
         DataSourceProperty(name: "Structure", key: #keyPath(Light.structure), type: .string),
         DataSourceProperty(name: "Focal Plane Elevation (ft)", key: #keyPath(Light.heightFeet), type: .double),
         DataSourceProperty(name: "Focal Plane Elevation (m)", key: #keyPath(Light.heightMeters), type: .double),
-        // this should be a double
-        DataSourceProperty(name: "Range (nm)", key: #keyPath(Light.range), type: .string),
+        DataSourceProperty(name: "Range (nm)", key: #keyPath(Light.lightRange), type: .double, subEntityKey: #keyPath(LightRange.range)),
         DataSourceProperty(name: "Remarks", key: #keyPath(Light.remarks), type: .string),
         DataSourceProperty(name: "Characteristic", key: #keyPath(Light.characteristic), type: .string),
         DataSourceProperty(name: "Signal", key: #keyPath(Light.characteristic), type: .string),

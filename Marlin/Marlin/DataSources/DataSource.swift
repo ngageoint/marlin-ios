@@ -100,11 +100,13 @@ struct DataSourceProperty: Hashable, Identifiable, Codable {
     let type: DataSourcePropertyType
     let enumerationValues: [String: [String]]?
     let requiredInFilter: Bool
+    let subEntityKey: String?
     
-    init(name: String, key: String, type: DataSourcePropertyType, enumerationValues: [String: [String]]? = nil, requiredInFilter: Bool = false) {
+    init(name: String, key: String, type: DataSourcePropertyType, subEntityKey: String? = nil, enumerationValues: [String: [String]]? = nil, requiredInFilter: Bool = false) {
         self.name = name
         self.key = key
         self.type = type
+        self.subEntityKey = subEntityKey
         self.enumerationValues = enumerationValues
         self.requiredInFilter = requiredInFilter
     }

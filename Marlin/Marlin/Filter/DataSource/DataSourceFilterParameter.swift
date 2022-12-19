@@ -87,6 +87,11 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
     }
     
     func toPredicate() -> NSPredicate? {
+        var propertyAndComparison: String = "\(property.key) \(comparison.coreDataComparison())"
+        if let subEntityKey = property.subEntityKey {
+            propertyAndComparison = "ANY \(property.key).\(subEntityKey) \(comparison.coreDataComparison())"
+        }
+        
         if property.type == .string, let value = valueString {
             return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %@", value)
         } else if property.type == .date {
@@ -99,7 +104,7 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
                     // Get today's beginning & end
                     let start = calendar.startOfDay(for: Date())
                     if let dateFrom = calendar.date(byAdding: .day, value: -value.numberOfDays(), to: start) {
-                        return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %@", dateFrom as NSDate)
+                        return NSPredicate(format: "\(propertyAndComparison) %@", dateFrom as NSDate)
                     }
                 }
             } else if let value = valueDate {
@@ -119,29 +124,29 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
                     let toPredicate = NSPredicate(format: "\(property.key) < %@", dateTo as NSDate)
                     return NSCompoundPredicate(andPredicateWithSubpredicates: [fromPredicate, toPredicate])
                 } else {
-                    return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %@", dateFrom as NSDate)
+                    return NSPredicate(format: "\(propertyAndComparison) %@", dateFrom as NSDate)
                 }
             }
         } else if property.type == .int, let value = valueInt {
-            return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %d", value)
+            return NSPredicate(format: "\(propertyAndComparison) %d", value)
         } else if property.type == .boolean, let value = valueInt {
-            return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %d", value)
+            return NSPredicate(format: "\(propertyAndComparison) %d", value)
         } else if (property.type == .float || property.type == .double), let value = valueDouble {
-            return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %f", value)
+            return NSPredicate(format: "\(propertyAndComparison) %f", value)
         } else if (property.type == .latitude), let value = valueLatitude {
-            return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %f", value)
+            return NSPredicate(format: "\(propertyAndComparison) %f", value)
         } else if (property.type == .longitude), let value = valueLongitude {
-            return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %f", value)
+            return NSPredicate(format: "\(propertyAndComparison) %f", value)
         } else if property.type == .enumeration, let value = valueString {
             if let queryValues = property.enumerationValues?[value], !queryValues.isEmpty {
                 var valuePredicates: [NSPredicate] = []
                 for queryValue in queryValues {
-                    valuePredicates.append(NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %@", queryValue))
+                    valuePredicates.append(NSPredicate(format: "\(propertyAndComparison) %@", queryValue))
                 }
                 return NSCompoundPredicate(orPredicateWithSubpredicates: valuePredicates)
             }
             
-            return NSPredicate(format: "\(property.key) \(comparison.coreDataComparison()) %@", value)
+            return NSPredicate(format: "\(propertyAndComparison) %@", value)
         } else if property.type == .location {
             var centralLongitude: Double?
             var centralLatitude: Double?
