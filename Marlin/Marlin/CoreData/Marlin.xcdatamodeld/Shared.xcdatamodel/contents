@@ -143,10 +143,12 @@
         <attribute name="regionHeading" optional="YES" attributeType="String"/>
         <attribute name="remarks" optional="YES" attributeType="String"/>
         <attribute name="removeFromList" optional="YES" attributeType="String"/>
+        <attribute name="requiresPostProcessing" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="sectionHeader" optional="YES" attributeType="String"/>
         <attribute name="structure" optional="YES" attributeType="String"/>
         <attribute name="subregionHeading" optional="YES" attributeType="String"/>
         <attribute name="volumeNumber" optional="YES" attributeType="String"/>
+        <relationship name="lightRange" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LightRange" inverseName="light" inverseEntity="LightRange"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="featureNumber"/>
@@ -154,6 +156,11 @@
                 <constraint value="characteristicNumber"/>
             </uniquenessConstraint>
         </uniquenessConstraints>
+    </entity>
+    <entity name="LightRange" representedClassName=".LightRange" syncable="YES" codeGenerationType="category">
+        <attribute name="color" optional="YES" attributeType="String"/>
+        <attribute name="range" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="light" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Light" inverseName="lightRange" inverseEntity="Light"/>
     </entity>
     <entity name="Modu" representedClassName=".Modu" syncable="YES" codeGenerationType="category">
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>

@@ -9,10 +9,13 @@ import Foundation
 import Alamofire
 import OSLog
 import CoreData
+import Combine
 
 public class MSI {
     
     let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "persistence")
+    
+    var cancellable = Set<AnyCancellable>()
     
     static let shared = MSI()
     let appState = AppState()
@@ -29,6 +32,21 @@ public class MSI {
     
     let masterDataList: [any BatchImportable.Type] = [Asam.self, Modu.self, NavigationalWarning.self, Light.self, Port.self, RadioBeacon.self, DifferentialGPSStation.self, DFRS.self, DFRSArea.self, ElectronicPublication.self, NoticeToMariners.self]
     
+    init() {
+        NotificationCenter.default.publisher(for: .DataSourceUpdated)
+            .receive(on: RunLoop.main)
+            .compactMap {
+                $0.object as? String
+            }
+            .sink { item in
+                let dataSource = self.masterDataList.first { type in
+                    item == type.key
+                }
+                
+                dataSource?.postProcess()
+            }
+            .store(in: &cancellable)
+    }
     
     func loadAllData() {
         NSLog("Load all data")

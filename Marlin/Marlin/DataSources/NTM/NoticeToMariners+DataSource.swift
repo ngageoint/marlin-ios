@@ -36,6 +36,7 @@ extension NoticeToMariners: DataSource {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         return dateFormatter
     }
+    static func postProcess() {}
 }
 
 extension NoticeToMariners: BatchImportable {

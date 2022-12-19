@@ -39,6 +39,8 @@ extension ElectronicPublication: DataSource {
         DataSourceProperty(name: "Type", key: #keyPath(ElectronicPublication.pubTypeId), type: .enumeration, enumerationValues: PublicationTypeEnum.keyValueMap),
         DataSourceProperty(name: "Display Name", key: #keyPath(ElectronicPublication.pubDownloadDisplayName), type: .string)
     ]
+    
+    static func postProcess() {}
 }
 
 extension ElectronicPublication: BatchImportable {

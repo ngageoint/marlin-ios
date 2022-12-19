@@ -43,6 +43,9 @@ struct ChartCorrection: Decodable, Hashable, Identifiable, DataSource {
     static var imageScale: CGFloat = 1.0
     static var dateFormatter: DateFormatter = DateFormatter()
     
+    static func postProcess() {
+    }
+    
     var id: Date { date }
     static func == (lhs: ChartCorrection, rhs: ChartCorrection) -> Bool {
         return lhs.date == rhs.date

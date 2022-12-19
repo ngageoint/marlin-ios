@@ -14,6 +14,8 @@ extension Port: DataSource {
         return Port.color
     }
     
+    static func postProcess() {}
+    
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("Ports", comment: "Port data source display name")
     static var fullDataSourceName: String = NSLocalizedString("World Ports", comment: "Port data source display name")

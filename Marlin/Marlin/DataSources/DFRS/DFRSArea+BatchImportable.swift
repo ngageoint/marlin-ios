@@ -30,6 +30,9 @@ extension DFRSArea: BatchImportable {
         // sync once every week
         return UserDefaults.standard.bool(forKey: "\(DFRSArea.key)DataSourceEnabled") && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.double(forKey: "\(DFRSArea.key)LastSyncTime")
     }
+    
+    static func postProcess() {
+    }
 }
 
 class DFRSArea: NSManagedObject {

@@ -52,6 +52,8 @@ extension DifferentialGPSStation: DataSource {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter
     }
+    
+    static func postProcess() {}
 }
 
 extension DifferentialGPSStation: BatchImportable {

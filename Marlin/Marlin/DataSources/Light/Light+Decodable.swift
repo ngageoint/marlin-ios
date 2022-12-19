@@ -78,6 +78,7 @@ struct LightsProperties: Decodable {
     let latitude: Double
     let longitude: Double
     let mgrs10km: String?
+    let requiresPostProcessing: Bool?
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -126,6 +127,16 @@ struct LightsProperties: Decodable {
         self.postNote = try? values.decode(String.self, forKey: .postNote)
         self.precedingNote = try? values.decode(String.self, forKey: .precedingNote)
         self.range = try? values.decode(String.self, forKey: .range)
+        if let range = self.range {
+            if Double(range) != nil {
+                self.requiresPostProcessing = false
+            } else {
+                self.requiresPostProcessing = true
+            }
+        } else {
+            self.requiresPostProcessing = false
+        }
+        // TODO: should post process characterstic (colors) and remarks (sectors)
         if var rawRegionHeading = try? values.decode(String.self, forKey: .regionHeading) {
             if rawRegionHeading.last == ":" {
                 rawRegionHeading.removeLast()
@@ -236,7 +247,8 @@ struct LightsProperties: Decodable {
             "subregionHeading": subregionHeading,
             "volumeNumber": volumeNumber,
             "latitude": latitude,
-            "longitude": longitude
+            "longitude": longitude,
+            "requiresPostProcessing": requiresPostProcessing
         ]
     }
 }

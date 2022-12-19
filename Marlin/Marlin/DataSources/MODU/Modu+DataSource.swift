@@ -41,6 +41,8 @@ extension Modu: DataSource {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter
     }
+
+    static func postProcess() {}
 }
 
 extension Modu: BatchImportable {

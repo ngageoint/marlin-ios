@@ -29,6 +29,7 @@ protocol BatchImportable: NSManagedObject, Identifiable {
     static var decodableRoot: Decodable.Type { get }
     static func shouldSync() -> Bool
     static func getRequeryRequest(initialRequest: URLRequestConvertible) -> URLRequestConvertible?
+    static func postProcess()
 }
 
 extension BatchImportable {

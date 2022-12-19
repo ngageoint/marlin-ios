@@ -41,6 +41,41 @@ class Light: NSManagedObject, LightProtocol {
     static let violetLight = UIColor(argbValue: 0xffaf52de)
     static let orangeLight = UIColor(argbValue: 0xffff9500)
     static let raconColor = UIColor(argbValue: 0xffb52bb5)
+    
+    static func postProcess() {
+        DispatchQueue.global(qos: .background).async {
+            let fetchRequest = NSFetchRequest<Light>(entityName: "Light")
+            fetchRequest.predicate = NSPredicate(format: "requiresPostProcessing == true")
+            let context = PersistenceController.current.newTaskContext()
+            
+            if let objects = try? context.fetch(fetchRequest) {
+//                print("xxx post process \(objects.count) lights")
+                context.perform {
+                    
+                    for light in objects {
+                        var ranges: [LightRange] = []
+//                        print("\(light.volumeNumber) - \(light.featureNumber) range is: \(light.range)")
+                        light.requiresPostProcessing = false
+                        if let rangeString = light.range {
+                            for rangeSplit in rangeString.components(separatedBy: CharacterSet(charactersIn: ";\n")) {
+                                let colorSplit = rangeSplit.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: ". ")
+                                if colorSplit.count == 2, let doubleRange = Double(colorSplit[1]) {
+                                    let lightRange = LightRange(context: context)
+                                    lightRange.light = light
+                                    lightRange.color = colorSplit[0]
+                                    lightRange.range = doubleRange
+                                    ranges.append(lightRange)
+                                    
+                                }
+                            }
+                        }
+                        light.lightRange = NSSet(array: ranges)
+                    }
+                    try? context.save()
+                }
+            }
+        }
+    }
 
     var color: UIColor {
         return Light.color
