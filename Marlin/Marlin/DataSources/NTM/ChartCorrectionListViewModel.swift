@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import sf_ios
+import sf_proj_ios
 import Alamofire
 
 class ChartCorrectionListViewModel: NSObject, ObservableObject {

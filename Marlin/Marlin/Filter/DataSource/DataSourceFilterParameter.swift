@@ -8,7 +8,7 @@
 import Foundation
 import CoreLocation
 import mgrs_ios
-import sf_ios
+import sf_proj_ios
 
 struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
     static func == (lhs: DataSourceFilterParameter, rhs: DataSourceFilterParameter) -> Bool {
