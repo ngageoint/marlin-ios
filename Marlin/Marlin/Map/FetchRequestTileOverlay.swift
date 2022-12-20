@@ -60,8 +60,8 @@ class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverl
             case .success(let value):
                 result(value.image.pngData(), nil)
                 
-            case .failure(let error):
-                print(error)
+            case .failure(_):
+                break
             }
         }
     }
