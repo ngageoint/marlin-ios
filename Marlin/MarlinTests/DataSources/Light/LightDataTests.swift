@@ -360,8 +360,10 @@ final class LightDataTests: XCTestCase {
             XCTAssertEqual(count, 1)
             return true
         }
-        
-        MSI.shared.loadInitialData(type: Light.decodableRoot, dataType: Light.self)
+        let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
+        queue.async( execute:{
+            MSI.shared.loadInitialData(type: Light.decodableRoot, dataType: Light.self)
+        })
         
         waitForExpectations(timeout: 10, handler: nil)
     }
@@ -544,6 +546,95 @@ final class LightDataTests: XCTestCase {
         MSI.shared.loadInitialData(type: Light.decodableRoot, dataType: Light.self)
         
         waitForExpectations(timeout: 10, handler: nil)
+    }
+    
+    func testPostProcess() throws {
+        for seedDataFile in Light.seedDataFiles ?? [] {
+            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
+                let jsonObject = [
+                    "ngalol": [
+                        [
+                            "volumeNumber": "PUB 110",
+                            "aidType": "Lighted Aids",
+                            "geopoliticalHeading": "GREENLAND",
+                            "regionHeading": "ANGMAGSSALIK:",
+                            "subregionHeading": nil,
+                            "localHeading": nil,
+                            "precedingNote": nil,
+                            "featureNumber": "1",
+                            "name": "-Outer.",
+                            "position": "65°35'32.1\"N \n37°34'08.9\"W",
+                            "charNo": 1,
+                            "characteristic": "Fl.W.\nperiod 5s \nfl. 1.0s, ec. 4.0s \n",
+                            "heightFeetMeters": "36\n11",
+                            "range": "W. 14 ; R. 11 ; G. 11",
+                            "structure": "Yellow pedestal, red band; 7.\n",
+                            "remarks": nil,
+                            "postNote": nil,
+                            "noticeNumber": 201507,
+                            "removeFromList": "N",
+                            "deleteFlag": "Y",
+                            "noticeWeek": "07",
+                            "noticeYear": "2015"
+                        ]
+                    ]
+                ]
+                return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
+            }
+        }
+        
+        expectation(forNotification: .DataSourceLoading,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[Light.key] {
+                XCTAssertTrue(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .DataSourceLoaded,
+                    object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[Light.key] {
+                XCTAssertFalse(loading)
+            } else {
+                XCTFail("Loading is not set")
+            }
+            return true
+        }
+        
+        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+            let count = try? self.persistentStore.countOfObjects(Light.self)
+            XCTAssertEqual(count, 1)
+            return true
+        }
+        let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
+        queue.async( execute:{
+            MSI.shared.loadInitialData(type: Light.decodableRoot, dataType: Light.self)
+        })
+        
+        waitForExpectations(timeout: 10, handler: nil)
+        
+        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+            let count = try? self.persistentStore.countOfObjects(Light.self)
+            XCTAssertEqual(count, 1)
+            return true
+        }
+        waitForExpectations(timeout: 10, handler: nil)
+        let light = try? self.persistentStore.fetchFirst(Light.self, sortBy: [Light.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(value: true))
+        let lightRanges = try XCTUnwrap(try XCTUnwrap(light?.lightRange).allObjects as? [LightRange])
+        XCTAssertEqual(lightRanges.count, 3)
+        for range in lightRanges {
+            XCTAssertTrue(range.color == "W" || range.color == "R" || range.color == "G")
+            if range.color == "W" {
+                XCTAssertEqual(range.range, 14)
+            } else if range.color == "R" {
+                XCTAssertEqual(range.range, 11)
+            } else if range.color == "G" {
+                XCTAssertEqual(range.range, 11)
+            }
+            
+        }
     }
     
     func testDataRequest() {

@@ -50,26 +50,28 @@ class Light: NSManagedObject, LightProtocol {
             let context = PersistenceController.current.newTaskContext()
             
             if let objects = try? context.fetch(fetchRequest) {
-                context.performAndWait {
-                    for light in objects {
-                        var ranges: [LightRange] = []
-                        light.requiresPostProcessing = false
-                        if let rangeString = light.range {
-                            for rangeSplit in rangeString.components(separatedBy: CharacterSet(charactersIn: ";\n")) {
-                                let colorSplit = rangeSplit.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: ". ")
-                                if colorSplit.count == 2, let doubleRange = Double(colorSplit[1]) {
-                                    let lightRange = LightRange(context: context)
-                                    lightRange.light = light
-                                    lightRange.color = colorSplit[0]
-                                    lightRange.range = doubleRange
-                                    ranges.append(lightRange)
-                                    
+                if !objects.isEmpty {
+                    context.performAndWait {
+                        for light in objects {
+                            var ranges: [LightRange] = []
+                            light.requiresPostProcessing = false
+                            if let rangeString = light.range {
+                                for rangeSplit in rangeString.components(separatedBy: CharacterSet(charactersIn: ";\n")) {
+                                    let colorSplit = rangeSplit.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: ". ")
+                                    if colorSplit.count == 2, let doubleRange = Double(colorSplit[1]) {
+                                        let lightRange = LightRange(context: context)
+                                        lightRange.light = light
+                                        lightRange.color = colorSplit[0]
+                                        lightRange.range = doubleRange
+                                        ranges.append(lightRange)
+                                        
+                                    }
                                 }
                             }
+                            light.lightRange = NSSet(array: ranges)
                         }
-                        light.lightRange = NSSet(array: ranges)
+                        try? context.save()
                     }
-                    try? context.save()
                 }
             }
         }

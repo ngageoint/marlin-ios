@@ -436,7 +436,7 @@ final class ASAMDataTests: XCTestCase {
         newItem.asamDescription = "description"
         newItem.longitude = 1.0
         newItem.latitude = 1.0
-        newItem.date = Date()
+        newItem.date = Date(timeIntervalSince1970: 0)
         newItem.navArea = "XI"
         newItem.reference = "2022-100"
         newItem.subreg = "71"
@@ -446,7 +446,7 @@ final class ASAMDataTests: XCTestCase {
         
         let description = "ASAM\n\n" +
             "Reference: 2022-100\n" +
-            "Date: 2022-12-14\n" +
+            "Date: 1969-12-31\n" +
             "Latitude: 1.0\n" +
             "Longitude: 1.0\n" +
             "Navigation Area: XI\n" +

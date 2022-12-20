@@ -327,7 +327,7 @@ final class ModuDataTests: XCTestCase {
     func testDescription() {
         let newItem = Modu(context: persistentStore.viewContext)
         newItem.name = "name"
-        newItem.date = Date()
+        newItem.date = Date(timeIntervalSince1970: 0)
         newItem.rigStatus = "Inactive"
         newItem.specialStatus = "Wide Berth Requested"
         newItem.longitude = 1.0
@@ -339,7 +339,7 @@ final class ModuDataTests: XCTestCase {
         
         let description = "MODU\n\n" +
         "Name: name\n" +
-        "Date: 2022-12-14\n" +
+        "Date: 1969-12-31\n" +
         "Latitude: 1.0\n" +
         "Longitude: 1.0\n" +
         "Position: 1°00'00\"N \n" +
