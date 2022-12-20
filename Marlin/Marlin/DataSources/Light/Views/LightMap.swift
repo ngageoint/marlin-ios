@@ -29,6 +29,7 @@ class LightMap<T: LightProtocol & MapImage>: FetchRequestMap<T> {
         super.setupMixin(marlinMap: marlinMap, mapView: mapView)
         
         userDefaultsShowLightRangesPublisher?
+            .dropFirst()
             .removeDuplicates()
             .handleEvents(receiveOutput: { showLightRanges in
                 print("Show light ranges: \(showLightRanges)")
@@ -42,6 +43,7 @@ class LightMap<T: LightProtocol & MapImage>: FetchRequestMap<T> {
         
         userDefaultsShowLightSectorRangesPublisher?
             .removeDuplicates()
+            .dropFirst()
             .handleEvents(receiveOutput: { showLightSectorRanges in
                 print("Show light sector ranges: \(showLightSectorRanges)")
             })

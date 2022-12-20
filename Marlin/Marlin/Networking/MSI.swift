@@ -51,16 +51,12 @@ public class MSI {
     func loadAllData() {
         NSLog("Load all data")
 
-        var initialDataLoadList: [any BatchImportable.Type] = []
-        // if we think we need to load the initial data
-//        if !UserDefaults.standard.initialDataLoaded {
-            initialDataLoadList = masterDataList.filter { importable in
-                if let ds = importable as? any DataSource.Type {
-                    return UserDefaults.standard.dataSourceEnabled(ds) && !isLoaded(type: importable) && !(importable.seedDataFiles ?? []).isEmpty
-                }
-                return false
+        var initialDataLoadList: [any BatchImportable.Type] = masterDataList.filter { importable in
+            if let ds = importable as? any DataSource.Type {
+                return UserDefaults.standard.dataSourceEnabled(ds) && !isLoaded(type: importable) && !(importable.seedDataFiles ?? []).isEmpty
             }
-//        }
+            return false
+        }
 
         if !initialDataLoadList.isEmpty {
             NSLog("Loading initial data from \(initialDataLoadList.count) data sources")

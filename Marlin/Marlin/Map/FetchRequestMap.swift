@@ -34,7 +34,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         self.showAsTiles = showAsTiles
         self.fetchPredicate = fetchPredicate
         self.objects = objects
-        imageCache = Kingfisher.ImageCache(name: T.key)
+        imageCache = T.imageCache
     }
     
     func getFetchRequest(mapState: MapState) -> NSFetchRequest<NSManagedObject>? {

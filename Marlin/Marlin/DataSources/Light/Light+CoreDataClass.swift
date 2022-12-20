@@ -10,6 +10,7 @@ import CoreData
 import MapKit
 import OSLog
 import SwiftUI
+import Kingfisher
 
 struct LightVolume {
     var volumeQuery: String
@@ -43,18 +44,15 @@ class Light: NSManagedObject, LightProtocol {
     static let raconColor = UIColor(argbValue: 0xffb52bb5)
     
     static func postProcess() {
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .utility).async {
             let fetchRequest = NSFetchRequest<Light>(entityName: "Light")
             fetchRequest.predicate = NSPredicate(format: "requiresPostProcessing == true")
             let context = PersistenceController.current.newTaskContext()
             
             if let objects = try? context.fetch(fetchRequest) {
-//                print("xxx post process \(objects.count) lights")
-                context.perform {
-                    
+                context.performAndWait {
                     for light in objects {
                         var ranges: [LightRange] = []
-//                        print("\(light.volumeNumber) - \(light.featureNumber) range is: \(light.range)")
                         light.requiresPostProcessing = false
                         if let rangeString = light.range {
                             for rangeSplit in rangeString.components(separatedBy: CharacterSet(charactersIn: ";\n")) {

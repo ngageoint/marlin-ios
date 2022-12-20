@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import MapKit
+import Kingfisher
 
 protocol MapImage {
     func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext?) -> [UIImage]
@@ -17,9 +18,14 @@ protocol MapImage {
     var TILE_SIZE: Double { get }
     static var key: String { get }
     static var cacheTiles: Bool { get }
+    static var imageCache: Kingfisher.ImageCache { get }
 }
 
 extension MapImage {
+    static var imageCache: Kingfisher.ImageCache {
+        Kingfisher.ImageCache(name: key)
+    }
+
     var TILE_SIZE: Double {
         return 512.0
     }
@@ -41,10 +47,7 @@ extension MapImage {
                     circle.stroke()
                     dataSource.color.setFill()
                     circle.fill()
-                    if let cachedImage = type(of:dataSource).cachedImage(zoomLevel: zoomLevel) {
-                        cachedImage.draw(at: CGPoint(x: pixel.x - cachedImage.size.width / 2.0, y: pixel.y - cachedImage.size.height / 2.0))
-                    } else if let dataSourceImage = type(of:dataSource).image?.aspectResize(to: CGSize(width: radius * 2.0 / 1.5, height: radius * 2.0 / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
-                        type(of:dataSource).cacheImage(zoomLevel: zoomLevel, image: dataSourceImage)
+                    if let dataSourceImage = type(of:dataSource).image?.aspectResize(to: CGSize(width: radius * 2.0 / 1.5, height: radius * 2.0 / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
                         dataSourceImage.draw(at: CGPoint(x: pixel.x - dataSourceImage.size.width / 2.0, y: pixel.y - dataSourceImage.size.height / 2.0))
                     }
                 } else {
