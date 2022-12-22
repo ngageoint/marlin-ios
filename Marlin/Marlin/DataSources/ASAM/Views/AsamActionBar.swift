@@ -35,6 +35,7 @@ struct AsamActionBar: View {
                     Text(coordinateButtonTitle)
                         .foregroundColor(Color.primaryColorVariant)
                 }
+                .accessibilityLabel("Location")
             }
             
             Spacer()
