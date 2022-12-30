@@ -13,19 +13,18 @@ import UIKit
 class TestHelpers {
     
     public static func getKeyWindowVisible() -> UIWindow {
-        var window: UIWindow;
-        if (UIApplication.shared.windows.count == 0) {
-            window = UIWindow(frame: UIScreen.main.bounds)
-        } else {
-            NSLog("There are \(UIApplication.shared.windows.count) windows");
-            if (UIApplication.shared.windows.count != 1) {
-                NSLog("Windows are \(UIApplication.shared.windows)")
-            }
-            window = UIApplication.shared.windows[0];
+        guard let window = UIApplication.shared.connectedScenes.map({ $0 as? UIWindowScene }).compactMap({ $0 }).first?.windows.first else {
+            let window = UIWindow(frame: UIScreen.main.bounds)
+            window.backgroundColor = .systemBackground
+            window.makeKeyAndVisible()
+            print("This is the window \(window)")
+            return window
         }
-        window.backgroundColor = .systemBackground;
-        window.makeKeyAndVisible();
-        return window;
+        
+        window.backgroundColor = .systemBackground
+        window.makeKeyAndVisible()
+        print("This is the window \(window)")
+        return window
     }
     
     public static func getAllAccessibilityLabels(_ viewRoot: UIView) -> [String]! {

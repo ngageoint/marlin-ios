@@ -14,6 +14,10 @@ extension XCTestCase {
     func system(file : String = #file, _ line : Int = #line) -> KIFSystemTestActor {
         return KIFSystemTestActor(inFile: file, atLine: line, delegate: self)
     }
+    
+    func viewTester(file: String = #file, _ line: Int = #line) -> KIFUIViewTestActor {
+        return KIFUIViewTestActor(inFile: file, atLine: line, delegate: self)
+    }
 }
 
 extension KIFTestActor {
@@ -23,5 +27,9 @@ extension KIFTestActor {
     
     func system(file : String = #file, _ line : Int = #line) -> KIFSystemTestActor {
         return KIFSystemTestActor(inFile: file, atLine: line, delegate: self)
+    }
+    
+    func viewTester(file: String = #file, _ line: Int = #line) -> KIFUIViewTestActor {
+        return KIFUIViewTestActor(inFile: file, atLine: line, delegate: self)
     }
 }

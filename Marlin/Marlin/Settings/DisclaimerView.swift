@@ -70,9 +70,3 @@ struct DisclaimerView: View {
             .padding(.bottom, 32)
     }
 }
-
-struct DisclaimerView_Previews: PreviewProvider {
-    static var previews: some View {
-        DisclaimerView()
-    }
-}

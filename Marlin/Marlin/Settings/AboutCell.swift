@@ -20,6 +20,8 @@ struct AboutCell: View {
                     .opacity(0.87)
                 Spacer()
             }
+            .accessibilityElement()
+            .accessibilityLabel("About")
             .contentShape(Rectangle())
             .onTapGesture {
                 NotificationCenter.default.post(name: .SwitchTabs, object: "settings")

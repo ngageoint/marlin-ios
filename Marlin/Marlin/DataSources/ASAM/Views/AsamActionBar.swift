@@ -51,6 +51,9 @@ struct AsamActionBar: View {
                                 .foregroundColor(Color.primaryColorVariant)
                         })
                 }
+                .accessibilityElement()
+                .accessibilityLabel("share")
+                
                 if showFocusButton {
                     Button(action: {
                         NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
@@ -64,15 +67,11 @@ struct AsamActionBar: View {
                                     .foregroundColor(Color.primaryColorVariant)
                             })
                     }
+                    .accessibilityElement()
+                    .accessibilityLabel("focus")
                 }
             }.padding(.trailing, -8)
         }
         .buttonStyle(MaterialButtonStyle())
     }
 }
-
-//struct AsamActionBar_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AsamActionBar()
-//    }
-//}

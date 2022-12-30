@@ -14,9 +14,6 @@ struct AboutView: View {
     
     @AppStorage("showMapScale") var showMapScale = false
     @AppStorage("flyoverMapsEnabled") var flyoverMapsEnabled = false
-    @AppStorage("searchEnabled") var searchEnabled = false
-    @AppStorage("filterEnabled") var filterEnabled = false
-    @AppStorage("sortEnabled") var sortEnabled = false
 
     var body: some View {
         List {
@@ -46,7 +43,7 @@ struct AboutView: View {
                 Image("marlin_small")
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)
-                Text("Marlin v\(version)")
+                Text("Marlin v\(version)\(tapCount > 5 ? " (\(buildVersion))" : "")")
                     .primary()
                 Spacer()
             }
@@ -54,33 +51,11 @@ struct AboutView: View {
             .onTapGesture {
                 tapCount += 1
             }
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("Marlin")
             
             if tapCount > 5 {
                 Section("Developer Tools") {
-                    Toggle(isOn: $searchEnabled, label: {
-                        HStack {
-                            Image(systemName: "magnifyingglass")
-                            Text("Search Enabled")
-                                .primary()
-                        }
-                    })
-                    .padding([.top, .bottom], 8)
-                    Toggle(isOn: $filterEnabled, label: {
-                        HStack {
-                            Image(systemName: "slider.horizontal.3")
-                            Text("Filter Enabled")
-                                .primary()
-                        }
-                    })
-                    .padding([.top, .bottom], 8)
-                    Toggle(isOn: $sortEnabled, label: {
-                        HStack {
-                            Image(systemName: "arrow.up.arrow.down")
-                            Text("Sort Enabled")
-                                .primary()
-                        }
-                    })
-                    .padding([.top, .bottom], 8)
                     Toggle(isOn: $showMapScale, label: {
                         HStack {
                             Image(systemName: "ruler.fill")
@@ -89,6 +64,7 @@ struct AboutView: View {
                         }
                     })
                     .padding([.top, .bottom], 8)
+                    
                     Toggle(isOn: $flyoverMapsEnabled, label: {
                         HStack {
                             Image(systemName: "rotate.3d")
@@ -97,7 +73,8 @@ struct AboutView: View {
                         }
                     })
                     .padding([.top, .bottom], 8)
-                }.toggleStyle(SwitchToggleStyle(tint: .primaryColorVariant))
+                }
+                .toggleStyle(SwitchToggleStyle(tint: .primaryColorVariant))
             }
         }
         .navigationTitle("About")

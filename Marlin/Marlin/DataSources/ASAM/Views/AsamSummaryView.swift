@@ -16,7 +16,7 @@ struct AsamSummaryView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(asam.dateString ?? "")
                 .overline()
-            Text("\(asam.hostility ?? "")\(asam.hostility != nil ? ": " : "")\(asam.victim ?? "")")
+            Text("\(asam.hostility ?? "")\(asam.hostility != nil && asam.victim != nil ? ": " : "")\(asam.victim ?? "")")
                 .primary()
             Text(asam.asamDescription ?? "")
                 .lineLimit(8)
