@@ -164,7 +164,6 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         guard let annotation = annotation as? (any DataSource), let annotationView = annotation.view(on: mapView) else {
             return nil
         }
-        
         annotationView.canShowCallout = false
         annotationView.isEnabled = false
         return annotationView

@@ -43,7 +43,13 @@ class MockDataSource: DataSource {
     static var properties: [Marlin.DataSourceProperty] = [
         DataSourceProperty(name: "String", key: "stringProperty", type: .string),
         DataSourceProperty(name: "Date", key: "dateProperty", type: .date),
-        DataSourceProperty(name: "Int", key: "intProperty", type: .int)
+        DataSourceProperty(name: "Int", key: "intProperty", type: .int),
+        DataSourceProperty(name: "Double", key: "doubleProperty", type: .double),
+        DataSourceProperty(name: "Float", key: "floatProperty", type: .float),
+        DataSourceProperty(name: "Enumeration", key: "enumerationProperty", type: .enumeration),
+        DataSourceProperty(name: "Location", key: "locationProperty", type: .location),
+        DataSourceProperty(name: "Date", key: "dateProperty", type: .date),
+        DataSourceProperty(name: "Boolean", key: "booleanProperty", type: .boolean)
     ]
     
     static var defaultSort: [Marlin.DataSourceSortParameter] = []

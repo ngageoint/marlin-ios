@@ -65,6 +65,8 @@ struct MarlinBottomSheet: View {
                                     })
                             }
                             .buttonStyle(MaterialButtonStyle())
+                            .accessibilityElement()
+                            .accessibilityLabel("previous")
                             
                             Text("\(selectedItem + 1) of \(pages)")
                                 .font(Font.caption)
@@ -83,6 +85,8 @@ struct MarlinBottomSheet: View {
                                     })
                             }
                             .buttonStyle(MaterialButtonStyle())
+                            .accessibilityElement()
+                            .accessibilityLabel("next")
                         }
                     }
                 }

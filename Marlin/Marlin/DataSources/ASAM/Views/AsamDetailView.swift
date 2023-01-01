@@ -37,7 +37,7 @@ struct AsamDetailView: View {
                     Group {
                         Text(asam.dateString ?? "")
                             .overline()
-                        Text("\(asam.hostility ?? "")\(asam.hostility != nil ? ": " : "")\(asam.victim ?? "")")
+                        Text("\(asam.hostility ?? "")\(asam.hostility != nil && asam.victim != nil ? ": " : "")\(asam.victim ?? "")")
                             .primary()
                         AsamActionBar(asam: asam)
                             .padding(.bottom, 16)
@@ -60,24 +60,12 @@ struct AsamDetailView: View {
 
             Section("Additional Information") {
                 VStack(alignment: .leading, spacing: 8) {
-                    if let hostility = asam.hostility {
-                        Property(property: "Hostility", value: hostility)
-                    }
-                    if let victim = asam.victim {
-                        Property(property: "Victim", value: victim)
-                    }
-                    if let reference = asam.reference {
-                        Property(property: "Reference Number", value: reference)
-                    }
-                    if let dateString = asam.dateString {
-                        Property(property: "Date of Occurence", value: dateString)
-                    }
-                    if let subregion = asam.subreg {
-                        Property(property: "Geographical Subregion", value: subregion)
-                    }
-                    if let navarea = asam.navArea {
-                        Property(property: "Navigational Area", value: navarea)
-                    }
+                    Property(property: "Hostility", value: asam.hostility)
+                    Property(property: "Victim", value: asam.victim)
+                    Property(property: "Reference Number", value: asam.reference)
+                    Property(property: "Date of Occurence", value: asam.dateString)
+                    Property(property: "Geographical Subregion", value: asam.subreg)
+                    Property(property: "Navigational Area", value: asam.navArea)
                 }
                 .padding(.all, 16)
                 .card()

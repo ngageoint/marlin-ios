@@ -17,6 +17,10 @@ extension Asam: MKAnnotation, AnnotationWithView {
     func view(on: MKMapView) -> MKAnnotationView {
         let annotationView = on.dequeueReusableAnnotationView(withIdentifier: Asam.key, for: self)
         self.annotationView = annotationView
+        if let reference = reference {
+            self.isAccessibilityElement = true
+            self.accessibilityLabel = "ASAM-\(reference)"
+        }
         return annotationView
     }
 }

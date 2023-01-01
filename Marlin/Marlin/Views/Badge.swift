@@ -37,6 +37,8 @@ struct CheckBadge: View {
                     .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 1))
                     .alignmentGuide(.top) { $0[.bottom] }
                     .alignmentGuide(.trailing) { $0[.trailing] - $0.width * 0.25 }
+                    .accessibilityElement()
+                    .accessibilityLabel("Check On")
             }
         }
     }
