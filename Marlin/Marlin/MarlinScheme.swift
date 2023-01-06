@@ -191,7 +191,7 @@ class MarlinScheme: ObservableObject {
         setTabBarItemColors(tabBarAppearance.stackedLayoutAppearance)
         setTabBarItemColors(tabBarAppearance.inlineLayoutAppearance)
         setTabBarItemColors(tabBarAppearance.compactInlineLayoutAppearance)
-        
+
         UITabBar.appearance().standardAppearance = tabBarAppearance;
         UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
         
@@ -229,10 +229,16 @@ class MarlinScheme: ObservableObject {
     
     private func setTabBarItemColors(_ itemAppearance: UITabBarItemAppearance) {
         itemAppearance.normal.iconColor = Color.onBackgroundUIColor.withAlphaComponent(0.6);
-        itemAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Color.onBackgroundUIColor.withAlphaComponent(0.6)]
-        
+        itemAppearance.normal.titleTextAttributes = [
+            .foregroundColor: Color.onBackgroundUIColor.withAlphaComponent(0.6),
+            .paragraphStyle: NSParagraphStyle.default
+        ]
+
         itemAppearance.selected.iconColor = Color.primaryUIColorVariant.withAlphaComponent(0.87)
-        itemAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Color.primaryUIColorVariant.withAlphaComponent(0.87)]
+        itemAppearance.selected.titleTextAttributes = [
+            .foregroundColor: Color.primaryUIColorVariant.withAlphaComponent(0.87),
+            .paragraphStyle: NSParagraphStyle.default
+        ]
     }
     
 }
