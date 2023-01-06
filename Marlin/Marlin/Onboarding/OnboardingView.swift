@@ -16,9 +16,13 @@ struct OnboardingView: View {
     let DATA_TABS_TAB = 5
     let DATA_MAP_TAB = 6
     
+    let gridColumns = Array(repeating: GridItem(.flexible()), count: 3)
+    let numColumns = 3
+    
     @State private var tabSelection = 1
     @AppStorage("disclaimerAccepted") var disclaimerAccepted: Bool = false
     @AppStorage("onboardingComplete") var onboardingComplete: Bool = false
+    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     
     @State private var requestedLocationAuthorization = false
     let locationAuthorizationStatusChangedPub = NotificationCenter.default.publisher(for: .LocationAuthorizationStatusChanged)
@@ -141,57 +145,50 @@ struct OnboardingView: View {
     
     @ViewBuilder
     func tabContent<M:View, T:View>(geometry: GeometryProxy, imageName: String? = nil, systemImageName: String? = nil, imageAreaContent: M? = EmptyView(), title: String, explanation: String?, buttons: T) -> some View {
-        VStack(alignment: .center, spacing: 0) {
-            
+        
+        VStack(alignment: .center, spacing: 16) {
             HStack(alignment: .bottom) {
                 VStack(alignment: .center, spacing: 16) {
                     Text(title)
                         .font(.headline4)
                         .bold()
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.center)
                         .opacity(0.94)
                     
                     if let explanation = explanation {
                         Text(explanation)
                             .font(.headline6)
                             .opacity(0.87)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .multilineTextAlignment(.center)
                     }
                 }
-                .padding(.top, 24)
             }
-            .frame(height: geometry.size.height * 0.25)
-            
-            HStack(alignment: .bottom) {
-                if let imageAreaContent = imageAreaContent {
-                    imageAreaContent
-                }
+            imageAreaContent
+            if verticalSizeClass != .compact {
                 if let imageName = imageName {
                     Image(imageName)
                         .renderingMode(.original)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
+                        .frame(maxHeight: .infinity)
                 } else if let systemImageName = systemImageName {
                     Image(systemName: systemImageName)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .symbolRenderingMode(.monochrome)
                         .foregroundStyle(Color.black)
-                        .frame(width: geometry.size.width * 0.50)
+                        .frame(maxHeight: .infinity)
                 }
+            } else if (imageAreaContent is EmptyView) {
+                Spacer()
+                    .frame(maxHeight: 24)
             }
-            .frame(height: geometry.size.height * 0.50)
-            
-            HStack(alignment: .top) {
-                VStack(alignment: .center, spacing: 16) {
-                    buttons
-                        .padding(.top, 24)
-                    Spacer()
-                }
-                .padding(.top, 24)
-            }
-            .frame(height: geometry.size.height * 0.25)
+            buttons
         }
-        .padding([.top, .leading, .trailing], 16)
-        .padding(.bottom, 40)
+        .padding(16)
+        .frame(maxHeight: .infinity)
     }
     
     func shouldShowTab(tab: Int) -> Bool {
@@ -261,15 +258,17 @@ struct OnboardingView: View {
     
     @ViewBuilder
     func welcomeTab(geometry: GeometryProxy) -> some View {
-        tabContent(geometry: geometry, imageName: "marlin_large", title: "Welcome to Marlin", explanation: "Marlin puts NGA's Maritime Safety Information datasets at your fingertips even when offline. The next few screens will allow you to customize your experience to meet your needs.", buttons: VStack(alignment: .center, spacing: 16) {
-            Button("Let's Go") {
+        tabContent(geometry: geometry, imageName: "marlin_large", title: "Welcome to Marlin", explanation: "Marlin puts NGA's Maritime Safety Information datasets at your fingertips even when offline. The next few screens will allow you to customize your experience to meet your needs.", buttons:
+//                    VStack(alignment: .center, spacing: 16) {
+            Button("Set Sail") {
                 nextTab(currentTab: WELCOME_TAB)
             }
             .tint(Color.primaryColor)
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.capsule)
             .controlSize(.large)
-        })
+//        }
+        )
     }
     
     @ViewBuilder
@@ -345,415 +344,418 @@ struct OnboardingView: View {
     
     @ViewBuilder
     func dataTabsTab(geometry: GeometryProxy) -> some View {
-        tabContent(geometry: geometry, imageAreaContent: dataSourceTabGrid(), title: "Marlin Tabs", explanation: "Choose up to 4 dataset tabs for the tab bar.  Other datasets will be accessible in the navigation menu.", buttons:
-                    VStack(spacing: 16) {
-                        Button("Next") {
-                            // when we add the tabs to the tab list, we are adding them to the front of the tab list, so we need to reverse that list
-                            // This will make the tabs appear in the order the user chose them
-                            dataSourceList.tabs.reverse()
-                            for i in 0...(dataSourceList.tabs.count - 1) {
-                                dataSourceList.tabs[i].order = i
-                            }
-                            nextTab(currentTab: DATA_TABS_TAB)
-                        }
-                        .tint(Color.primaryColor)
-                        .buttonStyle(.borderedProminent)
-                        .buttonBorderShape(.capsule)
-                        .controlSize(.large)
-                    }
+        tabContent(geometry: geometry, imageAreaContent:
+                    dataSourceTabGrid(gridSize: verticalSizeClass != .compact ? 100 : 75)
+            .frame(maxHeight: .infinity)
+                   ,
+                   title: "Marlin Tabs", explanation: "Choose up to 4 dataset tabs for the tab bar.  Other datasets will be accessible in the navigation menu.", buttons:
+            Button("Next") {
+                // when we add the tabs to the tab list, we are adding them to the front of the tab list, so we need to reverse that list
+                // This will make the tabs appear in the order the user chose them
+                dataSourceList.tabs.reverse()
+                for i in 0...(dataSourceList.tabs.count - 1) {
+                    dataSourceList.tabs[i].order = i
+                }
+                nextTab(currentTab: DATA_TABS_TAB)
+            }
+            .tint(Color.primaryColor)
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.capsule)
+            .controlSize(.large)
         )
     }
     
     @ViewBuilder
     func dataMapTab(geometry: GeometryProxy) -> some View {
-        tabContent(geometry: geometry, imageAreaContent: dataSourceMapGrid(), title: "Marlin Map", explanation: "Choose what datasets you want to see on the map.  This can always be changed via the navigation menu.", buttons:
-                    VStack(spacing: 16) {
-                        Button("Take Me To Marlin") {
-                            onboardingComplete = true
-                        }
-                        .tint(Color.primaryColor)
-                        .buttonStyle(.borderedProminent)
-                        .buttonBorderShape(.capsule)
-                        .controlSize(.large)
-                    }
+        tabContent(geometry: geometry, imageAreaContent:
+                    dataSourceMapGrid(gridSize: verticalSizeClass != .compact ? 100 : 100)
+            .frame(maxHeight: .infinity),
+                   title: "Marlin Map", explanation: "Choose what datasets you want to see on the map.  This can always be changed via the navigation menu.", buttons:
+                Button("Take Me To Marlin") {
+                    onboardingComplete = true
+                }
+                .tint(Color.primaryColor)
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.capsule)
+                .controlSize(.large)
         )
     }
     
     @ViewBuilder
-    func dataSourceTabGrid() -> some View {
-        VStack(alignment: .center, spacing: 16) {
+    func dataSourceTabGrid(gridSize: CGFloat) -> some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: gridSize))]) {
+            VStack(alignment: .center) {
+                if let image = Asam.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: Asam.color))))
+                }
+                Text(Asam.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
+            }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                if asamIsTab {
+                    dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: Asam.self), position: 0)
+                } else {
+                    dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: Asam.self), position: 0)
+                }
+            }
+            .overlay(CheckBadge(on: .constant(asamIsTab)))
+            .padding(8)
             
-            HStack(alignment: .center, spacing: 16) {
-                VStack(alignment: .center) {
-                    if let image = Asam.image {
-                        Image(uiImage: image)
-                            .renderingMode(.template)
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                            .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                .background(Circle().fill(Color(uiColor: Asam.color))))
-                    }
-                    Text(Asam.dataSourceName)
-                        .foregroundColor(Color.onPrimaryColor)
+            VStack(alignment: .center) {
+                if let image = Modu.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: Modu.color))))
                 }
-                .frame(width: 100, height: 100)
-                .background(Color.secondaryColor)
-                .cornerRadius(2)
-                .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                .onTapGesture {
-                    if asamIsTab {
-                        dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: Asam.self), position: 0)
-                    } else {
-                        dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: Asam.self), position: 0)
-                    }
-                }
-                .overlay(CheckBadge(on: .constant(asamIsTab)))
-                
-                VStack(alignment: .center) {
-                    if let image = Modu.image {
-                        Image(uiImage: image)
-                            .renderingMode(.template)
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                            .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                .background(Circle().fill(Color(uiColor: Modu.color))))
-                    }
-                    Text(Modu.dataSourceName)
-                        .foregroundColor(Color.onPrimaryColor)
-                }
-                .frame(width: 100, height: 100)
-                .background(Color.secondaryColor)
-                .cornerRadius(2)
-                .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                .onTapGesture {
-                    if moduIsTab {
-                        dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: Modu.self), position: 0)
-                    } else {
-                        dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: Modu.self), position: 0)
-                    }
-                }
-                .overlay(CheckBadge(on: .constant(moduIsTab)))
-                
-                VStack(alignment: .center) {
-                    if let image = Light.image {
-                        Image(uiImage: image)
-                            .renderingMode(.template)
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                            .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                .background(Circle().fill(Color(uiColor: Light.color))))
-                    }
-                    Text(Light.dataSourceName)
-                        .foregroundColor(Color.onPrimaryColor)
-                }
-                .frame(width: 100, height: 100)
-                .background(Color.secondaryColor)
-                .cornerRadius(2)
-                .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                .onTapGesture {
-                    if lightIsTab {
-                        dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: Light.self), position: 0)
-                    } else {
-                        dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: Light.self), position: 0)
-                    }
-                }
-                .overlay(CheckBadge(on: .constant(lightIsTab)))
-                
+                Text(Modu.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
             }
-            HStack(alignment: .center, spacing: 16) {
-                VStack(alignment: .center) {
-                    if let image = NavigationalWarning.image {
-                        Image(uiImage: image)
-                            .renderingMode(.template)
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                            .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                .background(Circle().fill(Color(uiColor: NavigationalWarning.color))))
-                    }
-                    Text(NavigationalWarning.dataSourceName)
-                        .foregroundColor(Color.onPrimaryColor)
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                if moduIsTab {
+                    dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: Modu.self), position: 0)
+                } else {
+                    dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: Modu.self), position: 0)
                 }
-                .frame(width: 100, height: 100)
-                .background(Color.secondaryColor)
-                .cornerRadius(2)
-                .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                .onTapGesture {
-                    if navWarningIsTab {
-                        dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: NavigationalWarning.self), position: 0)
-                    } else {
-                        dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: NavigationalWarning.self), position: 0)
-                    }
-                }
-                .overlay(CheckBadge(on: .constant(navWarningIsTab)))
-                
-                VStack(alignment: .center) {
-                    if let image = Port.image {
-                        Image(uiImage: image)
-                            .renderingMode(.template)
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                            .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                .background(Circle().fill(Color(uiColor: Port.color))))
-                    }
-                    Text(Port.dataSourceName)
-                        .foregroundColor(Color.onPrimaryColor)
-                }
-                .frame(width: 100, height: 100)
-                .background(Color.secondaryColor)
-                .cornerRadius(2)
-                .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                .onTapGesture {
-                    if portIsTab {
-                        dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: Port.self), position: 0)
-                    } else {
-                        dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: Port.self), position: 0)
-                    }
-                }
-                .overlay(CheckBadge(on: .constant(portIsTab)))
-                
-                VStack(alignment: .center) {
-                    if let image = RadioBeacon.image {
-                        Image(uiImage: image)
-                            .renderingMode(.template)
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                            .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                .background(Circle().fill(Color(uiColor: RadioBeacon.color))))
-                    }
-                    Text(RadioBeacon.dataSourceName)
-                        .foregroundColor(Color.onPrimaryColor)
-                }
-                .frame(width: 100, height: 100)
-                .background(Color.secondaryColor)
-                .cornerRadius(2)
-                .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                .onTapGesture {
-                    if radioBeaconIsTab {
-                        dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: RadioBeacon.self), position: 0)
-                    } else {
-                        dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: RadioBeacon.self), position: 0)
-                    }
-                }
-                .overlay(CheckBadge(on: .constant(radioBeaconIsTab)))
-                
             }
-            HStack(alignment: .center, spacing: 16) {
-                VStack(alignment: .center) {
-                    if let image = DifferentialGPSStation.image {
-                        Image(uiImage: image)
-                            .renderingMode(.template)
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                            .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                .background(Circle().fill(Color(uiColor: DifferentialGPSStation.color))))
-                    }
-                    Text(DifferentialGPSStation.dataSourceName)
-                        .foregroundColor(Color.onPrimaryColor)
+            .overlay(CheckBadge(on: .constant(moduIsTab)))
+            .padding(8)
+            
+            VStack(alignment: .center) {
+                if let image = Light.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: Light.color))))
                 }
-                .frame(width: 100, height: 100)
-                .background(Color.secondaryColor)
-                .cornerRadius(2)
-                .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                .onTapGesture {
-                    if dgpsIsTab {
-                        dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: DifferentialGPSStation.self), position: 0)
-                    } else {
-                        dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: DifferentialGPSStation.self), position: 0)
-                    }
-                }
-                .overlay(CheckBadge(on: .constant(dgpsIsTab)))
-                VStack(alignment: .center) {
-                    if let image = ElectronicPublication.image {
-                        Image(uiImage: image)
-                            .renderingMode(.template)
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                            .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                .background(Circle().fill(Color(uiColor: ElectronicPublication.color))))
-                    }
-                    Text(ElectronicPublication.dataSourceName)
-                        .foregroundColor(Color.onPrimaryColor)
-                }
-                .frame(width: 100, height: 100)
-                .background(Color.secondaryColor)
-                .cornerRadius(2)
-                .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                .onTapGesture {
-                    if epubIsTab {
-                        dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: ElectronicPublication.self), position: 0)
-                    } else {
-                        dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: ElectronicPublication.self), position: 0)
-                    }
-                }
-                .overlay(CheckBadge(on: .constant(epubIsTab)))
-                VStack(alignment: .center) {
-                    if let image = NoticeToMariners.image {
-                        Image(uiImage: image)
-                            .renderingMode(.template)
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                            .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                .background(Circle().fill(Color(uiColor: NoticeToMariners.color))))
-                    }
-                    Text(NoticeToMariners.dataSourceName)
-                        .foregroundColor(Color.onPrimaryColor)
-                }
-                .frame(width: 100, height: 100)
-                .background(Color.secondaryColor)
-                .cornerRadius(2)
-                .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                .onTapGesture {
-                    if ntmIsTab {
-                        dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: NoticeToMariners.self), position: 0)
-                    } else {
-                        dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: NoticeToMariners.self), position: 0)
-                    }
-                }
-                .overlay(CheckBadge(on: .constant(ntmIsTab)))
+                Text(Light.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
             }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                if lightIsTab {
+                    dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: Light.self), position: 0)
+                } else {
+                    dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: Light.self), position: 0)
+                }
+            }
+            .overlay(CheckBadge(on: .constant(lightIsTab)))
+            .padding(8)
+            
+            VStack(alignment: .center) {
+                if let image = NavigationalWarning.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: NavigationalWarning.color))))
+                }
+                Text(NavigationalWarning.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
+            }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                if navWarningIsTab {
+                    dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: NavigationalWarning.self), position: 0)
+                } else {
+                    dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: NavigationalWarning.self), position: 0)
+                }
+            }
+            .overlay(CheckBadge(on: .constant(navWarningIsTab)))
+            .padding(8)
+            
+            VStack(alignment: .center) {
+                if let image = Port.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: Port.color))))
+                }
+                Text(Port.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
+            }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                if portIsTab {
+                    dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: Port.self), position: 0)
+                } else {
+                    dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: Port.self), position: 0)
+                }
+            }
+            .overlay(CheckBadge(on: .constant(portIsTab)))
+            .padding(8)
+            
+            VStack(alignment: .center) {
+                if let image = RadioBeacon.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: RadioBeacon.color))))
+                }
+                Text(RadioBeacon.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
+            }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                if radioBeaconIsTab {
+                    dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: RadioBeacon.self), position: 0)
+                } else {
+                    dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: RadioBeacon.self), position: 0)
+                }
+            }
+            .overlay(CheckBadge(on: .constant(radioBeaconIsTab)))
+            .padding(8)
+            
+            VStack(alignment: .center) {
+                if let image = DifferentialGPSStation.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: DifferentialGPSStation.color))))
+                }
+                Text(DifferentialGPSStation.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
+            }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                if dgpsIsTab {
+                    dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: DifferentialGPSStation.self), position: 0)
+                } else {
+                    dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: DifferentialGPSStation.self), position: 0)
+                }
+            }
+            .overlay(CheckBadge(on: .constant(dgpsIsTab)))
+            .padding(8)
+            
+            VStack(alignment: .center) {
+                if let image = ElectronicPublication.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: ElectronicPublication.color))))
+                }
+                Text(ElectronicPublication.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
+            }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                if epubIsTab {
+                    dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: ElectronicPublication.self), position: 0)
+                } else {
+                    dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: ElectronicPublication.self), position: 0)
+                }
+            }
+            .overlay(CheckBadge(on: .constant(epubIsTab)))
+            .padding(8)
+            
+            VStack(alignment: .center) {
+                if let image = NoticeToMariners.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: NoticeToMariners.color))))
+                }
+                Text(NoticeToMariners.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
+            }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                if ntmIsTab {
+                    dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: NoticeToMariners.self), position: 0)
+                } else {
+                    dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: NoticeToMariners.self), position: 0)
+                }
+            }
+            .overlay(CheckBadge(on: .constant(ntmIsTab)))
+            .padding(8)
         }
     }
         
-        @ViewBuilder
-        func dataSourceMapGrid() -> some View {
-            VStack(alignment: .center, spacing: 16) {
-                HStack(alignment: .center, spacing: 16) {
-                    VStack(alignment: .center) {
-                        if let image = Asam.image {
-                            Image(uiImage: image)
-                                .renderingMode(.template)
-                                .frame(width: 50, height: 50)
-                                .tint(Color.white)
-                                .clipShape(Circle())
-                                .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                    .background(Circle().fill(Color(uiColor: Asam.color))))
-                        }
-                        Text(Asam.dataSourceName)
-                            .foregroundColor(Color.onPrimaryColor)
-                    }
-                    .frame(width: 100, height: 100)
-                    .background(Color.secondaryColor)
-                    .cornerRadius(2)
-                    .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                    .onTapGesture {
-                        asamIsMapped = !asamIsMapped
-                    }
-                    .overlay(CheckBadge(on: $asamIsMapped))
-                    
-                    VStack(alignment: .center) {
-                        if let image = Modu.image {
-                            Image(uiImage: image)
-                                .renderingMode(.template)
-                                .frame(width: 50, height: 50)
-                                .clipShape(Circle())
-                                .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                    .background(Circle().fill(Color(uiColor: Modu.color))))
-                            
-                        }
-                        Text(Modu.dataSourceName)
-                            .foregroundColor(Color.onPrimaryColor)
-                    }
-                    .frame(width: 100, height: 100)
-                    .background(Color.secondaryColor)
-                    .cornerRadius(2)
-                    .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                    .onTapGesture {
-                        moduIsMapped = !moduIsMapped
-                    }
-                    .overlay(CheckBadge(on: $moduIsMapped))
-                    
-                    VStack(alignment: .center) {
-                        if let image = Light.image {
-                            Image(uiImage: image)
-                                .renderingMode(.template)
-                                .frame(width: 50, height: 50)
-                                .tint(Color.white)
-                                .clipShape(Circle())
-                                .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                    .background(Circle().fill(Color(uiColor: Light.color))))
-                        }
-                        Text(Light.dataSourceName)
-                            .foregroundColor(Color.onPrimaryColor)
-                    }
-                    .frame(width: 100, height: 100)
-                    .background(Color.secondaryColor)
-                    .cornerRadius(2)
-                    .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                    .onTapGesture {
-                        lightIsMapped = !lightIsMapped
-                    }
-                    .overlay(CheckBadge(on: $lightIsMapped))
-                    
+    @ViewBuilder
+    func dataSourceMapGrid(gridSize: CGFloat) -> some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: gridSize))]) {
+            VStack(alignment: .center) {
+                if let image = Asam.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .tint(Color.white)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: Asam.color))))
                 }
-                HStack(alignment: .center, spacing: 16) {
-                    VStack(alignment: .center) {
-                        if let image = Port.image {
-                            Image(uiImage: image)
-                                .renderingMode(.template)
-                                .frame(width: 50, height: 50)
-                                .tint(Color.white)
-                                .clipShape(Circle())
-                                .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                    .background(Circle().fill(Color(uiColor: Port.color))))
-                        }
-                        Text(Port.dataSourceName)
-                            .foregroundColor(Color.onPrimaryColor)
-                    }
-                    .frame(width: 100, height: 100)
-                    .background(Color.secondaryColor)
-                    .cornerRadius(2)
-                    .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                    .onTapGesture {
-                        portIsMapped = !portIsMapped
-                    }
-                    .overlay(CheckBadge(on: $portIsMapped))
-                    
-                    VStack(alignment: .center) {
-                        if let image = RadioBeacon.image {
-                            Image(uiImage: image)
-                                .renderingMode(.template)
-                                .frame(width: 50, height: 50)
-                                .tint(Color.white)
-                                .clipShape(Circle())
-                                .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                    .background(Circle().fill(Color(uiColor: RadioBeacon.color))))
-                        }
-                        Text(RadioBeacon.dataSourceName)
-                            .foregroundColor(Color.onPrimaryColor)
-                    }
-                    .frame(width: 100, height: 100)
-                    .background(Color.secondaryColor)
-                    .cornerRadius(2)
-                    .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                    .onTapGesture {
-                        radioBeaconIsMapped = !radioBeaconIsMapped
-                    }
-                    .overlay(CheckBadge(on: $radioBeaconIsMapped))
-                    
-                    VStack(alignment: .center) {
-                        if let image = DifferentialGPSStation.image {
-                            Image(uiImage: image)
-                                .renderingMode(.template)
-                                .frame(width: 50, height: 50)
-                                .tint(Color.white)
-                                .clipShape(Circle())
-                                .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                                    .background(Circle().fill(Color(uiColor: DifferentialGPSStation.color))))
-                        }
-                        Text(DifferentialGPSStation.dataSourceName)
-                            .foregroundColor(Color.onPrimaryColor)
-                    }
-                    .frame(width: 100, height: 100)
-                    .background(Color.secondaryColor)
-                    .cornerRadius(2)
-                    .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-                    .onTapGesture {
-                        dgpsIsMapped = !dgpsIsMapped
-                    }
-                    .overlay(CheckBadge(on: $dgpsIsMapped))
-                }
+                Text(Asam.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
             }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                asamIsMapped = !asamIsMapped
+            }
+            .overlay(CheckBadge(on: $asamIsMapped))
+            
+            VStack(alignment: .center) {
+                if let image = Modu.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: Modu.color))))
+                    
+                }
+                Text(Modu.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
+            }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                moduIsMapped = !moduIsMapped
+            }
+            .overlay(CheckBadge(on: $moduIsMapped))
+            
+            VStack(alignment: .center) {
+                if let image = Light.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .tint(Color.white)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: Light.color))))
+                }
+                Text(Light.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
+            }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                lightIsMapped = !lightIsMapped
+            }
+            .overlay(CheckBadge(on: $lightIsMapped))
+            
+            VStack(alignment: .center) {
+                if let image = Port.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .tint(Color.white)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: Port.color))))
+                }
+                Text(Port.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
+            }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                portIsMapped = !portIsMapped
+            }
+            .overlay(CheckBadge(on: $portIsMapped))
+            
+            VStack(alignment: .center) {
+                if let image = RadioBeacon.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .tint(Color.white)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: RadioBeacon.color))))
+                }
+                Text(RadioBeacon.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
+            }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                radioBeaconIsMapped = !radioBeaconIsMapped
+            }
+            .overlay(CheckBadge(on: $radioBeaconIsMapped))
+            
+            VStack(alignment: .center) {
+                if let image = DifferentialGPSStation.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .tint(Color.white)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: DifferentialGPSStation.color))))
+                }
+                Text(DifferentialGPSStation.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
+            }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                dgpsIsMapped = !dgpsIsMapped
+            }
+            .overlay(CheckBadge(on: $dgpsIsMapped))
         }
+    }
 }
 
 struct CheckToggleStyle: ToggleStyle {
