@@ -32,10 +32,26 @@ struct SideMenu: View {
                 
                 HStack {
                     HStack(spacing: 0) {
-                        Rectangle()
-                            .foregroundColor(Color.primaryColorVariant)
-                            .ignoresSafeArea()
-                            .frame(width: geometry.safeAreaInsets.leading)
+                    Rectangle()
+                        .foregroundColor(Color.primaryColor)
+                        .overlay(alignment: .bottomLeading) {
+                            HStack {
+                                Image("marlin_small")
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.onPrimaryColor)
+                                    .tint(Color.onPrimaryColor)
+                                Text("Marlin")
+                                    .bold()
+                                    .foregroundColor(Color.onPrimaryColor)
+                                Spacer()
+                            }
+                            .offset(x: 16, y: 16)
+                            .fixedSize(horizontal: true, vertical: false)
+                            .rotationEffect(.degrees(-90), anchor: .topLeading)
+                        }
+                        .ignoresSafeArea()
+                        .frame(width: geometry.safeAreaInsets.leading)
+                        
                         SideMenuContent(dataSourceList: dataSourceList)
                             .frame(width: self.width)
                             
