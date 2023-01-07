@@ -11,6 +11,7 @@ import MapKit
 struct MarlinCompactWidth: View {
     
     @EnvironmentObject var appState: AppState
+    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     
     @AppStorage("selectedTab") var selectedTab: String = "map"
     @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = false
@@ -50,14 +51,11 @@ struct MarlinCompactWidth: View {
                                 .onAppear {
                                     Metrics.shared.mapView()
                                 }
-                            VStack(spacing: 0) {
-                                // top of map
-                                CurrentLocation()
-                                topButtons()
-                                Spacer()
-                                // bottom of map
-                                bottomButtons()
-                            }
+                                .ignoresSafeArea(edges: [.leading, .trailing])
+                                .overlay(bottomButtons(), alignment: .bottom)
+                                .overlay(topButtons(), alignment: .top)
+
+                            CurrentLocation()
                             loadingCapsule()
                         }
                         NavigationLink(tag: "detail", selection: $selection) {
@@ -104,7 +102,6 @@ struct MarlinCompactWidth: View {
                             self.appState.popToRoot = false
                         }
                     }
-                    //here
                 }
                 .tag("map")
                 .tabItem {
@@ -261,26 +258,19 @@ struct MarlinCompactWidth: View {
     @ViewBuilder
     func bottomButtons() -> some View {
         HStack(alignment: .bottom, spacing: 0) {
-            VStack(alignment: .leading, spacing: 8) {
-                ForEach(dataSourceList.allTabs, id: \.self) { dataSource in
-                    if dataSource.dataSource.isMappable {
-                        Button(action: {
-                            dataSource.showOnMap.toggle()
-                        }) {
-                            Label(title: {}) {
-                                if let image = dataSource.dataSource.image {
-                                    Image(uiImage: image)
-                                        .renderingMode(.template)
-                                        .tint(Color.white)
-                                }
-                            }
-                        }
-                        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: dataSource.showOnMap ? Color.white : Color.disabledColor, backgroundColor: dataSource.showOnMap ? Color(uiColor: dataSource.dataSource.color) : Color.disabledBackground))
-                    }
+            if verticalSizeClass != .compact {
+                VStack(alignment: .leading, spacing: 8) {
+                    dataSourceToggles()
                 }
+                .padding(.leading, 8)
+                .padding(.bottom, 30)
+            } else {
+                HStack(alignment: .bottom, spacing: 8) {
+                    dataSourceToggles()
+                }
+                .padding(.leading, 8)
+                .padding(.bottom, 30)
             }
-            .padding(.leading, 8)
-            .padding(.bottom, 30)
             
             Spacer()
             // bottom right button stack
@@ -290,6 +280,26 @@ struct MarlinCompactWidth: View {
             }
             .padding(.trailing, 8)
             .padding(.bottom, 30)
+        }
+    }
+    
+    @ViewBuilder
+    func dataSourceToggles() -> some View {
+        ForEach(dataSourceList.allTabs, id: \.self) { dataSource in
+            if dataSource.dataSource.isMappable {
+                Button(action: {
+                    dataSource.showOnMap.toggle()
+                }) {
+                    Label(title: {}) {
+                        if let image = dataSource.dataSource.image {
+                            Image(uiImage: image)
+                                .renderingMode(.template)
+                                .tint(Color.white)
+                        }
+                    }
+                }
+                .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: dataSource.showOnMap ? Color.white : Color.disabledColor, backgroundColor: dataSource.showOnMap ? Color(uiColor: dataSource.dataSource.color) : Color.disabledBackground))
+            }
         }
     }
     
