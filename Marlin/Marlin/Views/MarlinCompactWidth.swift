@@ -38,7 +38,8 @@ struct MarlinCompactWidth: View {
         ZStack {
             TabView(selection: $selectedTab) {
                 NavigationView {
-                    VStack {
+                    VStack(spacing: 0) {
+                        CurrentLocation()
                         ZStack(alignment: .topLeading) {
                             marlinMap
                                 .navigationTitle("Marlin")
@@ -55,7 +56,6 @@ struct MarlinCompactWidth: View {
                                 .overlay(bottomButtons(), alignment: .bottom)
                                 .overlay(topButtons(), alignment: .top)
 
-                            CurrentLocation()
                             loadingCapsule()
                         }
                         NavigationLink(tag: "detail", selection: $selection) {

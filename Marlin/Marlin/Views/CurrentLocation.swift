@@ -20,6 +20,7 @@ struct CurrentLocation: View {
                     .font(Font.overline)
                     .foregroundColor(Color.onPrimaryColor)
                     .opacity(0.87)
+                    .padding(8)
                 Spacer()
             }
             .background(Color.primaryColor)
