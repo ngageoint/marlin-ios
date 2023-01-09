@@ -4,70 +4,13 @@ Changelog
 All notable changes to this project will be documented in this file.
 
 ---
-## 0.9.1
-  * Lights crossing the date line are fixed
-  * OSM layer is positioned under data layers
-  * Tiles are now cached and the cache is cleared when new data shows up and when the filter is changed
-  * Cursor color in the search field is correct
-  * Location Filter field does not allow you to input a distance if there is no location when “near me” is selected
-  
-## 0.9.0
-  * Notice to Mariners
-  
-## 0.7.8
-  * Onboarding views
-  * Default filters
-  * Asam last 365 days
 
-## 0.7.7
-  * Filtering
-  * Sorting
-  * Light settings map is not affected by lights not being loaded yet
-  * Fix light range parsing due to MSI API change
-  * Database reset
-  * Updated seed data
+## 1.0.1
+  ### Bug Fixes
+    * Landscape mode fixes for Onboarding, Map, Side Nav, Navigation Warnings
+    * Background fetch
+    * Current Location view is now larger
 
-## 0.7.6
-  * Fixed crash caused by a light in Italy not being parsed properly
-  * Moved the light map settings to the map settings view
-  * Added a "Updating data" loading message when data is being pulled from MSI
-
-## 0.7.5
-  * Lights can now be drawn on the map in actual size based on the range
-  * Fix crash when loading initial MSI data
-  * Hamburger menu hit box expanded to allow easier taps
-  * Lights are loaded much faster
-
-## 0.7.4
-  * Fixes for how obscured lights are drawn
-
-## 0.7.3
-  * Initial data is loaded locally and then updates are fetched when the user first starts the app
-  * MGRS and GARS grids are now loaded based on the users settings
-
-## 0.7.2
-  * DGPS icon is rendered properly
-  * light map image drawing updates
-
-## 0.7.1
-  * ASAM description is not line limited
-  * data source size bug fixes
-  * loading indication for data sources
-  * map refreshes when new data is loaded
-
-## 0.7.0
-  * Differential GPS stations
-  * Radio Direction Finders are also included but disabled
-
-## 0.5.0
-  * Ports
-
-## 0.4.1
-
-##### Features
-  * Hamburger menu
-
-## 0.4.0
-
-##### Features
-  * Lights
+## 1.0.0
+  * Initial Release: Marlin brings NGA’s Maritime Safety Information datasets to your mobile device to help you navigate safely at sea. With Marlin, you can download the latest maritime safety reports and reference information before setting sail, then search and view the information on an interactive map, even when you have no cell service. Marlin automatically checks for updates when you have a data connection, and informs you what’s new.
+  Fair winds and following seas!
