@@ -17,7 +17,7 @@ struct Badge: View {
                 Image(systemName: "\(count).circle.fill")
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(Color.white, Color.secondaryColor)
-                    .alignmentGuide(.top) { $0[.bottom] }
+                    .alignmentGuide(.top) { $0[.bottom] - 5 }
                     .alignmentGuide(.trailing) { $0[.trailing] - $0.width * 0.25 }
             }
         }
