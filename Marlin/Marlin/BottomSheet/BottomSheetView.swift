@@ -12,8 +12,7 @@ import SwiftUI
 struct MarlinBottomSheet: View {
     @ObservedObject var itemList: BottomSheetItemList
     @State var selectedItem: Int = 0
-    @EnvironmentObject var locationManager: LocationManager
-    
+
     var pages: Int { itemList.bottomSheetItems?.count ?? 0 }
     
     @ViewBuilder

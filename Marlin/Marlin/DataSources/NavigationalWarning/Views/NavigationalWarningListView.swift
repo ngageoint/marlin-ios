@@ -10,30 +10,37 @@ import MapKit
 
 struct NavigationalWarningListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var locationManager: LocationManager
+    @ObservedObject var locationManager: LocationManager = LocationManager.shared
     @StateObject var mapState: MapState = MapState()
 
     var navareaMap = GeoPackageMap(fileName: "navigation_areas", tableName: "navigation_areas", index: 0)
     var backgroundMap = GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: Color.dynamicLandColor, index: 1)
     
     var body: some View {
-        List {
-            MarlinMap(name: "Navigational Warning List View Map", mixins: [navareaMap, backgroundMap], mapState: mapState)
-                .frame(minHeight: 250, maxHeight: 250)
-                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            NavigationalWarningAreasView(currentArea: locationManager.currentNavArea)
-                .listRowBackground(Color.surfaceColor)
-                .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                MarlinMap(name: "Navigational Warning List View Map", mixins: [navareaMap, backgroundMap], mapState: mapState)
+                    .frame(minHeight: geometry.size.height * 0.3, maxHeight: geometry.size.height * 0.3)
+                    .edgesIgnoringSafeArea([.leading, .trailing])
+                List {
+                    NavigationalWarningAreasView(currentArea: locationManager.currentNavArea)
+                        .listRowBackground(Color.surfaceColor)
+                        .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
+                }
+                .listStyle(.plain)
+                .onAppear {
+
+                    Metrics.shared.dataSourceList(dataSource: NavigationalWarning.self)
+                }
+            }
         }
-        .listStyle(.plain)
         .navigationTitle("Navigational Warnings")
         .navigationBarTitleDisplayMode(.inline)
-        .background(Color.backgroundColor)
-        .onAppear {
+        .background(Color.surfaceColor)
+        .onChange(of: locationManager.lastLocation) { lastLocation in
             if let lastLocation = locationManager.lastLocation {
                 mapState.center = MKCoordinateRegion(center: lastLocation.coordinate, span: MKCoordinateSpan(latitudeDelta: 30, longitudeDelta: 30))
             }
-            Metrics.shared.dataSourceList(dataSource: NavigationalWarning.self)
         }
     }
 }

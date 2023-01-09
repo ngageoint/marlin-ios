@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 struct UserTrackingButton: View {
-    @EnvironmentObject var locationManager: LocationManager
+    @ObservedObject var locationManager: LocationManager = LocationManager.shared
 
     @State var imageName: String = "location"
     @State var appearDisabled: Bool = false

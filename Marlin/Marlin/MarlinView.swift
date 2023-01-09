@@ -27,7 +27,6 @@ extension MarlinView: BottomSheetDelegate {
 
 struct MarlinView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    var locationManager: LocationManager = LocationManager.shared
 
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     @State var menuOpen: Bool = false
@@ -113,12 +112,12 @@ struct MarlinView: View {
                 if horizontalSizeClass == .compact {
                     
                     MarlinCompactWidth(dataSourceList: dataSourceList, filterOpen: $filterOpen, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
-                    ).environmentObject(locationManager)
+                    )
                 } else {
                     NavigationView {
                         VStack {
                             ZStack {
-                                MarlinRegularWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState)).environmentObject(locationManager)
+                                MarlinRegularWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState))
                                     .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
                                 
                                 GeometryReader { geometry in
@@ -175,7 +174,7 @@ struct MarlinView: View {
         }
         // TODO: this can be replaced with .sheet introduced in ios16 when we are at 17
         .bottomSheet(isPresented: $showBottomSheet, delegate: self) {
-            MarlinBottomSheet(itemList: bottomSheetItemList).environmentObject(locationManager)
+            MarlinBottomSheet(itemList: bottomSheetItemList)
         }
         .bottomSheet(isPresented: $filterOpen, detents: .large, delegate: self) {
             FilterBottomSheet(dataSources: $dataSourceList.mappedDataSources)

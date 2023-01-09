@@ -9,7 +9,8 @@ import SwiftUI
 import MapKit
 
 struct PortSummaryView: View {
-    @EnvironmentObject var locationManager: LocationManager
+    @ObservedObject var locationManager: LocationManager = LocationManager.shared
+    @State var distance: String?
 
     var port: Port
     var showMoreDetails: Bool = false
@@ -31,11 +32,8 @@ struct PortSummaryView: View {
                     Text("\(port.portName ?? "")")
                         .primary()
                     Spacer()
-                    if let currentLocation = locationManager.lastLocation {
-                        let metersMeasurement = NSMeasurement(doubleValue: port.distanceTo(currentLocation), unit: UnitLength.meters);
-                        let convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles);
-                        
-                        Text("\(measurementFormatter.string(from: convertedMeasurement)), \(currentLocation.coordinate.generalDirection(to: port.coordinate))")
+                    if let distance = distance {
+                        Text("\(distance)")
                             .secondary()
                     }
                 }
@@ -48,6 +46,14 @@ struct PortSummaryView: View {
                     .secondary()
             }
             PortActionBar(port: port, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+        }
+        .onChange(of: locationManager.lastLocation) { lastLocation in
+            if let currentLocation = lastLocation {
+                let metersMeasurement = NSMeasurement(doubleValue: port.distanceTo(currentLocation), unit: UnitLength.meters);
+                let convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles);
+                
+                distance = "\(measurementFormatter.string(from: convertedMeasurement)), \(currentLocation.coordinate.generalDirection(to: port.coordinate))"
+            }
         }
     }
 }
