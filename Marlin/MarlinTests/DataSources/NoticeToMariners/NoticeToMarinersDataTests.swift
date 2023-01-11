@@ -13,7 +13,7 @@ import CoreData
 @testable import Marlin
 final class NoticeToMarinersDataTests: XCTestCase {
     var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.memory
+    var persistentStore: PersistentStore = PersistenceController.shared
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
     
@@ -31,7 +31,6 @@ final class NoticeToMarinersDataTests: XCTestCase {
                 completion(nil)
             }
             .store(in: &cancellable)
-        persistentStore = PersistenceController.memory
         persistentStore.reset()
     }
     
@@ -188,9 +187,16 @@ final class NoticeToMarinersDataTests: XCTestCase {
         }
         
         expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+            print("xxx notification for ntm")
             let count = try? self.persistentStore.countOfObjects(NoticeToMariners.self)
-            XCTAssertEqual(count, 23)
-            return true
+            if count == 23 {
+                print("xxx count is 23")
+                XCTAssertEqual(count, 23)
+                return true
+            } else {
+                print("xxx count is not 23 it is \(count)")
+                return false
+            }
         }
         
         MSI.shared.loadData(type: NoticeToMariners.decodableRoot, dataType: NoticeToMariners.self)

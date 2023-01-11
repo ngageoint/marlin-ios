@@ -23,6 +23,8 @@ struct CurrentLocation: View {
                     .padding(8)
                 Spacer()
             }
+            .accessibilityElement()
+            .accessibilityLabel("Current Location")
             .background(Color.primaryColor)
             .onTapGesture {
                 UIPasteboard.general.string = "\(currentLocation.coordinate.latitude), \(currentLocation.coordinate.longitude)"
@@ -33,11 +35,5 @@ struct CurrentLocation: View {
                 )
             }
         }
-    }
-}
-
-struct CurrentLocation_Previews: PreviewProvider {
-    static var previews: some View {
-        CurrentLocation()
     }
 }

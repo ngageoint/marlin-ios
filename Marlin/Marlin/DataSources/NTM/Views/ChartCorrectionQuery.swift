@@ -22,9 +22,10 @@ struct ChartCorrectionQuery: View {
                     ChartCorrectionList()
                 } label: {
                     Text("Query")
-                    
                 }
                 .buttonStyle(MaterialButtonStyle(type: .text))
+                .accessibilityElement()
+                .accessibilityLabel("Query")
             }
         }
         .padding(.trailing, 8)

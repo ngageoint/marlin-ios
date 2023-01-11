@@ -14,7 +14,7 @@ import CoreData
 
 final class ASAMDataTests: XCTestCase {
     var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.memory
+    var persistentStore: PersistentStore = PersistenceController.shared
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
     
@@ -32,7 +32,6 @@ final class ASAMDataTests: XCTestCase {
                 completion(nil)
             }
             .store(in: &cancellable)
-        persistentStore = PersistenceController.memory
         persistentStore.reset()
     }
         
@@ -177,9 +176,17 @@ final class ASAMDataTests: XCTestCase {
         }
         
         expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+            print("xxx notification")
             let count = try? self.persistentStore.countOfObjects(Asam.self)
-            XCTAssertEqual(count, 3)
-            return true
+            if count != 3 {
+                let asams = try? self.persistentStore.viewContext.fetchAll(Asam.self)
+                print("xxxasams are \(asams)")
+                return false
+            } else {
+                print("xxx there were 3")
+                XCTAssertEqual(count, 3)
+                return true
+            }
         }
         
         MSI.shared.loadData(type: Asam.decodableRoot, dataType: Asam.self)
@@ -195,6 +202,7 @@ final class ASAMDataTests: XCTestCase {
         
         XCTAssertEqual(newAsam.reference, "2022-218")
         XCTAssertEqual(newAsam.asamDescription, "THIS ONE IS NEW")
+        print("xxx success")
     }
     
     func testRejectInvalidAsamNoReference() throws {

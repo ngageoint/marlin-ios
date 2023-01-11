@@ -60,7 +60,7 @@ class MockDataSource: DataSource {
     
     static var dataSourceName: String = "mock"
     
-    static var fullDataSourceName: String = "mock"
+    static var fullDataSourceName: String = "mock data source"
     
     static var key: String = "mock"
     
@@ -113,7 +113,7 @@ class MockDataSourceDefaultSort: DataSource {
     
     static var dataSourceName: String = "mockdefaultsort"
     
-    static var fullDataSourceName: String = "mockdefaultsort"
+    static var fullDataSourceName: String = "mockdefaultsort data source"
     
     static var key: String = "mockdefaultsort"
     
@@ -122,6 +122,63 @@ class MockDataSourceDefaultSort: DataSource {
     static var imageName: String?
     
     static var systemImageName: String? = "face.smiling"
+    
+    var color: UIColor = UIColor.black
+    
+    static var imageScale: CGFloat = 0.5
+    
+    static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        return dateFormatter
+    }
+    
+    @objc var latitude: Double = 1.0
+    
+    @objc var longitude: Double = 1.0
+    
+    var coordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 1.0, longitude: 1.0)
+    
+    @objc var stringProperty: String = ""
+    @objc var intProperty: Int = 0
+    @objc var doubleProperty: Double = 0.0
+    @objc var floatProperty: Float = 0.0
+    @objc var enumerationProperty: String = MockEnum.Y.description
+    @objc var locationProperty: String = ""
+    @objc var dateProperty: Date = Date()
+    @objc var booleanProperty: Bool = true
+}
+
+class MockDataSourceNonMappable: DataSource {
+    static var properties: [Marlin.DataSourceProperty] = [
+        DataSourceProperty(name: "String", key: "stringProperty", type: .string),
+        DataSourceProperty(name: "Date", key: "dateProperty", type: .date),
+        DataSourceProperty(name: "Int", key: "intProperty", type: .int),
+        DataSourceProperty(name: "Double", key: "doubleProperty", type: .double),
+        DataSourceProperty(name: "Float", key: "floatProperty", type: .float),
+        DataSourceProperty(name: "Enumeration", key: "enumerationProperty", type: .enumeration),
+        DataSourceProperty(name: "Location", key: "locationProperty", type: .location),
+        DataSourceProperty(name: "Date", key: "dateProperty", type: .date),
+        DataSourceProperty(name: "Boolean", key: "booleanProperty", type: .boolean)
+    ]
+    
+    static var defaultSort: [Marlin.DataSourceSortParameter] = []
+    
+    static var defaultFilter: [Marlin.DataSourceFilterParameter] = []
+    
+    static var isMappable: Bool = false
+    
+    static var dataSourceName: String = "mock"
+    
+    static var fullDataSourceName: String = "mock non mappable"
+    
+    static var key: String = "mock"
+    
+    static var color: UIColor = UIColor.black
+    
+    static var imageName: String? = "marlin_small"
+    
+    static var systemImageName: String? = nil
     
     var color: UIColor = UIColor.black
     

@@ -39,6 +39,8 @@ struct ChartCorrectionList: View {
                             .padding(.all, 16)
                             .card()
                             .padding(.all, 8)
+                            .accessibilityElement(children: .contain)
+                            .accessibilityLabel("\(key)")
                         }
                     }
                     .dataSourceSummaryItem()
@@ -99,26 +101,6 @@ struct ChartCorrectionList: View {
                         }
                     }
                 }
-            }
-        }
-    }
-    
-    @ViewBuilder
-    func correctionText(ntm: ChartCorrection) -> some View {
-        if let corrections = ntm.correctionText?.correction {
-            LazyVGrid(columns: columns) {
-                ForEach(corrections) { result in
-                    HStack(alignment: .top, spacing: 0) {
-                        Text(result.action ?? "")
-                        Spacer()
-                    }
-                    HStack(alignment: .center, spacing: 0)  {
-                        Text(result.text ?? "")
-                            .multilineTextAlignment(.leading)
-                        Spacer()
-                    }
-                }
-                .secondary()
             }
         }
     }

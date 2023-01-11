@@ -176,7 +176,21 @@ class CoreDataPersistentStore: PersistentStore {
     var isLoaded: Bool = false
     
     private var _container: NSPersistentContainer?
-    
+        
+    static var managedObjectModel: NSManagedObjectModel = {
+        let bundle = Bundle(for: PersistenceController.self)
+        
+        guard let url = bundle.url(forResource: "Marlin", withExtension: "momd") else {
+            fatalError("Failed to locate momd file for xcdatamodeld")
+        }
+                
+        guard let model = NSManagedObjectModel(contentsOf: url) else {
+            fatalError("Failed to load momd file for xcdatamodeld")
+        }
+        
+        return model
+    }()
+
     var container : NSPersistentContainer {
         if(_container == nil) {
             _container = initializeContainer()
@@ -185,13 +199,23 @@ class CoreDataPersistentStore: PersistentStore {
     }
     
     func reset() {
+        do {
+            let currentStore = _container?.persistentStoreCoordinator.persistentStores.last!
+            if let currentStoreURL = currentStore?.url {
+                print("Current store url \(currentStoreURL)")
+                try _container?.persistentStoreCoordinator.destroyPersistentStore(at: currentStoreURL, type: .sqlite)
+
+            }
+        } catch {
+            print("Exception destroying \(error)")
+        }
         _container = nil
         isLoaded = false
         _container = container
     }
     
     func initializeContainer() -> NSPersistentContainer {
-        let container = NSPersistentContainer(name: "Marlin")
+        let container = NSPersistentContainer(name: "Marlin", managedObjectModel: CoreDataPersistentStore.managedObjectModel)
         guard let description = container.persistentStoreDescriptions.first else {
             fatalError("Failed to retrieve a persistent store description.")
         }

@@ -21,6 +21,8 @@ struct DataSourceCell: View {
                             ProgressView()
                                 .progressViewStyle(CircularProgressViewStyle(tint: Color.primaryColorVariant))
                                 .scaleEffect(0.75, anchor: .center)
+                                .accessibilityElement()
+                                .accessibilityLabel("Loading \(dataSourceItem.dataSource.key)")
                         }
                     } else {
                         if let systemImageName = dataSourceItem.dataSource.systemImageName {
@@ -46,12 +48,16 @@ struct DataSourceCell: View {
                         .onTapGesture {
                             dataSourceItem.showOnMap = !dataSourceItem.showOnMap
                         }
+                        .accessibilityElement()
+                        .accessibilityLabel(dataSourceItem.showOnMap ? "shown on map" : "not shown on map")
                 }
             }
             .contentShape(Rectangle())
             .onTapGesture {
                 NotificationCenter.default.post(name: .SwitchTabs, object: dataSourceItem.key)
             }
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(dataSourceItem.key) cell")
             .padding([.leading, .top, .bottom, .trailing], 16)
             Divider()
         }
@@ -66,11 +72,5 @@ struct DataSourceCell: View {
                 .background(Color.surfaceColor)
         )
 
-    }
-}
-
-struct DataSourceCell_Previews: PreviewProvider {
-    static var previews: some View {
-        DataSourceCell(dataSourceItem: DataSourceItem(dataSource: Asam.self))
     }
 }

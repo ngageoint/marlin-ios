@@ -8,6 +8,7 @@
 import XCTest
 import CoreLocation
 import OHHTTPStubs
+import SwiftUI
 
 @testable import Marlin
 
@@ -136,6 +137,46 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
         XCTAssertFalse(model.loading)
     }
     
+    func testListView() {
+        UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)])
+        
+        stub(condition: isScheme("https") && pathEndsWith("/publications/ntm/ntm-chart-corr/geo") && containsQueryParams(["latitudeLeft": "1.9833732516151774", "latitudeRight":"2.0166265798958696", "longitudeLeft":"3.0166367990618945", "longitudeRight":"2.9833632009381055"])) { request in
+            return HTTPStubsResponse(
+                fileAtPath: OHPathForFile("chartCorrections.json", type(of: self))!,
+                statusCode: 200,
+                headers: ["Content-Type":"application/json"]
+            )
+        }
+        
+        let view = ChartCorrectionList()
+        
+        let navView = NavigationView {
+            view
+        }
+        
+        let controller = UIHostingController(rootView: navView)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        let publishExpectation = expectation(for: !view.viewModel.sortedChartIds.isEmpty)
+        wait(for: [publishExpectation], timeout: 10.0)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Querying...")
+        
+        XCTAssertEqual(view.viewModel.sortedChartIds, ["12", "104"])
+        
+        XCTAssertEqual(view.viewModel.sortedChartCorrections(key: "12")?.count, 2)
+        XCTAssertEqual(view.viewModel.sortedChartCorrections(key: "104")?.count, 7)
+        
+        // verify the things that should be here
+        // tap the rows
+        tester().waitForView(withAccessibilityLabel: "104")
+        tester().tapView(withAccessibilityLabel: "104")
+        
+        tester().waitForView(withAccessibilityLabel: "NTM 20/06 Details")
+        tester().tapView(withAccessibilityLabel: "NTM 20/06 Details")
+        
+        tester().waitForView(withAccessibilityLabel: "Notice 6/20")
+    }
+    
     func testLoadDataError() {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)])
         let model = ChartCorrectionListViewModel()
@@ -153,4 +194,5 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
         XCTAssertEqual(model.queryError, "URLSessionTask failed with error: The operation couldn’t be completed. (NSURLErrorDomain error -1009.)")
         XCTAssertFalse(model.loading)
     }
+
 }

@@ -15,7 +15,7 @@ import CoreData
 final class LightDataTests: XCTestCase {
 
     var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.memory
+    var persistentStore: PersistentStore = PersistenceController.shared
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
     
@@ -33,7 +33,6 @@ final class LightDataTests: XCTestCase {
                 completion(nil)
             }
             .store(in: &cancellable)
-        persistentStore = PersistenceController.memory
         persistentStore.reset()
     }
     
@@ -616,9 +615,16 @@ final class LightDataTests: XCTestCase {
         waitForExpectations(timeout: 10, handler: nil)
         
         expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+            print("xxx notification for lights post process")
             let count = try? self.persistentStore.countOfObjects(Light.self)
-            XCTAssertEqual(count, 1)
-            return true
+            if count == 1 {
+                print("xxx count is 1")
+                XCTAssertEqual(count, 1)
+                return true
+            } else {
+                print("xxx count is not 1 it is \(count)")
+                return false
+            }
         }
         waitForExpectations(timeout: 10, handler: nil)
         let light = try? self.persistentStore.fetchFirst(Light.self, sortBy: [Light.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(value: true))

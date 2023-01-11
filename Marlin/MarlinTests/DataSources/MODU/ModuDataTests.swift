@@ -14,7 +14,7 @@ import CoreData
 
 final class ModuDataTests: XCTestCase {
     var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.memory
+    var persistentStore: PersistentStore = PersistenceController.shared
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
     
@@ -32,7 +32,6 @@ final class ModuDataTests: XCTestCase {
                 completion(nil)
             }
             .store(in: &cancellable)
-        persistentStore = PersistenceController.memory
         persistentStore.reset()
     }
     

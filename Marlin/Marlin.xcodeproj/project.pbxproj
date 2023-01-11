@@ -73,6 +73,9 @@
 		F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71DF4AE285927D600686951 /* MarlinScheme.swift */; };
 		F71E3E3A28F49ABE002F2019 /* SearchResultsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71E3E3928F49ABE002F2019 /* SearchResultsMap.swift */; };
 		F71E3E3C28F99626002F2019 /* CurrentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71E3E3B28F99626002F2019 /* CurrentLocation.swift */; };
+		F72281D8296E232700218FC0 /* ChartCorrectionQueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72281D7296E232700218FC0 /* ChartCorrectionQueryTests.swift */; };
+		F72281DA296F27D000218FC0 /* CurrentLocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72281D9296F27D000218FC0 /* CurrentLocationTests.swift */; };
+		F72281DD296F3FDE00218FC0 /* DataSourceCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72281DC296F3FDE00218FC0 /* DataSourceCellTests.swift */; };
 		F7275FDF28FA252800ED8D9A /* LightProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7275FDE28FA252800ED8D9A /* LightProtocol.swift */; };
 		F727A684284E351800BD728A /* MSIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A683284E351800BD728A /* MSIError.swift */; };
 		F727A691284E605800BD728A /* MarlinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A690284E605800BD728A /* MarlinTests.swift */; };
@@ -383,6 +386,9 @@
 		F71DF4AE285927D600686951 /* MarlinScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinScheme.swift; sourceTree = "<group>"; };
 		F71E3E3928F49ABE002F2019 /* SearchResultsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsMap.swift; sourceTree = "<group>"; };
 		F71E3E3B28F99626002F2019 /* CurrentLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLocation.swift; sourceTree = "<group>"; };
+		F72281D7296E232700218FC0 /* ChartCorrectionQueryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartCorrectionQueryTests.swift; sourceTree = "<group>"; };
+		F72281D9296F27D000218FC0 /* CurrentLocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLocationTests.swift; sourceTree = "<group>"; };
+		F72281DC296F3FDE00218FC0 /* DataSourceCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceCellTests.swift; sourceTree = "<group>"; };
 		F7275FDE28FA252800ED8D9A /* LightProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightProtocol.swift; sourceTree = "<group>"; };
 		F727A682284E29AE00BD728A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F727A683284E351800BD728A /* MSIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIError.swift; sourceTree = "<group>"; };
@@ -831,6 +837,14 @@
 			path = BottomSheet;
 			sourceTree = "<group>";
 		};
+		F72281DB296F3FC700218FC0 /* SideMenu */ = {
+			isa = PBXGroup;
+			children = (
+				F72281DC296F3FDE00218FC0 /* DataSourceCellTests.swift */,
+			);
+			path = SideMenu;
+			sourceTree = "<group>";
+		};
 		F7275FE028FEF8A000ED8D9A /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
@@ -842,6 +856,7 @@
 		F727A68F284E605800BD728A /* MarlinTests */ = {
 			isa = PBXGroup;
 			children = (
+				F72281DB296F3FC700218FC0 /* SideMenu */,
 				F75F81E529623A7C0062A708 /* BottomSheet */,
 				F75F81DD295F68A80062A708 /* Views */,
 				F75F81D6295DE0DD0062A708 /* Settings */,
@@ -973,6 +988,7 @@
 			isa = PBXGroup;
 			children = (
 				F75F81DE295F68BB0062A708 /* BadgeTests.swift */,
+				F72281D9296F27D000218FC0 /* CurrentLocationTests.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1200,6 +1216,7 @@
 				F7D8FA1C2922F7F300E7D0A1 /* NoticeToMarinersDataTests.swift */,
 				F7D8FA782941005E00E7D0A1 /* ChartCorrectionListViewModelTests.swift */,
 				F7D8FA7E294240B400E7D0A1 /* NoticeToMarinersFullNoticeViewModelTests.swift */,
+				F72281D7296E232700218FC0 /* ChartCorrectionQueryTests.swift */,
 			);
 			path = NoticeToMariners;
 			sourceTree = "<group>";
@@ -1783,13 +1800,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				F73ABC92295250D50085EDC5 /* FilterViewModelTests.swift in Sources */,
+				F72281D8296E232700218FC0 /* ChartCorrectionQueryTests.swift in Sources */,
 				F75F81DA295DE4640062A708 /* AboutViewTests.swift in Sources */,
 				F73ABC91295250D50085EDC5 /* SortViewModelTests.swift in Sources */,
+				F72281DA296F27D000218FC0 /* CurrentLocationTests.swift in Sources */,
 				F7C23E182911C7D50002A7DF /* ASAMDataTests.swift in Sources */,
 				F75F81DF295F68BB0062A708 /* BadgeTests.swift in Sources */,
 				F727A698284E607100BD728A /* MSITests.swift in Sources */,
 				F75F81D529526E9C0062A708 /* AsamSummaryViewTests.swift in Sources */,
 				F73ABC8C295250C70085EDC5 /* DataSourceFilterParameterTests.swift in Sources */,
+				F72281DD296F3FDE00218FC0 /* DataSourceCellTests.swift in Sources */,
 				F75F81E2295F70A50062A708 /* BooleanFilterTests.swift in Sources */,
 				F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */,
 				F727A691284E605800BD728A /* MarlinTests.swift in Sources */,
