@@ -58,11 +58,11 @@ class MockDataSource: DataSource {
     
     static var isMappable: Bool = true
     
-    static var dataSourceName: String = "mock"
+    static var dataSourceName: String = "mockdatasource"
     
     static var fullDataSourceName: String = "mock data source"
     
-    static var key: String = "mock"
+    static var key: String = "mockdatasource"
     
     static var color: UIColor = UIColor.black
     
@@ -168,11 +168,11 @@ class MockDataSourceNonMappable: DataSource {
     
     static var isMappable: Bool = false
     
-    static var dataSourceName: String = "mock"
+    static var dataSourceName: String = "mocknonmappable"
     
     static var fullDataSourceName: String = "mock non mappable"
     
-    static var key: String = "mock"
+    static var key: String = "mocknonmappable"
     
     static var color: UIColor = UIColor.black
     
