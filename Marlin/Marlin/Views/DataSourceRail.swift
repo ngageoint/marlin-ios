@@ -16,31 +16,17 @@ struct DataSourceRail: View {
         ScrollView {
             VStack {
                 ForEach(dataSourceList.tabs) { dataSourceItem in
-                    if let systemImageName = dataSourceItem.dataSource.systemImageName {
-                        RailItem(systemImageName: systemImageName, itemText: dataSourceItem.dataSource.dataSourceName)
-                            .onTapGesture {
-                                if activeRailItem == dataSourceItem {
-                                    activeRailItem = nil
-                                } else {
-                                    activeRailItem = dataSourceItem
-                                }
+                    RailItem(imageName: dataSourceItem.dataSource.imageName, systemImageName: dataSourceItem.dataSource.systemImageName, itemText: dataSourceItem.dataSource.dataSourceName)
+                        .onTapGesture {
+                            if activeRailItem == dataSourceItem {
+                                activeRailItem = nil
+                            } else {
+                                activeRailItem = dataSourceItem
                             }
-                            .foregroundColor(activeRailItem == dataSourceItem ? Color.primaryColorVariant.opacity(0.87) : Color.onSurfaceColor.opacity(0.6))
-                            .accessibilityElement()
-                            .accessibilityLabel("\(dataSourceItem.dataSource.fullDataSourceName) rail item")
-                    } else if let imageName = dataSourceItem.dataSource.imageName {
-                        RailItem(imageName: imageName, itemText: dataSourceItem.dataSource.dataSourceName)
-                            .onTapGesture {
-                                if activeRailItem == dataSourceItem {
-                                    activeRailItem = nil
-                                } else {
-                                    activeRailItem = dataSourceItem
-                                }
-                            }
-                            .foregroundColor(activeRailItem == dataSourceItem ? Color.primaryColorVariant.opacity(0.87) : Color.onSurfaceColor.opacity(0.6))
-                            .accessibilityElement()
-                            .accessibilityLabel("\(dataSourceItem.dataSource.fullDataSourceName) rail item")
-                    }
+                        }
+                        .foregroundColor(activeRailItem == dataSourceItem ? Color.primaryColorVariant.opacity(0.87) : Color.onSurfaceColor.opacity(0.6))
+                        .accessibilityElement()
+                        .accessibilityLabel("\(dataSourceItem.dataSource.fullDataSourceName) rail item")
                 }
             }
             Spacer()
