@@ -26,6 +26,8 @@ struct MapSettings: View {
                         .onTapGesture {
                             mapType = Int(MKMapType.standard.rawValue)
                         }
+                        .accessibilityElement()
+                        .accessibilityLabel("Standard Map")
                 }
                 .padding(.top, 4)
                 .padding(.bottom, 4)
@@ -38,6 +40,8 @@ struct MapSettings: View {
                         .onTapGesture {
                             mapType = Int(MKMapType.satellite.rawValue)
                         }
+                        .accessibilityElement()
+                        .accessibilityLabel("Satellite Map")
                 }
                 .padding(.top, 4)
                 .padding(.bottom, 4)
@@ -50,6 +54,8 @@ struct MapSettings: View {
                         .onTapGesture {
                             mapType = Int(MKMapType.hybrid.rawValue)
                         }
+                        .accessibilityElement()
+                        .accessibilityLabel("Hybrid Map")
                 }
                 .padding(.top, 4)
                 .padding(.bottom, 4)
@@ -63,6 +69,8 @@ struct MapSettings: View {
                             .onTapGesture {
                                 mapType = Int(MKMapType.satelliteFlyover.rawValue)
                             }
+                            .accessibilityElement()
+                            .accessibilityLabel("Satellite Flyover Map")
                     }
                     .padding(.top, 4)
                     .padding(.bottom, 4)
@@ -75,6 +83,8 @@ struct MapSettings: View {
                             .onTapGesture {
                                 mapType = Int(MKMapType.hybridFlyover.rawValue)
                             }
+                            .accessibilityElement()
+                            .accessibilityLabel("Hybrid Flyover Map")
                     }
                     .padding(.top, 4)
                     .padding(.bottom, 4)
@@ -88,6 +98,8 @@ struct MapSettings: View {
                         .onTapGesture {
                             mapType = Int(MKMapType.mutedStandard.rawValue)
                         }
+                        .accessibilityElement()
+                        .accessibilityLabel("Muted Map")
                 }
                 .padding(.top, 4)
                 .padding(.bottom, 4)
@@ -100,6 +112,8 @@ struct MapSettings: View {
                         .onTapGesture {
                             mapType = ExtraMapTypes.osm.rawValue
                         }
+                        .accessibilityElement()
+                        .accessibilityLabel("Open Street Map")
                 }
                 .padding(.top, 4)
                 .padding(.bottom, 4)
@@ -116,7 +130,14 @@ struct MapSettings: View {
                     .padding(.top, 4)
                     .padding(.bottom, 4)
                 }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    showMGRS.toggle()
+                }
                 .tint(Color.primaryColor)
+                .accessibilityElement()
+                .accessibilityLabel("Toggle MGRS Grid")
+                
                 Toggle(isOn: $showGARS) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("GARS").font(Font.body1)
@@ -128,7 +149,14 @@ struct MapSettings: View {
                     .padding(.top, 4)
                     .padding(.bottom, 4)
                 }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    showGARS.toggle()
+                }
                 .tint(Color.primaryColor)
+                .accessibilityElement()
+                .accessibilityLabel("Toggle GARS Grid")
+                
             }
             Section("Data Source Settings") {
                 NavigationLink {
@@ -143,6 +171,8 @@ struct MapSettings: View {
                         .font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                 }
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Light Settings")
             }
             
             Section("Display") {
@@ -166,11 +196,5 @@ struct MapSettings: View {
         .onAppear {
             Metrics.shared.mapSettingsView()
         }
-    }
-}
-
-struct MapSettings_Previews: PreviewProvider {
-    static var previews: some View {
-        MapSettings()
     }
 }

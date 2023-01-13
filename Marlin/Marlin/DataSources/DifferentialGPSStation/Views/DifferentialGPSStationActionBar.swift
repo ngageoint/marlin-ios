@@ -33,6 +33,8 @@ struct DifferentialGPSStationActionBar: View {
                     Text(coordinateButtonTitle)
                         .foregroundColor(Color.primaryColorVariant)
                 }
+                .accessibilityElement()
+                .accessibilityLabel("Location")
             }
             
             Spacer()
@@ -48,6 +50,9 @@ struct DifferentialGPSStationActionBar: View {
                                 .foregroundColor(Color.primaryColorVariant)
                         })
                 }
+                .accessibilityElement()
+                .accessibilityLabel("share")
+                
                 if showFocusButton {
                     Button(action: {
                         NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
@@ -61,6 +66,8 @@ struct DifferentialGPSStationActionBar: View {
                                     .foregroundColor(Color.primaryColorVariant)
                             })
                     }
+                    .accessibilityElement()
+                    .accessibilityLabel("focus")
                 }
             }.padding(.trailing, -8)
         }

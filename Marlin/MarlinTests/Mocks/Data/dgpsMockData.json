@@ -5,7 +5,7 @@
             "volumeNumber": "PUB 112",
             "aidType": "Differential GPS Stations",
             "geopoliticalHeading": "KOREA",
-            "regionHeading": null,
+            "regionHeading": "region",
             "precedingNote": null,
             "featureNumber": 6,
             "name": "Chojin Dan Lt",

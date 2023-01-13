@@ -85,11 +85,21 @@ extension UserDefaults {
     }
     
     @objc var actualRangeLights: Bool {
-        bool(forKey: #function)
+        get {
+            bool(forKey: #function)
+        }
+        set {
+            setValue(newValue, forKey: #function)
+        }
     }
     
     @objc var actualRangeSectorLights: Bool {
-        bool(forKey: #function)
+        get {
+            bool(forKey: #function)
+        }
+        set {
+            setValue(newValue, forKey: #function)
+        }
     }
     
     @objc var initialDataLoaded: Bool {
