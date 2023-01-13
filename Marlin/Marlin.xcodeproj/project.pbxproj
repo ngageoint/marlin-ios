@@ -84,6 +84,7 @@
 		F727A698284E607100BD728A /* MSITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A685284E476200BD728A /* MSITests.swift */; };
 		F72D88F42971B84D00D022FB /* FilterBottomSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88F32971B84D00D022FB /* FilterBottomSheetTests.swift */; };
 		F72D88F62971E9D900D022FB /* FilterBottomSheetRowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88F52971E9D900D022FB /* FilterBottomSheetRowTests.swift */; };
+		F72D88F82971FF8000D022FB /* HamburgerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88F72971FF8000D022FB /* HamburgerTests.swift */; };
 		F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */; };
 		F72EAAB9291BF28C00AC6026 /* moduMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAAB8291BF28C00AC6026 /* moduMockData.json */; };
 		F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAABB291C138000AC6026 /* PortDataTests.swift */; };
@@ -190,7 +191,7 @@
 		F7D671E42871C5F900758F1C /* NavigationalWarningActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671E32871C5F900758F1C /* NavigationalWarningActionBar.swift */; };
 		F7D671E72871D46000758F1C /* SideMenuContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671E62871D46000758F1C /* SideMenuContent.swift */; };
 		F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671E82871D4C700758F1C /* SideMenu.swift */; };
-		F7D671EB2871D73200758F1C /* HamburgerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671EA2871D73200758F1C /* HamburgerButton.swift */; };
+		F7D671EB2871D73200758F1C /* Hamburger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671EA2871D73200758F1C /* Hamburger.swift */; };
 		F7D671ED2874737F00758F1C /* DataSourceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671EC2874737F00758F1C /* DataSourceCell.swift */; };
 		F7D671EF287475BC00758F1C /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671EE287475BC00758F1C /* DataSource.swift */; };
 		F7D671F1287484FE00758F1C /* MarlinUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671F0287484FE00758F1C /* MarlinUserDefaults.swift */; };
@@ -405,6 +406,7 @@
 		F727A690284E605800BD728A /* MarlinTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTests.swift; sourceTree = "<group>"; };
 		F72D88F32971B84D00D022FB /* FilterBottomSheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterBottomSheetTests.swift; sourceTree = "<group>"; };
 		F72D88F52971E9D900D022FB /* FilterBottomSheetRowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterBottomSheetRowTests.swift; sourceTree = "<group>"; };
+		F72D88F72971FF8000D022FB /* HamburgerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HamburgerTests.swift; sourceTree = "<group>"; };
 		F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDataTests.swift; sourceTree = "<group>"; };
 		F72EAAB8291BF28C00AC6026 /* moduMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = moduMockData.json; sourceTree = "<group>"; };
 		F72EAABB291C138000AC6026 /* PortDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDataTests.swift; sourceTree = "<group>"; };
@@ -515,7 +517,7 @@
 		F7D671E32871C5F900758F1C /* NavigationalWarningActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningActionBar.swift; sourceTree = "<group>"; };
 		F7D671E62871D46000758F1C /* SideMenuContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuContent.swift; sourceTree = "<group>"; };
 		F7D671E82871D4C700758F1C /* SideMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenu.swift; sourceTree = "<group>"; };
-		F7D671EA2871D73200758F1C /* HamburgerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HamburgerButton.swift; sourceTree = "<group>"; };
+		F7D671EA2871D73200758F1C /* Hamburger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hamburger.swift; sourceTree = "<group>"; };
 		F7D671EC2874737F00758F1C /* DataSourceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceCell.swift; sourceTree = "<group>"; };
 		F7D671EE287475BC00758F1C /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		F7D671F0287484FE00758F1C /* MarlinUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinUserDefaults.swift; sourceTree = "<group>"; };
@@ -1002,6 +1004,7 @@
 				F75F81DE295F68BB0062A708 /* BadgeTests.swift */,
 				F72281D9296F27D000218FC0 /* CurrentLocationTests.swift */,
 				F72281DE296F644600218FC0 /* DataSourceRailTests.swift */,
+				F72D88F72971FF8000D022FB /* HamburgerTests.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1377,7 +1380,7 @@
 			children = (
 				F7D8FA24292447AC00E7D0A1 /* AsyncImage */,
 				F7F59794285BE27400F9B32E /* Property.swift */,
-				F7D671EA2871D73200758F1C /* HamburgerButton.swift */,
+				F7D671EA2871D73200758F1C /* Hamburger.swift */,
 				F707BA842878DBFF006A94C4 /* AdaptiveImage.swift */,
 				F7E8C89D28946C8900E7CCE2 /* RailItem.swift */,
 				F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */,
@@ -1835,6 +1838,7 @@
 				F73ABC86295250A90085EDC5 /* LocationManagerTests.swift in Sources */,
 				F73D9E252970E54C008AF40D /* MapSettingsTests.swift in Sources */,
 				F75F81E42960B4D90062A708 /* StringFilterTests.swift in Sources */,
+				F72D88F82971FF8000D022FB /* HamburgerTests.swift in Sources */,
 				F7D8FA64293AB5B000E7D0A1 /* MockDataSource.swift in Sources */,
 				F7D8FA342936C08200E7D0A1 /* MapImageTests.swift in Sources */,
 				F72D88F42971B84D00D022FB /* FilterBottomSheetTests.swift in Sources */,
@@ -1910,7 +1914,7 @@
 				F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */,
 				F707BA87287C6596006A94C4 /* LightCard.swift in Sources */,
 				F74B9B1128B7DACB0097D448 /* RadioBeaconDetailView.swift in Sources */,
-				F7D671EB2871D73200758F1C /* HamburgerButton.swift in Sources */,
+				F7D671EB2871D73200758F1C /* Hamburger.swift in Sources */,
 				F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */,
 				F7FFB33628D8F5A300C31AA3 /* LightSettingsView.swift in Sources */,
 				F7D5C05D28AA7A1F000C2C29 /* Snackbar.swift in Sources */,

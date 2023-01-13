@@ -35,8 +35,6 @@ final class FilterBottomSheetRowTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "expand \(MockDataSource.fullDataSourceName) filters")
         
         tester().waitForView(withAccessibilityLabel: "\(MockDataSource.fullDataSourceName) filters")
-        
-        tester().wait(forTimeInterval: 5)
     }
     
     func testFilterBottomSheetRowWithFilters() {
@@ -64,7 +62,5 @@ final class FilterBottomSheetRowTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "expand \(MockDataSource.fullDataSourceName) filters")
         
         tester().waitForView(withAccessibilityLabel: "\(MockDataSource.fullDataSourceName) filters")
-        
-        tester().wait(forTimeInterval: 5)
     }
 }
