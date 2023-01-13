@@ -17,6 +17,8 @@ struct FilterBottomSheetRow: View {
             DisclosureGroup {
                 let dataSourceType = dataSourceItem.dataSource
                 FilterView(viewModel: FilterViewModel(dataSource: dataSourceType))
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("\(dataSourceItem.dataSource.fullDataSourceName) filters")
             } label : {
                 HStack(alignment: .center, spacing: 8) {
                     
@@ -41,10 +43,13 @@ struct FilterBottomSheetRow: View {
                 }
                 .contentShape(Rectangle())
                 .padding([.leading, .top, .bottom, .trailing], 16)
-                
-                
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("\(filterCount) \(dataSourceItem.dataSource.fullDataSourceName) filters")
             }
             .padding(.trailing, 16)
+            .contentShape(Rectangle())
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("expand \(dataSourceItem.dataSource.fullDataSourceName) filters")
             
             .background(
                 

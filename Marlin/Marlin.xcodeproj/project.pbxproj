@@ -82,6 +82,8 @@
 		F727A691284E605800BD728A /* MarlinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A690284E605800BD728A /* MarlinTests.swift */; };
 		F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A687284E485500BD728A /* KIF+extensions.swift */; };
 		F727A698284E607100BD728A /* MSITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A685284E476200BD728A /* MSITests.swift */; };
+		F72D88F42971B84D00D022FB /* FilterBottomSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88F32971B84D00D022FB /* FilterBottomSheetTests.swift */; };
+		F72D88F62971E9D900D022FB /* FilterBottomSheetRowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88F52971E9D900D022FB /* FilterBottomSheetRowTests.swift */; };
 		F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */; };
 		F72EAAB9291BF28C00AC6026 /* moduMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAAB8291BF28C00AC6026 /* moduMockData.json */; };
 		F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAABB291C138000AC6026 /* PortDataTests.swift */; };
@@ -401,6 +403,8 @@
 		F727A689284E5F9600BD728A /* Marlin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Marlin-Bridging-Header.h"; sourceTree = "<group>"; };
 		F727A68E284E605800BD728A /* MarlinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MarlinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F727A690284E605800BD728A /* MarlinTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTests.swift; sourceTree = "<group>"; };
+		F72D88F32971B84D00D022FB /* FilterBottomSheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterBottomSheetTests.swift; sourceTree = "<group>"; };
+		F72D88F52971E9D900D022FB /* FilterBottomSheetRowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterBottomSheetRowTests.swift; sourceTree = "<group>"; };
 		F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDataTests.swift; sourceTree = "<group>"; };
 		F72EAAB8291BF28C00AC6026 /* moduMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = moduMockData.json; sourceTree = "<group>"; };
 		F72EAABB291C138000AC6026 /* PortDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDataTests.swift; sourceTree = "<group>"; };
@@ -1291,6 +1295,8 @@
 				F73ABC90295250D50085EDC5 /* FilterViewModelTests.swift */,
 				F73ABC8F295250D50085EDC5 /* SortViewModelTests.swift */,
 				F7D8FA60293AA46600E7D0A1 /* DataSource */,
+				F72D88F32971B84D00D022FB /* FilterBottomSheetTests.swift */,
+				F72D88F52971E9D900D022FB /* FilterBottomSheetRowTests.swift */,
 			);
 			path = Filter;
 			sourceTree = "<group>";
@@ -1825,11 +1831,13 @@
 				F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */,
 				F727A691284E605800BD728A /* MarlinTests.swift in Sources */,
 				F73ABC8D295250C70085EDC5 /* DataSourcePropertyFilterViewModelTests.swift in Sources */,
+				F72D88F62971E9D900D022FB /* FilterBottomSheetRowTests.swift in Sources */,
 				F73ABC86295250A90085EDC5 /* LocationManagerTests.swift in Sources */,
 				F73D9E252970E54C008AF40D /* MapSettingsTests.swift in Sources */,
 				F75F81E42960B4D90062A708 /* StringFilterTests.swift in Sources */,
 				F7D8FA64293AB5B000E7D0A1 /* MockDataSource.swift in Sources */,
 				F7D8FA342936C08200E7D0A1 /* MapImageTests.swift in Sources */,
+				F72D88F42971B84D00D022FB /* FilterBottomSheetTests.swift in Sources */,
 				F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */,
 				F7D8FA792941005E00E7D0A1 /* ChartCorrectionListViewModelTests.swift in Sources */,
 				F75F81DC295F3F190062A708 /* AsamDetailViewTests.swift in Sources */,

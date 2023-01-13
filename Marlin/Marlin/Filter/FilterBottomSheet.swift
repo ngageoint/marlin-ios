@@ -19,6 +19,8 @@ struct FilterBottomSheet: View {
                     item1.order.wrappedValue < item2.order.wrappedValue
                 })) { $dataSourceItem in
                     FilterBottomSheetRow(dataSourceItem: $dataSourceItem)
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel("\(dataSourceItem.dataSource.fullDataSourceName) filter row")
                 }
                 .background(Color.surfaceColor)
             }
