@@ -13,7 +13,7 @@ import SwiftUI
 
 final class HamburgerTests: XCTestCase {
     
-    func testFilterBottomSheetRowNoFilters() {
+    func testHamburger() {
         UserDefaults.standard.setFilter(MockDataSource.key, filter: [])
         
         class PassThrough {

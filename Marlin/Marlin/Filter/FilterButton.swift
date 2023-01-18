@@ -8,9 +8,6 @@
 import SwiftUI
 
 struct FilterButton: ViewModifier {
-    @AppStorage("filterEnabled") var filterEnabled = false
-    @AppStorage("sortEnabled") var sortEnabled = false
-
     @Binding var filterOpen: Bool
     @Binding var sortOpen: Bool
     @Binding var dataSources: [DataSourceItem]
@@ -41,7 +38,7 @@ struct FilterButton: ViewModifier {
             ToolbarItem (placement: .navigationBarTrailing)  {
                 
                 HStack(spacing: 0) {
-                    if sortEnabled && allowSorting {
+                    if allowSorting {
                         Button(action: {
                             sortOpen.toggle()
                         }) {
@@ -51,21 +48,28 @@ struct FilterButton: ViewModifier {
                         }
                         .padding([.top, .bottom], 10)
                         .padding(.trailing, 5)
+                        .contentShape(Rectangle())
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel("Sort")
                     }
-                    if filterEnabled && allowFiltering {
+                    if allowFiltering {
                         Button(action: {
                             filterOpen.toggle()
                         }) {
                             Image(systemName: "slider.horizontal.3")
                                 .imageScale(.large)
                                 .foregroundColor(Color.onPrimaryColor)
-                                .overlay(Badge(count: filterCount))
+                                .overlay(Badge(count: filterCount)
+                                    .accessibilityElement()
+                                    .accessibilityLabel("\(filterCount) filter"))
                         }
                         .padding([.top, .bottom], 10)
                         .padding(.leading, 5)
+                        .contentShape(Rectangle())
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel("Filter")
                     }
                 }
-                
             }
         }
         .onAppear {
