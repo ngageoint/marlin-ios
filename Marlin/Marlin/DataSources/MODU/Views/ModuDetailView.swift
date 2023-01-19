@@ -51,22 +51,15 @@ struct ModuDetailView: View {
             
             Section("Additional Information") {
                 VStack(alignment: .leading, spacing: 8) {
-                    if let rigStatus = modu.rigStatus {
-                        Property(property: "Rig Status", value: rigStatus)
-                    }
-                    if let specialStatus = modu.specialStatus {
-                        Property(property: "Special Status", value: specialStatus)
-                    }
+                    Property(property: "Rig Status", value: modu.rigStatus)
+                    Property(property: "Special Status", value: modu.specialStatus)
                     if let distance = modu.distance, distance != 0 {
                         Property(property: "Distance", value: "\(distance)")
                     }
-                    if let navArea = modu.navArea {
-                        Property(property: "Navigational Area", value: navArea)
-                    }
+                    Property(property: "Navigational Area", value: modu.navArea)
                     if let subregion = modu.subregion {
                         Property(property: "Charting Subregion", value: "\(subregion)")
                     }
-                    
                 }
                 .padding(.all, 16)
                 .card()

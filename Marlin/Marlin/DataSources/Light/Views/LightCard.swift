@@ -47,6 +47,8 @@ struct LightCard: View {
                 
                 if let image = image {
                     image.aspectRatio(contentMode: .fit)
+                        .accessibilityElement()
+                        .accessibilityLabel("Light image")
                 }
             }
             
@@ -72,9 +74,3 @@ struct LightCard: View {
         .frame(maxWidth: .infinity)
     }
 }
-
-//struct LightCard_Previews: PreviewProvider {
-//    static var previews: some View {
-//        LightCard()
-//    }
-//}

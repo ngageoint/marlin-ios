@@ -152,7 +152,7 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
         
         let navView = NavigationView {
             view
-        }
+        }.environment(\.managedObjectContext, PersistenceController.shared.viewContext)
         
         let controller = UIHostingController(rootView: navView)
         let window = TestHelpers.getKeyWindowVisible()

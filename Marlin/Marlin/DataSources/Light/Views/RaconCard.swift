@@ -40,9 +40,3 @@ struct RaconCard: View {
         .frame(maxWidth: .infinity)
     }
 }
-
-//struct RaconCard_Previews: PreviewProvider {
-//    static var previews: some View {
-//        RaconCard()
-//    }
-//}

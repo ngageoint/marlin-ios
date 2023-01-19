@@ -87,6 +87,9 @@
 		F72D88F82971FF8000D022FB /* HamburgerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88F72971FF8000D022FB /* HamburgerTests.swift */; };
 		F72D88FA297211BC00D022FB /* FilterButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88F9297211BC00D022FB /* FilterButtonTests.swift */; };
 		F72D88FC29785CE100D022FB /* LightSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88FB29785CE100D022FB /* LightSummaryViewTests.swift */; };
+		F72D88FE29787AEE00D022FB /* LightDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88FD29787AEE00D022FB /* LightDetailViewTests.swift */; };
+		F72D89002979B87800D022FB /* ModuSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88FF2979B87800D022FB /* ModuSummaryTests.swift */; };
+		F72D89022979BCA300D022FB /* ModuDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D89012979BCA300D022FB /* ModuDetailViewTests.swift */; };
 		F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */; };
 		F72EAAB9291BF28C00AC6026 /* moduMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAAB8291BF28C00AC6026 /* moduMockData.json */; };
 		F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAABB291C138000AC6026 /* PortDataTests.swift */; };
@@ -411,6 +414,9 @@
 		F72D88F72971FF8000D022FB /* HamburgerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HamburgerTests.swift; sourceTree = "<group>"; };
 		F72D88F9297211BC00D022FB /* FilterButtonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButtonTests.swift; sourceTree = "<group>"; };
 		F72D88FB29785CE100D022FB /* LightSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightSummaryViewTests.swift; sourceTree = "<group>"; };
+		F72D88FD29787AEE00D022FB /* LightDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightDetailViewTests.swift; sourceTree = "<group>"; };
+		F72D88FF2979B87800D022FB /* ModuSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuSummaryTests.swift; sourceTree = "<group>"; };
+		F72D89012979BCA300D022FB /* ModuDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDetailViewTests.swift; sourceTree = "<group>"; };
 		F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDataTests.swift; sourceTree = "<group>"; };
 		F72EAAB8291BF28C00AC6026 /* moduMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = moduMockData.json; sourceTree = "<group>"; };
 		F72EAABB291C138000AC6026 /* PortDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDataTests.swift; sourceTree = "<group>"; };
@@ -895,6 +901,8 @@
 			isa = PBXGroup;
 			children = (
 				F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */,
+				F72D88FF2979B87800D022FB /* ModuSummaryTests.swift */,
+				F72D89012979BCA300D022FB /* ModuDetailViewTests.swift */,
 			);
 			path = MODU;
 			sourceTree = "<group>";
@@ -938,6 +946,7 @@
 			children = (
 				F72EAACF291C669D00AC6026 /* LightDataTests.swift */,
 				F72D88FB29785CE100D022FB /* LightSummaryViewTests.swift */,
+				F72D88FD29787AEE00D022FB /* LightDetailViewTests.swift */,
 			);
 			path = Light;
 			sourceTree = "<group>";
@@ -1836,11 +1845,14 @@
 				F73D9E212970AA66008AF40D /* DifferentialGPSStationDetailViewTests.swift in Sources */,
 				F73ABC8C295250C70085EDC5 /* DataSourceFilterParameterTests.swift in Sources */,
 				F72281DD296F3FDE00218FC0 /* DataSourceCellTests.swift in Sources */,
+				F72D88FE29787AEE00D022FB /* LightDetailViewTests.swift in Sources */,
 				F75F81E2295F70A50062A708 /* BooleanFilterTests.swift in Sources */,
+				F72D89022979BCA300D022FB /* ModuDetailViewTests.swift in Sources */,
 				F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */,
 				F727A691284E605800BD728A /* MarlinTests.swift in Sources */,
 				F73ABC8D295250C70085EDC5 /* DataSourcePropertyFilterViewModelTests.swift in Sources */,
 				F72D88F62971E9D900D022FB /* FilterBottomSheetRowTests.swift in Sources */,
+				F72D89002979B87800D022FB /* ModuSummaryTests.swift in Sources */,
 				F73ABC86295250A90085EDC5 /* LocationManagerTests.swift in Sources */,
 				F73D9E252970E54C008AF40D /* MapSettingsTests.swift in Sources */,
 				F75F81E42960B4D90062A708 /* StringFilterTests.swift in Sources */,
