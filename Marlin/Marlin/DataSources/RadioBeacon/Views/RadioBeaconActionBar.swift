@@ -20,6 +20,8 @@ struct RadioBeaconActionBar: View {
                 }) {
                     Text("More Details")
                 }
+                .accessibilityElement()
+                .accessibilityLabel("More Details")
             } else {
                 let coordinateButtonTitle = radioBeacon.coordinate.toDisplay()
                 
@@ -33,6 +35,8 @@ struct RadioBeaconActionBar: View {
                     Text(coordinateButtonTitle)
                         .foregroundColor(Color.primaryColorVariant)
                 }
+                .accessibilityElement()
+                .accessibilityLabel("Location")
             }
             
             Spacer()
@@ -48,6 +52,8 @@ struct RadioBeaconActionBar: View {
                                 .foregroundColor(Color.primaryColorVariant)
                         })
                 }
+                .accessibilityElement()
+                .accessibilityLabel("share")
                 if showFocusButton {
                     Button(action: {
                         NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
@@ -61,6 +67,8 @@ struct RadioBeaconActionBar: View {
                                     .foregroundColor(Color.primaryColorVariant)
                             })
                     }
+                    .accessibilityElement()
+                    .accessibilityLabel("focus")
                 }
             }.padding(.trailing, -8)
         }

@@ -20,6 +20,8 @@ struct PortActionBar: View {
                 }) {
                     Text("More Details")
                 }
+                .accessibilityElement()
+                .accessibilityLabel("More Details")
             } else {
                 let coordinateButtonTitle = port.coordinate.toDisplay()
                 
@@ -33,6 +35,8 @@ struct PortActionBar: View {
                     Text(coordinateButtonTitle)
                         .foregroundColor(Color.primaryColorVariant)
                 }
+                .accessibilityElement()
+                .accessibilityLabel("Location")
             }
             
             Spacer()
@@ -48,6 +52,8 @@ struct PortActionBar: View {
                                 .foregroundColor(Color.primaryColorVariant)
                         })
                 }
+                .accessibilityElement()
+                .accessibilityLabel("share")
                 if showFocusButton {
                     Button(action: {
                         NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
@@ -61,15 +67,11 @@ struct PortActionBar: View {
                                     .foregroundColor(Color.primaryColorVariant)
                             })
                     }
+                    .accessibilityElement()
+                    .accessibilityLabel("focus")
                 }
             }.padding(.trailing, -8)
         }
         .buttonStyle(MaterialButtonStyle())
     }
 }
-//
-//struct PortActionBar_Previews: PreviewProvider {
-//    static var previews: some View {
-//        PortActionBar()
-//    }
-//}

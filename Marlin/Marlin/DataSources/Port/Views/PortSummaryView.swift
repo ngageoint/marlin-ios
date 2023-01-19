@@ -57,11 +57,3 @@ struct PortSummaryView: View {
         }
     }
 }
-
-//struct PortSummaryView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let context = PersistenceController.preview.container.viewContext
-//        let port = try? context.fetchFirst(Port.self)
-//        PortSummaryView(port: port!)
-//    }
-//}

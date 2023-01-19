@@ -90,6 +90,10 @@
 		F72D88FE29787AEE00D022FB /* LightDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88FD29787AEE00D022FB /* LightDetailViewTests.swift */; };
 		F72D89002979B87800D022FB /* ModuSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88FF2979B87800D022FB /* ModuSummaryTests.swift */; };
 		F72D89022979BCA300D022FB /* ModuDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D89012979BCA300D022FB /* ModuDetailViewTests.swift */; };
+		F72D89042979C30500D022FB /* PortSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D89032979C30500D022FB /* PortSummaryViewTests.swift */; };
+		F72D89062979D56500D022FB /* PortDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D89052979D56500D022FB /* PortDetailViewTests.swift */; };
+		F72D89082979E3E400D022FB /* RadioBeaconSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D89072979E3E400D022FB /* RadioBeaconSummaryViewTests.swift */; };
+		F72D890A2979E7FC00D022FB /* RadioBeaconDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D89092979E7FC00D022FB /* RadioBeaconDetailViewTests.swift */; };
 		F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */; };
 		F72EAAB9291BF28C00AC6026 /* moduMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAAB8291BF28C00AC6026 /* moduMockData.json */; };
 		F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAABB291C138000AC6026 /* PortDataTests.swift */; };
@@ -417,6 +421,10 @@
 		F72D88FD29787AEE00D022FB /* LightDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightDetailViewTests.swift; sourceTree = "<group>"; };
 		F72D88FF2979B87800D022FB /* ModuSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuSummaryTests.swift; sourceTree = "<group>"; };
 		F72D89012979BCA300D022FB /* ModuDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDetailViewTests.swift; sourceTree = "<group>"; };
+		F72D89032979C30500D022FB /* PortSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortSummaryViewTests.swift; sourceTree = "<group>"; };
+		F72D89052979D56500D022FB /* PortDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDetailViewTests.swift; sourceTree = "<group>"; };
+		F72D89072979E3E400D022FB /* RadioBeaconSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconSummaryViewTests.swift; sourceTree = "<group>"; };
+		F72D89092979E7FC00D022FB /* RadioBeaconDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconDetailViewTests.swift; sourceTree = "<group>"; };
 		F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDataTests.swift; sourceTree = "<group>"; };
 		F72EAAB8291BF28C00AC6026 /* moduMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = moduMockData.json; sourceTree = "<group>"; };
 		F72EAABB291C138000AC6026 /* PortDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDataTests.swift; sourceTree = "<group>"; };
@@ -911,6 +919,8 @@
 			isa = PBXGroup;
 			children = (
 				F72EAABB291C138000AC6026 /* PortDataTests.swift */,
+				F72D89032979C30500D022FB /* PortSummaryViewTests.swift */,
+				F72D89052979D56500D022FB /* PortDetailViewTests.swift */,
 			);
 			path = Port;
 			sourceTree = "<group>";
@@ -955,6 +965,8 @@
 			isa = PBXGroup;
 			children = (
 				F72EAAD4291D526700AC6026 /* RadioBeaconDataTests.swift */,
+				F72D89072979E3E400D022FB /* RadioBeaconSummaryViewTests.swift */,
+				F72D89092979E7FC00D022FB /* RadioBeaconDetailViewTests.swift */,
 			);
 			path = RadioBeacon;
 			sourceTree = "<group>";
@@ -1833,6 +1845,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F73ABC92295250D50085EDC5 /* FilterViewModelTests.swift in Sources */,
+				F72D89082979E3E400D022FB /* RadioBeaconSummaryViewTests.swift in Sources */,
 				F72281D8296E232700218FC0 /* ChartCorrectionQueryTests.swift in Sources */,
 				F75F81DA295DE4640062A708 /* AboutViewTests.swift in Sources */,
 				F73ABC91295250D50085EDC5 /* SortViewModelTests.swift in Sources */,
@@ -1846,6 +1859,7 @@
 				F73ABC8C295250C70085EDC5 /* DataSourceFilterParameterTests.swift in Sources */,
 				F72281DD296F3FDE00218FC0 /* DataSourceCellTests.swift in Sources */,
 				F72D88FE29787AEE00D022FB /* LightDetailViewTests.swift in Sources */,
+				F72D89062979D56500D022FB /* PortDetailViewTests.swift in Sources */,
 				F75F81E2295F70A50062A708 /* BooleanFilterTests.swift in Sources */,
 				F72D89022979BCA300D022FB /* ModuDetailViewTests.swift in Sources */,
 				F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */,
@@ -1858,6 +1872,7 @@
 				F75F81E42960B4D90062A708 /* StringFilterTests.swift in Sources */,
 				F72D88F82971FF8000D022FB /* HamburgerTests.swift in Sources */,
 				F7D8FA64293AB5B000E7D0A1 /* MockDataSource.swift in Sources */,
+				F72D890A2979E7FC00D022FB /* RadioBeaconDetailViewTests.swift in Sources */,
 				F7D8FA342936C08200E7D0A1 /* MapImageTests.swift in Sources */,
 				F72D88F42971B84D00D022FB /* FilterBottomSheetTests.swift in Sources */,
 				F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */,
@@ -1870,6 +1885,7 @@
 				F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */,
 				F72EAAC1291C274100AC6026 /* DifferentialGPSStationDataTests.swift in Sources */,
 				F72D88FC29785CE100D022FB /* LightSummaryViewTests.swift in Sources */,
+				F72D89042979C30500D022FB /* PortSummaryViewTests.swift in Sources */,
 				F72EAAD0291C669D00AC6026 /* LightDataTests.swift in Sources */,
 				F72EAACB291C635100AC6026 /* NavigationalWarningDataTests.swift in Sources */,
 				F75F81E729623AAA0062A708 /* MarlinBottomSheetTests.swift in Sources */,
