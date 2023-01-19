@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## 1.0.2
+  ### Bug Fixes
+    * Port Dry Dock field uses the proper enumeration for display
+
 ## 1.0.1
   ### Bug Fixes
     * Landscape mode fixes for Onboarding, Map, Side Nav, Navigation Warnings

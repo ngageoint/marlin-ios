@@ -167,7 +167,7 @@ class Port: NSManagedObject {
             KeyValue(key: "Supplies - Deck", value: "\(DecisionEnum.fromValue(suDeck))"),
             KeyValue(key: "Supplies - Engine", value: "\(DecisionEnum.fromValue(suEngine))"),
             KeyValue(key: "Repair Code", value: "\(RepairCodeEnum.fromValue(repairCode))"),
-            KeyValue(key: "Dry Dock", value: "\(SizeEnum.fromValue(drydock))"),
+            KeyValue(key: "Dry Dock", value: "\(DecisionEnum.fromValue(drydock))"),
             KeyValue(key: "Railway", value: "\(SizeEnum.fromValue(railway))"),
         ]
     }
