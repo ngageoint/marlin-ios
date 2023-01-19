@@ -94,6 +94,8 @@
 		F72D89062979D56500D022FB /* PortDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D89052979D56500D022FB /* PortDetailViewTests.swift */; };
 		F72D89082979E3E400D022FB /* RadioBeaconSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D89072979E3E400D022FB /* RadioBeaconSummaryViewTests.swift */; };
 		F72D890A2979E7FC00D022FB /* RadioBeaconDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D89092979E7FC00D022FB /* RadioBeaconDetailViewTests.swift */; };
+		F72D890C2979ECC900D022FB /* NavigationalWarningSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D890B2979ECC900D022FB /* NavigationalWarningSummaryViewTests.swift */; };
+		F72D890E2979F48E00D022FB /* NavigationalWarningDetailTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D890D2979F48E00D022FB /* NavigationalWarningDetailTests.swift */; };
 		F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */; };
 		F72EAAB9291BF28C00AC6026 /* moduMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAAB8291BF28C00AC6026 /* moduMockData.json */; };
 		F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAABB291C138000AC6026 /* PortDataTests.swift */; };
@@ -425,6 +427,8 @@
 		F72D89052979D56500D022FB /* PortDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDetailViewTests.swift; sourceTree = "<group>"; };
 		F72D89072979E3E400D022FB /* RadioBeaconSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconSummaryViewTests.swift; sourceTree = "<group>"; };
 		F72D89092979E7FC00D022FB /* RadioBeaconDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconDetailViewTests.swift; sourceTree = "<group>"; };
+		F72D890B2979ECC900D022FB /* NavigationalWarningSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningSummaryViewTests.swift; sourceTree = "<group>"; };
+		F72D890D2979F48E00D022FB /* NavigationalWarningDetailTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningDetailTests.swift; sourceTree = "<group>"; };
 		F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDataTests.swift; sourceTree = "<group>"; };
 		F72EAAB8291BF28C00AC6026 /* moduMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = moduMockData.json; sourceTree = "<group>"; };
 		F72EAABB291C138000AC6026 /* PortDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDataTests.swift; sourceTree = "<group>"; };
@@ -947,6 +951,8 @@
 			isa = PBXGroup;
 			children = (
 				F72EAACA291C635100AC6026 /* NavigationalWarningDataTests.swift */,
+				F72D890B2979ECC900D022FB /* NavigationalWarningSummaryViewTests.swift */,
+				F72D890D2979F48E00D022FB /* NavigationalWarningDetailTests.swift */,
 			);
 			path = NavigationalWarning;
 			sourceTree = "<group>";
@@ -1879,10 +1885,12 @@
 				F7D8FA792941005E00E7D0A1 /* ChartCorrectionListViewModelTests.swift in Sources */,
 				F75F81DC295F3F190062A708 /* AsamDetailViewTests.swift in Sources */,
 				F72EAAD5291D526700AC6026 /* RadioBeaconDataTests.swift in Sources */,
+				F72D890C2979ECC900D022FB /* NavigationalWarningSummaryViewTests.swift in Sources */,
 				F73ABC88295250BD0085EDC5 /* DataSourceFilterComparisonTests.swift in Sources */,
 				F7D8FA1D2922F7F300E7D0A1 /* NoticeToMarinersDataTests.swift in Sources */,
 				F73ABC8E295250C70085EDC5 /* DataSourceSortTests.swift in Sources */,
 				F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */,
+				F72D890E2979F48E00D022FB /* NavigationalWarningDetailTests.swift in Sources */,
 				F72EAAC1291C274100AC6026 /* DifferentialGPSStationDataTests.swift in Sources */,
 				F72D88FC29785CE100D022FB /* LightSummaryViewTests.swift in Sources */,
 				F72D89042979C30500D022FB /* PortSummaryViewTests.swift in Sources */,

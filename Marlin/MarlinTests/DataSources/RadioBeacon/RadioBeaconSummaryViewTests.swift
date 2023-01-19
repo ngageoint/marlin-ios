@@ -190,7 +190,6 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "section")
         tester().waitForAbsenceOfView(withAccessibilityLabel: "More Details")
         
-        waitForExpectations(timeout: 10, handler: nil)
         tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
     }
 }

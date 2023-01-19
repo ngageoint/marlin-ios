@@ -26,15 +26,9 @@ struct NavigationalWarningDetailView: View {
                         .overline()
                     Text("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
                         .primary()
-                    if let status = navigationalWarning.status {
-                        Property(property: "Status", value: status)
-                    }
-                    if let authority = navigationalWarning.authority {
-                        Property(property: "Authority", value: authority)
-                    }
-                    if let cancelDateString = navigationalWarning.cancelDateString {
-                        Property(property: "Cancel Date", value: cancelDateString)
-                    }
+                    Property(property: "Status", value: navigationalWarning.status)
+                    Property(property: "Authority", value: navigationalWarning.authority)
+                    Property(property: "Cancel Date", value: navigationalWarning.cancelDateString)
                     if let cancelNavArea = navigationalWarning.cancelNavArea, let cancelMsgNumber = navigationalWarning.cancelMsgNumber, let cancelMsgYear = navigationalWarning.cancelMsgYear, let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea){
                         Property(property: "Cancelled By", value: "\(navAreaEnum.display) \(cancelMsgNumber)/\(cancelMsgYear)")
                     }
@@ -82,6 +76,7 @@ struct UITextViewContainer: UIViewRepresentable {
         view.tintColor = UIColor(Color.primaryColor)
         view.font = UIFont.systemFont(ofSize: 14.0, weight: .regular)
         view.textColor = UIColor(Color.onSurfaceColor).withAlphaComponent(0.6)
+        view.accessibilityLabel = "Text"
         return view
     }
     

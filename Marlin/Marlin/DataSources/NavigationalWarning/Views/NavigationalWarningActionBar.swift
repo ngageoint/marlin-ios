@@ -24,13 +24,9 @@ struct NavigationalWarningActionBar: View {
                             .foregroundColor(Color.primaryColorVariant)
                     })
             }
+            .accessibilityElement()
+            .accessibilityLabel("share")
         }
         .buttonStyle(MaterialButtonStyle())
     }
 }
-
-//struct NavigationalWarningActionBar_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NavigationalWarningActionBar()
-//    }
-//}
