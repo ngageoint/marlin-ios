@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 ## 1.0.2
   ### Bug Fixes
     * Port Dry Dock field uses the proper enumeration for display
+    * Delete Electronic Publications which are not returned from the API 
+    * Electronic Publications now sync once a day instead of once a week
 
 ## 1.0.1
   ### Bug Fixes

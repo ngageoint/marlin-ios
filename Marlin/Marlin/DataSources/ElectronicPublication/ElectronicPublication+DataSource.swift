@@ -56,7 +56,6 @@ extension ElectronicPublication: BatchImportable {
     static func newBatchInsertRequest(with propertyList: [ElectronicPublicationProperties]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
-        
         // Provide one dictionary at a time when the closure is called.
         let batchInsertRequest = NSBatchInsertRequest(entity: ElectronicPublication.entity(), dictionaryHandler: { dictionary in
             guard index < total else { return true }
@@ -81,16 +80,29 @@ extension ElectronicPublication: BatchImportable {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
             let batchInsertRequest = ElectronicPublication.newBatchInsertRequest(with: propertiesList)
-            batchInsertRequest.resultType = .count
+            batchInsertRequest.resultType = .objectIDs
             if let fetchResult = try? taskContext.execute(batchInsertRequest),
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
-                try? taskContext.save()
-                if let count = batchInsertResult.result as? Int, count > 0 {
-                    NSLog("Inserted \(count) EPUB records")
-                    return count
-                } else {
-                    NSLog("No new EPUB records")
+                if let objectIds = batchInsertResult.result as? [NSManagedObjectID] {
+                    if objectIds.count > 0 {
+                        NSLog("Inserted \(objectIds.count) EPUB records")
+                        let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "ElectronicPublication")
+                        fetch.predicate = NSPredicate(format: "NOT (self IN %@)", objectIds)
+                        let request = NSBatchDeleteRequest(fetchRequest: fetch)
+                        request.resultType = .resultTypeCount
+                        if let deleteResult = try? taskContext.execute(request),
+                           let batchDeleteResult = deleteResult as? NSBatchDeleteResult {
+                            if let count = batchDeleteResult.result as? Int {
+                                NSLog("Deleted \(count) old records")
+                            }
+                        }
+                        try? taskContext.save()
+                        return objectIds.count
+                    } else {
+                        NSLog("No new EPUB records")
+                    }
                 }
+                try? taskContext.save()
                 return 0
             }
             throw MSIError.batchInsertError
@@ -107,9 +119,7 @@ extension ElectronicPublication: BatchImportable {
     static var decodableRoot: Decodable.Type = ElectronicPublicationPropertyContainer.self
     
     static func shouldSync() -> Bool {
-        // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(ElectronicPublication.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(ElectronicPublication.self)
+        // sync once every day
+        return UserDefaults.standard.dataSourceEnabled(ElectronicPublication.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 1)) > UserDefaults.standard.lastSyncTimeSeconds(ElectronicPublication.self)
     }
-    
-    
 }

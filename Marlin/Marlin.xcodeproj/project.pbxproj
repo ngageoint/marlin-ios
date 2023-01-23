@@ -99,6 +99,8 @@
 		F72D8910297A002100D022FB /* ElectronicPublicationSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D890F297A002100D022FB /* ElectronicPublicationSummaryViewTests.swift */; };
 		F72D8912297B232C00D022FB /* mockEpub.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F72D8911297B232C00D022FB /* mockEpub.rtf */; };
 		F72D8914297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D8913297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift */; };
+		F72D8917297F018800D022FB /* DFRSDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D8916297F018800D022FB /* DFRSDataTests.swift */; };
+		F72D8919297F0D7D00D022FB /* dfrsMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72D8918297F0D7D00D022FB /* dfrsMockData.json */; };
 		F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */; };
 		F72EAAB9291BF28C00AC6026 /* moduMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAAB8291BF28C00AC6026 /* moduMockData.json */; };
 		F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAABB291C138000AC6026 /* PortDataTests.swift */; };
@@ -435,6 +437,8 @@
 		F72D890F297A002100D022FB /* ElectronicPublicationSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationSummaryViewTests.swift; sourceTree = "<group>"; };
 		F72D8911297B232C00D022FB /* mockEpub.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = mockEpub.rtf; sourceTree = "<group>"; };
 		F72D8913297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationDetailViewTests.swift; sourceTree = "<group>"; };
+		F72D8916297F018800D022FB /* DFRSDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSDataTests.swift; sourceTree = "<group>"; };
+		F72D8918297F0D7D00D022FB /* dfrsMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = dfrsMockData.json; sourceTree = "<group>"; };
 		F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDataTests.swift; sourceTree = "<group>"; };
 		F72EAAB8291BF28C00AC6026 /* moduMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = moduMockData.json; sourceTree = "<group>"; };
 		F72EAABB291C138000AC6026 /* PortDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDataTests.swift; sourceTree = "<group>"; };
@@ -915,6 +919,14 @@
 			path = MarlinTests;
 			sourceTree = "<group>";
 		};
+		F72D8915297F017500D022FB /* DFRS */ = {
+			isa = PBXGroup;
+			children = (
+				F72D8916297F018800D022FB /* DFRSDataTests.swift */,
+			);
+			path = DFRS;
+			sourceTree = "<group>";
+		};
 		F72EAAB5291BF1DA00AC6026 /* MODU */ = {
 			isa = PBXGroup;
 			children = (
@@ -1185,6 +1197,7 @@
 		F7C23E152911C7920002A7DF /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
+				F72D8915297F017500D022FB /* DFRS */,
 				F7D8FA1B2922F7DC00E7D0A1 /* NoticeToMariners */,
 				F72EAAD3291D525300AC6026 /* RadioBeacon */,
 				F72EAACE291C668A00AC6026 /* Light */,
@@ -1232,6 +1245,7 @@
 				F7D8FA7A29412BA600E7D0A1 /* chartCorrections.json */,
 				F7D8FA8029424F8400E7D0A1 /* ntmGraphics.json */,
 				F72D8911297B232C00D022FB /* mockEpub.rtf */,
+				F72D8918297F0D7D00D022FB /* dfrsMockData.json */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -1710,6 +1724,7 @@
 				F72EAABE291C197A00AC6026 /* portMockData.json in Resources */,
 				F72EAAC3291C2D3F00AC6026 /* dgpsMockData.json in Resources */,
 				F71DF4842857942D00686951 /* modus.json in Resources */,
+				F72D8919297F0D7D00D022FB /* dfrsMockData.json in Resources */,
 				F72EAACD291C644900AC6026 /* navwarnMockData.json in Resources */,
 				F72EAAC8291C3C3A00AC6026 /* epubMockData.json in Resources */,
 				F72EAAD2291C677E00AC6026 /* lightMockData.json in Resources */,
@@ -1878,6 +1893,7 @@
 				F72D89062979D56500D022FB /* PortDetailViewTests.swift in Sources */,
 				F72D8910297A002100D022FB /* ElectronicPublicationSummaryViewTests.swift in Sources */,
 				F72D8914297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift in Sources */,
+				F72D8917297F018800D022FB /* DFRSDataTests.swift in Sources */,
 				F75F81E2295F70A50062A708 /* BooleanFilterTests.swift in Sources */,
 				F72D89022979BCA300D022FB /* ModuDetailViewTests.swift in Sources */,
 				F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */,
@@ -2358,7 +2374,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.marlin;
 				PRODUCT_NAME = Marlin;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2396,7 +2412,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.marlin;
 				PRODUCT_NAME = Marlin;
 				PROVISIONING_PROFILE_SPECIFIER = "";
