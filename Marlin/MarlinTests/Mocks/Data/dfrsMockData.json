@@ -1,0 +1,30 @@
+{
+    "radio-navaids":[
+        {
+            "stationNo":"1188.0\n2-2147",
+            "stationName":"Karachi (ASK).",
+            "stationType":"RDF",
+            "rxPosition":"24°52'44\"N \n67°09'49.99\"E",
+            "txPosition":"24°51'05\"N \n67°02'32\"E",
+            "frequency":"C. 410, 500 kHz, A1A, A2A, 1.5 kW.\nB. 410, 500 kHz, A1A.\nA. 410, 500 kHz, A1A.",
+            "range":null,
+            "procedureText":null,
+            "remarks":"CALIBRATED SECTOR: 360^.",
+            "notes":"",
+            "areaName":"PAKISTAN"
+        },
+        {
+            "stationNo":"1187.61\n2-1282",
+            "stationName":"Nos Galata Lt.",
+            "stationType":"RDF",
+            "rxPosition":" \n",
+            "txPosition":"43°10'17\"N \n27°56'49\"E",
+            "frequency":"297.5 kHz, A2A.",
+            "range":"5",
+            "procedureText":"On request to Hydrographic Service, Varna.",
+            "remarks":"Transmits !DG$.",
+            "notes":"",
+            "areaName":"BULGARIA"
+        }
+    ]
+}

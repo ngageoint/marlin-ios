@@ -99,8 +99,8 @@
 		F72D8910297A002100D022FB /* ElectronicPublicationSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D890F297A002100D022FB /* ElectronicPublicationSummaryViewTests.swift */; };
 		F72D8912297B232C00D022FB /* mockEpub.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F72D8911297B232C00D022FB /* mockEpub.rtf */; };
 		F72D8914297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D8913297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift */; };
-		F72D8917297F018800D022FB /* DFRSDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D8916297F018800D022FB /* DFRSDataTests.swift */; };
 		F72D8919297F0D7D00D022FB /* dfrsMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72D8918297F0D7D00D022FB /* dfrsMockData.json */; };
+		F72D891B297F449C00D022FB /* DFRSDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D891A297F449C00D022FB /* DFRSDataTests.swift */; };
 		F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */; };
 		F72EAAB9291BF28C00AC6026 /* moduMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAAB8291BF28C00AC6026 /* moduMockData.json */; };
 		F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAABB291C138000AC6026 /* PortDataTests.swift */; };
@@ -437,8 +437,8 @@
 		F72D890F297A002100D022FB /* ElectronicPublicationSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationSummaryViewTests.swift; sourceTree = "<group>"; };
 		F72D8911297B232C00D022FB /* mockEpub.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = mockEpub.rtf; sourceTree = "<group>"; };
 		F72D8913297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationDetailViewTests.swift; sourceTree = "<group>"; };
-		F72D8916297F018800D022FB /* DFRSDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSDataTests.swift; sourceTree = "<group>"; };
 		F72D8918297F0D7D00D022FB /* dfrsMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = dfrsMockData.json; sourceTree = "<group>"; };
+		F72D891A297F449C00D022FB /* DFRSDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DFRSDataTests.swift; sourceTree = "<group>"; };
 		F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDataTests.swift; sourceTree = "<group>"; };
 		F72EAAB8291BF28C00AC6026 /* moduMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = moduMockData.json; sourceTree = "<group>"; };
 		F72EAABB291C138000AC6026 /* PortDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDataTests.swift; sourceTree = "<group>"; };
@@ -922,7 +922,7 @@
 		F72D8915297F017500D022FB /* DFRS */ = {
 			isa = PBXGroup;
 			children = (
-				F72D8916297F018800D022FB /* DFRSDataTests.swift */,
+				F72D891A297F449C00D022FB /* DFRSDataTests.swift */,
 			);
 			path = DFRS;
 			sourceTree = "<group>";
@@ -1893,9 +1893,9 @@
 				F72D89062979D56500D022FB /* PortDetailViewTests.swift in Sources */,
 				F72D8910297A002100D022FB /* ElectronicPublicationSummaryViewTests.swift in Sources */,
 				F72D8914297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift in Sources */,
-				F72D8917297F018800D022FB /* DFRSDataTests.swift in Sources */,
 				F75F81E2295F70A50062A708 /* BooleanFilterTests.swift in Sources */,
 				F72D89022979BCA300D022FB /* ModuDetailViewTests.swift in Sources */,
+				F72D891B297F449C00D022FB /* DFRSDataTests.swift in Sources */,
 				F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */,
 				F727A691284E605800BD728A /* MarlinTests.swift in Sources */,
 				F73ABC8D295250C70085EDC5 /* DataSourcePropertyFilterViewModelTests.swift in Sources */,
