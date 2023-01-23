@@ -9,9 +9,6 @@ import SwiftUI
 
 struct NavigationalWarningDetailView: View {
     
-    @EnvironmentObject var scheme: MarlinScheme
-    @State var showSelectable: Bool = false
-    
     var navigationalWarning: NavigationalWarning
     
     init(navigationalWarning: NavigationalWarning) {

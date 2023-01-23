@@ -7,10 +7,7 @@
 
 import SwiftUI
 
-struct ElectronicPublicationDetailView: View {
-    @EnvironmentObject var scheme: MarlinScheme
-    @State var showSelectable: Bool = false
-    
+struct ElectronicPublicationDetailView: View {    
     var electronicPublication: ElectronicPublication
     
     init(electronicPublication: ElectronicPublication) {

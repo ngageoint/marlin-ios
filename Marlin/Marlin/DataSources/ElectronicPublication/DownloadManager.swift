@@ -155,7 +155,6 @@ extension DownloadManager: URLSessionDownloadDelegate {
                 downloadable.objectWillChange.send()
                 downloadable.isDownloaded = true
                 downloadable.isDownloading = false
-                downloadable.downloadProgress = 1.0
                 DispatchQueue.main.async {
                     try? PersistenceController.current.save()
                 }

@@ -26,19 +26,27 @@ struct ElectronicPublicationActionBar: View {
                 Button("Delete") {
                     electronicPublication.deleteFile()
                 }
+                .accessibilityElement()
+                .accessibilityLabel("Delete")
                 VStack {
                     Button("Open") {
                         NotificationCenter.default.post(name: .DocumentPreview, object: url)
                     }
+                    .accessibilityElement()
+                    .accessibilityLabel("Open")
                 }
             } else if !electronicPublication.isDownloading {
                 Button("Download") {
                     electronicPublication.downloadFile()
                 }
+                .accessibilityElement()
+                .accessibilityLabel("Download")
             } else {
                 Button("Re-Download") {
                     electronicPublication.downloadFile()
                 }
+                .accessibilityElement()
+                .accessibilityLabel("Re-Download")
             }
         }
         .padding(.trailing, -8)
