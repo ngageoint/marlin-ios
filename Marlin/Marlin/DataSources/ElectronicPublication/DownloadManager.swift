@@ -13,12 +13,14 @@ final class DownloadManager: NSObject {
     var urlToDownloadableMap: [URL: Downloadable] = [:]
     
     static let shared: DownloadManager = DownloadManager()
+    // since it is impossible to stub http requests on a background session, this is purely to be able
+    // to override for testing
+    var sessionConfig: URLSessionConfiguration = URLSessionConfiguration.background(withIdentifier: ElectronicPublication.backgroundDownloadIdentifier)
     
     private lazy var urlSession: URLSession = {
-        let config = URLSessionConfiguration.background(withIdentifier: ElectronicPublication.backgroundDownloadIdentifier)
-        config.isDiscretionary = false
-        config.sessionSendsLaunchEvents = true
-        return URLSession(configuration: config, delegate: self, delegateQueue: nil)
+        sessionConfig.isDiscretionary = false
+        sessionConfig.sessionSendsLaunchEvents = true
+        return URLSession(configuration: sessionConfig, delegate: self, delegateQueue: nil)
     }()
     
     private override init() {
@@ -121,6 +123,12 @@ extension DownloadManager: URLSessionDownloadDelegate {
         guard let httpResponse = downloadTask.response as? HTTPURLResponse,
               (200...299).contains(httpResponse.statusCode) else {
             print ("server error code \(downloadTask.response.debugDescription)")
+            if let httpResponse = downloadTask.response as? HTTPURLResponse {
+                DispatchQueue.main.async {
+                    downloadable.objectWillChange.send()
+                    downloadable.error = "Error downloading (\(httpResponse.statusCode))"
+                }
+            }
             return
         }
         

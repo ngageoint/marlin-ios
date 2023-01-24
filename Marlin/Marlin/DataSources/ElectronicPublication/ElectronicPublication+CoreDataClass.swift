@@ -108,11 +108,14 @@ protocol Downloadable: NSManagedObject {
     var remoteLocation: URL? { get }
     var savePath: String { get }
     var title: String? { get }
+    var error: String? { get set }
     func checkFileExists() -> Bool
     func deleteFile()
 }
 
 class ElectronicPublication: NSManagedObject, Downloadable {
+    
+    var error: String?
         
     var title: String? {
         return sectionDisplayName ?? "Electronic Publication"
@@ -175,6 +178,7 @@ class ElectronicPublication: NSManagedObject, Downloadable {
     }
     
     func downloadFile() {
+        error = nil
         if isDownloaded && checkFileExists() {
             return
         }

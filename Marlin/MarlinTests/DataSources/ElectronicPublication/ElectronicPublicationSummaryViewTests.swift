@@ -20,6 +20,7 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         .receive(on: RunLoop.main)
     
     override func setUp(completion: @escaping (Error?) -> Void) {
+        HTTPStubs.setEnabled(true)
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
             UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
@@ -34,9 +35,11 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
             }
             .store(in: &cancellable)
         persistentStore.reset()
+        HTTPStubs.removeAllStubs()
     }
     
     override func tearDown() {
+        HTTPStubs.removeAllStubs()
     }
     
     func testNotDownloaded() {
@@ -139,6 +142,56 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         XCTAssertTrue(epub.checkFileExists())
         tester().tapView(withAccessibilityLabel: "Delete")
         XCTAssertFalse(epub.checkFileExists())
+    }
+    
+    func testDownloadError() {
+        let epub = ElectronicPublication(context: persistentStore.viewContext)
+        
+        epub.pubTypeId = 9
+        epub.pubDownloadId = 3
+        epub.fullPubFlag = false
+        epub.pubDownloadOrder = 1
+        epub.pubDownloadDisplayName = "Pub. 110 - Greenland, East Coasts of North and South America, and West Indies"
+        epub.pubsecId = 129
+        epub.odsEntryId = 22266
+        epub.sectionOrder = 1
+        epub.sectionName = "UpdatedPub110bk"
+        epub.sectionDisplayName = "Pub 110 - Updated to NTM 44/22"
+        epub.sectionLastModified = Date(timeIntervalSince1970: 0)
+        epub.contentId = 16694312
+        epub.internalPath = "NIMA_LOL/Pub110"
+        epub.filenameBase = "UpdatedPub110bk"
+        epub.fileExtension = "pdf"
+        epub.s3Key = "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf"
+        epub.fileSize = 2389496
+        epub.uploadTime = Date(timeIntervalSince1970: 0)
+        epub.fullFilename = "UpdatedPub110bk.pdf"
+        epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
+        epub.isDownloaded = false
+        
+        let summary = epub.summaryView(showMoreDetails: false)
+        
+        let controller = UIHostingController(rootView: summary)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        tester().waitForView(withAccessibilityLabel: epub.sectionDisplayName)
+        tester().waitForView(withAccessibilityLabel: "File Size: 2.4 MB")
+        tester().waitForView(withAccessibilityLabel: "Upload Time: \(epub.uploadTime?.formatted() ?? "")")
+        
+        print("all stubs: \(HTTPStubs.allStubs())")
+        let config = URLSessionConfiguration.default
+        DownloadManager.shared.sessionConfig = config
+        
+        stub(condition: isScheme("https") && pathEndsWith("api/publications/download")) { request in
+            let response = HTTPStubsResponse()
+            response.statusCode = 403
+            return response
+        }
+        
+        tester().wait(forTimeInterval: 1)
+        tester().waitForView(withAccessibilityLabel: "Download")
+        tester().tapView(withAccessibilityLabel: "Download")
+        tester().waitForView(withAccessibilityLabel: "Error downloading (403)")
     }
     
     func testReDownload() {

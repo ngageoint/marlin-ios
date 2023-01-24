@@ -19,8 +19,14 @@ struct ElectronicPublicationActionBar: View {
         HStack(spacing:8) {
             Spacer()
             if electronicPublication.isDownloading {
-                ProgressView(value: electronicPublication.downloadProgress)
-                    .tint(Color.primaryColorVariant)
+                if let error = electronicPublication.error {
+                    Text(error)
+                        .secondary()
+                    Spacer()
+                } else {
+                    ProgressView(value: electronicPublication.downloadProgress)
+                        .tint(Color.primaryColorVariant)
+                }
             }
             if electronicPublication.isDownloaded, electronicPublication.checkFileExists(), let url = URL(string: electronicPublication.savePath) {
                 Button("Delete") {

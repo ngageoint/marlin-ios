@@ -10,6 +10,7 @@ import CoreData
 import UIKit
 
 class NoticeToMariners: NSManagedObject, Downloadable {
+    var error: String?
 
     var remoteLocation: URL? {
         guard let odsKey else {
