@@ -23,6 +23,9 @@ struct SubmitReportView: View {
                         Spacer()
                     }
                 })
+                .accessibilityElement()
+                .accessibilityLabel("Submit Anti-Shipping Activity Message (ASAM) Report")
+                
                 Link(destination: URL(string: "https://msi.nga.mil/submit-report/Observ-Report")!, label: {
                     HStack {
                         Image(systemName: "eye.fill")
@@ -33,6 +36,9 @@ struct SubmitReportView: View {
                         Spacer()
                     }
                 })
+                .accessibilityElement()
+                .accessibilityLabel("Submit Observer Report")
+                
                 Link(destination: URL(string: "https://msi.nga.mil/submit-report/MODU-Report")!, label: {
                     HStack {
                         if let image = Modu.image {
@@ -45,6 +51,9 @@ struct SubmitReportView: View {
                         Spacer()
                     }
                 })
+                .accessibilityElement()
+                .accessibilityLabel("Submit Mobile Offshore Drilling Unit (MODU) Movement Report")
+                
                 Link(destination: URL(string: "https://msi.nga.mil/submit-report/Visit-Report")!, label: {
                     HStack {
                         if let image = Port.image {
@@ -57,6 +66,9 @@ struct SubmitReportView: View {
                         Spacer()
                     }
                 })
+                .accessibilityElement()
+                .accessibilityLabel("Submit US Navy Port Visit Report")
+                
                 Link(destination: URL(string: "https://msi.nga.mil/submit-report/SHAR-Report")!, label: {
                     HStack {
                         Image(systemName: "ferry.fill")
@@ -67,6 +79,8 @@ struct SubmitReportView: View {
                         Spacer()
                     }
                 })
+                .accessibilityElement()
+                .accessibilityLabel("Submit Ship Hostile Action Report")
             }
         }
         .navigationTitle("Submit Report")
@@ -78,11 +92,5 @@ struct SubmitReportView: View {
         .onAppear {
             Metrics.shared.submitReportView()
         }
-    }
-}
-
-struct SubmitReportView_Previews: PreviewProvider {
-    static var previews: some View {
-        SubmitReportView()
     }
 }

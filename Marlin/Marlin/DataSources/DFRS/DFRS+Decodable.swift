@@ -83,7 +83,7 @@ struct DFRSProperties: Decodable {
         let rawProcedureText = try? values.decode(String.self, forKey: .procedureText)
         if let rawProcedureText = rawProcedureText {
             if rawProcedureText.hasSuffix("\n") {
-                self.procedureText = "\(rawProcedureText.dropLast(2))"
+                self.procedureText = "\(rawProcedureText.dropLast(1))"
             } else {
                 self.procedureText = rawProcedureText
             }
@@ -99,7 +99,7 @@ struct DFRSProperties: Decodable {
         let rawRemarks = try? values.decode(String.self, forKey: .remarks)
         if let rawRemarks = rawRemarks {
             if rawRemarks.hasSuffix("\n") {
-                self.remarks = "\(rawRemarks.dropLast(2))"
+                self.remarks = "\(rawRemarks.dropLast(1))"
             } else {
                 self.remarks = rawRemarks
             }
@@ -115,8 +115,8 @@ struct DFRSProperties: Decodable {
             self.rxPosition = rawRxPosition
         } else {
             self.rxPosition = nil
-            self.rxLongitude = 0.0
-            self.rxLatitude = 0.0
+            self.rxLongitude = -190.0
+            self.rxLatitude = -190.0
         }
         
         self.stationName = try? values.decode(String.self, forKey: .stationName)
@@ -129,8 +129,8 @@ struct DFRSProperties: Decodable {
             self.txLatitude = coordinate.latitude
             self.txPosition = rawTxPosition
         } else {
-            self.txLongitude = 0.0
-            self.txLatitude = 0.0
+            self.txLongitude = -190.0
+            self.txLatitude = -190.0
             self.txPosition = nil
         }
         

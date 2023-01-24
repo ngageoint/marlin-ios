@@ -113,14 +113,16 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "File Size: 2.4 MB")
         tester().waitForView(withAccessibilityLabel: "Upload Time: \(epub.uploadTime?.formatted() ?? "")")
         
-        stub(condition: isScheme("https") && pathEndsWith("16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf")) { request in
+        let config = URLSessionConfiguration.default
+        DownloadManager.shared.sessionConfig = config
+        
+        stub(condition: isScheme("https") && pathEndsWith("api/publications/download")) { request in
             return HTTPStubsResponse(
                 fileAtPath: OHPathForFile("mockEpub.rtf", type(of: self))!,
                 statusCode: 200,
                 headers: ["Content-Type":"application/rtf"]
             )
         }
-        
         tester().wait(forTimeInterval: 1)
         tester().waitForView(withAccessibilityLabel: "Download")
         tester().tapView(withAccessibilityLabel: "Download")
@@ -178,7 +180,6 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "File Size: 2.4 MB")
         tester().waitForView(withAccessibilityLabel: "Upload Time: \(epub.uploadTime?.formatted() ?? "")")
         
-        print("all stubs: \(HTTPStubs.allStubs())")
         let config = URLSessionConfiguration.default
         DownloadManager.shared.sessionConfig = config
         
@@ -229,7 +230,10 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "File Size: 2.4 MB")
         tester().waitForView(withAccessibilityLabel: "Upload Time: \(epub.uploadTime?.formatted() ?? "")")
         
-        stub(condition: isScheme("https") && pathEndsWith("16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf")) { request in
+        let config = URLSessionConfiguration.default
+        DownloadManager.shared.sessionConfig = config
+        
+        stub(condition: isScheme("https") && pathEndsWith("api/publications/download")) { request in
             return HTTPStubsResponse(
                 fileAtPath: OHPathForFile("mockEpub.rtf", type(of: self))!,
                 statusCode: 200,

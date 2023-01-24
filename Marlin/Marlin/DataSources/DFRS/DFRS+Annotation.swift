@@ -16,9 +16,9 @@ extension DFRS: MKAnnotation, AnnotationWithView {
     }
     
     var coordinate: CLLocationCoordinate2D {
-        if CLLocationCoordinate2DIsValid(txCoordinate) {
+        if txPosition != nil {
             return txCoordinate
-        } else if CLLocationCoordinate2DIsValid(rxCoordinate) {
+        } else if rxPosition != nil {
             return rxCoordinate
         }
         return kCLLocationCoordinate2DInvalid

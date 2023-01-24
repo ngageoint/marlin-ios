@@ -21,6 +21,8 @@ struct DFRSActionBar: View {
                 }) {
                     Text("More Details")
                 }
+                .accessibilityElement()
+                .accessibilityLabel("More Details")
             } else if CLLocationCoordinate2DIsValid(dfrs.coordinate) {
                 let coordinateButtonTitle = dfrs.coordinate.toDisplay()
                 
@@ -34,6 +36,8 @@ struct DFRSActionBar: View {
                     Text(coordinateButtonTitle)
                         .foregroundColor(Color.primaryColorVariant)
                 }
+                .accessibilityElement()
+                .accessibilityLabel("Location")
             }
             
             Spacer()
@@ -49,6 +53,8 @@ struct DFRSActionBar: View {
                                 .foregroundColor(Color.primaryColorVariant)
                         })
                 }
+                .accessibilityElement()
+                .accessibilityLabel("share")
                 if showFocusButton && CLLocationCoordinate2DIsValid(dfrs.coordinate) {
                     Button(action: {
                         NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
@@ -62,6 +68,8 @@ struct DFRSActionBar: View {
                                     .foregroundColor(Color.primaryColorVariant)
                             })
                     }
+                    .accessibilityElement()
+                    .accessibilityLabel("focus")
                 }
             }.padding(.trailing, -8)
         }

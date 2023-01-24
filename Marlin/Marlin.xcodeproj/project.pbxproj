@@ -142,6 +142,9 @@
 		F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0C28B7DA210097D448 /* RadioBeaconSummaryView.swift */; };
 		F74B9B0F28B7DA8B0097D448 /* RadioBeaconActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0E28B7DA8B0097D448 /* RadioBeaconActionBar.swift */; };
 		F74B9B1128B7DACB0097D448 /* RadioBeaconDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B1028B7DACB0097D448 /* RadioBeaconDetailView.swift */; };
+		F75324B429805E5C005C509F /* DFRSSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324B329805E5C005C509F /* DFRSSummaryViewTests.swift */; };
+		F75324B629806329005C509F /* DFRSDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324B529806329005C509F /* DFRSDetailViewTests.swift */; };
+		F75324B829807F04005C509F /* SubmitReportViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324B729807F04005C509F /* SubmitReportViewTests.swift */; };
 		F75F81D529526E9C0062A708 /* AsamSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D429526E9C0062A708 /* AsamSummaryViewTests.swift */; };
 		F75F81D8295DE0EF0062A708 /* AboutCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D7295DE0EF0062A708 /* AboutCellTests.swift */; };
 		F75F81DA295DE4640062A708 /* AboutViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D9295DE4640062A708 /* AboutViewTests.swift */; };
@@ -480,6 +483,9 @@
 		F74B9B0C28B7DA210097D448 /* RadioBeaconSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconSummaryView.swift; sourceTree = "<group>"; };
 		F74B9B0E28B7DA8B0097D448 /* RadioBeaconActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconActionBar.swift; sourceTree = "<group>"; };
 		F74B9B1028B7DACB0097D448 /* RadioBeaconDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconDetailView.swift; sourceTree = "<group>"; };
+		F75324B329805E5C005C509F /* DFRSSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSSummaryViewTests.swift; sourceTree = "<group>"; };
+		F75324B529806329005C509F /* DFRSDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSDetailViewTests.swift; sourceTree = "<group>"; };
+		F75324B729807F04005C509F /* SubmitReportViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitReportViewTests.swift; sourceTree = "<group>"; };
 		F75F81D229526D5C0062A708 /* libKIF.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libKIF.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F75F81D429526E9C0062A708 /* AsamSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryViewTests.swift; sourceTree = "<group>"; };
 		F75F81D7295DE0EF0062A708 /* AboutCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutCellTests.swift; sourceTree = "<group>"; };
@@ -923,6 +929,8 @@
 			isa = PBXGroup;
 			children = (
 				F72D891A297F449C00D022FB /* DFRSDataTests.swift */,
+				F75324B329805E5C005C509F /* DFRSSummaryViewTests.swift */,
+				F75324B529806329005C509F /* DFRSDetailViewTests.swift */,
 			);
 			path = DFRS;
 			sourceTree = "<group>";
@@ -1057,6 +1065,7 @@
 				F72281D9296F27D000218FC0 /* CurrentLocationTests.swift */,
 				F72281DE296F644600218FC0 /* DataSourceRailTests.swift */,
 				F72D88F72971FF8000D022FB /* HamburgerTests.swift */,
+				F75324B729807F04005C509F /* SubmitReportViewTests.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1880,6 +1889,7 @@
 				F72281D8296E232700218FC0 /* ChartCorrectionQueryTests.swift in Sources */,
 				F75F81DA295DE4640062A708 /* AboutViewTests.swift in Sources */,
 				F73ABC91295250D50085EDC5 /* SortViewModelTests.swift in Sources */,
+				F75324B829807F04005C509F /* SubmitReportViewTests.swift in Sources */,
 				F72281DA296F27D000218FC0 /* CurrentLocationTests.swift in Sources */,
 				F7C23E182911C7D50002A7DF /* ASAMDataTests.swift in Sources */,
 				F75F81DF295F68BB0062A708 /* BadgeTests.swift in Sources */,
@@ -1917,11 +1927,13 @@
 				F73ABC88295250BD0085EDC5 /* DataSourceFilterComparisonTests.swift in Sources */,
 				F7D8FA1D2922F7F300E7D0A1 /* NoticeToMarinersDataTests.swift in Sources */,
 				F73ABC8E295250C70085EDC5 /* DataSourceSortTests.swift in Sources */,
+				F75324B629806329005C509F /* DFRSDetailViewTests.swift in Sources */,
 				F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */,
 				F72D890E2979F48E00D022FB /* NavigationalWarningDetailTests.swift in Sources */,
 				F72EAAC1291C274100AC6026 /* DifferentialGPSStationDataTests.swift in Sources */,
 				F72D88FC29785CE100D022FB /* LightSummaryViewTests.swift in Sources */,
 				F72D89042979C30500D022FB /* PortSummaryViewTests.swift in Sources */,
+				F75324B429805E5C005C509F /* DFRSSummaryViewTests.swift in Sources */,
 				F72EAAD0291C669D00AC6026 /* LightDataTests.swift in Sources */,
 				F72EAACB291C635100AC6026 /* NavigationalWarningDataTests.swift in Sources */,
 				F75F81E729623AAA0062A708 /* MarlinBottomSheetTests.swift in Sources */,
