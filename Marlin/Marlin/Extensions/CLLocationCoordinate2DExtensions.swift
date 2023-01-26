@@ -107,7 +107,131 @@ extension CLLocationCoordinate2D {
 //        }
     }
     
-    static func parse(coordinate: String) -> CLLocationCoordinate2D? {
+    // splits the string into possibly two coordinates with all spaces removed
+    // no further normalization takes place
+    static func splitCoordinates(coordinates: String?) -> [String] {
+        var split: [String] = []
+        
+        guard let coordinates = coordinates else {
+            return split
+        }
+        
+        // trim whitespace from the start and end of the string
+        let coordinatesToParse = coordinates.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        
+        // if there is a comma, split on that
+        if coordinatesToParse.firstIndex(of: ",") != nil {
+            return coordinatesToParse.split(separator: ",").map { splitString in
+                return "\(splitString)".components(separatedBy: .whitespacesAndNewlines).joined()
+            }
+        }
+        
+        // check if there are any direction letters
+        let firstDirectionIndex = coordinatesToParse.firstIndex { character in
+            let uppercase = character.uppercased()
+            return uppercase == "N" || uppercase == "S" || uppercase == "E" || uppercase == "W"
+        }
+        let hasDirection = firstDirectionIndex != nil
+        
+        // if the string has a direction we can try to split on the dash
+        if hasDirection && coordinatesToParse.firstIndex(of: "-") != nil {
+            return coordinatesToParse.split(separator: "-").map { splitString in
+                return "\(splitString)".components(separatedBy: .whitespacesAndNewlines).joined()
+            }
+        } else if hasDirection {
+            // if the string has a direction but no dash, split on the direction
+            let lastDirectionIndex = coordinatesToParse.lastIndex { character in
+                let uppercase = character.uppercased()
+                return uppercase == "N" || uppercase == "S" || uppercase == "E" || uppercase == "W"
+            }
+            // the direction will either be at the begining of the string, or the end
+            // if the direction is at the begining of the string, use the second index unless there is no second index
+            // in which case there is only one coordinate
+            if firstDirectionIndex == coordinatesToParse.startIndex {
+                if let lastDirectionIndex = lastDirectionIndex, lastDirectionIndex != firstDirectionIndex {
+                    split.append("\(coordinatesToParse.prefix(upTo: lastDirectionIndex))")
+                    split.append("\(coordinatesToParse.suffix(from: lastDirectionIndex))")
+                } else {
+                    // only one coordinate
+                    split.append(coordinatesToParse)
+                }
+            } else if lastDirectionIndex == coordinatesToParse.index(coordinatesToParse.endIndex, offsetBy: -1) {
+                // if the last direction index is the end of the string use the first index unless the first and last index are the same
+                if lastDirectionIndex == firstDirectionIndex {
+                    // only one coordinate
+                    split.append(coordinatesToParse)
+                } else if let firstDirectionIndex = firstDirectionIndex {
+                    split.append("\(coordinatesToParse.prefix(upTo: coordinatesToParse.index(firstDirectionIndex, offsetBy: 1)))")
+                    split.append("\(coordinatesToParse.suffix(from: coordinatesToParse.index(firstDirectionIndex, offsetBy: 1)))")
+                }
+            }
+        }
+        
+        // one last attempt to split.  if there is one white space character split on that
+        let whitespaceSplit = coordinatesToParse.components(separatedBy: .whitespacesAndNewlines)
+        if whitespaceSplit.count <= 2 {
+            split = whitespaceSplit
+        }
+        
+        return split.map { splitString in
+            return splitString.components(separatedBy: .whitespacesAndNewlines).joined()
+        }
+    }
+    
+    // best effort parse of the string passed in
+    // returns kCLLocationCoordinate2DInvalid if there is no way to parse
+    // If only one of latitude or longitude can be parsed, the returned coordinate will have that value set
+    // with the other value being CLLocationDegrees.nan.  longitude will be the default returned value
+    static func parse(coordinates: String?) -> CLLocationCoordinate2D? {
+        var latitude: CLLocationDegrees?
+        var longitude: CLLocationDegrees?
+        
+        let split = CLLocationCoordinate2D.splitCoordinates(coordinates: coordinates)
+        if split.count == 2 {
+            latitude = CLLocationCoordinate2D.parse(coordinate: split[0], enforceLatitude: true)
+            longitude = CLLocationCoordinate2D.parse(coordinate: split[1], enforceLatitude: false)
+        }
+        if let latitude = latitude, let longitude = longitude {
+            return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        }
+        return nil
+    }
+    
+    // takes one coordinate and translates it into a CLLocationDegrees
+    // returns nil if nothing can be parsed
+    static func parse(coordinate: String?, enforceLatitude: Bool = false) -> CLLocationDegrees? {
+        guard let coordinate = coordinate else {
+            return nil
+        }
+        
+        let normalized = coordinate.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        // check if it is a number and that number could be a valid latitude or longitude
+        // could either be a decimal or a whole number representing lat/lng or a DDMMSS.sss number representing degree minutes seconds
+        if let decimalDegrees = Double(normalized) {
+            // if either of these are true, parse it as a regular latitude longitude
+            if (!enforceLatitude && decimalDegrees >= -180 && decimalDegrees <= 180)
+                || (enforceLatitude && decimalDegrees >= -90 && decimalDegrees <= 90) {
+                return CLLocationDegrees(decimalDegrees)
+            }
+        }
+        
+        // try to just parse it as DMS
+        let dms = CLLocationCoordinate2D.parseDMS(coordinate: normalized)
+        if let degrees = dms.degrees {
+            var coordinateDegrees = Double(degrees)
+            if let minutes = dms.minutes {
+                coordinateDegrees += Double(minutes) / 60.0
+            }
+            if let seconds = dms.seconds {
+                coordinateDegrees += Double(seconds) / 3600.0
+            }
+            if let direction = dms.direction {
+                if direction == "S" || direction == "W" {
+                    coordinateDegrees = -coordinateDegrees
+                }
+            }
+            return CLLocationDegrees(coordinateDegrees)
+        }
         
         return nil
     }
@@ -397,6 +521,22 @@ extension CLLocationCoordinate2D {
     }
 
     init?(coordinateString: String) {
+        let initialSplit = coordinateString.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: CharacterSet(charactersIn: " ,"))
+        if initialSplit.count == 2, let latitude = Double(initialSplit[0]), let longitude = Double(initialSplit[1]) {
+            self.init(latitude: latitude, longitude: longitude)
+            return
+        }
+        
+        if let coordinate = CLLocationCoordinate2D.parse(coordinates: coordinateString) {
+            self.init(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            return
+        }
+        
+        if initialSplit.count == 1, let _ = Double(initialSplit[0]) {
+            // this is not a valid coordinate, just bail
+            return nil
+        }
+        
         let p = #"(?<latdeg>-?[0-9]*\.?\d+)[\s°-]*(?<latminutes>\d{1,2}\.?\d+)?[\s\`'-]*(?<latseconds>\d{1,2}\.?\d+)?[\s\" ]?(?<latdirection>([NOEWS])?)[\s,]*(?<londeg>-?[0-9]*\.?\d+)[\s°-]*(?<lonminutes>\d{1,2}\.?\d+)?[\s\`'-]*(?<lonseconds>\d{1,2}\.?\d+)?[\s\" ]*(?<londirection>([NOEWS])?)"#
         
         var foundLat: Bool = false
@@ -417,6 +557,8 @@ extension CLLocationCoordinate2D {
                        let range = Range(nsrange, in: coordinateString),
                        !range.isEmpty
                     {
+                        print("xxx component \(component)")
+                        print("xxx value \(coordinateString[range])")
                         if component == "latdirection" {
                             latmultiplier = "NEO".contains(coordinateString[range]) ? 1.0 : -1.0
                         } else if component == "latdeg" {

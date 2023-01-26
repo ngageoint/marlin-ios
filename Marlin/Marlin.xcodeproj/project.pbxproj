@@ -145,6 +145,8 @@
 		F75324B429805E5C005C509F /* DFRSSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324B329805E5C005C509F /* DFRSSummaryViewTests.swift */; };
 		F75324B629806329005C509F /* DFRSDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324B529806329005C509F /* DFRSDetailViewTests.swift */; };
 		F75324B829807F04005C509F /* SubmitReportViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324B729807F04005C509F /* SubmitReportViewTests.swift */; };
+		F75324BB2980906E005C509F /* CLLocationCoordinate2DExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324BA2980906E005C509F /* CLLocationCoordinate2DExtensionsTests.swift */; };
+		F75324BE298197E4005C509F /* OnboardingViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324BD298197E4005C509F /* OnboardingViewTests.swift */; };
 		F75F81D529526E9C0062A708 /* AsamSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D429526E9C0062A708 /* AsamSummaryViewTests.swift */; };
 		F75F81D8295DE0EF0062A708 /* AboutCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D7295DE0EF0062A708 /* AboutCellTests.swift */; };
 		F75F81DA295DE4640062A708 /* AboutViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D9295DE4640062A708 /* AboutViewTests.swift */; };
@@ -262,7 +264,6 @@
 		F7F59799285D166700F9B32E /* ModuDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59798285D166700F9B32E /* ModuDetailView.swift */; };
 		F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */; };
 		F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979E285D185000F9B32E /* ModuMap.swift */; };
-		F7F597A3286238F400F9B32E /* MSIMapCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A2286238F400F9B32E /* MSIMapCluster.swift */; };
 		F7F597A62862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A52862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift */; };
 		F7F597A82864BF9D00F9B32E /* navwarnings.json in Resources */ = {isa = PBXBuildFile; fileRef = F7F597A72864BF9D00F9B32E /* navwarnings.json */; };
 		F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A92864DD3900F9B32E /* NavigationalWarningSummaryView.swift */; };
@@ -486,6 +487,8 @@
 		F75324B329805E5C005C509F /* DFRSSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSSummaryViewTests.swift; sourceTree = "<group>"; };
 		F75324B529806329005C509F /* DFRSDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSDetailViewTests.swift; sourceTree = "<group>"; };
 		F75324B729807F04005C509F /* SubmitReportViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitReportViewTests.swift; sourceTree = "<group>"; };
+		F75324BA2980906E005C509F /* CLLocationCoordinate2DExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2DExtensionsTests.swift; sourceTree = "<group>"; };
+		F75324BD298197E4005C509F /* OnboardingViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewTests.swift; sourceTree = "<group>"; };
 		F75F81D229526D5C0062A708 /* libKIF.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libKIF.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F75F81D429526E9C0062A708 /* AsamSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryViewTests.swift; sourceTree = "<group>"; };
 		F75F81D7295DE0EF0062A708 /* AboutCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutCellTests.swift; sourceTree = "<group>"; };
@@ -607,7 +610,6 @@
 		F7F59798285D166700F9B32E /* ModuDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDetailView.swift; sourceTree = "<group>"; };
 		F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuSummaryView.swift; sourceTree = "<group>"; };
 		F7F5979E285D185000F9B32E /* ModuMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuMap.swift; sourceTree = "<group>"; };
-		F7F597A2286238F400F9B32E /* MSIMapCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIMapCluster.swift; sourceTree = "<group>"; };
 		F7F597A52862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7F597A72864BF9D00F9B32E /* navwarnings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = navwarnings.json; sourceTree = "<group>"; };
 		F7F597A92864DD3900F9B32E /* NavigationalWarningSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningSummaryView.swift; sourceTree = "<group>"; };
@@ -844,7 +846,6 @@
 				F71DF4892858BF0700686951 /* MarlinMap.swift */,
 				F71DF4932858C0EF00686951 /* StyledPolygon.swift */,
 				F71DF4952858C18000686951 /* StyledPolyline.swift */,
-				F7F597A2286238F400F9B32E /* MSIMapCluster.swift */,
 				F7D671C9286C945500758F1C /* BaseMapOverlay.swift */,
 				F7D671D5286DFAA800758F1C /* UserTrackingButton.swift */,
 				F7D671D7286E163E00758F1C /* MapSettings.swift */,
@@ -906,6 +907,8 @@
 		F727A68F284E605800BD728A /* MarlinTests */ = {
 			isa = PBXGroup;
 			children = (
+				F75324BC298197AF005C509F /* Onboarding */,
+				F75324B92980905B005C509F /* Extensions */,
 				F72281DB296F3FC700218FC0 /* SideMenu */,
 				F75F81E529623A7C0062A708 /* BottomSheet */,
 				F75F81DD295F68A80062A708 /* Views */,
@@ -1047,6 +1050,22 @@
 				F7FFB32728D6427200C31AA3 /* RadioBeacon+Decodable.swift */,
 			);
 			path = RadioBeacon;
+			sourceTree = "<group>";
+		};
+		F75324B92980905B005C509F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F75324BA2980906E005C509F /* CLLocationCoordinate2DExtensionsTests.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		F75324BC298197AF005C509F /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				F75324BD298197E4005C509F /* OnboardingViewTests.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		F75F81D6295DE0DD0062A708 /* Settings */ = {
@@ -1884,6 +1903,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F75324BE298197E4005C509F /* OnboardingViewTests.swift in Sources */,
 				F73ABC92295250D50085EDC5 /* FilterViewModelTests.swift in Sources */,
 				F72D89082979E3E400D022FB /* RadioBeaconSummaryViewTests.swift in Sources */,
 				F72281D8296E232700218FC0 /* ChartCorrectionQueryTests.swift in Sources */,
@@ -1919,6 +1939,7 @@
 				F72D890A2979E7FC00D022FB /* RadioBeaconDetailViewTests.swift in Sources */,
 				F7D8FA342936C08200E7D0A1 /* MapImageTests.swift in Sources */,
 				F72D88F42971B84D00D022FB /* FilterBottomSheetTests.swift in Sources */,
+				F75324BB2980906E005C509F /* CLLocationCoordinate2DExtensionsTests.swift in Sources */,
 				F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */,
 				F7D8FA792941005E00E7D0A1 /* ChartCorrectionListViewModelTests.swift in Sources */,
 				F75F81DC295F3F190062A708 /* AsamDetailViewTests.swift in Sources */,
@@ -2155,7 +2176,6 @@
 				F7FFB2F628D6340B00C31AA3 /* Port+MapImage.swift in Sources */,
 				F707BA81287768FA006A94C4 /* LightDetailView.swift in Sources */,
 				F73ABC98295250EE0085EDC5 /* ImageLoader.swift in Sources */,
-				F7F597A3286238F400F9B32E /* MSIMapCluster.swift in Sources */,
 				F7C23E0829084F110002A7DF /* ElectronicPublication+DataSourceViewBuilder.swift in Sources */,
 				F7D8FA56293AA13300E7D0A1 /* DataSourceFilterComparison.swift in Sources */,
 				F71D286628BE453A00F1775C /* DifferentialGPSStationSummaryView.swift in Sources */,

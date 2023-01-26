@@ -321,6 +321,7 @@ final class DFRSDataTests: XCTestCase {
         XCTAssertTrue(DFRS.shouldSync())
         UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60 * 24 * 7) + (60 * 10), forKey: "\(DFRS.key)LastSyncTime")
         XCTAssertFalse(DFRS.shouldSync())
+        UserDefaults.standard.setValue(false, forKey: "\(DFRS.key)DataSourceEnabled")
     }
     
     func testDescription() {

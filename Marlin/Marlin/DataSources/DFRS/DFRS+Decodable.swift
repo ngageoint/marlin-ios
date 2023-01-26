@@ -133,9 +133,10 @@ struct DFRSProperties: Decodable {
             self.txLatitude = -190.0
             self.txPosition = nil
         }
-        
-        let mgrsPosition = MGRS.from(longitude, latitude)
-        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        if txPosition != nil || rxPosition != nil {
+            let mgrsPosition = MGRS.from(longitude, latitude)
+            self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        }
     }
     
     // The keys must have the same name as the attributes of the Asam entity.

@@ -81,7 +81,6 @@ struct MarlinMap: UIViewRepresentable {
         singleTapGestureRecognizer.require(toFail: doubleTapRecognizer)
 
         mapView.addGestureRecognizer(singleTapGestureRecognizer)
-        mapView.register(ClusterAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
         mapView.delegate = context.coordinator
         mapView.showsUserLocation = true
         mapView.isPitchEnabled = false

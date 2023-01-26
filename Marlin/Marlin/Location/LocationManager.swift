@@ -13,7 +13,12 @@ import geopackage_ios
 import mgrs_ios
 import ExceptionCatcher
 
-class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+protocol LocationManagerProtocol {
+    var locationStatus: CLAuthorizationStatus? { get set }
+    func requestAuthorization()
+}
+
+class LocationManager: NSObject, ObservableObject, LocationManagerProtocol, CLLocationManagerDelegate {
     
     static let shared = LocationManager()
     

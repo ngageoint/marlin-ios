@@ -8,6 +8,15 @@
 import SwiftUI
 import CoreLocation
 
+protocol UserNotificationCenter {
+    func getNotificationSettings(completionHandler: @escaping (UNNotificationSettings) -> Void)
+    func removeAllPendingNotificationRequests()
+    func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: ((Error?) -> Void)?)
+    func requestAuthorization(options: UNAuthorizationOptions, completionHandler: @escaping (Bool, Error?) -> Void)
+}
+
+extension UNUserNotificationCenter: UserNotificationCenter {}
+
 struct OnboardingView: View {
     let WELCOME_TAB = 1
     let DISCLAIMER_TAB = 2
@@ -83,8 +92,17 @@ struct OnboardingView: View {
     @AppStorage("showOnMap\(DifferentialGPSStation.key)") var dgpsIsMapped: Bool = false
     
     @ObservedObject var dataSourceList: DataSourceList
+    var locationManager: LocationManagerProtocol
+    var userNotificationCenter: UserNotificationCenter
     
-    @State var locationAuthorizationStatus: CLAuthorizationStatus = LocationManager.shared.locationStatus ?? .notDetermined
+    @State var locationAuthorizationStatus: CLAuthorizationStatus
+    
+    init(dataSourceList: DataSourceList, locationManager: LocationManagerProtocol = LocationManager.shared, userNotificationCenter: UserNotificationCenter = UNUserNotificationCenter.current()) {
+        self.dataSourceList = dataSourceList
+        self.locationManager = locationManager
+        self.userNotificationCenter = userNotificationCenter
+        self._locationAuthorizationStatus = State(initialValue: locationManager.locationStatus ?? .notDetermined)
+    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -127,11 +145,11 @@ struct OnboardingView: View {
                     locationAuthorizationStatus = status
                 }
                 if requestedLocationAuthorization {
-                    tabSelection = NOTIFICATION_TAB
+                    nextTab(currentTab: LOCATION_TAB)
                 }
             }
             .onAppear {
-                UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+                userNotificationCenter.getNotificationSettings { (settings) in
                     if(settings.authorizationStatus == .authorized) {
                         notificationsAuthorized = true
                     } else {
@@ -219,7 +237,7 @@ struct OnboardingView: View {
             } else if locationAuthorizationStatus != .authorizedWhenInUse && locationAuthorizationStatus != .authorizedAlways {
                 tabSelection = LOCATION_TAB
             } else {
-                UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+                userNotificationCenter.getNotificationSettings { (settings) in
                     if(settings.authorizationStatus == .authorized) {
                         tabSelection = DATA_TABS_TAB
                     } else {
@@ -231,7 +249,7 @@ struct OnboardingView: View {
             if locationAuthorizationStatus != .authorizedWhenInUse && locationAuthorizationStatus != .authorizedAlways {
                 tabSelection = LOCATION_TAB
             } else {
-                UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+                userNotificationCenter.getNotificationSettings { (settings) in
                     if(settings.authorizationStatus == .authorized) {
                         tabSelection = DATA_TABS_TAB
                     } else {
@@ -240,7 +258,7 @@ struct OnboardingView: View {
                 }
             }
         case LOCATION_TAB:
-            UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+            userNotificationCenter.getNotificationSettings { (settings) in
                 if(settings.authorizationStatus == .authorized) {
                     tabSelection = DATA_TABS_TAB
                 } else {
@@ -259,7 +277,6 @@ struct OnboardingView: View {
     @ViewBuilder
     func welcomeTab(geometry: GeometryProxy) -> some View {
         tabContent(geometry: geometry, imageName: "marlin_large", title: "Welcome to Marlin", explanation: "Marlin puts NGA's Maritime Safety Information datasets at your fingertips even when offline. The next few screens will allow you to customize your experience to meet your needs.", buttons:
-//                    VStack(alignment: .center, spacing: 16) {
             Button("Set Sail") {
                 nextTab(currentTab: WELCOME_TAB)
             }
@@ -267,30 +284,26 @@ struct OnboardingView: View {
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.capsule)
             .controlSize(.large)
-//        }
         )
     }
     
     @ViewBuilder
     func disclaimerTab(geometry: GeometryProxy) -> some View {
-        VStack(alignment: .center, spacing: 0) {
-            
-            VStack(spacing: 16) {
+        ScrollView {
+            VStack(alignment: .center, spacing: 16) {
                 Text("Disclaimer")
                     .font(.headline4)
                     .bold()
-                ScrollView {
-                    DisclaimerView()
-                    Button("Accept") {
-                        disclaimerAccepted.toggle()
-                        nextTab(currentTab: DISCLAIMER_TAB)
-                    }
-                    .tint(Color.primaryColor)
-                    .buttonStyle(.borderedProminent)
-                    .buttonBorderShape(.capsule)
-                    .controlSize(.large)
-                    .padding(.bottom, 40)
+            
+                DisclaimerView()
+                Button("Accept") {
+                    disclaimerAccepted.toggle()
+                    nextTab(currentTab: DISCLAIMER_TAB)
                 }
+                .tint(Color.primaryColor)
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.capsule)
+                .controlSize(.large)
             }
         }
         .padding(.all, 16)
@@ -302,7 +315,7 @@ struct OnboardingView: View {
                     VStack(spacing: 16) {
                         Button("Yes, Enable My Location") {
                             requestedLocationAuthorization = true
-                            LocationManager.shared.requestAuthorization()
+                            locationManager.requestAuthorization()
                         }
                         .tint(Color.primaryColor)
                         .buttonStyle(.borderedProminent)
@@ -323,8 +336,7 @@ struct OnboardingView: View {
         tabContent(geometry: geometry, systemImageName: "bell.badge.fill", title: "Allow Notifications", explanation: "Would you like to recieve alerts when new data is available?", buttons:
                     VStack(spacing: 16) {
                         Button("Yes, Enable Notifications") {
-                            let center = UNUserNotificationCenter.current()
-                            center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+                            userNotificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
                                 nextTab(currentTab: NOTIFICATION_TAB)
                             }
                         }
@@ -407,8 +419,12 @@ struct OnboardingView: View {
                     dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: Asam.self), position: 0)
                 }
             }
-            .overlay(CheckBadge(on: .constant(asamIsTab)))
+            .overlay(CheckBadge(on: .constant(asamIsTab))
+                .accessibilityElement()
+                .accessibilityLabel("\(Asam.fullDataSourceName) Tab \(asamIsTab ? "On" : "Off")"))
             .padding(8)
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(Asam.fullDataSourceName) Tab")
             
             VStack(alignment: .center) {
                 if let image = Modu.image {
@@ -433,8 +449,14 @@ struct OnboardingView: View {
                     dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: Modu.self), position: 0)
                 }
             }
-            .overlay(CheckBadge(on: .constant(moduIsTab)))
+            .overlay(
+                CheckBadge(on: .constant(moduIsTab))
+                    .accessibilityElement()
+                    .accessibilityLabel("\(Modu.fullDataSourceName) Tab \(moduIsTab ? "On" : "Off")")
+            )
             .padding(8)
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(Modu.fullDataSourceName) Tab")
             
             VStack(alignment: .center) {
                 if let image = Light.image {
@@ -459,8 +481,12 @@ struct OnboardingView: View {
                     dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: Light.self), position: 0)
                 }
             }
-            .overlay(CheckBadge(on: .constant(lightIsTab)))
+            .overlay(CheckBadge(on: .constant(lightIsTab))
+                .accessibilityElement()
+                .accessibilityLabel("\(Light.fullDataSourceName) Tab \(lightIsTab ? "On" : "Off")"))
             .padding(8)
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(Light.fullDataSourceName) Tab")
             
             VStack(alignment: .center) {
                 if let image = NavigationalWarning.image {
@@ -485,8 +511,12 @@ struct OnboardingView: View {
                     dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: NavigationalWarning.self), position: 0)
                 }
             }
-            .overlay(CheckBadge(on: .constant(navWarningIsTab)))
+            .overlay(CheckBadge(on: .constant(navWarningIsTab))
+                .accessibilityElement()
+                .accessibilityLabel("\(NavigationalWarning.fullDataSourceName) Tab \(navWarningIsTab ? "On" : "Off")"))
             .padding(8)
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(NavigationalWarning.fullDataSourceName) Tab")
             
             VStack(alignment: .center) {
                 if let image = Port.image {
@@ -511,8 +541,12 @@ struct OnboardingView: View {
                     dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: Port.self), position: 0)
                 }
             }
-            .overlay(CheckBadge(on: .constant(portIsTab)))
+            .overlay(CheckBadge(on: .constant(portIsTab))
+                .accessibilityElement()
+                .accessibilityLabel("\(Port.fullDataSourceName) Tab \(portIsTab ? "On" : "Off")"))
             .padding(8)
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(Port.fullDataSourceName) Tab")
             
             VStack(alignment: .center) {
                 if let image = RadioBeacon.image {
@@ -537,8 +571,12 @@ struct OnboardingView: View {
                     dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: RadioBeacon.self), position: 0)
                 }
             }
-            .overlay(CheckBadge(on: .constant(radioBeaconIsTab)))
+            .overlay(CheckBadge(on: .constant(radioBeaconIsTab))
+                .accessibilityElement()
+                .accessibilityLabel("\(RadioBeacon.fullDataSourceName) Tab \(radioBeaconIsTab ? "On" : "Off")"))
             .padding(8)
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(RadioBeacon.fullDataSourceName) Tab")
             
             VStack(alignment: .center) {
                 if let image = DifferentialGPSStation.image {
@@ -563,8 +601,12 @@ struct OnboardingView: View {
                     dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: DifferentialGPSStation.self), position: 0)
                 }
             }
-            .overlay(CheckBadge(on: .constant(dgpsIsTab)))
+            .overlay(CheckBadge(on: .constant(dgpsIsTab))
+                .accessibilityElement()
+                .accessibilityLabel("\(DifferentialGPSStation.fullDataSourceName) Tab \(dgpsIsTab ? "On" : "Off")"))
             .padding(8)
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(DifferentialGPSStation.fullDataSourceName) Tab")
             
             VStack(alignment: .center) {
                 if let image = ElectronicPublication.image {
@@ -589,8 +631,12 @@ struct OnboardingView: View {
                     dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: ElectronicPublication.self), position: 0)
                 }
             }
-            .overlay(CheckBadge(on: .constant(epubIsTab)))
+            .overlay(CheckBadge(on: .constant(epubIsTab))
+                .accessibilityElement()
+                .accessibilityLabel("\(ElectronicPublication.fullDataSourceName) Tab \(epubIsTab ? "On" : "Off")"))
             .padding(8)
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(ElectronicPublication.fullDataSourceName) Tab")
             
             VStack(alignment: .center) {
                 if let image = NoticeToMariners.image {
@@ -615,8 +661,12 @@ struct OnboardingView: View {
                     dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: NoticeToMariners.self), position: 0)
                 }
             }
-            .overlay(CheckBadge(on: .constant(ntmIsTab)))
+            .overlay(CheckBadge(on: .constant(ntmIsTab))
+                .accessibilityElement()
+                .accessibilityLabel("\(NoticeToMariners.fullDataSourceName) Tab \(ntmIsTab ? "On" : "Off")"))
             .padding(8)
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(NoticeToMariners.fullDataSourceName) Tab")
         }
     }
         
@@ -643,7 +693,11 @@ struct OnboardingView: View {
             .onTapGesture {
                 asamIsMapped = !asamIsMapped
             }
-            .overlay(CheckBadge(on: $asamIsMapped))
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(Asam.fullDataSourceName) Map")
+            .overlay(CheckBadge(on: $asamIsMapped)
+                .accessibilityElement()
+                .accessibilityLabel("\(Asam.fullDataSourceName) Map \(asamIsMapped ? "On" : "Off")"))
             
             VStack(alignment: .center) {
                 if let image = Modu.image {
@@ -665,7 +719,11 @@ struct OnboardingView: View {
             .onTapGesture {
                 moduIsMapped = !moduIsMapped
             }
-            .overlay(CheckBadge(on: $moduIsMapped))
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(Modu.fullDataSourceName) Map")
+            .overlay(CheckBadge(on: $moduIsMapped)
+                .accessibilityElement()
+                .accessibilityLabel("\(Modu.fullDataSourceName) Map \(moduIsMapped ? "On" : "Off")"))
             
             VStack(alignment: .center) {
                 if let image = Light.image {
@@ -687,7 +745,11 @@ struct OnboardingView: View {
             .onTapGesture {
                 lightIsMapped = !lightIsMapped
             }
-            .overlay(CheckBadge(on: $lightIsMapped))
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(Light.fullDataSourceName) Map")
+            .overlay(CheckBadge(on: $lightIsMapped)
+                .accessibilityElement()
+                .accessibilityLabel("\(Light.fullDataSourceName) Map \(lightIsMapped ? "On" : "Off")"))
             
             VStack(alignment: .center) {
                 if let image = Port.image {
@@ -709,7 +771,11 @@ struct OnboardingView: View {
             .onTapGesture {
                 portIsMapped = !portIsMapped
             }
-            .overlay(CheckBadge(on: $portIsMapped))
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(Port.fullDataSourceName) Map")
+            .overlay(CheckBadge(on: $portIsMapped)
+                .accessibilityElement()
+                .accessibilityLabel("\(Port.fullDataSourceName) Map \(portIsMapped ? "On" : "Off")"))
             
             VStack(alignment: .center) {
                 if let image = RadioBeacon.image {
@@ -731,7 +797,11 @@ struct OnboardingView: View {
             .onTapGesture {
                 radioBeaconIsMapped = !radioBeaconIsMapped
             }
-            .overlay(CheckBadge(on: $radioBeaconIsMapped))
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(RadioBeacon.fullDataSourceName) Map")
+            .overlay(CheckBadge(on: $radioBeaconIsMapped)
+                .accessibilityElement()
+                .accessibilityLabel("\(RadioBeacon.fullDataSourceName) Map \(radioBeaconIsMapped ? "On" : "Off")"))
             
             VStack(alignment: .center) {
                 if let image = DifferentialGPSStation.image {
@@ -753,27 +823,11 @@ struct OnboardingView: View {
             .onTapGesture {
                 dgpsIsMapped = !dgpsIsMapped
             }
-            .overlay(CheckBadge(on: $dgpsIsMapped))
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(DifferentialGPSStation.fullDataSourceName) Map")
+            .overlay(CheckBadge(on: $dgpsIsMapped)
+                .accessibilityElement()
+                .accessibilityLabel("\(DifferentialGPSStation.fullDataSourceName) Map \(dgpsIsMapped ? "On" : "Off")"))
         }
-    }
-}
-
-struct CheckToggleStyle: ToggleStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        Button {
-            configuration.isOn.toggle()
-        } label: {
-            Label {
-                configuration.label
-            } icon: {
-                VStack(alignment: .center) {
-                    Image(systemName: configuration.isOn ? "checkmark.circle.fill" : "circle")
-                        .foregroundColor(configuration.isOn ? .secondaryColor : .onPrimaryColor)
-                        .accessibility(label: Text(configuration.isOn ? "Checked" : "Unchecked"))
-                        .imageScale(.large)
-                }
-            }
-        }
-        .buttonStyle(PlainButtonStyle())
     }
 }
