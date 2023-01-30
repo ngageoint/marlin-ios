@@ -147,6 +147,8 @@
 		F75324B829807F04005C509F /* SubmitReportViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324B729807F04005C509F /* SubmitReportViewTests.swift */; };
 		F75324BB2980906E005C509F /* CLLocationCoordinate2DExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324BA2980906E005C509F /* CLLocationCoordinate2DExtensionsTests.swift */; };
 		F75324BE298197E4005C509F /* OnboardingViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324BD298197E4005C509F /* OnboardingViewTests.swift */; };
+		F75324C02983272A005C509F /* MarlinCompactWidthViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324BF2983272A005C509F /* MarlinCompactWidthViewTests.swift */; };
+		F75324C229833BBB005C509F /* MalrinMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324C129833BBB005C509F /* MalrinMapTests.swift */; };
 		F75F81D529526E9C0062A708 /* AsamSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D429526E9C0062A708 /* AsamSummaryViewTests.swift */; };
 		F75F81D8295DE0EF0062A708 /* AboutCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D7295DE0EF0062A708 /* AboutCellTests.swift */; };
 		F75F81DA295DE4640062A708 /* AboutViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D9295DE4640062A708 /* AboutViewTests.swift */; };
@@ -489,6 +491,8 @@
 		F75324B729807F04005C509F /* SubmitReportViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitReportViewTests.swift; sourceTree = "<group>"; };
 		F75324BA2980906E005C509F /* CLLocationCoordinate2DExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2DExtensionsTests.swift; sourceTree = "<group>"; };
 		F75324BD298197E4005C509F /* OnboardingViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewTests.swift; sourceTree = "<group>"; };
+		F75324BF2983272A005C509F /* MarlinCompactWidthViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinCompactWidthViewTests.swift; sourceTree = "<group>"; };
+		F75324C129833BBB005C509F /* MalrinMapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MalrinMapTests.swift; sourceTree = "<group>"; };
 		F75F81D229526D5C0062A708 /* libKIF.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libKIF.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F75F81D429526E9C0062A708 /* AsamSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryViewTests.swift; sourceTree = "<group>"; };
 		F75F81D7295DE0EF0062A708 /* AboutCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutCellTests.swift; sourceTree = "<group>"; };
@@ -1085,6 +1089,7 @@
 				F72281DE296F644600218FC0 /* DataSourceRailTests.swift */,
 				F72D88F72971FF8000D022FB /* HamburgerTests.swift */,
 				F75324B729807F04005C509F /* SubmitReportViewTests.swift */,
+				F75324BF2983272A005C509F /* MarlinCompactWidthViewTests.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1334,6 +1339,7 @@
 			children = (
 				F7D8FA322936C07100E7D0A1 /* Annotation */,
 				F73D9E242970E54C008AF40D /* MapSettingsTests.swift */,
+				F75324C129833BBB005C509F /* MalrinMapTests.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -1951,6 +1957,7 @@
 				F75324B629806329005C509F /* DFRSDetailViewTests.swift in Sources */,
 				F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */,
 				F72D890E2979F48E00D022FB /* NavigationalWarningDetailTests.swift in Sources */,
+				F75324C229833BBB005C509F /* MalrinMapTests.swift in Sources */,
 				F72EAAC1291C274100AC6026 /* DifferentialGPSStationDataTests.swift in Sources */,
 				F72D88FC29785CE100D022FB /* LightSummaryViewTests.swift in Sources */,
 				F72D89042979C30500D022FB /* PortSummaryViewTests.swift in Sources */,
@@ -1959,6 +1966,7 @@
 				F72EAACB291C635100AC6026 /* NavigationalWarningDataTests.swift in Sources */,
 				F75F81E729623AAA0062A708 /* MarlinBottomSheetTests.swift in Sources */,
 				F7D8FA7F294240B400E7D0A1 /* NoticeToMarinersFullNoticeViewModelTests.swift in Sources */,
+				F75324C02983272A005C509F /* MarlinCompactWidthViewTests.swift in Sources */,
 				F72D88FA297211BC00D022FB /* FilterButtonTests.swift in Sources */,
 				F71DF482284E783600686951 /* TestHelper.swift in Sources */,
 				F72EAAC6291C334200AC6026 /* ElectronicPublicationDataTests.swift in Sources */,

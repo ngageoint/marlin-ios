@@ -38,22 +38,20 @@ class MapState: ObservableObject {
     @Published var showDFRS: Bool?
     
     @Published var searchResults: [MKMapItem]?
-}
-
-struct MarlinMap: UIViewRepresentable {
-    @Environment(\.colorScheme) var colorScheme
     
     @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
     @AppStorage("showGARS") var showGARS: Bool = false
     @AppStorage("showMGRS") var showMGRS: Bool = false
     @AppStorage("showMapScale") var showMapScale = false
-    
+}
+
+struct MarlinMap: UIViewRepresentable {
     @ObservedObject var mapState: MapState
 
     var mixins: [MapMixin]?
     var name: String
     
-    init(name: String, mixins: [MapMixin]? = [], mapState: MapState? = nil, annotationToShrink: EnlargableAnnotation? = nil, focusedAnnotation: AnnotationWithView? = nil) {
+    init(name: String, mixins: [MapMixin]? = [], mapState: MapState? = nil) {
         self.name = name
         if let mapState = mapState {
             self.mapState = mapState
@@ -86,12 +84,9 @@ struct MarlinMap: UIViewRepresentable {
         mapView.isPitchEnabled = false
         mapView.showsCompass = false
         mapView.tintColor = UIColor(Color.primaryColorVariant)
+        mapView.isAccessibilityElement = true
+        mapView.accessibilityLabel = name
         
-        if showMapScale {
-            let scale = MKScaleView(mapView: mapView)
-            scale.scaleVisibility = .visible // always visible
-            mapView.addSubview(scale)
-        }
         context.coordinator.mapView = mapView
     
         mapView.register(EnlargedAnnotationView.self, forAnnotationViewWithReuseIdentifier: EnlargedAnnotationView.ReuseID)
@@ -108,6 +103,27 @@ struct MarlinMap: UIViewRepresentable {
     func updateUIView(_ mapView: MKMapView, context: Context) {
         print("Update ui view")
         context.coordinator.mapView = mapView
+        
+        let scale = context.coordinator.mapScale ?? mapView.subviews.first { view in
+            return (view as? MKScaleView) != nil
+        }
+        
+        if mapState.showMapScale {
+            if scale == nil {
+                let scale = MKScaleView(mapView: mapView)
+                scale.scaleVisibility = .visible // always visible
+                scale.isAccessibilityElement = true
+                scale.accessibilityLabel = "Map Scale"
+                mapView.addSubview(scale)
+                context.coordinator.mapScale = scale
+            } else if let scale = scale {
+                mapView.addSubview(scale)
+            }
+        } else if let scale = scale {
+            scale.removeFromSuperview()
+        }
+        
+        // TODO: I think this is not used anymore
         context.coordinator.updateDataSources(fetchRequests: mapState.fetchRequests)
 
         if let center = mapState.center, center.center.latitude != context.coordinator.setCenter?.latitude, center.center.longitude != context.coordinator.setCenter?.longitude {
@@ -147,7 +163,7 @@ struct MarlinMap: UIViewRepresentable {
         mapView.removeOverlays(overlaysToRemove)
         mapView.addOverlays(overlaysToAdd)
         
-        if mapType == ExtraMapTypes.osm.rawValue {
+        if mapState.mapType == ExtraMapTypes.osm.rawValue {
             if context.coordinator.osmOverlay == nil {
                 context.coordinator.osmOverlay = MKTileOverlay(urlTemplate: "https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png")
                 context.coordinator.osmOverlay?.tileSize = CGSize(width: 512, height: 512)
@@ -155,14 +171,14 @@ struct MarlinMap: UIViewRepresentable {
             }
             mapView.removeOverlay(context.coordinator.osmOverlay!)
             mapView.insertOverlay(context.coordinator.osmOverlay!, at: 0, level: .aboveRoads)
-        } else if let mkmapType = MKMapType(rawValue: UInt(mapType)) {
+        } else if let mkmapType = MKMapType(rawValue: UInt(mapState.mapType)) {
             mapView.mapType = mkmapType
             if let osmOverlay = context.coordinator.osmOverlay {
                 mapView.removeOverlay(osmOverlay)
             }
         }
         
-        if showGARS {
+        if mapState.showGARS {
             if context.coordinator.garsOverlay == nil {
                 context.coordinator.garsOverlay = GARSTileOverlay(512, 512)
             }
@@ -173,7 +189,7 @@ struct MarlinMap: UIViewRepresentable {
             }
         }
         
-        if showMGRS {
+        if mapState.showMGRS {
             if context.coordinator.mgrsOverlay == nil {
                 context.coordinator.mgrsOverlay = MGRSTileOverlay(512, 512)
             }
@@ -183,16 +199,6 @@ struct MarlinMap: UIViewRepresentable {
                 mapView.removeOverlay(mgrsOverlay)
             }
         }
-    }
-    
-    func MKMapRectForCoordinateRegion(region:MKCoordinateRegion) -> MKMapRect {
-        let topLeft = CLLocationCoordinate2D(latitude: region.center.latitude + (region.span.latitudeDelta/2), longitude: region.center.longitude - (region.span.longitudeDelta/2))
-        let bottomRight = CLLocationCoordinate2D(latitude: region.center.latitude - (region.span.latitudeDelta/2), longitude: region.center.longitude + (region.span.longitudeDelta/2))
-        
-        let a = MKMapPoint(topLeft)
-        let b = MKMapPoint(bottomRight)
-        
-        return MKMapRect(origin: MKMapPoint(x:min(a.x,b.x), y:min(a.y,b.y)), size: MKMapSize(width: abs(a.x-b.x), height: abs(a.y-b.y)))
     }
     
     func makeCoordinator() -> MarlinMapCoordinator {
@@ -208,13 +214,14 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     var mgrsOverlay: MGRSTileOverlay?
 
     var mapView: MKMapView?
+    var mapScale: MKScaleView?
     var marlinMap: MarlinMap
     var focusedAnnotation: EnlargableAnnotation?
     var focusMapOnItemSink: AnyCancellable?
 
     var setCenter: CLLocationCoordinate2D?
     var trackingModeSet: MKUserTrackingMode?
-    
+    // TODO: I think this is not used anymore
     var fetchedResultsControllers: [String : NSFetchedResultsController<NSFetchRequestResult>] = [:]
 
     init(_ marlinMap: MarlinMap) {
@@ -228,7 +235,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
                 self?.focusItem(notification:$0)
             })
     }
-    
+    // TODO: I think this is not used anymore
     func updateDataSources(fetchRequests: [String : NSFetchRequest<NSFetchRequestResult>]) {
         for (key, fetchRequest) in fetchRequests {
             if let controller = fetchedResultsControllers[key] {
@@ -246,7 +253,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             }
         }
     }
-    
+    // TODO: I think this is not used anymore
     func initiateFetchResultsController(fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>?) {
         fetchedResultsController?.delegate = self
         do {
@@ -264,12 +271,12 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     func addAnnotation(annotation: MKAnnotation) {
         mapView?.addAnnotation(annotation)
     }
-    
+    // TODO: I think this is not used anymore
     func updateAnnotation(annotation: MKAnnotation) {
         mapView?.removeAnnotation(annotation)
         mapView?.addAnnotation(annotation)
     }
-    
+    // TODO: I think this is not used anymore
     func deleteAnnotation(annotation: MKAnnotation) {
         var mapAnnotation: MKAnnotation?
         if let asam = annotation as? Asam {
@@ -308,6 +315,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: {
                 focusedAnnotation.shrinkAnnotation()
             }) { complete in
+                print("xxx remove annotation")
                 self.mapView?.removeAnnotation(focusedAnnotation)
             }
             self.focusedAnnotation = nil
@@ -326,16 +334,6 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         ea.markForEnlarging()
         focusedAnnotation = ea
         mapView?.addAnnotation(ea)
-    }
-    
-    func MKMapRectForCoordinateRegion(region:MKCoordinateRegion) -> MKMapRect {
-        let topLeft = CLLocationCoordinate2D(latitude: region.center.latitude + (region.span.latitudeDelta/2), longitude: region.center.longitude - (region.span.longitudeDelta/2))
-        let bottomRight = CLLocationCoordinate2D(latitude: region.center.latitude - (region.span.latitudeDelta/2), longitude: region.center.longitude + (region.span.longitudeDelta/2))
-        
-        let a = MKMapPoint(topLeft)
-        let b = MKMapPoint(bottomRight)
-        
-        return MKMapRect(origin: MKMapPoint(x:min(a.x,b.x), y:min(a.y,b.y)), size: MKMapSize(width: abs(a.x-b.x), height: abs(a.y-b.y)))
     }
     
     @objc func singleTapGensture(tapGestureRecognizer: UITapGestureRecognizer) {
@@ -487,14 +485,14 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     }
 
 }
-
+// TODO: I think this is not used anymore
 extension MarlinMapCoordinator: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         guard let annotation = anObject as? MKAnnotation else {
             return
         }
         switch(type) {
-            
+
         case .insert:
             self.addAnnotation(annotation: annotation)
         case .delete:

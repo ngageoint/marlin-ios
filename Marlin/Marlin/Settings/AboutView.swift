@@ -59,7 +59,7 @@ struct AboutView: View {
                     Toggle(isOn: $showMapScale, label: {
                         HStack {
                             Image(systemName: "ruler.fill")
-                            Text("Show Map Scale (requires restart)")
+                            Text("Show Map Scale")
                                 .primary()
                         }
                     })
