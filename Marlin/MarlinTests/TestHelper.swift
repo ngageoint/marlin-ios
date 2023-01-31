@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import CoreLocation
 
 @testable import Marlin
 
@@ -64,5 +65,15 @@ class TestHelpers {
 //        print("Navigational Warnings truncated? \(navigationalWarningsTruncated)")
 //        let lightsTruncated = PersistenceController.shared.container.viewContext.truncateAll(Light.self)
 //        print("Lights truncated? \(lightsTruncated)")
+    }
+}
+
+class MockLocationManager: LocationManagerProtocol, ObservableObject {
+    @Published var locationStatus: CLAuthorizationStatus?
+    
+    public var requestAuthorizationCalled = false
+    func requestAuthorization() {
+        requestAuthorizationCalled = true
+        NotificationCenter.default.post(Notification(name: .LocationAuthorizationStatusChanged, object: CLAuthorizationStatus.authorizedAlways))
     }
 }

@@ -52,7 +52,7 @@ class SearchResultsMap: NSObject, MapMixin {
                 mapView.addAnnotations(self.annotations)
             }
             .store(in: &cancellable)
-        
+        // TODO: this seems like the wrong place for this
         let region = UserDefaults.standard.mapRegion
         if CLLocationCoordinate2DIsValid(region.center) {
             if MKUserTrackingMode(rawValue: marlinMap.mapState.userTrackingMode) ?? MKUserTrackingMode.none == .none {
@@ -77,7 +77,6 @@ class SearchResultsMap: NSObject, MapMixin {
             if let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "placemark", for: annotation) as? MKMarkerAnnotationView {
                 annotationView.isEnabled = true
                 annotationView.markerTintColor = Color.primaryUIColor
-                
                 if let category = mapItem.pointOfInterestCategory {
                     switch (category) {
                     case .airport:
@@ -86,83 +85,17 @@ class SearchResultsMap: NSObject, MapMixin {
                         annotationView.glyphImage = UIImage(systemName: "hands.sparkles.fill")
                     case .aquarium:
                         annotationView.glyphImage = UIImage(systemName: "drop.fill")
-                    case .atm:
-                        annotationView.glyphImage = UIImage(systemName: "dollarsign.circle.fill")
-                    case .bakery:
-                        annotationView.glyphImage = UIImage(systemName: "fork.knife")
-                    case .bank:
+                    case .atm, .bank:
                         annotationView.glyphImage = UIImage(systemName: "dollarsign.circle.fill")
                     case .beach:
                         annotationView.glyphImage = UIImage(systemName: "sun.dust.fill")
-                    case .brewery:
+                    case .bakery, .brewery, .cafe, .foodMarket, .restaurant:
                         annotationView.glyphImage = UIImage(systemName: "fork.knife")
-                    case .cafe:
-                        annotationView.glyphImage = UIImage(systemName: "fork.knife")
-                    case .campground:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .carRental:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .evCharger:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .fireStation:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .fitnessCenter:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .foodMarket:
-                        annotationView.glyphImage = UIImage(systemName: "fork.knife")
-                    case .gasStation:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .hospital:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .hotel:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .laundry:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .library:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .marina:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .movieTheater:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .museum:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .nationalPark:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .nightlife:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .park:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .parking:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .pharmacy:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .police:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .postOffice:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .publicTransport:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .restaurant:
-                        annotationView.glyphImage = UIImage(systemName: "fork.knife")
-                    case .restroom:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .school:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .stadium:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .store:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .theater:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .university:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .winery:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    case .zoo:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
                     default:
                         annotationView.glyphImage = UIImage(systemName: "mappin")
                     }
+                } else {
+                    annotationView.glyphImage = UIImage(systemName: "mappin")
                 }
                 return annotationView
             }

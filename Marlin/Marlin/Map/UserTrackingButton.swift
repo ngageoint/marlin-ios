@@ -8,14 +8,27 @@
 import SwiftUI
 import MapKit
 
-struct UserTrackingButton: View {
-    @ObservedObject var locationManager: LocationManager = LocationManager.shared
+struct UserTrackingButton<Location>: View where Location: LocationManagerProtocol {
+    @ObservedObject var locationManager: Location
 
     @State var imageName: String = "location"
-    @State var appearDisabled: Bool = false
+    @State var userTrackingModeDescription: String = "none"
+    var appearDisabled: Bool {
+        !authorized
+    }
+    @State var showingAlert: Bool = false
+    
+    var authorized: Bool {
+        locationManager.locationStatus == .authorizedAlways || locationManager.locationStatus == .authorizedWhenInUse
+    }
     
     @AppStorage("userTrackingMode") var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
     var mapState: MapState?
+    
+    init(mapState: MapState?, locationManager: Location = LocationManager.shared) {
+        self.mapState = mapState
+        self.locationManager = locationManager
+    }
     
     var body: some View {
         Button(action: {
@@ -27,12 +40,14 @@ struct UserTrackingButton: View {
                         .renderingMode(.template)
                 })
         }
+        .accessibilityElement()
+        .accessibilityLabel("Tracking \(userTrackingModeDescription)\(authorized ? "" : " Unauthorized")")
         .onAppear {
-            setupTrackingButton(locationAuthorizationStatus: locationManager.locationStatus ?? .notDetermined)
+            setButtonImage()
             mapState?.userTrackingMode = userTrackingMode
         }
         .onChange(of: locationManager.locationStatus ?? .notDetermined) { newValue in
-            setupTrackingButton(locationAuthorizationStatus: newValue)
+            setButtonImage()
         }
         .onChange(of: mapState?.userTrackingMode) { newValue in
             if let mode = newValue {
@@ -40,32 +55,27 @@ struct UserTrackingButton: View {
                 setButtonImage()
             }
         }
-        .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini))
+        .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: appearDisabled ? Color.disabledColor : Color.primaryColorVariant))
+        .alert(isPresented: $showingAlert) {
+            Alert(title: Text("Location Services Disabled"),
+                  message: Text("Marlin has been denied access to location services.  To show your location on the map, please go into your device settings and enable the Location permission."),
+                  primaryButton: .default(Text("Settings"),
+                                          action: {
+                                                if let url = NSURL(string: UIApplication.openSettingsURLString) as URL? {
+                                                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                                                }
+                                          }),
+                  secondaryButton: .cancel())
+        }
     }
     
     func buttonPressed() {
-        let authorized = locationManager.locationStatus == .authorizedAlways || locationManager.locationStatus == .authorizedWhenInUse
         if !authorized {
-            let alert = UIAlertController(title: "Location Services Disabled", message: "Marlin has been denied access to location services.  To show your location on the map, please go into your device settings and enable the Location permission.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { action in
-                if let url = NSURL(string: UIApplication.openSettingsURLString) as URL? {
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                }
-            }))
-            UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
-            return
+            showingAlert = true
+        } else {
+            updateTrackingMode()
+            setButtonImage()
         }
-        
-        updateTrackingMode()
-        setButtonImage()
-    }
-    
-    func setupTrackingButton(locationAuthorizationStatus: CLAuthorizationStatus) {
-        let authorized = locationAuthorizationStatus == .authorizedAlways || locationAuthorizationStatus == .authorizedWhenInUse
-        appearDisabled = !authorized
-        
-        setButtonImage()
     }
     
     func updateTrackingMode() {
@@ -88,12 +98,16 @@ struct UserTrackingButton: View {
         switch MKUserTrackingMode(rawValue: userTrackingMode) ?? .none {
         case .none:
             imageName = "location"
+            userTrackingModeDescription = "none"
         case .follow:
             imageName = "location.fill"
+            userTrackingModeDescription = "follow"
         case .followWithHeading:
             imageName = "location.north.line.fill"
+            userTrackingModeDescription = "follow with heading"
         @unknown default:
             imageName = "location"
+            userTrackingModeDescription = "none"
         }
     }
 }

@@ -149,6 +149,8 @@
 		F75324BE298197E4005C509F /* OnboardingViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324BD298197E4005C509F /* OnboardingViewTests.swift */; };
 		F75324C02983272A005C509F /* MarlinCompactWidthViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324BF2983272A005C509F /* MarlinCompactWidthViewTests.swift */; };
 		F75324C229833BBB005C509F /* MalrinMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324C129833BBB005C509F /* MalrinMapTests.swift */; };
+		F75324C529885521005C509F /* SearchResultsMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324C429885521005C509F /* SearchResultsMapTests.swift */; };
+		F75324C72989854F005C509F /* UserTrackingButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324C62989854F005C509F /* UserTrackingButtonTests.swift */; };
 		F75F81D529526E9C0062A708 /* AsamSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D429526E9C0062A708 /* AsamSummaryViewTests.swift */; };
 		F75F81D8295DE0EF0062A708 /* AboutCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D7295DE0EF0062A708 /* AboutCellTests.swift */; };
 		F75F81DA295DE4640062A708 /* AboutViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D9295DE4640062A708 /* AboutViewTests.swift */; };
@@ -493,6 +495,8 @@
 		F75324BD298197E4005C509F /* OnboardingViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewTests.swift; sourceTree = "<group>"; };
 		F75324BF2983272A005C509F /* MarlinCompactWidthViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinCompactWidthViewTests.swift; sourceTree = "<group>"; };
 		F75324C129833BBB005C509F /* MalrinMapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MalrinMapTests.swift; sourceTree = "<group>"; };
+		F75324C429885521005C509F /* SearchResultsMapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsMapTests.swift; sourceTree = "<group>"; };
+		F75324C62989854F005C509F /* UserTrackingButtonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingButtonTests.swift; sourceTree = "<group>"; };
 		F75F81D229526D5C0062A708 /* libKIF.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libKIF.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F75F81D429526E9C0062A708 /* AsamSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryViewTests.swift; sourceTree = "<group>"; };
 		F75F81D7295DE0EF0062A708 /* AboutCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutCellTests.swift; sourceTree = "<group>"; };
@@ -1072,6 +1076,14 @@
 			path = Onboarding;
 			sourceTree = "<group>";
 		};
+		F75324C32988550F005C509F /* Mixins */ = {
+			isa = PBXGroup;
+			children = (
+				F75324C429885521005C509F /* SearchResultsMapTests.swift */,
+			);
+			path = Mixins;
+			sourceTree = "<group>";
+		};
 		F75F81D6295DE0DD0062A708 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1337,9 +1349,11 @@
 		F7D8FA312936C06600E7D0A1 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				F75324C32988550F005C509F /* Mixins */,
 				F7D8FA322936C07100E7D0A1 /* Annotation */,
 				F73D9E242970E54C008AF40D /* MapSettingsTests.swift */,
 				F75324C129833BBB005C509F /* MalrinMapTests.swift */,
+				F75324C62989854F005C509F /* UserTrackingButtonTests.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -1932,6 +1946,7 @@
 				F75F81E2295F70A50062A708 /* BooleanFilterTests.swift in Sources */,
 				F72D89022979BCA300D022FB /* ModuDetailViewTests.swift in Sources */,
 				F72D891B297F449C00D022FB /* DFRSDataTests.swift in Sources */,
+				F75324C72989854F005C509F /* UserTrackingButtonTests.swift in Sources */,
 				F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */,
 				F727A691284E605800BD728A /* MarlinTests.swift in Sources */,
 				F73ABC8D295250C70085EDC5 /* DataSourcePropertyFilterViewModelTests.swift in Sources */,
@@ -1956,6 +1971,7 @@
 				F73ABC8E295250C70085EDC5 /* DataSourceSortTests.swift in Sources */,
 				F75324B629806329005C509F /* DFRSDetailViewTests.swift in Sources */,
 				F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */,
+				F75324C529885521005C509F /* SearchResultsMapTests.swift in Sources */,
 				F72D890E2979F48E00D022FB /* NavigationalWarningDetailTests.swift in Sources */,
 				F75324C229833BBB005C509F /* MalrinMapTests.swift in Sources */,
 				F72EAAC1291C274100AC6026 /* DifferentialGPSStationDataTests.swift in Sources */,

@@ -557,8 +557,6 @@ extension CLLocationCoordinate2D {
                        let range = Range(nsrange, in: coordinateString),
                        !range.isEmpty
                     {
-                        print("xxx component \(component)")
-                        print("xxx value \(coordinateString[range])")
                         if component == "latdirection" {
                             latmultiplier = "NEO".contains(coordinateString[range]) ? 1.0 : -1.0
                         } else if component == "latdeg" {

@@ -175,22 +175,16 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
-        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
-            print("xxx notification")
-            let count = try? self.persistentStore.countOfObjects(Asam.self)
-            if count != 3 {
-                let asams = try? self.persistentStore.viewContext.fetchAll(Asam.self)
-                print("xxxasams are \(asams)")
-                return false
-            } else {
-                print("xxx there were 3")
-                XCTAssertEqual(count, 3)
-                return true
+        let e5 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
+            if let count = try? self.persistentStore.countOfObjects(Asam.self) {
+                return count == 3
             }
-        }
+            return false
+        }), object: self.persistentStore.viewContext)
         
         MSI.shared.loadData(type: Asam.decodableRoot, dataType: Asam.self)
-        
+        wait(for: [e5], timeout: 10)
+
         waitForExpectations(timeout: 10, handler: nil)
         
         let updatedAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [Asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-216")))
@@ -202,7 +196,6 @@ final class ASAMDataTests: XCTestCase {
         
         XCTAssertEqual(newAsam.reference, "2022-218")
         XCTAssertEqual(newAsam.asamDescription, "THIS ONE IS NEW")
-        print("xxx success")
     }
     
     func testRejectInvalidAsamNoReference() throws {

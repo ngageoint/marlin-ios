@@ -25,6 +25,14 @@ final class LightDetailViewTests: XCTestCase {
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
+        persistentStore.viewContext.performAndWait {
+            if let lights = persistentStore.viewContext.fetchAll(Light.self) {
+                for light in lights {
+                    persistentStore.viewContext.delete(light)
+                }
+            }
+        }
+        
         persistentStoreLoadedPub
             .removeDuplicates()
             .sink { output in
@@ -32,9 +40,17 @@ final class LightDetailViewTests: XCTestCase {
             }
             .store(in: &cancellable)
         persistentStore.reset()
+        
     }
-    
-    override func tearDown() {
+    override func tearDown(completion: @escaping (Error?) -> Void) {
+        persistentStore.viewContext.performAndWait {
+            if let lights = persistentStore.viewContext.fetchAll(Light.self) {
+                for light in lights {
+                    persistentStore.viewContext.delete(light)
+                }
+            }
+        }
+        completion(nil)
     }
     
     func testLoading() {

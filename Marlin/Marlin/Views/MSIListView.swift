@@ -26,7 +26,6 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: V
     var watchFocusedItem: Bool = false
     
     let sectionNameBuilder: ((MSISection<T>) -> String)?
-    //    @ViewBuilder let content: any View
     
     let content: ((MSISection<T>) -> Content)?
     

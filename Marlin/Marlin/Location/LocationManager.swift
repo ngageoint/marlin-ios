@@ -13,7 +13,7 @@ import geopackage_ios
 import mgrs_ios
 import ExceptionCatcher
 
-protocol LocationManagerProtocol {
+protocol LocationManagerProtocol: ObservableObject {
     var locationStatus: CLAuthorizationStatus? { get set }
     func requestAuthorization()
 }

@@ -14,29 +14,29 @@ import CoreLocation
 
 final class OnboardingViewTests: XCTestCase {
     
-//    var cancellable = Set<AnyCancellable>()
-//    var persistentStore: PersistentStore = PersistenceController.shared
-//    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-//        .receive(on: RunLoop.main)
-//
-//    override func setUp(completion: @escaping (Error?) -> Void) {
-//        UserDefaults.standard.initialDataLoaded = false
-//        UserDefaults.standard.clearLastSyncTimeSeconds(DFRS.self as any BatchImportable.Type)
-//        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-//
-//        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-//        persistentStoreLoadedPub
-//            .removeDuplicates()
-//            .sink { output in
-//                completion(nil)
-//            }
-//            .store(in: &cancellable)
-//        persistentStore.reset()
-//    }
+    //    var cancellable = Set<AnyCancellable>()
+    //    var persistentStore: PersistentStore = PersistenceController.shared
+    //    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
+    //        .receive(on: RunLoop.main)
+    //
+    //    override func setUp(completion: @escaping (Error?) -> Void) {
+    //        UserDefaults.standard.initialDataLoaded = false
+    //        UserDefaults.standard.clearLastSyncTimeSeconds(DFRS.self as any BatchImportable.Type)
+    //        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
+    //
+    //        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
+    //        persistentStoreLoadedPub
+    //            .removeDuplicates()
+    //            .sink { output in
+    //                completion(nil)
+    //            }
+    //            .store(in: &cancellable)
+    //        persistentStore.reset()
+    //    }
     
     override func tearDown() {
     }
-
+    
     func testFlow() throws {
         UserDefaults.standard.set(false, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
@@ -63,14 +63,14 @@ final class OnboardingViewTests: XCTestCase {
             var dataSourceMapped: [DataSourceItem]?
         }
         
-        struct Container: View {
+        struct Container<Location>: View where Location: LocationManagerProtocol {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
             var passThrough: PassThrough
-            var locationManager: LocationManagerProtocol
+            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(passThrough: PassThrough, locationManager: LocationManagerProtocol, userNotificationCenter: UserNotificationCenter) {
+            init(passThrough: PassThrough, locationManager: Location, userNotificationCenter: UserNotificationCenter) {
                 self.passThrough = passThrough
                 self.locationManager = locationManager
                 self.userNotificationCenter = userNotificationCenter
@@ -110,9 +110,9 @@ final class OnboardingViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Accept")
         tester().waitForView(withAccessibilityLabel: "Yes, Enable My Location")
         tester().tapView(withAccessibilityLabel: "Yes, Enable My Location")
-
+        
         XCTAssertTrue(mockLocationManager.requestAuthorizationCalled)
-
+        
         tester().waitForView(withAccessibilityLabel: "Yes, Enable Notifications")
         tester().tapView(withAccessibilityLabel: "Yes, Enable Notifications")
         
@@ -227,14 +227,14 @@ final class OnboardingViewTests: XCTestCase {
             var dataSourceMapped: [DataSourceItem]?
         }
         
-        struct Container: View {
+        struct Container<Location>: View where Location: LocationManagerProtocol {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
             var passThrough: PassThrough
-            var locationManager: LocationManagerProtocol
+            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(passThrough: PassThrough, locationManager: LocationManagerProtocol, userNotificationCenter: UserNotificationCenter) {
+            init(passThrough: PassThrough, locationManager: Location, userNotificationCenter: UserNotificationCenter) {
                 self.passThrough = passThrough
                 self.locationManager = locationManager
                 self.userNotificationCenter = userNotificationCenter
@@ -381,13 +381,13 @@ final class OnboardingViewTests: XCTestCase {
         
         let mockUserNotificationCenter = UserNotificationCenterMock()
         
-        struct Container: View {
+        struct Container<Location>: View where Location: LocationManagerProtocol {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
-            var locationManager: LocationManagerProtocol
+            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(locationManager: LocationManagerProtocol, userNotificationCenter: UserNotificationCenter) {
+            init(locationManager: Location, userNotificationCenter: UserNotificationCenter) {
                 self.locationManager = locationManager
                 self.userNotificationCenter = userNotificationCenter
             }
@@ -412,7 +412,7 @@ final class OnboardingViewTests: XCTestCase {
         XCTAssertTrue(mockLocationManager.requestAuthorizationCalled)
         
         tester().waitForView(withAccessibilityLabel: "Marlin Tabs")
-
+        
     }
     
     func testFlowDisclaimerAccepted() throws {
@@ -431,13 +431,13 @@ final class OnboardingViewTests: XCTestCase {
         
         let mockUserNotificationCenter = UserNotificationCenterMock()
         
-        struct Container: View {
+        struct Container<Location>: View where Location: LocationManagerProtocol {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
-            var locationManager: LocationManagerProtocol
+            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(locationManager: LocationManagerProtocol, userNotificationCenter: UserNotificationCenter) {
+            init(locationManager: Location, userNotificationCenter: UserNotificationCenter) {
                 self.locationManager = locationManager
                 self.userNotificationCenter = userNotificationCenter
             }
@@ -474,13 +474,13 @@ final class OnboardingViewTests: XCTestCase {
         
         let mockUserNotificationCenter = UserNotificationCenterMock()
         
-        struct Container: View {
+        struct Container<Location>: View where Location: LocationManagerProtocol {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
-            var locationManager: LocationManagerProtocol
+            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(locationManager: LocationManagerProtocol, userNotificationCenter: UserNotificationCenter) {
+            init(locationManager: Location, userNotificationCenter: UserNotificationCenter) {
                 self.locationManager = locationManager
                 self.userNotificationCenter = userNotificationCenter
             }
@@ -518,13 +518,13 @@ final class OnboardingViewTests: XCTestCase {
         
         let mockUserNotificationCenter = UserNotificationCenterMock()
         
-        struct Container: View {
+        struct Container<Location>: View where Location: LocationManagerProtocol {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
-            var locationManager: LocationManagerProtocol
+            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(locationManager: LocationManagerProtocol, userNotificationCenter: UserNotificationCenter) {
+            init(locationManager: Location, userNotificationCenter: UserNotificationCenter) {
                 self.locationManager = locationManager
                 self.userNotificationCenter = userNotificationCenter
             }
@@ -562,13 +562,13 @@ final class OnboardingViewTests: XCTestCase {
         
         let mockUserNotificationCenter = UserNotificationCenterMock()
         
-        struct Container: View {
+        struct Container<Location>: View where Location: LocationManagerProtocol {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
-            var locationManager: LocationManagerProtocol
+            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(locationManager: LocationManagerProtocol, userNotificationCenter: UserNotificationCenter) {
+            init(locationManager: Location, userNotificationCenter: UserNotificationCenter) {
                 self.locationManager = locationManager
                 self.userNotificationCenter = userNotificationCenter
             }
@@ -608,13 +608,13 @@ final class OnboardingViewTests: XCTestCase {
         
         let mockUserNotificationCenter = UserNotificationCenterMock()
         
-        struct Container: View {
+        struct Container<Location>: View where Location: LocationManagerProtocol {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
-            var locationManager: LocationManagerProtocol
+            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(locationManager: LocationManagerProtocol, userNotificationCenter: UserNotificationCenter) {
+            init(locationManager: Location, userNotificationCenter: UserNotificationCenter) {
                 self.locationManager = locationManager
                 self.userNotificationCenter = userNotificationCenter
             }
@@ -634,16 +634,6 @@ final class OnboardingViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Accept")
         tester().tapView(withAccessibilityLabel: "Accept")
         tester().waitForView(withAccessibilityLabel: "Marlin Tabs")
-    }
-}
-
-class MockLocationManager: LocationManagerProtocol, ObservableObject {
-    @Published var locationStatus: CLAuthorizationStatus?
-    
-    public var requestAuthorizationCalled = false
-    func requestAuthorization() {
-        requestAuthorizationCalled = true
-        NotificationCenter.default.post(Notification(name: .LocationAuthorizationStatusChanged, object: CLAuthorizationStatus.authorizedAlways))
     }
 }
 

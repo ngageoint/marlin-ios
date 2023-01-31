@@ -264,14 +264,17 @@ final class LightDataTests: XCTestCase {
             return true
         }
         
-        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
-            let count = try? self.persistentStore.countOfObjects(Light.self)
-            XCTAssertEqual(count, 3)
-            return true
-        }
+        let e5 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
+            if let count = try? self.persistentStore.countOfObjects(Light.self) {
+                return count == 3
+            }
+            return false
+        }), object: self.persistentStore.viewContext)
+        
         
         MSI.shared.loadData(type: Light.decodableRoot, dataType: Light.self)
-        
+        wait(for: [e5], timeout: 10)
+
         waitForExpectations(timeout: 10, handler: nil)
     }
     
