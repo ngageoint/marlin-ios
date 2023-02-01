@@ -4,6 +4,9 @@ Changelog
 All notable changes to this project will be documented in this file.
 
 ---
+## 1.0.3
+ ### Features
+    * Metrics recording
 
 ## 1.0.2
   ### Bug Fixes

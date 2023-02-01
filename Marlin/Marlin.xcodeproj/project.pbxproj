@@ -151,6 +151,7 @@
 		F75324C229833BBB005C509F /* MalrinMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324C129833BBB005C509F /* MalrinMapTests.swift */; };
 		F75324C529885521005C509F /* SearchResultsMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324C429885521005C509F /* SearchResultsMapTests.swift */; };
 		F75324C72989854F005C509F /* UserTrackingButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324C62989854F005C509F /* UserTrackingButtonTests.swift */; };
+		F75324C92989D143005C509F /* MSIListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324C82989D143005C509F /* MSIListViewModelTests.swift */; };
 		F75F81D529526E9C0062A708 /* AsamSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D429526E9C0062A708 /* AsamSummaryViewTests.swift */; };
 		F75F81D8295DE0EF0062A708 /* AboutCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D7295DE0EF0062A708 /* AboutCellTests.swift */; };
 		F75F81DA295DE4640062A708 /* AboutViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D9295DE4640062A708 /* AboutViewTests.swift */; };
@@ -497,6 +498,7 @@
 		F75324C129833BBB005C509F /* MalrinMapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MalrinMapTests.swift; sourceTree = "<group>"; };
 		F75324C429885521005C509F /* SearchResultsMapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsMapTests.swift; sourceTree = "<group>"; };
 		F75324C62989854F005C509F /* UserTrackingButtonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingButtonTests.swift; sourceTree = "<group>"; };
+		F75324C82989D143005C509F /* MSIListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIListViewModelTests.swift; sourceTree = "<group>"; };
 		F75F81D229526D5C0062A708 /* libKIF.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libKIF.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F75F81D429526E9C0062A708 /* AsamSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryViewTests.swift; sourceTree = "<group>"; };
 		F75F81D7295DE0EF0062A708 /* AboutCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutCellTests.swift; sourceTree = "<group>"; };
@@ -1102,6 +1104,7 @@
 				F72D88F72971FF8000D022FB /* HamburgerTests.swift */,
 				F75324B729807F04005C509F /* SubmitReportViewTests.swift */,
 				F75324BF2983272A005C509F /* MarlinCompactWidthViewTests.swift */,
+				F75324C82989D143005C509F /* MSIListViewModelTests.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1943,6 +1946,7 @@
 				F72D89062979D56500D022FB /* PortDetailViewTests.swift in Sources */,
 				F72D8910297A002100D022FB /* ElectronicPublicationSummaryViewTests.swift in Sources */,
 				F72D8914297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift in Sources */,
+				F75324C92989D143005C509F /* MSIListViewModelTests.swift in Sources */,
 				F75F81E2295F70A50062A708 /* BooleanFilterTests.swift in Sources */,
 				F72D89022979BCA300D022FB /* ModuDetailViewTests.swift in Sources */,
 				F72D891B297F449C00D022FB /* DFRSDataTests.swift in Sources */,
@@ -2430,7 +2434,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.marlin;
 				PRODUCT_NAME = Marlin;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2468,7 +2472,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.marlin;
 				PRODUCT_NAME = Marlin;
 				PROVISIONING_PROFILE_SPECIFIER = "";

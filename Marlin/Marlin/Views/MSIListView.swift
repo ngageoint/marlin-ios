@@ -8,9 +8,7 @@
 import SwiftUI
 import CoreData
 
-struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: View {
-    //    @Environment(\.managedObjectContext) private var viewContext
-    
+struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: View {    
     @State var sortOpen: Bool = false
     
     @ObservedObject var focusedItem: ItemWrapper
