@@ -9,6 +9,10 @@ import Foundation
 import SwiftUI
 
 extension DFRS: DataSourceViewBuilder {
+    var itemTitle: String {
+        return "\(self.stationName ?? "")"
+    }
+    
     var detailView: AnyView {
         AnyView(DFRSDetailView(dfrs: self))
     }

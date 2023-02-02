@@ -9,6 +9,9 @@ import Foundation
 import SwiftUI
 
 extension NavigationalWarning: DataSourceViewBuilder {
+    var itemTitle: String {
+        return "\(self.navAreaName) \(String(self.msgNumber))/\(String(self.msgYear)) (\(self.subregion ?? ""))"
+    }
     var detailView: AnyView {
         AnyView(NavigationalWarningDetailView(navigationalWarning: self))
     }

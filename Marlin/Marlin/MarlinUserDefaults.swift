@@ -150,6 +150,10 @@ extension UserDefaults {
     @objc var differentialGPSStationFilter: Data? {
         data(forKey: #function)
     }
+    @objc var dfrsFilter: Data? {
+        data(forKey: #function)
+    }
+    
     @objc var lightFilter: Data? {
         data(forKey: #function)
     }
@@ -213,6 +217,10 @@ extension UserDefaults {
     }
     
     @objc var differentialGPSStationSort: Data? {
+        data(forKey: #function)
+    }
+    
+    @objc var dfrsSort: Data? {
         data(forKey: #function)
     }
     

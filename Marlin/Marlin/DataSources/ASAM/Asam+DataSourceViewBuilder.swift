@@ -9,6 +9,9 @@ import Foundation
 import SwiftUI
 
 extension Asam: DataSourceViewBuilder {
+    var itemTitle: String {
+        return "\(self.hostility ?? "")\(self.hostility != nil && self.victim != nil ? ": " : "")\(self.victim ?? "")"
+    }
     var detailView: AnyView {
         AnyView(AsamDetailView(asam: self))
     }

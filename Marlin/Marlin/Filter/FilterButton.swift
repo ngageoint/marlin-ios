@@ -46,8 +46,6 @@ struct FilterButton: ViewModifier {
                                 .imageScale(.large)
                                 .foregroundColor(Color.onPrimaryColor)
                         }
-                        .padding([.top, .bottom], 10)
-                        .padding(.trailing, 5)
                         .contentShape(Rectangle())
                         .accessibilityElement(children: .contain)
                         .accessibilityLabel("Sort")
@@ -63,8 +61,6 @@ struct FilterButton: ViewModifier {
                                     .accessibilityElement()
                                     .accessibilityLabel("\(filterCount) filter"))
                         }
-                        .padding([.top, .bottom], 10)
-                        .padding(.leading, 5)
                         .contentShape(Rectangle())
                         .accessibilityElement(children: .contain)
                         .accessibilityLabel("Filter")

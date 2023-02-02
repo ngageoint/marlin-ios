@@ -48,8 +48,14 @@ struct SortView: View {
                 Toggle("Group by primary sort field", isOn: $viewModel.sections)
                     .secondary()
             }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                viewModel.sections.toggle()
+            }
             .frame(maxWidth: .infinity)
             .padding(.all, 16)
+            .accessibilityElement()
+            .accessibilityLabel("Group by primary sort field")
         }
     }
     

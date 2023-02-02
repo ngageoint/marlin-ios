@@ -55,9 +55,9 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: V
     
     var body: some View {
         ZStack {
-            if watchFocusedItem, let focusedAsam = focusedItem.dataSource as? T {
+            if watchFocusedItem, let focusedDataSource = focusedItem.dataSource as? T {
                 NavigationLink(tag: "detail", selection: $selection) {
-                    focusedAsam.detailView
+                    focusedDataSource.detailView
                         .onDisappear {
                             focusedItem.dataSource = nil
                         }
@@ -114,6 +114,8 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: V
                             .imageScale(.large)
                             .foregroundColor(Color.onPrimaryColor.opacity(0.87))
                     }
+                    .accessibilityElement()
+                    .accessibilityLabel("Close Filter")
                 }
             }
         }
@@ -138,6 +140,8 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: V
                             .imageScale(.large)
                             .foregroundColor(Color.onPrimaryColor.opacity(0.87))
                     }
+                    .accessibilityElement()
+                    .accessibilityLabel("Close Sort")
                 }
             }
         }
@@ -152,8 +156,6 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, Content:
     let sectionHeaderIsSubList: Bool
     let content: ((MSISection<T>) -> Content)?
 
-//    let content: ((MSISection<T>) -> any View)?
-
     var body: some View {
         ZStack {
             NavigationLink(destination: AnyView(tappedItem?.detailView), isActive: self.$showDetail) {
@@ -164,18 +166,29 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, Content:
                         
                         LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
                             ForEach(itemsViewModel.sections, id: \.id) { section in
-                                Section(header: HStack {
-                                    Text(sectionNameBuilder?(section) ?? section.name)
-                                        .overline()
-                                        .padding([.leading, .trailing], 8)
-                                        .padding(.top, 12)
-                                        .padding(.bottom, 4)
-                                    Spacer()
+                                Section(header: Group {
+                                    if section.name == "All" {
+                                        EmptyView()
+                                    } else {
+                                        HStack {
+                                            Text(sectionNameBuilder?(section) ?? section.name)
+                                                .overline()
+                                                .padding([.leading, .trailing], 8)
+                                                .padding(.top, 12)
+                                                .padding(.bottom, 4)
+                                            Spacer()
+                                        }
+                                    }
                                 }
                                 .background(Color.backgroundColor)) {
                                     itemList(items: section.items)
                                 }
                                 .onAppear {
+                                    if section.id == itemsViewModel.sections[itemsViewModel.sections.count - 1].id {
+                                        itemsViewModel.update(for: section.id + 1)
+                                    }
+                                }
+                                .onChange(of: itemsViewModel.lastUpdateDate) { date in
                                     if section.id == itemsViewModel.sections[itemsViewModel.sections.count - 1].id {
                                         itemsViewModel.update(for: section.id + 1)
                                     }
@@ -246,6 +259,8 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, Content:
                 tappedItem = item
                 showDetail.toggle()
             }
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(item.itemTitle) summary")
         }
         .dataSourceSummaryItem()
     }

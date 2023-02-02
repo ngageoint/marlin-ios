@@ -9,6 +9,10 @@ import Foundation
 import SwiftUI
 
 extension Modu: DataSourceViewBuilder {
+    var itemTitle: String {
+        return "\(self.name ?? "")"
+    }
+    
     var detailView: AnyView {
         AnyView(ModuDetailView(modu: self))
     }

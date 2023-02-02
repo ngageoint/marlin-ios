@@ -9,6 +9,10 @@ import Foundation
 import SwiftUI
 
 extension RadioBeacon: DataSourceViewBuilder {
+    var itemTitle: String {
+        return "\(self.featureNumber) \(self.volumeNumber ?? "")"
+    }
+    
     var detailView: AnyView {
         AnyView(RadioBeaconDetailView(radioBeacon: self))
     }

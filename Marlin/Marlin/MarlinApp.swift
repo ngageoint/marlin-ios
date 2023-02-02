@@ -115,7 +115,7 @@ struct MarlinApp: App {
         do {
             try BGTaskScheduler.shared.submit(request)
         } catch {
-            print("xxx Could not schedule app refresh: \(error)")
+            print("Could not schedule app refresh: \(error)")
         }
     }
 }

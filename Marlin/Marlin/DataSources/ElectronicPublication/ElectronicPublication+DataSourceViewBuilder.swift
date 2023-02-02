@@ -9,6 +9,10 @@ import Foundation
 import SwiftUI
 
 extension ElectronicPublication: DataSourceViewBuilder {
+    var itemTitle: String {
+        return "\(self.sectionDisplayName ?? "")"
+    }
+    
     var detailView: AnyView {
         AnyView(ElectronicPublicationDetailView(electronicPublication: self))
     }

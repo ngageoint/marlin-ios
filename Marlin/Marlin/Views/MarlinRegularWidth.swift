@@ -177,7 +177,7 @@ struct MarlinRegularWidth: View {
         } else if dataSource.key == DifferentialGPSStation.key {
             MSIListView<DifferentialGPSStation, AnyView>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationFilter), sortPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationSort))
         } else if dataSource.key == DFRS.key {
-            DFRSListView(focusedItem: itemWrapper, watchFocusedItem: true)
+            MSIListView<DFRS, AnyView>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.dfrsFilter), sortPublisher: UserDefaults.standard.publisher(for: \.dfrsSort))
         } else if dataSource.key == ElectronicPublication.key {
             ElectronicPublicationsList()
         } else if dataSource.key == NoticeToMariners.key {

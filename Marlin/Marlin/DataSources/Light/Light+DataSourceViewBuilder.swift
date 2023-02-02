@@ -9,6 +9,10 @@ import Foundation
 import SwiftUI
 
 extension Light: DataSourceViewBuilder {
+    var itemTitle: String {
+        return "\(self.name ?? "")"
+    }
+    
     var detailView: AnyView {
         if let featureNumber = self.featureNumber, let volumeNumber = self.volumeNumber {
             return AnyView(LightDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber).navigationTitle("\(name ?? Light.dataSourceName)" ))

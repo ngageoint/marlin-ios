@@ -9,6 +9,10 @@ import Foundation
 import SwiftUI
 
 extension DifferentialGPSStation: DataSourceViewBuilder {
+    var itemTitle: String {
+        return "\(self.featureNumber) \(self.volumeNumber ?? "")"
+    }
+    
     var detailView: AnyView {
         AnyView(DifferentialGPSStationDetailView(differentialGPSStation: self))
     }

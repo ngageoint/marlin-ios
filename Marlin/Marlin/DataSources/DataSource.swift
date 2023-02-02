@@ -164,5 +164,6 @@ extension DataSource {
 protocol DataSourceViewBuilder: DataSource {
     var detailView: AnyView { get }
     func summaryView(showMoreDetails: Bool, showSectionHeader: Bool) -> AnyView
+    var itemTitle: String { get }
 }
 

@@ -315,7 +315,6 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: {
                 focusedAnnotation.shrinkAnnotation()
             }) { complete in
-                print("xxx remove annotation")
                 self.mapView?.removeAnnotation(focusedAnnotation)
             }
             self.focusedAnnotation = nil

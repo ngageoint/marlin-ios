@@ -9,6 +9,10 @@ import Foundation
 import SwiftUI
 
 extension Port: DataSourceViewBuilder {
+    var itemTitle: String {
+        return "\(self.portName ?? "")"
+    }
+    
     var detailView: AnyView {
         AnyView(PortDetailView(port: self))
     }

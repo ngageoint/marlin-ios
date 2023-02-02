@@ -41,7 +41,6 @@
 		F71D287328BE969500F1775C /* DFRSDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287228BE969500F1775C /* DFRSDetailView.swift */; };
 		F71D287528BE96EB00F1775C /* DFRSMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287428BE96EB00F1775C /* DFRSMap.swift */; };
 		F71D287728BE976300F1775C /* DFRSSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287628BE976300F1775C /* DFRSSummaryView.swift */; };
-		F71D287928BE9B7400F1775C /* DFRSListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287828BE9B7400F1775C /* DFRSListView.swift */; };
 		F71D287B28C1401500F1775C /* FetchRequestMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287A28C1401400F1775C /* FetchRequestMap.swift */; };
 		F71D287D28C2926500F1775C /* AboutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287C28C2926500F1775C /* AboutCell.swift */; };
 		F71D287F28C293A000F1775C /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D287E28C293A000F1775C /* AboutView.swift */; };
@@ -152,6 +151,7 @@
 		F75324C529885521005C509F /* SearchResultsMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324C429885521005C509F /* SearchResultsMapTests.swift */; };
 		F75324C72989854F005C509F /* UserTrackingButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324C62989854F005C509F /* UserTrackingButtonTests.swift */; };
 		F75324C92989D143005C509F /* MSIListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324C82989D143005C509F /* MSIListViewModelTests.swift */; };
+		F75324CB298BFFED005C509F /* MSIListViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324CA298BFFED005C509F /* MSIListViewTests.swift */; };
 		F75F81D529526E9C0062A708 /* AsamSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D429526E9C0062A708 /* AsamSummaryViewTests.swift */; };
 		F75F81D8295DE0EF0062A708 /* AboutCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D7295DE0EF0062A708 /* AboutCellTests.swift */; };
 		F75F81DA295DE4640062A708 /* AboutViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D9295DE4640062A708 /* AboutViewTests.swift */; };
@@ -386,7 +386,6 @@
 		F71D287228BE969500F1775C /* DFRSDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSDetailView.swift; sourceTree = "<group>"; };
 		F71D287428BE96EB00F1775C /* DFRSMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSMap.swift; sourceTree = "<group>"; };
 		F71D287628BE976300F1775C /* DFRSSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSSummaryView.swift; sourceTree = "<group>"; };
-		F71D287828BE9B7400F1775C /* DFRSListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSListView.swift; sourceTree = "<group>"; };
 		F71D287A28C1401400F1775C /* FetchRequestMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchRequestMap.swift; sourceTree = "<group>"; };
 		F71D287C28C2926500F1775C /* AboutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutCell.swift; sourceTree = "<group>"; };
 		F71D287E28C293A000F1775C /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
@@ -499,6 +498,7 @@
 		F75324C429885521005C509F /* SearchResultsMapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsMapTests.swift; sourceTree = "<group>"; };
 		F75324C62989854F005C509F /* UserTrackingButtonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingButtonTests.swift; sourceTree = "<group>"; };
 		F75324C82989D143005C509F /* MSIListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIListViewModelTests.swift; sourceTree = "<group>"; };
+		F75324CA298BFFED005C509F /* MSIListViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIListViewTests.swift; sourceTree = "<group>"; };
 		F75F81D229526D5C0062A708 /* libKIF.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libKIF.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F75F81D429526E9C0062A708 /* AsamSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryViewTests.swift; sourceTree = "<group>"; };
 		F75F81D7295DE0EF0062A708 /* AboutCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutCellTests.swift; sourceTree = "<group>"; };
@@ -1105,6 +1105,7 @@
 				F75324B729807F04005C509F /* SubmitReportViewTests.swift */,
 				F75324BF2983272A005C509F /* MarlinCompactWidthViewTests.swift */,
 				F75324C82989D143005C509F /* MSIListViewModelTests.swift */,
+				F75324CA298BFFED005C509F /* MSIListViewTests.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1617,7 +1618,6 @@
 				F71D287228BE969500F1775C /* DFRSDetailView.swift */,
 				F71D287428BE96EB00F1775C /* DFRSMap.swift */,
 				F71D287628BE976300F1775C /* DFRSSummaryView.swift */,
-				F71D287828BE9B7400F1775C /* DFRSListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1958,6 +1958,7 @@
 				F72D89002979B87800D022FB /* ModuSummaryTests.swift in Sources */,
 				F73ABC86295250A90085EDC5 /* LocationManagerTests.swift in Sources */,
 				F73D9E252970E54C008AF40D /* MapSettingsTests.swift in Sources */,
+				F75324CB298BFFED005C509F /* MSIListViewTests.swift in Sources */,
 				F75F81E42960B4D90062A708 /* StringFilterTests.swift in Sources */,
 				F72D88F82971FF8000D022FB /* HamburgerTests.swift in Sources */,
 				F7D8FA64293AB5B000E7D0A1 /* MockDataSource.swift in Sources */,
@@ -2059,7 +2060,6 @@
 				F7D8FA162922BA3B00E7D0A1 /* NoticeToMariners+DataSourceViewBuilder.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
 				F71D286428BE431900F1775C /* DifferentialGPSStationMap.swift in Sources */,
-				F71D287928BE9B7400F1775C /* DFRSListView.swift in Sources */,
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
 				F7FFB33D28DA061D00C31AA3 /* FilterButton.swift in Sources */,
 				F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */,

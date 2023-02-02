@@ -29,6 +29,8 @@ struct FilterView: View {
                         Image(systemName: "minus.circle.fill")
                             .tint(Color.red)
                     }
+                    .accessibilityElement()
+                    .accessibilityLabel("remove filter \(index)")
                 }
                 .padding([.top, .bottom], 8)
                 Divider()

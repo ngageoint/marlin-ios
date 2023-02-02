@@ -17,6 +17,7 @@ struct MSISection<T: DataSource & BatchImportable>: Hashable {
 
 class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResultsControllerDelegate, ObservableObject {
     @Published var sections : [MSISection<T>] = []
+    @Published var lastUpdateDate: Date = Date()
     var sortDescriptors: [DataSourceSortParameter] = []
     var filters: [DataSourceFilterParameter] = []
     var fetchRequest = T.fetchRequest()
@@ -103,13 +104,14 @@ class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResu
             }
         } else if sectionIndex == 0 {
             if let items = fetchedResultsController?.fetchedObjects as? [T] {
-                return MSISection(id: 0, name: "", items: items)
+                return MSISection(id: 0, name: "All", items: items)
             }
         }
         return nil
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        lastUpdateDate = Date()
         // update the sections that were already loaded, or load the initial section if none loaded yet
         if sections.isEmpty {
             if let sectionLights = get(for: 0) {

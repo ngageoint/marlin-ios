@@ -9,6 +9,9 @@ import Foundation
 import SwiftUI
 
 extension NoticeToMariners: DataSourceViewBuilder {
+    var itemTitle: String {
+        return "\(self.title ?? "") \(self.isFullPublication ? (self.fileExtension ?? "") : "")"
+    }
     var detailView: AnyView {
         AnyView(NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: self.noticeNumber)))
     }
