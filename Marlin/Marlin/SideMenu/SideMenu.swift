@@ -29,6 +29,8 @@ struct SideMenu: View {
                         self.menuClose()
                     }
                 }
+                .accessibilityElement()
+                .accessibilityLabel("Backdrop \(self.isOpen ? "Open" : "Closed")")
                 
                 HStack {
                     HStack(spacing: 0) {
@@ -52,7 +54,7 @@ struct SideMenu: View {
                         .ignoresSafeArea()
                         .frame(width: geometry.safeAreaInsets.leading)
                         
-                        SideMenuContent(dataSourceList: dataSourceList)
+                        SideMenuContent(model: SideMenuViewModel(dataSourceList: dataSourceList))
                             .frame(width: self.width)
                             
                     }

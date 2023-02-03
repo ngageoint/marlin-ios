@@ -131,6 +131,15 @@ extension UserDefaults {
         return nil
     }
     
+    @objc var userTabs: Int {
+        get {
+            return integer(forKey: #function)
+        }
+        set {
+            setValue(newValue, forKey: #function)
+        }
+    }
+    
     @objc var asamFilter: Data? {
         data(forKey: #function)
     }

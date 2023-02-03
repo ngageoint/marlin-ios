@@ -1,5 +1,5 @@
 //
-//  MalrinMapTests.swift
+//  MarlinMapTests.swift
 //  MarlinTests
 //
 //  Created by Daniel Barela on 1/26/23.
@@ -15,7 +15,7 @@ import mgrs_ios
 
 @testable import Marlin
 
-final class MalrinMapTests: XCTestCase {
+final class MarlinMapTests: XCTestCase {
     
     var cancellable = Set<AnyCancellable>()
     var persistentStore: PersistentStore = PersistenceController.shared
