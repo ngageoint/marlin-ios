@@ -19,6 +19,8 @@ final class ASAMDataTests: XCTestCase {
         .receive(on: RunLoop.main)
     
     override func setUp(completion: @escaping (Error?) -> Void) {
+        UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+        UserDefaults.registerMarlinDefaults()
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
             UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
@@ -75,6 +77,23 @@ final class ASAMDataTests: XCTestCase {
             XCTAssertEqual(count, 2)
             return true
         }
+        
+        expectation(forNotification: .BatchUpdateComplete,
+                    object: nil) { notification in
+            guard let updatedNotification = notification.object as? BatchUpdateComplete else {
+                XCTFail("Incorrect notification")
+                return false
+            }
+            let updates = updatedNotification.dataSourceUpdates
+            if updates.isEmpty {
+                XCTFail("should be some updates")
+            }
+            XCTAssertFalse(updates.isEmpty)
+            let update = updates[0]
+            XCTAssertEqual(2, update.inserts)
+            XCTAssertEqual(0, update.updates)
+            return true
+        }
             
         MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
         
@@ -119,6 +138,23 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
+        expectation(forNotification: .BatchUpdateComplete,
+                    object: nil) { notification in
+            guard let updatedNotification = notification.object as? BatchUpdateComplete else {
+                XCTFail("Incorrect notification")
+                return false
+            }
+            let updates = updatedNotification.dataSourceUpdates
+            if updates.isEmpty {
+                XCTFail("should be some updates")
+            }
+            XCTAssertFalse(updates.isEmpty)
+            let update = updates[0]
+            XCTAssertEqual(2, update.inserts)
+            XCTAssertEqual(0, update.updates)
+            return true
+        }
+        
         MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
         
         waitForExpectations(timeout: 10, handler: nil)
@@ -149,6 +185,19 @@ final class ASAMDataTests: XCTestCase {
                         "hostility": "Two drone explosions",
                         "victim": "Marshall Islands-flagged oil tanker NISSOS KEA",
                         "description": "UPDATED"
+                    ],
+                    // this one is the same
+                    [
+                        "reference": "2022-217",
+                        "date": "2022-10-24",
+                        "latitude": 1.1499999999778083,
+                        "longitude": 103.43333333315655,
+                        "position": "1°09'00\"N \n103°26'00\"E",
+                        "navArea": "XI",
+                        "subreg": "71",
+                        "hostility": "Boarding",
+                        "victim": "Marshall Islands bulk carrier GENCO ENDEAVOUR",
+                        "description": "INDONESIA: On 23 October at 2359 local time, five robbers boarded the underway Marshall Islands-flagged bulk carrier GENCO ENDEAVOUR close to Little Karimum Island in the eastbound lane of the Singapore Strait Traffic Separation Scheme (TSS), near position 01-09N 103-26E. The crew sighted the unauthorized personnel near the steering gear room and activated the ship’s general alarm. Upon realizing they had been discovered, the robbers escaped empty-handed. The ship reported the incident to the Singapore Vessel Traffic System. The Singapore police coast guard later boarded the vessel for an investigation. Information was shared with Indonesian authorities."
                     ]
                 ]
             ]
@@ -175,8 +224,26 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
+        expectation(forNotification: .BatchUpdateComplete,
+                    object: nil) { notification in
+            guard let updatedNotification = notification.object as? BatchUpdateComplete else {
+                XCTFail("Incorrect notification")
+                return false
+            }
+            let updates = updatedNotification.dataSourceUpdates
+            if updates.isEmpty {
+                XCTFail("should be some updates")
+            }
+            XCTAssertFalse(updates.isEmpty)
+            let update = updates[0]
+            XCTAssertEqual(1, update.inserts)
+            XCTAssertEqual(2, update.updates)
+            return true
+        }
+        
         let e5 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
             if let count = try? self.persistentStore.countOfObjects(Asam.self) {
+                print("count is \(count)")
                 return count == 3
             }
             return false

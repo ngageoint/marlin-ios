@@ -203,7 +203,7 @@ extension UserDefaults {
             
             // Write/Set Data
             UserDefaults.standard.set(data, forKey: "\(key)Filter")
-            NotificationCenter.default.post(name: .DataSourceUpdated, object: key)
+            NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: key))
         } catch {
             print("Unable to Encode Array of Notes (\(error))")
         }
@@ -272,7 +272,7 @@ extension UserDefaults {
             
             // Write/Set Data
             UserDefaults.standard.set(data, forKey: "\(key)Sort")
-            NotificationCenter.default.post(name: .DataSourceUpdated, object: key)
+            NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: key))
         } catch {
             print("Unable to Encode Array of Notes (\(error))")
         }

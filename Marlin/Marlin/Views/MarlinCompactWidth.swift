@@ -39,6 +39,7 @@ struct MarlinCompactWidth: View {
             TabView(selection: $selectedTab) {
                 NavigationView {
                     VStack(spacing: 0) {
+                        DataLoadedNotificationBanner()
                         CurrentLocation()
                         ZStack(alignment: .topLeading) {
                             marlinMap

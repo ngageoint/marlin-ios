@@ -200,6 +200,13 @@ class CoreDataPersistentStore: PersistentStore {
     
     func reset() {
         do {
+            let tokenURL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("MSICoreDataToken", isDirectory: true)
+            try FileManager.default.removeItem(atPath: tokenURL.path)
+        } catch {
+            print(error.localizedDescription)
+        }
+        lastToken = nil
+        do {
             let currentStore = _container?.persistentStoreCoordinator.persistentStores.last!
             if let currentStoreURL = currentStore?.url {
                 print("Current store url \(currentStoreURL)")
@@ -387,20 +394,24 @@ class CoreDataPersistentStore: PersistentStore {
             logger.info("Start fetching persistent history changes from the store...")
             
             try? taskContext.performAndWait { [self] in
-                taskContext.transactionAuthor = PersistenceController.remoteDataImportAuthorName
-                // Execute the persistent history change since the last transaction.
-                /// - Tag: fetchHistory
-                let changeRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: self.lastToken)
-                if let historyFetchRequest = NSPersistentHistoryTransaction.fetchRequest {
-                    historyFetchRequest.predicate =
-                    NSPredicate(format: "%K != %@", "author", PersistenceController.authorName)
-                    changeRequest.fetchRequest = historyFetchRequest
-                }
-                let historyResult = try taskContext.execute(changeRequest) as? NSPersistentHistoryResult
-                if let history = historyResult?.result as? [NSPersistentHistoryTransaction],
-                   !history.isEmpty {
-                    self.mergePersistentHistoryChanges(from: history)
-                    return
+                do {
+                    taskContext.transactionAuthor = PersistenceController.remoteDataImportAuthorName
+                    // Execute the persistent history change since the last transaction.
+                    /// - Tag: fetchHistory
+                    let changeRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: self.lastToken)
+                    if let historyFetchRequest = NSPersistentHistoryTransaction.fetchRequest {
+                        historyFetchRequest.predicate =
+                        NSPredicate(format: "%K != %@", "author", PersistenceController.authorName)
+                        changeRequest.fetchRequest = historyFetchRequest
+                    }
+                    let historyResult = try taskContext.execute(changeRequest) as? NSPersistentHistoryResult
+                    if let history = historyResult?.result as? [NSPersistentHistoryTransaction],
+                       !history.isEmpty {
+                        self.mergePersistentHistoryChanges(from: history)
+                        return
+                    }
+                } catch {
+                    self.logger.info("Error \(error)")
                 }
                 
                 self.logger.info("No persistent history transactions found.")
@@ -412,12 +423,31 @@ class CoreDataPersistentStore: PersistentStore {
     }
     
     private func mergePersistentHistoryChanges(from history: [NSPersistentHistoryTransaction]) {
+        let entityMap: [String?: String] = MSI.shared.masterDataList.reduce([String?:String]()) { (partialResult, importable) -> [String?:String] in
+            var partialResult = partialResult
+            partialResult[importable.entity().name] = importable.key
+            return partialResult
+        }
         self.logger.info("Received \(history.count) persistent history transactions.")
         // Update view context with objectIDs from history change request.
         /// - Tag: mergeChanges
         let viewContext = container.viewContext
         viewContext.perform {
+            var updateCounts: [String? : Int] = [:]
+            var insertCounts: [String? : Int] = [:]
             for transaction in history {
+                let notif = transaction.objectIDNotification()
+                let inserts: Set<NSManagedObjectID> = notif.userInfo?["inserted_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
+                let updates: Set<NSManagedObjectID> = notif.userInfo?["updated_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
+                
+                for insert in inserts {
+                    let entityKey = entityMap[insert.entity.name]
+                    insertCounts[entityKey] = (insertCounts[entityKey] ?? 0) + 1
+                }
+                for update in updates {
+                    let entityKey = entityMap[update.entity.name]
+                    updateCounts[entityKey] = (updateCounts[entityKey] ?? 0) + 1
+                }
                 viewContext.mergeChanges(fromContextDidSave: transaction.objectIDNotification())
                 self.lastToken = transaction.token
             }
@@ -425,6 +455,16 @@ class CoreDataPersistentStore: PersistentStore {
             if let newToken = history.last?.token {
                 self.storeHistoryToken(newToken)
             }
+            var dataSourceUpdatedNotifications: [DataSourceUpdatedNotification] = []
+            for dataSource in MSI.shared.masterDataList {
+                let inserts = insertCounts[dataSource.key] ?? 0
+                let updates = updateCounts[dataSource.key] ?? 0
+                if inserts != 0 || updates != 0 {
+                    dataSourceUpdatedNotifications.append(DataSourceUpdatedNotification(key: dataSource.key, updates: updates, inserts: inserts))
+                }
+            }
+            
+            NotificationCenter.default.post(Notification(name: .BatchUpdateComplete, object: BatchUpdateComplete(dataSourceUpdates: dataSourceUpdatedNotifications)))
         }
     }
     

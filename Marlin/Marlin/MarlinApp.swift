@@ -8,7 +8,6 @@
 import SwiftUI
 import Combine
 import OSLog
-import BackgroundTasks
 
 @main
 struct AppLauncher {
@@ -42,6 +41,9 @@ struct TestApp: App {
 class AppState: ObservableObject {
     @Published var popToRoot: Bool = false
     @Published var loadingDataSource: [String : Bool] = [:]
+    @Published var dataSourceBatchImportNotificationsPending: [String: [DataSourceUpdatedNotification]] = [:]
+    @Published var lastNotificationRequestDate: Date = Date()
+    @Published var consolidatedDataLoadedNotification: String?
 }
 
 @available (iOS 16, *)
@@ -56,11 +58,18 @@ struct MarlinApp: App {
     
     let scheme = MarlinScheme()
     var appState: AppState
-    
+    @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = false
+
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
-    @State var loading = false
+    let batchImportCompletePub = NotificationCenter.default.publisher(for: .BatchUpdateComplete)
+        .receive(on: RunLoop.main)
+        .compactMap {
+            $0.object as? BatchUpdateComplete
+        }
     
+    @State var loading = false
+        
     init() {
         // set up default user defaults
         UserDefaults.registerMarlinDefaults()
@@ -82,40 +91,62 @@ struct MarlinApp: App {
                 .environmentObject(appState)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
                 .background(Color.surfaceColor)
-                .onAppear {
-                    let request = BGAppRefreshTaskRequest(identifier: "mil.nga.msi.refresh")
-                    // Fetch no earlier than 1 hour from now
-                    request.earliestBeginDate = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
-                    do {
-                        try BGTaskScheduler.shared.submit(request) // Mark 3
-                        print("Background Task Scheduled!")
-                    } catch(let error) {
-                        print("Scheduling Error \(error.localizedDescription)")
+                .onReceive(appState.$lastNotificationRequestDate) { newValue in
+                    var insertsPerDataSource: [String : Int] = [:]
+                    
+                    for (_, importNotifications) in appState.dataSourceBatchImportNotificationsPending {
+                        for notification in importNotifications {
+                            let inserts: Int = insertsPerDataSource[notification.key] ?? 0
+                            insertsPerDataSource[notification.key] = inserts + (notification.inserts ?? 0)
+                        }
                     }
+                    
+                    var notificationStrings: [String] = []
+                    
+                    for (dataSourceKey, inserts) in insertsPerDataSource {
+                        let dataSourceItem = DataSourceList().allTabs.first { item in
+                            item.key == dataSourceKey
+                        }
+                        if inserts != 0 {
+                            notificationStrings.append("\(inserts) new \(dataSourceItem?.dataSource.fullDataSourceName ?? "")")
+                        }
+                    }
+                    if !notificationStrings.isEmpty {
+                        appState.consolidatedDataLoadedNotification = notificationStrings.joined(separator: "\n")
+                    } else {
+                        appState.consolidatedDataLoadedNotification = nil
+                    }
+                }
+                .onReceive(appState.$consolidatedDataLoadedNotification.debounce(for: .seconds(2), scheduler: RunLoop.main)) { newValue in
+                    if phase == .background {
+                        if let newValue = newValue {
+                            appState.dataSourceBatchImportNotificationsPending = [:]
+                            let center = UNUserNotificationCenter.current()
+                            let content = UNMutableNotificationContent()
+                            content.title = NSString.localizedUserNotificationString(forKey: "New Marlin Data", arguments: nil)
+                            content.body = NSString.localizedUserNotificationString(forKey: newValue, arguments: nil)
+                            content.sound = UNNotificationSound.default
+                            content.categoryIdentifier = "mil.nga.msi"
+                            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2.0, repeats: false)
+                            let request = UNNotificationRequest.init(identifier: UUID().uuidString, content: content, trigger: trigger)
+                            center.add(request)
+                        }
+                    }
+                }
+                .onReceive(batchImportCompletePub) { batchUpdateComplete in
+                    let updates = batchUpdateComplete.dataSourceUpdates
+                    for update in updates {
+                        let dataSourceKey = update.key
+                        var pending: [DataSourceUpdatedNotification] = appState.dataSourceBatchImportNotificationsPending[dataSourceKey] ?? []
+                        pending.append(update)
+                        appState.dataSourceBatchImportNotificationsPending[dataSourceKey] = pending
+                        
+                    }
+                    appState.lastNotificationRequestDate = Date()
                 }
         }
         .onChange(of: phase) { newPhase in
-            switch newPhase {
-            case .background: scheduleAppRefresh()
-            default: break
-            }
-        }
-        .backgroundTask(.appRefresh("mil.nga.msi.refresh")) {
-            await scheduleAppRefresh()
-            MSI.shared.loadAllData()
-
-        }
-    }
-    
-    func scheduleAppRefresh() {
-        let request = BGAppRefreshTaskRequest(identifier: "mil.nga.msi.refresh")
-        // Fetch no earlier than 1 hour from now
-        request.earliestBeginDate = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
-        
-        do {
-            try BGTaskScheduler.shared.submit(request)
-        } catch {
-            print("Could not schedule app refresh: \(error)")
+            MSI.shared.onChangeOfScenePhase(newPhase)
         }
     }
 }
@@ -145,6 +176,11 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let presentationOption: UNNotificationPresentationOptions = [.sound, .banner, .list]
         completionHandler(presentationOption)
+    }
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        MSI.shared.registerBackgroundHandler()
+        return true
     }
 }
 

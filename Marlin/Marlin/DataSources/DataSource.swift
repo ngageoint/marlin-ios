@@ -120,6 +120,7 @@ protocol DataSource {
     static var dataSourceName: String { get }
     static var fullDataSourceName: String { get }
     static var key: String { get }
+    var key: String { get }
     static var color: UIColor { get }
     static var imageName: String? { get }
     static var systemImageName: String? { get }
@@ -158,6 +159,10 @@ extension DataSource {
     
     var coordinate: CLLocationCoordinate2D? {
         return nil
+    }
+    
+    var key: String {
+        return Self.key
     }
 }
 

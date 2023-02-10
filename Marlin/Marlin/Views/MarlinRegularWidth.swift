@@ -74,6 +74,7 @@ struct MarlinRegularWidth: View {
                         }
                     VStack(spacing: 0) {
                         // top of map
+                        DataLoadedNotificationBanner()
                         CurrentLocation()
                         topButtons()
                         Spacer()

@@ -85,10 +85,10 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         NotificationCenter.default.publisher(for: .DataSourceUpdated)
             .receive(on: RunLoop.main)
             .compactMap {
-                $0.object as? String
+                $0.object as? DataSourceUpdatedNotification
             }
             .sink { item in
-                if item == T.key {
+                if item.key == T.key {
                     if T.cacheTiles {
                         print("New data for \(T.key), refresh overlay, clear the cache")
                         // Clear the cache
