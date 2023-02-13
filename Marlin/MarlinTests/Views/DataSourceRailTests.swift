@@ -20,22 +20,27 @@ final class DataSourceRailTests: XCTestCase {
         
         struct Container: View {
             @State var activeRailItem: DataSourceItem?
-            let dataSourceList = DataSourceList()
+            
+            class MockDataSourceList : DataSourceList {
+                override var allTabs: [DataSourceItem] {
+                    return [
+                        DataSourceItem(dataSource: MockDataSourceDefaultSort.self),
+                        DataSourceItem(dataSource: MockDataSource.self),
+                        DataSourceItem(dataSource: MockDataSourceNonMappable.self)
+                    ]
+                }
+            }
+            let dataSourceList = MockDataSourceList()
             let passThrough: PassThrough
             public init(passThrough: PassThrough) {
-                dataSourceList.tabs = [
-                    DataSourceItem(dataSource: MockDataSourceDefaultSort.self),
-                    DataSourceItem(dataSource: MockDataSource.self),
-                    DataSourceItem(dataSource: MockDataSourceNonMappable.self)
-                ]
                 self.passThrough = passThrough
             }
             
             var body: some View {
                 DataSourceRail(dataSourceList: dataSourceList, activeRailItem: $activeRailItem)
                     .onAppear {
-                        print("setting active rail item \(dataSourceList.tabs[0])")
-                        activeRailItem = dataSourceList.tabs[0]
+                        print("setting active rail item \(dataSourceList.allTabs[0])")
+                        activeRailItem = dataSourceList.allTabs[0]
                     }
                     .onChange(of: activeRailItem) { newValue in
                         self.passThrough.currentItem = newValue
