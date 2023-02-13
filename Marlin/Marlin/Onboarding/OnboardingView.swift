@@ -668,17 +668,18 @@ struct OnboardingView<Location>: View where Location: LocationManagerProtocol {
             .accessibilityElement(children: .contain)
             .accessibilityLabel("\(NoticeToMariners.fullDataSourceName) Tab")
         }
+        .frame(maxWidth: 500, alignment: .center)
     }
-        
+    
     @ViewBuilder
     func dataSourceMapGrid(gridSize: CGFloat) -> some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: gridSize))]) {
+            
             VStack(alignment: .center) {
                 if let image = Asam.image {
                     Image(uiImage: image)
                         .renderingMode(.template)
                         .frame(width: gridSize / 2, height: gridSize / 2)
-                        .tint(Color.white)
                         .clipShape(Circle())
                         .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
                             .background(Circle().fill(Color(uiColor: Asam.color))))
@@ -698,6 +699,7 @@ struct OnboardingView<Location>: View where Location: LocationManagerProtocol {
             .overlay(CheckBadge(on: $asamIsMapped)
                 .accessibilityElement()
                 .accessibilityLabel("\(Asam.fullDataSourceName) Map \(asamIsMapped ? "On" : "Off")"))
+            .padding(8)
             
             VStack(alignment: .center) {
                 if let image = Modu.image {
@@ -724,6 +726,7 @@ struct OnboardingView<Location>: View where Location: LocationManagerProtocol {
             .overlay(CheckBadge(on: $moduIsMapped)
                 .accessibilityElement()
                 .accessibilityLabel("\(Modu.fullDataSourceName) Map \(moduIsMapped ? "On" : "Off")"))
+            .padding(8)
             
             VStack(alignment: .center) {
                 if let image = Light.image {
@@ -750,6 +753,7 @@ struct OnboardingView<Location>: View where Location: LocationManagerProtocol {
             .overlay(CheckBadge(on: $lightIsMapped)
                 .accessibilityElement()
                 .accessibilityLabel("\(Light.fullDataSourceName) Map \(lightIsMapped ? "On" : "Off")"))
+            .padding(8)
             
             VStack(alignment: .center) {
                 if let image = Port.image {
@@ -776,6 +780,7 @@ struct OnboardingView<Location>: View where Location: LocationManagerProtocol {
             .overlay(CheckBadge(on: $portIsMapped)
                 .accessibilityElement()
                 .accessibilityLabel("\(Port.fullDataSourceName) Map \(portIsMapped ? "On" : "Off")"))
+            .padding(8)
             
             VStack(alignment: .center) {
                 if let image = RadioBeacon.image {
@@ -802,6 +807,7 @@ struct OnboardingView<Location>: View where Location: LocationManagerProtocol {
             .overlay(CheckBadge(on: $radioBeaconIsMapped)
                 .accessibilityElement()
                 .accessibilityLabel("\(RadioBeacon.fullDataSourceName) Map \(radioBeaconIsMapped ? "On" : "Off")"))
+            .padding(8)
             
             VStack(alignment: .center) {
                 if let image = DifferentialGPSStation.image {
@@ -828,6 +834,8 @@ struct OnboardingView<Location>: View where Location: LocationManagerProtocol {
             .overlay(CheckBadge(on: $dgpsIsMapped)
                 .accessibilityElement()
                 .accessibilityLabel("\(DifferentialGPSStation.fullDataSourceName) Map \(dgpsIsMapped ? "On" : "Off")"))
+            .padding(8)
         }
+        .frame(maxWidth: 500, alignment: .center)
     }
 }
