@@ -380,7 +380,7 @@ struct OnboardingView<Location>: View where Location: LocationManagerProtocol {
     @ViewBuilder
     func dataMapTab(geometry: GeometryProxy) -> some View {
         tabContent(geometry: geometry, imageAreaContent:
-                    dataSourceMapGrid(gridSize: verticalSizeClass != .compact ? 100 : 100)
+                    dataSourceMapGrid(gridSize: verticalSizeClass != .compact ? 100 : 75)
             .frame(maxHeight: .infinity),
                    title: "Marlin Map", explanation: "Choose what datasets you want to see on the map.  This can always be changed via the navigation menu.", buttons:
                 Button("Take Me To Marlin") {

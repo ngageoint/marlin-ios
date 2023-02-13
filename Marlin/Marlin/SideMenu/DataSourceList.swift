@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 class DataSourceList: ObservableObject {
-    let allTabs: [DataSourceItem] = [
+    let tabItems: [DataSourceItem] = [
         DataSourceItem(dataSource: Asam.self),
         DataSourceItem(dataSource: Modu.self),
         DataSourceItem(dataSource: Light.self),
@@ -21,12 +21,15 @@ class DataSourceList: ObservableObject {
         DataSourceItem(dataSource: DFRS.self),
         DataSourceItem(dataSource: ElectronicPublication.self),
         DataSourceItem(dataSource: NoticeToMariners.self)
-    ].filter({ item in
-        item.enabled
-    }).sorted(by: { one, two in
-        return one.order < two.order
-    })
+    ]
     
+    var allTabs: [DataSourceItem] {
+        return tabItems.filter({ item in
+            item.enabled
+        }).sorted(by: { one, two in
+            return one.order < two.order
+        })
+    }
     @Published var tabs: [DataSourceItem] = []
     @Published var nonTabs: [DataSourceItem] = []
     @Published var mappedDataSources: [DataSourceItem] = []

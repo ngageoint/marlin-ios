@@ -15,7 +15,7 @@ struct DataSourceRail: View {
     var body: some View {
         ScrollView {
             VStack {
-                ForEach(dataSourceList.tabs) { dataSourceItem in
+                ForEach(dataSourceList.allTabs) { dataSourceItem in
                     RailItem(imageName: dataSourceItem.dataSource.imageName, systemImageName: dataSourceItem.dataSource.systemImageName, itemText: dataSourceItem.dataSource.dataSourceName)
                         .onTapGesture {
                             if activeRailItem == dataSourceItem {
