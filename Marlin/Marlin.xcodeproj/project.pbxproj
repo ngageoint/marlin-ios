@@ -174,6 +174,8 @@
 		F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CAA2848149500E5F565 /* MarlinApp.swift */; };
 		F7A54CD92848149700E5F565 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A54CAC2848149500E5F565 /* Persistence.swift */; };
 		F7A54CDB2848149700E5F565 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7A54CAD2848149600E5F565 /* Assets.xcassets */; };
+		F7ABB5FE299AC4A500BAD868 /* ElectronicPublicationListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB5FD299AC4A500BAD868 /* ElectronicPublicationListTests.swift */; };
+		F7ABB600299AD5E900BAD868 /* fullEpubList.json in Resources */ = {isa = PBXBuildFile; fileRef = F7ABB5FF299AD5E900BAD868 /* fullEpubList.json */; };
 		F7ADDCDD2885D79900137D95 /* navigation_areas.gpkg in Resources */ = {isa = PBXBuildFile; fileRef = F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */; };
 		F7ADDCDF2885E53E00137D95 /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCDE2885E53E00137D95 /* UIColorExtensions.swift */; };
 		F7ADDCE22887026500137D95 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCE12887026500137D95 /* LocationManager.swift */; };
@@ -530,6 +532,8 @@
 		F7A54CBF2848149700E5F565 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7A54CC32848149700E5F565 /* Tests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOS.swift; sourceTree = "<group>"; };
 		F7A54CC52848149700E5F565 /* Tests_iOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOSLaunchTests.swift; sourceTree = "<group>"; };
+		F7ABB5FD299AC4A500BAD868 /* ElectronicPublicationListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationListTests.swift; sourceTree = "<group>"; };
+		F7ABB5FF299AD5E900BAD868 /* fullEpubList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = fullEpubList.json; sourceTree = "<group>"; };
 		F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */ = {isa = PBXFileReference; lastKnownFileType = file; path = navigation_areas.gpkg; sourceTree = "<group>"; };
 		F7ADDCDE2885E53E00137D95 /* UIColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtensions.swift; sourceTree = "<group>"; };
 		F7ADDCE12887026500137D95 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
@@ -998,6 +1002,7 @@
 				F72EAAC5291C334200AC6026 /* ElectronicPublicationDataTests.swift */,
 				F72D890F297A002100D022FB /* ElectronicPublicationSummaryViewTests.swift */,
 				F72D8913297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift */,
+				F7ABB5FD299AC4A500BAD868 /* ElectronicPublicationListTests.swift */,
 			);
 			path = ElectronicPublication;
 			sourceTree = "<group>";
@@ -1310,6 +1315,7 @@
 				F7D8FA8029424F8400E7D0A1 /* ntmGraphics.json */,
 				F72D8911297B232C00D022FB /* mockEpub.rtf */,
 				F72D8918297F0D7D00D022FB /* dfrsMockData.json */,
+				F7ABB5FF299AD5E900BAD868 /* fullEpubList.json */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -1789,6 +1795,7 @@
 				F7D8FA8129424F8400E7D0A1 /* ntmGraphics.json in Resources */,
 				F72EAAB9291BF28C00AC6026 /* moduMockData.json in Resources */,
 				F7D8FA7B29412BA600E7D0A1 /* chartCorrections.json in Resources */,
+				F7ABB600299AD5E900BAD868 /* fullEpubList.json in Resources */,
 				F7F597A82864BF9D00F9B32E /* navwarnings.json in Resources */,
 				F72EAABE291C197A00AC6026 /* portMockData.json in Resources */,
 				F72EAAC3291C2D3F00AC6026 /* dgpsMockData.json in Resources */,
@@ -1998,6 +2005,7 @@
 				F75324B629806329005C509F /* DFRSDetailViewTests.swift in Sources */,
 				F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */,
 				F75324C529885521005C509F /* SearchResultsMapTests.swift in Sources */,
+				F7ABB5FE299AC4A500BAD868 /* ElectronicPublicationListTests.swift in Sources */,
 				F72D890E2979F48E00D022FB /* NavigationalWarningDetailTests.swift in Sources */,
 				F75324C229833BBB005C509F /* MarlinMapTests.swift in Sources */,
 				F72EAAC1291C274100AC6026 /* DifferentialGPSStationDataTests.swift in Sources */,

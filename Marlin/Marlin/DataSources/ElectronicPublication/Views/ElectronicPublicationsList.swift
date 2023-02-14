@@ -38,19 +38,9 @@ struct ElectronicPublicationsList: View {
                         defaultPublications(section: section)
                     }
                 } label: {
-                    HStack(spacing: 16) {
-                        Image(systemName: "folder.fill")
-                            .renderingMode(.template)
-                            .foregroundColor(Color.onSurfaceColor.opacity(0.87))
-                        VStack(alignment: .leading) {
-                            Text("\(PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "")")
-                                .primary()
-                            Text("\(section.count) files")
-                                .secondary()
-                        }
-                    }
-                    .padding(.top, 8)
-                    .padding(.bottom, 8)
+                    folderLabel(name: "\(PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "")", count: section.count)
+                    .accessibilityElement()
+                    .accessibilityLabel("\(PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "")")
                 }
             }
         }
@@ -148,45 +138,30 @@ struct ElectronicPublicationsList: View {
     @ViewBuilder
     func nestedFolder(section: SectionedFetchResults<Int64, ElectronicPublication>.Element) -> some View {
         let dictionary: [String? : [SectionedFetchResults<Int64, ElectronicPublication>.Section.Element]] = Dictionary(grouping: section, by: { $0.pubDownloadDisplayName })
-        let sortedKeys = dictionary.keys.sorted {
+        let sortedKeys: [Dictionary<String?, [SectionedFetchResults<Int64, ElectronicPublication>.Section.Element]>.Keys.Element] = dictionary.keys.sorted {
             return dictionary[$0]?[0].pubDownloadOrder ?? -1 < dictionary[$1]?[0].pubDownloadOrder ?? -1
         }
         List {
             ForEach(Array(sortedKeys), id: \.self) { key in
-                if let group = dictionary[key] {
-                    if !group.isEmpty {
-                        NavigationLink {
-                            
-                            List {
-                                ForEach(group.sorted {
-                                    return $0.sectionOrder < $1.sectionOrder
-                                }, id: \.self) { epub in
-                                    epub.summaryView()
-                                        .padding([.top, .bottom], 16)
-                                }
+                if let group = dictionary[key], !group.isEmpty {
+                    NavigationLink {
+                        List {
+                            ForEach(group.sorted {
+                                return $0.sectionOrder < $1.sectionOrder
+                            }, id: \.self) { epub in
+                                epub.summaryView()
+                                    .padding([.top, .bottom], 16)
                             }
-                            .background(Color.backgroundColor)
-                            .listRowBackground(Color.surfaceColor)
-                            .listStyle(.plain)
-                            .navigationTitle(key ?? "")
-                            .navigationBarTitleDisplayMode(.inline)
-                        } label: {
-                            HStack(spacing: 16) {
-                                Image(systemName: "folder.fill")
-                                    .renderingMode(.template)
-                                    .foregroundColor(Color.onSurfaceColor.opacity(0.87))
-                                VStack(alignment: .leading) {
-                                    //                        Text( "section")
-                                    Text("\(key ?? "")")
-                                        .primary()
-                                    Text("\(group.count) files")
-                                        .secondary()
-                                }
-                            }
-                            .padding(.top, 8)
-                            .padding(.bottom, 8)
-                            
                         }
+                        .background(Color.backgroundColor)
+                        .listRowBackground(Color.surfaceColor)
+                        .listStyle(.plain)
+                        .navigationTitle(key ?? "")
+                        .navigationBarTitleDisplayMode(.inline)
+                    } label: {
+                        folderLabel(name: key, count: group.count)
+                            .accessibilityElement()
+                            .accessibilityLabel(key ?? "")
                     }
                 }
             }
@@ -197,10 +172,21 @@ struct ElectronicPublicationsList: View {
         .navigationTitle((PublicationTypeEnum(rawValue: Int(section.id)) ?? .unknown).description)
         .navigationBarTitleDisplayMode(.inline)
     }
-}
-
-struct ElectronicPublicationsList_Previews: PreviewProvider {
-    static var previews: some View {
-        ElectronicPublicationsList()
+    
+    @ViewBuilder
+    func folderLabel(name: String?, count: Int) -> some View {
+        HStack(spacing: 16) {
+            Image(systemName: "folder.fill")
+                .renderingMode(.template)
+                .foregroundColor(Color.onSurfaceColor.opacity(0.87))
+            VStack(alignment: .leading) {
+                Text("\(name ?? "")")
+                    .primary()
+                Text("\(count) files")
+                    .secondary()
+            }
+        }
+        .padding(.top, 8)
+        .padding(.bottom, 8)
     }
 }

@@ -20,25 +20,52 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         .receive(on: RunLoop.main)
     
     override func setUp(completion: @escaping (Error?) -> Void) {
-        HTTPStubs.setEnabled(true)
+        UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+        UserDefaults.registerMarlinDefaults()
+        
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
             UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
+        
+        UserDefaults.standard.setFilter(ElectronicPublication.key, filter: [])
+        UserDefaults.standard.setSort(ElectronicPublication.key, sort: ElectronicPublication.defaultSort)
+        
+        persistentStore.viewContext.performAndWait {
+            if let epubs = persistentStore.viewContext.fetchAll(ElectronicPublication.self) {
+                for epub in epubs {
+                    persistentStore.viewContext.delete(epub)
+                }
+            }
+        }
+        
         persistentStoreLoadedPub
             .removeDuplicates()
             .sink { output in
+                let e5 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
+                    if let count = try? self.persistentStore.countOfObjects(ElectronicPublication.self) {
+                        return count == 0
+                    }
+                    return false
+                }), object: self.persistentStore.viewContext)
+                self.wait(for: [e5], timeout: 10)
                 completion(nil)
             }
             .store(in: &cancellable)
         persistentStore.reset()
-        HTTPStubs.removeAllStubs()
+        
     }
-    
-    override func tearDown() {
+    override func tearDown(completion: @escaping (Error?) -> Void) {
+        persistentStore.viewContext.performAndWait {
+            if let epubs = persistentStore.viewContext.fetchAll(ElectronicPublication.self) {
+                for epub in epubs {
+                    persistentStore.viewContext.delete(epub)
+                }
+            }
+        }
+        completion(nil)
         HTTPStubs.removeAllStubs()
     }
     
