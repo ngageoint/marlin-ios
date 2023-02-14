@@ -246,15 +246,15 @@ final class ElectronicPublicationDataTests: XCTestCase {
             return true
         }
         
-        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+        let e = XCTNSPredicateExpectation(predicate: NSPredicate(block: { _, _ in
             let count = try? self.persistentStore.countOfObjects(ElectronicPublication.self)
-            XCTAssertEqual(count, 1)
-            return true
-        }
+            return count == 1
+        }), object: self.persistentStore.viewContext)
         
         MSI.shared.loadData(type: ElectronicPublication.decodableRoot, dataType: ElectronicPublication.self)
         
         waitForExpectations(timeout: 10, handler: nil)
+        wait(for: [e], timeout: 10)
         
         let epubs2: [ElectronicPublication] = self.persistentStore.viewContext.fetchAll(ElectronicPublication.self)!
         XCTAssertEqual(1, epubs2.count)
@@ -331,15 +331,15 @@ final class ElectronicPublicationDataTests: XCTestCase {
             return true
         }
         
-        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+        let e = XCTNSPredicateExpectation(predicate: NSPredicate(block: { _, _ in
             let count = try? self.persistentStore.countOfObjects(ElectronicPublication.self)
-            XCTAssertEqual(count, 1)
-            return true
-        }
+            return count == 1
+        }), object: self.persistentStore.viewContext)
         
         MSI.shared.loadData(type: ElectronicPublication.decodableRoot, dataType: ElectronicPublication.self)
         
         waitForExpectations(timeout: 10, handler: nil)
+        wait(for: [e], timeout: 10)
     }
     
     func testDataRequest() {
