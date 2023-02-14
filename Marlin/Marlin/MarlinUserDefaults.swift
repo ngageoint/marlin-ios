@@ -10,7 +10,7 @@ import MapKit
 
 extension UserDefaults {
     
-    static func registerMarlinDefaults() {
+    static func registerMarlinDefaults(withMetrics: Bool = true) {
         if let path = Bundle.main.path(forResource: "userDefaults", ofType: "plist"), let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject] {
             UserDefaults.standard.register(defaults: dict)
         }
@@ -18,6 +18,8 @@ extension UserDefaults {
         if let path = Bundle.main.path(forResource: "appFeatures", ofType: "plist"), let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject] {
             UserDefaults.standard.register(defaults: dict)
         }
+        
+        UserDefaults.standard.metricsEnabled = withMetrics
     }
     
     @objc func mkcoordinateregion(forKey key: String) -> MKCoordinateRegion {
@@ -284,7 +286,12 @@ extension UserDefaults {
     }
     
     var metricsEnabled: Bool {
-        bool(forKey: #function)
+        get {
+            return bool(forKey: #function)
+        }
+        set {
+            setValue(newValue, forKey: #function)
+        }
     }
     
     func dataSourceEnabled(_ dataSource: any DataSource.Type) -> Bool {

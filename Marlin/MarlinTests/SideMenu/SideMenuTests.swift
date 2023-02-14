@@ -15,7 +15,7 @@ final class SideMenuTests: XCTestCase {
     
     override func setUp() {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
-        UserDefaults.registerMarlinDefaults()
+        UserDefaults.registerMarlinDefaults(withMetrics: false)
     }
     
     func testSideMenuDataSources() {

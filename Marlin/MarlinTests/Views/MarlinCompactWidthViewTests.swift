@@ -21,8 +21,8 @@ final class MarlinCompactWidthViewTests: XCTestCase {
 
     override func setUp(completion: @escaping (Error?) -> Void) {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
-        UserDefaults.registerMarlinDefaults()
-        
+        UserDefaults.registerMarlinDefaults(withMetrics: false)
+
         UserDefaults.standard.initialDataLoaded = false
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
