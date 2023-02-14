@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
     * No longer bombarded with push notifications when you are in the app, they will be presented in a top banner.
     * Number of rail items on iPad devices are not restricted
     * Data source items in onboarding views are centered
+    * Navigational Warnings now report the proper number of new warnings
     
 ## 1.0.3
  ### Features
