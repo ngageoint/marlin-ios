@@ -85,25 +85,37 @@ extension NavigationalWarning: BatchImportable {
         taskContext.name = "importContext"
         taskContext.transactionAuthor = "importNavigationalWarnings"
         
-        /// - Tag: performAndWait
-        return try await taskContext.perform {
-            _ = taskContext.truncateAll(NavigationalWarning.self)
+        let count = try await taskContext.perform {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
             let batchInsertRequest = NavigationalWarning.newBatchInsertRequest(with: propertiesList)
-            batchInsertRequest.resultType = .count
+            batchInsertRequest.resultType = .objectIDs
             if let fetchResult = try? taskContext.execute(batchInsertRequest),
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
-                try? taskContext.save()
-                if let count = batchInsertResult.result as? Int, count > 0 {
-                    NSLog("Inserted \(count) NavigationalWarning records")
-                    return count
-                } else {
-                    NSLog("No new NavigationalWarning records")
+                if let objectIds = batchInsertResult.result as? [NSManagedObjectID] {
+                    if objectIds.count > 0 {
+                        NSLog("Inserted \(objectIds.count) Navigational Warning records")
+                        let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "NavigationalWarning")
+                        fetch.predicate = NSPredicate(format: "NOT (self IN %@)", objectIds)
+                        let request = NSBatchDeleteRequest(fetchRequest: fetch)
+                        request.resultType = .resultTypeCount
+                        if let deleteResult = try? taskContext.execute(request),
+                           let batchDeleteResult = deleteResult as? NSBatchDeleteResult {
+                            if let count = batchDeleteResult.result as? Int {
+                                NSLog("Deleted \(count) old records")
+                            }
+                        }
+                        try? taskContext.save()
+                        return objectIds.count
+                    } else {
+                        NSLog("No new NavigationalWarning records")
+                    }
                 }
+                try? taskContext.save()
                 return 0
             }
             throw MSIError.batchInsertError
         }
+        return count
     }
 }
