@@ -13,23 +13,44 @@ import SwiftUI
 final class BooleanFilterTests: XCTestCase {
 
     func xtestFilterChange() {
-        @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
-        @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Boolean", key: "booleanProperty", type: .boolean))
-        dataSourcePropertyFilterViewModel.valueInt = 0
+        class PassThrough: ObservableObject {
+            var viewModel: DataSourcePropertyFilterViewModel?
+            init() {
+            }
+        }
         
-        let filter = BooleanFilter(filterViewModel: filterViewModel, viewModel: dataSourcePropertyFilterViewModel)
-        let controller = UIHostingController(rootView: filter)
+        struct Container: View {
+            @ObservedObject var passThrough: PassThrough
+            
+            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Boolean", key: "booleanProperty", type: .boolean))
+            
+            init(passThrough: PassThrough) {
+                self.passThrough = passThrough
+                self.passThrough.viewModel = dataSourcePropertyFilterViewModel
+            }
+            
+            var body: some View {
+                NavigationView {
+                    BooleanFilter(filterViewModel: filterViewModel, viewModel: dataSourcePropertyFilterViewModel)
+                }
+            }
+        }
+        
+        let passThrough = PassThrough()
+        let view = Container(passThrough: passThrough)
+        
+        let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "True")
-        window.printHierarchy()
+        tester().waitForView(withAccessibilityLabel: "Boolean input")
         tester().tapView(withAccessibilityLabel: "True")
         tester().waitForView(withAccessibilityLabel: "False")
         tester().tapView(withAccessibilityLabel: "False")
-//        tester().selectPickerViewRow(withTitle: "True", inComponent: 0)
-//        XCTAssertEqual(dataSourcePropertyFilterViewModel.valueInt, 1)
-//        tester().selectPickerViewRow(withTitle: "False")
+        
+        tester().waitForAnimationsToFinish()
         tester().wait(forTimeInterval: 5)
-        XCTAssertEqual(dataSourcePropertyFilterViewModel.valueInt, 0)
+        // even though it looks like it is being tapped, it is not
+        XCTAssertEqual(passThrough.viewModel?.valueInt, 0)
     }
 }

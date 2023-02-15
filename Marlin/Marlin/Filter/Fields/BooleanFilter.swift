@@ -22,6 +22,8 @@ struct BooleanFilter: View {
             .scaledToFill()
             .labelsHidden()
             .tint(Color.primaryColorVariant)
+            .accessibilityElement()
+            .accessibilityLabel("\(viewModel.dataSourceProperty.name) input")
         }
     }
 }

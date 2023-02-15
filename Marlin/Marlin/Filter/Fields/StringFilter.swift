@@ -21,6 +21,7 @@ struct StringFilter: View {
             VStack(alignment: .leading, spacing: 0) {
                 TextField(viewModel.dataSourceProperty.name, text: $viewModel.valueString)
                     .keyboardType(.default)
+                    .textInputAutocapitalization(.never)
                     .underlineTextField()
                     .onTapGesture(perform: {
                         viewModel.startValidating = true
