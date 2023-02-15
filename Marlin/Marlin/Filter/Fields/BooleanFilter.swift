@@ -15,7 +15,6 @@ struct BooleanFilter: View {
         HStack(spacing: 0) {
             FilterPropertyName(filterViewModel: filterViewModel, viewModel: viewModel)
             FilterComparison(dataSourcePropertyFilterViewModel: viewModel)
-            Text("value \(viewModel.valueInt ?? -1)")
             Picker("Boolean", selection: $viewModel.valueInt) {
                 Text("True").tag(1)
                 Text("False").tag(0)
