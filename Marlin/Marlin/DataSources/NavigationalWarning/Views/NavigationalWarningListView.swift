@@ -8,13 +8,17 @@
 import SwiftUI
 import MapKit
 
-struct NavigationalWarningListView: View {
+struct NavigationalWarningListView<Location>: View where Location: LocationManagerProtocol  {
     @Environment(\.managedObjectContext) private var viewContext
-    @ObservedObject var locationManager: LocationManager = LocationManager.shared
     @StateObject var mapState: MapState = MapState()
+    @ObservedObject var locationManager: Location
 
     var navareaMap = GeoPackageMap(fileName: "navigation_areas", tableName: "navigation_areas", index: 0)
     var backgroundMap = GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: Color.dynamicLandColor, index: 1)
+    
+    init(locationManager: Location = LocationManager.shared) {
+        self.locationManager = locationManager
+    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -80,6 +84,8 @@ struct NavigationalWarningAreasView: View {
                     NavigationalWarningAreaUnreadBadge(navArea: section.id, warnings: Array<NavigationalWarning>(section))
                 }
             }
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area") (Current)")
             .padding(.leading, 8)
             .padding(.top, 8)
             .padding(.bottom, 8)
@@ -114,6 +120,8 @@ struct NavigationalWarningAreasView: View {
                     NavigationalWarningAreaUnreadBadge(navArea: section.id, warnings: Array<NavigationalWarning>(section))
                 }
             }
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area")
             .padding(.leading, 8)
             .padding(.top, 8)
             .padding(.bottom, 8)
@@ -128,12 +136,5 @@ struct NavigationalWarningAreasView: View {
         }
         .listRowBackground(Color.surfaceColor)
         .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
-    }
-}
-
-
-struct NavigationalWarningListView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationalWarningListView()
     }
 }

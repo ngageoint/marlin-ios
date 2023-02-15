@@ -14,6 +14,8 @@ import mgrs_ios
 import ExceptionCatcher
 
 protocol LocationManagerProtocol: ObservableObject {
+    var lastLocation: CLLocation? { get set }
+    var currentNavArea: NavigationalWarningNavArea? { get set }
     var locationStatus: CLAuthorizationStatus? { get set }
     func requestAuthorization()
 }

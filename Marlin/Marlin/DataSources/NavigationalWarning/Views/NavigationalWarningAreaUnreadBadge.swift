@@ -31,6 +31,8 @@ struct NavigationalWarningAreaUnreadBadge: View {
                     .background(.red)
                     .foregroundColor(.white)
                     .cornerRadius(10)
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("\(unreadCount) Unread")
             }
         } else {
             Text("\(warnings.count)")
@@ -41,20 +43,8 @@ struct NavigationalWarningAreaUnreadBadge: View {
                 .background(.red)
                 .foregroundColor(.white)
                 .cornerRadius(10)
-        }
-    }
-}
-
-struct NavigationalWarningAreaUnreadBadge_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        PreviewWrapper()
-    }
-    
-    struct PreviewWrapper: View {
-
-        var body: some View {
-            NavigationalWarningAreaUnreadBadge(navArea: "P", warnings:[])
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("\(warnings.count) Unread")
         }
     }
 }

@@ -70,6 +70,8 @@ class TestHelpers {
 
 class MockLocationManager: LocationManagerProtocol, ObservableObject {
     @Published var locationStatus: CLAuthorizationStatus?
+    @Published var lastLocation: CLLocation?
+    @Published var currentNavArea: NavigationalWarningNavArea?
     
     public var requestAuthorizationCalled = false
     func requestAuthorization() {
