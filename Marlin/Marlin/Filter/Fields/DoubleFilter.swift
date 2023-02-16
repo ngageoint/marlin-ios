@@ -37,10 +37,14 @@ struct DoubleFilter: View {
                             .tint(Color.primaryColorVariant)
                         }
                     }
+                    .accessibilityElement()
+                    .accessibilityLabel("\(viewModel.dataSourceProperty.name) input")
                 if let validationText = viewModel.validationText {
                     Text(validationText)
                         .overline()
                         .padding(.leading, 8)
+                        .accessibilityElement()
+                        .accessibilityLabel(validationText)
                 }
             }
         }

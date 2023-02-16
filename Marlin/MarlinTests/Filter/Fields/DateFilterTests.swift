@@ -1,8 +1,8 @@
 //
-//  BooleanFilterTests.swift
+//  DateFilterTests.swift
 //  MarlinTests
 //
-//  Created by Daniel Barela on 12/30/22.
+//  Created by Daniel Barela on 2/15/23.
 //
 
 import XCTest
@@ -10,7 +10,7 @@ import SwiftUI
 
 @testable import Marlin
 
-final class BooleanFilterTests: XCTestCase {
+final class DateFilterTests: XCTestCase {
 
     // untestable until you can pick form a picker
     func xtestFilterChange() {
@@ -24,7 +24,7 @@ final class BooleanFilterTests: XCTestCase {
             @ObservedObject var passThrough: PassThrough
             
             @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
-            @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Boolean", key: "booleanProperty", type: .boolean))
+            @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Date", key: "dateProperty", type: .date))
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
@@ -33,7 +33,7 @@ final class BooleanFilterTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    BooleanFilter(filterViewModel: filterViewModel, viewModel: dataSourcePropertyFilterViewModel)
+                    DateFilter(filterViewModel: filterViewModel, viewModel: dataSourcePropertyFilterViewModel)
                 }
             }
         }
@@ -44,14 +44,5 @@ final class BooleanFilterTests: XCTestCase {
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "Boolean input")
-        tester().tapView(withAccessibilityLabel: "True")
-        tester().waitForView(withAccessibilityLabel: "False")
-        tester().tapView(withAccessibilityLabel: "False")
-        
-        tester().waitForAnimationsToFinish()
-        tester().wait(forTimeInterval: 5)
-        // even though it looks like it is being tapped, it is not
-        XCTAssertEqual(passThrough.viewModel?.valueInt, 0)
     }
 }

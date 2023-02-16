@@ -180,6 +180,11 @@
 		F7ABB604299C1ECE00BAD868 /* NavigationalWarningNavAreaListViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB603299C1ECE00BAD868 /* NavigationalWarningNavAreaListViewTests.swift */; };
 		F7ABB606299D1EE900BAD868 /* NavigationalWarningListViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB605299D1EE900BAD868 /* NavigationalWarningListViewTests.swift */; };
 		F7ABB608299D532800BAD868 /* NavigationalWarningAreaUnreadBadgeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB607299D532800BAD868 /* NavigationalWarningAreaUnreadBadgeTests.swift */; };
+		F7ABB60A299D777B00BAD868 /* DoubleFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB609299D777B00BAD868 /* DoubleFilterTests.swift */; };
+		F7ABB60C299D83E500BAD868 /* IntFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB60B299D83E500BAD868 /* IntFilterTests.swift */; };
+		F7ABB60E299D883400BAD868 /* DateFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB60D299D883400BAD868 /* DateFilterTests.swift */; };
+		F7ABB610299D8C2100BAD868 /* LocationFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB60F299D8C2100BAD868 /* LocationFilterTests.swift */; };
+		F7ABB612299ECE6500BAD868 /* LatitudeLongitudeFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB611299ECE6500BAD868 /* LatitudeLongitudeFilterTests.swift */; };
 		F7ADDCDD2885D79900137D95 /* navigation_areas.gpkg in Resources */ = {isa = PBXBuildFile; fileRef = F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */; };
 		F7ADDCDF2885E53E00137D95 /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCDE2885E53E00137D95 /* UIColorExtensions.swift */; };
 		F7ADDCE22887026500137D95 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCE12887026500137D95 /* LocationManager.swift */; };
@@ -542,6 +547,11 @@
 		F7ABB603299C1ECE00BAD868 /* NavigationalWarningNavAreaListViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningNavAreaListViewTests.swift; sourceTree = "<group>"; };
 		F7ABB605299D1EE900BAD868 /* NavigationalWarningListViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningListViewTests.swift; sourceTree = "<group>"; };
 		F7ABB607299D532800BAD868 /* NavigationalWarningAreaUnreadBadgeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreaUnreadBadgeTests.swift; sourceTree = "<group>"; };
+		F7ABB609299D777B00BAD868 /* DoubleFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleFilterTests.swift; sourceTree = "<group>"; };
+		F7ABB60B299D83E500BAD868 /* IntFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntFilterTests.swift; sourceTree = "<group>"; };
+		F7ABB60D299D883400BAD868 /* DateFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFilterTests.swift; sourceTree = "<group>"; };
+		F7ABB60F299D8C2100BAD868 /* LocationFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFilterTests.swift; sourceTree = "<group>"; };
+		F7ABB611299ECE6500BAD868 /* LatitudeLongitudeFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatitudeLongitudeFilterTests.swift; sourceTree = "<group>"; };
 		F7ADDCDC2885D79900137D95 /* navigation_areas.gpkg */ = {isa = PBXFileReference; lastKnownFileType = file; path = navigation_areas.gpkg; sourceTree = "<group>"; };
 		F7ADDCDE2885E53E00137D95 /* UIColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtensions.swift; sourceTree = "<group>"; };
 		F7ADDCE12887026500137D95 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
@@ -1146,6 +1156,11 @@
 			children = (
 				F75F81E1295F70A50062A708 /* BooleanFilterTests.swift */,
 				F75F81E32960B4D90062A708 /* StringFilterTests.swift */,
+				F7ABB609299D777B00BAD868 /* DoubleFilterTests.swift */,
+				F7ABB60B299D83E500BAD868 /* IntFilterTests.swift */,
+				F7ABB60D299D883400BAD868 /* DateFilterTests.swift */,
+				F7ABB60F299D8C2100BAD868 /* LocationFilterTests.swift */,
+				F7ABB611299ECE6500BAD868 /* LatitudeLongitudeFilterTests.swift */,
 			);
 			path = Fields;
 			sourceTree = "<group>";
@@ -1970,6 +1985,7 @@
 				F75F81DA295DE4640062A708 /* AboutViewTests.swift in Sources */,
 				F73ABC91295250D50085EDC5 /* SortViewModelTests.swift in Sources */,
 				F75324B829807F04005C509F /* SubmitReportViewTests.swift in Sources */,
+				F7ABB60E299D883400BAD868 /* DateFilterTests.swift in Sources */,
 				F72281DA296F27D000218FC0 /* CurrentLocationTests.swift in Sources */,
 				F7C23E182911C7D50002A7DF /* ASAMDataTests.swift in Sources */,
 				F75F81DF295F68BB0062A708 /* BadgeTests.swift in Sources */,
@@ -1979,8 +1995,10 @@
 				F75F81D529526E9C0062A708 /* AsamSummaryViewTests.swift in Sources */,
 				F73D9E212970AA66008AF40D /* DifferentialGPSStationDetailViewTests.swift in Sources */,
 				F73ABC8C295250C70085EDC5 /* DataSourceFilterParameterTests.swift in Sources */,
+				F7ABB612299ECE6500BAD868 /* LatitudeLongitudeFilterTests.swift in Sources */,
 				F72281DD296F3FDE00218FC0 /* DataSourceCellTests.swift in Sources */,
 				F72D88FE29787AEE00D022FB /* LightDetailViewTests.swift in Sources */,
+				F7ABB60A299D777B00BAD868 /* DoubleFilterTests.swift in Sources */,
 				F72D89062979D56500D022FB /* PortDetailViewTests.swift in Sources */,
 				F72D8910297A002100D022FB /* ElectronicPublicationSummaryViewTests.swift in Sources */,
 				F72D8914297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift in Sources */,
@@ -2006,6 +2024,7 @@
 				F7D8FA64293AB5B000E7D0A1 /* MockDataSource.swift in Sources */,
 				F72D890A2979E7FC00D022FB /* RadioBeaconDetailViewTests.swift in Sources */,
 				F7D8FA342936C08200E7D0A1 /* MapImageTests.swift in Sources */,
+				F7ABB610299D8C2100BAD868 /* LocationFilterTests.swift in Sources */,
 				F7ABB606299D1EE900BAD868 /* NavigationalWarningListViewTests.swift in Sources */,
 				F72D88F42971B84D00D022FB /* FilterBottomSheetTests.swift in Sources */,
 				F75324BB2980906E005C509F /* CLLocationCoordinate2DExtensionsTests.swift in Sources */,
@@ -2014,6 +2033,7 @@
 				F75324D2298DBC15005C509F /* SideMenuTests.swift in Sources */,
 				F75F81DC295F3F190062A708 /* AsamDetailViewTests.swift in Sources */,
 				F72EAAD5291D526700AC6026 /* RadioBeaconDataTests.swift in Sources */,
+				F7ABB60C299D83E500BAD868 /* IntFilterTests.swift in Sources */,
 				F72D890C2979ECC900D022FB /* NavigationalWarningSummaryViewTests.swift in Sources */,
 				F73ABC88295250BD0085EDC5 /* DataSourceFilterComparisonTests.swift in Sources */,
 				F7D8FA1D2922F7F300E7D0A1 /* NoticeToMarinersDataTests.swift in Sources */,

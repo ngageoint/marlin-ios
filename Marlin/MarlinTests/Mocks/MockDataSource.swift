@@ -48,6 +48,8 @@ class MockDataSource: DataSource {
         DataSourceProperty(name: "Float", key: "floatProperty", type: .float),
         DataSourceProperty(name: "Enumeration", key: "enumerationProperty", type: .enumeration),
         DataSourceProperty(name: "Location", key: "locationProperty", type: .location),
+        DataSourceProperty(name: "Latitude", key: "latitudeProperty", type: .latitude),
+        DataSourceProperty(name: "Longitude", key: "longitudeProperty", type: .longitude),
         DataSourceProperty(name: "Date", key: "dateProperty", type: .date),
         DataSourceProperty(name: "Boolean", key: "booleanProperty", type: .boolean)
     ]
@@ -94,6 +96,8 @@ class MockDataSource: DataSource {
     @objc var locationProperty: String = ""
     @objc var dateProperty: Date = Date()
     @objc var booleanProperty: Bool = true
+    @objc var latitudeProperty: Double = 0.0
+    @objc var longitudeProperty: Double = 0.0
 }
 
 class MockDataSourceDefaultSort: DataSource {

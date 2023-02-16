@@ -37,6 +37,8 @@ struct LatitudeLongitudeFilter: View {
                             .tint(Color.primaryColorVariant)
                         }
                     }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("\(viewModel.dataSourceProperty.name) input")
                 if let validationText = viewModel.validationText {
                     Text(validationText)
                         .overline()

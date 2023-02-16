@@ -8,12 +8,19 @@
 import SwiftUI
 import MapKit
 
-struct LocationFilter: View {
-    @ObservedObject var locationManager: LocationManager = LocationManager.shared
+struct LocationFilter<Location>: View where Location: LocationManagerProtocol {
+    @ObservedObject var locationManager: Location
 
     @ObservedObject var filterViewModel: FilterViewModel
     @ObservedObject var viewModel: DataSourcePropertyFilterViewModel
     @FocusState var isInputActive: Bool
+    @State var mapTapped: Bool = false
+    
+    init(locationManager: Location = LocationManager.shared, filterViewModel: FilterViewModel, viewModel: DataSourcePropertyFilterViewModel) {
+        self.locationManager = locationManager
+        self.filterViewModel = filterViewModel
+        self.viewModel = viewModel
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -23,21 +30,32 @@ struct LocationFilter: View {
             }
             if viewModel.selectedComparison == .closeTo {
                 ZStack {
-                    if !isInputActive {
+                    if !isInputActive && mapTapped {
                         Map(coordinateRegion: $viewModel.region, interactionModes: .all)
                             .frame(maxWidth: .infinity)
                             .frame(height: 250)
+                            .accessibilityElement(children: .contain)
+                            .accessibilityLabel("\(viewModel.dataSourceProperty.name) map input2")
                     } else {
-                        VStack {
-                            Map(coordinateRegion: $viewModel.readableRegion)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 250)
-                                .disabled(true)
+                        ZStack(alignment: .topLeading) {
+                            VStack {
+                                Map(coordinateRegion: $viewModel.readableRegion)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 250)
+                                    .disabled(true)
+                            }
+
+                            Text("Tap To Set Location")
+                                .secondary()
+                                .padding(.all, 4)
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
+                            mapTapped = true
                             isInputActive = false
                         }
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel("\(viewModel.dataSourceProperty.name) map input")
                     }
                     Image(systemName: "scope")
                 }
@@ -50,10 +68,14 @@ struct LocationFilter: View {
                             .padding(.bottom, -16)
                         TextField("Latitude", text: $viewModel.valueLatitudeString)
                             .underlineTextField()
+                            .textInputAutocapitalization(.never)
                             .onTapGesture(perform: {
+                                mapTapped = false
                                 viewModel.startValidating = true
                             })
                             .focused($isInputActive)
+                            .accessibilityElement()
+                            .accessibilityLabel("\(viewModel.dataSourceProperty.name) latitude input")
                         if let validationLatitudeText = viewModel.validationLatitudeText {
                             Text(validationLatitudeText)
                                 .overline()
@@ -67,10 +89,14 @@ struct LocationFilter: View {
                             .padding(.bottom, -16)
                         TextField("Longitude", text: $viewModel.valueLongitudeString)
                             .underlineTextField()
+                            .textInputAutocapitalization(.never)
                             .onTapGesture(perform: {
+                                mapTapped = false
                                 viewModel.startValidating = true
                             })
                             .focused($isInputActive)
+                            .accessibilityElement()
+                            .accessibilityLabel("\(viewModel.dataSourceProperty.name) longitude input")
                         if let validationLongitudeText = viewModel.validationLongitudeText {
                             Text(validationLongitudeText)
                                 .overline()
@@ -118,11 +144,15 @@ struct LocationFilter: View {
                     .padding(.bottom, -16)
                 TextField("Nautical Miles", value: $viewModel.valueInt, format: .number.grouping(.never))
                     .keyboardType(.numberPad)
+                    .textInputAutocapitalization(.never)
                     .underlineTextField()
                     .onTapGesture(perform: {
+                        mapTapped = false
                         viewModel.startValidating = true
                     })
                     .focused($isInputActive)
+                    .accessibilityElement()
+                    .accessibilityLabel("\(viewModel.dataSourceProperty.name) distance input")
                 if let validationText = viewModel.validationText {
                     Text(validationText)
                         .overline()
