@@ -8,9 +8,7 @@
 import SwiftUI
 import CoreLocation
 
-struct FilterView: View {
-    @ObservedObject var locationManager: LocationManager = LocationManager.shared
-    
+struct FilterView: View {    
     @ObservedObject var viewModel: FilterViewModel
         
     var body: some View {
