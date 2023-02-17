@@ -4,7 +4,6 @@
 //  Created by Daniel Barela on 6/10/20.
 //
 
-import Quick
 import KIF
 extension XCTestCase {
     func tester(file : String = #file, _ line : Int = #line) -> KIFUITestActor {

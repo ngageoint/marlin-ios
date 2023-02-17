@@ -268,7 +268,7 @@ final class SideMenuContentTests: XCTestCase {
         XCTAssertEqual(nonTabCount, pt.model!.dataSourceList.nonTabs.count)
         XCTAssertEqual(pt.model!.dataSourceList.nonTabs.first, lastTab)
         XCTAssertNotEqual(pt.model!.dataSourceList.tabs.last, lastTab)
-        var firstNonTab = pt.model!.dataSourceList.nonTabs.first!
+        let firstNonTab = pt.model!.dataSourceList.nonTabs.first!
         pt.model!.dropEntered(item: firstNonTab)
         _ = pt.model!.performDrop()
         tester().wait(forTimeInterval: 0.25)

@@ -325,7 +325,6 @@ final class MarlinMapTests: XCTestCase {
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         
-        let map = viewTester().usingLabel("Marlin Compact Map").view as! MKMapView
         tester().waitForView(withAccessibilityLabel: "Map Scale")
         
         UserDefaults.standard.set(false, forKey: "showMapScale")
@@ -418,7 +417,7 @@ final class MarlinMapTests: XCTestCase {
                     mapState.overlays.insert(newValue, at: 0)
                 }
                 .onChange(of: passThrough.overlayToRemove) { newValue in
-                    guard let newValue = newValue else {
+                    guard newValue != nil else {
                         return
                     }
                     mapState.overlays.remove(at: 0)

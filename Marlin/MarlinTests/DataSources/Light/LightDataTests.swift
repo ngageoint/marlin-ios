@@ -625,7 +625,7 @@ final class LightDataTests: XCTestCase {
                 XCTAssertEqual(count, 1)
                 return true
             } else {
-                print("xxx count is not 1 it is \(count)")
+                print("xxx count is not 1 it is \(count ?? -1)")
                 return false
             }
         }

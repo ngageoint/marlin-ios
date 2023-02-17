@@ -194,7 +194,7 @@ final class NoticeToMarinersDataTests: XCTestCase {
                 XCTAssertEqual(count, 23)
                 return true
             } else {
-                print("xxx count is not 23 it is \(count)")
+                print("xxx count is not 23 it is \(count ?? -1)")
                 return false
             }
         }

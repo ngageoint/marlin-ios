@@ -37,18 +37,12 @@ class MarlinTests: XCTestCase {
         let longitude: Double = 15.3894
         let latitude: Double = 23.5038
         let mgrs = MGRS.from(longitude, latitude, .DEGREE)
-        print("xxx gridzone name \(mgrs.gridZone()?.name())")
-        print("xxx hundredkm name \(mgrs.coordinate(.HUNDRED_KILOMETER))")
-        print("xxx tenkm name \(mgrs.coordinate(.TEN_KILOMETER))")
     }
     
     func testMGRS2() {
         let longitude: Double = -157.868595
         let latitude: Double = 21.319392
         let mgrs = MGRS.from(longitude, latitude, .DEGREE)
-        print("xxx gridzone name \(mgrs.gridZone()?.name())")
-        print("xxx hundredkm name \(mgrs.coordinate(.HUNDRED_KILOMETER))")
-        print("xxx tenkm name \(mgrs.coordinate(.TEN_KILOMETER))")
     }
     
     func testGeneralDirection() {
@@ -77,3 +71,4 @@ class MarlinTests: XCTestCase {
     }
 
 }
+_

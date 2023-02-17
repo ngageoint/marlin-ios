@@ -80,8 +80,6 @@ final class SearchResultsMapTests: XCTestCase {
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         
-        let map = viewTester().usingLabel("Marlin Compact Map").view as! MKMapView
-
         tester().waitForView(withAccessibilityLabel: "Test item\n\n, United States")
     }
 }
