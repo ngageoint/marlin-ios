@@ -263,14 +263,15 @@ final class LocationFilterTests: XCTestCase {
             @ObservedObject var passThrough: PassThrough
             
             @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
-            @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Location", key: "locationProperty", type: .location))
+            @ObservedObject var dataSourcePropertyFilterViewModel: DataSourcePropertyFilterViewModel
             
             var locationManager: MockLocationManager = MockLocationManager()
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
-                self.passThrough.viewModel = dataSourcePropertyFilterViewModel
                 locationManager.lastLocation = CLLocation(latitude: 12, longitude: 14)
+                self.dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Location", key: "locationProperty", type: .location), locationManager: locationManager)
+                self.passThrough.viewModel = dataSourcePropertyFilterViewModel
             }
             
             var body: some View {

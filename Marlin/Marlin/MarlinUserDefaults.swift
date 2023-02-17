@@ -86,6 +86,15 @@ extension UserDefaults {
         }
     }
     
+    var showCurrentLocation: Bool {
+        get {
+            bool(forKey: #function)
+        }
+        set {
+            setValue(newValue, forKey: #function)
+        }
+    }
+    
     @objc var actualRangeLights: Bool {
         get {
             bool(forKey: #function)

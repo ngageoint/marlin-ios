@@ -15,7 +15,6 @@ struct MarlinCompactWidth: View {
     
     @AppStorage("selectedTab") var selectedTab: String = "map"
     @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = false
-    @State var loadingData: Bool = false
     
     @ObservedObject var dataSourceList: DataSourceList
     @State var menuOpen: Bool = false
@@ -29,8 +28,6 @@ struct MarlinCompactWidth: View {
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
     }
-    let dataSourceLoadedPub = NotificationCenter.default.publisher(for: .DataSourceLoaded)
-    let dataSourceLoadingPub = NotificationCenter.default.publisher(for: .DataSourceLoading)
 
     var marlinMap: MarlinMap
     
@@ -56,6 +53,8 @@ struct MarlinCompactWidth: View {
                                 .ignoresSafeArea(edges: [.leading, .trailing])
                                 .overlay(bottomButtons(), alignment: .bottom)
                                 .overlay(topButtons(), alignment: .top)
+                                .accessibilityElement(children: .contain)
+                                .accessibilityLabel("Marlin Map")
 
                             loadingCapsule()
                         }
@@ -107,6 +106,8 @@ struct MarlinCompactWidth: View {
                 .tag("map")
                 .tabItem {
                     Label("Map", systemImage: "map.fill")
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel("Marlin Map Tab")
                 }
                 // this affects text buttons, image buttons need .foregroundColor set on them
                 .tint(Color.onPrimaryColor)
@@ -129,10 +130,16 @@ struct MarlinCompactWidth: View {
                     .tabItem {
                         if let imageName = dataSource.dataSource.imageName {
                             Label(dataSource.dataSource.dataSourceName, image: imageName)
+                                .accessibilityElement(children: .contain)
+                                .accessibilityLabel("\(dataSource.key)List")
                         } else if let imageName = dataSource.dataSource.systemImageName {
                             Label(dataSource.dataSource.dataSourceName, systemImage: imageName)
+                                .accessibilityElement(children: .contain)
+                                .accessibilityLabel("\(dataSource.key)List")
                         } else {
                             Label(dataSource.dataSource.dataSourceName, systemImage: "list.bullet.rectangle.fill")
+                                .accessibilityElement(children: .contain)
+                                .accessibilityLabel("\(dataSource.key)List")
                         }
                     }
                     .tag("\(dataSource.key)List")
@@ -166,37 +173,14 @@ struct MarlinCompactWidth: View {
                     self.menuOpen = false
                 }
             }
-            .onReceive(dataSourceLoadedPub) { output in
-                print("data source updated pub")
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    let loading = dataSourceList.allTabs.contains { dataSourceItem in
-                        return appState.loadingDataSource[dataSourceItem.key] ?? false
-
-                    }
-                    withAnimation {
-                        loadingData = loading
-                    }
-                }
-            }
-            .onReceive(dataSourceLoadingPub) { output in
-                print("data source loading pub")
-                DispatchQueue.main.async {
-                    let loading = dataSourceList.allTabs.contains { dataSourceItem in
-                        return appState.loadingDataSource[dataSourceItem.key] ?? false
-
-                    }
-                    withAnimation {
-                        loadingData = loading
-                    }
-                }
-            }
-            
             GeometryReader { geometry in
                 SideMenu(width: geometry.size.width - 56,
                          isOpen: self.menuOpen,
                          menuClose: self.openMenu,
                          dataSourceList: dataSourceList
                 )
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Side Menu \(self.menuOpen ? "Open" : "Closed")")
             }
         }
     }
@@ -250,6 +234,8 @@ struct MarlinCompactWidth: View {
                 .isDetailLink(false)
                 .fixedSize()
                 .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini))
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Map Settings")
             }
             .padding(.trailing, 8)
             .padding(.top, 16)
@@ -278,6 +264,8 @@ struct MarlinCompactWidth: View {
             VStack(alignment: .trailing, spacing: 16) {
                 UserTrackingButton(mapState: marlinMap.mapState)
                     .fixedSize()
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("User Tracking")
             }
             .padding(.trailing, 8)
             .padding(.bottom, 30)
@@ -300,6 +288,8 @@ struct MarlinCompactWidth: View {
                     }
                 }
                 .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: dataSource.showOnMap ? Color.white : Color.disabledColor, backgroundColor: dataSource.showOnMap ? Color(uiColor: dataSource.dataSource.color) : Color.disabledBackground))
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("\(dataSource.dataSource.key) Map Toggle")
             }
         }
     }

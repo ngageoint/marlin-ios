@@ -10,7 +10,7 @@ import SwiftUI
 import MapKit
 
 class DataSourcePropertyFilterViewModel: ObservableObject {
-    @ObservedObject var locationManager: LocationManager = LocationManager.shared
+    var locationManager: any LocationManagerProtocol
     
     @Published var startValidating: Bool = false
     @Published var dataSourceProperty: DataSourceProperty {
@@ -207,9 +207,10 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
         }
     }
     
-    init(dataSourceProperty: DataSourceProperty, isStaticProperty: Bool = false) {
+    init(dataSourceProperty: DataSourceProperty, isStaticProperty: Bool = false, locationManager: any LocationManagerProtocol = LocationManager.shared) {
         self.dataSourceProperty = dataSourceProperty
         self.selectedComparison = dataSourceProperty.type.defaultComparison()
         self.isStaticProperty = isStaticProperty
+        self.locationManager = locationManager
     }
 }
