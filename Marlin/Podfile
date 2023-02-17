@@ -22,8 +22,6 @@ target 'Marlin' do
       common_pods
       pod 'OHHTTPStubs'
       pod 'OHHTTPStubs/Swift'
-      pod 'Quick'
-      pod 'Nimble'
       pod 'KIF'
     end
 end

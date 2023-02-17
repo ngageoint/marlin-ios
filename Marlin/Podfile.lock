@@ -23,7 +23,6 @@ PODS:
   - MatomoTracker/Core (7.5.2)
   - mgrs-ios (1.1.2):
     - grid-ios (~> 1.0.3)
-  - Nimble (11.2.1)
   - ogc-api-features-json-ios (4.2.1):
     - sf-geojson-ios (~> 4.2.1)
   - OHHTTPStubs (9.1.0):
@@ -45,7 +44,6 @@ PODS:
     - crs-ios (~> 1.0.3)
     - proj4-ios (~> 4.9.3)
   - proj4-ios (4.9.3)
-  - Quick (6.1.0)
   - sf-geojson-ios (4.2.1):
     - sf-ios (~> 4.1.0)
   - sf-ios (4.1.0)
@@ -66,10 +64,8 @@ DEPENDENCIES:
   - Kingfisher
   - MatomoTracker (~> 7.5)
   - mgrs-ios
-  - Nimble
   - OHHTTPStubs
   - OHHTTPStubs/Swift
-  - Quick
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -83,12 +79,10 @@ SPEC REPOS:
     - Kingfisher
     - MatomoTracker
     - mgrs-ios
-    - Nimble
     - ogc-api-features-json-ios
     - OHHTTPStubs
     - proj-ios
     - proj4-ios
-    - Quick
     - sf-geojson-ios
     - sf-ios
     - sf-proj-ios
@@ -107,12 +101,10 @@ SPEC CHECKSUMS:
   Kingfisher: cd762a593a61b2fbecf7645c00f9a801a3ebfc9c
   MatomoTracker: 1d98ddc58322fd9d65e1a6886b8e41363047bd13
   mgrs-ios: c5184c4888a72a4e75c3959779042f960b6ae113
-  Nimble: 516ac503a0fafaa8e41dbb4a70a61be421fa893a
   ogc-api-features-json-ios: 3671cdf6f0c0b4f55aaa44bca984177a04d06a30
   OHHTTPStubs: 90eac6d8f2c18317baeca36698523dc67c513831
   proj-ios: b9b0fced7abed627750164b140fc4629bc76ca17
   proj4-ios: fa2f3ab9ba9ba727bd10bc12aea735d0c3927ef4
-  Quick: 6676ffb409bf04abba2ff23902af2407bfc6ac90
   sf-geojson-ios: 5bd694af38d316037d3bc3d79579a0c3abd341bd
   sf-ios: 02f985b929472e3b8a42924a5a352ee0fcf589fe
   sf-proj-ios: ae6a661e6e01ad7cb1d555110cc64d1bf8887c71
@@ -120,6 +112,6 @@ SPEC CHECKSUMS:
   sf-wkt-ios: c2d988fffb8091d3449d16c74cd215a9cb98f4a6
   tiff-ios: fb3f51fcd3400ea1dd8f710d2a7832a18d112580
 
-PODFILE CHECKSUM: c1a1bc5eb880c3842c18925cc710c1d67569c31d
+PODFILE CHECKSUM: 26f1945d257bae28df057fbd4f260d5d737b9f39
 
 COCOAPODS: 1.11.3
