@@ -117,7 +117,7 @@ class ChartCorrectionListViewModel: NSObject, ObservableObject {
                     if let metersPoint = SFGeometryUtils.degreesToMetersWith(x: longitude, andY: latitude), let x = metersPoint.x as? Double, let y = metersPoint.y as? Double {
                         let southWest = SFGeometryUtils.metersToDegreesWith(x: x - metersDistance, andY: y - metersDistance)
                         let northEast = SFGeometryUtils.metersToDegreesWith(x: x + metersDistance, andY: y + metersDistance)
-                        if let southWest = southWest, let northEast = northEast, let maxy = northEast.y as? Double, let miny = southWest.y as? Double, let maxx = southWest.x as? Double, let minx = northEast.x as? Double {
+                        if let southWest = southWest, let northEast = northEast, let maxy = northEast.y as? Double, let miny = southWest.y as? Double, let maxx = northEast.x as? Double, let minx = southWest.x as? Double {
                             validQuery = true
                             queryParameters.append("latitudeLeft=\(miny)")
                             queryParameters.append("longitudeLeft=\(minx)")

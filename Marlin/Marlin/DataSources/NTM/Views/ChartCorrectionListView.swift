@@ -20,7 +20,7 @@ struct ChartCorrectionList: View {
     var body: some View {
         ZStack {
             ScrollView {
-                LazyVStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 0) {
                     
                     ForEach(Array(viewModel.sortedChartIds), id: \.self) { key in
                         if let group = viewModel.sortedChartCorrections(key: key) {
@@ -91,7 +91,7 @@ struct ChartCorrectionList: View {
                         Text("Current Notice: \(currNoticeNum)")
                             .secondary()
                         Spacer()
-                        if (ntm.noticeYear >= 99 && ntm.noticeWeek >= 29) || ntm.noticeYear <= Int(Calendar.current.component(.year, from: Date()) / 100) % 1000  {
+                        if (ntm.noticeYear >= 99 && ntm.noticeWeek >= 29) || ntm.noticeYear <= Int(Calendar.current.component(.year, from: Date())) % 1000  {
                             NavigationLink {
                                 NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumberString: ntm.currNoticeNum))
                             } label: {
