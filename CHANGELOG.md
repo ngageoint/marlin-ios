@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file.
  ### Bug Fixes
     * location updates no longer cause the filter view to reset itself
     * Navigational Warnings now report the proper number of new warnings
+    * Chart correction query has been corrected
+    * Chart correction expansion now works in all cases
+    * Chart correction NTM details link is presented for all appropriate cases
  ### Features
     * No longer bombarded with push notifications when you are in the app, they will be presented in a top banner.
     * Number of rail items on iPad devices are not restricted

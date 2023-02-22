@@ -8,7 +8,34 @@
 import SwiftUI
 import CoreData
 
-struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: View {    
+extension MSIListView where SectionHeader == EmptyView, Content == EmptyView {
+    init(focusedItem: ItemWrapper,
+         watchFocusedItem: Bool = false,
+         filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
+         sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
+         allowUserSort: Bool = true,
+         allowUserFilter: Bool = true,
+         sectionHeaderIsSubList: Bool = false,
+         sectionNameBuilder: ((MSISection<T>) -> String)? = nil) {
+        self.init(focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, filterPublisher: filterPublisher, sortPublisher: sortPublisher, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: { _ in EmptyView() }, content: { _ in EmptyView() })
+    }
+}
+
+extension MSIListView where Content == EmptyView {
+    init(focusedItem: ItemWrapper,
+         watchFocusedItem: Bool = false,
+         filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
+         sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
+         allowUserSort: Bool = true,
+         allowUserFilter: Bool = true,
+         sectionHeaderIsSubList: Bool = false,
+         sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
+         @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader) {
+        self.init(focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, filterPublisher: filterPublisher, sortPublisher: sortPublisher, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: { _ in EmptyView() })
+    }
+}
+
+struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: View, Content: View>: View {
     @State var sortOpen: Bool = false
     
     @ObservedObject var focusedItem: ItemWrapper
@@ -24,10 +51,20 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: V
     var watchFocusedItem: Bool = false
     
     let sectionNameBuilder: ((MSISection<T>) -> String)?
+    let sectionViewBuilder: ((MSISection<T>) -> SectionHeader)
+
+    let content: ((MSISection<T>) -> Content)
     
-    let content: ((MSISection<T>) -> Content)?
-    
-    init(focusedItem: ItemWrapper, watchFocusedItem: Bool = false, filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, allowUserSort: Bool = true, allowUserFilter: Bool = true, sectionHeaderIsSubList: Bool = false, sectionNameBuilder: ((MSISection<T>) -> String)? = nil) {
+    init(focusedItem: ItemWrapper,
+         watchFocusedItem: Bool = false,
+         filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
+         sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
+         allowUserSort: Bool = true,
+         allowUserFilter: Bool = true,
+         sectionHeaderIsSubList: Bool = false,
+         sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
+         @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader,
+         @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
         self.focusedItem = focusedItem
         self.watchFocusedItem = watchFocusedItem
         self.filterPublisher = filterPublisher
@@ -36,19 +73,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: V
         self.allowUserFilter = allowUserFilter
         self.sectionHeaderIsSubList = sectionHeaderIsSubList
         self.sectionNameBuilder = sectionNameBuilder
-        self.content = nil
-        self.filterViewModel = FilterViewModel(dataSource: T.self)
-    }
-    
-    init(focusedItem: ItemWrapper, watchFocusedItem: Bool = false, filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, allowUserSort: Bool = true, allowUserFilter: Bool = true, sectionHeaderIsSubList: Bool = false, sectionNameBuilder: ((MSISection<T>) -> String)? = nil, @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
-        self.focusedItem = focusedItem
-        self.watchFocusedItem = watchFocusedItem
-        self.filterPublisher = filterPublisher
-        self.sortPublisher = sortPublisher
-        self.allowUserSort = allowUserSort
-        self.allowUserFilter = allowUserFilter
-        self.sectionHeaderIsSubList = sectionHeaderIsSubList
-        self.sectionNameBuilder = sectionNameBuilder
+        self.sectionViewBuilder = sectionViewBuilder
         self.content = content
         self.filterViewModel = FilterViewModel(dataSource: T.self)
     }
@@ -76,17 +101,10 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: V
                 }
                 
             }
-            if let content = content {
-                GenericSectionedList<T, Content>(filterPublisher: filterPublisher, sortPublisher: sortPublisher, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder, content: content)
-                    .onAppear {
-                        Metrics.shared.dataSourceList(dataSource: T.self)
-                    }
-            } else {
-                GenericSectionedList<T, Content>(filterPublisher: filterPublisher, sortPublisher: sortPublisher, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder)
-                    .onAppear {
-                        Metrics.shared.dataSourceList(dataSource: T.self)
-                    }
-            }
+            GenericSectionedList<T, SectionHeader, Content>(filterPublisher: filterPublisher, sortPublisher: sortPublisher, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content)
+                .onAppear {
+                    Metrics.shared.dataSourceList(dataSource: T.self)
+                }
         }
         .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)]), allowSorting: allowUserSort, allowFiltering: allowUserFilter))
         .bottomSheet(isPresented: $filterOpen, detents: .large) {
@@ -148,13 +166,14 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, Content: View>: V
     }
 }
 
-struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, Content: View>: View {
+struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionHeader: View, Content: View>: View {
     @StateObject var itemsViewModel: MSIListViewModel<T>
     @State var tappedItem: T?
     @State private var showDetail = false
     var sectionNameBuilder: ((MSISection<T>) -> String)?
+    var sectionViewBuilder: ((MSISection<T>) -> SectionHeader)
     let sectionHeaderIsSubList: Bool
-    let content: ((MSISection<T>) -> Content)?
+    let content: ((MSISection<T>) -> Content)
 
     var body: some View {
         ZStack {
@@ -163,12 +182,13 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, Content:
             }.hidden()
                 if !sectionHeaderIsSubList {
                     ScrollView {
-                        
                         LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
                             ForEach(itemsViewModel.sections, id: \.id) { section in
                                 Section(header: Group {
                                     if section.name == "All" {
                                         EmptyView()
+                                    } else if SectionHeader.self != EmptyView.self {
+                                        sectionViewBuilder(section)
                                     } else {
                                         HStack {
                                             Text(sectionNameBuilder?(section) ?? section.name)
@@ -214,14 +234,18 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, Content:
                                     .navigationBarTitleDisplayMode(.inline)
                                 }
                             } label: {
-                                HStack(spacing: 16) {
-                                    VStack(alignment: .leading) {
-                                        Text(sectionNameBuilder?(section) ?? section.name)
-                                            .primary()
+                                if SectionHeader.self != EmptyView.self {
+                                    sectionViewBuilder(section)
+                                } else {
+                                    HStack(spacing: 16) {
+                                        VStack(alignment: .leading) {
+                                            Text(sectionNameBuilder?(section) ?? section.name)
+                                                .primary()
+                                        }
                                     }
+                                    .padding(.top, 8)
+                                    .padding(.bottom, 8)
                                 }
-                                .padding(.top, 8)
-                                .padding(.bottom, 8)
                             }
                             .onAppear {
                                 if section.id == itemsViewModel.sections[itemsViewModel.sections.count - 1].id {
@@ -265,17 +289,16 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, Content:
         .dataSourceSummaryItem()
     }
     
-    init(filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sectionHeaderIsSubList: Bool = false, sectionNameBuilder: ((MSISection<T>) -> String)? = nil, @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
+    init(filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
+         sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
+         sectionHeaderIsSubList: Bool = false,
+         sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
+         @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader,
+         @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
         _itemsViewModel = StateObject(wrappedValue: MSIListViewModel<T>(filterPublisher: filterPublisher, sortPublisher: sortPublisher))
         self.sectionNameBuilder = sectionNameBuilder
+        self.sectionViewBuilder = sectionViewBuilder
         self.sectionHeaderIsSubList = sectionHeaderIsSubList
         self.content = content
-    }
-    
-    init(filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sectionHeaderIsSubList: Bool = false, sectionNameBuilder: ((MSISection<T>) -> String)? = nil) {
-        _itemsViewModel = StateObject(wrappedValue: MSIListViewModel<T>(filterPublisher: filterPublisher, sortPublisher: sortPublisher))
-        self.sectionNameBuilder = sectionNameBuilder
-        self.sectionHeaderIsSubList = sectionHeaderIsSubList
-        self.content = nil
     }
 }

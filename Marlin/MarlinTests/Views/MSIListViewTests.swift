@@ -109,7 +109,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, AnyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
                 }
             }
         }
@@ -143,7 +143,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, AnyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
                 }
             }
         }
@@ -176,7 +176,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, AnyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
                 }
             }
         }
@@ -244,7 +244,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, AnyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
                 }
             }
         }
@@ -343,7 +343,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, AnyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
                 }
             }
         }
@@ -413,7 +413,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, AnyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
                 }
             }
         }
@@ -492,7 +492,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, AnyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
                 }
             }
         }
@@ -571,7 +571,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, AnyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort), sectionHeaderIsSubList: true)
+                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort), sectionHeaderIsSubList: true)
                 }
             }
         }
@@ -653,11 +653,11 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, AnyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort), sectionHeaderIsSubList: true) { section in
+                    MSIListView<Asam, EmptyView, AnyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort), sectionHeaderIsSubList: true, sectionNameBuilder: { section in
                         return "ASAM SECTION \(section.name) (\(section.items.count))"
-                    } content: { section in
+                    }, sectionViewBuilder: { _ in EmptyView()}, content: { section in
                         AnyView(Text("content of the section \(section.name) \(section.items.count)"))
-                    }
+                    })
                 }
             }
         }
@@ -733,7 +733,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, AnyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
                 }
             }
         }
@@ -808,7 +808,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, AnyView>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
                 }
                 .onChange(of: passThrough.date) { newValue in
                     itemWrapper.dataSource = passThrough.item

@@ -23,7 +23,11 @@ class ChartCorrectionListViewModel: NSObject, ObservableObject {
                     if $0.noticeYear == $1.noticeYear {
                         return $0.noticeWeek > $1.noticeWeek
                     }
-                    return $0.noticeYear > $1.noticeYear
+                    // let's just assume that 1950 is the first chart correction until we can figure out otherwise
+                    // revisit this code in 2049
+                    let zeroYear = $0.noticeYear > 50 ? $0.noticeYear + 1900 : $0.noticeYear + 2000
+                    let oneYear = $1.noticeYear > 50 ? $1.noticeYear + 1900 : $1.noticeYear + 2000
+                    return zeroYear > oneYear
                 }
                 return group
             }
