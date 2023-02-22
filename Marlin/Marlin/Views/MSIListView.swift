@@ -221,7 +221,7 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
                     List {
                         ForEach(itemsViewModel.sections, id: \.id) { section in
                             NavigationLink {
-                                if let content = content {
+                                if Content.self != EmptyView.self {
                                     content(section)
                                 } else {
                                     ScrollView {

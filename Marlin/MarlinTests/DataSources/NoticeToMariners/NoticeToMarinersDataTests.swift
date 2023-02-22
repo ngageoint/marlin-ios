@@ -186,22 +186,19 @@ final class NoticeToMarinersDataTests: XCTestCase {
             return true
         }
         
-        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
-            print("xxx notification for ntm")
-            let count = try? self.persistentStore.countOfObjects(NoticeToMariners.self)
-            if count == 23 {
-                print("xxx count is 23")
-                XCTAssertEqual(count, 23)
-                return true
-            } else {
-                print("xxx count is not 23 it is \(count ?? -1)")
-                return false
+        let e = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
+            if let count = try? self.persistentStore.countOfObjects(NoticeToMariners.self) {
+                print("count is \(count)")
+                return count == 23
             }
-        }
+            return false
+        }), object: self.persistentStore.viewContext)
+        
         
         MSI.shared.loadData(type: NoticeToMariners.decodableRoot, dataType: NoticeToMariners.self)
         
         waitForExpectations(timeout: 10, handler: nil)
+        wait(for: [e], timeout: 10)
         
         let newNtm = try! XCTUnwrap(self.persistentStore.fetchFirst(NoticeToMariners.self, sortBy: [NoticeToMariners.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "noticeNumber = %d", 202248)))
         
