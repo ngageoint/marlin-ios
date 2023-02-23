@@ -297,21 +297,21 @@ struct MarlinCompactWidth: View {
     @ViewBuilder
     func createListView(dataSource: DataSourceItem) -> some View {
         if dataSource.key == Asam.key {
-            MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper)
+            MSIListView<Asam, EmptyView, EmptyView>()
         } else if dataSource.key == Modu.key {
-            MSIListView<Modu, EmptyView, EmptyView>(focusedItem: itemWrapper)
+            MSIListView<Modu, EmptyView, EmptyView>()
         } else if dataSource.key == Light.key {
-            MSIListView<Light, EmptyView, EmptyView>(focusedItem: itemWrapper)
+            MSIListView<Light, EmptyView, EmptyView>()
         } else if dataSource.key == NavigationalWarning.key {
             NavigationalWarningListView()
         } else if dataSource.key == Port.key {
-            MSIListView<Port, EmptyView, EmptyView>(focusedItem: itemWrapper)
+            MSIListView<Port, EmptyView, EmptyView>()
         } else if dataSource.key == RadioBeacon.key {
-            MSIListView<RadioBeacon, EmptyView, EmptyView>(focusedItem: itemWrapper)
+            MSIListView<RadioBeacon, EmptyView, EmptyView>()
         } else if dataSource.key == DifferentialGPSStation.key {
-            MSIListView<DifferentialGPSStation, EmptyView, EmptyView>(focusedItem: itemWrapper)
+            MSIListView<DifferentialGPSStation, EmptyView, EmptyView>()
         } else if dataSource.key == DFRS.key {
-            MSIListView<DFRS, EmptyView, EmptyView>(focusedItem: itemWrapper)
+            MSIListView<DFRS, EmptyView, EmptyView>()
         } else if dataSource.key == ElectronicPublication.key {
             ElectronicPublicationsList()
         } else if dataSource.key == NoticeToMariners.key {

@@ -99,8 +99,6 @@ final class MSIListViewTests: XCTestCase {
         }
         
         struct Container: View {
-            @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-            
             @ObservedObject var passThrough: PassThrough
             
             init(passThrough: PassThrough) {
@@ -109,7 +107,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper)
+                    MSIListView<Asam, EmptyView, EmptyView>()
                 }
             }
         }
@@ -133,7 +131,6 @@ final class MSIListViewTests: XCTestCase {
         }
         
         struct Container: View {
-            @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
             
             @ObservedObject var passThrough: PassThrough
             
@@ -143,7 +140,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper)
+                    MSIListView<Asam, EmptyView, EmptyView>()
                 }
             }
         }
@@ -166,8 +163,6 @@ final class MSIListViewTests: XCTestCase {
         }
         
         struct Container: View {
-            @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-            
             @ObservedObject var passThrough: PassThrough
             
             init(passThrough: PassThrough) {
@@ -176,7 +171,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper)
+                    MSIListView<Asam, EmptyView, EmptyView>()
                 }
             }
         }
@@ -234,8 +229,6 @@ final class MSIListViewTests: XCTestCase {
         }
         
         struct Container: View {
-            @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-            
             @ObservedObject var passThrough: PassThrough
             
             init(passThrough: PassThrough) {
@@ -244,7 +237,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper)
+                    MSIListView<Asam, EmptyView, EmptyView>()
                 }
             }
         }
@@ -333,8 +326,6 @@ final class MSIListViewTests: XCTestCase {
         }
         
         struct Container: View {
-            @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-            
             @ObservedObject var passThrough: PassThrough
             
             init(passThrough: PassThrough) {
@@ -343,7 +334,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper)
+                    MSIListView<Asam, EmptyView, EmptyView>()
                 }
             }
         }
@@ -403,8 +394,6 @@ final class MSIListViewTests: XCTestCase {
         }
         
         struct Container: View {
-            @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-            
             @ObservedObject var passThrough: PassThrough
             
             init(passThrough: PassThrough) {
@@ -413,7 +402,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper)
+                    MSIListView<Asam, EmptyView, EmptyView>()
                 }
             }
         }
@@ -482,8 +471,6 @@ final class MSIListViewTests: XCTestCase {
         }
         
         struct Container: View {
-            @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-            
             @ObservedObject var passThrough: PassThrough
             
             init(passThrough: PassThrough) {
@@ -492,7 +479,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper)
+                    MSIListView<Asam, EmptyView, EmptyView>()
                 }
             }
         }
@@ -561,8 +548,6 @@ final class MSIListViewTests: XCTestCase {
         }
         
         struct Container: View {
-            @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-            
             @ObservedObject var passThrough: PassThrough
             
             init(passThrough: PassThrough) {
@@ -571,7 +556,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, sectionHeaderIsSubList: true)
+                    MSIListView<Asam, EmptyView, EmptyView>(sectionHeaderIsSubList: true)
                 }
             }
         }
@@ -643,8 +628,6 @@ final class MSIListViewTests: XCTestCase {
         }
         
         struct Container: View {
-            @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-            
             @ObservedObject var passThrough: PassThrough
             
             init(passThrough: PassThrough) {
@@ -653,7 +636,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, EmptyView, AnyView>(focusedItem: itemWrapper, sectionHeaderIsSubList: true, sectionNameBuilder: { section in
+                    MSIListView<Asam, EmptyView, AnyView>(sectionHeaderIsSubList: true, sectionNameBuilder: { section in
                         return "ASAM SECTION \(section.name) (\(section.items.count))"
                     }, sectionViewBuilder: { _ in EmptyView()}, content: { section in
                         AnyView(Text("content of the section \(section.name) \(section.items.count)"))
@@ -723,8 +706,6 @@ final class MSIListViewTests: XCTestCase {
         }
         
         struct Container: View {
-            @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-            
             @ObservedObject var passThrough: PassThrough
             
             init(passThrough: PassThrough) {
@@ -733,7 +714,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper)
+                    MSIListView<Asam, EmptyView, EmptyView>()
                 }
             }
         }

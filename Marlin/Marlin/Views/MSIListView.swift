@@ -9,7 +9,7 @@ import SwiftUI
 import CoreData
 
 extension MSIListView where SectionHeader == EmptyView, Content == EmptyView {
-    init(focusedItem: ItemWrapper,
+    init(focusedItem: ItemWrapper = ItemWrapper(),
          watchFocusedItem: Bool = false,
          allowUserSort: Bool = true,
          allowUserFilter: Bool = true,
@@ -20,7 +20,7 @@ extension MSIListView where SectionHeader == EmptyView, Content == EmptyView {
 }
 
 extension MSIListView where Content == EmptyView {
-    init(focusedItem: ItemWrapper,
+    init(focusedItem: ItemWrapper = ItemWrapper(),
          watchFocusedItem: Bool = false,
          allowUserSort: Bool = true,
          allowUserFilter: Bool = true,
@@ -49,7 +49,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
 
     let content: ((MSISection<T>) -> Content)
     
-    init(focusedItem: ItemWrapper,
+    init(focusedItem: ItemWrapper = ItemWrapper(),
          watchFocusedItem: Bool = false,
          allowUserSort: Bool = true,
          allowUserFilter: Bool = true,
