@@ -26,19 +26,19 @@ class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResu
     
     var cancellable = Set<AnyCancellable>()
     
-    init(filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>, sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>) {
+    override init() {
         
         super.init()
         setupFetchedResultsController()
         
-        filterPublisher
+        UserDefaults.standard.filterPublisher(key: T.key)
             .removeDuplicates()
             .sink { output in
                 self.setupFetchedResultsController()
             }
             .store(in: &cancellable)
         
-        sortPublisher
+        UserDefaults.standard.sortPublisher(key: T.key)
             .removeDuplicates()
             .sink { output in
                 self.setupFetchedResultsController()

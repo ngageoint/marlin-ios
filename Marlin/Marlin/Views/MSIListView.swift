@@ -11,27 +11,23 @@ import CoreData
 extension MSIListView where SectionHeader == EmptyView, Content == EmptyView {
     init(focusedItem: ItemWrapper,
          watchFocusedItem: Bool = false,
-         filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
-         sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
          allowUserSort: Bool = true,
          allowUserFilter: Bool = true,
          sectionHeaderIsSubList: Bool = false,
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil) {
-        self.init(focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, filterPublisher: filterPublisher, sortPublisher: sortPublisher, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: { _ in EmptyView() }, content: { _ in EmptyView() })
+        self.init(focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: { _ in EmptyView() }, content: { _ in EmptyView() })
     }
 }
 
 extension MSIListView where Content == EmptyView {
     init(focusedItem: ItemWrapper,
          watchFocusedItem: Bool = false,
-         filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
-         sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
          allowUserSort: Bool = true,
          allowUserFilter: Bool = true,
          sectionHeaderIsSubList: Bool = false,
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
          @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader) {
-        self.init(focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, filterPublisher: filterPublisher, sortPublisher: sortPublisher, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: { _ in EmptyView() })
+        self.init(focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: { _ in EmptyView() })
     }
 }
 
@@ -44,21 +40,17 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
     var allowUserSort: Bool = true
     var allowUserFilter: Bool = true
     var sectionHeaderIsSubList: Bool = false
-    var filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>
-    var sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>
     var filterViewModel: FilterViewModel
     
     var watchFocusedItem: Bool = false
     
-    let sectionNameBuilder: ((MSISection<T>) -> String)?
+    var sectionNameBuilder: ((MSISection<T>) -> String)?
     let sectionViewBuilder: ((MSISection<T>) -> SectionHeader)
 
     let content: ((MSISection<T>) -> Content)
     
     init(focusedItem: ItemWrapper,
          watchFocusedItem: Bool = false,
-         filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
-         sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
          allowUserSort: Bool = true,
          allowUserFilter: Bool = true,
          sectionHeaderIsSubList: Bool = false,
@@ -67,8 +59,6 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
          @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
         self.focusedItem = focusedItem
         self.watchFocusedItem = watchFocusedItem
-        self.filterPublisher = filterPublisher
-        self.sortPublisher = sortPublisher
         self.allowUserSort = allowUserSort
         self.allowUserFilter = allowUserFilter
         self.sectionHeaderIsSubList = sectionHeaderIsSubList
@@ -101,7 +91,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
                 }
                 
             }
-            GenericSectionedList<T, SectionHeader, Content>(filterPublisher: filterPublisher, sortPublisher: sortPublisher, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content)
+            GenericSectionedList<T, SectionHeader, Content>(sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content)
                 .onAppear {
                     Metrics.shared.dataSourceList(dataSource: T.self)
                 }
@@ -289,13 +279,11 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
         .dataSourceSummaryItem()
     }
     
-    init(filterPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
-         sortPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Data?>,
-         sectionHeaderIsSubList: Bool = false,
+    init(sectionHeaderIsSubList: Bool = false,
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
          @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader,
          @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
-        _itemsViewModel = StateObject(wrappedValue: MSIListViewModel<T>(filterPublisher: filterPublisher, sortPublisher: sortPublisher))
+        _itemsViewModel = StateObject(wrappedValue: MSIListViewModel<T>())
         self.sectionNameBuilder = sectionNameBuilder
         self.sectionViewBuilder = sectionViewBuilder
         self.sectionHeaderIsSubList = sectionHeaderIsSubList

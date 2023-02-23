@@ -164,21 +164,21 @@ struct MarlinRegularWidth: View {
     @ViewBuilder
     func createListView(dataSource: DataSourceItem) -> some View {
         if dataSource.key == Asam.key {
-            MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+            MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == Modu.key {
-            MSIListView<Modu, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.moduFilter), sortPublisher: UserDefaults.standard.publisher(for: \.moduSort))
+            MSIListView<Modu, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == Light.key {
-            MSIListView<Light, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.lightFilter), sortPublisher: UserDefaults.standard.publisher(for: \.lightSort))
+            MSIListView<Light, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == NavigationalWarning.key {
             NavigationalWarningListView()
         } else if dataSource.key == Port.key {
-            MSIListView<Port, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.portFilter), sortPublisher: UserDefaults.standard.publisher(for: \.portSort))
+            MSIListView<Port, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == RadioBeacon.key {
-            MSIListView<RadioBeacon, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.radioBeaconFilter), sortPublisher: UserDefaults.standard.publisher(for: \.radioBeaconSort))
+            MSIListView<RadioBeacon, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == DifferentialGPSStation.key {
-            MSIListView<DifferentialGPSStation, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationFilter), sortPublisher: UserDefaults.standard.publisher(for: \.differentialGPSStationSort))
+            MSIListView<DifferentialGPSStation, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == DFRS.key {
-            MSIListView<DFRS, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true, filterPublisher: UserDefaults.standard.publisher(for: \.dfrsFilter), sortPublisher: UserDefaults.standard.publisher(for: \.dfrsSort))
+            MSIListView<DFRS, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
         } else if dataSource.key == ElectronicPublication.key {
             ElectronicPublicationsList()
         } else if dataSource.key == NoticeToMariners.key {

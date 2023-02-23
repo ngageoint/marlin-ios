@@ -7,6 +7,7 @@
 
 import Foundation
 import MapKit
+import Combine
 
 extension UserDefaults {
     
@@ -151,6 +152,31 @@ extension UserDefaults {
         }
     }
     
+    func filterPublisher(key: String) -> NSObject.KeyValueObservingPublisher<UserDefaults, Data?> {
+        switch key {
+        case Asam.key:
+            return publisher(for: \.asamFilter)
+        case Modu.key:
+            return publisher(for: \.moduFilter)
+        case Light.key:
+            return publisher(for: \.lightFilter)
+        case NoticeToMariners.key:
+            return publisher(for: \.ntmFilter)
+        case DFRS.key:
+            return publisher(for: \.dfrsFilter)
+        case DifferentialGPSStation.key:
+            return publisher(for: \.differentialGPSStationFilter)
+        case ElectronicPublication.key:
+            return publisher(for: \.epubFilter)
+        case Port.key:
+            return publisher(for: \.portFilter)
+        case RadioBeacon.key:
+            return publisher(for: \.radioBeaconFilter)
+        default:
+            return publisher(for: \.asamFilter)
+        }
+    }
+    
     @objc var asamFilter: Data? {
         data(forKey: #function)
     }
@@ -217,6 +243,31 @@ extension UserDefaults {
             NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: key))
         } catch {
             print("Unable to Encode Array of Notes (\(error))")
+        }
+    }
+    
+    func sortPublisher(key: String) -> NSObject.KeyValueObservingPublisher<UserDefaults, Data?> {
+        switch key {
+        case Asam.key:
+            return publisher(for: \.asamSort)
+        case Modu.key:
+            return publisher(for: \.moduSort)
+        case Light.key:
+            return publisher(for: \.lightSort)
+        case NoticeToMariners.key:
+            return publisher(for: \.ntmSort)
+        case DFRS.key:
+            return publisher(for: \.dfrsSort)
+        case DifferentialGPSStation.key:
+            return publisher(for: \.differentialGPSStationSort)
+        case ElectronicPublication.key:
+            return publisher(for: \.epubSort)
+        case Port.key:
+            return publisher(for: \.portSort)
+        case RadioBeacon.key:
+            return publisher(for: \.radioBeaconSort)
+        default:
+            return publisher(for: \.asamSort)
         }
     }
     

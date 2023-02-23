@@ -94,7 +94,7 @@ final class MSIListViewModelTests: XCTestCase {
             try? persistentStore.viewContext.save()
         }
         
-        let listViewModel = MSIListViewModel<Asam>(filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+        let listViewModel = MSIListViewModel<Asam>()
         
         let sectionExpectation = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, dictionary in
             guard let observedObject = observedObject as? MSIListViewModel<Asam> else {
@@ -120,7 +120,7 @@ final class MSIListViewModelTests: XCTestCase {
     }
     
     func testZeroItemList() throws {
-        let listViewModel = MSIListViewModel<Asam>(filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+        let listViewModel = MSIListViewModel<Asam>()
         
         let sectionExpectation = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, dictionary in
             guard let observedObject = observedObject as? MSIListViewModel<Asam> else {
@@ -141,7 +141,7 @@ final class MSIListViewModelTests: XCTestCase {
     }
     
     func testAddItemsList() throws {
-        let listViewModel = MSIListViewModel<Asam>(filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+        let listViewModel = MSIListViewModel<Asam>()
         
         let sectionExpectation = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, dictionary in
             guard let observedObject = observedObject as? MSIListViewModel<Asam> else {
@@ -203,7 +203,7 @@ final class MSIListViewModelTests: XCTestCase {
         
         UserDefaults.standard.setSort(Asam.key, sort: [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), ascending: false, section: true)])
         
-        let listViewModel = MSIListViewModel<Asam>(filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+        let listViewModel = MSIListViewModel<Asam>()
         
         let sectionExpectation = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, dictionary in
             guard let observedObject = observedObject as? MSIListViewModel<Asam> else {
@@ -267,7 +267,7 @@ final class MSIListViewModelTests: XCTestCase {
         UserDefaults.standard.setSort(Asam.key, sort: Asam.defaultSort)
         UserDefaults.standard.setFilter(Asam.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last30Days)])
         
-        let listViewModel = MSIListViewModel<Asam>(filterPublisher: UserDefaults.standard.publisher(for: \.asamFilter), sortPublisher: UserDefaults.standard.publisher(for: \.asamSort))
+        let listViewModel = MSIListViewModel<Asam>()
         
         let sectionExpectation = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, dictionary in
             guard let observedObject = observedObject as? MSIListViewModel<Asam> else {

@@ -48,7 +48,7 @@ struct NoticeToMarinersView: View {
     var body: some View {
         List {
             NavigationLink {
-                MSIListView<NoticeToMariners,AnyView,NoticeToMarinersFullNoticeView>(focusedItem: itemWrapper, watchFocusedItem: false, filterPublisher: UserDefaults.standard.publisher(for: \.ntmFilter), sortPublisher: UserDefaults.standard.publisher(for: \.ntmSort), allowUserSort: false, allowUserFilter: false, sectionHeaderIsSubList: true, sectionViewBuilder: { section in
+                MSIListView<NoticeToMariners,AnyView,NoticeToMarinersFullNoticeView>(focusedItem: itemWrapper, watchFocusedItem: false, allowUserSort: false, allowUserFilter: false, sectionHeaderIsSubList: true, sectionViewBuilder: { section in
                     AnyView(sectionHeader(section: section))
                 }, content: { section in
                     NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: Int64(section.name)))
