@@ -14,8 +14,9 @@ extension MSIListView where SectionHeader == EmptyView, Content == EmptyView {
          allowUserSort: Bool = true,
          allowUserFilter: Bool = true,
          sectionHeaderIsSubList: Bool = false,
+         sectionGroupNameBuilder: ((MSISection<T>) -> String)? = nil,
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil) {
-        self.init(focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: { _ in EmptyView() }, content: { _ in EmptyView() })
+        self.init(focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: { _ in EmptyView() }, content: { _ in EmptyView() })
     }
 }
 
@@ -25,9 +26,10 @@ extension MSIListView where Content == EmptyView {
          allowUserSort: Bool = true,
          allowUserFilter: Bool = true,
          sectionHeaderIsSubList: Bool = false,
+         sectionGroupNameBuilder: ((MSISection<T>) -> String)? = nil,
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
          @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader) {
-        self.init(focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: { _ in EmptyView() })
+        self.init(focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: { _ in EmptyView() })
     }
 }
 
@@ -44,6 +46,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
     
     var watchFocusedItem: Bool = false
     
+    var sectionGroupNameBuilder: ((MSISection<T>) -> String)?
     var sectionNameBuilder: ((MSISection<T>) -> String)?
     let sectionViewBuilder: ((MSISection<T>) -> SectionHeader)
 
@@ -54,6 +57,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
          allowUserSort: Bool = true,
          allowUserFilter: Bool = true,
          sectionHeaderIsSubList: Bool = false,
+         sectionGroupNameBuilder: ((MSISection<T>) -> String)? = nil,
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
          @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader,
          @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
@@ -62,6 +66,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
         self.allowUserSort = allowUserSort
         self.allowUserFilter = allowUserFilter
         self.sectionHeaderIsSubList = sectionHeaderIsSubList
+        self.sectionGroupNameBuilder = sectionGroupNameBuilder
         self.sectionNameBuilder = sectionNameBuilder
         self.sectionViewBuilder = sectionViewBuilder
         self.content = content
@@ -91,7 +96,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
                 }
                 
             }
-            GenericSectionedList<T, SectionHeader, Content>(sectionHeaderIsSubList: sectionHeaderIsSubList, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content)
+            GenericSectionedList<T, SectionHeader, Content>(sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content)
                 .onAppear {
                     Metrics.shared.dataSourceList(dataSource: T.self)
                 }
@@ -160,6 +165,7 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
     @StateObject var itemsViewModel: MSIListViewModel<T>
     @State var tappedItem: T?
     @State private var showDetail = false
+    var sectionGroupNameBuilder: ((MSISection<T>) -> String)?
     var sectionNameBuilder: ((MSISection<T>) -> String)?
     var sectionViewBuilder: ((MSISection<T>) -> SectionHeader)
     let sectionHeaderIsSubList: Bool
@@ -171,45 +177,40 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
                 EmptyView()
             }.hidden()
                 if !sectionHeaderIsSubList {
-                    ScrollView {
-                        LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
-                            ForEach(itemsViewModel.sections, id: \.id) { section in
-                                Section(header: Group {
-                                    if section.name == "All" {
-                                        EmptyView()
-                                    } else if SectionHeader.self != EmptyView.self {
-                                        sectionViewBuilder(section)
-                                    } else {
-                                        HStack {
-                                            Text(sectionNameBuilder?(section) ?? section.name)
-                                                .overline()
-                                                .padding([.leading, .trailing], 8)
-                                                .padding(.top, 12)
-                                                .padding(.bottom, 4)
-                                            Spacer()
-                                        }
-                                    }
-                                }
-                                .background(Color.backgroundColor)) {
-                                    itemList(items: section.items)
-                                }
-                                .onAppear {
-                                    if section.id == itemsViewModel.sections[itemsViewModel.sections.count - 1].id {
-                                        itemsViewModel.update(for: section.id + 1)
-                                    }
-                                }
-                                .onChange(of: itemsViewModel.lastUpdateDate) { date in
-                                    if section.id == itemsViewModel.sections[itemsViewModel.sections.count - 1].id {
-                                        itemsViewModel.update(for: section.id + 1)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    .dataSourceSummaryList()
+                    sectionHeaderList()
+                } else if sectionGroupNameBuilder != nil {
+                    sectionHeaderGroupedSublist()
                 } else {
-                    List {
-                        ForEach(itemsViewModel.sections, id: \.id) { section in
+                    sectionHeaderSublist()
+                }
+            }
+            
+        .navigationTitle(T.fullDataSourceName)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    var groups: [String: [MSISection<T>]] {
+        return Dictionary(grouping: itemsViewModel.sections) { section in
+            sectionGroupNameBuilder?(section) ?? ""
+        }
+    }
+    
+    var sortedGroupIds: [String] {
+        return groups.keys.sorted {
+            return Int($0) ?? -1 > Int($1) ?? -1
+        }.compactMap { $0 }
+    }
+    
+    @ViewBuilder
+    func sectionHeaderGroupedSublist() -> some View {
+        List {
+            ForEach(Array(sortedGroupIds), id: \.self) { groupKey in
+                Section(header:
+                            Text(groupKey)
+                    .background(Color.backgroundColor)
+                ) {
+                    if let group = groups[groupKey] {
+                        ForEach(group, id: \.id) { section in
                             NavigationLink {
                                 if Content.self != EmptyView.self {
                                     content(section)
@@ -237,6 +238,7 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
                                     .padding(.bottom, 8)
                                 }
                             }
+                            
                             .onAppear {
                                 if section.id == itemsViewModel.sections[itemsViewModel.sections.count - 1].id {
                                     itemsViewModel.update(for: section.id + 1)
@@ -244,12 +246,93 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
                             }
                         }
                     }
-                    .listStyle(.plain)
                 }
             }
-            
-        .navigationTitle(T.fullDataSourceName)
-        .navigationBarTitleDisplayMode(.inline)
+        }
+        .dataSourceSummaryList()
+    }
+    
+    @ViewBuilder
+    func sectionHeaderSublist() -> some View {
+        List {
+            ForEach(itemsViewModel.sections, id: \.id) { section in
+                NavigationLink {
+                    if Content.self != EmptyView.self {
+                        content(section)
+                    } else {
+                        ScrollView {
+                            LazyVStack(alignment: .leading, spacing: 0) {
+                                itemList(items: section.items)
+                            }
+                        }
+                        .background(Color.backgroundColor)
+                        .navigationTitle(sectionNameBuilder?(section) ?? section.name)
+                        .navigationBarTitleDisplayMode(.inline)
+                    }
+                } label: {
+                    if SectionHeader.self != EmptyView.self {
+                        sectionViewBuilder(section)
+                    } else {
+                        HStack(spacing: 16) {
+                            VStack(alignment: .leading) {
+                                Text(sectionNameBuilder?(section) ?? section.name)
+                                    .primary()
+                            }
+                        }
+                        .padding(.top, 8)
+                        .padding(.bottom, 8)
+                    }
+                }
+                .onAppear {
+                    if section.id == itemsViewModel.sections[itemsViewModel.sections.count - 1].id {
+                        itemsViewModel.update(for: section.id + 1)
+                    }
+                }
+            }
+        }
+        .listStyle(.plain)
+    }
+    
+    @ViewBuilder
+    func sectionHeaderList() -> some View {
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
+                ForEach(itemsViewModel.sections, id: \.id) { section in
+                    Section(header:
+                        Group {
+                            if section.name == "All" {
+                                EmptyView()
+                            } else if SectionHeader.self != EmptyView.self {
+                                sectionViewBuilder(section)
+                            } else {
+                                HStack {
+                                    Text(sectionNameBuilder?(section) ?? section.name)
+                                        .overline()
+                                        .padding([.leading, .trailing], 8)
+                                        .padding(.top, 12)
+                                        .padding(.bottom, 4)
+                                    Spacer()
+                                }
+                            }
+                        }
+                        .background(Color.backgroundColor)
+                    ) {
+                        itemList(items: section.items)
+                    }
+                    .onAppear {
+                        if section.id == itemsViewModel.sections[itemsViewModel.sections.count - 1].id {
+                            itemsViewModel.update(for: section.id + 1)
+                        }
+                    }
+                    .onChange(of: itemsViewModel.lastUpdateDate) { date in
+                        if section.id == itemsViewModel.sections[itemsViewModel.sections.count - 1].id {
+                            itemsViewModel.update(for: section.id + 1)
+                        }
+                    }
+                }
+            }
+        }
+        .dataSourceSummaryList()
     }
     
     @ViewBuilder
@@ -280,10 +363,12 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
     }
     
     init(sectionHeaderIsSubList: Bool = false,
+         sectionGroupNameBuilder: ((MSISection<T>) -> String)? = nil,
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
          @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader,
          @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
         _itemsViewModel = StateObject(wrappedValue: MSIListViewModel<T>())
+        self.sectionGroupNameBuilder = sectionGroupNameBuilder
         self.sectionNameBuilder = sectionNameBuilder
         self.sectionViewBuilder = sectionViewBuilder
         self.sectionHeaderIsSubList = sectionHeaderIsSubList

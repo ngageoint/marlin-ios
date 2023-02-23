@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import MapKit
+import CoreLocation
 
 class DataSourcePropertyFilterViewModel: ObservableObject {
     var locationManager: any LocationManagerProtocol
@@ -56,7 +57,11 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
         
     var region: MKCoordinateRegion {
         get {
-            MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: valueLatitude ?? 0.0, longitude: valueLongitude ?? 0.0), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+            let coordinate = CLLocationCoordinate2D(latitude: valueLatitude ?? 0.0, longitude: valueLongitude ?? 0.0)
+            if CLLocationCoordinate2DIsValid(coordinate) {
+                return MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+            }
+            return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
         }
         set {
             DispatchQueue.main.async {
@@ -81,7 +86,11 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
     private var _readableRegion: MKCoordinateRegion?
     var readableRegion: MKCoordinateRegion {
         get {
-            MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: valueLatitude ?? 0.0, longitude: valueLongitude ?? 0.0), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+            let coordinate = CLLocationCoordinate2D(latitude: valueLatitude ?? 0.0, longitude: valueLongitude ?? 0.0)
+            if CLLocationCoordinate2DIsValid(coordinate) {
+                return MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+            }
+            return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
         }
         set {
             _readableRegion = newValue

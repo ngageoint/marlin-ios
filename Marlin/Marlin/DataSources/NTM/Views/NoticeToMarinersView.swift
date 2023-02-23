@@ -46,7 +46,13 @@ struct NoticeToMarinersView: View {
     var body: some View {
         List {
             NavigationLink {
-                MSIListView<NoticeToMariners,AnyView,NoticeToMarinersFullNoticeView>(watchFocusedItem: false, allowUserSort: false, allowUserFilter: false, sectionHeaderIsSubList: true, sectionViewBuilder: { section in
+                MSIListView<NoticeToMariners,AnyView,NoticeToMarinersFullNoticeView>(watchFocusedItem: false, allowUserSort: false, allowUserFilter: false, sectionHeaderIsSubList: true, sectionGroupNameBuilder: { section in
+                    if let sectionInt = Int(section.name) {
+                        return "\(Int(sectionInt / 100))"
+                    } else {
+                        return ""
+                    }
+                }, sectionViewBuilder: { section in
                     AnyView(sectionHeader(section: section))
                 }, content: { section in
                     NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: Int64(section.name)))
