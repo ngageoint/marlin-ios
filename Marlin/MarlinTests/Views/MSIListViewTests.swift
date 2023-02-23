@@ -590,6 +590,85 @@ final class MSIListViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Boarding2")
     }
     
+    func testSectionHeaderSublistWithGroupedSublist() throws {
+        
+        UserDefaults.standard.setSort(Asam.key, sort: [DataSourceSortParameter(property:DataSourceProperty(name: "Hostility", key: #keyPath(Asam.hostility), type: .string), ascending: false, section: true)])
+        UserDefaults.standard.setFilter(Asam.key, filter: [])
+        
+        persistentStore.viewContext.performAndWait {
+            let asam = Asam(context: persistentStore.viewContext)
+            asam.asamDescription = "description"
+            asam.longitude = 1.0
+            asam.latitude = 1.0
+            asam.date = Date()
+            asam.navArea = "XI"
+            asam.reference = "2022-100"
+            asam.subreg = "71"
+            asam.position = "1°00'00\"N \n1°00'00\"E"
+            asam.hostility = "Boarding"
+            asam.victim = "Boat"
+            
+            let asam2 = Asam(context: persistentStore.viewContext)
+            asam2.asamDescription = "description2"
+            asam2.longitude = 2.0
+            asam2.latitude = 2.0
+            asam2.date = Date(timeIntervalSince1970: 100000)
+            asam2.navArea = "XI"
+            asam2.reference = "2022-102"
+            asam2.subreg = "71"
+            asam2.position = "2°00'00\"N \n2°00'00\"E"
+            asam2.hostility = "Boarding2"
+            asam2.victim = "Boat2"
+            
+            try? persistentStore.viewContext.save()
+        }
+        
+        class PassThrough: ObservableObject {
+            
+        }
+        
+        struct Container: View {
+            @ObservedObject var passThrough: PassThrough
+            
+            init(passThrough: PassThrough) {
+                self.passThrough = passThrough
+            }
+            
+            var body: some View {
+                NavigationView {
+                    MSIListView<Asam, EmptyView, EmptyView>(sectionHeaderIsSubList: true, sectionGroupNameBuilder: { section in
+                        "\(section.name) Header"
+                    })
+                }
+            }
+        }
+        let appState = AppState()
+        let passThrough = PassThrough()
+        
+        let container = Container(passThrough: passThrough)
+            .environmentObject(appState)
+        
+        let controller = UIHostingController(rootView: container)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        
+        tester().waitForView(withAccessibilityLabel: Asam.fullDataSourceName)
+        tester().waitForView(withAccessibilityLabel: "Boarding2 Header")
+        tester().waitForView(withAccessibilityLabel: "Boarding2")
+        tester().tapView(withAccessibilityLabel: "Boarding2")
+        tester().waitForView(withAccessibilityLabel: "Boarding2: Boat2")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Boarding")
+        tester().tapView(withAccessibilityLabel: "Back")
+        
+        tester().waitForView(withAccessibilityLabel: "Boarding Header")
+        tester().waitForView(withAccessibilityLabel: "Boarding")
+        tester().tapView(withAccessibilityLabel: "Boarding")
+        tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Boarding2")
+        tester().tapView(withAccessibilityLabel: "Back")
+        tester().wait(forTimeInterval: 5)
+    }
+    
     func testSectionContent() throws {
         
         UserDefaults.standard.setSort(Asam.key, sort: [DataSourceSortParameter(property:DataSourceProperty(name: "Hostility", key: #keyPath(Asam.hostility), type: .string), ascending: false)])
