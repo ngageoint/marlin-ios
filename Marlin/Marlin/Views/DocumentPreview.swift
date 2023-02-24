@@ -20,7 +20,7 @@ extension View {
             Color.clear
                 .onChange(of: previewDate.wrappedValue) { show in
                     if let url = previewUrl.wrappedValue {
-                        DocumentController().presentDocument(url: url)
+                        DocumentController.shared.presentDocument(url: url)
                     }
                 }
         }
@@ -29,37 +29,30 @@ extension View {
 
 class DocumentController: NSObject, ObservableObject, UIDocumentInteractionControllerDelegate { //, QLPreviewControllerDataSource {
 
+    public static let shared = DocumentController()
+    var controller: UIDocumentInteractionController?
+    var presentingViewController: UIViewController?
+    
+    override private init() {
+        
+    }
+    
+    func dismissPreview() {
+        controller?.dismissPreview(animated: true)
+        presentingViewController?.dismiss(animated: true, completion: {
+            print("dismissed")
+        })
+    }
+    
     func presentDocument(url: URL) {
-        let controller = UIDocumentInteractionController()
-        controller.delegate = self
-        controller.url = url
-        controller.presentPreview(animated: true)
+        controller = UIDocumentInteractionController()
+        controller?.delegate = self
+        controller?.url = url
+        controller?.presentPreview(animated: true)
     }
     
     func documentInteractionControllerViewControllerForPreview(_: UIDocumentInteractionController) -> UIViewController {
-        return UIApplication.shared.keyWindow?.rootViewController ?? UIViewController()
+        presentingViewController = UIApplication.shared.keyWindow?.rootViewController ?? UIViewController()
+        return presentingViewController!
     }
-    
-    // The QLPreviewController asks its delegate how many items it has:
-//    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-//        return 1
-//    }
-//
-//    // For each item (see method above), the QLPreviewController asks for
-//    // a QLPreviewItem instance describing that item:
-//    func previewController(
-//        _ controller: QLPreviewController,
-//        previewItemAt index: Int
-//    ) -> QLPreviewItem {
-    
-//        guard let fileURL = Bundle.main.url(forResource: parent.name, withExtension: "usdz") else {
-//            fatalError("Unable to load \(parent.name).reality from main bundle")
-//        }
-//
-//        let item = ARQuickLookPreviewItem(fileAt: fileURL)
-//        item.allowsContentScaling = parent.allowScaling
-//        return item
-//    }
-
-
 }

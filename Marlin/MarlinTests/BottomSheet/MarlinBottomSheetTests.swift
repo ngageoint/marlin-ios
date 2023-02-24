@@ -35,12 +35,15 @@ final class MarlinBottomSheetTests: XCTestCase {
     }
     
     override func tearDown() {
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = nil
     }
     
     private struct TestBottomSheet: View {
         @State var show: Bool = false
         @StateObject var bottomSheetItemList: BottomSheetItemList = BottomSheetItemList()
         var bottomSheetItems: [BottomSheetItem]
+        let dismissBottomSheetPub = NotificationCenter.default.publisher(for: .DismissBottomSheet)
         
         var body: some View {
             HStack {
@@ -52,6 +55,11 @@ final class MarlinBottomSheetTests: XCTestCase {
             .onAppear {
                 self.bottomSheetItemList.bottomSheetItems = bottomSheetItems
                 show.toggle()
+            }
+            .onReceive(dismissBottomSheetPub) { output in
+                if show {
+                    show.toggle()
+                }
             }
         }
     }
@@ -90,6 +98,9 @@ final class MarlinBottomSheetTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "More Details")
         
         waitForExpectations(timeout: 10, handler: nil)
+        
+        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Boarding: Boat")
     }
     
     func testMultipleItems() {
@@ -172,5 +183,8 @@ final class MarlinBottomSheetTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "More Details")
         
         waitForExpectations(timeout: 10, handler: nil)
+        
+        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Boarding: Boat")
     }
 }

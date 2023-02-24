@@ -72,8 +72,6 @@ final class MapImageTests: XCTestCase {
             XCTAssertGreaterThan(images[0].size.height, imageSize.height)
             XCTAssertGreaterThan(images[0].size.width, imageSize.width)
             imageSize = images[0].size
-            print("xxx circle size \(circleSize)")
-            print("xxx image size \(images[1].size)")
         }
     }
 

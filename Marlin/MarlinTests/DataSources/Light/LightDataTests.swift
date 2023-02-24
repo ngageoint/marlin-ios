@@ -618,14 +618,11 @@ final class LightDataTests: XCTestCase {
         waitForExpectations(timeout: 10, handler: nil)
         
         expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
-            print("xxx notification for lights post process")
             let count = try? self.persistentStore.countOfObjects(Light.self)
             if count == 1 {
-                print("xxx count is 1")
                 XCTAssertEqual(count, 1)
                 return true
             } else {
-                print("xxx count is not 1 it is \(count ?? -1)")
                 return false
             }
         }

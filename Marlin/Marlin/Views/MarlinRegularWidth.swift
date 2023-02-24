@@ -16,7 +16,9 @@ struct MarlinRegularWidth: View {
     @State var loadingData: Bool = false
 
     @State var activeRailItem: DataSourceItem? = nil
-    
+    @State var menuOpen: Bool = false
+    @Binding var filterOpen: Bool
+
     @ObservedObject var dataSourceList: DataSourceList
         
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource)
@@ -33,97 +35,152 @@ struct MarlinRegularWidth: View {
     var marlinMap: MarlinMap
     
     var body: some View {
-        HStack(spacing: 0) {
-            DataSourceRail(dataSourceList: dataSourceList, activeRailItem: $activeRailItem)
-                .frame(minWidth: 72, idealWidth: 72, maxWidth: 72)
-                .onAppear {
-                    var found = false
-                    for item in dataSourceList.allTabs {
-                        if "\(item.key)List" == selectedTab {
-                            activeRailItem = item
-                            found = true
+        NavigationView {
+            VStack {
+                ZStack {
+                    HStack(spacing: 0) {
+                        DataSourceRail(dataSourceList: dataSourceList, activeRailItem: $activeRailItem)
+                            .frame(minWidth: 72, idealWidth: 72, maxWidth: 72)
+                            .onAppear {
+                                var found = false
+                                for item in dataSourceList.allTabs {
+                                    if "\(item.key)List" == selectedTab {
+                                        activeRailItem = item
+                                        found = true
+                                    }
+                                }
+                                if !found {
+                                    activeRailItem = dataSourceList.tabs[0]
+                                }
+                            }
+                            .background(Color.surfaceColor)
+                            .padding(.horizontal, 2)
+                            .onChange(of: activeRailItem) { newValue in
+                                if let item = newValue {
+                                    selectedTab = "\(item.key)List"
+                                }
+                            }
+                        
+                        if let activeRailItem = activeRailItem {
+                            NavigationView {
+                                createListView(dataSource: activeRailItem)
+                            }
+                            .navigationViewStyle(.stack)
+                            .frame(minWidth: 256, idealWidth: 360, maxWidth: 360)
+                            .background(Color.backgroundColor)
+                        }
+                        
+                        NavigationView {
+                            ZStack(alignment: .topLeading) {
+                                marlinMap
+                                    .ignoresSafeArea()
+                                    .onAppear {
+                                        Metrics.shared.mapView()
+                                    }
+                                VStack(spacing: 0) {
+                                    // top of map
+                                    DataLoadedNotificationBanner()
+                                    CurrentLocation()
+                                    topButtons()
+                                    Spacer()
+                                    // bottom of map
+                                    bottomButtons()
+                                }
+                                loadingCapsule()
+                                
+                            }
+                            .navigationBarHidden(true)
+                        }.navigationViewStyle(.stack)
+                    }
+                    .onReceive(viewDataSourcePub) { output in
+                        if let dataSource = output.object as? (any DataSource) {
+                            viewData(dataSource)
                         }
                     }
-                    if !found {
-                        activeRailItem = dataSourceList.tabs[0]
-                    }
-                }
-                .background(Color.surfaceColor)
-                .padding(.horizontal, 2)
-                .onChange(of: activeRailItem) { newValue in
-                    if let item = newValue {
-                        selectedTab = "\(item.key)List"
-                    }
-                }
-            
-            if let activeRailItem = activeRailItem {
-                NavigationView {
-                    createListView(dataSource: activeRailItem)
-                }
-                .navigationViewStyle(.stack)
-                .frame(minWidth: 256, idealWidth: 360, maxWidth: 360)
-                .background(Color.backgroundColor)
-            }
-            
-            NavigationView {
-                ZStack(alignment: .topLeading) {
-                    marlinMap
-                        .ignoresSafeArea()
-                        .onAppear {
-                            Metrics.shared.mapView()
+                    .onReceive(switchTabPub) { output in
+                        if let output = output as? String {
+                            let dataSource = dataSourceList.allTabs.first { item in
+                                item.key == output
+                            }
+                            self.activeRailItem = dataSource
                         }
-                    VStack(spacing: 0) {
-                        // top of map
-                        DataLoadedNotificationBanner()
-                        CurrentLocation()
-                        topButtons()
-                        Spacer()
-                        // bottom of map
-                        bottomButtons()
                     }
-                    loadingCapsule()
+                    .onReceive(dataSourceLoadedPub) { output in
+                        print("data source updated pub")
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            let loading = dataSourceList.allTabs.contains { dataSourceItem in
+                                return appState.loadingDataSource[dataSourceItem.key] ?? false
+                                
+                            }
+                            withAnimation {
+                                loadingData = loading
+                            }
+                        }
+                    }
+                    .onReceive(dataSourceLoadingPub) { output in
+                        print("data source loading pub")
+                        DispatchQueue.main.async {
+                            let loading = dataSourceList.allTabs.contains { dataSourceItem in
+                                return appState.loadingDataSource[dataSourceItem.key] ?? false
+                                
+                            }
+                            withAnimation {
+                                loadingData = loading
+                            }
+                        }
+                    }
+                    .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
                     
+                    GeometryReader { geometry in
+                        SideMenu(width: min(geometry.size.width - 56, 512),
+                                 isOpen: self.menuOpen,
+                                 menuClose: self.openMenu,
+                                 dataSourceList: dataSourceList
+                        )
+                        .opacity(self.menuOpen ? 1 : 0)
+                        .animation(.default, value: self.menuOpen)
+                        .onReceive(switchTabPub) { output in
+                            if let output = output as? String {
+                                if output == "settings" {
+                                    selection = "settings"
+                                } else if output == "submitReport" {
+                                    selection = "submitReport"
+                                } else {
+                                    selection = "\(output)List"
+                                }
+                                self.menuOpen = false
+                            }
+                        }
+                    }
                 }
-                .navigationBarHidden(true)
-            }.navigationViewStyle(.stack)
-        }
-        .onReceive(viewDataSourcePub) { output in
-            if let dataSource = output.object as? (any DataSource) {
-                viewData(dataSource)
+                .if(UserDefaults.standard.hamburger) { view in
+                    view.modifier(Hamburger(menuOpen: $menuOpen))
+                }
+                .navigationTitle("Marlin")
+                .navigationBarTitleDisplayMode(.inline)
+                NavigationLink(tag: "settings", selection: $selection) {
+                    AboutView()
+                } label: {
+                    EmptyView()
+                }
+                .isDetailLink(false)
+                .hidden()
+                
+                NavigationLink(tag: "submitReport", selection: $selection) {
+                    SubmitReportView()
+                } label: {
+                    EmptyView()
+                }
+                .isDetailLink(false)
+                .hidden()
             }
         }
-        .onReceive(switchTabPub) { output in
-            if let output = output as? String {
-                let dataSource = dataSourceList.allTabs.first { item in
-                    item.key == output
-                }
-                self.activeRailItem = dataSource
-            }
-        }
-        .onReceive(dataSourceLoadedPub) { output in
-            print("data source updated pub")
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                let loading = dataSourceList.allTabs.contains { dataSourceItem in
-                    return appState.loadingDataSource[dataSourceItem.key] ?? false
-                    
-                }
-                withAnimation {
-                    loadingData = loading
-                }
-            }
-        }
-        .onReceive(dataSourceLoadingPub) { output in
-            print("data source loading pub")
-            DispatchQueue.main.async {
-                let loading = dataSourceList.allTabs.contains { dataSourceItem in
-                    return appState.loadingDataSource[dataSourceItem.key] ?? false
-                    
-                }
-                withAnimation {
-                    loadingData = loading
-                }
-            }
-        }
+        .tint(Color.onPrimaryColor)
+        .navigationViewStyle(.stack)
+    }
+    
+    func openMenu() {
+        self.menuOpen.toggle()
     }
     
     func viewData(_ data: any DataSource) {

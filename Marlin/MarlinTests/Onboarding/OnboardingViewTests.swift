@@ -14,26 +14,6 @@ import CoreLocation
 
 final class OnboardingViewTests: XCTestCase {
     
-    //    var cancellable = Set<AnyCancellable>()
-    //    var persistentStore: PersistentStore = PersistenceController.shared
-    //    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-    //        .receive(on: RunLoop.main)
-    //
-    //    override func setUp(completion: @escaping (Error?) -> Void) {
-    //        UserDefaults.standard.initialDataLoaded = false
-    //        UserDefaults.standard.clearLastSyncTimeSeconds(DFRS.self as any BatchImportable.Type)
-    //        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-    //
-    //        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-    //        persistentStoreLoadedPub
-    //            .removeDuplicates()
-    //            .sink { output in
-    //                completion(nil)
-    //            }
-    //            .store(in: &cancellable)
-    //        persistentStore.reset()
-    //    }
-    
     override func tearDown() {
     }
     

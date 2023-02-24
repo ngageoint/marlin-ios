@@ -29,7 +29,6 @@ struct MarlinView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
-    @State var menuOpen: Bool = false
     @State var selection: String? = nil
     @State var showBottomSheet: Bool = false
     @StateObject var bottomSheetItemList: BottomSheetItemList = BottomSheetItemList()
@@ -50,7 +49,6 @@ struct MarlinView: View {
     @AppStorage("onboardingComplete") var onboardingComplete: Bool = false
 
     let mapItemsTappedPub = NotificationCenter.default.publisher(for: .MapItemsTapped)
-    let mapViewDisappearingPub = NotificationCenter.default.publisher(for: .MapViewDisappearing)
     let dismissBottomSheetPub = NotificationCenter.default.publisher(for: .DismissBottomSheet)
     let snackbarPub = NotificationCenter.default.publisher(for: .SnackbarNotification)
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
@@ -114,58 +112,7 @@ struct MarlinView: View {
                     MarlinCompactWidth(dataSourceList: dataSourceList, filterOpen: $filterOpen, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
                     )
                 } else {
-                    NavigationView {
-                        VStack {
-                            ZStack {
-                                MarlinRegularWidth(dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState))
-                                    .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
-                                
-                                GeometryReader { geometry in
-                                    SideMenu(width: min(geometry.size.width - 56, 512),
-                                             isOpen: self.menuOpen,
-                                             menuClose: self.openMenu,
-                                             dataSourceList: dataSourceList
-                                    )
-                                    .opacity(self.menuOpen ? 1 : 0)
-                                    .animation(.default, value: self.menuOpen)
-                                    .onReceive(switchTabPub) { output in
-                                        if let output = output as? String {
-                                            if output == "settings" {
-                                                selection = "settings"
-                                            } else if output == "submitReport" {
-                                                selection = "submitReport"
-                                            } else {
-                                                selection = "\(output)List"
-                                            }
-                                            self.menuOpen = false
-                                        }
-                                    }
-                                }
-                            }
-                            .if(UserDefaults.standard.hamburger) { view in
-                                view.modifier(Hamburger(menuOpen: $menuOpen))
-                            }
-                            .navigationTitle("Marlin")
-                            .navigationBarTitleDisplayMode(.inline)
-                            NavigationLink(tag: "settings", selection: $selection) {
-                                AboutView()
-                            } label: {
-                                EmptyView()
-                            }
-                            .isDetailLink(false)
-                            .hidden()
-                            
-                            NavigationLink(tag: "submitReport", selection: $selection) {
-                                SubmitReportView()
-                            } label: {
-                                EmptyView()
-                            }
-                            .isDetailLink(false)
-                            .hidden()
-                        }
-                    }
-                    .tint(Color.onPrimaryColor)
-                    .navigationViewStyle(.stack)
+                    MarlinRegularWidth(filterOpen: $filterOpen, dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState))
                 }
             }
         }
@@ -187,6 +134,8 @@ struct MarlinView: View {
                                 .imageScale(.large)
                                 .foregroundColor(Color.onPrimaryColor.opacity(0.87))
                         }
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel("Close Filter")
                     }
                 }
         }
@@ -212,7 +161,6 @@ struct MarlinView: View {
                 return
             }
             var bottomSheetItems: [BottomSheetItem] = []
-            bottomSheetItems += self.handleTappedAnnotations(annotations: notification.annotations)
             bottomSheetItems += self.handleTappedItems(items: notification.items)
             if bottomSheetItems.count == 0 {
                 return
@@ -220,15 +168,8 @@ struct MarlinView: View {
             bottomSheetItemList.bottomSheetItems = bottomSheetItems
             showBottomSheet.toggle()
         }
-        .onReceive(mapViewDisappearingPub) { output in
-            if showBottomSheet {
-                showBottomSheet.toggle()
-            }
-        }
         .onReceive(dismissBottomSheetPub) { output in
-            if showBottomSheet {
-                showBottomSheet.toggle()
-            }
+            showBottomSheet = false
         }
         .onReceive(documentPreviewPub) { output in
             if let url = output as? URL {
@@ -251,48 +192,5 @@ struct MarlinView: View {
         }
         return bottomSheetItems
     }
-    
-    func handleTappedAnnotations(annotations: [Any]?) -> [BottomSheetItem] {
-        var dedup: Set<AnyHashable> = Set()
-        let bottomSheetItems: [BottomSheetItem] = createBottomSheetItems(annotations: annotations, dedup: &dedup)
-        return bottomSheetItems
-    }
-    
-    func createBottomSheetItems(annotations: [Any]?, dedup: inout Set<AnyHashable>) -> [BottomSheetItem] {
-        var items: [BottomSheetItem] = []
-        
-        guard let annotations = annotations else {
-            return items
-        }
-        
-        for annotation in annotations {
-            if let cluster = annotation as? MKClusterAnnotation {
-                items.append(contentsOf: self.createBottomSheetItems(annotations: cluster.memberAnnotations, dedup: &dedup))
-            } else if let asam = annotation as? Asam {
-                if !dedup.contains(asam) {
-                    _ = dedup.insert(asam)
-                    let bottomSheetItem = BottomSheetItem(item: asam, actionDelegate: nil, annotationView: asam.annotationView)
-                    items.append(bottomSheetItem)
-                }
-            } else if let modu = annotation as? Modu {
-                if !dedup.contains(modu) {
-                    _ = dedup.insert(modu)
-                    let bottomSheetItem = BottomSheetItem(item: modu, actionDelegate: nil, annotationView: modu.annotationView)
-                    items.append(bottomSheetItem)
-                }
-            } else if let light = annotation as? Light {
-                if !dedup.contains(light) {
-                    _ = dedup.insert(light)
-                    let bottomSheetItem = BottomSheetItem(item: light, actionDelegate: nil, annotationView: light.annotationView)
-                    items.append(bottomSheetItem)
-                }
-            }
-        }
-        
-        return Array(items)
-    }
-    
-    func openMenu() {
-        self.menuOpen.toggle()
-    }
+
 }

@@ -12,7 +12,6 @@ extension Notification.Name {
     public static let PersistentStoreLoaded = Notification.Name("PersistenStoreLoaded")
     public static let MapItemsTapped = Notification.Name("MapItemsTapped")
     public static let MapAnnotationFocused = Notification.Name("MapAnnotationFocused")
-    public static let MapViewDisappearing = Notification.Name("MapViewDisappearing")
     public static let FocusMapOnItem = Notification.Name("FocusMapOnItem")
     public static let DismissBottomSheet = Notification.Name("DismissBottomSheet")
     public static let BottomSheetDismissed = Notification.Name("BottomSheetDismissed")

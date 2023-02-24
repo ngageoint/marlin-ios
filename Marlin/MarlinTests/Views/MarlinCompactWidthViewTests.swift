@@ -41,6 +41,8 @@ final class MarlinCompactWidthViewTests: XCTestCase {
     }
     
     override func tearDown() {
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = nil
     }
 
     func testLoading() {
