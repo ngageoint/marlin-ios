@@ -130,7 +130,7 @@ struct RadioBeaconProperties: Decodable {
         self.stationRemark = try? values.decode(String.self, forKey: .stationRemark)
         
         if let position = self.position {
-            let coordinate = LightsProperties.parsePosition(position: position)
+            let coordinate = RadioBeaconProperties.parsePosition(position: position)
             self.longitude = coordinate.longitude
             self.latitude = coordinate.latitude
         } else {
