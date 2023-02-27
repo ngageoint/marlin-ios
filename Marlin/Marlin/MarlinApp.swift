@@ -25,9 +25,7 @@ struct AppLauncher {
     }
 }
 
-struct TestApp: App {
-//    let persistenceController = PersistenceController.shared
-    
+struct TestApp: App {    
     init() {
         UserDefaults.standard.set(false, forKey: "metricsEnabled")
         print("doing the tests")

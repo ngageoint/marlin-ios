@@ -21,7 +21,7 @@ struct NoticeToMarinersSummaryView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("\(noticeToMariners.title ?? "") \(noticeToMariners.isFullPublication ? (noticeToMariners.fileExtension ?? "") : "")")
+            Text("\(noticeToMariners.title ?? "")\(noticeToMariners.isFullPublication ? (" \(noticeToMariners.fileExtension ?? "")") : "")")
                 .primary()
             Text("File Size: \(bcf.string(fromByteCount: noticeToMariners.fileSize))")
                 .secondary()

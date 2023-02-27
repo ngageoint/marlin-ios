@@ -19,12 +19,14 @@ struct RailItem: View {
                     .frame(width: 24, height: 24, alignment: .center)
             } else if let systemImageName = systemImageName {
                 Image(systemName: systemImageName)
+                    .frame(width: 24, height: 24, alignment: .center)
             }
             if let itemText = itemText {
                 Text(itemText)
                     .font(Font.caption)
             }
         }
+        .contentShape(Rectangle())
         .frame(minWidth: 72, idealWidth: 72, maxWidth: 72, minHeight: 72, idealHeight: 72, maxHeight: 72)
     }
 }

@@ -36,6 +36,8 @@ struct AsyncImage<Placeholder: View>: View {
         Group {
             if loader.image != nil {
                 image(loader.image!)
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel(name)
             } else {
                 placeholder
             }

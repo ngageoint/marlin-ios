@@ -12,6 +12,21 @@ import CoreLocation
 @testable import Marlin
 
 class TestHelpers {
+    let scheme = MarlinScheme()
+    
+    public static func createGradientImage(startColor: UIColor, endColor: UIColor, size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
+        let rect = CGRect(origin: .zero, size: size)
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = rect
+        gradientLayer.colors = [startColor.cgColor, endColor.cgColor]
+        
+        UIGraphicsBeginImageContext(gradientLayer.bounds.size)
+        gradientLayer.render(in: UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        guard let cgImage = image?.cgImage else { return UIImage() }
+        return UIImage(cgImage: cgImage)
+    }
     
     public static func getKeyWindowVisible() -> UIWindow {
         guard let window = UIApplication.shared.connectedScenes.map({ $0 as? UIWindowScene }).compactMap({ $0 }).first?.windows.first else {

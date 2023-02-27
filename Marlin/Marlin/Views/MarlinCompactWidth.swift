@@ -235,7 +235,7 @@ struct MarlinCompactWidth: View {
                 .fixedSize()
                 .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini))
                 .accessibilityElement(children: .contain)
-                .accessibilityLabel("Map Settings")
+                .accessibilityLabel("Map Settings Button")
             }
             .padding(.trailing, 8)
             .padding(.top, 16)

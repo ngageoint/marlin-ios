@@ -165,6 +165,9 @@
 		F75F81E2295F70A50062A708 /* BooleanFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81E1295F70A50062A708 /* BooleanFilterTests.swift */; };
 		F75F81E42960B4D90062A708 /* StringFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81E32960B4D90062A708 /* StringFilterTests.swift */; };
 		F75F81E729623AAA0062A708 /* MarlinBottomSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81E629623AAA0062A708 /* MarlinBottomSheetTests.swift */; };
+		F76052BB29A94FA800F13260 /* MarlinRegularWidthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76052BA29A94FA800F13260 /* MarlinRegularWidthTests.swift */; };
+		F76052BD29A96F5A00F13260 /* NoticeToMarinersFullNoticeViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76052BC29A96F5A00F13260 /* NoticeToMarinersFullNoticeViewTests.swift */; };
+		F76052BF29AD16AB00F13260 /* NoticeToMarinersSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76052BE29AD16AB00F13260 /* NoticeToMarinersSummaryViewTests.swift */; };
 		F76B4A7228EB8AB20012BF4F /* MSIListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76B4A7128EB8AB20012BF4F /* MSIListViewModel.swift */; };
 		F79168FE28B56031004FFEBA /* PortMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79168FD28B56031004FFEBA /* PortMap.swift */; };
 		F79C994229955262004D9E82 /* DataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79C994129955262004D9E82 /* DataLoadOperation.swift */; };
@@ -242,7 +245,6 @@
 		F7D8D2EA2922A35F00EA2296 /* NoticeToMariners+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8D2E92922A35F00EA2296 /* NoticeToMariners+CoreDataClass.swift */; };
 		F7D8FA142922ABF500E7D0A1 /* NoticeToMariners+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA132922ABF500E7D0A1 /* NoticeToMariners+Decodable.swift */; };
 		F7D8FA162922BA3B00E7D0A1 /* NoticeToMariners+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA152922BA3B00E7D0A1 /* NoticeToMariners+DataSourceViewBuilder.swift */; };
-		F7D8FA182922BAE100E7D0A1 /* NoticeToMarinersDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA172922BAE100E7D0A1 /* NoticeToMarinersDetailView.swift */; };
 		F7D8FA1A2922BB0400E7D0A1 /* NoticeToMarinersSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA192922BB0400E7D0A1 /* NoticeToMarinersSummaryView.swift */; };
 		F7D8FA1D2922F7F300E7D0A1 /* NoticeToMarinersDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA1C2922F7F300E7D0A1 /* NoticeToMarinersDataTests.swift */; };
 		F7D8FA1F2922F8D700E7D0A1 /* ntmMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F7D8FA1E2922F8D700E7D0A1 /* ntmMockData.json */; };
@@ -531,6 +533,9 @@
 		F75F81E1295F70A50062A708 /* BooleanFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooleanFilterTests.swift; sourceTree = "<group>"; };
 		F75F81E32960B4D90062A708 /* StringFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringFilterTests.swift; sourceTree = "<group>"; };
 		F75F81E629623AAA0062A708 /* MarlinBottomSheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinBottomSheetTests.swift; sourceTree = "<group>"; };
+		F76052BA29A94FA800F13260 /* MarlinRegularWidthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinRegularWidthTests.swift; sourceTree = "<group>"; };
+		F76052BC29A96F5A00F13260 /* NoticeToMarinersFullNoticeViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersFullNoticeViewTests.swift; sourceTree = "<group>"; };
+		F76052BE29AD16AB00F13260 /* NoticeToMarinersSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersSummaryViewTests.swift; sourceTree = "<group>"; };
 		F76B4A7128EB8AB20012BF4F /* MSIListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIListViewModel.swift; sourceTree = "<group>"; };
 		F79168FD28B56031004FFEBA /* PortMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortMap.swift; sourceTree = "<group>"; };
 		F79C994129955262004D9E82 /* DataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadOperation.swift; sourceTree = "<group>"; };
@@ -611,7 +616,6 @@
 		F7D8D2E92922A35F00EA2296 /* NoticeToMariners+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoticeToMariners+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7D8FA132922ABF500E7D0A1 /* NoticeToMariners+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoticeToMariners+Decodable.swift"; sourceTree = "<group>"; };
 		F7D8FA152922BA3B00E7D0A1 /* NoticeToMariners+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoticeToMariners+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
-		F7D8FA172922BAE100E7D0A1 /* NoticeToMarinersDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersDetailView.swift; sourceTree = "<group>"; };
 		F7D8FA192922BB0400E7D0A1 /* NoticeToMarinersSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersSummaryView.swift; sourceTree = "<group>"; };
 		F7D8FA1C2922F7F300E7D0A1 /* NoticeToMarinersDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersDataTests.swift; sourceTree = "<group>"; };
 		F7D8FA1E2922F8D700E7D0A1 /* ntmMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ntmMockData.json; sourceTree = "<group>"; };
@@ -1082,7 +1086,6 @@
 				F72EAADC291D955000AC6026 /* ChartCorrectionListView.swift */,
 				F72EAADE291EECF400AC6026 /* NTMActionBar.swift */,
 				F72EAAE0291F040D00AC6026 /* NoticeToMarinersView.swift */,
-				F7D8FA172922BAE100E7D0A1 /* NoticeToMarinersDetailView.swift */,
 				F7D8FA192922BB0400E7D0A1 /* NoticeToMarinersSummaryView.swift */,
 				F7D8FA202923F99C00E7D0A1 /* NoticeToMarinersFullNoticeView.swift */,
 				F7D8FA2B2925756F00E7D0A1 /* ChartCorrectionQuery.swift */,
@@ -1150,6 +1153,7 @@
 				F75324CA298BFFED005C509F /* MSIListViewTests.swift */,
 				F70F501C2993EA470062E555 /* DataLoadedNotificationBannerTests.swift */,
 				F7A42E7429A0316700635E16 /* MarlinViewTests.swift */,
+				F76052BA29A94FA800F13260 /* MarlinRegularWidthTests.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1387,6 +1391,8 @@
 				F7D8FA782941005E00E7D0A1 /* ChartCorrectionListViewModelTests.swift */,
 				F7D8FA7E294240B400E7D0A1 /* NoticeToMarinersFullNoticeViewModelTests.swift */,
 				F72281D7296E232700218FC0 /* ChartCorrectionQueryTests.swift */,
+				F76052BC29A96F5A00F13260 /* NoticeToMarinersFullNoticeViewTests.swift */,
+				F76052BE29AD16AB00F13260 /* NoticeToMarinersSummaryViewTests.swift */,
 			);
 			path = NoticeToMariners;
 			sourceTree = "<group>";
@@ -1988,6 +1994,7 @@
 				F75F81DA295DE4640062A708 /* AboutViewTests.swift in Sources */,
 				F73ABC91295250D50085EDC5 /* SortViewModelTests.swift in Sources */,
 				F75324B829807F04005C509F /* SubmitReportViewTests.swift in Sources */,
+				F76052BF29AD16AB00F13260 /* NoticeToMarinersSummaryViewTests.swift in Sources */,
 				F7ABB60E299D883400BAD868 /* DateFilterTests.swift in Sources */,
 				F72281DA296F27D000218FC0 /* CurrentLocationTests.swift in Sources */,
 				F7C23E182911C7D50002A7DF /* ASAMDataTests.swift in Sources */,
@@ -2023,10 +2030,12 @@
 				F75324CB298BFFED005C509F /* MSIListViewTests.swift in Sources */,
 				F75F81E42960B4D90062A708 /* StringFilterTests.swift in Sources */,
 				F7ABB604299C1ECE00BAD868 /* NavigationalWarningNavAreaListViewTests.swift in Sources */,
+				F76052BD29A96F5A00F13260 /* NoticeToMarinersFullNoticeViewTests.swift in Sources */,
 				F70F501D2993EA470062E555 /* DataLoadedNotificationBannerTests.swift in Sources */,
 				F72D88F82971FF8000D022FB /* HamburgerTests.swift in Sources */,
 				F7D8FA64293AB5B000E7D0A1 /* MockDataSource.swift in Sources */,
 				F72D890A2979E7FC00D022FB /* RadioBeaconDetailViewTests.swift in Sources */,
+				F76052BB29A94FA800F13260 /* MarlinRegularWidthTests.swift in Sources */,
 				F7D8FA342936C08200E7D0A1 /* MapImageTests.swift in Sources */,
 				F7ABB610299D8C2100BAD868 /* LocationFilterTests.swift in Sources */,
 				F7ABB606299D1EE900BAD868 /* NavigationalWarningListViewTests.swift in Sources */,
@@ -2083,7 +2092,6 @@
 				F7ADDCEE28902D5300137D95 /* AnnotationWithView.swift in Sources */,
 				F7FFB2DE28D61BE300C31AA3 /* DFRS+MapImage.swift in Sources */,
 				F707BA7728760EE7006A94C4 /* Light+CoreDataClass.swift in Sources */,
-				F7D8FA182922BAE100E7D0A1 /* NoticeToMarinersDetailView.swift in Sources */,
 				F72EAAE1291F040D00AC6026 /* NoticeToMarinersView.swift in Sources */,
 				F7F59799285D166700F9B32E /* ModuDetailView.swift in Sources */,
 				F72EAADD291D955000AC6026 /* ChartCorrectionListView.swift in Sources */,

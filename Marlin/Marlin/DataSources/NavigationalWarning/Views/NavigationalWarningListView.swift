@@ -38,7 +38,7 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
                 }
             }
         }
-        .navigationTitle("Navigational Warnings")
+        .navigationTitle(NavigationalWarning.fullDataSourceName)
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.surfaceColor)
         .onChange(of: locationManager.lastLocation) { lastLocation in

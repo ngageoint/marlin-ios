@@ -13,7 +13,6 @@ struct MarlinRegularWidth: View {
 
     @AppStorage("selectedTab") var selectedTab: String = "map"
     @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = false
-    @State var loadingData: Bool = false
 
     @State var activeRailItem: DataSourceItem? = nil
     @State var menuOpen: Bool = false
@@ -25,8 +24,6 @@ struct MarlinRegularWidth: View {
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
     }
-    let dataSourceLoadedPub = NotificationCenter.default.publisher(for: .DataSourceLoaded)
-    let dataSourceLoadingPub = NotificationCenter.default.publisher(for: .DataSourceLoading)
     let mapFocus = NotificationCenter.default.publisher(for: .MapRequestFocus)
     
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
@@ -60,6 +57,8 @@ struct MarlinRegularWidth: View {
                                     selectedTab = "\(item.key)List"
                                 }
                             }
+                            .accessibilityElement(children: .contain)
+                            .accessibilityLabel("Data Source Rail")
                         
                         if let activeRailItem = activeRailItem {
                             NavigationView {
@@ -73,6 +72,8 @@ struct MarlinRegularWidth: View {
                         NavigationView {
                             ZStack(alignment: .topLeading) {
                                 marlinMap
+                                    .accessibilityElement(children: .contain)
+                                    .accessibilityLabel("Marlin Map")
                                     .ignoresSafeArea()
                                     .onAppear {
                                         Metrics.shared.mapView()
@@ -103,30 +104,6 @@ struct MarlinRegularWidth: View {
                                 item.key == output
                             }
                             self.activeRailItem = dataSource
-                        }
-                    }
-                    .onReceive(dataSourceLoadedPub) { output in
-                        print("data source updated pub")
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                            let loading = dataSourceList.allTabs.contains { dataSourceItem in
-                                return appState.loadingDataSource[dataSourceItem.key] ?? false
-                                
-                            }
-                            withAnimation {
-                                loadingData = loading
-                            }
-                        }
-                    }
-                    .onReceive(dataSourceLoadingPub) { output in
-                        print("data source loading pub")
-                        DispatchQueue.main.async {
-                            let loading = dataSourceList.allTabs.contains { dataSourceItem in
-                                return appState.loadingDataSource[dataSourceItem.key] ?? false
-                                
-                            }
-                            withAnimation {
-                                loadingData = loading
-                            }
                         }
                     }
                     .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
@@ -220,27 +197,31 @@ struct MarlinRegularWidth: View {
     
     @ViewBuilder
     func createListView(dataSource: DataSourceItem) -> some View {
-        if dataSource.key == Asam.key {
-            MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-        } else if dataSource.key == Modu.key {
-            MSIListView<Modu, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-        } else if dataSource.key == Light.key {
-            MSIListView<Light, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-        } else if dataSource.key == NavigationalWarning.key {
-            NavigationalWarningListView()
-        } else if dataSource.key == Port.key {
-            MSIListView<Port, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-        } else if dataSource.key == RadioBeacon.key {
-            MSIListView<RadioBeacon, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-        } else if dataSource.key == DifferentialGPSStation.key {
-            MSIListView<DifferentialGPSStation, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-        } else if dataSource.key == DFRS.key {
-            MSIListView<DFRS, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-        } else if dataSource.key == ElectronicPublication.key {
-            ElectronicPublicationsList()
-        } else if dataSource.key == NoticeToMariners.key {
-            NoticeToMarinersView()
+        Group {
+            if dataSource.key == Asam.key {
+                MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+            } else if dataSource.key == Modu.key {
+                MSIListView<Modu, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+            } else if dataSource.key == Light.key {
+                MSIListView<Light, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+            } else if dataSource.key == NavigationalWarning.key {
+                NavigationalWarningListView()
+            } else if dataSource.key == Port.key {
+                MSIListView<Port, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+            } else if dataSource.key == RadioBeacon.key {
+                MSIListView<RadioBeacon, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+            } else if dataSource.key == DifferentialGPSStation.key {
+                MSIListView<DifferentialGPSStation, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+            } else if dataSource.key == DFRS.key {
+                MSIListView<DFRS, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+            } else if dataSource.key == ElectronicPublication.key {
+                ElectronicPublicationsList()
+            } else if dataSource.key == NoticeToMariners.key {
+                NoticeToMarinersView()
+            }
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("\(dataSource.dataSource.fullDataSourceName) List")
     }
     
     @ViewBuilder
@@ -268,6 +249,8 @@ struct MarlinRegularWidth: View {
                 .isDetailLink(false)
                 .fixedSize()
                 .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini))
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Map Settings Button")
             }
             .padding(.trailing, 8)
             .padding(.top, 16)
@@ -292,6 +275,8 @@ struct MarlinRegularWidth: View {
                             }
                         }
                         .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: dataSource.showOnMap ? Color.white : Color.disabledColor, backgroundColor: dataSource.showOnMap ? Color(uiColor: dataSource.dataSource.color) : Color.disabledBackground))
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel("\(dataSource.dataSource.key) Map Toggle")
                     }
                 }
             }
@@ -303,6 +288,8 @@ struct MarlinRegularWidth: View {
             VStack(alignment: .trailing, spacing: 16) {
                 UserTrackingButton(mapState: marlinMap.mapState)
                     .fixedSize()
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("User Tracking")
             }
             .padding(.trailing, 8)
             .padding(.bottom, 30)
