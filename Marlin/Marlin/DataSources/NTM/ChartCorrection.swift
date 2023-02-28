@@ -29,9 +29,17 @@ struct ChartCorrection: Decodable, Hashable, Identifiable, DataSource {
         DataSourceProperty(name: "Location", key: "location", type: .location, requiredInFilter: true)
     ]
     static var defaultSort: [DataSourceSortParameter] = []
-    static var defaultFilter: [DataSourceFilterParameter] = [
-        DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .nearMe, valueInt: 2500)
-    ]
+    static var defaultFilter: [DataSourceFilterParameter] {
+        if LocationManager.shared.lastLocation != nil {
+            return [
+                DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .nearMe, valueInt: 2500)
+            ]
+        } else {
+            return [
+                DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 2500, valueLatitude: 0.0, valueLongitude: 0.0)
+            ]
+        }
+    }
     static var isMappable: Bool = false
     static var dataSourceName: String = "Chart Corrections"
     static var fullDataSourceName: String = "Chart Corrections"

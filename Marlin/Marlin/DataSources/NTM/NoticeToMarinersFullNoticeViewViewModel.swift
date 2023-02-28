@@ -78,7 +78,6 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
             return
         }
         loadingGraphics = true
-        print("url is \(url)")
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
         
         MSI.shared.session.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: nil, interceptor: nil, requestModifier: .none)
