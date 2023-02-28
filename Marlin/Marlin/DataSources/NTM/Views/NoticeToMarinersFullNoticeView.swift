@@ -55,7 +55,7 @@ struct NoticeToMarinersFullNoticeView: View {
                                     image: { Image(uiImage: $0).resizable() }
                                 )
                                 .aspectRatio(contentMode: .fit)
-                                Text("Chart \(item.chartNumber ?? "")").overline()
+                                Text("\(item.graphicType ?? "Chart") \(item.chartNumber ?? "")").overline()
                             }
                         }
                     }

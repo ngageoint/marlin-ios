@@ -26,7 +26,7 @@ struct NoticeToMarinersSummaryView: View {
             Text("File Size: \(bcf.string(fromByteCount: noticeToMariners.fileSize))")
                 .secondary()
             if let uploadTime = noticeToMariners.uploadTime {
-                Text("Upload Time: \(uploadTime.formatted())")
+                Text("Upload Time: \(uploadTime.formatted(date: .complete, time: .omitted))")
                     .overline()
             }
             HStack(spacing: 8) {

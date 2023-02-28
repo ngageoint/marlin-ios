@@ -53,9 +53,10 @@ struct ChartCorrectionList: View {
             .onAppear(perform: viewModel.loadData)
             .tint(Color.primaryColorVariant)
             if viewModel.loading {
-                HStack(spacing: 8) {
+                VStack(spacing: 8) {
                     ProgressView()
-                    Text("Querying...")
+                        .tint(Color.primaryColorVariant)
+                    Text("Loading Chart Corrections...")
                         .primary()
                 }
             }

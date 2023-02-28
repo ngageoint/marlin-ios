@@ -75,7 +75,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Front Cover")
         tester().waitForView(withAccessibilityLabel: "File Size: 63 KB")
-        tester().waitForView(withAccessibilityLabel: "Upload Time: \(newItem.uploadTime!.formatted())")
+        tester().waitForView(withAccessibilityLabel: "Upload Time: \(newItem.uploadTime!.formatted(date: .complete, time: .omitted))")
     }
     
     func testReDownloadFullPublication() {
@@ -116,7 +116,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Front Cover pdf")
         tester().waitForView(withAccessibilityLabel: "File Size: 63 KB")
-        tester().waitForView(withAccessibilityLabel: "Upload Time: \(newItem.uploadTime!.formatted())")
+        tester().waitForView(withAccessibilityLabel: "Upload Time: \(newItem.uploadTime!.formatted(date: .complete, time: .omitted))")
         
         let config = URLSessionConfiguration.default
         DownloadManager.shared.sessionConfig = config
@@ -190,7 +190,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Front Cover pdf")
         tester().waitForView(withAccessibilityLabel: "File Size: 63 KB")
-        tester().waitForView(withAccessibilityLabel: "Upload Time: \(newItem.uploadTime!.formatted())")
+        tester().waitForView(withAccessibilityLabel: "Upload Time: \(newItem.uploadTime!.formatted(date: .complete, time: .omitted))")
         
         let config = URLSessionConfiguration.default
         DownloadManager.shared.sessionConfig = config
