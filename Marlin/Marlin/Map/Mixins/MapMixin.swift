@@ -12,6 +12,7 @@ import SwiftUI
 
 protocol MapMixin: AnyObject {
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView)
+    func updateMixin(mapView: MKMapView, mapState: MapState)
     func renderer(overlay: MKOverlay) -> MKOverlayRenderer?
     func traitCollectionUpdated(previous: UITraitCollection?)
     func regionDidChange(mapView: MKMapView, animated: Bool)
@@ -20,6 +21,10 @@ protocol MapMixin: AnyObject {
 }
 
 extension MapMixin {
+    
+    func updateMixin(mapView: MKMapView, mapState: MapState) {
+        print("xxx update mixin no op")
+    }
     
     func renderer(overlay: MKOverlay) -> MKOverlayRenderer? {
         return standardRenderer(overlay: overlay)

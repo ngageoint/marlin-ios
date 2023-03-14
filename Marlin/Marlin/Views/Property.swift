@@ -17,18 +17,19 @@ struct Property: View {
     
     var property: String
     var value: String?
+    var valueView: AnyView?
+    
     var body: some View {
         if let value = value, value != "" {
             VStack(alignment: .leading, spacing: 4) {
                 Text(property).font(Font.body2).foregroundColor(Color.onSurfaceColor.opacity(0.60))
                 Text(value).font(Font.subheadline).foregroundColor(Color.onSurfaceColor.opacity(0.87))
             }.frame(maxWidth: .infinity, alignment: .leading)
+        } else if let valueView = valueView {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(property).font(Font.body2).foregroundColor(Color.onSurfaceColor.opacity(0.60))
+                valueView
+            }.frame(maxWidth: .infinity, alignment: .leading)
         }
-    }
-}
-
-struct Property_Previews: PreviewProvider {
-    static var previews: some View {
-        Property(property: "Name", value: "Value")
     }
 }

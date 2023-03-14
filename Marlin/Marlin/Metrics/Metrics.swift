@@ -34,6 +34,11 @@ class Metrics {
         MatomoTracker.shared?.track(view:["app", "map", "settings"])
     }
     
+    func mapLayersView() {
+        NSLog("Record Map Settings View")
+        MatomoTracker.shared?.track(view:["app", "map", "settings", "layers"])
+    }
+    
     func sideNavigationView() {
         NSLog("Record Side Navigation View")
         MatomoTracker.shared?.track(view:["app", "sideNavigation"])

@@ -22,13 +22,13 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
     var objects: [T]?
     var overlay: PredicateTileOverlay<T>?
     
-    var showKeyPath: ReferenceWritableKeyPath<MapState, Bool?>?
     var userDefaultsShowPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
     var sortDescriptors: [NSSortDescriptor] = []
     
     var focusNotificationName: Notification.Name?
     
     var imageCache: Kingfisher.ImageCache
+    var show: Bool = false
     
     public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
         self.showAsTiles = showAsTiles
@@ -37,7 +37,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         imageCache = T.imageCache
     }
     
-    func getFetchRequest(mapState: MapState) -> NSFetchRequest<NSManagedObject>? {
+    func getFetchRequest(show: Bool) -> NSFetchRequest<NSManagedObject>? {
         guard let M = T.self as? any BatchImportable.Type, let D = T.self as? any DataSource.Type else {
             return nil
         }
@@ -48,7 +48,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         
         if let presetPredicate = fetchPredicate {
             filterPredicates.append(presetPredicate)
-        } else if let showKeyPath = showKeyPath, let showItems = mapState[keyPath: showKeyPath], showItems == true {
+        } else if show == true {
             let filters = UserDefaults.standard.filter(D.self)
             for filter in filters {
                 if let predicate = filter.toPredicate() {
@@ -108,21 +108,8 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
                 print("Show \(T.self): \(show)")
             })
             .sink() { [weak self] show in
-                guard let M = T.self as? any DataSource.Type else {
-                    return
-                }
-                if let showKeyPath = self?.showKeyPath {
-                    DispatchQueue.main.async {
-                        marlinMap.mapState[keyPath: showKeyPath] = show
-                    }
-                }
-                if let showAsTiles = self?.showAsTiles, showAsTiles {
-                    self?.refreshOverlay(marlinMap: marlinMap)
-                } else {
-                    DispatchQueue.main.async {
-                        marlinMap.mapState.fetchRequests[M.key] = self?.getFetchRequest(mapState: marlinMap.mapState) as? NSFetchRequest<NSFetchRequestResult>
-                    }
-                }
+                self?.show = show
+                self?.refreshOverlay(marlinMap: marlinMap)
             }
             .store(in: &cancellable)
         
@@ -134,23 +121,31 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
             .store(in: &cancellable)
     }
     
+    func updateMixin(mapView: MKMapView, mapState: MapState) {
+        if let selfOverlay = self.overlay {
+            if let newOverlay = mapState.mixinStates["FetchRequestMixin\(T.key)"] as? PredicateTileOverlay<T> {
+                if selfOverlay != newOverlay {
+                    mapView.removeOverlay(selfOverlay)
+                    mapView.addOverlay(newOverlay)
+                    self.overlay = newOverlay
+                }
+            } else {
+                mapView.removeOverlay(selfOverlay)
+            }
+        } else if let newOverlay = mapState.mixinStates["FetchRequestMixin\(T.key)"] as? PredicateTileOverlay<T> {
+            mapView.addOverlay(newOverlay)
+            self.overlay = newOverlay
+        }
+    }
+    
     func refreshOverlay(marlinMap: MarlinMap) {
         DispatchQueue.main.async {
-            if let overlay = self.overlay {
-                marlinMap.mapState.overlays.removeAll { mapOverlay in
-                    if let mapOverlay = mapOverlay as? PredicateTileOverlay<T> {
-                        return mapOverlay == overlay
-                    }
-                    return false
-                }
-            }
-            let newFetchRequest = self.getFetchRequest(mapState: marlinMap.mapState)
+            let newFetchRequest = self.getFetchRequest(show: self.show)
             let newOverlay = PredicateTileOverlay<T>(predicate: newFetchRequest?.predicate, sortDescriptors: newFetchRequest?.sortDescriptors, objects: self.objects, imageCache: self.imageCache)
             
             newOverlay.tileSize = CGSize(width: 512, height: 512)
             newOverlay.minimumZ = self.minZoom
-            self.overlay = newOverlay
-            marlinMap.mapState.overlays.append(newOverlay)
+            marlinMap.mapState.mixinStates["FetchRequestMixin\(T.key)"] = newOverlay
         }
     }
     
@@ -173,7 +168,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         if mapView.zoomLevel < minZoom {
             return nil
         }
-        guard let mapState = mapState, let showKeyPath = showKeyPath, let showItems = mapState[keyPath: showKeyPath], showItems == true else {
+        guard show == true else {
             return nil
         }
         let screenPercentage = 0.03
@@ -183,7 +178,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         let minLat = location.latitude - tolerance
         let maxLat = location.latitude + tolerance
         
-        guard let fetchRequest = self.getFetchRequest(mapState: mapState) else {
+        guard let fetchRequest = self.getFetchRequest(show: self.show) else {
             return nil
         }
         var predicates: [NSPredicate] = []

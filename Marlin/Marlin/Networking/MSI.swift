@@ -43,6 +43,13 @@ public class MSI {
         return Session(configuration: configuration, serverTrustManager: manager)
     }()
     
+    lazy var capabilitiesSession: Session = {
+        configuration.httpMaximumConnectionsPerHost = 4
+        configuration.timeoutIntervalForRequest = 120
+        let m = ServerTrustManager(allHostsMustBeEvaluated: false, evaluators: [:])
+        return Session(configuration: configuration, serverTrustManager: m)
+    }()
+    
     let masterDataList: [any BatchImportable.Type] = [Asam.self, Modu.self, NavigationalWarning.self, Light.self, Port.self, RadioBeacon.self, DifferentialGPSStation.self, DFRS.self, DFRSArea.self, ElectronicPublication.self, NoticeToMariners.self]
     
     lazy var initialLoadQueue: OperationQueue = {

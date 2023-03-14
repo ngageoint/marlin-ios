@@ -14,9 +14,10 @@ struct MapSettings: View {
     @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
     @AppStorage("flyoverMapsEnabled") var flyoverMapsEnabled: Bool = false
     @AppStorage("showCurrentLocation") var showCurrentLocation: Bool = false
+    
     var body: some View {
         List {
-            Section("Map") {
+            Section("Map Base Layer") {
                 HStack(spacing: 4) {
                     Text("Standard").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
@@ -158,6 +159,23 @@ struct MapSettings: View {
                 .accessibilityLabel("Toggle GARS Grid")
                 
             }
+            
+            Section("Layers") {
+                NavigationLink {
+                    MapLayersView()
+                } label: {
+                    Image(systemName: "square.3.layers.3d")
+                        .tint(Color.onSurfaceColor)
+                        .opacity(0.60)
+                    Text("Additional Map Layers")
+                        .font(Font.body1)
+                        .foregroundColor(Color.onSurfaceColor.opacity(0.87))
+                }
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Additional Map Layers")
+                
+            }
+            
             Section("Data Source Settings") {
                 NavigationLink {
                     LightSettingsView()

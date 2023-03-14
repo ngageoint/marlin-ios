@@ -17,7 +17,6 @@ class LightMap<T: LightProtocol & MapImage>: FetchRequestMap<T> {
     
     override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
         super.init(fetchPredicate: fetchPredicate, objects: objects, showAsTiles: showAsTiles)
-        self.showKeyPath = \MapState.showLights
         self.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
         self.focusNotificationName = .FocusLight
         self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMaplight)

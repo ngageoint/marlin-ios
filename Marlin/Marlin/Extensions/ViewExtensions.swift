@@ -46,4 +46,11 @@ extension View {
             .foregroundColor(Color.primaryColorVariant)
             .padding(10)
     }
+    
+    func underlineTextFieldWithLabel() -> some View {
+        self
+            .overlay(Rectangle().frame(height: 2).padding(.top, 35))
+            .foregroundColor(Color.primaryColorVariant)
+            .padding(.bottom, 10)
+    }
 }

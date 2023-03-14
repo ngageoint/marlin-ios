@@ -44,7 +44,7 @@ class GeoPackageMap: NSObject, MapMixin {
         }
     }
     
-    func updateMixin(mapView: MKMapView, marlinMap: MarlinMap) {
+    func updateMixin(mapView: MKMapView, mapState: MapState) {
     }
     
     func items(at location: CLLocationCoordinate2D) -> [Any]? {
