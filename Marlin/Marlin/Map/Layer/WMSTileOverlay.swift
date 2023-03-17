@@ -13,10 +13,10 @@ import Combine
 class WMSTileOverlay: MKTileOverlay {
     var cancellable = Set<AnyCancellable>()
 
-    var layer: NewMapLayerViewModel?
+    var layer: MapLayerViewModel?
     var mapLayer: MapLayer?
     
-    init(layer: NewMapLayerViewModel) {
+    init(layer: MapLayerViewModel) {
         self.layer = layer
         super.init(urlTemplate: layer.urlTemplate)
     }

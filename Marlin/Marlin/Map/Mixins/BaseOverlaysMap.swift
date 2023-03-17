@@ -12,7 +12,7 @@ import CoreData
 import Combine
 
 class BaseOverlaysMap: NSObject, MapMixin {
-    var viewModel: NewMapLayerViewModel?
+    var viewModel: MapLayerViewModel?
     var overlay: MKTileOverlay?
     
     var mapState: MapState?
@@ -20,7 +20,7 @@ class BaseOverlaysMap: NSObject, MapMixin {
     var lastChange: Date?
     var cancellable = Set<AnyCancellable>()
     
-    init(viewModel: NewMapLayerViewModel? = nil) {
+    init(viewModel: MapLayerViewModel? = nil) {
         self.viewModel = viewModel
     }
 

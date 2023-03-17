@@ -11,7 +11,7 @@ import CoreData
 
 class MapLayer: NSManagedObject {
     
-    static func createFrom(viewModel: NewMapLayerViewModel, context: NSManagedObjectContext) -> MapLayer {
+    static func createFrom(viewModel: MapLayerViewModel, context: NSManagedObjectContext) -> MapLayer {
         let layer = MapLayer(context: context)
         layer.name = viewModel.name
         layer.url = viewModel.urlTemplate

@@ -62,7 +62,7 @@ struct MapLayersView: View {
                 })
                 .fullScreenCover(isPresented: $isMapLayersPresented) {
                     NavigationView {
-                        NewMapLayerView(isPresented: $isMapLayersPresented)
+                        MapLayerView(isPresented: $isMapLayersPresented)
                     }
                 }
                 .accessibilityElement(children: .contain)

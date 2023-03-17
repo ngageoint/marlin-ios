@@ -13,11 +13,11 @@ import Combine
 class XYZTileOverlay: MKTileOverlay {
     var cancellable = Set<AnyCancellable>()
     
-    var layer: NewMapLayerViewModel?
+    var layer: MapLayerViewModel?
     var mapLayer: MapLayer?
     var tms: Bool = false
     
-    init(layer: NewMapLayerViewModel) {
+    init(layer: MapLayerViewModel) {
         self.layer = layer
         super.init(urlTemplate: layer.urlTemplate)
         tileSize = CGSize(width: 512, height: 512)
