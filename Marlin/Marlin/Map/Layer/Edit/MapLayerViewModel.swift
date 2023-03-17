@@ -14,6 +14,7 @@ enum LayerType: String {
     case xyz = "XYZ"
     case wms = "WMS"
     case tms = "TMS"
+    case geopackage = "GeoPackage"
     case unknown = "Unknown"
 }
 
@@ -57,7 +58,7 @@ class MapLayerViewModel: ObservableObject {
                 if capabilities == nil {
                     retrieveWMSCapabilitiesDocument()
                 }
-            } else if layerType != .unknown {
+            } else if layerType == .xyz || layerType == .tms {
                 updateTemplate()
             }
         }
@@ -117,7 +118,7 @@ class MapLayerViewModel: ObservableObject {
             let layerNames = layerNameArray.joined(separator: ",")
             
             urlTemplate = "\(url)?SERVICE=WMS&VERSION=\(version)&REQUEST=GetMap&FORMAT=\(transparent ? "image%2Fpng" : "image%2Fjpeg")&TRANSPARENT=\(transparent)&LAYERS=\(layerNames)&TILED=true&WIDTH=512&HEIGHT=512&CRS=EPSG%3A3857&STYLES="
-        } else if layerType != .unknown {
+        } else if layerType == .xyz || layerType == .tms {
             guard !url.isEmpty else {
                 urlTemplate = nil
                 return

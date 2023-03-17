@@ -13,12 +13,12 @@ import SwiftUI
 class GeoPackageMap: NSObject, MapMixin {
     
     var geopackageImportedObserver: AnyObject?
-    var overlay: BaseMapOverlay?
+    var overlay: GeopackageFeatureOverlay?
         
     var geoPackageManager: GPKGGeoPackageManager?
     var geoPackageCache: GPKGGeoPackageCache?
     
-    var geoPackage: GeoPackage?
+    var geoPackage: GeoPackageLayer?
     
     var fileName: String
     var tableName: String
@@ -37,7 +37,7 @@ class GeoPackageMap: NSObject, MapMixin {
     }
     
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
-        geoPackage = GeoPackage(mapView: mapView, fileName: fileName, tableName: tableName, polygonColor: polygonColor, fillColor: fillColor, canReplaceMapContent: canReplaceMapContent, index: index)
+        geoPackage = GeoPackageLayer(mapView: mapView, fileName: fileName, tableName: tableName, polygonColor: polygonColor, fillColor: fillColor, canReplaceMapContent: canReplaceMapContent, index: index)
     }
     
     func updateMixin(mapView: MKMapView, mapState: MapState) {

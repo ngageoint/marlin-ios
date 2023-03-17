@@ -25,6 +25,7 @@ struct LayerURLView: View {
                         TextField("Layer URL", text: $viewModel.url)
                             .keyboardType(.URL)
                             .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
                             .underlineTextFieldWithLabel()
                             .focused($isInputActive)
                             .accessibilityElement()
@@ -153,7 +154,7 @@ struct LayerURLView: View {
                             }
                         }
                     }
-                } else if viewModel.layerType != .unknown {
+                } else if viewModel.layerType == .xyz || viewModel.layerType == .tms {
                     MarlinMap(name: "XYZ Layer Map", mixins: [BaseOverlaysMap(viewModel: viewModel)], mapState: mapState)
                         .frame(minHeight: 300, maxHeight: .infinity)
                 }

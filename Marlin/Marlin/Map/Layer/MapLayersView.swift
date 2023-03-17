@@ -55,11 +55,6 @@ struct MapLayersView: View {
                 .onTapGesture {
                     isMapLayersPresented.toggle()
                 }
-                .onChange(of: isMapLayersPresented, perform: { newValue in
-                    if newValue == false {
-                        model.updateLayers()
-                    }
-                })
                 .fullScreenCover(isPresented: $isMapLayersPresented) {
                     NavigationView {
                         MapLayerView(isPresented: $isMapLayersPresented)

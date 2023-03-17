@@ -25,6 +25,7 @@
 		F707BA91287F1767006A94C4 /* RaconImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA90287F1767006A94C4 /* RaconImage.swift */; };
 		F707BA9328805476006A94C4 /* PersistedMapState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA9228805476006A94C4 /* PersistedMapState.swift */; };
 		F707BA97288590E2006A94C4 /* FogSignalImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA96288590E2006A94C4 /* FogSignalImage.swift */; };
+		F70BCE9929C4F1AE00AEF73D /* UserLayersMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCE9829C4F1AE00AEF73D /* UserLayersMap.swift */; };
 		F70F50192992DAFF0062E555 /* DataLoadedNotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70F50182992DAFF0062E555 /* DataLoadedNotificationBanner.swift */; };
 		F70F501D2993EA470062E555 /* DataLoadedNotificationBannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70F501C2993EA470062E555 /* DataLoadedNotificationBannerTests.swift */; };
 		F713616B28B79D310005C69C /* set_build_number.sh in Resources */ = {isa = PBXBuildFile; fileRef = F713616A28B79D310005C69C /* set_build_number.sh */; };
@@ -241,8 +242,8 @@
 		F7D5C05D28AA7A1F000C2C29 /* Snackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05C28AA7A1F000C2C29 /* Snackbar.swift */; };
 		F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */; };
 		F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C2286C860900758F1C /* GeoPackageMap.swift */; };
-		F7D671C5286C8A3100758F1C /* GeoPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C4286C8A3100758F1C /* GeoPackage.swift */; };
-		F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C9286C945500758F1C /* BaseMapOverlay.swift */; };
+		F7D671C5286C8A3100758F1C /* GeoPackageLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C4286C8A3100758F1C /* GeoPackageLayer.swift */; };
+		F7D671CA286C945500758F1C /* GeopackageFeatureOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671C9286C945500758F1C /* GeopackageFeatureOverlay.swift */; };
 		F7D671CC286C98B200758F1C /* natural_earth_1_100.gpkg in Resources */ = {isa = PBXBuildFile; fileRef = F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */; };
 		F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671D5286DFAA800758F1C /* UserTrackingButton.swift */; };
 		F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D671D7286E163E00758F1C /* MapSettings.swift */; };
@@ -407,6 +408,7 @@
 		F707BA90287F1767006A94C4 /* RaconImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaconImage.swift; sourceTree = "<group>"; };
 		F707BA9228805476006A94C4 /* PersistedMapState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedMapState.swift; sourceTree = "<group>"; };
 		F707BA96288590E2006A94C4 /* FogSignalImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FogSignalImage.swift; sourceTree = "<group>"; };
+		F70BCE9829C4F1AE00AEF73D /* UserLayersMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLayersMap.swift; sourceTree = "<group>"; };
 		F70F50182992DAFF0062E555 /* DataLoadedNotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadedNotificationBanner.swift; sourceTree = "<group>"; };
 		F70F501C2993EA470062E555 /* DataLoadedNotificationBannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadedNotificationBannerTests.swift; sourceTree = "<group>"; };
 		F713616A28B79D310005C69C /* set_build_number.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = set_build_number.sh; sourceTree = "<group>"; };
@@ -629,8 +631,8 @@
 		F7D5C05C28AA7A1F000C2C29 /* Snackbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snackbar.swift; sourceTree = "<group>"; };
 		F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreaUnreadBadge.swift; sourceTree = "<group>"; };
 		F7D671C2286C860900758F1C /* GeoPackageMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageMap.swift; sourceTree = "<group>"; };
-		F7D671C4286C8A3100758F1C /* GeoPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackage.swift; sourceTree = "<group>"; };
-		F7D671C9286C945500758F1C /* BaseMapOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMapOverlay.swift; sourceTree = "<group>"; };
+		F7D671C4286C8A3100758F1C /* GeoPackageLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageLayer.swift; sourceTree = "<group>"; };
+		F7D671C9286C945500758F1C /* GeopackageFeatureOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeopackageFeatureOverlay.swift; sourceTree = "<group>"; };
 		F7D671CB286C98B100758F1C /* natural_earth_1_100.gpkg */ = {isa = PBXFileReference; lastKnownFileType = file; path = natural_earth_1_100.gpkg; sourceTree = "<group>"; };
 		F7D671D5286DFAA800758F1C /* UserTrackingButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTrackingButton.swift; sourceTree = "<group>"; };
 		F7D671D7286E163E00758F1C /* MapSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettings.swift; sourceTree = "<group>"; };
@@ -925,13 +927,13 @@
 		F71DF48B2858BF7B00686951 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				F75E32C229C4C5F4006F2394 /* GeoPackage */,
 				F76052C529AD37CC00F13260 /* Layer */,
 				F71DF49A2859022B00686951 /* Annotation */,
 				F71DF48C2858BF9200686951 /* Mixins */,
 				F71DF4892858BF0700686951 /* MarlinMap.swift */,
 				F71DF4932858C0EF00686951 /* StyledPolygon.swift */,
 				F71DF4952858C18000686951 /* StyledPolyline.swift */,
-				F7D671C9286C945500758F1C /* BaseMapOverlay.swift */,
 				F7D671D5286DFAA800758F1C /* UserTrackingButton.swift */,
 				F7D671D7286E163E00758F1C /* MapSettings.swift */,
 				F7D671D9286E3B3D00758F1C /* ExtraMapTypes.swift */,
@@ -950,6 +952,7 @@
 				F707BA9228805476006A94C4 /* PersistedMapState.swift */,
 				F71E3E3928F49ABE002F2019 /* SearchResultsMap.swift */,
 				F7F7CFC429BA955900A14350 /* BaseOverlaysMap.swift */,
+				F70BCE9829C4F1AE00AEF73D /* UserLayersMap.swift */,
 			);
 			path = Mixins;
 			sourceTree = "<group>";
@@ -1177,6 +1180,14 @@
 				F75E32C029C4BC1F006F2394 /* LayerConfigurationView.swift */,
 			);
 			path = Edit;
+			sourceTree = "<group>";
+		};
+		F75E32C229C4C5F4006F2394 /* GeoPackage */ = {
+			isa = PBXGroup;
+			children = (
+				F7D671C9286C945500758F1C /* GeopackageFeatureOverlay.swift */,
+			);
+			path = GeoPackage;
 			sourceTree = "<group>";
 		};
 		F75F81D6295DE0DD0062A708 /* Settings */ = {
@@ -1439,7 +1450,7 @@
 			isa = PBXGroup;
 			children = (
 				F7D671C2286C860900758F1C /* GeoPackageMap.swift */,
-				F7D671C4286C8A3100758F1C /* GeoPackage.swift */,
+				F7D671C4286C8A3100758F1C /* GeoPackageLayer.swift */,
 			);
 			path = GeoPackage;
 			sourceTree = "<group>";
@@ -2182,7 +2193,8 @@
 				F70F50192992DAFF0062E555 /* DataLoadedNotificationBanner.swift in Sources */,
 				F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */,
 				F7C23E06290844740002A7DF /* ElectronicPublication+Decodable.swift in Sources */,
-				F7D671C5286C8A3100758F1C /* GeoPackage.swift in Sources */,
+				F7D671C5286C8A3100758F1C /* GeoPackageLayer.swift in Sources */,
+				F70BCE9929C4F1AE00AEF73D /* UserLayersMap.swift in Sources */,
 				F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */,
 				F7FFB31428D63CB000C31AA3 /* Modu+DataSourceViewBuilder.swift in Sources */,
 				F7C23E1429115AF40002A7DF /* DocumentPreview.swift in Sources */,
@@ -2206,7 +2218,7 @@
 				F7D8FA49293A954D00E7D0A1 /* EnumerationFilter.swift in Sources */,
 				F7C3679428CCC8E500AE1265 /* DisclaimerView.swift in Sources */,
 				F7C23DFE290721680002A7DF /* SubmitReportView.swift in Sources */,
-				F7D671CA286C945500758F1C /* BaseMapOverlay.swift in Sources */,
+				F7D671CA286C945500758F1C /* GeopackageFeatureOverlay.swift in Sources */,
 				F707BA87287C6596006A94C4 /* LightCard.swift in Sources */,
 				F74B9B1128B7DACB0097D448 /* RadioBeaconDetailView.swift in Sources */,
 				F7D671EB2871D73200758F1C /* Hamburger.swift in Sources */,

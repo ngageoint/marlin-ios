@@ -7,16 +7,30 @@
 
 import Foundation
 import SwiftUI
+import CoreData
 
-class MapLayersViewModel: ObservableObject {
+class MapLayersViewModel: NSObject, ObservableObject {
     @Published var layers: [MapLayer] = []
+    var controller: NSFetchedResultsController<MapLayer>?
     
-    init(layers: [MapLayer]? = nil) {
-        self.layers = (try? PersistenceController.current.viewContext.fetchObjects(MapLayer.self, sortBy: [NSSortDescriptor(keyPath: \MapLayer.order, ascending: true)])) ?? []
+    var fetchRequest: NSFetchRequest<MapLayer> {
+        let fetchRequest = MapLayer.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \MapLayer.order, ascending: true)]
+        return fetchRequest
+    }
+    
+    override init() {
+        super.init()
+        controller = PersistenceController.current.fetchedResultsController(fetchRequest: fetchRequest,
+                                                                            sectionNameKeyPath: nil,
+                                                                            cacheName: nil)
+        controller?.delegate = self
+        updateLayers()
     }
     
     func updateLayers() {
-        self.layers = (try? PersistenceController.current.viewContext.fetchObjects(MapLayer.self, sortBy: [NSSortDescriptor(keyPath: \MapLayer.order, ascending: true)])) ?? []
+        try? controller?.performFetch()
+        self.layers = controller?.fetchedObjects ?? []
     }
     
     func toggleVisibility(of layer: MapLayer) -> Binding<Bool> {
@@ -49,7 +63,11 @@ class MapLayersViewModel: ObservableObject {
             }
             try? PersistenceController.current.viewContext.save()
         }
-        
-        layers.remove(atOffsets: offsets)
+    }
+}
+
+extension MapLayersViewModel: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        updateLayers()
     }
 }
