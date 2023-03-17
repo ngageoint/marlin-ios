@@ -25,7 +25,6 @@ class MapSingleTap: UITapGestureRecognizer {
 class MapState: ObservableObject {
     @Published var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
     @Published var center: MKCoordinateRegion?
-    @Published var overlays: [MKOverlay] = []
     
     @Published var searchResults: [MKMapItem]?
     
@@ -40,8 +39,8 @@ class MapState: ObservableObject {
 struct MarlinMap: UIViewRepresentable {
     @ObservedObject var mapState: MapState
 
-    var mixins: [MapMixin]?
-    var name: String
+    @State var mixins: [MapMixin]?
+    @State var name: String
     
     init(name: String, mixins: [MapMixin]? = [], mapState: MapState? = nil) {
         self.name = name
@@ -50,7 +49,7 @@ struct MarlinMap: UIViewRepresentable {
         } else {
             self.mapState = MapState()
         }
-        self.mixins = mixins
+        self._mixins = State(wrappedValue: mixins)
     }
     
     func makeUIView(context: Context) -> MKMapView {

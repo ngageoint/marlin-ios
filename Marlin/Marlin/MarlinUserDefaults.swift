@@ -152,6 +152,70 @@ extension UserDefaults {
         }
     }
     
+    func dataSourceMapOrder(_ key: String) -> Int {
+        return integer(forKey: "\(key)Order")
+    }
+    
+    func orderPublisher(key: String) -> NSObject.KeyValueObservingPublisher<UserDefaults, Int> {
+        switch key {
+        case Asam.key:
+            return publisher(for: \.asamOrder)
+        case Modu.key:
+            return publisher(for: \.moduOrder)
+        case Light.key:
+            return publisher(for: \.lightOrder)
+        case NoticeToMariners.key:
+            return publisher(for: \.ntmOrder)
+        case DFRS.key:
+            return publisher(for: \.dfrsOrder)
+        case DifferentialGPSStation.key:
+            return publisher(for: \.differentialGPSStationOrder)
+        case ElectronicPublication.key:
+            return publisher(for: \.epubOrder)
+        case Port.key:
+            return publisher(for: \.portOrder)
+        case RadioBeacon.key:
+            return publisher(for: \.radioBeaconOrder)
+        default:
+            return publisher(for: \.asamOrder)
+        }
+    }
+    
+    @objc var asamOrder: Int {
+        integer(forKey: #function)
+    }
+    
+    @objc var moduOrder: Int {
+        integer(forKey: #function)
+    }
+    
+    @objc var portOrder: Int {
+        integer(forKey: #function)
+    }
+    
+    @objc var radioBeaconOrder: Int {
+        integer(forKey: #function)
+    }
+    
+    @objc var differentialGPSStationOrder: Int {
+        integer(forKey: #function)
+    }
+    @objc var dfrsOrder: Int {
+        integer(forKey: #function)
+    }
+    
+    @objc var lightOrder: Int {
+        integer(forKey: #function)
+    }
+    
+    @objc var epubOrder: Int {
+        integer(forKey: #function)
+    }
+    
+    @objc var ntmOrder: Int {
+        integer(forKey: #function)
+    }
+    
     func filterPublisher(key: String) -> NSObject.KeyValueObservingPublisher<UserDefaults, Data?> {
         switch key {
         case Asam.key:

@@ -13,6 +13,7 @@ import SwiftUI
 class GeoPackageMap: NSObject, MapMixin {
     
     var geopackageImportedObserver: AnyObject?
+    var overlay: BaseMapOverlay?
         
     var geoPackageManager: GPKGGeoPackageManager?
     var geoPackageCache: GPKGGeoPackageCache?
@@ -37,14 +38,15 @@ class GeoPackageMap: NSObject, MapMixin {
     
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
         geoPackage = GeoPackage(mapView: mapView, fileName: fileName, tableName: tableName, polygonColor: polygonColor, fillColor: fillColor, canReplaceMapContent: canReplaceMapContent, index: index)
-        if let overlay = geoPackage?.getOverlay() {
-            DispatchQueue.main.async {
-                marlinMap.mapState.overlays.insert(overlay, at: min(self.index, marlinMap.mapState.overlays.count))
-            }
-        }
     }
     
     func updateMixin(mapView: MKMapView, mapState: MapState) {
+        if overlay == nil {
+            if let overlay = geoPackage?.getOverlay() {
+                self.overlay = overlay
+                mapView.insertOverlay(overlay, at: self.index)
+            }
+        }
     }
     
     func items(at location: CLLocationCoordinate2D) -> [Any]? {

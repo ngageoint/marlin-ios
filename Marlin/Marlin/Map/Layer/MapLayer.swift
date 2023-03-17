@@ -45,6 +45,18 @@ class MapLayer: NSManagedObject {
         }
     }
     
-    
+    var host: String? {
+        guard let urlString = url else {
+            return nil
+        }
+        
+        if type == LayerType.wms.rawValue {
+            return URL(string: urlString)?.host
+        } else if type != LayerType.unknown.rawValue {
+            let currentURL = url?.replacingOccurrences(of: "{x}", with: "0").replacingOccurrences(of: "{y}", with: "0").replacingOccurrences(of: "{z}", with: "0") ?? ""
+            return URL(string: currentURL)?.host
+        }
+        return nil
+    }
     
 }

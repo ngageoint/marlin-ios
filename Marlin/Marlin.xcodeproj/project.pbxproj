@@ -144,7 +144,6 @@
 		F749E43A29AFC94700B2FF8B /* wms.xml in Resources */ = {isa = PBXBuildFile; fileRef = F749E43629AE91C800B2FF8B /* wms.xml */; };
 		F749E43C29B0097300B2FF8B /* WMSTileOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F749E43B29B0097300B2FF8B /* WMSTileOverlay.swift */; };
 		F749E43E29B63D9D00B2FF8B /* WMSLayerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F749E43D29B63D9D00B2FF8B /* WMSLayerEditView.swift */; };
-		F749E44029B64B5F00B2FF8B /* WMSMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F749E43F29B64B5F00B2FF8B /* WMSMap.swift */; };
 		F74B9B0728B7CF650097D448 /* RadioBeacon+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0628B7CF650097D448 /* RadioBeacon+CoreDataClass.swift */; };
 		F74B9B0928B7D1640097D448 /* RadioBeaconMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0828B7D1640097D448 /* RadioBeaconMap.swift */; };
 		F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0C28B7DA210097D448 /* RadioBeaconSummaryView.swift */; };
@@ -164,6 +163,7 @@
 		F75324CE298C5E87005C509F /* SideMenuContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324CD298C5E87005C509F /* SideMenuContentTests.swift */; };
 		F75324D0298D52CC005C509F /* SideMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324CF298D52CC005C509F /* SideMenuViewModel.swift */; };
 		F75324D2298DBC15005C509F /* SideMenuTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324D1298DBC15005C509F /* SideMenuTests.swift */; };
+		F75E32B829C10C75006F2394 /* XYZTileOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75E32B729C10C75006F2394 /* XYZTileOverlay.swift */; };
 		F75F81D529526E9C0062A708 /* AsamSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D429526E9C0062A708 /* AsamSummaryViewTests.swift */; };
 		F75F81D8295DE0EF0062A708 /* AboutCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D7295DE0EF0062A708 /* AboutCellTests.swift */; };
 		F75F81DA295DE4640062A708 /* AboutViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F81D9295DE4640062A708 /* AboutViewTests.swift */; };
@@ -524,7 +524,6 @@
 		F749E43829AEA39E00B2FF8B /* NewMapLayerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMapLayerViewTests.swift; sourceTree = "<group>"; };
 		F749E43B29B0097300B2FF8B /* WMSTileOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WMSTileOverlay.swift; sourceTree = "<group>"; };
 		F749E43D29B63D9D00B2FF8B /* WMSLayerEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WMSLayerEditView.swift; sourceTree = "<group>"; };
-		F749E43F29B64B5F00B2FF8B /* WMSMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WMSMap.swift; sourceTree = "<group>"; };
 		F74B9B0628B7CF650097D448 /* RadioBeacon+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F74B9B0828B7D1640097D448 /* RadioBeaconMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconMap.swift; sourceTree = "<group>"; };
 		F74B9B0C28B7DA210097D448 /* RadioBeaconSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconSummaryView.swift; sourceTree = "<group>"; };
@@ -544,6 +543,7 @@
 		F75324CD298C5E87005C509F /* SideMenuContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuContentTests.swift; sourceTree = "<group>"; };
 		F75324CF298D52CC005C509F /* SideMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewModel.swift; sourceTree = "<group>"; };
 		F75324D1298DBC15005C509F /* SideMenuTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuTests.swift; sourceTree = "<group>"; };
+		F75E32B729C10C75006F2394 /* XYZTileOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XYZTileOverlay.swift; sourceTree = "<group>"; };
 		F75F81D229526D5C0062A708 /* libKIF.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libKIF.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F75F81D429526E9C0062A708 /* AsamSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryViewTests.swift; sourceTree = "<group>"; };
 		F75F81D7295DE0EF0062A708 /* AboutCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutCellTests.swift; sourceTree = "<group>"; };
@@ -1219,7 +1219,7 @@
 				F76052CB29AE6F0700F13260 /* NewMapLayerView.swift */,
 				F749E43B29B0097300B2FF8B /* WMSTileOverlay.swift */,
 				F749E43D29B63D9D00B2FF8B /* WMSLayerEditView.swift */,
-				F749E43F29B64B5F00B2FF8B /* WMSMap.swift */,
+				F75E32B729C10C75006F2394 /* XYZTileOverlay.swift */,
 			);
 			path = Layer;
 			sourceTree = "<group>";
@@ -2182,6 +2182,7 @@
 				F71D287328BE969500F1775C /* DFRSDetailView.swift in Sources */,
 				F76052C129AD274E00F13260 /* MapLayersView.swift in Sources */,
 				F740AA79289D6DED00754293 /* MarlinRegularWidth.swift in Sources */,
+				F75E32B829C10C75006F2394 /* XYZTileOverlay.swift in Sources */,
 				F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */,
 				F7D8FA772940EF7400E7D0A1 /* ChartCorrectionListViewModel.swift in Sources */,
 				F7FFB33F28DA104200C31AA3 /* FilterBottomSheet.swift in Sources */,
@@ -2222,7 +2223,6 @@
 				F71D287728BE976300F1775C /* DFRSSummaryView.swift in Sources */,
 				F7FFB2E628D6217900C31AA3 /* DFRSArea+Decodable.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
-				F749E44029B64B5F00B2FF8B /* WMSMap.swift in Sources */,
 				F7C23E122909B6C70002A7DF /* DownloadManager.swift in Sources */,
 				F7C23E0229082D4A0002A7DF /* ElectronicPublication+CoreDataClass.swift in Sources */,
 				F7F597B22866248700F9B32E /* NavigationalWarningNavAreaListView.swift in Sources */,

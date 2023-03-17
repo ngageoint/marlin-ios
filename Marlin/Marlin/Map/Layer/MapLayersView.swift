@@ -17,8 +17,7 @@ struct MapLayerRow: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(layer.displayName ?? layer.name ?? "Layer").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
-                    Text("Order \(layer.order)")
-                    Text("\(isVisible ? "Showing" : "Hiding") \(layer.url ?? layer.filePath ?? "")")
+                    Text("\(layer.host ?? layer.filePath ?? "")")
                         .font(Font.caption)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.6))
                 }
@@ -56,9 +55,14 @@ struct MapLayersView: View {
                 .onTapGesture {
                     isMapLayersPresented.toggle()
                 }
+                .onChange(of: isMapLayersPresented, perform: { newValue in
+                    if newValue == false {
+                        model.updateLayers()
+                    }
+                })
                 .fullScreenCover(isPresented: $isMapLayersPresented) {
                     NavigationView {
-                        NewMapLayerView()
+                        NewMapLayerView(isPresented: $isMapLayersPresented)
                     }
                 }
                 .accessibilityElement(children: .contain)
@@ -67,8 +71,12 @@ struct MapLayersView: View {
             Section("Additional Layers - Drag to reorder on the map") {
                 ForEach(model.layers, id: \.self) { layer in
                     MapLayerRow(layer: layer, isVisible: model.toggleVisibility(of: layer))
-                }.onMove { from, to in
+                }
+                .onMove { from, to in
                     model.reorderLayers(fromOffsets: from, toOffset: to)
+                }
+                .onDelete { offsets in
+                    model.deleteLayers(offsets: offsets)
                 }
             }
         }

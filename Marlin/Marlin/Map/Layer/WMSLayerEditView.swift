@@ -13,6 +13,7 @@ struct WMSLayerEditView: View {
     @ObservedObject var viewModel: NewMapLayerViewModel
     @ObservedObject var mapState: MapState
     @State private var topExpanded: Bool = true
+    @Binding var isPresented: Bool
     var body: some View {
         VStack(spacing: 0) {
             Group {
@@ -25,10 +26,10 @@ struct WMSLayerEditView: View {
             }
             .padding([.trailing, .leading], 8)
             .frame(minHeight: 0, maxHeight: .infinity)
-            MarlinMap(name: "WMS Layer Map", mixins: [WMSMap(viewModel: viewModel)], mapState: mapState)
+            MarlinMap(name: "WMS Layer Map", mixins: [BaseOverlaysMap(viewModel: viewModel)], mapState: mapState)
                             .frame(minHeight: 0, maxHeight: .infinity)
             NavigationLink {
-                LayerConfiguration(viewModel: viewModel, mapState: mapState)
+                LayerConfiguration(viewModel: viewModel, mapState: mapState, isPresented: $isPresented)
             } label: {
                 Text("Confirm WMS Layers")
                     .tint(Color.primaryColor)
@@ -40,6 +41,18 @@ struct WMSLayerEditView: View {
         }
         .navigationTitle("WMS Layers")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("WMS Layers")
+                    .foregroundColor(Color.onPrimaryColor)
+                    .tint(Color.onPrimaryColor)
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Cancel") {
+                    isPresented.toggle()
+                }
+            }
+        }
     }
     
     @ViewBuilder

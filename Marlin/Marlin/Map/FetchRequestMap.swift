@@ -23,7 +23,9 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
     var overlay: PredicateTileOverlay<T>?
     
     var userDefaultsShowPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
+    var orderPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Int>?
     var sortDescriptors: [NSSortDescriptor] = []
+    var lastChange: Date?
     
     var focusNotificationName: Notification.Name?
     
@@ -35,6 +37,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         self.fetchPredicate = fetchPredicate
         self.objects = objects
         imageCache = T.imageCache
+        orderPublisher = UserDefaults.standard.orderPublisher(key: T.key)
     }
     
     func getFetchRequest(show: Bool) -> NSFetchRequest<NSManagedObject>? {
@@ -113,6 +116,16 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
             }
             .store(in: &cancellable)
         
+        orderPublisher?
+            .removeDuplicates()
+            .handleEvents(receiveOutput: { order in
+                print("Order update \(T.self): \(order)")
+            })
+            .sink() { [weak self] _ in
+                self?.refreshOverlay(marlinMap: marlinMap)
+            }
+            .store(in: &cancellable)
+        
         LocationManager.shared.$current10kmMGRS
             .receive(on: RunLoop.main)
             .sink() { [weak self] mgrsZone in
@@ -122,30 +135,49 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
     }
     
     func updateMixin(mapView: MKMapView, mapState: MapState) {
-        if let selfOverlay = self.overlay {
-            if let newOverlay = mapState.mixinStates["FetchRequestMixin\(T.key)"] as? PredicateTileOverlay<T> {
-                if selfOverlay != newOverlay {
-                    mapView.removeOverlay(selfOverlay)
-                    mapView.addOverlay(newOverlay)
-                    self.overlay = newOverlay
+        if lastChange == nil || lastChange != mapState.mixinStates["FetchRequestMixin\(T.key)DateUpdated"] as? Date {
+            lastChange = mapState.mixinStates["FetchRequestMixin\(T.key)DataUpdated"] as? Date ?? Date()
+            
+            if mapState.mixinStates["FetchRequestMixin\(T.key)DataUpdated"] as? Date == nil {
+                DispatchQueue.main.async {
+                    mapState.mixinStates["FetchRequestMixin\(T.key)DataUpdated"] = self.lastChange
                 }
-            } else {
+            }
+            
+            if let selfOverlay = self.overlay {
                 mapView.removeOverlay(selfOverlay)
             }
-        } else if let newOverlay = mapState.mixinStates["FetchRequestMixin\(T.key)"] as? PredicateTileOverlay<T> {
-            mapView.addOverlay(newOverlay)
-            self.overlay = newOverlay
-        }
-    }
-    
-    func refreshOverlay(marlinMap: MarlinMap) {
-        DispatchQueue.main.async {
+            
             let newFetchRequest = self.getFetchRequest(show: self.show)
             let newOverlay = PredicateTileOverlay<T>(predicate: newFetchRequest?.predicate, sortDescriptors: newFetchRequest?.sortDescriptors, objects: self.objects, imageCache: self.imageCache)
             
             newOverlay.tileSize = CGSize(width: 512, height: 512)
             newOverlay.minimumZ = self.minZoom
-            marlinMap.mapState.mixinStates["FetchRequestMixin\(T.key)"] = newOverlay
+            
+            self.overlay = newOverlay
+            // find the right place
+            let mapOrder = UserDefaults.standard.dataSourceMapOrder(T.key)
+            if mapView.overlays(in: .aboveLabels).isEmpty{
+                mapView.insertOverlay(newOverlay, at: 0, level: .aboveLabels)
+            } else {
+                for added in mapView.overlays(in: .aboveLabels) {
+                    if let added = added as? any PredicateBasedTileOverlay, let key = added.key, let addedOverlay = added as? MKTileOverlay {
+                        let addedOrder = UserDefaults.standard.dataSourceMapOrder(key)
+                        if addedOrder < mapOrder {
+                            mapView.insertOverlay(newOverlay, below: addedOverlay)
+                            return
+                        }
+                    }
+                }
+            }
+            
+            mapView.insertOverlay(newOverlay, at: mapView.overlays(in: .aboveLabels).count, level: .aboveLabels)
+        }
+    }
+    
+    func refreshOverlay(marlinMap: MarlinMap) {
+        DispatchQueue.main.async {
+            self.mapState?.mixinStates["FetchRequestMixin\(T.key)DateUpdated"] = Date()
         }
     }
     

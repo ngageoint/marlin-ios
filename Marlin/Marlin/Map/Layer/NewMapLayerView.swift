@@ -48,8 +48,21 @@ class NewMapLayerViewModel: ObservableObject {
     @Published var name: String = ""
 
     @Published var retrievingWMSCapabilities: Bool = false
+    @Published var triedCapabilities: Bool = false
+    @Published var triedXYZTile: Bool = false
+    @Published var retrievingXYZTile: Bool = false
     @Published var capabilities: WMSCapabilities?
-    @Published var layerType: LayerType = .unknown
+    @Published var layerType: LayerType = .unknown {
+        didSet {
+            if layerType == .wms {
+                if capabilities == nil {
+                    retrieveWMSCapabilitiesDocument()
+                }
+            } else if layerType != .unknown {
+                updateTemplate()
+            }
+        }
+    }
     @Published var refreshRate: Int = 0
     @Published var refreshRateUnits: RefreshRateUnit = .none
     @Published var minimumZoom: Int = 0
@@ -77,7 +90,7 @@ class NewMapLayerViewModel: ObservableObject {
     
     func create() {
         PersistenceController.current.perform {
-            let layer = MapLayer.createFrom(viewModel: self, context: PersistenceController.current.viewContext)
+            let _ = MapLayer.createFrom(viewModel: self, context: PersistenceController.current.viewContext)
             do {
                 try PersistenceController.current.viewContext.save()
             } catch {
@@ -87,24 +100,31 @@ class NewMapLayerViewModel: ObservableObject {
     }
     
     func updateTemplate() {
-        guard !url.isEmpty, let layers = capabilities?.selectedLayers, let version = capabilities?.version else {
-            urlTemplate = nil
-            return
-        }
-        print("layers are now \(layers)")
-        
-        var layerNameArray: [String] = []
-        var transparent: Bool = true
-        
-        for layer in layers {
-            if let name = layer.name {
-                layerNameArray.append(name)
+        if layerType == .wms {
+            guard !url.isEmpty, let layers = capabilities?.selectedLayers, let version = capabilities?.version else {
+                urlTemplate = nil
+                return
             }
-            transparent = transparent && layer.transparent
+            
+            var layerNameArray: [String] = []
+            var transparent: Bool = true
+            
+            for layer in layers {
+                if let name = layer.name {
+                    layerNameArray.append(name)
+                }
+                transparent = transparent && layer.transparent
+            }
+            let layerNames = layerNameArray.joined(separator: ",")
+            
+            urlTemplate = "\(url)?SERVICE=WMS&VERSION=\(version)&REQUEST=GetMap&FORMAT=\(transparent ? "image%2Fpng" : "image%2Fjpeg")&TRANSPARENT=\(transparent)&LAYERS=\(layerNames)&TILED=true&WIDTH=512&HEIGHT=512&CRS=EPSG%3A3857&STYLES="
+        } else if layerType != .unknown {
+            guard !url.isEmpty else {
+                urlTemplate = nil
+                return
+            }
+            urlTemplate = "\(url)/{z}/{x}/{y}.png"
         }
-        let layerNames = layerNameArray.joined(separator: ",")
-        
-        urlTemplate = "\(url)?SERVICE=WMS&VERSION=\(version)&REQUEST=GetMap&FORMAT=\(transparent ? "image%2Fpng" : "image%2Fjpeg")&TRANSPARENT=\(transparent)&LAYERS=\(layerNames)&TILED=true&WIDTH=512&HEIGHT=512&CRS=EPSG%3A3857&STYLES="
     }
     
     var cancellable = Set<AnyCancellable>()
@@ -113,9 +133,39 @@ class NewMapLayerViewModel: ObservableObject {
     init() {
         urlPublisher.debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .sink(receiveValue: { newUrl in
-                print("xxxx got a new url \(newUrl)")
                 if !newUrl.isEmpty {
                     self.retrieveWMSCapabilitiesDocument()
+                }
+            })
+            .store(in: &cancellable)
+    }
+    
+    func retrieveXYZTile() {
+        guard let url = URL(string: "\(url)/0/0/0.png") else {
+            print("invalid url")
+            return
+        }
+        var urlRequest: URLRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "GET"
+        MSI.shared.capabilitiesSession.request(url, method: .get)
+            .onURLRequestCreation(perform: { request in
+                self.retrievingXYZTile = true
+                self.triedXYZTile = false
+            })
+            .validate()
+            .publishData()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { response in
+                self.triedXYZTile = true
+                self.retrievingXYZTile = false
+                if let error = response.error {
+                    print("Error retrieving capabilities \(error)")
+                    return
+                }
+                if let _ = try? response.result.get() {
+                    if self.layerType != .tms && self.layerType != .xyz {
+                        self.layerType = .xyz
+                    }
                 }
             })
             .store(in: &cancellable)
@@ -135,40 +185,37 @@ class NewMapLayerViewModel: ObservableObject {
             ]
             urlRequest = try URLEncoding.default.encode(urlRequest, with: parameters)
             
-            // for testing
-//            let string = try! String(contentsOf: Bundle.main.url(forResource: "wms", withExtension: "xml")!)
-//            self.capabilities = self.parseDocument(string: string)
-//            if self.capabilities != nil {
-//                self.layerType = .wms
-//            }
-//            print("capabilities is \(self.capabilities)")
-            
-            // for real
             MSI.shared.capabilitiesSession.request(url, method: .get, parameters: parameters)
                 .onURLRequestCreation(perform: { request in
                     self.retrievingWMSCapabilities = true
+                    self.triedCapabilities = false
                 })
                 .validate()
                 .publishString()
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { response in
+                    self.triedCapabilities = true
+                    self.retrievingWMSCapabilities = false
                     if let error = response.error {
-                        print("Error \(error)")
+                        print("Error retrieving capabilities \(error)")
+                        self.retrieveXYZTile()
+                        return
                     }
-                    self.retrievingWMSCapabilities = true
                     if let string = try? response.result.get() {
                         self.capabilities = self.parseDocument(string: string)
-                        print("capabilities is \(self.capabilities)")
                         if self.capabilities != nil {
                             self.layerType = .wms
+                        } else {
+                            self.retrieveXYZTile()
                         }
+                    } else {
+                        self.retrieveXYZTile()
                     }
                 })
                 .store(in: &cancellable)
         } catch {
             print("Error making request \(error)")
         }
-        // ?SERVICE=WMS&REQUEST=GetCapabilities
     }
     
     func parseDocument(string: String) -> WMSCapabilities? {
@@ -177,10 +224,9 @@ class NewMapLayerViewModel: ObservableObject {
         }.parse(string)
         do {
             let capabilities: WMSCapabilities? = try xml["WMS_Capabilities"].value()
-            print("xxx get map \(capabilities?.getMap)")
             return capabilities
         } catch {
-            print("xxx error \(error)")
+            print("Error parsing capabilities \(error)")
         }
         return nil
     }
@@ -375,6 +421,7 @@ struct LayerURLView: View {
     @ObservedObject var viewModel: NewMapLayerViewModel
     @ObservedObject var mapState: MapState
     @FocusState var isInputActive: Bool
+    @Binding var isPresented: Bool
     
     var body: some View {
         VStack {
@@ -394,6 +441,39 @@ struct LayerURLView: View {
                     .frame(maxWidth:.infinity)
                 } header: {
                     EmptyView().frame(width: 0, height: 0, alignment: .leading)
+                }
+                
+                if viewModel.retrievingWMSCapabilities {
+                    HStack(alignment: .center) {
+                        ProgressView()
+                            .tint(Color.primaryColorVariant)
+                        Text("Attempting to retrieve WMS Capabilities document...")
+                            .primary()
+                    }
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.backgroundColor)
+                } else if viewModel.retrievingXYZTile {
+                    HStack(alignment: .center) {
+                        ProgressView()
+                            .tint(Color.primaryColorVariant)
+                        Text("Attempting to retrieve 0/0/0 tile...")
+                            .primary()
+                    }
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.backgroundColor)
+                } else if viewModel.triedCapabilities && viewModel.triedXYZTile && viewModel.layerType == .unknown {
+                    Section("Tile Server Information") {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Unable to retrieve capabilities document or the 0/0/0 tile.  Please choose the correct type of tile server below.")
+                                .primary()
+                            Text("-or-")
+                                .overline()
+                            Button("Try again") {
+                                viewModel.retrieveWMSCapabilitiesDocument()
+                            }
+                            .buttonStyle(MaterialButtonStyle())
+                        }
+                    }
                 }
                 
                 HStack(alignment: .center) {
@@ -481,19 +561,25 @@ struct LayerURLView: View {
                             }
                         }
                     }
+                } else if viewModel.layerType != .unknown {
+                    MarlinMap(name: "XYZ Layer Map", mixins: [BaseOverlaysMap(viewModel: viewModel)], mapState: mapState)
+                        .frame(minHeight: 300, maxHeight: .infinity)
                 }
             }
             .dataSourceDetailList()
             .listRowBackground(Color.white)
             
             NavigationLink {
-                WMSLayerEditView(viewModel: viewModel, mapState: mapState)
+                if viewModel.layerType == .wms {
+                    WMSLayerEditView(viewModel: viewModel, mapState: mapState, isPresented: $isPresented)
+                } else {
+                    LayerConfiguration(viewModel: viewModel, mapState: mapState, isPresented: $isPresented)
+                }
             } label: {
                 Text("Confirm URL")
                     .tint(Color.primaryColor)
             }
             .buttonStyle(MaterialButtonStyle(type: .contained))
-//            .tint(viewModel.urlOK ? Color.primaryColorVariant : Color.disabledColor)
             .background(Color.backgroundColor)
             .disabled(!viewModel.urlOK)
             .padding(8)
@@ -501,6 +587,16 @@ struct LayerURLView: View {
         .navigationTitle("Layer URL")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("Create Map Layer")
+                    .foregroundColor(Color.onPrimaryColor)
+                    .tint(Color.onPrimaryColor)
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Cancel") {
+                    isPresented.toggle()
+                }
+            }
             ToolbarItem(placement: .keyboard) {
                 Spacer()
             }
@@ -518,7 +614,7 @@ struct LayerConfiguration: View {
     @ObservedObject var viewModel: NewMapLayerViewModel
     @FocusState var isInputActive: Bool
     @ObservedObject var mapState: MapState
-    @Environment(\.dismiss) var dismiss
+    @Binding var isPresented: Bool
     
     var body: some View {
         VStack(spacing: 16) {
@@ -593,13 +689,12 @@ struct LayerConfiguration: View {
             }
             .frame(minHeight: 0, maxHeight: .infinity)
             
-            MarlinMap(name: "WMS Layer Map", mixins: [WMSMap(viewModel: viewModel)], mapState: mapState)
+            MarlinMap(name: "WMS Layer Map", mixins: [BaseOverlaysMap(viewModel: viewModel)], mapState: mapState)
                 .frame(minHeight: 0, maxHeight: .infinity)
             
             Button("Create Layer") {
-                print("xxxx make it")
                 viewModel.create()
-                dismiss()
+                isPresented.toggle()
             }
             .buttonStyle(MaterialButtonStyle(type: .contained))
             .tint(viewModel.displayName.count != 0 ? Color.primaryColorVariant : Color.disabledColor)
@@ -607,6 +702,16 @@ struct LayerConfiguration: View {
             .padding(8)
         }
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("Layer Configuration")
+                    .foregroundColor(Color.onPrimaryColor)
+                    .tint(Color.onPrimaryColor)
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Cancel") {
+                    isPresented.toggle()
+                }
+            }
             ToolbarItem(placement: .keyboard) {
                 Spacer()
             }
@@ -624,25 +729,14 @@ struct NewMapLayerView: View {
     @StateObject var viewModel: NewMapLayerViewModel = NewMapLayerViewModel()
     @FocusState var isInputActive: Bool
     @StateObject var mapState: MapState = MapState()
-    @Environment(\.dismiss) var dismiss
+    @Binding var isPresented: Bool
     
     var body: some View {
         VStack {
-            LayerURLView(viewModel: viewModel, mapState: mapState)
+            LayerURLView(viewModel: viewModel, mapState: mapState, isPresented: $isPresented)
         }
         .frame(maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
         .background(Color.backgroundColor)
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text("Create Map Layer")
-                    .tint(Color.onPrimaryColor)
-            }
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button("Cancel") {
-                    dismiss()
-                }
-            }
-        }
     }
 }
 
