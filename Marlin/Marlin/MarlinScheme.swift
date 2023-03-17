@@ -70,6 +70,10 @@ extension Color {
         return Color("onPrimary")
     }
     
+    static var mapButtonColor: Color {
+        return Color("mapButton")
+    }
+    
     static var secondaryUIColor: UIColor {
         return UIColor(named: "secondary") ?? .systemBackground
     }

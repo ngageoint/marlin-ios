@@ -133,7 +133,7 @@ struct SearchView<T: MKLocalSearch>: View {
         .font(Font.body2)
         .foregroundColor(Color.primaryColorVariant)
         .background(
-            RoundedRectangle(cornerRadius: 20).fill(Color.surfaceColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.4), radius: 3, x: 0, y: 4)
+            RoundedRectangle(cornerRadius: 20).fill(Color.mapButtonColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.4), radius: 3, x: 0, y: 4)
                 .animation(.default, value: searchExpanded)
         )
     }

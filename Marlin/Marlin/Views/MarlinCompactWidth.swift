@@ -233,7 +233,7 @@ struct MarlinCompactWidth: View {
                 }
                 .isDetailLink(false)
                 .fixedSize()
-                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini))
+                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
                 .accessibilityElement(children: .contain)
                 .accessibilityLabel("Map Settings Button")
             }
