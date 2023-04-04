@@ -227,6 +227,8 @@ class MarlinScheme: ObservableObject {
             NSAttributedString.Key.backgroundColor: Color.primaryUIColor
         ];
         
+        UITextField.appearance(whenContainedInInstancesOf: [UINavigationBar.self]).backgroundColor = Color.backgroundUIColor
+        
         let toolbarAppearance = UIToolbar.appearance(whenContainedInInstancesOf: [QLPreviewController.self])
         toolbarAppearance.tintColor = UIColor.label
     }

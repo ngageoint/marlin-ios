@@ -9,6 +9,8 @@ import Foundation
 import Combine
 import Alamofire
 import SWXMLHash
+import geopackage_ios
+import proj_ios
 
 enum LayerType: String {
     case xyz = "XYZ"
@@ -35,6 +37,68 @@ enum RefreshRateUnit: Int, Equatable, CaseIterable {
         case .days:
             return "Days"
         }
+    }
+}
+
+class TileTableInfo: ObservableObject, Identifiable, Hashable {
+    var name: String
+    var minZoom: Int
+    var maxZoom: Int
+    var bounds: GPKGBoundingBox
+    @Published var selected: Bool = false
+    
+    init(name: String, minZoom: Int, maxZoom: Int, bounds: GPKGBoundingBox) {
+        self.name = name
+        self.minZoom = minZoom
+        self.maxZoom = maxZoom
+        self.bounds = bounds
+    }
+    
+    static func == (lhs: TileTableInfo, rhs: TileTableInfo) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    var id: String { name }
+    
+    var boundingBoxDisplay: String {
+        if let minLatitude = bounds.minLatitude, let minLongitude = bounds.minLongitude, let maxLatitude = bounds.maxLatitude, let maxLongitude = bounds.maxLongitude {
+            return "(\(minLatitude.latitudeDisplay), \(minLongitude.longitudeDisplay)) - (\(maxLatitude.latitudeDisplay), \(maxLongitude.longitudeDisplay))"
+        }
+        return ""
+    }
+}
+
+class FeatureTableInfo: ObservableObject, Identifiable, Hashable {
+    var name: String
+    var count: Int
+    var bounds: GPKGBoundingBox
+    @Published var selected: Bool = false
+    
+    init(name: String, count: Int, bounds: GPKGBoundingBox) {
+        self.name = name
+        self.count = count
+        self.bounds = bounds
+    }
+    
+    static func == (lhs: FeatureTableInfo, rhs: FeatureTableInfo) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    var id: String { name }
+    
+    var boundingBoxDisplay: String {
+        if let minLatitude = bounds.minLatitude, let minLongitude = bounds.minLongitude, let maxLatitude = bounds.maxLatitude, let maxLongitude = bounds.maxLongitude {
+            return "(\(minLatitude.latitudeDisplay), \(minLongitude.longitudeDisplay)) - (\(maxLatitude.latitudeDisplay), \(maxLongitude.longitudeDisplay))"
+        }
+        return ""
     }
 }
 
@@ -73,6 +137,23 @@ class MapLayerViewModel: ObservableObject {
     @Published var urlTemplate: String?
     @Published var tabSelection: Int? = 0
     
+    @Published var importingFile: Bool = false
+    @Published var fileImported: Bool = false
+    @Published var confirmFileOverwrite: Bool = false
+    @Published var fileUrl: URL?
+    @Published var fileLayers: [String] = []
+    @Published var fileName: String?
+    @Published var selectedFileLayers: [String] = []
+    
+    var geoPackage: GPKGGeoPackage?  {
+        didSet {
+            populateFileLayers()
+        }
+    }
+    
+    @Published var selectedGeoPackageTables: [String]?
+    var documentPickerViewModel: DocumentPickerViewModel = DocumentPickerViewModel()
+    
     var urlOK: Bool {
         url.isValidURL && ((layerType == .wms && capabilities != nil) || (layerType != .unknown))
     }
@@ -82,10 +163,69 @@ class MapLayerViewModel: ObservableObject {
     static let FINAL_CONFIGURATION = 2
     
     var layersOK: Bool {
-        if let layers = capabilities?.selectedLayers, !layers.isEmpty {
+        if !layers.isEmpty {
             return true
         }
         return false
+    }
+    
+    var layers: [String] {
+        if layerType == .wms {
+            guard let layers = capabilities?.selectedLayers else {
+                return []
+            }
+            
+            var layerNameArray: [String] = []
+            for layer in layers {
+                if let name = layer.name {
+                    layerNameArray.append(name)
+                }
+            }
+            return layerNameArray
+        } else if layerType == .geopackage {
+            return fileLayers
+        }
+        return []
+    }
+    
+    var tileLayers: [TileTableInfo] {
+        var tileLayers: [TileTableInfo] = []
+        if let geoPackage = geoPackage {
+            for tileTable in geoPackage.tileTables() {
+                if let tileDao = geoPackage.tileDao(withTableName: tileTable) {
+                    let bb: GPKGBoundingBox = tileDao.contents().boundingBox().transform(SFPGeometryTransform(from: tileDao.projection, andToEpsg: 4326)) ?? GPKGBoundingBox.worldWGS84()
+                    tileLayers.append(TileTableInfo(name: tileDao.tableName, minZoom: Int(tileDao.mapMinZoom()), maxZoom: Int(tileDao.mapMaxZoom()), bounds: bb))
+                }
+            }
+        }
+        return tileLayers
+    }
+    
+    var featureLayers: [FeatureTableInfo] {
+        var featureLayers: [FeatureTableInfo] = []
+        if let geoPackage = geoPackage {
+            for featureTable in geoPackage.featureTables() {
+                if let featureDao = geoPackage.featureDao(withTableName: featureTable) {
+                    let bb: GPKGBoundingBox = featureDao.contents().boundingBox().transform(SFPGeometryTransform(from: featureDao.projection, andToEpsg: 4326)) ?? GPKGBoundingBox.worldWGS84()
+                    featureLayers.append(FeatureTableInfo(name: featureDao.tableName, count: Int(featureDao.count()), bounds: bb))
+                }
+            }
+        }
+        return featureLayers
+    }
+    
+    func updateSelectedFileLayers(layerName: String, selected: Bool) {
+        if selected {
+            selectedFileLayers.append(layerName)
+        } else if let index = selectedFileLayers.firstIndex(of: layerName) {
+            selectedFileLayers.remove(at: index)
+        }
+    }
+    
+    func populateFileLayers() {
+        let tileTables = geoPackage?.tileTables() ?? []
+        let featureTables = geoPackage?.featureTables() ?? []
+        fileLayers = tileTables + featureTables
     }
     
     func create() {
@@ -129,6 +269,7 @@ class MapLayerViewModel: ObservableObject {
     
     var cancellable = Set<AnyCancellable>()
     let urlPublisher = PassthroughSubject<String, Never>()
+    let importer = GeoPackageImporter()
     
     init() {
         urlPublisher.debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
@@ -138,6 +279,65 @@ class MapLayerViewModel: ObservableObject {
                 }
             })
             .store(in: &cancellable)
+        
+        documentPickerViewModel.$url.receive(on: DispatchQueue.main).sink { url in
+            if let url = url {
+                self.fileChosen(url: url)
+            }
+        }
+        .store(in: &cancellable)
+        
+        importer.progress.$complete.receive(on: DispatchQueue.main).sink { complete in
+            self.geoPackageImported()
+        }
+        .store(in: &cancellable)
+    }
+    
+    func fileChosen(url: URL, forceImport: Bool = false) {
+        layerType = .unknown
+        importingFile = true
+        fileUrl = url
+        let securityScoped = url.startAccessingSecurityScopedResource()
+        
+        if importer.alreadyImported(url: url) && !forceImport {
+            confirmFileOverwrite = true
+            importingFile = false
+        } else if forceImport {
+            confirmFileOverwrite = false
+            fileName = importer.uniqueName(url: url)
+            importer.importGeoPackage(url: url, nameOverride: fileName, overwrite: true)
+        } else {
+            confirmFileOverwrite = false
+            fileName = importer.fileName(url: url)
+            importer.importGeoPackage(url: url, overwrite: false)
+        }
+        
+        if securityScoped {
+            url.stopAccessingSecurityScopedResource()
+        }
+    }
+    
+    func useExistingFile(url: URL) {
+        importingFile = false
+        fileName = importer.fileName(url: url)
+        if let name = fileName, importer.alreadyImported(url: url) {
+            geoPackage = GeoPackage.shared.getGeoPackage(name: name)
+            layerType = .geopackage
+        } else {
+            // unsuccessful import
+        }
+    }
+    
+    func geoPackageImported() {
+        importingFile = false
+        
+        let name = fileName
+        if let name = fileName, importer.alreadyImported(name: name) {
+            geoPackage = GeoPackage.shared.getGeoPackage(name: name)
+            layerType = .geopackage
+        } else {
+            // unsuccessful import
+        }
     }
     
     func retrieveXYZTile() {

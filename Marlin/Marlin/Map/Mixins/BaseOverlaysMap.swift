@@ -37,6 +37,12 @@ class BaseOverlaysMap: NSObject, MapMixin {
                 self?.refreshOverlay(marlinMap: marlinMap)
             }
             .store(in: &cancellable)
+        viewModel.$selectedFileLayers
+            .receive(on: RunLoop.main)
+            .sink() { [weak self] urlTemplate in
+                self?.refreshOverlay(marlinMap: marlinMap)
+            }
+            .store(in: &cancellable)
     }
     
     func refreshOverlay(marlinMap: MarlinMap) {
@@ -59,14 +65,19 @@ class BaseOverlaysMap: NSObject, MapMixin {
                 mapView.removeOverlay(overlay)
             }
 
-            guard let _ = viewModel.urlTemplate else {
-                return
-            }
             var overlay: MKTileOverlay?
             if viewModel.layerType == .wms {
+                guard let _ = viewModel.urlTemplate else {
+                    return
+                }
                 overlay = WMSTileOverlay(layer: viewModel)
             } else if viewModel.layerType == .xyz || viewModel.layerType == .tms {
+                guard let _ = viewModel.urlTemplate else {
+                    return
+                }
                 overlay = XYZTileOverlay(layer: viewModel)
+            } else if viewModel.layerType == .geopackage {
+                overlay = GeopackageCompositeOverlay(layer: viewModel)
             }
             if let overlay = overlay {
                 overlays.append(overlay)

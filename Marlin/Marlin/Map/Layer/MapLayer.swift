@@ -24,6 +24,7 @@ class MapLayer: NSManagedObject {
         layer.type = viewModel.layerType.rawValue
         layer.visible = true
         layer.order = Int64((try? context.countOfObjects(MapLayer.self)) ?? 0)
+        layer.layers = viewModel.layers.joined(separator: ",")
         return layer
     }
     
@@ -57,6 +58,13 @@ class MapLayer: NSManagedObject {
             return URL(string: currentURL)?.host
         }
         return nil
+    }
+    
+    var layerNames: [String] {
+        guard let layers = layers else {
+            return []
+        }
+        return layers.components(separatedBy: ",")
     }
     
 }

@@ -26,6 +26,12 @@
 		F707BA9328805476006A94C4 /* PersistedMapState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA9228805476006A94C4 /* PersistedMapState.swift */; };
 		F707BA97288590E2006A94C4 /* FogSignalImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA96288590E2006A94C4 /* FogSignalImage.swift */; };
 		F70BCE9929C4F1AE00AEF73D /* UserLayersMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCE9829C4F1AE00AEF73D /* UserLayersMap.swift */; };
+		F70BCE9B29D1F61C00AEF73D /* GeoPackageCompositeOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCE9A29D1F61C00AEF73D /* GeoPackageCompositeOverlay.swift */; };
+		F70BCE9D29D2104D00AEF73D /* GeoPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCE9C29D2104D00AEF73D /* GeoPackage.swift */; };
+		F70BCE9F29D351DA00AEF73D /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCE9E29D351DA00AEF73D /* DocumentPicker.swift */; };
+		F70BCEA129D48ED800AEF73D /* GeoPackageImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCEA029D48ED800AEF73D /* GeoPackageImporter.swift */; };
+		F70BCEA329D761E400AEF73D /* GeoPackageLayerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCEA229D761E400AEF73D /* GeoPackageLayerEditView.swift */; };
+		F70BCEA529DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCEA429DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift */; };
 		F70F50192992DAFF0062E555 /* DataLoadedNotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70F50182992DAFF0062E555 /* DataLoadedNotificationBanner.swift */; };
 		F70F501D2993EA470062E555 /* DataLoadedNotificationBannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70F501C2993EA470062E555 /* DataLoadedNotificationBannerTests.swift */; };
 		F713616B28B79D310005C69C /* set_build_number.sh in Resources */ = {isa = PBXBuildFile; fileRef = F713616A28B79D310005C69C /* set_build_number.sh */; };
@@ -409,6 +415,12 @@
 		F707BA9228805476006A94C4 /* PersistedMapState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedMapState.swift; sourceTree = "<group>"; };
 		F707BA96288590E2006A94C4 /* FogSignalImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FogSignalImage.swift; sourceTree = "<group>"; };
 		F70BCE9829C4F1AE00AEF73D /* UserLayersMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLayersMap.swift; sourceTree = "<group>"; };
+		F70BCE9A29D1F61C00AEF73D /* GeoPackageCompositeOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageCompositeOverlay.swift; sourceTree = "<group>"; };
+		F70BCE9C29D2104D00AEF73D /* GeoPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackage.swift; sourceTree = "<group>"; };
+		F70BCE9E29D351DA00AEF73D /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
+		F70BCEA029D48ED800AEF73D /* GeoPackageImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageImporter.swift; sourceTree = "<group>"; };
+		F70BCEA229D761E400AEF73D /* GeoPackageLayerEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageLayerEditView.swift; sourceTree = "<group>"; };
+		F70BCEA429DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSDecimalNumberExtensions.swift; sourceTree = "<group>"; };
 		F70F50182992DAFF0062E555 /* DataLoadedNotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadedNotificationBanner.swift; sourceTree = "<group>"; };
 		F70F501C2993EA470062E555 /* DataLoadedNotificationBannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadedNotificationBannerTests.swift; sourceTree = "<group>"; };
 		F713616A28B79D310005C69C /* set_build_number.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = set_build_number.sh; sourceTree = "<group>"; };
@@ -1178,6 +1190,7 @@
 				F75E32BC29C4BB13006F2394 /* MapLayerViewModel.swift */,
 				F75E32BE29C4BC00006F2394 /* LayerURLView.swift */,
 				F75E32C029C4BC1F006F2394 /* LayerConfigurationView.swift */,
+				F70BCEA229D761E400AEF73D /* GeoPackageLayerEditView.swift */,
 			);
 			path = Edit;
 			sourceTree = "<group>";
@@ -1186,6 +1199,8 @@
 			isa = PBXGroup;
 			children = (
 				F7D671C9286C945500758F1C /* GeopackageFeatureOverlay.swift */,
+				F70BCE9A29D1F61C00AEF73D /* GeoPackageCompositeOverlay.swift */,
+				F70BCE9C29D2104D00AEF73D /* GeoPackage.swift */,
 			);
 			path = GeoPackage;
 			sourceTree = "<group>";
@@ -1451,6 +1466,7 @@
 			children = (
 				F7D671C2286C860900758F1C /* GeoPackageMap.swift */,
 				F7D671C4286C8A3100758F1C /* GeoPackageLayer.swift */,
+				F70BCEA029D48ED800AEF73D /* GeoPackageImporter.swift */,
 			);
 			path = GeoPackage;
 			sourceTree = "<group>";
@@ -1622,6 +1638,7 @@
 				F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */,
 				F71D288028C29F0200F1775C /* BundleExtensions.swift */,
 				F7F7CFC229BA56C400A14350 /* StringExtensions.swift */,
+				F70BCEA429DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1645,6 +1662,7 @@
 				F7C23DFD290721680002A7DF /* SubmitReportView.swift */,
 				F7C23E1329115AF40002A7DF /* DocumentPreview.swift */,
 				F70F50182992DAFF0062E555 /* DataLoadedNotificationBanner.swift */,
+				F70BCE9E29D351DA00AEF73D /* DocumentPicker.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2196,6 +2214,7 @@
 				F7D671C5286C8A3100758F1C /* GeoPackageLayer.swift in Sources */,
 				F70BCE9929C4F1AE00AEF73D /* UserLayersMap.swift in Sources */,
 				F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */,
+				F70BCEA529DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift in Sources */,
 				F7FFB31428D63CB000C31AA3 /* Modu+DataSourceViewBuilder.swift in Sources */,
 				F7C23E1429115AF40002A7DF /* DocumentPreview.swift in Sources */,
 				F7D671E22871C29A00758F1C /* AsamActionBar.swift in Sources */,
@@ -2206,12 +2225,14 @@
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
 				F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */,
 				F72EAADA291D915000AC6026 /* ChartCorrection.swift in Sources */,
+				F70BCE9F29D351DA00AEF73D /* DocumentPicker.swift in Sources */,
 				F7FFB2FE28D6373F00C31AA3 /* NavigationalWarning+DataSourceViewBuilder.swift in Sources */,
 				F7D5C05B28A6B458000C2C29 /* StructureImage.swift in Sources */,
 				F71D287328BE969500F1775C /* DFRSDetailView.swift in Sources */,
 				F76052C129AD274E00F13260 /* MapLayersView.swift in Sources */,
 				F740AA79289D6DED00754293 /* MarlinRegularWidth.swift in Sources */,
 				F75E32B829C10C75006F2394 /* XYZTileOverlay.swift in Sources */,
+				F70BCEA329D761E400AEF73D /* GeoPackageLayerEditView.swift in Sources */,
 				F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */,
 				F7D8FA772940EF7400E7D0A1 /* ChartCorrectionListViewModel.swift in Sources */,
 				F7FFB33F28DA104200C31AA3 /* FilterBottomSheet.swift in Sources */,
@@ -2294,6 +2315,7 @@
 				F7FFB32028D640FA00C31AA3 /* RadioBeacon+DataSource.swift in Sources */,
 				F7FFB32628D6422F00C31AA3 /* RadioBeacon+MapImage.swift in Sources */,
 				F7D8FA42293A923400E7D0A1 /* FilterPropertyAndComparison.swift in Sources */,
+				F70BCEA129D48ED800AEF73D /* GeoPackageImporter.swift in Sources */,
 				F707BA8328786F11006A94C4 /* LightColorImage.swift in Sources */,
 				F7D8FA51293A999600E7D0A1 /* BooleanFilter.swift in Sources */,
 				F71D287528BE96EB00F1775C /* DFRSMap.swift in Sources */,
@@ -2310,6 +2332,7 @@
 				F7F597AE2864DE2900F9B32E /* NavigationalWarningDetailView.swift in Sources */,
 				F7D8FA1A2922BB0400E7D0A1 /* NoticeToMarinersSummaryView.swift in Sources */,
 				F71DF4A52859120A00686951 /* BottomSheetView.swift in Sources */,
+				F70BCE9D29D2104D00AEF73D /* GeoPackage.swift in Sources */,
 				F71D287F28C293A000F1775C /* AboutView.swift in Sources */,
 				F7FFB2FA28D6349900C31AA3 /* Port+DataSourceViewBuilder.swift in Sources */,
 				F7C23DFC2906F1460002A7DF /* Metrics.swift in Sources */,
@@ -2362,6 +2385,7 @@
 				F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */,
 				F7FFB32828D6427200C31AA3 /* RadioBeacon+Decodable.swift in Sources */,
 				F71D287B28C1401500F1775C /* FetchRequestMap.swift in Sources */,
+				F70BCE9B29D1F61C00AEF73D /* GeoPackageCompositeOverlay.swift in Sources */,
 				F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */,
 				F71D287D28C2926500F1775C /* AboutCell.swift in Sources */,
 				F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */,
@@ -2606,12 +2630,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Marlin/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Marlin;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Marlin uses your location to provide location aware alerts";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2644,12 +2668,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Marlin/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Marlin;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Marlin uses your location to provide location aware alerts";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

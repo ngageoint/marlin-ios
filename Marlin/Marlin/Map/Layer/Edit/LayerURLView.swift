@@ -14,27 +14,57 @@ struct LayerURLView: View {
     @ObservedObject var mapState: MapState
     @FocusState var isInputActive: Bool
     @Binding var isPresented: Bool
-    
+    @State var chooseFile: Bool = false
+
     var body: some View {
         VStack {
             List {
-                Section {
-                    VStack(alignment: .leading) {
-                        Text("Layer URL")
-                            .overline()
-                        TextField("Layer URL", text: $viewModel.url)
-                            .keyboardType(.URL)
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled()
-                            .underlineTextFieldWithLabel()
-                            .focused($isInputActive)
-                            .accessibilityElement()
-                            .accessibilityLabel("Layer URL input")
-                    }
-                    .frame(maxWidth:.infinity)
-                } header: {
-                    EmptyView().frame(width: 0, height: 0, alignment: .leading)
+                VStack(alignment: .leading) {
+                    Text("Layer URL")
+                        .overline()
+                    TextField("Layer URL", text: $viewModel.url)
+                        .keyboardType(.URL)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .underlineTextFieldWithLabel()
+                        .focused($isInputActive)
+                        .accessibilityElement()
+                        .accessibilityLabel("Layer URL input")
                 }
+                .frame(maxWidth:.infinity)
+                
+                HStack(alignment: .center) {
+                    Spacer()
+                    Text("-or-")
+                        .overline()
+                    Spacer()
+                }
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.backgroundColor)
+                
+                VStack(alignment: .leading) {
+                    Button("Choose A File") {
+                        chooseFile = true
+                    }
+                    .buttonStyle(MaterialButtonStyle())
+                }
+                .frame(maxWidth:.infinity)
+                .alert("Existing GeoPackage", isPresented: $viewModel.confirmFileOverwrite, actions: {
+                    Button("Import As New", role: .destructive) {
+                        if let geoPackageFileUrl = viewModel.fileUrl {
+                            viewModel.fileChosen(url: geoPackageFileUrl, forceImport: true)
+                        }
+                    }
+                    Button("Use Existing", role: .cancel) {
+                        if let fileUrl = viewModel.fileUrl {
+                            viewModel.useExistingFile(url: fileUrl)
+                        }
+                    }
+                    Button("Cancel") {
+                    }
+                }, message: {
+                    Text("An existing GeoPackage with the same name has been imported.  What would you like to do?")
+                })
                 
                 if viewModel.retrievingWMSCapabilities {
                     HStack(alignment: .center) {
@@ -69,40 +99,42 @@ struct LayerURLView: View {
                     }
                 }
                 
-                HStack(alignment: .center) {
-                    Spacer()
-                    
-                    Image(systemName: viewModel.layerType == .xyz ? "circle.inset.filled": "circle")
-                        .foregroundColor(Color.primaryColor)
-                        .onTapGesture {
-                            viewModel.layerType = .xyz
-                        }
-                        .accessibilityElement()
-                        .accessibilityLabel("XYZ")
-                    Text("XYZ")
-                        .overline()
-                    Image(systemName: viewModel.layerType == .wms ? "circle.inset.filled": "circle")
-                        .foregroundColor(Color.primaryColor)
-                        .onTapGesture {
-                            viewModel.layerType = .wms
-                        }
-                        .accessibilityElement()
-                        .accessibilityLabel("WMS")
-                    Text("WMS")
-                        .overline()
-                    Image(systemName: viewModel.layerType == .tms ? "circle.inset.filled": "circle")
-                        .foregroundColor(Color.primaryColor)
-                        .onTapGesture {
-                            viewModel.layerType = .tms
-                        }
-                        .accessibilityElement()
-                        .accessibilityLabel("TMS")
-                    Text("TMS")
-                        .overline()
-                    Spacer()
+                if viewModel.urlOK {
+                    HStack(alignment: .center) {
+                        Spacer()
+                        
+                        Image(systemName: viewModel.layerType == .xyz ? "circle.inset.filled": "circle")
+                            .foregroundColor(Color.primaryColor)
+                            .onTapGesture {
+                                viewModel.layerType = .xyz
+                            }
+                            .accessibilityElement()
+                            .accessibilityLabel("XYZ")
+                        Text("XYZ")
+                            .overline()
+                        Image(systemName: viewModel.layerType == .wms ? "circle.inset.filled": "circle")
+                            .foregroundColor(Color.primaryColor)
+                            .onTapGesture {
+                                viewModel.layerType = .wms
+                            }
+                            .accessibilityElement()
+                            .accessibilityLabel("WMS")
+                        Text("WMS")
+                            .overline()
+                        Image(systemName: viewModel.layerType == .tms ? "circle.inset.filled": "circle")
+                            .foregroundColor(Color.primaryColor)
+                            .onTapGesture {
+                                viewModel.layerType = .tms
+                            }
+                            .accessibilityElement()
+                            .accessibilityLabel("TMS")
+                        Text("TMS")
+                            .overline()
+                        Spacer()
+                    }
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.backgroundColor)
                 }
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.backgroundColor)
                 
                 if viewModel.layerType == .wms {
                     if let capabilities = viewModel.capabilities {
@@ -157,6 +189,15 @@ struct LayerURLView: View {
                 } else if viewModel.layerType == .xyz || viewModel.layerType == .tms {
                     MarlinMap(name: "XYZ Layer Map", mixins: [BaseOverlaysMap(viewModel: viewModel)], mapState: mapState)
                         .frame(minHeight: 300, maxHeight: .infinity)
+                } else if viewModel.layerType == .geopackage {
+                    Section("GeoPackage Information") {
+                        VStack(alignment: .leading, spacing: 8) {
+                            if let geoPackage = viewModel.geoPackage, let geoPackageName = geoPackage.name {
+                                Property(property: "GeoPackage Name", value: "\(geoPackageName)")
+                                Property(property: "Layer Count", value: "\(viewModel.fileLayers.count)")
+                            }
+                        }
+                    }
                 }
             }
             .dataSourceDetailList()
@@ -165,16 +206,18 @@ struct LayerURLView: View {
             NavigationLink {
                 if viewModel.layerType == .wms {
                     WMSLayerEditView(viewModel: viewModel, mapState: mapState, isPresented: $isPresented)
+                } else if viewModel.layerType == .geopackage {
+                    GeoPackageLayerEditView(viewModel: viewModel, mapState: mapState, isPresented: $isPresented)
                 } else {
                     LayerConfiguration(viewModel: viewModel, mapState: mapState, isPresented: $isPresented)
                 }
             } label: {
-                Text("Confirm URL")
+                Text("Confirm Layer Source")
                     .tint(Color.primaryColor)
             }
             .buttonStyle(MaterialButtonStyle(type: .contained))
             .background(Color.backgroundColor)
-            .disabled(!viewModel.urlOK)
+            .disabled(!viewModel.urlOK && viewModel.geoPackage == nil)
             .padding(8)
         }
         .navigationTitle("Layer URL")
@@ -200,5 +243,8 @@ struct LayerURLView: View {
                 .tint(Color.primaryColorVariant)
             }
         }
+        .sheet(isPresented: $chooseFile, content: {
+            DocumentPicker(model: viewModel.documentPickerViewModel)
+        })
     }
 }

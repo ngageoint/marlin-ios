@@ -77,7 +77,7 @@ class GeopackageCompositeOverlay: MKTileOverlay {
         for tileTable in tileTables {
             if tileTable.hasTileWith(x: path.x, andY: path.y, andZoom: path.z) {
                 if let data = tileTable.retrieveTileWith(x: path.x, andY: path.y, andZoom: path.z) {
-                    images.append(GPKGImageConverter.toImage(data))
+                    images.append(GPKGImageConverter.toImage(data, withScale: tileTable.tileSize.width / 512.0))
                 }
             }
         }
