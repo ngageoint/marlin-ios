@@ -14,23 +14,41 @@ struct MapLayerRow: View {
     
     var body: some View {
         Toggle(isOn: $isVisible) {
+            HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(layer.displayName ?? layer.name ?? "Layer").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
-                    Text("\(layer.host ?? layer.filePath ?? "")")
+                    Text("\(layer.host ?? layer.name ?? "")")
                         .font(Font.caption)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.6))
                 }
-                .padding(.top, 4)
-                .padding(.bottom, 4)
+                .padding([.top, .bottom], 4)
+                Spacer()
+                Button(action: {
+//                    NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+//                    let notification = MapItemsTappedNotification(items: [self.asam])
+//                    NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
+                }) {
+                    Label(
+                        title: {},
+                        icon: { Image(systemName: "scope")
+                                .renderingMode(.template)
+                                .foregroundColor(Color.primaryColorVariant)
+                        })
+                }
+                .padding([.trailing, .leading], 16)
+                .accessibilityElement()
+                .accessibilityLabel("focus")
             }
-            .contentShape(Rectangle())
-            .onTapGesture {
-                isVisible.toggle()
-            }
-            .tint(Color.primaryColor)
-            .accessibilityElement()
-            .accessibilityLabel("\(isVisible ? "Hide" : "Show") \(layer.url ?? layer.filePath ?? "")")
+        }
+        .toggleStyle(iOSCheckboxToggleStyle())
+        .contentShape(Rectangle())
+        .onTapGesture {
+            isVisible.toggle()
+        }
+        .tint(Color.primaryColor)
+        .accessibilityElement()
+        .accessibilityLabel("\(isVisible ? "Hide" : "Show") \(layer.url ?? layer.filePath ?? "")")
     }
 }
 

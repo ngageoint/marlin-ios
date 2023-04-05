@@ -13,7 +13,7 @@ class MapLayer: NSManagedObject {
     
     static func createFrom(viewModel: MapLayerViewModel, context: NSManagedObjectContext) -> MapLayer {
         let layer = MapLayer(context: context)
-        layer.name = viewModel.name
+        layer.name = viewModel.fileName
         layer.url = viewModel.urlTemplate
         layer.refreshRate = Int64(viewModel.refreshRate)
         layer.displayName = viewModel.displayName

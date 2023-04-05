@@ -56,6 +56,8 @@ class UserLayersMap: MapMixin {
                         overlay = WMSTileOverlay(mapLayer: layer)
                     } else if layer.type == LayerType.xyz.rawValue || layer.type == LayerType.tms.rawValue {
                         overlay = XYZTileOverlay(mapLayer: layer)
+                    } else if layer.type == LayerType.geopackage.rawValue {
+                        overlay = GeopackageCompositeOverlay(mapLayer: layer)
                     }
                     
                     if let overlay = overlay {

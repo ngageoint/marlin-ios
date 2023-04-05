@@ -109,7 +109,6 @@ class MapLayerViewModel: ObservableObject {
         }
     }
     @Published var displayName: String = ""
-    @Published var name: String = ""
     
     @Published var retrievingWMSCapabilities: Bool = false
     @Published var triedCapabilities: Bool = false
@@ -183,7 +182,7 @@ class MapLayerViewModel: ObservableObject {
             }
             return layerNameArray
         } else if layerType == .geopackage {
-            return fileLayers
+            return selectedFileLayers
         }
         return []
     }
@@ -331,7 +330,6 @@ class MapLayerViewModel: ObservableObject {
     func geoPackageImported() {
         importingFile = false
         
-        let name = fileName
         if let name = fileName, importer.alreadyImported(name: name) {
             geoPackage = GeoPackage.shared.getGeoPackage(name: name)
             layerType = .geopackage

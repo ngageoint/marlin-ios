@@ -88,7 +88,7 @@ struct LayerConfiguration: View {
             }
             .frame(minHeight: 0, maxHeight: .infinity)
             
-            MarlinMap(name: "WMS Layer Map", mixins: [BaseOverlaysMap(viewModel: viewModel)], mapState: mapState)
+            MarlinMap(name: "Layer Map", mixins: [BaseOverlaysMap(viewModel: viewModel)], mapState: mapState)
                 .frame(minHeight: 0, maxHeight: .infinity)
             
             Button("Create Layer") {
