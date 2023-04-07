@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import MapKit
 
 struct WMSLayerEditView: View {
 
@@ -73,10 +74,10 @@ struct WMSLayerEditView: View {
                         DisclosureGroup(isExpanded: first ? $topExpanded : Binding.constant(false)) {
                             self.layerDisclosureGroup(layers: layers, parentWebMercator: parentWebMercator || layer.isWebMercator)
                         } label: {
-                            LayerRow(viewModel: viewModel, layer: layer, parentWebMercator: parentWebMercator)
+                            LayerRow(viewModel: viewModel, layer: layer, mapState: mapState, parentWebMercator: parentWebMercator)
                         }
                     } else {
-                        LayerRow(viewModel: viewModel, layer: layer, parentWebMercator: parentWebMercator)
+                        LayerRow(viewModel: viewModel, layer: layer, mapState: mapState, parentWebMercator: parentWebMercator)
                     }
                 }
             }
@@ -87,6 +88,7 @@ struct WMSLayerEditView: View {
 struct LayerRow: View {
     @ObservedObject var viewModel: MapLayerViewModel
     @ObservedObject var layer: Layer
+    @ObservedObject var mapState: MapState
     var parentWebMercator: Bool = false
     var body: some View {
         buildRow()
@@ -131,8 +133,34 @@ struct LayerRow: View {
                                 .font(Font.caption)
                                 .foregroundColor(Color.onSurfaceColor.opacity(0.6))
                         }
+                        if layer.boundingBox != nil {
+                            Text(layer.boundingBoxDisplay)
+                                .multilineTextAlignment(.leading)
+                                .font(Font.caption)
+                                .foregroundColor(Color.onSurfaceColor.opacity(0.6))
+                        }
                     }
                     .padding([.top, .bottom], 4)
+                    Spacer()
+                    Button(action: {
+                        if let boundingBox = layer.boundingBox, let minLatitude = boundingBox.minLatitude, let maxLatitude = boundingBox.maxLatitude, let minLongitude = boundingBox.minLongitude, let maxLongitude = boundingBox.maxLongitude {
+                            let latSpan = maxLatitude - minLatitude
+                            let lonSpan = maxLongitude - minLongitude
+                            let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: maxLatitude - (latSpan / 2.0), longitude: maxLongitude - (lonSpan / 2.0))
+                            let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latSpan, longitudeDelta: lonSpan)
+                            mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                        }
+                    }) {
+                        Label(
+                            title: {},
+                            icon: { Image(systemName: "scope")
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.primaryColorVariant)
+                            })
+                    }
+                    .padding([.trailing, .leading], 16)
+                    .accessibilityElement()
+                    .accessibilityLabel("focus")
                 }
             })
             .onChange(of: layer.selected, perform: { newValue in

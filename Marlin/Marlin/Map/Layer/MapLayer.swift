@@ -25,6 +25,10 @@ class MapLayer: NSManagedObject {
         layer.visible = true
         layer.order = Int64((try? context.countOfObjects(MapLayer.self)) ?? 0)
         layer.layers = viewModel.layers.joined(separator: ",")
+        layer.minLatitude = viewModel.minLatitude
+        layer.maxLatitude = viewModel.maxLatitude
+        layer.minLongitude = viewModel.minLongitude
+        layer.maxLongitude = viewModel.maxLongitude
         return layer
     }
     
@@ -65,6 +69,10 @@ class MapLayer: NSManagedObject {
             return []
         }
         return layers.components(separatedBy: ",")
+    }
+    
+    var boundingBoxDisplay: String {
+        return "(\(minLatitude.latitudeDisplay), \(minLongitude.longitudeDisplay)) - (\(maxLatitude.latitudeDisplay), \(maxLongitude.longitudeDisplay))"
     }
     
 }

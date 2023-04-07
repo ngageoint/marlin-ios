@@ -16,7 +16,6 @@ class BaseOverlaysMap: NSObject, MapMixin {
     var overlays: [MKTileOverlay] = []
     
     var mapState: MapState?
-    var controller: NSFetchedResultsController<MapLayer>?
     var lastChange: Date?
     var cancellable = Set<AnyCancellable>()
     

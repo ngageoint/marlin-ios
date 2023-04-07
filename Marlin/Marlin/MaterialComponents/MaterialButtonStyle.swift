@@ -142,7 +142,7 @@ struct MaterialButtonStyle: ButtonStyle {
             .label
             .labelStyle(MaterialButtonLabelStyle(color: foregroundColor))
             .frame(minWidth: 44.0, maxWidth: maxWidth ? .infinity : nil, minHeight: 44.0)
-            .padding([.trailing, .leading], 4)
+            .padding([.trailing, .leading], 8)
             .font(Font.body2)
             .foregroundColor(foregroundColor)
             .background(

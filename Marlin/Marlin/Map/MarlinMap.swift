@@ -25,6 +25,12 @@ class MapSingleTap: UITapGestureRecognizer {
 class MapState: ObservableObject {
     @Published var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
     @Published var center: MKCoordinateRegion?
+    @Published var forceCenter: MKCoordinateRegion? {
+        didSet {
+            forceCenterDate = Date()
+        }
+    }
+    var forceCenterDate: Date?
     
     @Published var searchResults: [MKMapItem]?
     
@@ -113,8 +119,13 @@ struct MarlinMap: UIViewRepresentable {
         }
 
         if let center = mapState.center, center.center.latitude != context.coordinator.setCenter?.latitude, center.center.longitude != context.coordinator.setCenter?.longitude {
-                mapView.setRegion(center, animated: true)
+            mapView.setRegion(center, animated: true)
             context.coordinator.setCenter = center.center
+        }
+        
+        if let center = mapState.forceCenter, context.coordinator.forceCenterDate != mapState.forceCenterDate {
+            mapView.setRegion(center, animated: true)
+            context.coordinator.forceCenterDate = mapState.forceCenterDate
         }
         
         if context.coordinator.trackingModeSet != MKUserTrackingMode(rawValue: mapState.userTrackingMode) {
@@ -186,6 +197,8 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
 
     var setCenter: CLLocationCoordinate2D?
     var trackingModeSet: MKUserTrackingMode?
+    
+    var forceCenterDate: Date?
 
     init(_ marlinMap: MarlinMap) {
         self.marlinMap = marlinMap

@@ -237,7 +237,7 @@ struct MarlinRegularWidth: View {
             // top right button stack
             VStack(alignment: .trailing, spacing: 16) {
                 NavigationLink {
-                    MapSettings()
+                    MapSettings(mapState: marlinMap.mapState)
                 } label: {
                     Label(
                         title: {},

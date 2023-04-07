@@ -221,8 +221,8 @@ struct MarlinCompactWidth: View {
             Spacer()
             // top right button stack
             VStack(alignment: .trailing, spacing: 16) {
-                NavigationLink {
-                    MapSettings()
+                NavigationLink(tag: "mapSettings", selection: $selection) {
+                    MapSettings(mapState: marlinMap.mapState)
                 } label: {
                     Label(
                         title: {},

@@ -33,6 +33,7 @@ struct iOSCheckboxToggleStyle: ToggleStyle {
                 configuration.label
                 Spacer()
                 Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
+                    .tint(Color.primaryColorVariant)
             }
         })
     }

@@ -40,72 +40,98 @@ enum RefreshRateUnit: Int, Equatable, CaseIterable {
     }
 }
 
-class TileTableInfo: ObservableObject, Identifiable, Hashable {
+protocol LayerInfo: Identifiable, Hashable {
+    var name: String { get }
+    var minLatitude: Double { get }
+    var maxLatitude: Double { get }
+    var minLongitude: Double { get }
+    var maxLongitude: Double { get }
+    var selected: Bool { get set }
+}
+
+extension LayerInfo {
+    var id: String { name }
+    
+    var boundingBoxDisplay: String {
+        return "(\(minLatitude.latitudeDisplay), \(minLongitude.longitudeDisplay)) - (\(maxLatitude.latitudeDisplay), \(maxLongitude.longitudeDisplay))"
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+
+}
+
+class TileLayerInfo: LayerInfo, ObservableObject {
     var name: String
     var minZoom: Int
     var maxZoom: Int
-    var bounds: GPKGBoundingBox
+    var minLatitude: Double = -90.0
+    var maxLatitude: Double = 90.0
+    var minLongitude: Double = -180.0
+    var maxLongitude: Double = 180.0
+    
     @Published var selected: Bool = false
     
-    init(name: String, minZoom: Int, maxZoom: Int, bounds: GPKGBoundingBox) {
+    init(name: String, minZoom: Int, maxZoom: Int, minLatitude: Double = -90.0, maxLatitude: Double = 90.0, minLongitude: Double = -180.0, maxLongitude: Double = 180.0) {
         self.name = name
         self.minZoom = minZoom
         self.maxZoom = maxZoom
-        self.bounds = bounds
+        self.minLatitude = minLatitude
+        self.maxLatitude = maxLatitude
+        self.minLongitude = minLongitude
+        self.maxLongitude = maxLongitude
     }
     
-    static func == (lhs: TileTableInfo, rhs: TileTableInfo) -> Bool {
+    static func == (lhs: TileLayerInfo, rhs: TileLayerInfo) -> Bool {
         return lhs.id == rhs.id
     }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
-    var id: String { name }
-    
-    var boundingBoxDisplay: String {
-        if let minLatitude = bounds.minLatitude, let minLongitude = bounds.minLongitude, let maxLatitude = bounds.maxLatitude, let maxLongitude = bounds.maxLongitude {
-            return "(\(minLatitude.latitudeDisplay), \(minLongitude.longitudeDisplay)) - (\(maxLatitude.latitudeDisplay), \(maxLongitude.longitudeDisplay))"
-        }
-        return ""
+
+}
+
+extension TileLayerInfo {
+    convenience init(name: String, minZoom: Int, maxZoom: Int, boundingBox: GPKGBoundingBox) {
+        self.init(name: name, minZoom: minZoom, maxZoom: maxZoom, minLatitude: boundingBox.minLatitude.doubleValue, maxLatitude: boundingBox.maxLatitude.doubleValue, minLongitude: boundingBox.minLongitude.doubleValue, maxLongitude: boundingBox.maxLongitude.doubleValue)
     }
 }
 
-class FeatureTableInfo: ObservableObject, Identifiable, Hashable {
+class FeatureLayerInfo: LayerInfo, ObservableObject {
     var name: String
     var count: Int
-    var bounds: GPKGBoundingBox
+    var minLatitude: Double = -90.0
+    var maxLatitude: Double = 90.0
+    var minLongitude: Double = -180.0
+    var maxLongitude: Double = 180.0
     @Published var selected: Bool = false
     
-    init(name: String, count: Int, bounds: GPKGBoundingBox) {
+    init(name: String, count: Int, minLatitude: Double = -90.0, maxLatitude: Double = 90.0, minLongitude: Double = -180.0, maxLongitude: Double = 180.0) {
         self.name = name
         self.count = count
-        self.bounds = bounds
+        self.minLatitude = minLatitude
+        self.maxLatitude = maxLatitude
+        self.minLongitude = minLongitude
+        self.maxLongitude = maxLongitude
     }
     
-    static func == (lhs: FeatureTableInfo, rhs: FeatureTableInfo) -> Bool {
+    static func == (lhs: FeatureLayerInfo, rhs: FeatureLayerInfo) -> Bool {
         return lhs.id == rhs.id
     }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
-    var id: String { name }
-    
-    var boundingBoxDisplay: String {
-        if let minLatitude = bounds.minLatitude, let minLongitude = bounds.minLongitude, let maxLatitude = bounds.maxLatitude, let maxLongitude = bounds.maxLongitude {
-            return "(\(minLatitude.latitudeDisplay), \(minLongitude.longitudeDisplay)) - (\(maxLatitude.latitudeDisplay), \(maxLongitude.longitudeDisplay))"
-        }
-        return ""
+}
+
+extension FeatureLayerInfo {
+    convenience init(name: String, count: Int, boundingBox: GPKGBoundingBox) {
+        self.init(name: name, count: count, minLatitude: boundingBox.minLatitude.doubleValue, maxLatitude: boundingBox.maxLatitude.doubleValue, minLongitude: boundingBox.minLongitude.doubleValue, maxLongitude: boundingBox.maxLongitude.doubleValue)
     }
 }
 
 class MapLayerViewModel: ObservableObject {
     @Published var url: String = "" {
         didSet {
-            urlPublisher.send(url)
+            if url != oldValue {
+                capabilities = nil
+                urlPublisher.send(url)
+            }
         }
     }
     @Published var displayName: String = ""
@@ -130,6 +156,10 @@ class MapLayerViewModel: ObservableObject {
     @Published var refreshRateUnits: RefreshRateUnit = .none
     @Published var minimumZoom: Int = 0
     @Published var maximumZoom: Int = 25
+    @Published var minLatitude: Double = -90.0
+    @Published var maxLatitude: Double = 90.0
+    @Published var minLongitude: Double = -180.0
+    @Published var maxLongitude: Double = 180.0
     
     @Published var username: String?
     @Published var password: String?
@@ -142,7 +172,7 @@ class MapLayerViewModel: ObservableObject {
     @Published var fileUrl: URL?
     @Published var fileLayers: [String] = []
     @Published var fileName: String?
-    @Published var selectedFileLayers: [String] = []
+    @Published var selectedFileLayers: [any LayerInfo] = []
     
     var geoPackage: GPKGGeoPackage?  {
         didSet {
@@ -182,45 +212,94 @@ class MapLayerViewModel: ObservableObject {
             }
             return layerNameArray
         } else if layerType == .geopackage {
-            return selectedFileLayers
+            return selectedFileLayers.map { $0.name }
         }
         return []
     }
     
-    var tileLayers: [TileTableInfo] {
-        var tileLayers: [TileTableInfo] = []
+    var tileLayers: [TileLayerInfo] {
+        var tileLayers: [TileLayerInfo] = []
         if let geoPackage = geoPackage {
             for tileTable in geoPackage.tileTables() {
                 if let tileDao = geoPackage.tileDao(withTableName: tileTable) {
                     let bb: GPKGBoundingBox = tileDao.contents().boundingBox().transform(SFPGeometryTransform(from: tileDao.projection, andToEpsg: 4326)) ?? GPKGBoundingBox.worldWGS84()
-                    tileLayers.append(TileTableInfo(name: tileDao.tableName, minZoom: Int(tileDao.mapMinZoom()), maxZoom: Int(tileDao.mapMaxZoom()), bounds: bb))
+                    tileLayers.append(TileLayerInfo(name: tileDao.tableName, minZoom: Int(tileDao.mapMinZoom()), maxZoom: Int(tileDao.mapMaxZoom()), boundingBox: bb))
                 }
             }
         }
         return tileLayers
     }
     
-    var featureLayers: [FeatureTableInfo] {
-        var featureLayers: [FeatureTableInfo] = []
+    var featureLayers: [FeatureLayerInfo] {
+        var featureLayers: [FeatureLayerInfo] = []
         if let geoPackage = geoPackage {
             for featureTable in geoPackage.featureTables() {
                 if let featureDao = geoPackage.featureDao(withTableName: featureTable) {
                     let bb: GPKGBoundingBox = featureDao.contents().boundingBox().transform(SFPGeometryTransform(from: featureDao.projection, andToEpsg: 4326)) ?? GPKGBoundingBox.worldWGS84()
-                    featureLayers.append(FeatureTableInfo(name: featureDao.tableName, count: Int(featureDao.count()), bounds: bb))
+                    featureLayers.append(FeatureLayerInfo(name: featureDao.tableName, count: Int(featureDao.count()), boundingBox: bb))
                 }
             }
         }
         return featureLayers
     }
     
-    func updateSelectedFileLayers(layerName: String, selected: Bool) {
-        if selected {
-            selectedFileLayers.append(layerName)
-        } else if let index = selectedFileLayers.firstIndex(of: layerName) {
-            selectedFileLayers.remove(at: index)
+    func updateBounds() {
+        if layerType == .geopackage {
+            if selectedFileLayers.isEmpty {
+                minLatitude = -90.0
+                maxLatitude = 90.0
+                minLongitude = -180.0
+                maxLongitude = 180.0
+            } else {
+                minLatitude = selectedFileLayers[0].minLatitude
+                maxLatitude = selectedFileLayers[0].maxLatitude
+                minLongitude = selectedFileLayers[0].minLongitude
+                maxLongitude = selectedFileLayers[0].maxLongitude
+                for selectedFileLayer in selectedFileLayers.dropFirst() {
+                    minLatitude = min(minLatitude, selectedFileLayer.minLatitude)
+                    maxLatitude = max(maxLatitude, selectedFileLayer.maxLatitude)
+                    minLongitude = min(minLongitude, selectedFileLayer.minLongitude)
+                    maxLongitude = max(maxLongitude, selectedFileLayer.maxLongitude)
+                }
+            }
+        } else if layerType == .wms {
+            guard !url.isEmpty, let layers = capabilities?.selectedLayers, !layers.isEmpty else {
+                minLatitude = -90.0
+                maxLatitude = 90.0
+                minLongitude = -180.0
+                maxLongitude = 180.0
+                return
+            }
+            
+            if let boundingBox = layers[0].boundingBox, let minLatitude = boundingBox.minLatitude, let maxLatitude = boundingBox.maxLatitude, let minLongitude = boundingBox.minLongitude, let maxLongitude = boundingBox.maxLongitude {
+                self.minLatitude = minLatitude
+                self.maxLatitude = maxLatitude
+                self.minLongitude = minLongitude
+                self.maxLongitude = maxLongitude
+                
+            }
+            for layer in layers.dropFirst() {
+                if let boundingBox = layer.boundingBox, let minLatitude = boundingBox.minLatitude, let maxLatitude = boundingBox.maxLatitude, let minLongitude = boundingBox.minLongitude, let maxLongitude = boundingBox.maxLongitude {
+                    self.minLatitude = min(self.minLatitude, minLatitude)
+                    self.maxLatitude = max(self.maxLatitude, maxLatitude)
+                    self.minLongitude = min(self.minLongitude, minLongitude)
+                    self.maxLongitude = max(self.maxLongitude, maxLongitude)
+                }
+            }
         }
     }
     
+    func updateSelectedFileLayers(layer: any LayerInfo) {
+        if layer.selected {
+            selectedFileLayers.append(layer)
+        } else if let index = selectedFileLayers.firstIndex(where: { layerInfo in
+            layerInfo.name == layer.name
+        }) {
+            selectedFileLayers.remove(at: index)
+        }
+        updateBounds()
+    }
+
     func populateFileLayers() {
         let tileTables = geoPackage?.tileTables() ?? []
         let featureTables = geoPackage?.featureTables() ?? []
@@ -257,6 +336,7 @@ class MapLayerViewModel: ObservableObject {
             let layerNames = layerNameArray.joined(separator: ",")
             
             urlTemplate = "\(url)?SERVICE=WMS&VERSION=\(version)&REQUEST=GetMap&FORMAT=\(transparent ? "image%2Fpng" : "image%2Fjpeg")&TRANSPARENT=\(transparent)&LAYERS=\(layerNames)&TILED=true&WIDTH=512&HEIGHT=512&CRS=EPSG%3A3857&STYLES="
+            updateBounds()
         } else if layerType == .xyz || layerType == .tms {
             guard !url.isEmpty else {
                 urlTemplate = nil
@@ -422,6 +502,7 @@ class MapLayerViewModel: ObservableObject {
         }.parse(string)
         do {
             let capabilities: WMSCapabilities? = try xml["WMS_Capabilities"].value()
+            capabilities?.correctBounds()
             return capabilities
         } catch {
             print("Error parsing capabilities \(error)")
@@ -487,6 +568,37 @@ struct WMSCapabilities: XMLObjectDeserialization {
             getMap: node["Capability"]["Request"]["GetMap"].value()
         )
     }
+    
+    func correctBounds() {
+        if let layers = layers {
+            for layer in layers {
+                layer.correctBounds(parentBounds: nil)
+            }
+        }
+    }
+}
+
+final class BoundingBox: XMLObjectDeserialization {
+    let minLongitude: Double?
+    let maxLongitude: Double?
+    let minLatitude: Double?
+    let maxLatitude: Double?
+    
+    init(minLongitude: Double?, maxLongitude: Double?, minLatitude: Double?, maxLatitude: Double?) {
+        self.minLongitude = minLongitude
+        self.maxLongitude = maxLongitude
+        self.minLatitude = minLatitude
+        self.maxLatitude = maxLatitude
+    }
+    
+    static func deserialize(_ node: XMLIndexer) throws -> BoundingBox {
+        return try BoundingBox(
+            minLongitude: node["westBoundLongitude"].value(),
+            maxLongitude: node["eastBoundLongitude"].value(),
+            minLatitude: node["southBoundLatitude"].value(),
+            maxLatitude: node["northBoundLatitude"].value()
+        )
+    }
 }
 
 final class Layer: XMLObjectDeserialization, Identifiable, ObservableObject {
@@ -497,9 +609,17 @@ final class Layer: XMLObjectDeserialization, Identifiable, ObservableObject {
     let name: String?
     let crs: [String]?
     let layers: [Layer]?
+    var boundingBox: BoundingBox?
     let transparent: Bool
     
     @Published var selected: Bool = false
+    
+    var boundingBoxDisplay: String {
+        if let boundingBox = boundingBox, let minLatitude = boundingBox.minLatitude, let maxLatitude = boundingBox.maxLatitude, let minLongitude = boundingBox.minLongitude, let maxLongitude = boundingBox.maxLongitude {
+            return "(\(minLatitude.latitudeDisplay), \(minLongitude.longitudeDisplay)) - (\(maxLatitude.latitudeDisplay), \(maxLongitude.longitudeDisplay))"
+        }
+        return ""
+    }
     
     var isWebMercator: Bool {
         if let crs = crs, crs.contains(where: { code in
@@ -545,7 +665,7 @@ final class Layer: XMLObjectDeserialization, Identifiable, ObservableObject {
                 return partialResult
             }) ?? []
         }
-        return Layer(title: title, abstract: abstract, name: name, crs: crs, layers: sublayers, transparent: transparent)
+        return Layer(title: title, abstract: abstract, name: name, crs: crs, layers: sublayers, boundingBox: boundingBox, transparent: transparent)
     }
     
     var selectedLayers: [Layer] {
@@ -574,12 +694,13 @@ final class Layer: XMLObjectDeserialization, Identifiable, ObservableObject {
         }) ?? 0
     }
     
-    init(title: String?, abstract: String?, name: String?, crs: [String]?, layers: [Layer]?, transparent: Bool) {
+    init(title: String?, abstract: String?, name: String?, crs: [String]?, layers: [Layer]?, boundingBox: BoundingBox?, transparent: Bool) {
         self.title = title
         self.abstract = abstract
         self.name = name
         self.crs = crs
         self.layers = layers
+        self.boundingBox = boundingBox
         self.transparent = transparent
     }
     
@@ -601,7 +722,17 @@ final class Layer: XMLObjectDeserialization, Identifiable, ObservableObject {
                 return crs ?? ""
             },
             layers: node["Layer"].value(),
+            boundingBox: node["EX_GeographicBoundingBox"].value(),
             transparent: transparent
         )
+    }
+    
+    func correctBounds(parentBounds: BoundingBox?) {
+        boundingBox = boundingBox ?? parentBounds
+        if let layers = layers {
+            for layer in layers {
+                layer.correctBounds(parentBounds: boundingBox)
+            }
+        }
     }
 }

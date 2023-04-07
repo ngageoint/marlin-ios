@@ -9,10 +9,10 @@ import Foundation
 
 extension NSDecimalNumber {
     var latitudeDisplay: String {
-        return "\(abs(self.doubleValue))°\(self.doubleValue < 0 ? "S" : "N")"
+        return "\(String(format: "%.2f", abs(self.doubleValue)))°\(self.doubleValue < 0 ? "S" : "N")"
     }
     
     var longitudeDisplay: String {
-        return "\(abs(self.doubleValue))°\(self.doubleValue < 0 ? "W" : "E")"
+        return "\(String(format: "%.2f", abs(self.doubleValue)))°\(self.doubleValue < 0 ? "W" : "E")"
     }
 }

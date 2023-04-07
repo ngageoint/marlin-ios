@@ -32,6 +32,7 @@
 		F70BCEA129D48ED800AEF73D /* GeoPackageImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCEA029D48ED800AEF73D /* GeoPackageImporter.swift */; };
 		F70BCEA329D761E400AEF73D /* GeoPackageLayerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCEA229D761E400AEF73D /* GeoPackageLayerEditView.swift */; };
 		F70BCEA529DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCEA429DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift */; };
+		F70BCEA929DEFDA900AEF73D /* DoubleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCEA829DEFDA800AEF73D /* DoubleExtensions.swift */; };
 		F70F50192992DAFF0062E555 /* DataLoadedNotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70F50182992DAFF0062E555 /* DataLoadedNotificationBanner.swift */; };
 		F70F501D2993EA470062E555 /* DataLoadedNotificationBannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70F501C2993EA470062E555 /* DataLoadedNotificationBannerTests.swift */; };
 		F713616B28B79D310005C69C /* set_build_number.sh in Resources */ = {isa = PBXBuildFile; fileRef = F713616A28B79D310005C69C /* set_build_number.sh */; };
@@ -421,6 +422,7 @@
 		F70BCEA029D48ED800AEF73D /* GeoPackageImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageImporter.swift; sourceTree = "<group>"; };
 		F70BCEA229D761E400AEF73D /* GeoPackageLayerEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageLayerEditView.swift; sourceTree = "<group>"; };
 		F70BCEA429DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSDecimalNumberExtensions.swift; sourceTree = "<group>"; };
+		F70BCEA829DEFDA800AEF73D /* DoubleExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtensions.swift; sourceTree = "<group>"; };
 		F70F50182992DAFF0062E555 /* DataLoadedNotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadedNotificationBanner.swift; sourceTree = "<group>"; };
 		F70F501C2993EA470062E555 /* DataLoadedNotificationBannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadedNotificationBannerTests.swift; sourceTree = "<group>"; };
 		F713616A28B79D310005C69C /* set_build_number.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = set_build_number.sh; sourceTree = "<group>"; };
@@ -1639,6 +1641,7 @@
 				F71D288028C29F0200F1775C /* BundleExtensions.swift */,
 				F7F7CFC229BA56C400A14350 /* StringExtensions.swift */,
 				F70BCEA429DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift */,
+				F70BCEA829DEFDA800AEF73D /* DoubleExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2208,6 +2211,7 @@
 				F75324D0298D52CC005C509F /* SideMenuViewModel.swift in Sources */,
 				F7FFB31828D63EBC00C31AA3 /* Light+Decodable.swift in Sources */,
 				F73ABC84295245BB0085EDC5 /* OnboardingView.swift in Sources */,
+				F70BCEA929DEFDA900AEF73D /* DoubleExtensions.swift in Sources */,
 				F70F50192992DAFF0062E555 /* DataLoadedNotificationBanner.swift in Sources */,
 				F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */,
 				F7C23E06290844740002A7DF /* ElectronicPublication+Decodable.swift in Sources */,

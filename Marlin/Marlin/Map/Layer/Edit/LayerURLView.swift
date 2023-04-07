@@ -20,33 +20,10 @@ struct LayerURLView: View {
         VStack {
             List {
                 VStack(alignment: .leading) {
-                    Text("Layer URL")
-                        .overline()
-                    TextField("Layer URL", text: $viewModel.url)
-                        .keyboardType(.URL)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .underlineTextFieldWithLabel()
-                        .focused($isInputActive)
-                        .accessibilityElement()
-                        .accessibilityLabel("Layer URL input")
-                }
-                .frame(maxWidth:.infinity)
-                
-                HStack(alignment: .center) {
-                    Spacer()
-                    Text("-or-")
-                        .overline()
-                    Spacer()
-                }
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.backgroundColor)
-                
-                VStack(alignment: .leading) {
-                    Button("Choose A File") {
+                    Button("Import GeoPackage File") {
                         chooseFile = true
                     }
-                    .buttonStyle(MaterialButtonStyle())
+                    .buttonStyle(MaterialButtonStyle(type: .contained))
                 }
                 .frame(maxWidth:.infinity)
                 .alert("Existing GeoPackage", isPresented: $viewModel.confirmFileOverwrite, actions: {
@@ -63,11 +40,46 @@ struct LayerURLView: View {
                     Button("Cancel") {
                     }
                 }, message: {
-                    Text("An existing GeoPackage with the same name has been imported.  What would you like to do?")
+                    if let url = viewModel.fileUrl {
+                        Text("An existing GeoPackage with the name \"**\(viewModel.importer.fileName(url: url))**\" has already been imported.  What would you like to do?")
+                    } else {
+                        Text("An existing GeoPackage with the same name has been imported.  What would you like to do?")
+                    }
                 })
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.backgroundColor)
+                
+                HStack(alignment: .center) {
+                    Spacer()
+                    Text("-or-")
+                        .overline()
+                    Spacer()
+                }
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.backgroundColor)
+                
+                Text("Enter a layer URL, Marlin will do it's best to auto detect the type of your layer.  **NOTE: if tiles appear misaligned, toggle between XYZ and TMS types.**")
+                    .padding(.bottom, 16)
+                    .secondary()
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.backgroundColor)
+                
+                VStack(alignment: .leading) {
+                    Text("Layer URL")
+                        .overline()
+                    TextField("Layer URL", text: $viewModel.url)
+                        .keyboardType(.URL)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .underlineTextFieldWithLabel()
+                        .focused($isInputActive)
+                        .accessibilityElement()
+                        .accessibilityLabel("Layer URL input")
+                }
+                .frame(maxWidth:.infinity)
                 
                 if viewModel.retrievingWMSCapabilities {
-                    HStack(alignment: .center) {
+                    HStack(alignment: .center, spacing: 16) {
                         ProgressView()
                             .tint(Color.primaryColorVariant)
                         Text("Attempting to retrieve WMS Capabilities document...")
@@ -76,7 +88,7 @@ struct LayerURLView: View {
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.backgroundColor)
                 } else if viewModel.retrievingXYZTile {
-                    HStack(alignment: .center) {
+                    HStack(alignment: .center, spacing: 16) {
                         ProgressView()
                             .tint(Color.primaryColorVariant)
                         Text("Attempting to retrieve 0/0/0 tile...")

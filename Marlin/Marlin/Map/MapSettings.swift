@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct MapSettings: View {
+    @ObservedObject var mapState: MapState
     @AppStorage("showMGRS") var showMGRS: Bool = false
     @AppStorage("showGARS") var showGARS: Bool = false
     @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
@@ -162,7 +163,7 @@ struct MapSettings: View {
             
             Section("Layers") {
                 NavigationLink {
-                    MapLayersView()
+                    MapLayersView(mapState: mapState)
                 } label: {
                     Image(systemName: "square.3.layers.3d")
                         .tint(Color.onSurfaceColor)

@@ -27,7 +27,7 @@ class GeopackageCompositeOverlay: MKTileOverlay {
         tileSize = CGSize(width: 512, height: 512)
         self.minimumZ = layer.minimumZoom
         self.maximumZ = layer.maximumZoom
-        self.tableNames = layer.selectedFileLayers
+        self.tableNames = layer.selectedFileLayers.map { $0.name }
         self.geoPackageName = layer.fileName
         openGeoPackage()
         createOverlays()
