@@ -14,6 +14,7 @@ struct MapLayerView: View {
     @FocusState var isInputActive: Bool
     @StateObject var mapState: MapState = MapState()
     @Binding var isPresented: Bool
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack {
@@ -21,10 +22,15 @@ struct MapLayerView: View {
         }
         .frame(maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
         .background(Color.backgroundColor)
+        .onChange(of: isPresented) { newValue in
+            if !newValue {
+                dismiss()
+            }
+        }
     }
 }
 
-struct iOSCheckboxToggleStyle: ToggleStyle {
+struct listCheckboxToggleStyle: ToggleStyle {
     func makeBody(configuration: Configuration) -> some View {
         Button(action: {
             configuration.isOn.toggle()
@@ -33,8 +39,24 @@ struct iOSCheckboxToggleStyle: ToggleStyle {
                 configuration.label
                 Spacer()
                 Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
-                    .tint(Color.primaryColorVariant)
             }
         })
+        .buttonStyle(PlainButtonStyle())
+        .foregroundColor(Color.primaryColorVariant)
+    }
+}
+
+struct checkboxToggleStyle: ToggleStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        Button(action: {
+            configuration.isOn.toggle()
+        }, label: {
+            HStack {
+                configuration.label
+                Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
+            }
+        })
+        .buttonStyle(PlainButtonStyle())
+        .foregroundColor(Color.primaryColorVariant)
     }
 }

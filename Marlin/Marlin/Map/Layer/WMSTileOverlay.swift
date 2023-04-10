@@ -23,7 +23,7 @@ class WMSTileOverlay: MKTileOverlay {
     
     init(mapLayer: MapLayer) {
         self.mapLayer = mapLayer
-        super.init(urlTemplate: mapLayer.url)
+        super.init(urlTemplate: mapLayer.urlTemplate)
     }
     
     override func url(forTilePath path: MKTileOverlayPath) -> URL {

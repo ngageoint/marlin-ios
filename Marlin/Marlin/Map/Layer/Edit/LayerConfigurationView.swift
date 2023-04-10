@@ -91,7 +91,7 @@ struct LayerConfiguration: View {
             MarlinMap(name: "Layer Map", mixins: [BaseOverlaysMap(viewModel: viewModel)], mapState: mapState)
                 .frame(minHeight: 0, maxHeight: .infinity)
             
-            Button("Create Layer") {
+            Button("\(viewModel.mapLayer != nil ? "Update" : "Create") Layer") {
                 viewModel.create()
                 isPresented.toggle()
             }

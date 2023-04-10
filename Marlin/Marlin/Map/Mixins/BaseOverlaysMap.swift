@@ -24,7 +24,7 @@ class BaseOverlaysMap: NSObject, MapMixin {
     }
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
         mapState = marlinMap.mapState
-        viewModel.$urlTemplate
+        viewModel.$url
             .receive(on: RunLoop.main)
             .sink() { [weak self] urlTemplate in
                 self?.refreshOverlay(marlinMap: marlinMap)
@@ -36,7 +36,7 @@ class BaseOverlaysMap: NSObject, MapMixin {
                 self?.refreshOverlay(marlinMap: marlinMap)
             }
             .store(in: &cancellable)
-        viewModel.$selectedFileLayers
+        viewModel.$selectedLayers
             .receive(on: RunLoop.main)
             .sink() { [weak self] urlTemplate in
                 self?.refreshOverlay(marlinMap: marlinMap)

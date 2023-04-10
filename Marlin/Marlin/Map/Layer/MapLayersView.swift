@@ -15,49 +15,44 @@ struct MapLayerRow: View {
     @ObservedObject var mapState: MapState
     
     var body: some View {
-        Toggle(isOn: $isVisible) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(layer.displayName ?? layer.name ?? "Layer").font(Font.body1)
-                        .foregroundColor(Color.onSurfaceColor.opacity(0.87))
-                    Text("\(layer.host ?? layer.name ?? "")")
-                        .font(Font.caption)
-                        .foregroundColor(Color.onSurfaceColor.opacity(0.6))
-                    Text(layer.boundingBoxDisplay)
-                        .font(Font.caption)
-                        .foregroundColor(Color.onSurfaceColor.opacity(0.6))
-                }
-                .padding([.top, .bottom], 4)
-                Spacer()
-                Button(action: {
-                    let latSpan = layer.maxLatitude - layer.minLatitude
-                    let lonSpan = layer.maxLongitude - layer.minLongitude
-                    let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: layer.maxLatitude - (latSpan / 2.0), longitude: layer.maxLongitude - (lonSpan / 2.0))
-                    let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latSpan, longitudeDelta: lonSpan)
-                    mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
-                    
-                    NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
-                }) {
-                    Label(
-                        title: {},
-                        icon: { Image(systemName: "scope")
-                                .renderingMode(.template)
-                                .foregroundColor(Color.primaryColorVariant)
-                        })
-                }
-                .padding([.trailing, .leading], 16)
-                .accessibilityElement()
-                .accessibilityLabel("focus")
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(layer.displayName ?? layer.name ?? "Layer").font(Font.body1)
+                    .foregroundColor(Color.onSurfaceColor.opacity(0.87))
+                Text("\(layer.host ?? layer.name ?? "")")
+                    .font(Font.caption)
+                    .foregroundColor(Color.onSurfaceColor.opacity(0.6))
+                Text(layer.boundingBoxDisplay)
+                    .font(Font.caption)
+                    .foregroundColor(Color.onSurfaceColor.opacity(0.6))
             }
+            .padding([.top, .bottom], 4)
+            Spacer()
+            Button(action: {
+                let latSpan = layer.maxLatitude - layer.minLatitude
+                let lonSpan = layer.maxLongitude - layer.minLongitude
+                let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: layer.maxLatitude - (latSpan / 2.0), longitude: layer.maxLongitude - (lonSpan / 2.0))
+                let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latSpan, longitudeDelta: lonSpan)
+                mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                
+                NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+            }) {
+                Label(
+                    title: {},
+                    icon: { Image(systemName: "scope")
+                            .renderingMode(.template)
+                            .foregroundColor(Color.primaryColorVariant)
+                    })
+            }
+            .padding([.trailing, .leading], 16)
+            .accessibilityElement()
+            .accessibilityLabel("focus")
+            Toggle("", isOn: $isVisible)
+                .toggleStyle(checkboxToggleStyle())
+                .tint(Color.primaryColor)
+                .accessibilityElement()
+                .accessibilityLabel("\(isVisible ? "Hide" : "Show") \(layer.url ?? layer.filePath ?? "")")
         }
-        .toggleStyle(iOSCheckboxToggleStyle())
-        .contentShape(Rectangle())
-        .onTapGesture {
-            isVisible.toggle()
-        }
-        .tint(Color.primaryColor)
-        .accessibilityElement()
-        .accessibilityLabel("\(isVisible ? "Hide" : "Show") \(layer.url ?? layer.filePath ?? "")")
     }
 }
 
@@ -66,6 +61,8 @@ struct MapLayersView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject var model: MapLayersViewModel = MapLayersViewModel()
     @State var isMapLayersPresented: Bool = false
+    @State var editPresented: Bool = false
+    @State var editLayerViewModel: MapLayerViewModel?
     
     var body: some View {
         ZStack {
@@ -73,6 +70,10 @@ struct MapLayersView: View {
                 Section {
                     ForEach(model.layers, id: \.self) { layer in
                         MapLayerRow(layer: layer, isVisible: model.toggleVisibility(of: layer), mapState: mapState)
+                        .onTapGesture {
+                            editPresented = true
+                            editLayerViewModel = MapLayerViewModel(mapLayer: layer)
+                        }
                     }
                     .onMove { from, to in
                         model.reorderLayers(fromOffsets: from, toOffset: to)
@@ -113,6 +114,13 @@ struct MapLayersView: View {
         .fullScreenCover(isPresented: $isMapLayersPresented) {
             NavigationView {
                 MapLayerView(isPresented: $isMapLayersPresented)
+            }
+        }
+        .fullScreenCover(item: $editLayerViewModel, onDismiss: {
+            editLayerViewModel = nil
+        }) { viewModel in
+            NavigationView {
+                MapLayerView(viewModel: viewModel, isPresented: $editPresented)
             }
         }
 

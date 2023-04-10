@@ -179,6 +179,7 @@
         <attribute name="refreshRate" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="type" optional="YES" attributeType="String"/>
         <attribute name="url" optional="YES" attributeType="String"/>
+        <attribute name="urlParameters" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer" customClassName=".[String:String]"/>
         <attribute name="username" optional="YES" attributeType="String"/>
         <attribute name="visible" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
     </entity>

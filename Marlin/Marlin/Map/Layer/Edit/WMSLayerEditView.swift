@@ -57,7 +57,7 @@ struct WMSLayerEditView: View {
     }
     
     @ViewBuilder
-    func layerDisclosureGroup(layers: [Layer], first: Bool = false, parentWebMercator: Bool = false) -> some View {
+    func layerDisclosureGroup(layers: [WMSLayer], first: Bool = false, parentWebMercator: Bool = false) -> some View {
         AnyView(
             VStack(alignment: .leading) {
                 ForEach(layers.sorted(by: { one, two in
@@ -87,7 +87,7 @@ struct WMSLayerEditView: View {
 
 struct LayerRow: View {
     @ObservedObject var viewModel: MapLayerViewModel
-    @ObservedObject var layer: Layer
+    @ObservedObject var layer: WMSLayer
     @ObservedObject var mapState: MapState
     var parentWebMercator: Bool = false
     var body: some View {
@@ -164,9 +164,9 @@ struct LayerRow: View {
                 }
             })
             .onChange(of: layer.selected, perform: { newValue in
-                viewModel.updateTemplate()
+                viewModel.updateSelectedLayers(layer: layer)
             })
-            .toggleStyle(iOSCheckboxToggleStyle())
+            .toggleStyle(listCheckboxToggleStyle())
             .contentShape(Rectangle())
             .onTapGesture {
                 layer.selected.toggle()

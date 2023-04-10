@@ -17,10 +17,10 @@ struct GeoPackageLayerEditView: View {
         VStack(spacing: 0) {
             ScrollView {
                 ForEach(viewModel.tileLayers, id: \.self) { tileLayer in
-                    GeoPackageTileLayerRow(viewModel: viewModel, tileLayer: tileLayer, mapState: mapState)
+                    GeoPackageTileLayerRow(viewModel: viewModel, layer: tileLayer, mapState: mapState)
                 }
                 ForEach(viewModel.featureLayers, id: \.self) { featureLayer in
-                    GeoPackageFeatureLayerRow(viewModel: viewModel, featureLayer: featureLayer, mapState: mapState)
+                    GeoPackageFeatureLayerRow(viewModel: viewModel, layer: featureLayer, mapState: mapState)
                 }
             }
             .tint(Color.primaryColor)
@@ -58,25 +58,25 @@ struct GeoPackageLayerEditView: View {
 
 struct GeoPackageTileLayerRow: View {
     @ObservedObject var viewModel: MapLayerViewModel
-    @ObservedObject var tileLayer: TileLayerInfo
+    @ObservedObject var layer: TileLayerInfo
     @ObservedObject var mapState: MapState
     
     var body: some View {
-        Toggle(isOn: $tileLayer.selected, label: {
+        Toggle(isOn: $layer.selected, label: {
             HStack {
                 Image(systemName: "square.3.layers.3d")
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("\(tileLayer.name)")
+                    Text("\(layer.name ?? "")")
                         .multilineTextAlignment(.leading)
                         .font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
-                    Text("Zoom \(tileLayer.minZoom) - \(tileLayer.maxZoom)")
+                    Text("Zoom \(layer.minZoom) - \(layer.maxZoom)")
                         .multilineTextAlignment(.leading)
                         .font(Font.caption)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.6))
-                    Text(tileLayer.boundingBoxDisplay)
+                    Text(layer.boundingBoxDisplay)
                         .multilineTextAlignment(.leading)
                         .font(Font.caption)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.6))
@@ -84,11 +84,13 @@ struct GeoPackageTileLayerRow: View {
                 .padding([.top, .bottom], 4)
                 Spacer()
                 Button(action: {
-                    let latSpan = tileLayer.maxLatitude - tileLayer.minLatitude
-                    let lonSpan = tileLayer.maxLongitude - tileLayer.minLongitude
-                    let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: tileLayer.maxLatitude - (latSpan / 2.0), longitude: tileLayer.maxLongitude - (lonSpan / 2.0))
-                    let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latSpan, longitudeDelta: lonSpan)
-                    mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                    if let maxLatitude = layer.boundingBox?.maxLatitude, let minLatitude = layer.boundingBox?.minLatitude, let maxLongitude = layer.boundingBox?.maxLongitude, let minLongitude = layer.boundingBox?.minLongitude {
+                        let latSpan = maxLatitude - minLatitude
+                        let lonSpan = maxLongitude - minLongitude
+                        let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: maxLatitude - (latSpan / 2.0), longitude: maxLongitude - (lonSpan / 2.0))
+                        let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latSpan, longitudeDelta: lonSpan)
+                        mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                    }
                 }) {
                     Label(
                         title: {},
@@ -102,41 +104,41 @@ struct GeoPackageTileLayerRow: View {
                 .accessibilityLabel("focus")
             }
         })
-        .toggleStyle(iOSCheckboxToggleStyle())
+        .toggleStyle(listCheckboxToggleStyle())
         .contentShape(Rectangle())
         .onTapGesture {
-            tileLayer.selected.toggle()
+            layer.selected.toggle()
         }
         .tint(Color.primaryColor)
         .accessibilityElement()
-        .accessibilityLabel("Tile Layer \(tileLayer.name) Toggle")
-        .onChange(of: tileLayer.selected, perform: { newValue in
-            viewModel.updateSelectedFileLayers(layer: tileLayer)
+        .accessibilityLabel("Tile Layer \(layer.name ?? "") Toggle")
+        .onChange(of: layer.selected, perform: { newValue in
+            viewModel.updateSelectedLayers(layer: layer)
         })
     }
 }
 
 struct GeoPackageFeatureLayerRow: View {
     @ObservedObject var viewModel: MapLayerViewModel
-    @ObservedObject var featureLayer: FeatureLayerInfo
+    @ObservedObject var layer: FeatureLayerInfo
     @ObservedObject var mapState: MapState
     
     var body: some View {
-        Toggle(isOn: $featureLayer.selected, label: {
+        Toggle(isOn: $layer.selected, label: {
             HStack {
                 Image(systemName: "square.3.layers.3d")
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("\(featureLayer.name)")
+                    Text("\(layer.name ?? "")")
                         .multilineTextAlignment(.leading)
                         .font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
-                    Text("Feature Count: \(featureLayer.count)")
+                    Text("Feature Count: \(layer.count)")
                         .multilineTextAlignment(.leading)
                         .font(Font.caption)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.6))
-                    Text("Bounding Box: \(featureLayer.boundingBoxDisplay)")
+                    Text("Bounding Box: \(layer.boundingBoxDisplay)")
                         .multilineTextAlignment(.leading)
                         .font(Font.caption)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.6))
@@ -144,11 +146,13 @@ struct GeoPackageFeatureLayerRow: View {
                 .padding([.top, .bottom], 4)
                 Spacer()
                 Button(action: {
-                    let latSpan = featureLayer.maxLatitude - featureLayer.minLatitude
-                    let lonSpan = featureLayer.maxLongitude - featureLayer.minLongitude
-                    let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: featureLayer.maxLatitude - (latSpan / 2.0), longitude: featureLayer.maxLongitude - (lonSpan / 2.0))
-                    let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latSpan, longitudeDelta: lonSpan)
-                    mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                    if let maxLatitude = layer.boundingBox?.maxLatitude, let minLatitude = layer.boundingBox?.minLatitude, let maxLongitude = layer.boundingBox?.maxLongitude, let minLongitude = layer.boundingBox?.minLongitude {
+                        let latSpan = maxLatitude - minLatitude
+                        let lonSpan = maxLongitude - minLongitude
+                        let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: maxLatitude - (latSpan / 2.0), longitude: maxLongitude - (lonSpan / 2.0))
+                        let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latSpan, longitudeDelta: lonSpan)
+                        mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                    }
                 }) {
                     Label(
                         title: {},
@@ -162,16 +166,16 @@ struct GeoPackageFeatureLayerRow: View {
                 .accessibilityLabel("focus")
             }
         })
-        .toggleStyle(iOSCheckboxToggleStyle())
+        .toggleStyle(listCheckboxToggleStyle())
         .contentShape(Rectangle())
         .onTapGesture {
-            featureLayer.selected.toggle()
+            layer.selected.toggle()
         }
         .tint(Color.primaryColor)
         .accessibilityElement()
-        .accessibilityLabel("Feature Layer \(featureLayer.name) Toggle")
-        .onChange(of: featureLayer.selected, perform: { newValue in
-            viewModel.updateSelectedFileLayers(layer: featureLayer)
+        .accessibilityLabel("Feature Layer \(layer.name ?? "") Toggle")
+        .onChange(of: layer.selected, perform: { newValue in
+            viewModel.updateSelectedLayers(layer: layer)
         })
     }
 }
