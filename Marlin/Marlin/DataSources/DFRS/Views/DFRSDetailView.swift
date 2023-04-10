@@ -33,7 +33,7 @@ struct DFRSDetailView: View {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     if CLLocationCoordinate2DIsValid(dfrs.coordinate) {
-                        MarlinMap(name: "DFRS Detail Map", mixins: [DFRSMap(fetchPredicate: fetchRequest.predicate)], mapState: mapState)
+                        MarlinMap(name: "DFRS Detail Map", mixins: [DFRSMap(fetchPredicate: fetchRequest.predicate), UserLayersMap()], mapState: mapState)
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                             .onAppear {
                                 mapState.center = MKCoordinateRegion(center: dfrs.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
