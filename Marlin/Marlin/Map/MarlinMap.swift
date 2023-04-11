@@ -227,14 +227,15 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             self.focusedAnnotation = nil
         }
         
+        if let ds = notification.item, let coordinate = ds.coordinate {
+            let span = mapView?.region.span ?? MKCoordinateSpan(zoomLevel: 17, pixelWidth: Double(mapView?.frame.size.width ?? UIScreen.main.bounds.width))
+            let adjustedCenter = CLLocationCoordinate2D(latitude: coordinate.latitude - (span.latitudeDelta / 4.0), longitude: coordinate.longitude)
+            mapView?.setCenter(adjustedCenter, animated: true)
+        }
+        
         guard let mapItem = notification.item as? MapImage else {
             return
         }
-        
-        let coordinate = mapItem.coordinate
-        let span = mapView?.region.span ?? MKCoordinateSpan(zoomLevel: 17, pixelWidth: Double(mapView?.frame.size.width ?? UIScreen.main.bounds.width))
-        let adjustedCenter = CLLocationCoordinate2D(latitude: coordinate.latitude - (span.latitudeDelta / 4.0), longitude: coordinate.longitude)
-        mapView?.setCenter(adjustedCenter, animated: true)
         
         let ea = EnlargedAnnotation(mapImage: mapItem)
         ea.markForEnlarging()

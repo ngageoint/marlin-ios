@@ -68,4 +68,23 @@ class UserLayersMap: MapMixin {
             }
         }
     }
+    
+    func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
+        var featureItems: [GeoPackageFeatureItem] = []
+        for (index, layer) in viewModel.layers.reversed().enumerated() {
+            if layer.showOnMap {
+                if layer.type == LayerType.geopackage.rawValue {
+                    if let geoPackageName = layer.name {
+                        for table in layer.layerNames {
+                            featureItems.append(contentsOf: GeoPackage.shared.getFeaturesFromTable(at: location, mapView: mapView, table: table, geoPackageName: geoPackageName, layerName: layer.displayName ?? "GeoPackage Layer"))
+                        }
+                    }
+                }
+                
+            }
+            
+        }
+        return featureItems
+    }
+
 }

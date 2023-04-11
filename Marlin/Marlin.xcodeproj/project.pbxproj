@@ -33,6 +33,10 @@
 		F70BCEA329D761E400AEF73D /* GeoPackageLayerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCEA229D761E400AEF73D /* GeoPackageLayerEditView.swift */; };
 		F70BCEA529DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCEA429DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift */; };
 		F70BCEA929DEFDA900AEF73D /* DoubleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCEA829DEFDA800AEF73D /* DoubleExtensions.swift */; };
+		F70BCEAB29E498A900AEF73D /* GeoPackageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCEAA29E498A900AEF73D /* GeoPackageDataSource.swift */; };
+		F70BCEAD29E5E04E00AEF73D /* GeoPackageFeatureItemSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCEAC29E5E04E00AEF73D /* GeoPackageFeatureItemSummaryView.swift */; };
+		F70BCEAF29E5E2AD00AEF73D /* GeoPackageFeatureItemActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCEAE29E5E2AD00AEF73D /* GeoPackageFeatureItemActionBar.swift */; };
+		F70BCEB129E5E35E00AEF73D /* GeoPackageFeatureItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70BCEB029E5E35E00AEF73D /* GeoPackageFeatureItemDetailView.swift */; };
 		F70F50192992DAFF0062E555 /* DataLoadedNotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70F50182992DAFF0062E555 /* DataLoadedNotificationBanner.swift */; };
 		F70F501D2993EA470062E555 /* DataLoadedNotificationBannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70F501C2993EA470062E555 /* DataLoadedNotificationBannerTests.swift */; };
 		F713616B28B79D310005C69C /* set_build_number.sh in Resources */ = {isa = PBXBuildFile; fileRef = F713616A28B79D310005C69C /* set_build_number.sh */; };
@@ -423,6 +427,10 @@
 		F70BCEA229D761E400AEF73D /* GeoPackageLayerEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageLayerEditView.swift; sourceTree = "<group>"; };
 		F70BCEA429DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSDecimalNumberExtensions.swift; sourceTree = "<group>"; };
 		F70BCEA829DEFDA800AEF73D /* DoubleExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtensions.swift; sourceTree = "<group>"; };
+		F70BCEAA29E498A900AEF73D /* GeoPackageDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageDataSource.swift; sourceTree = "<group>"; };
+		F70BCEAC29E5E04E00AEF73D /* GeoPackageFeatureItemSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageFeatureItemSummaryView.swift; sourceTree = "<group>"; };
+		F70BCEAE29E5E2AD00AEF73D /* GeoPackageFeatureItemActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageFeatureItemActionBar.swift; sourceTree = "<group>"; };
+		F70BCEB029E5E35E00AEF73D /* GeoPackageFeatureItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageFeatureItemDetailView.swift; sourceTree = "<group>"; };
 		F70F50182992DAFF0062E555 /* DataLoadedNotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadedNotificationBanner.swift; sourceTree = "<group>"; };
 		F70F501C2993EA470062E555 /* DataLoadedNotificationBannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadedNotificationBannerTests.swift; sourceTree = "<group>"; };
 		F713616A28B79D310005C69C /* set_build_number.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = set_build_number.sh; sourceTree = "<group>"; };
@@ -1203,6 +1211,10 @@
 				F7D671C9286C945500758F1C /* GeopackageFeatureOverlay.swift */,
 				F70BCE9A29D1F61C00AEF73D /* GeoPackageCompositeOverlay.swift */,
 				F70BCE9C29D2104D00AEF73D /* GeoPackage.swift */,
+				F70BCEAA29E498A900AEF73D /* GeoPackageDataSource.swift */,
+				F70BCEAC29E5E04E00AEF73D /* GeoPackageFeatureItemSummaryView.swift */,
+				F70BCEAE29E5E2AD00AEF73D /* GeoPackageFeatureItemActionBar.swift */,
+				F70BCEB029E5E35E00AEF73D /* GeoPackageFeatureItemDetailView.swift */,
 			);
 			path = GeoPackage;
 			sourceTree = "<group>";
@@ -2192,6 +2204,7 @@
 				F7D2225228E4F83000F527F2 /* SortButton.swift in Sources */,
 				F7D671E42871C5F900758F1C /* NavigationalWarningActionBar.swift in Sources */,
 				F7D671ED2874737F00758F1C /* DataSourceCell.swift in Sources */,
+				F70BCEAB29E498A900AEF73D /* GeoPackageDataSource.swift in Sources */,
 				F7D5C05928A6A48F000C2C29 /* DataSourceList.swift in Sources */,
 				F71CC6F028AD1647000A326C /* PortDetailView.swift in Sources */,
 				F7FFB30C28D63BA300C31AA3 /* Modu+DataSource.swift in Sources */,
@@ -2312,6 +2325,7 @@
 				F7FFB30228D6383900C31AA3 /* Asam+DataSource.swift in Sources */,
 				F73ABC96295250EE0085EDC5 /* AsyncImage.swift in Sources */,
 				F7D8FA2C2925756F00E7D0A1 /* ChartCorrectionQuery.swift in Sources */,
+				F70BCEB129E5E35E00AEF73D /* GeoPackageFeatureItemDetailView.swift in Sources */,
 				F7FFB2E428D6213C00C31AA3 /* DFRS+Decodable.swift in Sources */,
 				F7C23E04290831EA0002A7DF /* ElectronicPublication+DataSource.swift in Sources */,
 				F7FFB30828D63A9F00C31AA3 /* Asam+MapImage.swift in Sources */,
@@ -2320,6 +2334,7 @@
 				F7FFB32628D6422F00C31AA3 /* RadioBeacon+MapImage.swift in Sources */,
 				F7D8FA42293A923400E7D0A1 /* FilterPropertyAndComparison.swift in Sources */,
 				F70BCEA129D48ED800AEF73D /* GeoPackageImporter.swift in Sources */,
+				F70BCEAD29E5E04E00AEF73D /* GeoPackageFeatureItemSummaryView.swift in Sources */,
 				F707BA8328786F11006A94C4 /* LightColorImage.swift in Sources */,
 				F7D8FA51293A999600E7D0A1 /* BooleanFilter.swift in Sources */,
 				F71D287528BE96EB00F1775C /* DFRSMap.swift in Sources */,
@@ -2394,6 +2409,7 @@
 				F71D287D28C2926500F1775C /* AboutCell.swift in Sources */,
 				F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */,
 				F74B9B0728B7CF650097D448 /* RadioBeacon+CoreDataClass.swift in Sources */,
+				F70BCEAF29E5E2AD00AEF73D /* GeoPackageFeatureItemActionBar.swift in Sources */,
 				F71D286228BE390800F1775C /* DifferentialGPSStation+CoreDataClass.swift in Sources */,
 				F71DF4A02859116C00686951 /* Notifications.swift in Sources */,
 				F7D8FA4D293A95D000E7D0A1 /* LatitudeLongitudeFilter.swift in Sources */,

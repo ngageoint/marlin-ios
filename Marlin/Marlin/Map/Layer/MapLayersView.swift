@@ -40,10 +40,11 @@ struct MapLayerRow: View {
                 Label(
                     title: {},
                     icon: { Image(systemName: "scope")
-                            .renderingMode(.template)
+                            .renderingMode(.template)                            
                             .foregroundColor(Color.primaryColorVariant)
                     })
             }
+            .buttonStyle(BorderlessButtonStyle())
             .padding([.trailing, .leading], 16)
             .accessibilityElement()
             .accessibilityLabel("focus")
