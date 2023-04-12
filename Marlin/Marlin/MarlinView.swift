@@ -40,6 +40,8 @@ struct MarlinView: View {
     
     @State private var previewDate: Date = Date()
     @State private var previewUrl: URL?
+    @State var isMapLayersPresented: Bool = false
+    @State var mapLayerEditViewModel: MapLayerViewModel?
     
     @StateObject var mapState: MapState = MapState()
     
@@ -177,9 +179,28 @@ struct MarlinView: View {
             }
             previewDate = Date()
         }
+        .onOpenURL(perform: { url in
+            if url.isFileURL {
+                if url.pathExtension == "gpkg" || url.pathExtension == "gpkx" {
+                    mapLayerEditViewModel = MapLayerViewModel()
+                    mapLayerEditViewModel?.fileChosen(url: url)
+                }
+            }
+        })
+        .fullScreenCover(item: $mapLayerEditViewModel, onDismiss: {
+            mapLayerEditViewModel = nil
+        }) { viewModel in
+            NavigationView {
+                MapLayerView(viewModel: viewModel, isPresented: $isMapLayersPresented)
+            }
+        }
         .onAppear {
             Metrics.shared.appLaunch()
         }
+        // this affects text buttons, image buttons need .foregroundColor set on them
+        .tint(Color.onPrimaryColor)
+        // This is deprecated, but in iOS16 this is the only way to set the back button color
+        .accentColor(Color.onPrimaryColor)
     }
     
     func handleTappedItems(items: [any DataSource]?) -> [BottomSheetItem] {
