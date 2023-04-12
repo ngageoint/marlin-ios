@@ -41,7 +41,7 @@ struct MarlinView: View {
     @State private var previewDate: Date = Date()
     @State private var previewUrl: URL?
     @State var isMapLayersPresented: Bool = false
-    @State var mapLayerEditViewModel: MapLayerViewModel?
+    @State var mapLayerEditViewModel: MapLayerViewModel? = nil
     
     @StateObject var mapState: MapState = MapState()
     
@@ -184,10 +184,12 @@ struct MarlinView: View {
                 if url.pathExtension == "gpkg" || url.pathExtension == "gpkx" {
                     mapLayerEditViewModel = MapLayerViewModel()
                     mapLayerEditViewModel?.fileChosen(url: url)
+                    isMapLayersPresented = true
                 }
             }
         })
         .fullScreenCover(item: $mapLayerEditViewModel, onDismiss: {
+            isMapLayersPresented = false
             mapLayerEditViewModel = nil
         }) { viewModel in
             NavigationView {
