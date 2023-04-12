@@ -36,7 +36,6 @@ class WMSTileOverlay: MKTileOverlay {
 
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
         let url = url(forTilePath: path)
-//        print("xxx URL \(url.absoluteString)")
         var headers: HTTPHeaders = [:]
         if let layer = layer, let username = layer.username, let password = layer.password {
             headers.add(.authorization(username: username, password: password))

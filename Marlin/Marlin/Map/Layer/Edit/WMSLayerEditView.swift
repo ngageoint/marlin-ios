@@ -71,10 +71,18 @@ struct WMSLayerEditView: View {
                     return false
                 })) { layer in
                     if let layers = layer.layers {
-                        DisclosureGroup(isExpanded: first ? $topExpanded : Binding.constant(false)) {
-                            self.layerDisclosureGroup(layers: layers, parentWebMercator: parentWebMercator || layer.isWebMercator)
-                        } label: {
-                            LayerRow(viewModel: viewModel, layer: layer, mapState: mapState, parentWebMercator: parentWebMercator)
+                        if first {
+                            DisclosureGroup(isExpanded: $topExpanded) {
+                                self.layerDisclosureGroup(layers: layers, parentWebMercator: parentWebMercator || layer.isWebMercator)
+                            } label: {
+                                LayerRow(viewModel: viewModel, layer: layer, mapState: mapState, parentWebMercator: parentWebMercator)
+                            }
+                        } else {
+                            DisclosureGroup {
+                                self.layerDisclosureGroup(layers: layers, parentWebMercator: parentWebMercator || layer.isWebMercator)
+                            } label: {
+                                LayerRow(viewModel: viewModel, layer: layer, mapState: mapState, parentWebMercator: parentWebMercator)
+                            }
                         }
                     } else {
                         LayerRow(viewModel: viewModel, layer: layer, mapState: mapState, parentWebMercator: parentWebMercator)
@@ -89,6 +97,8 @@ struct LayerRow: View {
     @ObservedObject var viewModel: MapLayerViewModel
     @ObservedObject var layer: WMSLayer
     @ObservedObject var mapState: MapState
+    @State var abstractLineLimit: Int? = 3
+    
     var parentWebMercator: Bool = false
     var body: some View {
         buildRow()
@@ -108,9 +118,17 @@ struct LayerRow: View {
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     if let abstract = layer.abstract {
                         Text(abstract)
+                            .lineLimit(abstractLineLimit)
                             .multilineTextAlignment(.leading)
                             .font(Font.caption)
                             .foregroundColor(Color.onSurfaceColor.opacity(0.6))
+                            .onTapGesture {
+                                if abstractLineLimit == 3 {
+                                    abstractLineLimit = nil
+                                } else {
+                                    abstractLineLimit = 3
+                                }
+                            }
                     }
                 }
             }
@@ -129,9 +147,17 @@ struct LayerRow: View {
                             .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                         if let abstract = layer.abstract {
                             Text(abstract)
+                                .lineLimit(abstractLineLimit)
                                 .multilineTextAlignment(.leading)
                                 .font(Font.caption)
                                 .foregroundColor(Color.onSurfaceColor.opacity(0.6))
+                                .onTapGesture {
+                                    if abstractLineLimit == 3 {
+                                        abstractLineLimit = nil
+                                    } else {
+                                        abstractLineLimit = 3
+                                    }
+                                }
                         }
                         if layer.boundingBox != nil {
                             Text(layer.boundingBoxDisplay)

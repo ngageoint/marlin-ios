@@ -78,6 +78,10 @@ struct LayerURLView: View {
                 }
                 .frame(maxWidth:.infinity)
                 
+                if let error = viewModel.error {
+                    Text("Error: \(error)")
+                }
+                
                 if viewModel.retrievingWMSCapabilities {
                     HStack(alignment: .center, spacing: 16) {
                         ProgressView()

@@ -110,6 +110,17 @@ extension FeatureLayerInfo {
     }
 }
 
+private extension URL {
+    var removingQueries: URL {
+        if var components = URLComponents(string: absoluteString) {
+            components.query = nil
+            return components.url ?? self
+        } else {
+            return self
+        }
+    }
+}
+
 class MapLayerViewModel: ObservableObject, Identifiable {
     var id: String {
         displayName
@@ -117,6 +128,10 @@ class MapLayerViewModel: ObservableObject, Identifiable {
     @Published var url: String = "" {
         didSet {
             if url != oldValue {
+                url = url.trimmingCharacters(in: .whitespacesAndNewlines)
+                if let validUrl = URL(string: url) {
+                    url = validUrl.removingQueries.absoluteString
+                }
                 capabilities = nil
                 urlPublisher.send(url)
             }
@@ -152,6 +167,8 @@ class MapLayerViewModel: ObservableObject, Identifiable {
     @Published var maxLatitude: Double = 90.0
     @Published var minLongitude: Double = -180.0
     @Published var maxLongitude: Double = 180.0
+    
+    @Published var error: String?
     
     @Published var username: String?
     @Published var password: String?
@@ -302,14 +319,20 @@ class MapLayerViewModel: ObservableObject, Identifiable {
             }
             
             var layerNameArray: [String] = []
-            var transparent: Bool = true
+            var layersTransparent: Bool = true
+            var mapTransparent: Bool = false
             
+            if let formats = capabilities?.getMap?.formats, formats.contains(where: { format in
+                format.starts(with: "image/png")
+            }) {
+                mapTransparent = true
+            }
             for layer in selectedLayers {
                 if let name = layer.name {
                     layerNameArray.append(name)
                 }
                 if let wmsLayer = layer as? WMSLayer {
-                    transparent = transparent && wmsLayer.transparent
+                    layersTransparent = layersTransparent && wmsLayer.transparent
                 }
             }
             let layerNames = layerNameArray.joined(separator: ",")
@@ -317,13 +340,14 @@ class MapLayerViewModel: ObservableObject, Identifiable {
             urlParameters["SERVICE"] = "WMS"
             urlParameters["VERSION"] = version
             urlParameters["REQUEST"] = "GetMap"
-            urlParameters["FORMAT"] = "\(transparent ? "image%2Fpng" : "image%2Fjpeg")"
+            urlParameters["FORMAT"] = "\(mapTransparent || layersTransparent ? "image%2Fpng" : "image%2Fjpeg")"
             urlParameters["TILED"] = "true"
             urlParameters["WIDTH"] = "512"
             urlParameters["HEIGHT"] = "512"
-            urlParameters["TRANSPARENT"] = "\(transparent ? "true" : "false")"
+            urlParameters["TRANSPARENT"] = "\(mapTransparent || layersTransparent ? "true" : "false")"
             urlParameters["LAYERS"] = "\(layerNames)"
             urlParameters["CRS"] = "EPSG%3A3857"
+            urlParameters["STYLES"] = ""
             
             return urlParameters
         }
@@ -432,9 +456,11 @@ class MapLayerViewModel: ObservableObject, Identifiable {
     
     func retrieveXYZTile() {
         guard let url = URL(string: "\(url)/0/0/0.png") else {
+            error = "Invalid URL"
             print("invalid url")
             return
         }
+        error = nil
         var urlRequest: URLRequest = URLRequest(url: url)
         urlRequest.httpMethod = "GET"
         MSI.shared.capabilitiesSession.request(url, method: .get)
@@ -464,9 +490,11 @@ class MapLayerViewModel: ObservableObject, Identifiable {
     func retrieveWMSCapabilitiesDocument() {
         do {
             guard let url = URL(string: url) else {
+                error = "Invalid URL"
                 print("invalid url")
                 return
             }
+            error = nil
             var urlRequest: URLRequest = URLRequest(url: url)
             urlRequest.httpMethod = "GET"
             let parameters: Parameters = [
