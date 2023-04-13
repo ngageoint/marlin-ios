@@ -15,6 +15,7 @@ struct LayerURLView: View {
     @FocusState var isInputActive: Bool
     @Binding var isPresented: Bool
     @State var chooseFile: Bool = false
+    @State var showCredentials: Bool = false
 
     var body: some View {
         VStack {
@@ -64,7 +65,7 @@ struct LayerURLView: View {
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.backgroundColor)
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text("Layer URL")
                         .overline()
                     TextField("Layer URL", text: $viewModel.url)
@@ -77,6 +78,48 @@ struct LayerURLView: View {
                         .accessibilityLabel("Layer URL input")
                 }
                 .frame(maxWidth:.infinity)
+                
+                HStack {
+                    Button("Add Credentials")  {
+                        showCredentials = true
+                    }
+                    .buttonStyle(MaterialButtonStyle(type:.text))
+                    Spacer()
+                }
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.backgroundColor)
+                    
+                if showCredentials {
+                    VStack(alignment: .center) {
+                        Group {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Username")
+                                    .overline()
+                                TextField("Username", text: $viewModel.username)
+                                    .textInputAutocapitalization(.never)
+                                    .keyboardType(.default)
+                                    .underlineTextFieldWithLabel()
+                                    .focused($isInputActive)
+                                    .accessibilityElement()
+                                    .accessibilityLabel("Username input")
+                            }
+                        }
+                        Group {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Password")
+                                    .overline()
+                                SecureField("Password", text: $viewModel.password)
+                                    .textInputAutocapitalization(.never)
+                                    .keyboardType(.default)
+                                    .underlineTextFieldWithLabel()
+                                    .focused($isInputActive)
+                                    .accessibilityElement()
+                                    .accessibilityLabel("Password input")
+                            }
+                        }
+                    }
+                }
+                
                 
                 if let error = viewModel.error {
                     Text("Error: \(error)")

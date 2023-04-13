@@ -170,8 +170,24 @@ class MapLayerViewModel: ObservableObject, Identifiable {
     
     @Published var error: String?
     
-    @Published var username: String?
-    @Published var password: String?
+    @Published var username: String = "" {
+        didSet {
+            if username != oldValue {
+                capabilities = nil
+                urlPublisher.send(url)
+            }
+        }
+    }
+    
+    @Published var password: String = "" {
+        didSet {
+            if password != oldValue {
+                capabilities = nil
+                urlPublisher.send(url)
+            }
+        }
+    }
+            
     var urlTemplate: String? {
         if layerType == .wms {
             guard !url.isEmpty else {
@@ -402,8 +418,8 @@ class MapLayerViewModel: ObservableObject, Identifiable {
         self.mapLayer = mapLayer
         self.fileName = mapLayer.name
         self.displayName = mapLayer.displayName ?? ""
-        self.username = mapLayer.username
-        self.password = mapLayer.password
+        self.username = mapLayer.username ?? ""
+        self.password = mapLayer.password ?? ""
         self.maximumZoom = Int(mapLayer.maxZoom)
         self.minimumZoom = Int(mapLayer.minZoom)
         self.minLatitude = mapLayer.minLatitude
@@ -477,7 +493,13 @@ class MapLayerViewModel: ObservableObject, Identifiable {
         error = nil
         var urlRequest: URLRequest = URLRequest(url: url)
         urlRequest.httpMethod = "GET"
-        MSI.shared.capabilitiesSession.request(url, method: .get)
+        
+        var headers: HTTPHeaders = [:]
+        if !username.isEmpty, !password.isEmpty {
+            headers.add(.authorization(username: username, password: password))
+        }
+        
+        MSI.shared.capabilitiesSession.request(url, method: .get, headers: headers)
             .onURLRequestCreation(perform: { request in
                 self.retrievingXYZTile = true
                 self.triedXYZTile = false
@@ -517,7 +539,12 @@ class MapLayerViewModel: ObservableObject, Identifiable {
             ]
             urlRequest = try URLEncoding.default.encode(urlRequest, with: parameters)
             
-            MSI.shared.capabilitiesSession.request(url, method: .get, parameters: parameters)
+            var headers: HTTPHeaders = [:]
+            if !username.isEmpty, !password.isEmpty {
+                headers.add(.authorization(username: username, password: password))
+            }
+            
+            MSI.shared.capabilitiesSession.request(url, method: .get, parameters: parameters, headers: headers)
                 .onURLRequestCreation(perform: { request in
                     self.retrievingWMSCapabilities = true
                     self.triedCapabilities = false

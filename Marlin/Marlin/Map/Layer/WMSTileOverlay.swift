@@ -37,8 +37,8 @@ class WMSTileOverlay: MKTileOverlay {
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
         let url = url(forTilePath: path)
         var headers: HTTPHeaders = [:]
-        if let layer = layer, let username = layer.username, let password = layer.password {
-            headers.add(.authorization(username: username, password: password))
+        if let layer = layer, !layer.username.isEmpty, !layer.password.isEmpty {
+            headers.add(.authorization(username: layer.username, password: layer.password))
         }
         MSI.shared.capabilitiesSession.request(url, method: .get, headers: headers)
             .publishData()
