@@ -11,6 +11,17 @@ import CoreData
 
 class MapLayer: NSManagedObject {
     
+    @discardableResult
+    static func safeDeleteGeoPackage(name: String) -> Bool {
+        if let mapLayers = try? PersistenceController.shared.viewContext.fetchObjects(MapLayer.self, predicate: NSPredicate(format: "name = %@ AND type = %@", name, LayerType.geopackage.rawValue)) {
+            if mapLayers.isEmpty {
+                // safe to delete the geopackage
+                return GeoPackage.shared.deleteGeoPackage(name: name)
+            }
+        }
+        return false
+    }
+    
     static func createFrom(viewModel: MapLayerViewModel, context: NSManagedObjectContext) -> MapLayer {
         let layer = MapLayer(context: context)
         layer.name = viewModel.fileName

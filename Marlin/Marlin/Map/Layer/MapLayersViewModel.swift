@@ -57,11 +57,21 @@ class MapLayersViewModel: NSObject, ObservableObject {
     func deleteLayers(offsets: IndexSet) {
         let layersToDelete = offsets.map { self.layers[$0] }
         
+        var geopackagesToMaybeDelete: [String] = []
+        
         PersistenceController.current.viewContext.performAndWait {
             _ = layersToDelete.compactMap { layer in
+                if layer.type == LayerType.geopackage.rawValue, let fileName = layer.name {
+                    geopackagesToMaybeDelete.append(fileName)
+                }
                 PersistenceController.current.viewContext.delete(layer)
             }
             try? PersistenceController.current.viewContext.save()
+        }
+        
+        // check the deleted layers and delete their geopackages if necessary
+        for geopackageToMaybeDelete in geopackagesToMaybeDelete {
+            MapLayer.safeDeleteGeoPackage(name: geopackageToMaybeDelete)
         }
     }
 }

@@ -49,6 +49,7 @@ struct GeoPackageLayerEditView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Cancel") {
+                    viewModel.cancel()
                     isPresented.toggle()
                 }
             }

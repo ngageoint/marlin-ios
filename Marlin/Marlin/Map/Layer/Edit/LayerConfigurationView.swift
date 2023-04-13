@@ -108,6 +108,7 @@ struct LayerConfiguration: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Cancel") {
+                    viewModel.cancel()
                     isPresented.toggle()
                 }
             }

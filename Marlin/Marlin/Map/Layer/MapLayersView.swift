@@ -68,35 +68,73 @@ struct MapLayersView: View {
     var body: some View {
         ZStack {
             List {
-                Section {
-                    ForEach(model.layers, id: \.self) { layer in
-                        MapLayerRow(layer: layer, isVisible: model.toggleVisibility(of: layer), mapState: mapState)
-                        .onTapGesture {
-                            editPresented = true
-                            editLayerViewModel = MapLayerViewModel(mapLayer: layer)
+                if !model.layers.isEmpty {
+                    Section {
+                        ForEach(model.layers, id: \.self) { layer in
+                            MapLayerRow(layer: layer, isVisible: model.toggleVisibility(of: layer), mapState: mapState)
+                                .onTapGesture {
+                                    editPresented = true
+                                    editLayerViewModel = MapLayerViewModel(mapLayer: layer)
+                                }
                         }
-                    }
-                    .onMove { from, to in
-                        model.reorderLayers(fromOffsets: from, toOffset: to)
-                    }
-                    .onDelete { offsets in
-                        model.deleteLayers(offsets: offsets)
-                    }
-                } header: {
-                    VStack(alignment: .leading) {
-                        Text("Map Layers")
-                            .textCase(.uppercase)
-                        Text("Reorder layers on the map with a long press and drag")
-                            .textCase(nil)
-                            .overline()
-                        
+                        .onMove { from, to in
+                            model.reorderLayers(fromOffsets: from, toOffset: to)
+                        }
+                        .onDelete { offsets in
+                            model.deleteLayers(offsets: offsets)
+                        }
+                    } header: {
+                        VStack(alignment: .leading) {
+                            Text("Map Layers")
+                                .textCase(.uppercase)
+                            Text("Reorder layers on the map with a long press and drag")
+                                .textCase(nil)
+                                .overline()
+                            
+                        }
                     }
                 }
             }
-            .navigationTitle("Map Layers")
-            .navigationBarTitleDisplayMode(.inline)
             .listStyle(.grouped)
+            .emptyPlaceholder(model.layers) {
+                GeometryReader { geo in
+                    VStack(alignment: .center, spacing: 16) {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            
+                            HStack {
+                                Spacer()
+                                Image(systemName: "square.3.layers.3d")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(maxWidth: geo.size.width / 2.0, maxHeight: geo.size.width / 2.0)
+                                    .tint(Color.onSurfaceColor)
+                                    .opacity(0.87)
+                                Spacer()
+                            }
+                        }
+                        .padding(24)
+                        Text("No Layers")
+                            .font(.headline5)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .multilineTextAlignment(.center)
+                            .opacity(0.94)
+                        Text("Create a new layer and it will show up here.")
+                            .font(.headline6)
+                            .opacity(0.87)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .multilineTextAlignment(.center)
+                        Spacer()
+                        
+                    }
+                    .padding(24)
+                }
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .navigationTitle("Map Layers")
+        .navigationBarTitleDisplayMode(.inline)
         .overlay(
             Button {
                 isMapLayersPresented.toggle()
@@ -130,4 +168,23 @@ struct MapLayersView: View {
         }
     }
     
+}
+
+struct EmptyPlaceholderModifier<Items: Collection>: ViewModifier {
+    let items: Items
+    let placeholder: AnyView
+    
+    @ViewBuilder func body(content: Content) -> some View {
+        if !items.isEmpty {
+            content
+        } else {
+            placeholder
+        }
+    }
+}
+
+extension View {
+    func emptyPlaceholder<Items: Collection, PlaceholderView: View>(_ items: Items, _ placeholder: @escaping () -> PlaceholderView) -> some View {
+        modifier(EmptyPlaceholderModifier(items: items, placeholder: AnyView(placeholder())))
+    }
 }

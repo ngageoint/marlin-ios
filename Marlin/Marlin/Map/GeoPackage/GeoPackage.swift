@@ -20,6 +20,12 @@ class GeoPackage {
         cache = GPKGGeoPackageCache(manager: manager)
     }
     
+    func deleteGeoPackage(name: String) -> Bool {
+        cache.close(byName: name)
+        cache.remove(byName: name)
+        return manager.delete(name, andFile: true)
+    }
+    
     func getGeoPackage(name: String) -> GPKGGeoPackage {
         return cache.geoPackageOpenName(name)
     }
