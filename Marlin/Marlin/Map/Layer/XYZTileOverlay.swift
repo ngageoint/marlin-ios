@@ -30,7 +30,7 @@ class XYZTileOverlay: MKTileOverlay {
     
     init(mapLayer: MapLayer) {
         self.mapLayer = mapLayer
-        super.init(urlTemplate: "\(mapLayer.url ?? "")/{z}/{x}/{y}.png")
+        super.init(urlTemplate: mapLayer.urlTemplate ?? "")
         tileSize = CGSize(width: 512, height: 512)
         if mapLayer.type == LayerType.tms.rawValue {
             tms = true
