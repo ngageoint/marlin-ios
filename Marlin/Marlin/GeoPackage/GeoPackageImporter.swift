@@ -12,6 +12,7 @@ import SwiftUI
 
 class GeoPackageImportProgress: NSObject, ObservableObject, GPKGProgress {
     @Published var complete: Bool = false
+    @Published var failure: String?
     
     func setMax(_ max: Int32) {
         
@@ -35,7 +36,7 @@ class GeoPackageImportProgress: NSObject, ObservableObject, GPKGProgress {
     }
     
     func failureWithError(_ error: String!) {
-        
+        failure = error
     }
     
     
@@ -68,7 +69,11 @@ class GeoPackageImporter {
         let name = nameOverride ?? url.deletingPathExtension().lastPathComponent
         do {
             try ExceptionCatcher.catch {
-                manager?.importGeoPackage(from: url, withName: name, inDirectory: nil, andOverride: overwrite, andProgress: progress)
+                if let imported = manager?.importGeoPackage(fromPath: url.path, withName: name, andOverride: overwrite), imported {
+                    progress.completed()
+                } else {
+                    progress.failureWithError("Failed to import GeoPackage")
+                }
             }
         } catch {
             print("Error importing:", error.localizedDescription)

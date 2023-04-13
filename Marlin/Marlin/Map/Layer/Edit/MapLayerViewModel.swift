@@ -388,6 +388,13 @@ class MapLayerViewModel: ObservableObject, Identifiable {
             }
         }
         .store(in: &cancellable)
+        
+        importer.progress.$failure.receive(on: DispatchQueue.main).sink { failure in
+            if let failure = failure {
+                self.error = failure
+            }
+        }
+        .store(in: &cancellable)
     }
     
     convenience init(mapLayer: MapLayer) {
