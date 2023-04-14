@@ -15,15 +15,29 @@ class WMSTileOverlay: MKTileOverlay {
 
     var layer: MapLayerViewModel?
     var mapLayer: MapLayer?
+    var username: String?
+    var password: String?
     
     init(layer: MapLayerViewModel) {
         self.layer = layer
         super.init(urlTemplate: layer.urlTemplate)
+        self.minimumZ = layer.minimumZoom
+        self.maximumZ = layer.maximumZoom
+        if !layer.username.isEmpty, !layer.password.isEmpty {
+            username = layer.username
+            password = layer.password
+        }
     }
     
     init(mapLayer: MapLayer) {
         self.mapLayer = mapLayer
         super.init(urlTemplate: mapLayer.urlTemplate)
+        self.minimumZ = Int(mapLayer.minZoom)
+        self.maximumZ = Int(mapLayer.maxZoom)
+        if let username = mapLayer.username, !username.isEmpty, let password = mapLayer.password {
+            self.username = username
+            self.password = password
+        }
     }
     
     override func url(forTilePath path: MKTileOverlayPath) -> URL {
@@ -37,8 +51,8 @@ class WMSTileOverlay: MKTileOverlay {
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
         let url = url(forTilePath: path)
         var headers: HTTPHeaders = [:]
-        if let layer = layer, !layer.username.isEmpty, !layer.password.isEmpty {
-            headers.add(.authorization(username: layer.username, password: layer.password))
+        if let username = username, let password = password {
+            headers.add(.authorization(username: username, password: password))
         }
         MSI.shared.capabilitiesSession.request(url, method: .get, headers: headers)
             .publishData()

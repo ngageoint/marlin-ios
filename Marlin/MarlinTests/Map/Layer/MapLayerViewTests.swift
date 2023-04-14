@@ -38,7 +38,6 @@ final class MapLayerViewTests: XCTestCase {
         persistentStore.viewContext.performAndWait {
             let item = MapLayer(context: persistentStore.viewContext)
             item.visible = true
-            item.layerId = 1
             item.name = "Hi"
             item.displayName = "Hi Display"
             item.url = "https://example.com/wms"
@@ -51,7 +50,7 @@ final class MapLayerViewTests: XCTestCase {
             return
         }
         
-        let view = MapLayersView()
+        let view = MapLayersView(mapState: MapState())
         let nav = NavigationView {
             view
                 .environment(\.managedObjectContext, persistentStore.viewContext)

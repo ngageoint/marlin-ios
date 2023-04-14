@@ -17,7 +17,7 @@ final class SearchResultsMapTests: XCTestCase {
 
     override func setUp() {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
-        UserDefaults.registerMarlinDefaults(withMetrics: false)
+        UserDefaults.registerMarlinDefaults()
     }
     
     override func tearDown() {

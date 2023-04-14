@@ -419,7 +419,6 @@ class MapLayerViewModel: ObservableObject, Identifiable {
         self.fileName = mapLayer.name
         self.displayName = mapLayer.displayName ?? ""
         self.username = mapLayer.username ?? ""
-        self.password = mapLayer.password ?? ""
         self.maximumZoom = Int(mapLayer.maxZoom)
         self.minimumZoom = Int(mapLayer.minZoom)
         self.minLatitude = mapLayer.minLatitude
@@ -435,6 +434,11 @@ class MapLayerViewModel: ObservableObject, Identifiable {
         }
         if self.layerType == .geopackage {
             self.geoPackageImported()
+        }
+        
+        if self.username != "", let credentials = Keychain().getCredentials(server: self.url , account: self.username) {
+            print("xxxx pulled password \(credentials.password)")
+            self.password = credentials.password
         }
     }
     

@@ -15,7 +15,7 @@ final class DataLoadedNotificationBannerTests: XCTestCase {
     
     override func setUp() {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
-        UserDefaults.registerMarlinDefaults(withMetrics: false)
+        UserDefaults.registerMarlinDefaults()
     }
     
     func testShowNotification() {

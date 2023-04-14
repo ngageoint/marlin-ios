@@ -29,7 +29,6 @@ class MapLayer: NSManagedObject {
         layer.refreshRate = Int64(viewModel.refreshRate)
         layer.displayName = viewModel.displayName
         layer.username = viewModel.username
-        layer.password = viewModel.password
         layer.maxZoom = Int64(viewModel.maximumZoom)
         layer.minZoom = Int64(viewModel.minimumZoom)
         layer.type = viewModel.layerType.rawValue
@@ -41,6 +40,10 @@ class MapLayer: NSManagedObject {
         layer.minLongitude = viewModel.minLongitude
         layer.maxLongitude = viewModel.maxLongitude
         layer.urlParameters = viewModel.urlParameters
+        
+        if viewModel.password != "" {
+            Keychain().addOrUpdate(server: layer.url ?? "", credentials: Credentials(username: viewModel.username, password: viewModel.password))
+        }
         return layer
     }
     
@@ -50,7 +53,6 @@ class MapLayer: NSManagedObject {
         self.refreshRate = Int64(viewModel.refreshRate)
         self.displayName = viewModel.displayName
         self.username = viewModel.username
-        self.password = viewModel.password
         self.maxZoom = Int64(viewModel.maximumZoom)
         self.minZoom = Int64(viewModel.minimumZoom)
         self.type = viewModel.layerType.rawValue
@@ -61,11 +63,22 @@ class MapLayer: NSManagedObject {
         self.minLongitude = viewModel.minLongitude
         self.maxLongitude = viewModel.maxLongitude
         self.urlParameters = viewModel.urlParameters
+        
+        if viewModel.password != "" {
+            Keychain().addOrUpdate(server: url ?? "", credentials: Credentials(username: viewModel.username, password: viewModel.password))
+        }
     }
     
     func toggleShow() {
         self.visible = !self.visible
         try? self.managedObjectContext?.save()
+    }
+    
+    var password: String? {
+        if self.username != "", let credentials = Keychain().getCredentials(server: self.url ?? "" , account: self.username ?? "") {
+            return credentials.password
+        }
+        return nil
     }
     
     var urlTemplate: String? {

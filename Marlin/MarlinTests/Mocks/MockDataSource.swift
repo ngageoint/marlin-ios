@@ -65,6 +65,7 @@ class MockDataSource: DataSource {
     static var fullDataSourceName: String = "mock data source"
     
     static var key: String = "mockdatasource"
+    static var metricsKey: String = "mockdatasource"
     
     static var color: UIColor = UIColor.black
     
@@ -120,6 +121,7 @@ class MockDataSourceDefaultSort: DataSource {
     static var fullDataSourceName: String = "mockdefaultsort data source"
     
     static var key: String = "mockdefaultsort"
+    static var metricsKey: String = "mockdefaultsort"
     
     static var color: UIColor = UIColor.black
     
@@ -177,6 +179,7 @@ class MockDataSourceNonMappable: DataSource {
     static var fullDataSourceName: String = "mock non mappable"
     
     static var key: String = "mocknonmappable"
+    static var metricsKey: String = "mocknonmappable"
     
     static var color: UIColor = UIColor.black
     

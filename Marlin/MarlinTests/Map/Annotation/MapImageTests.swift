@@ -26,6 +26,7 @@ class MockMapImage: MapImage, DataSource {
     static var fullDataSourceName: String = "mock"
     
     static var key: String = "mock"
+    static var metricsKey: String = "mock"
     
     static var color: UIColor = UIColor.black
     

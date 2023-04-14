@@ -11,7 +11,7 @@ import Combine
 
 extension UserDefaults {
     
-    static func registerMarlinDefaults(withMetrics: Bool = true) {
+    static func registerMarlinDefaults() {
         if let path = Bundle.main.path(forResource: "userDefaults", ofType: "plist"), let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject] {
             UserDefaults.standard.register(defaults: dict)
         }
@@ -19,8 +19,6 @@ extension UserDefaults {
         if let path = Bundle.main.path(forResource: "appFeatures", ofType: "plist"), let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject] {
             UserDefaults.standard.register(defaults: dict)
         }
-        
-        UserDefaults.standard.metricsEnabled = withMetrics
     }
     
     @objc func mkcoordinateregion(forKey key: String) -> MKCoordinateRegion {

@@ -23,7 +23,7 @@ final class NewMapLayerViewTests: XCTestCase {
             )
         }
         
-        let view = NewMapLayerView()
+        let view = MapLayerView(isPresented: Binding.constant(true))
         
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
