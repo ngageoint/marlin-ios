@@ -8,8 +8,9 @@
 import Foundation
 import UIKit
 import CoreData
+import CoreLocation
 
-extension DFRS: DataSource {
+extension DFRS: DataSourceLocation {
     var color: UIColor {
         return DFRS.color
     }

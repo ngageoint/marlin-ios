@@ -9,12 +9,12 @@ import Foundation
 import SwiftUI
 import geopackage_ios
 
-class GeoPackageFeatureItem: NSObject, DataSourceViewBuilder {
+class GeoPackageFeatureItem: NSObject, DataSourceLocation, DataSourceViewBuilder {
     var coordinate: CLLocationCoordinate2D
     
-    var latitude: Double { coordinate?.latitude ?? 0.0 }
+    var latitude: Double { coordinate.latitude }
     
-    var longitude: Double { coordinate?.longitude ?? 0.0 }
+    var longitude: Double { coordinate.longitude }
     
     static var cacheTiles: Bool = false
     

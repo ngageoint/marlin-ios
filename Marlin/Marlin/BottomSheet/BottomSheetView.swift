@@ -110,12 +110,12 @@ struct MarlinBottomSheet: View {
             .ignoresSafeArea()
         )
         .onChange(of: selectedItem) { item in
-            if let item = itemList.bottomSheetItems?[selectedItem].item {
+            if let item = itemList.bottomSheetItems?[selectedItem].item as? DataSourceLocation {
                 NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: item))
             }
         }
         .onAppear {
-            if let item = itemList.bottomSheetItems?[selectedItem].item {
+            if let item = itemList.bottomSheetItems?[selectedItem].item as? DataSourceLocation {
                 NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: item))
                 Metrics.shared.dataSourceBottomSheet(dataSource: type(of: item))
             }

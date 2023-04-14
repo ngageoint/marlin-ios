@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import CoreData
 
-extension DifferentialGPSStation: DataSource {
+extension DifferentialGPSStation: DataSourceLocation {
     var color: UIColor {
         return DifferentialGPSStation.color
     }

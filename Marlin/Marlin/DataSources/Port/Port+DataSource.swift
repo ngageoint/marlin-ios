@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import CoreData
 
-extension Port: DataSource {
+extension Port: DataSourceLocation {
     var color: UIColor {
         return Port.color
     }

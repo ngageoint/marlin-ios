@@ -595,7 +595,6 @@ final class MarlinMapTests: XCTestCase {
         }
         tester().tapView(withAccessibilityLabel: "Marlin Compact Map")
         waitForExpectations(timeout: 10, handler: nil)
-        
         NotificationCenter.default.post(Notification(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: newItem)))
         
         let e2 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in

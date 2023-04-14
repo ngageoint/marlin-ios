@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import Combine
 
-extension Asam: DataSource {
+extension Asam: DataSourceLocation {
     static var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"

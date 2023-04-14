@@ -226,10 +226,9 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             }
             self.focusedAnnotation = nil
         }
-        
-        if let ds = notification.item, let coordinate = ds.coordinate {
+        if let ds = notification.item {
             let span = mapView?.region.span ?? MKCoordinateSpan(zoomLevel: 17, pixelWidth: Double(mapView?.frame.size.width ?? UIScreen.main.bounds.width))
-            let adjustedCenter = CLLocationCoordinate2D(latitude: coordinate.latitude - (span.latitudeDelta / 4.0), longitude: coordinate.longitude)
+            let adjustedCenter = CLLocationCoordinate2D(latitude: ds.coordinate.latitude - (span.latitudeDelta / 4.0), longitude: ds.coordinate.longitude)
             mapView?.setCenter(adjustedCenter, animated: true)
         }
         

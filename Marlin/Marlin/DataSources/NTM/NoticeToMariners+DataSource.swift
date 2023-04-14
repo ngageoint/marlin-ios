@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import CoreData
 import Combine
+import CoreLocation
 
 extension NoticeToMariners: DataSource {
     static var properties: [DataSourceProperty] {
@@ -38,6 +39,9 @@ extension NoticeToMariners: DataSource {
         return dateFormatter
     }
     static func postProcess() {}
+    var coordinate: CLLocationCoordinate2D? {
+        return nil
+    }
 }
 
 extension NoticeToMariners: BatchImportable {

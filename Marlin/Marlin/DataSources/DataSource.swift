@@ -112,6 +112,10 @@ struct DataSourceProperty: Hashable, Identifiable, Codable {
     }
 }
 
+protocol DataSourceLocation: DataSource {
+    var coordinate: CLLocationCoordinate2D { get }
+}
+
 protocol DataSource {
     static var properties: [DataSourceProperty] { get }
     static var defaultSort: [DataSourceSortParameter] { get }
@@ -129,7 +133,6 @@ protocol DataSource {
     var color: UIColor { get }
     static var image: UIImage? { get }
     static var imageScale: CGFloat { get }
-    var coordinate: CLLocationCoordinate2D? { get }
     func view(on: MKMapView) -> MKAnnotationView?
     static func cachedImage(zoomLevel: Int) -> UIImage?
     static func cacheImage(zoomLevel: Int, image: UIImage)
@@ -156,10 +159,6 @@ extension DataSource {
     }
     
     func view(on: MKMapView) -> MKAnnotationView? {
-        return nil
-    }
-    
-    var coordinate: CLLocationCoordinate2D? {
         return nil
     }
     

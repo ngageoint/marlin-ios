@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import CoreData
 
-extension RadioBeacon: DataSource {
+extension RadioBeacon: DataSourceLocation {
     var color: UIColor {
         return RadioBeacon.color
     }
