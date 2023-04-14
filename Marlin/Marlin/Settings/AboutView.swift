@@ -83,7 +83,7 @@ struct AboutView: View {
         .listRowBackground(Color.surfaceColor)
         .background(Color.backgroundColor)
         .onAppear {
-            Metrics.shared.settingsView()
+            Metrics.shared.aboutView()
         }
     }
 }

@@ -47,9 +47,9 @@ class Metrics {
         appRoute(["sideNavigation"])
     }
     
-    func settingsView() {
-        NSLog("Record Settings View")
-        appRoute(["settings"])
+    func aboutView() {
+        NSLog("Record About View")
+        appRoute(["about", "list"])
     }
     
     func submitReportView() {
