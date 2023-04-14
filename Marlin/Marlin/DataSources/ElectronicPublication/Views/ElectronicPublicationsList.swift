@@ -23,19 +23,24 @@ struct ElectronicPublicationsList: View {
                 PublicationTypeEnum(rawValue: Int(section1.id))?.description ?? "" < PublicationTypeEnum(rawValue: Int(section2.id))?.description ?? ""
             })) { section in
                 NavigationLink {
-                    switch(PublicationTypeEnum(rawValue: Int(section.id))) {
-                    case .americanPracticalNavigator:
-                        completeVolumes(section: section)
-                    case .atlasOfPilotCharts, .listOfLights, .sightReductionTablesForMarineNavigation:
-                        nestedFolder(section: section)
-                    case .sailingDirectionsPlanningGuides, .chartNo1, .sailingDirectionsEnroute, .sightReductionTablesForAirNavigation, .uscgLightList:
-                        completeAndChapters(section: section)
-                    case .distanceBetweenPorts, .internationalCodeOfSignals, .radarNavigationAndManeuveringBoardManual, .radioNavigationAids:
-                        completeAndChapters(section: section, completeTitle: "Complete Volume")
-                    case .worldPortIndex:
-                        completeAndChapters(section: section, completeTitle: "Complete Volume", chapterTitle: "Additional Formats")
-                    default:
-                        defaultPublications(section: section)
+                    Group {
+                        switch(PublicationTypeEnum(rawValue: Int(section.id))) {
+                        case .americanPracticalNavigator:
+                            completeVolumes(section: section)
+                        case .atlasOfPilotCharts, .listOfLights, .sightReductionTablesForMarineNavigation:
+                            nestedFolder(section: section)
+                        case .sailingDirectionsPlanningGuides, .chartNo1, .sailingDirectionsEnroute, .sightReductionTablesForAirNavigation, .uscgLightList:
+                            completeAndChapters(section: section)
+                        case .distanceBetweenPorts, .internationalCodeOfSignals, .radarNavigationAndManeuveringBoardManual, .radioNavigationAids:
+                            completeAndChapters(section: section, completeTitle: "Complete Volume")
+                        case .worldPortIndex:
+                            completeAndChapters(section: section, completeTitle: "Complete Volume", chapterTitle: "Additional Formats")
+                        default:
+                            defaultPublications(section: section)
+                        }
+                    }
+                    .onAppear {
+                        Metrics.shared.appRoute(["epubs", PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "pubType"])
                     }
                 } label: {
                     folderLabel(name: "\(PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "")", count: section.count)
@@ -48,7 +53,7 @@ struct ElectronicPublicationsList: View {
         .navigationTitle(ElectronicPublication.fullDataSourceName)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            Metrics.shared.dataSourceList(dataSource: ElectronicPublication.self)
+            Metrics.shared.appRoute(["epubs"])
         }
     }
     

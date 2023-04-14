@@ -122,5 +122,12 @@ struct LayerConfiguration: View {
                 .tint(Color.primaryColorVariant)
             }
         }
+        .onAppear {
+            if viewModel.mapLayer != nil {
+                Metrics.shared.appRoute(["mapEditGridLayerSettings"])
+            } else {
+                Metrics.shared.appRoute(["mapCreateGridLayerSettings"])
+            }
+        }
     }
 }

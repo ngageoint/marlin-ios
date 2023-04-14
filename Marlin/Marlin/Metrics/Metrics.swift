@@ -19,59 +19,77 @@ class Metrics {
         
     }
     
+    func appRoute(_ route: [String]) {
+        MatomoTracker.shared?.track(view:route)
+    }
+    
     func appLaunch() {
         NSLog("Record App Launch")
-        MatomoTracker.shared?.track(view:["app"])
+        appRoute(["main"])
     }
     
     func mapView() {
         NSLog("Record Map View")
-        MatomoTracker.shared?.track(view:["app", "map"])
+        appRoute(["map"])
     }
     
     func mapSettingsView() {
         NSLog("Record Map Settings View")
-        MatomoTracker.shared?.track(view:["app", "map", "settings"])
+        appRoute(["mapSettings"])
     }
     
     func mapLayersView() {
-        NSLog("Record Map Settings View")
-        MatomoTracker.shared?.track(view:["app", "map", "settings", "layers"])
+        appRoute(["mapLayers"])
     }
     
     func sideNavigationView() {
         NSLog("Record Side Navigation View")
-        MatomoTracker.shared?.track(view:["app", "sideNavigation"])
+        appRoute(["sideNavigation"])
     }
     
     func settingsView() {
         NSLog("Record Settings View")
-        MatomoTracker.shared?.track(view:["app", "settings"])
+        appRoute(["settings"])
     }
     
     func submitReportView() {
         NSLog("Record Submit Report View")
-        MatomoTracker.shared?.track(view:["app", "submitReport"])
+        appRoute(["report", "list"])
     }
     
     func searchView() {
         NSLog("Record Search View")
-        MatomoTracker.shared?.track(view:["app", "map", "search"])
+        appRoute(["mapSearch"])
     }
     
     func noticeToMarinersView() {
         NSLog("Record Notice To Mariners")
-        MatomoTracker.shared?.track(view:["app", "noticeToMariners"])
+        appRoute(["ntms", "home"])
+    }
+    
+    func dataSourceSort(dataSource: any DataSource.Type) {
+        NSLog("Record Data Source Sort \(dataSource.key)")
+        appRoute(["\(dataSource.metricsKey)", "sort"])
+    }
+    
+    func dataSourceFilter(dataSource: any DataSource.Type) {
+        NSLog("Record Data Source Filter \(dataSource.key)")
+        appRoute(["\(dataSource.metricsKey)", "filter"])
+    }
+    
+    func dataSourceBottomSheet(dataSource: any DataSource.Type) {
+        NSLog("Record Data Source BottomSheet \(dataSource.key)")
+        appRoute(["\(dataSource.metricsKey)", "sheet"])
     }
     
     func dataSourceList(dataSource: any DataSource.Type) {
         NSLog("Record Data Source List \(dataSource.key)")
-        MatomoTracker.shared?.track(view:["app", "\(dataSource.key)List"])
+        appRoute(["\(dataSource.metricsKey)", "list"])
     }
     
     func dataSourceDetail(dataSource: any DataSource.Type) {
         NSLog("Record Data Source Detail \(dataSource.key)")
-        MatomoTracker.shared?.track(view:["app", "\(dataSource.key)List", "\(dataSource.key)Detail"])
+        appRoute(["\(dataSource.metricsKey)", "detail"])
     }
     
     func search(query: String, resultCount: Int) {

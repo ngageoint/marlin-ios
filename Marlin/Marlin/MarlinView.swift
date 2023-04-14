@@ -140,6 +140,9 @@ struct MarlinView: View {
                         .accessibilityLabel("Close Filter")
                     }
                 }
+                .onAppear {
+                    Metrics.shared.appRoute(["mapFilter"])
+                }
         }
         .snackbar(isPresented: $showSnackbar) {
             Group {

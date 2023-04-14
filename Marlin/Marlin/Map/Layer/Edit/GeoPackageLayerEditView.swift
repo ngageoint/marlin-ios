@@ -54,6 +54,13 @@ struct GeoPackageLayerEditView: View {
                 }
             }
         }
+        .onAppear {
+            if viewModel.mapLayer != nil {
+                Metrics.shared.appRoute(["mapEditGPLayerSettings"])
+            } else {
+                Metrics.shared.appRoute(["mapCreateGPLayerSettings"])
+            }
+        }
     }
 }
 

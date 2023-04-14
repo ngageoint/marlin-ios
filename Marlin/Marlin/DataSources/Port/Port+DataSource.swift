@@ -20,6 +20,7 @@ extension Port: DataSource {
     static var dataSourceName: String = NSLocalizedString("Ports", comment: "Port data source display name")
     static var fullDataSourceName: String = NSLocalizedString("World Ports", comment: "Port data source display name")
     static var key: String = "port"
+    static var metricsKey: String = "ports"
     static var imageName: String? = "port"
     static var systemImageName: String? = nil
     static var color: UIColor = UIColor(argbValue: 0xFF5856d6)

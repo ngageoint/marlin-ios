@@ -25,6 +25,10 @@ struct SubmitReportView: View {
                 })
                 .accessibilityElement()
                 .accessibilityLabel("Submit Anti-Shipping Activity Message (ASAM) Report")
+                .environment(\.openURL, OpenURLAction { url in
+                    Metrics.shared.appRoute(["report", "asam"])
+                    return .systemAction
+                })
                 
                 Link(destination: URL(string: "https://msi.nga.mil/submit-report/Observ-Report")!, label: {
                     HStack {
@@ -38,6 +42,10 @@ struct SubmitReportView: View {
                 })
                 .accessibilityElement()
                 .accessibilityLabel("Submit Observer Report")
+                .environment(\.openURL, OpenURLAction { url in
+                    Metrics.shared.appRoute(["report", "observer"])
+                    return .systemAction
+                })
                 
                 Link(destination: URL(string: "https://msi.nga.mil/submit-report/MODU-Report")!, label: {
                     HStack {
@@ -53,6 +61,10 @@ struct SubmitReportView: View {
                 })
                 .accessibilityElement()
                 .accessibilityLabel("Submit Mobile Offshore Drilling Unit (MODU) Movement Report")
+                .environment(\.openURL, OpenURLAction { url in
+                    Metrics.shared.appRoute(["report", "modu"])
+                    return .systemAction
+                })
                 
                 Link(destination: URL(string: "https://msi.nga.mil/submit-report/Visit-Report")!, label: {
                     HStack {
@@ -68,6 +80,10 @@ struct SubmitReportView: View {
                 })
                 .accessibilityElement()
                 .accessibilityLabel("Submit US Navy Port Visit Report")
+                .environment(\.openURL, OpenURLAction { url in
+                    Metrics.shared.appRoute(["report", "portVisit"])
+                    return .systemAction
+                })
                 
                 Link(destination: URL(string: "https://msi.nga.mil/submit-report/SHAR-Report")!, label: {
                     HStack {
@@ -81,6 +97,10 @@ struct SubmitReportView: View {
                 })
                 .accessibilityElement()
                 .accessibilityLabel("Submit Ship Hostile Action Report")
+                .environment(\.openURL, OpenURLAction { url in
+                    Metrics.shared.appRoute(["report", "hostileShip"])
+                    return .systemAction
+                })
             }
         }
         .navigationTitle("Submit Report")

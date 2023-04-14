@@ -44,6 +44,7 @@ struct ChartCorrection: Decodable, Hashable, Identifiable, DataSource {
     static var dataSourceName: String = "Chart Corrections"
     static var fullDataSourceName: String = "Chart Corrections"
     static var key: String = "chartCorrection"
+    static var metricsKey: String = "corrections"
     static var color: UIColor = NoticeToMariners.color
     static var imageName: String?
     static var systemImageName: String?

@@ -27,6 +27,13 @@ struct MapLayerView: View {
                 dismiss()
             }
         }
+        .onAppear {
+            if viewModel.mapLayer != nil {
+                Metrics.shared.appRoute(["mapEditLayer"])
+            } else {
+                Metrics.shared.appRoute(["mapNewLayer"])
+            }
+        }
     }
 }
 

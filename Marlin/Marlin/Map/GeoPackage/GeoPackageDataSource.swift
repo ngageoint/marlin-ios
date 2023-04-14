@@ -78,6 +78,7 @@ class GeoPackageFeatureItem: NSObject, DataSourceViewBuilder {
     static var systemImageName: String?
     
     static var key: String = "gpfeature"
+    static var metricsKey: String = "geopackage"
     
     var color: UIColor = .brown
     

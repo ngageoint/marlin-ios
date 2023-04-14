@@ -27,5 +27,6 @@ struct GeoPackageFeatureItemSummaryView: View {
                 .overline()
             GeoPackageFeatureItemActionBar(featureItem: featureItem, showMoreDetailsButton: true, showFocusButton: false)
         }
+        
     }
 }

@@ -54,6 +54,13 @@ struct WMSLayerEditView: View {
                 }
             }
         }
+        .onAppear {
+            if viewModel.mapLayer != nil {
+                Metrics.shared.appRoute(["mapWMSEditLayerSettings"])
+            } else {
+                Metrics.shared.appRoute(["mapWMSCreateLayerSettings"])
+            }
+        }
     }
     
     @ViewBuilder

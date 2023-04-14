@@ -66,6 +66,9 @@ struct ChartCorrectionList: View {
                     .padding(.all, 16)
             }
         }
+        .onAppear {
+            Metrics.shared.appRoute(["ntms", "corrections"])
+        }
     }
     
     @ViewBuilder

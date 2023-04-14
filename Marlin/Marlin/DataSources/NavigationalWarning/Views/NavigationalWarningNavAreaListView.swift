@@ -143,6 +143,7 @@ struct NavigationalWarningNavAreaListView: View {
             .accessibilityIdentifier("Navigation Warning Scroll")
         }
         .onAppear {
+            Metrics.shared.appRoute([NavigationalWarning.metricsKey, "list"])
             shouldSavePosition = false
         }
         .navigationTitle(NavigationalWarningNavArea.fromId(id: navArea)?.display ?? "Navigational Warnings")

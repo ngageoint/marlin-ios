@@ -121,6 +121,8 @@ protocol DataSource {
     static var fullDataSourceName: String { get }
     static var key: String { get }
     var key: String { get }
+    static var metricsKey: String { get }
+    var metricsKey: String { get }
     static var color: UIColor { get }
     static var imageName: String? { get }
     static var systemImageName: String? { get }
@@ -163,6 +165,10 @@ extension DataSource {
     
     var key: String {
         return Self.key
+    }
+    
+    var metricsKey: String {
+        return Self.metricsKey
     }
 }
 

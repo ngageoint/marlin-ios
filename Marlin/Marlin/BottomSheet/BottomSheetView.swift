@@ -117,6 +117,7 @@ struct MarlinBottomSheet: View {
         .onAppear {
             if let item = itemList.bottomSheetItems?[selectedItem].item {
                 NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: item))
+                Metrics.shared.dataSourceBottomSheet(dataSource: type(of: item))
             }
         }
     }
