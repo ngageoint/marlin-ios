@@ -103,9 +103,9 @@ struct NavigationalWarningNavAreaListView: View {
             }
             .safeAreaInset(edge: .top) {
                 if lastSavedDate != dataSource.items.first?.issueDate {
-                    if let lastSeenIndex = dataSource.items.firstIndex { warning in
+                    if let lastSeenIndex = dataSource.items.firstIndex(where: { warning in
                         warning.primaryKey == lastSeen
-                    } {
+                    }) {
                         let unreadCount = dataSource.items.distance(from: dataSource.items.startIndex, to: lastSeenIndex)
                         if unreadCount != 0 {
                             Text("\(unreadCount) Unread Warnings")

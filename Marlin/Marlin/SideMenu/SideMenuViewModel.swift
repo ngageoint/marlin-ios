@@ -72,7 +72,7 @@ class SideMenuViewModel: ObservableObject {
     }
     
     func validateDrop() -> Bool {
-        guard let draggedItem = draggedItem else {
+        guard draggedItem != nil else {
             return false
         }
         

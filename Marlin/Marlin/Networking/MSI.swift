@@ -169,7 +169,7 @@ public class MSI {
         loadAllDataTime = Date()
         NSLog("Load all data")
         
-        var initialDataLoadList: [any BatchImportable.Type] = self.masterDataList.filter { importable in
+        let initialDataLoadList: [any BatchImportable.Type] = self.masterDataList.filter { importable in
             if let ds = importable as? any DataSource.Type {
                 return UserDefaults.standard.dataSourceEnabled(ds) && !self.isLoaded(type: importable) && !(importable.seedDataFiles ?? []).isEmpty
             }

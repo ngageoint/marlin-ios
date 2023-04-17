@@ -117,7 +117,7 @@ class GeoPackage {
                     
                     var values: [String : AnyHashable] = [:]
                     var featureDataTypes: [String : String] = [:]
-                    var geometryColumn = featureRow.geometryColumnIndex()
+                    let geometryColumn = featureRow.geometryColumnIndex()
                     var geometryColumnName: String?
                     
                     var coordinate = location
@@ -128,7 +128,7 @@ class GeoPackage {
                         if i == geometryColumn {
                             geometryColumnName = columnName
                             if let geometry = value as? GPKGGeometryData {
-                                var centroid = geometry.geometry.centroid()
+                                let centroid = geometry.geometry.centroid()
                                 let transform = SFPGeometryTransform(from: featureDao.projection, andToEpsg: 4326)
                                 if let centroid = transform?.transform(centroid) {
                                     coordinate = CLLocationCoordinate2D(latitude: centroid.y.doubleValue, longitude: centroid.x.doubleValue)
@@ -168,16 +168,15 @@ class GeoPackage {
                         }
                         let attributeId = row.idValue()
                         for relation in attributeMediaTables {
-                            var relatedMedia = rte?.mappings(forTableName: relation.mappingTableName, withBaseId: attributeId)
+                            let relatedMedia = rte?.mappings(forTableName: relation.mappingTableName, withBaseId: attributeId)
                             let mediaDao = rte?.mediaDao(forTableName: relation.relatedTableName)
                             attributeMedias.append(contentsOf: mediaDao?.rows(withIds: relatedMedia) ?? [])
                         }
                         
-                        var values: [String : AnyHashable] = [:]
+                        let values: [String : AnyHashable] = [:]
                         var attributeDataTypes: [String : String] = [:]
                         
                         for i in 0...(row.columnCount() - 1) {
-                            let value = row.value(with: i)
                             let columnName = self.displayColumnName(dataColumnsDao: dataColumnsDao, attributeRow: row, columnName: row.columnName(with: i))
                             if let dataType = GPKGDataTypes.name(row.attributesColumns.columns()[Int(i)].dataType) {
                                 attributeDataTypes[columnName] = dataType

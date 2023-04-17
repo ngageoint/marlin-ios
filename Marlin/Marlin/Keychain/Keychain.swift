@@ -62,7 +62,7 @@ class Keychain {
     func addOrUpdate(server: String, credentials: Credentials) -> Bool {
         let account = credentials.username
         let password = credentials.password.data(using: String.Encoding.utf8)!
-        var query: [String: Any] = [kSecClass as String: kSecClassInternetPassword,
+        let query: [String: Any] = [kSecClass as String: kSecClassInternetPassword,
                                     kSecAttrAccount as String: account,
                                     kSecAttrServer as String: server,
                                     kSecValueData as String: password]

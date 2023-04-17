@@ -95,7 +95,7 @@ class DataLoadOperation: Operation {
             NSLog("Loading initial data for \(D.key)")
             for seedDataFile in seedDataFiles {
                 if let localUrl = Bundle.main.url(forResource: seedDataFile, withExtension: "json") {
-                    let request = MSI.shared.session.request(localUrl, method: .get, parameters: nil, encoding: URLEncoding.default, headers: nil, interceptor: nil, requestModifier: .none)
+                    _ = MSI.shared.session.request(localUrl, method: .get, parameters: nil, encoding: URLEncoding.default, headers: nil, interceptor: nil, requestModifier: .none)
                         .responseDecodable(of: T.self, queue: queue) { response in
                             if self.isCancelled {
                                 return

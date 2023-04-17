@@ -63,6 +63,7 @@ class GeoPackageImporter {
         "\(url.deletingPathExtension().lastPathComponent)_\(Int(Date().timeIntervalSince1970))"
     }
     
+    @discardableResult
     func importGeoPackage(url: URL, nameOverride: String? = nil, overwrite: Bool = false) -> String {
         let manager = GPKGGeoPackageFactory.manager()
         let name = nameOverride ?? url.deletingPathExtension().lastPathComponent

@@ -46,8 +46,6 @@ class ImageLoader: ObservableObject {
         .publishData()
         .receive(on: DispatchQueue.main)
         .sink(receiveValue: { response in
-            if let error = response.error {
-            }
             self.onFinish()
             if let data = response.data {
                 self.image = UIImage(data: data)

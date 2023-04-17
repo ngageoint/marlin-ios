@@ -71,7 +71,7 @@ class UserLayersMap: MapMixin {
     
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
         var featureItems: [GeoPackageFeatureItem] = []
-        for (index, layer) in viewModel.layers.reversed().enumerated() {
+        for (_, layer) in viewModel.layers.reversed().enumerated() {
             if layer.showOnMap {
                 if layer.type == LayerType.geopackage.rawValue {
                     if let geoPackageName = layer.name {
