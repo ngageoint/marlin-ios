@@ -13,12 +13,12 @@ import sf_proj_ios
 import ExceptionCatcher
 import SwiftUI
 
-class GeoPackage: NSObject {
+class GeoPackageLayer: NSObject {
     var mapView: MKMapView
     var fileName: String
     var tableName: String
     var geoPackage: GPKGGeoPackage?
-    var overlay: BaseMapOverlay?
+    var overlay: GeopackageFeatureOverlay?
     var featureTiles: GPKGFeatureTiles?
     var fillColor: UIColor?
     var polygonColor: UIColor?
@@ -35,7 +35,7 @@ class GeoPackage: NSObject {
         self.polygonColor = polygonColor
     }
     
-    func getOverlay() -> BaseMapOverlay? {
+    func getOverlay() -> GeopackageFeatureOverlay? {
         guard let manager = GPKGGeoPackageFactory.manager() else {
             return nil
         }
@@ -72,14 +72,14 @@ class GeoPackage: NSObject {
         featureTiles?.lineStrokeWidth = 0.1
         featureTiles?.lineColor = UIColor.lightGray
         
-        overlay = BaseMapOverlay(featureTiles: featureTiles, fillColor: fillColor)
+        overlay = GeopackageFeatureOverlay(featureTiles: featureTiles, fillColor: fillColor)
         overlay?.minZoom = 0
         overlay?.canReplaceMapContent = canReplaceMapContent
         
         return overlay
     }
     
-    func recreateOverlay() -> BaseMapOverlay? {
+    func recreateOverlay() -> GeopackageFeatureOverlay? {
         guard let featureTiles = featureTiles else {
             return nil
         }
@@ -89,7 +89,7 @@ class GeoPackage: NSObject {
             featureTiles.polygonFillColor = polygonColor
             featureTiles.fillPolygon = true
         }
-        overlay = BaseMapOverlay(featureTiles: featureTiles, fillColor: fillColor)
+        overlay = GeopackageFeatureOverlay(featureTiles: featureTiles, fillColor: fillColor)
         overlay?.minZoom = 0
         overlay?.canReplaceMapContent = true
         return overlay

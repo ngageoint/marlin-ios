@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import CoreData
 
-extension RadioBeacon: DataSource {
+extension RadioBeacon: DataSourceLocation {
     var color: UIColor {
         return RadioBeacon.color
     }
@@ -17,6 +17,7 @@ extension RadioBeacon: DataSource {
     static var dataSourceName: String = NSLocalizedString("Beacons", comment: "Radio Beacons data source display name")
     static var fullDataSourceName: String = NSLocalizedString("Radio Beacons", comment: "Radio Beacons data source display name")
     static var key: String = "radioBeacon"
+    static var metricsKey: String = "radioBeacons"
     static var imageName: String? = nil
     static var systemImageName: String? = "antenna.radiowaves.left.and.right"
     static var color: UIColor = UIColor(argbValue: 0xFF007BFF)

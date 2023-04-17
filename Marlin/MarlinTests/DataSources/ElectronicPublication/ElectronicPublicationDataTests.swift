@@ -21,7 +21,7 @@ final class ElectronicPublicationDataTests: XCTestCase {
     
     override func setUp(completion: @escaping (Error?) -> Void) {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
-        UserDefaults.registerMarlinDefaults(withMetrics: false)
+        UserDefaults.registerMarlinDefaults()
 
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false

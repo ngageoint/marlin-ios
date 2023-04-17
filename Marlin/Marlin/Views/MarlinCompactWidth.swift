@@ -221,8 +221,8 @@ struct MarlinCompactWidth: View {
             Spacer()
             // top right button stack
             VStack(alignment: .trailing, spacing: 16) {
-                NavigationLink {
-                    MapSettings()
+                NavigationLink(tag: "mapSettings", selection: $selection) {
+                    MapSettings(mapState: marlinMap.mapState)
                 } label: {
                     Label(
                         title: {},
@@ -233,7 +233,7 @@ struct MarlinCompactWidth: View {
                 }
                 .isDetailLink(false)
                 .fixedSize()
-                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini))
+                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
                 .accessibilityElement(children: .contain)
                 .accessibilityLabel("Map Settings Button")
             }

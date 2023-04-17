@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import CoreData
 import Combine
+import CoreLocation
 
 extension NoticeToMariners: DataSource {
     static var properties: [DataSourceProperty] {
@@ -21,6 +22,7 @@ extension NoticeToMariners: DataSource {
     static var dataSourceName: String = "NTM"
     static var fullDataSourceName: String = "Notice To Mariners"
     static var key: String = "ntm"
+    static var metricsKey: String = "ntms"
     static var color: UIColor = UIColor.red
     static var imageName: String? = nil
     static var systemImageName: String? = "speaker.badge.exclamationmark.fill"
@@ -37,6 +39,9 @@ extension NoticeToMariners: DataSource {
         return dateFormatter
     }
     static func postProcess() {}
+    var coordinate: CLLocationCoordinate2D? {
+        return nil
+    }
 }
 
 extension NoticeToMariners: BatchImportable {

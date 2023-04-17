@@ -15,6 +15,7 @@ import sf_ios
 protocol PredicateBasedTileOverlay {
     associatedtype T where T : MapImage
     var predicate: NSPredicate? { get set }
+    var key: String? { get set }
 }
 
 struct MapBoundingBox {
@@ -28,6 +29,7 @@ class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverl
     var objects: [T]?
     var zoomLevel: Int = 0
     var imageCache: Kingfisher.ImageCache?
+    var key: String?
     
     var clearImage: UIImage {
         let rect = CGRect(origin: CGPoint(x: 0, y:0), size: CGSize(width: 1, height: 1))
@@ -49,6 +51,7 @@ class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverl
         self.sortDescriptors = sortDescriptors
         self.objects = objects
         self.imageCache = imageCache
+        self.key = T.key
     }
     
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {

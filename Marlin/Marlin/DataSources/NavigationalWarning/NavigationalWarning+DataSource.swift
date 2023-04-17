@@ -20,6 +20,7 @@ extension NavigationalWarning: DataSource {
     static var dataSourceName: String = NSLocalizedString("Warnings", comment: "Warnings data source display name")
     static var fullDataSourceName: String = NSLocalizedString("Navigational Warnings", comment: "Warnings data source display name")
     static var key: String = "navWarning"
+    static var metricsKey: String = "navigational_warnings"
     static var color: UIColor = UIColor(argbValue: 0xFFD32F2F)
     static var imageName: String? = nil
     static var systemImageName: String? = "exclamationmark.triangle.fill"

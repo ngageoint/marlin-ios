@@ -37,7 +37,10 @@ struct NoticeToMarinersFullNoticeView: View {
         .dataSourceDetailList()
         .navigationTitle("Notice \(viewModel.noticeNumberString ?? "")")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear(perform: viewModel.loadGraphics)
+        .onAppear {
+            viewModel.loadGraphics()
+            Metrics.shared.appRoute(["ntms", "detail"])
+        }
     }
     
     @ViewBuilder

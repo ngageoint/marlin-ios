@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import Alamofire
 
-extension Light: DataSource {
+extension Light: DataSourceLocation {
     static var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -21,6 +21,7 @@ extension Light: DataSource {
     static var dataSourceName: String = NSLocalizedString("Lights", comment: "Lights data source display name")
     static var fullDataSourceName: String = NSLocalizedString("Lights", comment: "Lights data source display name")
     static var key: String = "light"
+    static var metricsKey: String = "lights"
     static var imageName: String? = nil
     static var systemImageName: String? = "lightbulb.fill"
     static var color: UIColor = UIColor(argbValue: 0xFFFFC500)

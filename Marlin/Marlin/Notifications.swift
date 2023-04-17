@@ -37,7 +37,7 @@ extension Notification.Name {
 }
 
 struct FocusMapOnItemNotification {
-    var item: (any DataSource)?
+    var item: (any DataSourceLocation)?
 }
 
 struct MapAnnotationFocusedNotification {

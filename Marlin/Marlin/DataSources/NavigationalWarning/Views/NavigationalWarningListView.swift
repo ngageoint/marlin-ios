@@ -33,7 +33,7 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
                 }
                 .listStyle(.plain)
                 .onAppear {
-
+                    Metrics.shared.appRoute([NavigationalWarning.metricsKey, "group"])
                     Metrics.shared.dataSourceList(dataSource: NavigationalWarning.self)
                 }
             }

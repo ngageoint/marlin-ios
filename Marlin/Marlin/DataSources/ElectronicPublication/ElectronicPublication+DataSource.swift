@@ -26,6 +26,7 @@ extension ElectronicPublication: DataSource {
     static var dataSourceName: String = NSLocalizedString("EPUB", comment: "Electronic Publication data source display name")
     static var fullDataSourceName: String = NSLocalizedString("Electronic Publications", comment: "Electronic Publication data source full display name")
     static var key: String = "epub"
+    static var metricsKey: String = "epubs"
     static var imageName: String? = nil
     static var systemImageName: String? = "doc.text.fill"
     

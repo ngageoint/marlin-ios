@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import Combine
 
-extension Asam: DataSource {
+extension Asam: DataSourceLocation {
     static var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -23,6 +23,7 @@ extension Asam: DataSource {
     static var dataSourceName: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")
     static var fullDataSourceName: String = NSLocalizedString("Anti-Shipping Activity Messages", comment: "ASAM data source full display name")
     static var key: String = "asam"
+    static var metricsKey: String = "asams"
     static var imageName: String? = "asam"
     static var systemImageName: String? = nil
     

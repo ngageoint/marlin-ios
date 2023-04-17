@@ -55,7 +55,7 @@ struct UserTrackingButton<Location>: View where Location: LocationManagerProtoco
                 setButtonImage()
             }
         }
-        .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: appearDisabled ? Color.disabledColor : Color.primaryColorVariant))
+        .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: appearDisabled ? Color.disabledColor : Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
         .alert(isPresented: $showingAlert) {
             Alert(title: Text("Location Services Disabled"),
                   message: Text("Marlin has been denied access to location services.  To show your location on the map, please go into your device settings and enable the Location permission."),

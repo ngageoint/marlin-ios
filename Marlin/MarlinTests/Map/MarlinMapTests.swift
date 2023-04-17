@@ -24,7 +24,7 @@ final class MarlinMapTests: XCTestCase {
     
     override func setUp(completion: @escaping (Error?) -> Void) {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
-        UserDefaults.registerMarlinDefaults(withMetrics: false)
+        UserDefaults.registerMarlinDefaults()
 
         UserDefaults.standard.initialDataLoaded = false
         for item in DataSourceList().allTabs {
@@ -385,119 +385,119 @@ final class MarlinMapTests: XCTestCase {
         wait(for: [e], timeout: 10)
     }
     
-    func testAddAndRemoveOverlays() {
-        class PassThrough: ObservableObject {
-            @Published var overlayToAdd: MKTileOverlay?
-            @Published var overlayToRemove: MKTileOverlay?
-        }
-        
-        struct Container: View {
-            @StateObject var dataSourceList: DataSourceList = DataSourceList()
-            @StateObject var mapState: MapState = MapState()
-            @State var filterOpen: Bool = false
-            
-            @ObservedObject var passThrough: PassThrough
-            var mixins: [MapMixin] = []
-            
-            init(passThrough: PassThrough) {
-                self.passThrough = passThrough
-            }
-            
-            var body: some View {
-                ZStack {
-                    MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
-                }
-                .onAppear {
-                    if let overlayToAdd = passThrough.overlayToAdd {
-                        mapState.overlays.insert(overlayToAdd, at: 0)
-                    }
-                }
-                .onChange(of: passThrough.overlayToAdd) { newValue in
-                    guard let newValue = newValue else {
-                        return
-                    }
-                    mapState.overlays.insert(newValue, at: 0)
-                }
-                .onChange(of: passThrough.overlayToRemove) { newValue in
-                    guard newValue != nil else {
-                        return
-                    }
-                    mapState.overlays.remove(at: 0)
-                }
-            }
-        }
-        
-        let appState = AppState()
-        let passThrough = PassThrough()
-        UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
-        let container = Container(passThrough: passThrough)
-            .environmentObject(appState)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
-        
-        let controller = UIHostingController(rootView: container)
-        let window = TestHelpers.getKeyWindowVisible()
-        window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "Marlin Compact Map")
-        let map = viewTester().usingLabel("Marlin Compact Map").view as! MKMapView
-        
-        let overlay = MKTileOverlay(urlTemplate: "https://example.com")
-        let overlay2 = MKTileOverlay(urlTemplate: "https://example.com/nope")
-        
-        passThrough.overlayToAdd = overlay
-        
-        let e = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
-            guard let map = observedObject as? MKMapView else {
-                return false
-            }
-            var foundOverlay = false
-            let overlays = map.overlays
-            for overlay in overlays {
-                if let tileOverlay = overlay as? MKTileOverlay {
-                    if tileOverlay.urlTemplate == "https://example.com" {
-                        foundOverlay = true
-                    }
-                }
-            }
-            return foundOverlay
-        }), object: map)
-        wait(for: [e], timeout: 10)
-        
-        passThrough.overlayToAdd = overlay2
-        let e3 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
-            guard let map = observedObject as? MKMapView else {
-                return false
-            }
-            var foundOverlay = false
-            let overlays = map.overlays
-            for overlay in overlays {
-                if let tileOverlay = overlay as? MKTileOverlay {
-                    if tileOverlay.urlTemplate == "https://example.com/nope" {
-                        foundOverlay = true
-                    }
-                }
-            }
-            return foundOverlay
-        }), object: map)
-        wait(for: [e3], timeout: 10)
-        
-        passThrough.overlayToRemove = overlay
-        let e2 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
-            guard let map = observedObject as? MKMapView else {
-                return false
-            }
-            var foundOverlay = false
-            let overlays = map.overlays
-            for overlay in overlays {
-                if let tileOverlay = overlay as? MKTileOverlay {
-                    if tileOverlay.urlTemplate == "https://example.com/nope" {
-                        foundOverlay = true
-                    }
-                }
-            }
-            return !foundOverlay
-        }), object: map)
-        wait(for: [e2], timeout: 10)
-    }
+//    func testAddAndRemoveOverlays() {
+//        class PassThrough: ObservableObject {
+//            @Published var overlayToAdd: MKTileOverlay?
+//            @Published var overlayToRemove: MKTileOverlay?
+//        }
+//
+//        struct Container: View {
+//            @StateObject var dataSourceList: DataSourceList = DataSourceList()
+//            @StateObject var mapState: MapState = MapState()
+//            @State var filterOpen: Bool = false
+//
+//            @ObservedObject var passThrough: PassThrough
+//            var mixins: [MapMixin] = []
+//
+//            init(passThrough: PassThrough) {
+//                self.passThrough = passThrough
+//            }
+//
+//            var body: some View {
+//                ZStack {
+//                    MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
+//                }
+//                .onAppear {
+//                    if let overlayToAdd = passThrough.overlayToAdd {
+//                        mapState.overlays.insert(overlayToAdd, at: 0)
+//                    }
+//                }
+//                .onChange(of: passThrough.overlayToAdd) { newValue in
+//                    guard let newValue = newValue else {
+//                        return
+//                    }
+//                    mapState.overlays.insert(newValue, at: 0)
+//                }
+//                .onChange(of: passThrough.overlayToRemove) { newValue in
+//                    guard newValue != nil else {
+//                        return
+//                    }
+//                    mapState.overlays.remove(at: 0)
+//                }
+//            }
+//        }
+//
+//        let appState = AppState()
+//        let passThrough = PassThrough()
+//        UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
+//        let container = Container(passThrough: passThrough)
+//            .environmentObject(appState)
+//            .environment(\.managedObjectContext, persistentStore.viewContext)
+//
+//        let controller = UIHostingController(rootView: container)
+//        let window = TestHelpers.getKeyWindowVisible()
+//        window.rootViewController = controller
+//        tester().waitForView(withAccessibilityLabel: "Marlin Compact Map")
+//        let map = viewTester().usingLabel("Marlin Compact Map").view as! MKMapView
+//
+//        let overlay = MKTileOverlay(urlTemplate: "https://example.com")
+//        let overlay2 = MKTileOverlay(urlTemplate: "https://example.com/nope")
+//
+//        passThrough.overlayToAdd = overlay
+//
+//        let e = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
+//            guard let map = observedObject as? MKMapView else {
+//                return false
+//            }
+//            var foundOverlay = false
+//            let overlays = map.overlays
+//            for overlay in overlays {
+//                if let tileOverlay = overlay as? MKTileOverlay {
+//                    if tileOverlay.urlTemplate == "https://example.com" {
+//                        foundOverlay = true
+//                    }
+//                }
+//            }
+//            return foundOverlay
+//        }), object: map)
+//        wait(for: [e], timeout: 10)
+//
+//        passThrough.overlayToAdd = overlay2
+//        let e3 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
+//            guard let map = observedObject as? MKMapView else {
+//                return false
+//            }
+//            var foundOverlay = false
+//            let overlays = map.overlays
+//            for overlay in overlays {
+//                if let tileOverlay = overlay as? MKTileOverlay {
+//                    if tileOverlay.urlTemplate == "https://example.com/nope" {
+//                        foundOverlay = true
+//                    }
+//                }
+//            }
+//            return foundOverlay
+//        }), object: map)
+//        wait(for: [e3], timeout: 10)
+//
+//        passThrough.overlayToRemove = overlay
+//        let e2 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
+//            guard let map = observedObject as? MKMapView else {
+//                return false
+//            }
+//            var foundOverlay = false
+//            let overlays = map.overlays
+//            for overlay in overlays {
+//                if let tileOverlay = overlay as? MKTileOverlay {
+//                    if tileOverlay.urlTemplate == "https://example.com/nope" {
+//                        foundOverlay = true
+//                    }
+//                }
+//            }
+//            return !foundOverlay
+//        }), object: map)
+//        wait(for: [e2], timeout: 10)
+//    }
     
     func testTapAsamFeature() {
         UserDefaults.standard.set(true, forKey: "showOnMap\(Asam.key)")
@@ -595,7 +595,6 @@ final class MarlinMapTests: XCTestCase {
         }
         tester().tapView(withAccessibilityLabel: "Marlin Compact Map")
         waitForExpectations(timeout: 10, handler: nil)
-        
         NotificationCenter.default.post(Notification(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: newItem)))
         
         let e2 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in

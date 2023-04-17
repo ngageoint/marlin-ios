@@ -124,6 +124,7 @@ struct MaterialButtonStyle: ButtonStyle {
     let cornerRadius: CGFloat = 4.0
     let maxWidth: Bool = false
     let type: ButtonType
+    @Environment(\.isEnabled) private var isEnabled: Bool
     
     func makeBody(configuration: Configuration) -> some View {
         var borderWidth = 1.0
@@ -132,7 +133,7 @@ struct MaterialButtonStyle: ButtonStyle {
         } else if type == .text {
             borderWidth = 0.0
         }
-        var foregroundColor = Color.primaryColorVariant
+        var foregroundColor = isEnabled ? Color.primaryColorVariant : Color.disabledColor
         if type == ButtonType.contained {
             foregroundColor = Color.onPrimaryColor
         }
@@ -141,7 +142,7 @@ struct MaterialButtonStyle: ButtonStyle {
             .label
             .labelStyle(MaterialButtonLabelStyle(color: foregroundColor))
             .frame(minWidth: 44.0, maxWidth: maxWidth ? .infinity : nil, minHeight: 44.0)
-            .padding([.trailing, .leading], 4)
+            .padding([.trailing, .leading], 8)
             .font(Font.body2)
             .foregroundColor(foregroundColor)
             .background(
@@ -150,20 +151,20 @@ struct MaterialButtonStyle: ButtonStyle {
                     ZStack {
                         if type == .contained {
                         // Solid fill
-                            RoundedRectangle(cornerRadius: cornerRadius).fill(Color.primaryColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.3), radius: (configuration.isPressed ? 8 : 2), x: 0, y: 2)
+                            RoundedRectangle(cornerRadius: cornerRadius).fill(isEnabled ? Color.primaryColor : Color.disabledBackground).shadow(color: Color(.sRGB, white: 0, opacity: 0.3), radius: (configuration.isPressed ? 8 : 2), x: 0, y: 2)
                             
                             // tap effect
                             Circle().fill(Color.white).scaleEffect(configuration.isPressed ? scale : 0.0001).opacity(configuration.isPressed ? 0.32 : 0.0).cornerRadius(cornerRadius)
                         } else if type == .text {
                             // tap effect
-                            RoundedRectangle(cornerRadius: cornerRadius).fill(Color.primaryColor).scaleEffect(configuration.isPressed ? scale : 0.0001).opacity(configuration.isPressed ? 0.16 : 0.0).cornerRadius(cornerRadius)
+                            RoundedRectangle(cornerRadius: cornerRadius).fill(isEnabled ? Color.primaryColor : Color.disabledBackground).scaleEffect(configuration.isPressed ? scale : 0.0001).opacity(configuration.isPressed ? 0.16 : 0.0).cornerRadius(cornerRadius)
                         }
                     }
                 }
             )
             .overlay(
                 // border
-                RoundedRectangle(cornerRadius: cornerRadius).stroke(Color.primaryColor, lineWidth: borderWidth).opacity(0.2)
+                RoundedRectangle(cornerRadius: cornerRadius).stroke(isEnabled ? Color.primaryColor : Color.disabledColor, lineWidth: borderWidth).opacity(0.2)
             )
     }
     

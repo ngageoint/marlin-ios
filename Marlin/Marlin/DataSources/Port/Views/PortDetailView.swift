@@ -26,7 +26,7 @@ struct PortDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "Port Detail Map", mixins: [PortMap(fetchPredicate: fetchRequest.predicate)], mapState: mapState)
+                    MarlinMap(name: "Port Detail Map", mixins: [PortMap(fetchPredicate: fetchRequest.predicate), UserLayersMap()], mapState: mapState)
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                         .onAppear {
                             mapState.center = MKCoordinateRegion(center: port.coordinate, zoomLevel: 12.0, pixelWidth: 300.0)

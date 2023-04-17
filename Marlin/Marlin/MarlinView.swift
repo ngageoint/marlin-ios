@@ -40,6 +40,8 @@ struct MarlinView: View {
     
     @State private var previewDate: Date = Date()
     @State private var previewUrl: URL?
+    @State var isMapLayersPresented: Bool = false
+    @State var mapLayerEditViewModel: MapLayerViewModel? = nil
     
     @StateObject var mapState: MapState = MapState()
     
@@ -61,7 +63,7 @@ struct MarlinView: View {
     var mixins: [MapMixin]
     
     init() {
-        var mixins: [MapMixin] = [PersistedMapState(), SearchResultsMap()]
+        var mixins: [MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
 
         if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) {
             mixins.append(DifferentialGPSStationMap(showAsTiles: true))
@@ -138,6 +140,9 @@ struct MarlinView: View {
                         .accessibilityLabel("Close Filter")
                     }
                 }
+                .onAppear {
+                    Metrics.shared.appRoute(["mapFilter"])
+                }
         }
         .snackbar(isPresented: $showSnackbar) {
             Group {
@@ -177,9 +182,30 @@ struct MarlinView: View {
             }
             previewDate = Date()
         }
+        .onOpenURL(perform: { url in
+            if url.isFileURL {
+                if url.pathExtension == "gpkg" || url.pathExtension == "gpkx" {
+                    mapLayerEditViewModel = MapLayerViewModel()
+                    mapLayerEditViewModel?.fileChosen(url: url)
+                    isMapLayersPresented = true
+                }
+            }
+        })
+        .fullScreenCover(item: $mapLayerEditViewModel, onDismiss: {
+            isMapLayersPresented = false
+            mapLayerEditViewModel = nil
+        }) { viewModel in
+            NavigationView {
+                MapLayerView(viewModel: viewModel, isPresented: $isMapLayersPresented)
+            }
+        }
         .onAppear {
             Metrics.shared.appLaunch()
         }
+        // this affects text buttons, image buttons need .foregroundColor set on them
+        .tint(Color.onPrimaryColor)
+        // This is deprecated, but in iOS16 this is the only way to set the back button color
+        .accentColor(Color.onPrimaryColor)
     }
     
     func handleTappedItems(items: [any DataSource]?) -> [BottomSheetItem] {

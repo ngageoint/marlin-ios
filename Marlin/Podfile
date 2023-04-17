@@ -13,6 +13,7 @@ def common_pods
   pod 'mgrs-ios'
   pod 'gars-ios'
   pod 'MatomoTracker', '~> 7.5'
+  pod 'SWXMLHash', '~> 7'
 end
 
 target 'Marlin' do

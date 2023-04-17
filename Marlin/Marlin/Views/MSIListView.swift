@@ -131,6 +131,9 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
                     .accessibilityLabel("Close Filter")
                 }
             }
+            .onAppear {
+                Metrics.shared.dataSourceFilter(dataSource: T.self)
+            }
         }
         .bottomSheet(isPresented: $sortOpen, detents: .large) {
             ScrollView {
@@ -156,6 +159,9 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
                     .accessibilityElement()
                     .accessibilityLabel("Close Sort")
                 }
+            }
+            .onAppear {
+                Metrics.shared.dataSourceSort(dataSource: T.self)
             }
         }
     }

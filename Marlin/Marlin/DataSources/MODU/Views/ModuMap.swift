@@ -13,7 +13,6 @@ import Combine
 class ModuMap<T: Modu & MapImage>: FetchRequestMap<T> {
     override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil,showAsTiles: Bool = true) {
         super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
-        self.showKeyPath = \MapState.showModus
         self.sortDescriptors = [NSSortDescriptor(keyPath: \Modu.date, ascending: true)]
         self.focusNotificationName = .FocusModu
         self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMapmodu)

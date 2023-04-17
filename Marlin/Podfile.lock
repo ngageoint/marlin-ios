@@ -54,6 +54,7 @@ PODS:
     - sf-ios (~> 4.1.0)
   - sf-wkt-ios (2.1.0):
     - sf-ios (~> 4.1.0)
+  - SWXMLHash (7.0.0)
   - tiff-ios (4.0.0)
 
 DEPENDENCIES:
@@ -66,6 +67,7 @@ DEPENDENCIES:
   - mgrs-ios
   - OHHTTPStubs
   - OHHTTPStubs/Swift
+  - SWXMLHash (~> 7)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -88,6 +90,7 @@ SPEC REPOS:
     - sf-proj-ios
     - sf-wkb-ios
     - sf-wkt-ios
+    - SWXMLHash
     - tiff-ios
 
 SPEC CHECKSUMS:
@@ -110,8 +113,9 @@ SPEC CHECKSUMS:
   sf-proj-ios: ae6a661e6e01ad7cb1d555110cc64d1bf8887c71
   sf-wkb-ios: 02fecc1ca79d1661bad77279c196a55f741173f6
   sf-wkt-ios: c2d988fffb8091d3449d16c74cd215a9cb98f4a6
+  SWXMLHash: cf8682ebf12f124e77554d6a5f9170830626d99e
   tiff-ios: fb3f51fcd3400ea1dd8f710d2a7832a18d112580
 
-PODFILE CHECKSUM: 26f1945d257bae28df057fbd4f260d5d737b9f39
+PODFILE CHECKSUM: b219b07beb95037b4d3903fc2d0c36ed688088d2
 
 COCOAPODS: 1.11.3

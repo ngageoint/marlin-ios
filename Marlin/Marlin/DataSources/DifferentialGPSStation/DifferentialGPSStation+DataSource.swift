@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import CoreData
 
-extension DifferentialGPSStation: DataSource {
+extension DifferentialGPSStation: DataSourceLocation {
     var color: UIColor {
         return DifferentialGPSStation.color
     }
@@ -18,6 +18,7 @@ extension DifferentialGPSStation: DataSource {
     static var fullDataSourceName: String = NSLocalizedString("Differential GPS Stations", comment: "Differential GPS Station data source display name")
     
     static var key: String = "differentialGPSStation"
+    static var metricsKey: String = "dgpsStations"
     static var imageName: String? = "dgps"
     static var systemImageName: String? = nil
     static var color: UIColor = UIColor(argbValue: 0xFF00E676)

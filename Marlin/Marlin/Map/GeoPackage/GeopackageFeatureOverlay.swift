@@ -1,5 +1,5 @@
 //
-//  BaseMapOverlay.swift
+//  GeopackageFeatureOverlay.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 6/29/22.
@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import geopackage_ios
 
-class BaseMapOverlay: GPKGFeatureOverlay, OverlayRenderable {
+class GeopackageFeatureOverlay: GPKGFeatureOverlay, OverlayRenderable {
     var renderer: MKOverlayRenderer {
         get {
             return MKTileOverlayRenderer(overlay: self)

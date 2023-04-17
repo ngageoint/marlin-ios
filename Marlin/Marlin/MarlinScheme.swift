@@ -70,6 +70,10 @@ extension Color {
         return Color("onPrimary")
     }
     
+    static var mapButtonColor: Color {
+        return Color("mapButton")
+    }
+    
     static var secondaryUIColor: UIColor {
         return UIColor(named: "secondary") ?? .systemBackground
     }
@@ -123,7 +127,7 @@ extension Color {
     }
     
     static var disabledBackground: Color {
-        return Color(uiColor: UIColor(rgbValue: 0xE0E0E0))
+        return Color(uiColor: UIColor(argbValue: 0x33FFFFFF))
     }
     
     static let dynamicOceanColor = UIColor { (traits) -> UIColor in
@@ -222,6 +226,8 @@ class MarlinScheme: ObservableObject {
             NSAttributedString.Key.foregroundColor: Color.onPrimaryUIColor,
             NSAttributedString.Key.backgroundColor: Color.primaryUIColor
         ];
+        
+        UITextField.appearance(whenContainedInInstancesOf: [UINavigationBar.self]).backgroundColor = Color.backgroundUIColor
         
         let toolbarAppearance = UIToolbar.appearance(whenContainedInInstancesOf: [QLPreviewController.self])
         toolbarAppearance.tintColor = UIColor.label

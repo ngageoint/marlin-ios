@@ -30,6 +30,7 @@ struct ChartCorrectionQuery: View {
         }
         .padding(.trailing, 8)
         .onAppear {
+            Metrics.shared.appRoute(["ntms", "query"])
             checkRequiredParameters()
         }
         .onChange(of: chartCorrectionFilter) { newValue in

@@ -59,6 +59,9 @@ struct NoticeToMarinersView: View {
                 })
                 .navigationTitle(NoticeToMariners.fullDataSourceName)
                 .navigationBarTitleDisplayMode(.inline)
+                .onAppear {
+                    Metrics.shared.appRoute(["ntms", "all"])
+                }
             } label: {
                 HStack {
                     Text("View All Notice to Mariners")

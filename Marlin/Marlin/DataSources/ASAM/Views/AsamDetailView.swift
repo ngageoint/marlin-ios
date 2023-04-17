@@ -26,7 +26,7 @@ struct AsamDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "Asam Detail Map", mixins: [AsamMap(fetchPredicate: fetchRequest.predicate)], mapState: mapState)
+                    MarlinMap(name: "Asam Detail Map", mixins: [AsamMap(fetchPredicate: fetchRequest.predicate), UserLayersMap()], mapState: mapState)
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                         .onAppear {
                             mapState.center = MKCoordinateRegion(center: asam.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)

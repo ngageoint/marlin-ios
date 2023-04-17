@@ -8,8 +8,9 @@
 import Foundation
 import UIKit
 import CoreData
+import CoreLocation
 
-extension DFRS: DataSource {
+extension DFRS: DataSourceLocation {
     var color: UIColor {
         return DFRS.color
     }
@@ -18,6 +19,7 @@ extension DFRS: DataSource {
     static var dataSourceName: String = NSLocalizedString("DFRS", comment: "Radio Direction Finders and Radar station data source display name")
     static var fullDataSourceName: String = NSLocalizedString("Radio Direction Finders & Radar Stations", comment: "Radio Direction Finders and Radar station data source display name")
     static var key: String = "dfrs"
+    static var metricsKey: String = "dfrs"
     static var imageName: String? = nil
     static var systemImageName: String? = "antenna.radiowaves.left.and.right.circle"
     static var color: UIColor = UIColor(argbValue: 0xFFFFB300)

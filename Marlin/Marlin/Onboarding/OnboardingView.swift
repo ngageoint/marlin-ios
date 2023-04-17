@@ -109,31 +109,49 @@ struct OnboardingView<Location>: View where Location: LocationManagerProtocol {
             TabView(selection: $tabSelection) {
                 if shouldShowTab(tab: WELCOME_TAB) {
                     welcomeTab(geometry: geometry)
+                        .onAppear {
+                            Metrics.shared.appRoute(["embark", "welcome"])
+                        }
                         .tag(WELCOME_TAB)
                 }
                 
                 if shouldShowTab(tab: DISCLAIMER_TAB) {
                     disclaimerTab(geometry: geometry)
+                        .onAppear {
+                            Metrics.shared.appRoute(["embark", "disclaimer"])
+                        }
                         .tag(DISCLAIMER_TAB)
                 }
                 
                 if shouldShowTab(tab: LOCATION_TAB) {
                     locationTab(geometry: geometry)
+                        .onAppear {
+                            Metrics.shared.appRoute(["embark", "Location"])
+                        }
                         .tag(LOCATION_TAB)
                 }
                 
                 if shouldShowTab(tab: NOTIFICATION_TAB) {
                     notificationTab(geometry: geometry)
+                        .onAppear {
+                            Metrics.shared.appRoute(["embark", "notification"])
+                        }
                         .tag(NOTIFICATION_TAB)
                 }
                 
                 if shouldShowTab(tab: DATA_TABS_TAB) {
                     dataTabsTab(geometry: geometry)
+                        .onAppear {
+                            Metrics.shared.appRoute(["embark", "tabs"])
+                        }
                         .tag(DATA_TABS_TAB)
                 }
                 
                 if shouldShowTab(tab: DATA_MAP_TAB) {
                     dataMapTab(geometry: geometry)
+                        .onAppear {
+                            Metrics.shared.appRoute(["embark", "map"])
+                        }
                         .tag(DATA_MAP_TAB)
                 }
             }
