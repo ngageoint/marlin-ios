@@ -4,6 +4,12 @@ Changelog
 All notable changes to this project will be documented in this file.
 
 ---
+## 1.1.0
+ ### Bug Fixes
+    * metrics use the same paths as Android
+ ### Features
+    * User defined layers
+    
 ## 1.0.4
  ### Bug Fixes
     * location updates no longer cause the filter view to reset itself
