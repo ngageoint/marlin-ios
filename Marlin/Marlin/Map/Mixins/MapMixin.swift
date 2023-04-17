@@ -23,7 +23,6 @@ protocol MapMixin: AnyObject {
 extension MapMixin {
     
     func updateMixin(mapView: MKMapView, mapState: MapState) {
-        print("xxx update mixin no op")
     }
     
     func renderer(overlay: MKOverlay) -> MKOverlayRenderer? {

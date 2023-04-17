@@ -437,7 +437,6 @@ class MapLayerViewModel: ObservableObject, Identifiable {
         }
         
         if self.username != "", let credentials = Keychain().getCredentials(server: self.url , account: self.username) {
-            print("xxxx pulled password \(credentials.password)")
             self.password = credentials.password
         }
     }

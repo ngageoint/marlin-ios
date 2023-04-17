@@ -31,7 +31,6 @@ class GeoPackageImportProgress: NSObject, ObservableObject, GPKGProgress {
     }
     
     func completed() {
-        print("xxx progress completed")
         complete = true
     }
     
