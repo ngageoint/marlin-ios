@@ -17,7 +17,7 @@ PODS:
   - KIF (3.8.7):
     - KIF/Core (= 3.8.7)
   - KIF/Core (3.8.7)
-  - Kingfisher (7.4.1)
+  - Kingfisher (7.6.2)
   - MatomoTracker (7.5.2):
     - MatomoTracker/Core (= 7.5.2)
   - MatomoTracker/Core (7.5.2)
@@ -101,7 +101,7 @@ SPEC CHECKSUMS:
   geopackage-ios: a70f603c5a49165b940ab80bf2fa572faa77b7e2
   grid-ios: bc7f691652c801486e5613096abe0fd684329b9f
   KIF: 779cdbca106633b94ecee7b036537490ebdbd9de
-  Kingfisher: cd762a593a61b2fbecf7645c00f9a801a3ebfc9c
+  Kingfisher: 6c5449c6450c5239166510ba04afe374a98afc4f
   MatomoTracker: 1d98ddc58322fd9d65e1a6886b8e41363047bd13
   mgrs-ios: c5184c4888a72a4e75c3959779042f960b6ae113
   ogc-api-features-json-ios: 3671cdf6f0c0b4f55aaa44bca984177a04d06a30

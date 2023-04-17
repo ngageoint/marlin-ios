@@ -26,8 +26,8 @@ struct NavigationalWarningDetailView: View {
                     Property(property: "Status", value: navigationalWarning.status)
                     Property(property: "Authority", value: navigationalWarning.authority)
                     Property(property: "Cancel Date", value: navigationalWarning.cancelDateString)
-                    if let cancelNavArea = navigationalWarning.cancelNavArea, let cancelMsgNumber = navigationalWarning.cancelMsgNumber, let cancelMsgYear = navigationalWarning.cancelMsgYear, let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea){
-                        Property(property: "Cancelled By", value: "\(navAreaEnum.display) \(cancelMsgNumber)/\(cancelMsgYear)")
+                    if let cancelNavArea = navigationalWarning.cancelNavArea, let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea){
+                        Property(property: "Cancelled By", value: "\(navAreaEnum.display) \(navigationalWarning.cancelMsgNumber)/\(navigationalWarning.cancelMsgYear)")
                     }
                     NavigationalWarningActionBar(navigationalWarning: navigationalWarning)
                 }

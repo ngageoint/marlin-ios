@@ -21,8 +21,8 @@ struct GeoPackageFeatureItemActionBar: View {
                     Text("More Details")
                         .foregroundColor(Color.primaryColorVariant)
                 }
-            } else if let coordinate = featureItem.coordinate {
-                let coordinateButtonTitle = coordinate.toDisplay()
+            } else {
+                let coordinateButtonTitle = featureItem.coordinate.toDisplay()
                 
                 Button(action: {
                     UIPasteboard.general.string = coordinateButtonTitle

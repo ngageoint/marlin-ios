@@ -15,10 +15,9 @@ struct FilterPropertyName: View {
         if !viewModel.isStaticProperty, filterViewModel.dataSource.properties.count > 1 {
             HStack {
                 Picker("Property", selection: $viewModel.dataSourceProperty) {
-                    if let dataSourceProperties = filterViewModel.dataSource.properties {
-                        ForEach(dataSourceProperties) { property in
-                            Text(property.name).tag(property)
-                        }
+                    let dataSourceProperties = filterViewModel.dataSource.properties
+                    ForEach(dataSourceProperties) { property in
+                        Text(property.name).tag(property)
                     }
                 }
                 .scaledToFill()

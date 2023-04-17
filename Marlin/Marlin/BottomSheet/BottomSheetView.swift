@@ -26,29 +26,30 @@ struct MarlinBottomSheet: View {
         VStack {
             ZStack {
                 if let bottomSheetItems = itemList.bottomSheetItems {
-                    if let item = bottomSheetItems[selectedItem].item {
-                        if let imageName = type(of: item).imageName {
-                            HStack {
-                                Image(imageName)
-                                    .frame(width: 30, height: 30)
-                                    .foregroundColor(.white)
-                                    .padding(5)
-                                    .background(Color(item.color))
-                                    .clipShape(Circle())
-                                Spacer()
-                            }
-                        } else if let systemImageName = type(of: item).systemImageName {
-                            HStack {
-                                Image(systemName: systemImageName)
-                                    .frame(width: 30, height: 30)
-                                    .foregroundColor(.white)
-                                    .padding(5)
-                                    .background(Color(item.color))
-                                    .clipShape(Circle())
-                                Spacer()
-                            }
+                    let item = bottomSheetItems[selectedItem].item
+                    
+                    if let imageName = type(of: item).imageName {
+                        HStack {
+                            Image(imageName)
+                                .frame(width: 30, height: 30)
+                                .foregroundColor(.white)
+                                .padding(5)
+                                .background(Color(item.color))
+                                .clipShape(Circle())
+                            Spacer()
+                        }
+                    } else if let systemImageName = type(of: item).systemImageName {
+                        HStack {
+                            Image(systemName: systemImageName)
+                                .frame(width: 30, height: 30)
+                                .foregroundColor(.white)
+                                .padding(5)
+                                .background(Color(item.color))
+                                .clipShape(Circle())
+                            Spacer()
                         }
                     }
+                    
                     if bottomSheetItems.count > 1 {
                         HStack(spacing: 8) {
                             Button(action: {

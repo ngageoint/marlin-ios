@@ -73,7 +73,8 @@ struct GeoPackageFeatureItemDetailView: View {
             Section("Media") {
                 VStack {
                     ForEach(mediaRows, id: \.self) { media in
-                        if let media = media, let image = media.dataImage(), let tableName = media.table.tableName(), let id = media.idValue() {
+                        if let image = media.dataImage(), let tableName = media.table.tableName() {
+                            let id = media.idValue()
                             Image(uiImage: media.dataImage())
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
@@ -84,8 +85,6 @@ struct GeoPackageFeatureItemDetailView: View {
                                         try? imageData.write(to: filename)
                                         NotificationCenter.default.post(name: .DocumentPreview, object: filename)
                                     }
-                                    
-                                    
                                 }
                         }
                     }
