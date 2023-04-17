@@ -38,6 +38,17 @@ struct AboutView: View {
                     .primary()
                     .tint(Color.onSurfaceColor)
             }
+            
+            NavigationLink {
+                AcknowledgementsView()
+                .navigationTitle("Acknowledgements")
+            } label: {
+                Image(systemName: "hands.clap")
+                    .tint(Color.onSurfaceColor)
+                    .opacity(0.60)
+                Text("Acknowledgements")
+                    .primary()
+            }
 
             HStack {
                 Image("marlin_small")
