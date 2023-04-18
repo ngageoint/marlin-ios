@@ -8,46 +8,10 @@
 import SwiftUI
 
 struct AcknowledgementsView: View {
-    var acknowledgements: [Acknowledgement] = [
-        Acknowledgement(
-            title: "Alamofire",
-            copyright: "Copyright (c) 2014-2022 Alamofire Software Foundation",
-            license: "This product includes software licensed under the [MIT license](https://raw.githubusercontent.com/Alamofire/Alamofire/master/LICENSE)."),
-        Acknowledgement(
-            title: "Kingfisher",
-            copyright: "Copyright (c) 2019 Wei Wang",
-            license: "This product includes software licensed under the [MIT license](https://raw.githubusercontent.com/onevcat/Kingfisher/master/LICENSE)."),
-        Acknowledgement(
-            title: "GeoPackage",
-            copyright: "Copyright (c) 2015 BIT Systems",
-            license: "This product includes software licensed under the [MIT license](https://raw.githubusercontent.com/ngageoint/geopackage-ios/master/LICENSE)."),
-        Acknowledgement(
-            title: "MGRS",
-            copyright: "Copyright (c) 2022 National Geospatial-Intelligence Agency",
-            license: "This product includes software licensed under the [MIT license](https://raw.githubusercontent.com/ngageoint/mgrs-ios/master/LICENSE)."),
-        Acknowledgement(
-            title: "GARS",
-            copyright: "Copyright (c) 2022 National Geospatial-Intelligence Agency",
-            license: "This product includes software licensed under the [MIT license](https://raw.githubusercontent.com/ngageoint/gars-ios/master/LICENSE)."),
-        Acknowledgement(
-            title: "Matomo Tracker",
-            license: "This product includes software licensed under the [MIT license](https://raw.githubusercontent.com/matomo-org/matomo-sdk-ios/develop/LICENSE.md)."),
-        Acknowledgement(
-            title: "SWXMLHash",
-            copyright: "Copyright (c) 2014 David Mohundro",
-            license: "This product includes software licensed under the [MIT license](https://raw.githubusercontent.com/drmohundro/SWXMLHash/main/LICENSE)."),
-        Acknowledgement(
-            title: "OHHTTPStubs",
-            copyright: "Copyright (c) 2012 Olivier Halligon",
-            license: "This product includes software licensed under the [MIT license](https://raw.githubusercontent.com/AliSoftware/OHHTTPStubs/master/LICENSE)."),
-        Acknowledgement(
-            title: "KIF",
-            copyright: "Copyright 2011-2016 Square, Inc.",
-            license: "This product includes software licensed under the [Apache License 2.0](https://raw.githubusercontent.com/kif-framework/KIF/master/LICENSE).")
-    ]
+    var model: AcknowledgementModel = AcknowledgementModel()
     var body: some View {
         List {
-            ForEach(acknowledgements.sorted(by: { one, two in
+            ForEach(model.acknowledgements.sorted(by: { one, two in
                 one.title < two.title
             })) { acknowledgement in
                 VStack(alignment: .leading) {
@@ -80,4 +44,19 @@ struct Acknowledgement: Identifiable, Hashable {
     var title: String
     var copyright: String?
     var license: String?
+}
+
+class AcknowledgementModel {
+    var acknowledgements: [Acknowledgement] = [
+        Acknowledgement(title: "Exception Catcher", copyright: "Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)", license: "This product includes software licensed under the [MIT license](https://raw.githubusercontent.com/sindresorhus/ExceptionCatcher/main/license).")
+    ]
+    init() {
+        if let path = Bundle.main.url(forResource: "Settings", withExtension: "bundle")?.appendingPathComponent("Acknowledgements.plist"), let dictionary = NSDictionary(contentsOf: path) {
+            for library in dictionary["PreferenceSpecifiers"] as? [Dictionary<String, Any>] ?? [] {
+                if let title = library["Title"] as? String, !title.isEmpty, title != "Acknowledgements" {
+                    acknowledgements.append(Acknowledgement(title: title, copyright: library["FooterText"] as? String, license: library["License"] as? String))
+                }
+            }
+        }
+    }
 }
