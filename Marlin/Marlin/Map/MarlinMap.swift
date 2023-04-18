@@ -81,7 +81,6 @@ struct MarlinMap: UIViewRepresentable {
         mapView.isPitchEnabled = false
         mapView.showsCompass = false
         mapView.tintColor = UIColor(Color.primaryColorVariant)
-        mapView.isAccessibilityElement = true
         mapView.accessibilityLabel = name
         
         context.coordinator.mapView = mapView

@@ -150,11 +150,11 @@ final class SearchViewTests: XCTestCase {
             return passThrough.mapState?.searchResults?.count == 1
         }), object: passThrough.mapState)
         
-        tester().enterText("hello", intoViewWithAccessibilityLabel: "Search Field")
+        tester().enterText("search", intoViewWithAccessibilityLabel: "Search Field")
          
         // wait for the debounce
         wait(for: [e], timeout: 5)
-        XCTAssertEqual(MKLocalSearchMock.searchRequest?.naturalLanguageQuery, "hello")
+        XCTAssertEqual(MKLocalSearchMock.searchRequest?.naturalLanguageQuery, "search")
         tester().waitForView(withAccessibilityLabel: "Test item")
         tester().waitForView(withAccessibilityLabel: "Location")
         expectation(forNotification: .SnackbarNotification,
@@ -219,11 +219,11 @@ final class SearchViewTests: XCTestCase {
             return passThrough.mapState?.searchResults?.count == 0
         }), object: passThrough.mapState)
         
-        tester().enterText("hello no results", intoViewWithAccessibilityLabel: "Search Field")
+        tester().enterText("search", intoViewWithAccessibilityLabel: "Search Field")
         
         // wait for the debounce
         tester().wait(forTimeInterval: 2)
-        XCTAssertEqual(MKLocalSearchMock.searchRequest?.naturalLanguageQuery, "hello no results")
+        XCTAssertEqual(MKLocalSearchMock.searchRequest?.naturalLanguageQuery, "search")
         wait(for: [e], timeout: 5)
     }
 

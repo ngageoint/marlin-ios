@@ -284,8 +284,9 @@ final class MSIListViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
         tester().waitForView(withAccessibilityLabel: "Boarding2: Boat2")
         
-        tester().waitForView(withAccessibilityLabel: "Boarding2")
-        tester().waitForView(withAccessibilityLabel: "Boarding")
+        // these are no longer accessibility elements as of Xcode 14.3
+//        tester().waitForView(withAccessibilityLabel: "Boarding2")
+//        tester().waitForView(withAccessibilityLabel: "Boarding")
     }
 
     func testFilteredList() throws {
@@ -506,8 +507,9 @@ final class MSIListViewTests: XCTestCase {
         
         tester().tapView(withAccessibilityLabel: "Close Sort")
         
-        tester().waitForView(withAccessibilityLabel: "Boarding")
-        tester().waitForView(withAccessibilityLabel: "Boarding2")
+        // these are no longer accessibility elements as of Xcode 14.3
+//        tester().waitForView(withAccessibilityLabel: "Boarding")
+//        tester().waitForView(withAccessibilityLabel: "Boarding2")
     }
     
     func testSectionHeaderSublist() throws {
