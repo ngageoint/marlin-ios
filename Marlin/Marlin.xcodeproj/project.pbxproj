@@ -308,6 +308,7 @@
 		F7D8FA8129424F8400E7D0A1 /* ntmGraphics.json in Resources */ = {isa = PBXBuildFile; fileRef = F7D8FA8029424F8400E7D0A1 /* ntmGraphics.json */; };
 		F7DF1BBD29E98B5700F92E14 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DF1BBC29E98B5700F92E14 /* Keychain.swift */; };
 		F7DF1BBF29E9EBF800F92E14 /* AcknowledgementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DF1BBE29E9EBF800F92E14 /* AcknowledgementsView.swift */; };
+		F7E768B329EECAF2001EFFFF /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F7E768B229EECAF2001EFFFF /* Settings.bundle */; };
 		F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89D28946C8900E7CCE2 /* RailItem.swift */; };
 		F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
@@ -710,6 +711,7 @@
 		F7D8FA8029424F8400E7D0A1 /* ntmGraphics.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ntmGraphics.json; sourceTree = "<group>"; };
 		F7DF1BBC29E98B5700F92E14 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		F7DF1BBE29E9EBF800F92E14 /* AcknowledgementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsView.swift; sourceTree = "<group>"; };
+		F7E768B229EECAF2001EFFFF /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		F7E8C89D28946C8900E7CCE2 /* RailItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailItem.swift; sourceTree = "<group>"; };
 		F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceRail.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
@@ -1298,6 +1300,7 @@
 		F7A54CA22848149500E5F565 = {
 			isa = PBXGroup;
 			children = (
+				F7E768B129EECAE9001EFFFF /* Resources */,
 				F7FFB33728D9EB6800C31AA3 /* CHANGELOG.md */,
 				F713616928B79D0B0005C69C /* Scripts */,
 				F7A54CA72848149500E5F565 /* Marlin */,
@@ -1615,6 +1618,14 @@
 				F7DF1BBC29E98B5700F92E14 /* Keychain.swift */,
 			);
 			path = Keychain;
+			sourceTree = "<group>";
+		};
+		F7E768B129EECAE9001EFFFF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F7E768B229EECAF2001EFFFF /* Settings.bundle */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		F7F5977F285A1B2400F9B32E /* ASAM */ = {
@@ -2005,6 +2016,7 @@
 				F71D288A28CA30C700F1775C /* asam.json in Resources */,
 				F749E43A29AFC94700B2FF8B /* wms.xml in Resources */,
 				F71D288828CA26AA00F1775C /* initialData.sh in Resources */,
+				F7E768B329EECAF2001EFFFF /* Settings.bundle in Resources */,
 				F713616B28B79D310005C69C /* set_build_number.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
