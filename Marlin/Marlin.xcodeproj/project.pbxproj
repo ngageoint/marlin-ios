@@ -195,6 +195,7 @@
 		F76052C729AD37EE00F13260 /* MapLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76052C629AD37EE00F13260 /* MapLayer.swift */; };
 		F76052CA29AD4B2700F13260 /* MapLayerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76052C929AD4B2700F13260 /* MapLayerViewTests.swift */; };
 		F76052CC29AE6F0700F13260 /* MapLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76052CB29AE6F0700F13260 /* MapLayerView.swift */; };
+		F7667CEB29F05327005B36A0 /* navwarnings.json in Resources */ = {isa = PBXBuildFile; fileRef = F7667CEA29F05327005B36A0 /* navwarnings.json */; };
 		F76B4A7228EB8AB20012BF4F /* MSIListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76B4A7128EB8AB20012BF4F /* MSIListViewModel.swift */; };
 		F79168FE28B56031004FFEBA /* PortMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79168FD28B56031004FFEBA /* PortMap.swift */; };
 		F79C994229955262004D9E82 /* DataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79C994129955262004D9E82 /* DataLoadOperation.swift */; };
@@ -309,6 +310,8 @@
 		F7DF1BBD29E98B5700F92E14 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DF1BBC29E98B5700F92E14 /* Keychain.swift */; };
 		F7DF1BBF29E9EBF800F92E14 /* AcknowledgementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DF1BBE29E9EBF800F92E14 /* AcknowledgementsView.swift */; };
 		F7E768B329EECAF2001EFFFF /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F7E768B229EECAF2001EFFFF /* Settings.bundle */; };
+		F7E768B529EF0F99001EFFFF /* NavigationalWarningLocationParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E768B429EF0F99001EFFFF /* NavigationalWarningLocationParsingTests.swift */; };
+		F7E768B729EF11CC001EFFFF /* NAVTEXTextParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E768B629EF11CC001EFFFF /* NAVTEXTextParser.swift */; };
 		F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89D28946C8900E7CCE2 /* RailItem.swift */; };
 		F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
@@ -320,7 +323,6 @@
 		F7F5979D285D17EE00F9B32E /* ModuSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */; };
 		F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979E285D185000F9B32E /* ModuMap.swift */; };
 		F7F597A62862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A52862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift */; };
-		F7F597A82864BF9D00F9B32E /* navwarnings.json in Resources */ = {isa = PBXBuildFile; fileRef = F7F597A72864BF9D00F9B32E /* navwarnings.json */; };
 		F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A92864DD3900F9B32E /* NavigationalWarningSummaryView.swift */; };
 		F7F597AC2864DD5200F9B32E /* NavigationalWarningListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597AB2864DD5200F9B32E /* NavigationalWarningListView.swift */; };
 		F7F597AE2864DE2900F9B32E /* NavigationalWarningDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597AD2864DE2800F9B32E /* NavigationalWarningDetailView.swift */; };
@@ -595,6 +597,7 @@
 		F76052C629AD37EE00F13260 /* MapLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLayer.swift; sourceTree = "<group>"; };
 		F76052C929AD4B2700F13260 /* MapLayerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLayerViewTests.swift; sourceTree = "<group>"; };
 		F76052CB29AE6F0700F13260 /* MapLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLayerView.swift; sourceTree = "<group>"; };
+		F7667CEA29F05327005B36A0 /* navwarnings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = navwarnings.json; sourceTree = "<group>"; };
 		F76B4A7128EB8AB20012BF4F /* MSIListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIListViewModel.swift; sourceTree = "<group>"; };
 		F79168FD28B56031004FFEBA /* PortMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortMap.swift; sourceTree = "<group>"; };
 		F79C994129955262004D9E82 /* DataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadOperation.swift; sourceTree = "<group>"; };
@@ -712,6 +715,8 @@
 		F7DF1BBC29E98B5700F92E14 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		F7DF1BBE29E9EBF800F92E14 /* AcknowledgementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsView.swift; sourceTree = "<group>"; };
 		F7E768B229EECAF2001EFFFF /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		F7E768B429EF0F99001EFFFF /* NavigationalWarningLocationParsingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningLocationParsingTests.swift; sourceTree = "<group>"; };
+		F7E768B629EF11CC001EFFFF /* NAVTEXTextParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NAVTEXTextParser.swift; sourceTree = "<group>"; };
 		F7E8C89D28946C8900E7CCE2 /* RailItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailItem.swift; sourceTree = "<group>"; };
 		F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceRail.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
@@ -723,7 +728,6 @@
 		F7F5979C285D17EE00F9B32E /* ModuSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuSummaryView.swift; sourceTree = "<group>"; };
 		F7F5979E285D185000F9B32E /* ModuMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuMap.swift; sourceTree = "<group>"; };
 		F7F597A52862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+CoreDataClass.swift"; sourceTree = "<group>"; };
-		F7F597A72864BF9D00F9B32E /* navwarnings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = navwarnings.json; sourceTree = "<group>"; };
 		F7F597A92864DD3900F9B32E /* NavigationalWarningSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningSummaryView.swift; sourceTree = "<group>"; };
 		F7F597AB2864DD5200F9B32E /* NavigationalWarningListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningListView.swift; sourceTree = "<group>"; };
 		F7F597AD2864DE2800F9B32E /* NavigationalWarningDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningDetailView.swift; sourceTree = "<group>"; };
@@ -946,7 +950,6 @@
 			children = (
 				F71DF47D284E68DE00686951 /* asams.json */,
 				F71DF4832857942D00686951 /* modus.json */,
-				F7F597A72864BF9D00F9B32E /* navwarnings.json */,
 				F707BA7E287736A8006A94C4 /* lights.json */,
 			);
 			path = responses;
@@ -1107,6 +1110,7 @@
 				F7ABB603299C1ECE00BAD868 /* NavigationalWarningNavAreaListViewTests.swift */,
 				F7ABB605299D1EE900BAD868 /* NavigationalWarningListViewTests.swift */,
 				F7ABB607299D532800BAD868 /* NavigationalWarningAreaUnreadBadgeTests.swift */,
+				F7E768B429EF0F99001EFFFF /* NavigationalWarningLocationParsingTests.swift */,
 			);
 			path = NavigationalWarning;
 			sourceTree = "<group>";
@@ -1454,6 +1458,7 @@
 		F7C23E1A291426590002A7DF /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				F7667CEA29F05327005B36A0 /* navwarnings.json */,
 				F749E43629AE91C800B2FF8B /* wms.xml */,
 				F7C23E1B2914269D0002A7DF /* asamMockData.json */,
 				F72EAAB8291BF28C00AC6026 /* moduMockData.json */,
@@ -1715,6 +1720,7 @@
 				F7FFB2FB28D6361800C31AA3 /* NavigationalWarning+DataSource.swift */,
 				F7FFB2FD28D6373F00C31AA3 /* NavigationalWarning+DataSourceViewBuilder.swift */,
 				F7FFB2FF28D6376100C31AA3 /* NavigationalWarning+Decodable.swift */,
+				F7E768B629EF11CC001EFFFF /* NAVTEXTextParser.swift */,
 			);
 			path = NavigationalWarning;
 			sourceTree = "<group>";
@@ -1972,10 +1978,10 @@
 			files = (
 				F7D8FA1F2922F8D700E7D0A1 /* ntmMockData.json in Resources */,
 				F7D8FA8129424F8400E7D0A1 /* ntmGraphics.json in Resources */,
+				F7667CEB29F05327005B36A0 /* navwarnings.json in Resources */,
 				F72EAAB9291BF28C00AC6026 /* moduMockData.json in Resources */,
 				F7D8FA7B29412BA600E7D0A1 /* chartCorrections.json in Resources */,
 				F7ABB600299AD5E900BAD868 /* fullEpubList.json in Resources */,
-				F7F597A82864BF9D00F9B32E /* navwarnings.json in Resources */,
 				F72EAABE291C197A00AC6026 /* portMockData.json in Resources */,
 				F72EAAC3291C2D3F00AC6026 /* dgpsMockData.json in Resources */,
 				F71DF4842857942D00686951 /* modus.json in Resources */,
@@ -2208,6 +2214,7 @@
 				F75324C229833BBB005C509F /* MarlinMapTests.swift in Sources */,
 				F72EAAC1291C274100AC6026 /* DifferentialGPSStationDataTests.swift in Sources */,
 				F72D88FC29785CE100D022FB /* LightSummaryViewTests.swift in Sources */,
+				F7E768B529EF0F99001EFFFF /* NavigationalWarningLocationParsingTests.swift in Sources */,
 				F72D89042979C30500D022FB /* PortSummaryViewTests.swift in Sources */,
 				F75324B429805E5C005C509F /* DFRSSummaryViewTests.swift in Sources */,
 				F72EAAD0291C669D00AC6026 /* LightDataTests.swift in Sources */,
@@ -2383,6 +2390,7 @@
 				F71D287F28C293A000F1775C /* AboutView.swift in Sources */,
 				F7FFB2FA28D6349900C31AA3 /* Port+DataSourceViewBuilder.swift in Sources */,
 				F7C23DFC2906F1460002A7DF /* Metrics.swift in Sources */,
+				F7E768B729EF11CC001EFFFF /* NAVTEXTextParser.swift in Sources */,
 				F7ADDCE22887026500137D95 /* LocationManager.swift in Sources */,
 				F7B7064328BAADD50026DE88 /* CircleImage.swift in Sources */,
 				F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */,
