@@ -97,7 +97,7 @@ extension String {
     
     var startsWithLetterHeading: Bool {
         return self.range(
-            of: "^\\s*[A-Z]+\\. {1}.*", // 1.
+            of: "^\\s*[A-Z]+\\.", // 1.
             options: .regularExpression) != nil
     }
     
@@ -143,7 +143,7 @@ class NAVTEXTextParser {
     
     func parseSubSection(type: String = "Point", components: [String]) -> LocationWithType? {
         let what = components.joined(separator: " ")
-        let locationRanges = what.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}\\.{1}[0-9]+[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}\\.{1}[0-9]+[EW]", options: .regularExpression)
+        let locationRanges = what.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]", options: .regularExpression)
         var locations = locationRanges.map { String(what[$0]) }
         if locations.isEmpty {
             return nil
@@ -162,7 +162,7 @@ class NAVTEXTextParser {
         var subComponents: [String] = []
         var realLocationType: String = locationType ?? "Point"
         for component in components {
-            if component.contains("AREA") {
+            if component.contains(" AREA") {
                 realLocationType = "Polygon"
             }
 
@@ -240,14 +240,32 @@ class NAVTEXTextParser {
                 let dncRange = toParse.ranges(of: "(DNC ){1}[0-9]*", options: .regularExpression)
                 foundChartNow = !dncRange.isEmpty
                 foundChart = !dncRange.isEmpty
-                dnc = dncRange.map { String(toParse[$0]) }.first
+                if foundChart {
+                    dnc = dncRange.map { String(toParse[$0]) }.first
+                    if let dnc = dnc {
+                        if toParse.hasSuffix(".") {
+                            foundChartNow = dnc.count == toParse.count - 1
+                        } else {
+                            foundChartNow = dnc.count == toParse.count
+                        }
+                    }
+                }
             }
             
             if !foundChart && chart == nil {
                 let chartRange = toParse.ranges(of: "(CHART ){1}[0-9]*", options: .regularExpression)
                 foundChartNow = !chartRange.isEmpty
                 foundChart = !chartRange.isEmpty
-                chart = chartRange.map { String(toParse[$0]) }.first
+                if foundChart {
+                    chart = chartRange.map { String(toParse[$0]) }.first
+                    if let chart = chart {
+                        if toParse.hasSuffix(".") {
+                            foundChartNow = chart.count == toParse.count - 1
+                        } else {
+                            foundChartNow = chart.count == toParse.count
+                        }
+                    }
+                }
             }
             if !foundChartNow {
                 if specificArea == nil && !foundChart {
@@ -262,16 +280,23 @@ class NAVTEXTextParser {
         var locationType: String = "Point"
         var locations: [String] = []
         for subject in extras {
-            let locationRanges = subject.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}\\.{1}[0-9]+[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}\\.{1}[0-9]+[EW]", options: .regularExpression)
+            let locationRanges = subject.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]", options: .regularExpression)
             locations.append(contentsOf: locationRanges.map { String(subject[$0]) })
-            if subject.contains("AREA") {
+            if subject.contains(" AREA") {
                 locationType = "Polygon"
             }
         }
         if let numberSubject = numberSubject {
-            let locationRanges = numberSubject.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}\\.{1}[0-9]+[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}\\.{1}[0-9]+[EW]", options: .regularExpression)
+            let locationRanges = numberSubject.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]", options: .regularExpression)
             locations.append(contentsOf: locationRanges.map { String(numberSubject[$0]) })
-            if numberSubject.contains("AREA") {
+            if numberSubject.contains(" AREA") {
+                locationType = "Polygon"
+            }
+        }
+        if let specificArea = specificArea {
+            let locationRanges = specificArea.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]", options: .regularExpression)
+            locations.append(contentsOf: locationRanges.map { String(specificArea[$0]) })
+            if specificArea.contains(" AREA") {
                 locationType = "Polygon"
             }
         }
