@@ -19,10 +19,11 @@ enum MappedLocationGeoJSONProperties {
 struct LocationWithType: CustomStringConvertible {
     var location: [String] = []
     var locationType: String?
-    var distanceFroMLocation: String?
-    
+    var locationDescription: String?
+    var distanceFromLocation: String?
+
     var description: String {
-        return "\(locationType ?? ""): [\(location.joined(separator: "; "))]"
+        return "\(locationDescription ?? "")\n\tDistance:\(distanceFromLocation ?? "")\n\t\(locationType ?? "")\n\t\t [\(location.joined(separator: "; "))]\n"
     }
 }
 
@@ -33,12 +34,11 @@ struct MappedLocation: CustomStringConvertible {
     var cancelTime: String?
     var location: [LocationWithType] = []
     var when: String?
-    var what: String?
     var extra: String?
     var dnc: String?
     var chart: String?
     
-    init(seedData: MappedLocation? = nil, locationName: String? = nil, specificArea: String? = nil, subject: String? = nil, cancelTime: String? = nil, location: [LocationWithType]? = nil, when: String? = nil, what: String? = nil, extra: String? = nil, dnc: String? = nil, chart: String? = nil) {
+    init(seedData: MappedLocation? = nil, locationName: String? = nil, specificArea: String? = nil, subject: String? = nil, cancelTime: String? = nil, location: [LocationWithType]? = nil, when: String? = nil, extra: String? = nil, dnc: String? = nil, chart: String? = nil) {
         if let seedData = seedData {
             self.locationName = seedData.locationName
             self.specificArea = seedData.specificArea
@@ -46,7 +46,6 @@ struct MappedLocation: CustomStringConvertible {
             self.cancelTime = seedData.cancelTime
             self.location = seedData.location
             self.when = seedData.when
-            self.what = seedData.what
             self.extra = seedData.extra
             self.dnc = seedData.dnc
             self.chart = seedData.chart
@@ -69,9 +68,6 @@ struct MappedLocation: CustomStringConvertible {
         if let when = when {
             self.when = when
         }
-        if let what = what {
-            self.what = what
-        }
         if let extra = extra {
             self.extra = extra
         }
@@ -84,27 +80,14 @@ struct MappedLocation: CustomStringConvertible {
     }
     
     var description: String {
-        return "Location Name: \(locationName ?? "")\nSpecific Area: \(specificArea ?? "")\nSubject: \(subject ?? "")\nCancelTime: \(cancelTime ?? "")\nLocation: \(location)\nWhat: \(what ?? "")\nWhen: \(when ?? "")\nExtra: \(extra ?? "")\nDNC: \(dnc ?? "")\nChart: \(chart ?? "")\n"
+        return "Location Name: \(locationName ?? "")\nSpecific Area: \(specificArea ?? "")\nSubject: \(subject ?? "")\nCancelTime: \(cancelTime ?? "")\nLocation: \(location)\nWhen: \(when ?? "")\nExtra: \(extra ?? "")\nDNC: \(dnc ?? "")\nChart: \(chart ?? "")\n"
     }
 }
 
 extension String {
-    var startsWithNumberHeading: Bool {
-        return self.range(
-            of: "^[0-9]+\\. {1}.*", // 1.
-            options: .regularExpression) != nil
-    }
-    
-    var startsWithLetterHeading: Bool {
-        return self.range(
-            of: "^\\s*[A-Z]+\\.", // 1.
-            options: .regularExpression) != nil
-    }
-    
-    var isNumberHeading: Bool {
-        return self.range(
-            of: "^[0-9]+\\.$", // 1.
-            options: .regularExpression) != nil
+    func deletingPrefix(_ prefix: String) -> String {
+        guard self.hasPrefix(prefix) else { return self }
+        return String(self.dropFirst(prefix.count))
     }
 }
 
@@ -124,244 +107,287 @@ extension StringProtocol {
 
 class NAVTEXTextParser {
     var text: String
+    var areaName: String?
+    var specificArea: String?
+    var subject: String?
+    var extras: [String] = []
+    var chart: String?
+    var dnc: String?
+    var currentLocationType: String = "Point"
+    var firstDistance: String?
+    var numberDistance: String?
+    
+    var heading: String?
+    var sections: [String] = []
+    var locations: [LocationWithType] = []
     
     init(text: String) {
         self.text = text
     }
     
-    func parseWhat(components: [String]) -> String? {
-        var what: [String] = []
-        if !components.isEmpty {
-            for component in components {
-                if !component.isNumberHeading {
-                    what.append(component)
-                }
-            }
+    func parseDNCAndChart(line: String) -> Bool {
+        var found = false
+        if dnc == nil {
+            let dncRange = line.ranges(of: "(DNC ){1}[0-9]*", options: .regularExpression)
+            dnc = dncRange.map { String(line[$0]) }.first
+            found = !dncRange.isEmpty
         }
-        return what.joined(separator: "\n")
+        
+        if chart == nil {
+            let chartRange = line.ranges(of: "(CHART ){1}[0-9]*", options: .regularExpression)
+            chart = chartRange.map { String(line[$0]) }.first
+            found = found || !chartRange.isEmpty
+        }
+        
+        return found
     }
     
-    func parseSubSection(type: String = "Point", components: [String]) -> LocationWithType? {
-        let what = components.joined(separator: " ")
-        let locationRanges = what.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]", options: .regularExpression)
-        var locations = locationRanges.map { String(what[$0]) }
-        if locations.isEmpty {
-            return nil
+    func splitChartFromLine(line: String) -> String {
+        if let chart = chart {
+            return String(line.deletingPrefix(chart).deletingPrefix(".")).trimmingCharacters(in: .whitespaces)
+        } else if let dnc = dnc {
+            return String(line.deletingPrefix(dnc).deletingPrefix(".")).trimmingCharacters(in: .whitespaces)
         }
-        return LocationWithType(location: locations, locationType: type)
+        return line
     }
     
-    func parseSection(components: [String], currentMappedLocation: MappedLocation?, locationType: String?) -> MappedLocation {
-//        print("parse section components \(components)")
-        let what = parseWhat(components: components)
-        var locations: [LocationWithType] = []
-        
-        var currentLocationStrings: [String] = []
-        var currentSubComponent: String?
-        
-        var subComponents: [String] = []
-        var realLocationType: String = locationType ?? "Point"
-        for component in components {
-            if component.contains(" AREA") {
-                realLocationType = "Polygon"
-            }
+    func parseCurrentLocationType(line: String) {
+        if !line.ranges(of: "AREA[S]? BOUND", options: .regularExpression).isEmpty {
+            currentLocationType = "Polygon"
+        } else if line.contains("TRACKLINE") {
+            currentLocationType = "LineString"
+        } else if line.contains("POSITION") {
+            currentLocationType = "Point"
+        }
+    }
 
-            if component.startsWithLetterHeading && !subComponents.isEmpty {
-                // parse the previous ones
-                if let location = parseSubSection(type: realLocationType, components: subComponents) {
-                    locations.append(location)
-                }
-                subComponents = [component]
-            } else {
-                subComponents.append(component)
-            }
-        }
-        
-        if !subComponents.isEmpty {
-            if let location = parseSubSection(type: realLocationType, components: subComponents) {
-                locations.append(location)
-            }
-        }
-        if currentMappedLocation?.subject == nil {
-            return MappedLocation(seedData: currentMappedLocation, subject: what, location: locations.isEmpty ? nil : locations)
-        } else {
-            return MappedLocation(seedData: currentMappedLocation, location: locations.isEmpty ? nil : locations, what: what)
-        }
-    }
-    
-    func splitIntoSentences(string: String) -> [String] {
-        var toParse = string.replacingOccurrences(of: "\n", with: " ")
-        var r = [Range<String.Index>]()
-        let t = toParse.linguisticTags(
-            in: toParse.startIndex..<toParse.endIndex,
-            scheme: NSLinguisticTagScheme.lexicalClass.rawValue,
-            tokenRanges: &r)
-        var result = [String]()
-        let ixs = t.enumerated().filter {
-            return $0.1 == "SentenceTerminator"
-        }.map {r[$0.0].lowerBound}
-        var prev = toParse.startIndex
-        for ix in ixs {
-            let r = prev...ix
-            let subSequence = toParse[r].trimmingCharacters(
-                in: NSCharacterSet.whitespaces)
-            for component in subSequence.components(separatedBy: ":") {
-                result.append(component)
-            }
-            prev = toParse.index(after: ix)
-        }
-        return result
-    }
-    
-    func parseHeading(components: [String]) -> (String?, MappedLocation) {
-        var areaName: String? = components.first
-        var specificArea: String?
-        var numberSubject: String?
-        var extras: [String] = []
-        var chart: String?
-        var dnc: String?
-        
-        if let areaName = areaName {
-            if dnc == nil {
-                let dncRange = areaName.ranges(of: "(DNC ){1}[0-9]*", options: .regularExpression)
-                dnc = dncRange.map { String(areaName[$0]) }.first
-            }
-            
-            if chart == nil {
-                let chartRange = areaName.ranges(of: "(CHART ){1}[0-9]*", options: .regularExpression)
-                chart = chartRange.map { String(areaName[$0]) }.first
-            }
-        }
+    func parseHeading(heading: [String]) {
+        firstDistance = parseDistance(line: heading.joined(separator: " "))
         
         var foundChart: Bool = false
-        for toParse in components.dropFirst() {
-            var foundChartNow: Bool = false
-            if !foundChart && dnc == nil {
-                let dncRange = toParse.ranges(of: "(DNC ){1}[0-9]*", options: .regularExpression)
-                foundChartNow = !dncRange.isEmpty
-                foundChart = !dncRange.isEmpty
-                if foundChart {
-                    dnc = dncRange.map { String(toParse[$0]) }.first
-                    if let dnc = dnc {
-                        if toParse.hasSuffix(".") {
-                            foundChartNow = dnc.count == toParse.count - 1
-                        } else {
-                            foundChartNow = dnc.count == toParse.count
-                        }
-                    }
-                }
+        var stringLocations: [String] = []
+        for line in heading {
+            var toParse = line
+            parseCurrentLocationType(line: toParse)
+            foundChart = parseDNCAndChart(line: toParse)
+            if foundChart {
+                toParse = splitChartFromLine(line: line)
             }
-            
-            if !foundChart && chart == nil {
-                let chartRange = toParse.ranges(of: "(CHART ){1}[0-9]*", options: .regularExpression)
-                foundChartNow = !chartRange.isEmpty
-                foundChart = !chartRange.isEmpty
-                if foundChart {
-                    chart = chartRange.map { String(toParse[$0]) }.first
-                    if let chart = chart {
-                        if toParse.hasSuffix(".") {
-                            foundChartNow = chart.count == toParse.count - 1
-                        } else {
-                            foundChartNow = chart.count == toParse.count
-                        }
-                    }
-                }
-            }
-            if !foundChartNow {
-                if specificArea == nil && !foundChart {
+            if !toParse.isEmpty {
+                if areaName == nil {
+                    areaName = toParse
+                } else if specificArea == nil {
                     specificArea = toParse
-                } else if numberSubject == nil {
-                    numberSubject = toParse
+                } else if subject == nil {
+                    subject = toParse
                 } else {
                     extras.append(toParse)
                 }
             }
-        }
-        var locationType: String = "Point"
-        var locations: [String] = []
-        for subject in extras {
-            let locationRanges = subject.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]", options: .regularExpression)
-            locations.append(contentsOf: locationRanges.map { String(subject[$0]) })
-            if subject.contains(" AREA") {
-                locationType = "Polygon"
-            }
-        }
-        if let numberSubject = numberSubject {
-            let locationRanges = numberSubject.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]", options: .regularExpression)
-            locations.append(contentsOf: locationRanges.map { String(numberSubject[$0]) })
-            if numberSubject.contains(" AREA") {
-                locationType = "Polygon"
-            }
-        }
-        if let specificArea = specificArea {
-            let locationRanges = specificArea.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]", options: .regularExpression)
-            locations.append(contentsOf: locationRanges.map { String(specificArea[$0]) })
-            if specificArea.contains(" AREA") {
-                locationType = "Polygon"
-            }
+            
+            let locationRanges = toParse.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]", options: .regularExpression)
+            stringLocations.append(contentsOf: locationRanges.map { String(toParse[$0]) })
         }
         
-        return (locations.isEmpty ? nil : locationType, MappedLocation(locationName: areaName, specificArea: specificArea, subject: numberSubject, location: locations.isEmpty ? nil : [LocationWithType(location: locations, locationType: locationType)], extra: extras.joined(separator: ", "), dnc: dnc, chart: chart))
+        if !stringLocations.isEmpty {
+            locations.append(LocationWithType(location: stringLocations, locationType: currentLocationType, locationDescription: subject, distanceFromLocation: firstDistance))
+        }
     }
     
-    func parseNumbers(heading: MappedLocation?, numbers: [String], locationType: String?) -> [MappedLocation] {
-        var locations: [MappedLocation] = []
-        var subComponents: [String] = []
+    func parseDistance(line: String) -> String? {
+        var distance: String?
+        if !line.ranges(of: "(?!=\\.)[^\\.]*? BERTH", options: .regularExpression).isEmpty {
+            let range = line.ranges(of: "(?!=\\.)[^\\.]*? BERTH", options: .regularExpression)
+            distance = range.compactMap { String(line[$0]) }.first?.trimmingCharacters(in: .whitespacesAndNewlines)
+        } else if !line.ranges(of: "WITHIN", options: .regularExpression).isEmpty {
+            let range = line.ranges(of: "(?<=WITHIN ).*(?= OF)", options: .regularExpression)
+            distance = range.compactMap { String(line[$0]) }.first
+        }
         
-        for component in numbers {
-            var toParse = component
+        return distance
+    }
 
-            if toParse.isNumberHeading && !subComponents.isEmpty {
-                // parse the previous ones
-                locations.append(parseSection(components: subComponents, currentMappedLocation: heading, locationType: locationType))
-                subComponents = [toParse]
-            } else {
-                subComponents.append(toParse)
+    func parseNumber(numberSection: String) {
+        var headingAndLetters = splitLettersFromHeading(text: numberSection)
+        if let heading = headingAndLetters.heading {
+            numberDistance = parseDistance(line: heading)
+            let distance = numberDistance ?? firstDistance
+            extras.append(heading)
+            let descriptionAndLocations = splitDescriptionFromLocation(text: heading)
+            if let description = descriptionAndLocations.description {
+                parseCurrentLocationType(line: description)
+                if subject == nil {
+                    subject = description
+                }
+            }
+            if let parsedLocations = descriptionAndLocations.locations, !parsedLocations.isEmpty {
+                locations.append(LocationWithType(location: parsedLocations, locationType: currentLocationType, locationDescription: descriptionAndLocations.description != nil ? descriptionAndLocations.description : heading, distanceFromLocation: distance))
             }
         }
-        locations.append(parseSection(components: subComponents, currentMappedLocation: heading, locationType: locationType))
-        return locations
+        if let letters = headingAndLetters.letters {
+            for letter in splitLetters(string: letters) {
+                parseLetter(letterSection: letter, numberSectionDescription: headingAndLetters.heading)
+            }
+        }
     }
     
-    func parseToMappedLocation() -> [MappedLocation] {
-        // split the text into Heading, and number sections
+    func parseLetter(letterSection: String, numberSectionDescription: String? = nil) {
+        var currentLetter: String?
+        var currentLetterDescription: [String] = []
+        if let numberSectionDescription = numberSectionDescription {
+            currentLetterDescription.append(numberSectionDescription)
+        }
+        var currentLocations: [String] = []
+        var distance = parseDistance(line: letterSection) ?? numberDistance ?? firstDistance
+        let sentences = splitSentences(string: letterSection)
+        extras.append(contentsOf: sentences)
+        for (index, sentence) in sentences.enumerated() {
+            // this will be the letter
+            if !sentence.contains(" ") {
+                currentLetter = sentence
+                if !currentLocations.isEmpty {
+                    locations.append(LocationWithType(location: currentLocations, locationType: currentLocationType, locationDescription: currentLetterDescription.compactMap { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.joined(separator: " "), distanceFromLocation: distance))
+                    currentLocations = []
+                    currentLetterDescription = []
+                }
+            } else {
+                let descriptionAndLocations = splitDescriptionFromLocation(text: sentence)
+                if let description = descriptionAndLocations.description {
+                    parseCurrentLocationType(line: description)
+                    currentLetterDescription.append(description)
+                }
+                if let parsedLocations = descriptionAndLocations.locations, !parsedLocations.isEmpty {
+                    currentLocations.append(contentsOf: parsedLocations)
+                }
+            }
+        }
+        
+        // add the final parsed locations
+        if !currentLocations.isEmpty {
+            locations.append(LocationWithType(location: currentLocations, locationType: currentLocationType, locationDescription: currentLetterDescription.compactMap { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.joined(separator: " "), distanceFromLocation: distance))
+        }
+    }
+    
+    func splitDescriptionFromLocation(text: String) -> (description: String?, locations: [String]?, distance: String?) {
+        let locationRanges = text.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]", options: .regularExpression)
+        var distance: String?
+        if locationRanges.isEmpty {
+            return (text, nil, distance)
+        } else {
+            var description: String?
+            var locations: [String]?
+            if let first = locationRanges.first {
+                if first.lowerBound != text.startIndex {
+                    // go back one index from the start of the first match
+                    let finalIndex = first.lowerBound == text.endIndex ? first.lowerBound : text.index(before: first.lowerBound)
+                    description = String(text[...finalIndex]).trimmingCharacters(in: .whitespaces)
+                }
+            }
+            locations = locationRanges.compactMap { String(text[$0]) }
+            if let last = locationRanges.last {
+                if last.upperBound != text.endIndex {
+                    let finalIndex = last.upperBound
+                    let endDescription = String(text[finalIndex...]).trimmingCharacters(in: .whitespaces)
+                    if let currentDescription = description {
+                        description = "\(currentDescription) \(endDescription)"
+                    } else {
+                        description = endDescription
+                    }
+                }
+            }
+            return (description, locations, distance)
+        }
+    }
+    
+    func splitLettersFromHeading(text: String) -> (heading: String?, letters: String?) {
         var heading: String?
-        var numbers: String?
+        var letters: String?
         
         let regexOptions: NSRegularExpression.Options = [.anchorsMatchLines]
-        let regex = try? NSRegularExpression(pattern: "^[0-9]*\\. {1}", options: regexOptions)
-        if let numberNSRange = regex?.rangeOfFirstMatch(in: text, range: NSRange(location: 0, length: text.utf8.count)), let numberRange = Range(numberNSRange) {
-            let lowerBound = String.Index(utf16Offset: numberRange.lowerBound, in: text)
-            if numberNSRange.lowerBound != 0 {
-                heading = String(text[...text.index(lowerBound, offsetBy: -1)])
-//                print("Heading is \(heading)")
+        let regex = try? NSRegularExpression(pattern: "\\bA\\. ", options: regexOptions)
+        if let lettersNSRange = regex?.rangeOfFirstMatch(in: text, range: NSRange(location: 0, length: text.utf8.count)), let lettersRange = Range(lettersNSRange) {
+            let lowerBound = String.Index(utf16Offset: lettersRange.lowerBound, in: text)
+            if lettersNSRange.lowerBound != 0 {
+                heading = String(text[...text.index(lowerBound, offsetBy: -1)]).split(separator: "\n").compactMap { $0.trimmingCharacters(in:.whitespacesAndNewlines) }.joined(separator: " ")
             }
-            numbers = String(text[lowerBound...])
-//            print("number stuff is \(numbers)")
+            letters = String(text[lowerBound...])
         } else {
             // the entire thing is the heading
-            heading = text
-//            print("no range")
+            heading = text.split(separator: "\n").compactMap { $0.trimmingCharacters(in:.whitespacesAndNewlines) }.joined(separator: " ")
         }
-
-        var headingLocation: MappedLocation?
-        var locationType: String?
-
-        if let heading = heading {
-            let headingSentences = splitIntoSentences(string: heading)
-            var parsedHeading = parseHeading(components: headingSentences)
-            headingLocation = parsedHeading.1
-            locationType = parsedHeading.0
-        }
-        
-        if let numbers = numbers {
-            let numberSentences = splitIntoSentences(string: numbers)
-            return parseNumbers(heading: headingLocation, numbers: numberSentences, locationType: locationType)
-        } else if let headingLocation = headingLocation {
-            return [headingLocation]
+        return (heading, letters)
+    }
+    
+    func getHeadingAndSections(string: String) -> (heading: String?, sections: String?) {
+        var heading: String?
+        var sections: String?
+                
+        let regexOptions: NSRegularExpression.Options = [.anchorsMatchLines]
+        let regex = try? NSRegularExpression(pattern: "\\b[1A]\\. ", options: regexOptions)
+        if let sectionNSRange = regex?.rangeOfFirstMatch(in: string, range: NSRange(location: 0, length: string.utf8.count)), let sectionRange = Range(sectionNSRange) {
+            let lowerBound = String.Index(utf16Offset: sectionRange.lowerBound, in: string)
+            if sectionNSRange.lowerBound != 0 {
+                heading = String(string[...string.index(lowerBound, offsetBy: -1)]).trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+            sections = String(string[lowerBound...]).trimmingCharacters(in: .whitespacesAndNewlines)
         } else {
-            return []
+            // the entire thing is the heading
+            heading = string.trimmingCharacters(in: .whitespacesAndNewlines)
         }
+        return (heading, sections)
+    }
+
+    func splitSentences(string: String) -> [String] {
+        // split on new lines and trim the extra white space
+        return string.components(separatedBy: .newlines)
+            .compactMap { $0.trimmingCharacters(in: .whitespaces) }
+        // join back together
+            .joined(separator: " ")
+        // split on period space
+            .components(separatedBy: ". ")
+            .filter { $0 != "" }
+            .compactMap {
+                ($0.hasSuffix(".") ? $0 : "\($0).").trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+    }
+    
+    func splitLetters(string: String) -> [String] {
+        var letters: [String] = []
+        let ranges = string.ranges(of: "(?<letters>[\\w]+\\. (?<letterContent>[\\W\\w]*?)(?=([\\w]+\\. [\\w])|($)))", options: .regularExpression)
+        letters = ranges.map { String(string[$0]).trimmingCharacters(in: .whitespacesAndNewlines) }
+        return letters
+    }
+    
+    func splitNumbers(string: String) -> [String] {
+        var numbers: [String] = []
+        let ranges = string.ranges(of: "(?<numbers>[\\d]+\\. (?<numberContent>[\\W\\w]*?)(?=([\\d]+\\. [\\w])|($)))", options: .regularExpression)
+        numbers = ranges.map { String(string[$0]).trimmingCharacters(in: .whitespacesAndNewlines) }
+        return numbers
+    }
+    
+    func parseToMappedLocation() -> MappedLocation? {
+        // split the text into Heading, and number sections
+        let headingAndSections = getHeadingAndSections(string: text)
+        // handle header
+        if let heading = headingAndSections.heading {
+            let sentences = splitSentences(string: heading)
+            parseHeading(heading: sentences)
+        }
+        if let sections = headingAndSections.sections {
+            // do we have numbers
+            if sections.hasPrefix("1.") {
+                for number in splitNumbers(string: sections) {
+                    parseNumber(numberSection: number)
+                }
+            } else
+            // or just letters
+            if sections.hasPrefix("A.") {
+                for letter in splitLetters(string: sections) {
+                    parseLetter(letterSection: letter)
+                }
+            }
+        }
+        return MappedLocation(locationName: areaName, specificArea: specificArea, subject: subject, cancelTime: nil, location: locations, when: nil, extra: extras.joined(separator: "\n"), dnc:dnc, chart: chart)
     }
     
     func parseToWKT() -> String? {
