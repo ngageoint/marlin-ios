@@ -9,6 +9,7 @@ import Foundation
 import sf_wkt_ios
 import sf_geojson_ios
 import NaturalLanguage
+import MapKit
 
 enum MappedLocationGeoJSONProperties {
     case locationName
@@ -24,6 +25,35 @@ struct LocationWithType: CustomStringConvertible {
 
     var description: String {
         return "\(locationDescription ?? "")\n\tDistance:\(distanceFromLocation ?? "")\n\t\(locationType ?? "")\n\t\t [\(location.joined(separator: "; "))]\n"
+    }
+    
+    var mkOverlay: MKOverlay? {
+        var points: [MKMapPoint] = []
+        if locationType == "Polygon" {
+            for locationPoint in location {
+                if let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
+                    points.append(MKMapPoint(coordinate))
+                }
+            }
+            return MKPolygon(points: &points, count: points.count)
+        } else if locationType == "LineString" {
+            for locationPoint in location {
+                if let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
+                    points.append(MKMapPoint(coordinate))
+                }
+            }
+            return MKPolyline(points: &points, count: points.count)
+        }
+        return nil
+    }
+    
+    var mkMapPoint: MKMapPoint? {
+        if locationType == "Point" {
+            if let firstLocation = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: firstLocation) {
+                return MKMapPoint(coordinate)
+            }
+        }
+        return nil
     }
 }
 
@@ -232,19 +262,17 @@ class NAVTEXTextParser {
     }
     
     func parseLetter(letterSection: String, numberSectionDescription: String? = nil) {
-        var currentLetter: String?
         var currentLetterDescription: [String] = []
         if let numberSectionDescription = numberSectionDescription {
             currentLetterDescription.append(numberSectionDescription)
         }
         var currentLocations: [String] = []
-        var distance = parseDistance(line: letterSection) ?? numberDistance ?? firstDistance
+        let distance = parseDistance(line: letterSection) ?? numberDistance ?? firstDistance
         let sentences = splitSentences(string: letterSection)
         extras.append(contentsOf: sentences)
-        for (index, sentence) in sentences.enumerated() {
+        for sentence in sentences {
             // this will be the letter
             if !sentence.contains(" ") {
-                currentLetter = sentence
                 if !currentLocations.isEmpty {
                     locations.append(LocationWithType(location: currentLocations, locationType: currentLocationType, locationDescription: currentLetterDescription.compactMap { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.joined(separator: " "), distanceFromLocation: distance))
                     currentLocations = []
@@ -268,11 +296,10 @@ class NAVTEXTextParser {
         }
     }
     
-    func splitDescriptionFromLocation(text: String) -> (description: String?, locations: [String]?, distance: String?) {
+    func splitDescriptionFromLocation(text: String) -> (description: String?, locations: [String]?) {
         let locationRanges = text.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]", options: .regularExpression)
-        var distance: String?
         if locationRanges.isEmpty {
-            return (text, nil, distance)
+            return (text, nil)
         } else {
             var description: String?
             var locations: [String]?
@@ -295,7 +322,7 @@ class NAVTEXTextParser {
                     }
                 }
             }
-            return (description, locations, distance)
+            return (description, locations)
         }
     }
     
