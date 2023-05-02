@@ -97,6 +97,10 @@ struct LocationWithType: CustomStringConvertible {
         }
         return nil
     }
+    
+    var center: CLLocationCoordinate2D? {
+        return mkShape?.coordinate
+    }
 }
 
 struct MappedLocation: CustomStringConvertible {
@@ -104,7 +108,7 @@ struct MappedLocation: CustomStringConvertible {
     var specificArea: String?
     var subject: String?
     var cancelTime: String?
-    var location: [LocationWithType] = []
+    var locations: [LocationWithType] = []
     var when: String?
     var extra: String?
     var dnc: String?
@@ -116,7 +120,7 @@ struct MappedLocation: CustomStringConvertible {
             self.specificArea = seedData.specificArea
             self.subject = seedData.subject
             self.cancelTime = seedData.cancelTime
-            self.location = seedData.location
+            self.locations = seedData.locations
             self.when = seedData.when
             self.extra = seedData.extra
             self.dnc = seedData.dnc
@@ -135,7 +139,7 @@ struct MappedLocation: CustomStringConvertible {
             self.cancelTime = cancelTime
         }
         if let location = location {
-            self.location.append(contentsOf: location)
+            self.locations.append(contentsOf: location)
         }
         if let when = when {
             self.when = when
@@ -152,7 +156,62 @@ struct MappedLocation: CustomStringConvertible {
     }
     
     var description: String {
-        return "Location Name: \(locationName ?? "")\nSpecific Area: \(specificArea ?? "")\nSubject: \(subject ?? "")\nCancelTime: \(cancelTime ?? "")\nLocation: \(location)\nWhen: \(when ?? "")\nExtra: \(extra ?? "")\nDNC: \(dnc ?? "")\nChart: \(chart ?? "")\n"
+        return "Location Name: \(locationName ?? "")\nSpecific Area: \(specificArea ?? "")\nSubject: \(subject ?? "")\nCancelTime: \(cancelTime ?? "")\nLocation: \(locations)\nWhen: \(when ?? "")\nExtra: \(extra ?? "")\nDNC: \(dnc ?? "")\nChart: \(chart ?? "")\n"
+    }
+    
+    var center: CLLocationCoordinate2D? {
+        var center: CLLocationCoordinate2D?
+        
+        var northWest: CLLocationCoordinate2D?
+        var southEast: CLLocationCoordinate2D?
+        for location in locations {
+            if let locationCenter = location.center {
+                if let currentNorthWest = northWest {
+                    northWest = CLLocationCoordinate2D(latitude: max(currentNorthWest.latitude, locationCenter.latitude), longitude: min(currentNorthWest.longitude, locationCenter.longitude))
+                } else {
+                    northWest = locationCenter
+                }
+                
+                if let currentSouthEast = southEast {
+                    southEast = CLLocationCoordinate2D(latitude: min(currentSouthEast.latitude, locationCenter.latitude), longitude: max(currentSouthEast.longitude, locationCenter.longitude))
+                } else {
+                    southEast = locationCenter
+                }
+            }
+        }
+        
+        if let northWest = northWest, let southEast = southEast {
+            center = CLLocationCoordinate2D(latitude: southEast.latitude + ((northWest.latitude - southEast.latitude) / 2.0), longitude: northWest.longitude + ((southEast.longitude - northWest.longitude) / 2.0))
+        }
+        
+        return center
+    }
+    
+    var span: MKCoordinateSpan? {
+        var span: MKCoordinateSpan?
+        var northWest: CLLocationCoordinate2D?
+        var southEast: CLLocationCoordinate2D?
+        for location in locations {
+            if let locationCenter = location.center {
+                if let currentNorthWest = northWest {
+                    northWest = CLLocationCoordinate2D(latitude: max(currentNorthWest.latitude, locationCenter.latitude), longitude: min(currentNorthWest.longitude, locationCenter.longitude))
+                } else {
+                    northWest = locationCenter
+                }
+                
+                if let currentSouthEast = southEast {
+                    southEast = CLLocationCoordinate2D(latitude: min(currentSouthEast.latitude, locationCenter.latitude), longitude: max(currentSouthEast.longitude, locationCenter.longitude))
+                } else {
+                    southEast = locationCenter
+                }
+            }
+        }
+        
+        if let northWest = northWest, let southEast = southEast {
+            span = MKCoordinateSpan(latitudeDelta: northWest.latitude - southEast.latitude, longitudeDelta: southEast.longitude - northWest.longitude)
+        }
+        
+        return span
     }
 }
 
