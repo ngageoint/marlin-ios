@@ -10,7 +10,7 @@ import MapKit
 import CoreData
 import Combine
 
-class NavigationWarningMap: NSObject, MapMixin {
+class NavigationalWarningMap: NSObject, MapMixin {
     var warning: NavigationalWarning?
     var mapState: MapState?
     var lastChange: Date?

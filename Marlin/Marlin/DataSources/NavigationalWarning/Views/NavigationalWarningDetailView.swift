@@ -20,7 +20,7 @@ struct NavigationalWarningDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "Nav Warning Detail Map", mixins: [NavigationWarningMap(warning: navigationalWarning), UserLayersMap()], mapState: mapState)
+                    MarlinMap(name: "Nav Warning Detail Map", mixins: [NavigationalWarningMap(warning: navigationalWarning), UserLayersMap()], mapState: mapState)
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                         .onAppear {
                             mapState.center = navigationalWarning.region
