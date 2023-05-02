@@ -196,6 +196,7 @@
 		F76052CA29AD4B2700F13260 /* MapLayerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76052C929AD4B2700F13260 /* MapLayerViewTests.swift */; };
 		F76052CC29AE6F0700F13260 /* MapLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76052CB29AE6F0700F13260 /* MapLayerView.swift */; };
 		F7667CEB29F05327005B36A0 /* navwarnings.json in Resources */ = {isa = PBXBuildFile; fileRef = F7667CEA29F05327005B36A0 /* navwarnings.json */; };
+		F7667CED2A0025B0005B36A0 /* NavigationWarningMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7667CEC2A0025B0005B36A0 /* NavigationWarningMap.swift */; };
 		F76B4A7228EB8AB20012BF4F /* MSIListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76B4A7128EB8AB20012BF4F /* MSIListViewModel.swift */; };
 		F79168FE28B56031004FFEBA /* PortMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79168FD28B56031004FFEBA /* PortMap.swift */; };
 		F79C994229955262004D9E82 /* DataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79C994129955262004D9E82 /* DataLoadOperation.swift */; };
@@ -598,6 +599,7 @@
 		F76052C929AD4B2700F13260 /* MapLayerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLayerViewTests.swift; sourceTree = "<group>"; };
 		F76052CB29AE6F0700F13260 /* MapLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLayerView.swift; sourceTree = "<group>"; };
 		F7667CEA29F05327005B36A0 /* navwarnings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = navwarnings.json; sourceTree = "<group>"; };
+		F7667CEC2A0025B0005B36A0 /* NavigationWarningMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationWarningMap.swift; sourceTree = "<group>"; };
 		F76B4A7128EB8AB20012BF4F /* MSIListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIListViewModel.swift; sourceTree = "<group>"; };
 		F79168FD28B56031004FFEBA /* PortMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortMap.swift; sourceTree = "<group>"; };
 		F79C994129955262004D9E82 /* DataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadOperation.swift; sourceTree = "<group>"; };
@@ -984,6 +986,7 @@
 				F71E3E3928F49ABE002F2019 /* SearchResultsMap.swift */,
 				F7F7CFC429BA955900A14350 /* BaseOverlaysMap.swift */,
 				F70BCE9829C4F1AE00AEF73D /* UserLayersMap.swift */,
+				F7667CEC2A0025B0005B36A0 /* NavigationWarningMap.swift */,
 			);
 			path = Mixins;
 			sourceTree = "<group>";
@@ -2307,6 +2310,7 @@
 				F7D8FA162922BA3B00E7D0A1 /* NoticeToMariners+DataSourceViewBuilder.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
 				F71D286428BE431900F1775C /* DifferentialGPSStationMap.swift in Sources */,
+				F7667CED2A0025B0005B36A0 /* NavigationWarningMap.swift in Sources */,
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
 				F7FFB33D28DA061D00C31AA3 /* FilterButton.swift in Sources */,
 				F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */,

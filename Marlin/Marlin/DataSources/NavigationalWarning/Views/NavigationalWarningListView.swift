@@ -23,8 +23,8 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
-                MarlinMap(name: "Navigational Warning List View Map", mixins: [navareaMap, backgroundMap], mapState: mapState)
-                    .frame(minHeight: geometry.size.height * 0.3, maxHeight: geometry.size.height * 0.3)
+                MarlinMap(name: "Navigational Warning List View Map", mixins: [NavigationWarningMap(), navareaMap, backgroundMap], mapState: mapState)
+                    .frame(minHeight: geometry.size.height * 0.3, maxHeight: geometry.size.height * 0.5)
                     .edgesIgnoringSafeArea([.leading, .trailing])
                 List {
                     NavigationalWarningAreasView(currentArea: locationManager.currentNavArea)

@@ -44,6 +44,11 @@ extension MapMixin {
             renderer.strokeColor = .black
             renderer.lineWidth = 1
             return renderer
+        } else if let circle = overlay as? MKCircle {
+            let renderer = MKCircleRenderer(circle: circle)
+            renderer.strokeColor = .black
+            renderer.lineWidth = 1
+            return renderer
         }
         return nil
     }

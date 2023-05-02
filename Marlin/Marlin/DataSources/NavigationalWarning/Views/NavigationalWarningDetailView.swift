@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct NavigationalWarningDetailView: View {
-    
+    @StateObject var mapState: MapState = MapState()
     var navigationalWarning: NavigationalWarning
     
     init(navigationalWarning: NavigationalWarning) {
@@ -19,19 +20,28 @@ struct NavigationalWarningDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(navigationalWarning.dateString ?? "")
-                        .overline()
-                    Text("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
-                        .primary()
-                    Property(property: "Status", value: navigationalWarning.status)
-                    Property(property: "Authority", value: navigationalWarning.authority)
-                    Property(property: "Cancel Date", value: navigationalWarning.cancelDateString)
-                    if let cancelNavArea = navigationalWarning.cancelNavArea, let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea){
-                        Property(property: "Cancelled By", value: "\(navAreaEnum.display) \(navigationalWarning.cancelMsgNumber)/\(navigationalWarning.cancelMsgYear)")
-                    }
-                    NavigationalWarningActionBar(navigationalWarning: navigationalWarning)
+                    MarlinMap(name: "Nav Warning Detail Map", mixins: [NavigationWarningMap(warning: navigationalWarning), UserLayersMap()], mapState: mapState)
+                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                        .onAppear {
+                            mapState.center = navigationalWarning.region
+                        }
+                        .onChange(of: navigationalWarning) { navigationalWarning in
+                            mapState.center = navigationalWarning.region
+                        }
+                    Group {
+                        Text(navigationalWarning.dateString ?? "")
+                            .overline()
+                        Text("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
+                            .primary()
+                        Property(property: "Status", value: navigationalWarning.status)
+                        Property(property: "Authority", value: navigationalWarning.authority)
+                        Property(property: "Cancel Date", value: navigationalWarning.cancelDateString)
+                        if let cancelNavArea = navigationalWarning.cancelNavArea, let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea){
+                            Property(property: "Cancelled By", value: "\(navAreaEnum.display) \(navigationalWarning.cancelMsgNumber)/\(navigationalWarning.cancelMsgYear)")
+                        }
+                        NavigationalWarningActionBar(navigationalWarning: navigationalWarning)
+                    }.padding([.leading, .trailing], 16)
                 }
-                .padding(.all, 16)
                 .card()
             } header: {
                 EmptyView().frame(width: 0, height: 0, alignment: .leading)
