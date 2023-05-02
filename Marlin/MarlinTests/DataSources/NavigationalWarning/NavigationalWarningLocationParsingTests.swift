@@ -76,6 +76,14 @@ final class NavigationalWarningLocationParsingTests: XCTestCase {
 //        XCTAssertEqual(areaSurroundingPoint.expected, wkt.locationName)
     }
     
+    func testMetersDistance() {
+        let location = LocationWithType(location: [""], locationType: "Circle", locationDescription: "", distanceFromLocation: "TWO MILES")
+        let distance = location.metersDistance
+        print("Distance \(distance)")
+        // 1852 meters to nautical mile
+        XCTAssertEqual(2 * 1852, distance)
+    }
+    
     func importTestData() -> [String: Any] {
         let path = URL(fileURLWithPath: OHPathForFile("navwarnings.json", type(of: self))!)
         let data = try! Data(contentsOf: path)

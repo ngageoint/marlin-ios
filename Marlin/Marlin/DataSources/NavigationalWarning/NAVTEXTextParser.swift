@@ -27,7 +27,48 @@ struct LocationWithType: CustomStringConvertible {
         return "\(locationDescription ?? "")\n\tDistance:\(distanceFromLocation ?? "")\n\t\(locationType ?? "")\n\t\t [\(location.joined(separator: "; "))]\n"
     }
     
-    var mkOverlay: MKOverlay? {
+    var metersDistance: Double? {
+        let nf = NumberFormatter()
+        nf.numberStyle = .spellOut
+        nf.isLenient = true
+        
+        var distance: Double?
+        if let distanceFromLocation = distanceFromLocation {
+            let range = distanceFromLocation.ranges(of: "(MILE)|(METER)", options: .regularExpression)
+            if let first = range.first, first.lowerBound != distanceFromLocation.startIndex {
+                let beginingText = distanceFromLocation[...distanceFromLocation.index(before:first.lowerBound)].trimmingCharacters(in: .whitespacesAndNewlines)
+                // now split on word boundaries, try to parse each into a number start at the end, then go backwards until
+                // it fails to parse to find the extent of the number words
+                
+                let wordSplit = Array(beginingText.components(separatedBy: " ").reversed())
+                var lastParts: [String] = []
+                var tempParsedNumber: Double?
+                for index in 0..<wordSplit.count {
+                    lastParts.insert(wordSplit[index], at: 0)
+                    // first see if it is a number anyway
+                    if let parsed = Double(lastParts.joined(separator: " ")) {
+                        tempParsedNumber = parsed
+                    } else if let parsed = nf.number(from:lastParts.joined(separator: " ")) {
+                        // see if it is a number in words
+                        tempParsedNumber = parsed.doubleValue
+                    }
+                }
+                if let parsedNumber = tempParsedNumber {
+                    if distanceFromLocation.contains("MILE") {
+                        let milesMeasurement = NSMeasurement(doubleValue: Double(parsedNumber), unit: UnitLength.nauticalMiles)
+                        let convertedMeasurement = milesMeasurement.converting(to: UnitLength.meters)
+                        distance = convertedMeasurement.value
+                    } else {
+                        distance = CLLocationDistance(parsedNumber)
+                    }
+                }
+            }
+        }
+        
+        return distance
+    }
+    
+    var mkShape: MKShape? {
         var points: [MKMapPoint] = []
         if locationType == "Polygon" {
             for locationPoint in location {
@@ -43,14 +84,15 @@ struct LocationWithType: CustomStringConvertible {
                 }
             }
             return MKPolyline(points: &points, count: points.count)
-        }
-        return nil
-    }
-    
-    var mkMapPoint: MKMapPoint? {
-        if locationType == "Point" {
+        } else if locationType == "Point" {
             if let firstLocation = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: firstLocation) {
-                return MKMapPoint(coordinate)
+                let point = MKPointAnnotation()
+                point.coordinate = coordinate
+                return point
+            }
+        } else if locationType == "Circle" {
+            if let locationPoint = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
+                return MKCircle(center: coordinate, radius: metersDistance ?? 1000)
             }
         }
         return nil
@@ -184,6 +226,8 @@ class NAVTEXTextParser {
     func parseCurrentLocationType(line: String) {
         if !line.ranges(of: "AREA[S]? BOUND", options: .regularExpression).isEmpty {
             currentLocationType = "Polygon"
+        } else if !line.ranges(of: "AREA[S]? WITHIN", options: .regularExpression).isEmpty {
+            currentLocationType = "Circle"
         } else if line.contains("TRACKLINE") {
             currentLocationType = "LineString"
         } else if line.contains("POSITION") {
