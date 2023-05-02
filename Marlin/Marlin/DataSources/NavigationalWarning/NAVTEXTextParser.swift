@@ -86,6 +86,10 @@ struct LocationWithType: CustomStringConvertible {
             return MKPolyline(points: &points, count: points.count)
         } else if locationType == "Point" {
             if let firstLocation = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: firstLocation) {
+                if let metersDistance = metersDistance {
+                    // this is really a circle
+                    return MKCircle(center: coordinate, radius: metersDistance)
+                }
                 let point = MKPointAnnotation()
                 point.coordinate = coordinate
                 return point
