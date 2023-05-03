@@ -119,6 +119,22 @@ private extension URL {
             return self
         }
     }
+    
+    var queryParameters: [String : String] {
+        var queryParameters: [String : String] = [:]
+        if let components = URLComponents(string: absoluteString) {
+            if let queries = components.query?.components(separatedBy: "&") {
+                for query in queries {
+                    let parameter = query.components(separatedBy: "=")
+                    if parameter.count > 0 {
+                        queryParameters[parameter[0]] = parameter.count > 1 ? parameter[1] : ""
+                    }
+                }
+            }
+        }
+        
+        return queryParameters
+    }
 }
 
 class MapLayerViewModel: ObservableObject, Identifiable {
@@ -129,13 +145,16 @@ class MapLayerViewModel: ObservableObject, Identifiable {
         didSet {
             if url != oldValue {
                 url = url.trimmingCharacters(in: .whitespacesAndNewlines)
-                if let validUrl = URL(string: url) {
-                    url = validUrl.removingQueries.absoluteString
-                }
                 capabilities = nil
                 urlPublisher.send(url)
             }
         }
+    }
+    var plainUrl: String {
+        if let url = URL(string: url) {
+            return url.removingQueries.absoluteString
+        }
+        return url
     }
     @Published var displayName: String = ""
     
@@ -187,23 +206,42 @@ class MapLayerViewModel: ObservableObject, Identifiable {
             }
         }
     }
+    
+    var userUrlParameters: [String : String] {
+        var userUrlParameters: [String: String] = [:]
+        if let validUrl = URL(string: url) {
+            userUrlParameters = validUrl.queryParameters.filter({ element in
+                layerType != .wms || !wmsParameters.contains { param in
+                    param == element.key.uppercased()
+                }
+            })
+        }
+        return userUrlParameters
+    }
             
     var urlTemplate: String? {
+        guard !url.isEmpty else {
+            return nil
+        }
+        
+        guard let url = URL(string:plainUrl) else {
+            return nil
+        }
         if layerType == .wms {
-            guard !url.isEmpty else {
-                return nil
-            }
-            
             let urlParamString = urlParameters.map({ (key: String, value: String) in
                 "\(key)=\(value)"
             }).joined(separator: "&")
             
             return "\(url)?\(urlParamString)"
         } else if layerType == .xyz || layerType == .tms {
-            guard !url.isEmpty else {
-                return nil
+            if userUrlParameters.isEmpty {
+                return "\(url)/{z}/{x}/{y}.png"
+            } else {
+                let urlParamString = urlParameters.map({ (key: String, value: String) in
+                    "\(key)=\(value)"
+                }).joined(separator: "&")
+                return "\(url)/{z}/{x}/{y}.png?\(urlParamString)"
             }
-            return "\(url)/{z}/{x}/{y}.png"
         }
         return nil
     }
@@ -239,7 +277,11 @@ class MapLayerViewModel: ObservableObject, Identifiable {
     static let FINAL_CONFIGURATION = 2
     
     var layersOK: Bool {
-        if !layers.isEmpty {
+        if layerType == .geopackage {
+            if !layers.isEmpty {
+                return true
+            }
+        } else if layerType == .wms {
             return true
         }
         return false
@@ -335,6 +377,8 @@ class MapLayerViewModel: ObservableObject, Identifiable {
         }
     }
     
+    let wmsParameters: [String] = ["SERVICE", "VERSION", "REQUEST", "FORMAT", "TILED", "WIDTH", "HEIGHT", "TRANSPARENT", "LAYERS", "CRS", "STYLES"]
+    
     var urlParameters: [String : String] {
         if layerType == .wms {
             guard !url.isEmpty, let version = capabilities?.version else {
@@ -372,10 +416,10 @@ class MapLayerViewModel: ObservableObject, Identifiable {
             urlParameters["CRS"] = "EPSG%3A3857"
             urlParameters["STYLES"] = ""
             
-            return urlParameters
+            return urlParameters.merging(userUrlParameters) { (current, _) in current }
+        } else {
+            return userUrlParameters
         }
-        
-        return [:]
     }
 
     var cancellable = Set<AnyCancellable>()
@@ -488,7 +532,17 @@ class MapLayerViewModel: ObservableObject, Identifiable {
     }
     
     func retrieveXYZTile() {
-        guard let url = URL(string: "\(url)/0/0/0.png") else {
+        var url: String = ""
+        if userUrlParameters.isEmpty {
+            url = "\(plainUrl)/0/0/0.png"
+        } else {
+            let urlParamString = urlParameters.map({ (key: String, value: String) in
+                "\(key)=\(value)"
+            }).joined(separator: "&")
+            url = "\(plainUrl)/0/0/0.png?\(urlParamString)"
+        }
+        
+        guard let url = URL(string: url) else {
             error = "Invalid URL"
             print("invalid url")
             return
@@ -528,26 +582,33 @@ class MapLayerViewModel: ObservableObject, Identifiable {
     
     func retrieveWMSCapabilitiesDocument() {
         do {
-            guard let url = URL(string: url) else {
+            guard let url = URL(string: url)?.removingQueries else {
                 error = "Invalid URL"
                 print("invalid url")
                 return
             }
             error = nil
+            
             var urlRequest: URLRequest = URLRequest(url: url)
             urlRequest.httpMethod = "GET"
             let parameters: Parameters = [
                 "SERVICE":"WMS",
                 "REQUEST": "GetCapabilities"
             ]
-            urlRequest = try URLEncoding.default.encode(urlRequest, with: parameters)
+            // merge the paramters but let the non user parameters override
+            let filteredUserUrlParameters = userUrlParameters.filter({ element in
+                !wmsParameters.contains { param in
+                    param == element.key.uppercased()
+                }
+            })
+            let allUrlParameters = parameters.merging(filteredUserUrlParameters) { (current, _) in current }
+            urlRequest = try URLEncoding.default.encode(urlRequest, with: allUrlParameters)
             
             var headers: HTTPHeaders = [:]
             if !username.isEmpty, !password.isEmpty {
                 headers.add(.authorization(username: username, password: password))
             }
-            
-            MSI.shared.capabilitiesSession.request(url, method: .get, parameters: parameters, headers: headers)
+            MSI.shared.capabilitiesSession.request(url, method: .get, parameters: allUrlParameters, headers: headers)
                 .onURLRequestCreation(perform: { request in
                     self.retrievingWMSCapabilities = true
                     self.triedCapabilities = false

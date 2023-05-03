@@ -25,7 +25,7 @@ class MapLayer: NSManagedObject {
     static func createFrom(viewModel: MapLayerViewModel, context: NSManagedObjectContext) -> MapLayer {
         let layer = MapLayer(context: context)
         layer.name = viewModel.fileName
-        layer.url = viewModel.url
+        layer.url = viewModel.plainUrl
         layer.refreshRate = Int64(viewModel.refreshRate)
         layer.displayName = viewModel.displayName
         layer.username = viewModel.username
@@ -49,7 +49,7 @@ class MapLayer: NSManagedObject {
     
     func update(viewModel: MapLayerViewModel, context: NSManagedObjectContext) {
         self.name = viewModel.fileName
-        self.url = viewModel.url
+        self.url = viewModel.plainUrl
         self.refreshRate = Int64(viewModel.refreshRate)
         self.displayName = viewModel.displayName
         self.username = viewModel.username
@@ -96,7 +96,14 @@ class MapLayer: NSManagedObject {
             guard !url.isEmpty else {
                 return nil
             }
-            return "\(url)/{z}/{x}/{y}.png"
+            if let urlParameters = urlParameters, !urlParameters.isEmpty {
+                let urlParamString = urlParameters.map({ (key: String, value: String) in
+                    "\(key)=\(value)"
+                }).joined(separator: "&")
+                return "\(url)/{z}/{x}/{y}.png?\(urlParamString)"
+            } else {
+                return "\(url)/{z}/{x}/{y}.png"
+            }
         }
         return nil
     }
