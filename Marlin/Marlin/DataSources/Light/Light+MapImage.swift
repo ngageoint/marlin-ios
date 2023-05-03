@@ -17,12 +17,20 @@ extension Light: MapImage {
         var images: [UIImage] = []
         
         if UserDefaults.standard.actualRangeSectorLights, let tileBounds3857 = tileBounds3857, let lightSectors = lightSectors {
-            if context == nil {
-                let size = CGSize(width: TILE_SIZE, height: TILE_SIZE)
-                UIGraphicsBeginImageContext(size)
-            }
-            if let context: CGContext = context ?? UIGraphicsGetCurrentContext() {
-                actualSizeSectorLight(lightSectors: lightSectors, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context)
+            // if any sectors have no range, just make a sector image
+            if lightSectors.contains(where: { sector in
+                sector.range == nil
+            }) {
+                images.append(contentsOf: LightImage.image(light: self, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857))
+            } else {
+                
+                if context == nil {
+                    let size = CGSize(width: TILE_SIZE, height: TILE_SIZE)
+                    UIGraphicsBeginImageContext(size)
+                }
+                if let context: CGContext = context ?? UIGraphicsGetCurrentContext() {
+                    actualSizeSectorLight(lightSectors: lightSectors, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context)
+                }
             }
         } else if UserDefaults.standard.actualRangeLights, let stringRange = range, let range = Double(stringRange), let tileBounds3857 = tileBounds3857, let lightColors = lightColors {
             if context == nil {
