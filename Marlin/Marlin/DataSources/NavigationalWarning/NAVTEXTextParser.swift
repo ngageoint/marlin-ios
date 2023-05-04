@@ -6,16 +6,10 @@
 //
 
 import Foundation
+import sf_ios
 import sf_wkt_ios
-import sf_geojson_ios
 import NaturalLanguage
 import MapKit
-
-enum MappedLocationGeoJSONProperties {
-    case locationName
-    case subject
-    case cancelTime
-}
 
 struct LocationWithType: CustomStringConvertible {
     var location: [String] = []
@@ -104,6 +98,41 @@ struct LocationWithType: CustomStringConvertible {
     
     var center: CLLocationCoordinate2D? {
         return mkShape?.coordinate
+    }
+    
+    var geometry: SFGeometry? {
+        var points: [SFPoint] = []
+        if locationType == "Polygon" {
+            for locationPoint in location {
+                if let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
+                    points.append(SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude))
+                }
+            }
+            return SFPolygon(ring: SFLineString(points: NSMutableArray(array: points)))
+        } else if locationType == "LineString" {
+            for locationPoint in location {
+                if let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
+                    points.append(SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude))
+                }
+            }
+            return SFLineString(points: NSMutableArray(array: points))
+        } else if locationType == "Point" {
+            if let firstLocation = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: firstLocation) {
+                return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+            }
+        } else if locationType == "Circle" {
+            if let locationPoint = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
+                return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+            }
+        }
+        return nil
+    }
+    
+    var wkt: String? {
+        if let geometry = geometry {
+            return SFWTGeometryWriter.write(geometry)
+        }
+        return nil
     }
 }
 
@@ -216,6 +245,16 @@ struct MappedLocation: CustomStringConvertible {
         }
         
         return span
+    }
+    
+    var wkt: [String] {
+        var wkts: [String] = []
+        for location in locations {
+            if let wkt = location.wkt {
+                wkts.append(wkt)
+            }
+        }
+        return wkts
     }
 }
 
@@ -528,10 +567,5 @@ class NAVTEXTextParser {
         var components = text.components(separatedBy: .newlines)
         
         return nil
-    }
-    
-    func parseToGeoJSON() -> [SFGGeoJSONObject] {
-        
-        return []
     }
 }

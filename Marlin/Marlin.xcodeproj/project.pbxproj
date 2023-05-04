@@ -716,6 +716,7 @@
 		F7D8FA8029424F8400E7D0A1 /* ntmGraphics.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ntmGraphics.json; sourceTree = "<group>"; };
 		F7DF1BBC29E98B5700F92E14 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		F7DF1BBE29E9EBF800F92E14 /* AcknowledgementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsView.swift; sourceTree = "<group>"; };
+		F7E049902A02A103001ABE0B /* Marlin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Marlin-Bridging-Header.h"; sourceTree = "<group>"; };
 		F7E768B229EECAF2001EFFFF /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		F7E768B429EF0F99001EFFFF /* NavigationalWarningLocationParsingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningLocationParsingTests.swift; sourceTree = "<group>"; };
 		F7E768B629EF11CC001EFFFF /* NAVTEXTextParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NAVTEXTextParser.swift; sourceTree = "<group>"; };
@@ -1349,6 +1350,7 @@
 				F7ADDCE728872BF300137D95 /* Localizable.strings */,
 				F7D5C05428A68C43000C2C29 /* appFeatures.plist */,
 				F7FFB33128D6440A00C31AA3 /* Resources */,
+				F7E049902A02A103001ABE0B /* Marlin-Bridging-Header.h */,
 			);
 			path = Marlin;
 			sourceTree = "<group>";
@@ -2713,6 +2715,7 @@
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Marlin (Development)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Marlin/Marlin-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2754,6 +2757,7 @@
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Marlin (Development)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Marlin/Marlin-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

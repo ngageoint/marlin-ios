@@ -63,7 +63,7 @@ struct MarlinView: View {
     var mixins: [MapMixin]
     
     init() {
-        var mixins: [MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
+        var mixins: [MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]//, NavigationalWarningMap()]
 
         if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) {
             mixins.append(DifferentialGPSStationMap(showAsTiles: true))
