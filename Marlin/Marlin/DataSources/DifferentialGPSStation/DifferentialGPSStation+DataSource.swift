@@ -71,13 +71,19 @@ extension DifferentialGPSStation: BatchImportable {
     }
     
     static func dataRequest() -> [MSIRouter] {
-        let newestDifferentialGPSStation = try? PersistenceController.current.fetchFirst(DifferentialGPSStation.self, sortBy: [NSSortDescriptor(keyPath: \DifferentialGPSStation.noticeNumber, ascending: false)], predicate: nil)
+        let context = PersistenceController.current.newTaskContext()
+        var noticeWeek = 0
+        var noticeYear: String?
         
-        let noticeWeek = Int(newestDifferentialGPSStation?.noticeWeek ?? "0") ?? 0
+        context.performAndWait {
+            let newestDifferentialGPSStation = try? PersistenceController.current.fetchFirst(DifferentialGPSStation.self, sortBy: [NSSortDescriptor(keyPath: \DifferentialGPSStation.noticeNumber, ascending: false)], predicate: nil, context: context)
+            noticeWeek = Int(newestDifferentialGPSStation?.noticeWeek ?? "0") ?? 0
+            noticeYear = newestDifferentialGPSStation?.noticeYear
+        }
         
-        print("Query for differential gps stations after year:\(newestDifferentialGPSStation?.noticeYear ?? "") week:\(noticeWeek)")
+        print("Query for differential gps stations after year:\(noticeYear ?? "") week:\(noticeWeek)")
         
-        return [MSIRouter.readDifferentialGPSStations(noticeYear: newestDifferentialGPSStation?.noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1))]
+        return [MSIRouter.readDifferentialGPSStations(noticeYear: noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1))]
     }
     
     static func shouldSync() -> Bool {

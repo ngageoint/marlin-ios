@@ -9,15 +9,19 @@ import Foundation
 import MapKit
 import CoreData
 import Combine
+import sf_wkt_ios
 
 class NavigationalWarningMap: NSObject, MapMixin {
     var warning: NavigationalWarning?
     var mapState: MapState?
     var lastChange: Date?
-    var mapShapes: [MKShape] = []
+    var mapOverlays: [MKOverlay] = []
+    var mapAnnotations: [MKAnnotation] = []
     var userDefaultsShowPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
     var show: Bool = true
     var cancellable = Set<AnyCancellable>()
+    
+    static let MIXIN_STATE_KEY = "FetchRequestMixin\(NavigationalWarning.key)DateUpdated"
     
     override init() {
         
@@ -37,26 +41,26 @@ class NavigationalWarningMap: NSObject, MapMixin {
     }
     
     func setupSingleNavigationalWarning(mapView: MKMapView) {
-        if let mappedLocation = warning?.mappedLocation {
-            for location in mappedLocation.locations {
-                if let shape = location.mkShape {
-                    mapShapes.append(shape)
+        if let locations = warning?.locations {
+            for location in locations {
+                if let wkt = location["wkt"] {
+                    var distance: Double?
+                    if let distanceString = location["distance"] {
+                        distance = Double(distanceString)
+                    }
+                    if let shape = MKShape.fromWKT(wkt: wkt, distance: distance) {
+                        if let shape = shape as? MKOverlay {
+                            mapOverlays.append(shape)
+                        } else {
+                            mapAnnotations.append(shape)
+                        }
+                    }
                 }
             }
         }
         
-        for shape in mapShapes {
-            print("Adding the shape: \(shape)")
-            if let polygon = shape as? MKPolygon {
-                mapView.addOverlay(polygon)
-            } else if let polyline = shape as? MKPolyline {
-                mapView.addOverlay(polyline)
-            } else if let circle = shape as? MKCircle {
-                mapView.addOverlay(circle)
-            }  else {
-                mapView.addAnnotation(shape)
-            }
-        }
+        mapView.addOverlays(mapOverlays)
+        mapView.addAnnotations(mapAnnotations)
     }
     
     func setupAllNavigationalWarnings(mapView: MKMapView) {
@@ -94,52 +98,52 @@ class NavigationalWarningMap: NSObject, MapMixin {
     }
     
     func updateMixin(mapView: MKMapView, mapState: MapState) {
-        if lastChange == nil || lastChange != mapState.mixinStates["FetchRequestMixin\(NavigationalWarning.key)DateUpdated"] as? Date {
-            lastChange = mapState.mixinStates["FetchRequestMixin\(NavigationalWarning.key)DataUpdated"] as? Date ?? Date()
+        if warning == nil && (lastChange == nil || (lastChange != mapState.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] as? Date && mapState.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] != nil)) {
+            lastChange = mapState.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] as? Date ?? Date()
             
-            if mapState.mixinStates["FetchRequestMixin\(NavigationalWarning.key)DataUpdated"] as? Date == nil {
+            if mapState.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] as? Date == nil {
                 DispatchQueue.main.async {
-                    mapState.mixinStates["FetchRequestMixin\(NavigationalWarning.key)DataUpdated"] = self.lastChange
+                    mapState.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] = self.lastChange
                 }
             }
             
-//            if let selfOverlay = self.overlay {
-//                mapView.removeOverlay(selfOverlay)
-//            }
-//
+            mapView.removeOverlays(mapOverlays)
+            mapView.removeAnnotations(mapAnnotations)
+            
             let newFetchRequest = self.getFetchRequest(show: self.show)
             let context = PersistenceController.current.newTaskContext()
-            if let objects = try? context.fetch(newFetchRequest) {
-                
-                for warning in objects {
-                    if let mappedLocation = warning.mappedLocation {
-                        for location in mappedLocation.locations {
-                            if let shape = location.mkShape {
-                                mapShapes.append(shape)
+            context.performAndWait {
+                if let objects = try? context.fetch(newFetchRequest) {
+                    
+                    for warning in objects {
+                        if let locations = warning.locations {
+                            for location in locations {
+                                if let wkt = location["wkt"] {
+                                    var distance: Double?
+                                    if let distanceString = location["distance"] {
+                                        distance = Double(distanceString)
+                                    }
+                                    if let shape = MKShape.fromWKT(wkt: wkt, distance: distance) {
+                                        if let shape = shape as? MKOverlay {
+                                            self.mapOverlays.append(shape)
+                                        } else {
+                                            self.mapAnnotations.append(shape)
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
-            
-            for shape in mapShapes {
-                print("Adding the shape: \(shape)")
-                if let polygon = shape as? MKPolygon {
-                    mapView.addOverlay(polygon)
-                } else if let polyline = shape as? MKPolyline {
-                    mapView.addOverlay(polyline)
-                } else if let circle = shape as? MKCircle {
-                    mapView.addOverlay(circle)
-                }  else {
-                    mapView.addAnnotation(shape)
-                }
-            }
+            mapView.addOverlays(self.mapOverlays)
+            mapView.addAnnotations(self.mapAnnotations)
         }
     }
     
     func refresh() {
         DispatchQueue.main.async {
-            self.mapState?.mixinStates["FetchRequestMixin\(NavigationalWarning.key)DateUpdated"] = Date()
+            self.mapState?.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] = Date()
         }
     }
     

@@ -227,6 +227,7 @@
 		F7ADDCEE28902D5300137D95 /* AnnotationWithView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCED28902D5300137D95 /* AnnotationWithView.swift */; };
 		F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */; };
 		F7B7064328BAADD50026DE88 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B7064228BAADD50026DE88 /* CircleImage.swift */; };
+		F7BEE47E2A0443D200EC282D /* MKShapeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE47D2A0443D200EC282D /* MKShapeExtensions.swift */; };
 		F7C23DFC2906F1460002A7DF /* Metrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23DFB2906F1460002A7DF /* Metrics.swift */; };
 		F7C23DFE290721680002A7DF /* SubmitReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23DFD290721680002A7DF /* SubmitReportView.swift */; };
 		F7C23E0229082D4A0002A7DF /* ElectronicPublication+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23E0129082D4A0002A7DF /* ElectronicPublication+CoreDataClass.swift */; };
@@ -633,6 +634,8 @@
 		F7ADDCED28902D5300137D95 /* AnnotationWithView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationWithView.swift; sourceTree = "<group>"; };
 		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7B7064228BAADD50026DE88 /* CircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
+		F7BEE47C2A04221D00EC282D /* Shared 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Shared 3.xcdatamodel"; sourceTree = "<group>"; };
+		F7BEE47D2A0443D200EC282D /* MKShapeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKShapeExtensions.swift; sourceTree = "<group>"; };
 		F7C23DFB2906F1460002A7DF /* Metrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metrics.swift; sourceTree = "<group>"; };
 		F7C23DFD290721680002A7DF /* SubmitReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitReportView.swift; sourceTree = "<group>"; };
 		F7C23E0129082D4A0002A7DF /* ElectronicPublication+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ElectronicPublication+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -1689,6 +1692,7 @@
 				F7F7CFC229BA56C400A14350 /* StringExtensions.swift */,
 				F70BCEA429DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift */,
 				F70BCEA829DEFDA800AEF73D /* DoubleExtensions.swift */,
+				F7BEE47D2A0443D200EC282D /* MKShapeExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2278,6 +2282,7 @@
 				F7FFB2F228D627E800C31AA3 /* Port+DataSource.swift in Sources */,
 				F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */,
 				F7FFB2EC28D6249400C31AA3 /* DifferentialGPSStation+Annotation.swift in Sources */,
+				F7BEE47E2A0443D200EC282D /* MKShapeExtensions.swift in Sources */,
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
 				F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */,
 				F72EAADA291D915000AC6026 /* ChartCorrection.swift in Sources */,
@@ -2867,10 +2872,11 @@
 		F7A54CA82848149500E5F565 /* Marlin.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F7BEE47C2A04221D00EC282D /* Shared 3.xcdatamodel */,
 				F76052C429AD29E000F13260 /* Shared 2.xcdatamodel */,
 				F7A54CA92848149500E5F565 /* Shared.xcdatamodel */,
 			);
-			currentVersion = F76052C429AD29E000F13260 /* Shared 2.xcdatamodel */;
+			currentVersion = F7BEE47C2A04221D00EC282D /* Shared 3.xcdatamodel */;
 			path = Marlin.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

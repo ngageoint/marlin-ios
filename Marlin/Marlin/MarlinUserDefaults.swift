@@ -431,4 +431,13 @@ extension UserDefaults {
     func clearLastSyncTimeSeconds(_ dataSource: any BatchImportable.Type) {
         removeObject(forKey: "\(dataSource.key)LastSyncTime")
     }
+        
+    var navigationalWarningsLocationsParsed: Bool {
+        get {
+            return bool(forKey: #function)
+        }
+        set {
+            setValue(newValue, forKey: #function)
+        }
+    }
 }

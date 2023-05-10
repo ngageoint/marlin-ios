@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import sf_ios
 import sf_wkt_ios
 import NaturalLanguage
 import MapKit
@@ -98,6 +97,69 @@ struct LocationWithType: CustomStringConvertible {
     
     var center: CLLocationCoordinate2D? {
         return mkShape?.coordinate
+    }
+    
+    var span: MKCoordinateSpan? {
+        var points: [MKMapPoint] = []
+        if locationType == "Polygon" {
+            for locationPoint in location {
+                if let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
+                    points.append(MKMapPoint(coordinate))
+                }
+            }
+//            return MKPolygon(points: &points, count: points.count)
+        } else if locationType == "LineString" {
+            for locationPoint in location {
+                if let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
+                    points.append(MKMapPoint(coordinate))
+                }
+            }
+//            return MKPolyline(points: &points, count: points.count)
+        } else if locationType == "Point" {
+            if let firstLocation = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: firstLocation) {
+                points.append(MKMapPoint(coordinate))
+//                if let metersDistance = metersDistance {
+//                    // this is really a circle
+//                    return MKCircle(center: coordinate, radius: metersDistance)
+//                }
+//                let point = MKPointAnnotation()
+//                point.coordinate = coordinate
+//                return point
+            }
+        } else if locationType == "Circle" {
+            if let locationPoint = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
+                points.append(MKMapPoint(coordinate))
+//                let circle = MKCircle(center: coordinate, radius: metersDistance ?? 1000)
+                
+            }
+        }
+//        return nil
+        
+        
+        var span: MKCoordinateSpan?
+        var northWest: CLLocationCoordinate2D?
+        var southEast: CLLocationCoordinate2D?
+        for point in points {
+//            if let locationCenter = location.center {
+                if let currentNorthWest = northWest {
+                    northWest = CLLocationCoordinate2D(latitude: max(currentNorthWest.latitude, point.coordinate.latitude), longitude: min(currentNorthWest.longitude, point.coordinate.longitude))
+                } else {
+                    northWest = point.coordinate
+                }
+                
+                if let currentSouthEast = southEast {
+                    southEast = CLLocationCoordinate2D(latitude: min(currentSouthEast.latitude, point.coordinate.latitude), longitude: max(currentSouthEast.longitude, point.coordinate.longitude))
+                } else {
+                    southEast = point.coordinate
+                }
+//            }
+        }
+        
+        if let northWest = northWest, let southEast = southEast {
+            span = MKCoordinateSpan(latitudeDelta: northWest.latitude - southEast.latitude, longitudeDelta: southEast.longitude - northWest.longitude)
+        }
+        
+        return span
     }
     
     var geometry: SFGeometry? {
@@ -220,22 +282,29 @@ struct MappedLocation: CustomStringConvertible {
         return center
     }
     
+    var region: MKCoordinateRegion? {
+        if let center = center, let span = span {
+            return MKCoordinateRegion(center: center, span: span)
+        }
+        return nil
+    }
+    
     var span: MKCoordinateSpan? {
         var span: MKCoordinateSpan?
         var northWest: CLLocationCoordinate2D?
         var southEast: CLLocationCoordinate2D?
         for location in locations {
-            if let locationCenter = location.center {
+            if let locationCenter = location.center, let locationSpan = location.span {
                 if let currentNorthWest = northWest {
-                    northWest = CLLocationCoordinate2D(latitude: max(currentNorthWest.latitude, locationCenter.latitude), longitude: min(currentNorthWest.longitude, locationCenter.longitude))
+                    northWest = CLLocationCoordinate2D(latitude: max(currentNorthWest.latitude, locationCenter.latitude + (locationSpan.latitudeDelta / 2.0)), longitude: min(currentNorthWest.longitude, locationCenter.longitude - (locationSpan.longitudeDelta / 2.0)))
                 } else {
-                    northWest = locationCenter
+                    northWest = CLLocationCoordinate2D(latitude: locationCenter.latitude + (locationSpan.latitudeDelta / 2.0), longitude: locationCenter.longitude - (locationSpan.longitudeDelta / 2.0))
                 }
                 
                 if let currentSouthEast = southEast {
-                    southEast = CLLocationCoordinate2D(latitude: min(currentSouthEast.latitude, locationCenter.latitude), longitude: max(currentSouthEast.longitude, locationCenter.longitude))
+                    southEast = CLLocationCoordinate2D(latitude: min(currentSouthEast.latitude, locationCenter.latitude - (locationSpan.latitudeDelta / 2.0)), longitude: max(currentSouthEast.longitude, locationCenter.longitude + (locationSpan.longitudeDelta / 2.0)))
                 } else {
-                    southEast = locationCenter
+                    southEast = CLLocationCoordinate2D(latitude: locationCenter.latitude - (locationSpan.latitudeDelta / 2.0), longitude: locationCenter.longitude + (locationSpan.longitudeDelta / 2.0))
                 }
             }
         }
@@ -247,11 +316,15 @@ struct MappedLocation: CustomStringConvertible {
         return span
     }
     
-    var wkt: [String] {
-        var wkts: [String] = []
+    var wktDistance: [[String: String]] {
+        var wkts: [[String: String]] = []
         for location in locations {
             if let wkt = location.wkt {
-                wkts.append(wkt)
+                if let distance = location.metersDistance {
+                    wkts.append(["wkt":wkt, "distance":"\(distance)"])
+                } else {
+                    wkts.append(["wkt":wkt])
+                }
             }
         }
         return wkts
@@ -563,9 +636,8 @@ class NAVTEXTextParser {
         return MappedLocation(locationName: areaName, specificArea: specificArea, subject: subject, cancelTime: nil, location: locations, when: nil, extra: extras.joined(separator: "\n"), dnc:dnc, chart: chart)
     }
     
-    func parseToWKT() -> String? {
-        var components = text.components(separatedBy: .newlines)
-        
-        return nil
+    func parseToWKT() -> [[String: Any?]] {
+        var mappedLocation = parseToMappedLocation()
+        return mappedLocation?.wktDistance ?? []
     }
 }

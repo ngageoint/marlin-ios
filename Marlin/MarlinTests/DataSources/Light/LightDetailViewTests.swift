@@ -85,7 +85,7 @@ final class LightDetailViewTests: XCTestCase {
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "14840 ")
+        tester().waitForView(withAccessibilityLabel: "14840  PUB 110")
         tester().waitForView(withAccessibilityLabel: "-Outer.")
         tester().waitForView(withAccessibilityLabel: "Section")
         tester().waitForView(withAccessibilityLabel: "Yellow pedestal, red band; 7.\n")
@@ -158,7 +158,7 @@ final class LightDetailViewTests: XCTestCase {
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "14840 ")
+        tester().waitForView(withAccessibilityLabel: "14840  PUB 110")
         tester().waitForView(withAccessibilityLabel: "-Outer.")
         tester().waitForView(withAccessibilityLabel: "Section")
         tester().waitForView(withAccessibilityLabel: "Yellow pedestal, red band; 7.\n")
@@ -296,7 +296,7 @@ final class LightDetailViewTests: XCTestCase {
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "4 A0002")
+        tester().waitForView(withAccessibilityLabel: "4 A0002 PUB 114")
         tester().waitForView(withAccessibilityLabel: "Section")
         tester().waitForView(withAccessibilityLabel: "Bishop Rock.")
         tester().waitForView(withAccessibilityLabel: "Gray round granite tower; 161.\nHelicopter platform. \n")

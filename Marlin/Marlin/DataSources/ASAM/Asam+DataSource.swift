@@ -68,8 +68,13 @@ extension Asam: BatchImportable {
     }
     
     static func dataRequest() -> [MSIRouter] {
-        let newestAsam = try? PersistenceController.current.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)], predicate: nil)
-        return [MSIRouter.readAsams(date: newestAsam?.dateString)]
+        let context = PersistenceController.current.newTaskContext()
+        var date: String? = nil
+        context.performAndWait {
+            let newestAsam = try? PersistenceController.current.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)], predicate: nil, context: context)
+            date = newestAsam?.dateString
+        }
+        return [MSIRouter.readAsams(date: date)]
     }
     
     static func shouldSync() -> Bool {

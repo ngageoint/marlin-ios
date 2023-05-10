@@ -31,6 +31,7 @@ extension Notification.Name {
     public static let DataSourceUpdated = Notification.Name("DataSourceUpdated")
     public static let DataSourceLoading = Notification.Name("DataSourceLoading")
     public static let DataSourceLoaded = Notification.Name("DataSourceLoaded")
+    public static let DataSourceProcessed = Notification.Name("DataSourceProcessed")
     public static let BatchUpdateComplete = Notification.Name("BatchUpdateComplete")
     public static let MappedDataSourcesUpdated = Notification.Name("MappedDataSourcesUpdated")
     public static let LocationAuthorizationStatusChanged = Notification.Name("LocationAuthorizationStatusChanged")

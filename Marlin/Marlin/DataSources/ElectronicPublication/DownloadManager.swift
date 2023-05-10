@@ -101,71 +101,85 @@ extension DownloadManager: URLSessionDownloadDelegate {
             return
         }
         let downloadable = urlToDownloadableMap[url]
-        PersistenceController.current.perform {
+        downloadable?.managedObjectContext?.perform {
             downloadable?.objectWillChange.send()
             downloadable?.downloadProgress = Float(totalBytesWritten)/Float(totalBytesExpectedToWrite)
-            DispatchQueue.main.async {
-                try? PersistenceController.current.save()
-            }
+            try? downloadable?.managedObjectContext?.save()
         }
     }
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        
         guard let url = downloadTask.currentRequest?.url, let downloadable = urlToDownloadableMap[url] else {
             return
         }
+        
+        var destinationUrl: URL?
+        
+        downloadable.managedObjectContext?.performAndWait {
+            destinationUrl = URL(string: downloadable.savePath)
+        }
 
-        guard let destinationUrl = URL(string: downloadable.savePath) else {
+        guard let destinationUrl = destinationUrl else {
             return
         }
-                
+        
         guard let httpResponse = downloadTask.response as? HTTPURLResponse,
               (200...299).contains(httpResponse.statusCode) else {
             print ("server error code \(downloadTask.response.debugDescription)")
             if let httpResponse = downloadTask.response as? HTTPURLResponse {
-                DispatchQueue.main.async {
+                downloadable.managedObjectContext?.perform {
                     downloadable.objectWillChange.send()
                     downloadable.error = "Error downloading (\(httpResponse.statusCode))"
+                    try? downloadable.managedObjectContext?.save()
                 }
             }
             return
         }
         
         // just delete before saving again if it already exists
-        if FileManager().fileExists(atPath: destinationUrl.path) {
+        if FileManager.default.fileExists(atPath: destinationUrl.path) {
             do {
-                try FileManager().removeItem(atPath: destinationUrl.path)
+                try FileManager.default.removeItem(atPath: destinationUrl.path)
             } catch {
                 print("failed to delete file, it's fine")
             }
         }
         // create the directory structure
         do {
-            try FileManager().createDirectory(atPath: destinationUrl.deletingLastPathComponent().path, withIntermediateDirectories: true)
+            try FileManager.default.createDirectory(atPath: destinationUrl.deletingLastPathComponent().path, withIntermediateDirectories: true)
         } catch {
             print("error making dir \(error) \(destinationUrl.deletingLastPathComponent().path)")
         }
+        
+        print("Does the file exist \(location.path)")
+        if !FileManager.default.fileExists(atPath: location.path) {
+            downloadable.managedObjectContext?.perform {
+                downloadable.objectWillChange.send()
+                downloadable.error = "Error downloading (file not saved)"
+                try? downloadable.managedObjectContext?.save()
+            }
+            return
+        }
+        
         do {
             try FileManager.default.moveItem(at: location, to: destinationUrl)
-            let center = UNUserNotificationCenter.current()
-            let content = UNMutableNotificationContent()
-            content.title = NSString.localizedUserNotificationString(forKey: "Download Complete", arguments: nil)
-            content.body = NSString.localizedUserNotificationString(forKey: "Downloaded the file \(downloadable.title ?? "")", arguments: nil)
-            content.sound = UNNotificationSound.default
-            content.categoryIdentifier = "mil.nga.msi"
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2.0, repeats: false)
-            let request = UNNotificationRequest.init(identifier: "downloadCompleted", content: content, trigger: trigger)
+            downloadable.managedObjectContext?.perform {
+                let center = UNUserNotificationCenter.current()
+                let content = UNMutableNotificationContent()
+                content.title = NSString.localizedUserNotificationString(forKey: "Download Complete", arguments: nil)
+                content.body = NSString.localizedUserNotificationString(forKey: "Downloaded the file \(downloadable.title ?? "")", arguments: nil)
+                content.sound = UNNotificationSound.default
+                content.categoryIdentifier = "mil.nga.msi"
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2.0, repeats: false)
+                let request = UNNotificationRequest.init(identifier: "downloadCompleted", content: content, trigger: trigger)
+                
+                // Schedule the notification.
+                center.add(request)
             
-            // Schedule the notification.
-            center.add(request)
-            PersistenceController.current.perform {
                 downloadable.objectWillChange.send()
                 downloadable.isDownloaded = true
                 downloadable.isDownloading = false
-                DispatchQueue.main.async {
-                    try? PersistenceController.current.save()
-                }
+                try? downloadable.managedObjectContext?.save()
             }
         } catch {
             print("error saving file to \(destinationUrl.path) \(error)")

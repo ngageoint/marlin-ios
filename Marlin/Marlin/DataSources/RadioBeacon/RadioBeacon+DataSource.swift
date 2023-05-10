@@ -73,12 +73,18 @@ extension RadioBeacon: BatchImportable {
     }
     
     static func dataRequest() -> [MSIRouter] {
-        let newestRadioBeacon = try? PersistenceController.current.fetchFirst(RadioBeacon.self, sortBy: [NSSortDescriptor(keyPath: \RadioBeacon.noticeNumber, ascending: false)], predicate: nil)
+        let context = PersistenceController.current.newTaskContext()
+        var noticeWeek = 0
+        var noticeYear: String?
         
-        let noticeWeek = Int(newestRadioBeacon?.noticeWeek ?? "0") ?? 0
-        
-        print("Query for radio beacons after year:\(newestRadioBeacon?.noticeYear ?? "") week:\(noticeWeek)")
-        return [MSIRouter.readRadioBeacons(noticeYear: newestRadioBeacon?.noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1))]
+        context.performAndWait {
+            let newestRadioBeacon = try? PersistenceController.current.fetchFirst(RadioBeacon.self, sortBy: [NSSortDescriptor(keyPath: \RadioBeacon.noticeNumber, ascending: false)], predicate: nil, context: context)
+            noticeWeek = Int(newestRadioBeacon?.noticeWeek ?? "0") ?? 0
+            noticeYear = newestRadioBeacon?.noticeYear
+        }
+            
+        print("Query for radio beacons after year:\(noticeYear ?? "") week:\(noticeWeek)")
+        return [MSIRouter.readRadioBeacons(noticeYear: noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1))]
     }
     
     static func shouldSync() -> Bool {

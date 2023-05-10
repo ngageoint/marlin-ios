@@ -77,6 +77,12 @@ final class LightDataTests: XCTestCase {
             return true
         }
         
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, Light.key)
+            return true
+        }
+        
         MSI.shared.loadInitialData(type: Light.decodableRoot, dataType: Light.self)
         
         waitForExpectations(timeout: 10, handler: nil)
@@ -117,6 +123,12 @@ final class LightDataTests: XCTestCase {
         expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
             let count = try? self.persistentStore.countOfObjects(Light.self)
             XCTAssertEqual(count, 2)
+            return true
+        }
+        
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, Light.key)
             return true
         }
         
@@ -271,6 +283,11 @@ final class LightDataTests: XCTestCase {
             return false
         }), object: self.persistentStore.viewContext)
         
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, Light.key)
+            return true
+        }
         
         MSI.shared.loadData(type: Light.decodableRoot, dataType: Light.self)
         wait(for: [e5], timeout: 10)
@@ -367,6 +384,12 @@ final class LightDataTests: XCTestCase {
             MSI.shared.loadInitialData(type: Light.decodableRoot, dataType: Light.self)
         })
         
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, Light.key)
+            return true
+        }
+        
         waitForExpectations(timeout: 10, handler: nil)
     }
     
@@ -452,6 +475,12 @@ final class LightDataTests: XCTestCase {
         expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
             let count = try? self.persistentStore.countOfObjects(Light.self)
             XCTAssertEqual(count, 1)
+            return true
+        }
+        
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, Light.key)
             return true
         }
         
@@ -545,6 +574,12 @@ final class LightDataTests: XCTestCase {
             return true
         }
         
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, Light.key)
+            return true
+        }
+        
         MSI.shared.loadInitialData(type: Light.decodableRoot, dataType: Light.self)
         
         waitForExpectations(timeout: 10, handler: nil)
@@ -615,19 +650,15 @@ final class LightDataTests: XCTestCase {
             MSI.shared.loadInitialData(type: Light.decodableRoot, dataType: Light.self)
         })
         
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, Light.key)
+            return true
+        }
+        
         waitForExpectations(timeout: 10, handler: nil)
         
-        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
-            let count = try? self.persistentStore.countOfObjects(Light.self)
-            if count == 1 {
-                XCTAssertEqual(count, 1)
-                return true
-            } else {
-                return false
-            }
-        }
-        waitForExpectations(timeout: 10, handler: nil)
-        let light = try? self.persistentStore.fetchFirst(Light.self, sortBy: [Light.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(value: true))
+        let light = try? self.persistentStore.fetchFirst(Light.self, sortBy: [Light.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(value: true), context: nil)
         let lightRanges = try XCTUnwrap(try XCTUnwrap(light?.lightRange).allObjects as? [LightRange])
         XCTAssertEqual(lightRanges.count, 3)
         for range in lightRanges {

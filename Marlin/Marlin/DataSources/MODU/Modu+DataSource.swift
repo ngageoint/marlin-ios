@@ -60,8 +60,13 @@ extension Modu: BatchImportable {
     }
     
     static func dataRequest() -> [MSIRouter] {
-        let newestModu = try? PersistenceController.current.fetchFirst(Modu.self, sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)], predicate: nil)
-        return [MSIRouter.readModus(date: newestModu?.dateString)]
+        let context = PersistenceController.current.newTaskContext()
+        var date: String? = nil
+        context.performAndWait {
+            let newestModu = try? PersistenceController.current.fetchFirst(Modu.self, sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)], predicate: nil, context: context)
+            date = newestModu?.dateString
+        }
+        return [MSIRouter.readModus(date: date)]
     }
     
     static func shouldSync() -> Bool {

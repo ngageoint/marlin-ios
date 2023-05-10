@@ -147,12 +147,10 @@ class ElectronicPublication: NSManagedObject, Downloadable {
             guard FileManager().fileExists(atPath: destinationUrl.path) else { return }
             do {
                 try FileManager().removeItem(atPath: destinationUrl.path)
-                PersistenceController.current.perform {
+                self.managedObjectContext?.perform {
                     self.objectWillChange.send()
                     self.isDownloaded = false
-                    DispatchQueue.main.async {
-                        try? PersistenceController.current.save()
-                    }
+                    try? self.managedObjectContext?.save()
                 }
             } catch let error {
                 print("Error while deleting file: ", error)
@@ -166,12 +164,10 @@ class ElectronicPublication: NSManagedObject, Downloadable {
             downloaded = FileManager().fileExists(atPath: destinationUrl.path)
         }
         if downloaded != self.isDownloaded {
-            PersistenceController.current.perform {
+            self.managedObjectContext?.perform {
                 self.objectWillChange.send()
                 self.isDownloaded = downloaded
-                DispatchQueue.main.async {
-                    try? PersistenceController.current.save()
-                }
+                try? self.managedObjectContext?.save()
             }
         }
         return downloaded

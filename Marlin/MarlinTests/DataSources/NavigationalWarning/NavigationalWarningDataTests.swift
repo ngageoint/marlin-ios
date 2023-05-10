@@ -75,6 +75,12 @@ final class NavigationalWarningDataTests: XCTestCase {
             return true
         }
         
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
+            return true
+        }
+        
         MSI.shared.loadData(type: NavigationalWarning.decodableRoot, dataType: NavigationalWarning.self)
         
         waitForExpectations(timeout: 10, handler: nil)
@@ -146,6 +152,12 @@ final class NavigationalWarningDataTests: XCTestCase {
         expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
             let count = try? self.persistentStore.countOfObjects(NavigationalWarning.self)
             XCTAssertEqual(count, 1)
+            return true
+        }
+        
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
             return true
         }
         
@@ -223,6 +235,12 @@ final class NavigationalWarningDataTests: XCTestCase {
             return true
         }
         
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
+            return true
+        }
+        
         MSI.shared.loadData(type: NavigationalWarning.decodableRoot, dataType: NavigationalWarning.self)
         
         waitForExpectations(timeout: 10, handler: nil)
@@ -294,6 +312,12 @@ final class NavigationalWarningDataTests: XCTestCase {
         expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
             let count = try? self.persistentStore.countOfObjects(NavigationalWarning.self)
             XCTAssertEqual(count, 1)
+            return true
+        }
+        
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
             return true
         }
         
@@ -397,6 +421,12 @@ final class NavigationalWarningDataTests: XCTestCase {
             return count == 2
         }), object: self.persistentStore.viewContext)
         
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
+            return true
+        }
+        
         MSI.shared.loadData(type: NavigationalWarning.decodableRoot, dataType: NavigationalWarning.self)
         
         waitForExpectations(timeout: 10, handler: nil)
@@ -426,6 +456,12 @@ final class NavigationalWarningDataTests: XCTestCase {
             let count = try? self.persistentStore.countOfObjects(NavigationalWarning.self)
             return count == 1
         }), object: self.persistentStore.viewContext)
+        
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
+            return true
+        }
         
         MSI.shared.loadData(type: NavigationalWarning.decodableRoot, dataType: NavigationalWarning.self)
         
@@ -528,6 +564,12 @@ final class NavigationalWarningDataTests: XCTestCase {
             return count == 2
         }), object: self.persistentStore.viewContext)
         
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
+            return true
+        }
+        
         MSI.shared.loadData(type: NavigationalWarning.decodableRoot, dataType: NavigationalWarning.self)
         
         waitForExpectations(timeout: 10, handler: nil)
@@ -558,12 +600,18 @@ final class NavigationalWarningDataTests: XCTestCase {
             return count == 1
         }), object: self.persistentStore.viewContext)
         
+        expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
+            return true
+        }
+        
         MSI.shared.loadData(type: NavigationalWarning.decodableRoot, dataType: NavigationalWarning.self)
         
         waitForExpectations(timeout: 10, handler: nil)
         wait(for: [e], timeout: 10)
         
-        let navWarn = try self.persistentStore.fetchFirst(NavigationalWarning.self, sortBy: [NavigationalWarning.defaultSort[0].toNSSortDescriptor()], predicate: nil)
+        let navWarn = try self.persistentStore.fetchFirst(NavigationalWarning.self, sortBy: [NavigationalWarning.defaultSort[0].toNSSortDescriptor()], predicate: nil, context: nil)
         XCTAssertEqual(navWarn!.msgYear, 2023)
     }
     

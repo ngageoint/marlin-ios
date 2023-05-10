@@ -134,7 +134,7 @@ final class DFRSDataTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        let dfrs: DFRS = try! XCTUnwrap(self.persistentStore.fetchFirst(DFRS.self, sortBy: [DFRS.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(value: true)))
+        let dfrs: DFRS = try! XCTUnwrap(self.persistentStore.fetchFirst(DFRS.self, sortBy: [DFRS.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(value: true), context: nil))
         XCTAssertEqual(dfrs.areaName, "BULGARIA")
         XCTAssertEqual(dfrs.stationNumber, "1187.61\n2-1282")
         XCTAssertEqual(dfrs.stationName, "Nos Galata Lt.")

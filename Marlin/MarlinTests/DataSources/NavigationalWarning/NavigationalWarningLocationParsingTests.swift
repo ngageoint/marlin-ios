@@ -120,7 +120,7 @@ final class NavigationalWarningLocationParsingTests: XCTestCase {
         let parser4 = NAVTEXTextParser(text: "BARENTS SEA.\nSVALBARD.\nDNC 22.\nSURVEY OPERATIONS IN PROGRESS UNTIL FURTHER NOTICE BY\nM/V RAMFORD HYPERION TOWING 12 4050 METER LONG CABLES\nIN AREA BOUND BY\n73-44.50N 023-04.50E, 73-41.60N 025-52.40E,\n73-13.10N 025-45.00E, 73-15.80N 023-01.40E.\nFOUR MILE BERTH REQUESTED.\n")
         let location = parser4.parseToMappedLocation()
         print("\(location)\n\n")
-        print("wkt \(location?.wkt)\n\n")
+        print("wkt \(location?.wktDistance)\n\n")
 //
 //        let parser5 = NAVTEXTextParser(text: "CORONATION GULF.\nCANADA.\nDNC 28.\nSCIENTIFIC MOORING, TOP FLOAT 15 METERS BELOW\nSURFACE, ESTABLISHED IN:\nA. 67-40.09N 107-57.28W.\nB. 67-40.36N 107-57.86W.\n")
 //        print("\(parser5.parseToMappedLocation())\n\n")

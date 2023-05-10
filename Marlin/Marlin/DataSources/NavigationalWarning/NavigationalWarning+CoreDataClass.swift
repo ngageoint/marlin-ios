@@ -82,7 +82,6 @@ class NavigationalWarning: NSManagedObject {
     }
     
     lazy var mappedLocation: MappedLocation? = {
-        print("get the mapped location")
         if let text = text {
             return NAVTEXTextParser(text: text).parseToMappedLocation()
         }
@@ -90,13 +89,24 @@ class NavigationalWarning: NSManagedObject {
     }()
     
     lazy var coordinate: CLLocationCoordinate2D? = {
-        return mappedLocation?.center
+        if let locations = locations, !locations.isEmpty {
+            return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        }
+        return nil
     }()
     
     lazy var region: MKCoordinateRegion? = {
-        if let coordinate = coordinate, let span = mappedLocation?.span {
-            // pad the region, but max of 10 degrees just in case, minimum of .5 degrees
-            return MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: min(10.0, max(0.5, span.latitudeDelta * 2.0)), longitudeDelta: min(10.0, max(0.5, span.longitudeDelta * 2.0))))
+        if let locations = locations, !locations.isEmpty {
+            var latitudeDelta = maxLatitude - minLatitude
+            var longitudeDelta = maxLongitude - minLongitude
+            
+            if latitudeDelta == 0.0 {
+                latitudeDelta = 0.5
+            }
+            if longitudeDelta == 0.0 {
+                longitudeDelta = 0.5
+            }
+            return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: latitude, longitude: longitude), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
         }
         return nil
     }()

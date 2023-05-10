@@ -20,17 +20,20 @@ struct NavigationalWarningDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "Nav Warning Detail Map", mixins: [NavigationalWarningMap(warning: navigationalWarning), UserLayersMap()], mapState: mapState)
-                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                        .onAppear {
-                            mapState.center = navigationalWarning.region
-                        }
-                        .onChange(of: navigationalWarning) { navigationalWarning in
-                            mapState.center = navigationalWarning.region
-                        }
+                    if navigationalWarning.coordinate != nil {
+                        MarlinMap(name: "Nav Warning Detail Map", mixins: [NavigationalWarningMap(warning: navigationalWarning), UserLayersMap()], mapState: mapState)
+                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                            .onAppear {
+                                mapState.center = navigationalWarning.region?.padded(percent: 0.1)
+                            }
+                            .onChange(of: navigationalWarning) { navigationalWarning in
+                                mapState.center = navigationalWarning.region?.padded(percent: 0.1)
+                            }
+                    }
                     Group {
                         Text(navigationalWarning.dateString ?? "")
                             .overline()
+                            .padding(.top, 16)
                         Text("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
                             .primary()
                         Property(property: "Status", value: navigationalWarning.status)

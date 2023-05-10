@@ -31,11 +31,15 @@ extension MKCoordinateRegion {
     init(center: CLLocationCoordinate2D, zoomLevel: Double, pixelWidth: Double) {
         self.init(center: center, span: MKCoordinateSpan(zoomLevel: zoomLevel, pixelWidth: pixelWidth))
     }
-            
+    
     init(center: CLLocationCoordinate2D, zoom: Double, bounds: CGRect) {
         let zoom = min(zoom, 20)
         let span = MKCoordinateSpan(center: center, zoom: zoom, bounds: bounds)
         self.init(center: center, span: span)
+    }
+    
+    func padded(percent: Double, maxDelta: Double = 10.0) -> MKCoordinateRegion {
+        return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude), span: MKCoordinateSpan(latitudeDelta: min(maxDelta, span.latitudeDelta * (1.0 + percent)), longitudeDelta: min(maxDelta, span.longitudeDelta * (1.0 + percent))))
     }
 }
 

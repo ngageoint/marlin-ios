@@ -59,8 +59,13 @@ extension NoticeToMariners: BatchImportable {
     }
     
     static func dataRequest() -> [MSIRouter] {
-        let newestNotice = try? PersistenceController.current.fetchFirst(NoticeToMariners.self, sortBy: [NSSortDescriptor(keyPath: \NoticeToMariners.noticeNumber, ascending: false)], predicate: nil)
-        return [MSIRouter.readNoticeToMariners(noticeNumber: newestNotice?.noticeNumber)]
+        let context = PersistenceController.current.newTaskContext()
+        var noticeNumber: Int64?
+        context.performAndWait {
+            let newestNotice = try? PersistenceController.current.fetchFirst(NoticeToMariners.self, sortBy: [NSSortDescriptor(keyPath: \NoticeToMariners.noticeNumber, ascending: false)], predicate: nil, context: context)
+            noticeNumber = newestNotice?.noticeNumber
+        }
+        return [MSIRouter.readNoticeToMariners(noticeNumber: noticeNumber)]
     }
     
     static func shouldSync() -> Bool {
