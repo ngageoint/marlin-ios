@@ -316,6 +316,7 @@
 		F7E768B729EF11CC001EFFFF /* NAVTEXTextParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E768B629EF11CC001EFFFF /* NAVTEXTextParser.swift */; };
 		F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89D28946C8900E7CCE2 /* RailItem.swift */; };
 		F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */; };
+		F7EB1B0E2A0D7FC200D1433B /* SFGeometryExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EB1B0D2A0D7FC200D1433B /* SFGeometryExtensions.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
 		F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59785285A206700F9B32E /* AsamDetailView.swift */; };
 		F7F59789285A277000F9B32E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59788285A277000F9B32E /* Card.swift */; };
@@ -725,6 +726,7 @@
 		F7E768B629EF11CC001EFFFF /* NAVTEXTextParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NAVTEXTextParser.swift; sourceTree = "<group>"; };
 		F7E8C89D28946C8900E7CCE2 /* RailItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailItem.swift; sourceTree = "<group>"; };
 		F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceRail.swift; sourceTree = "<group>"; };
+		F7EB1B0D2A0D7FC200D1433B /* SFGeometryExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFGeometryExtensions.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
 		F7F59785285A206700F9B32E /* AsamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDetailView.swift; sourceTree = "<group>"; };
 		F7F59788285A277000F9B32E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
@@ -1693,6 +1695,7 @@
 				F70BCEA429DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift */,
 				F70BCEA829DEFDA800AEF73D /* DoubleExtensions.swift */,
 				F7BEE47D2A0443D200EC282D /* MKShapeExtensions.swift */,
+				F7EB1B0D2A0D7FC200D1433B /* SFGeometryExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2465,6 +2468,7 @@
 				F72EAADF291EECF400AC6026 /* NTMActionBar.swift in Sources */,
 				F707BA7D2877329E006A94C4 /* LightActionBar.swift in Sources */,
 				F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */,
+				F7EB1B0E2A0D7FC200D1433B /* SFGeometryExtensions.swift in Sources */,
 				F7FFB31028D63C4700C31AA3 /* Modu+MapImage.swift in Sources */,
 				F7FFB30E28D63C2700C31AA3 /* Modu+Decodable.swift in Sources */,
 				F7F597A62862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift in Sources */,
@@ -2693,6 +2697,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = debug;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = ZL8G5D9G2H;
 				ENABLE_PREVIEWS = YES;
@@ -2735,6 +2740,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = debug;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = ZL8G5D9G2H;
 				ENABLE_PREVIEWS = YES;

@@ -4,12 +4,17 @@ platform :ios, '15.5'
 workspace 'Marlin'
 project 'Marlin.xcodeproj'
 
-use_modular_headers!
+#use_modular_headers!
 
 def common_pods
   pod "Alamofire"
   pod "Kingfisher"
-  pod 'geopackage-ios'
+  pod 'proj-ios', :modular_headers => true
+  pod 'sf-ios', :modular_headers => true
+  pod 'sf-proj-ios', :modular_headers => true
+  pod 'sf-wkt-ios', :modular_headers => true
+  pod 'color-ios', :modular_headers => true
+  pod 'geopackage-ios', :modular_headers => true
   pod 'mgrs-ios'
   pod 'gars-ios'
   pod 'MatomoTracker', '~> 7.5'

@@ -107,52 +107,37 @@ struct LocationWithType: CustomStringConvertible {
                     points.append(MKMapPoint(coordinate))
                 }
             }
-//            return MKPolygon(points: &points, count: points.count)
         } else if locationType == "LineString" {
             for locationPoint in location {
                 if let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
                     points.append(MKMapPoint(coordinate))
                 }
             }
-//            return MKPolyline(points: &points, count: points.count)
         } else if locationType == "Point" {
             if let firstLocation = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: firstLocation) {
                 points.append(MKMapPoint(coordinate))
-//                if let metersDistance = metersDistance {
-//                    // this is really a circle
-//                    return MKCircle(center: coordinate, radius: metersDistance)
-//                }
-//                let point = MKPointAnnotation()
-//                point.coordinate = coordinate
-//                return point
             }
         } else if locationType == "Circle" {
             if let locationPoint = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
                 points.append(MKMapPoint(coordinate))
-//                let circle = MKCircle(center: coordinate, radius: metersDistance ?? 1000)
-                
             }
         }
-//        return nil
-        
         
         var span: MKCoordinateSpan?
         var northWest: CLLocationCoordinate2D?
         var southEast: CLLocationCoordinate2D?
         for point in points {
-//            if let locationCenter = location.center {
-                if let currentNorthWest = northWest {
-                    northWest = CLLocationCoordinate2D(latitude: max(currentNorthWest.latitude, point.coordinate.latitude), longitude: min(currentNorthWest.longitude, point.coordinate.longitude))
-                } else {
-                    northWest = point.coordinate
-                }
-                
-                if let currentSouthEast = southEast {
-                    southEast = CLLocationCoordinate2D(latitude: min(currentSouthEast.latitude, point.coordinate.latitude), longitude: max(currentSouthEast.longitude, point.coordinate.longitude))
-                } else {
-                    southEast = point.coordinate
-                }
-//            }
+            if let currentNorthWest = northWest {
+                northWest = CLLocationCoordinate2D(latitude: max(currentNorthWest.latitude, point.coordinate.latitude), longitude: min(currentNorthWest.longitude, point.coordinate.longitude))
+            } else {
+                northWest = point.coordinate
+            }
+            
+            if let currentSouthEast = southEast {
+                southEast = CLLocationCoordinate2D(latitude: min(currentSouthEast.latitude, point.coordinate.latitude), longitude: max(currentSouthEast.longitude, point.coordinate.longitude))
+            } else {
+                southEast = point.coordinate
+            }
         }
         
         if let northWest = northWest, let southEast = southEast {
@@ -163,21 +148,10 @@ struct LocationWithType: CustomStringConvertible {
     }
     
     var geometry: SFGeometry? {
-        var points: [SFPoint] = []
         if locationType == "Polygon" {
-            for locationPoint in location {
-                if let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
-                    points.append(SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude))
-                }
-            }
-            return SFPolygon(ring: SFLineString(points: NSMutableArray(array: points)))
+            return SFPolygon(locations: location)
         } else if locationType == "LineString" {
-            for locationPoint in location {
-                if let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
-                    points.append(SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude))
-                }
-            }
-            return SFLineString(points: NSMutableArray(array: points))
+            return SFLineString(locations: location)
         } else if locationType == "Point" {
             if let firstLocation = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: firstLocation) {
                 return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)

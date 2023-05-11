@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (5.6.4)
+  - Alamofire (5.7.1)
   - color-ios (1.0.1)
   - crs-ios (1.0.4)
   - gars-ios (1.1.3):
@@ -54,11 +54,12 @@ PODS:
     - sf-ios (~> 4.1.2)
   - sf-wkt-ios (2.1.2):
     - sf-ios (~> 4.1.2)
-  - SWXMLHash (7.0.0)
+  - SWXMLHash (7.0.2)
   - tiff-ios (4.0.1)
 
 DEPENDENCIES:
   - Alamofire
+  - color-ios
   - gars-ios
   - geopackage-ios
   - KIF
@@ -67,6 +68,10 @@ DEPENDENCIES:
   - mgrs-ios
   - OHHTTPStubs
   - OHHTTPStubs/Swift
+  - proj-ios
+  - sf-ios
+  - sf-proj-ios
+  - sf-wkt-ios
   - SWXMLHash (~> 7)
 
 SPEC REPOS:
@@ -94,7 +99,7 @@ SPEC REPOS:
     - tiff-ios
 
 SPEC CHECKSUMS:
-  Alamofire: 4e95d97098eacb88856099c4fc79b526a299e48c
+  Alamofire: 0123a34370cb170936ae79a8df46cc62b2edeb88
   color-ios: ab7521e896b4e061905d292aa7ff675d7e7f801d
   crs-ios: 87d8e59c7289cea83248164f5038efe04e3ffebc
   gars-ios: 8caa81a296a802f53400a41588b9cdc26e730b92
@@ -113,9 +118,9 @@ SPEC CHECKSUMS:
   sf-proj-ios: b5388d60181b0e368eb754e5b2a773233b49af01
   sf-wkb-ios: 6a32a00f36ddf79adbd4f74a088ca569607da8de
   sf-wkt-ios: a8bb6be99b6e209557ce5feba64d961d896da049
-  SWXMLHash: cf8682ebf12f124e77554d6a5f9170830626d99e
+  SWXMLHash: dd733a457e9c4fe93b1538654057aefae4acb382
   tiff-ios: 6f74cf7fefc371e2523807ea38cd808fd594f86b
 
-PODFILE CHECKSUM: bfebbe2c22c86d9776044d30a4b33512fcfdf581
+PODFILE CHECKSUM: 15f4e45e87a2e27f99f21ef48e15ca4d2f94a047
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1
