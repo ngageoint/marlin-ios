@@ -59,7 +59,6 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
-  - color-ios
   - gars-ios
   - geopackage-ios
   - KIF
@@ -68,9 +67,7 @@ DEPENDENCIES:
   - mgrs-ios
   - OHHTTPStubs
   - OHHTTPStubs/Swift
-  - proj-ios
   - sf-ios
-  - sf-proj-ios
   - sf-wkt-ios
   - SWXMLHash (~> 7)
 
@@ -121,6 +118,6 @@ SPEC CHECKSUMS:
   SWXMLHash: dd733a457e9c4fe93b1538654057aefae4acb382
   tiff-ios: 6f74cf7fefc371e2523807ea38cd808fd594f86b
 
-PODFILE CHECKSUM: 15f4e45e87a2e27f99f21ef48e15ca4d2f94a047
+PODFILE CHECKSUM: cf8e87812cba5cdf08bacc383c1dea4fbc1c1ea4
 
 COCOAPODS: 1.12.1
