@@ -407,6 +407,15 @@ extension UserDefaults {
         bool(forKey: "hamburger")
     }
     
+    var showUnparsedNavigationalWarnings: Bool {
+        get {
+            return bool(forKey: #function)
+        }
+        set {
+            setValue(newValue, forKey: #function)
+        }
+    }
+    
     var metricsEnabled: Bool {
         get {
             return bool(forKey: #function)

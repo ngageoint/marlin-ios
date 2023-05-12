@@ -14,6 +14,7 @@ struct AboutView: View {
     
     @AppStorage("showMapScale") var showMapScale = false
     @AppStorage("flyoverMapsEnabled") var flyoverMapsEnabled = false
+    @AppStorage("showUnparsedNavigationalWarnings") var showUnparsedNavigationalWarnings = false
 
     var body: some View {
         List {
@@ -80,6 +81,15 @@ struct AboutView: View {
                         HStack {
                             Image(systemName: "rotate.3d")
                             Text("Enable Flyover Map Types")
+                                .primary()
+                        }
+                    })
+                    .padding([.top, .bottom], 8)
+                    
+                    Toggle(isOn: $showUnparsedNavigationalWarnings, label: {
+                        HStack {
+                            Image(systemName: "mappin.slash")
+                            Text("Show Navigation Warnings With No Parsed Location")
                                 .primary()
                         }
                     })

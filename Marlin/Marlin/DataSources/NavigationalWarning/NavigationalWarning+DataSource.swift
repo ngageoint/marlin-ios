@@ -91,7 +91,6 @@ extension NavigationalWarning: BatchImportable {
     }
     
     static func shouldSync() -> Bool {
-//        return true
         // sync once every hour
         return UserDefaults.standard.dataSourceEnabled(NavigationalWarning.self) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(NavigationalWarning.self)
     }

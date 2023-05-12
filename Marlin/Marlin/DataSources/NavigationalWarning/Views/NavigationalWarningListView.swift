@@ -53,11 +53,19 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
 struct NavigationalWarningAreasView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
+    @AppStorage("showUnparsedNavigationalWarnings") var showUnparsedNavigationalWarnings = false
+    
     @SectionedFetchRequest<String, NavigationalWarning>
     var currentNavigationalWarningsSections: SectionedFetchResults<String, NavigationalWarning>
 
     @SectionedFetchRequest<String, NavigationalWarning>
     var navigationalWarningsSections: SectionedFetchResults<String, NavigationalWarning>
+    
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \NavigationalWarning.navArea, ascending: false), NSSortDescriptor(keyPath: \NavigationalWarning.issueDate, ascending: false)],
+        predicate: NSPredicate(format: "locations == nil"),
+        animation: .default)
+    private var noParsedLocationNavigationalWarnings: FetchedResults<NavigationalWarning>
     
     init(currentArea: NavigationalWarningNavArea?) {
         self._currentNavigationalWarningsSections = SectionedFetchRequest<String, NavigationalWarning>(entity: NavigationalWarning.entity(), sectionIdentifier: \NavigationalWarning.navArea!, sortDescriptors: [NSSortDescriptor(keyPath: \NavigationalWarning.navArea, ascending: false), NSSortDescriptor(keyPath: \NavigationalWarning.issueDate, ascending: false)], predicate: NSPredicate(format: "navArea = %@", currentArea?.name ?? ""))
@@ -137,5 +145,32 @@ struct NavigationalWarningAreasView: View {
         }
         .listRowBackground(Color.surfaceColor)
         .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
+        
+        if showUnparsedNavigationalWarnings {
+            NavigationLink {
+                NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(noParsedLocationNavigationalWarnings), navArea: "Unknown")
+            } label: {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Unparsed Locations")
+                            .font(Font.body1)
+                            .foregroundColor(Color.onSurfaceColor)
+                            .opacity(0.87)
+                        Text("\(noParsedLocationNavigationalWarnings.count)")
+                            .font(Font.caption)
+                            .foregroundColor(Color.onSurfaceColor)
+                            .opacity(0.6)
+                    }
+                    Spacer()
+                }
+            }
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("Unparsed Locations Navigation Area")
+            .padding(.leading, 8)
+            .padding(.top, 8)
+            .padding(.bottom, 8)
+            .listRowBackground(Color.surfaceColor)
+            .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
+        }
     }
 }
