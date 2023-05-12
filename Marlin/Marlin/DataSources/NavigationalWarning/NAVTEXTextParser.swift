@@ -290,7 +290,7 @@ struct MappedLocation: CustomStringConvertible {
         return span
     }
     
-    var wktDistance: [[String: String]] {
+    var wktDistance: [[String: String]]? {
         var wkts: [[String: String]] = []
         for location in locations {
             if let wkt = location.wkt {
@@ -300,6 +300,9 @@ struct MappedLocation: CustomStringConvertible {
                     wkts.append(["wkt":wkt])
                 }
             }
+        }
+        if wkts.isEmpty {
+            return nil
         }
         return wkts
     }
