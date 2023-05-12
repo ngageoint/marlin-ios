@@ -227,6 +227,7 @@
 		F7ADDCEE28902D5300137D95 /* AnnotationWithView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCED28902D5300137D95 /* AnnotationWithView.swift */; };
 		F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */; };
 		F7B7064328BAADD50026DE88 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B7064228BAADD50026DE88 /* CircleImage.swift */; };
+		F7BDF76A2A0E8D160083B97F /* UITextViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF7692A0E8D160083B97F /* UITextViewContainer.swift */; };
 		F7BEE47E2A0443D200EC282D /* MKShapeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE47D2A0443D200EC282D /* MKShapeExtensions.swift */; };
 		F7C23DFC2906F1460002A7DF /* Metrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23DFB2906F1460002A7DF /* Metrics.swift */; };
 		F7C23DFE290721680002A7DF /* SubmitReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23DFD290721680002A7DF /* SubmitReportView.swift */; };
@@ -635,6 +636,7 @@
 		F7ADDCED28902D5300137D95 /* AnnotationWithView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationWithView.swift; sourceTree = "<group>"; };
 		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7B7064228BAADD50026DE88 /* CircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
+		F7BDF7692A0E8D160083B97F /* UITextViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextViewContainer.swift; sourceTree = "<group>"; };
 		F7BEE47C2A04221D00EC282D /* Shared 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Shared 3.xcdatamodel"; sourceTree = "<group>"; };
 		F7BEE47D2A0443D200EC282D /* MKShapeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKShapeExtensions.swift; sourceTree = "<group>"; };
 		F7C23DFB2906F1460002A7DF /* Metrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metrics.swift; sourceTree = "<group>"; };
@@ -1720,6 +1722,7 @@
 				F7C23E1329115AF40002A7DF /* DocumentPreview.swift */,
 				F70F50182992DAFF0062E555 /* DataLoadedNotificationBanner.swift */,
 				F70BCE9E29D351DA00AEF73D /* DocumentPicker.swift */,
+				F7BDF7692A0E8D160083B97F /* UITextViewContainer.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2374,6 +2377,7 @@
 				F7FFB30228D6383900C31AA3 /* Asam+DataSource.swift in Sources */,
 				F73ABC96295250EE0085EDC5 /* AsyncImage.swift in Sources */,
 				F7D8FA2C2925756F00E7D0A1 /* ChartCorrectionQuery.swift in Sources */,
+				F7BDF76A2A0E8D160083B97F /* UITextViewContainer.swift in Sources */,
 				F70BCEB129E5E35E00AEF73D /* GeoPackageFeatureItemDetailView.swift in Sources */,
 				F7FFB2E428D6213C00C31AA3 /* DFRS+Decodable.swift in Sources */,
 				F7C23E04290831EA0002A7DF /* ElectronicPublication+DataSource.swift in Sources */,
