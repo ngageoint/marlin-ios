@@ -30,7 +30,7 @@ extension NavigationalWarning: DataSource {
         if !UserDefaults.standard.navigationalWarningsLocationsParsed {
             DispatchQueue.global(qos: .utility).async {
                 let fetchRequest = NavigationalWarning.fetchRequest()
-                fetchRequest.predicate = NSPredicate(value: true)// NSPredicate(format: "locations == nil")
+                fetchRequest.predicate = NSPredicate(format: "locations == nil")
                 let context = PersistenceController.current.newTaskContext()
                 context.performAndWait {
                     if let objects = try? context.fetch(fetchRequest), !objects.isEmpty {
