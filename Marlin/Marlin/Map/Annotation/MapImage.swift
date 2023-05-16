@@ -40,15 +40,17 @@ extension MapImage {
                 if let tileBounds3857 = tileBounds3857, let _ = context {
                     // have to do this b/c an ImageRenderer will automatically do this
                     radius *= UIScreen.main.scale
-                    let pixel = coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: tileSize)
-                    let circle = UIBezierPath(arcCenter: pixel, radius: radius, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: true)
-                    circle.lineWidth = 0.5
-                    dataSource.color.setStroke()
-                    circle.stroke()
-                    dataSource.color.setFill()
-                    circle.fill()
-                    if let dataSourceImage = type(of:dataSource).image?.aspectResize(to: CGSize(width: radius * 2.0 / 1.5, height: radius * 2.0 / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
-                        dataSourceImage.draw(at: CGPoint(x: pixel.x - dataSourceImage.size.width / 2.0, y: pixel.y - dataSourceImage.size.height / 2.0))
+                    if CLLocationCoordinate2DIsValid(coordinate) {
+                        let pixel = coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: tileSize)
+                        let circle = UIBezierPath(arcCenter: pixel, radius: radius, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: true)
+                        circle.lineWidth = 0.5
+                        dataSource.color.setStroke()
+                        circle.stroke()
+                        dataSource.color.setFill()
+                        circle.fill()
+                        if let dataSourceImage = type(of:dataSource).image?.aspectResize(to: CGSize(width: radius * 2.0 / 1.5, height: radius * 2.0 / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
+                            dataSourceImage.draw(at: CGPoint(x: pixel.x - dataSourceImage.size.width / 2.0, y: pixel.y - dataSourceImage.size.height / 2.0))
+                        }
                     }
                 } else {
                     if let image = CircleImage(color: dataSource.color, radius: radius, fill: true) {

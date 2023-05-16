@@ -12,15 +12,18 @@ struct NavigationalWarningDetailView: View {
     @StateObject var mapState: MapState = MapState()
     var navigationalWarning: NavigationalWarning
     
+    var mappedLocation: MappedLocation?
+    
     init(navigationalWarning: NavigationalWarning) {
         self.navigationalWarning = navigationalWarning
+        self.mappedLocation = navigationalWarning.mappedLocation
     }
     
     var body: some View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    if navigationalWarning.coordinate != nil {
+                    if CLLocationCoordinate2DIsValid(navigationalWarning.coordinate) {
                         MarlinMap(name: "Nav Warning Detail Map", mixins: [NavigationalWarningMap(warning: navigationalWarning), UserLayersMap()], mapState: mapState)
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                             .onAppear {
@@ -42,7 +45,7 @@ struct NavigationalWarningDetailView: View {
                         if let cancelNavArea = navigationalWarning.cancelNavArea, let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea){
                             Property(property: "Cancelled By", value: "\(navAreaEnum.display) \(navigationalWarning.cancelMsgNumber)/\(navigationalWarning.cancelMsgYear)")
                         }
-                        NavigationalWarningActionBar(navigationalWarning: navigationalWarning)
+                        NavigationalWarningActionBar(navigationalWarning: navigationalWarning, showMoreDetails: false)
                     }.padding([.leading, .trailing], 16)
                 }
                 .card()
@@ -52,7 +55,7 @@ struct NavigationalWarningDetailView: View {
             .dataSourceSection()
             
             if let text = navigationalWarning.text {
-                Section("Text") {
+                Section("Warning") {
                     UITextViewContainer(text:text)
                         .multilineTextAlignment(.leading)
                         .textSelection(.enabled)

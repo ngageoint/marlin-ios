@@ -24,7 +24,7 @@ extension NavigationalWarning: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFFD32F2F)
     static var imageName: String? = nil
     static var systemImageName: String? = "exclamationmark.triangle.fill"
-    static var imageScale: CGFloat = 0.66
+    static var imageScale: CGFloat = 1.0
     
     static func postProcess() {
         if !UserDefaults.standard.navigationalWarningsLocationsParsed {

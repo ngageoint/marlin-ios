@@ -9,9 +9,18 @@ import SwiftUI
 
 struct NavigationalWarningActionBar: View {
     var navigationalWarning: NavigationalWarning
-    
+    var showMoreDetails: Bool
+
     var body: some View {
         HStack(spacing:0) {
+            if showMoreDetails {
+                Button(action: {
+                    NotificationCenter.default.post(name: .ViewDataSource, object: self.navigationalWarning)
+                }) {
+                    Text("More Details")
+                        .foregroundColor(Color.primaryColorVariant)
+                }
+            }
             Spacer()
             Button(action: {
                 let activityVC = UIActivityViewController(activityItems: [navigationalWarning.description], applicationActivities: nil)

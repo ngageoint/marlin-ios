@@ -12,6 +12,10 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject var mapState: MapState = MapState()
     @ObservedObject var locationManager: Location
+    @State var expandMap: Bool = false
+    @State var selection: String? = nil
+    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource)
+    @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
 
     var navareaMap = GeoPackageMap(fileName: "navigation_areas", tableName: "navigation_areas", index: 0)
     var backgroundMap = GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: Color.dynamicLandColor, index: 1)
@@ -22,11 +26,22 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
     
     var body: some View {
         GeometryReader { geometry in
+            NavigationLink(tag: "detail", selection: $selection) {
+                if let data = itemWrapper.dataSource as? DataSourceViewBuilder {
+                    data.detailView
+                }
+            } label: {
+                EmptyView()
+            }
+            .isDetailLink(false)
+            .hidden()
+            
             VStack(spacing: 0) {
                 MarlinMap(name: "Navigational Warning List View Map", mixins: [NavigationalWarningMap(), navareaMap, backgroundMap],
                           mapState: mapState)
-                    .frame(minHeight: geometry.size.height * 0.3, maxHeight: geometry.size.height * 0.5)
-                    .edgesIgnoringSafeArea([.leading, .trailing])
+                .frame(minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3, maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5)
+                .edgesIgnoringSafeArea([.leading, .trailing])
+                .overlay(bottomButtons(), alignment: .bottom)
                 List {
                     NavigationalWarningAreasView(currentArea: locationManager.currentNavArea)
                         .listRowBackground(Color.surfaceColor)
@@ -47,6 +62,30 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
                 mapState.center = MKCoordinateRegion(center: lastLocation.coordinate, span: MKCoordinateSpan(latitudeDelta: 30, longitudeDelta: 30))
             }
         }
+        .onReceive(viewDataSourcePub) { output in
+            if let dataSource = output.object as? NavigationalWarning {
+                NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
+                itemWrapper.dataSource = dataSource
+                itemWrapper.date = Date()
+                selection = "detail"
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func bottomButtons() -> some View {
+        HStack(alignment: .bottom, spacing: 0) {
+            Spacer()
+            VStack {
+                ViewExpandButton(expanded: $expandMap)
+                UserTrackingButton(mapState: mapState)
+                    .fixedSize()
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("User Tracking")
+            }
+        }
+        .padding(.trailing, 8)
+        .padding(.bottom, 30)
     }
 }
 

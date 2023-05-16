@@ -17,6 +17,6 @@ extension NavigationalWarning: DataSourceViewBuilder {
     }
     
     func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
-        AnyView(NavigationalWarningSummaryView(navigationalWarning: self))
+        AnyView(NavigationalWarningSummaryView(navigationalWarning: self, showMoreDetails: showMoreDetails))
     }
 }

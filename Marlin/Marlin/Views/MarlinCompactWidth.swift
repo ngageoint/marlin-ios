@@ -147,7 +147,9 @@ struct MarlinCompactWidth: View {
             }
             .onReceive(viewDataSourcePub) { output in
                 if let dataSource = output.object as? (any DataSource) {
-                    viewData(dataSource)
+                    if !(dataSource is NavigationalWarning) {
+                        viewData(dataSource)
+                    }
                 }
             }
             .onReceive(mapFocus) { output in

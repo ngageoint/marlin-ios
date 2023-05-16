@@ -228,6 +228,8 @@
 		F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */; };
 		F7B7064328BAADD50026DE88 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B7064228BAADD50026DE88 /* CircleImage.swift */; };
 		F7BDF76A2A0E8D160083B97F /* UITextViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF7692A0E8D160083B97F /* UITextViewContainer.swift */; };
+		F7BDF76C2A13BFC80083B97F /* NavigationalWarning+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF76B2A13BFC80083B97F /* NavigationalWarning+MapImage.swift */; };
+		F7BDF76E2A13D7790083B97F /* ViewExpandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF76D2A13D7790083B97F /* ViewExpandButton.swift */; };
 		F7BEE47E2A0443D200EC282D /* MKShapeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE47D2A0443D200EC282D /* MKShapeExtensions.swift */; };
 		F7C23DFC2906F1460002A7DF /* Metrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23DFB2906F1460002A7DF /* Metrics.swift */; };
 		F7C23DFE290721680002A7DF /* SubmitReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23DFD290721680002A7DF /* SubmitReportView.swift */; };
@@ -637,6 +639,8 @@
 		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7B7064228BAADD50026DE88 /* CircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
 		F7BDF7692A0E8D160083B97F /* UITextViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextViewContainer.swift; sourceTree = "<group>"; };
+		F7BDF76B2A13BFC80083B97F /* NavigationalWarning+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+MapImage.swift"; sourceTree = "<group>"; };
+		F7BDF76D2A13D7790083B97F /* ViewExpandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExpandButton.swift; sourceTree = "<group>"; };
 		F7BEE47C2A04221D00EC282D /* Shared 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Shared 3.xcdatamodel"; sourceTree = "<group>"; };
 		F7BEE47D2A0443D200EC282D /* MKShapeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKShapeExtensions.swift; sourceTree = "<group>"; };
 		F7C23DFB2906F1460002A7DF /* Metrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metrics.swift; sourceTree = "<group>"; };
@@ -982,6 +986,7 @@
 				F71D287A28C1401400F1775C /* FetchRequestMap.swift */,
 				F7FFB33928D9EFDB00C31AA3 /* SearchView.swift */,
 				F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */,
+				F7BDF76D2A13D7790083B97F /* ViewExpandButton.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -1736,6 +1741,7 @@
 				F7FFB2FD28D6373F00C31AA3 /* NavigationalWarning+DataSourceViewBuilder.swift */,
 				F7FFB2FF28D6376100C31AA3 /* NavigationalWarning+Decodable.swift */,
 				F7E768B629EF11CC001EFFFF /* NAVTEXTextParser.swift */,
+				F7BDF76B2A13BFC80083B97F /* NavigationalWarning+MapImage.swift */,
 			);
 			path = NavigationalWarning;
 			sourceTree = "<group>";
@@ -2301,6 +2307,7 @@
 				F75E32B829C10C75006F2394 /* XYZTileOverlay.swift in Sources */,
 				F70BCEA329D761E400AEF73D /* GeoPackageLayerEditView.swift in Sources */,
 				F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */,
+				F7BDF76E2A13D7790083B97F /* ViewExpandButton.swift in Sources */,
 				F7D8FA772940EF7400E7D0A1 /* ChartCorrectionListViewModel.swift in Sources */,
 				F7FFB33F28DA104200C31AA3 /* FilterBottomSheet.swift in Sources */,
 				F7D8FA49293A954D00E7D0A1 /* EnumerationFilter.swift in Sources */,
@@ -2369,6 +2376,7 @@
 				F7275FDF28FA252800ED8D9A /* LightProtocol.swift in Sources */,
 				F7D8FA4B293A958900E7D0A1 /* LocationFilter.swift in Sources */,
 				F727A684284E351800BD728A /* MSIError.swift in Sources */,
+				F7BDF76C2A13BFC80083B97F /* NavigationalWarning+MapImage.swift in Sources */,
 				F7D8FA142922ABF500E7D0A1 /* NoticeToMariners+Decodable.swift in Sources */,
 				F7FFB32428D641DE00C31AA3 /* RadioBeacon+Annotation.swift in Sources */,
 				F749E43C29B0097300B2FF8B /* WMSTileOverlay.swift in Sources */,

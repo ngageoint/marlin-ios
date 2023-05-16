@@ -9,9 +9,11 @@ import SwiftUI
 
 struct NavigationalWarningSummaryView: View {
     var navigationalWarning: NavigationalWarning
+    var showMoreDetails: Bool
     
-    init(navigationalWarning: NavigationalWarning) {
+    init(navigationalWarning: NavigationalWarning, showMoreDetails: Bool) {
         self.navigationalWarning = navigationalWarning
+        self.showMoreDetails = showMoreDetails
     }
     
     var body: some View {
@@ -24,7 +26,7 @@ struct NavigationalWarningSummaryView: View {
                 .multilineTextAlignment(.leading)
                 .lineLimit(8)
                 .secondary()
-            NavigationalWarningActionBar(navigationalWarning: navigationalWarning)
+            NavigationalWarningActionBar(navigationalWarning: navigationalWarning, showMoreDetails: showMoreDetails)
         }
     }
 }

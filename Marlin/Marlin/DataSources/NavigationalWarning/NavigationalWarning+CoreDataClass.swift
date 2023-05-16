@@ -88,11 +88,11 @@ class NavigationalWarning: NSManagedObject {
         return nil
     }()
     
-    lazy var coordinate: CLLocationCoordinate2D? = {
+    lazy var coordinate: CLLocationCoordinate2D = {
         if let locations = locations, !locations.isEmpty {
             return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         }
-        return nil
+        return kCLLocationCoordinate2DInvalid
     }()
     
     lazy var region: MKCoordinateRegion? = {
