@@ -17,7 +17,7 @@ struct AsamActionBar: View {
         HStack(spacing:0) {
             if showMoreDetailsButton {
                 Button(action: {
-                    NotificationCenter.default.post(name: .ViewDataSource, object: self.asam)
+                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: self.asam))
                 }) {
                     Text("More Details")
                         .foregroundColor(Color.primaryColorVariant)

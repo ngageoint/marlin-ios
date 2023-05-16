@@ -166,7 +166,7 @@ struct MarlinView: View {
                 return
             }
             var bottomSheetItems: [BottomSheetItem] = []
-            bottomSheetItems += self.handleTappedItems(items: notification.items)
+            bottomSheetItems += self.handleTappedItems(items: notification.items, mapName: notification.mapName)
             if bottomSheetItems.count == 0 {
                 return
             }
@@ -208,11 +208,11 @@ struct MarlinView: View {
         .accentColor(Color.onPrimaryColor)
     }
     
-    func handleTappedItems(items: [any DataSource]?) -> [BottomSheetItem] {
+    func handleTappedItems(items: [any DataSource]?, mapName: String?) -> [BottomSheetItem] {
         var bottomSheetItems: [BottomSheetItem] = []
         if let items = items {
             for item in items {
-                let bottomSheetItem = BottomSheetItem(item: item, actionDelegate: self, annotationView: nil)
+                let bottomSheetItem = BottomSheetItem(item: item, actionDelegate: self, mapName: mapName)
                 bottomSheetItems.append(bottomSheetItem)
             }
         }

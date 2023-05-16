@@ -11,11 +11,13 @@ import MapKit
 class BottomSheetItem: NSObject, Identifiable {
     var item: any DataSource
     var annotationView: MKAnnotationView?
+    var mapName: String?
     var actionDelegate: Any?
     
-    init(item: any DataSource, actionDelegate: Any? = nil, annotationView: MKAnnotationView? = nil) {
-        self.item = item;
-        self.actionDelegate = actionDelegate;
-        self.annotationView = annotationView;
+    init(item: any DataSource, actionDelegate: Any? = nil, annotationView: MKAnnotationView? = nil, mapName: String? = nil) {
+        self.item = item
+        self.actionDelegate = actionDelegate
+        self.annotationView = annotationView
+        self.mapName = mapName
     }
 }

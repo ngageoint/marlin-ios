@@ -17,7 +17,7 @@ struct ModuActionBar: View {
         HStack(spacing:0) {
             if showMoreDetailsButton {
                 Button(action: {
-                    NotificationCenter.default.post(name: .ViewDataSource, object: self.modu)
+                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: self.modu))
                 }) {
                     Text("More Details")
                         .foregroundColor(Color.primaryColorVariant)

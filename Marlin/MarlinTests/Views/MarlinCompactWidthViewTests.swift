@@ -345,7 +345,7 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         
         tester().waitForView(withAccessibilityLabel: "Marlin Map")
         
-        NotificationCenter.default.post(name: .ViewDataSource, object: asam)
+        NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: asam))
         
         tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
     }

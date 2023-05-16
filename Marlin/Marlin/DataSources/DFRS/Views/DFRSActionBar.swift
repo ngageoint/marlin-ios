@@ -17,7 +17,7 @@ struct DFRSActionBar: View {
         HStack(spacing:0) {
             if showMoreDetailsButton {
                 Button(action: {
-                    NotificationCenter.default.post(name: .ViewDataSource, object: self.dfrs)
+                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: self.dfrs))
                 }) {
                     Text("More Details")
                 }

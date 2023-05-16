@@ -49,7 +49,7 @@ struct MapAnnotationFocusedNotification {
 struct MapItemsTappedNotification {
     var annotations: [Any]?
     var items: [any DataSource]?
-    var mapView: MKMapView?
+    var mapName: String?
 }
 
 struct SnackbarNotification {
@@ -65,4 +65,9 @@ struct DataSourceUpdatedNotification {
 
 struct BatchUpdateComplete {
     var dataSourceUpdates: [DataSourceUpdatedNotification]
+}
+
+struct ViewDataSource {
+    var mapName: String?
+    var dataSource: (any DataSource)?
 }

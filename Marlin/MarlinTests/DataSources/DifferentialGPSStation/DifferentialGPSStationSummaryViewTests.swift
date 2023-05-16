@@ -182,8 +182,8 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-
-            let dgps = try! XCTUnwrap(notification.object as? DifferentialGPSStation)
+            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
+            let dgps = try! XCTUnwrap(vds.dataSource as? DifferentialGPSStation)
             XCTAssertEqual(dgps.featureNumber, 6)
             return true
         }

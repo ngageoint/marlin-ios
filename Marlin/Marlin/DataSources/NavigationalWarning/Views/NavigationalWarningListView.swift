@@ -9,12 +9,14 @@ import SwiftUI
 import MapKit
 
 struct NavigationalWarningListView<Location>: View where Location: LocationManagerProtocol  {
+    let MAP_NAME = "Navigational Warning List View Map"
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject var mapState: MapState = MapState()
     @ObservedObject var locationManager: Location
     @State var expandMap: Bool = false
     @State var selection: String? = nil
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource)
+        .compactMap { notification in notification.object as? ViewDataSource }
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
 
     var navareaMap = GeoPackageMap(fileName: "navigation_areas", tableName: "navigation_areas", index: 0)
@@ -37,7 +39,7 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
             .hidden()
             
             VStack(spacing: 0) {
-                MarlinMap(name: "Navigational Warning List View Map", mixins: [NavigationalWarningMap(), navareaMap, backgroundMap],
+                MarlinMap(name: MAP_NAME, mixins: [NavigationalWarningMap(), navareaMap, backgroundMap],
                           mapState: mapState)
                 .frame(minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3, maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5)
                 .edgesIgnoringSafeArea([.leading, .trailing])
@@ -63,7 +65,7 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
             }
         }
         .onReceive(viewDataSourcePub) { output in
-            if let dataSource = output.object as? NavigationalWarning {
+            if let dataSource = output.dataSource as? NavigationalWarning, output.mapName == MAP_NAME {
                 NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
                 itemWrapper.dataSource = dataSource
                 itemWrapper.date = Date()

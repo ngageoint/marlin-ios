@@ -312,7 +312,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             }
         }
 
-        let notification = MapItemsTappedNotification(annotations: annotationsTapped, items: items, mapView: mapView)
+        let notification = MapItemsTappedNotification(annotations: annotationsTapped, items: items, mapName: marlinMap.name)
         NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
     }
         

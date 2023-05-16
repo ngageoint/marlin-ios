@@ -196,7 +196,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         return annotationView
     }
     
-    func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [any DataSource]? {
+    func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [any DataSource]? {
         if mapView.zoomLevel < minZoom {
             return nil
         }

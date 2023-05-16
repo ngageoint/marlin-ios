@@ -149,8 +149,8 @@ final class AsamSummaryViewTests: XCTestCase {
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-            
-            let asam = try! XCTUnwrap(notification.object as? Asam)
+            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
+            let asam = try! XCTUnwrap(vds.dataSource as? Asam)
             XCTAssertEqual(asam.hostility, "Boarding")
             XCTAssertEqual(asam.victim, "Boat")
             return true

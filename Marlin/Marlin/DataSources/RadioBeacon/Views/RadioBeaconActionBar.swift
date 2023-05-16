@@ -16,7 +16,7 @@ struct RadioBeaconActionBar: View {
         HStack(spacing:0) {
             if showMoreDetailsButton {
                 Button(action: {
-                    NotificationCenter.default.post(name: .ViewDataSource, object: self.radioBeacon)
+                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: self.radioBeacon))
                 }) {
                     Text("More Details")
                 }

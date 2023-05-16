@@ -55,7 +55,7 @@ class GeoPackageFeatureItem: NSObject, DataSourceLocation, DataSourceViewBuilder
         AnyView(GeoPackageFeatureItemDetailView(featureItem: self))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil) -> AnyView {
         AnyView(GeoPackageFeatureItemSummaryView(featureItem: self))
     }
     

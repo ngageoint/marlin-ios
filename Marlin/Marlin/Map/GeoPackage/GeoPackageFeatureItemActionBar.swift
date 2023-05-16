@@ -16,7 +16,7 @@ struct GeoPackageFeatureItemActionBar: View {
         HStack(spacing:0) {
             if showMoreDetailsButton {
                 Button(action: {
-                    NotificationCenter.default.post(name: .ViewDataSource, object: self.featureItem)
+                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: self.featureItem))
                 }) {
                     Text("More Details")
                         .foregroundColor(Color.primaryColorVariant)

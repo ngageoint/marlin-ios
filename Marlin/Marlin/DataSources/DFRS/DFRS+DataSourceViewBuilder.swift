@@ -17,7 +17,7 @@ extension DFRS: DataSourceViewBuilder {
         AnyView(DFRSDetailView(dfrs: self))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil) -> AnyView {
         AnyView(DFRSSummaryView(dfrs: self, showMoreDetails: showMoreDetails, showSectionHeader: showSectionHeader))
     }
 }

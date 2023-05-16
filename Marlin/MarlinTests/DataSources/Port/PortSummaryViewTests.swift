@@ -318,8 +318,8 @@ final class PortSummaryViewTests: XCTestCase {
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-            
-            let port = try! XCTUnwrap(notification.object as? Marlin.Port)
+            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
+            let port = try! XCTUnwrap(vds.dataSource as? Marlin.Port)
             XCTAssertEqual(port.portName, "Aasiaat")
             return true
         }

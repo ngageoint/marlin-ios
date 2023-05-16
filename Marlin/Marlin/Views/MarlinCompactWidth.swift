@@ -9,7 +9,6 @@ import SwiftUI
 import MapKit
 
 struct MarlinCompactWidth: View {
-    
     @EnvironmentObject var appState: AppState
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     
@@ -23,7 +22,9 @@ struct MarlinCompactWidth: View {
     
     @Binding var filterOpen: Bool
     
-    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource)
+    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
+        notification.object as? ViewDataSource
+    }
     let mapFocus = NotificationCenter.default.publisher(for: .MapRequestFocus)
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
@@ -146,8 +147,8 @@ struct MarlinCompactWidth: View {
                 }
             }
             .onReceive(viewDataSourcePub) { output in
-                if let dataSource = output.object as? (any DataSource) {
-                    if !(dataSource is NavigationalWarning) {
+                if let dataSource = output.dataSource {
+                    if output.mapName == nil || output.mapName == marlinMap.name {
                         viewData(dataSource)
                     }
                 }

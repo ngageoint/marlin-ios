@@ -17,7 +17,7 @@ extension DifferentialGPSStation: DataSourceViewBuilder {
         AnyView(DifferentialGPSStationDetailView(differentialGPSStation: self))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil) -> AnyView {
         AnyView(DifferentialGPSStationSummaryView(differentialGPSStation: self, showMoreDetails: showMoreDetails, showSectionHeader: showSectionHeader))
     }
 }

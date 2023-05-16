@@ -69,7 +69,7 @@ class UserLayersMap: MapMixin {
         }
     }
     
-    func items(at location: CLLocationCoordinate2D, mapView: MKMapView) -> [DataSource]? {
+    func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [DataSource]? {
         var featureItems: [GeoPackageFeatureItem] = []
         for (_, layer) in viewModel.layers.reversed().enumerated() {
             if layer.showOnMap {

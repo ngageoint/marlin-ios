@@ -16,7 +16,7 @@ struct DifferentialGPSStationActionBar: View {
         HStack(spacing:0) {
             if showMoreDetailsButton {
                 Button(action: {
-                    NotificationCenter.default.post(name: .ViewDataSource, object: self.differentialGPSStation)
+                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: self.differentialGPSStation))
                 }) {
                     Text("More Details")
                 }
