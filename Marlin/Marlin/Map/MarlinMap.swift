@@ -108,10 +108,20 @@ struct MarlinMap: UIViewRepresentable {
                 scale.scaleVisibility = .visible // always visible
                 scale.isAccessibilityElement = true
                 scale.accessibilityLabel = "Map Scale"
+                scale.translatesAutoresizingMaskIntoConstraints = false
                 mapView.addSubview(scale)
+                
+                NSLayoutConstraint.activate([
+                    scale.centerXAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.centerXAnchor),
+                    scale.bottomAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+                ])
                 context.coordinator.mapScale = scale
             } else if let scale = scale {
                 mapView.addSubview(scale)
+                NSLayoutConstraint.activate([
+                    scale.centerXAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.centerXAnchor),
+                    scale.bottomAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+                ])
             }
         } else if let scale = scale {
             scale.removeFromSuperview()
