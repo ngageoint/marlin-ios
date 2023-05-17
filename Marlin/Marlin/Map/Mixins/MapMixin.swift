@@ -84,17 +84,17 @@ extension MapMixin {
             return renderable.renderer
         }
         // standard renderers
-        if let polygon = overlay as? MKPolygon {
+        if let polygon = overlay as? MKPolygon, type(of: polygon) == MKPolygon.self {
             let renderer = MKPolygonRenderer(polygon: polygon)
             renderer.strokeColor = .black
             renderer.lineWidth = 1
             return renderer
-        } else if let polyline = overlay as? MKPolyline {
+        } else if let polyline = overlay as? MKPolyline, type(of: polyline) == MKPolyline.self  {
             let renderer = MKPolylineRenderer(polyline: polyline)
             renderer.strokeColor = .black
             renderer.lineWidth = 1
             return renderer
-        } else if let circle = overlay as? MKCircle {
+        } else if let circle = overlay as? MKCircle, type(of: circle) == MKCircle.self  {
             let renderer = MKCircleRenderer(circle: circle)
             renderer.strokeColor = .black
             renderer.lineWidth = 1

@@ -16,7 +16,7 @@ extension NavigationalWarning: DataSource {
         return dateFormatter
     }
     
-    static var isMappable: Bool = false
+    static var isMappable: Bool = UserDefaults.standard.showNavigationalWarningsOnMainMap
     static var dataSourceName: String = NSLocalizedString("Warnings", comment: "Warnings data source display name")
     static var fullDataSourceName: String = NSLocalizedString("Navigational Warnings", comment: "Warnings data source display name")
     static var key: String = "navWarning"

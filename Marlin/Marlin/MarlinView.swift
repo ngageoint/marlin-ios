@@ -63,7 +63,7 @@ struct MarlinView: View {
     var mixins: [MapMixin]
     
     init() {
-        var mixins: [MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]//, NavigationalWarningMap()]
+        var mixins: [MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
 
         if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) {
             mixins.append(DifferentialGPSStationMap(showAsTiles: true))
@@ -85,6 +85,9 @@ struct MarlinView: View {
         }
         if UserDefaults.standard.dataSourceEnabled(Asam.self) {
             mixins.append(AsamMap(showAsTiles: true))
+        }
+        if UserDefaults.standard.showNavigationalWarningsOnMainMap {
+            mixins.append(NavigationalWarningMap())
         }
         self.mixins = mixins
     }
