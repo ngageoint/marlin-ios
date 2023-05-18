@@ -84,7 +84,7 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         }
         tester().tapView(withAccessibilityLabel: "Location")
         
-        expectation(forNotification: .MapRequestFocus,
+        expectation(forNotification: .TabRequestFocus,
                     object: nil) { notification in
             return true
         }

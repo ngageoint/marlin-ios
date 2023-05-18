@@ -36,15 +36,20 @@ class NavigationalWarningMap: NSObject, MapMixin {
     var userDefaultsShowPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
     var show: Bool = true
     var cancellable = Set<AnyCancellable>()
+    var zoomOnFocus: Bool = false
+    var setup: Bool = false
     
     static let MIXIN_STATE_KEY = "FetchRequestMixin\(NavigationalWarning.key)DateUpdated"
     
-    override init() {
-        
+    init(zoomOnFocus: Bool = false) {
+        super.init()
+        self.zoomOnFocus = zoomOnFocus
     }
     
-    init(warning: NavigationalWarning) {
+    init(warning: NavigationalWarning, zoomOnFocus: Bool = false) {
+        super.init()
         self.warning = warning
+        self.zoomOnFocus = zoomOnFocus
     }
     
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
@@ -52,9 +57,30 @@ class NavigationalWarningMap: NSObject, MapMixin {
         mapState = marlinMap.mapState
         if warning != nil {
             setupSingleNavigationalWarning(mapView: mapView)
-        } else {
-            setupAllNavigationalWarnings(mapView: mapView)
         }
+
+        NotificationCenter.default.publisher(for: .DataSourceUpdated)
+            .receive(on: RunLoop.main)
+            .compactMap {
+                $0.object as? DataSourceUpdatedNotification
+            }
+            .sink { item in
+                if item.key == NavigationalWarning.key {
+                    self.refresh()
+                }
+            }
+            .store(in: &cancellable)
+
+        userDefaultsShowPublisher?
+            .removeDuplicates()
+            .handleEvents(receiveOutput: { show in
+                print("Show \(NavigationalWarning.self): \(show)")
+            })
+            .sink() { [weak self] show in
+                self?.show = show
+                self?.refresh()
+            }
+            .store(in: &cancellable)
     }
     
     func addWarning(warning: NavigationalWarning, location: [String : String]) {
@@ -97,40 +123,6 @@ class NavigationalWarningMap: NSObject, MapMixin {
         mapView.addAnnotations(mapAnnotations)
     }
     
-    func setupAllNavigationalWarnings(mapView: MKMapView) {
-        NotificationCenter.default.publisher(for: .FocusNavigationalWarning)
-            .compactMap {
-                $0.object as? NavigationalWarning
-            }
-            .sink(receiveValue: { [weak self] in
-                self?.focus(item: $0)
-            })
-            .store(in: &cancellable)
-        
-        NotificationCenter.default.publisher(for: .DataSourceUpdated)
-            .receive(on: RunLoop.main)
-            .compactMap {
-                $0.object as? DataSourceUpdatedNotification
-            }
-            .sink { item in
-                if item.key == NavigationalWarning.key {
-                    self.refresh()
-                }
-            }
-            .store(in: &cancellable)
-        
-        userDefaultsShowPublisher?
-            .removeDuplicates()
-            .handleEvents(receiveOutput: { show in
-                print("Show \(NavigationalWarning.self): \(show)")
-            })
-            .sink() { [weak self] show in
-                self?.show = show
-                self?.refresh()
-            }
-            .store(in: &cancellable)
-    }
-    
     func updateMixin(mapView: MKMapView, mapState: MapState) {
         if warning == nil && (lastChange == nil || (lastChange != mapState.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] as? Date && mapState.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] != nil)) {
             lastChange = mapState.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] as? Date ?? Date()
@@ -169,12 +161,6 @@ class NavigationalWarningMap: NSObject, MapMixin {
         }
     }
     
-    func focus(item: NavigationalWarning) {
-        DispatchQueue.main.async {
-            self.mapState?.center = item.region
-        }
-    }
-    
     func getFetchRequest(show: Bool) -> NSFetchRequest<NavigationalWarning> {
         let fetchRequest: NSFetchRequest<NavigationalWarning> = NavigationalWarning.fetchRequest()
         fetchRequest.sortDescriptors = NavigationalWarning.defaultSort.map({ parameter in
@@ -191,7 +177,7 @@ class NavigationalWarningMap: NSObject, MapMixin {
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
         let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: NavigationalWarning.key, for: annotation)
         if let systemImageName = NavigationalWarning.systemImageName, let annotation = annotation as? NavigationalWarningAnnotation, let warning = annotation.warning {
-            let images = warning.mapImage(marker: false, zoomLevel: mapView.zoomLevel, tileBounds3857: nil)
+            let images = warning.mapImage(marker: false, zoomLevel: 2, tileBounds3857: nil)
             var combinedImage: UIImage? = UIImage.combineCentered(image1: images.first, image2: nil)
             if !images.isEmpty {
                 for image in images.dropFirst() {
@@ -271,18 +257,18 @@ class NavigationalWarningMap: NSObject, MapMixin {
     }
     
     func renderer(overlay: MKOverlay) -> MKOverlayRenderer? {
-        if let polygon = overlay as? MKPolygon {
+        if let polygon = overlay as? NavigationalWarningPolygon {
             let renderer = MKPolygonRenderer(polygon: polygon)
             renderer.strokeColor = NavigationalWarning.color
             renderer.lineWidth = 3
             renderer.fillColor = NavigationalWarning.color.withAlphaComponent(0.2)
             return renderer
-        } else if let polyline = overlay as? MKPolyline {
+        } else if let polyline = overlay as? NavigationalWarningPolyline {
             let renderer = MKPolylineRenderer(polyline: polyline)
             renderer.strokeColor = NavigationalWarning.color
             renderer.lineWidth = 3
             return renderer
-        } else if let circle = overlay as? MKCircle {
+        } else if let circle = overlay as? NavigationalWarningCircle {
             let renderer = MKCircleRenderer(circle: circle)
             renderer.strokeColor = NavigationalWarning.color
             renderer.fillColor = NavigationalWarning.color.withAlphaComponent(0.2)

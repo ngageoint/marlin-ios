@@ -25,7 +25,7 @@ struct MarlinCompactWidth: View {
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
         notification.object as? ViewDataSource
     }
-    let mapFocus = NotificationCenter.default.publisher(for: .MapRequestFocus)
+    let mapFocus = NotificationCenter.default.publisher(for: .TabRequestFocus)
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
     }
@@ -99,7 +99,7 @@ struct MarlinCompactWidth: View {
                     }
                     .onReceive(self.appState.$popToRoot) { popToRoot in
                         if popToRoot {
-                            self.selection = "map"
+//                            self.selection = "\(Asam.key)List"
                             self.appState.popToRoot = false
                         }
                     }
@@ -154,7 +154,7 @@ struct MarlinCompactWidth: View {
                 }
             }
             .onReceive(mapFocus) { output in
-                selectedTab = "map"
+                selectedTab = output.object as? String ?? "map"
                 self.appState.popToRoot = true
             }
             .onReceive(switchTabPub) { output in

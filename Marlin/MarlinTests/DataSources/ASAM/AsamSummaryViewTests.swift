@@ -181,7 +181,7 @@ final class AsamSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "focus")
         TestHelpers.printAllAccessibilityLabelsInWindows()
         
-        expectation(forNotification: .MapRequestFocus,
+        expectation(forNotification: .TabRequestFocus,
                     object: nil) { notification in
             return true
         }

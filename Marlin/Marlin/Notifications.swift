@@ -15,7 +15,7 @@ extension Notification.Name {
     public static let FocusMapOnItem = Notification.Name("FocusMapOnItem")
     public static let DismissBottomSheet = Notification.Name("DismissBottomSheet")
     public static let BottomSheetDismissed = Notification.Name("BottomSheetDismissed")
-    public static let MapRequestFocus = Notification.Name("MapRequestFocus")
+    public static let TabRequestFocus = Notification.Name("TabRequestFocus")
     public static let FocusLight = Notification.Name("FocusLight")
     public static let FocusRadioBeacon = Notification.Name("FocusRadioBeacon")
     public static let FocusAsam = Notification.Name("FocusAsam")
@@ -40,6 +40,7 @@ extension Notification.Name {
 
 struct FocusMapOnItemNotification {
     var item: (any DataSourceLocation)?
+    var zoom: Bool = false
 }
 
 struct MapAnnotationFocusedNotification {
@@ -50,6 +51,7 @@ struct MapItemsTappedNotification {
     var annotations: [Any]?
     var items: [any DataSource]?
     var mapName: String?
+    var zoom: Bool = false
 }
 
 struct SnackbarNotification {

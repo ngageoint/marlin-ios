@@ -41,7 +41,7 @@ struct GeoPackageFeatureItemActionBar: View {
             Group {
                 if showFocusButton {
                     Button(action: {
-                        NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+                        NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
                         let notification = MapItemsTappedNotification(items: [self.featureItem])
                         NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
                     }) {

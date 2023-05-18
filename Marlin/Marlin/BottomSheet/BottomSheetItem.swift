@@ -13,11 +13,13 @@ class BottomSheetItem: NSObject, Identifiable {
     var annotationView: MKAnnotationView?
     var mapName: String?
     var actionDelegate: Any?
+    var zoom: Bool
     
-    init(item: any DataSource, actionDelegate: Any? = nil, annotationView: MKAnnotationView? = nil, mapName: String? = nil) {
+    init(item: any DataSource, actionDelegate: Any? = nil, annotationView: MKAnnotationView? = nil, mapName: String? = nil, zoom: Bool) {
         self.item = item
         self.actionDelegate = actionDelegate
         self.annotationView = annotationView
         self.mapName = mapName
+        self.zoom = zoom
     }
 }

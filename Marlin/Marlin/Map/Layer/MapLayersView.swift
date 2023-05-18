@@ -35,7 +35,7 @@ struct MapLayerRow: View {
                 let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latSpan, longitudeDelta: lonSpan)
                 mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
                 
-                NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+                NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
             }) {
                 Label(
                     title: {},

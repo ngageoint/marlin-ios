@@ -58,7 +58,7 @@ struct ModuActionBar: View {
                 .accessibilityLabel("share")
                 if showFocusButton {
                     Button(action: {
-                        NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+                        NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
                         let notification = MapItemsTappedNotification(items: [self.modu])
                         NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
                     }) {

@@ -57,7 +57,7 @@ struct DFRSActionBar: View {
                 .accessibilityLabel("share")
                 if showFocusButton && CLLocationCoordinate2DIsValid(dfrs.coordinate) {
                     Button(action: {
-                        NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+                        NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
                         let notification = MapItemsTappedNotification(items: [self.dfrs])
                         NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
                     }) {

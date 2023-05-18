@@ -36,6 +36,11 @@ struct TestApp: App {
     }
 }
 
+final class NavState : ObservableObject {
+    @Published var rootViewId = UUID()
+    @Published var navGroupName: String?
+}
+
 class AppState: ObservableObject {
     @Published var popToRoot: Bool = false
     @Published var loadingDataSource: [String : Bool] = [:]

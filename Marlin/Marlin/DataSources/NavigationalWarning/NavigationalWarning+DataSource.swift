@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import CoreData
 
-extension NavigationalWarning: DataSource {
+extension NavigationalWarning: DataSourceLocation {
     static var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
@@ -52,7 +52,6 @@ extension NavigationalWarning: DataSource {
                     do {
                         try context.save()
                     } catch {
-                        print("XXXX ERROR IS \(error)")
                     }
                 }
                 

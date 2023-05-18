@@ -9,6 +9,8 @@ import SwiftUI
 import MapKit
 
 struct NavigationalWarningActionBar: View {
+    @EnvironmentObject var navState: NavState
+    
     var navigationalWarning: NavigationalWarning
     var showMoreDetails: Bool
     var mapName: String?
@@ -37,6 +39,22 @@ struct NavigationalWarningActionBar: View {
             }
             .accessibilityElement()
             .accessibilityLabel("share")
+            if !showMoreDetails {
+                Button(action: {
+                    NotificationCenter.default.post(name: .TabRequestFocus, object: navState.navGroupName)
+                    let notification = MapItemsTappedNotification(items: [self.navigationalWarning], mapName: mapName, zoom: true)
+                    NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
+                }) {
+                    Label(
+                        title: {},
+                        icon: { Image(systemName: "scope")
+                                .renderingMode(.template)
+                                .foregroundColor(Color.primaryColorVariant)
+                        })
+                }
+                .accessibilityElement()
+                .accessibilityLabel("focus")
+            }
         }
         .buttonStyle(MaterialButtonStyle())
     }

@@ -26,7 +26,7 @@ struct MarlinRegularWidth: View {
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
     }
-    let mapFocus = NotificationCenter.default.publisher(for: .MapRequestFocus)
+    let mapFocus = NotificationCenter.default.publisher(for: .TabRequestFocus)
     
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
     @State var selection: String? = nil

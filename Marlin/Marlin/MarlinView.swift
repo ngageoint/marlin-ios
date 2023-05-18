@@ -25,6 +25,13 @@ extension MarlinView: BottomSheetDelegate {
     }
 }
 
+class MapMixins: ObservableObject {
+    var mixins: [MapMixin]
+    init(mixins: [MapMixin]) {
+        self.mixins = mixins
+    }
+}
+
 struct MarlinView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
@@ -60,7 +67,7 @@ struct MarlinView: View {
         notification.object
     }
     
-    var mixins: [MapMixin]
+    @State var mixins: [MapMixin]
     
     init() {
         var mixins: [MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
@@ -89,7 +96,7 @@ struct MarlinView: View {
         if UserDefaults.standard.showNavigationalWarningsOnMainMap {
             mixins.append(NavigationalWarningMap())
         }
-        self.mixins = mixins
+        _mixins = State(wrappedValue: mixins)// StateObject(wrappedValue: MapMixins(mixins: mixins))
     }
     
     var body: some View {
@@ -169,7 +176,7 @@ struct MarlinView: View {
                 return
             }
             var bottomSheetItems: [BottomSheetItem] = []
-            bottomSheetItems += self.handleTappedItems(items: notification.items, mapName: notification.mapName)
+            bottomSheetItems += self.handleTappedItems(items: notification.items, mapName: notification.mapName, zoom: notification.zoom)
             if bottomSheetItems.count == 0 {
                 return
             }
@@ -203,6 +210,7 @@ struct MarlinView: View {
             }
         }
         .onAppear {
+            mapState.name = "Main Map"
             Metrics.shared.appLaunch()
         }
         // this affects text buttons, image buttons need .foregroundColor set on them
@@ -211,11 +219,11 @@ struct MarlinView: View {
         .accentColor(Color.onPrimaryColor)
     }
     
-    func handleTappedItems(items: [any DataSource]?, mapName: String?) -> [BottomSheetItem] {
+    func handleTappedItems(items: [any DataSource]?, mapName: String?, zoom: Bool) -> [BottomSheetItem] {
         var bottomSheetItems: [BottomSheetItem] = []
         if let items = items {
             for item in items {
-                let bottomSheetItem = BottomSheetItem(item: item, actionDelegate: self, mapName: mapName)
+                let bottomSheetItem = BottomSheetItem(item: item, actionDelegate: self, mapName: mapName, zoom: zoom)
                 bottomSheetItems.append(bottomSheetItem)
             }
         }

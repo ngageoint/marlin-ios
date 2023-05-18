@@ -73,7 +73,7 @@ final class DFRSSummaryViewTests: XCTestCase {
         }
         tester().tapView(withAccessibilityLabel: "Location")
         
-        expectation(forNotification: .MapRequestFocus,
+        expectation(forNotification: .TabRequestFocus,
                     object: nil) { notification in
             return true
         }
@@ -170,7 +170,7 @@ final class DFRSSummaryViewTests: XCTestCase {
         
         tester().waitForAbsenceOfView(withAccessibilityLabel: "More Details")
         
-        expectation(forNotification: .MapRequestFocus,
+        expectation(forNotification: .TabRequestFocus,
                     object: nil) { notification in
             return true
         }

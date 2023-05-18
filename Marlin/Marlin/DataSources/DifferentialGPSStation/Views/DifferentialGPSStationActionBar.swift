@@ -55,7 +55,7 @@ struct DifferentialGPSStationActionBar: View {
                 
                 if showFocusButton {
                     Button(action: {
-                        NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+                        NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
                         let notification = MapItemsTappedNotification(items: [self.differentialGPSStation])
                         NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
                     }) {
