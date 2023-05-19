@@ -4,6 +4,13 @@ Changelog
 All notable changes to this project will be documented in this file.
 
 ---
+## 1.2.0
+ ### Bug Fixes
+    * UI Improvements to prevent unncessary redraws, ongoing fixes
+    * Core Data objects are now accessed in the proper thread
+    * If sectors have no range, draw the no range image
+ ### Features
+    * Navigational Warnings now show their location on the Navigational Warnings map and in the detail view
 ## 1.1.0
  ### Bug Fixes
     * metrics use the same paths as Android
