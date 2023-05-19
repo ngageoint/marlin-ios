@@ -407,6 +407,24 @@ extension UserDefaults {
         bool(forKey: "hamburger")
     }
     
+    var showUnparsedNavigationalWarnings: Bool {
+        get {
+            return bool(forKey: #function)
+        }
+        set {
+            setValue(newValue, forKey: #function)
+        }
+    }
+    
+    var showNavigationalWarningsOnMainMap: Bool {
+        get {
+            return bool(forKey: #function)
+        }
+        set {
+            setValue(newValue, forKey: #function)
+        }
+    }
+    
     var metricsEnabled: Bool {
         get {
             return bool(forKey: #function)
@@ -430,5 +448,14 @@ extension UserDefaults {
     
     func clearLastSyncTimeSeconds(_ dataSource: any BatchImportable.Type) {
         removeObject(forKey: "\(dataSource.key)LastSyncTime")
+    }
+        
+    var navigationalWarningsLocationsParsed: Bool {
+        get {
+            return bool(forKey: #function)
+        }
+        set {
+            setValue(newValue, forKey: #function)
+        }
     }
 }

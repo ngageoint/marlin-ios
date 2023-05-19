@@ -98,13 +98,16 @@ extension Light: BatchImportable {
         var requests: [MSIRouter] = []
         
         for lightVolume in Light.lightVolumes {
-            let newestLight = try? PersistenceController.current.fetchFirst(Light.self, sortBy: [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)], predicate: NSPredicate(format: "volumeNumber = %@", lightVolume.volumeNumber))
-            
-            let noticeWeek = Int(newestLight?.noticeWeek ?? "0") ?? 0
-            
-            print("Query for lights in volume \(lightVolume) after year:\(newestLight?.noticeYear ?? "") week:\(noticeWeek)")
-            
-            requests.append(MSIRouter.readLights(volume: lightVolume.volumeQuery, noticeYear: newestLight?.noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1)))
+            let context = PersistenceController.current.newTaskContext()
+            context.performAndWait {
+                let newestLight = try? PersistenceController.current.fetchFirst(Light.self, sortBy: [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)], predicate: NSPredicate(format: "volumeNumber = %@", lightVolume.volumeNumber), context: context)
+                
+                let noticeWeek = Int(newestLight?.noticeWeek ?? "0") ?? 0
+                
+                print("Query for lights in volume \(lightVolume) after year:\(newestLight?.noticeYear ?? "") week:\(noticeWeek)")
+                
+                requests.append(MSIRouter.readLights(volume: lightVolume.volumeQuery, noticeYear: newestLight?.noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1)))
+            }
         }
         
         return requests

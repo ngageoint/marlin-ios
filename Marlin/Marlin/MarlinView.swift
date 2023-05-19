@@ -15,13 +15,16 @@ class ItemWrapper : ObservableObject {
     @Published var date: Date?
 }
 
-class BottomSheetItemList: ObservableObject {
-    @Published var bottomSheetItems: [BottomSheetItem]?
-}
-
 extension MarlinView: BottomSheetDelegate {
     func bottomSheetDidDismiss() {
         NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
+    }
+}
+
+class MapMixins: ObservableObject {
+    var mixins: [MapMixin]
+    init(mixins: [MapMixin]) {
+        self.mixins = mixins
     }
 }
 
@@ -31,7 +34,6 @@ struct MarlinView: View {
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     @State var selection: String? = nil
     @State var showBottomSheet: Bool = false
-    @StateObject var bottomSheetItemList: BottomSheetItemList = BottomSheetItemList()
         
     @State var showSnackbar: Bool = false
     @State var snackbarModel: SnackbarModel?
@@ -42,15 +44,11 @@ struct MarlinView: View {
     @State private var previewUrl: URL?
     @State var isMapLayersPresented: Bool = false
     @State var mapLayerEditViewModel: MapLayerViewModel? = nil
-    
-    @StateObject var mapState: MapState = MapState()
-    
-    @AppStorage("userTrackingMode") var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
+        
     @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = true
     @AppStorage("disclaimerAccepted") var disclaimerAccepted: Bool = false
     @AppStorage("onboardingComplete") var onboardingComplete: Bool = false
 
-    let mapItemsTappedPub = NotificationCenter.default.publisher(for: .MapItemsTapped)
     let dismissBottomSheetPub = NotificationCenter.default.publisher(for: .DismissBottomSheet)
     let snackbarPub = NotificationCenter.default.publisher(for: .SnackbarNotification)
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
@@ -60,7 +58,7 @@ struct MarlinView: View {
         notification.object
     }
     
-    var mixins: [MapMixin]
+    @State var mixins: [MapMixin]
     
     init() {
         var mixins: [MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
@@ -86,11 +84,15 @@ struct MarlinView: View {
         if UserDefaults.standard.dataSourceEnabled(Asam.self) {
             mixins.append(AsamMap(showAsTiles: true))
         }
-        self.mixins = mixins
+        if UserDefaults.standard.showNavigationalWarningsOnMainMap {
+            mixins.append(NavigationalWarningMap())
+        }
+        _mixins = State(wrappedValue: mixins)
     }
     
     var body: some View {
-        ZStack(alignment: .top) {
+        Self._printChanges()
+        return ZStack(alignment: .top) {
             
             if !onboardingComplete {
                 OnboardingView(dataSourceList: dataSourceList)
@@ -111,19 +113,15 @@ struct MarlinView: View {
                 
                 if horizontalSizeClass == .compact {
                     
-                    MarlinCompactWidth(dataSourceList: dataSourceList, filterOpen: $filterOpen, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
+                    MarlinCompactWidth(dataSourceList: dataSourceList, filterOpen: $filterOpen, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins)
                     )
                 } else {
-                    MarlinRegularWidth(filterOpen: $filterOpen, dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState))
+                    MarlinRegularWidth(filterOpen: $filterOpen, dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins))
                 }
             }
         }
-        .onChange(of: userTrackingMode) { newValue in
-            mapState.userTrackingMode = newValue
-        }
-        // TODO: this can be replaced with .sheet introduced in ios16 when we are at 17
-        .bottomSheet(isPresented: $showBottomSheet, delegate: self) {
-            MarlinBottomSheet(itemList: bottomSheetItemList)
+        .background {
+            MarlinDataBottomSheet()
         }
         .bottomSheet(isPresented: $filterOpen, detents: .large, delegate: self) {
             FilterBottomSheet(dataSources: $dataSourceList.mappedDataSources)
@@ -161,18 +159,7 @@ struct MarlinView: View {
             self.snackbarModel = notification.snackbarModel
             showSnackbar.toggle()
         }
-        .onReceive(mapItemsTappedPub) { output in
-            guard let notification = output.object as? MapItemsTappedNotification else {
-                return
-            }
-            var bottomSheetItems: [BottomSheetItem] = []
-            bottomSheetItems += self.handleTappedItems(items: notification.items)
-            if bottomSheetItems.count == 0 {
-                return
-            }
-            bottomSheetItemList.bottomSheetItems = bottomSheetItems
-            showBottomSheet.toggle()
-        }
+        
         .onReceive(dismissBottomSheetPub) { output in
             showBottomSheet = false
         }
@@ -206,17 +193,6 @@ struct MarlinView: View {
         .tint(Color.onPrimaryColor)
         // This is deprecated, but in iOS16 this is the only way to set the back button color
         .accentColor(Color.onPrimaryColor)
+//        .environmentObject(appState)
     }
-    
-    func handleTappedItems(items: [any DataSource]?) -> [BottomSheetItem] {
-        var bottomSheetItems: [BottomSheetItem] = []
-        if let items = items {
-            for item in items {
-                let bottomSheetItem = BottomSheetItem(item: item, actionDelegate: self, annotationView: nil)
-                bottomSheetItems.append(bottomSheetItem)
-            }
-        }
-        return bottomSheetItems
-    }
-
 }

@@ -74,7 +74,7 @@ final class LightSummaryViewTests: XCTestCase {
         }
         tester().tapView(withAccessibilityLabel: "Location")
         
-        expectation(forNotification: .MapRequestFocus,
+        expectation(forNotification: .TabRequestFocus,
                     object: nil) { notification in
             return true
         }
@@ -127,8 +127,8 @@ final class LightSummaryViewTests: XCTestCase {
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-            
-            let light = try! XCTUnwrap(notification.object as? Light)
+            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
+            let light = try! XCTUnwrap(vds.dataSource as? Light)
             XCTAssertEqual(light.featureNumber, "14840")
             return true
         }

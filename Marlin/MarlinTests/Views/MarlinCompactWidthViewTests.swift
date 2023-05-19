@@ -166,7 +166,7 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             tester().tapView(withAccessibilityLabel: "\(dataSourceList.tabs[0].dataSource.key)List")
             tester().waitForView(withAccessibilityLabel: dataSourceList.tabs[0].dataSource.fullDataSourceName)
             tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
-            NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+            NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
             tester().waitForView(withAccessibilityLabel: "Marlin Map")
         }
     }
@@ -218,19 +218,19 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             for dataSource in dataSourceList.allTabs {
                 NotificationCenter.default.post(name: .SwitchTabs, object: dataSource.dataSource.key)
                 tester().waitForView(withAccessibilityLabel: dataSource.dataSource.fullDataSourceName)
-                NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+                NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
                 tester().waitForView(withAccessibilityLabel: "Marlin Map")
             }
         }
         
         NotificationCenter.default.post(name: .SwitchTabs, object: "settings")
         tester().waitForView(withAccessibilityLabel: "About")
-        NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+        NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
         tester().waitForView(withAccessibilityLabel: "Marlin Map")
         
         NotificationCenter.default.post(name: .SwitchTabs, object: "submitReport")
         tester().waitForView(withAccessibilityLabel: "Submit Report")
-        NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+        NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
         tester().waitForView(withAccessibilityLabel: "Marlin Map")
     }
     
@@ -345,7 +345,7 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         
         tester().waitForView(withAccessibilityLabel: "Marlin Map")
         
-        NotificationCenter.default.post(name: .ViewDataSource, object: asam)
+        NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: asam))
         
         tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
     }

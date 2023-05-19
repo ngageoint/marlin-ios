@@ -8,28 +8,78 @@
 import SwiftUI
 import MapKit
 
-struct NavigationalWarningListView<Location>: View where Location: LocationManagerProtocol  {
-    @Environment(\.managedObjectContext) private var viewContext
-    @StateObject var mapState: MapState = MapState()
-    @ObservedObject var locationManager: Location
+struct RootPresentationModeKey: EnvironmentKey {
+    static let defaultValue: Binding<RootPresentationMode> = .constant(RootPresentationMode())
+}
 
-    var navareaMap = GeoPackageMap(fileName: "navigation_areas", tableName: "navigation_areas", index: 0)
-    var backgroundMap = GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: Color.dynamicLandColor, index: 1)
+extension EnvironmentValues {
+    var rootPresentationMode: Binding<RootPresentationMode> {
+        get { return self[RootPresentationModeKey.self] }
+        set { self[RootPresentationModeKey.self] = newValue }
+    }
+}
+
+typealias RootPresentationMode = Bool
+
+extension RootPresentationMode {
     
+    public mutating func dismiss() {
+        self.toggle()
+    }
+}
+
+struct MapWrapper: View {
+    let MAP_NAME = "Navigational Warning List View Map"
+    var mapState: MapState
+    
+    var body: some View {
+        MarlinMap(navigationalWarningMap: true, name: MAP_NAME, mapState: mapState)
+    }
+}
+
+struct NavigationalWarningListView<Location>: View where Location: LocationManagerProtocol  {
+    @ObservedObject var navState = NavState()
+    
+    let MAP_NAME = "Navigational Warning List View Map"
+    @Environment(\.managedObjectContext) private var viewContext
+    var mapState: MapState = MapState()
+    var locationManager: Location
+    @State var expandMap: Bool = false
+    @State var selection: String? = nil
+    let tabFocus = NotificationCenter.default.publisher(for: .TabRequestFocus)
+
+    @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
+
     init(locationManager: Location = LocationManager.shared) {
         self.locationManager = locationManager
+        navState.navGroupName = "\(NavigationalWarning.key)List"
     }
     
     var body: some View {
-        GeometryReader { geometry in
+        Self._printChanges()
+        return GeometryReader { geometry in
+            NavigationLink(tag: "detail", selection: $selection) {
+                if let data = itemWrapper.dataSource as? DataSourceViewBuilder {
+                    data.detailView
+                }
+            } label: {
+                EmptyView()
+            }
+            .isDetailLink(false)
+            .hidden()
+            
             VStack(spacing: 0) {
-                MarlinMap(name: "Navigational Warning List View Map", mixins: [navareaMap, backgroundMap], mapState: mapState)
-                    .frame(minHeight: geometry.size.height * 0.3, maxHeight: geometry.size.height * 0.3)
-                    .edgesIgnoringSafeArea([.leading, .trailing])
+                MapWrapper(mapState: mapState)
+//                MarlinMap(navigationalWarningMap: true, name: MAP_NAME,
+//                          mapState: mapState)
+                .frame(minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3, maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5)
+                .edgesIgnoringSafeArea([.leading, .trailing])
+                .overlay(bottomButtons(), alignment: .bottom)
                 List {
-                    NavigationalWarningAreasView(currentArea: locationManager.currentNavArea)
+                    NavigationalWarningAreasView(locationManager: locationManager, mapName: MAP_NAME)
                         .listRowBackground(Color.surfaceColor)
                         .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
+                        .environmentObject(navState)
                 }
                 .listStyle(.plain)
                 .onAppear {
@@ -41,16 +91,53 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
         .navigationTitle(NavigationalWarning.fullDataSourceName)
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.surfaceColor)
-        .onChange(of: locationManager.lastLocation) { lastLocation in
-            if let lastLocation = locationManager.lastLocation {
-                mapState.center = MKCoordinateRegion(center: lastLocation.coordinate, span: MKCoordinateSpan(latitudeDelta: 30, longitudeDelta: 30))
+//        .onReceive(viewDataSourcePub) { output in
+//            if let dataSource = output.dataSource as? NavigationalWarning, output.mapName == MAP_NAME {
+//                NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
+//                itemWrapper.dataSource = dataSource
+//                itemWrapper.date = Date()
+//                selection = "detail"
+//            }
+//        }
+        .onReceive(tabFocus) { output in
+            let tabName = output.object as? String
+            if tabName == nil || tabName == "\(NavigationalWarning.key)List" {
+                selection = "Navigational Warning View"
+                navState.rootViewId = UUID()
             }
         }
+        .id(navState.rootViewId)
+//        .onAppear {
+//            mapState.name = "Navigational Warning Map"
+//        }
+    }
+    
+    @ViewBuilder
+    func bottomButtons() -> some View {
+        HStack(alignment: .bottom, spacing: 0) {
+            Spacer()
+            VStack {
+                ViewExpandButton(expanded: $expandMap)
+                UserTrackingButton(mapState: mapState)
+                    .fixedSize()
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("User Tracking")
+            }
+        }
+        .padding(.trailing, 8)
+        .padding(.bottom, 30)
     }
 }
 
-struct NavigationalWarningAreasView: View {
+struct NavigationalWarningAreasView<Location>: View where Location: LocationManagerProtocol {
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject var navState: NavState
+    
+    @ObservedObject var locationManager: Location
+    
+    var mapName: String?
+    
+    @AppStorage("showUnparsedNavigationalWarnings") var showUnparsedNavigationalWarnings = false
     
     @SectionedFetchRequest<String, NavigationalWarning>
     var currentNavigationalWarningsSections: SectionedFetchResults<String, NavigationalWarning>
@@ -58,16 +145,27 @@ struct NavigationalWarningAreasView: View {
     @SectionedFetchRequest<String, NavigationalWarning>
     var navigationalWarningsSections: SectionedFetchResults<String, NavigationalWarning>
     
-    init(currentArea: NavigationalWarningNavArea?) {
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \NavigationalWarning.navArea, ascending: false), NSSortDescriptor(keyPath: \NavigationalWarning.issueDate, ascending: false)],
+        predicate: NSPredicate(format: "locations == nil"),
+        animation: .default)
+    private var noParsedLocationNavigationalWarnings: FetchedResults<NavigationalWarning>
+    
+    init(locationManager: Location, mapName: String?) {
+        self.locationManager = locationManager
+        let currentArea = locationManager.currentNavArea
         self._currentNavigationalWarningsSections = SectionedFetchRequest<String, NavigationalWarning>(entity: NavigationalWarning.entity(), sectionIdentifier: \NavigationalWarning.navArea!, sortDescriptors: [NSSortDescriptor(keyPath: \NavigationalWarning.navArea, ascending: false), NSSortDescriptor(keyPath: \NavigationalWarning.issueDate, ascending: false)], predicate: NSPredicate(format: "navArea = %@", currentArea?.name ?? ""))
     
         self._navigationalWarningsSections = SectionedFetchRequest<String, NavigationalWarning>(entity: NavigationalWarning.entity(), sectionIdentifier: \NavigationalWarning.navArea!, sortDescriptors: [NSSortDescriptor(keyPath: \NavigationalWarning.navArea, ascending: false), NSSortDescriptor(keyPath: \NavigationalWarning.issueDate, ascending: false)], predicate: NSPredicate(format: "navArea != %@", currentArea?.name ?? ""))
+        
+        self.mapName = mapName
     }
     
     var body: some View {
         ForEach(currentNavigationalWarningsSections) { section in
             NavigationLink {
-                NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(section), navArea: section.id)
+                NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(section), navArea: section.id, mapName: mapName)
+                    .environmentObject(navState)
             } label: {
                 HStack {
                     VStack(alignment: .leading) {
@@ -84,6 +182,7 @@ struct NavigationalWarningAreasView: View {
                     NavigationalWarningAreaUnreadBadge(navArea: section.id, warnings: Array<NavigationalWarning>(section))
                 }
             }
+            .isDetailLink(false)
             .accessibilityElement(children: .contain)
             .accessibilityLabel("\(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area") (Current)")
             .padding(.leading, 8)
@@ -103,7 +202,8 @@ struct NavigationalWarningAreasView: View {
         
         ForEach(navigationalWarningsSections) { section in
             NavigationLink {
-                NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(section), navArea: section.id)
+                NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(section), navArea: section.id, mapName: mapName)
+                    .environmentObject(navState)
             } label: {
                 HStack {
                     VStack(alignment: .leading) {
@@ -120,6 +220,7 @@ struct NavigationalWarningAreasView: View {
                     NavigationalWarningAreaUnreadBadge(navArea: section.id, warnings: Array<NavigationalWarning>(section))
                 }
             }
+            .isDetailLink(false)
             .accessibilityElement(children: .contain)
             .accessibilityLabel(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area")
             .padding(.leading, 8)
@@ -136,5 +237,34 @@ struct NavigationalWarningAreasView: View {
         }
         .listRowBackground(Color.surfaceColor)
         .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
+        
+        if showUnparsedNavigationalWarnings {
+            NavigationLink {
+                NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(noParsedLocationNavigationalWarnings), navArea: "Unknown", mapName: mapName)
+                    .environmentObject(navState)
+            } label: {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Unparsed Locations")
+                            .font(Font.body1)
+                            .foregroundColor(Color.onSurfaceColor)
+                            .opacity(0.87)
+                        Text("\(noParsedLocationNavigationalWarnings.count)")
+                            .font(Font.caption)
+                            .foregroundColor(Color.onSurfaceColor)
+                            .opacity(0.6)
+                    }
+                    Spacer()
+                }
+            }
+            .isDetailLink(false)
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("Unparsed Locations Navigation Area")
+            .padding(.leading, 8)
+            .padding(.top, 8)
+            .padding(.bottom, 8)
+            .listRowBackground(Color.surfaceColor)
+            .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
+        }
     }
 }

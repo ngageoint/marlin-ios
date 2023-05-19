@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22E261" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Asam" representedClassName=".Asam" syncable="YES" codeGenerationType="category">
+        <attribute name="asamDescription" optional="YES" attributeType="String"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="hostility" optional="YES" attributeType="String"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="mgrs10km" optional="YES" attributeType="String"/>
+        <attribute name="navArea" optional="YES" attributeType="String"/>
+        <attribute name="position" optional="YES" attributeType="String"/>
+        <attribute name="reference" optional="YES" attributeType="String"/>
+        <attribute name="subreg" optional="YES" attributeType="String"/>
+        <attribute name="victim" optional="YES" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="reference"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="DFRS" representedClassName=".DFRS" syncable="YES" codeGenerationType="category">
+        <attribute name="areaName" optional="YES" attributeType="String"/>
+        <attribute name="frequency" optional="YES" attributeType="String"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="mgrs10km" optional="YES" attributeType="String"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="procedureText" optional="YES" attributeType="String"/>
+        <attribute name="range" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="remarks" optional="YES" attributeType="String"/>
+        <attribute name="rxLatitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="rxLongitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="rxPosition" optional="YES" attributeType="String"/>
+        <attribute name="stationName" optional="YES" attributeType="String"/>
+        <attribute name="stationNumber" optional="YES" attributeType="String"/>
+        <attribute name="stationType" optional="YES" attributeType="String"/>
+        <attribute name="txLatitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="txLongitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="txPosition" optional="YES" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="stationNumber"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="DFRSArea" representedClassName=".DFRSArea" syncable="YES" codeGenerationType="category">
+        <attribute name="areaIndex" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="areaName" optional="YES" attributeType="String"/>
+        <attribute name="areaNote" optional="YES" attributeType="String"/>
+        <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="indexNote" optional="YES" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="areaName"/>
+                <constraint value="areaIndex"/>
+                <constraint value="index"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="DifferentialGPSStation" representedClassName=".DifferentialGPSStation" syncable="YES" codeGenerationType="category">
+        <attribute name="aidType" optional="YES" attributeType="String"/>
+        <attribute name="deleteFlag" optional="YES" attributeType="String"/>
+        <attribute name="featureNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="frequency" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="geopoliticalHeading" optional="YES" attributeType="String"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="mgrs10km" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="noticeNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="noticeWeek" optional="YES" attributeType="String"/>
+        <attribute name="noticeYear" optional="YES" attributeType="String"/>
+        <attribute name="position" optional="YES" attributeType="String"/>
+        <attribute name="postNote" optional="YES" attributeType="String"/>
+        <attribute name="precedingNote" optional="YES" attributeType="String"/>
+        <attribute name="range" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="regionHeading" optional="YES" attributeType="String"/>
+        <attribute name="remarks" optional="YES" attributeType="String"/>
+        <attribute name="removeFromList" optional="YES" attributeType="String"/>
+        <attribute name="sectionHeader" optional="YES" attributeType="String"/>
+        <attribute name="stationID" optional="YES" attributeType="String"/>
+        <attribute name="transferRate" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="volumeNumber" optional="YES" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="featureNumber"/>
+                <constraint value="volumeNumber"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="ElectronicPublication" representedClassName=".ElectronicPublication" syncable="YES" codeGenerationType="category">
+        <attribute name="contentId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="downloadProgress" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="fileExtension" optional="YES" attributeType="String"/>
+        <attribute name="filenameBase" optional="YES" attributeType="String"/>
+        <attribute name="fileSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="fullFilename" optional="YES" attributeType="String"/>
+        <attribute name="fullPubFlag" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="internalPath" optional="YES" attributeType="String"/>
+        <attribute name="isDownloaded" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isDownloading" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="odsEntryId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pubDownloadDisplayName" optional="YES" attributeType="String"/>
+        <attribute name="pubDownloadId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pubDownloadOrder" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pubsecId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pubsecLastModified" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="pubTypeId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="s3Key" optional="YES" attributeType="String"/>
+        <attribute name="sectionDisplayName" optional="YES" attributeType="String"/>
+        <attribute name="sectionLastModified" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="sectionName" optional="YES" attributeType="String"/>
+        <attribute name="sectionOrder" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="uploadTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="s3Key"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="Light" representedClassName=".Light" syncable="YES" codeGenerationType="category">
+        <attribute name="aidType" optional="YES" attributeType="String"/>
+        <attribute name="characteristic" optional="YES" attributeType="String"/>
+        <attribute name="characteristicNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="deleteFlag" optional="YES" attributeType="String"/>
+        <attribute name="featureNumber" optional="YES" attributeType="String"/>
+        <attribute name="geopoliticalHeading" optional="YES" attributeType="String"/>
+        <attribute name="heightFeet" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="heightMeters" optional="YES" attributeType="Float" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="internationalFeature" optional="YES" attributeType="String"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="localHeading" optional="YES" attributeType="String"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="mgrs10km" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="noticeNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="noticeWeek" optional="YES" attributeType="String"/>
+        <attribute name="noticeYear" optional="YES" attributeType="String"/>
+        <attribute name="position" optional="YES" attributeType="String"/>
+        <attribute name="postNote" optional="YES" attributeType="String"/>
+        <attribute name="precedingNote" optional="YES" attributeType="String"/>
+        <attribute name="range" optional="YES" attributeType="String"/>
+        <attribute name="regionHeading" optional="YES" attributeType="String"/>
+        <attribute name="remarks" optional="YES" attributeType="String"/>
+        <attribute name="removeFromList" optional="YES" attributeType="String"/>
+        <attribute name="requiresPostProcessing" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="sectionHeader" optional="YES" attributeType="String"/>
+        <attribute name="structure" optional="YES" attributeType="String"/>
+        <attribute name="subregionHeading" optional="YES" attributeType="String"/>
+        <attribute name="volumeNumber" optional="YES" attributeType="String"/>
+        <relationship name="lightRange" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LightRange" inverseName="light" inverseEntity="LightRange"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="featureNumber"/>
+                <constraint value="volumeNumber"/>
+                <constraint value="characteristicNumber"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="LightRange" representedClassName=".LightRange" syncable="YES" codeGenerationType="category">
+        <attribute name="color" optional="YES" attributeType="String"/>
+        <attribute name="range" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="light" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Light" inverseName="lightRange" inverseEntity="Light"/>
+    </entity>
+    <entity name="MapLayer" representedClassName=".MapLayer" syncable="YES" codeGenerationType="category">
+        <attribute name="displayName" optional="YES" attributeType="String"/>
+        <attribute name="filePath" optional="YES" attributeType="String"/>
+        <attribute name="groupName" optional="YES" attributeType="String"/>
+        <attribute name="layers" optional="YES" attributeType="String"/>
+        <attribute name="maxLatitude" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="maxLongitude" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="maxZoom" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="minLatitude" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="minLongitude" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="minZoom" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="order" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="refreshRate" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
+        <attribute name="url" optional="YES" attributeType="String"/>
+        <attribute name="urlParameters" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer" customClassName=".[String:String]"/>
+        <attribute name="username" optional="YES" attributeType="String"/>
+        <attribute name="visible" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="Modu" representedClassName=".Modu" syncable="YES" codeGenerationType="category">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="distance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="mgrs10km" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="navArea" optional="YES" attributeType="String"/>
+        <attribute name="position" optional="YES" attributeType="String"/>
+        <attribute name="region" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="rigStatus" optional="YES" attributeType="String"/>
+        <attribute name="specialStatus" optional="YES" attributeType="String"/>
+        <attribute name="subregion" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="name"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="NavigationalWarning" representedClassName=".NavigationalWarning" syncable="YES" codeGenerationType="category">
+        <attribute name="authority" optional="YES" attributeType="String"/>
+        <attribute name="cancelDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="cancelMsgNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="cancelMsgYear" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="cancelNavArea" optional="YES" attributeType="String"/>
+        <attribute name="issueDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="locations" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer" customClassName=".[[String:String]]"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="maxLatitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="maxLongitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="minLatitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="minLongitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="msgNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="msgYear" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="navArea" attributeType="String"/>
+        <attribute name="status" optional="YES" attributeType="String"/>
+        <attribute name="subregion" optional="YES" attributeType="String"/>
+        <attribute name="text" optional="YES" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="msgYear"/>
+                <constraint value="msgNumber"/>
+                <constraint value="navArea"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="NoticeToMariners" representedClassName=".NoticeToMariners" syncable="YES" codeGenerationType="category">
+        <attribute name="downloadProgress" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="fileExtension" optional="YES" attributeType="String"/>
+        <attribute name="filenameBase" optional="YES" attributeType="String"/>
+        <attribute name="fileSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="internalPath" optional="YES" attributeType="String"/>
+        <attribute name="isDownloaded" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isDownloading" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isFullPublication" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="lastModified" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="limitedDist" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="noticeNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="odsContentId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="odsEntryId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="odsKey" optional="YES" attributeType="String"/>
+        <attribute name="publicationIdentifier" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="sectionOrder" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="title" attributeType="String"/>
+        <attribute name="uploadTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="odsEntryId"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="Port" representedClassName=".Port" syncable="YES" codeGenerationType="category">
+        <attribute name="alternateName" optional="YES" attributeType="String"/>
+        <attribute name="anchorageDepth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="cargoPierDepth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="channelDepth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="chartNumber" optional="YES" attributeType="String"/>
+        <attribute name="chemicalHoldingTank" optional="YES" attributeType="String"/>
+        <attribute name="cmAir" optional="YES" attributeType="String"/>
+        <attribute name="cmRadio" optional="YES" attributeType="String"/>
+        <attribute name="cmRadioTel" optional="YES" attributeType="String"/>
+        <attribute name="cmRail" optional="YES" attributeType="String"/>
+        <attribute name="cmTelegraph" optional="YES" attributeType="String"/>
+        <attribute name="cmTelephone" optional="YES" attributeType="String"/>
+        <attribute name="countryCode" optional="YES" attributeType="String"/>
+        <attribute name="countryName" optional="YES" attributeType="String"/>
+        <attribute name="craneContainer" optional="YES" attributeType="String"/>
+        <attribute name="craneFixed" optional="YES" attributeType="String"/>
+        <attribute name="craneFloating" optional="YES" attributeType="String"/>
+        <attribute name="craneMobile" optional="YES" attributeType="String"/>
+        <attribute name="degauss" optional="YES" attributeType="String"/>
+        <attribute name="dirtyBallast" optional="YES" attributeType="String"/>
+        <attribute name="dnc" optional="YES" attributeType="String"/>
+        <attribute name="dodWaterBody" optional="YES" attributeType="String"/>
+        <attribute name="drydock" optional="YES" attributeType="String"/>
+        <attribute name="entranceWidth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="erIce" optional="YES" attributeType="String"/>
+        <attribute name="erOther" optional="YES" attributeType="String"/>
+        <attribute name="erSwell" optional="YES" attributeType="String"/>
+        <attribute name="erTide" optional="YES" attributeType="String"/>
+        <attribute name="etaMessage" optional="YES" attributeType="String"/>
+        <attribute name="firstPortOfEntry" optional="YES" attributeType="String"/>
+        <attribute name="garbageDisposal" optional="YES" attributeType="String"/>
+        <attribute name="globalId" optional="YES" attributeType="String"/>
+        <attribute name="goodHoldingGround" optional="YES" attributeType="String"/>
+        <attribute name="harborSize" optional="YES" attributeType="String"/>
+        <attribute name="harborType" optional="YES" attributeType="String"/>
+        <attribute name="harborUse" optional="YES" attributeType="String"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="latitudeDms" optional="YES" attributeType="String"/>
+        <attribute name="lifts0" optional="YES" attributeType="String"/>
+        <attribute name="lifts25" optional="YES" attributeType="String"/>
+        <attribute name="lifts50" optional="YES" attributeType="String"/>
+        <attribute name="lifts100" optional="YES" attributeType="String"/>
+        <attribute name="liquifiedNaturalGasTerminalDepth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="loAnchor" optional="YES" attributeType="String"/>
+        <attribute name="loBeachMoor" optional="YES" attributeType="String"/>
+        <attribute name="loBreakBulk" optional="YES" attributeType="String"/>
+        <attribute name="loContainer" optional="YES" attributeType="String"/>
+        <attribute name="loDangCargo" optional="YES" attributeType="String"/>
+        <attribute name="loIceMoor" optional="YES" attributeType="String"/>
+        <attribute name="loLiquidBulk" optional="YES" attributeType="String"/>
+        <attribute name="loLongTerm" optional="YES" attributeType="String"/>
+        <attribute name="loMedMoor" optional="YES" attributeType="String"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longitudeDms" optional="YES" attributeType="String"/>
+        <attribute name="loOilTerm" optional="YES" attributeType="String"/>
+        <attribute name="loOther" optional="YES" attributeType="String"/>
+        <attribute name="loRoro" optional="YES" attributeType="String"/>
+        <attribute name="loSolidBulk" optional="YES" attributeType="String"/>
+        <attribute name="loWharves" optional="YES" attributeType="String"/>
+        <attribute name="maxVesselBeam" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="maxVesselDraft" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="maxVesselLength" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="medFacilities" optional="YES" attributeType="String"/>
+        <attribute name="mgrs10km" optional="YES" attributeType="String"/>
+        <attribute name="navArea" optional="YES" attributeType="String"/>
+        <attribute name="offshoreMaxVesselBeam" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="offshoreMaxVesselDraft" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="offshoreMaxVesselLength" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="oilTerminalDepth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="overheadLimits" optional="YES" attributeType="String"/>
+        <attribute name="portName" optional="YES" attributeType="String"/>
+        <attribute name="portNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="portSecurity" optional="YES" attributeType="String"/>
+        <attribute name="ptAdvisable" optional="YES" attributeType="String"/>
+        <attribute name="ptAvailable" optional="YES" attributeType="String"/>
+        <attribute name="ptCompulsory" optional="YES" attributeType="String"/>
+        <attribute name="ptLocalAssist" optional="YES" attributeType="String"/>
+        <attribute name="publicationNumber" optional="YES" attributeType="String"/>
+        <attribute name="qtOther" optional="YES" attributeType="String"/>
+        <attribute name="qtPratique" optional="YES" attributeType="String"/>
+        <attribute name="qtSanitation" optional="YES" attributeType="String"/>
+        <attribute name="railway" optional="YES" attributeType="String"/>
+        <attribute name="regionName" optional="YES" attributeType="String"/>
+        <attribute name="regionNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="repairCode" optional="YES" attributeType="String"/>
+        <attribute name="s57Enc" optional="YES" attributeType="String"/>
+        <attribute name="s101Enc" optional="YES" attributeType="String"/>
+        <attribute name="searchAndRescue" optional="YES" attributeType="String"/>
+        <attribute name="shelter" optional="YES" attributeType="String"/>
+        <attribute name="srDiving" optional="YES" attributeType="String"/>
+        <attribute name="srElectrical" optional="YES" attributeType="String"/>
+        <attribute name="srElectricalRepair" optional="YES" attributeType="String"/>
+        <attribute name="srIceBreaking" optional="YES" attributeType="String"/>
+        <attribute name="srLongshore" optional="YES" attributeType="String"/>
+        <attribute name="srNavigationalEquipment" optional="YES" attributeType="String"/>
+        <attribute name="srSteam" optional="YES" attributeType="String"/>
+        <attribute name="suAviationFuel" optional="YES" attributeType="String"/>
+        <attribute name="suDeck" optional="YES" attributeType="String"/>
+        <attribute name="suDiesel" optional="YES" attributeType="String"/>
+        <attribute name="suEngine" optional="YES" attributeType="String"/>
+        <attribute name="suFuel" optional="YES" attributeType="String"/>
+        <attribute name="suProvisions" optional="YES" attributeType="String"/>
+        <attribute name="suWater" optional="YES" attributeType="String"/>
+        <attribute name="tide" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="trafficSeparationScheme" optional="YES" attributeType="String"/>
+        <attribute name="tugsAssist" optional="YES" attributeType="String"/>
+        <attribute name="tugsSalvage" optional="YES" attributeType="String"/>
+        <attribute name="turningArea" optional="YES" attributeType="String"/>
+        <attribute name="ukcMgmtSystem" optional="YES" attributeType="String"/>
+        <attribute name="unloCode" optional="YES" attributeType="String"/>
+        <attribute name="usRep" optional="YES" attributeType="String"/>
+        <attribute name="vesselTrafficService" optional="YES" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="portNumber"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="RadioBeacon" representedClassName=".RadioBeacon" syncable="YES" codeGenerationType="category">
+        <attribute name="aidType" optional="YES" attributeType="String"/>
+        <attribute name="characteristic" optional="YES" attributeType="String"/>
+        <attribute name="deleteFlag" optional="YES" attributeType="String"/>
+        <attribute name="featureNumber" optional="YES" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="frequency" optional="YES" attributeType="String"/>
+        <attribute name="geopoliticalHeading" optional="YES" attributeType="String"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="mgrs10km" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="noticeNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="noticeWeek" optional="YES" attributeType="String"/>
+        <attribute name="noticeYear" optional="YES" attributeType="String"/>
+        <attribute name="position" optional="YES" attributeType="String"/>
+        <attribute name="postNote" optional="YES" attributeType="String"/>
+        <attribute name="precedingNote" optional="YES" attributeType="String"/>
+        <attribute name="range" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="regionHeading" optional="YES" attributeType="String"/>
+        <attribute name="removeFromList" optional="YES" attributeType="String"/>
+        <attribute name="sectionHeader" optional="YES" attributeType="String"/>
+        <attribute name="sequenceText" optional="YES" attributeType="String"/>
+        <attribute name="stationRemark" optional="YES" attributeType="String"/>
+        <attribute name="volumeNumber" optional="YES" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="volumeNumber"/>
+                <constraint value="featureNumber"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+</model>

@@ -17,7 +17,7 @@ extension ElectronicPublication: DataSourceViewBuilder {
         AnyView(ElectronicPublicationDetailView(electronicPublication: self))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil) -> AnyView {
         AnyView(ElectronicPublicationSummaryView(electronicPublication: self, showMoreDetails: showMoreDetails))
     }
 }

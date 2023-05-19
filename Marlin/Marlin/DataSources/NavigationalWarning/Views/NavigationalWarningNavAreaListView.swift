@@ -8,7 +8,8 @@
 import SwiftUI
 import Combine
 
-struct NavigationalWarningNavAreaListView: View {    
+struct NavigationalWarningNavAreaListView: View {
+    @EnvironmentObject var navState: NavState
     @AppStorage<String> var lastSeen: String
     @State var lastSavedDate: Date = Date(timeIntervalSince1970: 0)
     @State var scrollingTo: ObjectIdentifier?
@@ -19,12 +20,14 @@ struct NavigationalWarningNavAreaListView: View {
     @StateObject var scrollViewHelper = ScrollViewHelper()
     
     @StateObject var dataSource = NavigationalWarningsAreaDataSource()
+    var mapName: String?
     var navArea: String
     var warnings: [NavigationalWarning]
-    init(warnings: [NavigationalWarning], navArea: String) {
+    init(warnings: [NavigationalWarning], navArea: String, mapName: String?) {
         self.warnings = warnings
         self.navArea = navArea
         self._lastSeen = AppStorage(wrappedValue: "", "lastSeen-\(navArea)")
+        self.mapName = mapName
     }
     
     var body: some View {
@@ -36,8 +39,9 @@ struct NavigationalWarningNavAreaListView: View {
                             navigationalWarning.detailView
                         } label: {
                             HStack {
-                                navigationalWarning.summaryView()
+                                navigationalWarning.summaryView(mapName: mapName)
                                     .padding(.all, 16)
+                                    .environmentObject(navState)
                             }
                             .card()
                             .background(GeometryReader {

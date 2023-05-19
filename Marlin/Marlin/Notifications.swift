@@ -15,7 +15,7 @@ extension Notification.Name {
     public static let FocusMapOnItem = Notification.Name("FocusMapOnItem")
     public static let DismissBottomSheet = Notification.Name("DismissBottomSheet")
     public static let BottomSheetDismissed = Notification.Name("BottomSheetDismissed")
-    public static let MapRequestFocus = Notification.Name("MapRequestFocus")
+    public static let TabRequestFocus = Notification.Name("TabRequestFocus")
     public static let FocusLight = Notification.Name("FocusLight")
     public static let FocusRadioBeacon = Notification.Name("FocusRadioBeacon")
     public static let FocusAsam = Notification.Name("FocusAsam")
@@ -23,6 +23,7 @@ extension Notification.Name {
     public static let FocusPort = Notification.Name("FocusPort")
     public static let FocusDifferentialGPSStation = Notification.Name("FocusDifferentialGPSStation")
     public static let FocusDFRS = Notification.Name("FocusDFRS")
+    public static let FocusNavigationalWarning = Notification.Name("FocusNavigationalWarning")
     public static let ViewDataSource = Notification.Name("ViewDataSource")
     public static let ViewNavigationalWarning = Notification.Name("ViewNavigationalWarning")
     public static let SwitchTabs = Notification.Name("SwitchTabs")
@@ -30,6 +31,7 @@ extension Notification.Name {
     public static let DataSourceUpdated = Notification.Name("DataSourceUpdated")
     public static let DataSourceLoading = Notification.Name("DataSourceLoading")
     public static let DataSourceLoaded = Notification.Name("DataSourceLoaded")
+    public static let DataSourceProcessed = Notification.Name("DataSourceProcessed")
     public static let BatchUpdateComplete = Notification.Name("BatchUpdateComplete")
     public static let MappedDataSourcesUpdated = Notification.Name("MappedDataSourcesUpdated")
     public static let LocationAuthorizationStatusChanged = Notification.Name("LocationAuthorizationStatusChanged")
@@ -38,6 +40,8 @@ extension Notification.Name {
 
 struct FocusMapOnItemNotification {
     var item: (any DataSourceLocation)?
+    var zoom: Bool = false
+    var mapName: String?
 }
 
 struct MapAnnotationFocusedNotification {
@@ -47,7 +51,8 @@ struct MapAnnotationFocusedNotification {
 struct MapItemsTappedNotification {
     var annotations: [Any]?
     var items: [any DataSource]?
-    var mapView: MKMapView?
+    var mapName: String?
+    var zoom: Bool = false
 }
 
 struct SnackbarNotification {
@@ -63,4 +68,9 @@ struct DataSourceUpdatedNotification {
 
 struct BatchUpdateComplete {
     var dataSourceUpdates: [DataSourceUpdatedNotification]
+}
+
+struct ViewDataSource {
+    var mapName: String?
+    var dataSource: (any DataSource)?
 }

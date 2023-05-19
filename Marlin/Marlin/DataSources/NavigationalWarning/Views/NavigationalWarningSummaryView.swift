@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct NavigationalWarningSummaryView: View {
     var navigationalWarning: NavigationalWarning
+    var showMoreDetails: Bool
+    var mapName: String?
     
-    init(navigationalWarning: NavigationalWarning) {
+    init(navigationalWarning: NavigationalWarning, showMoreDetails: Bool, mapName: String? = nil) {
         self.navigationalWarning = navigationalWarning
+        self.showMoreDetails = showMoreDetails
+        self.mapName = mapName
     }
     
     var body: some View {
@@ -24,7 +29,7 @@ struct NavigationalWarningSummaryView: View {
                 .multilineTextAlignment(.leading)
                 .lineLimit(8)
                 .secondary()
-            NavigationalWarningActionBar(navigationalWarning: navigationalWarning)
+            NavigationalWarningActionBar(navigationalWarning: navigationalWarning, showMoreDetails: showMoreDetails, mapName: mapName)
         }
     }
 }

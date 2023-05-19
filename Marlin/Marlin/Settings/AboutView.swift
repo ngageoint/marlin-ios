@@ -14,6 +14,8 @@ struct AboutView: View {
     
     @AppStorage("showMapScale") var showMapScale = false
     @AppStorage("flyoverMapsEnabled") var flyoverMapsEnabled = false
+    @AppStorage("showUnparsedNavigationalWarnings") var showUnparsedNavigationalWarnings = false
+    @AppStorage("showNavigationalWarningsOnMainMap") var showNavigationalWarningsOnMainMap = false
 
     var body: some View {
         List {
@@ -80,6 +82,33 @@ struct AboutView: View {
                         HStack {
                             Image(systemName: "rotate.3d")
                             Text("Enable Flyover Map Types")
+                                .primary()
+                        }
+                    })
+                    .padding([.top, .bottom], 8)
+                    
+                    Toggle(isOn: $showUnparsedNavigationalWarnings, label: {
+                        HStack {
+                            Image(systemName: "mappin.slash")
+                            Text("Show Navigation Warnings With No Parsed Location")
+                                .primary()
+                        }
+                    })
+                    .padding([.top, .bottom], 8)
+                    
+                    Toggle(isOn: $showUnparsedNavigationalWarnings, label: {
+                        HStack {
+                            Image(systemName: "mappin.slash")
+                            Text("Show Navigation Warnings With No Parsed Location")
+                                .primary()
+                        }
+                    })
+                    .padding([.top, .bottom], 8)
+                    
+                    Toggle(isOn: $showNavigationalWarningsOnMainMap, label: {
+                        HStack {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                            Text("Show Navigation Warnings On Main Map")
                                 .primary()
                         }
                     })

@@ -47,7 +47,7 @@ struct LightDetailView: View {
                                 }
                             }
                         Group {
-                            Text("\(lights[0].featureNumber ?? "") \(lights[0].internationalFeature ?? "")")
+                            Text("\(lights[0].featureNumber ?? "") \(lights[0].internationalFeature ?? "") \(lights[0].volumeNumber ?? "")")
                                 .overline()
                             Text("\(lights[0].name ?? "")")
                                 .primary()

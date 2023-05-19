@@ -73,7 +73,7 @@ final class DFRSSummaryViewTests: XCTestCase {
         }
         tester().tapView(withAccessibilityLabel: "Location")
         
-        expectation(forNotification: .MapRequestFocus,
+        expectation(forNotification: .TabRequestFocus,
                     object: nil) { notification in
             return true
         }
@@ -128,8 +128,8 @@ final class DFRSSummaryViewTests: XCTestCase {
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-            
-            let dfrs = try! XCTUnwrap(notification.object as? DFRS)
+            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
+            let dfrs = try! XCTUnwrap(vds.dataSource as? DFRS)
             XCTAssertEqual(dfrs.stationName, "Nos Galata Lt.")
             return true
         }
@@ -170,7 +170,7 @@ final class DFRSSummaryViewTests: XCTestCase {
         
         tester().waitForAbsenceOfView(withAccessibilityLabel: "More Details")
         
-        expectation(forNotification: .MapRequestFocus,
+        expectation(forNotification: .TabRequestFocus,
                     object: nil) { notification in
             return true
         }

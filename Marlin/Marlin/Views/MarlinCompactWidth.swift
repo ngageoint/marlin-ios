@@ -9,7 +9,6 @@ import SwiftUI
 import MapKit
 
 struct MarlinCompactWidth: View {
-    
     @EnvironmentObject var appState: AppState
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     
@@ -23,8 +22,10 @@ struct MarlinCompactWidth: View {
     
     @Binding var filterOpen: Bool
     
-    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource)
-    let mapFocus = NotificationCenter.default.publisher(for: .MapRequestFocus)
+    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
+        notification.object as? ViewDataSource
+    }
+    let mapFocus = NotificationCenter.default.publisher(for: .TabRequestFocus)
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
     }
@@ -32,7 +33,8 @@ struct MarlinCompactWidth: View {
     var marlinMap: MarlinMap
     
     var body: some View {
-        ZStack {
+        Self._printChanges()
+        return ZStack {
             TabView(selection: $selectedTab) {
                 NavigationView {
                     VStack(spacing: 0) {
@@ -98,7 +100,7 @@ struct MarlinCompactWidth: View {
                     }
                     .onReceive(self.appState.$popToRoot) { popToRoot in
                         if popToRoot {
-                            self.selection = "map"
+//                            self.selection = "\(Asam.key)List"
                             self.appState.popToRoot = false
                         }
                     }
@@ -146,12 +148,14 @@ struct MarlinCompactWidth: View {
                 }
             }
             .onReceive(viewDataSourcePub) { output in
-                if let dataSource = output.object as? (any DataSource) {
-                    viewData(dataSource)
+                if let dataSource = output.dataSource {
+                    if output.mapName == nil || output.mapName == marlinMap.name {
+                        viewData(dataSource)
+                    }
                 }
             }
             .onReceive(mapFocus) { output in
-                selectedTab = "map"
+                selectedTab = output.object as? String ?? "map"
                 self.appState.popToRoot = true
             }
             .onReceive(switchTabPub) { output in

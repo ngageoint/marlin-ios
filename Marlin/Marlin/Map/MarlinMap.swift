@@ -24,13 +24,24 @@ class MapSingleTap: UITapGestureRecognizer {
 
 class MapState: ObservableObject {
     @Published var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
-    @Published var center: MKCoordinateRegion?
+    var centerDate: Date?
+    @Published var center: MKCoordinateRegion? {
+        didSet {
+            centerDate = Date()
+        }
+    }
     @Published var forceCenter: MKCoordinateRegion? {
         didSet {
             forceCenterDate = Date()
         }
     }
     var forceCenterDate: Date?
+    
+    @Published var coordinateCenter: CLLocationCoordinate2D? {
+        didSet {
+            forceCenterDate = Date()
+        }
+    }
     
     @Published var searchResults: [MKMapItem]?
     
@@ -40,6 +51,22 @@ class MapState: ObservableObject {
     @AppStorage("showMapScale") var showMapScale = false
     
     @Published var mixinStates: [String: Any] = [:]
+}
+
+extension MarlinMap {
+
+    init(navigationalWarningMap: Bool, name: String, mapState: MapState? = nil) {
+        self.name = name
+        if let mapState = mapState {
+            self.mapState = mapState
+        } else {
+            self.mapState = MapState()
+        }
+        
+        var navareaMap = GeoPackageMap(fileName: "navigation_areas", tableName: "navigation_areas", index: 0)
+        var backgroundMap = GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: Color.dynamicLandColor, index: 1)
+        self._mixins = State(wrappedValue: [NavigationalWarningMap(zoomOnFocus: true), navareaMap, backgroundMap])
+    }
 }
 
 struct MarlinMap: UIViewRepresentable {
@@ -84,6 +111,9 @@ struct MarlinMap: UIViewRepresentable {
         mapView.accessibilityLabel = name
         
         context.coordinator.mapView = mapView
+        if let region = context.coordinator.currentRegion {
+            context.coordinator.setMapRegion(region: region)
+        }
     
         mapView.register(EnlargedAnnotationView.self, forAnnotationViewWithReuseIdentifier: EnlargedAnnotationView.ReuseID)
 
@@ -108,22 +138,32 @@ struct MarlinMap: UIViewRepresentable {
                 scale.scaleVisibility = .visible // always visible
                 scale.isAccessibilityElement = true
                 scale.accessibilityLabel = "Map Scale"
+                scale.translatesAutoresizingMaskIntoConstraints = false
                 mapView.addSubview(scale)
+                
+                NSLayoutConstraint.activate([
+                    scale.centerXAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.centerXAnchor),
+                    scale.bottomAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+                ])
                 context.coordinator.mapScale = scale
             } else if let scale = scale {
                 mapView.addSubview(scale)
+                NSLayoutConstraint.activate([
+                    scale.centerXAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.centerXAnchor),
+                    scale.bottomAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+                ])
             }
         } else if let scale = scale {
             scale.removeFromSuperview()
         }
 
         if let center = mapState.center, center.center.latitude != context.coordinator.setCenter?.latitude, center.center.longitude != context.coordinator.setCenter?.longitude {
-            mapView.setRegion(center, animated: true)
+            context.coordinator.setMapRegion(region: center)
             context.coordinator.setCenter = center.center
         }
         
         if let center = mapState.forceCenter, context.coordinator.forceCenterDate != mapState.forceCenterDate {
-            mapView.setRegion(center, animated: true)
+            context.coordinator.setMapRegion(region: center)
             context.coordinator.forceCenterDate = mapState.forceCenterDate
         }
         
@@ -198,6 +238,14 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     var trackingModeSet: MKUserTrackingMode?
     
     var forceCenterDate: Date?
+    var centerDate: Date?
+    
+    var currentRegion: MKCoordinateRegion?
+    
+    func setMapRegion(region: MKCoordinateRegion) {
+        currentRegion = region
+        self.mapView?.setRegion(region, animated: true)
+    }
 
     init(_ marlinMap: MarlinMap) {
         self.marlinMap = marlinMap
@@ -217,6 +265,9 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     }
     
     func focusItem(notification: FocusMapOnItemNotification) {
+        if let notificationMapName = notification.mapName, notificationMapName != marlinMap.name {
+            return
+        }
         if let focusedAnnotation = focusedAnnotation {
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: {
                 focusedAnnotation.shrinkAnnotation()
@@ -226,9 +277,16 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             self.focusedAnnotation = nil
         }
         if let ds = notification.item {
-            let span = mapView?.region.span ?? MKCoordinateSpan(zoomLevel: 17, pixelWidth: Double(mapView?.frame.size.width ?? UIScreen.main.bounds.width))
-            let adjustedCenter = CLLocationCoordinate2D(latitude: ds.coordinate.latitude - (span.latitudeDelta / 4.0), longitude: ds.coordinate.longitude)
-            mapView?.setCenter(adjustedCenter, animated: true)
+            if notification.zoom, let warning = ds as? NavigationalWarning, let region = warning.region {
+                setMapRegion(region: region)
+            } else {
+                let span = mapView?.region.span ?? MKCoordinateSpan(zoomLevel: 17, pixelWidth: Double(mapView?.frame.size.width ?? UIScreen.main.bounds.width))
+                let adjustedCenter = CLLocationCoordinate2D(latitude: ds.coordinate.latitude - (span.latitudeDelta / 4.0), longitude: ds.coordinate.longitude)
+                if CLLocationCoordinate2DIsValid(adjustedCenter) {
+                    mapView?.setCenter(adjustedCenter, animated: true)
+                    currentRegion = MKCoordinateRegion(center: adjustedCenter, span: span)
+                }
+            }
         }
         
         guard let mapItem = notification.item as? MapImage else {
@@ -306,13 +364,13 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         var items: [any DataSource] = []
         if let mixins = marlinMap.mixins {
             for mixin in mixins.reversed() {
-                if let matchedItems = mixin.items(at: tapCoord, mapView: mapView) {
+                if let matchedItems = mixin.items(at: tapCoord, mapView: mapView, touchPoint: tapPoint) {
                     items.append(contentsOf: matchedItems)
                 }
             }
         }
 
-        let notification = MapItemsTappedNotification(annotations: annotationsTapped, items: items, mapView: mapView)
+        let notification = MapItemsTappedNotification(annotations: annotationsTapped, items: items, mapName: marlinMap.name)
         NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
     }
         
@@ -351,6 +409,9 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             annotationView.canShowCallout = false
             annotationView.isEnabled = false
             annotationView.accessibilityLabel = "Enlarged"
+            annotationView.zPriority = .max
+            annotationView.selectedZPriority = .max
+
             (annotation as? EnlargableAnnotation)?.annotationView = annotationView
             return annotationView
         }
@@ -388,7 +449,6 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             }
         }
     }
-
 }
 
 class EnlargedAnnotation: NSObject, MKAnnotation, EnlargableAnnotation {

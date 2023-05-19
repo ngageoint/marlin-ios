@@ -20,7 +20,7 @@ extension Light: DataSourceViewBuilder {
         return AnyView(EmptyView())
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false) -> AnyView {
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil) -> AnyView {
         AnyView(LightSummaryView(light: self, showMoreDetails: showMoreDetails))
     }
 }

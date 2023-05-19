@@ -84,7 +84,7 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         }
         tester().tapView(withAccessibilityLabel: "Location")
         
-        expectation(forNotification: .MapRequestFocus,
+        expectation(forNotification: .TabRequestFocus,
                     object: nil) { notification in
             return true
         }
@@ -144,8 +144,8 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
 
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-            
-            let rb = try! XCTUnwrap(notification.object as? RadioBeacon)
+            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
+            let rb = try! XCTUnwrap(vds.dataSource as? RadioBeacon)
             XCTAssertEqual(rb.name, "Ittoqqortoormit, Scoresbysund")
             return true
         }

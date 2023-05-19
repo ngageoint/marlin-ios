@@ -17,7 +17,7 @@ struct DFRSActionBar: View {
         HStack(spacing:0) {
             if showMoreDetailsButton {
                 Button(action: {
-                    NotificationCenter.default.post(name: .ViewDataSource, object: self.dfrs)
+                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: self.dfrs))
                 }) {
                     Text("More Details")
                 }
@@ -57,7 +57,7 @@ struct DFRSActionBar: View {
                 .accessibilityLabel("share")
                 if showFocusButton && CLLocationCoordinate2DIsValid(dfrs.coordinate) {
                     Button(action: {
-                        NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+                        NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
                         let notification = MapItemsTappedNotification(items: [self.dfrs])
                         NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
                     }) {

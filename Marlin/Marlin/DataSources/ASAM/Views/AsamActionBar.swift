@@ -17,7 +17,7 @@ struct AsamActionBar: View {
         HStack(spacing:0) {
             if showMoreDetailsButton {
                 Button(action: {
-                    NotificationCenter.default.post(name: .ViewDataSource, object: self.asam)
+                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: self.asam))
                 }) {
                     Text("More Details")
                         .foregroundColor(Color.primaryColorVariant)
@@ -56,7 +56,7 @@ struct AsamActionBar: View {
                 
                 if showFocusButton {
                     Button(action: {
-                        NotificationCenter.default.post(name: .MapRequestFocus, object: nil)
+                        NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
                         let notification = MapItemsTappedNotification(items: [self.asam])
                         NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
                     }) {

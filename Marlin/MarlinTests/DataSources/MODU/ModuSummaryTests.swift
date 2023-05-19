@@ -71,7 +71,7 @@ final class ModuSummaryTests: XCTestCase {
         }
         tester().tapView(withAccessibilityLabel: "Location")
         
-        expectation(forNotification: .MapRequestFocus,
+        expectation(forNotification: .TabRequestFocus,
                     object: nil) { notification in
             return true
         }
@@ -119,8 +119,8 @@ final class ModuSummaryTests: XCTestCase {
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-            
-            let modu = try! XCTUnwrap(notification.object as? Modu)
+            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
+            let modu = try! XCTUnwrap(vds.dataSource as? Modu)
             XCTAssertEqual(modu.name, "ABAN II")
             return true
         }

@@ -99,7 +99,7 @@ final class DFRSDetailViewTests: XCTestCase {
         
         tester().waitForAbsenceOfView(withAccessibilityLabel: "More Details")
         
-        expectation(forNotification: .MapRequestFocus,
+        expectation(forNotification: .TabRequestFocus,
                     object: nil) { notification in
             return true
         }

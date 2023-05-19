@@ -9,14 +9,14 @@ import Foundation
 import UIKit
 import CoreData
 
-extension NavigationalWarning: DataSource {
+extension NavigationalWarning: DataSourceLocation {
     static var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
         return dateFormatter
     }
     
-    static var isMappable: Bool = false
+    static var isMappable: Bool = UserDefaults.standard.showNavigationalWarningsOnMainMap
     static var dataSourceName: String = NSLocalizedString("Warnings", comment: "Warnings data source display name")
     static var fullDataSourceName: String = NSLocalizedString("Navigational Warnings", comment: "Warnings data source display name")
     static var key: String = "navWarning"
@@ -24,9 +24,41 @@ extension NavigationalWarning: DataSource {
     static var color: UIColor = UIColor(argbValue: 0xFFD32F2F)
     static var imageName: String? = nil
     static var systemImageName: String? = "exclamationmark.triangle.fill"
-    static var imageScale: CGFloat = 0.66
+    static var imageScale: CGFloat = 1.0
     
-    static func postProcess() {}
+    static func postProcess() {
+        if !UserDefaults.standard.navigationalWarningsLocationsParsed {
+            DispatchQueue.global(qos: .utility).async {
+                let fetchRequest = NavigationalWarning.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "locations == nil")
+                let context = PersistenceController.current.newTaskContext()
+                context.performAndWait {
+                    if let objects = try? context.fetch(fetchRequest), !objects.isEmpty {
+
+                        for warning in objects {
+                            if let mappedLocation = warning.mappedLocation {
+                                if let region = mappedLocation.region {
+                                    warning.latitude = region.center.latitude
+                                    warning.longitude = region.center.longitude
+                                    warning.minLatitude = region.center.latitude - (region.span.latitudeDelta / 2.0)
+                                    warning.maxLatitude = region.center.latitude + (region.span.latitudeDelta / 2.0)
+                                    warning.minLongitude = region.center.longitude - (region.span.longitudeDelta / 2.0)
+                                    warning.maxLongitude = region.center.longitude + (region.span.longitudeDelta / 2.0)
+                                }
+                                warning.locations = mappedLocation.wktDistance
+                            }
+                        }
+                    }
+                    do {
+                        try context.save()
+                    } catch {
+                    }
+                }
+                
+                NotificationCenter.default.post(Notification(name: .DataSourceProcessed, object: DataSourceUpdatedNotification(key: NavigationalWarning.key)))
+            }
+        }
+    }
 
     var color: UIColor {
         return NavigationalWarning.color

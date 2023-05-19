@@ -90,7 +90,8 @@ final class MarlinBottomSheetTests: XCTestCase {
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
             
-            let asam = try! XCTUnwrap(notification.object as? Asam)
+            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
+            let asam = try! XCTUnwrap(vds.dataSource as? Asam)
             XCTAssertEqual(asam.hostility, "Boarding")
             XCTAssertEqual(asam.victim, "Boat")
             return true
@@ -158,8 +159,8 @@ final class MarlinBottomSheetTests: XCTestCase {
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-            
-            let modu = try! XCTUnwrap(notification.object as? Modu)
+            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
+            let modu = try! XCTUnwrap(vds.dataSource as? Modu)
             XCTAssertEqual(modu.name, "name")
             XCTAssertEqual(modu.rigStatus, "Inactive")
             return true
@@ -174,8 +175,8 @@ final class MarlinBottomSheetTests: XCTestCase {
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-            
-            let asam = try! XCTUnwrap(notification.object as? Asam)
+            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
+            let asam = try! XCTUnwrap(vds.dataSource as? Asam)
             XCTAssertEqual(asam.hostility, "Boarding")
             XCTAssertEqual(asam.victim, "Boat")
             return true

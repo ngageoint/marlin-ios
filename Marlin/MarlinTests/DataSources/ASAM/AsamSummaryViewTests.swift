@@ -149,8 +149,8 @@ final class AsamSummaryViewTests: XCTestCase {
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-            
-            let asam = try! XCTUnwrap(notification.object as? Asam)
+            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
+            let asam = try! XCTUnwrap(vds.dataSource as? Asam)
             XCTAssertEqual(asam.hostility, "Boarding")
             XCTAssertEqual(asam.victim, "Boat")
             return true
@@ -181,7 +181,7 @@ final class AsamSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "focus")
         TestHelpers.printAllAccessibilityLabelsInWindows()
         
-        expectation(forNotification: .MapRequestFocus,
+        expectation(forNotification: .TabRequestFocus,
                     object: nil) { notification in
             return true
         }

@@ -13,7 +13,8 @@ protocol PersistentStore {
     func newTaskContext() -> NSManagedObjectContext
     func fetchFirst<T: NSManagedObject>(_ entityClass:T.Type,
                                                      sortBy: [NSSortDescriptor]?,
-                                                     predicate: NSPredicate?) throws-> T?
+                                        predicate: NSPredicate?,
+                                        context: NSManagedObjectContext?) throws-> T?
     func fetch<ResultType: NSFetchRequestResult>(fetchRequest: NSFetchRequest<ResultType>) throws -> [ResultType]
     func perform(_ block: @escaping () -> Void)
     func save() throws
@@ -68,7 +69,8 @@ class MockPersistentStore: PersistentStore {
     
     func fetchFirst<T: NSManagedObject>(_ entityClass:T.Type,
                                                      sortBy: [NSSortDescriptor]? = nil,
-                                                     predicate: NSPredicate? = nil) throws-> T? {
+                                        predicate: NSPredicate? = nil,
+                                        context: NSManagedObjectContext? = nil) throws-> T? {
         return nil
     }
     
@@ -119,8 +121,10 @@ class CoreDataPersistentStore: PersistentStore {
     
     func fetchFirst<T: NSManagedObject>(_ entityClass:T.Type,
                                                      sortBy: [NSSortDescriptor]? = nil,
-                                                     predicate: NSPredicate? = nil) throws-> T? {
-        return try container.viewContext.fetchFirst(entityClass, sortBy: sortBy, predicate: predicate)
+                                                     predicate: NSPredicate? = nil,
+                                        context: NSManagedObjectContext? = nil) throws-> T? {
+        
+        return try (context ?? container.viewContext).fetchFirst(entityClass, sortBy: sortBy, predicate: predicate)
     }
     
     func fetch<ResultType: NSFetchRequestResult>(fetchRequest: NSFetchRequest<ResultType>) throws -> [ResultType] {
@@ -151,7 +155,11 @@ class CoreDataPersistentStore: PersistentStore {
     }
     
     func countOfObjects<T: NSManagedObject>(_ entityClass:T.Type) throws -> Int? {
-        return try container.viewContext.countOfObjects(entityClass)
+        var count: Int?
+        container.viewContext.performAndWait {
+            count = try? container.viewContext.countOfObjects(entityClass)
+        }
+        return count
     }
     
     func mainQueueContext() -> NSManagedObjectContext {

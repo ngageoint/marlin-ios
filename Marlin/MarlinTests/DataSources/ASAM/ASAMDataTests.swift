@@ -254,12 +254,12 @@ final class ASAMDataTests: XCTestCase {
 
         waitForExpectations(timeout: 10, handler: nil)
         
-        let updatedAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [Asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-216")))
+        let updatedAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [Asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-216"), context: nil))
         
         XCTAssertEqual(updatedAsam.reference, "2022-216")
         XCTAssertEqual(updatedAsam.asamDescription, "UPDATED")
         
-        let newAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [Asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-218")))
+        let newAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [Asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-218"), context: nil))
         
         XCTAssertEqual(newAsam.reference, "2022-218")
         XCTAssertEqual(newAsam.asamDescription, "THIS ONE IS NEW")

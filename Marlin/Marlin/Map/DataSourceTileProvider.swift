@@ -140,43 +140,46 @@ struct DataSourceTileProvider<T : MapImage>: ImageDataProvider {
             finalPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, boundsPredicate])
         }
         
-        let objects = getMatchingObjects(predicate: finalPredicate)
-        if objects == nil || objects?.count == 0 {
-            handler(.failure(DataTileError.zeroObjects))
-            return
-        }
-        
-        UIGraphicsBeginImageContext(self.tileSize)
-        
-        if let objects = objects {
-            for object in objects {
-                let mapImages = object.mapImage(marker: false, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: UIGraphicsGetCurrentContext())
-                for mapImage in mapImages {
-                    let object3857Location = coord4326To3857(longitude: object.longitude, latitude: object.latitude)
-                    let xPosition = (((object3857Location.x - tileBounds3857.swCorner.x) / (tileBounds3857.neCorner.x - tileBounds3857.swCorner.x)) * self.tileSize.width)
-                    let yPosition = self.tileSize.height - (((object3857Location.y - tileBounds3857.swCorner.y) / (tileBounds3857.neCorner.y - tileBounds3857.swCorner.y)) * self.tileSize.height)
-                    mapImage.draw(in: CGRect(x: (xPosition - (mapImage.size.width / 2)), y: (yPosition - (mapImage.size.height / 2)), width: mapImage.size.width, height: mapImage.size.height))
+        let context = PersistenceController.current.newTaskContext()
+        context.perform {
+            let objects = getMatchingObjects(predicate: finalPredicate, context: context)
+            if objects == nil || objects?.count == 0 {
+                handler(.failure(DataTileError.zeroObjects))
+                return
+            }
+            
+            UIGraphicsBeginImageContext(self.tileSize)
+            
+            if let objects = objects {
+                for object in objects {
+                    let mapImages = object.mapImage(marker: false, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: UIGraphicsGetCurrentContext())
+                    for mapImage in mapImages {
+                        let object3857Location = coord4326To3857(longitude: object.longitude, latitude: object.latitude)
+                        let xPosition = (((object3857Location.x - tileBounds3857.swCorner.x) / (tileBounds3857.neCorner.x - tileBounds3857.swCorner.x)) * self.tileSize.width)
+                        let yPosition = self.tileSize.height - (((object3857Location.y - tileBounds3857.swCorner.y) / (tileBounds3857.neCorner.y - tileBounds3857.swCorner.y)) * self.tileSize.height)
+                        mapImage.draw(in: CGRect(x: (xPosition - (mapImage.size.width / 2)), y: (yPosition - (mapImage.size.height / 2)), width: mapImage.size.width, height: mapImage.size.height))
+                    }
                 }
             }
-        }
-        
-        let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        
-        UIGraphicsEndImageContext()
-        guard let cgImage = newImage.cgImage else {
-            handler(.failure(DataTileError.notFound))
-            return
-        }
-        let data = UIImage(cgImage: cgImage).pngData()
-        if let data = data {
-            handler(.success(data))
-        } else {
-            handler(.failure(DataTileError.notFound))
+            
+            let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+            
+            UIGraphicsEndImageContext()
+            guard let cgImage = newImage.cgImage else {
+                handler(.failure(DataTileError.notFound))
+                return
+            }
+            let data = UIImage(cgImage: cgImage).pngData()
+            if let data = data {
+                handler(.success(data))
+            } else {
+                handler(.failure(DataTileError.notFound))
+            }
         }
         
     }
     
-    func getMatchingObjects(predicate: NSPredicate) -> [T]? {
+    func getMatchingObjects(predicate: NSPredicate, context: NSManagedObjectContext) -> [T]? {
         if let objects = objects {
             
             let filteredObjects: [T] = objects.filter { object in
@@ -193,7 +196,6 @@ struct DataSourceTileProvider<T : MapImage>: ImageDataProvider {
             
             tileFetchRequest.predicate = predicate
             
-            let context = PersistenceController.current.newTaskContext()
             let objects = try? context.fetch(tileFetchRequest)
             return objects as? [T]
         }

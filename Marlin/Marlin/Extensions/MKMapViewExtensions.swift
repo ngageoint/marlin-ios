@@ -14,9 +14,23 @@ extension MKMapView {
     
     var zoomLevel: Int {
         let maxZoom: Double = 20
-        let zoomScale = self.visibleMapRect.size.width / Double(self.frame.size.width)
-        let zoomExponent = log2(zoomScale)
-        return Int(maxZoom - ceil(zoomExponent))
+        var width = self.frame.size.width
+        if width == 0.0 {
+            let windowSize = UIApplication.shared.connectedScenes
+                .compactMap({ scene -> UIWindow? in
+                    (scene as? UIWindowScene)?.keyWindow
+                })
+                .first?
+                .frame
+                .size
+            width = windowSize?.width ?? 0.0
+        }
+        if width != 0.0 {
+            let zoomScale = self.visibleMapRect.size.width / Double(width)
+            let zoomExponent = log2(zoomScale)
+            return Int(maxZoom - ceil(zoomExponent))
+        }
+        return 0
     }
     
 }
@@ -31,11 +45,15 @@ extension MKCoordinateRegion {
     init(center: CLLocationCoordinate2D, zoomLevel: Double, pixelWidth: Double) {
         self.init(center: center, span: MKCoordinateSpan(zoomLevel: zoomLevel, pixelWidth: pixelWidth))
     }
-            
+    
     init(center: CLLocationCoordinate2D, zoom: Double, bounds: CGRect) {
         let zoom = min(zoom, 20)
         let span = MKCoordinateSpan(center: center, zoom: zoom, bounds: bounds)
         self.init(center: center, span: span)
+    }
+    
+    func padded(percent: Double, maxDelta: Double = 10.0) -> MKCoordinateRegion {
+        return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude), span: MKCoordinateSpan(latitudeDelta: min(maxDelta, span.latitudeDelta * (1.0 + percent)), longitudeDelta: min(maxDelta, span.longitudeDelta * (1.0 + percent))))
     }
 }
 

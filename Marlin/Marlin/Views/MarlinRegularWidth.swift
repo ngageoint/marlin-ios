@@ -20,11 +20,13 @@ struct MarlinRegularWidth: View {
 
     @ObservedObject var dataSourceList: DataSourceList
         
-    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource)
+    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
+        notification.object as? ViewDataSource
+    }
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
     }
-    let mapFocus = NotificationCenter.default.publisher(for: .MapRequestFocus)
+    let mapFocus = NotificationCenter.default.publisher(for: .TabRequestFocus)
     
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
     @State var selection: String? = nil
@@ -94,7 +96,7 @@ struct MarlinRegularWidth: View {
                         }.navigationViewStyle(.stack)
                     }
                     .onReceive(viewDataSourcePub) { output in
-                        if let dataSource = output.object as? (any DataSource) {
+                        if let dataSource = output.dataSource {
                             viewData(dataSource)
                         }
                     }

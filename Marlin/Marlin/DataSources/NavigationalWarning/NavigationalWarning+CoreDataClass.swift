@@ -79,6 +79,35 @@ class NavigationalWarning: NSManagedObject {
         "Cancel Date: \(cancelDateString ?? "")\n" +
         "Cancel Year: \(cancelMsgNumber)\n" +
         "Cancel Year: \(cancelMsgYear)\n"
-
     }
+    
+    lazy var mappedLocation: MappedLocation? = {
+        if let text = text {
+            return NAVTEXTextParser(text: text).parseToMappedLocation()
+        }
+        return nil
+    }()
+    
+    lazy var coordinate: CLLocationCoordinate2D = {
+        if let locations = locations, !locations.isEmpty {
+            return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        }
+        return kCLLocationCoordinate2DInvalid
+    }()
+    
+    lazy var region: MKCoordinateRegion? = {
+        if let locations = locations, !locations.isEmpty {
+            var latitudeDelta = maxLatitude - minLatitude
+            var longitudeDelta = maxLongitude - minLongitude
+            
+            if latitudeDelta == 0.0 {
+                latitudeDelta = 0.5
+            }
+            if longitudeDelta == 0.0 {
+                longitudeDelta = 0.5
+            }
+            return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: latitude, longitude: longitude), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+        }
+        return nil
+    }()
 }

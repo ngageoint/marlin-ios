@@ -48,10 +48,9 @@ class Light: NSManagedObject, LightProtocol {
             let fetchRequest = NSFetchRequest<Light>(entityName: "Light")
             fetchRequest.predicate = NSPredicate(format: "requiresPostProcessing == true")
             let context = PersistenceController.current.newTaskContext()
-            
-            if let objects = try? context.fetch(fetchRequest) {
-                if !objects.isEmpty {
-                    context.performAndWait {
+            context.performAndWait {
+                if let objects = try? context.fetch(fetchRequest) {
+                    if !objects.isEmpty {
                         for light in objects {
                             var ranges: [LightRange] = []
                             light.requiresPostProcessing = false
@@ -70,10 +69,11 @@ class Light: NSManagedObject, LightProtocol {
                             }
                             light.lightRange = NSSet(array: ranges)
                         }
-                        try? context.save()
                     }
                 }
+                try? context.save()
             }
+            NotificationCenter.default.post(Notification(name: .DataSourceProcessed, object: DataSourceUpdatedNotification(key: Light.key)))
         }
     }
 
