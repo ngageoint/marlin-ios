@@ -41,6 +41,7 @@ extension Notification.Name {
 struct FocusMapOnItemNotification {
     var item: (any DataSourceLocation)?
     var zoom: Bool = false
+    var mapName: String?
 }
 
 struct MapAnnotationFocusedNotification {

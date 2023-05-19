@@ -23,7 +23,6 @@ class MapSingleTap: UITapGestureRecognizer {
 }
 
 class MapState: ObservableObject {
-    var name: String?
     @Published var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
     var centerDate: Date?
     @Published var center: MKCoordinateRegion? {
@@ -266,6 +265,9 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     }
     
     func focusItem(notification: FocusMapOnItemNotification) {
+        if let notificationMapName = notification.mapName, notificationMapName != marlinMap.name {
+            return
+        }
         if let focusedAnnotation = focusedAnnotation {
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: {
                 focusedAnnotation.shrinkAnnotation()

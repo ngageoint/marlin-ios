@@ -33,7 +33,8 @@ struct MarlinCompactWidth: View {
     var marlinMap: MarlinMap
     
     var body: some View {
-        ZStack {
+        Self._printChanges()
+        return ZStack {
             TabView(selection: $selectedTab) {
                 NavigationView {
                     VStack(spacing: 0) {

@@ -175,18 +175,21 @@ class NavigationalWarningMap: NSObject, MapMixin {
     }
     
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
-        let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: NavigationalWarning.key, for: annotation)
-        if let systemImageName = NavigationalWarning.systemImageName, let annotation = annotation as? NavigationalWarningAnnotation, let warning = annotation.warning {
-            let images = warning.mapImage(marker: false, zoomLevel: 2, tileBounds3857: nil)
-            var combinedImage: UIImage? = UIImage.combineCentered(image1: images.first, image2: nil)
-            if !images.isEmpty {
-                for image in images.dropFirst() {
-                    combinedImage = UIImage.combineCentered(image1: combinedImage, image2: image)
+        if annotation is NavigationalWarningAnnotation {
+            let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: NavigationalWarning.key, for: annotation)
+            if let systemImageName = NavigationalWarning.systemImageName, let annotation = annotation as? NavigationalWarningAnnotation, let warning = annotation.warning {
+                let images = warning.mapImage(marker: false, zoomLevel: 2, tileBounds3857: nil)
+                var combinedImage: UIImage? = UIImage.combineCentered(image1: images.first, image2: nil)
+                if !images.isEmpty {
+                    for image in images.dropFirst() {
+                        combinedImage = UIImage.combineCentered(image1: combinedImage, image2: image)
+                    }
                 }
+                annotationView.image = combinedImage ?? UIImage(systemName: systemImageName)
             }
-            annotationView.image = combinedImage ?? UIImage(systemName: systemImageName)
+            return annotationView
         }
-        return annotationView
+        return nil
     }
 
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [DataSource]? {

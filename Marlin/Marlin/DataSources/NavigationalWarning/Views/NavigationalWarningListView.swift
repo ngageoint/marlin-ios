@@ -28,17 +28,24 @@ extension RootPresentationMode {
     }
 }
 
+struct MapWrapper: View {
+    let MAP_NAME = "Navigational Warning List View Map"
+    var mapState: MapState
+    
+    var body: some View {
+        MarlinMap(navigationalWarningMap: true, name: MAP_NAME, mapState: mapState)
+    }
+}
+
 struct NavigationalWarningListView<Location>: View where Location: LocationManagerProtocol  {
     @ObservedObject var navState = NavState()
     
     let MAP_NAME = "Navigational Warning List View Map"
     @Environment(\.managedObjectContext) private var viewContext
-    @StateObject var mapState: MapState = MapState()
-    @ObservedObject var locationManager: Location
+    var mapState: MapState = MapState()
+    var locationManager: Location
     @State var expandMap: Bool = false
     @State var selection: String? = nil
-    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource)
-        .compactMap { notification in notification.object as? ViewDataSource }
     let tabFocus = NotificationCenter.default.publisher(for: .TabRequestFocus)
 
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
@@ -49,7 +56,8 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
     }
     
     var body: some View {
-        GeometryReader { geometry in
+        Self._printChanges()
+        return GeometryReader { geometry in
             NavigationLink(tag: "detail", selection: $selection) {
                 if let data = itemWrapper.dataSource as? DataSourceViewBuilder {
                     data.detailView
@@ -61,13 +69,14 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
             .hidden()
             
             VStack(spacing: 0) {
-                MarlinMap(navigationalWarningMap: true, name: MAP_NAME,
-                          mapState: mapState)
+                MapWrapper(mapState: mapState)
+//                MarlinMap(navigationalWarningMap: true, name: MAP_NAME,
+//                          mapState: mapState)
                 .frame(minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3, maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5)
                 .edgesIgnoringSafeArea([.leading, .trailing])
                 .overlay(bottomButtons(), alignment: .bottom)
                 List {
-                    NavigationalWarningAreasView(currentArea: locationManager.currentNavArea, mapName: MAP_NAME)
+                    NavigationalWarningAreasView(locationManager: locationManager, mapName: MAP_NAME)
                         .listRowBackground(Color.surfaceColor)
                         .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
                         .environmentObject(navState)
@@ -82,14 +91,14 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
         .navigationTitle(NavigationalWarning.fullDataSourceName)
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.surfaceColor)
-        .onReceive(viewDataSourcePub) { output in
-            if let dataSource = output.dataSource as? NavigationalWarning, output.mapName == MAP_NAME {
-                NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
-                itemWrapper.dataSource = dataSource
-                itemWrapper.date = Date()
-                selection = "detail"
-            }
-        }
+//        .onReceive(viewDataSourcePub) { output in
+//            if let dataSource = output.dataSource as? NavigationalWarning, output.mapName == MAP_NAME {
+//                NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
+//                itemWrapper.dataSource = dataSource
+//                itemWrapper.date = Date()
+//                selection = "detail"
+//            }
+//        }
         .onReceive(tabFocus) { output in
             let tabName = output.object as? String
             if tabName == nil || tabName == "\(NavigationalWarning.key)List" {
@@ -98,9 +107,9 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
             }
         }
         .id(navState.rootViewId)
-        .onAppear {
-            mapState.name = "Navigational Warning Map"
-        }
+//        .onAppear {
+//            mapState.name = "Navigational Warning Map"
+//        }
     }
     
     @ViewBuilder
@@ -120,9 +129,11 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
     }
 }
 
-struct NavigationalWarningAreasView: View {
+struct NavigationalWarningAreasView<Location>: View where Location: LocationManagerProtocol {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var navState: NavState
+    
+    @ObservedObject var locationManager: Location
     
     var mapName: String?
     
@@ -140,7 +151,9 @@ struct NavigationalWarningAreasView: View {
         animation: .default)
     private var noParsedLocationNavigationalWarnings: FetchedResults<NavigationalWarning>
     
-    init(currentArea: NavigationalWarningNavArea?, mapName: String?) {
+    init(locationManager: Location, mapName: String?) {
+        self.locationManager = locationManager
+        let currentArea = locationManager.currentNavArea
         self._currentNavigationalWarningsSections = SectionedFetchRequest<String, NavigationalWarning>(entity: NavigationalWarning.entity(), sectionIdentifier: \NavigationalWarning.navArea!, sortDescriptors: [NSSortDescriptor(keyPath: \NavigationalWarning.navArea, ascending: false), NSSortDescriptor(keyPath: \NavigationalWarning.issueDate, ascending: false)], predicate: NSPredicate(format: "navArea = %@", currentArea?.name ?? ""))
     
         self._navigationalWarningsSections = SectionedFetchRequest<String, NavigationalWarning>(entity: NavigationalWarning.entity(), sectionIdentifier: \NavigationalWarning.navArea!, sortDescriptors: [NSSortDescriptor(keyPath: \NavigationalWarning.navArea, ascending: false), NSSortDescriptor(keyPath: \NavigationalWarning.issueDate, ascending: false)], predicate: NSPredicate(format: "navArea != %@", currentArea?.name ?? ""))
