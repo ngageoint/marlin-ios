@@ -10,9 +10,6 @@ import MapKit
 import CoreData
 
 struct RadioBeaconDetailView: View {
-    
-    @StateObject var mapState: MapState = MapState()
-    
     var fetchRequest: NSFetchRequest<RadioBeacon>
     var radioBeacon: RadioBeacon
     
@@ -27,14 +24,8 @@ struct RadioBeaconDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "RadioBeacon Detail Map", mixins: [RadioBeaconMap(fetchPredicate: fetchRequest.predicate), UserLayersMap()], mapState: mapState)
+                    DataSourceLocationMapView(dataSourceLocation: radioBeacon, mapName: "Radio Beacon Detail Map", mixins: [RadioBeaconMap(fetchPredicate: fetchRequest.predicate)])
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                        .onAppear {
-                            mapState.center = MKCoordinateRegion(center: radioBeacon.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
-                        }
-                        .onChange(of: radioBeacon) { radioBeacon in
-                            mapState.center = MKCoordinateRegion(center: radioBeacon.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
-                        }
                     radioBeacon.summaryView(showSectionHeader: true)
                         .padding(.all, 16)
                 }

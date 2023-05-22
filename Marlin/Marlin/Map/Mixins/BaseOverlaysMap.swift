@@ -12,6 +12,7 @@ import CoreData
 import Combine
 
 class BaseOverlaysMap: NSObject, MapMixin {
+    var uuid: UUID = UUID()
     var viewModel: MapLayerViewModel
     var overlays: [MKTileOverlay] = []
     
@@ -60,9 +61,7 @@ class BaseOverlaysMap: NSObject, MapMixin {
                 }
             }
             
-            for overlay in self.overlays {
-                mapView.removeOverlay(overlay)
-            }
+            mapView.removeOverlays(self.overlays)
 
             var overlay: MKTileOverlay?
             if viewModel.layerType == .wms {
@@ -83,5 +82,9 @@ class BaseOverlaysMap: NSObject, MapMixin {
                 mapView.insertOverlay(overlay, at: 0)
             }
         }
+    }
+    
+    func removeMixin(mapView: MKMapView, mapState: MapState) {
+        mapView.removeOverlays(overlays)
     }
 }

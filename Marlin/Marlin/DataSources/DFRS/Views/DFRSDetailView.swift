@@ -10,8 +10,6 @@ import MapKit
 import CoreData
 
 struct DFRSDetailView: View {
-    @StateObject var mapState: MapState = MapState()
-    
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \DFRSArea.areaName, ascending: true), NSSortDescriptor(keyPath: \DFRSArea.index, ascending: true)],
         predicate: NSPredicate(format: "areaNote != nil || indexNote != nil"),
@@ -33,14 +31,8 @@ struct DFRSDetailView: View {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     if CLLocationCoordinate2DIsValid(dfrs.coordinate) {
-                        MarlinMap(name: "DFRS Detail Map", mixins: [DFRSMap(fetchPredicate: fetchRequest.predicate), UserLayersMap()], mapState: mapState)
+                        DataSourceLocationMapView(dataSourceLocation: dfrs, mapName: "DFRS Detail Map", mixins: [DFRSMap(fetchPredicate: fetchRequest.predicate)])
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                            .onAppear {
-                                mapState.center = MKCoordinateRegion(center: dfrs.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
-                            }
-                            .onChange(of: dfrs) { dfrs in
-                                mapState.center = MKCoordinateRegion(center: dfrs.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
-                            }
                     }
                     dfrs.summaryView(showMoreDetails: false, showSectionHeader: true)
                         .padding(.all, 16)

@@ -28,12 +28,27 @@ extension RootPresentationMode {
     }
 }
 
-struct MapWrapper: View {
-    let MAP_NAME = "Navigational Warning List View Map"
-    var mapState: MapState
+struct NavigationalWarningMapView<Content: View>: View {
+    @ViewBuilder var bottomButtons: Content
+    @StateObject var mixins: NavigationalMapMixins = NavigationalMapMixins()
+    @StateObject var mapState: MapState = MapState()
     
     var body: some View {
-        MarlinMap(navigationalWarningMap: true, name: MAP_NAME, mapState: mapState)
+        MarlinMap(name: "Navigational Warning List View Map", mixins: mixins, mapState: mapState)
+            .overlay(alignment: .bottom) {
+                HStack(alignment: .bottom, spacing: 0) {
+                    Spacer()
+                    VStack {
+                        bottomButtons
+                        UserTrackingButton(mapState: mapState)
+                            .fixedSize()
+                            .accessibilityElement(children: .contain)
+                            .accessibilityLabel("User Tracking")
+                    }
+                }
+                .padding(.trailing, 8)
+                .padding(.bottom, 30)
+            }
     }
 }
 
@@ -42,14 +57,13 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
     
     let MAP_NAME = "Navigational Warning List View Map"
     @Environment(\.managedObjectContext) private var viewContext
-    var mapState: MapState = MapState()
     var locationManager: Location
     @State var expandMap: Bool = false
     @State var selection: String? = nil
     let tabFocus = NotificationCenter.default.publisher(for: .TabRequestFocus)
 
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-
+    
     init(locationManager: Location = LocationManager.shared) {
         self.locationManager = locationManager
         navState.navGroupName = "\(NavigationalWarning.key)List"
@@ -69,12 +83,11 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
             .hidden()
             
             VStack(spacing: 0) {
-                MapWrapper(mapState: mapState)
-//                MarlinMap(navigationalWarningMap: true, name: MAP_NAME,
-//                          mapState: mapState)
+                NavigationalWarningMapView(bottomButtons: {
+                    ViewExpandButton(expanded: $expandMap)
+                })
                 .frame(minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3, maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5)
                 .edgesIgnoringSafeArea([.leading, .trailing])
-                .overlay(bottomButtons(), alignment: .bottom)
                 List {
                     NavigationalWarningAreasView(locationManager: locationManager, mapName: MAP_NAME)
                         .listRowBackground(Color.surfaceColor)
@@ -91,14 +104,6 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
         .navigationTitle(NavigationalWarning.fullDataSourceName)
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.surfaceColor)
-//        .onReceive(viewDataSourcePub) { output in
-//            if let dataSource = output.dataSource as? NavigationalWarning, output.mapName == MAP_NAME {
-//                NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
-//                itemWrapper.dataSource = dataSource
-//                itemWrapper.date = Date()
-//                selection = "detail"
-//            }
-//        }
         .onReceive(tabFocus) { output in
             let tabName = output.object as? String
             if tabName == nil || tabName == "\(NavigationalWarning.key)List" {
@@ -107,25 +112,6 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
             }
         }
         .id(navState.rootViewId)
-//        .onAppear {
-//            mapState.name = "Navigational Warning Map"
-//        }
-    }
-    
-    @ViewBuilder
-    func bottomButtons() -> some View {
-        HStack(alignment: .bottom, spacing: 0) {
-            Spacer()
-            VStack {
-                ViewExpandButton(expanded: $expandMap)
-                UserTrackingButton(mapState: mapState)
-                    .fixedSize()
-                    .accessibilityElement(children: .contain)
-                    .accessibilityLabel("User Tracking")
-            }
-        }
-        .padding(.trailing, 8)
-        .padding(.bottom, 30)
     }
 }
 

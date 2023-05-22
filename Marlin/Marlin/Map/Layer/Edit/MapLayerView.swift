@@ -12,13 +12,12 @@ import Combine
 struct MapLayerView: View {
     @StateObject var viewModel: MapLayerViewModel = MapLayerViewModel()
     @FocusState var isInputActive: Bool
-    @StateObject var mapState: MapState = MapState()
     @Binding var isPresented: Bool
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack {
-            LayerURLView(viewModel: viewModel, mapState: mapState, isPresented: $isPresented)
+            LayerURLView(viewModel: viewModel, isPresented: $isPresented)
         }
         .frame(maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
         .background(Color.backgroundColor)

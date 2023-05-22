@@ -320,7 +320,9 @@ class MapLayerViewModel: ObservableObject, Identifiable {
     func cancel() {
         if mapLayer == nil, let fileName = fileName, layerType == .geopackage {
             // this is a non saved layer.  If it is a GeoPackage layer, check if we should delete the GP
-            MapLayer.safeDeleteGeoPackage(name: fileName)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                MapLayer.safeDeleteGeoPackage(name: fileName)
+            }
         }
     }
     

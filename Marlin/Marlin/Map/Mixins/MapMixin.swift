@@ -11,6 +11,7 @@ import SwiftUI
 import geopackage_ios
 
 protocol MapMixin: AnyObject {
+    var uuid: UUID { get }
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView)
     func updateMixin(mapView: MKMapView, mapState: MapState)
     func renderer(overlay: MKOverlay) -> MKOverlayRenderer?
@@ -18,10 +19,10 @@ protocol MapMixin: AnyObject {
     func regionDidChange(mapView: MKMapView, animated: Bool)
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView?
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [any DataSource]?
+    func removeMixin(mapView: MKMapView, mapState: MapState)
 }
 
 extension MapMixin {
-    
     func polygonHitTest(polygon: MKPolygon, location: CLLocationCoordinate2D) -> Bool {
         guard let renderer = (renderer(overlay: polygon) as? MKPolygonRenderer ?? standardRenderer(overlay: polygon) as? MKPolygonRenderer) else {
             return false
@@ -67,9 +68,7 @@ extension MapMixin {
         }
         let mapPoint = MKMapPoint.init(location)
         let point = renderer.point(for: mapPoint)
-        var onShape = renderer.path?.contains(point) ?? false
-
-        return onShape
+        return renderer.path?.contains(point) ?? false
     }
     
     func updateMixin(mapView: MKMapView, mapState: MapState) {

@@ -53,38 +53,72 @@ class MapState: ObservableObject {
     @Published var mixinStates: [String: Any] = [:]
 }
 
-extension MarlinMap {
-
-    init(navigationalWarningMap: Bool, name: String, mapState: MapState? = nil) {
-        self.name = name
-        if let mapState = mapState {
-            self.mapState = mapState
-        } else {
-            self.mapState = MapState()
-        }
+class MainMapMixins: MapMixins {
+    var subscriptions = Set<AnyCancellable>()
+    var navigationalWarningMap = NavigationalWarningMap()
         
-        var navareaMap = GeoPackageMap(fileName: "navigation_areas", tableName: "navigation_areas", index: 0)
-        var backgroundMap = GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: Color.dynamicLandColor, index: 1)
-        self._mixins = State(wrappedValue: [NavigationalWarningMap(zoomOnFocus: true), navareaMap, backgroundMap])
+    override init() {
+        super.init()
+        var mixins: [any MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
+        
+        if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) {
+            mixins.append(DifferentialGPSStationMap<DifferentialGPSStation>(showAsTiles: true))
+        }
+        if UserDefaults.standard.dataSourceEnabled(DFRS.self) {
+            mixins.append(DFRSMap<DFRS>(showAsTiles: true))
+        }
+        if UserDefaults.standard.dataSourceEnabled(Light.self) {
+            mixins.append(LightMap<Light>(showAsTiles: true))
+        }
+        if UserDefaults.standard.dataSourceEnabled(Port.self) {
+            mixins.append(PortMap<Port>(showAsTiles: true))
+        }
+        if UserDefaults.standard.dataSourceEnabled(RadioBeacon.self) {
+            mixins.append(RadioBeaconMap<RadioBeacon>(showAsTiles: true))
+        }
+        if UserDefaults.standard.dataSourceEnabled(Modu.self) {
+            mixins.append(ModuMap<Modu>(showAsTiles: true))
+        }
+        if UserDefaults.standard.dataSourceEnabled(Asam.self) {
+            mixins.append(AsamMap<Asam>(showAsTiles: true))
+        }
+//        if UserDefaults.standard.showNavigationalWarningsOnMainMap {
+//            mixins.append(navigationalWarningMap)
+//        }
+        self.mixins = mixins
+        
+        UserDefaults.standard.publisher(for: \.showNavigationalWarningsOnMainMap)
+            .sink { showNavigationalWarnings in
+                if showNavigationalWarnings {
+                    self.mixins.append(self.navigationalWarningMap)
+                } else {
+                    self.mixins.removeAll { mixin in
+                        mixin is NavigationalWarningMap
+                    }
+                }
+            }
+            .store(in: &subscriptions)
+    }
+}
+
+class NavigationalMapMixins: MapMixins {
+    var subscriptions = Set<AnyCancellable>()
+    var navigationalWarningMap = NavigationalWarningMap()
+    
+    override init() {
+        super.init()
+        let navareaMap = GeoPackageMap(fileName: "navigation_areas", tableName: "navigation_areas", index: 0)
+        let backgroundMap = GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: Color.dynamicLandColor, index: 1)
+        self.mixins = [NavigationalWarningMap(zoomOnFocus: true), navareaMap, backgroundMap]
     }
 }
 
 struct MarlinMap: UIViewRepresentable {
-    @ObservedObject var mapState: MapState
-
-    @State var mixins: [MapMixin]?
     @State var name: String
-    
-    init(name: String, mixins: [MapMixin]? = [], mapState: MapState? = nil) {
-        self.name = name
-        if let mapState = mapState {
-            self.mapState = mapState
-        } else {
-            self.mapState = MapState()
-        }
-        self._mixins = State(wrappedValue: mixins)
-    }
-    
+
+    @ObservedObject var mixins: MapMixins
+    @StateObject var mapState: MapState = MapState()
+
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView(frame: UIScreen.main.bounds)
         // double tap recognizer has no action
@@ -117,11 +151,10 @@ struct MarlinMap: UIViewRepresentable {
     
         mapView.register(EnlargedAnnotationView.self, forAnnotationViewWithReuseIdentifier: EnlargedAnnotationView.ReuseID)
 
-        if let mixins = mixins {
-            for mixin in mixins {
-                mixin.setupMixin(marlinMap: self, mapView: mapView)
-            }
+        for mixin in mixins.mixins {
+            mixin.setupMixin(marlinMap: self, mapView: mapView)
         }
+        context.coordinator.mixins = mixins.mixins
         return mapView
     }
     
@@ -209,11 +242,28 @@ struct MarlinMap: UIViewRepresentable {
             }
         }
         
-        if let mixins = mixins {
-            for mixin in mixins {
+        // remove any mixins that were removed and add any new ones
+        for mixin in context.coordinator.mixins {
+            if !mixins.mixins.contains(where: { mixinFromMixins in
+                mixinFromMixins.uuid == mixin.uuid
+            }) {
+                // this means it was removed
+                mixin.removeMixin(mapView: mapView, mapState: mapState)
+            }
+        }
+        
+        for mixin in mixins.mixins {
+            if !context.coordinator.mixins.contains(where: { mixinFromCoordinator in
+                mixinFromCoordinator.uuid == mixin.uuid
+            }) {
+                // this means it is new
+                mixin.setupMixin(marlinMap: self, mapView: mapView)
+            } else {
+                // just update it
                 mixin.updateMixin(mapView: mapView, mapState: mapState)
             }
         }
+        context.coordinator.mixins = mixins.mixins
     }
  
     func makeCoordinator() -> MarlinMapCoordinator {
@@ -241,6 +291,8 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     var centerDate: Date?
     
     var currentRegion: MKCoordinateRegion?
+    
+    var mixins: [any MapMixin] = []
     
     func setMapRegion(region: MKCoordinateRegion) {
         currentRegion = region
@@ -362,11 +414,9 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         }
         
         var items: [any DataSource] = []
-        if let mixins = marlinMap.mixins {
-            for mixin in mixins.reversed() {
-                if let matchedItems = mixin.items(at: tapCoord, mapView: mapView, touchPoint: tapPoint) {
-                    items.append(contentsOf: matchedItems)
-                }
+        for mixin in marlinMap.mixins.mixins.reversed() {
+            if let matchedItems = mixin.items(at: tapCoord, mapView: mapView, touchPoint: tapPoint) {
+                items.append(contentsOf: matchedItems)
             }
         }
 
@@ -378,11 +428,9 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         if let renderableOverlay = overlay as? OverlayRenderable {
             return renderableOverlay.renderer
         }
-        if let mixins = marlinMap.mixins {
-            for mixin in mixins {
-                if let renderer = mixin.renderer(overlay: overlay) {
-                    return renderer
-                }
+        for mixin in marlinMap.mixins.mixins {
+            if let renderer = mixin.renderer(overlay: overlay) {
+                return renderer
             }
         }
         return MKTileOverlayRenderer(overlay: overlay)
@@ -415,21 +463,17 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             (annotation as? EnlargableAnnotation)?.annotationView = annotationView
             return annotationView
         }
-        if let mixins = marlinMap.mixins {
-            for mixin in mixins {
-                if let view = mixin.viewForAnnotation(annotation: annotation, mapView: mapView){
-                    return view
-                }
+        for mixin in marlinMap.mixins.mixins {
+            if let view = mixin.viewForAnnotation(annotation: annotation, mapView: mapView){
+                return view
             }
         }
         return nil
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        if let mixins = marlinMap.mixins {
-            for mixin in mixins {
-                mixin.regionDidChange(mapView: mapView, animated: animated)
-            }
+        for mixin in marlinMap.mixins.mixins {
+            mixin.regionDidChange(mapView: mapView, animated: animated)
         }
     }
     
@@ -443,10 +487,8 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     }
     
     func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        if let mixins = marlinMap.mixins {
-            for mixin in mixins {
-                mixin.traitCollectionUpdated(previous: previousTraitCollection)
-            }
+        for mixin in marlinMap.mixins.mixins {
+            mixin.traitCollectionUpdated(previous: previousTraitCollection)
         }
     }
 }

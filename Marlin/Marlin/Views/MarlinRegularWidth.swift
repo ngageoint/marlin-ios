@@ -31,7 +31,11 @@ struct MarlinRegularWidth: View {
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
     @State var selection: String? = nil
         
-    var marlinMap: MarlinMap
+    @StateObject var mixins: MainMapMixins = MainMapMixins()
+    
+    var marlinMap: MarlinMap {
+        MarlinMap(name: "Marlin Compact Map", mixins: mixins)
+    }
     
     var body: some View {
         NavigationView {

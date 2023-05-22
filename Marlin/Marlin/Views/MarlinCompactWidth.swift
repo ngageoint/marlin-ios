@@ -29,8 +29,13 @@ struct MarlinCompactWidth: View {
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
     }
-
-    var marlinMap: MarlinMap
+    
+    @StateObject var mixins: MainMapMixins = MainMapMixins()
+    @StateObject var mapState: MapState = MapState()
+    
+    var marlinMap: MarlinMap {
+        MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
+    }
     
     var body: some View {
         Self._printChanges()
@@ -218,7 +223,7 @@ struct MarlinCompactWidth: View {
         HStack(alignment: .top, spacing: 8) {
             // top left button stack
             VStack(alignment: .leading, spacing: 8) {
-                SearchView(mapState: marlinMap.mapState)
+                SearchView(mapState: mapState)
             }
             .padding(.leading, 8)
             .padding(.top, 16)
@@ -226,7 +231,7 @@ struct MarlinCompactWidth: View {
             // top right button stack
             VStack(alignment: .trailing, spacing: 16) {
                 NavigationLink(tag: "mapSettings", selection: $selection) {
-                    MapSettings(mapState: marlinMap.mapState)
+                    MapSettings(mapState: mapState)
                 } label: {
                     Label(
                         title: {},
@@ -266,7 +271,7 @@ struct MarlinCompactWidth: View {
             Spacer()
             // bottom right button stack
             VStack(alignment: .trailing, spacing: 16) {
-                UserTrackingButton(mapState: marlinMap.mapState)
+                UserTrackingButton(mapState: mapState)
                     .fixedSize()
                     .accessibilityElement(children: .contain)
                     .accessibilityLabel("User Tracking")

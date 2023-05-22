@@ -14,16 +14,13 @@ struct LightDetailView: View {
     var fetchRequest: NSFetchRequest<Light>
     var featureNumber: String
     var volumeNumber: String
-    
-    @StateObject var mapState: MapState = MapState()
-    
+        
     init(featureNumber: String, volumeNumber: String) {
         self.featureNumber = featureNumber
         self.volumeNumber = volumeNumber
         
         let predicate = NSPredicate(format: "featureNumber == %@ AND volumeNumber == %@", self.featureNumber, self.volumeNumber)
 
-        //Intialize the FetchRequest property wrapper
         self._lights = FetchRequest(entity: Light.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Light.characteristicNumber, ascending: true)], predicate: predicate)
         fetchRequest = Light.fetchRequest()
         fetchRequest.predicate = predicate
@@ -34,18 +31,10 @@ struct LightDetailView: View {
             List {
                 Section {
                     VStack(alignment: .leading, spacing: 8) {
-                        MarlinMap(name: "Light Detail Map", mixins: [LightMap<Light>(fetchPredicate: fetchRequest.predicate), UserLayersMap()], mapState: mapState)
-                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                            .onAppear {
-                                if lights.count > 0 {
-                                    mapState.center = MKCoordinateRegion(center: lights[0].coordinate, zoom: 14.5, bounds: CGRect(x: 0, y: 0, width: 600, height: 600))
-                                }
-                            }
-                            .onChange(of: lights.first) { light in
-                                if let firstLight = light {
-                                    mapState.center = MKCoordinateRegion(center: firstLight.coordinate, zoom: 14.5, bounds: CGRect(x: 0, y: 0, width: 600, height: 600))
-                                }
-                            }
+                        if let firstLight = lights.first {
+                            DataSourceLocationMapView(dataSourceLocation: firstLight, mapName: "Light Detail Map", mixins: [LightMap<Light>(fetchPredicate: fetchRequest.predicate)])
+                                .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                        }
                         Group {
                             Text("\(lights[0].featureNumber ?? "") \(lights[0].internationalFeature ?? "") \(lights[0].volumeNumber ?? "")")
                                 .overline()

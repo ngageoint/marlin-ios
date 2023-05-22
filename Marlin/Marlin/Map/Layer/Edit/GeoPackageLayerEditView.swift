@@ -8,10 +8,20 @@
 import SwiftUI
 import MapKit
 
+//struct GeoPackageLayerMapView: View {
+//    @ObservedObject var viewModel: MapLayerViewModel
+//}
+
 struct GeoPackageLayerEditView: View {
     @ObservedObject var viewModel: MapLayerViewModel
-    @ObservedObject var mapState: MapState
+    @StateObject var mixins: MapMixins = MapMixins()
+    @StateObject var mapState = MapState()
+
     @Binding var isPresented: Bool
+    
+    var marlinMap: MarlinMap {
+        MarlinMap(name: "GeoPackage Layer Map", mixins: mixins, mapState: mapState)
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -26,10 +36,13 @@ struct GeoPackageLayerEditView: View {
             .tint(Color.primaryColor)
             .padding([.trailing, .leading], 8)
             .frame(minHeight: 0, maxHeight: .infinity)
-            MarlinMap(name: "GeoPackage Layer Map", mixins: [BaseOverlaysMap(viewModel: viewModel)], mapState: mapState)
+            marlinMap
+                .onAppear {
+                    mixins.mixins.append(BaseOverlaysMap(viewModel: viewModel))
+                }
                 .frame(minHeight: 0, maxHeight: .infinity)
             NavigationLink {
-                LayerConfiguration(viewModel: viewModel, mapState: mapState, isPresented: $isPresented)
+                LayerConfiguration(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 Text("Confirm GeoPackage Layers")
                     .tint(Color.primaryColor)
@@ -55,6 +68,7 @@ struct GeoPackageLayerEditView: View {
             }
         }
         .onAppear {
+            mixins.mixins.append(BaseOverlaysMap(viewModel: viewModel))
             if viewModel.mapLayer != nil {
                 Metrics.shared.appRoute(["mapEditGPLayerSettings"])
             } else {

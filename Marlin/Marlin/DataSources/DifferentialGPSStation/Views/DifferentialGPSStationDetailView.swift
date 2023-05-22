@@ -10,8 +10,6 @@ import MapKit
 import CoreData
 
 struct DifferentialGPSStationDetailView: View {
-    @StateObject var mapState: MapState = MapState()
-    
     var fetchRequest: NSFetchRequest<DifferentialGPSStation>
     var differentialGPSStation: DifferentialGPSStation
     
@@ -21,19 +19,13 @@ struct DifferentialGPSStationDetailView: View {
         fetchRequest = DifferentialGPSStation.fetchRequest()
         fetchRequest.predicate = predicate
     }
-    
+
     var body: some View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "DifferentialGPSStation Detail Map", mixins: [DifferentialGPSStationMap(fetchPredicate: fetchRequest.predicate), UserLayersMap()], mapState: mapState)
+                    DataSourceLocationMapView(dataSourceLocation: differentialGPSStation, mapName: "DifferentialGPSStation Detail Map", mixins: [DifferentialGPSStationMap(fetchPredicate: fetchRequest.predicate)])
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                        .onAppear {
-                            mapState.center = MKCoordinateRegion(center: differentialGPSStation.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
-                        }
-                        .onChange(of: differentialGPSStation) { differentialGPSStation in
-                            mapState.center = MKCoordinateRegion(center: differentialGPSStation.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
-                        }
                     differentialGPSStation.summaryView(showSectionHeader: true)
                         .padding(.all, 16)
                 }

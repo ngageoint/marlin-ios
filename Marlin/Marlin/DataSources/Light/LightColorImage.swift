@@ -35,7 +35,7 @@ class LightImage {
         }
         
         // draw the sectors starting at zoom level 8
-        if zoomLevel > 8, let lightSectors = light.lightSectors {
+        if zoomLevel > 7, let lightSectors = light.lightSectors {
             if let sectorImage = sectorImage(light: light, lightSectors: lightSectors, scale: 1, zoomLevel: zoomLevel) {
                 images.append(sectorImage)
             }
@@ -57,7 +57,7 @@ class LightImage {
     
     static func sectorImage(light: LightProtocol, lightSectors: [ImageSector], scale: Int, zoomLevel: Int) -> UIImage? {
         let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale - ((CGFloat(light.characteristicNumber) - 1.0) * 2)
-        if zoomLevel > 8 {
+        if zoomLevel > 7 {
             return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: 40 * radius, height: 40 * radius), sectors: lightSectors, radius: 8 * radius, fill: false, arcWidth: radius * 0.75)
         } else {
             var sectors: [ImageSector] = []

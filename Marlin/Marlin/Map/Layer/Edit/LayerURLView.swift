@@ -11,11 +11,16 @@ import Combine
 
 struct LayerURLView: View {
     @ObservedObject var viewModel: MapLayerViewModel
-    @ObservedObject var mapState: MapState
+    @StateObject var mixins: MapMixins = MapMixins()
+
     @FocusState var isInputActive: Bool
     @Binding var isPresented: Bool
     @State var chooseFile: Bool = false
     @State var showCredentials: Bool = false
+    
+    var marlinMap: MarlinMap {
+        MarlinMap(name: "XYZ Layer Map", mixins: mixins)
+    }
 
     var body: some View {
         VStack {
@@ -256,7 +261,7 @@ struct LayerURLView: View {
                         .background(Color.surfaceColor)
                     }
                 } else if viewModel.layerType == .xyz || viewModel.layerType == .tms {
-                    MarlinMap(name: "XYZ Layer Map", mixins: [BaseOverlaysMap(viewModel: viewModel)], mapState: mapState)
+                    marlinMap
                         .frame(minHeight: 300, maxHeight: .infinity)
                 } else if viewModel.layerType == .geopackage {
                     Text("GeoPackage Information")
@@ -275,11 +280,11 @@ struct LayerURLView: View {
             
             NavigationLink {
                 if viewModel.layerType == .wms {
-                    WMSLayerEditView(viewModel: viewModel, mapState: mapState, isPresented: $isPresented)
+                    WMSLayerEditView(viewModel: viewModel, isPresented: $isPresented)
                 } else if viewModel.layerType == .geopackage {
-                    GeoPackageLayerEditView(viewModel: viewModel, mapState: mapState, isPresented: $isPresented)
+                    GeoPackageLayerEditView(viewModel: viewModel, isPresented: $isPresented)
                 } else {
-                    LayerConfiguration(viewModel: viewModel, mapState: mapState, isPresented: $isPresented)
+                    LayerConfiguration(viewModel: viewModel, isPresented: $isPresented)
                 }
             } label: {
                 Text("Confirm Layer Source")
@@ -313,6 +318,9 @@ struct LayerURLView: View {
                 }
                 .tint(Color.primaryColorVariant)
             }
+        }
+        .onAppear {
+            mixins.mixins.append(BaseOverlaysMap(viewModel: viewModel))
         }
         .sheet(isPresented: $chooseFile, content: {
             DocumentPicker(model: viewModel.documentPickerViewModel)

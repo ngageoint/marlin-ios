@@ -10,7 +10,6 @@ import MapKit
 import geopackage_ios
 
 struct GeoPackageFeatureItemDetailView: View {
-    @StateObject var mapState: MapState = MapState()
     var featureItem: GeoPackageFeatureItem
     
     init(featureItem: GeoPackageFeatureItem) {
@@ -21,14 +20,8 @@ struct GeoPackageFeatureItemDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "GeoPackage Feature Item Detail Map", mixins: [UserLayersMap()], mapState: mapState)
+                    DataSourceLocationMapView(dataSourceLocation: featureItem, mapName: "GeoPackage Feature Item Detail Map", mixins: [])
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                        .onAppear {
-                            mapState.center = MKCoordinateRegion(center: featureItem.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
-                        }
-                        .onChange(of: featureItem) { featureItem in
-                            mapState.center = MKCoordinateRegion(center: featureItem.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
-                        }
                     Group {
                         if let date = featureItem.dateString {
                             Text(date)

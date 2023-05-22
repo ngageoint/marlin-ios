@@ -9,6 +9,7 @@ import Foundation
 import MapKit
 
 class PersistedMapState: NSObject, MapMixin {
+    var uuid: UUID = UUID()
     
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
         let region = UserDefaults.standard.mapRegion
@@ -29,4 +30,7 @@ class PersistedMapState: NSObject, MapMixin {
         UserDefaults.standard.mapRegion = mapView.region
     }
 
+    func removeMixin(mapView: MKMapView, mapState: MapState) {
+        
+    }
 }

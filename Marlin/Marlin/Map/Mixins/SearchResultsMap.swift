@@ -31,6 +31,7 @@ class SearchResultAnnotation: NSObject, MKAnnotation {
 }
 
 class SearchResultsMap: NSObject, MapMixin {
+    var uuid: UUID = UUID()
     var cancellable = Set<AnyCancellable>()
     var annotations: [SearchResultAnnotation] = []
     
@@ -65,6 +66,10 @@ class SearchResultsMap: NSObject, MapMixin {
                 marlinMap.mapState.center = MKCoordinateRegion(center: mapView.centerCoordinate, zoom: 4, bounds: UIScreen.main.bounds)
             }
         }
+    }
+    
+    func removeMixin(mapView: MKMapView, mapState: MapState) {
+        
     }
     
     func regionDidChange(mapView: MKMapView, animated: Bool) {

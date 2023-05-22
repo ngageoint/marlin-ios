@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import CoreData
 import Alamofire
+import MapKit
 
 extension Light: DataSourceLocation {
     static var dateFormatter: DateFormatter {
@@ -56,6 +57,10 @@ extension Light: DataSourceLocation {
         DataSourceProperty(name: "Subregion Heading", key: #keyPath(Light.subregionHeading), type: .string),
         DataSourceProperty(name: "Local Heading", key: #keyPath(Light.localHeading), type: .string)
     ]
+    
+    var coordinateRegion: MKCoordinateRegion? {
+        MKCoordinateRegion(center: self.coordinate, zoom: 14.5, bounds: CGRect(x: 0, y: 0, width: 600, height: 600))
+    }
 }
 
 extension Light: BatchImportable {

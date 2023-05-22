@@ -22,10 +22,7 @@ extension MarlinView: BottomSheetDelegate {
 }
 
 class MapMixins: ObservableObject {
-    var mixins: [MapMixin]
-    init(mixins: [MapMixin]) {
-        self.mixins = mixins
-    }
+    @Published var mixins: [any MapMixin] = []
 }
 
 struct MarlinView: View {
@@ -58,38 +55,6 @@ struct MarlinView: View {
         notification.object
     }
     
-    @State var mixins: [MapMixin]
-    
-    init() {
-        var mixins: [MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
-
-        if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) {
-            mixins.append(DifferentialGPSStationMap(showAsTiles: true))
-        }
-        if UserDefaults.standard.dataSourceEnabled(DFRS.self) {
-            mixins.append(DFRSMap(showAsTiles: true))
-        }
-        if UserDefaults.standard.dataSourceEnabled(Light.self) {
-            mixins.append(LightMap<Light>(showAsTiles: true))
-        }
-        if UserDefaults.standard.dataSourceEnabled(Port.self) {
-            mixins.append(PortMap(showAsTiles: true))
-        }
-        if UserDefaults.standard.dataSourceEnabled(RadioBeacon.self) {
-            mixins.append(RadioBeaconMap(showAsTiles: true))
-        }
-        if UserDefaults.standard.dataSourceEnabled(Modu.self) {
-            mixins.append(ModuMap(showAsTiles: true))
-        }
-        if UserDefaults.standard.dataSourceEnabled(Asam.self) {
-            mixins.append(AsamMap(showAsTiles: true))
-        }
-        if UserDefaults.standard.showNavigationalWarningsOnMainMap {
-            mixins.append(NavigationalWarningMap())
-        }
-        _mixins = State(wrappedValue: mixins)
-    }
-    
     var body: some View {
         Self._printChanges()
         return ZStack(alignment: .top) {
@@ -112,11 +77,9 @@ struct MarlinView: View {
             } else {
                 
                 if horizontalSizeClass == .compact {
-                    
-                    MarlinCompactWidth(dataSourceList: dataSourceList, filterOpen: $filterOpen, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins)
-                    )
+                    MarlinCompactWidth(dataSourceList: dataSourceList, filterOpen: $filterOpen)
                 } else {
-                    MarlinRegularWidth(filterOpen: $filterOpen, dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins))
+                    MarlinRegularWidth(filterOpen: $filterOpen, dataSourceList: dataSourceList)
                 }
             }
         }
@@ -193,6 +156,5 @@ struct MarlinView: View {
         .tint(Color.onPrimaryColor)
         // This is deprecated, but in iOS16 this is the only way to set the back button color
         .accentColor(Color.onPrimaryColor)
-//        .environmentObject(appState)
     }
 }

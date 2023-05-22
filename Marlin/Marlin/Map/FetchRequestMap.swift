@@ -12,6 +12,8 @@ import Combine
 import Kingfisher
 
 class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
+    var uuid: UUID = UUID()
+    
     var minZoom = 2
     var mapState: MapState?
     var cancellable = Set<AnyCancellable>()
@@ -172,6 +174,12 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
             }
             
             mapView.insertOverlay(newOverlay, at: mapView.overlays(in: .aboveLabels).count, level: .aboveLabels)
+        }
+    }
+    
+    func removeMixin(mapView: MKMapView, mapState: MapState) {
+        if let overlay = self.overlay {
+            mapView.removeOverlay(overlay)
         }
     }
     

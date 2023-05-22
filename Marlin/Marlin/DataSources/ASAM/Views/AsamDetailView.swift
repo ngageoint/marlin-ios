@@ -10,7 +10,6 @@ import MapKit
 import CoreData
 
 struct AsamDetailView: View {
-    @StateObject var mapState: MapState = MapState()
     var fetchRequest: NSFetchRequest<Asam>
 
     var asam: Asam
@@ -26,14 +25,8 @@ struct AsamDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "Asam Detail Map", mixins: [AsamMap(fetchPredicate: fetchRequest.predicate), UserLayersMap()], mapState: mapState)
+                    DataSourceLocationMapView(dataSourceLocation: asam, mapName: "Asam Detail Map", mixins: [AsamMap(fetchPredicate: fetchRequest.predicate)])
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                        .onAppear {
-                            mapState.center = MKCoordinateRegion(center: asam.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
-                        }
-                        .onChange(of: asam) { asam in
-                            mapState.center = MKCoordinateRegion(center: asam.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
-                        }
                     Group {
                         Text(asam.dateString ?? "")
                             .overline()

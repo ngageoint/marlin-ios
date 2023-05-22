@@ -114,6 +114,13 @@ struct DataSourceProperty: Hashable, Identifiable, Codable {
 
 protocol DataSourceLocation: DataSource {
     var coordinate: CLLocationCoordinate2D { get }
+    var coordinateRegion: MKCoordinateRegion? { get }
+}
+
+extension DataSourceLocation {
+    var coordinateRegion: MKCoordinateRegion? {
+        return nil
+    }
 }
 
 protocol DataSource {

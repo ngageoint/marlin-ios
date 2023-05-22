@@ -9,7 +9,6 @@ import SwiftUI
 import MapKit
 
 struct NavigationalWarningDetailView: View {
-    @StateObject var mapState: MapState = MapState()
     var navigationalWarning: NavigationalWarning
     
     var mappedLocation: MappedLocation?
@@ -24,14 +23,8 @@ struct NavigationalWarningDetailView: View {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     if CLLocationCoordinate2DIsValid(navigationalWarning.coordinate) {
-                        MarlinMap(name: "Nav Warning Detail Map", mixins: [NavigationalWarningMap(warning: navigationalWarning), UserLayersMap()], mapState: mapState)
+                        DataSourceLocationMapView(dataSourceLocation: navigationalWarning, mapName: "Navigational Warning Detail Map", mixins: [NavigationalWarningMap(warning: navigationalWarning)])
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                            .onAppear {
-                                mapState.center = navigationalWarning.region?.padded(percent: 0.1)
-                            }
-                            .onChange(of: navigationalWarning) { navigationalWarning in
-                                mapState.center = navigationalWarning.region?.padded(percent: 0.1)
-                            }
                     }
                     Group {
                         Text(navigationalWarning.dateString ?? "")

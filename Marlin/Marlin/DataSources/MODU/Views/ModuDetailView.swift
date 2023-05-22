@@ -10,7 +10,6 @@ import MapKit
 import CoreData
 
 struct ModuDetailView: View {
-    @StateObject var mapState: MapState = MapState()
     var fetchRequest: NSFetchRequest<Modu>
     
     var modu: Modu
@@ -26,14 +25,8 @@ struct ModuDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    MarlinMap(name: "Modu Detail Map", mixins: [ModuMap(fetchPredicate: fetchRequest.predicate), UserLayersMap()], mapState: mapState)
+                    DataSourceLocationMapView(dataSourceLocation: modu, mapName: "Modu Detail Map", mixins: [ModuMap(fetchPredicate: fetchRequest.predicate)])
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                        .onAppear {
-                            mapState.center = MKCoordinateRegion(center: modu.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
-                        }
-                        .onChange(of: modu) { modu in
-                            mapState.center = MKCoordinateRegion(center: modu.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
-                        }
                     Group {
                         Text(modu.dateString ?? "")
                             .overline()

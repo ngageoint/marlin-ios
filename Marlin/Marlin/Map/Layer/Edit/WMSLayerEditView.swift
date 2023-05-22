@@ -12,9 +12,16 @@ import MapKit
 struct WMSLayerEditView: View {
 
     @ObservedObject var viewModel: MapLayerViewModel
-    @ObservedObject var mapState: MapState
+    @StateObject var mixins: MapMixins = MapMixins()
+    @StateObject var mapState: MapState = MapState()
+
     @State private var topExpanded: Bool = true
     @Binding var isPresented: Bool
+    
+    var marlinMap: MarlinMap {
+        MarlinMap(name: "WMS Layer Map", mixins: mixins, mapState: mapState)
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             Group {
@@ -27,10 +34,10 @@ struct WMSLayerEditView: View {
             }
             .padding([.trailing, .leading], 8)
             .frame(minHeight: 0, maxHeight: .infinity)
-            MarlinMap(name: "WMS Layer Map", mixins: [BaseOverlaysMap(viewModel: viewModel)], mapState: mapState)
+            marlinMap
                             .frame(minHeight: 0, maxHeight: .infinity)
             NavigationLink {
-                LayerConfiguration(viewModel: viewModel, mapState: mapState, isPresented: $isPresented)
+                LayerConfiguration(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 Text("Confirm WMS Layers")
                     .tint(Color.primaryColor)
@@ -55,6 +62,8 @@ struct WMSLayerEditView: View {
             }
         }
         .onAppear {
+            mixins.mixins.append(BaseOverlaysMap(viewModel: viewModel))
+
             if viewModel.mapLayer != nil {
                 Metrics.shared.appRoute(["mapWMSEditLayerSettings"])
             } else {
@@ -88,7 +97,7 @@ struct WMSLayerEditView: View {
                             DisclosureGroup {
                                 self.layerDisclosureGroup(layers: layers, parentWebMercator: parentWebMercator || layer.isWebMercator)
                             } label: {
-                                LayerRow(viewModel: viewModel, layer: layer, mapState: mapState, parentWebMercator: parentWebMercator)
+                                LayerRow(viewModel: viewModel, layer: layer, mapState: marlinMap.mapState, parentWebMercator: parentWebMercator)
                             }
                         }
                     } else {

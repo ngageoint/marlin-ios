@@ -11,6 +11,7 @@ import geopackage_ios
 import SwiftUI
 
 class GeoPackageMap: NSObject, MapMixin {
+    var uuid: UUID = UUID()
     
     var geopackageImportedObserver: AnyObject?
     var overlay: GeopackageFeatureOverlay?
@@ -46,6 +47,12 @@ class GeoPackageMap: NSObject, MapMixin {
                 self.overlay = overlay
                 mapView.insertOverlay(overlay, at: self.index)
             }
+        }
+    }
+    
+    func removeMixin(mapView: MKMapView, mapState: MapState) {
+        if let overlay = overlay {
+            mapView.removeOverlay(overlay)
         }
     }
     

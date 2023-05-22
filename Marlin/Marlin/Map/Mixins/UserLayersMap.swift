@@ -12,6 +12,7 @@ import CoreData
 import Combine
 
 class UserLayersMap: MapMixin {
+    var uuid: UUID = UUID()
     var viewModel: MapLayersViewModel = MapLayersViewModel()
     var overlays: [MKTileOverlay] = []
     
@@ -66,6 +67,12 @@ class UserLayersMap: MapMixin {
                     }
                 }
             }
+        }
+    }
+    
+    func removeMixin(mapView: MKMapView, mapState: MapState) {
+        for overlay in self.overlays {
+            mapView.removeOverlay(overlay)
         }
     }
     

@@ -11,9 +11,14 @@ import Combine
 
 struct LayerConfiguration: View {
     @ObservedObject var viewModel: MapLayerViewModel
+    @StateObject var mixins: MapMixins = MapMixins()
+    
     @FocusState var isInputActive: Bool
-    @ObservedObject var mapState: MapState
     @Binding var isPresented: Bool
+    
+    var marlinMap: MarlinMap {
+        MarlinMap(name: "Layer Map", mixins: mixins)
+    }
     
     var body: some View {
         VStack(spacing: 16) {
@@ -88,7 +93,7 @@ struct LayerConfiguration: View {
             }
             .frame(minHeight: 0, maxHeight: .infinity)
             
-            MarlinMap(name: "Layer Map", mixins: [BaseOverlaysMap(viewModel: viewModel)], mapState: mapState)
+            marlinMap
                 .frame(minHeight: 0, maxHeight: .infinity)
             
             Button("\(viewModel.mapLayer != nil ? "Update" : "Create") Layer") {
@@ -123,6 +128,7 @@ struct LayerConfiguration: View {
             }
         }
         .onAppear {
+            mixins.mixins.append(BaseOverlaysMap(viewModel: viewModel))
             if viewModel.mapLayer != nil {
                 Metrics.shared.appRoute(["mapEditGridLayerSettings"])
             } else {

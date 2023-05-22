@@ -302,7 +302,7 @@ extension LightProtocol {
     }
 }
 
-protocol LightMapViewModelProtocol: LightProtocol, MapImage {
+protocol LightMapViewModelProtocol: LightProtocol, MapImage, DataSourceLocation {
     
 }
 
@@ -311,12 +311,20 @@ extension LightMapViewModelProtocol {
         var images: [UIImage] = []
         
         if UserDefaults.standard.actualRangeSectorLights, let tileBounds3857 = tileBounds3857, let lightSectors = lightSectors {
-            if context == nil {
-                let size = CGSize(width: TILE_SIZE, height: TILE_SIZE)
-                UIGraphicsBeginImageContext(size)
-            }
-            if let context: CGContext = context ?? UIGraphicsGetCurrentContext() {
-                actualSizeSectorLight(lightSectors: lightSectors, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context)
+            // if any sectors have no range, just make a sector image
+            if lightSectors.contains(where: { sector in
+                sector.range == nil
+            }) {
+                images.append(contentsOf: LightImage.image(light: self, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857))
+            } else {
+                
+                if context == nil {
+                    let size = CGSize(width: TILE_SIZE, height: TILE_SIZE)
+                    UIGraphicsBeginImageContext(size)
+                }
+                if let context: CGContext = context ?? UIGraphicsGetCurrentContext() {
+                    actualSizeSectorLight(lightSectors: lightSectors, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context)
+                }
             }
         } else if UserDefaults.standard.actualRangeLights, let stringRange = range, let range = Double(stringRange), let tileBounds3857 = tileBounds3857, let lightColors = lightColors {
             if context == nil {
@@ -398,15 +406,15 @@ extension LightMapViewModelProtocol {
     
     func circleCoordinates(center: CLLocationCoordinate2D, radiusMeters: Double, startDegrees: Double = 0.0, endDegrees: Double = 360.0) -> [CLLocationCoordinate2D] {
         var coordinates: [CLLocationCoordinate2D] = []
-        let centerLatRad = CLLocationCoordinate2D.degreesToRadians(center.latitude)
-        let centerLonRad = CLLocationCoordinate2D.degreesToRadians(center.longitude)
+        let centerLatRad = toRadians(degrees: center.latitude)
+        let centerLonRad = toRadians(degrees: center.longitude)
         let dRad = radiusMeters / 6378137
         
-        let radial = CLLocationCoordinate2D.degreesToRadians(Double(startDegrees))
+        let radial = toRadians(degrees: Double(startDegrees))
         let latRad = asin(sin(centerLatRad) * cos(dRad) + cos(centerLatRad) * sin(dRad) * cos(radial))
         let dlonRad = atan2(sin(radial) * sin(dRad) * cos(centerLatRad), cos(dRad) - sin(centerLatRad) * sin(latRad))
         let lonRad = fmod((centerLonRad + dlonRad + .pi), 2.0 * .pi) - .pi
-        coordinates.append(CLLocationCoordinate2D(latitude: CLLocationCoordinate2D.radiansToDegrees(latRad), longitude: CLLocationCoordinate2D.radiansToDegrees(lonRad)))
+        coordinates.append(CLLocationCoordinate2D(latitude: toDegrees(radians: latRad), longitude: toDegrees(radians: lonRad)))
         
         if startDegrees >= endDegrees {
             // this could be an error in the data, or sometimes lights are defined as follows:
@@ -417,19 +425,27 @@ extension LightMapViewModelProtocol {
             return coordinates
         }
         for i in Int(startDegrees)...Int(endDegrees) {
-            let radial = CLLocationCoordinate2D.degreesToRadians(Double(i))
+            let radial = toRadians(degrees: Double(i))
             let latRad = asin(sin(centerLatRad) * cos(dRad) + cos(centerLatRad) * sin(dRad) * cos(radial))
             let dlonRad = atan2(sin(radial) * sin(dRad) * cos(centerLatRad), cos(dRad) - sin(centerLatRad) * sin(latRad))
             let lonRad = fmod((centerLonRad + dlonRad + .pi), 2.0 * .pi) - .pi
-            coordinates.append(CLLocationCoordinate2D(latitude: CLLocationCoordinate2D.radiansToDegrees(latRad), longitude: CLLocationCoordinate2D.radiansToDegrees(lonRad)))
+            coordinates.append(CLLocationCoordinate2D(latitude: toDegrees(radians: latRad), longitude: toDegrees(radians: lonRad)))
         }
         
-        let endRadial = CLLocationCoordinate2D.degreesToRadians(Double(endDegrees))
+        let endRadial = toRadians(degrees: Double(endDegrees))
         let endLatRad = asin(sin(centerLatRad) * cos(dRad) + cos(centerLatRad) * sin(dRad) * cos(endRadial))
         let endDlonRad = atan2(sin(endRadial) * sin(dRad) * cos(centerLatRad), cos(dRad) - sin(centerLatRad) * sin(endLatRad))
         let endLonRad = fmod((centerLonRad + endDlonRad + .pi), 2.0 * .pi) - .pi
-        coordinates.append(CLLocationCoordinate2D(latitude: CLLocationCoordinate2D.radiansToDegrees(endLatRad), longitude: CLLocationCoordinate2D.radiansToDegrees(endLonRad)))
+        coordinates.append(CLLocationCoordinate2D(latitude: toDegrees(radians: endLatRad), longitude: toDegrees(radians: endLonRad)))
         
         return coordinates
+    }
+    
+    func toRadians(degrees: Double) -> Double {
+        return degrees * .pi / 180.0
+    }
+    
+    func toDegrees(radians: Double) -> Double {
+        return radians * 180.0 / .pi
     }
 }

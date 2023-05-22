@@ -28,6 +28,7 @@ class NavigationalWarningCircle: MKCircle {
 }
 
 class NavigationalWarningMap: NSObject, MapMixin {
+    var uuid: UUID = UUID()
     var warning: NavigationalWarning?
     var mapState: MapState?
     var lastChange: Date?
@@ -153,6 +154,11 @@ class NavigationalWarningMap: NSObject, MapMixin {
             mapView.addOverlays(self.mapOverlays)
             mapView.addAnnotations(self.mapAnnotations)
         }
+    }
+    
+    func removeMixin(mapView: MKMapView, mapState: MapState) {
+        mapView.removeOverlays(mapOverlays)
+        mapView.removeAnnotations(mapAnnotations)
     }
     
     func refresh() {

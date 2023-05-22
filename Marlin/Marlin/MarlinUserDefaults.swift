@@ -416,7 +416,7 @@ extension UserDefaults {
         }
     }
     
-    var showNavigationalWarningsOnMainMap: Bool {
+    @objc var showNavigationalWarningsOnMainMap: Bool {
         get {
             return bool(forKey: #function)
         }

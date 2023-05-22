@@ -10,6 +10,32 @@ import CoreData
 import MapKit
 
 class LightMapViewModel: NSObject, LightMapViewModelProtocol {
+    static var metricsKey: String = Light.metricsKey
+    
+    static var properties: [DataSourceProperty] = Light.properties
+    
+    static var defaultSort: [DataSourceSortParameter] = Light.defaultSort
+    
+    static var defaultFilter: [DataSourceFilterParameter] = Light.defaultFilter
+    
+    static var isMappable: Bool = Light.isMappable
+    
+    static var dataSourceName: String = Light.dataSourceName
+    
+    static var fullDataSourceName: String = Light.fullDataSourceName
+    
+    static var color: UIColor = Light.color
+    
+    static var imageName: String? = Light.imageName
+    
+    static var systemImageName: String? = Light.systemImageName
+    
+    var color: UIColor = LightMapViewModel.color
+    
+    static var imageScale: CGFloat = Light.imageScale
+    
+    static var dateFormatter: DateFormatter = Light.dateFormatter
+    
     
     init(light: Light) {
         self.characteristicNumber = light.characteristicNumber
@@ -81,15 +107,15 @@ class LightMapViewModel: NSObject, LightMapViewModelProtocol {
     
     var coordinate: CLLocationCoordinate2D
     
-    
+    var coordinateRegion: MKCoordinateRegion? {
+        MKCoordinateRegion(center: self.coordinate, zoom: 9.5, bounds: CGRect(x: 0, y: 0, width: 600, height: 600))
+    }
 }
 
 struct LightSettingsView: View {
     @AppStorage("actualRangeLights") var actualRangeLights = false
     @AppStorage("actualRangeSectorLights") var actualRangeSectorLights = false
     
-    @StateObject var mapState: MapState = MapState()
-
     var lights: [LightMapViewModel] = []
     
     init() {
@@ -122,18 +148,8 @@ struct LightSettingsView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
-                MarlinMap(name: "Light Detail Map", mixins: [LightMap<LightMapViewModel>(objects: lights)], mapState: mapState)
+                    DataSourceLocationMapView(dataSourceLocation: lights[0], mapName: "Light Detail Map", mixins: [LightMap<LightMapViewModel>(objects: lights)])
                     .frame(maxWidth: .infinity, minHeight: geometry.size.height * 0.3, maxHeight: geometry.size.height * 0.3)
-                    .onAppear {
-                        if lights.count > 0 {
-                            mapState.center = MKCoordinateRegion(center: lights[0].coordinate, zoom: 9.5, bounds: CGRect(x: 0, y: 0, width: 600, height: 600))
-                        }
-                    }
-                    .onChange(of: lights.first) { light in
-                        if let firstLight = light {
-                            mapState.center = MKCoordinateRegion(center: firstLight.coordinate, zoom: 9.5, bounds: CGRect(x: 0, y: 0, width: 600, height: 600))
-                        }
-                    }
                 List {
                     Section {
                         Toggle(isOn: $actualRangeSectorLights, label: {
