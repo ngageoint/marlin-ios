@@ -43,7 +43,6 @@ final class NavState : ObservableObject {
 }
 
 class AppState: ObservableObject {
-    @Published var popToRoot: Bool = false
     @Published var loadingDataSource: [String : Bool] = [:]
     @Published var dataSourceBatchImportNotificationsPending: [String: [DataSourceUpdatedNotification]] = [:]
     @Published var lastNotificationRequestDate: Date = Date()

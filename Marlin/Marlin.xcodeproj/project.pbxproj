@@ -132,6 +132,7 @@
 		F72EAADD291D955000AC6026 /* ChartCorrectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAADC291D955000AC6026 /* ChartCorrectionListView.swift */; };
 		F72EAADF291EECF400AC6026 /* NTMActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAADE291EECF400AC6026 /* NTMActionBar.swift */; };
 		F72EAAE1291F040D00AC6026 /* NoticeToMarinersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAE0291F040D00AC6026 /* NoticeToMarinersView.swift */; };
+		F7364E342A1D4BD10098F243 /* MarlinMainMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E332A1D4BD10098F243 /* MarlinMainMap.swift */; };
 		F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC7F294D2E240085EDC5 /* LightRange.swift */; };
 		F73ABC82295102480085EDC5 /* DataSourceTileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */; };
 		F73ABC84295245BB0085EDC5 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC83295245BB0085EDC5 /* OnboardingView.swift */; };
@@ -541,6 +542,7 @@
 		F72EAADC291D955000AC6026 /* ChartCorrectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartCorrectionListView.swift; sourceTree = "<group>"; };
 		F72EAADE291EECF400AC6026 /* NTMActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NTMActionBar.swift; sourceTree = "<group>"; };
 		F72EAAE0291F040D00AC6026 /* NoticeToMarinersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersView.swift; sourceTree = "<group>"; };
+		F7364E332A1D4BD10098F243 /* MarlinMainMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinMainMap.swift; sourceTree = "<group>"; };
 		F73ABC7F294D2E240085EDC5 /* LightRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightRange.swift; sourceTree = "<group>"; };
 		F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceTileProvider.swift; sourceTree = "<group>"; };
 		F73ABC83295245BB0085EDC5 /* OnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -992,6 +994,7 @@
 				F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */,
 				F7BDF76D2A13D7790083B97F /* ViewExpandButton.swift */,
 				F7BDF7732A1BD97C0083B97F /* DataSourceLocationMapView.swift */,
+				F7364E332A1D4BD10098F243 /* MarlinMainMap.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -2303,6 +2306,7 @@
 				F7FFB2EC28D6249400C31AA3 /* DifferentialGPSStation+Annotation.swift in Sources */,
 				F7BEE47E2A0443D200EC282D /* MKShapeExtensions.swift in Sources */,
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
+				F7364E342A1D4BD10098F243 /* MarlinMainMap.swift in Sources */,
 				F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */,
 				F72EAADA291D915000AC6026 /* ChartCorrection.swift in Sources */,
 				F70BCE9F29D351DA00AEF73D /* DocumentPicker.swift in Sources */,

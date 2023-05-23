@@ -8,91 +8,12 @@
 import SwiftUI
 import MapKit
 
-struct MarlinMainMap: View {
-    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
-
-    @StateObject var mixins: MainMapMixins = MainMapMixins()
-    @StateObject var mapState: MapState = MapState()
-    
-    @Binding var selection: String?
-    
-    @EnvironmentObject var dataSourceList: DataSourceList
-    
-    var body: some View {
-        VStack {
-            MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
-                .ignoresSafeArea()
-        }
-        .overlay(bottomButtons(), alignment: .bottom)
-        .overlay(topButtons(), alignment: .top)
-    }
-    
-    @ViewBuilder
-    func topButtons() -> some View {
-        HStack(alignment: .top, spacing: 8) {
-            // top left button stack
-            VStack(alignment: .leading, spacing: 8) {
-                SearchView(mapState: mapState)
-            }
-            .padding(.leading, 8)
-            .padding(.top, 16)
-            Spacer()
-            // top right button stack
-            VStack(alignment: .trailing, spacing: 16) {
-                NavigationLink(tag: "mapSettings", selection: $selection) {
-                    MapSettings(mapState: mapState)
-                } label: {
-                    Label(
-                        title: {},
-                        icon: { Image(systemName: "square.3.stack.3d")
-                                .renderingMode(.template)
-                        }
-                    )
-                }
-                .isDetailLink(false)
-                .fixedSize()
-                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
-                .accessibilityElement(children: .contain)
-                .accessibilityLabel("Map Settings Button")
-            }
-            .padding(.trailing, 8)
-            .padding(.top, 16)
-        }
-    }
-    
-    @ViewBuilder
-    func bottomButtons() -> some View {
-        HStack(alignment: .bottom, spacing: 0) {
-            if verticalSizeClass != .compact {
-                VStack(alignment: .leading, spacing: 8) {
-                    DataSourceToggles()
-                }
-                .padding(.leading, 8)
-                .padding(.bottom, 30)
-            } else {
-                HStack(alignment: .bottom, spacing: 8) {
-                    DataSourceToggles()
-                }
-                .padding(.leading, 8)
-                .padding(.bottom, 30)
-            }
-            
-            Spacer()
-            // bottom right button stack
-            VStack(alignment: .trailing, spacing: 16) {
-                UserTrackingButton(mapState: mapState)
-                    .fixedSize()
-                    .accessibilityElement(children: .contain)
-                    .accessibilityLabel("User Tracking")
-            }
-            .padding(.trailing, 8)
-            .padding(.bottom, 30)
-        }
-    }
+class MarlinMainNavState: ObservableObject {
+    @Published var popToRoot: Bool = false
 }
 
 struct MarlinCompactWidth: View {
-    @EnvironmentObject var appState: AppState
+    @StateObject var marlinMainNavState: MarlinMainNavState = MarlinMainNavState()
     
     @AppStorage("selectedTab") var selectedTab: String = "map"
     @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = false
@@ -133,7 +54,6 @@ struct MarlinCompactWidth: View {
                                 .onAppear {
                                     Metrics.shared.mapView()
                                 }
-//                                .ignoresSafeArea(edges: [.leading, .trailing])
                                 .accessibilityElement(children: .contain)
                                 .accessibilityLabel("Marlin Map")
 
@@ -177,9 +97,9 @@ struct MarlinCompactWidth: View {
                             .hidden()
                         }
                     }
-                    .onReceive(self.appState.$popToRoot) { popToRoot in
+                    .onReceive(self.marlinMainNavState.$popToRoot) { popToRoot in
                         if popToRoot {
-                            self.appState.popToRoot = false
+                            self.marlinMainNavState.popToRoot = false
                         }
                     }
                 }
@@ -227,14 +147,15 @@ struct MarlinCompactWidth: View {
             }
             .onReceive(viewDataSourcePub) { output in
                 if let dataSource = output.dataSource {
-                    if output.mapName == nil || output.mapName == "Marlin Compact Map" {
+                    if output.mapName == nil || output.mapName == "Marlin Map" {
                         viewData(dataSource)
                     }
                 }
             }
             .onReceive(mapFocus) { output in
                 selectedTab = output.object as? String ?? "map"
-                self.appState.popToRoot = true
+                selection = nil
+                self.marlinMainNavState.popToRoot = true
             }
             .onReceive(switchTabPub) { output in
                 if let output = output as? String {
