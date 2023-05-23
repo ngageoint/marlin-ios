@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DataSourceRail: View {
-    @ObservedObject var dataSourceList: DataSourceList
+    @EnvironmentObject var dataSourceList: DataSourceList
     
     @Binding var activeRailItem: DataSourceItem?
 

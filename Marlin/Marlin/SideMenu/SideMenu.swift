@@ -13,7 +13,7 @@ struct SideMenu: View {
     let isOpen: Bool
     let menuClose: () -> Void
     
-    @ObservedObject var dataSourceList: DataSourceList
+    @EnvironmentObject var dataSourceList: DataSourceList
     
     var body: some View {
         GeometryReader { geometry in

@@ -98,14 +98,16 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
-            
+            @ObservedObject var navState = NavState()
+
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
                 NavigationView {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea)
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                        .environmentObject(navState)
                 }
             }
         }
@@ -166,14 +168,16 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
-            
+            @ObservedObject var navState = NavState()
+
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
                 NavigationView {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea)
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                        .environmentObject(navState)
                 }
             }
         }
@@ -238,14 +242,16 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
-            
+            @ObservedObject var navState = NavState()
+
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
                 NavigationView {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea)
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                        .environmentObject(navState)
                 }
             }
         }
@@ -310,14 +316,16 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
-            
+            @ObservedObject var navState = NavState()
+
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
                 NavigationView {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea)
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                        .environmentObject(navState)
                 }
             }
         }
@@ -385,14 +393,16 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
-            
+            @ObservedObject var navState = NavState()
+
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
                 NavigationView {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea)
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                        .environmentObject(navState)
                 }
             }
         }

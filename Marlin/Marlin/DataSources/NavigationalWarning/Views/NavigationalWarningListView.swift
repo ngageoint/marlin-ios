@@ -117,7 +117,6 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
 
 struct NavigationalWarningAreasView<Location>: View where Location: LocationManagerProtocol {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var navState: NavState
     
     @ObservedObject var locationManager: Location
     
@@ -151,7 +150,6 @@ struct NavigationalWarningAreasView<Location>: View where Location: LocationMana
         ForEach(currentNavigationalWarningsSections) { section in
             NavigationLink {
                 NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(section), navArea: section.id, mapName: mapName)
-                    .environmentObject(navState)
             } label: {
                 HStack {
                     VStack(alignment: .leading) {
@@ -189,7 +187,6 @@ struct NavigationalWarningAreasView<Location>: View where Location: LocationMana
         ForEach(navigationalWarningsSections) { section in
             NavigationLink {
                 NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(section), navArea: section.id, mapName: mapName)
-                    .environmentObject(navState)
             } label: {
                 HStack {
                     VStack(alignment: .leading) {
@@ -227,7 +224,6 @@ struct NavigationalWarningAreasView<Location>: View where Location: LocationMana
         if showUnparsedNavigationalWarnings {
             NavigationLink {
                 NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(noParsedLocationNavigationalWarnings), navArea: "Unknown", mapName: mapName)
-                    .environmentObject(navState)
             } label: {
                 HStack {
                     VStack(alignment: .leading) {

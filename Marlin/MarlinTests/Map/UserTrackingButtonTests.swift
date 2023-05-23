@@ -32,7 +32,6 @@ final class UserTrackingButtonTests: XCTestCase {
         }
         
         struct Container<Location>: View where Location: LocationManagerProtocol {
-            @StateObject var dataSourceList: DataSourceList = DataSourceList()
             @StateObject var mapState: MapState = MapState()
             @State var filterOpen: Bool = false
             
@@ -88,7 +87,6 @@ final class UserTrackingButtonTests: XCTestCase {
         }
         
         struct Container<Location>: View where Location: LocationManagerProtocol {
-            @StateObject var dataSourceList: DataSourceList = DataSourceList()
             @StateObject var mapState: MapState = MapState()
             @State var filterOpen: Bool = false
             

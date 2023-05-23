@@ -24,6 +24,7 @@ struct MarlinDataBottomSheet: View {
     @StateObject var itemList: BottomSheetItemList = BottomSheetItemList()
 
     let mapItemsTappedPub = NotificationCenter.default.publisher(for: .MapItemsTapped)
+    let dismissBottomSheetPub = NotificationCenter.default.publisher(for: .DismissBottomSheet)
 
     var body: some View {
         
@@ -45,6 +46,9 @@ struct MarlinDataBottomSheet: View {
                 }
                 itemList.bottomSheetItems = bottomSheetItems
                 showBottomSheet.toggle()
+            }
+            .onReceive(dismissBottomSheetPub) { output in
+                showBottomSheet = false
             }
     }
     

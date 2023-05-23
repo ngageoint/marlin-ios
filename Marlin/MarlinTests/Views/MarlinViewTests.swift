@@ -69,6 +69,7 @@ final class MarlinViewTests: XCTestCase {
             var body: some View {
                 ZStack {
                     MarlinView()
+                        .environmentObject(dataSourceList)
                 }
             }
         }
@@ -111,6 +112,7 @@ final class MarlinViewTests: XCTestCase {
             var body: some View {
                 ZStack {
                     MarlinView()
+                        .environmentObject(dataSourceList)
                 }
             }
         }
@@ -157,6 +159,7 @@ final class MarlinViewTests: XCTestCase {
             var body: some View {
                 ZStack {
                     MarlinView()
+                        .environmentObject(dataSourceList)
                 }
             }
         }
@@ -204,6 +207,7 @@ final class MarlinViewTests: XCTestCase {
                         .onAppear {
                             passThrough.dataSourceList = dataSourceList
                         }
+                        .environmentObject(dataSourceList)
                 }
             }
         }
@@ -278,6 +282,7 @@ final class MarlinViewTests: XCTestCase {
                         .onAppear {
                             passThrough.dataSourceList = dataSourceList
                         }
+                        .environmentObject(dataSourceList)
                 }
             }
         }
@@ -325,6 +330,7 @@ final class MarlinViewTests: XCTestCase {
             var body: some View {
                 ZStack {
                     MarlinView()
+                        .environmentObject(dataSourceList)
                 }
             }
         }

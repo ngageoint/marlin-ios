@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+struct MappedDataSourcesFilter: View {
+    @EnvironmentObject var dataSourceList: DataSourceList
+    
+    var body: some View {
+        FilterBottomSheet(dataSources: $dataSourceList.mappedDataSources)
+    }
+}
+
 struct FilterBottomSheet: View {
     @Binding var dataSources: [DataSourceItem]
 

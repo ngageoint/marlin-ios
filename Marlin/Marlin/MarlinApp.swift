@@ -133,6 +133,8 @@ struct MarlinApp: App {
     
     let scheme = MarlinScheme()
     var appState: AppState
+    
+    @StateObject var dataSourceList: DataSourceList = DataSourceList()
 
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
@@ -157,6 +159,7 @@ struct MarlinApp: App {
             MarlinView()
                 .background(PhaseWatcher())
                 .environmentObject(appState)
+                .environmentObject(dataSourceList)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
                 .background(Color.surfaceColor)
         }

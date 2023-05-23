@@ -55,7 +55,6 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         
         struct Container: View {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
-            @StateObject var mapState: MapState = MapState()
             @State var filterOpen: Bool = false
 
             var passThrough: PassThrough
@@ -67,8 +66,8 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             
             var body: some View {
                 ZStack {
-                    MarlinCompactWidth(dataSourceList: dataSourceList, filterOpen: $filterOpen, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
-                    )
+                    MarlinCompactWidth(filterOpen: $filterOpen)
+                    .environmentObject(dataSourceList)
                     .onAppear {
                         self.passThrough.dataSourceList = dataSourceList
                     }
@@ -120,7 +119,6 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         
         struct Container: View {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
-            @StateObject var mapState: MapState = MapState()
             @State var filterOpen: Bool = false
             
             var passThrough: PassThrough
@@ -132,8 +130,8 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             
             var body: some View {
                 ZStack {
-                    MarlinCompactWidth(dataSourceList: dataSourceList, filterOpen: $filterOpen, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
-                    )
+                    MarlinCompactWidth(filterOpen: $filterOpen)
+                    .environmentObject(dataSourceList)
                     .onAppear {
                         self.passThrough.dataSourceList = dataSourceList
                     }
@@ -181,7 +179,6 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         
         struct Container: View {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
-            @StateObject var mapState: MapState = MapState()
             @State var filterOpen: Bool = false
             
             var passThrough: PassThrough
@@ -193,8 +190,8 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             
             var body: some View {
                 ZStack {
-                    MarlinCompactWidth(dataSourceList: dataSourceList, filterOpen: $filterOpen, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
-                    )
+                    MarlinCompactWidth(filterOpen: $filterOpen)
+                    .environmentObject(dataSourceList)
                     .onAppear {
                         self.passThrough.dataSourceList = dataSourceList
                     }
@@ -215,7 +212,7 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         
         tester().waitForView(withAccessibilityLabel: "Marlin Map")
         if let dataSourceList = passThrough.dataSourceList {
-            for dataSource in dataSourceList.allTabs {
+            for dataSource in dataSourceList.tabs {
                 NotificationCenter.default.post(name: .SwitchTabs, object: dataSource.dataSource.key)
                 tester().waitForView(withAccessibilityLabel: dataSource.dataSource.fullDataSourceName)
                 NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
@@ -256,8 +253,8 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             
             var body: some View {
                 ZStack {
-                    MarlinCompactWidth(dataSourceList: dataSourceList, filterOpen: $filterOpen, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
-                    )
+                    MarlinCompactWidth(filterOpen: $filterOpen)
+                    .environmentObject(dataSourceList)
                     .onAppear {
                         self.passThrough.dataSourceList = dataSourceList
                     }
@@ -304,8 +301,8 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             
             var body: some View {
                 ZStack {
-                    MarlinCompactWidth(dataSourceList: dataSourceList, filterOpen: $filterOpen, marlinMap: MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
-                    )
+                    MarlinCompactWidth(filterOpen: $filterOpen)
+                    .environmentObject(dataSourceList)
                     .onAppear {
                         self.passThrough.dataSourceList = dataSourceList
                     }

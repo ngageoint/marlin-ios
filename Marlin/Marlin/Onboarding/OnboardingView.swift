@@ -91,14 +91,13 @@ struct OnboardingView<Location>: View where Location: LocationManagerProtocol {
     @AppStorage("showOnMap\(RadioBeacon.key)") var radioBeaconIsMapped: Bool = false
     @AppStorage("showOnMap\(DifferentialGPSStation.key)") var dgpsIsMapped: Bool = false
     
-    @ObservedObject var dataSourceList: DataSourceList
+    @EnvironmentObject var dataSourceList: DataSourceList
     var locationManager: Location
     var userNotificationCenter: UserNotificationCenter
     
     @State var locationAuthorizationStatus: CLAuthorizationStatus
     
-    init(dataSourceList: DataSourceList, locationManager: Location = LocationManager.shared, userNotificationCenter: UserNotificationCenter = UNUserNotificationCenter.current()) {
-        self.dataSourceList = dataSourceList
+    init(locationManager: Location = LocationManager.shared, userNotificationCenter: UserNotificationCenter = UNUserNotificationCenter.current()) {
         self.locationManager = locationManager
         self.userNotificationCenter = userNotificationCenter
         self._locationAuthorizationStatus = State(initialValue: locationManager.locationStatus ?? .notDetermined)

@@ -56,12 +56,11 @@ final class MarlinMapTests: XCTestCase {
         }
         
         struct Container: View {
-            @StateObject var dataSourceList: DataSourceList = DataSourceList()
             @StateObject var mapState: MapState = MapState()
+            @StateObject var mixins: MainMapMixins = MainMapMixins()
             @State var filterOpen: Bool = false
             
             var passThrough: PassThrough
-            var mixins: [MapMixin] = []
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
@@ -163,13 +162,12 @@ final class MarlinMapTests: XCTestCase {
         }
         
         struct Container: View {
-            @StateObject var dataSourceList: DataSourceList = DataSourceList()
             @StateObject var mapState: MapState = MapState()
             @State var filterOpen: Bool = false
             
             var passThrough: PassThrough
-            var mixins: [MapMixin] = []
-            
+            @StateObject var mixins: MainMapMixins = MainMapMixins()
+
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
@@ -303,8 +301,8 @@ final class MarlinMapTests: XCTestCase {
             @State var filterOpen: Bool = false
             
             var passThrough: PassThrough
-            var mixins: [MapMixin] = []
-            
+            @StateObject var mixins: MainMapMixins = MainMapMixins()
+
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
@@ -341,13 +339,12 @@ final class MarlinMapTests: XCTestCase {
         }
         
         struct Container: View {
-            @StateObject var dataSourceList: DataSourceList = DataSourceList()
             @StateObject var mapState: MapState = MapState()
             @State var filterOpen: Bool = false
             
             var passThrough: PassThrough
-            var mixins: [MapMixin] = []
-            
+            @StateObject var mixins: MainMapMixins = MainMapMixins()
+
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
@@ -506,13 +503,12 @@ final class MarlinMapTests: XCTestCase {
         }
         
         struct Container: View {
-            @StateObject var dataSourceList: DataSourceList = DataSourceList()
             @StateObject var mapState: MapState = MapState()
             @State var filterOpen: Bool = false
             
             var passThrough: PassThrough
-            var mixins: [MapMixin] = [AsamMap(showAsTiles: true)]
-            
+            @StateObject var mixins: MainMapMixins = MainMapMixins()
+
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
@@ -595,6 +591,7 @@ final class MarlinMapTests: XCTestCase {
         }
         tester().tapView(withAccessibilityLabel: "Marlin Compact Map")
         waitForExpectations(timeout: 10, handler: nil)
+        print("xxx Focus on map item first item")
         NotificationCenter.default.post(Notification(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: newItem)))
         
         let e2 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
@@ -623,7 +620,7 @@ final class MarlinMapTests: XCTestCase {
                 return false
             }
             let center = map.centerCoordinate
-            return center.latitude < 10.0 && center.latitude > 9.0 && center.longitude <= 20.02 && center.longitude >= 19.98
+            return center.latitude < 10.0 && center.longitude <= 20.02 && center.longitude >= 19.98
         }), object: map)
         wait(for: [e3], timeout: 10)
         

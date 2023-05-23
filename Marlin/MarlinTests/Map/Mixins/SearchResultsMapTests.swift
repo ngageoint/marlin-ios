@@ -36,17 +36,22 @@ final class SearchResultsMapTests: XCTestCase {
             }
         }
         
+        class SearchResultsMixins: MapMixins {
+            override init() {
+                super.init()
+                self.mixins = [SearchResultsMap()]
+            }
+        }
+        
         struct Container: View {
-            @StateObject var dataSourceList: DataSourceList = DataSourceList()
             @StateObject var mapState: MapState = MapState()
             @State var filterOpen: Bool = false
             
             var passThrough: PassThrough
-            var mixins: [MapMixin] = []
-            
+            @StateObject var mixins: SearchResultsMixins = SearchResultsMixins()
+
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
-                mixins = [passThrough.searchResultMap]
             }
             
             var body: some View {

@@ -37,9 +37,9 @@ final class SideMenuTests: XCTestCase {
                 GeometryReader { geometry in
                     SideMenu(width: geometry.size.width - 56,
                              isOpen: self.menuOpen,
-                             menuClose: self.openMenu,
-                             dataSourceList: dataSourceList
+                             menuClose: self.openMenu
                     )
+                    .environmentObject(dataSourceList)
                     .environmentObject(appState)
                     .accessibilityElement(children: .contain)
                     .accessibilityLabel("Side Menu")

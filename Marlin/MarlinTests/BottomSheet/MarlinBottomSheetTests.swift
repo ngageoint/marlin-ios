@@ -77,7 +77,7 @@ final class MarlinBottomSheetTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = "Boat"
         
-        let bottomSheetItem = BottomSheetItem(item: newItem)
+        let bottomSheetItem = BottomSheetItem(item: newItem, zoom: false)
         
         let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem])
         
@@ -117,7 +117,7 @@ final class MarlinBottomSheetTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = "Boat"
         
-        let bottomSheetItem = BottomSheetItem(item: newItem)
+        let bottomSheetItem = BottomSheetItem(item: newItem, zoom: false)
         
         let newItem2 = Modu(context: persistentStore.viewContext)
         newItem2.name = "name"
@@ -131,7 +131,7 @@ final class MarlinBottomSheetTests: XCTestCase {
         newItem2.region = 6
         newItem2.subregion = 63
         
-        let bottomSheetItem2 = BottomSheetItem(item: newItem2)
+        let bottomSheetItem2 = BottomSheetItem(item: newItem2, zoom: false)
         
         let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem, bottomSheetItem2])
         
@@ -143,8 +143,8 @@ final class MarlinBottomSheetTests: XCTestCase {
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-            
-            let asam = try! XCTUnwrap(notification.object as? Asam)
+            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
+            let asam = try! XCTUnwrap(vds.dataSource as? Asam)
             XCTAssertEqual(asam.hostility, "Boarding")
             XCTAssertEqual(asam.victim, "Boat")
             return true

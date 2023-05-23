@@ -57,7 +57,8 @@ final class OnboardingViewTests: XCTestCase {
             }
             
             var body: some View {
-                OnboardingView(dataSourceList: dataSourceList, locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                    .environmentObject(dataSourceList)
                     .onChange(of: dataSourceList.tabs) { newValue in
                         passThrough.dataSourceListTabs = newValue
                     }
@@ -221,7 +222,8 @@ final class OnboardingViewTests: XCTestCase {
             }
             
             var body: some View {
-                OnboardingView(dataSourceList: dataSourceList, locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                    .environmentObject(dataSourceList)
                     .onChange(of: dataSourceList.tabs) { newValue in
                         passThrough.dataSourceListTabs = newValue
                     }
@@ -373,7 +375,8 @@ final class OnboardingViewTests: XCTestCase {
             }
             
             var body: some View {
-                OnboardingView(dataSourceList: dataSourceList, locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                    .environmentObject(dataSourceList)
             }
         }
         
@@ -423,7 +426,8 @@ final class OnboardingViewTests: XCTestCase {
             }
             
             var body: some View {
-                OnboardingView(dataSourceList: dataSourceList, locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                    .environmentObject(dataSourceList)
             }
         }
         
@@ -466,7 +470,8 @@ final class OnboardingViewTests: XCTestCase {
             }
             
             var body: some View {
-                OnboardingView(dataSourceList: dataSourceList, locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                    .environmentObject(dataSourceList)
             }
         }
         
@@ -510,7 +515,8 @@ final class OnboardingViewTests: XCTestCase {
             }
             
             var body: some View {
-                OnboardingView(dataSourceList: dataSourceList, locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                    .environmentObject(dataSourceList)
             }
         }
         
@@ -554,7 +560,8 @@ final class OnboardingViewTests: XCTestCase {
             }
             
             var body: some View {
-                OnboardingView(dataSourceList: dataSourceList, locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                    .environmentObject(dataSourceList)
             }
         }
         
@@ -600,7 +607,8 @@ final class OnboardingViewTests: XCTestCase {
             }
             
             var body: some View {
-                OnboardingView(dataSourceList: dataSourceList, locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                    .environmentObject(dataSourceList)
             }
         }
         

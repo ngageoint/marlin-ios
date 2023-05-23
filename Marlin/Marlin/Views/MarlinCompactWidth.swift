@@ -8,19 +8,99 @@
 import SwiftUI
 import MapKit
 
+struct MarlinCompactMap: View {
+    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
+
+    @StateObject var mixins: MainMapMixins = MainMapMixins()
+    @StateObject var mapState: MapState = MapState()
+    
+    @Binding var selection: String?
+    
+    @EnvironmentObject var dataSourceList: DataSourceList
+    
+    var body: some View {
+        MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
+            .overlay(bottomButtons(), alignment: .bottom)
+            .overlay(topButtons(), alignment: .top)
+    }
+    
+    @ViewBuilder
+    func topButtons() -> some View {
+        HStack(alignment: .top, spacing: 8) {
+            // top left button stack
+            VStack(alignment: .leading, spacing: 8) {
+                SearchView(mapState: mapState)
+            }
+            .padding(.leading, 8)
+            .padding(.top, 16)
+            Spacer()
+            // top right button stack
+            VStack(alignment: .trailing, spacing: 16) {
+                NavigationLink(tag: "mapSettings", selection: $selection) {
+                    MapSettings(mapState: mapState)
+                } label: {
+                    Label(
+                        title: {},
+                        icon: { Image(systemName: "square.3.stack.3d")
+                                .renderingMode(.template)
+                        }
+                    )
+                }
+                .isDetailLink(false)
+                .fixedSize()
+                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Map Settings Button")
+            }
+            .padding(.trailing, 8)
+            .padding(.top, 16)
+        }
+    }
+    
+    @ViewBuilder
+    func bottomButtons() -> some View {
+        HStack(alignment: .bottom, spacing: 0) {
+            if verticalSizeClass != .compact {
+                VStack(alignment: .leading, spacing: 8) {
+                    DataSourceToggles()
+                }
+                .padding(.leading, 8)
+                .padding(.bottom, 30)
+            } else {
+                HStack(alignment: .bottom, spacing: 8) {
+                    DataSourceToggles()
+                }
+                .padding(.leading, 8)
+                .padding(.bottom, 30)
+            }
+            
+            Spacer()
+            // bottom right button stack
+            VStack(alignment: .trailing, spacing: 16) {
+                UserTrackingButton(mapState: mapState)
+                    .fixedSize()
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("User Tracking")
+            }
+            .padding(.trailing, 8)
+            .padding(.bottom, 30)
+        }
+    }
+}
+
 struct MarlinCompactWidth: View {
     @EnvironmentObject var appState: AppState
-    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     
     @AppStorage("selectedTab") var selectedTab: String = "map"
     @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = false
     
-    @ObservedObject var dataSourceList: DataSourceList
     @State var menuOpen: Bool = false
     @State var selection: String? = nil
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
     
     @Binding var filterOpen: Bool
+    
+    @EnvironmentObject var dataSourceList: DataSourceList
     
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
         notification.object as? ViewDataSource
@@ -28,13 +108,6 @@ struct MarlinCompactWidth: View {
     let mapFocus = NotificationCenter.default.publisher(for: .TabRequestFocus)
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
-    }
-    
-    @StateObject var mixins: MainMapMixins = MainMapMixins()
-    @StateObject var mapState: MapState = MapState()
-    
-    var marlinMap: MarlinMap {
-        MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
     }
     
     var body: some View {
@@ -46,7 +119,7 @@ struct MarlinCompactWidth: View {
                         DataLoadedNotificationBanner()
                         CurrentLocation()
                         ZStack(alignment: .topLeading) {
-                            marlinMap
+                            MarlinCompactMap(selection: $selection)
                                 .navigationTitle("Marlin")
                                 .navigationBarTitleDisplayMode(.inline)
                                 .navigationBarBackButtonHidden(true)
@@ -58,8 +131,6 @@ struct MarlinCompactWidth: View {
                                     Metrics.shared.mapView()
                                 }
                                 .ignoresSafeArea(edges: [.leading, .trailing])
-                                .overlay(bottomButtons(), alignment: .bottom)
-                                .overlay(topButtons(), alignment: .top)
                                 .accessibilityElement(children: .contain)
                                 .accessibilityLabel("Marlin Map")
 
@@ -105,7 +176,6 @@ struct MarlinCompactWidth: View {
                     }
                     .onReceive(self.appState.$popToRoot) { popToRoot in
                         if popToRoot {
-//                            self.selection = "\(Asam.key)List"
                             self.appState.popToRoot = false
                         }
                     }
@@ -154,7 +224,7 @@ struct MarlinCompactWidth: View {
             }
             .onReceive(viewDataSourcePub) { output in
                 if let dataSource = output.dataSource {
-                    if output.mapName == nil || output.mapName == marlinMap.name {
+                    if output.mapName == nil || output.mapName == "Marlin Compact Map" {
                         viewData(dataSource)
                     }
                 }
@@ -185,8 +255,7 @@ struct MarlinCompactWidth: View {
             GeometryReader { geometry in
                 SideMenu(width: geometry.size.width - 56,
                          isOpen: self.menuOpen,
-                         menuClose: self.openMenu,
-                         dataSourceList: dataSourceList
+                         menuClose: self.openMenu
                 )
                 .accessibilityElement(children: .contain)
                 .accessibilityLabel("Side Menu \(self.menuOpen ? "Open" : "Closed")")
@@ -216,91 +285,6 @@ struct MarlinCompactWidth: View {
         .animation(.default, value: initialDataLoaded)
         .opacity(initialDataLoaded ? 0.0 : 1.0)
         .padding(.top, 8)
-    }
-    
-    @ViewBuilder
-    func topButtons() -> some View {
-        HStack(alignment: .top, spacing: 8) {
-            // top left button stack
-            VStack(alignment: .leading, spacing: 8) {
-                SearchView(mapState: mapState)
-            }
-            .padding(.leading, 8)
-            .padding(.top, 16)
-            Spacer()
-            // top right button stack
-            VStack(alignment: .trailing, spacing: 16) {
-                NavigationLink(tag: "mapSettings", selection: $selection) {
-                    MapSettings(mapState: mapState)
-                } label: {
-                    Label(
-                        title: {},
-                        icon: { Image(systemName: "square.3.stack.3d")
-                                .renderingMode(.template)
-                        }
-                    )
-                }
-                .isDetailLink(false)
-                .fixedSize()
-                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
-                .accessibilityElement(children: .contain)
-                .accessibilityLabel("Map Settings Button")
-            }
-            .padding(.trailing, 8)
-            .padding(.top, 16)
-        }
-    }
-    
-    @ViewBuilder
-    func bottomButtons() -> some View {
-        HStack(alignment: .bottom, spacing: 0) {
-            if verticalSizeClass != .compact {
-                VStack(alignment: .leading, spacing: 8) {
-                    dataSourceToggles()
-                }
-                .padding(.leading, 8)
-                .padding(.bottom, 30)
-            } else {
-                HStack(alignment: .bottom, spacing: 8) {
-                    dataSourceToggles()
-                }
-                .padding(.leading, 8)
-                .padding(.bottom, 30)
-            }
-            
-            Spacer()
-            // bottom right button stack
-            VStack(alignment: .trailing, spacing: 16) {
-                UserTrackingButton(mapState: mapState)
-                    .fixedSize()
-                    .accessibilityElement(children: .contain)
-                    .accessibilityLabel("User Tracking")
-            }
-            .padding(.trailing, 8)
-            .padding(.bottom, 30)
-        }
-    }
-    
-    @ViewBuilder
-    func dataSourceToggles() -> some View {
-        ForEach(dataSourceList.allTabs, id: \.self) { dataSource in
-            if dataSource.dataSource.isMappable {
-                Button(action: {
-                    dataSource.showOnMap.toggle()
-                }) {
-                    Label(title: {}) {
-                        if let image = dataSource.dataSource.image {
-                            Image(uiImage: image)
-                                .renderingMode(.template)
-                                .tint(Color.white)
-                        }
-                    }
-                }
-                .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: dataSource.showOnMap ? Color.white : Color.disabledColor, backgroundColor: dataSource.showOnMap ? Color(uiColor: dataSource.dataSource.color) : Color.disabledBackground))
-                .accessibilityElement(children: .contain)
-                .accessibilityLabel("\(dataSource.dataSource.key) Map Toggle")
-            }
-        }
     }
     
     @ViewBuilder

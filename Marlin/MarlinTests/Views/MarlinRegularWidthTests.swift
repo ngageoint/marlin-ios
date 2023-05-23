@@ -68,7 +68,8 @@ final class MarlinRegularWidthTests: XCTestCase {
             
             var body: some View {
                 ZStack {
-                    MarlinRegularWidth(filterOpen: $filterOpen, dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState))
+                    MarlinRegularWidth(filterOpen: $filterOpen)
+                        .environmentObject(dataSourceList)
                     .onAppear {
                         self.passThrough.dataSourceList = dataSourceList
                     }
@@ -132,7 +133,8 @@ final class MarlinRegularWidthTests: XCTestCase {
             
             var body: some View {
                 ZStack {
-                    MarlinRegularWidth(filterOpen: $filterOpen, dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState))
+                    MarlinRegularWidth(filterOpen: $filterOpen)
+                        .environmentObject(dataSourceList)
                     .onAppear {
                         self.passThrough.dataSourceList = dataSourceList
                     }
@@ -192,7 +194,8 @@ final class MarlinRegularWidthTests: XCTestCase {
             
             var body: some View {
                 ZStack {
-                    MarlinRegularWidth(filterOpen: $filterOpen, dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState))
+                    MarlinRegularWidth(filterOpen: $filterOpen)
+                        .environmentObject(dataSourceList)
                     .onAppear {
                         self.passThrough.dataSourceList = dataSourceList
                     }
@@ -252,7 +255,8 @@ final class MarlinRegularWidthTests: XCTestCase {
             
             var body: some View {
                 ZStack {
-                    MarlinRegularWidth(filterOpen: $filterOpen, dataSourceList: dataSourceList, marlinMap: MarlinMap(name: "Marlin Regular Map", mixins: mixins, mapState: mapState))
+                    MarlinRegularWidth(filterOpen: $filterOpen)
+                        .environmentObject(dataSourceList)
                     .onAppear {
                         self.passThrough.dataSourceList = dataSourceList
                     }

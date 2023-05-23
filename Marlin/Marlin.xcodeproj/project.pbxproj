@@ -231,6 +231,7 @@
 		F7BDF76C2A13BFC80083B97F /* NavigationalWarning+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF76B2A13BFC80083B97F /* NavigationalWarning+MapImage.swift */; };
 		F7BDF76E2A13D7790083B97F /* ViewExpandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF76D2A13D7790083B97F /* ViewExpandButton.swift */; };
 		F7BDF7742A1BD97C0083B97F /* DataSourceLocationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF7732A1BD97C0083B97F /* DataSourceLocationMapView.swift */; };
+		F7BDF7762A1C11640083B97F /* DataSourceToggles.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF7752A1C11640083B97F /* DataSourceToggles.swift */; };
 		F7BEE47E2A0443D200EC282D /* MKShapeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE47D2A0443D200EC282D /* MKShapeExtensions.swift */; };
 		F7C23DFC2906F1460002A7DF /* Metrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23DFB2906F1460002A7DF /* Metrics.swift */; };
 		F7C23DFE290721680002A7DF /* SubmitReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23DFD290721680002A7DF /* SubmitReportView.swift */; };
@@ -643,6 +644,7 @@
 		F7BDF76B2A13BFC80083B97F /* NavigationalWarning+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+MapImage.swift"; sourceTree = "<group>"; };
 		F7BDF76D2A13D7790083B97F /* ViewExpandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExpandButton.swift; sourceTree = "<group>"; };
 		F7BDF7732A1BD97C0083B97F /* DataSourceLocationMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceLocationMapView.swift; sourceTree = "<group>"; };
+		F7BDF7752A1C11640083B97F /* DataSourceToggles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceToggles.swift; sourceTree = "<group>"; };
 		F7BEE47C2A04221D00EC282D /* Shared 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Shared 3.xcdatamodel"; sourceTree = "<group>"; };
 		F7BEE47D2A0443D200EC282D /* MKShapeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKShapeExtensions.swift; sourceTree = "<group>"; };
 		F7C23DFB2906F1460002A7DF /* Metrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metrics.swift; sourceTree = "<group>"; };
@@ -1731,6 +1733,7 @@
 				F70F50182992DAFF0062E555 /* DataLoadedNotificationBanner.swift */,
 				F70BCE9E29D351DA00AEF73D /* DocumentPicker.swift */,
 				F7BDF7692A0E8D160083B97F /* UITextViewContainer.swift */,
+				F7BDF7752A1C11640083B97F /* DataSourceToggles.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2291,6 +2294,7 @@
 				F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */,
 				F70BCEA529DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift in Sources */,
 				F7FFB31428D63CB000C31AA3 /* Modu+DataSourceViewBuilder.swift in Sources */,
+				F7BDF7762A1C11640083B97F /* DataSourceToggles.swift in Sources */,
 				F7C23E1429115AF40002A7DF /* DocumentPreview.swift in Sources */,
 				F7D671E22871C29A00758F1C /* AsamActionBar.swift in Sources */,
 				F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */,

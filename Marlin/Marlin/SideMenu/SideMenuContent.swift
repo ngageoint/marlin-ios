@@ -12,12 +12,6 @@ struct SideMenuContent: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
     @StateObject var model: SideMenuViewModel
-
-//    @State var draggedItem : String?
-//    @State var validDropTarget: Bool = false
-//    @State var lastTab: DataSourceItem?
-//
-//    @ObservedObject var dataSourceList: DataSourceList
     
     var body: some View {
         ScrollView {

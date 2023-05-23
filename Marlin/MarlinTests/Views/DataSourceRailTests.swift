@@ -30,14 +30,15 @@ final class DataSourceRailTests: XCTestCase {
                     ]
                 }
             }
-            let dataSourceList = MockDataSourceList()
+            @StateObject var dataSourceList: DataSourceList = MockDataSourceList()
             let passThrough: PassThrough
             public init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                DataSourceRail(dataSourceList: dataSourceList, activeRailItem: $activeRailItem)
+                DataSourceRail(activeRailItem: $activeRailItem)
+                    .environmentObject(dataSourceList)
                     .onAppear {
                         print("setting active rail item \(dataSourceList.allTabs[0])")
                         activeRailItem = dataSourceList.allTabs[0]

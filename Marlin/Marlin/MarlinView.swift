@@ -27,8 +27,8 @@ class MapMixins: ObservableObject {
 
 struct MarlinView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @EnvironmentObject var dataSourceList: DataSourceList
 
-    @StateObject var dataSourceList: DataSourceList = DataSourceList()
     @State var selection: String? = nil
     @State var showBottomSheet: Bool = false
         
@@ -46,7 +46,6 @@ struct MarlinView: View {
     @AppStorage("disclaimerAccepted") var disclaimerAccepted: Bool = false
     @AppStorage("onboardingComplete") var onboardingComplete: Bool = false
 
-    let dismissBottomSheetPub = NotificationCenter.default.publisher(for: .DismissBottomSheet)
     let snackbarPub = NotificationCenter.default.publisher(for: .SnackbarNotification)
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
@@ -60,7 +59,7 @@ struct MarlinView: View {
         return ZStack(alignment: .top) {
             
             if !onboardingComplete {
-                OnboardingView(dataSourceList: dataSourceList)
+                OnboardingView()
             } else
             if !disclaimerAccepted {
                 VStack(spacing: 16) {
@@ -77,9 +76,9 @@ struct MarlinView: View {
             } else {
                 
                 if horizontalSizeClass == .compact {
-                    MarlinCompactWidth(dataSourceList: dataSourceList, filterOpen: $filterOpen)
+                    MarlinCompactWidth(filterOpen: $filterOpen)
                 } else {
-                    MarlinRegularWidth(filterOpen: $filterOpen, dataSourceList: dataSourceList)
+                    MarlinRegularWidth(filterOpen: $filterOpen)
                 }
             }
         }
@@ -87,7 +86,8 @@ struct MarlinView: View {
             MarlinDataBottomSheet()
         }
         .bottomSheet(isPresented: $filterOpen, detents: .large, delegate: self) {
-            FilterBottomSheet(dataSources: $dataSourceList.mappedDataSources)
+            MappedDataSourcesFilter()
+                .environmentObject(dataSourceList)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
@@ -121,10 +121,6 @@ struct MarlinView: View {
             }
             self.snackbarModel = notification.snackbarModel
             showSnackbar.toggle()
-        }
-        
-        .onReceive(dismissBottomSheetPub) { output in
-            showBottomSheet = false
         }
         .onReceive(documentPreviewPub) { output in
             if let url = output as? URL {
