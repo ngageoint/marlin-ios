@@ -8,7 +8,7 @@
 import SwiftUI
 import MapKit
 
-struct MarlinCompactMap: View {
+struct MarlinMainMap: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
 
     @StateObject var mixins: MainMapMixins = MainMapMixins()
@@ -19,9 +19,12 @@ struct MarlinCompactMap: View {
     @EnvironmentObject var dataSourceList: DataSourceList
     
     var body: some View {
-        MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
-            .overlay(bottomButtons(), alignment: .bottom)
-            .overlay(topButtons(), alignment: .top)
+        VStack {
+            MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
+                .ignoresSafeArea()
+        }
+        .overlay(bottomButtons(), alignment: .bottom)
+        .overlay(topButtons(), alignment: .top)
     }
     
     @ViewBuilder
@@ -119,7 +122,7 @@ struct MarlinCompactWidth: View {
                         DataLoadedNotificationBanner()
                         CurrentLocation()
                         ZStack(alignment: .topLeading) {
-                            MarlinCompactMap(selection: $selection)
+                            MarlinMainMap(selection: $selection)
                                 .navigationTitle("Marlin")
                                 .navigationBarTitleDisplayMode(.inline)
                                 .navigationBarBackButtonHidden(true)
@@ -130,7 +133,7 @@ struct MarlinCompactWidth: View {
                                 .onAppear {
                                     Metrics.shared.mapView()
                                 }
-                                .ignoresSafeArea(edges: [.leading, .trailing])
+//                                .ignoresSafeArea(edges: [.leading, .trailing])
                                 .accessibilityElement(children: .contain)
                                 .accessibilityLabel("Marlin Map")
 

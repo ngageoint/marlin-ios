@@ -8,96 +8,6 @@
 import SwiftUI
 import MapKit
 
-// this and MarlinCompactMap should be able to be consolidated
-struct MarlinRegularMap: View {
-    
-    @StateObject var mixins: MainMapMixins = MainMapMixins()
-    @StateObject var mapState: MapState = MapState()
-    
-    @EnvironmentObject var dataSourceList: DataSourceList
-
-    var body: some View {
-        VStack {
-            MarlinMap(name: "Marlin Regular Map", mixins: mixins)
-                .ignoresSafeArea()
-        }
-        .overlay(bottomButtons(), alignment: .bottom)
-        .overlay(topButtons(), alignment: .top)
-    }
-    
-    @ViewBuilder
-    func topButtons() -> some View {
-        HStack(alignment: .top, spacing: 8) {
-            // top left button stack
-            VStack(alignment: .leading, spacing: 8) {
-                SearchView(mapState: mapState)
-            }
-            .padding(.leading, 8)
-            .padding(.top, 16)
-            Spacer()
-            // top right button stack
-            VStack(alignment: .trailing, spacing: 16) {
-                NavigationLink {
-                    MapSettings(mapState: mapState)
-                } label: {
-                    Label(
-                        title: {},
-                        icon: { Image(systemName: "square.3.stack.3d")
-                                .renderingMode(.template)
-                        }
-                    )
-                }
-                .isDetailLink(false)
-                .fixedSize()
-                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini))
-                .accessibilityElement(children: .contain)
-                .accessibilityLabel("Map Settings Button")
-            }
-            .padding(.trailing, 8)
-            .padding(.top, 16)
-        }
-    }
-    
-    @ViewBuilder
-    func bottomButtons() -> some View {
-        HStack(alignment: .bottom, spacing: 0) {
-            VStack(alignment: .leading, spacing: 8) {
-                ForEach(dataSourceList.allTabs, id: \.self) { dataSource in
-                    if dataSource.dataSource.isMappable {
-                        Button(action: {
-                            dataSource.showOnMap.toggle()
-                        }) {
-                            Label(title: {}) {
-                                if let image = dataSource.dataSource.image {
-                                    Image(uiImage: image)
-                                        .renderingMode(.template)
-                                        .tint(Color.white)
-                                }
-                            }
-                        }
-                        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: dataSource.showOnMap ? Color.white : Color.disabledColor, backgroundColor: dataSource.showOnMap ? Color(uiColor: dataSource.dataSource.color) : Color.disabledBackground))
-                        .accessibilityElement(children: .contain)
-                        .accessibilityLabel("\(dataSource.dataSource.key) Map Toggle")
-                    }
-                }
-            }
-            .padding(.leading, 8)
-            .padding(.bottom, 30)
-            
-            Spacer()
-            // bottom right button stack
-            VStack(alignment: .trailing, spacing: 16) {
-                UserTrackingButton(mapState: mapState)
-                    .fixedSize()
-                    .accessibilityElement(children: .contain)
-                    .accessibilityLabel("User Tracking")
-            }
-            .padding(.trailing, 8)
-            .padding(.bottom, 30)
-        }
-    }
-}
-
 struct MarlinRegularWidth: View {
     @EnvironmentObject var appState: AppState
 
@@ -166,7 +76,7 @@ struct MarlinRegularWidth: View {
                                 DataLoadedNotificationBanner()
                                 CurrentLocation()
                                 ZStack(alignment: .topLeading) {
-                                    MarlinRegularMap()
+                                    MarlinMainMap(selection: $selection)
                                         .accessibilityElement(children: .contain)
                                         .accessibilityLabel("Marlin Map")
                                         .onAppear {
