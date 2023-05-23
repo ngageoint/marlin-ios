@@ -17,9 +17,12 @@ struct MarlinRegularMap: View {
     @EnvironmentObject var dataSourceList: DataSourceList
 
     var body: some View {
-        MarlinMap(name: "Marlin Regular Map", mixins: mixins)
-            .overlay(bottomButtons(), alignment: .bottom)
-            .overlay(topButtons(), alignment: .top)
+        VStack {
+            MarlinMap(name: "Marlin Regular Map", mixins: mixins)
+                .ignoresSafeArea()
+        }
+        .overlay(bottomButtons(), alignment: .bottom)
+        .overlay(topButtons(), alignment: .top)
     }
     
     @ViewBuilder
@@ -159,25 +162,18 @@ struct MarlinRegularWidth: View {
                         }
                         
                         NavigationView {
-                            ZStack(alignment: .topLeading) {
-                                MarlinRegularMap()
-                                    .accessibilityElement(children: .contain)
-                                    .accessibilityLabel("Marlin Map")
-                                    .ignoresSafeArea()
-                                    .onAppear {
-                                        Metrics.shared.mapView()
-                                    }
-                                VStack(spacing: 0) {
-                                    // top of map
-                                    DataLoadedNotificationBanner()
-                                    CurrentLocation()
-//                                    topButtons()
-                                    Spacer()
-                                    // bottom of map
-//                                    bottomButtons()
+                            VStack(spacing: 0) {
+                                DataLoadedNotificationBanner()
+                                CurrentLocation()
+                                ZStack(alignment: .topLeading) {
+                                    MarlinRegularMap()
+                                        .accessibilityElement(children: .contain)
+                                        .accessibilityLabel("Marlin Map")
+                                        .onAppear {
+                                            Metrics.shared.mapView()
+                                        }
+                                    loadingCapsule()
                                 }
-                                loadingCapsule()
-                                
                             }
                             .navigationBarHidden(true)
                         }.navigationViewStyle(.stack)
