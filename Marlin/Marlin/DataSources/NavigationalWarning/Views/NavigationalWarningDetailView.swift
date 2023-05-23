@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct NavigationalWarningDetailView: View {
+    @EnvironmentObject var navState: NavState
     var navigationalWarning: NavigationalWarning
     
     var mappedLocation: MappedLocation?
@@ -38,7 +39,7 @@ struct NavigationalWarningDetailView: View {
                         if let cancelNavArea = navigationalWarning.cancelNavArea, let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea){
                             Property(property: "Cancelled By", value: "\(navAreaEnum.display) \(navigationalWarning.cancelMsgNumber)/\(navigationalWarning.cancelMsgYear)")
                         }
-                        NavigationalWarningActionBar(navigationalWarning: navigationalWarning, showMoreDetails: false)
+                        NavigationalWarningActionBar(navigationalWarning: navigationalWarning, showMoreDetails: false, mapName: navState.mapName)
                     }.padding([.leading, .trailing], 16)
                 }
                 .card()

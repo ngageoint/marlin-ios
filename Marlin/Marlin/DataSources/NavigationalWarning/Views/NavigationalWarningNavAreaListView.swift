@@ -37,11 +37,12 @@ struct NavigationalWarningNavAreaListView: View {
                     ForEach(dataSource.items) { navigationalWarning in
                         NavigationLink {
                             navigationalWarning.detailView
+                                .environmentObject(navState)
                         } label: {
                             HStack {
                                 navigationalWarning.summaryView(mapName: mapName)
-                                    .padding(.all, 16)
                                     .environmentObject(navState)
+                                    .padding(.all, 16)
                             }
                             .card()
                             .background(GeometryReader {
@@ -152,6 +153,8 @@ struct NavigationalWarningNavAreaListView: View {
         }
         .navigationTitle(NavigationalWarningNavArea.fromId(id: navArea)?.display ?? "Navigational Warnings")
         .navigationBarTitleDisplayMode(.inline)
+        
+        .environmentObject(navState)
     }
 }
 

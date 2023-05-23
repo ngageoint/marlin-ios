@@ -53,7 +53,7 @@ struct NavigationalWarningMapView<Content: View>: View {
 }
 
 struct NavigationalWarningListView<Location>: View where Location: LocationManagerProtocol  {
-    @ObservedObject var navState = NavState()
+    @StateObject var navState = NavState()
     
     let MAP_NAME = "Navigational Warning List View Map"
     @Environment(\.managedObjectContext) private var viewContext
@@ -66,7 +66,6 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
     
     init(locationManager: Location = LocationManager.shared) {
         self.locationManager = locationManager
-        navState.navGroupName = "\(NavigationalWarning.key)List"
     }
     
     var body: some View {
@@ -111,13 +110,17 @@ struct NavigationalWarningListView<Location>: View where Location: LocationManag
                 navState.rootViewId = UUID()
             }
         }
+        .onAppear {
+            navState.navGroupName = "\(NavigationalWarning.key)List"
+            navState.mapName = MAP_NAME
+        }
         .id(navState.rootViewId)
     }
 }
 
 struct NavigationalWarningAreasView<Location>: View where Location: LocationManagerProtocol {
     @Environment(\.managedObjectContext) private var viewContext
-    
+    @EnvironmentObject var navState: NavState
     @ObservedObject var locationManager: Location
     
     var mapName: String?
@@ -150,6 +153,7 @@ struct NavigationalWarningAreasView<Location>: View where Location: LocationMana
         ForEach(currentNavigationalWarningsSections) { section in
             NavigationLink {
                 NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(section), navArea: section.id, mapName: mapName)
+                    .environmentObject(navState)
             } label: {
                 HStack {
                     VStack(alignment: .leading) {
@@ -187,6 +191,7 @@ struct NavigationalWarningAreasView<Location>: View where Location: LocationMana
         ForEach(navigationalWarningsSections) { section in
             NavigationLink {
                 NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(section), navArea: section.id, mapName: mapName)
+                    .environmentObject(navState)
             } label: {
                 HStack {
                     VStack(alignment: .leading) {
@@ -224,6 +229,7 @@ struct NavigationalWarningAreasView<Location>: View where Location: LocationMana
         if showUnparsedNavigationalWarnings {
             NavigationLink {
                 NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(noParsedLocationNavigationalWarnings), navArea: "Unknown", mapName: mapName)
+                    .environmentObject(navState)
             } label: {
                 HStack {
                     VStack(alignment: .leading) {
