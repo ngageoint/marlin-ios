@@ -8,31 +8,10 @@
 import SwiftUI
 import MapKit
 
-struct RootPresentationModeKey: EnvironmentKey {
-    static let defaultValue: Binding<RootPresentationMode> = .constant(RootPresentationMode())
-}
-
-extension EnvironmentValues {
-    var rootPresentationMode: Binding<RootPresentationMode> {
-        get { return self[RootPresentationModeKey.self] }
-        set { self[RootPresentationModeKey.self] = newValue }
-    }
-}
-
-typealias RootPresentationMode = Bool
-
-extension RootPresentationMode {
-    
-    public mutating func dismiss() {
-        self.toggle()
-    }
-}
-
 struct NavigationalWarningsOverview<Location>: View where Location: LocationManagerProtocol  {
     @StateObject var navState = NavState()
     
     let MAP_NAME = "Navigational Warning List View Map"
-    @Environment(\.managedObjectContext) private var viewContext
     var locationManager: Location
     @State var expandMap: Bool = false
     @State var selection: String? = nil
@@ -92,4 +71,5 @@ struct NavigationalWarningsOverview<Location>: View where Location: LocationMana
         }
         .id(navState.rootViewId)
     }
+    
 }
