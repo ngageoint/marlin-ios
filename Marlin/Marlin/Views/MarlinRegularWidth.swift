@@ -199,7 +199,7 @@ struct MarlinRegularWidth: View {
             } else if dataSource.key == Light.key {
                 MSIListView<Light, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
             } else if dataSource.key == NavigationalWarning.key {
-                NavigationalWarningListView()
+                NavigationalWarningsOverview()
             } else if dataSource.key == Port.key {
                 MSIListView<Port, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
             } else if dataSource.key == RadioBeacon.key {

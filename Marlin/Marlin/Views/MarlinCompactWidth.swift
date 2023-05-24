@@ -16,19 +16,14 @@ struct MarlinCompactWidth: View {
     @StateObject var marlinMainNavState: MarlinMainNavState = MarlinMainNavState()
     
     @AppStorage("selectedTab") var selectedTab: String = "map"
-    @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = false
     
     @State var menuOpen: Bool = false
     @State var selection: String? = nil
-    @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-    
-    @Binding var filterOpen: Bool
     
     @EnvironmentObject var dataSourceList: DataSourceList
     
-    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
-        notification.object as? ViewDataSource
-    }
+    @Binding var filterOpen: Bool
+    
     let mapFocus = NotificationCenter.default.publisher(for: .TabRequestFocus)
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
@@ -38,71 +33,7 @@ struct MarlinCompactWidth: View {
         Self._printChanges()
         return ZStack {
             TabView(selection: $selectedTab) {
-                NavigationView {
-                    VStack(spacing: 0) {
-                        DataLoadedNotificationBanner()
-                        CurrentLocation()
-                        ZStack(alignment: .topLeading) {
-                            MarlinMainMap(selection: $selection)
-                                .navigationTitle("Marlin")
-                                .navigationBarTitleDisplayMode(.inline)
-                                .navigationBarBackButtonHidden(true)
-                                .if(UserDefaults.standard.hamburger) { view in
-                                    view.modifier(Hamburger(menuOpen: $menuOpen))
-                                }
-                                .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
-                                .onAppear {
-                                    Metrics.shared.mapView()
-                                }
-                                .accessibilityElement(children: .contain)
-                                .accessibilityLabel("Marlin Map")
-
-                            loadingCapsule()
-                        }
-                        NavigationLink(tag: "detail", selection: $selection) {
-                            if let data = itemWrapper.dataSource as? DataSourceViewBuilder {
-                                data.detailView
-                            }
-                        } label: {
-                            EmptyView()
-                        }
-                        .isDetailLink(false)
-                        .hidden()
-                        
-                        NavigationLink(tag: "settings", selection: $selection) {
-                            AboutView()
-                        } label: {
-                            EmptyView()
-                        }
-                        .isDetailLink(false)
-                        .hidden()
-                        
-                        NavigationLink(tag: "submitReport", selection: $selection) {
-                            SubmitReportView()
-                        } label: {
-                            EmptyView()
-                        }
-                        .isDetailLink(false)
-                        .hidden()
-                        
-                        ForEach(dataSourceList.nonTabs) { dataSource in
-                            
-                            NavigationLink(tag: "\(dataSource.key)List", selection: $selection) {
-                                createListView(dataSource: dataSource)
-                            } label: {
-                                EmptyView()
-                            }
-                            
-                            .isDetailLink(false)
-                            .hidden()
-                        }
-                    }
-                    .onReceive(self.marlinMainNavState.$popToRoot) { popToRoot in
-                        if popToRoot {
-                            self.marlinMainNavState.popToRoot = false
-                        }
-                    }
-                }
+                MapNavigationView(filterOpen: $filterOpen, selection: $selection, menuOpen: $menuOpen)
                 .tag("map")
                 .tabItem {
                     Label("Map", systemImage: "map.fill")
@@ -118,7 +49,7 @@ struct MarlinCompactWidth: View {
                 
                 ForEach(dataSourceList.tabs, id: \.self) { dataSource in
                     NavigationView {
-                        createListView(dataSource: dataSource)
+                        DataSourceListView(dataSource: dataSource)
                             .if(UserDefaults.standard.hamburger) { view in
                                 view.modifier(Hamburger(menuOpen: $menuOpen))
                             }
@@ -145,11 +76,9 @@ struct MarlinCompactWidth: View {
                     .tag("\(dataSource.key)List")
                 }
             }
-            .onReceive(viewDataSourcePub) { output in
-                if let dataSource = output.dataSource {
-                    if output.mapName == nil || output.mapName == "Marlin Map" {
-                        viewData(dataSource)
-                    }
+            .onReceive(self.marlinMainNavState.$popToRoot) { popToRoot in
+                if popToRoot {
+                    self.marlinMainNavState.popToRoot = false
                 }
             }
             .onReceive(mapFocus) { output in
@@ -187,65 +116,8 @@ struct MarlinCompactWidth: View {
         }
     }
     
-    @ViewBuilder
-    func loadingCapsule() -> some View {
-        HStack {
-            Spacer()
-            Capsule()
-                .fill(Color.primaryColor)
-                .frame(width: 175, height: 25)
-                .overlay(
-                    HStack {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: Color.onPrimaryColor))
-                            .scaleEffect(0.5, anchor: .center)
-                        Text("Loading initial data")
-                            .font(Font.overline)
-                            .foregroundColor(Color.onPrimaryColor)
-                    }
-                )
-            Spacer()
-        }
-        .animation(.default, value: initialDataLoaded)
-        .opacity(initialDataLoaded ? 0.0 : 1.0)
-        .padding(.top, 8)
-    }
-    
-    @ViewBuilder
-    func createListView(dataSource: DataSourceItem) -> some View {
-        if dataSource.key == Asam.key {
-            MSIListView<Asam, EmptyView, EmptyView>()
-        } else if dataSource.key == Modu.key {
-            MSIListView<Modu, EmptyView, EmptyView>()
-        } else if dataSource.key == Light.key {
-            MSIListView<Light, EmptyView, EmptyView>()
-        } else if dataSource.key == NavigationalWarning.key {
-            NavigationalWarningListView()
-        } else if dataSource.key == Port.key {
-            MSIListView<Port, EmptyView, EmptyView>()
-        } else if dataSource.key == RadioBeacon.key {
-            MSIListView<RadioBeacon, EmptyView, EmptyView>()
-        } else if dataSource.key == DifferentialGPSStation.key {
-            MSIListView<DifferentialGPSStation, EmptyView, EmptyView>()
-        } else if dataSource.key == DFRS.key {
-            MSIListView<DFRS, EmptyView, EmptyView>()
-        } else if dataSource.key == ElectronicPublication.key {
-            ElectronicPublicationsList()
-        } else if dataSource.key == NoticeToMariners.key {
-            NoticeToMarinersView()
-        }
-    }
-    
     func openMenu() {
         self.menuOpen.toggle()
-    }
-    
-    func viewData(_ data: any DataSource) {
-        NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
-        NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
-        itemWrapper.dataSource = data
-        itemWrapper.date = Date()
-        selection = "detail"
     }
 }
 

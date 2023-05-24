@@ -64,7 +64,7 @@ final class NavigationalWarningDetailTests: XCTestCase {
             return
         }
         
-        let detailView = newItem.detailView.environment(\.managedObjectContext, persistentStore.viewContext)
+        let detailView = newItem.detailView.environment(\.managedObjectContext, persistentStore.viewContext).environmentObject(NavState())
         
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()

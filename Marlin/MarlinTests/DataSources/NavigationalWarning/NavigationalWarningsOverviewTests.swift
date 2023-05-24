@@ -1,5 +1,5 @@
 //
-//  NavigationalWarningListViewTests.swift
+//  NavigationalWarningsOverviewTests.swift
 //  MarlinTests
 //
 //  Created by Daniel Barela on 2/15/23.
@@ -11,7 +11,7 @@ import SwiftUI
 
 @testable import Marlin
 
-final class NavigationalWarningListViewTests: XCTestCase {
+final class NavigationalWarningsOverviewTests: XCTestCase {
 
     var cancellable = Set<AnyCancellable>()
     var persistentStore: PersistentStore = PersistenceController.shared
@@ -122,7 +122,7 @@ final class NavigationalWarningListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    NavigationalWarningListView(locationManager: locationManager)
+                    NavigationalWarningsOverview(locationManager: locationManager)
                 }
             }
         }
@@ -192,16 +192,15 @@ final class NavigationalWarningListViewTests: XCTestCase {
         struct Container<Location>: View where Location: LocationManagerProtocol {
             
             @ObservedObject var passThrough: PassThrough
-            @StateObject var locationManager: Location
+            @StateObject var locationManager: Location = MockLocationManager() as! Location
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
-                _locationManager = StateObject(wrappedValue: MockLocationManager() as! Location)
             }
             
             var body: some View {
                 NavigationView {
-                    NavigationalWarningListView(locationManager: locationManager)
+                    NavigationalWarningsOverview(locationManager: locationManager)
                 }
                 .onAppear {
                     locationManager.currentNavArea = .NAVAREA_IV

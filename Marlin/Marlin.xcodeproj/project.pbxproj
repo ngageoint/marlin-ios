@@ -133,6 +133,12 @@
 		F72EAADF291EECF400AC6026 /* NTMActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAADE291EECF400AC6026 /* NTMActionBar.swift */; };
 		F72EAAE1291F040D00AC6026 /* NoticeToMarinersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAE0291F040D00AC6026 /* NoticeToMarinersView.swift */; };
 		F7364E342A1D4BD10098F243 /* MarlinMainMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E332A1D4BD10098F243 /* MarlinMainMap.swift */; };
+		F7364E362A1D53970098F243 /* MapNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E352A1D53970098F243 /* MapNavigationView.swift */; };
+		F7364E382A1D55D10098F243 /* LoadingCapsule.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E372A1D55D10098F243 /* LoadingCapsule.swift */; };
+		F7364E3A2A1D57060098F243 /* DataSourceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E392A1D57060098F243 /* DataSourceListView.swift */; };
+		F7364E3C2A1E45B80098F243 /* NavigationalWarningMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E3B2A1E45B80098F243 /* NavigationalWarningMapView.swift */; };
+		F7364E3E2A1E46860098F243 /* NavigationalWarningAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E3D2A1E46860098F243 /* NavigationalWarningAreasView.swift */; };
+		F7364E402A1E495C0098F243 /* NavigationalWarningSectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E3F2A1E495C0098F243 /* NavigationalWarningSectionRow.swift */; };
 		F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC7F294D2E240085EDC5 /* LightRange.swift */; };
 		F73ABC82295102480085EDC5 /* DataSourceTileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */; };
 		F73ABC84295245BB0085EDC5 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC83295245BB0085EDC5 /* OnboardingView.swift */; };
@@ -212,7 +218,7 @@
 		F7ABB600299AD5E900BAD868 /* fullEpubList.json in Resources */ = {isa = PBXBuildFile; fileRef = F7ABB5FF299AD5E900BAD868 /* fullEpubList.json */; };
 		F7ABB602299BD35C00BAD868 /* SearchViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB601299BD35C00BAD868 /* SearchViewTests.swift */; };
 		F7ABB604299C1ECE00BAD868 /* NavigationalWarningNavAreaListViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB603299C1ECE00BAD868 /* NavigationalWarningNavAreaListViewTests.swift */; };
-		F7ABB606299D1EE900BAD868 /* NavigationalWarningListViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB605299D1EE900BAD868 /* NavigationalWarningListViewTests.swift */; };
+		F7ABB606299D1EE900BAD868 /* NavigationalWarningsOverviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB605299D1EE900BAD868 /* NavigationalWarningsOverviewTests.swift */; };
 		F7ABB608299D532800BAD868 /* NavigationalWarningAreaUnreadBadgeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB607299D532800BAD868 /* NavigationalWarningAreaUnreadBadgeTests.swift */; };
 		F7ABB60A299D777B00BAD868 /* DoubleFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB609299D777B00BAD868 /* DoubleFilterTests.swift */; };
 		F7ABB60C299D83E500BAD868 /* IntFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ABB60B299D83E500BAD868 /* IntFilterTests.swift */; };
@@ -543,6 +549,12 @@
 		F72EAADE291EECF400AC6026 /* NTMActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NTMActionBar.swift; sourceTree = "<group>"; };
 		F72EAAE0291F040D00AC6026 /* NoticeToMarinersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersView.swift; sourceTree = "<group>"; };
 		F7364E332A1D4BD10098F243 /* MarlinMainMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinMainMap.swift; sourceTree = "<group>"; };
+		F7364E352A1D53970098F243 /* MapNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapNavigationView.swift; sourceTree = "<group>"; };
+		F7364E372A1D55D10098F243 /* LoadingCapsule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingCapsule.swift; sourceTree = "<group>"; };
+		F7364E392A1D57060098F243 /* DataSourceListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceListView.swift; sourceTree = "<group>"; };
+		F7364E3B2A1E45B80098F243 /* NavigationalWarningMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningMapView.swift; sourceTree = "<group>"; };
+		F7364E3D2A1E46860098F243 /* NavigationalWarningAreasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreasView.swift; sourceTree = "<group>"; };
+		F7364E3F2A1E495C0098F243 /* NavigationalWarningSectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningSectionRow.swift; sourceTree = "<group>"; };
 		F73ABC7F294D2E240085EDC5 /* LightRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightRange.swift; sourceTree = "<group>"; };
 		F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceTileProvider.swift; sourceTree = "<group>"; };
 		F73ABC83295245BB0085EDC5 /* OnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -625,7 +637,7 @@
 		F7ABB5FF299AD5E900BAD868 /* fullEpubList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = fullEpubList.json; sourceTree = "<group>"; };
 		F7ABB601299BD35C00BAD868 /* SearchViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewTests.swift; sourceTree = "<group>"; };
 		F7ABB603299C1ECE00BAD868 /* NavigationalWarningNavAreaListViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningNavAreaListViewTests.swift; sourceTree = "<group>"; };
-		F7ABB605299D1EE900BAD868 /* NavigationalWarningListViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningListViewTests.swift; sourceTree = "<group>"; };
+		F7ABB605299D1EE900BAD868 /* NavigationalWarningsOverviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningsOverviewTests.swift; sourceTree = "<group>"; };
 		F7ABB607299D532800BAD868 /* NavigationalWarningAreaUnreadBadgeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreaUnreadBadgeTests.swift; sourceTree = "<group>"; };
 		F7ABB609299D777B00BAD868 /* DoubleFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleFilterTests.swift; sourceTree = "<group>"; };
 		F7ABB60B299D83E500BAD868 /* IntFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntFilterTests.swift; sourceTree = "<group>"; };
@@ -1132,7 +1144,7 @@
 				F72D890B2979ECC900D022FB /* NavigationalWarningSummaryViewTests.swift */,
 				F72D890D2979F48E00D022FB /* NavigationalWarningDetailTests.swift */,
 				F7ABB603299C1ECE00BAD868 /* NavigationalWarningNavAreaListViewTests.swift */,
-				F7ABB605299D1EE900BAD868 /* NavigationalWarningListViewTests.swift */,
+				F7ABB605299D1EE900BAD868 /* NavigationalWarningsOverviewTests.swift */,
 				F7ABB607299D532800BAD868 /* NavigationalWarningAreaUnreadBadgeTests.swift */,
 				F7E768B429EF0F99001EFFFF /* NavigationalWarningLocationParsingTests.swift */,
 			);
@@ -1737,6 +1749,9 @@
 				F70BCE9E29D351DA00AEF73D /* DocumentPicker.swift */,
 				F7BDF7692A0E8D160083B97F /* UITextViewContainer.swift */,
 				F7BDF7752A1C11640083B97F /* DataSourceToggles.swift */,
+				F7364E352A1D53970098F243 /* MapNavigationView.swift */,
+				F7364E372A1D55D10098F243 /* LoadingCapsule.swift */,
+				F7364E392A1D57060098F243 /* DataSourceListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1824,6 +1839,9 @@
 				F7F597B12866248700F9B32E /* NavigationalWarningNavAreaListView.swift */,
 				F7D671BF286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift */,
 				F7D671E32871C5F900758F1C /* NavigationalWarningActionBar.swift */,
+				F7364E3B2A1E45B80098F243 /* NavigationalWarningMapView.swift */,
+				F7364E3D2A1E46860098F243 /* NavigationalWarningAreasView.swift */,
+				F7364E3F2A1E495C0098F243 /* NavigationalWarningSectionRow.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2220,7 +2238,7 @@
 				F76052BB29A94FA800F13260 /* MarlinRegularWidthTests.swift in Sources */,
 				F7D8FA342936C08200E7D0A1 /* MapImageTests.swift in Sources */,
 				F7ABB610299D8C2100BAD868 /* LocationFilterTests.swift in Sources */,
-				F7ABB606299D1EE900BAD868 /* NavigationalWarningListViewTests.swift in Sources */,
+				F7ABB606299D1EE900BAD868 /* NavigationalWarningsOverviewTests.swift in Sources */,
 				F72D88F42971B84D00D022FB /* FilterBottomSheetTests.swift in Sources */,
 				F75324BB2980906E005C509F /* CLLocationCoordinate2DExtensionsTests.swift in Sources */,
 				F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */,
@@ -2298,6 +2316,7 @@
 				F70BCEA529DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift in Sources */,
 				F7FFB31428D63CB000C31AA3 /* Modu+DataSourceViewBuilder.swift in Sources */,
 				F7BDF7762A1C11640083B97F /* DataSourceToggles.swift in Sources */,
+				F7364E382A1D55D10098F243 /* LoadingCapsule.swift in Sources */,
 				F7C23E1429115AF40002A7DF /* DocumentPreview.swift in Sources */,
 				F7D671E22871C29A00758F1C /* AsamActionBar.swift in Sources */,
 				F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */,
@@ -2309,6 +2328,7 @@
 				F7364E342A1D4BD10098F243 /* MarlinMainMap.swift in Sources */,
 				F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */,
 				F72EAADA291D915000AC6026 /* ChartCorrection.swift in Sources */,
+				F7364E402A1E495C0098F243 /* NavigationalWarningSectionRow.swift in Sources */,
 				F70BCE9F29D351DA00AEF73D /* DocumentPicker.swift in Sources */,
 				F7FFB2FE28D6373F00C31AA3 /* NavigationalWarning+DataSourceViewBuilder.swift in Sources */,
 				F7D5C05B28A6B458000C2C29 /* StructureImage.swift in Sources */,
@@ -2349,6 +2369,7 @@
 				F7FFB30028D6376100C31AA3 /* NavigationalWarning+Decodable.swift in Sources */,
 				F7FFB30628D63A7200C31AA3 /* Asam+DataSourceViewBuilder.swift in Sources */,
 				F7D671F1287484FE00758F1C /* MarlinUserDefaults.swift in Sources */,
+				F7364E3E2A1E46860098F243 /* NavigationalWarningAreasView.swift in Sources */,
 				F71DF4862857954A00686951 /* Modu+CoreDataClass.swift in Sources */,
 				F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */,
 				F7D671E72871D46000758F1C /* SideMenuContent.swift in Sources */,
@@ -2366,6 +2387,7 @@
 				F7FFB34128DA486500C31AA3 /* FilterView.swift in Sources */,
 				F75E32BF29C4BC00006F2394 /* LayerURLView.swift in Sources */,
 				F7FFB2F428D62A5000C31AA3 /* Port+Annotation.swift in Sources */,
+				F7364E362A1D53970098F243 /* MapNavigationView.swift in Sources */,
 				F7FFB2EA28D623B000C31AA3 /* DifferentialGPSStation+DataSource.swift in Sources */,
 				F75E32BD29C4BB13006F2394 /* MapLayerViewModel.swift in Sources */,
 				F7D671DA286E3B3D00758F1C /* ExtraMapTypes.swift in Sources */,
@@ -2402,6 +2424,7 @@
 				F7C23E04290831EA0002A7DF /* ElectronicPublication+DataSource.swift in Sources */,
 				F7FFB30828D63A9F00C31AA3 /* Asam+MapImage.swift in Sources */,
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
+				F7364E3C2A1E45B80098F243 /* NavigationalWarningMapView.swift in Sources */,
 				F7FFB32028D640FA00C31AA3 /* RadioBeacon+DataSource.swift in Sources */,
 				F7FFB32628D6422F00C31AA3 /* RadioBeacon+MapImage.swift in Sources */,
 				F7D8FA42293A923400E7D0A1 /* FilterPropertyAndComparison.swift in Sources */,
@@ -2465,6 +2488,7 @@
 				F7C361C12921370B001C7C84 /* NoticeToMariners+DataSource.swift in Sources */,
 				F7C23E0C290850D70002A7DF /* ElectronicPublicationDetailView.swift in Sources */,
 				F7D8FA7D29414FA100E7D0A1 /* NoticeToMarinersFullNoticeViewViewModel.swift in Sources */,
+				F7364E3A2A1D57060098F243 /* DataSourceListView.swift in Sources */,
 				F7FFB31228D63C8300C31AA3 /* Modu+Annotation.swift in Sources */,
 				F707BA852878DBFF006A94C4 /* AdaptiveImage.swift in Sources */,
 				F7FFB2F828D6344000C31AA3 /* Port+Decodable.swift in Sources */,
