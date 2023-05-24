@@ -339,7 +339,7 @@
 		F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5979E285D185000F9B32E /* ModuMap.swift */; };
 		F7F597A62862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A52862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift */; };
 		F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597A92864DD3900F9B32E /* NavigationalWarningSummaryView.swift */; };
-		F7F597AC2864DD5200F9B32E /* NavigationalWarningListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597AB2864DD5200F9B32E /* NavigationalWarningListView.swift */; };
+		F7F597AC2864DD5200F9B32E /* NavigationalWarningOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597AB2864DD5200F9B32E /* NavigationalWarningOverview.swift */; };
 		F7F597AE2864DE2900F9B32E /* NavigationalWarningDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597AD2864DE2800F9B32E /* NavigationalWarningDetailView.swift */; };
 		F7F597B02866241100F9B32E /* NavigationalWarningsAreaDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597AF2866241100F9B32E /* NavigationalWarningsAreaDataSource.swift */; };
 		F7F597B22866248700F9B32E /* NavigationalWarningNavAreaListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F597B12866248700F9B32E /* NavigationalWarningNavAreaListView.swift */; };
@@ -761,7 +761,7 @@
 		F7F5979E285D185000F9B32E /* ModuMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuMap.swift; sourceTree = "<group>"; };
 		F7F597A52862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7F597A92864DD3900F9B32E /* NavigationalWarningSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningSummaryView.swift; sourceTree = "<group>"; };
-		F7F597AB2864DD5200F9B32E /* NavigationalWarningListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningListView.swift; sourceTree = "<group>"; };
+		F7F597AB2864DD5200F9B32E /* NavigationalWarningOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningOverview.swift; sourceTree = "<group>"; };
 		F7F597AD2864DE2800F9B32E /* NavigationalWarningDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningDetailView.swift; sourceTree = "<group>"; };
 		F7F597AF2866241100F9B32E /* NavigationalWarningsAreaDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningsAreaDataSource.swift; sourceTree = "<group>"; };
 		F7F597B12866248700F9B32E /* NavigationalWarningNavAreaListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningNavAreaListView.swift; sourceTree = "<group>"; };
@@ -1833,7 +1833,7 @@
 			isa = PBXGroup;
 			children = (
 				F7F597A92864DD3900F9B32E /* NavigationalWarningSummaryView.swift */,
-				F7F597AB2864DD5200F9B32E /* NavigationalWarningListView.swift */,
+				F7F597AB2864DD5200F9B32E /* NavigationalWarningOverview.swift */,
 				F7F597AD2864DE2800F9B32E /* NavigationalWarningDetailView.swift */,
 				F7F597AF2866241100F9B32E /* NavigationalWarningsAreaDataSource.swift */,
 				F7F597B12866248700F9B32E /* NavigationalWarningNavAreaListView.swift */,
@@ -2459,7 +2459,7 @@
 				F76052C729AD37EE00F13260 /* MapLayer.swift in Sources */,
 				F7D8FA3829391C7C00E7D0A1 /* FilterComparison.swift in Sources */,
 				F7D671E02871BFEC00758F1C /* ModuActionBar.swift in Sources */,
-				F7F597AC2864DD5200F9B32E /* NavigationalWarningListView.swift in Sources */,
+				F7F597AC2864DD5200F9B32E /* NavigationalWarningOverview.swift in Sources */,
 				F7FFB31C28D63F5500C31AA3 /* Light+MapImage.swift in Sources */,
 				F7F7CFC529BA955900A14350 /* BaseOverlaysMap.swift in Sources */,
 				F71CC6EA28AC178F000A326C /* Port+CoreDataClass.swift in Sources */,
