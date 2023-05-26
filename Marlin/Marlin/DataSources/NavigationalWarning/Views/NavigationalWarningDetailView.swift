@@ -51,9 +51,6 @@ struct NavigationalWarningDetailView: View {
             if let text = navigationalWarning.text {
                 Section("Warning") {
                     UITextViewContainer(text:text)
-                        .multilineTextAlignment(.leading)
-                        .textSelection(.enabled)
-                        .tint(Color.purple)
                         .padding(.all, 16)
                         .card()
                 }

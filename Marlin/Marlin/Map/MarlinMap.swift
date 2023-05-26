@@ -109,7 +109,8 @@ class NavigationalMapMixins: MapMixins {
         super.init()
         let navareaMap = GeoPackageMap(fileName: "navigation_areas", tableName: "navigation_areas", index: 0)
         let backgroundMap = GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: Color.dynamicLandColor, index: 1)
-        self.mixins = [NavigationalWarningMap(zoomOnFocus: true), navareaMap, backgroundMap]
+//        self.mixins = [NavigationalWarningMap(zoomOnFocus: true), navareaMap, backgroundMap]
+        self.mixins = [NavigationalWarningFetchMap(), navareaMap, backgroundMap]
     }
 }
 
@@ -441,12 +442,11 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: EnlargedAnnotationView.ReuseID, for: enlarged)
             let mapImage = enlarged.mapImage
             let mapImages = mapImage.mapImage(marker: true, zoomLevel: 36, tileBounds3857: nil, context: nil)
-            var finalImage: UIImage?
-            if mapImages.count > 0 {
-                finalImage = mapImages.first
-            }
-            for mapImage in mapImages.suffix(from: 1) {
-                finalImage = UIImage.combineCentered(image1: finalImage, image2: mapImage)
+            var finalImage: UIImage? = mapImages.first
+            if mapImages.count > 1 {
+                for mapImage in mapImages.suffix(from: 1) {
+                    finalImage = UIImage.combineCentered(image1: finalImage, image2: mapImage)
+                }
             }
             annotationView.image = finalImage
             var size = CGSize(width: 40, height: 40)

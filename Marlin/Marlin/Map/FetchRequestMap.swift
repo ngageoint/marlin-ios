@@ -128,7 +128,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
             }
             .store(in: &cancellable)
         
-        LocationManager.shared.$current10kmMGRS
+        LocationManager.shared().$current10kmMGRS
             .receive(on: RunLoop.main)
             .sink() { [weak self] mgrsZone in
                 self?.refreshOverlay(marlinMap: marlinMap)
@@ -151,7 +151,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
             }
             
             let newFetchRequest = self.getFetchRequest(show: self.show)
-            let newOverlay = PredicateTileOverlay<T>(predicate: newFetchRequest?.predicate, sortDescriptors: newFetchRequest?.sortDescriptors, objects: self.objects, imageCache: self.imageCache)
+            let newOverlay = PredicateTileOverlay<T>(predicate: newFetchRequest?.predicate, sortDescriptors: newFetchRequest?.sortDescriptors, boundingPredicate: getBoundingPredicate, objects: self.objects, imageCache: self.imageCache)
             
             newOverlay.tileSize = CGSize(width: 512, height: 512)
             newOverlay.minimumZ = self.minZoom

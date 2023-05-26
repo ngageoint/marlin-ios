@@ -27,6 +27,63 @@ class NavigationalWarningCircle: MKCircle {
     var warning: NavigationalWarning?
 }
 
+class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchRequestMap<T> {
+    override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
+        super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
+        self.sortDescriptors = NavigationalWarning.defaultSort.map({ parameter in
+            parameter.toNSSortDescriptor()
+        })
+        self.focusNotificationName = .FocusNavigationalWarning
+        self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMapasam)
+    }
+    
+    override func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
+        super.setupMixin(marlinMap: marlinMap, mapView: mapView)
+        mapView.register(ImageAnnotationView.self, forAnnotationViewWithReuseIdentifier: NavigationalWarning.key)
+    }
+    
+    override func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
+        return NSPredicate(
+            format: "maxLatitude >= %lf AND minLatitude <= %lf AND maxLongitude >= %lf AND minLongitude <= %lf", minLat, maxLat, minLon, maxLon
+        )
+    }
+    
+    override func focus(item: T) {
+        DispatchQueue.main.async {
+            self.mapState?.center = MKCoordinateRegion(center: item.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+        }
+    }
+    
+    override func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [any DataSource]? {
+        if mapView.zoomLevel < minZoom {
+            return nil
+        }
+        guard show == true else {
+            return nil
+        }
+        let screenPercentage = 0.03
+        let tolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
+        let minLon = location.longitude - tolerance
+        let maxLon = location.longitude + tolerance
+        let minLat = location.latitude - tolerance
+        let maxLat = location.latitude + tolerance
+        
+        guard let fetchRequest = self.getFetchRequest(show: self.show) else {
+            return nil
+        }
+        var predicates: [NSPredicate] = []
+        if let predicate = fetchRequest.predicate {
+            predicates.append(predicate)
+        }
+        
+        predicates.append(getBoundingPredicate(minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon))
+        
+        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        
+        return try? PersistenceController.current.fetch(fetchRequest: fetchRequest) as? [any DataSource]
+    }
+}
+
 class NavigationalWarningMap: NSObject, MapMixin {
     var uuid: UUID = UUID()
     var warning: NavigationalWarning?
@@ -103,7 +160,7 @@ class NavigationalWarningMap: NSObject, MapMixin {
                     let navpoint = NavigationalWarningAnnotation()
                     navpoint.coordinate = point.coordinate
                     navpoint.warning = warning
-                    mapAnnotations.append(navpoint)
+//                    mapAnnotations.append(navpoint)
                 } else if let circle = shape as? MKCircle {
                     let navcircle = NavigationalWarningCircle(center: circle.coordinate, radius: circle.radius)
                     navcircle.warning = warning
@@ -152,13 +209,13 @@ class NavigationalWarningMap: NSObject, MapMixin {
                 }
             }
             mapView.addOverlays(self.mapOverlays)
-            mapView.addAnnotations(self.mapAnnotations)
+//            mapView.addAnnotations(self.mapAnnotations)
         }
     }
     
     func removeMixin(mapView: MKMapView, mapState: MapState) {
         mapView.removeOverlays(mapOverlays)
-        mapView.removeAnnotations(mapAnnotations)
+//        mapView.removeAnnotations(mapAnnotations)
     }
     
     func refresh() {
@@ -180,23 +237,23 @@ class NavigationalWarningMap: NSObject, MapMixin {
         return fetchRequest
     }
     
-    func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
-        if annotation is NavigationalWarningAnnotation {
-            let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: NavigationalWarning.key, for: annotation)
-            if let systemImageName = NavigationalWarning.systemImageName, let annotation = annotation as? NavigationalWarningAnnotation, let warning = annotation.warning {
-                let images = warning.mapImage(marker: false, zoomLevel: 2, tileBounds3857: nil)
-                var combinedImage: UIImage? = UIImage.combineCentered(image1: images.first, image2: nil)
-                if !images.isEmpty {
-                    for image in images.dropFirst() {
-                        combinedImage = UIImage.combineCentered(image1: combinedImage, image2: image)
-                    }
-                }
-                annotationView.image = combinedImage ?? UIImage(systemName: systemImageName)
-            }
-            return annotationView
-        }
-        return nil
-    }
+//    func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
+//        if annotation is NavigationalWarningAnnotation {
+//            let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: NavigationalWarning.key, for: annotation)
+//            if let systemImageName = NavigationalWarning.systemImageName, let annotation = annotation as? NavigationalWarningAnnotation, let warning = annotation.warning {
+//                let images = warning.mapImage(marker: false, zoomLevel: 2, tileBounds3857: nil)
+//                var combinedImage: UIImage? = UIImage.combineCentered(image1: images.first, image2: nil)
+//                if !images.isEmpty {
+//                    for image in images.dropFirst() {
+//                        combinedImage = UIImage.combineCentered(image1: combinedImage, image2: image)
+//                    }
+//                }
+//                annotationView.image = combinedImage ?? UIImage(systemName: systemImageName)
+//            }
+//            return annotationView
+//        }
+//        return nil
+//    }
 
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [DataSource]? {
         let screenPercentage = 0.03
@@ -233,28 +290,28 @@ class NavigationalWarningMap: NSObject, MapMixin {
         }
         
         // find the points
-        let longitudeTolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
-        let minLon = location.longitude - longitudeTolerance
-        let maxLon = location.longitude + longitudeTolerance
-        let minLat = location.latitude - longitudeTolerance
-        let maxLat = location.latitude + longitudeTolerance
-        
-        let fetchRequest = self.getFetchRequest(show: self.show)
-        
-        var predicates: [NSPredicate] = []
-        if let predicate = fetchRequest.predicate {
-            predicates.append(predicate)
-        }
-        
-        predicates.append(getBoundingPredicate(minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon))
-        
-        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-        
-        if let points = try? PersistenceController.current.fetch(fetchRequest: fetchRequest) {
-            for point in points {
-                items.insert(point)
-            }
-        }
+//        let longitudeTolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
+//        let minLon = location.longitude - longitudeTolerance
+//        let maxLon = location.longitude + longitudeTolerance
+//        let minLat = location.latitude - longitudeTolerance
+//        let maxLat = location.latitude + longitudeTolerance
+//
+//        let fetchRequest = self.getFetchRequest(show: self.show)
+//
+//        var predicates: [NSPredicate] = []
+//        if let predicate = fetchRequest.predicate {
+//            predicates.append(predicate)
+//        }
+//
+//        predicates.append(getBoundingPredicate(minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon))
+//
+//        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+//
+//        if let points = try? PersistenceController.current.fetch(fetchRequest: fetchRequest) {
+//            for point in points {
+//                items.insert(point)
+//            }
+//        }
         
         return Array(items)
     }

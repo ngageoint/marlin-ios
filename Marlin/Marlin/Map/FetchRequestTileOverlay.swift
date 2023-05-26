@@ -30,6 +30,7 @@ class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverl
     var zoomLevel: Int = 0
     var imageCache: Kingfisher.ImageCache?
     var key: String?
+    var boundingPredicate: ((Double, Double, Double, Double) -> NSPredicate)?
     
     var clearImage: UIImage {
         let rect = CGRect(origin: CGPoint(x: 0, y:0), size: CGSize(width: 1, height: 1))
@@ -45,20 +46,24 @@ class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverl
         return image!
     }
 
-    convenience init(predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]? = nil, objects: [T]? = nil, imageCache: Kingfisher.ImageCache? = nil) {
+    convenience init(predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]? = nil, boundingPredicate: @escaping (Double, Double, Double, Double) -> NSPredicate, objects: [T]? = nil, imageCache: Kingfisher.ImageCache? = nil) {
         self.init()
         self.predicate = predicate
         self.sortDescriptors = sortDescriptors
         self.objects = objects
         self.imageCache = imageCache
         self.key = T.key
+        self.boundingPredicate = boundingPredicate
     }
     
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
         
         let options: KingfisherOptionsInfo? = T.cacheTiles ? (imageCache != nil ? [.targetCache(imageCache!)] : nil) : [.forceRefresh]
                 
-        KingfisherManager.shared.retrieveImage(with: .provider(DataSourceTileProvider<T>(path: path, predicate: predicate, sortDescriptors: sortDescriptors, objects: objects, tileSize: tileSize)), options: options) { imageResult in
+        guard let boundingPredicate = boundingPredicate else {
+            return
+        }
+        KingfisherManager.shared.retrieveImage(with: .provider(DataSourceTileProvider<T>(path: path, predicate: predicate, sortDescriptors: sortDescriptors, boundingPredicate: boundingPredicate, objects: objects, tileSize: tileSize)), options: options) { imageResult in
             switch imageResult {
             case .success(let value):
                 result(value.image.pngData(), nil)

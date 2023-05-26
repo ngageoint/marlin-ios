@@ -16,10 +16,13 @@ struct NavigationalWarningsOverview<Location>: View where Location: LocationMana
     @State var expandMap: Bool = false
     @State var selection: String? = nil
     let tabFocus = NotificationCenter.default.publisher(for: .TabRequestFocus)
-
+    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
+        notification.object as? ViewDataSource
+    }
+    
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
     
-    init(locationManager: Location = LocationManager.shared) {
+    init(locationManager: Location = LocationManager.shared()) {
         self.locationManager = locationManager
     }
     
@@ -29,6 +32,7 @@ struct NavigationalWarningsOverview<Location>: View where Location: LocationMana
             NavigationLink(tag: "detail", selection: $selection) {
                 if let data = itemWrapper.dataSource as? DataSourceViewBuilder {
                     data.detailView
+                        .environmentObject(navState)
                 }
             } label: {
                 EmptyView()
@@ -68,6 +72,14 @@ struct NavigationalWarningsOverview<Location>: View where Location: LocationMana
         .onAppear {
             navState.navGroupName = "\(NavigationalWarning.key)List"
             navState.mapName = MAP_NAME
+        }
+        .onReceive(viewDataSourcePub) { output in
+            if let dataSource = output.dataSource as? NavigationalWarning, output.mapName == MAP_NAME {
+                NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
+                itemWrapper.dataSource = dataSource
+                itemWrapper.date = Date()
+                selection = "detail"
+            }
         }
         .id(navState.rootViewId)
     }

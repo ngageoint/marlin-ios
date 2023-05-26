@@ -66,13 +66,15 @@ struct DataSourceTileProvider<T : MapImage>: ImageDataProvider {
     let path: MKTileOverlayPath
     let tileSize: CGSize
     let objects: [T]?
+    var boundingPredicate: ((Double, Double, Double, Double) -> NSPredicate)?
     
-    init(path: MKTileOverlayPath, predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?, objects: [T]? = nil, tileSize: CGSize) {
+    init(path: MKTileOverlayPath, predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?, boundingPredicate: @escaping (Double, Double, Double, Double) -> NSPredicate, objects: [T]? = nil, tileSize: CGSize) {
         self.path = path
         self.predicate = predicate
         self.sortDescriptors = sortDescriptors
         self.tileSize = tileSize
         self.objects = objects
+        self.boundingPredicate = boundingPredicate
     }
     
     func data(handler: @escaping (Result<Data, Error>) -> Void) {
@@ -112,22 +114,24 @@ struct DataSourceTileProvider<T : MapImage>: ImageDataProvider {
     
     func drawTile(tileBounds3857: MapBoundingBox, queryBounds: MapBoundingBox, zoomLevel: Int, cacheKey: String, handler: @escaping (Result<Data, Error>) -> Void) {
         
+        guard let boundingPredicate = boundingPredicate else {
+            return
+        }
+        
         var boundsPredicate: NSPredicate?
         
         if queryBounds.swCorner.x < -180 {
             boundsPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
-                NSPredicate(format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", queryBounds.swCorner.y, queryBounds.neCorner.y, -180.0, queryBounds.neCorner.x),
-                NSPredicate(format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", queryBounds.swCorner.y, queryBounds.neCorner.y, queryBounds.swCorner.x + 360.0, 180.0)
+                boundingPredicate(queryBounds.swCorner.y, queryBounds.neCorner.y, -180.0, queryBounds.neCorner.x),
+                boundingPredicate(queryBounds.swCorner.y, queryBounds.neCorner.y, queryBounds.swCorner.x + 360.0, 180.0)
             ])
         } else if queryBounds.neCorner.x > 180 {
             boundsPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
-                NSPredicate(format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", queryBounds.swCorner.y, queryBounds.neCorner.y, queryBounds.swCorner.x, 180.0),
-                NSPredicate(format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", queryBounds.swCorner.y, queryBounds.neCorner.y, -180.0, queryBounds.neCorner.x - 360.0)
+                boundingPredicate(queryBounds.swCorner.y, queryBounds.neCorner.y, queryBounds.swCorner.x, 180.0),
+                boundingPredicate(queryBounds.swCorner.y, queryBounds.neCorner.y, -180.0, queryBounds.neCorner.x - 360.0)
             ])
         } else {
-            boundsPredicate = NSPredicate(
-                format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", queryBounds.swCorner.y, queryBounds.neCorner.y, queryBounds.swCorner.x, queryBounds.neCorner.x
-            )
+            boundsPredicate = boundingPredicate(queryBounds.swCorner.y, queryBounds.neCorner.y, queryBounds.swCorner.x, queryBounds.neCorner.x)
         }
         
         guard let boundsPredicate = boundsPredicate else {
