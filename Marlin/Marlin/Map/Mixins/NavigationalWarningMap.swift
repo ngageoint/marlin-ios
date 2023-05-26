@@ -19,6 +19,10 @@ class NavigationalWarningPolyline: MKPolyline {
     var warning: NavigationalWarning?
 }
 
+class NavigationalWarningGeodesicPolyline: MKGeodesicPolyline {
+    var warning: NavigationalWarning?
+}
+
 class NavigationalWarningAnnotation: MKPointAnnotation {
     var warning: NavigationalWarning?
 }
@@ -80,7 +84,54 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
         
         fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         
-        return try? PersistenceController.current.fetch(fetchRequest: fetchRequest) as? [any DataSource]
+        var matched: [NavigationalWarning] = []
+        if let navWarnings = try? PersistenceController.current.fetch(fetchRequest: fetchRequest) as? [NavigationalWarning] {
+            // verify the actual shapes match and not just the bounding box
+            for warning in navWarnings {
+                if verifyMatch(warning: warning, location: location, tolerance: tolerance) {
+                    matched.append(warning)
+                }
+            }
+        }
+        
+        return matched
+    }
+    
+    func verifyMatch(warning: NavigationalWarning, location: CLLocationCoordinate2D, tolerance: Double) -> Bool {
+        if let locations = warning.locations {
+            for wktLocation in locations {
+                if let wkt = wktLocation["wkt"] {
+                    var distance: Double?
+                    if let distanceString = wktLocation["distance"] {
+                        distance = Double(distanceString)
+                    }
+                    if let shape = MKShape.fromWKT(wkt: wkt, distance: distance) {
+                        if let polygon = shape as? MKPolygon {
+                            if polygonHitTest(polygon: polygon, location: location) {
+                                return true
+                            }
+                        } else if let polyline = shape as? MKPolyline {
+                            if lineHitTest(line: polyline, location: location, tolerance: tolerance * 2.0) {
+                                return true
+                            }
+                        } else if let point = shape as? MKPointAnnotation {
+                            let minLon = location.longitude - tolerance
+                            let maxLon = location.longitude + tolerance
+                            let minLat = location.latitude - tolerance
+                            let maxLat = location.latitude + tolerance
+                            if minLon <= point.coordinate.longitude && maxLon >= point.coordinate.longitude && minLat <= point.coordinate.latitude && maxLat >= point.coordinate.latitude {
+                                return true
+                            }
+                        } else if let circle = shape as? MKCircle {
+                            if circleHitTest(circle: circle, location: location) {
+                                return true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false
     }
 }
 
@@ -156,11 +207,15 @@ class NavigationalWarningMap: NSObject, MapMixin {
                     let navline = NavigationalWarningPolyline(points: polyline.points(), count: polyline.pointCount)
                     navline.warning = warning
                     mapOverlays.append(navline)
+                } else if let polyline = shape as? MKGeodesicPolyline {
+                    let navline = NavigationalWarningGeodesicPolyline(points: polyline.points(), count: polyline.pointCount)
+                    navline.warning = warning
+                    mapOverlays.append(navline)
                 } else if let point = shape as? MKPointAnnotation {
                     let navpoint = NavigationalWarningAnnotation()
                     navpoint.coordinate = point.coordinate
                     navpoint.warning = warning
-//                    mapAnnotations.append(navpoint)
+                    mapAnnotations.append(navpoint)
                 } else if let circle = shape as? MKCircle {
                     let navcircle = NavigationalWarningCircle(center: circle.coordinate, radius: circle.radius)
                     navcircle.warning = warning
@@ -209,13 +264,13 @@ class NavigationalWarningMap: NSObject, MapMixin {
                 }
             }
             mapView.addOverlays(self.mapOverlays)
-//            mapView.addAnnotations(self.mapAnnotations)
+            mapView.addAnnotations(self.mapAnnotations)
         }
     }
     
     func removeMixin(mapView: MKMapView, mapState: MapState) {
         mapView.removeOverlays(mapOverlays)
-//        mapView.removeAnnotations(mapAnnotations)
+        mapView.removeAnnotations(mapAnnotations)
     }
     
     func refresh() {
@@ -237,23 +292,23 @@ class NavigationalWarningMap: NSObject, MapMixin {
         return fetchRequest
     }
     
-//    func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
-//        if annotation is NavigationalWarningAnnotation {
-//            let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: NavigationalWarning.key, for: annotation)
-//            if let systemImageName = NavigationalWarning.systemImageName, let annotation = annotation as? NavigationalWarningAnnotation, let warning = annotation.warning {
-//                let images = warning.mapImage(marker: false, zoomLevel: 2, tileBounds3857: nil)
-//                var combinedImage: UIImage? = UIImage.combineCentered(image1: images.first, image2: nil)
-//                if !images.isEmpty {
-//                    for image in images.dropFirst() {
-//                        combinedImage = UIImage.combineCentered(image1: combinedImage, image2: image)
-//                    }
-//                }
-//                annotationView.image = combinedImage ?? UIImage(systemName: systemImageName)
-//            }
-//            return annotationView
-//        }
-//        return nil
-//    }
+    func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
+        if annotation is NavigationalWarningAnnotation {
+            let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: NavigationalWarning.key, for: annotation)
+            if let systemImageName = NavigationalWarning.systemImageName, let annotation = annotation as? NavigationalWarningAnnotation, let warning = annotation.warning {
+                let images = warning.mapImage(marker: false, zoomLevel: 2, tileBounds3857: nil)
+                var combinedImage: UIImage? = UIImage.combineCentered(image1: images.first, image2: nil)
+                if !images.isEmpty {
+                    for image in images.dropFirst() {
+                        combinedImage = UIImage.combineCentered(image1: combinedImage, image2: image)
+                    }
+                }
+                annotationView.image = combinedImage ?? UIImage(systemName: systemImageName)
+            }
+            return annotationView
+        }
+        return nil
+    }
 
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [DataSource]? {
         let screenPercentage = 0.03
@@ -290,28 +345,28 @@ class NavigationalWarningMap: NSObject, MapMixin {
         }
         
         // find the points
-//        let longitudeTolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
-//        let minLon = location.longitude - longitudeTolerance
-//        let maxLon = location.longitude + longitudeTolerance
-//        let minLat = location.latitude - longitudeTolerance
-//        let maxLat = location.latitude + longitudeTolerance
-//
-//        let fetchRequest = self.getFetchRequest(show: self.show)
-//
-//        var predicates: [NSPredicate] = []
-//        if let predicate = fetchRequest.predicate {
-//            predicates.append(predicate)
-//        }
-//
-//        predicates.append(getBoundingPredicate(minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon))
-//
-//        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-//
-//        if let points = try? PersistenceController.current.fetch(fetchRequest: fetchRequest) {
-//            for point in points {
-//                items.insert(point)
-//            }
-//        }
+        let longitudeTolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
+        let minLon = location.longitude - longitudeTolerance
+        let maxLon = location.longitude + longitudeTolerance
+        let minLat = location.latitude - longitudeTolerance
+        let maxLat = location.latitude + longitudeTolerance
+
+        let fetchRequest = self.getFetchRequest(show: self.show)
+
+        var predicates: [NSPredicate] = []
+        if let predicate = fetchRequest.predicate {
+            predicates.append(predicate)
+        }
+
+        predicates.append(getBoundingPredicate(minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon))
+
+        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+
+        if let points = try? PersistenceController.current.fetch(fetchRequest: fetchRequest) {
+            for point in points {
+                items.insert(point)
+            }
+        }
         
         return Array(items)
     }
@@ -328,6 +383,11 @@ class NavigationalWarningMap: NSObject, MapMixin {
             renderer.strokeColor = NavigationalWarning.color
             renderer.lineWidth = 3
             renderer.fillColor = NavigationalWarning.color.withAlphaComponent(0.2)
+            return renderer
+        } else if let polyline = overlay as? NavigationalWarningGeodesicPolyline {
+            let renderer = MKPolylineRenderer(polyline: polyline)
+            renderer.strokeColor = NavigationalWarning.color
+            renderer.lineWidth = 3
             return renderer
         } else if let polyline = overlay as? NavigationalWarningPolyline {
             let renderer = MKPolylineRenderer(polyline: polyline)

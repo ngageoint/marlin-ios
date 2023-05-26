@@ -45,20 +45,11 @@ extension MapMixin {
         guard let renderer = (renderer(overlay: line) as? MKPolylineRenderer ?? standardRenderer(overlay: line) as? MKPolylineRenderer) else {
             return false
         }
-        let mapPoint = MKMapPoint.init(location)
+        renderer.invalidatePath()
+        
+        let mapPoint = MKMapPoint(location)
         let point = renderer.point(for: mapPoint)
-        let strokedPath = renderer.path?.copy(strokingWithWidth: tolerance, lineCap: .round, lineJoin: .round, miterLimit: 1)
-        
-        var onShape = strokedPath?.contains(point) ?? false
-        // If not on the line, check the complementary polygon path in case it crosses -180 / 180 longitude
-        if !onShape {
-            if let complementaryPath: Unmanaged<CGPath> = GPKGMapUtils.complementaryWorldPath(of: line) {
-                let retained = complementaryPath.takeRetainedValue()
-                let complimentaryStrokedPath = retained.copy(strokingWithWidth: tolerance, lineCap: .round, lineJoin: .round, miterLimit: 1)
-                onShape = complimentaryStrokedPath.contains(CGPoint(x: mapPoint.x, y: mapPoint.y))
-            }
-        }
-        
+        let onShape = renderer.path.contains(point)
         return onShape
     }
     
@@ -89,6 +80,11 @@ extension MapMixin {
             renderer.lineWidth = 1
             return renderer
         } else if let polyline = overlay as? MKPolyline, type(of: polyline) == MKPolyline.self  {
+            let renderer = MKPolylineRenderer(polyline: polyline)
+            renderer.strokeColor = .black
+            renderer.lineWidth = 1
+            return renderer
+        } else if let polyline = overlay as? MKPolyline, type(of: polyline) == MKGeodesicPolyline.self  {
             let renderer = MKPolylineRenderer(polyline: polyline)
             renderer.strokeColor = .black
             renderer.lineWidth = 1

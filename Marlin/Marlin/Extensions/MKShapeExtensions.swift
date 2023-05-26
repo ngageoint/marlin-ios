@@ -42,7 +42,7 @@ extension MKShape {
                     }
                 }
             }
-            return MKPolyline(points: &mapPoints, count: mapPoints.count)
+            return MKGeodesicPolyline(points: &mapPoints, count: mapPoints.count)
         }
         return nil
     }

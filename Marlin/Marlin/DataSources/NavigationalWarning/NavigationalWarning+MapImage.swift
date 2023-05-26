@@ -18,9 +18,7 @@ extension NavigationalWarning: MapImage {
         guard let tileBounds3857 = tileBounds3857 else {
             return images
         }
-        print("xxx locations is nil? \(locations == nil)")
         if let locations = locations {
-            print("xxx there are this many \(locations.count)")
             for location in locations {
                 if let wkt = location["wkt"] {
                     var distance: Double?
@@ -28,13 +26,12 @@ extension NavigationalWarning: MapImage {
                         distance = Double(distanceString)
                     }
                     
-                    let geometry = SFWTGeometryReader.readGeometry(withText: wkt)
-                    
-                    var mapPoints: [MKMapPoint] = []
-                    if let point = geometry as? SFPoint {
-                        let coordinate = CLLocationCoordinate2D(latitude: point.y.doubleValue, longitude: point.x.doubleValue)
+                    let shape = MKShape.fromWKT(wkt: wkt, distance: distance)
+                                        
+                    if let point = shape as? MKPointAnnotation {
+                        let coordinate = point.coordinate
                         if let distance = distance {
-                            let circleCoordinates = circleCoordinates(center: self.coordinate, radiusMeters: distance)
+                            let circleCoordinates = circleCoordinates(center: coordinate, radiusMeters: distance)
                             let path = UIBezierPath()
                             
                             var pixel = circleCoordinates[0].toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
@@ -51,52 +48,86 @@ extension NavigationalWarning: MapImage {
                             path.stroke()
                         }
                         images.append(contentsOf: defaultMapImage(marker: marker, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context, tileSize: 512.0))
-                    } else if let polygon = geometry as? SFPolygon {
-                        if let lineString = polygon.ring(at: 0) {
-                            if let points = lineString.points {
-                                let path = UIBezierPath()
-                                if let first = points.firstObject as? SFPoint {
-                                    let firstPixel = CLLocationCoordinate2D(latitude: first.y.doubleValue, longitude: first.x.doubleValue).toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
-                                    path.move(to: firstPixel)
-                                }
-                                for point in points.dropFirst() {
-                                    if let point = point as? SFPoint {
-                                        let pixel = CLLocationCoordinate2D(latitude: point.y.doubleValue, longitude: point.x.doubleValue).toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+                    } else if let polygon = shape as? MKPolygon {
+                        let points = polygon.points()
+                        let path = UIBezierPath()
+                        var first = true
+                        var firstPoint: CLLocationCoordinate2D?
+                        var previousPoint: CLLocationCoordinate2D?
+                        for point in UnsafeBufferPointer(start: points, count: polygon.pointCount) {
+                            
+                            let pixel = point.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+                            if first {
+                                firstPoint = point.coordinate
+                                previousPoint = point.coordinate
+                                path.move(to: pixel)
+                                first = false
+                            } else {
+                                // make a geodesic line between the points and then plot that
+                                if let previousPoint = previousPoint {
+                                    var coords: [CLLocationCoordinate2D] = [previousPoint, point.coordinate]
+                                    let gl = MKGeodesicPolyline(coordinates: &coords, count: 2)
+                                    
+                                    let glpoints = gl.points()
+                                    
+                                    for point in UnsafeBufferPointer(start: glpoints, count: gl.pointCount) {
+                                        
+                                        let pixel = point.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
                                         path.addLine(to: pixel)
+                                        
                                     }
                                 }
-                                path.lineWidth = 4
-                                path.close()
-                                NavigationalWarning.color.withAlphaComponent(0.3).setFill()
-                                NavigationalWarning.color.setStroke()
-                                path.fill()
-                                path.stroke()
+                                previousPoint = point.coordinate
+                            }
+                            
+                        }
+                        
+                        // now draw the geodesic line between the last and the first
+                        if let previousPoint = previousPoint, let firstPoint = firstPoint {
+                            var coords: [CLLocationCoordinate2D] = [previousPoint, firstPoint]
+                            let gl = MKGeodesicPolyline(coordinates: &coords, count: 2)
+                            
+                            let glpoints = gl.points()
+                            
+                            for point in UnsafeBufferPointer(start: glpoints, count: gl.pointCount) {
+                                
+                                let pixel = point.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+                                path.addLine(to: pixel)
+                                
                             }
                         }
-                    } else if let line = geometry as? SFLineString {
-                        if let points = line.points {
-                            let path = UIBezierPath()
-                            if let first = points.firstObject as? SFPoint {
-                                let firstPixel = CLLocationCoordinate2D(latitude: first.y.doubleValue, longitude: first.x.doubleValue).toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
-                                path.move(to: firstPixel)
+                        
+                        path.lineWidth = 4
+                        path.close()
+                        NavigationalWarning.color.withAlphaComponent(0.3).setFill()
+                        NavigationalWarning.color.setStroke()
+                        path.fill()
+                        path.stroke()
+                    } else if let lineShape = shape as? MKGeodesicPolyline {
+                        
+                        let path = UIBezierPath()
+                        var first = true
+                        let points = lineShape.points()
+
+                        for point in UnsafeBufferPointer(start: points, count: lineShape.pointCount) {
+                            
+                            let pixel = point.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+                            if first {
+                                path.move(to: pixel)
+                                first = false
+                            } else {
+                                path.addLine(to: pixel)
                             }
-                            for point in points.dropFirst() {
-                                if let point = point as? SFPoint {
-                                    let pixel = CLLocationCoordinate2D(latitude: point.y.doubleValue, longitude: point.x.doubleValue).toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
-                                    path.addLine(to: pixel)
-                                }
-                            }
-                            path.lineWidth = 4
-                            NavigationalWarning.color.withAlphaComponent(0.3).setFill()
-                            NavigationalWarning.color.setStroke()
-                            path.stroke()
+                           
                         }
+                        
+                        path.lineWidth = 4
+                        NavigationalWarning.color.setStroke()
+                        path.stroke()
                     }
                 }
             }
         }
-        
-        
         
         return images
     }
