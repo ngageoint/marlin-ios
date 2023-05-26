@@ -30,7 +30,7 @@ struct ChartCorrection: Decodable, Hashable, Identifiable, DataSource {
     ]
     static var defaultSort: [DataSourceSortParameter] = []
     static var defaultFilter: [DataSourceFilterParameter] {
-        if LocationManager.shared.lastLocation != nil {
+        if LocationManager.shared().lastLocation != nil {
             return [
                 DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .nearMe, valueInt: 2500)
             ]

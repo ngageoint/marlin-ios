@@ -152,7 +152,7 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
             var centralLatitude: Double?
             
             if comparison == .nearMe {
-                if let lastLocation = LocationManager.shared.lastLocation {
+                if let lastLocation = LocationManager.shared().lastLocation {
                     centralLongitude = lastLocation.coordinate.longitude
                     centralLatitude = lastLocation.coordinate.latitude
                 }

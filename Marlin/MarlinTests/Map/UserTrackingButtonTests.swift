@@ -24,29 +24,30 @@ final class UserTrackingButtonTests: XCTestCase {
 
     func testChangeState() {
         UserDefaults.standard.set(Int(MKUserTrackingMode.none.rawValue), forKey: "userTrackingMode")
-        let mockLocationManager = MockLocationManager()
-        mockLocationManager.locationStatus = .authorizedAlways
+
+        var mockLocationManager = MockCLLocationManager()
+        var locationManager = LocationManager.shared(locationManager: mockLocationManager)
+        locationManager.locationStatus = .authorizedAlways
 
         class PassThrough {
             var userTrackingMode: MKUserTrackingMode?
         }
         
-        struct Container<Location>: View where Location: LocationManagerProtocol {
+        struct Container: View {
             @StateObject var mapState: MapState = MapState()
             @State var filterOpen: Bool = false
             
             var passThrough: PassThrough
             var mixins: [MapMixin] = []
-            var locationManager: Location
             
-            init(passThrough: PassThrough, locationManager: Location) {
+            init(passThrough: PassThrough) {
                 self.passThrough = passThrough
-                self.locationManager = locationManager
             }
             
             var body: some View {
                 ZStack {
-                    UserTrackingButton(mapState: mapState, locationManager: locationManager)
+                    UserTrackingButton(mapState: mapState)
+                        
                 }
                 .onChange(of: mapState.userTrackingMode) { newValue in
                     passThrough.userTrackingMode = MKUserTrackingMode(rawValue: newValue)
@@ -56,7 +57,8 @@ final class UserTrackingButtonTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough()
         
-        let container = Container(passThrough: passThrough, locationManager: mockLocationManager)
+        let container = Container(passThrough: passThrough)
+            .environmentObject(locationManager)
             .environmentObject(appState)
         
         let controller = UIHostingController(rootView: container)
@@ -78,30 +80,29 @@ final class UserTrackingButtonTests: XCTestCase {
     
     func testLocationNotAuthorized() {
         UserDefaults.standard.set(Int(MKUserTrackingMode.none.rawValue), forKey: "userTrackingMode")
-        let mockLocationManager = MockLocationManager()
-        mockLocationManager.locationStatus = .notDetermined
+        var mockLocationManager = MockCLLocationManager()
+        var locationManager = LocationManager.shared(locationManager: mockLocationManager)
+        locationManager.locationStatus = .notDetermined
         
         class PassThrough: ObservableObject {
             var userTrackingMode: MKUserTrackingMode?
             @Published var newUserTrackingMode: MKUserTrackingMode = .none
         }
         
-        struct Container<Location>: View where Location: LocationManagerProtocol {
+        struct Container: View {
             @StateObject var mapState: MapState = MapState()
             @State var filterOpen: Bool = false
             
             @ObservedObject var passThrough: PassThrough
             var mixins: [MapMixin] = []
-            var locationManager: Location
             
-            init(passThrough: PassThrough, locationManager: Location) {
+            init(passThrough: PassThrough) {
                 self.passThrough = passThrough
-                self.locationManager = locationManager
             }
             
             var body: some View {
                 ZStack {
-                    UserTrackingButton(mapState: mapState, locationManager: locationManager)
+                    UserTrackingButton(mapState: mapState)
                 }
                 .onChange(of: mapState.userTrackingMode) { newValue in
                     passThrough.userTrackingMode = MKUserTrackingMode(rawValue: newValue)
@@ -114,7 +115,8 @@ final class UserTrackingButtonTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough()
         
-        let container = Container(passThrough: passThrough, locationManager: mockLocationManager)
+        let container = Container(passThrough: passThrough)
+            .environmentObject(locationManager)
             .environmentObject(appState)
         
         let controller = UIHostingController(rootView: container)
@@ -133,7 +135,7 @@ final class UserTrackingButtonTests: XCTestCase {
         
         tester().waitForView(withAccessibilityLabel: "Tracking follow with heading Unauthorized")
         
-        mockLocationManager.locationStatus = .authorizedAlways
+        locationManager.locationStatus = .authorizedAlways
         
         tester().waitForView(withAccessibilityLabel: "Tracking follow with heading")
     }

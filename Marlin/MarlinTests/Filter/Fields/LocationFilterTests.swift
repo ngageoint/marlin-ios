@@ -222,16 +222,21 @@ final class LocationFilterTests: XCTestCase {
             @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Location", key: "locationProperty", type: .location))
             
-            var locationManager: MockLocationManager = MockLocationManager()
+            var locationManager: LocationManager
             
             init(passThrough: PassThrough) {
+                var mockLocationManager = MockCLLocationManager()
+                locationManager = LocationManager.shared(locationManager: mockLocationManager)
                 self.passThrough = passThrough
+                dataSourcePropertyFilterViewModel.locationManager = locationManager
                 self.passThrough.viewModel = dataSourcePropertyFilterViewModel
+                
             }
             
             var body: some View {
                 NavigationView {
-                    LocationFilter(locationManager: locationManager, filterViewModel: filterViewModel, viewModel: dataSourcePropertyFilterViewModel)
+                    LocationFilter(filterViewModel: filterViewModel, viewModel: dataSourcePropertyFilterViewModel)
+                        .environmentObject(locationManager)
                 }
                 .onAppear {
                     dataSourcePropertyFilterViewModel.selectedComparison = .nearMe
@@ -265,18 +270,22 @@ final class LocationFilterTests: XCTestCase {
             @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel: DataSourcePropertyFilterViewModel
             
-            var locationManager: MockLocationManager = MockLocationManager()
+            var locationManager: LocationManager
             
             init(passThrough: PassThrough) {
+                var mockLocationManager = MockCLLocationManager()
+                locationManager = LocationManager.shared(locationManager: mockLocationManager)
                 self.passThrough = passThrough
                 locationManager.lastLocation = CLLocation(latitude: 12, longitude: 14)
-                self.dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Location", key: "locationProperty", type: .location), locationManager: locationManager)
+                self.dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Location", key: "locationProperty", type: .location))
+                dataSourcePropertyFilterViewModel.locationManager = locationManager
                 self.passThrough.viewModel = dataSourcePropertyFilterViewModel
             }
             
             var body: some View {
                 NavigationView {
-                    LocationFilter(locationManager: locationManager, filterViewModel: filterViewModel, viewModel: dataSourcePropertyFilterViewModel)
+                    LocationFilter(filterViewModel: filterViewModel, viewModel: dataSourcePropertyFilterViewModel)
+                        .environmentObject(locationManager)
                 }
                 .onAppear {
                     dataSourcePropertyFilterViewModel.selectedComparison = .nearMe

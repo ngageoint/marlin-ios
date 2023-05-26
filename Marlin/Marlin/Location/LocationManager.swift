@@ -12,6 +12,38 @@ import sf_proj_ios
 import geopackage_ios
 import mgrs_ios
 import ExceptionCatcher
+import SwiftUI
+
+//private struct LocationManagerKey: EnvironmentKey {
+//    typealias Value = LocationManagerProtocol
+//    
+//    static let defaultValue: any Value = EmptyLocationManager.shared
+//}
+//
+//private struct LastLocationKey: EnvironmentKey {
+//    static let defaultValue: CLLocation? = nil
+//}
+//
+//extension EnvironmentValues {
+//    var locationManager: any LocationManagerProtocol {
+//        get { self[LocationManagerKey.self] }
+//        set { self[LocationManagerKey.self] = newValue }
+//    }
+//    
+//    var lastLocation: CLLocation? {
+//        get { self[LastLocationKey.self] }
+//        set { self[LastLocationKey.self] = newValue }
+//    }
+//}
+//
+//extension View {
+//    func lastLocation(_ lastLocation: CLLocation?) -> some View {
+//        environment(\.lastLocation, lastLocation)
+//    }
+//    func locationManager(_ locationManager: any LocationManagerProtocol) -> some View {
+//        environment(\.locationManager, locationManager)
+//    }
+//}
 
 protocol LocationManagerProtocol: ObservableObject {
     var lastLocation: CLLocation? { get set }
@@ -20,11 +52,34 @@ protocol LocationManagerProtocol: ObservableObject {
     func requestAuthorization()
 }
 
+//class EmptyLocationManager: NSObject, ObservableObject, LocationManagerProtocol {
+//    static let shared = EmptyLocationManager()
+//
+//    private override init() {
+//        super.init()
+//    }
+//
+//    var lastLocation: CLLocation?
+//
+//    var currentNavArea: NavigationalWarningNavArea?
+//
+//    var locationStatus: CLAuthorizationStatus?
+//
+//    func requestAuthorization() { }
+//}
+
 class LocationManager: NSObject, ObservableObject, LocationManagerProtocol, CLLocationManagerDelegate {
+    static var _shared: LocationManager?
+
+    class func shared(locationManager: CLLocationManager? = nil) -> LocationManager {
+        if let _shared = _shared {
+            return _shared
+        }
+        _shared = LocationManager(locationManager: locationManager ?? CLLocationManager())
+        return _shared!
+    }
     
-    static let shared = LocationManager()
-    
-    private var locationManager: CLLocationManager?
+    var locationManager: CLLocationManager?
     @Published var locationStatus: CLAuthorizationStatus?
     @Published var lastLocation: CLLocation?
     @Published var currentNavArea: NavigationalWarningNavArea?
@@ -35,12 +90,12 @@ class LocationManager: NSObject, ObservableObject, LocationManagerProtocol, CLLo
     var navAreaGeoPackage: GPKGGeoPackage?
     var navAreaFeatureDao: GPKGFeatureDao?
     
-    private override init() {
+    private init(locationManager: CLLocationManager) {
         super.init()
-        locationManager = CLLocationManager()
-        locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        locationManager?.distanceFilter = 10
-        locationManager?.delegate = self
+        self.locationManager = locationManager
+        self.locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        self.locationManager?.distanceFilter = 10
+        self.locationManager?.delegate = self
         initializeGeoPackage()
     }
     

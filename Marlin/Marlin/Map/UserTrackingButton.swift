@@ -8,8 +8,8 @@
 import SwiftUI
 import MapKit
 
-struct UserTrackingButton<Location>: View where Location: LocationManagerProtocol {
-    @ObservedObject var locationManager: Location
+struct UserTrackingButton: View {
+    @EnvironmentObject var locationManager: LocationManager
 
     @State var imageName: String = "location"
     @State var userTrackingModeDescription: String = "none"
@@ -25,9 +25,8 @@ struct UserTrackingButton<Location>: View where Location: LocationManagerProtoco
     @AppStorage("userTrackingMode") var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
     var mapState: MapState?
     
-    init(mapState: MapState?, locationManager: Location = LocationManager.shared) {
+    init(mapState: MapState?) {
         self.mapState = mapState
-        self.locationManager = locationManager
     }
     
     var body: some View {

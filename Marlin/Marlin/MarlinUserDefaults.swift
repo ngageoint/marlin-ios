@@ -75,6 +75,10 @@ extension UserDefaults {
     @objc var showOnMapdfrs: Bool {
         bool(forKey: "showOnMap\(DFRS.key)")
     }
+    
+    @objc var showOnMapnavWarning: Bool {
+        bool(forKey: "showOnMap\(NavigationalWarning.key)")
+    }
 
     @objc var mapRegion: MKCoordinateRegion {
         get {

@@ -48,7 +48,7 @@ final class MarlinViewTests: XCTestCase {
     
     func testShowOnboarding() {
         UserDefaults.standard.showCurrentLocation = true
-        LocationManager.shared.lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
+        LocationManager.shared().lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
         
         class PassThrough {
             var dataSourceList: DataSourceList?
@@ -91,7 +91,7 @@ final class MarlinViewTests: XCTestCase {
     func testShowDisclaimer() {
         UserDefaults.standard.set(true, forKey: "onboardingComplete")
         UserDefaults.standard.showCurrentLocation = true
-        LocationManager.shared.lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
+        LocationManager.shared().lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
         
         class PassThrough {
             var dataSourceList: DataSourceList?
@@ -138,7 +138,7 @@ final class MarlinViewTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "disclaimerAccepted")
         UserDefaults.standard.showCurrentLocation = true
-        LocationManager.shared.lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
+        LocationManager.shared().lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
         
         class PassThrough {
             var dataSourceList: DataSourceList?
@@ -183,7 +183,7 @@ final class MarlinViewTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "disclaimerAccepted")
         UserDefaults.standard.showCurrentLocation = true
-        LocationManager.shared.lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
+        LocationManager.shared().lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
         
         class PassThrough {
             var dataSourceList: DataSourceList?
@@ -236,7 +236,7 @@ final class MarlinViewTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "disclaimerAccepted")
         UserDefaults.standard.showCurrentLocation = true
-        LocationManager.shared.lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
+        LocationManager.shared().lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
         
         var newItem: Asam?
         persistentStore.viewContext.performAndWait {
@@ -309,7 +309,7 @@ final class MarlinViewTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "disclaimerAccepted")
         UserDefaults.standard.showCurrentLocation = true
-        LocationManager.shared.lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
+        LocationManager.shared().lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
         
         class PassThrough {
             var dataSourceList: DataSourceList?

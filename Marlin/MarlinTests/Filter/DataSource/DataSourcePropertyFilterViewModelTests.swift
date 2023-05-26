@@ -13,11 +13,11 @@ import CoreLocation
 final class DataSourcePropertyFilterViewModelTests: XCTestCase {
     
     override func setUp() {
-        LocationManager.shared.lastLocation = nil
+        LocationManager.shared().lastLocation = nil
     }
     
     override class func tearDown() {
-        LocationManager.shared.lastLocation = nil
+        LocationManager.shared().lastLocation = nil
     }
 
     func testSettingLatitudeToDMS() {
@@ -195,11 +195,11 @@ final class DataSourcePropertyFilterViewModelTests: XCTestCase {
         model.valueInt = nil
         XCTAssertEqual(model.valueInt, nil)
         // no last location
-        XCTAssertNil(LocationManager.shared.lastLocation)
+        XCTAssertNil(LocationManager.shared().lastLocation)
         XCTAssertFalse(model.isValid)
         
-        LocationManager.shared.locationManager(CLLocationManager(), didUpdateLocations: [CLLocation(latitude: 1.0, longitude: 1.0)])
-        XCTAssertNotNil(LocationManager.shared.lastLocation)
+        LocationManager.shared().locationManager(CLLocationManager(), didUpdateLocations: [CLLocation(latitude: 1.0, longitude: 1.0)])
+        XCTAssertNotNil(LocationManager.shared().lastLocation)
         XCTAssertFalse(model.isValid)
         
         model.valueInt = 4

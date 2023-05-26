@@ -11,7 +11,7 @@ import MapKit
 import CoreLocation
 
 class DataSourcePropertyFilterViewModel: ObservableObject {
-    var locationManager: any LocationManagerProtocol
+    var locationManager: (any LocationManagerProtocol)?
     
     @Published var startValidating: Bool = false
     @Published var dataSourceProperty: DataSourceProperty {
@@ -76,7 +76,7 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
     private var _currentRegion: MKCoordinateRegion?
     var currentRegion: MKCoordinateRegion {
         get {
-            MKCoordinateRegion(center: locationManager.lastLocation?.coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+            MKCoordinateRegion(center: locationManager?.lastLocation?.coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
         }
         set {
             _currentRegion = newValue
@@ -171,7 +171,7 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
             return !valueString.isEmpty
         case .location:
             if selectedComparison == .nearMe {
-                return locationManager.lastLocation != nil && valueInt != nil
+                return locationManager != nil && locationManager!.lastLocation != nil && valueInt != nil
             } else {
                 if let parsed = Double(coordinateString: valueLongitudeString) {
                     valueLongitude = parsed
@@ -216,10 +216,9 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
         }
     }
     
-    init(dataSourceProperty: DataSourceProperty, isStaticProperty: Bool = false, locationManager: any LocationManagerProtocol = LocationManager.shared) {
+    init(dataSourceProperty: DataSourceProperty, isStaticProperty: Bool = false) {
         self.dataSourceProperty = dataSourceProperty
         self.selectedComparison = dataSourceProperty.type.defaultComparison()
         self.isStaticProperty = isStaticProperty
-        self.locationManager = locationManager
     }
 }

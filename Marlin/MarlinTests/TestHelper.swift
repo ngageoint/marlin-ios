@@ -83,14 +83,32 @@ class TestHelpers {
     }
 }
 
-class MockLocationManager: LocationManagerProtocol, ObservableObject {
-    @Published var locationStatus: CLAuthorizationStatus?
-    @Published var lastLocation: CLLocation?
-    @Published var currentNavArea: NavigationalWarningNavArea?
-    
+class MockLocationManager: LocationManager {
+//    @Published override var locationStatus: CLAuthorizationStatus?
     public var requestAuthorizationCalled = false
-    func requestAuthorization() {
+    override func requestAuthorization() {
         requestAuthorizationCalled = true
         NotificationCenter.default.post(Notification(name: .LocationAuthorizationStatusChanged, object: CLAuthorizationStatus.authorizedAlways))
+    }
+    
+    override func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        
+    }
+}
+
+class MockCLLocationManager: CLLocationManager {
+    public var requestAuthorizationCalled = false
+    
+    override func requestWhenInUseAuthorization() {
+        requestAuthorizationCalled = true
+        
+    }
+    
+    override func startUpdatingHeading() {
+        
+    }
+    
+    override func startUpdatingLocation() {
+        
     }
 }

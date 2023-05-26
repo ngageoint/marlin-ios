@@ -34,6 +34,7 @@ struct MarlinDataBottomSheet: View {
         // TODO: this can be replaced with .sheet introduced in ios16 when we are at 17
             .bottomSheet(isPresented: $showBottomSheet, delegate: self) {
                 MarlinBottomSheet(itemList: itemList)
+                    .environmentObject(LocationManager.shared())
             }
             .onReceive(mapItemsTappedPub) { output in
                 guard let notification = output.object as? MapItemsTappedNotification else {

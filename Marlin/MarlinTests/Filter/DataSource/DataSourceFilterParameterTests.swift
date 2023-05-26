@@ -13,11 +13,11 @@ import CoreLocation
 final class DataSourceFilterParameterTests: XCTestCase {
     
     override func setUp() {
-        LocationManager.shared.lastLocation = nil
+        LocationManager.shared().lastLocation = nil
     }
     
     override class func tearDown() {
-        LocationManager.shared.lastLocation = nil
+        LocationManager.shared().lastLocation = nil
     }
 
     func testStringValueDisplay() {
@@ -184,7 +184,7 @@ final class DataSourceFilterParameterTests: XCTestCase {
         let predicate2 = p2.toPredicate()
         XCTAssertNil(predicate2)
 
-        LocationManager.shared.locationManager(CLLocationManager(), didUpdateLocations: [CLLocation(latitude: 2.0, longitude: 3.0)])
+        LocationManager.shared().locationManager(CLLocationManager(), didUpdateLocations: [CLLocation(latitude: 2.0, longitude: 3.0)])
         let predicate3 = p2.toPredicate()
         XCTAssertEqual(predicate3?.kifPredicateDescription, compare.kifPredicateDescription)
     }

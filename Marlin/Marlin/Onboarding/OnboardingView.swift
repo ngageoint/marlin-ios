@@ -17,7 +17,9 @@ protocol UserNotificationCenter {
 
 extension UNUserNotificationCenter: UserNotificationCenter {}
 
-struct OnboardingView<Location>: View where Location: LocationManagerProtocol {
+struct OnboardingView: View {
+    @EnvironmentObject var locationManager: LocationManager
+    
     let WELCOME_TAB = 1
     let DISCLAIMER_TAB = 2
     let LOCATION_TAB = 3
@@ -92,15 +94,12 @@ struct OnboardingView<Location>: View where Location: LocationManagerProtocol {
     @AppStorage("showOnMap\(DifferentialGPSStation.key)") var dgpsIsMapped: Bool = false
     
     @EnvironmentObject var dataSourceList: DataSourceList
-    var locationManager: Location
     var userNotificationCenter: UserNotificationCenter
     
-    @State var locationAuthorizationStatus: CLAuthorizationStatus
+    @State var locationAuthorizationStatus: CLAuthorizationStatus?
     
-    init(locationManager: Location = LocationManager.shared, userNotificationCenter: UserNotificationCenter = UNUserNotificationCenter.current()) {
-        self.locationManager = locationManager
+    init(userNotificationCenter: UserNotificationCenter = UNUserNotificationCenter.current()) {
         self.userNotificationCenter = userNotificationCenter
-        self._locationAuthorizationStatus = State(initialValue: locationManager.locationStatus ?? .notDetermined)
     }
     
     var body: some View {
@@ -176,6 +175,9 @@ struct OnboardingView<Location>: View where Location: LocationManagerProtocol {
             }
         }
         .gradientView()
+        .onAppear {
+            locationAuthorizationStatus = locationManager.locationStatus ?? .notDetermined
+        }
     }
     
     @ViewBuilder

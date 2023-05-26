@@ -9,7 +9,8 @@ import SwiftUI
 import Combine
 
 struct DataSourcePropertyFilterView: View {
-    
+    @EnvironmentObject var locationManager: LocationManager
+
     var filterViewModel: FilterViewModel
     
     @ObservedObject var viewModel: DataSourcePropertyFilterViewModel
@@ -53,6 +54,10 @@ struct DataSourcePropertyFilterView: View {
             }
             .disabled(!viewModel.isValid)
             .padding(.bottom, viewModel.dataSourceProperty.type == .location ? 12 : 0)
+        }
+        .onAppear {
+            print("xxx location manager is \(locationManager)")
+            viewModel.locationManager = locationManager
         }
     }
 }

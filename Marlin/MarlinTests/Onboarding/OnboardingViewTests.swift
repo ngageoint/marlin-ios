@@ -14,6 +14,11 @@ import CoreLocation
 
 final class OnboardingViewTests: XCTestCase {
     
+    override func setUp() {
+        UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+        UserDefaults.registerMarlinDefaults()
+    }
+    
     override func tearDown() {
     }
     
@@ -30,7 +35,8 @@ final class OnboardingViewTests: XCTestCase {
         let initialTabs = 2
         UserDefaults.standard.set(initialTabs, forKey: "userTabs")
         
-        let mockLocationManager = MockLocationManager()
+        let mockLocationManager = MockCLLocationManager()
+        let locationManager = LocationManager.shared(locationManager: mockLocationManager)
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         
@@ -43,50 +49,33 @@ final class OnboardingViewTests: XCTestCase {
             var dataSourceMapped: [DataSourceItem]?
         }
         
-        struct Container<Location>: View where Location: LocationManagerProtocol {
-            @StateObject var dataSourceList: DataSourceList = DataSourceList()
-            
+        struct Container: View {
             var passThrough: PassThrough
-            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(passThrough: PassThrough, locationManager: Location, userNotificationCenter: UserNotificationCenter) {
+            init(passThrough: PassThrough, userNotificationCenter: UserNotificationCenter) {
                 self.passThrough = passThrough
-                self.locationManager = locationManager
                 self.userNotificationCenter = userNotificationCenter
             }
             
             var body: some View {
-                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
-                    .environmentObject(dataSourceList)
-                    .onChange(of: dataSourceList.tabs) { newValue in
-                        passThrough.dataSourceListTabs = newValue
-                    }
-                    .onChange(of: dataSourceList.nonTabs) { newValue in
-                        passThrough.dataSourceListNonTabs = newValue
-                    }
-                    .onChange(of: dataSourceList.allTabs) { newValue in
-                        passThrough.dataSourceListAll = newValue
-                    }
-                    .onChange(of: dataSourceList.mappedDataSources) { newValue in
-                        passThrough.dataSourceMapped = newValue
-                    }
-                    .onAppear {
-                        self.passThrough.dataSourceListAll = dataSourceList.allTabs
-                        self.passThrough.dataSourceListTabs = dataSourceList.tabs
-                        self.passThrough.dataSourceListNonTabs = dataSourceList.nonTabs
-                        self.passThrough.dataSourceMapped = dataSourceList.mappedDataSources
-                    }
+                OnboardingView(userNotificationCenter: userNotificationCenter)
             }
         }
         let passThrough = PassThrough()
         UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
-        let container = Container(passThrough: passThrough, locationManager: mockLocationManager, userNotificationCenter: mockUserNotificationCenter)
+        let dataSourceList: DataSourceList = DataSourceList()
+        XCTAssertEqual(dataSourceList.tabItems.count, 10)
+        
+        let container = Container(passThrough: passThrough, userNotificationCenter: mockUserNotificationCenter)
+            .environmentObject(locationManager)
+            .environmentObject(dataSourceList)
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Set Sail")
         tester().tapView(withAccessibilityLabel: "Set Sail")
+        
         tester().waitForView(withAccessibilityLabel: "Accept")
         tester().tapView(withAccessibilityLabel: "Accept")
         tester().waitForView(withAccessibilityLabel: "Yes, Enable My Location")
@@ -100,59 +89,59 @@ final class OnboardingViewTests: XCTestCase {
         XCTAssertTrue(mockUserNotificationCenter.requestAuthorizationCalled)
         
         tester().waitForView(withAccessibilityLabel: "Marlin Tabs")
-        for tab in passThrough.dataSourceListAll! {
+        for tab in dataSourceList.allTabs {
             tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullDataSourceName) Tab")
         }
         
-        XCTAssertEqual(passThrough.dataSourceListTabs!.count, initialTabs)
-        for tab in passThrough.dataSourceListTabs! {
+        XCTAssertEqual(dataSourceList.tabs.count, initialTabs)
+        for tab in dataSourceList.tabs {
             // verify they are checked
             tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullDataSourceName) Tab On")
         }
         
-        for nontab in passThrough.dataSourceListNonTabs! {
+        for nontab in dataSourceList.nonTabs {
             // verify they are not checked
             tester().waitForView(withAccessibilityLabel: "\(nontab.dataSource.fullDataSourceName) Tab Off")
         }
         
-        let firstNonTab = passThrough.dataSourceListNonTabs![0].dataSource.fullDataSourceName
+        let firstNonTab = dataSourceList.nonTabs[0].dataSource.fullDataSourceName
         tester().tapView(withAccessibilityLabel: "\(firstNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(firstNonTab) Tab On")
-        XCTAssertEqual(passThrough.dataSourceListTabs!.count, initialTabs + 1)
+        XCTAssertEqual(dataSourceList.tabs.count, initialTabs + 1)
         
-        let secondNonTab = passThrough.dataSourceListNonTabs![0].dataSource.fullDataSourceName
+        let secondNonTab = dataSourceList.nonTabs[0].dataSource.fullDataSourceName
         tester().tapView(withAccessibilityLabel: "\(secondNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(secondNonTab) Tab On")
-        XCTAssertEqual(passThrough.dataSourceListTabs!.count, initialTabs + 2)
+        XCTAssertEqual(dataSourceList.tabs.count, initialTabs + 2)
         
-        let thirdNonTab = passThrough.dataSourceListNonTabs![0].dataSource.fullDataSourceName
+        let thirdNonTab = dataSourceList.nonTabs[0].dataSource.fullDataSourceName
         tester().tapView(withAccessibilityLabel: "\(thirdNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(thirdNonTab) Tab On")
-        XCTAssertEqual(passThrough.dataSourceListTabs!.count, DataSourceList.MAX_TABS)
+        XCTAssertEqual(dataSourceList.tabs.count, DataSourceList.MAX_TABS)
         
-        let fourthNonTab = passThrough.dataSourceListNonTabs![0].dataSource.fullDataSourceName
+        let fourthNonTab = dataSourceList.nonTabs[0].dataSource.fullDataSourceName
         tester().tapView(withAccessibilityLabel: "\(fourthNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(fourthNonTab) Tab On")
-        XCTAssertEqual(passThrough.dataSourceListTabs!.count, DataSourceList.MAX_TABS)
+        XCTAssertEqual(dataSourceList.tabs.count, DataSourceList.MAX_TABS)
         
         tester().waitForView(withAccessibilityLabel: "Next")
         tester().tapView(withAccessibilityLabel: "Next")
         
         // order should match the order the user chose
-        XCTAssertEqual(passThrough.dataSourceListTabs![0].dataSource.fullDataSourceName, firstNonTab)
-        XCTAssertEqual(passThrough.dataSourceListTabs![1].dataSource.fullDataSourceName, secondNonTab)
-        XCTAssertEqual(passThrough.dataSourceListTabs![2].dataSource.fullDataSourceName, thirdNonTab)
-        XCTAssertEqual(passThrough.dataSourceListTabs![3].dataSource.fullDataSourceName, fourthNonTab)
+        XCTAssertEqual(dataSourceList.tabs[0].dataSource.fullDataSourceName, firstNonTab)
+        XCTAssertEqual(dataSourceList.tabs[1].dataSource.fullDataSourceName, secondNonTab)
+        XCTAssertEqual(dataSourceList.tabs[2].dataSource.fullDataSourceName, thirdNonTab)
+        XCTAssertEqual(dataSourceList.tabs[3].dataSource.fullDataSourceName, fourthNonTab)
         
         
         tester().waitForView(withAccessibilityLabel: "Marlin Map")
-        for tab in passThrough.dataSourceListAll!.filter({ item in
+        for tab in dataSourceList.allTabs.filter({ item in
             item.dataSource.isMappable
         }) {
             tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullDataSourceName) Map")
         }
         
-        for mapped in passThrough.dataSourceMapped! {
+        for mapped in dataSourceList.mappedDataSources {
             // verify they are checked
             tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.fullDataSourceName) Map On")
             // flip em
@@ -163,7 +152,7 @@ final class OnboardingViewTests: XCTestCase {
             tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.fullDataSourceName) Map On")
         }
         
-        for nonmapped in passThrough.dataSourceListAll!.filter({ item in
+        for nonmapped in dataSourceList.allTabs.filter({ item in
             !item.showOnMap && item.dataSource.isMappable
         }) {
             // verify they are not checked
@@ -182,7 +171,7 @@ final class OnboardingViewTests: XCTestCase {
         XCTAssertTrue(UserDefaults.standard.bool(forKey: "onboardingComplete"))
     }
     
-    func testNowNowFlow() throws {
+    func testNotNowFlow() throws {
         UserDefaults.standard.set(false, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "showOnMap\(Asam.key)")
@@ -195,7 +184,8 @@ final class OnboardingViewTests: XCTestCase {
         let initialTabs = 2
         UserDefaults.standard.set(initialTabs, forKey: "userTabs")
         
-        let mockLocationManager = MockLocationManager()
+        let mockLocationManager = MockCLLocationManager()
+        let locationManager = LocationManager.shared(locationManager: mockLocationManager)
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         
@@ -208,21 +198,19 @@ final class OnboardingViewTests: XCTestCase {
             var dataSourceMapped: [DataSourceItem]?
         }
         
-        struct Container<Location>: View where Location: LocationManagerProtocol {
+        struct Container: View {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
             var passThrough: PassThrough
-            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(passThrough: PassThrough, locationManager: Location, userNotificationCenter: UserNotificationCenter) {
+            init(passThrough: PassThrough, userNotificationCenter: UserNotificationCenter) {
                 self.passThrough = passThrough
-                self.locationManager = locationManager
                 self.userNotificationCenter = userNotificationCenter
             }
             
             var body: some View {
-                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(userNotificationCenter: userNotificationCenter)
                     .environmentObject(dataSourceList)
                     .onChange(of: dataSourceList.tabs) { newValue in
                         passThrough.dataSourceListTabs = newValue
@@ -246,7 +234,8 @@ final class OnboardingViewTests: XCTestCase {
         }
         let passThrough = PassThrough()
         UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
-        let container = Container(passThrough: passThrough, locationManager: mockLocationManager, userNotificationCenter: mockUserNotificationCenter)
+        let container = Container(passThrough: passThrough, userNotificationCenter: mockUserNotificationCenter)
+            .environmentObject(locationManager)
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -357,32 +346,32 @@ final class OnboardingViewTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "showOnMap\(RadioBeacon.key)")
         UserDefaults.standard.set(true, forKey: "showOnMap\(DifferentialGPSStation.key)")
         
-        let mockLocationManager = MockLocationManager()
+        let mockLocationManager = MockCLLocationManager()
+        let locationManager = LocationManager.shared(locationManager: mockLocationManager)
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         
         let mockUserNotificationCenter = UserNotificationCenterMock()
         
-        struct Container<Location>: View where Location: LocationManagerProtocol {
+        struct Container: View {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
-            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(locationManager: Location, userNotificationCenter: UserNotificationCenter) {
-                self.locationManager = locationManager
+            init(userNotificationCenter: UserNotificationCenter) {
                 self.userNotificationCenter = userNotificationCenter
             }
             
             var body: some View {
-                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(userNotificationCenter: userNotificationCenter)
                     .environmentObject(dataSourceList)
             }
         }
         
         UNNotificationSettings.fakeAuthorizationStatus = .authorized
         
-        let controller = UIHostingController(rootView: Container(locationManager: mockLocationManager, userNotificationCenter: mockUserNotificationCenter))
+        let controller = UIHostingController(rootView: Container(userNotificationCenter: mockUserNotificationCenter)
+            .environmentObject(locationManager))
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Set Sail")
@@ -408,32 +397,32 @@ final class OnboardingViewTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "showOnMap\(RadioBeacon.key)")
         UserDefaults.standard.set(true, forKey: "showOnMap\(DifferentialGPSStation.key)")
         
-        let mockLocationManager = MockLocationManager()
+        let mockLocationManager = MockCLLocationManager()
+        let locationManager = LocationManager.shared(locationManager: mockLocationManager)
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         
         let mockUserNotificationCenter = UserNotificationCenterMock()
         
-        struct Container<Location>: View where Location: LocationManagerProtocol {
+        struct Container: View {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
-            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(locationManager: Location, userNotificationCenter: UserNotificationCenter) {
-                self.locationManager = locationManager
+            init(userNotificationCenter: UserNotificationCenter) {
                 self.userNotificationCenter = userNotificationCenter
             }
             
             var body: some View {
-                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(userNotificationCenter: userNotificationCenter)
                     .environmentObject(dataSourceList)
             }
         }
         
         UNNotificationSettings.fakeAuthorizationStatus = .authorized
         
-        let controller = UIHostingController(rootView: Container(locationManager: mockLocationManager, userNotificationCenter: mockUserNotificationCenter))
+        let controller = UIHostingController(rootView: Container(userNotificationCenter: mockUserNotificationCenter)
+            .environmentObject(locationManager))
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Set Sail")
@@ -451,33 +440,33 @@ final class OnboardingViewTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "showOnMap\(RadioBeacon.key)")
         UserDefaults.standard.set(true, forKey: "showOnMap\(DifferentialGPSStation.key)")
         
-        let mockLocationManager = MockLocationManager()
-        mockLocationManager.locationStatus = .authorizedAlways
+        let mockLocationManager = MockCLLocationManager()
+        let locationManager = LocationManager.shared(locationManager: mockLocationManager)
+        locationManager.locationStatus = .authorizedAlways
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         
         let mockUserNotificationCenter = UserNotificationCenterMock()
         
-        struct Container<Location>: View where Location: LocationManagerProtocol {
+        struct Container: View {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
-            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(locationManager: Location, userNotificationCenter: UserNotificationCenter) {
-                self.locationManager = locationManager
+            init(userNotificationCenter: UserNotificationCenter) {
                 self.userNotificationCenter = userNotificationCenter
             }
             
             var body: some View {
-                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(userNotificationCenter: userNotificationCenter)
                     .environmentObject(dataSourceList)
             }
         }
         
         UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
         
-        let controller = UIHostingController(rootView: Container(locationManager: mockLocationManager, userNotificationCenter: mockUserNotificationCenter))
+        let controller = UIHostingController(rootView: Container(userNotificationCenter: mockUserNotificationCenter)
+            .environmentObject(locationManager))
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Set Sail")
@@ -496,33 +485,33 @@ final class OnboardingViewTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "showOnMap\(RadioBeacon.key)")
         UserDefaults.standard.set(true, forKey: "showOnMap\(DifferentialGPSStation.key)")
         
-        let mockLocationManager = MockLocationManager()
-        mockLocationManager.locationStatus = .authorizedAlways
+        let mockLocationManager = MockCLLocationManager()
+        let locationManager = LocationManager.shared(locationManager: mockLocationManager)
+        locationManager.locationStatus = .authorizedAlways
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         
         let mockUserNotificationCenter = UserNotificationCenterMock()
         
-        struct Container<Location>: View where Location: LocationManagerProtocol {
+        struct Container: View {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
-            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(locationManager: Location, userNotificationCenter: UserNotificationCenter) {
-                self.locationManager = locationManager
+            init(userNotificationCenter: UserNotificationCenter) {
                 self.userNotificationCenter = userNotificationCenter
             }
             
             var body: some View {
-                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(userNotificationCenter: userNotificationCenter)
                     .environmentObject(dataSourceList)
             }
         }
         
         UNNotificationSettings.fakeAuthorizationStatus = .authorized
         
-        let controller = UIHostingController(rootView: Container(locationManager: mockLocationManager, userNotificationCenter: mockUserNotificationCenter))
+        let controller = UIHostingController(rootView: Container(userNotificationCenter: mockUserNotificationCenter)
+            .environmentObject(locationManager))
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Set Sail")
@@ -541,33 +530,33 @@ final class OnboardingViewTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "showOnMap\(RadioBeacon.key)")
         UserDefaults.standard.set(true, forKey: "showOnMap\(DifferentialGPSStation.key)")
         
-        let mockLocationManager = MockLocationManager()
-        mockLocationManager.locationStatus = .authorizedAlways
+        let mockLocationManager = MockCLLocationManager()
+        let locationManager = LocationManager.shared(locationManager: mockLocationManager)
+        locationManager.locationStatus = .authorizedAlways
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         
         let mockUserNotificationCenter = UserNotificationCenterMock()
         
-        struct Container<Location>: View where Location: LocationManagerProtocol {
+        struct Container: View {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
-            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(locationManager: Location, userNotificationCenter: UserNotificationCenter) {
-                self.locationManager = locationManager
+            init(userNotificationCenter: UserNotificationCenter) {
                 self.userNotificationCenter = userNotificationCenter
             }
             
             var body: some View {
-                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(userNotificationCenter: userNotificationCenter)
                     .environmentObject(dataSourceList)
             }
         }
         
         UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
         
-        let controller = UIHostingController(rootView: Container(locationManager: mockLocationManager, userNotificationCenter: mockUserNotificationCenter))
+        let controller = UIHostingController(rootView: Container(userNotificationCenter: mockUserNotificationCenter)
+            .environmentObject(locationManager))
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Set Sail")
@@ -588,33 +577,33 @@ final class OnboardingViewTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "showOnMap\(RadioBeacon.key)")
         UserDefaults.standard.set(true, forKey: "showOnMap\(DifferentialGPSStation.key)")
         
-        let mockLocationManager = MockLocationManager()
-        mockLocationManager.locationStatus = .authorizedAlways
+        let mockLocationManager = MockCLLocationManager()
+        let locationManager = LocationManager.shared(locationManager: mockLocationManager)
+        locationManager.locationStatus = .authorizedAlways
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         
         let mockUserNotificationCenter = UserNotificationCenterMock()
         
-        struct Container<Location>: View where Location: LocationManagerProtocol {
+        struct Container: View {
             @StateObject var dataSourceList: DataSourceList = DataSourceList()
             
-            var locationManager: Location
             var userNotificationCenter: UserNotificationCenter
             
-            init(locationManager: Location, userNotificationCenter: UserNotificationCenter) {
-                self.locationManager = locationManager
+            init(userNotificationCenter: UserNotificationCenter) {
                 self.userNotificationCenter = userNotificationCenter
             }
             
             var body: some View {
-                OnboardingView(locationManager: locationManager, userNotificationCenter: userNotificationCenter)
+                OnboardingView(userNotificationCenter: userNotificationCenter)
                     .environmentObject(dataSourceList)
             }
         }
         
         UNNotificationSettings.fakeAuthorizationStatus = .authorized
         
-        let controller = UIHostingController(rootView: Container(locationManager: mockLocationManager, userNotificationCenter: mockUserNotificationCenter))
+        let controller = UIHostingController(rootView: Container(userNotificationCenter: mockUserNotificationCenter)
+            .environmentObject(locationManager))
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Set Sail")

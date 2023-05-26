@@ -104,7 +104,7 @@ class ChartCorrectionListViewModel: NSObject, ObservableObject {
                 var centralLatitude: Double?
                 
                 if filter.comparison == .nearMe {
-                    if let lastLocation = LocationManager.shared.lastLocation {
+                    if let lastLocation = LocationManager.shared().lastLocation {
                         centralLongitude = lastLocation.coordinate.longitude
                         centralLatitude = lastLocation.coordinate.latitude
                     }

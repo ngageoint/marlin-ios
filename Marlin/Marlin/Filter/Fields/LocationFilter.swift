@@ -8,16 +8,15 @@
 import SwiftUI
 import MapKit
 
-struct LocationFilter<Location>: View where Location: LocationManagerProtocol {
-    @ObservedObject var locationManager: Location
+struct LocationFilter: View {
+    @EnvironmentObject var locationManager: LocationManager
 
     @ObservedObject var filterViewModel: FilterViewModel
     @ObservedObject var viewModel: DataSourcePropertyFilterViewModel
     @FocusState var isInputActive: Bool
     @State var mapTapped: Bool = false
     
-    init(locationManager: Location = LocationManager.shared, filterViewModel: FilterViewModel, viewModel: DataSourcePropertyFilterViewModel) {
-        self.locationManager = locationManager
+    init(filterViewModel: FilterViewModel, viewModel: DataSourcePropertyFilterViewModel) {
         self.filterViewModel = filterViewModel
         self.viewModel = viewModel
     }
@@ -107,17 +106,19 @@ struct LocationFilter<Location>: View where Location: LocationManagerProtocol {
                 .padding(.leading, 4)
                 distanceFilter()
             } else if viewModel.selectedComparison == .nearMe {
-                if locationManager.lastLocation == nil {
-                    Text("No current location")
-                        .secondary()
-                        .padding([.leading, .top], 12)
-                } else {
+                if let lastLocation = locationManager.lastLocation {
+                    Text(lastLocation.coordinate.toDisplay())
+                        .overline()
                     Map(coordinateRegion: $viewModel.currentRegion, showsUserLocation: true)
                         .frame(maxWidth: .infinity)
                         .frame(height: 250)
                         .tint(Color.primaryColorVariant)
                         .padding(.bottom, 8)
                     distanceFilter()
+                } else {
+                    Text("No current location")
+                        .secondary()
+                        .padding([.leading, .top], 12)
                 }
             }
         }
@@ -131,6 +132,9 @@ struct LocationFilter<Location>: View where Location: LocationManagerProtocol {
                 }
                 .tint(Color.primaryColorVariant)
             }
+        }
+        .onChange(of: locationManager.lastLocation) { change in
+            print("xxx change location")
         }
     }
     

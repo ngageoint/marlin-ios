@@ -31,12 +31,12 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
 
     override func setUp() {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [])
-        LocationManager.shared.lastLocation = nil
+        LocationManager.shared().lastLocation = nil
     }
     
     override func tearDown() {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [])
-        LocationManager.shared.lastLocation = nil
+        LocationManager.shared().lastLocation = nil
     }
     
     func testNoFilters() {
@@ -88,7 +88,7 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
     }
     
     func testLocationNearMeNoLocation() {
-        LocationManager.shared.lastLocation = nil
+        LocationManager.shared().lastLocation = nil
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .nearMe, valueInt: 1)])
         let model = ChartCorrectionListViewModel()
         
@@ -96,7 +96,7 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
     }
     
     func testLocationNearMe() {
-        LocationManager.shared.lastLocation = CLLocation(latitude: 2.0, longitude: 3.0)
+        LocationManager.shared().lastLocation = CLLocation(latitude: 2.0, longitude: 3.0)
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .nearMe, valueInt: 1)])
         let model = ChartCorrectionListViewModel()
         

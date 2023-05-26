@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 struct PortSummaryView: View {
-    @ObservedObject var locationManager: LocationManager = LocationManager.shared
+    @EnvironmentObject var locationManager: LocationManager
     @State var distance: String?
 
     var port: Port

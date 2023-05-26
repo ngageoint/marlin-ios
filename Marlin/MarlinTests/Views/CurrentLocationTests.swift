@@ -14,7 +14,9 @@ import CoreLocation
 final class CurrentLocationTests: XCTestCase {
     
     func testShowCurrentLocationTap() {
-        LocationManager.shared.lastLocation = CLLocation(latitude: 1.0, longitude: 2.0)
+        let mockLocationManager = MockCLLocationManager()
+        let locationManager = LocationManager.shared(locationManager: mockLocationManager)
+        locationManager.lastLocation = CLLocation(latitude: 1.0, longitude: 2.0)
         UserDefaults.standard.set(true, forKey: "showCurrentLocation")
         
         expectation(forNotification: .SnackbarNotification, object: nil) { notification in
@@ -24,6 +26,7 @@ final class CurrentLocationTests: XCTestCase {
         }
         
         let currentLocation = CurrentLocation()
+            .environmentObject(locationManager)
         
         let controller = UIHostingController(rootView: currentLocation)
         let window = TestHelpers.getKeyWindowVisible()

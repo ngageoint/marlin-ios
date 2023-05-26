@@ -158,6 +158,7 @@ struct MarlinApp: App {
         WindowGroup {
             MarlinView()
                 .background(PhaseWatcher())
+                .environmentObject(LocationManager.shared())
                 .environmentObject(appState)
                 .environmentObject(dataSourceList)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
