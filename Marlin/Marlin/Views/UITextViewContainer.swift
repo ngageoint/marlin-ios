@@ -14,16 +14,19 @@ struct UITextViewContainer: UIViewRepresentable {
     func makeUIView(context: UIViewRepresentableContext<Self>) -> UITextView {
         let view = UITextView()
         view.textContainer.widthTracksTextView = true
-        view.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        view.autoresizingMask = [.flexibleHeight]
+        view.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        view.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         view.textContainer.lineBreakMode = .byWordWrapping
         view.isScrollEnabled = false
         view.isEditable = false
         view.tintColor = UIColor(Color.primaryColor)
-        view.font = UIFont.systemFont(ofSize: 14.0, weight: .regular)
+        view.font = UIFont.systemFont(ofSize: 13.0, weight: .regular)
         view.textColor = UIColor(Color.onSurfaceColor).withAlphaComponent(0.6)
         view.accessibilityLabel = "Text"
+        
+        view.textContainerInset = .zero
+        view.textContainer.lineFragmentPadding = 0
         return view
     }
     
