@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CurrentLocation: View {
-    @ObservedObject var locationManager: LocationManager = LocationManager.shared
+    @EnvironmentObject var locationManager: LocationManager
 
     @AppStorage("showCurrentLocation") var showCurrentLocation: Bool = false
 
@@ -16,7 +16,7 @@ struct CurrentLocation: View {
         if showCurrentLocation, let currentLocation = locationManager.lastLocation {
             HStack {
                 Spacer()
-                Text("Current Location: \(currentLocation.coordinate.latitude), \(currentLocation.coordinate.longitude)")
+                Text("Current Location: \(currentLocation.coordinate.toDisplay())")
                     .font(Font.overline)
                     .foregroundColor(Color.onPrimaryColor)
                     .opacity(0.87)
@@ -27,11 +27,11 @@ struct CurrentLocation: View {
             .accessibilityLabel("Current Location")
             .background(Color.primaryColor)
             .onTapGesture {
-                UIPasteboard.general.string = "\(currentLocation.coordinate.latitude), \(currentLocation.coordinate.longitude)"
+                UIPasteboard.general.string = "\(currentLocation.coordinate.toDisplay())"
                 NotificationCenter.default.post(
                     name: .SnackbarNotification,
                     object: SnackbarNotification(
-                        snackbarModel: SnackbarModel(message: "Location \(currentLocation.coordinate.latitude), \(currentLocation.coordinate.longitude) copied to clipboard"))
+                        snackbarModel: SnackbarModel(message: "Location \(currentLocation.coordinate.toDisplay()) copied to clipboard"))
                 )
             }
         }
