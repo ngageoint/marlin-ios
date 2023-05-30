@@ -14,6 +14,8 @@ import geopackage_ios
 final class LocationManagerTests: XCTestCase {
     
     override func setUp() {
+        let mockCLLocation = MockCLLocationManager()
+        LocationManager.shared(locationManager: mockCLLocation)
         LocationManager.shared().lastLocation = nil
         LocationManager.shared().locationStatus = nil
         LocationManager.shared().currentNavArea = nil
@@ -44,7 +46,13 @@ final class LocationManagerTests: XCTestCase {
                     object: nil) { notification in
             return true
         }
-        LocationManager.shared().locationManager(CLLocationManager(), didChangeAuthorization: .authorizedAlways)
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = LocationManager.shared(locationManager: mockCLLocation)
+        mockLocationManager.currentNavArea = nil
+        mockLocationManager.lastLocation = nil
+        (mockLocationManager.locationManager as! MockCLLocationManager).overriddenAuthStatus = .authorizedAlways
+        mockLocationManager.locationManager(mockLocationManager.locationManager!, didChangeAuthorization: .authorizedAlways)
+        
         waitForExpectations(timeout: 10, handler: nil)
         XCTAssertEqual(LocationManager.shared().locationStatus, .authorizedAlways)
         XCTAssertEqual(LocationManager.shared().statusString, "authorizedAlways")
@@ -53,7 +61,8 @@ final class LocationManagerTests: XCTestCase {
                     object: nil) { notification in
             return true
         }
-        LocationManager.shared().locationManager(CLLocationManager(), didChangeAuthorization: .denied)
+        (mockLocationManager.locationManager as! MockCLLocationManager).overriddenAuthStatus = .denied
+        LocationManager.shared().locationManager(LocationManager.shared().locationManager!, didChangeAuthorization: .denied)
         waitForExpectations(timeout: 10, handler: nil)
         XCTAssertEqual(LocationManager.shared().locationStatus, .denied)
         XCTAssertEqual(LocationManager.shared().statusString, "denied")
@@ -62,7 +71,8 @@ final class LocationManagerTests: XCTestCase {
                     object: nil) { notification in
             return true
         }
-        LocationManager.shared().locationManager(CLLocationManager(), didChangeAuthorization: .notDetermined)
+        (mockLocationManager.locationManager as! MockCLLocationManager).overriddenAuthStatus = .notDetermined
+        LocationManager.shared().locationManager(LocationManager.shared().locationManager!, didChangeAuthorization: .notDetermined)
         waitForExpectations(timeout: 10, handler: nil)
         XCTAssertEqual(LocationManager.shared().locationStatus, .notDetermined)
         XCTAssertEqual(LocationManager.shared().statusString, "notDetermined")
@@ -71,7 +81,8 @@ final class LocationManagerTests: XCTestCase {
                     object: nil) { notification in
             return true
         }
-        LocationManager.shared().locationManager(CLLocationManager(), didChangeAuthorization: .authorizedWhenInUse)
+        (mockLocationManager.locationManager as! MockCLLocationManager).overriddenAuthStatus = .authorizedWhenInUse
+        LocationManager.shared().locationManager(LocationManager.shared().locationManager!, didChangeAuthorization: .authorizedWhenInUse)
         waitForExpectations(timeout: 10, handler: nil)
         XCTAssertEqual(LocationManager.shared().locationStatus, .authorizedWhenInUse)
         XCTAssertEqual(LocationManager.shared().statusString, "authorizedWhenInUse")
@@ -80,7 +91,8 @@ final class LocationManagerTests: XCTestCase {
                     object: nil) { notification in
             return true
         }
-        LocationManager.shared().locationManager(CLLocationManager(), didChangeAuthorization: .restricted)
+        (mockLocationManager.locationManager as! MockCLLocationManager).overriddenAuthStatus = .restricted
+        LocationManager.shared().locationManager(LocationManager.shared().locationManager!, didChangeAuthorization: .restricted)
         waitForExpectations(timeout: 10, handler: nil)
         XCTAssertEqual(LocationManager.shared().locationStatus, .restricted)
         XCTAssertEqual(LocationManager.shared().statusString, "restricted")

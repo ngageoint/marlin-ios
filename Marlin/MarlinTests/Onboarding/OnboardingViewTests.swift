@@ -37,6 +37,8 @@ final class OnboardingViewTests: XCTestCase {
         
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)
+        (locationManager.locationManager as? MockCLLocationManager)?.overriddenAuthStatus = .notDetermined
+        locationManager.locationManager(locationManager.locationManager!, didChangeAuthorization: .notDetermined)
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         
@@ -81,7 +83,7 @@ final class OnboardingViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Yes, Enable My Location")
         tester().tapView(withAccessibilityLabel: "Yes, Enable My Location")
         
-        XCTAssertTrue(mockLocationManager.requestAuthorizationCalled)
+        XCTAssertTrue((locationManager.locationManager as? MockCLLocationManager)!.requestAuthorizationCalled)
         
         tester().waitForView(withAccessibilityLabel: "Yes, Enable Notifications")
         tester().tapView(withAccessibilityLabel: "Yes, Enable Notifications")
@@ -186,6 +188,8 @@ final class OnboardingViewTests: XCTestCase {
         
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)
+        (locationManager.locationManager as? MockCLLocationManager)?.overriddenAuthStatus = .notDetermined
+        locationManager.locationManager(mockLocationManager, didChangeAuthorization: .notDetermined)
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         
@@ -348,7 +352,8 @@ final class OnboardingViewTests: XCTestCase {
         
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)
-        
+        (locationManager.locationManager as? MockCLLocationManager)?.overriddenAuthStatus = .notDetermined
+        locationManager.locationManager(mockLocationManager, didChangeAuthorization: .notDetermined)
         UNNotificationSettings.swizzleAuthorizationStatus()
         
         let mockUserNotificationCenter = UserNotificationCenterMock()
@@ -381,7 +386,7 @@ final class OnboardingViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Yes, Enable My Location")
         tester().tapView(withAccessibilityLabel: "Yes, Enable My Location")
         
-        XCTAssertTrue(mockLocationManager.requestAuthorizationCalled)
+        XCTAssertTrue((locationManager.locationManager as? MockCLLocationManager)!.requestAuthorizationCalled)
         
         tester().waitForView(withAccessibilityLabel: "Marlin Tabs")
         
@@ -399,6 +404,8 @@ final class OnboardingViewTests: XCTestCase {
         
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)
+        (locationManager.locationManager as? MockCLLocationManager)?.overriddenAuthStatus = .notDetermined
+        locationManager.locationManager(mockLocationManager, didChangeAuthorization: .notDetermined)
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         
@@ -442,7 +449,8 @@ final class OnboardingViewTests: XCTestCase {
         
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)
-        locationManager.locationStatus = .authorizedAlways
+        (locationManager.locationManager as? MockCLLocationManager)?.overriddenAuthStatus = .authorizedAlways
+        locationManager.locationManager(mockLocationManager, didChangeAuthorization: .authorizedAlways)
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         
@@ -487,7 +495,8 @@ final class OnboardingViewTests: XCTestCase {
         
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)
-        locationManager.locationStatus = .authorizedAlways
+        (locationManager.locationManager as? MockCLLocationManager)?.overriddenAuthStatus = .authorizedAlways
+        locationManager.locationManager(mockLocationManager, didChangeAuthorization: .authorizedAlways)
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         
@@ -532,7 +541,8 @@ final class OnboardingViewTests: XCTestCase {
         
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)
-        locationManager.locationStatus = .authorizedAlways
+        (locationManager.locationManager as? MockCLLocationManager)?.overriddenAuthStatus = .authorizedAlways
+        locationManager.locationManager(mockLocationManager, didChangeAuthorization: .authorizedAlways)
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         
@@ -579,7 +589,8 @@ final class OnboardingViewTests: XCTestCase {
         
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)
-        locationManager.locationStatus = .authorizedAlways
+        (locationManager.locationManager as? MockCLLocationManager)?.overriddenAuthStatus = .authorizedAlways
+        locationManager.locationManager(mockLocationManager, didChangeAuthorization: .authorizedAlways)
         
         UNNotificationSettings.swizzleAuthorizationStatus()
         

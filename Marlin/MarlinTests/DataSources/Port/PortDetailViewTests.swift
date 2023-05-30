@@ -162,9 +162,12 @@ final class PortDetailViewTests: XCTestCase {
             XCTFail()
             return
         }
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         
         let detailView = newItem.detailView.environment(\.managedObjectContext, persistentStore.viewContext)
-        
+            .environmentObject(mockLocationManager as LocationManager)
+
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller

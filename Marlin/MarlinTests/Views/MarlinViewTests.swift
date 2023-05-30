@@ -48,7 +48,9 @@ final class MarlinViewTests: XCTestCase {
     
     func testShowOnboarding() {
         UserDefaults.standard.showCurrentLocation = true
-        LocationManager.shared().lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
+        mockLocationManager.lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
         
         class PassThrough {
             var dataSourceList: DataSourceList?
@@ -80,6 +82,7 @@ final class MarlinViewTests: XCTestCase {
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -91,7 +94,9 @@ final class MarlinViewTests: XCTestCase {
     func testShowDisclaimer() {
         UserDefaults.standard.set(true, forKey: "onboardingComplete")
         UserDefaults.standard.showCurrentLocation = true
-        LocationManager.shared().lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
+        mockLocationManager.lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
         
         class PassThrough {
             var dataSourceList: DataSourceList?
@@ -123,6 +128,7 @@ final class MarlinViewTests: XCTestCase {
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -138,7 +144,9 @@ final class MarlinViewTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "disclaimerAccepted")
         UserDefaults.standard.showCurrentLocation = true
-        LocationManager.shared().lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
+        mockLocationManager.lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
         
         class PassThrough {
             var dataSourceList: DataSourceList?
@@ -170,6 +178,7 @@ final class MarlinViewTests: XCTestCase {
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -183,7 +192,9 @@ final class MarlinViewTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "disclaimerAccepted")
         UserDefaults.standard.showCurrentLocation = true
-        LocationManager.shared().lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
+        mockLocationManager.lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
         
         class PassThrough {
             var dataSourceList: DataSourceList?
@@ -218,6 +229,7 @@ final class MarlinViewTests: XCTestCase {
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -236,7 +248,9 @@ final class MarlinViewTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "disclaimerAccepted")
         UserDefaults.standard.showCurrentLocation = true
-        LocationManager.shared().lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
+        mockLocationManager.lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
         
         var newItem: Asam?
         persistentStore.viewContext.performAndWait {
@@ -293,6 +307,7 @@ final class MarlinViewTests: XCTestCase {
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -309,7 +324,9 @@ final class MarlinViewTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "disclaimerAccepted")
         UserDefaults.standard.showCurrentLocation = true
-        LocationManager.shared().lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
+        mockLocationManager.lastLocation = CLLocation(latitude: 5.0, longitude: 4.0)
         
         class PassThrough {
             var dataSourceList: DataSourceList?
@@ -341,6 +358,7 @@ final class MarlinViewTests: XCTestCase {
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()

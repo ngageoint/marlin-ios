@@ -35,7 +35,6 @@ struct NavigationalWarningSectionRow: View {
         }
         .isDetailLink(false)
         .accessibilityElement(children: .contain)
-        .accessibilityLabel("\(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area") (Current)")
         .padding(.leading, 8)
         .padding(.top, 8)
         .padding(.bottom, 8)

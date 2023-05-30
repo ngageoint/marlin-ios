@@ -145,6 +145,12 @@ final class DataSourcePropertyFilterViewModelTests: XCTestCase {
     
     func testSettingLocation() {
         let model = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Location", key: #keyPath(MockDataSource.locationProperty), type: .location))
+        
+        let mockLocationManager = MockCLLocationManager()
+        let locationManager = LocationManager.shared(locationManager: mockLocationManager)
+        
+        model.locationManager = locationManager
+        
         model.startValidating = true
         model.selectedComparison = .closeTo
         
@@ -195,10 +201,10 @@ final class DataSourcePropertyFilterViewModelTests: XCTestCase {
         model.valueInt = nil
         XCTAssertEqual(model.valueInt, nil)
         // no last location
-        XCTAssertNil(LocationManager.shared().lastLocation)
+        XCTAssertNil(locationManager.lastLocation)
         XCTAssertFalse(model.isValid)
         
-        LocationManager.shared().locationManager(CLLocationManager(), didUpdateLocations: [CLLocation(latitude: 1.0, longitude: 1.0)])
+        locationManager.lastLocation = CLLocation(latitude: 1.0, longitude: 2.0)
         XCTAssertNotNil(LocationManager.shared().lastLocation)
         XCTAssertFalse(model.isValid)
         

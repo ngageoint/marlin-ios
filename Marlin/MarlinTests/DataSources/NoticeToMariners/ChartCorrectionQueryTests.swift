@@ -13,9 +13,14 @@ import SwiftUI
 final class ChartCorrectionQueryTests: XCTestCase {
     
     func testRequiredParametersNotSet() {
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
+        mockLocationManager.currentNavArea = nil
+        
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Notice Number", key: "currNoticeNum", type: .int), comparison: .greaterThanEqual, valueInt: 202052)])
         
         let queryView = ChartCorrectionQuery()
+            .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: queryView)
         let window = TestHelpers.getKeyWindowVisible()
@@ -26,8 +31,12 @@ final class ChartCorrectionQueryTests: XCTestCase {
     
     func testRequiredParametersSet() {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)])
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
+        mockLocationManager.currentNavArea = nil
         
         let queryView = ChartCorrectionQuery()
+            .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: queryView)
         let window = TestHelpers.getKeyWindowVisible()
@@ -38,8 +47,14 @@ final class ChartCorrectionQueryTests: XCTestCase {
     
     func testRequiredParametersNotSetAndThenSet() {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Notice Number", key: "currNoticeNum", type: .int), comparison: .greaterThanEqual, valueInt: 202052)])
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
+        mockLocationManager.currentNavArea = nil
         
-        let queryView = ChartCorrectionQuery()
+        var filterViewModel: FilterViewModel = FilterViewModel(dataSource: ChartCorrection.self, useDefaultForEmptyFilter: true)
+
+        let queryView = ChartCorrectionQuery(filterViewModel: filterViewModel)
+            .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: queryView)
         let window = TestHelpers.getKeyWindowVisible()
@@ -47,8 +62,9 @@ final class ChartCorrectionQueryTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Add Required Filter Parameters")
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Query")
         tester().wait(forTimeInterval: 1.0)
+        
+        filterViewModel.filters = [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)]
 
-        queryView.filterViewModel.filters = [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)]
         tester().wait(forTimeInterval: 1.0)
         
         tester().waitForView(withAccessibilityLabel: "Query")

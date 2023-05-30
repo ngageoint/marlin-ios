@@ -23,7 +23,10 @@ struct CurrentNavigationalWarningSection: View {
     var body: some View {
         ForEach(currentNavigationalWarningsSections) { section in
             NavigationalWarningSectionRow(section: section, mapName: mapName)
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("\(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area") (Current)")
         }
+        .accessibilityElement(children: .contain)
         .listRowBackground(Color.surfaceColor)
         .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
     }
@@ -61,7 +64,10 @@ struct NavigationalWarningAreasView: View {
             }
             ForEach(navigationalWarningsSections) { section in
                 NavigationalWarningSectionRow(section: section, mapName: mapName)
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("\(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area")")
             }
+            .accessibilityElement(children: .contain)
             .listRowBackground(Color.surfaceColor)
             .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
             
@@ -100,5 +106,6 @@ struct NavigationalWarningAreasView: View {
         .onAppear {
             navigationalWarningsSections.nsPredicate = NSPredicate(format: "navArea != %@", generalLocation.currentNavAreaName ?? "")
         }
+        .accessibilityElement(children: .contain)
     }
 }

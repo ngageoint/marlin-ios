@@ -152,7 +152,10 @@ final class PortSummaryViewTests: XCTestCase {
         port.latitude = 1.0
         port.longitude = 2.0
         
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         let summary = port.summaryView(showMoreDetails: false)
+            .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -309,7 +312,10 @@ final class PortSummaryViewTests: XCTestCase {
         port.latitude = 1.0
         port.longitude = 2.0
         
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         let summary = port.summaryView(showMoreDetails: true)
+            .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

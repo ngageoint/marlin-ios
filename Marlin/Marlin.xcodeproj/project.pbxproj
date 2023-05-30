@@ -139,6 +139,7 @@
 		F7364E3C2A1E45B80098F243 /* NavigationalWarningMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E3B2A1E45B80098F243 /* NavigationalWarningMapView.swift */; };
 		F7364E3E2A1E46860098F243 /* NavigationalWarningAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E3D2A1E46860098F243 /* NavigationalWarningAreasView.swift */; };
 		F7364E402A1E495C0098F243 /* NavigationalWarningSectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E3F2A1E495C0098F243 /* NavigationalWarningSectionRow.swift */; };
+		F7364E422A26A1740098F243 /* MarlinTestInitialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E412A26A1740098F243 /* MarlinTestInitialization.swift */; };
 		F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC7F294D2E240085EDC5 /* LightRange.swift */; };
 		F73ABC82295102480085EDC5 /* DataSourceTileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */; };
 		F73ABC84295245BB0085EDC5 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC83295245BB0085EDC5 /* OnboardingView.swift */; };
@@ -555,6 +556,7 @@
 		F7364E3B2A1E45B80098F243 /* NavigationalWarningMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningMapView.swift; sourceTree = "<group>"; };
 		F7364E3D2A1E46860098F243 /* NavigationalWarningAreasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreasView.swift; sourceTree = "<group>"; };
 		F7364E3F2A1E495C0098F243 /* NavigationalWarningSectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningSectionRow.swift; sourceTree = "<group>"; };
+		F7364E412A26A1740098F243 /* MarlinTestInitialization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTestInitialization.swift; sourceTree = "<group>"; };
 		F73ABC7F294D2E240085EDC5 /* LightRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightRange.swift; sourceTree = "<group>"; };
 		F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceTileProvider.swift; sourceTree = "<group>"; };
 		F73ABC83295245BB0085EDC5 /* OnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -1082,6 +1084,7 @@
 				F727A687284E485500BD728A /* KIF+extensions.swift */,
 				F727A690284E605800BD728A /* MarlinTests.swift */,
 				F71DF481284E783600686951 /* TestHelper.swift */,
+				F7364E412A26A1740098F243 /* MarlinTestInitialization.swift */,
 			);
 			path = MarlinTests;
 			sourceTree = "<group>";
@@ -2232,6 +2235,7 @@
 				F7ABB604299C1ECE00BAD868 /* NavigationalWarningNavAreaListViewTests.swift in Sources */,
 				F76052BD29A96F5A00F13260 /* NoticeToMarinersFullNoticeViewTests.swift in Sources */,
 				F70F501D2993EA470062E555 /* DataLoadedNotificationBannerTests.swift in Sources */,
+				F7364E422A26A1740098F243 /* MarlinTestInitialization.swift in Sources */,
 				F72D88F82971FF8000D022FB /* HamburgerTests.swift in Sources */,
 				F7D8FA64293AB5B000E7D0A1 /* MockDataSource.swift in Sources */,
 				F72D890A2979E7FC00D022FB /* RadioBeaconDetailViewTests.swift in Sources */,
@@ -2587,6 +2591,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPrincipalClass = "$(PRODUCT_NAME).MarlinTestInitialization";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.msi.MarlinTests;
@@ -2609,6 +2614,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPrincipalClass = "$(PRODUCT_NAME).MarlinTestInitialization";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.msi.MarlinTests;

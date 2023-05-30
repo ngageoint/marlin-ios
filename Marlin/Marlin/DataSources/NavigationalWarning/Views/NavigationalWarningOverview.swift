@@ -8,11 +8,11 @@
 import SwiftUI
 import MapKit
 
-struct NavigationalWarningsOverview<Location>: View where Location: LocationManagerProtocol  {
+struct NavigationalWarningsOverview: View {
     @StateObject var navState = NavState()
+    @EnvironmentObject var locationManager: LocationManager
     
     let MAP_NAME = "Navigational Warning List View Map"
-    var locationManager: Location
     @State var expandMap: Bool = false
     @State var selection: String? = nil
     let tabFocus = NotificationCenter.default.publisher(for: .TabRequestFocus)
@@ -21,10 +21,6 @@ struct NavigationalWarningsOverview<Location>: View where Location: LocationMana
     }
     
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-    
-    init(locationManager: Location = LocationManager.shared()) {
-        self.locationManager = locationManager
-    }
     
     var body: some View {
         Self._printChanges()

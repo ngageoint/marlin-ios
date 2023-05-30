@@ -95,7 +95,7 @@ class LocationManager: NSObject, ObservableObject, LocationManagerProtocol, CLLo
     var navAreaGeoPackage: GPKGGeoPackage?
     var navAreaFeatureDao: GPKGFeatureDao?
     
-    private init(locationManager: CLLocationManager) {
+    internal init(locationManager: CLLocationManager) {
         super.init()
         self.locationManager = locationManager
         self.locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
@@ -147,7 +147,7 @@ class LocationManager: NSObject, ObservableObject, LocationManagerProtocol, CLLo
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        locationStatus = status
+        locationStatus = manager.authorizationStatus
         NotificationCenter.default.post(Notification(name: .LocationAuthorizationStatusChanged, object: status))
         if status == .authorizedAlways || status == .authorizedWhenInUse {
             DispatchQueue.main.async {

@@ -35,7 +35,8 @@ extension MSIListView where Content == EmptyView {
 
 struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: View, Content: View>: View {
     @State var sortOpen: Bool = false
-    
+    @EnvironmentObject var locationManager: LocationManager
+
     @ObservedObject var focusedItem: ItemWrapper
     @State var selection: String? = nil
     @State var filterOpen: Bool = false
@@ -134,6 +135,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
             .onAppear {
                 Metrics.shared.dataSourceFilter(dataSource: T.self)
             }
+            .environmentObject(locationManager)
         }
         .bottomSheet(isPresented: $sortOpen, detents: .large) {
             ScrollView {

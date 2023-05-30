@@ -20,7 +20,7 @@ final class FilterBottomSheetTests: XCTestCase {
         UserDefaults.standard.set(2, forKey: "\(Modu.key)Order")
         
         struct Container: View {
-            @State var showBottomSheet: Bool = true
+            @State var showBottomSheet: Bool = false
             @State var dataSources: [DataSourceItem] = [
                 DataSourceItem(dataSource: Asam.self),
                 DataSourceItem(dataSource: Modu.self),
@@ -29,6 +29,9 @@ final class FilterBottomSheetTests: XCTestCase {
             
             var body: some View {
                 FilterBottomSheet(showBottomSheet: $showBottomSheet, dataSources: $dataSources)
+                    .onAppear {
+                        showBottomSheet.toggle()
+                    }
             }
         }
         

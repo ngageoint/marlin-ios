@@ -69,7 +69,7 @@ class LightMapViewModel: NSObject, LightMapViewModelProtocol {
         coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
-    var characteristicNumber: Int64
+    @objc var characteristicNumber: Int64
     
     var structure: String?
     

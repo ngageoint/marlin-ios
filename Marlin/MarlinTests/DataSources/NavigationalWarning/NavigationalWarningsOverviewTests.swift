@@ -110,30 +110,32 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
         class PassThrough: ObservableObject {
         }
         
-        struct Container<Location>: View where Location: LocationManagerProtocol {
+        struct Container: View {
 
             @ObservedObject var passThrough: PassThrough
-            var locationManager: Location
+            @EnvironmentObject var locationManager: LocationManager
 
-            init(passThrough: PassThrough, locationManager: Location) {
+            init(passThrough: PassThrough) {
                 self.passThrough = passThrough
-                self.locationManager = locationManager
             }
             
             var body: some View {
                 NavigationView {
-                    NavigationalWarningsOverview(locationManager: locationManager)
+                    NavigationalWarningsOverview()
+                        .environmentObject(locationManager)
                 }
             }
         }
         let appState = AppState()
         let passThrough = PassThrough()
-        let mockLocationManager = MockLocationManager()
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         mockLocationManager.currentNavArea = nil
 
-        let container = Container(passThrough: passThrough, locationManager: mockLocationManager)
+        let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -190,32 +192,42 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
         }
         
         struct Container<Location>: View where Location: LocationManagerProtocol {
-            
+            @EnvironmentObject var locationManager: LocationManager
             @ObservedObject var passThrough: PassThrough
-            @StateObject var locationManager: Location = MockLocationManager() as! Location
+            var location: Location
             
-            init(passThrough: PassThrough) {
+            init(passThrough: PassThrough, location: Location) {
                 self.passThrough = passThrough
+                self.location = location
             }
             
             var body: some View {
                 NavigationView {
-                    NavigationalWarningsOverview(locationManager: locationManager)
+                    NavigationalWarningsOverview()
+                        .environmentObject(locationManager)
                 }
                 .onAppear {
-                    locationManager.currentNavArea = .NAVAREA_IV
+                    GeneralLocation.shared.currentNavArea = .NAVAREA_IV
+                    GeneralLocation.shared.currentNavAreaName = GeneralLocation.shared.currentNavArea?.name
+//                    locationManager.currentNavArea = .NAVAREA_IV
                 }
                 .onChange(of: passThrough.navArea) { newValue in
                     locationManager.currentNavArea = newValue
+                    GeneralLocation.shared.currentNavArea = newValue
+                    GeneralLocation.shared.currentNavAreaName = newValue?.name
                 }
             }
         }
         let appState = AppState()
         let passThrough = PassThrough()
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
+        mockLocationManager.currentNavArea = nil
         
-        let container = Container<MockLocationManager>(passThrough: passThrough)
+        let container = Container<MockLocationManager>(passThrough: passThrough, location: mockLocationManager)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()

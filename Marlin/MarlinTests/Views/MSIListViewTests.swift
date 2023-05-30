@@ -396,6 +396,7 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
+            @EnvironmentObject var locationManager: LocationManager
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
@@ -404,14 +405,19 @@ final class MSIListViewTests: XCTestCase {
             var body: some View {
                 NavigationView {
                     MSIListView<Asam, EmptyView, EmptyView>()
+                        .environmentObject(locationManager)
                 }
             }
         }
+        
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         let appState = AppState()
         let passThrough = PassThrough()
         
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()

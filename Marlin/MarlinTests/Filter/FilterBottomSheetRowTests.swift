@@ -16,6 +16,9 @@ final class FilterBottomSheetRowTests: XCTestCase {
     func testFilterBottomSheetRowNoFilters() {
         UserDefaults.standard.setFilter(MockDataSource.key, filter: [])
         
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
+        
         struct Container: View {
             @State var dataSourceItem = DataSourceItem(dataSource: MockDataSource.self)
             
@@ -24,7 +27,7 @@ final class FilterBottomSheetRowTests: XCTestCase {
             }
         }
         
-        let view = Container()
+        let view = Container().environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
@@ -39,6 +42,8 @@ final class FilterBottomSheetRowTests: XCTestCase {
     
     func testFilterBottomSheetRowWithFilters() {
         UserDefaults.standard.setFilter(MockDataSource.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(MockDataSource.dateProperty), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last365Days)])
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         
         struct Container: View {
             @State var dataSourceItem = DataSourceItem(dataSource: MockDataSource.self)
@@ -48,7 +53,7 @@ final class FilterBottomSheetRowTests: XCTestCase {
             }
         }
         
-        let view = Container()
+        let view = Container().environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()

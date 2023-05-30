@@ -94,14 +94,23 @@ class MockLocationManager: LocationManager {
     override func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         
     }
+    
+    override internal init(locationManager: CLLocationManager) {
+        super.init(locationManager: locationManager)
+    }
 }
 
 class MockCLLocationManager: CLLocationManager {
     public var requestAuthorizationCalled = false
+    public var overriddenAuthStatus: CLAuthorizationStatus = .notDetermined
+    
+    override var authorizationStatus: CLAuthorizationStatus {
+        return overriddenAuthStatus
+    }
     
     override func requestWhenInUseAuthorization() {
         requestAuthorizationCalled = true
-        
+        print("xxx request called")
     }
     
     override func startUpdatingHeading() {
