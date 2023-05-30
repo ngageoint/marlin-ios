@@ -24,7 +24,7 @@ struct NavigationalWarningDetailView: View {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     if CLLocationCoordinate2DIsValid(navigationalWarning.coordinate) {
-                        DataSourceLocationMapView(dataSourceLocation: navigationalWarning, mapName: "Navigational Warning Detail Map", mixins: [NavigationalWarningMap(warning: navigationalWarning)])
+                        DataSourceLocationMapView(dataSourceLocation: navigationalWarning, mapName: "Navigational Warning Detail Map", mixins: [NavigationalWarningFetchMap(objects: [navigationalWarning])])
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     Group {
