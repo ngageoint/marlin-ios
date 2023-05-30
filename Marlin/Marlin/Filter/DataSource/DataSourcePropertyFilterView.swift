@@ -56,7 +56,6 @@ struct DataSourcePropertyFilterView: View {
             .padding(.bottom, viewModel.dataSourceProperty.type == .location ? 12 : 0)
         }
         .onAppear {
-            print("xxx location manager is \(locationManager)")
             viewModel.locationManager = locationManager
         }
     }

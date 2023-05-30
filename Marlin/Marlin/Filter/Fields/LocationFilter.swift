@@ -133,9 +133,6 @@ struct LocationFilter: View {
                 .tint(Color.primaryColorVariant)
             }
         }
-        .onChange(of: locationManager.lastLocation) { change in
-            print("xxx change location")
-        }
     }
     
     @ViewBuilder

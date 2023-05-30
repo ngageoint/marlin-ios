@@ -14,36 +14,46 @@ import mgrs_ios
 import ExceptionCatcher
 import SwiftUI
 
-//private struct LocationManagerKey: EnvironmentKey {
-//    typealias Value = LocationManagerProtocol
-//    
-//    static let defaultValue: any Value = EmptyLocationManager.shared
-//}
-//
-//private struct LastLocationKey: EnvironmentKey {
-//    static let defaultValue: CLLocation? = nil
-//}
-//
-//extension EnvironmentValues {
-//    var locationManager: any LocationManagerProtocol {
-//        get { self[LocationManagerKey.self] }
-//        set { self[LocationManagerKey.self] = newValue }
-//    }
-//    
-//    var lastLocation: CLLocation? {
-//        get { self[LastLocationKey.self] }
-//        set { self[LastLocationKey.self] = newValue }
-//    }
-//}
-//
-//extension View {
-//    func lastLocation(_ lastLocation: CLLocation?) -> some View {
-//        environment(\.lastLocation, lastLocation)
-//    }
-//    func locationManager(_ locationManager: any LocationManagerProtocol) -> some View {
-//        environment(\.locationManager, locationManager)
-//    }
-//}
+private struct LocationManagerKey: EnvironmentKey {
+    static let defaultValue: LocationManager? = nil
+}
+
+private struct LastLocationKey: EnvironmentKey {
+    static let defaultValue: CLLocation? = nil
+}
+
+private struct CurrentNavAreaKey: EnvironmentKey {    
+    static let defaultValue: String? = nil
+}
+
+extension EnvironmentValues {
+    var locationManager: LocationManager? {
+        get { self[LocationManagerKey.self] }
+        set { self[LocationManagerKey.self] = newValue }
+    }
+
+    var lastLocation: CLLocation? {
+        get { self[LastLocationKey.self] }
+        set { self[LastLocationKey.self] = newValue }
+    }
+    
+    var currentNavArea: String? {
+        get { self[CurrentNavAreaKey.self] }
+        set { self[CurrentNavAreaKey.self] = newValue }
+    }
+}
+
+extension View {
+    func lastLocation(_ lastLocation: CLLocation?) -> some View {
+        environment(\.lastLocation, lastLocation)
+    }
+    func locationManager(_ locationManager: LocationManager?) -> some View {
+        environment(\.locationManager, locationManager)
+    }
+    func currentNavArea(_ currentNavArea: String?) -> some View {
+        environment(\.currentNavArea, currentNavArea)
+    }
+}
 
 protocol LocationManagerProtocol: ObservableObject {
     var lastLocation: CLLocation? { get set }
@@ -52,21 +62,16 @@ protocol LocationManagerProtocol: ObservableObject {
     func requestAuthorization()
 }
 
-//class EmptyLocationManager: NSObject, ObservableObject, LocationManagerProtocol {
-//    static let shared = EmptyLocationManager()
-//
-//    private override init() {
-//        super.init()
-//    }
-//
-//    var lastLocation: CLLocation?
-//
-//    var currentNavArea: NavigationalWarningNavArea?
-//
-//    var locationStatus: CLAuthorizationStatus?
-//
-//    func requestAuthorization() { }
-//}
+class GeneralLocation: NSObject, ObservableObject {
+    static var shared: GeneralLocation = GeneralLocation()
+    @Published var currentNavArea: NavigationalWarningNavArea?
+    @Published var current10kmMGRS: String?
+    @Published var currentNavAreaName: String?
+    
+    private override init() {
+        super.init()
+    }
+}
 
 class LocationManager: NSObject, ObservableObject, LocationManagerProtocol, CLLocationManagerDelegate {
     static var _shared: LocationManager?
@@ -84,7 +89,7 @@ class LocationManager: NSObject, ObservableObject, LocationManagerProtocol, CLLo
     @Published var lastLocation: CLLocation?
     @Published var currentNavArea: NavigationalWarningNavArea?
     @Published var current10kmMGRS: String?
-    
+        
     let navAreaGeoPackageFileName = "navigation_areas"
     let navAreaGeoPackageTableName = "navigation_areas"
     var navAreaGeoPackage: GPKGGeoPackage?
@@ -169,6 +174,8 @@ class LocationManager: NSObject, ObservableObject, LocationManagerProtocol, CLLo
         if resultSet.moveToNext() {
             if let code = resultSet.row().value(withColumn: "code") as? String {
                 currentNavArea = NavigationalWarningNavArea.fromId(id: code)
+                GeneralLocation.shared.currentNavArea = currentNavArea
+                GeneralLocation.shared.currentNavAreaName = currentNavArea?.name
             }
         }
         resultSet.close()
@@ -182,6 +189,7 @@ class LocationManager: NSObject, ObservableObject, LocationManagerProtocol, CLLo
         let mgrsZone = mgrsPosition.coordinate(.TEN_KILOMETER)
         if current10kmMGRS != mgrsZone {
             current10kmMGRS = mgrsZone
+            GeneralLocation.shared.current10kmMGRS = current10kmMGRS
             updateCurrentNavArea()
         }
     }
