@@ -17,7 +17,7 @@ struct DataSourceLocationMapView: View {
     var mixins: [MapMixin]
     
     var body: some View {
-        MarlinMap(name: mapName, mixins: mapMixins, mapState: mapState)
+        MarlinMap(name: mapName, mixins: mapMixins, mapState: mapState, allowMapTapsOnItems: false)
             .onAppear {
                 mapMixins.mixins.append(contentsOf: mixins + [UserLayersMap()])
                 if let region = dataSourceLocation.coordinateRegion {

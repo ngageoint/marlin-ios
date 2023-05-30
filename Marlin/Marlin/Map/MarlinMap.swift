@@ -109,7 +109,6 @@ class NavigationalMapMixins: MapMixins {
         super.init()
         let navareaMap = GeoPackageMap(fileName: "navigation_areas", tableName: "navigation_areas", index: 0)
         let backgroundMap = GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: Color.dynamicLandColor, index: 1)
-//        self.mixins = [NavigationalWarningMap(zoomOnFocus: true), navareaMap, backgroundMap]
         self.mixins = [NavigationalWarningFetchMap(), navareaMap, backgroundMap]
     }
 }
@@ -119,6 +118,7 @@ struct MarlinMap: UIViewRepresentable {
 
     @ObservedObject var mixins: MapMixins
     @StateObject var mapState: MapState = MapState()
+    var allowMapTapsOnItems: Bool = true
 
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView(frame: UIScreen.main.bounds)
@@ -156,12 +156,14 @@ struct MarlinMap: UIViewRepresentable {
             mixin.setupMixin(marlinMap: self, mapView: mapView)
         }
         context.coordinator.mixins = mixins.mixins
+        context.coordinator.allowMapTapsOnItems = allowMapTapsOnItems
         return mapView
     }
     
     func updateUIView(_ mapView: MKMapView, context: Context) {
         context.coordinator.mapView = mapView
-        
+        context.coordinator.allowMapTapsOnItems = allowMapTapsOnItems
+
         let scale = context.coordinator.mapScale ?? mapView.subviews.first { view in
             return (view as? MKScaleView) != nil
         }
@@ -295,6 +297,8 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     
     var mixins: [any MapMixin] = []
     
+    var allowMapTapsOnItems: Bool = true
+    
     func setMapRegion(region: MKCoordinateRegion) {
         currentRegion = region
         self.mapView?.setRegion(region, animated: true)
@@ -387,7 +391,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     }
     
     func mapTap(tapPoint:CGPoint, gesture: UITapGestureRecognizer, mapView: MKMapView?) {
-        guard let mapView = mapView else {
+        guard let mapView = mapView, allowMapTapsOnItems else {
             return
         }
         
