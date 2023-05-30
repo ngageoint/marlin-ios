@@ -109,6 +109,7 @@ struct LocationFilter: View {
                 if let lastLocation = locationManager.lastLocation {
                     Text(lastLocation.coordinate.toDisplay())
                         .overline()
+                        .padding(.leading, 8)
                     Map(coordinateRegion: $viewModel.currentRegion, showsUserLocation: true)
                         .frame(maxWidth: .infinity)
                         .frame(height: 250)
