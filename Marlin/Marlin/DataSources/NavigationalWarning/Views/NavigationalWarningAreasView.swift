@@ -7,21 +7,35 @@
 
 import SwiftUI
 
-struct NavigationalWarningAreasView<Location>: View where Location: LocationManagerProtocol {
-    @EnvironmentObject var navState: NavState
-    @ObservedObject var locationManager: Location
+struct CurrentNavigationalWarningSection: View {
+    var navArea: String
+    var mapName: String?
     
+    @SectionedFetchRequest<String, NavigationalWarning>
+    var currentNavigationalWarningsSections: SectionedFetchResults<String, NavigationalWarning>
+    
+    init(navArea: String, mapName: String?) {
+        self.navArea = navArea
+        self.mapName = mapName
+        self._currentNavigationalWarningsSections = SectionedFetchRequest<String, NavigationalWarning>(entity: NavigationalWarning.entity(), sectionIdentifier: \NavigationalWarning.navArea!, sortDescriptors: [NSSortDescriptor(keyPath: \NavigationalWarning.navArea, ascending: false), NSSortDescriptor(keyPath: \NavigationalWarning.issueDate, ascending: false)], predicate: NSPredicate(format: "navArea = %@", navArea))
+    }
+    
+    var body: some View {
+        ForEach(currentNavigationalWarningsSections) { section in
+            NavigationalWarningSectionRow(section: section, mapName: mapName)
+        }
+        .listRowBackground(Color.surfaceColor)
+        .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
+    }
+}
+
+struct NavigationalWarningAreasView: View {
+    @EnvironmentObject var navState: NavState
+    @ObservedObject var generalLocation = GeneralLocation.shared
+    @State var navArea: String?
     var mapName: String?
     
     @AppStorage("showUnparsedNavigationalWarnings") var showUnparsedNavigationalWarnings = false
-    
-    @SectionedFetchRequest<String, NavigationalWarning>(
-        sectionIdentifier: \NavigationalWarning.navArea!,
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \NavigationalWarning.navArea, ascending: false),
-            NSSortDescriptor(keyPath: \NavigationalWarning.issueDate, ascending: false)],
-        predicate: NSPredicate(format: "navArea = %@", ""))
-    var currentNavigationalWarningsSections: SectionedFetchResults<String, NavigationalWarning>
     
     @SectionedFetchRequest<String, NavigationalWarning>(
         sectionIdentifier: \NavigationalWarning.navArea!,
@@ -40,13 +54,11 @@ struct NavigationalWarningAreasView<Location>: View where Location: LocationMana
     private var noParsedLocationNavigationalWarnings: FetchedResults<NavigationalWarning>
     
     var body: some View {
-        Group {
-            ForEach(currentNavigationalWarningsSections) { section in
-                NavigationalWarningSectionRow(section: section, mapName: mapName)
+        Self._printChanges()
+        return List {
+            if let navArea = generalLocation.currentNavAreaName {
+                CurrentNavigationalWarningSection(navArea: navArea, mapName: mapName)
             }
-            .listRowBackground(Color.surfaceColor)
-            .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
-            
             ForEach(navigationalWarningsSections) { section in
                 NavigationalWarningSectionRow(section: section, mapName: mapName)
             }
@@ -82,13 +94,11 @@ struct NavigationalWarningAreasView<Location>: View where Location: LocationMana
                 .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
             }
         }
+        .listStyle(.plain)
+        .listRowBackground(Color.surfaceColor)
+        .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
         .onAppear {
-            currentNavigationalWarningsSections.nsPredicate = NSPredicate(format: "navArea = %@", locationManager.currentNavArea?.name ?? "")
-            navigationalWarningsSections.nsPredicate = NSPredicate(format: "navArea != %@", locationManager.currentNavArea?.name ?? "")
-        }
-        .onReceive(self.locationManager.objectWillChange) { _ in
-            currentNavigationalWarningsSections.nsPredicate = NSPredicate(format: "navArea = %@", locationManager.currentNavArea?.name ?? "")
-            navigationalWarningsSections.nsPredicate = NSPredicate(format: "navArea != %@", locationManager.currentNavArea?.name ?? "")
+            navigationalWarningsSections.nsPredicate = NSPredicate(format: "navArea != %@", generalLocation.currentNavAreaName ?? "")
         }
     }
 }

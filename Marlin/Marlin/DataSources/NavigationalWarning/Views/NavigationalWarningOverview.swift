@@ -46,17 +46,9 @@ struct NavigationalWarningsOverview<Location>: View where Location: LocationMana
                 })
                 .frame(minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3, maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5)
                 .edgesIgnoringSafeArea([.leading, .trailing])
-                List {
-                    NavigationalWarningAreasView(locationManager: locationManager, mapName: MAP_NAME)
-                        .listRowBackground(Color.surfaceColor)
-                        .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
-                        .environmentObject(navState)
-                }
-                .listStyle(.plain)
-                .onAppear {
-                    Metrics.shared.appRoute([NavigationalWarning.metricsKey, "group"])
-                    Metrics.shared.dataSourceList(dataSource: NavigationalWarning.self)
-                }
+                NavigationalWarningAreasView(mapName: MAP_NAME)
+                    .currentNavArea(locationManager.currentNavArea?.name)
+                    .environmentObject(navState)
             }
         }
         .navigationTitle(NavigationalWarning.fullDataSourceName)
@@ -70,6 +62,8 @@ struct NavigationalWarningsOverview<Location>: View where Location: LocationMana
             }
         }
         .onAppear {
+            Metrics.shared.appRoute([NavigationalWarning.metricsKey, "group"])
+            Metrics.shared.dataSourceList(dataSource: NavigationalWarning.self)
             navState.navGroupName = "\(NavigationalWarning.key)List"
             navState.mapName = MAP_NAME
         }
