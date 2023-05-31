@@ -38,7 +38,7 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
             parameter.toNSSortDescriptor()
         })
         self.focusNotificationName = .FocusNavigationalWarning
-        self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMapasam)
+        self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMapnavWarning)
     }
     
     override func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
