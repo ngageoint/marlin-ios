@@ -35,7 +35,6 @@ extension MSIListView where Content == EmptyView {
 
 struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: View, Content: View>: View {
     @State var sortOpen: Bool = false
-    @EnvironmentObject var locationManager: LocationManager
 
     @ObservedObject var focusedItem: ItemWrapper
     @State var selection: String? = nil
@@ -75,7 +74,8 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
     }
     
     var body: some View {
-        ZStack {
+        Self._printChanges()
+        return ZStack {
             if watchFocusedItem, let focusedDataSource = focusedItem.dataSource as? T {
                 NavigationLink(tag: "detail", selection: $selection) {
                     focusedDataSource.detailView
@@ -103,39 +103,8 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
                 }
         }
         .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)]), allowSorting: allowUserSort, allowFiltering: allowUserFilter))
-        .bottomSheet(isPresented: $filterOpen, detents: .large) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    FilterView(viewModel: filterViewModel)
-                        .padding(.trailing, 16)
-                        .padding(.top, 8)
-                        .background(Color.surfaceColor)
-                    
-                }
-                .background(Color.surfaceColor)
-                
-                Spacer()
-                    .foregroundColor(Color.backgroundColor)
-            }
-            .navigationTitle("\(T.dataSourceName) Filters")
-            .background(Color.backgroundColor)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        filterOpen.toggle()
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .imageScale(.large)
-                            .foregroundColor(Color.onPrimaryColor.opacity(0.87))
-                    }
-                    .accessibilityElement()
-                    .accessibilityLabel("Close Filter")
-                }
-            }
-            .onAppear {
-                Metrics.shared.dataSourceFilter(dataSource: T.self)
-            }
-            .environmentObject(locationManager)
+        .background {
+            DataSourceFilter(filterViewModel: filterViewModel, showBottomSheet: $filterOpen)
         }
         .bottomSheet(isPresented: $sortOpen, detents: .large) {
             ScrollView {

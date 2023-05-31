@@ -191,14 +191,12 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
             @Published var navArea: NavigationalWarningNavArea?
         }
         
-        struct Container<Location>: View where Location: LocationManagerProtocol {
+        struct Container: View {
             @EnvironmentObject var locationManager: LocationManager
             @ObservedObject var passThrough: PassThrough
-            var location: Location
             
-            init(passThrough: PassThrough, location: Location) {
+            init(passThrough: PassThrough) {
                 self.passThrough = passThrough
-                self.location = location
             }
             
             var body: some View {
@@ -224,7 +222,7 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         mockLocationManager.currentNavArea = nil
         
-        let container = Container<MockLocationManager>(passThrough: passThrough, location: mockLocationManager)
+        let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(mockLocationManager as LocationManager)

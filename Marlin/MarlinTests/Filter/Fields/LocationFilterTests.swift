@@ -230,7 +230,7 @@ final class LocationFilterTests: XCTestCase {
             }
         }
         
-        struct Container<Location>: View where Location: LocationManagerProtocol {
+        struct Container: View {
             @EnvironmentObject var locationManager: LocationManager
             @ObservedObject var passThrough: PassThrough
             
@@ -261,7 +261,7 @@ final class LocationFilterTests: XCTestCase {
         mockLocationManager.lastLocation = nil
         
         let passThrough = PassThrough()
-        let view = Container<MockLocationManager>(passThrough: passThrough)
+        let view = Container(passThrough: passThrough)
             .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: view)
@@ -281,7 +281,7 @@ final class LocationFilterTests: XCTestCase {
             }
         }
         
-        struct Container<Location>: View where Location: LocationManagerProtocol {
+        struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
             @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
@@ -314,7 +314,7 @@ final class LocationFilterTests: XCTestCase {
         mockLocationManager.currentNavArea = nil
         
         let passThrough = PassThrough()
-        let view = Container<MockLocationManager>(passThrough: passThrough)
+        let view = Container(passThrough: passThrough)
             .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: view)

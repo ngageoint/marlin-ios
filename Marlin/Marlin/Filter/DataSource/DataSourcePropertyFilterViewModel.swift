@@ -11,7 +11,7 @@ import MapKit
 import CoreLocation
 
 class DataSourcePropertyFilterViewModel: ObservableObject {
-    var locationManager: (any LocationManagerProtocol)?
+    var locationManager: LocationManager?
     
     @Published var startValidating: Bool = false
     @Published var dataSourceProperty: DataSourceProperty {

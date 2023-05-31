@@ -55,13 +55,6 @@ extension View {
     }
 }
 
-protocol LocationManagerProtocol: ObservableObject {
-    var lastLocation: CLLocation? { get set }
-    var currentNavArea: NavigationalWarningNavArea? { get set }
-    var locationStatus: CLAuthorizationStatus? { get set }
-    func requestAuthorization()
-}
-
 class GeneralLocation: NSObject, ObservableObject {
     static var shared: GeneralLocation = GeneralLocation()
     @Published var currentNavArea: NavigationalWarningNavArea?
@@ -73,7 +66,7 @@ class GeneralLocation: NSObject, ObservableObject {
     }
 }
 
-class LocationManager: NSObject, ObservableObject, LocationManagerProtocol, CLLocationManagerDelegate {
+class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     static var _shared: LocationManager?
 
     class func shared(locationManager: CLLocationManager? = nil) -> LocationManager {

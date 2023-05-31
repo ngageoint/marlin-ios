@@ -22,7 +22,8 @@ struct AsamDetailView: View {
     }
     
     var body: some View {
-        List {
+        Self._printChanges()
+        return List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     DataSourceLocationMapView(dataSourceLocation: asam, mapName: "Asam Detail Map", mixins: [AsamMap(fetchPredicate: fetchRequest.predicate)])

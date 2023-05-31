@@ -7,6 +7,51 @@
 
 import SwiftUI
 
+struct DataSourceFilter: View {
+    var filterViewModel: FilterViewModel
+    @Binding var showBottomSheet: Bool
+
+    var body: some View {
+        Self._printChanges()
+        return Color.clear
+        // TODO: this can be replaced with .sheet introduced in ios16 when we are at 17
+            .bottomSheet(isPresented: $showBottomSheet, detents: .large) {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 0) {
+                        FilterView(viewModel: filterViewModel)
+                            .padding(.trailing, 16)
+                            .padding(.top, 8)
+                            .background(Color.surfaceColor)
+                        
+                    }
+                    .background(Color.surfaceColor)
+                    
+                    Spacer()
+                        .foregroundColor(Color.backgroundColor)
+                }
+                .navigationTitle("\(filterViewModel.dataSource.dataSourceName) Filters")
+                .background(Color.backgroundColor)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            showBottomSheet.toggle()
+                        }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .imageScale(.large)
+                                .foregroundColor(Color.onPrimaryColor.opacity(0.87))
+                        }
+                        .accessibilityElement()
+                        .accessibilityLabel("Close Filter")
+                    }
+                }
+                .onAppear {
+                    Metrics.shared.dataSourceFilter(dataSource: filterViewModel.dataSource)
+                }
+                .environmentObject(LocationManager.shared())
+            }
+    }
+}
+
 struct MappedDataSourcesFilter: View {
     @EnvironmentObject var dataSourceList: DataSourceList
     @Binding var showBottomSheet: Bool
