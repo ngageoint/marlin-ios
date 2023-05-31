@@ -55,7 +55,7 @@ class MapState: ObservableObject {
 
 class MainMapMixins: MapMixins {
     var subscriptions = Set<AnyCancellable>()
-    var navigationalWarningMap = NavigationalWarningMap()
+    var navigationalWarningMap = NavigationalWarningFetchMap()
         
     override init() {
         super.init()
@@ -82,9 +82,6 @@ class MainMapMixins: MapMixins {
         if UserDefaults.standard.dataSourceEnabled(Asam.self) {
             mixins.append(AsamMap<Asam>(showAsTiles: true))
         }
-//        if UserDefaults.standard.showNavigationalWarningsOnMainMap {
-//            mixins.append(navigationalWarningMap)
-//        }
         self.mixins = mixins
         
         UserDefaults.standard.publisher(for: \.showNavigationalWarningsOnMainMap)
@@ -93,7 +90,7 @@ class MainMapMixins: MapMixins {
                     self.mixins.append(self.navigationalWarningMap)
                 } else {
                     self.mixins.removeAll { mixin in
-                        mixin is NavigationalWarningMap
+                        mixin is NavigationalWarningFetchMap
                     }
                 }
             }
@@ -245,7 +242,7 @@ struct MarlinMap: UIViewRepresentable {
             }
         }
         
-        // remove any mixins that were removed and add any new ones
+        // remove any mixins that were removed
         for mixin in context.coordinator.mixins {
             if !mixins.mixins.contains(where: { mixinFromMixins in
                 mixinFromMixins.uuid == mixin.uuid
