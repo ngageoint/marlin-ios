@@ -127,7 +127,7 @@ extension Color {
     }
     
     static var disabledBackground: Color {
-        return Color(uiColor: UIColor(argbValue: 0x33FFFFFF))
+        return Color(uiColor: UIColor(argbValue: 0x77FFFFFF))
     }
     
     static let dynamicOceanColor = UIColor { (traits) -> UIColor in
