@@ -10,12 +10,11 @@ import MapKit
 
 struct NavigationalWarningsOverview: View {
     @StateObject var navState = NavState()
-    @EnvironmentObject var locationManager: LocationManager
+    @ObservedObject var generalLocation: GeneralLocation = GeneralLocation.shared
     
     let MAP_NAME = "Navigational Warning List View Map"
     @State var expandMap: Bool = false
     @State var selection: String? = nil
-    let tabFocus = NotificationCenter.default.publisher(for: .TabRequestFocus)
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
         notification.object as? ViewDataSource
     }
@@ -43,20 +42,13 @@ struct NavigationalWarningsOverview: View {
                 .frame(minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3, maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5)
                 .edgesIgnoringSafeArea([.leading, .trailing])
                 NavigationalWarningAreasView(mapName: MAP_NAME)
-                    .currentNavArea(locationManager.currentNavArea?.name)
+                    .currentNavArea(generalLocation.currentNavArea?.name)
                     .environmentObject(navState)
             }
         }
         .navigationTitle(NavigationalWarning.fullDataSourceName)
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.surfaceColor)
-        .onReceive(tabFocus) { output in
-            let tabName = output.object as? String
-            if tabName == nil || tabName == "\(NavigationalWarning.key)List" {
-                selection = "Navigational Warning View"
-                navState.rootViewId = UUID()
-            }
-        }
         .onAppear {
             Metrics.shared.appRoute([NavigationalWarning.metricsKey, "group"])
             Metrics.shared.dataSourceList(dataSource: NavigationalWarning.self)

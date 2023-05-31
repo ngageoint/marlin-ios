@@ -82,19 +82,8 @@ class MainMapMixins: MapMixins {
         if UserDefaults.standard.dataSourceEnabled(Asam.self) {
             mixins.append(AsamMap<Asam>(showAsTiles: true))
         }
+        mixins.append(NavigationalWarningFetchMap())
         self.mixins = mixins
-        
-        UserDefaults.standard.publisher(for: \.showNavigationalWarningsOnMainMap)
-            .sink { showNavigationalWarnings in
-                if showNavigationalWarnings {
-                    self.mixins.append(self.navigationalWarningMap)
-                } else {
-                    self.mixins.removeAll { mixin in
-                        mixin is NavigationalWarningFetchMap
-                    }
-                }
-            }
-            .store(in: &subscriptions)
     }
 }
 
@@ -319,9 +308,6 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
     }
     
     func focusItem(notification: FocusMapOnItemNotification) {
-        if let notificationMapName = notification.mapName, notificationMapName != marlinMap.name {
-            return
-        }
         if let focusedAnnotation = focusedAnnotation {
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: {
                 focusedAnnotation.shrinkAnnotation()
@@ -332,7 +318,13 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         }
         if let ds = notification.item {
             if notification.zoom, let warning = ds as? NavigationalWarning, let region = warning.region {
-                setMapRegion(region: region)
+                let span = region.span
+                let adjustedCenter = CLLocationCoordinate2D(latitude: region.center.latitude - (span.latitudeDelta / 4.0), longitude: region.center.longitude)
+                if CLLocationCoordinate2DIsValid(adjustedCenter) {
+                    let newRegion = MKCoordinateRegion(center: adjustedCenter, span: MKCoordinateSpan(latitudeDelta: span.latitudeDelta + (span.latitudeDelta / 4.0), longitudeDelta: span.longitudeDelta))
+                    setMapRegion(region: newRegion)
+                }
+                
             } else {
                 let span = mapView?.region.span ?? MKCoordinateSpan(zoomLevel: 17, pixelWidth: Double(mapView?.frame.size.width ?? UIScreen.main.bounds.width))
                 let adjustedCenter = CLLocationCoordinate2D(latitude: ds.coordinate.latitude - (span.latitudeDelta / 4.0), longitude: ds.coordinate.longitude)

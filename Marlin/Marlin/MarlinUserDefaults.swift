@@ -420,15 +420,6 @@ extension UserDefaults {
         }
     }
     
-    @objc var showNavigationalWarningsOnMainMap: Bool {
-        get {
-            return bool(forKey: #function)
-        }
-        set {
-            setValue(newValue, forKey: #function)
-        }
-    }
-    
     var metricsEnabled: Bool {
         get {
             return bool(forKey: #function)

@@ -85,15 +85,6 @@ struct AboutView: View {
                         }
                     })
                     .padding([.top, .bottom], 8)
-                    
-                    Toggle(isOn: $showNavigationalWarningsOnMainMap, label: {
-                        HStack {
-                            Image(systemName: "exclamationmark.triangle.fill")
-                            Text("Show Navigation Warnings On Main Map")
-                                .primary()
-                        }
-                    })
-                    .padding([.top, .bottom], 8)
                 }
                 .toggleStyle(SwitchToggleStyle(tint: .primaryColorVariant))
             }
