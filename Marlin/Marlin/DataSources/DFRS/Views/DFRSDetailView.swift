@@ -30,11 +30,19 @@ struct DFRSDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
+                    Text(dfrs.itemTitle)
+                        .padding(.all, 8)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .itemTitle()
+                        .foregroundColor(Color.white)
+                        .background(Color(uiColor: dfrs.color))
+                        .padding(.bottom, -8)
                     if CLLocationCoordinate2DIsValid(dfrs.coordinate) {
                         DataSourceLocationMapView(dataSourceLocation: dfrs, mapName: "DFRS Detail Map", mixins: [DFRSMap(fetchPredicate: fetchRequest.predicate)])
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
-                    dfrs.summaryView(showMoreDetails: false, showSectionHeader: true)
+                    dfrs.summaryView(showMoreDetails: false, showSectionHeader: true, showTitle: false)
                         .padding(.all, 16)
                 }
                 .card()

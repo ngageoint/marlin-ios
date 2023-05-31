@@ -12,19 +12,23 @@ struct DifferentialGPSStationSummaryView: View {
     var differentialGPSStation: DifferentialGPSStation
     var showMoreDetails: Bool = false
     var showSectionHeader: Bool = false
+    var showTitle: Bool = true
     
-    init(differentialGPSStation: DifferentialGPSStation, showMoreDetails: Bool = false, showSectionHeader: Bool = false) {
+    init(differentialGPSStation: DifferentialGPSStation, showMoreDetails: Bool = false, showSectionHeader: Bool = false, showTitle: Bool = true) {
         self.differentialGPSStation = differentialGPSStation
         self.showMoreDetails = showMoreDetails
         self.showSectionHeader = showSectionHeader
+        self.showTitle = showTitle
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("\(differentialGPSStation.featureNumber) \(differentialGPSStation.volumeNumber ?? "")")
                 .overline()
-            Text("\(differentialGPSStation.name ?? "")")
-                .primary()
+            if showTitle {
+                Text("\(differentialGPSStation.name ?? "")")
+                    .primary()
+            }
             if showMoreDetails {
                 Text(differentialGPSStation.geopoliticalHeading ?? "")
                     .secondary()

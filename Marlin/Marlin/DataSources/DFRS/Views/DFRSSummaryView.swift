@@ -12,19 +12,23 @@ struct DFRSSummaryView: View {
     var dfrs: DFRS
     var showMoreDetails: Bool = false
     var showSectionHeader: Bool = false
+    var showTitle: Bool = false
     
-    init(dfrs: DFRS, showMoreDetails: Bool = false, showSectionHeader: Bool = false) {
+    init(dfrs: DFRS, showMoreDetails: Bool = false, showSectionHeader: Bool = false, showTitle: Bool = true) {
         self.dfrs = dfrs
         self.showMoreDetails = showMoreDetails
         self.showSectionHeader = showSectionHeader
+        self.showTitle = showTitle
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("\(dfrs.stationNumber ?? "")")
                 .overline()
-            Text("\(dfrs.stationName ?? "")")
-                .primary()
+            if showTitle {
+                Text("\(dfrs.stationName ?? "")")
+                    .primary()
+            }
             if showMoreDetails {
                 Text(dfrs.areaName ?? "")
                     .secondary()

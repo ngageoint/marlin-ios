@@ -10,14 +10,14 @@ import SwiftUI
 
 extension DifferentialGPSStation: DataSourceViewBuilder {
     var itemTitle: String {
-        return "\(self.featureNumber) \(self.volumeNumber ?? "")"
+        return "\(self.name ?? "\(self.featureNumber)")"
     }
     
     var detailView: AnyView {
         AnyView(DifferentialGPSStationDetailView(differentialGPSStation: self))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil) -> AnyView {
-        AnyView(DifferentialGPSStationSummaryView(differentialGPSStation: self, showMoreDetails: showMoreDetails, showSectionHeader: showSectionHeader))
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil, showTitle: Bool = true) -> AnyView {
+        AnyView(DifferentialGPSStationSummaryView(differentialGPSStation: self, showMoreDetails: showMoreDetails, showSectionHeader: showSectionHeader, showTitle: showTitle))
     }
 }

@@ -14,11 +14,13 @@ struct PortSummaryView: View {
 
     var port: Port
     var showMoreDetails: Bool = false
+    var showTitle: Bool = true
     var measurementFormatter: MeasurementFormatter
     
-    init(port: Port, showMoreDetails: Bool = false) {
+    init(port: Port, showMoreDetails: Bool = false, showTitle: Bool = true) {
         self.port = port
         self.showMoreDetails = showMoreDetails
+        self.showTitle = showTitle
         self.measurementFormatter = MeasurementFormatter();
         measurementFormatter.unitOptions = .providedUnit;
         measurementFormatter.unitStyle = .short;
@@ -27,25 +29,36 @@ struct PortSummaryView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(alignment: .center) {
-                    Text("\(port.portName ?? "")")
-                        .primary()
-                    Spacer()
-                    if let distance = distance {
-                        Text("\(distance)")
+            HStack(alignment: .center) {
+                VStack(alignment: .leading, spacing: 8) {
+                    
+                    if showTitle {
+                        Text("\(port.portName ?? "")")
+                            .primary()
+                    }
+                    if let alternateName = port.alternateName {
+                        Text("Alternate Name: \(alternateName)")
                             .secondary()
                     }
-                }
-                if let alternateName = port.alternateName {
-                    Text("Alternate Name: \(alternateName)")
+                    
+                    Text("\(port.regionName ?? "")")
                         .secondary()
                 }
-                
-                Text("\(port.regionName ?? "")")
-                    .secondary()
+                Spacer()
+                if let distance = distance {
+                    Text("\(distance)")
+                        .secondary()
+                }
             }
             PortActionBar(port: port, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+        }
+        .onAppear {
+            if let currentLocation = locationManager.lastLocation {
+                let metersMeasurement = NSMeasurement(doubleValue: port.distanceTo(currentLocation), unit: UnitLength.meters);
+                let convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles);
+                
+                distance = "\(measurementFormatter.string(from: convertedMeasurement)), \(currentLocation.coordinate.generalDirection(to: port.coordinate))"
+            }
         }
         .onChange(of: locationManager.lastLocation) { lastLocation in
             if let currentLocation = lastLocation {

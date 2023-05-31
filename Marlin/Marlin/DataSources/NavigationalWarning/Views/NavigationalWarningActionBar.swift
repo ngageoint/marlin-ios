@@ -41,7 +41,7 @@ struct NavigationalWarningActionBar: View {
             .accessibilityLabel("share")
             if !showMoreDetails {
                 Button(action: {
-                    NotificationCenter.default.post(name: .TabRequestFocus, object: navState.navGroupName)
+                    NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
                     let notification = MapItemsTappedNotification(items: [self.navigationalWarning], mapName: mapName, zoom: true)
                     NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
                 }) {

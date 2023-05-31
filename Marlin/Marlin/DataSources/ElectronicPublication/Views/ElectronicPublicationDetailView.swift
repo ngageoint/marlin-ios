@@ -18,6 +18,14 @@ struct ElectronicPublicationDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
+                    Text(electronicPublication.itemTitle)
+                        .padding(.all, 8)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .itemTitle()
+                        .foregroundColor(Color.white)
+                        .background(Color(uiColor: electronicPublication.color))
+                        .padding(.bottom, -8)
                     if let uploadTime = electronicPublication.uploadTime {
                         Text(ElectronicPublication.dateFormatter.string(from: uploadTime))
                             .overline()

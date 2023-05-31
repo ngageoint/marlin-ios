@@ -11,18 +11,22 @@ struct ModuSummaryView: View {
         
     var modu: Modu
     var showMoreDetails: Bool = false
+    var showTitle: Bool = true
     
-    init(modu: Modu, showMoreDetails: Bool = false) {
+    init(modu: Modu, showMoreDetails: Bool = false, showTitle: Bool = true) {
         self.modu = modu
         self.showMoreDetails = showMoreDetails
+        self.showTitle = showTitle
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(modu.dateString ?? "")
                 .overline()
-            Text("\(modu.name ?? "")")
-                .primary()
+            if showTitle {
+                Text("\(modu.name ?? "")")
+                    .primary()
+            }
             Text("Rig Status: \(modu.rigStatus ?? "")")
                 .lineLimit(1)
                 .secondary()

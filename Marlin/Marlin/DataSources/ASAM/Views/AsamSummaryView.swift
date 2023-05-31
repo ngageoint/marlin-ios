@@ -11,13 +11,16 @@ struct AsamSummaryView: View {
         
     var asam: Asam
     var showMoreDetails: Bool = false
+    var showTitle: Bool = true
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(asam.dateString ?? "")
                 .overline()
-            Text("\(asam.hostility ?? "")\(asam.hostility != nil && asam.victim != nil ? ": " : "")\(asam.victim ?? "")")
-                .primary()
+            if showTitle {
+                Text("\(asam.hostility ?? "")\(asam.hostility != nil && asam.victim != nil ? ": " : "")\(asam.victim ?? "")")
+                    .primary()
+            }
             Text(asam.asamDescription ?? "")
                 .lineLimit(8)
                 .secondary()

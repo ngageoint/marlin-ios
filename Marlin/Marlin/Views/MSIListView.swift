@@ -323,7 +323,7 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
                 .opacity(0)
                 
                 HStack {
-                    item.summaryView(showMoreDetails: false, showSectionHeader: false, mapName: nil)
+                    item.summaryView(showMoreDetails: false, showSectionHeader: false, mapName: nil, showTitle: true)
                 }
                 .padding(.all, 16)
                 .card()

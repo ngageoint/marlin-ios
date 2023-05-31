@@ -180,7 +180,7 @@ extension DataSource {
 
 protocol DataSourceViewBuilder: DataSource {
     var detailView: AnyView { get }
-    func summaryView(showMoreDetails: Bool, showSectionHeader: Bool, mapName: String?) -> AnyView
+    func summaryView(showMoreDetails: Bool, showSectionHeader: Bool, mapName: String?, showTitle: Bool) -> AnyView
     var itemTitle: String { get }
 }
 

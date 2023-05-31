@@ -12,19 +12,23 @@ struct NavigationalWarningSummaryView: View {
     var navigationalWarning: NavigationalWarning
     var showMoreDetails: Bool
     var mapName: String?
+    var showTitle: Bool = true
     
-    init(navigationalWarning: NavigationalWarning, showMoreDetails: Bool, mapName: String? = nil) {
+    init(navigationalWarning: NavigationalWarning, showMoreDetails: Bool, mapName: String? = nil, showTitle: Bool = true) {
         self.navigationalWarning = navigationalWarning
         self.showMoreDetails = showMoreDetails
         self.mapName = mapName
+        self.showTitle = showTitle
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(navigationalWarning.dateString ?? "")
                 .overline()
-            Text("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
-                .primary()
+            if showTitle {
+                Text("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
+                    .primary()
+            }
             Text("\(navigationalWarning.text ?? "")")
                 .multilineTextAlignment(.leading)
                 .lineLimit(8)

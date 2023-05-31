@@ -25,13 +25,19 @@ struct ModuDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
+                    Text(modu.itemTitle)
+                        .padding(.all, 8)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .itemTitle()
+                        .foregroundColor(Color.white)
+                        .background(Color(uiColor: modu.color))
+                        .padding(.bottom, -8)
                     DataSourceLocationMapView(dataSourceLocation: modu, mapName: "Modu Detail Map", mixins: [ModuMap(fetchPredicate: fetchRequest.predicate)])
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     Group {
                         Text(modu.dateString ?? "")
                             .overline()
-                        Text("\(modu.name ?? "")")
-                            .primary()
                         ModuActionBar(modu: modu)
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)

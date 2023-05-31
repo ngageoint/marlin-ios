@@ -32,25 +32,37 @@ struct LightDetailView: View {
                 Section {
                     VStack(alignment: .leading, spacing: 8) {
                         if let firstLight = lights.first {
+                            Text(firstLight.itemTitle)
+                                .padding(.all, 8)
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .itemTitle()
+                                .foregroundColor(Color.white)
+                                .background(Color(uiColor: firstLight.color))
+                                .padding(.bottom, -8)
+                            
                             DataSourceLocationMapView(dataSourceLocation: firstLight, mapName: "Light Detail Map", mixins: [LightMap<Light>(fetchPredicate: fetchRequest.predicate)])
                                 .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                            
+                            Group {
+                                Text("\(firstLight.featureNumber ?? "") \(firstLight.internationalFeature ?? "") \(firstLight.volumeNumber ?? "")")
+                                    .overline()
+                                if let sectionHeader = firstLight.sectionHeader {
+                                    Text(sectionHeader)
+                                        .secondary()
+                                }
+                                if let structure = firstLight.structure?.trimmingCharacters(in: .whitespacesAndNewlines) {
+                                    Text(structure)
+                                        .secondary()
+                                }
+                                if firstLight.heightFeet != 0 {
+                                    Text("Focal Plane Elevation: \(Int(firstLight.heightFeet))ft (\(Int(firstLight.heightMeters))m)")
+                                        .secondary()
+                                }
+                                LightActionBar(light: firstLight, showMoreDetailsButton: false, showFocusButton: true)
+                                    .padding(.bottom, 16)
+                            }.padding([.leading, .trailing], 16)
                         }
-                        Group {
-                            Text("\(lights[0].featureNumber ?? "") \(lights[0].internationalFeature ?? "") \(lights[0].volumeNumber ?? "")")
-                                .overline()
-                            Text("\(lights[0].name ?? "")")
-                                .primary()
-                            Text(lights[0].sectionHeader ?? "")
-                                .secondary()
-                            Text(lights[0].structure ?? "")
-                                .secondary()
-                            if lights[0].heightFeet != 0 {
-                                Text("Focal Plane Elevation: \(Int(lights[0].heightFeet))ft (\(Int(lights[0].heightMeters))m)")
-                                    .secondary()
-                            }
-                            LightActionBar(light: lights[0], showMoreDetailsButton: false, showFocusButton: true)
-                                .padding(.bottom, 16)
-                        }.padding([.leading, .trailing], 16)
                     }
                     .frame(maxWidth:.infinity)
                     .card()

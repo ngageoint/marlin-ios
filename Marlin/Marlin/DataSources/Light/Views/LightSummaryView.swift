@@ -11,24 +11,24 @@ struct LightSummaryView: View {
     
     var light: Light
     var showMoreDetails: Bool = false
-    
-    init(light: Light, showMoreDetails: Bool = false) {
-        self.light = light
-        self.showMoreDetails = showMoreDetails
-    }
+    var showTitle: Bool = true
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("\(light.featureNumber ?? "") \(light.internationalFeature ?? "") \(light.volumeNumber ?? "")")
                 .overline()
-            Text("\(light.name ?? "")")
-                .primary()
+            if showTitle {
+                Text("\(light.name ?? "")")
+                    .primary()
+            }
             if showMoreDetails {
                 Text(light.sectionHeader ?? "")
                     .secondary()
             }
-            Text(light.structure ?? "")
-                .secondary()
+            if let structure = light.structure?.trimmingCharacters(in: .whitespacesAndNewlines) {
+                Text(structure)
+                    .secondary()
+            }
             LightActionBar(light: light, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }

@@ -24,6 +24,14 @@ struct RadioBeaconDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
+                    Text(radioBeacon.itemTitle)
+                        .padding(.all, 8)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .itemTitle()
+                        .foregroundColor(Color.white)
+                        .background(Color(uiColor: radioBeacon.color))
+                        .padding(.bottom, -8)
                     DataSourceLocationMapView(dataSourceLocation: radioBeacon, mapName: "Radio Beacon Detail Map", mixins: [RadioBeaconMap(fetchPredicate: fetchRequest.predicate)])
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     radioBeacon.summaryView(showSectionHeader: true)

@@ -26,14 +26,18 @@ struct AsamDetailView: View {
         return List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
+                    Text(asam.itemTitle)
+                        .padding(.all, 8)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .itemTitle()
+                        .foregroundColor(Color.white)
+                        .background(Color(uiColor: asam.color))
+                        .padding(.bottom, -8)
                     DataSourceLocationMapView(dataSourceLocation: asam, mapName: "Asam Detail Map", mixins: [AsamMap(fetchPredicate: fetchRequest.predicate)])
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     Group {
-                        Text(asam.dateString ?? "")
-                            .overline()
-                        Text("\(asam.hostility ?? "")\(asam.hostility != nil && asam.victim != nil ? ": " : "")\(asam.victim ?? "")")
-                            .primary()
-                        AsamActionBar(asam: asam)
+                        AsamSummaryView(asam: asam, showTitle: false)
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
                 }

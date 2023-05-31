@@ -14,7 +14,7 @@ struct UITextViewContainer: UIViewRepresentable {
     func makeUIView(context: UIViewRepresentableContext<Self>) -> UITextView {
         let view = UITextView()
         view.textContainer.widthTracksTextView = true
-        view.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         view.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
         view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         view.textContainer.lineBreakMode = .byWordWrapping
@@ -24,9 +24,10 @@ struct UITextViewContainer: UIViewRepresentable {
         view.font = UIFont.systemFont(ofSize: 13.0, weight: .regular)
         view.textColor = UIColor(Color.onSurfaceColor).withAlphaComponent(0.6)
         view.accessibilityLabel = "Text"
-        
         view.textContainerInset = .zero
         view.textContainer.lineFragmentPadding = 0
+        
+        print(text)
         return view
     }
     

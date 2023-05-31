@@ -28,16 +28,20 @@ struct RadioBeaconSummaryView: View {
             if showMoreDetails || showSectionHeader {
                 Text(radioBeacon.sectionHeader ?? "")
                     .secondary()
-            }             
+            }
             if let morseCode = radioBeacon.morseCode {
                 Text(radioBeacon.morseLetter)
                     .primary()
                 MorseCode(code: morseCode)
             }
-            Text(radioBeacon.expandedCharacteristicWithoutCode ?? "")
+            if let expandedCharacteristicWithoutCode = radioBeacon.expandedCharacteristicWithoutCode {
+                Text(expandedCharacteristicWithoutCode)
                 .secondary()
-            Text(radioBeacon.stationRemark ?? "")
-                .secondary()
+            }
+            if let stationRemark = radioBeacon.stationRemark {
+                Text(stationRemark)
+                    .secondary()
+            }
             RadioBeaconActionBar(radioBeacon: radioBeacon, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }

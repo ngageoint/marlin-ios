@@ -24,9 +24,17 @@ struct DifferentialGPSStationDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
+                    Text(differentialGPSStation.itemTitle)
+                        .padding(.all, 8)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .itemTitle()
+                        .foregroundColor(Color.white)
+                        .background(Color(uiColor: differentialGPSStation.color))
+                        .padding(.bottom, -8)
                     DataSourceLocationMapView(dataSourceLocation: differentialGPSStation, mapName: "DifferentialGPSStation Detail Map", mixins: [DifferentialGPSStationMap(fetchPredicate: fetchRequest.predicate)])
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                    differentialGPSStation.summaryView(showSectionHeader: true)
+                    differentialGPSStation.summaryView(showSectionHeader: true, showTitle: false)
                         .padding(.all, 16)
                 }
                 .card()

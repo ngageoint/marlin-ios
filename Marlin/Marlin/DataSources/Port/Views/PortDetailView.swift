@@ -25,9 +25,17 @@ struct PortDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
+                    Text(port.itemTitle)
+                        .padding(.all, 8)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .itemTitle()
+                        .foregroundColor(Color.white)
+                        .background(Color(uiColor: port.color))
+                        .padding(.bottom, -8)
                     DataSourceLocationMapView(dataSourceLocation: port, mapName: "Port Detail Map", mixins: [PortMap(fetchPredicate: fetchRequest.predicate)])
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                    port.summaryView()
+                    port.summaryView(showTitle: false)
                         .padding(.all, 16)
                 }
                 .card()

@@ -33,7 +33,7 @@ class NavigationalWarningCircle: MKCircle {
 
 class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchRequestMap<T> {
     override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
-        super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
+        super.init(fetchPredicate: fetchPredicate, objects: objects, showAsTiles: showAsTiles)
         self.sortDescriptors = NavigationalWarning.defaultSort.map({ parameter in
             parameter.toNSSortDescriptor()
         })

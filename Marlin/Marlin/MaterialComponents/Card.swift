@@ -62,6 +62,19 @@ extension View {
     }
 }
 
+struct ItemTitleModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(Font.headline5.weight(.heavy))
+    }
+}
+
+extension View {
+    func itemTitle() -> some View {
+        modifier(ItemTitleModifier())
+    }
+}
+
 struct PrimaryModifier: ViewModifier {
     func body(content: Content) -> some View {
         content

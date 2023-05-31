@@ -17,7 +17,7 @@ extension Modu: DataSourceViewBuilder {
         AnyView(ModuDetailView(modu: self))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil) -> AnyView {
-        AnyView(ModuSummaryView(modu: self, showMoreDetails: showMoreDetails))
+    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil, showTitle: Bool = true) -> AnyView {
+        AnyView(ModuSummaryView(modu: self, showMoreDetails: showMoreDetails, showTitle: showTitle))
     }
 }
