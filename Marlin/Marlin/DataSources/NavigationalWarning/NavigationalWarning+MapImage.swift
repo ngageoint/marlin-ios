@@ -11,7 +11,7 @@ import MapKit
 import sf_wkt_ios
 
 extension NavigationalWarning: MapImage {
-    static var cacheTiles: Bool = false
+    static var cacheTiles: Bool = true
     
     func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {
         var images: [UIImage] = []
