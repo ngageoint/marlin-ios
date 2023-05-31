@@ -32,7 +32,7 @@ extension Light: MapImage {
                     actualSizeSectorLight(lightSectors: lightSectors, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context)
                 }
             }
-        } else if UserDefaults.standard.actualRangeLights, let stringRange = range, let range = Double(stringRange), let tileBounds3857 = tileBounds3857, let lightColors = lightColors {
+        } else if lightSectors == nil, UserDefaults.standard.actualRangeLights, let stringRange = range, let range = Double(stringRange), let tileBounds3857 = tileBounds3857, let lightColors = lightColors {
             if context == nil {
                 let size = CGSize(width: TILE_SIZE, height: TILE_SIZE)
                 UIGraphicsBeginImageContext(size)
@@ -51,6 +51,9 @@ extension Light: MapImage {
         for sector in lightSectors.sorted(by: { one, two in
             return one.range ?? 0.0 < two.range ?? 0.0
         }) {
+            if sector.obscured {
+                continue
+            }
             let nauticalMilesMeasurement = NSMeasurement(doubleValue: sector.range ?? 0.0, unit: UnitLength.nauticalMiles)
             let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
             if sector.startDegrees >= sector.endDegrees {

@@ -193,7 +193,7 @@ extension LightProtocol {
         }
         var sectors: [ImageSector] = []
         
-        let pattern = #"(?<visible>(Visible)?)(?<fullLightObscured>(Partially obscured)?)((?<color>[A-Z]+)?)\.?(?<unintensified>(\(unintensified\))?)(?<obscured>(\(partially obscured\))?)( (?<startdeg>(\d*))°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))°)(?<endminutes>[0-9]*)[\`']?"#
+        let pattern = #"(?<visible>(Visible)?)(?<fullLightObscured>(bscured)?)((?<color>[A-Z]+)?)\.?(?<unintensified>(\(unintensified\))?)(?<obscured>(\(bscured\))?)( (?<startdeg>(\d*))°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))°)(?<endminutes>[0-9]*)[\`']?"#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
                               in: remarks)
@@ -326,7 +326,7 @@ extension LightMapViewModelProtocol {
                     actualSizeSectorLight(lightSectors: lightSectors, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context)
                 }
             }
-        } else if UserDefaults.standard.actualRangeLights, let stringRange = range, let range = Double(stringRange), let tileBounds3857 = tileBounds3857, let lightColors = lightColors {
+        } else if lightSectors == nil, UserDefaults.standard.actualRangeLights, let stringRange = range, let range = Double(stringRange), let tileBounds3857 = tileBounds3857, let lightColors = lightColors {
             if context == nil {
                 let size = CGSize(width: TILE_SIZE, height: TILE_SIZE)
                 UIGraphicsBeginImageContext(size)
@@ -345,6 +345,9 @@ extension LightMapViewModelProtocol {
         for sector in lightSectors.sorted(by: { one, two in
             return one.range ?? 0.0 < two.range ?? 0.0
         }) {
+            if sector.obscured {
+                continue
+            }
             let nauticalMilesMeasurement = NSMeasurement(doubleValue: sector.range ?? 0.0, unit: UnitLength.nauticalMiles)
             let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
             if sector.startDegrees >= sector.endDegrees {
