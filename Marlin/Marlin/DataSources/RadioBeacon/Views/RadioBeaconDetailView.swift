@@ -10,15 +10,8 @@ import MapKit
 import CoreData
 
 struct RadioBeaconDetailView: View {
-    var fetchRequest: NSFetchRequest<RadioBeacon>
-    var radioBeacon: RadioBeacon
-    
-    init(radioBeacon: RadioBeacon) {
-        self.radioBeacon = radioBeacon
-        let predicate = NSPredicate(format: "featureNumber == %i AND volumeNumber == %@", radioBeacon.featureNumber, radioBeacon.volumeNumber ?? "")
-        fetchRequest = RadioBeacon.fetchRequest()
-        fetchRequest.predicate = predicate
-    }
+    @State var predicate: NSPredicate?
+    @State var radioBeacon: RadioBeacon
     
     var body: some View {
         List {
@@ -32,8 +25,10 @@ struct RadioBeaconDetailView: View {
                         .foregroundColor(Color.white)
                         .background(Color(uiColor: radioBeacon.color))
                         .padding(.bottom, -8)
-                    DataSourceLocationMapView(dataSourceLocation: radioBeacon, mapName: "Radio Beacon Detail Map", mixins: [RadioBeaconMap(fetchPredicate: fetchRequest.predicate)])
-                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                    if let predicate = predicate {
+                        DataSourceLocationMapView(dataSourceLocation: radioBeacon, mapName: "Radio Beacon Detail Map", mixins: [RadioBeaconMap(fetchPredicate: predicate)])
+                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                    }
                     radioBeacon.summaryView(showSectionHeader: true)
                         .padding(.all, 16)
                 }
@@ -50,6 +45,7 @@ struct RadioBeaconDetailView: View {
         .navigationTitle("\(radioBeacon.name ?? RadioBeacon.dataSourceName)" )
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
+            predicate = NSPredicate(format: "featureNumber == %i AND volumeNumber == %@", radioBeacon.featureNumber, radioBeacon.volumeNumber ?? "")
             Metrics.shared.dataSourceDetail(dataSource: RadioBeacon.self)
         }
     }

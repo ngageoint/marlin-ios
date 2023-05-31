@@ -10,16 +10,9 @@ import MapKit
 import CoreData
 
 struct PortDetailView: View {
-    var fetchRequest: NSFetchRequest<Port>
-    
-    var port: Port
-    
-    init(port: Port) {
-        self.port = port
-        let predicate = NSPredicate(format: "portNumber == %ld", port.portNumber)
-        fetchRequest = Port.fetchRequest()
-        fetchRequest.predicate = predicate
-    }
+    @State var predicate: NSPredicate?
+
+    @State var port: Port
     
     var body: some View {
         List {
@@ -33,8 +26,10 @@ struct PortDetailView: View {
                         .foregroundColor(Color.white)
                         .background(Color(uiColor: port.color))
                         .padding(.bottom, -8)
-                    DataSourceLocationMapView(dataSourceLocation: port, mapName: "Port Detail Map", mixins: [PortMap(fetchPredicate: fetchRequest.predicate)])
-                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                    if let predicate = predicate {
+                        DataSourceLocationMapView(dataSourceLocation: port, mapName: "Port Detail Map", mixins: [PortMap(fetchPredicate: predicate)])
+                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                    }
                     port.summaryView(showTitle: false)
                         .padding(.all, 16)
                 }
@@ -75,6 +70,7 @@ struct PortDetailView: View {
         .navigationTitle(port.portName ?? Port.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
+            predicate = NSPredicate(format: "portNumber == %ld", port.portNumber)
             Metrics.shared.dataSourceDetail(dataSource: Port.self)
         }
     }

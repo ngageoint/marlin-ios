@@ -16,15 +16,8 @@ struct DFRSDetailView: View {
         animation: .default)
     private var areas: FetchedResults<DFRSArea>
     
-    var fetchRequest: NSFetchRequest<DFRS>
-    var dfrs: DFRS
-    
-    init(dfrs: DFRS) {
-        self.dfrs = dfrs
-        let predicate = NSPredicate(format: "stationNumber == %@", dfrs.stationNumber ?? "")
-        fetchRequest = DFRS.fetchRequest()
-        fetchRequest.predicate = predicate
-    }
+    @State var predicate: NSPredicate?
+    @State var dfrs: DFRS
     
     var body: some View {
         List {
@@ -38,8 +31,8 @@ struct DFRSDetailView: View {
                         .foregroundColor(Color.white)
                         .background(Color(uiColor: dfrs.color))
                         .padding(.bottom, -8)
-                    if CLLocationCoordinate2DIsValid(dfrs.coordinate) {
-                        DataSourceLocationMapView(dataSourceLocation: dfrs, mapName: "DFRS Detail Map", mixins: [DFRSMap(fetchPredicate: fetchRequest.predicate)])
+                    if let predicate = predicate, CLLocationCoordinate2DIsValid(dfrs.coordinate) {
+                        DataSourceLocationMapView(dataSourceLocation: dfrs, mapName: "DFRS Detail Map", mixins: [DFRSMap(fetchPredicate: predicate)])
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     dfrs.summaryView(showMoreDetails: false, showSectionHeader: true, showTitle: false)
@@ -81,6 +74,7 @@ struct DFRSDetailView: View {
         }
         .dataSourceDetailList()
         .onAppear {
+            predicate = NSPredicate(format: "stationNumber == %@", dfrs.stationNumber ?? "")
             Metrics.shared.dataSourceDetail(dataSource: DFRS.self)
         }
     }

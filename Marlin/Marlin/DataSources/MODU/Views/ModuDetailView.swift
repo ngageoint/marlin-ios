@@ -10,16 +10,9 @@ import MapKit
 import CoreData
 
 struct ModuDetailView: View {
-    var fetchRequest: NSFetchRequest<Modu>
+    @State var predicate: NSPredicate?
     
-    var modu: Modu
-    
-    init(modu: Modu) {
-        self.modu = modu
-        let predicate = NSPredicate(format: "name == %@", modu.name ?? "")
-        fetchRequest = Modu.fetchRequest()
-        fetchRequest.predicate = predicate
-    }
+    @State var modu: Modu
     
     var body: some View {
         List {
@@ -33,8 +26,10 @@ struct ModuDetailView: View {
                         .foregroundColor(Color.white)
                         .background(Color(uiColor: modu.color))
                         .padding(.bottom, -8)
-                    DataSourceLocationMapView(dataSourceLocation: modu, mapName: "Modu Detail Map", mixins: [ModuMap(fetchPredicate: fetchRequest.predicate)])
-                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                    if let predicate = predicate {
+                        DataSourceLocationMapView(dataSourceLocation: modu, mapName: "Modu Detail Map", mixins: [ModuMap(fetchPredicate: predicate)])
+                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                    }
                     Group {
                         Text(modu.dateString ?? "")
                             .overline()
@@ -67,6 +62,7 @@ struct ModuDetailView: View {
         .navigationTitle(modu.name ?? Modu.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
+            predicate = NSPredicate(format: "name == %@", modu.name ?? "")
             Metrics.shared.dataSourceDetail(dataSource: Modu.self)
         }
     }

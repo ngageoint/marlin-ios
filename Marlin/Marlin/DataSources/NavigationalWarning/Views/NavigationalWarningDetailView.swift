@@ -12,15 +12,9 @@ struct NavigationalWarningDetailView: View {
     @EnvironmentObject var navState: NavState
     var navigationalWarning: NavigationalWarning
     
-    var mappedLocation: MappedLocation?
-    var fetchPredicate: NSPredicate
-    
-    init(navigationalWarning: NavigationalWarning) {
-        self.navigationalWarning = navigationalWarning
-        self.mappedLocation = navigationalWarning.mappedLocation
-        self.fetchPredicate = NSPredicate(format: "self == %@", navigationalWarning.objectID)
-    }
-    
+    @State var mappedLocation: MappedLocation?
+    @State var fetchPredicate: NSPredicate?
+
     var body: some View {
         List {
             Section {
@@ -33,7 +27,7 @@ struct NavigationalWarningDetailView: View {
                         .foregroundColor(Color.white)
                         .background(Color(uiColor: NavigationalWarning.color))
                         .padding(.bottom, -8)
-                    if CLLocationCoordinate2DIsValid(navigationalWarning.coordinate) {
+                    if let fetchPredicate = fetchPredicate, CLLocationCoordinate2DIsValid(navigationalWarning.coordinate) {
                         DataSourceLocationMapView(dataSourceLocation: navigationalWarning, mapName: "Navigational Warning Detail Map", mixins: [NavigationalWarningFetchMap(fetchPredicate: fetchPredicate)])
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
@@ -70,6 +64,8 @@ struct NavigationalWarningDetailView: View {
         .navigationTitle("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
+            self.mappedLocation = navigationalWarning.mappedLocation
+            self.fetchPredicate = NSPredicate(format: "self == %@", navigationalWarning.objectID)
             Metrics.shared.dataSourceDetail(dataSource: NavigationalWarning.self)
         }
     }

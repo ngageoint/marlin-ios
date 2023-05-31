@@ -10,15 +10,9 @@ import MapKit
 import CoreData
 
 struct DifferentialGPSStationDetailView: View {
-    var fetchRequest: NSFetchRequest<DifferentialGPSStation>
-    var differentialGPSStation: DifferentialGPSStation
+    @State var predicate: NSPredicate?
     
-    init(differentialGPSStation: DifferentialGPSStation) {
-        self.differentialGPSStation = differentialGPSStation
-        let predicate = NSPredicate(format: "featureNumber == %i AND volumeNumber == %@", differentialGPSStation.featureNumber, differentialGPSStation.volumeNumber ?? "")
-        fetchRequest = DifferentialGPSStation.fetchRequest()
-        fetchRequest.predicate = predicate
-    }
+    @State var differentialGPSStation: DifferentialGPSStation
 
     var body: some View {
         List {
@@ -32,8 +26,10 @@ struct DifferentialGPSStationDetailView: View {
                         .foregroundColor(Color.white)
                         .background(Color(uiColor: differentialGPSStation.color))
                         .padding(.bottom, -8)
-                    DataSourceLocationMapView(dataSourceLocation: differentialGPSStation, mapName: "DifferentialGPSStation Detail Map", mixins: [DifferentialGPSStationMap(fetchPredicate: fetchRequest.predicate)])
-                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                    if let predicate = predicate {
+                        DataSourceLocationMapView(dataSourceLocation: differentialGPSStation, mapName: "DifferentialGPSStation Detail Map", mixins: [DifferentialGPSStationMap(fetchPredicate: predicate)])
+                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                    }
                     differentialGPSStation.summaryView(showSectionHeader: true, showTitle: false)
                         .padding(.all, 16)
                 }
@@ -50,6 +46,7 @@ struct DifferentialGPSStationDetailView: View {
         .navigationTitle("\(differentialGPSStation.name ?? DifferentialGPSStation.dataSourceName)" )
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
+            predicate = NSPredicate(format: "featureNumber == %i AND volumeNumber == %@", differentialGPSStation.featureNumber, differentialGPSStation.volumeNumber ?? "")
             Metrics.shared.dataSourceDetail(dataSource: DifferentialGPSStation.self)
         }
     }
