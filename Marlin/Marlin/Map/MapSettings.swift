@@ -15,6 +15,7 @@ struct MapSettings: View {
     @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
     @AppStorage("flyoverMapsEnabled") var flyoverMapsEnabled: Bool = false
     @AppStorage("showCurrentLocation") var showCurrentLocation: Bool = false
+    @AppStorage("showMapScale") var showMapScale = false
     
     var body: some View {
         List {
@@ -63,7 +64,7 @@ struct MapSettings: View {
                 .padding(.bottom, 4)
                 if flyoverMapsEnabled {
                     HStack(spacing: 4) {
-                        Text("Satellite Flyover").font(Font.body1)
+                        Text("Satellite 3D").font(Font.body1)
                             .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                         Spacer()
                         Image(systemName: mapType == MKMapType.satelliteFlyover.rawValue ? "circle.inset.filled": "circle")
@@ -77,7 +78,7 @@ struct MapSettings: View {
                     .padding(.top, 4)
                     .padding(.bottom, 4)
                     HStack(spacing: 4) {
-                        Text("Hybrid Flyover").font(Font.body1)
+                        Text("Hybrid 3D").font(Font.body1)
                             .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                         Spacer()
                         Image(systemName: mapType == MKMapType.hybridFlyover.rawValue ? "circle.inset.filled": "circle")
@@ -199,7 +200,7 @@ struct MapSettings: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Show Current Location").font(Font.body1)
                             .foregroundColor(Color.onSurfaceColor.opacity(0.87))
-                        Text("Shows your curent latitude, longitude on the map")
+                        Text("Display your current position on the map")
                             .font(Font.caption)
                             .foregroundColor(Color.onSurfaceColor.opacity(0.6))
                     }
@@ -207,6 +208,18 @@ struct MapSettings: View {
                     .padding(.bottom, 4)
                 }
                 .tint(Color.primaryColor)
+                Toggle(isOn: $showMapScale, label: {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Show Map Scale").font(Font.body1)
+                            .foregroundColor(Color.onSurfaceColor.opacity(0.87))
+                        Text("Show a scale bar indicating the current map scale")
+                            .font(Font.caption)
+                            .foregroundColor(Color.onSurfaceColor.opacity(0.6))
+                    }
+                    .padding(.top, 4)
+                    .padding(.bottom, 4)
+                })
+                .padding([.top, .bottom], 8)
             }
         }
         .navigationTitle("Map Settings")

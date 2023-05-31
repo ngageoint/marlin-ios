@@ -12,7 +12,6 @@ struct AboutView: View {
     let buildVersion = Bundle.main.buildVersionNumber ?? ""
     @State var tapCount: Int = 1
     
-    @AppStorage("showMapScale") var showMapScale = false
     @AppStorage("flyoverMapsEnabled") var flyoverMapsEnabled = false
     @AppStorage("showUnparsedNavigationalWarnings") var showUnparsedNavigationalWarnings = false
     @AppStorage("showNavigationalWarningsOnMainMap") var showNavigationalWarningsOnMainMap = false
@@ -69,28 +68,10 @@ struct AboutView: View {
             
             if tapCount > 5 {
                 Section("Developer Tools") {
-                    Toggle(isOn: $showMapScale, label: {
-                        HStack {
-                            Image(systemName: "ruler.fill")
-                            Text("Show Map Scale")
-                                .primary()
-                        }
-                    })
-                    .padding([.top, .bottom], 8)
-                    
                     Toggle(isOn: $flyoverMapsEnabled, label: {
                         HStack {
                             Image(systemName: "rotate.3d")
-                            Text("Enable Flyover Map Types")
-                                .primary()
-                        }
-                    })
-                    .padding([.top, .bottom], 8)
-                    
-                    Toggle(isOn: $showUnparsedNavigationalWarnings, label: {
-                        HStack {
-                            Image(systemName: "mappin.slash")
-                            Text("Show Navigation Warnings With No Parsed Location")
+                            Text("Enable 3D Map Types")
                                 .primary()
                         }
                     })
