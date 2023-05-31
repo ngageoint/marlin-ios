@@ -82,9 +82,13 @@ struct MarlinCompactWidth: View {
                 }
             }
             .onReceive(mapFocus) { output in
-                selectedTab = output.object as? String ?? "map"
-                selection = nil
-                self.marlinMainNavState.popToRoot = true
+                let tab = output.object as? String ?? "map"
+                // this should be fixed to be less specific
+                if tab != "\(NavigationalWarning.key)List" {
+                    selectedTab = tab
+                    selection = nil
+                    self.marlinMainNavState.popToRoot = true
+                }
             }
             .onReceive(switchTabPub) { output in
                 if let output = output as? String {
