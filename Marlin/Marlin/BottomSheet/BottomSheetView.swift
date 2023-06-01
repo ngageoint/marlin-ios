@@ -66,7 +66,6 @@ struct MarlinDataBottomSheet: View {
 }
 
 struct MarlinBottomSheet: View {
-    @StateObject var navState = NavState()
     @ObservedObject var itemList: BottomSheetItemList
     @State var selectedItem: Int = 0
 
@@ -155,7 +154,6 @@ struct MarlinBottomSheet: View {
                     if let dataSource = item.item as? DataSourceViewBuilder {
                         dataSource.summaryView(showMoreDetails: true, showSectionHeader: true, mapName: item.mapName, showTitle: true)
                             .transition(.opacity)
-                            .environmentObject(navState)
                     }
                 }
                 

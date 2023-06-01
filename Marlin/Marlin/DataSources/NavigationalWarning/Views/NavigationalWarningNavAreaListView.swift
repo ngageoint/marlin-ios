@@ -9,7 +9,6 @@ import SwiftUI
 import Combine
 
 struct NavigationalWarningNavAreaListView: View {
-    @EnvironmentObject var navState: NavState
     @AppStorage<String> var lastSeen: String
     @State var lastSavedDate: Date = Date(timeIntervalSince1970: 0)
     @State var scrollingTo: ObjectIdentifier?
@@ -37,11 +36,9 @@ struct NavigationalWarningNavAreaListView: View {
                     ForEach(dataSource.items) { navigationalWarning in
                         NavigationLink {
                             navigationalWarning.detailView
-                                .environmentObject(navState)
                         } label: {
                             HStack {
                                 navigationalWarning.summaryView(mapName: mapName)
-                                    .environmentObject(navState)
                                     .padding(.all, 16)
                             }
                             .card()
@@ -153,8 +150,6 @@ struct NavigationalWarningNavAreaListView: View {
         }
         .navigationTitle(NavigationalWarningNavArea.fromId(id: navArea)?.display ?? "Navigational Warnings")
         .navigationBarTitleDisplayMode(.inline)
-        
-        .environmentObject(navState)
     }
 }
 

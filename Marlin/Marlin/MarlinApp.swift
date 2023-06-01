@@ -36,12 +36,6 @@ struct TestApp: App {
     }
 }
 
-final class NavState : ObservableObject {
-    @Published var rootViewId = UUID()
-    @Published var navGroupName: String?
-    @Published var mapName: String?
-}
-
 class AppState: ObservableObject {
     @Published var loadingDataSource: [String : Bool] = [:]
     @Published var dataSourceBatchImportNotificationsPending: [String: [DataSourceUpdatedNotification]] = [:]

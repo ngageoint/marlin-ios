@@ -33,7 +33,6 @@ struct CurrentNavigationalWarningSection: View {
 }
 
 struct NavigationalWarningAreasView: View {
-    @EnvironmentObject var navState: NavState
     @ObservedObject var generalLocation = GeneralLocation.shared
     @State var navArea: String?
     var mapName: String?
@@ -74,7 +73,6 @@ struct NavigationalWarningAreasView: View {
             if showUnparsedNavigationalWarnings {
                 NavigationLink {
                     NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(noParsedLocationNavigationalWarnings), navArea: "Unknown", mapName: mapName)
-                        .environmentObject(navState)
                 } label: {
                     HStack {
                         VStack(alignment: .leading) {

@@ -9,7 +9,6 @@ import SwiftUI
 import MapKit
 
 struct NavigationalWarningsOverview: View {
-    @StateObject var navState = NavState()
     @ObservedObject var generalLocation: GeneralLocation = GeneralLocation.shared
     
     let MAP_NAME = "Navigational Warning List View Map"
@@ -27,7 +26,6 @@ struct NavigationalWarningsOverview: View {
             NavigationLink(tag: "detail", selection: $selection) {
                 if let data = itemWrapper.dataSource as? DataSourceViewBuilder {
                     data.detailView
-                        .environmentObject(navState)
                 }
             } label: {
                 EmptyView()
@@ -43,7 +41,6 @@ struct NavigationalWarningsOverview: View {
                 .edgesIgnoringSafeArea([.leading, .trailing])
                 NavigationalWarningAreasView(mapName: MAP_NAME)
                     .currentNavArea(generalLocation.currentNavArea?.name)
-                    .environmentObject(navState)
             }
         }
         .navigationTitle(NavigationalWarning.fullDataSourceName)
@@ -52,8 +49,6 @@ struct NavigationalWarningsOverview: View {
         .onAppear {
             Metrics.shared.appRoute([NavigationalWarning.metricsKey, "group"])
             Metrics.shared.dataSourceList(dataSource: NavigationalWarning.self)
-            navState.navGroupName = "\(NavigationalWarning.key)List"
-            navState.mapName = MAP_NAME
         }
         .onReceive(viewDataSourcePub) { output in
             if let dataSource = output.dataSource as? NavigationalWarning, output.mapName == MAP_NAME {
@@ -63,7 +58,6 @@ struct NavigationalWarningsOverview: View {
                 selection = "detail"
             }
         }
-        .id(navState.rootViewId)
     }
     
 }

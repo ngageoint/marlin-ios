@@ -8,14 +8,12 @@
 import SwiftUI
 
 struct NavigationalWarningSectionRow: View {
-    @EnvironmentObject var navState: NavState
     var section: SectionedFetchResults<String, NavigationalWarning>.Element
     var mapName: String?
     
     var body: some View {
         NavigationLink {
             NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(section), navArea: section.id, mapName: mapName)
-                .environmentObject(navState)
         } label: {
             
             HStack {
