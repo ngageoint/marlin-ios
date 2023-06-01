@@ -83,8 +83,25 @@ public class MSI {
                 let dataSource = self.masterDataList.first { type in
                     item.key == type.key
                 }
-                
+                if let mapImageDataSource = dataSource as? (any MapImage) {
+                    type(of: mapImageDataSource).imageCache.clearCache()
+                }
                 dataSource?.postProcess()
+            }
+            .store(in: &cancellable)
+        
+        NotificationCenter.default.publisher(for: .DataSourceProcessed)
+            .receive(on: RunLoop.main)
+            .compactMap {
+                $0.object as? DataSourceUpdatedNotification
+            }
+            .sink { item in
+                let dataSource = self.masterDataList.first { type in
+                    item.key == type.key
+                }
+                if let mapImageDataSource = dataSource as? (any MapImage) {
+                    type(of: mapImageDataSource).imageCache.clearCache()
+                }
             }
             .store(in: &cancellable)
     }
