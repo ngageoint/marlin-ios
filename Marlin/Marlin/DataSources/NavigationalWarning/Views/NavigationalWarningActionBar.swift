@@ -8,9 +8,7 @@
 import SwiftUI
 import MapKit
 
-struct NavigationalWarningActionBar: View {
-    @EnvironmentObject var navState: NavState
-    
+struct NavigationalWarningActionBar: View {    
     var navigationalWarning: NavigationalWarning
     var showMoreDetails: Bool
     var mapName: String?

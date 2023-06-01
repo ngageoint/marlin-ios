@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MapNavigationView: View {
     @EnvironmentObject var dataSourceList: DataSourceList
-
+    @StateObject var navState: NavState = NavState()
     @Binding var filterOpen: Bool
     @Binding var selection: String?
     @Binding var menuOpen: Bool
@@ -45,6 +45,7 @@ struct MapNavigationView: View {
                 NavigationLink(tag: "detail", selection: $selection) {
                     if let data = itemWrapper.dataSource as? DataSourceViewBuilder {
                         data.detailView
+                            .environmentObject(navState)
                     }
                 } label: {
                     EmptyView()
