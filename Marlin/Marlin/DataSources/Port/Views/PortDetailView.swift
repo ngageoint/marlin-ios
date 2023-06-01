@@ -12,7 +12,7 @@ import CoreData
 struct PortDetailView: View {
     @State var predicate: NSPredicate?
 
-    @State var port: Port
+    @ObservedObject var port: Port
     
     var body: some View {
         List {
@@ -69,6 +69,9 @@ struct PortDetailView: View {
         .dataSourceDetailList()
         .navigationTitle(port.portName ?? Port.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: port, perform: { newValue in
+            predicate = NSPredicate(format: "portNumber == %ld", port.portNumber)
+        })
         .onAppear {
             predicate = NSPredicate(format: "portNumber == %ld", port.portNumber)
             Metrics.shared.dataSourceDetail(dataSource: Port.self)

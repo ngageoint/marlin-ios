@@ -18,6 +18,9 @@ final class AsamDetailViewTests: XCTestCase {
         .receive(on: RunLoop.main)
     
     override func setUp(completion: @escaping (Error?) -> Void) {
+        Task.init {
+            await TestHelpers.asyncGetKeyWindowVisible()
+        }
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
             UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)

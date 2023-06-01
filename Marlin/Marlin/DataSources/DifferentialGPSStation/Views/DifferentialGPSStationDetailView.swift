@@ -12,7 +12,7 @@ import CoreData
 struct DifferentialGPSStationDetailView: View {
     @State var predicate: NSPredicate?
     
-    @State var differentialGPSStation: DifferentialGPSStation
+    @ObservedObject var differentialGPSStation: DifferentialGPSStation
 
     var body: some View {
         List {
@@ -45,6 +45,9 @@ struct DifferentialGPSStationDetailView: View {
         .dataSourceDetailList()
         .navigationTitle("\(differentialGPSStation.name ?? DifferentialGPSStation.dataSourceName)" )
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: differentialGPSStation, perform: { newValue in
+            predicate = NSPredicate(format: "featureNumber == %i AND volumeNumber == %@", differentialGPSStation.featureNumber, differentialGPSStation.volumeNumber ?? "")
+        })
         .onAppear {
             predicate = NSPredicate(format: "featureNumber == %i AND volumeNumber == %@", differentialGPSStation.featureNumber, differentialGPSStation.volumeNumber ?? "")
             Metrics.shared.dataSourceDetail(dataSource: DifferentialGPSStation.self)

@@ -14,7 +14,9 @@ import CoreLocation
 
 final class OnboardingViewTests: XCTestCase {
     
-    override func setUp() {
+    override func setUp() async throws {
+        await TestHelpers.asyncGetKeyWindowVisible()
+
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
         UserDefaults.registerMarlinDefaults()
     }

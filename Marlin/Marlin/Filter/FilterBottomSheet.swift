@@ -81,7 +81,7 @@ struct FilterBottomSheet: View {
                 ScrollView {
                     VStack(spacing: 8) {
                         ForEach($dataSources.filter({ item in
-                            item.showOnMap.wrappedValue
+                            item.showOnMap.wrappedValue && item.dataSource.wrappedValue.properties.count != 0
                         }).sorted(by: { item1, item2 in
                             item1.order.wrappedValue < item2.order.wrappedValue
                         })) { $dataSourceItem in

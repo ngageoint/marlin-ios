@@ -10,7 +10,7 @@ import MapKit
 
 struct NavigationalWarningDetailView: View {
     @EnvironmentObject var navState: NavState
-    var navigationalWarning: NavigationalWarning
+    @ObservedObject var navigationalWarning: NavigationalWarning
     
     @State var mappedLocation: MappedLocation?
     @State var fetchPredicate: NSPredicate?
@@ -63,6 +63,10 @@ struct NavigationalWarningDetailView: View {
         .dataSourceDetailList()
         .navigationTitle("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: navigationalWarning, perform: { newValue in
+            self.mappedLocation = navigationalWarning.mappedLocation
+            self.fetchPredicate = NSPredicate(format: "self == %@", navigationalWarning.objectID)
+        })
         .onAppear {
             self.mappedLocation = navigationalWarning.mappedLocation
             self.fetchPredicate = NSPredicate(format: "self == %@", navigationalWarning.objectID)

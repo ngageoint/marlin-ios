@@ -63,7 +63,7 @@ final class LightSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "14840  PUB 110")
         tester().waitForView(withAccessibilityLabel: "-Outer.")
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Section")
-        tester().waitForView(withAccessibilityLabel: "Yellow pedestal, red band; 7.\n")
+        tester().waitForView(withAccessibilityLabel: "Yellow pedestal, red band; 7.")
         
         expectation(forNotification: .SnackbarNotification,
                     object: nil) { notification in
@@ -123,7 +123,7 @@ final class LightSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "14840  PUB 110")
         tester().waitForView(withAccessibilityLabel: "-Outer.")
         tester().waitForView(withAccessibilityLabel: "Section")
-        tester().waitForView(withAccessibilityLabel: "Yellow pedestal, red band; 7.\n")
+        tester().waitForView(withAccessibilityLabel: "Yellow pedestal, red band; 7.")
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in

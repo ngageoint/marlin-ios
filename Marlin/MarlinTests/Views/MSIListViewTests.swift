@@ -879,6 +879,7 @@ final class MSIListViewTests: XCTestCase {
                     MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
                 }
                 .onChange(of: passThrough.date) { newValue in
+                    print("change date to \(newValue)")
                     itemWrapper.dataSource = passThrough.item
                     itemWrapper.date = Date()
                 }
@@ -911,6 +912,7 @@ final class MSIListViewTests: XCTestCase {
         passThrough.item = secondAsam
         passThrough.date = Date()
 
+        XCTAssertEqual(secondAsam?.itemTitle, "Boarding2: Boat2")
         tester().waitForView(withAccessibilityLabel: "Boarding2: Boat2")
         tester().waitForView(withAccessibilityLabel: secondAsam?.asamDescription)
         tester().waitForView(withAccessibilityLabel: secondAsam?.hostility)

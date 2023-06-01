@@ -199,6 +199,8 @@ extension LightProtocol {
                               in: remarks)
         var previousEnd: Double = 0.0
         
+        var visibleSector: Bool = false
+        
         regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, flags, stop in
             guard let match = match else {
                 return
@@ -218,6 +220,7 @@ extension LightProtocol {
                    !range.isEmpty
                 {
                     if component == "visible" {
+                        visibleSector = true
                         visibleColor = lightColors?[0]
                     } else if component == "fullLightObscured" {
                         visibleColor = lightColors?[0]
@@ -289,7 +292,7 @@ extension LightProtocol {
                 }
                 sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: uicolor, text: color, obscured: obscured || fullLightObscured, range: sectorRange))
             }
-            if fullLightObscured {
+            if fullLightObscured && !visibleSector {
                 // add the sector for the part of the light which is not obscured
                 sectors.append(ImageSector(startDegrees: end, endDegrees: (start ?? 0) + 360, color: visibleColor ?? (lightColors?[0] ?? UIColor.clear), range: sectorRange))
             }

@@ -114,6 +114,7 @@
 		F72D8914297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D8913297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift */; };
 		F72D8919297F0D7D00D022FB /* dfrsMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72D8918297F0D7D00D022FB /* dfrsMockData.json */; };
 		F72D891B297F449C00D022FB /* DFRSDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D891A297F449C00D022FB /* DFRSDataTests.swift */; };
+		F72E0F6C2A28D5160099BFFD /* LightSectorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72E0F6B2A28D5160099BFFD /* LightSectorsTests.swift */; };
 		F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */; };
 		F72EAAB9291BF28C00AC6026 /* moduMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAAB8291BF28C00AC6026 /* moduMockData.json */; };
 		F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAABB291C138000AC6026 /* PortDataTests.swift */; };
@@ -531,6 +532,7 @@
 		F72D8913297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationDetailViewTests.swift; sourceTree = "<group>"; };
 		F72D8918297F0D7D00D022FB /* dfrsMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = dfrsMockData.json; sourceTree = "<group>"; };
 		F72D891A297F449C00D022FB /* DFRSDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DFRSDataTests.swift; sourceTree = "<group>"; };
+		F72E0F6B2A28D5160099BFFD /* LightSectorsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightSectorsTests.swift; sourceTree = "<group>"; };
 		F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDataTests.swift; sourceTree = "<group>"; };
 		F72EAAB8291BF28C00AC6026 /* moduMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = moduMockData.json; sourceTree = "<group>"; };
 		F72EAABB291C138000AC6026 /* PortDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDataTests.swift; sourceTree = "<group>"; };
@@ -1160,6 +1162,7 @@
 				F72EAACF291C669D00AC6026 /* LightDataTests.swift */,
 				F72D88FB29785CE100D022FB /* LightSummaryViewTests.swift */,
 				F72D88FD29787AEE00D022FB /* LightDetailViewTests.swift */,
+				F72E0F6B2A28D5160099BFFD /* LightSectorsTests.swift */,
 			);
 			path = Light;
 			sourceTree = "<group>";
@@ -2206,6 +2209,7 @@
 				F7ABB608299D532800BAD868 /* NavigationalWarningAreaUnreadBadgeTests.swift in Sources */,
 				F73D9E1F29709A69008AF40D /* DifferentialGPSStationSummaryViewTests.swift in Sources */,
 				F75F81D529526E9C0062A708 /* AsamSummaryViewTests.swift in Sources */,
+				F72E0F6C2A28D5160099BFFD /* LightSectorsTests.swift in Sources */,
 				F73D9E212970AA66008AF40D /* DifferentialGPSStationDetailViewTests.swift in Sources */,
 				F73ABC8C295250C70085EDC5 /* DataSourceFilterParameterTests.swift in Sources */,
 				F7ABB612299ECE6500BAD868 /* LatitudeLongitudeFilterTests.swift in Sources */,

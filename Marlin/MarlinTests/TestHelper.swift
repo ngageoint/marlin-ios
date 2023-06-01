@@ -33,13 +33,23 @@ class TestHelpers {
             let window = UIWindow(frame: UIScreen.main.bounds)
             window.backgroundColor = .systemBackground
             window.makeKeyAndVisible()
-            print("This is the window \(window)")
             return window
         }
         
         window.backgroundColor = .systemBackground
         window.makeKeyAndVisible()
-        print("This is the window \(window)")
+        return window
+    }
+    
+    @discardableResult
+    public static func asyncGetKeyWindowVisible() async -> UIWindow {
+        guard let window = await UIApplication.shared.connectedScenes.map({ $0 as? UIWindowScene }).compactMap({ $0 }).first?.windows.first else {
+            let window = await UIWindow(frame: UIScreen.main.bounds)
+            await window.makeKeyAndVisible()
+            return window
+        }
+        
+        await window.makeKeyAndVisible()
         return window
     }
     

@@ -48,7 +48,7 @@ class DataSourceList: ObservableObject {
         })))
         _mappedDataSources = Published(initialValue: Array(allTabs.filter({ item in
             // no filtering Navigational Warnings for right now..
-            UserDefaults.standard.dataSourceEnabled(item.dataSource) && UserDefaults.standard.showOnMap(key: item.key) && item.key != NavigationalWarning.key
+            UserDefaults.standard.dataSourceEnabled(item.dataSource) && UserDefaults.standard.showOnMap(key: item.key)
         })))
         
         NotificationCenter.default.publisher(for: .MappedDataSourcesUpdated)

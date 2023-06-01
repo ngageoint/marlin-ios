@@ -12,7 +12,7 @@ import CoreData
 struct AsamDetailView: View {
     @State var predicate: NSPredicate?
 
-    @State var asam: Asam
+    @ObservedObject var asam: Asam
     
     var body: some View {
         Self._printChanges()
@@ -27,6 +27,7 @@ struct AsamDetailView: View {
                         .foregroundColor(Color.white)
                         .background(Color(uiColor: asam.color))
                         .padding(.bottom, -8)
+                        .accessibilityElement(children: .contain)
                     if let predicate = predicate {
                         DataSourceLocationMapView(dataSourceLocation: asam, mapName: "Asam Detail Map", mixins: [AsamMap(fetchPredicate: predicate)])
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
@@ -69,6 +70,9 @@ struct AsamDetailView: View {
         .dataSourceDetailList()
         .navigationTitle(asam.reference ?? Asam.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: asam, perform: { newValue in
+            predicate = NSPredicate(format: "reference == %@", asam.reference ?? "")
+        })
         .onAppear {
             predicate = NSPredicate(format: "reference == %@", asam.reference ?? "")
             Metrics.shared.dataSourceDetail(dataSource: Asam.self)

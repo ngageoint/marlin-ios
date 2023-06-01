@@ -12,7 +12,7 @@ import CoreData
 struct ModuDetailView: View {
     @State var predicate: NSPredicate?
     
-    @State var modu: Modu
+    @ObservedObject var modu: Modu
     
     var body: some View {
         List {
@@ -61,6 +61,9 @@ struct ModuDetailView: View {
         .dataSourceDetailList()
         .navigationTitle(modu.name ?? Modu.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: modu, perform: { newValue in
+            predicate = NSPredicate(format: "name == %@", modu.name ?? "")
+        })
         .onAppear {
             predicate = NSPredicate(format: "name == %@", modu.name ?? "")
             Metrics.shared.dataSourceDetail(dataSource: Modu.self)

@@ -92,6 +92,7 @@ struct OnboardingView: View {
     @AppStorage("showOnMap\(Port.key)") var portIsMapped: Bool = false
     @AppStorage("showOnMap\(RadioBeacon.key)") var radioBeaconIsMapped: Bool = false
     @AppStorage("showOnMap\(DifferentialGPSStation.key)") var dgpsIsMapped: Bool = false
+    @AppStorage("showOnMap\(NavigationalWarning.key)") var navWarningIsMapped: Bool = false
     
     @EnvironmentObject var dataSourceList: DataSourceList
     var userNotificationCenter: UserNotificationCenter
@@ -853,6 +854,33 @@ struct OnboardingView: View {
             .overlay(CheckBadge(on: $dgpsIsMapped)
                 .accessibilityElement()
                 .accessibilityLabel("\(DifferentialGPSStation.fullDataSourceName) Map \(dgpsIsMapped ? "On" : "Off")"))
+            .padding(8)
+            
+            VStack(alignment: .center) {
+                if let image = NavigationalWarning.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .frame(width: gridSize / 2, height: gridSize / 2)
+                        .tint(Color.white)
+                        .clipShape(Circle())
+                        .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
+                            .background(Circle().fill(Color(uiColor: NavigationalWarning.color))))
+                }
+                Text(NavigationalWarning.dataSourceName)
+                    .foregroundColor(Color.onPrimaryColor)
+            }
+            .frame(width: gridSize, height: gridSize)
+            .background(Color.secondaryColor)
+            .cornerRadius(2)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+            .onTapGesture {
+                navWarningIsMapped = !navWarningIsMapped
+            }
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(NavigationalWarning.fullDataSourceName) Map")
+            .overlay(CheckBadge(on: $navWarningIsMapped)
+                .accessibilityElement()
+                .accessibilityLabel("\(NavigationalWarning.fullDataSourceName) Map \(navWarningIsMapped ? "On" : "Off")"))
             .padding(8)
         }
         .frame(maxWidth: 500, alignment: .center)

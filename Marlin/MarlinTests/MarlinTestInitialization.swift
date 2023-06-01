@@ -10,6 +10,7 @@ import Foundation
 @testable import Marlin
 
 class MarlinTestInitialization: NSObject {
+    static var window: UIWindow?
     public override init() {
         print("xxx initialize the tests")
         let mockCLLocation = MockCLLocationManager()

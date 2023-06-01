@@ -11,7 +11,7 @@ import CoreData
 
 struct RadioBeaconDetailView: View {
     @State var predicate: NSPredicate?
-    @State var radioBeacon: RadioBeacon
+    @ObservedObject var radioBeacon: RadioBeacon
     
     var body: some View {
         List {

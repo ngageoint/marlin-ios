@@ -17,7 +17,7 @@ struct DFRSDetailView: View {
     private var areas: FetchedResults<DFRSArea>
     
     @State var predicate: NSPredicate?
-    @State var dfrs: DFRS
+    @ObservedObject var dfrs: DFRS
     
     var body: some View {
         List {
@@ -73,6 +73,9 @@ struct DFRSDetailView: View {
                 .dataSourceSection()
         }
         .dataSourceDetailList()
+        .onChange(of: dfrs, perform: { newValue in
+            predicate = NSPredicate(format: "stationNumber == %@", dfrs.stationNumber ?? "")
+        })
         .onAppear {
             predicate = NSPredicate(format: "stationNumber == %@", dfrs.stationNumber ?? "")
             Metrics.shared.dataSourceDetail(dataSource: DFRS.self)

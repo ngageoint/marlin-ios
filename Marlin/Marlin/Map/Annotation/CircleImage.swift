@@ -8,13 +8,17 @@
 import Foundation
 import UIKit
 
-struct ImageSector {
+struct ImageSector: CustomStringConvertible {
     var startDegrees: Double
     var endDegrees: Double
     var color: UIColor
     var text: String?
     var obscured: Bool = false
     var range: Double?
+    
+    var description: String {
+        return "Sector starting at \(startDegrees - 90.0), going to \(endDegrees - 90.0) has color \(color) is \(obscured ? "obscured" : "visible") with range of \(range ?? -1)\n"
+    }
 }
 
 class CircleImage: UIImage {

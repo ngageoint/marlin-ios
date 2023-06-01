@@ -12,7 +12,8 @@ import SwiftUI
 
 final class AboutViewTests: XCTestCase {
 
-    override func setUp() {
+    override func setUp() async throws {
+        await TestHelpers.asyncGetKeyWindowVisible()
         UserDefaults.standard.setValue(false, forKey: "showMapScale")
         UserDefaults.standard.setValue(false, forKey: "flyoverMapsEnabled")
         UserDefaults.standard.setValue(false, forKey: "searchEnabled")
