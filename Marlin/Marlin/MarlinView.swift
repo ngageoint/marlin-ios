@@ -89,26 +89,6 @@ struct MarlinView: View {
             MappedDataSourcesFilter(showBottomSheet: $filterOpen)
                 .environmentObject(dataSourceList)
         }
-//        .bottomSheet(isPresented: $filterOpen, detents: .large, delegate: self) {
-//            MappedDataSourcesFilter()
-//                .environmentObject(dataSourceList)
-//                .toolbar {
-//                    ToolbarItem(placement: .navigationBarTrailing) {
-//                        Button(action: {
-//                            filterOpen.toggle()
-//                        }) {
-//                            Image(systemName: "xmark.circle.fill")
-//                                .imageScale(.large)
-//                                .foregroundColor(Color.onPrimaryColor.opacity(0.87))
-//                        }
-//                        .accessibilityElement(children: .contain)
-//                        .accessibilityLabel("Close Filter")
-//                    }
-//                }
-//                .onAppear {
-//                    Metrics.shared.appRoute(["mapFilter"])
-//                }
-//        }
         .snackbar(isPresented: $showSnackbar) {
             Group {
                 if let snackbarModel = snackbarModel {

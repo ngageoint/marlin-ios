@@ -94,7 +94,6 @@
 		F727A684284E351800BD728A /* MSIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A683284E351800BD728A /* MSIError.swift */; };
 		F727A691284E605800BD728A /* MarlinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A690284E605800BD728A /* MarlinTests.swift */; };
 		F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A687284E485500BD728A /* KIF+extensions.swift */; };
-		F727A698284E607100BD728A /* MSITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A685284E476200BD728A /* MSITests.swift */; };
 		F72D88F42971B84D00D022FB /* FilterBottomSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88F32971B84D00D022FB /* FilterBottomSheetTests.swift */; };
 		F72D88F62971E9D900D022FB /* FilterBottomSheetRowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88F52971E9D900D022FB /* FilterBottomSheetRowTests.swift */; };
 		F72D88F82971FF8000D022FB /* HamburgerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D88F72971FF8000D022FB /* HamburgerTests.swift */; };
@@ -115,6 +114,7 @@
 		F72D8919297F0D7D00D022FB /* dfrsMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72D8918297F0D7D00D022FB /* dfrsMockData.json */; };
 		F72D891B297F449C00D022FB /* DFRSDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72D891A297F449C00D022FB /* DFRSDataTests.swift */; };
 		F72E0F6C2A28D5160099BFFD /* LightSectorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72E0F6B2A28D5160099BFFD /* LightSectorsTests.swift */; };
+		F72E0F6E2A2926600099BFFD /* MarlinFullFlowTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72E0F6D2A2926600099BFFD /* MarlinFullFlowTest.swift */; };
 		F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */; };
 		F72EAAB9291BF28C00AC6026 /* moduMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F72EAAB8291BF28C00AC6026 /* moduMockData.json */; };
 		F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAABB291C138000AC6026 /* PortDataTests.swift */; };
@@ -508,7 +508,6 @@
 		F7275FDE28FA252800ED8D9A /* LightProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightProtocol.swift; sourceTree = "<group>"; };
 		F727A682284E29AE00BD728A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F727A683284E351800BD728A /* MSIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIError.swift; sourceTree = "<group>"; };
-		F727A685284E476200BD728A /* MSITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSITests.swift; sourceTree = "<group>"; };
 		F727A687284E485500BD728A /* KIF+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KIF+extensions.swift"; sourceTree = "<group>"; };
 		F727A689284E5F9600BD728A /* Marlin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Marlin-Bridging-Header.h"; sourceTree = "<group>"; };
 		F727A68E284E605800BD728A /* MarlinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MarlinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -533,6 +532,7 @@
 		F72D8918297F0D7D00D022FB /* dfrsMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = dfrsMockData.json; sourceTree = "<group>"; };
 		F72D891A297F449C00D022FB /* DFRSDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DFRSDataTests.swift; sourceTree = "<group>"; };
 		F72E0F6B2A28D5160099BFFD /* LightSectorsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightSectorsTests.swift; sourceTree = "<group>"; };
+		F72E0F6D2A2926600099BFFD /* MarlinFullFlowTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinFullFlowTest.swift; sourceTree = "<group>"; };
 		F72EAAB6291BF21400AC6026 /* ModuDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuDataTests.swift; sourceTree = "<group>"; };
 		F72EAAB8291BF28C00AC6026 /* moduMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = moduMockData.json; sourceTree = "<group>"; };
 		F72EAABB291C138000AC6026 /* PortDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDataTests.swift; sourceTree = "<group>"; };
@@ -1082,11 +1082,11 @@
 				F7C23E152911C7920002A7DF /* DataSources */,
 				F71DF47C284E68C200686951 /* responses */,
 				F727A689284E5F9600BD728A /* Marlin-Bridging-Header.h */,
-				F727A685284E476200BD728A /* MSITests.swift */,
 				F727A687284E485500BD728A /* KIF+extensions.swift */,
 				F727A690284E605800BD728A /* MarlinTests.swift */,
 				F71DF481284E783600686951 /* TestHelper.swift */,
 				F7364E412A26A1740098F243 /* MarlinTestInitialization.swift */,
+				F72E0F6D2A2926600099BFFD /* MarlinFullFlowTest.swift */,
 			);
 			path = MarlinTests;
 			sourceTree = "<group>";
@@ -2205,7 +2205,6 @@
 				F72281DA296F27D000218FC0 /* CurrentLocationTests.swift in Sources */,
 				F7C23E182911C7D50002A7DF /* ASAMDataTests.swift in Sources */,
 				F75F81DF295F68BB0062A708 /* BadgeTests.swift in Sources */,
-				F727A698284E607100BD728A /* MSITests.swift in Sources */,
 				F7ABB608299D532800BAD868 /* NavigationalWarningAreaUnreadBadgeTests.swift in Sources */,
 				F73D9E1F29709A69008AF40D /* DifferentialGPSStationSummaryViewTests.swift in Sources */,
 				F75F81D529526E9C0062A708 /* AsamSummaryViewTests.swift in Sources */,
@@ -2249,6 +2248,7 @@
 				F7ABB606299D1EE900BAD868 /* NavigationalWarningsOverviewTests.swift in Sources */,
 				F72D88F42971B84D00D022FB /* FilterBottomSheetTests.swift in Sources */,
 				F75324BB2980906E005C509F /* CLLocationCoordinate2DExtensionsTests.swift in Sources */,
+				F72E0F6E2A2926600099BFFD /* MarlinFullFlowTest.swift in Sources */,
 				F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */,
 				F7D8FA792941005E00E7D0A1 /* ChartCorrectionListViewModelTests.swift in Sources */,
 				F749E43529AE90E200B2FF8B /* NewMapLayerViewModelTests.swift in Sources */,

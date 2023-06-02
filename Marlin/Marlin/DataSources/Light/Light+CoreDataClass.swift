@@ -10,7 +10,6 @@ import CoreData
 import MapKit
 import OSLog
 import SwiftUI
-import Kingfisher
 
 struct LightVolume {
     var volumeQuery: String

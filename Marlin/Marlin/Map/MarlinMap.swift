@@ -329,8 +329,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
                 let span = mapView?.region.span ?? MKCoordinateSpan(zoomLevel: 17, pixelWidth: Double(mapView?.frame.size.width ?? UIScreen.main.bounds.width))
                 let adjustedCenter = CLLocationCoordinate2D(latitude: ds.coordinate.latitude - (span.latitudeDelta / 4.0), longitude: ds.coordinate.longitude)
                 if CLLocationCoordinate2DIsValid(adjustedCenter) {
-                    mapView?.setCenter(adjustedCenter, animated: true)
-                    currentRegion = MKCoordinateRegion(center: adjustedCenter, span: span)
+                    setMapRegion(region: MKCoordinateRegion(center: adjustedCenter, span: span))
                 }
             }
         }

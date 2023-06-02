@@ -21,7 +21,6 @@ struct NavigationalWarningPropertyContainer: Decodable {
     }
 }
 
-/// A struct encapsulating the properties of a Quake.
 struct NavigationalWarningProperties: Decodable {
     
     static let apiToDateFormatter: DateFormatter = {
