@@ -24,7 +24,7 @@ struct AsamSummaryView: View {
             Text(asam.asamDescription ?? "")
                 .lineLimit(8)
                 .secondary()
-            AsamActionBar(asam: asam, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+            DataSourceActionBar(data: asam, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }
 }

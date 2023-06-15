@@ -33,7 +33,7 @@ struct ModuDetailView: View {
                     Group {
                         Text(modu.dateString ?? "")
                             .overline()
-                        ModuActionBar(modu: modu)
+                        DataSourceActionBar(data: modu)
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
                 }

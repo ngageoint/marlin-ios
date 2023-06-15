@@ -50,7 +50,7 @@ struct PortSummaryView: View {
                         .secondary()
                 }
             }
-            PortActionBar(port: port, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+            DataSourceActionBar(data: port, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
         .onAppear {
             if let currentLocation = locationManager.lastLocation {

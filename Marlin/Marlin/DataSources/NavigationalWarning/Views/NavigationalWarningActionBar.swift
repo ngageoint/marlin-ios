@@ -24,34 +24,9 @@ struct NavigationalWarningActionBar: View {
                 }
             }
             Spacer()
-            Button(action: {
-                let activityVC = UIActivityViewController(activityItems: [navigationalWarning.description], applicationActivities: nil)
-                UIApplication.shared.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
-            }) {
-                Label(
-                    title: {},
-                    icon: { Image(systemName: "square.and.arrow.up")
-                            .renderingMode(.template)
-                            .foregroundColor(Color.primaryColorVariant)
-                    })
-            }
-            .accessibilityElement()
-            .accessibilityLabel("share")
+            ShareButton(shareText: navigationalWarning.description)
             if !showMoreDetails {
-                Button(action: {
-                    NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
-                    let notification = MapItemsTappedNotification(items: [self.navigationalWarning], mapName: mapName, zoom: true)
-                    NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
-                }) {
-                    Label(
-                        title: {},
-                        icon: { Image(systemName: "scope")
-                                .renderingMode(.template)
-                                .foregroundColor(Color.primaryColorVariant)
-                        })
-                }
-                .accessibilityElement()
-                .accessibilityLabel("focus")
+                FocusButton(data: navigationalWarning)
             }
         }
         .buttonStyle(MaterialButtonStyle())

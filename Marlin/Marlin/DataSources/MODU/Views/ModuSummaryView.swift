@@ -33,7 +33,7 @@ struct ModuSummaryView: View {
             Text("Special Status: \(modu.specialStatus ?? "")")
                 .lineLimit(1)
                 .secondary()
-            ModuActionBar(modu: modu, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+            DataSourceActionBar(data: modu, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }
 }

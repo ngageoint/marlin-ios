@@ -36,7 +36,7 @@ struct GeoPackageFeatureItemDetailView: View {
                         }
                         Text(featureItem.layerName ?? "")
                             .overline()
-                        GeoPackageFeatureItemActionBar(featureItem: featureItem, showMoreDetailsButton: false, showFocusButton: true)
+                        DataSourceActionBar(data: featureItem, showMoreDetailsButton: false, showFocusButton: true)
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
                 }

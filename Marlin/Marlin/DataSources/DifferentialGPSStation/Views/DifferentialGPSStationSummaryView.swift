@@ -45,7 +45,7 @@ struct DifferentialGPSStationSummaryView: View {
                 Text(remarks)
                     .secondary()
             }
-            DifferentialGPSStationActionBar(differentialGPSStation: differentialGPSStation, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+            DataSourceActionBar(data: differentialGPSStation, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }
 }

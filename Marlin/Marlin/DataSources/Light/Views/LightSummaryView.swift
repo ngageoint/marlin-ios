@@ -29,7 +29,7 @@ struct LightSummaryView: View {
                 Text(structure)
                     .secondary()
             }
-            LightActionBar(light: light, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+            DataSourceActionBar(data: light, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }
 }

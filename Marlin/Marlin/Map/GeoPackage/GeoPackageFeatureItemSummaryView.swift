@@ -25,7 +25,7 @@ struct GeoPackageFeatureItemSummaryView: View {
             }
             Text(featureItem.layerName ?? "")
                 .overline()
-            GeoPackageFeatureItemActionBar(featureItem: featureItem, showMoreDetailsButton: true, showFocusButton: false)
+            DataSourceActionBar(data: featureItem, showMoreDetailsButton: true, showFocusButton: false)
         }
         
     }

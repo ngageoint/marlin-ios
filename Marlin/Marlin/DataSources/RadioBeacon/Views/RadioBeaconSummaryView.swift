@@ -42,7 +42,7 @@ struct RadioBeaconSummaryView: View {
                 Text(stationRemark)
                     .secondary()
             }
-            RadioBeaconActionBar(radioBeacon: radioBeacon, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+            DataSourceActionBar(data: radioBeacon, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }
 }

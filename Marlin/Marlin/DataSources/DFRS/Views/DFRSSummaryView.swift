@@ -45,7 +45,7 @@ struct DFRSSummaryView: View {
                 Text(remarks)
                     .secondary()
             }
-            DFRSActionBar(dfrs: dfrs, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+            DataSourceActionBar(data: dfrs, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }
 }
