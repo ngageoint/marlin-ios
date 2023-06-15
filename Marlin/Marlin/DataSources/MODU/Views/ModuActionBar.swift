@@ -17,7 +17,7 @@ struct ModuActionBar: View {
         HStack(spacing:0) {
             if showMoreDetailsButton {
                 Button(action: {
-                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: self.modu))
+                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: modu))
                 }) {
                     Text("More Details")
                         .foregroundColor(Color.primaryColorVariant)
@@ -25,20 +25,7 @@ struct ModuActionBar: View {
                 .accessibilityElement()
                 .accessibilityLabel("More Details")
             } else {
-                let coordinateButtonTitle = modu.coordinate.toDisplay()
-                
-                Button(action: {
-                    UIPasteboard.general.string = coordinateButtonTitle
-                    NotificationCenter.default.post(name: .SnackbarNotification,
-                                                    object: SnackbarNotification(snackbarModel:
-                                                                                    SnackbarModel(message: "Location \(coordinateButtonTitle) copied to clipboard"))
-                    )
-                }) {
-                    Text(coordinateButtonTitle)
-                        .foregroundColor(Color.primaryColorVariant)
-                }
-                .accessibilityElement()
-                .accessibilityLabel("Location")
+                CoordinateButton(coordinate: modu.coordinate)
             }
             
             Spacer()

@@ -7,6 +7,40 @@
 
 import Foundation
 import MapKit
+import gars_ios
+import mgrs_ios
+
+enum CoordinateDisplayType: Int, CustomStringConvertible {
+    case latitudeLongitude, degreesMinutesSeconds, mgrs, gars
+    
+    var description: String {
+        switch(self) {
+        case .latitudeLongitude:
+            return "Latitude, Longitude"
+        case .degreesMinutesSeconds:
+            return "Degrees, Minutes, Seconds"
+        case .mgrs:
+            return "Military Grid Reference System"
+        case .gars:
+            return "Global Area Reference System"
+        }
+    }
+    
+    func format(coordinate: CLLocationCoordinate2D) -> String {
+        switch UserDefaults.standard.coordinateDisplay {
+        case .latitudeLongitude:
+            let nf = NumberFormatter()
+            nf.maximumFractionDigits = 4
+            return "\(nf.string(for: coordinate.latitude) ?? ""), \(nf.string(for: coordinate.longitude) ?? "")"
+        case .degreesMinutesSeconds:
+            return "\(CLLocationCoordinate2D.latitudeDMSString(coordinate: coordinate.latitude)), \(CLLocationCoordinate2D.longitudeDMSString(coordinate: coordinate.longitude))"
+        case .gars:
+            return GARS.from(coordinate).coordinate()
+        case .mgrs:
+            return MGRS.from(coordinate).coordinate()
+        }
+    }
+}
 
 struct DMSCoordinate {
     var degrees: Int?
@@ -98,13 +132,18 @@ extension CLLocationCoordinate2D {
     }
     
     public func toDisplay() -> String {
-//        if UserDefaults.standard.locationDisplay == .mgrs {
-//            return MGRS.mgrSfromCoordinate(self)
-//        } else if UserDefaults.standard.locationDisplay == .dms {
+        switch UserDefaults.standard.coordinateDisplay {
+        case .latitudeLongitude:
+            let nf = NumberFormatter()
+            nf.maximumFractionDigits = 4
+            return "\(nf.string(for: self.latitude) ?? ""), \(nf.string(for: self.longitude) ?? "")"
+        case .degreesMinutesSeconds:
             return "\(CLLocationCoordinate2D.latitudeDMSString(coordinate: self.latitude)), \(CLLocationCoordinate2D.longitudeDMSString(coordinate: self.longitude))"
-//        } else {
-//            return String(format: "%.5f, %.5f", self.latitude, self.longitude)
-//        }
+        case .gars:
+            return GARS.from(self).coordinate()
+        case .mgrs:
+            return MGRS.from(self).coordinate()
+        }
     }
     
     // splits the string into possibly two coordinates with all spaces removed

@@ -16,27 +16,14 @@ struct RadioBeaconActionBar: View {
         HStack(spacing:0) {
             if showMoreDetailsButton {
                 Button(action: {
-                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: self.radioBeacon))
+                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: radioBeacon))
                 }) {
                     Text("More Details")
                 }
                 .accessibilityElement()
                 .accessibilityLabel("More Details")
             } else {
-                let coordinateButtonTitle = radioBeacon.coordinate.toDisplay()
-                
-                Button(action: {
-                    UIPasteboard.general.string = coordinateButtonTitle
-                    NotificationCenter.default.post(name: .SnackbarNotification,
-                                                    object: SnackbarNotification(snackbarModel:
-                                                                                    SnackbarModel(message: "Location \(coordinateButtonTitle) copied to clipboard"))
-                    )
-                }) {
-                    Text(coordinateButtonTitle)
-                        .foregroundColor(Color.primaryColorVariant)
-                }
-                .accessibilityElement()
-                .accessibilityLabel("Location")
+                CoordinateButton(coordinate: radioBeacon.coordinate)
             }
             
             Spacer()

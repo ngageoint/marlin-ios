@@ -17,25 +17,13 @@ struct AsamActionBar: View {
         HStack(spacing:0) {
             if showMoreDetailsButton {
                 Button(action: {
-                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: self.asam))
+                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: asam))
                 }) {
                     Text("More Details")
                         .foregroundColor(Color.primaryColorVariant)
                 }
             } else {
-                let coordinateButtonTitle = asam.coordinate.toDisplay()
-                
-                Button(action: {
-                    UIPasteboard.general.string = coordinateButtonTitle
-                    NotificationCenter.default.post(name: .SnackbarNotification,
-                                                    object: SnackbarNotification(snackbarModel:
-                        SnackbarModel(message: "Location \(coordinateButtonTitle) copied to clipboard"))
-                    )
-                }) {
-                    Text(coordinateButtonTitle)
-                        .foregroundColor(Color.primaryColorVariant)
-                }
-                .accessibilityLabel("Location")
+                CoordinateButton(coordinate: asam.coordinate)
             }
             
             Spacer()

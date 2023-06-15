@@ -59,7 +59,6 @@ struct MapLayerRow: View {
 
 struct MapLayersView: View {
     @ObservedObject var mapState: MapState
-    @Environment(\.managedObjectContext) private var viewContext
     @StateObject var model: MapLayersViewModel = MapLayersViewModel()
     @State var isMapLayersPresented: Bool = false
     @State var editPresented: Bool = false

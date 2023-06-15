@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct ElectronicPublicationsList: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    
+struct ElectronicPublicationsList: View {    
     @SectionedFetchRequest<Int64, ElectronicPublication>
     var electronicPublicationSections: SectionedFetchResults<Int64, ElectronicPublication>
     

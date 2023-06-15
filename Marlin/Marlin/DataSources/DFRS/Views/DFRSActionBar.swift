@@ -24,20 +24,7 @@ struct DFRSActionBar: View {
                 .accessibilityElement()
                 .accessibilityLabel("More Details")
             } else if CLLocationCoordinate2DIsValid(dfrs.coordinate) {
-                let coordinateButtonTitle = dfrs.coordinate.toDisplay()
-                
-                Button(action: {
-                    UIPasteboard.general.string = coordinateButtonTitle
-                    NotificationCenter.default.post(name: .SnackbarNotification,
-                                                    object: SnackbarNotification(snackbarModel:
-                                                                                    SnackbarModel(message: "Location \(coordinateButtonTitle) copied to clipboard"))
-                    )
-                }) {
-                    Text(coordinateButtonTitle)
-                        .foregroundColor(Color.primaryColorVariant)
-                }
-                .accessibilityElement()
-                .accessibilityLabel("Location")
+                CoordinateButton(coordinate: dfrs.coordinate)
             }
             
             Spacer()

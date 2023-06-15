@@ -9,6 +9,8 @@ import SwiftUI
 import MapKit
 
 struct LocationFilter: View {
+    @AppStorage("coordinateDisplay") var coordinateDisplay: CoordinateDisplayType = .latitudeLongitude
+
     @EnvironmentObject var locationManager: LocationManager
 
     @ObservedObject var filterViewModel: FilterViewModel
@@ -107,7 +109,7 @@ struct LocationFilter: View {
                 distanceFilter()
             } else if viewModel.selectedComparison == .nearMe {
                 if let lastLocation = locationManager.lastLocation {
-                    Text(lastLocation.coordinate.toDisplay())
+                    Text(coordinateDisplay.format(coordinate: lastLocation.coordinate))
                         .overline()
                         .padding(.leading, 8)
                     Map(coordinateRegion: $viewModel.currentRegion, showsUserLocation: true)

@@ -10,6 +10,8 @@ import MapKit
 import Combine
 
 struct SearchView<T: MKLocalSearch>: View {
+    @AppStorage("coordinateDisplay") var coordinateDisplay: CoordinateDisplayType = .latitudeLongitude
+
     @State var search: String = ""
     @FocusState private var searchFocused: Bool
     let searchPublisher = PassthroughSubject<String, Never>()
@@ -91,17 +93,19 @@ struct SearchView<T: MKLocalSearch>: View {
                                             .accessibilityLabel(searchResult.name ?? "")
                                         Text("\(searchResult.placemark.title ?? "")")
                                             .secondary()
-                                        Text("\(searchResult.placemark.location?.coordinate.latitude ?? 0.0),\(searchResult.placemark.location?.coordinate.longitude ?? 0.0)")
-                                            .onTapGesture {
-                                                UIPasteboard.general.string = "\(searchResult.placemark.location?.coordinate.latitude ?? 0.0), \(searchResult.placemark.location?.coordinate.longitude ?? 0.0)"
-                                                NotificationCenter.default.post(
-                                                    name: .SnackbarNotification,
-                                                    object: SnackbarNotification(
-                                                        snackbarModel: SnackbarModel(message: "Location \(searchResult.placemark.location?.coordinate.latitude ?? 0.0), \(searchResult.placemark.location?.coordinate.longitude ?? 0.0) copied to clipboard"))
-                                                )
-                                            }
-                                            .accessibilityElement()
-                                            .accessibilityLabel("Location")
+                                        if let coordinate = searchResult.placemark.location?.coordinate {
+                                            Text(coordinateDisplay.format(coordinate: coordinate))
+                                                .onTapGesture {
+                                                    UIPasteboard.general.string = coordinateDisplay.format(coordinate: coordinate)
+                                                    NotificationCenter.default.post(
+                                                        name: .SnackbarNotification,
+                                                        object: SnackbarNotification(
+                                                            snackbarModel: SnackbarModel(message: "Location \(coordinateDisplay.format(coordinate: coordinate)) copied to clipboard"))
+                                                    )
+                                                }
+                                                .accessibilityElement()
+                                                .accessibilityLabel("Location")
+                                        }
                                     }
                                     Spacer()
                                     Button(action: {

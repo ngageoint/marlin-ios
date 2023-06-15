@@ -16,25 +16,13 @@ struct GeoPackageFeatureItemActionBar: View {
         HStack(spacing:0) {
             if showMoreDetailsButton {
                 Button(action: {
-                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: self.featureItem))
+                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: featureItem))
                 }) {
                     Text("More Details")
                         .foregroundColor(Color.primaryColorVariant)
                 }
             } else {
-                let coordinateButtonTitle = featureItem.coordinate.toDisplay()
-                
-                Button(action: {
-                    UIPasteboard.general.string = coordinateButtonTitle
-                    NotificationCenter.default.post(name: .SnackbarNotification,
-                                                    object: SnackbarNotification(snackbarModel:
-                                                                                    SnackbarModel(message: "Location \(coordinateButtonTitle) copied to clipboard"))
-                    )
-                }) {
-                    Text(coordinateButtonTitle)
-                        .foregroundColor(Color.primaryColorVariant)
-                }
-                .accessibilityLabel("Location")
+                CoordinateButton(coordinate: featureItem.coordinate)
             }
             
             Spacer()
@@ -42,7 +30,7 @@ struct GeoPackageFeatureItemActionBar: View {
                 if showFocusButton {
                     Button(action: {
                         NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
-                        let notification = MapItemsTappedNotification(items: [self.featureItem])
+                        let notification = MapItemsTappedNotification(items: [featureItem])
                         NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
                     }) {
                         Label(

@@ -44,6 +44,15 @@ extension UserDefaults {
         setValue(regionData, forKey: key);
     }
     
+    var coordinateDisplay: CoordinateDisplayType {
+        get {
+            return CoordinateDisplayType(rawValue: integer(forKey: #function)) ?? .latitudeLongitude
+        }
+        set {
+            setValue(newValue.rawValue, forKey: #function)
+        }
+    }
+    
     func showOnMap(key: String) -> Bool {
         bool(forKey: "showOnMap\(key)")
     }

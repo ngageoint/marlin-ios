@@ -21,20 +21,7 @@ struct DifferentialGPSStationActionBar: View {
                     Text("More Details")
                 }
             } else {
-                let coordinateButtonTitle = differentialGPSStation.coordinate.toDisplay()
-                
-                Button(action: {
-                    UIPasteboard.general.string = coordinateButtonTitle
-                    NotificationCenter.default.post(name: .SnackbarNotification,
-                                                    object: SnackbarNotification(snackbarModel:
-                                                                                    SnackbarModel(message: "Location \(coordinateButtonTitle) copied to clipboard"))
-                    )
-                }) {
-                    Text(coordinateButtonTitle)
-                        .foregroundColor(Color.primaryColorVariant)
-                }
-                .accessibilityElement()
-                .accessibilityLabel("Location")
+                CoordinateButton(coordinate: differentialGPSStation.coordinate)
             }
             
             Spacer()
