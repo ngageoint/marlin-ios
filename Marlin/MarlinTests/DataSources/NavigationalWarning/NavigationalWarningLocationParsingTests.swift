@@ -7,9 +7,37 @@
 
 import XCTest
 import OHHTTPStubs
+import Combine
+import SwiftUI
 
 @testable import Marlin
 final class NavigationalWarningLocationParsingTests: XCTestCase {
+    
+    var cancellable = Set<AnyCancellable>()
+    var persistentStore: PersistentStore = PersistenceController.shared
+    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
+        .receive(on: RunLoop.main)
+    
+    override func setUp(completion: @escaping (Error?) -> Void) {
+        for item in DataSourceList().allTabs {
+            UserDefaults.standard.initialDataLoaded = false
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+        }
+        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
+        
+        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
+        persistentStoreLoadedPub
+            .removeDuplicates()
+            .sink { output in
+                completion(nil)
+            }
+            .store(in: &cancellable)
+        persistentStore.reset()
+    }
+    
+    override func tearDown() {
+    }
+    
     struct NavWarningTextToExpectedLocation {
         var text: String
         var expected: String
@@ -54,26 +82,6 @@ final class NavigationalWarningLocationParsingTests: XCTestCase {
         XCTAssertEqual(p.parseDistance(line: "PERSIAN GULF.\nU.A.E.\nDNC 10.\n1. UNDERWATER OPERATIONS IN PROGRESS UNTIL\n   FURTHER NOTICE IN AREAS BOUND BY:\n   A. 24-40.22N 052-52.61E, 24-39.08N 053-00.18E,\n      24-30.79N 053-03.24E, 24-26.33N 052-56.63E,\n      24-30.70N 052-52.08E.\n   B. 24-24.56N 053-21.72E, 24-24.46N 053-28.22E,\n      24-17.96N 053-28.09E, 24-18.07N 053-21.60E.\n   WIDE BERTH REQUESTED.\n2. CANCEL HYDROPAC 1742/19.\n"), "WIDE BERTH")
         
         XCTAssertEqual(p.parseDistance(line: "BARENTS SEA. SVALBARD. DNC 22. SURVEY OPERATIONS IN PROGRESS UNTIL FURTHER NOTICE BY M/V RAMFORD HYPERION TOWING 12 4050 METER LONG CABLES IN AREA BOUND BY 73-44.50N 023-04.50E, 73-41.60N 025-52.40E, 73-13.10N 025-45.00E, 73-15.80N 023-01.40E. FOUR MILE BERTH REQUESTED."), "FOUR MILE BERTH")
-    }
-    
-    func testAreaSurroundingPoint() {
-        let nw = NavigationalWarning(context: PersistenceController.shared.viewContext)
-        nw.msgYear = 2023
-        nw.msgNumber = 396
-        nw.navArea = "4"
-        nw.subregion = "14,51"
-        nw.text = chart.text
-        nw.status = "A"
-        nw.issueDate = NavigationalWarning.dateFormatter.date(from: "090315Z APR 2023")
-        nw.authority = "NAVAREA II 0/23 070918Z APR 23."
-        nw.cancelDate = nil
-        nw.cancelNavArea = nil
-        
-//        let wkt = nw.parseToMappedLocation()
-        
-//        print("wkt \(wkt)")
-        
-//        XCTAssertEqual(areaSurroundingPoint.expected, wkt.locationName)
     }
     
     func testMetersDistance() {

@@ -50,52 +50,183 @@ final class MarlinFullFlowTest: XCTestCase {
         persistentStore.reset()
     }
     
+    func testNavigateToTabFocusOnMap() {
+        guard let objects = TestHelpers.createOneOfEachType(persistentStore.viewContext) else {
+            XCTFail()
+            return
+        }
+        
+        for dataSource in MSI.shared.masterDataList {
+            switch dataSource {
+            case let mapImage as MapImage.Type:
+                mapImage.imageCache.clearCache()
+            default:
+                continue
+            }
+        }
+        
+        let appState: AppState = MSI.shared.appState
+        UserDefaults.standard.setValue(true, forKey: "onboardingComplete")
+        UserDefaults.standard.setValue(true, forKey: "disclaimerAccepted")
+        UserDefaults.standard.setFilter(Asam.key, filter: [])
+        let dataSourceList: DataSourceList = DataSourceList()
+        // set up the tabs to only be 1
+        for tab in dataSourceList.tabs {
+            dataSourceList.addItemToNonTabs(dataSourceItem: tab, position: 0)
+        }
+        // find the datasourceitem and move it back to a tab
+        for item in dataSourceList.nonTabs {
+            if item.key == Asam.key {
+                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
+                break
+            }
+        }
+        
+        let view = MarlinView()
+            .environment(\.managedObjectContext, PersistenceController.shared.viewContext)
+            .environmentObject(LocationManager.shared())
+            .environmentObject(appState)
+            .environmentObject(dataSourceList)
+        
+        let controller = UIHostingController(rootView: view)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+//        tester().waitForView(withAccessibilityLabel: "\(Asam.key)List")
+//        tester().tapView(withAccessibilityLabel: "\(Asam.key)List")
+//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
+//        tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
+//        tester().tapView(withAccessibilityLabel: "focus")
+//        // should switch tabs
+//        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+//        // bottom sheet should show up
+//        tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
+//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Boarding: Boat")
+//        
+//        // Modu
+//        for item in dataSourceList.nonTabs {
+//            if item.key == Modu.key {
+//                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
+//                break
+//            }
+//        }
+//        tester().waitForView(withAccessibilityLabel: "\(Modu.key)List")
+//        tester().tapView(withAccessibilityLabel: "\(Modu.key)List")
+//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
+//        tester().waitForView(withAccessibilityLabel: "ABAN II")
+//        tester().tapView(withAccessibilityLabel: "focus")
+//        // should switch tabs
+//        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+//        // bottom sheet should show up
+//        tester().waitForView(withAccessibilityLabel: "ABAN II")
+//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+//        tester().waitForAbsenceOfView(withAccessibilityLabel: "ABAN II")
+//        
+//        // Port
+//        for item in dataSourceList.nonTabs {
+//            if item.key == Port.key {
+//                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
+//                break
+//            }
+//        }
+//        tester().waitForView(withAccessibilityLabel: "\(Port.key)List")
+//        tester().tapView(withAccessibilityLabel: "\(Port.key)List")
+//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
+//        tester().waitForView(withAccessibilityLabel: "Aasiaat")
+//        tester().tapView(withAccessibilityLabel: "focus")
+//        // should switch tabs
+//        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+//        // bottom sheet should show up
+//        tester().waitForView(withAccessibilityLabel: "Aasiaat")
+//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Aasiaat")
+//        
+//        // RadioBeacon
+//        for item in dataSourceList.nonTabs {
+//            if item.key == RadioBeacon.key {
+//                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
+//                break
+//            }
+//        }
+//        tester().waitForView(withAccessibilityLabel: "\(RadioBeacon.key)List")
+//        tester().tapView(withAccessibilityLabel: "\(RadioBeacon.key)List")
+//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
+//        tester().waitForView(withAccessibilityLabel: "Ittoqqortoormit, Scoresbysund")
+//        tester().tapView(withAccessibilityLabel: "focus")
+//        // should switch tabs
+//        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+//        // bottom sheet should show up
+//        tester().waitForView(withAccessibilityLabel: "Ittoqqortoormit, Scoresbysund")
+//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Ittoqqortoormit, Scoresbysund")
+//        
+//        // Light
+//        for item in dataSourceList.nonTabs {
+//            if item.key == Light.key {
+//                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
+//                break
+//            }
+//        }
+//        tester().waitForView(withAccessibilityLabel: "\(Light.key)List")
+//        tester().tapView(withAccessibilityLabel: "\(Light.key)List")
+//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
+//        tester().waitForView(withAccessibilityLabel: "Bishop Rock.")
+//        tester().tapView(withAccessibilityLabel: "focus")
+//        // should switch tabs
+//        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+//        // bottom sheet should show up
+//        tester().waitForView(withAccessibilityLabel: "Bishop Rock.")
+//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Bishop Rock.")
+//        
+//        // DifferentialGPSStation
+//        for item in dataSourceList.nonTabs {
+//            if item.key == DifferentialGPSStation.key {
+//                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
+//                break
+//            }
+//        }
+//        tester().waitForView(withAccessibilityLabel: "\(DifferentialGPSStation.key)List")
+//        tester().tapView(withAccessibilityLabel: "\(DifferentialGPSStation.key)List")
+//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
+//        tester().waitForView(withAccessibilityLabel: "Chojin Dan Lt")
+//        tester().tapView(withAccessibilityLabel: "focus")
+//        // should switch tabs
+//        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+//        // bottom sheet should show up
+//        tester().waitForView(withAccessibilityLabel: "Chojin Dan Lt")
+//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Chojin Dan Lt")
+        
+        // Navigational Warning
+        for item in dataSourceList.nonTabs {
+            if item.key == NavigationalWarning.key {
+                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
+                break
+            }
+        }
+        tester().waitForView(withAccessibilityLabel: "\(NavigationalWarning.key)List")
+        tester().tapView(withAccessibilityLabel: "\(NavigationalWarning.key)List")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
+        tester().waitForView(withAccessibilityLabel: "NAVAREA IV")
+        tester().tapView(withAccessibilityLabel: "NAVAREA IV")
+        tester().waitForAnimationsToFinish()
+        TestHelpers.printAllAccessibilityLabelsInWindows()
+        tester().waitForView(withAccessibilityLabel: "\(objects.navigationalWarningLine.itemTitle) summary")
+        tester().tapView(withAccessibilityLabel: "\(objects.navigationalWarningLine.itemTitle) summary")
+        tester().tapView(withAccessibilityLabel: "focus")
+        // should switch tabs
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        // bottom sheet should show up
+        tester().waitForView(withAccessibilityLabel: objects.navigationalWarningLine.itemTitle)
+        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: objects.navigationalWarningLine.itemTitle)
+    }
+    
     func testMapTapBottomSheetShowDetails() {
-        guard let asam = TestHelpers.createAsam(persistentStore.viewContext) else {
-            XCTFail()
-            return
-        }
-        guard let modu = TestHelpers.createModu(persistentStore.viewContext) else {
-            XCTFail()
-            return
-        }
-        guard let port = TestHelpers.createPort(persistentStore.viewContext) else {
-            XCTFail()
-            return
-        }
-        guard let dfrs = TestHelpers.createDFRS(persistentStore.viewContext) else {
-            XCTFail()
-            return
-        }
-        guard let radioBeacon = TestHelpers.createRadioBeacon(persistentStore.viewContext) else {
-            XCTFail()
-            return
-        }
-        guard let light = TestHelpers.createLight(persistentStore.viewContext) else {
-            XCTFail()
-            return
-        }
-        guard let navigationalWarningPolygon = TestHelpers.createNavigationalWarningPolygon(persistentStore.viewContext) else {
-            XCTFail()
-            return
-        }
-        guard let navigationalWarningLine = TestHelpers.createNavigationalWarningLine(persistentStore.viewContext) else {
-            XCTFail()
-            return
-        }
-        guard let navigationalWarningPoint = TestHelpers.createNavigationalWarningPoint(persistentStore.viewContext) else {
-            XCTFail()
-            return
-        }
-        guard let navigationalWarningMultipoint = TestHelpers.createNavigationalWarningMultiPoint(persistentStore.viewContext) else {
-            XCTFail()
-            return
-        }
-        guard let navigationalWarningCircle = TestHelpers.createNavigationalWarningCircle(persistentStore.viewContext) else {
-            XCTFail()
-            return
-        }
-        guard let differentialGPSStation = TestHelpers.createDifferentialGPSStation(persistentStore.viewContext) else {
+        guard let objects = TestHelpers.createOneOfEachType(persistentStore.viewContext) else {
             XCTFail()
             return
         }
@@ -115,6 +246,7 @@ final class MarlinFullFlowTest: XCTestCase {
         let dataSourceList: DataSourceList = DataSourceList()
         
         let view = MarlinView()
+            .environment(\.managedObjectContext, PersistenceController.shared.viewContext)
             .environmentObject(LocationManager.shared())
             .environmentObject(appState)
             .environmentObject(dataSourceList)
@@ -124,11 +256,9 @@ final class MarlinFullFlowTest: XCTestCase {
         window.rootViewController = controller
         
         tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
-        NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: navigationalWarningPolygon))
-//        tester().wait(forTimeInterval: 10)
         
-        NotificationCenter.default.post(name: .MapItemsTapped, object: MapItemsTappedNotification(annotations: nil, items: [asam, modu, port, dfrs, radioBeacon, light, navigationalWarningPolygon, navigationalWarningLine, navigationalWarningPoint, navigationalWarningMultipoint, navigationalWarningCircle, differentialGPSStation], mapName: nil))
-//        tester().wait(forTimeInterval: 5)
+        // verify bottom sheet switching works and then tapping more details works
+        NotificationCenter.default.post(name: .MapItemsTapped, object: MapItemsTappedNotification(annotations: nil, items: [objects.asam, objects.modu, objects.port, objects.dfrs, objects.radioBeacon, objects.light, objects.navigationalWarningPolygon, objects.navigationalWarningLine, objects.navigationalWarningPoint, objects.navigationalWarningMultipoint, objects.navigationalWarningCircle, objects.differentialGPSStation], mapName: nil))
         tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
         tester().tapView(withAccessibilityLabel: "next")
         tester().waitForView(withAccessibilityLabel: "ABAN II")
@@ -141,23 +271,17 @@ final class MarlinFullFlowTest: XCTestCase {
         tester().tapView(withAccessibilityLabel: "next")
         tester().waitForView(withAccessibilityLabel: "Bishop Rock.")
         tester().tapView(withAccessibilityLabel: "next")
-        tester().waitForView(withAccessibilityLabel: navigationalWarningPolygon.itemTitle)
-//        tester().wait(forTimeInterval: 10)
+        tester().waitForView(withAccessibilityLabel: objects.navigationalWarningPolygon.itemTitle)
         tester().tapView(withAccessibilityLabel: "next")
-        tester().waitForView(withAccessibilityLabel: navigationalWarningLine.itemTitle)
-//        tester().wait(forTimeInterval: 5)
+        tester().waitForView(withAccessibilityLabel: objects.navigationalWarningLine.itemTitle)
         tester().tapView(withAccessibilityLabel: "next")
-        tester().waitForView(withAccessibilityLabel: navigationalWarningPoint.itemTitle)
-//        tester().wait(forTimeInterval: 5)
+        tester().waitForView(withAccessibilityLabel: objects.navigationalWarningPoint.itemTitle)
         tester().tapView(withAccessibilityLabel: "next")
-        tester().waitForView(withAccessibilityLabel: navigationalWarningMultipoint.itemTitle)
-//        tester().wait(forTimeInterval: 5)
+        tester().waitForView(withAccessibilityLabel: objects.navigationalWarningMultipoint.itemTitle)
         tester().tapView(withAccessibilityLabel: "next")
-        tester().waitForView(withAccessibilityLabel: navigationalWarningCircle.itemTitle)
-//        tester().wait(forTimeInterval: 5)
+        tester().waitForView(withAccessibilityLabel: objects.navigationalWarningCircle.itemTitle)
         tester().tapView(withAccessibilityLabel: "next")
         tester().waitForView(withAccessibilityLabel: "Chojin Dan Lt")
-        
         
         tester().waitForTappableView(withAccessibilityLabel: "More Details")
         tester().tapView(withAccessibilityLabel: "More Details")
@@ -165,6 +289,106 @@ final class MarlinFullFlowTest: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "Marlin")
         tester().tapView(withAccessibilityLabel: "Marlin", traits: .button)
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Chojin Dan Lt")
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        
+        // pull up each data type and go to the detail page
+        NotificationCenter.default.post(name: .MapItemsTapped, object: MapItemsTappedNotification(annotations: nil, items: [objects.asam], mapName: nil))
+        tester().waitForTappableView(withAccessibilityLabel: "More Details")
+        tester().tapView(withAccessibilityLabel: "More Details")
+        tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
+        tester().waitForTappableView(withAccessibilityLabel: "Marlin")
+        tester().tapView(withAccessibilityLabel: "Marlin", traits: .button)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Boarding: Boat")
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        
+        NotificationCenter.default.post(name: .MapItemsTapped, object: MapItemsTappedNotification(annotations: nil, items: [objects.modu], mapName: nil))
+        tester().waitForTappableView(withAccessibilityLabel: "More Details")
+        tester().tapView(withAccessibilityLabel: "More Details")
+        tester().waitForView(withAccessibilityLabel: "ABAN II")
+        tester().waitForTappableView(withAccessibilityLabel: "Marlin")
+        tester().tapView(withAccessibilityLabel: "Marlin", traits: .button)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "ABAN II")
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        
+        NotificationCenter.default.post(name: .MapItemsTapped, object: MapItemsTappedNotification(annotations: nil, items: [objects.port], mapName: nil))
+        tester().waitForTappableView(withAccessibilityLabel: "More Details")
+        tester().tapView(withAccessibilityLabel: "More Details")
+        tester().waitForView(withAccessibilityLabel: "Aasiaat")
+        tester().waitForTappableView(withAccessibilityLabel: "Marlin")
+        tester().tapView(withAccessibilityLabel: "Marlin", traits: .button)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Aasiaat")
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        
+        NotificationCenter.default.post(name: .MapItemsTapped, object: MapItemsTappedNotification(annotations: nil, items: [objects.dfrs], mapName: nil))
+        tester().waitForTappableView(withAccessibilityLabel: "More Details")
+        tester().tapView(withAccessibilityLabel: "More Details")
+        tester().waitForView(withAccessibilityLabel: "Nos Galata Lt.")
+        tester().waitForTappableView(withAccessibilityLabel: "Marlin")
+        tester().tapView(withAccessibilityLabel: "Marlin", traits: .button)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Nos Galata Lt.")
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        
+        NotificationCenter.default.post(name: .MapItemsTapped, object: MapItemsTappedNotification(annotations: nil, items: [objects.radioBeacon], mapName: nil))
+        tester().waitForTappableView(withAccessibilityLabel: "More Details")
+        tester().tapView(withAccessibilityLabel: "More Details")
+        tester().waitForView(withAccessibilityLabel: "Ittoqqortoormit, Scoresbysund")
+        tester().waitForTappableView(withAccessibilityLabel: "Marlin")
+        tester().tapView(withAccessibilityLabel: "Marlin", traits: .button)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Ittoqqortoormit, Scoresbysund")
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        
+        NotificationCenter.default.post(name: .MapItemsTapped, object: MapItemsTappedNotification(annotations: nil, items: [objects.light], mapName: nil))
+        tester().waitForTappableView(withAccessibilityLabel: "More Details")
+        tester().tapView(withAccessibilityLabel: "More Details")
+        tester().waitForView(withAccessibilityLabel: "Bishop Rock.")
+        tester().waitForTappableView(withAccessibilityLabel: "Marlin")
+        tester().tapView(withAccessibilityLabel: "Marlin", traits: .button)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Bishop Rock.")
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        
+        NotificationCenter.default.post(name: .MapItemsTapped, object: MapItemsTappedNotification(annotations: nil, items: [objects.navigationalWarningPolygon], mapName: nil))
+        tester().waitForTappableView(withAccessibilityLabel: "More Details")
+        tester().tapView(withAccessibilityLabel: "More Details")
+        tester().waitForView(withAccessibilityLabel: objects.navigationalWarningPolygon.itemTitle)
+        tester().waitForTappableView(withAccessibilityLabel: "Marlin")
+        tester().tapView(withAccessibilityLabel: "Marlin", traits: .button)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: objects.navigationalWarningPolygon.itemTitle)
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        
+        NotificationCenter.default.post(name: .MapItemsTapped, object: MapItemsTappedNotification(annotations: nil, items: [objects.navigationalWarningLine], mapName: nil))
+        tester().waitForTappableView(withAccessibilityLabel: "More Details")
+        tester().tapView(withAccessibilityLabel: "More Details")
+        tester().waitForView(withAccessibilityLabel: objects.navigationalWarningLine.itemTitle)
+        tester().waitForTappableView(withAccessibilityLabel: "Marlin")
+        tester().tapView(withAccessibilityLabel: "Marlin", traits: .button)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: objects.navigationalWarningLine.itemTitle)
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        
+        NotificationCenter.default.post(name: .MapItemsTapped, object: MapItemsTappedNotification(annotations: nil, items: [objects.navigationalWarningPoint], mapName: nil))
+        tester().waitForTappableView(withAccessibilityLabel: "More Details")
+        tester().tapView(withAccessibilityLabel: "More Details")
+        tester().waitForView(withAccessibilityLabel: objects.navigationalWarningPoint.itemTitle)
+        tester().waitForTappableView(withAccessibilityLabel: "Marlin")
+        tester().tapView(withAccessibilityLabel: "Marlin", traits: .button)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: objects.navigationalWarningPoint.itemTitle)
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        
+        NotificationCenter.default.post(name: .MapItemsTapped, object: MapItemsTappedNotification(annotations: nil, items: [objects.navigationalWarningMultipoint], mapName: nil))
+        tester().waitForTappableView(withAccessibilityLabel: "More Details")
+        tester().tapView(withAccessibilityLabel: "More Details")
+        tester().waitForView(withAccessibilityLabel: objects.navigationalWarningMultipoint.itemTitle)
+        tester().waitForTappableView(withAccessibilityLabel: "Marlin")
+        tester().tapView(withAccessibilityLabel: "Marlin", traits: .button)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: objects.navigationalWarningMultipoint.itemTitle)
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        
+        NotificationCenter.default.post(name: .MapItemsTapped, object: MapItemsTappedNotification(annotations: nil, items: [objects.navigationalWarningCircle], mapName: nil))
+        tester().waitForTappableView(withAccessibilityLabel: "More Details")
+        tester().tapView(withAccessibilityLabel: "More Details")
+        tester().waitForView(withAccessibilityLabel: objects.navigationalWarningCircle.itemTitle)
+        tester().waitForTappableView(withAccessibilityLabel: "Marlin")
+        tester().tapView(withAccessibilityLabel: "Marlin", traits: .button)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: objects.navigationalWarningCircle.itemTitle)
         tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
     }
 }

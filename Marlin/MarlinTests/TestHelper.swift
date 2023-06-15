@@ -161,7 +161,61 @@ class TestHelpers {
         }
     }
     
-    static func createAsam(_ context: NSManagedObjectContext)  -> Asam? {
+    static func createOneOfEachType(_ context: NSManagedObjectContext) -> (asam: Asam, modu: Modu, port: Marlin.Port, dfrs: DFRS, radioBeacon: RadioBeacon, light: Light, navigationalWarningPolygon: NavigationalWarning, navigationalWarningLine: NavigationalWarning, navigationalWarningPoint: NavigationalWarning, navigationalWarningMultipoint: NavigationalWarning, navigationalWarningCircle: NavigationalWarning, differentialGPSStation: DifferentialGPSStation)? {
+        guard let asam = TestHelpers.createAsam(context) else {
+            XCTFail()
+            return nil
+        }
+        guard let modu = TestHelpers.createModu(context) else {
+            XCTFail()
+            return nil
+        }
+        guard let port = TestHelpers.createPort(context) else {
+            XCTFail()
+            return nil
+        }
+        guard let dfrs = TestHelpers.createDFRS(context) else {
+            XCTFail()
+            return nil
+        }
+        guard let radioBeacon = TestHelpers.createRadioBeacon(context) else {
+            XCTFail()
+            return nil
+        }
+        guard let light = TestHelpers.createLight(context) else {
+            XCTFail()
+            return nil
+        }
+        guard let navigationalWarningPolygon = TestHelpers.createNavigationalWarningPolygon(context) else {
+            XCTFail()
+            return nil
+        }
+        guard let navigationalWarningLine = TestHelpers.createNavigationalWarningLine(context) else {
+            XCTFail()
+            return nil
+        }
+        guard let navigationalWarningPoint = TestHelpers.createNavigationalWarningPoint(context) else {
+            XCTFail()
+            return nil
+        }
+        guard let navigationalWarningMultipoint = TestHelpers.createNavigationalWarningMultiPoint(context) else {
+            XCTFail()
+            return nil
+        }
+        guard let navigationalWarningCircle = TestHelpers.createNavigationalWarningCircle(context) else {
+            XCTFail()
+            return nil
+        }
+        guard let differentialGPSStation = TestHelpers.createDifferentialGPSStation(context) else {
+            XCTFail()
+            return nil
+        }
+        return (
+        asam: asam, modu: modu, port: port, dfrs: dfrs, radioBeacon: radioBeacon, light: light, navigationalWarningPolygon: navigationalWarningPolygon, navigationalWarningLine: navigationalWarningLine, navigationalWarningPoint: navigationalWarningPoint, navigationalWarningMultipoint: navigationalWarningMultipoint, navigationalWarningCircle: navigationalWarningCircle, differentialGPSStation: differentialGPSStation
+        )
+    }
+    
+    static func createAsam(_ context: NSManagedObjectContext) -> Asam? {
         var newItem: Asam?
         context.performAndWait {
             let asam = Asam(context: context)

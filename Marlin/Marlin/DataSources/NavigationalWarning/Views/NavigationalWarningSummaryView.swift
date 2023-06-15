@@ -26,7 +26,7 @@ struct NavigationalWarningSummaryView: View {
             Text(navigationalWarning.dateString ?? "")
                 .overline()
             if showTitle {
-                Text("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
+                Text(navigationalWarning.itemTitle)
                     .primary()
             }
             Text("\(navigationalWarning.text ?? "")")

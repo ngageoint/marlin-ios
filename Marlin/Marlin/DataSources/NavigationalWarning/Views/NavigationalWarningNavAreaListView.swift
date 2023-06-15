@@ -15,7 +15,9 @@ struct NavigationalWarningNavAreaListView: View {
     @State var shouldSavePosition: Bool = false
     
     @State var firstUnseenNavigationalWarning: NavigationalWarning?
-    
+    @State var tappedItem: NavigationalWarning?
+    @State private var showDetail = false
+
     @StateObject var scrollViewHelper = ScrollViewHelper()
     
     @StateObject var dataSource = NavigationalWarningsAreaDataSource()
@@ -33,37 +35,49 @@ struct NavigationalWarningNavAreaListView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack (alignment: .leading) {
+                    NavigationLink(destination: AnyView(tappedItem?.detailView), isActive: self.$showDetail) {
+                        EmptyView()
+                    }.hidden()
                     ForEach(dataSource.items) { navigationalWarning in
-                        NavigationLink {
-                            navigationalWarning.detailView
-                        } label: {
-                            HStack {
-                                navigationalWarning.summaryView(mapName: mapName)
-                                    .padding(.all, 16)
-                            }
-                            .card()
-                            .background(GeometryReader {
-                                return Color.clear.preference(key: ViewOffsetKey.self,
-                                                              value: -$0.frame(in: .named("scroll")).origin.y)
-                            })
-
-                            .onPreferenceChange(ViewOffsetKey.self) { offset in
-                                if offset > 0 {
-                                    firstUnseenNavigationalWarning = navigationalWarning
+                        ZStack {
+                            NavigationLink {
+                                navigationalWarning.detailView
+                            } label: {
+                                HStack {
+                                    navigationalWarning.summaryView(mapName: mapName)
+                                        .padding(.all, 16)
                                 }
-                                // once this offset goes negative, they have seen the nav warning
-                                if offset < 0 {
-                                    // This checks if we are saving right now, because we could be still scrolling to the bottom
-                                    // also checks if we have already saved a newer warning as the latest one
-                                    if shouldSavePosition, let issueDate = navigationalWarning.issueDate, issueDate > lastSavedDate {
-                                        self.lastSavedDate = issueDate
-                                        self.lastSeen = navigationalWarning.primaryKey
+                                .card()
+                                .background(GeometryReader {
+                                    return Color.clear.preference(key: ViewOffsetKey.self,
+                                                                  value: -$0.frame(in: .named("scroll")).origin.y)
+                                })
+                                
+                                .onPreferenceChange(ViewOffsetKey.self) { offset in
+                                    if offset > 0 {
+                                        firstUnseenNavigationalWarning = navigationalWarning
+                                    }
+                                    // once this offset goes negative, they have seen the nav warning
+                                    if offset < 0 {
+                                        // This checks if we are saving right now, because we could be still scrolling to the bottom
+                                        // also checks if we have already saved a newer warning as the latest one
+                                        if shouldSavePosition, let issueDate = navigationalWarning.issueDate, issueDate > lastSavedDate {
+                                            self.lastSavedDate = issueDate
+                                            self.lastSeen = navigationalWarning.primaryKey
+                                        }
                                     }
                                 }
                             }
                         }
-                        .accessibilityElement(children: .contain)
-                        .accessibilityLabel(navigationalWarning.primaryKey)
+                            .onTapGesture {
+                                tappedItem = navigationalWarning
+                                showDetail.toggle()
+                            }
+                            .accessibilityElement(children: .contain)
+                            .accessibilityLabel("\(navigationalWarning.itemTitle) summary")
+//                        }
+//                        .accessibilityElement(children: .contain)
+//                        .accessibilityLabel(navigationalWarning.primaryKey)
                     }
                     .padding(.all, 8)
                 }.background(GeometryReader {
