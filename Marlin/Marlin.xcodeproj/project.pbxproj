@@ -86,6 +86,10 @@
 		F71FC0CF2A3B879800911BAC /* FocusButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71FC0CE2A3B879800911BAC /* FocusButton.swift */; };
 		F71FC0D12A3B9D9000911BAC /* MoreDetailsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71FC0D02A3B9D9000911BAC /* MoreDetailsButton.swift */; };
 		F71FC0D32A3B9DDA00911BAC /* DataSourceActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71FC0D22A3B9DDA00911BAC /* DataSourceActionBar.swift */; };
+		F71FC0D52A3BAC3200911BAC /* OnboardingTabTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71FC0D42A3BAC3200911BAC /* OnboardingTabTemplate.swift */; };
+		F71FC0D72A3BB2D600911BAC /* DataSourceTabGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71FC0D62A3BB2D600911BAC /* DataSourceTabGrid.swift */; };
+		F71FC0D92A3BBBD000911BAC /* DataSourceGridSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71FC0D82A3BBBD000911BAC /* DataSourceGridSquare.swift */; };
+		F71FC0DB2A3BBC7E00911BAC /* DataSourceMapGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71FC0DA2A3BBC7E00911BAC /* DataSourceMapGrid.swift */; };
 		F72281D8296E232700218FC0 /* ChartCorrectionQueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72281D7296E232700218FC0 /* ChartCorrectionQueryTests.swift */; };
 		F72281DA296F27D000218FC0 /* CurrentLocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72281D9296F27D000218FC0 /* CurrentLocationTests.swift */; };
 		F72281DD296F3FDE00218FC0 /* DataSourceCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72281DC296F3FDE00218FC0 /* DataSourceCellTests.swift */; };
@@ -498,6 +502,10 @@
 		F71FC0CE2A3B879800911BAC /* FocusButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusButton.swift; sourceTree = "<group>"; };
 		F71FC0D02A3B9D9000911BAC /* MoreDetailsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreDetailsButton.swift; sourceTree = "<group>"; };
 		F71FC0D22A3B9DDA00911BAC /* DataSourceActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceActionBar.swift; sourceTree = "<group>"; };
+		F71FC0D42A3BAC3200911BAC /* OnboardingTabTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTabTemplate.swift; sourceTree = "<group>"; };
+		F71FC0D62A3BB2D600911BAC /* DataSourceTabGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceTabGrid.swift; sourceTree = "<group>"; };
+		F71FC0D82A3BBBD000911BAC /* DataSourceGridSquare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceGridSquare.swift; sourceTree = "<group>"; };
+		F71FC0DA2A3BBC7E00911BAC /* DataSourceMapGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceMapGrid.swift; sourceTree = "<group>"; };
 		F72281D7296E232700218FC0 /* ChartCorrectionQueryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartCorrectionQueryTests.swift; sourceTree = "<group>"; };
 		F72281D9296F27D000218FC0 /* CurrentLocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLocationTests.swift; sourceTree = "<group>"; };
 		F72281DC296F3FDE00218FC0 /* DataSourceCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceCellTests.swift; sourceTree = "<group>"; };
@@ -1056,6 +1064,10 @@
 			isa = PBXGroup;
 			children = (
 				F73ABC83295245BB0085EDC5 /* OnboardingView.swift */,
+				F71FC0D42A3BAC3200911BAC /* OnboardingTabTemplate.swift */,
+				F71FC0D62A3BB2D600911BAC /* DataSourceTabGrid.swift */,
+				F71FC0D82A3BBBD000911BAC /* DataSourceGridSquare.swift */,
+				F71FC0DA2A3BBC7E00911BAC /* DataSourceMapGrid.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -2368,6 +2380,8 @@
 				F7FFB33D28DA061D00C31AA3 /* FilterButton.swift in Sources */,
 				F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */,
 				F71D288128C29F0200F1775C /* BundleExtensions.swift in Sources */,
+				F71FC0DB2A3BBC7E00911BAC /* DataSourceMapGrid.swift in Sources */,
+				F71FC0D92A3BBBD000911BAC /* DataSourceGridSquare.swift in Sources */,
 				F7FFB30028D6376100C31AA3 /* NavigationalWarning+Decodable.swift in Sources */,
 				F7FFB30628D63A7200C31AA3 /* Asam+DataSourceViewBuilder.swift in Sources */,
 				F7D671F1287484FE00758F1C /* MarlinUserDefaults.swift in Sources */,
@@ -2493,6 +2507,7 @@
 				F707BA852878DBFF006A94C4 /* AdaptiveImage.swift in Sources */,
 				F7FFB2F828D6344000C31AA3 /* Port+Decodable.swift in Sources */,
 				F7D8FA47293A950F00E7D0A1 /* DateFilter.swift in Sources */,
+				F71FC0D52A3BAC3200911BAC /* OnboardingTabTemplate.swift in Sources */,
 				F71E3E3C28F99626002F2019 /* CurrentLocation.swift in Sources */,
 				F707BA89287C68E7006A94C4 /* RaconCard.swift in Sources */,
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
@@ -2513,6 +2528,7 @@
 				F7FFB34528DE18B900C31AA3 /* Badge.swift in Sources */,
 				F72EAADF291EECF400AC6026 /* NTMActionBar.swift in Sources */,
 				F7BDF7742A1BD97C0083B97F /* DataSourceLocationMapView.swift in Sources */,
+				F71FC0D72A3BB2D600911BAC /* DataSourceTabGrid.swift in Sources */,
 				F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */,
 				F7EB1B0E2A0D7FC200D1433B /* SFGeometryExtensions.swift in Sources */,
 				F7FFB31028D63C4700C31AA3 /* Modu+MapImage.swift in Sources */,

@@ -23,10 +23,20 @@ class DataSourceList: ObservableObject {
         DataSourceItem(dataSource: NoticeToMariners.self)
     ]
     
-    var allTabs: [DataSourceItem] {
+    var enabledTabs: [DataSourceItem] {
         return tabItems.filter({ item in
             item.enabled
-        }).sorted(by: { one, two in
+        })
+    }
+    
+    var mappableDataSources: [DataSourceItem] {
+        return enabledTabs.filter { item in
+            item.dataSource.isMappable
+        }
+    }
+    
+    var allTabs: [DataSourceItem] {
+        return enabledTabs.sorted(by: { one, two in
             return one.order < two.order
         })
     }
@@ -59,6 +69,7 @@ class DataSourceList: ObservableObject {
                 self?._mappedDataSources = Published(initialValue: Array(allTabs.filter({ item in
                     UserDefaults.standard.dataSourceEnabled(item.dataSource) && UserDefaults.standard.showOnMap(key: item.key)
                 })))
+                self?.objectWillChange.send()
             })
             .store(in: &cancellable)
     }
