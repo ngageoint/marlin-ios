@@ -14,11 +14,7 @@ struct AppLauncher {
     
     static func main() throws {
         if NSClassFromString("XCTestCase") == nil {
-            if #available(iOS 16, *) {
-                MarlinApp.main()
-            } else {
-                NonBackgroundMarlinApp.main()
-            }
+            MarlinApp.main()
         } else {
             TestApp.main()
         }
@@ -191,44 +187,5 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         MSI.shared.registerBackgroundHandler()
         return true
-    }
-}
-
-// remove this when we support ios 16 +
-struct NonBackgroundMarlinApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-    var cancellable = Set<AnyCancellable>()
-    
-    let persistentStore: PersistentStore
-    let shared: MSI
-    
-    let scheme = MarlinScheme()
-    var appState: AppState
-    
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    init() {
-        // set up default user defaults
-        UserDefaults.registerMarlinDefaults()
-        shared = MSI.shared
-        appState = MSI.shared.appState
-        persistentStoreLoadedPub.sink { notification in
-            NSLog("Persistent store loaded, load all data")
-            MSI.shared.loadAllData()
-        }
-        .store(in: &cancellable)
-        persistentStore = PersistenceController.shared
-        
-        UNUserNotificationCenter.current().delegate = appDelegate
-    }
-    
-    var body: some Scene {
-        WindowGroup {
-            MarlinView()
-                .environmentObject(appState)
-                .environment(\.managedObjectContext, persistentStore.viewContext)
-                .background(Color.surfaceColor)
-        }
     }
 }
