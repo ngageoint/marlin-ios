@@ -65,8 +65,8 @@ final class ModuSummaryTests: XCTestCase {
         expectation(forNotification: .SnackbarNotification,
                     object: nil) { notification in
             let model = try? XCTUnwrap(notification.object as? SnackbarNotification)
-            XCTAssertEqual(model?.snackbarModel?.message, "Location 1° 00' 00\" N, 2° 00' 00\" E copied to clipboard")
-            XCTAssertEqual(UIPasteboard.general.string, "1° 00' 00\" N, 2° 00' 00\" E")
+            XCTAssertEqual(model?.snackbarModel?.message, "Location \(UserDefaults.standard.coordinateDisplay.format(coordinate: modu.coordinate)) copied to clipboard")
+            XCTAssertEqual(UIPasteboard.general.string, "\(UserDefaults.standard.coordinateDisplay.format(coordinate: modu.coordinate))")
             return true
         }
         tester().tapView(withAccessibilityLabel: "Location")

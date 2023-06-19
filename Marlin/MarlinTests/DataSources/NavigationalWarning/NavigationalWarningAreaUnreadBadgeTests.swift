@@ -32,14 +32,6 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
         UserDefaults.standard.setFilter(NavigationalWarning.key, filter: [])
         UserDefaults.standard.setSort(NavigationalWarning.key, sort: NavigationalWarning.defaultSort)
         
-        persistentStore.viewContext.performAndWait {
-            if let nws = persistentStore.viewContext.fetchAll(NavigationalWarning.self) {
-                for nw in nws {
-                    persistentStore.viewContext.delete(nw)
-                }
-            }
-        }
-        
         persistentStoreLoadedPub
             .removeDuplicates()
             .sink { output in

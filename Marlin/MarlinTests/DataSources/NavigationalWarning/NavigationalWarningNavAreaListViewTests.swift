@@ -32,14 +32,6 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         UserDefaults.standard.setFilter(NavigationalWarning.key, filter: [])
         UserDefaults.standard.setSort(NavigationalWarning.key, sort: NavigationalWarning.defaultSort)
         
-        persistentStore.viewContext.performAndWait {
-            if let nws = persistentStore.viewContext.fetchAll(NavigationalWarning.self) {
-                for nw in nws {
-                    persistentStore.viewContext.delete(nw)
-                }
-            }
-        }
-        
         persistentStoreLoadedPub
             .removeDuplicates()
             .sink { output in
@@ -63,6 +55,7 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
                     persistentStore.viewContext.delete(nw)
                 }
             }
+            try? persistentStore.viewContext.save()
         }
         completion(nil)
     }
@@ -119,7 +112,77 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForAnimationsToFinish()
-        tester().waitForView(withAccessibilityLabel: warnings[0].primaryKey)
+        tester().waitForView(withAccessibilityLabel: "\(warnings[0].itemTitle) summary")
+        tester().tapView(withAccessibilityLabel: "\(warnings[0].itemTitle) summary")
+    }
+    
+    func testOneNavWarningNavAreasView() throws {
+        var warnings: [NavigationalWarning] = []
+        persistentStore.viewContext.performAndWait {
+            let navWarning = NavigationalWarning(context: persistentStore.viewContext)
+            navWarning.msgYear = 2022
+            navWarning.msgNumber = 1177
+            navWarning.navArea = "4"
+            navWarning.subregion = "11,26"
+            navWarning.text = "WESTERN NORTH ATLANTIC.\nFLORIDA.\n1. HAZARDOUS OPERATIONS, ROCKET LAUNCHING\n   121606Z TO 121854Z NOV, ALTERNATE\n   131606Z TO 131854Z AND 1607Z TO 1854Z DAILY\n   14 THRU 18 NOV IN AREAS BOUND BY:\n   A. 28-39.92N 080-38.33W, 28-40.00N 079-44.00W,\n      28-28.00N 079-40.00W, 28-29.97N 080-32.29W\n   B. 27-51.00N 073-56.00W, 28-37.00N 073-55.00W,\n      28-40.00N 071-21.00W, 28-13.00N 069-58.00W,\n      27-31.00N 069-58.00W, 27-21.00N 071-43.00W.\n2. CANCEL NAVAREA IV 1165/22.\n3. CANCEL THIS MSG 181954Z NOV 22.\n"
+            navWarning.status = "A"
+            navWarning.issueDate = Date()
+            navWarning.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
+            
+            warnings.append(navWarning)
+            
+            try? persistentStore.viewContext.save()
+        }
+//        guard let objects = TestHelpers.createOneOfEachType(persistentStore.viewContext) else {
+//            XCTFail()
+//            return
+//        }
+        
+        class PassThrough: ObservableObject {
+            var navArea: String
+            var warnings: [NavigationalWarning]
+            
+            init(navArea: String, warnings: [NavigationalWarning]) {
+                self.navArea = navArea
+                self.warnings = warnings
+            }
+        }
+        
+        struct Container: View {
+            
+            @ObservedObject var passThrough: PassThrough
+            
+            init(passThrough: PassThrough) {
+                self.passThrough = passThrough
+            }
+            
+            var body: some View {
+                NavigationView {
+                    NavigationalWarningsOverview()
+
+//                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                }
+            }
+        }
+        let appState = AppState()
+        let passThrough = PassThrough(navArea: "4", warnings: warnings)
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
+        
+        let container = Container(passThrough: passThrough)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(appState)
+            .environmentObject(mockLocationManager as LocationManager)
+        
+        let controller = UIHostingController(rootView: container)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        tester().waitForAnimationsToFinish()
+        tester().waitForView(withAccessibilityLabel: "NAVAREA IV")
+        tester().tapView(withAccessibilityLabel: "NAVAREA IV")
+        tester().waitForView(withAccessibilityLabel: "\(warnings[warnings.count - 1].itemTitle) summary")
+        tester().tapView(withAccessibilityLabel: "\(warnings[warnings.count - 1].itemTitle) summary")
+        tester().wait(forTimeInterval: 5)
     }
     
     func testALotOfNavWarnings() throws {
@@ -188,10 +251,9 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         window.rootViewController = controller
         
         tester().waitForAnimationsToFinish()
-        tester().waitForView(withAccessibilityLabel: "10 Unread Warnings")
+        tester().waitForView(withAccessibilityLabel: "Unread Warnings")
         tester().scrollView(withAccessibilityIdentifier: "Navigation Warning Scroll", byFractionOfSizeHorizontal: 0, vertical: 1.0)
-        tester().waitForAnimationsToFinish()
-        tester().waitForAbsenceOfView(withAccessibilityLabel: "10 Unread Warnings")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Unread Warnings")
     }
     
     func testALotOfNavWarningsScrollTopWithTap() throws {
@@ -260,10 +322,10 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         window.rootViewController = controller
         
         tester().waitForAnimationsToFinish()
-        tester().waitForView(withAccessibilityLabel: "10 Unread Warnings")
-        tester().tapView(withAccessibilityLabel: "10 Unread Warnings")
+        tester().waitForView(withAccessibilityLabel: "Unread Warnings")
+        tester().tapView(withAccessibilityLabel: "Unread Warnings")
         tester().waitForAnimationsToFinish()
-        tester().waitForAbsenceOfView(withAccessibilityLabel: "10 Unread Warnings")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Unread Warnings")
     }
     
     func testALotOfNavWarningsWithLastSeen() throws {
@@ -335,10 +397,10 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         
         tester().waitForAnimationsToFinish()
         
-        tester().waitForView(withAccessibilityLabel: "5 Unread Warnings")
-        tester().tapView(withAccessibilityLabel: "5 Unread Warnings")
+        tester().waitForView(withAccessibilityLabel: "Unread Warnings")
+        tester().tapView(withAccessibilityLabel: "Unread Warnings")
         tester().waitForAnimationsToFinish()
-        tester().waitForAbsenceOfView(withAccessibilityLabel: "5 Unread Warnings")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Unread Warnings")
     }
     
     func testALotOfNavWarningsWithLastSeenThatDoesNotExist() throws {
@@ -410,10 +472,10 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         
         tester().waitForAnimationsToFinish()
         
-        tester().waitForView(withAccessibilityLabel: "10 Unread Warnings")
-        tester().tapView(withAccessibilityLabel: "10 Unread Warnings")
+        tester().waitForView(withAccessibilityLabel: "Unread Warnings")
+        tester().tapView(withAccessibilityLabel: "Unread Warnings")
         tester().waitForAnimationsToFinish()
-        tester().waitForAbsenceOfView(withAccessibilityLabel: "10 Unread Warnings")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Unread Warnings")
     }
 
 }

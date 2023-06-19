@@ -93,112 +93,112 @@ final class MarlinFullFlowTest: XCTestCase {
         window.rootViewController = controller
         
         tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
-//        tester().waitForView(withAccessibilityLabel: "\(Asam.key)List")
-//        tester().tapView(withAccessibilityLabel: "\(Asam.key)List")
-//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
-//        tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
-//        tester().tapView(withAccessibilityLabel: "focus")
-//        // should switch tabs
-//        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
-//        // bottom sheet should show up
-//        tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
-//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Boarding: Boat")
-//        
-//        // Modu
-//        for item in dataSourceList.nonTabs {
-//            if item.key == Modu.key {
-//                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
-//                break
-//            }
-//        }
-//        tester().waitForView(withAccessibilityLabel: "\(Modu.key)List")
-//        tester().tapView(withAccessibilityLabel: "\(Modu.key)List")
-//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
-//        tester().waitForView(withAccessibilityLabel: "ABAN II")
-//        tester().tapView(withAccessibilityLabel: "focus")
-//        // should switch tabs
-//        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
-//        // bottom sheet should show up
-//        tester().waitForView(withAccessibilityLabel: "ABAN II")
-//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-//        tester().waitForAbsenceOfView(withAccessibilityLabel: "ABAN II")
-//        
-//        // Port
-//        for item in dataSourceList.nonTabs {
-//            if item.key == Port.key {
-//                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
-//                break
-//            }
-//        }
-//        tester().waitForView(withAccessibilityLabel: "\(Port.key)List")
-//        tester().tapView(withAccessibilityLabel: "\(Port.key)List")
-//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
-//        tester().waitForView(withAccessibilityLabel: "Aasiaat")
-//        tester().tapView(withAccessibilityLabel: "focus")
-//        // should switch tabs
-//        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
-//        // bottom sheet should show up
-//        tester().waitForView(withAccessibilityLabel: "Aasiaat")
-//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Aasiaat")
-//        
-//        // RadioBeacon
-//        for item in dataSourceList.nonTabs {
-//            if item.key == RadioBeacon.key {
-//                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
-//                break
-//            }
-//        }
-//        tester().waitForView(withAccessibilityLabel: "\(RadioBeacon.key)List")
-//        tester().tapView(withAccessibilityLabel: "\(RadioBeacon.key)List")
-//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
-//        tester().waitForView(withAccessibilityLabel: "Ittoqqortoormit, Scoresbysund")
-//        tester().tapView(withAccessibilityLabel: "focus")
-//        // should switch tabs
-//        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
-//        // bottom sheet should show up
-//        tester().waitForView(withAccessibilityLabel: "Ittoqqortoormit, Scoresbysund")
-//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Ittoqqortoormit, Scoresbysund")
-//        
-//        // Light
-//        for item in dataSourceList.nonTabs {
-//            if item.key == Light.key {
-//                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
-//                break
-//            }
-//        }
-//        tester().waitForView(withAccessibilityLabel: "\(Light.key)List")
-//        tester().tapView(withAccessibilityLabel: "\(Light.key)List")
-//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
-//        tester().waitForView(withAccessibilityLabel: "Bishop Rock.")
-//        tester().tapView(withAccessibilityLabel: "focus")
-//        // should switch tabs
-//        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
-//        // bottom sheet should show up
-//        tester().waitForView(withAccessibilityLabel: "Bishop Rock.")
-//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Bishop Rock.")
-//        
-//        // DifferentialGPSStation
-//        for item in dataSourceList.nonTabs {
-//            if item.key == DifferentialGPSStation.key {
-//                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
-//                break
-//            }
-//        }
-//        tester().waitForView(withAccessibilityLabel: "\(DifferentialGPSStation.key)List")
-//        tester().tapView(withAccessibilityLabel: "\(DifferentialGPSStation.key)List")
-//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
-//        tester().waitForView(withAccessibilityLabel: "Chojin Dan Lt")
-//        tester().tapView(withAccessibilityLabel: "focus")
-//        // should switch tabs
-//        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
-//        // bottom sheet should show up
-//        tester().waitForView(withAccessibilityLabel: "Chojin Dan Lt")
-//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Chojin Dan Lt")
+        tester().waitForView(withAccessibilityLabel: "\(Asam.key)List")
+        tester().tapView(withAccessibilityLabel: "\(Asam.key)List")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
+        tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
+        tester().tapView(withAccessibilityLabel: "focus")
+        // should switch tabs
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        // bottom sheet should show up
+        tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
+        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Boarding: Boat")
+        
+        // Modu
+        for item in dataSourceList.nonTabs {
+            if item.key == Modu.key {
+                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
+                break
+            }
+        }
+        tester().waitForView(withAccessibilityLabel: "\(Modu.key)List")
+        tester().tapView(withAccessibilityLabel: "\(Modu.key)List")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
+        tester().waitForView(withAccessibilityLabel: "ABAN II")
+        tester().tapView(withAccessibilityLabel: "focus")
+        // should switch tabs
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        // bottom sheet should show up
+        tester().waitForView(withAccessibilityLabel: "ABAN II")
+        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "ABAN II")
+        
+        // Port
+        for item in dataSourceList.nonTabs {
+            if item.key == Port.key {
+                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
+                break
+            }
+        }
+        tester().waitForView(withAccessibilityLabel: "\(Port.key)List")
+        tester().tapView(withAccessibilityLabel: "\(Port.key)List")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
+        tester().waitForView(withAccessibilityLabel: "Aasiaat")
+        tester().tapView(withAccessibilityLabel: "focus")
+        // should switch tabs
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        // bottom sheet should show up
+        tester().waitForView(withAccessibilityLabel: "Aasiaat")
+        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Aasiaat")
+        
+        // RadioBeacon
+        for item in dataSourceList.nonTabs {
+            if item.key == RadioBeacon.key {
+                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
+                break
+            }
+        }
+        tester().waitForView(withAccessibilityLabel: "\(RadioBeacon.key)List")
+        tester().tapView(withAccessibilityLabel: "\(RadioBeacon.key)List")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
+        tester().waitForView(withAccessibilityLabel: "Ittoqqortoormit, Scoresbysund")
+        tester().tapView(withAccessibilityLabel: "focus")
+        // should switch tabs
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        // bottom sheet should show up
+        tester().waitForView(withAccessibilityLabel: "Ittoqqortoormit, Scoresbysund")
+        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Ittoqqortoormit, Scoresbysund")
+        
+        // Light
+        for item in dataSourceList.nonTabs {
+            if item.key == Light.key {
+                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
+                break
+            }
+        }
+        tester().waitForView(withAccessibilityLabel: "\(Light.key)List")
+        tester().tapView(withAccessibilityLabel: "\(Light.key)List")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
+        tester().waitForView(withAccessibilityLabel: "Bishop Rock.")
+        tester().tapView(withAccessibilityLabel: "focus")
+        // should switch tabs
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        // bottom sheet should show up
+        tester().waitForView(withAccessibilityLabel: "Bishop Rock.")
+        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Bishop Rock.")
+        
+        // DifferentialGPSStation
+        for item in dataSourceList.nonTabs {
+            if item.key == DifferentialGPSStation.key {
+                dataSourceList.addItemToTabs(dataSourceItem: item, position: 0)
+                break
+            }
+        }
+        tester().waitForView(withAccessibilityLabel: "\(DifferentialGPSStation.key)List")
+        tester().tapView(withAccessibilityLabel: "\(DifferentialGPSStation.key)List")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
+        tester().waitForView(withAccessibilityLabel: "Chojin Dan Lt")
+        tester().tapView(withAccessibilityLabel: "focus")
+        // should switch tabs
+        tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
+        // bottom sheet should show up
+        tester().waitForView(withAccessibilityLabel: "Chojin Dan Lt")
+        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Chojin Dan Lt")
         
         // Navigational Warning
         for item in dataSourceList.nonTabs {
@@ -214,15 +214,15 @@ final class MarlinFullFlowTest: XCTestCase {
         tester().tapView(withAccessibilityLabel: "NAVAREA IV")
         tester().waitForAnimationsToFinish()
         TestHelpers.printAllAccessibilityLabelsInWindows()
-        tester().waitForView(withAccessibilityLabel: "\(objects.navigationalWarningLine.itemTitle) summary")
-        tester().tapView(withAccessibilityLabel: "\(objects.navigationalWarningLine.itemTitle) summary")
+        tester().waitForView(withAccessibilityLabel: "\(objects.navigationalWarningPoint.itemTitle) summary")
+        tester().tapView(withAccessibilityLabel: "\(objects.navigationalWarningPoint.itemTitle) summary")
         tester().tapView(withAccessibilityLabel: "focus")
         // should switch tabs
         tester().waitForView(withAccessibilityLabel: "Marlin Map Tab")
         // bottom sheet should show up
-        tester().waitForView(withAccessibilityLabel: objects.navigationalWarningLine.itemTitle)
+        tester().waitForView(withAccessibilityLabel: objects.navigationalWarningPoint.itemTitle)
         NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-        tester().waitForAbsenceOfView(withAccessibilityLabel: objects.navigationalWarningLine.itemTitle)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: objects.navigationalWarningPoint.itemTitle)
     }
     
     func testMapTapBottomSheetShowDetails() {

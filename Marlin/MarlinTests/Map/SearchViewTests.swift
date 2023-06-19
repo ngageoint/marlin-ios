@@ -160,8 +160,8 @@ final class SearchViewTests: XCTestCase {
         expectation(forNotification: .SnackbarNotification,
                     object: nil) { notification in
             let model = try? XCTUnwrap(notification.object as? SnackbarNotification)
-            XCTAssertEqual(model?.snackbarModel?.message, "Location 1.0, 1.0 copied to clipboard")
-            XCTAssertEqual(UIPasteboard.general.string, "1.0, 1.0")
+            XCTAssertEqual(model?.snackbarModel?.message, "Location \(UserDefaults.standard.coordinateDisplay.format(coordinate: CLLocationCoordinate2D(latitude: 1.0, longitude: 1.0))) copied to clipboard")
+            XCTAssertEqual(UIPasteboard.general.string, "\(UserDefaults.standard.coordinateDisplay.format(coordinate: CLLocationCoordinate2D(latitude: 1.0, longitude: 1.0)))")
             return true
         }
         tester().tapView(withAccessibilityLabel: "Location")

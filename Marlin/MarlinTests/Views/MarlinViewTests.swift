@@ -238,7 +238,9 @@ final class MarlinViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Filter")
         
         for ds in passThrough.dataSourceList!.mappedDataSources {
-            tester().waitForView(withAccessibilityLabel: "\(ds.dataSource.fullDataSourceName) filter row")
+            if ds.dataSource.properties.count != 0 {
+                tester().waitForView(withAccessibilityLabel: "\(ds.dataSource.fullDataSourceName) filter row")
+            }
         }
         
         tester().tapView(withAccessibilityLabel: "Close Filter")

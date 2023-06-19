@@ -69,10 +69,12 @@ struct NavigationalWarningAreasView: View {
             .accessibilityElement(children: .contain)
             .listRowBackground(Color.surfaceColor)
             .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
+            .accessibilityElement(children: .contain)
             
             if showUnparsedNavigationalWarnings {
                 NavigationLink {
                     NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(noParsedLocationNavigationalWarnings), navArea: "Unknown", mapName: mapName)
+                        .accessibilityElement(children: .contain)
                 } label: {
                     HStack {
                         VStack(alignment: .leading) {

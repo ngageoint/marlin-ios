@@ -32,14 +32,6 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
         UserDefaults.standard.setFilter(NavigationalWarning.key, filter: [])
         UserDefaults.standard.setSort(NavigationalWarning.key, sort: NavigationalWarning.defaultSort)
         
-        persistentStore.viewContext.performAndWait {
-            if let nws = persistentStore.viewContext.fetchAll(NavigationalWarning.self) {
-                for nw in nws {
-                    persistentStore.viewContext.delete(nw)
-                }
-            }
-        }
-        
         persistentStoreLoadedPub
             .removeDuplicates()
             .sink { output in
@@ -63,6 +55,7 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
                     persistentStore.viewContext.delete(nw)
                 }
             }
+            try? persistentStore.viewContext.save()
         }
         completion(nil)
     }
@@ -106,7 +99,7 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
             
             try? persistentStore.viewContext.save()
         }
-        
+
         class PassThrough: ObservableObject {
         }
         

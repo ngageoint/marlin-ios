@@ -69,15 +69,12 @@ struct NavigationalWarningNavAreaListView: View {
                                 }
                             }
                         }
-                            .onTapGesture {
-                                tappedItem = navigationalWarning
-                                showDetail.toggle()
-                            }
-                            .accessibilityElement(children: .contain)
-                            .accessibilityLabel("\(navigationalWarning.itemTitle) summary")
-//                        }
-//                        .accessibilityElement(children: .contain)
-//                        .accessibilityLabel(navigationalWarning.primaryKey)
+                        .onTapGesture {
+                            tappedItem = navigationalWarning
+                            showDetail.toggle()
+                        }
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel("\(navigationalWarning.itemTitle) summary")
                     }
                     .padding(.all, 8)
                 }.background(GeometryReader {
@@ -136,6 +133,8 @@ struct NavigationalWarningNavAreaListView: View {
                                         }
                                     }
                                 }
+                                .accessibilityLabel("Unread Warnings")
+                                .accessibilityElement(children: .contain)
                         }
                     } else {
                         Text("\(dataSource.items.count) Unread Warnings")
@@ -150,6 +149,8 @@ struct NavigationalWarningNavAreaListView: View {
                                     }
                                 }
                             }
+                            .accessibilityLabel("Unread Warnings")
+                            .accessibilityElement(children: .contain)
                     }
                 }
             }

@@ -14,6 +14,7 @@ struct NavigationalWarningSectionRow: View {
     var body: some View {
         NavigationLink {
             NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(section), navArea: section.id, mapName: mapName)
+                .accessibilityElement(children: .contain)
         } label: {
             
             HStack {

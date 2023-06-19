@@ -34,7 +34,16 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         persistentStore.reset()
     }
     
-    override func tearDown() {
+    override func tearDown(completion: @escaping (Error?) -> Void) {
+        persistentStore.viewContext.performAndWait {
+            if let nws = persistentStore.viewContext.fetchAll(NavigationalWarning.self) {
+                for nw in nws {
+                    persistentStore.viewContext.delete(nw)
+                }
+            }
+            try? persistentStore.viewContext.save()
+        }
+        completion(nil)
     }
     
     func testLoading() {

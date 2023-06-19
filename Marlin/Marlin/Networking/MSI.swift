@@ -74,7 +74,7 @@ public class MSI {
     }()
     
     init() {
-        NotificationCenter.default.publisher(for: .DataSourceUpdated)
+        NotificationCenter.default.publisher(for: .DataSourceNeedsProcessed)
             .receive(on: RunLoop.main)
             .compactMap {
                 $0.object as? DataSourceUpdatedNotification
