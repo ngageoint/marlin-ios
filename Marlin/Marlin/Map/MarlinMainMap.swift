@@ -63,19 +63,13 @@ struct MarlinMainMap: View {
     @ViewBuilder
     func bottomButtons() -> some View {
         HStack(alignment: .bottom, spacing: 0) {
-            if verticalSizeClass != .compact {
-                VStack(alignment: .leading, spacing: 8) {
-                    DataSourceToggles()
-                }
-                .padding(.leading, 8)
-                .padding(.bottom, 30)
-            } else {
-                HStack(alignment: .bottom, spacing: 8) {
-                    DataSourceToggles()
-                }
-                .padding(.leading, 8)
-                .padding(.bottom, 30)
+            let layout = verticalSizeClass != .compact ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8)) : AnyLayout(HStackLayout(alignment: .bottom, spacing: 8))
+            
+            layout {
+                DataSourceToggles()
             }
+            .padding(.leading, 8)
+            .padding(.bottom, 30)
             
             Spacer()
             // bottom right button stack
