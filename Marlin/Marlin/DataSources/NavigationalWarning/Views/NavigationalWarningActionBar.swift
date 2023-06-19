@@ -24,7 +24,7 @@ struct NavigationalWarningActionBar: View {
                 }
             }
             Spacer()
-            ShareButton(shareText: navigationalWarning.description)
+            ShareButton(shareText: navigationalWarning.description, dataSource: navigationalWarning)
             if !showMoreDetails {
                 FocusButton(data: navigationalWarning)
             }

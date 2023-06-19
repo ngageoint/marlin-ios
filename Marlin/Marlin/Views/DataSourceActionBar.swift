@@ -22,7 +22,7 @@ struct DataSourceActionBar: View {
             
             Spacer()
             Group {
-                ShareButton(shareText: data.description)
+                ShareButton(shareText: data.description, dataSource: data as? DataSourceViewBuilder)
                 if showFocusButton {
                     FocusButton(data: data)
                 }

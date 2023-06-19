@@ -9,19 +9,35 @@ import SwiftUI
 
 struct ShareButton: View {
     var shareText: String
+    var dataSource: DataSourceViewBuilder?
     var body: some View {
-        Button(action: {
-            let activityVC = UIActivityViewController(activityItems: [shareText], applicationActivities: nil)
-            UIApplication.shared.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
-        }) {
-            Label(
-                title: {},
-                icon: { Image(systemName: "square.and.arrow.up")
-                        .renderingMode(.template)
-                        .foregroundColor(Color.primaryColorVariant)
-                })
+        
+        if let dataSource = dataSource {
+            ShareLink(
+                item: shareText,
+                subject: Text(dataSource.itemTitle),
+                message: Text(dataSource.itemTitle)
+            ) {
+                Label(
+                    title: {},
+                    icon: { Image(systemName: "square.and.arrow.up")
+                            .renderingMode(.template)
+                            .foregroundColor(Color.primaryColorVariant)
+                    })
+            }
+            .accessibilityElement()
+            .accessibilityLabel("share")
+        } else {
+            ShareLink(item: shareText) {
+                Label(
+                    title: {},
+                    icon: { Image(systemName: "square.and.arrow.up")
+                            .renderingMode(.template)
+                            .foregroundColor(Color.primaryColorVariant)
+                    })
+            }
+            .accessibilityElement()
+            .accessibilityLabel("share")
         }
-        .accessibilityElement()
-        .accessibilityLabel("share")
     }
 }
