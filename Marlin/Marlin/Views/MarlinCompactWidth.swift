@@ -121,9 +121,3 @@ struct MarlinCompactWidth: View {
         self.menuOpen.toggle()
     }
 }
-
-extension MarlinCompactWidth: BottomSheetDelegate {
-    func bottomSheetDidDismiss() {
-        filterOpen.toggle()
-    }
-}

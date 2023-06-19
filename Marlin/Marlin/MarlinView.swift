@@ -15,12 +15,6 @@ class ItemWrapper : ObservableObject {
     @Published var date: Date?
 }
 
-extension MarlinView: BottomSheetDelegate {
-    func bottomSheetDidDismiss() {
-        NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
-    }
-}
-
 class MapMixins: ObservableObject {
     @Published var mixins: [any MapMixin] = []
 }

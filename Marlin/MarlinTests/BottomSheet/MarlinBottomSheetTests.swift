@@ -49,7 +49,7 @@ final class MarlinBottomSheetTests: XCTestCase {
             HStack {
                 Text("stack")
             }
-            .bottomSheet(isPresented: $show) {
+            .sheet(isPresented: $show) {
                 MarlinBottomSheet(itemList: bottomSheetItemList)
             }
             .onAppear {
