@@ -139,15 +139,16 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
 }
 
 struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionHeader: View, Content: View>: View {
-    @StateObject var itemsViewModel: MSIListViewModel<T>
-    @State var tappedItem: T?
-    @State private var showDetail = false
     @Binding var path: NavigationPath
+    let sectionHeaderIsSubList: Bool
     var sectionGroupNameBuilder: ((MSISection<T>) -> String)?
     var sectionNameBuilder: ((MSISection<T>) -> String)?
     var sectionViewBuilder: ((MSISection<T>) -> SectionHeader)
-    let sectionHeaderIsSubList: Bool
     let content: ((MSISection<T>) -> Content)
+    
+    @StateObject var itemsViewModel: MSIListViewModel<T> = MSIListViewModel<T>()
+    @State var tappedItem: T?
+    @State private var showDetail = false
 
     var body: some View {
         ZStack {
@@ -329,19 +330,5 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
             .accessibilityLabel("\(item.itemTitle) summary")
         }
         .dataSourceSummaryItem()
-    }
-    
-    init(path: Binding<NavigationPath>, sectionHeaderIsSubList: Bool = false,
-         sectionGroupNameBuilder: ((MSISection<T>) -> String)? = nil,
-         sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
-         @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader,
-         @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
-        _path = path
-        _itemsViewModel = StateObject(wrappedValue: MSIListViewModel<T>())
-        self.sectionGroupNameBuilder = sectionGroupNameBuilder
-        self.sectionNameBuilder = sectionNameBuilder
-        self.sectionViewBuilder = sectionViewBuilder
-        self.sectionHeaderIsSubList = sectionHeaderIsSubList
-        self.content = content
     }
 }
