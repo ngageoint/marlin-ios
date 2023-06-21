@@ -8,7 +8,7 @@
 import SwiftUI
 import MapKit
 
-struct NavigationalWarningsOverview: View {
+struct NavigationalWarningsOverview {
     @ObservedObject var generalLocation: GeneralLocation = GeneralLocation.shared
     
     let MAP_NAME = "Navigational Warning List View Map"
@@ -18,27 +18,27 @@ struct NavigationalWarningsOverview: View {
     
     @ObservedObject var focusedItem: ItemWrapper = ItemWrapper()
     var watchFocusedItem: Bool = false
-
+    
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
         notification.object as? ViewDataSource
     }
-    
-    @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-    
+}
+
+extension NavigationalWarningsOverview: View {
     var body: some View {
         Self._printChanges()
         return NavigationStack(path: $path) {
-            GeometryReader { geometry in
-                
-                VStack(spacing: 0) {
+            VStack(spacing: 0) {
+                GeometryReader { geometry in
+                    
                     NavigationalWarningMapView(bottomButtons: {
                         ViewExpandButton(expanded: $expandMap)
                     })
                     .frame(minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3, maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5)
                     .edgesIgnoringSafeArea([.leading, .trailing])
-                    NavigationalWarningAreasView(mapName: MAP_NAME, path: $path)
-                        .currentNavArea(generalLocation.currentNavArea?.name)
                 }
+                NavigationalWarningAreasView(mapName: MAP_NAME, path: $path)
+                    .currentNavArea(generalLocation.currentNavArea?.name)
             }
             .navigationTitle(NavigationalWarning.fullDataSourceName)
             .navigationBarTitleDisplayMode(.inline)
