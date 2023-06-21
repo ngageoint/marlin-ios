@@ -47,6 +47,7 @@ struct SortView: View {
             HStack {
                 Toggle("Group by primary sort field", isOn: $viewModel.sections)
                     .secondary()
+                    .tint(Color.primaryColor)
             }
             .contentShape(Rectangle())
             .onTapGesture {

@@ -39,6 +39,8 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
     @ObservedObject var focusedItem: ItemWrapper
     @State var selection: String? = nil
     @State var filterOpen: Bool = false
+    @State private var path: NavigationPath = NavigationPath()
+
     var allowUserSort: Bool = true
     var allowUserFilter: Bool = true
     var sectionHeaderIsSubList: Bool = false
@@ -75,69 +77,62 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
     
     var body: some View {
         Self._printChanges()
-        return ZStack {
-            if watchFocusedItem, let focusedDataSource = focusedItem.dataSource as? T {
-                NavigationLink(tag: "detail", selection: $selection) {
-                    focusedDataSource.detailView
+        return NavigationStack(path: $path) {
+            GenericSectionedList<T, SectionHeader, Content>(path: $path, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content)
+                .onAppear {
+                    if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
+                        path.append(focusedItem)
+                    }
+                    Metrics.shared.dataSourceList(dataSource: T.self)
+                }
+                .onChange(of: focusedItem.date) { newValue in
+                    if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
+                        path.append(focusedItem)
+                    }
+                }
+                .navigationDestination(for: T.self) { item in
+                    item.detailView
                         .onDisappear {
                             focusedItem.dataSource = nil
                         }
-                } label: {
-                    EmptyView().hidden()
                 }
-                
-                .isDetailLink(false)
-                .onAppear {
-                    selection = "detail"
-                }
-                .onChange(of: focusedItem.date) { newValue in
-                    if watchFocusedItem, let _ = focusedItem.dataSource as? T {
-                        selection = "detail"
-                    }
-                }
-                
+            .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)]), allowSorting: allowUserSort, allowFiltering: allowUserFilter))
+            .background {
+                DataSourceFilter(filterViewModel: filterViewModel, showBottomSheet: $filterOpen)
             }
-            GenericSectionedList<T, SectionHeader, Content>(sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content)
-                .onAppear {
-                    Metrics.shared.dataSourceList(dataSource: T.self)
-                }
-        }
-        .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)]), allowSorting: allowUserSort, allowFiltering: allowUserFilter))
-        .background {
-            DataSourceFilter(filterViewModel: filterViewModel, showBottomSheet: $filterOpen)
-        }
-        .sheet(isPresented: $sortOpen) {
-            NavigationStack {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        SortView(dataSource: T.self)
-                            .background(Color.surfaceColor)
-                        
-                        Spacer()
-                    }
-                    
-                }
-                .navigationTitle("\(T.dataSourceName) Sort")
-                .navigationBarTitleDisplayMode(.inline)
-                .background(Color.backgroundColor)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            sortOpen.toggle()
-                        }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .imageScale(.large)
-                                .foregroundColor(Color.onPrimaryColor.opacity(0.87))
+            .sheet(isPresented: $sortOpen) {
+                NavigationStack {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 0) {
+                            SortView(dataSource: T.self)
+                                .background(Color.surfaceColor)
+                            
+                            Spacer()
                         }
-                        .accessibilityElement()
-                        .accessibilityLabel("Close Sort")
+                        
                     }
+                    .navigationTitle("\(T.dataSourceName) Sort")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .background(Color.backgroundColor)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                sortOpen.toggle()
+                            }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .imageScale(.large)
+                                    .foregroundColor(Color.onPrimaryColor.opacity(0.87))
+                            }
+                            .accessibilityElement()
+                            .accessibilityLabel("Close Sort")
+                        }
+                    }
+                    .presentationDetents([.large])
                 }
-                .presentationDetents([.large])
-            }
-            
-            .onAppear {
-                Metrics.shared.dataSourceSort(dataSource: T.self)
+                
+                .onAppear {
+                    Metrics.shared.dataSourceSort(dataSource: T.self)
+                }
             }
         }
     }
@@ -147,6 +142,7 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
     @StateObject var itemsViewModel: MSIListViewModel<T>
     @State var tappedItem: T?
     @State private var showDetail = false
+    @Binding var path: NavigationPath
     var sectionGroupNameBuilder: ((MSISection<T>) -> String)?
     var sectionNameBuilder: ((MSISection<T>) -> String)?
     var sectionViewBuilder: ((MSISection<T>) -> SectionHeader)
@@ -155,17 +151,14 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
 
     var body: some View {
         ZStack {
-            NavigationLink(destination: AnyView(tappedItem?.detailView), isActive: self.$showDetail) {
-                EmptyView()
-            }.hidden()
-                if !sectionHeaderIsSubList {
-                    sectionHeaderList()
-                } else if sectionGroupNameBuilder != nil {
-                    sectionHeaderGroupedSublist()
-                } else {
-                    sectionHeaderSublist()
-                }
+            if !sectionHeaderIsSubList {
+                sectionHeaderList()
+            } else if sectionGroupNameBuilder != nil {
+                sectionHeaderGroupedSublist()
+            } else {
+                sectionHeaderSublist()
             }
+        }
             
         .navigationTitle(T.fullDataSourceName)
         .navigationBarTitleDisplayMode(.inline)
@@ -322,11 +315,6 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
         ForEach(items) { item in
             
             ZStack {
-                NavigationLink(destination: item.detailView) {
-                    EmptyView()
-                }
-                .opacity(0)
-                
                 HStack {
                     item.summaryView(showMoreDetails: false, showSectionHeader: false, mapName: nil, showTitle: true)
                 }
@@ -335,8 +323,7 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
             }
             .padding(.all, 8)
             .onTapGesture {
-                tappedItem = item
-                showDetail.toggle()
+                path.append(item)
             }
             .accessibilityElement(children: .contain)
             .accessibilityLabel("\(item.itemTitle) summary")
@@ -344,11 +331,12 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
         .dataSourceSummaryItem()
     }
     
-    init(sectionHeaderIsSubList: Bool = false,
+    init(path: Binding<NavigationPath>, sectionHeaderIsSubList: Bool = false,
          sectionGroupNameBuilder: ((MSISection<T>) -> String)? = nil,
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
          @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader,
          @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
+        _path = path
         _itemsViewModel = StateObject(wrappedValue: MSIListViewModel<T>())
         self.sectionGroupNameBuilder = sectionGroupNameBuilder
         self.sectionNameBuilder = sectionNameBuilder

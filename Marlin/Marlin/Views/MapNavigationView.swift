@@ -10,28 +10,30 @@ import SwiftUI
 struct MapNavigationView: View {
     @EnvironmentObject var dataSourceList: DataSourceList
     @Binding var filterOpen: Bool
-    @Binding var selection: String?
     @Binding var menuOpen: Bool
     
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
     
+    @Binding var path: NavigationPath
+    
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
         notification.object as? ViewDataSource
     }
+    let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
+        notification.object
+    }
 
     var body: some View {
-        NavigationView {
+        NavigationStack(path: $path) {
             VStack(spacing: 0) {
                 DataLoadedNotificationBanner()
                 CurrentLocation()
                 ZStack(alignment: .topLeading) {
-                    MarlinMainMap(selection: $selection)
+                    MarlinMainMap(path: $path)
                         .navigationTitle("Marlin")
                         .navigationBarTitleDisplayMode(.inline)
                         .navigationBarBackButtonHidden(true)
-                        .if(UserDefaults.standard.hamburger) { view in
-                            view.modifier(Hamburger(menuOpen: $menuOpen))
-                        }
+                        .modifier(Hamburger(menuOpen: $menuOpen))
                         .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
                         .onAppear {
                             Metrics.shared.mapView()
@@ -41,42 +43,25 @@ struct MapNavigationView: View {
                     
                     LoadingCapsule()
                 }
-                NavigationLink(tag: "detail", selection: $selection) {
-                    if let data = itemWrapper.dataSource as? DataSourceViewBuilder {
-                        data.detailView
-                    }
-                } label: {
-                    EmptyView()
-                }
-                .isDetailLink(false)
-                .hidden()
-                
-                NavigationLink(tag: "settings", selection: $selection) {
+            }
+            .navigationDestination(for: String.self) { destination in
+                if destination == "settings" {
                     AboutView()
-                } label: {
-                    EmptyView()
-                }
-                .isDetailLink(false)
-                .hidden()
-                
-                NavigationLink(tag: "submitReport", selection: $selection) {
+                } else if destination == "submitReport" {
                     SubmitReportView()
-                } label: {
-                    EmptyView()
                 }
-                .isDetailLink(false)
-                .hidden()
-                
-                ForEach(dataSourceList.nonTabs) { dataSource in
-                    
-                    NavigationLink(tag: "\(dataSource.key)List", selection: $selection) {
-                        DataSourceListView(dataSource: dataSource)
-                    } label: {
-                        EmptyView()
-                    }
-                    
-                    .isDetailLink(false)
-                    .hidden()
+            }
+            .navigationDestination(for: ItemWrapper.self) { item in
+                if let dataSourceViewBuilder = item.dataSource as? (any DataSourceViewBuilder) {
+                    dataSourceViewBuilder.detailView
+                }
+            }
+            .navigationDestination(for: DataSourceItem.self) { item in
+                DataSourceListView(dataSource: item)
+            }
+            .navigationDestination(for: MapStateNavigation.self) { item in
+                if item.view == "mapSettings" {
+                    MapSettings(mapState: item.mapState)
                 }
             }
             .onReceive(viewDataSourcePub) { output in
@@ -86,14 +71,33 @@ struct MapNavigationView: View {
                     }
                 }
             }
+            .onReceive(switchTabPub) { output in
+                if let output = output as? String {
+                    if output == "settings" {
+                        path.append("settings")
+                    } else if output == "submitReport" {
+                        path.append("submitReport")
+                    } else {
+                        let tab = dataSourceList.tabs.contains(where: { item in
+                            item.key == output
+                        })
+                        if !tab, let dataSourceItem = dataSourceList.allTabs.first(where: { item in
+                            item.key == output
+                        }) {
+                            path.append(dataSourceItem)
+                        }
+                    }
+                }
+            }
         }
     }
     
     func viewData(_ data: any DataSource) {
         NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
         NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
+        let itemWrapper = ItemWrapper()
         itemWrapper.dataSource = data
         itemWrapper.date = Date()
-        selection = "detail"
+        path.append(itemWrapper)
     }
 }

@@ -7,16 +7,26 @@
 
 import SwiftUI
 
+struct NavigationalWarningSection: Hashable {
+    static func == (lhs: NavigationalWarningSection, rhs: NavigationalWarningSection) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    var id: String
+    var warnings: Array<NavigationalWarning>
+}
+
 struct NavigationalWarningSectionRow: View {
     var section: SectionedFetchResults<String, NavigationalWarning>.Element
     var mapName: String?
+    @Binding var path: NavigationPath
     
     var body: some View {
-        NavigationLink {
-            NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(section), navArea: section.id, mapName: mapName)
-                .accessibilityElement(children: .contain)
-        } label: {
-            
+        NavigationLink(value: NavigationalWarningSection(id: section.id, warnings: Array<NavigationalWarning>(section))) {
             HStack {
                 VStack(alignment: .leading) {
                     Text(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "")

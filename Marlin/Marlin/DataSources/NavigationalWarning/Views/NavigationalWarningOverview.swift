@@ -14,6 +14,11 @@ struct NavigationalWarningsOverview: View {
     let MAP_NAME = "Navigational Warning List View Map"
     @State var expandMap: Bool = false
     @State var selection: String? = nil
+    @State private var path: NavigationPath = NavigationPath()
+    
+    @ObservedObject var focusedItem: ItemWrapper = ItemWrapper()
+    var watchFocusedItem: Bool = false
+
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
         notification.object as? ViewDataSource
     }
@@ -22,40 +27,49 @@ struct NavigationalWarningsOverview: View {
     
     var body: some View {
         Self._printChanges()
-        return GeometryReader { geometry in
-            NavigationLink(tag: "detail", selection: $selection) {
-                if let data = itemWrapper.dataSource as? DataSourceViewBuilder {
-                    data.detailView
+        return NavigationStack(path: $path) {
+            GeometryReader { geometry in
+                
+                VStack(spacing: 0) {
+                    NavigationalWarningMapView(bottomButtons: {
+                        ViewExpandButton(expanded: $expandMap)
+                    })
+                    .frame(minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3, maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5)
+                    .edgesIgnoringSafeArea([.leading, .trailing])
+                    NavigationalWarningAreasView(mapName: MAP_NAME, path: $path)
+                        .currentNavArea(generalLocation.currentNavArea?.name)
                 }
-            } label: {
-                EmptyView()
             }
-            .isDetailLink(false)
-            .hidden()
-            
-            VStack(spacing: 0) {
-                NavigationalWarningMapView(bottomButtons: {
-                    ViewExpandButton(expanded: $expandMap)
-                })
-                .frame(minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3, maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5)
-                .edgesIgnoringSafeArea([.leading, .trailing])
-                NavigationalWarningAreasView(mapName: MAP_NAME)
-                    .currentNavArea(generalLocation.currentNavArea?.name)
+            .navigationTitle(NavigationalWarning.fullDataSourceName)
+            .navigationBarTitleDisplayMode(.inline)
+            .background(Color.surfaceColor)
+            .navigationDestination(for: NavigationalWarning.self) { item in
+                item.detailView
+                    .onDisappear {
+                        focusedItem.dataSource = nil
+                    }
+            }
+            .navigationDestination(for: NavigationalWarningSection.self) { section in
+                NavigationalWarningNavAreaListView(warnings: section.warnings, navArea: section.id, mapName: MAP_NAME, path: $path)
+                    .accessibilityElement(children: .contain)
             }
         }
-        .navigationTitle(NavigationalWarning.fullDataSourceName)
-        .navigationBarTitleDisplayMode(.inline)
-        .background(Color.surfaceColor)
+        .onChange(of: focusedItem.date) { newValue in
+            if watchFocusedItem, let focusedItem = focusedItem.dataSource as? NavigationalWarning {
+                path.append(focusedItem)
+            }
+        }
         .onAppear {
+            if watchFocusedItem, let focusedItem = focusedItem.dataSource as? NavigationalWarning {
+                path.append(focusedItem)
+            }
             Metrics.shared.appRoute([NavigationalWarning.metricsKey, "group"])
             Metrics.shared.dataSourceList(dataSource: NavigationalWarning.self)
         }
         .onReceive(viewDataSourcePub) { output in
             if let dataSource = output.dataSource as? NavigationalWarning, output.mapName == MAP_NAME {
                 NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
-                itemWrapper.dataSource = dataSource
-                itemWrapper.date = Date()
-                selection = "detail"
+                path.append(dataSource)
             }
         }
     }

@@ -8,17 +8,12 @@
 import SwiftUI
 import MapKit
 
-class MarlinMainNavState: ObservableObject {
-    @Published var popToRoot: Bool = false
-}
-
 struct MarlinCompactWidth: View {
-    @StateObject var marlinMainNavState: MarlinMainNavState = MarlinMainNavState()
-    
+    @State private var path: NavigationPath = NavigationPath()
+
     @AppStorage("selectedTab") var selectedTab: String = "map"
     
     @State var menuOpen: Bool = false
-    @State var selection: String? = nil
     
     @EnvironmentObject var dataSourceList: DataSourceList
     
@@ -33,7 +28,7 @@ struct MarlinCompactWidth: View {
         Self._printChanges()
         return ZStack {
             TabView(selection: $selectedTab) {
-                MapNavigationView(filterOpen: $filterOpen, selection: $selection, menuOpen: $menuOpen)
+                MapNavigationView(filterOpen: $filterOpen, menuOpen: $menuOpen, path: $path)
                 .tag("map")
                 .tabItem {
                     Label("Map", systemImage: "map.fill")
@@ -48,60 +43,45 @@ struct MarlinCompactWidth: View {
                 .accentColor(Color.onPrimaryColor)
                 
                 ForEach(dataSourceList.tabs, id: \.self) { dataSource in
-                    NavigationView {
-                        DataSourceListView(dataSource: dataSource)
-                            .if(UserDefaults.standard.hamburger) { view in
-                                view.modifier(Hamburger(menuOpen: $menuOpen))
+                    DataSourceListView(dataSource: dataSource)
+                        .modifier(Hamburger(menuOpen: $menuOpen))
+                        // This is deprecated, but in iOS16 this is the only way to set the back button color
+                        .accentColor(Color.onPrimaryColor)
+                        .tabItem {
+                            if let imageName = dataSource.dataSource.imageName {
+                                Label(dataSource.dataSource.dataSourceName, image: imageName)
+                                    .accessibilityElement(children: .contain)
+                                    .accessibilityLabel("\(dataSource.key)List")
+                            } else if let imageName = dataSource.dataSource.systemImageName {
+                                Label(dataSource.dataSource.dataSourceName, systemImage: imageName)
+                                    .accessibilityElement(children: .contain)
+                                    .accessibilityLabel("\(dataSource.key)List")
+                            } else {
+                                Label(dataSource.dataSource.dataSourceName, systemImage: "list.bullet.rectangle.fill")
+                                    .accessibilityElement(children: .contain)
+                                    .accessibilityLabel("\(dataSource.key)List")
                             }
-                    }
-                    // This is deprecated, but in iOS16 this is the only way to set the back button color
-                    .accentColor(Color.onPrimaryColor)
-                    // This must be set or navigation links that are nested more than 2 deep will auto pop off
-                    .navigationViewStyle(.stack)
-                    .tabItem {
-                        if let imageName = dataSource.dataSource.imageName {
-                            Label(dataSource.dataSource.dataSourceName, image: imageName)
-                                .accessibilityElement(children: .contain)
-                                .accessibilityLabel("\(dataSource.key)List")
-                        } else if let imageName = dataSource.dataSource.systemImageName {
-                            Label(dataSource.dataSource.dataSourceName, systemImage: imageName)
-                                .accessibilityElement(children: .contain)
-                                .accessibilityLabel("\(dataSource.key)List")
-                        } else {
-                            Label(dataSource.dataSource.dataSourceName, systemImage: "list.bullet.rectangle.fill")
-                                .accessibilityElement(children: .contain)
-                                .accessibilityLabel("\(dataSource.key)List")
                         }
-                    }
-                    .tag("\(dataSource.key)List")
-                }
-            }
-            .onReceive(self.marlinMainNavState.$popToRoot) { popToRoot in
-                if popToRoot {
-                    self.marlinMainNavState.popToRoot = false
+                        .tag("\(dataSource.key)List")
                 }
             }
             .onReceive(mapFocus) { output in
                 let tab = output.object as? String ?? "map"
                 selectedTab = tab
-                selection = nil
-                self.marlinMainNavState.popToRoot = true
+                path.removeLast(path.count)
             }
             .onReceive(switchTabPub) { output in
                 if let output = output as? String {
                     if output == "settings" {
                         selectedTab = "map"
-                        selection = "settings"
                     } else if output == "submitReport" {
                         selectedTab = "map"
-                        selection = "submitReport"
                     } else if dataSourceList.tabs.contains(where: { item in
                             item.key == output
                         }) {
                         selectedTab = "\(output)List"
                     } else {
                         selectedTab = "map"
-                        selection = "\(output)List"
                     }
                     self.menuOpen = false
                 }

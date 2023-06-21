@@ -220,6 +220,7 @@ struct MapSettings: View {
                     .padding(.top, 4)
                     .padding(.bottom, 4)
                 })
+                .tint(Color.primaryColor)
                 .padding([.top, .bottom], 8)
                 
                 NavigationLink {

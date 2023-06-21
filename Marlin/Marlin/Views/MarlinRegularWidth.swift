@@ -17,6 +17,7 @@ struct MarlinRegularWidth: View {
     @State var activeRailItem: DataSourceItem? = nil
     @State var menuOpen: Bool = false
     @Binding var filterOpen: Bool
+    @State private var path: NavigationPath = NavigationPath()
 
     @EnvironmentObject var dataSourceList: DataSourceList
         
@@ -33,123 +34,123 @@ struct MarlinRegularWidth: View {
         
     @StateObject var mixins: MainMapMixins = MainMapMixins()
     
-    var body: some View {
-        NavigationView {
-            VStack {
-                ZStack {
-                    HStack(spacing: 0) {
-                        DataSourceRail(activeRailItem: $activeRailItem)
-                            .frame(minWidth: 72, idealWidth: 72, maxWidth: 72)
-                            .onAppear {
-                                var found = false
-                                for item in dataSourceList.allTabs {
-                                    if "\(item.key)List" == selectedTab {
-                                        activeRailItem = item
-                                        found = true
-                                    }
-                                }
-                                if !found {
-                                    activeRailItem = dataSourceList.tabs[0]
-                                }
-                            }
-                            .background(Color.surfaceColor)
-                            .padding(.horizontal, 2)
-                            .onChange(of: activeRailItem) { newValue in
-                                if let item = newValue {
-                                    selectedTab = "\(item.key)List"
-                                }
-                            }
-                            .accessibilityElement(children: .contain)
-                            .accessibilityLabel("Data Source Rail")
-                        
-                        if let activeRailItem = activeRailItem {
-                            NavigationView {
-                                createListView(dataSource: activeRailItem)
-                            }
-                            .navigationViewStyle(.stack)
-                            .frame(minWidth: 256, idealWidth: 360, maxWidth: 360)
-                            .background(Color.backgroundColor)
-                        }
-                        
-                        NavigationView {
-                            VStack(spacing: 0) {
-                                DataLoadedNotificationBanner()
-                                CurrentLocation()
-                                ZStack(alignment: .topLeading) {
-                                    MarlinMainMap(selection: $selection)
-                                        .accessibilityElement(children: .contain)
-                                        .accessibilityLabel("Marlin Map")
-                                        .onAppear {
-                                            Metrics.shared.mapView()
-                                        }
-                                    loadingCapsule()
-                                }
-                            }
-                            .navigationBarHidden(true)
-                        }.navigationViewStyle(.stack)
-                    }
-                    .onReceive(viewDataSourcePub) { output in
-                        if let dataSource = output.dataSource {
-                            viewData(dataSource)
+    @ViewBuilder
+    func rail() -> some View {
+        NavigationStack {
+            DataSourceRail(activeRailItem: $activeRailItem)
+                .onAppear {
+                    var found = false
+                    for item in dataSourceList.allTabs {
+                        if "\(item.key)List" == selectedTab {
+                            activeRailItem = item
+                            found = true
                         }
                     }
-                    .onReceive(switchTabPub) { output in
-                        if let output = output as? String {
-                            let dataSource = dataSourceList.allTabs.first { item in
-                                item.key == output
-                            }
-                            self.activeRailItem = dataSource
-                        }
-                    }
-                    .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
-                    
-                    GeometryReader { geometry in
-                        SideMenu(width: min(geometry.size.width - 56, 512),
-                                 isOpen: self.menuOpen,
-                                 menuClose: self.openMenu
-                        )
-                        .opacity(self.menuOpen ? 1 : 0)
-                        .animation(.default, value: self.menuOpen)
-                        .onReceive(switchTabPub) { output in
-                            if let output = output as? String {
-                                if output == "settings" {
-                                    selection = "settings"
-                                } else if output == "submitReport" {
-                                    selection = "submitReport"
-                                } else {
-                                    selection = "\(output)List"
-                                }
-                                self.menuOpen = false
-                            }
-                        }
+                    if !found {
+                        activeRailItem = dataSourceList.tabs[0]
                     }
                 }
-                .if(UserDefaults.standard.hamburger) { view in
-                    view.modifier(Hamburger(menuOpen: $menuOpen))
+                .background(Color.surfaceColor)
+                .padding(.horizontal, 2)
+                .onChange(of: activeRailItem) { newValue in
+                    if let item = newValue {
+                        selectedTab = "\(item.key)List"
+                    }
                 }
-                .navigationTitle("Marlin")
-                .navigationBarTitleDisplayMode(.inline)
-                NavigationLink(tag: "settings", selection: $selection) {
-                    AboutView()
-                } label: {
-                    EmptyView()
-                }
-                .isDetailLink(false)
-                .hidden()
-                
-                NavigationLink(tag: "submitReport", selection: $selection) {
-                    SubmitReportView()
-                } label: {
-                    EmptyView()
-                }
-                .isDetailLink(false)
-                .hidden()
-            }
+                .modifier(Hamburger(menuOpen: $menuOpen))
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Data Source Rail")
         }
-        .tint(Color.onPrimaryColor)
-        .navigationViewStyle(.stack)
     }
     
+    @ViewBuilder
+    func list() -> some View {
+        if let activeRailItem = activeRailItem {
+            createListView(dataSource: activeRailItem)
+                .background(Color.backgroundColor)
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("\(activeRailItem.dataSource.fullDataSourceName) List")
+        }
+    }
+    
+    @ViewBuilder
+    func map() -> some View {
+        NavigationStack(path: $path) {
+            VStack(spacing: 0) {
+                DataLoadedNotificationBanner()
+                CurrentLocation()
+                ZStack(alignment: .topLeading) {
+                    MarlinMainMap(path: $path)
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel("Marlin Map")
+                        .onAppear {
+                            Metrics.shared.mapView()
+                        }
+                    loadingCapsule()
+                }
+            }
+            .navigationDestination(for: String.self) { destination in
+                if destination == "settings" {
+                    AboutView()
+                } else if destination == "submitReport" {
+                    SubmitReportView()
+                }
+            }
+            .navigationDestination(for: MapStateNavigation.self) { item in
+                if item.view == "mapSettings" {
+                    MapSettings(mapState: item.mapState)
+                }
+            }
+            .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
+            .navigationTitle("Marlin")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+    @State private var visibility: NavigationSplitViewVisibility = .all
+    
+    var body: some View {
+        ZStack {
+            HStack(spacing: 0) {
+                rail()
+                    .frame(minWidth: 72, idealWidth: 72, maxWidth: 72)
+                list()
+                    .frame(minWidth: 256, idealWidth: 360, maxWidth: 360)
+                map()
+            }
+            GeometryReader { geometry in
+                SideMenu(width: min(geometry.size.width - 56, 512),
+                         isOpen: self.menuOpen,
+                         menuClose: self.openMenu
+                )
+                .opacity(self.menuOpen ? 1 : 0)
+                .animation(.default, value: self.menuOpen)
+            }
+        }
+        .onReceive(viewDataSourcePub) { output in
+            if let dataSource = output.dataSource {
+                viewData(dataSource)
+            }
+        }
+        .onReceive(switchTabPub) { output in
+            if let output = output as? String {
+                if output == "settings" {
+                    path.append("settings")
+                } else if output == "submitReport" {
+                    path.append("submitReport")
+                } else {
+                    let dataSource = dataSourceList.allTabs.first { item in
+                        item.key == output
+                    }
+                    self.activeRailItem = dataSource
+                }
+                self.menuOpen = false
+            }
+        }
+        
+        .navigationTitle("Marlin")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
     func openMenu() {
         self.menuOpen.toggle()
     }
@@ -157,12 +158,11 @@ struct MarlinRegularWidth: View {
     func viewData(_ data: any DataSource) {
         NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
         NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
-        itemWrapper.dataSource = data
-        itemWrapper.date = Date()
         activeRailItem = dataSourceList.allTabs.first(where: { item in
             item.dataSource == type(of: data.self)
         })
-        
+        itemWrapper.dataSource = data
+        itemWrapper.date = Date()
     }
     
     @ViewBuilder
@@ -191,30 +191,26 @@ struct MarlinRegularWidth: View {
     
     @ViewBuilder
     func createListView(dataSource: DataSourceItem) -> some View {
-        Group {
-            if dataSource.key == Asam.key {
-                MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-            } else if dataSource.key == Modu.key {
-                MSIListView<Modu, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-            } else if dataSource.key == Light.key {
-                MSIListView<Light, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-            } else if dataSource.key == NavigationalWarning.key {
-                NavigationalWarningsOverview()
-            } else if dataSource.key == Port.key {
-                MSIListView<Port, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-            } else if dataSource.key == RadioBeacon.key {
-                MSIListView<RadioBeacon, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-            } else if dataSource.key == DifferentialGPSStation.key {
-                MSIListView<DifferentialGPSStation, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-            } else if dataSource.key == DFRS.key {
-                MSIListView<DFRS, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-            } else if dataSource.key == ElectronicPublication.key {
-                ElectronicPublicationsList()
-            } else if dataSource.key == NoticeToMariners.key {
-                NoticeToMarinersView()
-            }
+        if dataSource.key == Asam.key {
+            MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+        } else if dataSource.key == Modu.key {
+            MSIListView<Modu, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+        } else if dataSource.key == Light.key {
+            MSIListView<Light, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+        } else if dataSource.key == NavigationalWarning.key {
+            NavigationalWarningsOverview(focusedItem: itemWrapper, watchFocusedItem: true)
+        } else if dataSource.key == Port.key {
+            MSIListView<Port, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+        } else if dataSource.key == RadioBeacon.key {
+            MSIListView<RadioBeacon, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+        } else if dataSource.key == DifferentialGPSStation.key {
+            MSIListView<DifferentialGPSStation, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+        } else if dataSource.key == DFRS.key {
+            MSIListView<DFRS, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+        } else if dataSource.key == ElectronicPublication.key {
+            ElectronicPublicationsList()
+        } else if dataSource.key == NoticeToMariners.key {
+            NoticeToMarinersView()
         }
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel("\(dataSource.dataSource.fullDataSourceName) List")
     }
 }

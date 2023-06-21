@@ -7,13 +7,28 @@
 
 import SwiftUI
 
+struct MapStateNavigation: Hashable {
+    static func == (lhs: MapStateNavigation, rhs: MapStateNavigation) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    var id = UUID()
+    
+    @ObservedObject var mapState: MapState
+    var view: String
+}
+
 struct MarlinMainMap: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     
     @StateObject var mixins: MainMapMixins = MainMapMixins()
     @StateObject var mapState: MapState = MapState()
     
-    @Binding var selection: String?
+    @Binding var path: NavigationPath
     
     @EnvironmentObject var dataSourceList: DataSourceList
     
@@ -39,9 +54,7 @@ struct MarlinMainMap: View {
             Spacer()
             // top right button stack
             VStack(alignment: .trailing, spacing: 16) {
-                NavigationLink(tag: "mapSettings", selection: $selection) {
-                    MapSettings(mapState: mapState)
-                } label: {
+                NavigationLink(value: MapStateNavigation(mapState: mapState, view: "mapSettings")) {
                     Label(
                         title: {},
                         icon: { Image(systemName: "square.3.stack.3d")

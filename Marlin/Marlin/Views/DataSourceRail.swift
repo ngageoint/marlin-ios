@@ -31,7 +31,6 @@ struct DataSourceRail: View {
             }
             Spacer()
         }
-        .frame(minWidth: 72, idealWidth: 72, maxWidth: 72)
         .background(
             Color.surfaceColor
                 .shadow(color: Color(UIColor.label).opacity(0.3), radius: 1, x: 0, y: 0)

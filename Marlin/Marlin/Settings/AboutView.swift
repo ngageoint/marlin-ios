@@ -75,6 +75,7 @@ struct AboutView: View {
                                 .primary()
                         }
                     })
+                    .tint(Color.primaryColor)
                     .padding([.top, .bottom], 8)
                     
                     Toggle(isOn: $showUnparsedNavigationalWarnings, label: {
@@ -84,6 +85,7 @@ struct AboutView: View {
                                 .primary()
                         }
                     })
+                    .tint(Color.primaryColor)
                     .padding([.top, .bottom], 8)
                 }
                 .toggleStyle(SwitchToggleStyle(tint: .primaryColorVariant))

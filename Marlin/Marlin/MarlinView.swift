@@ -8,9 +8,16 @@
 import SwiftUI
 import MapKit
 
-class ItemWrapper : ObservableObject {
-    @Published var asam: Asam?
-    @Published var modu: Modu?
+class ItemWrapper : ObservableObject, Identifiable, Hashable {
+    static func == (lhs: ItemWrapper, rhs: ItemWrapper) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    var id = UUID()
     @Published var dataSource: (any DataSource)?
     @Published var date: Date?
 }
@@ -41,9 +48,6 @@ struct MarlinView: View {
     @AppStorage("onboardingComplete") var onboardingComplete: Bool = false
 
     let snackbarPub = NotificationCenter.default.publisher(for: .SnackbarNotification)
-    let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
-        notification.object
-    }
     let documentPreviewPub = NotificationCenter.default.publisher(for: .DocumentPreview).map { notification in
         notification.object
     }

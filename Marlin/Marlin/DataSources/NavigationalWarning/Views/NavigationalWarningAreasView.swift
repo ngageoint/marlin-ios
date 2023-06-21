@@ -14,15 +14,18 @@ struct CurrentNavigationalWarningSection: View {
     @SectionedFetchRequest<String, NavigationalWarning>
     var currentNavigationalWarningsSections: SectionedFetchResults<String, NavigationalWarning>
     
-    init(navArea: String, mapName: String?) {
+    @Binding var path: NavigationPath
+    
+    init(navArea: String, mapName: String?, path: Binding<NavigationPath>) {
         self.navArea = navArea
         self.mapName = mapName
         self._currentNavigationalWarningsSections = SectionedFetchRequest<String, NavigationalWarning>(entity: NavigationalWarning.entity(), sectionIdentifier: \NavigationalWarning.navArea!, sortDescriptors: [NSSortDescriptor(keyPath: \NavigationalWarning.navArea, ascending: false), NSSortDescriptor(keyPath: \NavigationalWarning.issueDate, ascending: false)], predicate: NSPredicate(format: "navArea = %@", navArea))
+        _path = path
     }
     
     var body: some View {
         ForEach(currentNavigationalWarningsSections) { section in
-            NavigationalWarningSectionRow(section: section, mapName: mapName)
+            NavigationalWarningSectionRow(section: section, mapName: mapName, path: $path)
                 .accessibilityElement(children: .contain)
                 .accessibilityLabel("\(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area") (Current)")
         }
@@ -36,6 +39,7 @@ struct NavigationalWarningAreasView: View {
     @ObservedObject var generalLocation = GeneralLocation.shared
     @State var navArea: String?
     var mapName: String?
+    @Binding var path: NavigationPath
     
     @AppStorage("showUnparsedNavigationalWarnings") var showUnparsedNavigationalWarnings = false
     
@@ -59,10 +63,10 @@ struct NavigationalWarningAreasView: View {
         Self._printChanges()
         return List {
             if let navArea = generalLocation.currentNavAreaName {
-                CurrentNavigationalWarningSection(navArea: navArea, mapName: mapName)
+                CurrentNavigationalWarningSection(navArea: navArea, mapName: mapName, path: $path)
             }
             ForEach(navigationalWarningsSections) { section in
-                NavigationalWarningSectionRow(section: section, mapName: mapName)
+                NavigationalWarningSectionRow(section: section, mapName: mapName, path: $path)
                     .accessibilityElement(children: .contain)
                     .accessibilityLabel("\(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area")")
             }
@@ -72,10 +76,7 @@ struct NavigationalWarningAreasView: View {
             .accessibilityElement(children: .contain)
             
             if showUnparsedNavigationalWarnings {
-                NavigationLink {
-                    NavigationalWarningNavAreaListView(warnings: Array<NavigationalWarning>(noParsedLocationNavigationalWarnings), navArea: "Unknown", mapName: mapName)
-                        .accessibilityElement(children: .contain)
-                } label: {
+                NavigationLink(value: NavigationalWarningSection(id: "Unknown", warnings: Array<NavigationalWarning>(noParsedLocationNavigationalWarnings))) {
                     HStack {
                         VStack(alignment: .leading) {
                             Text("Unparsed Locations")

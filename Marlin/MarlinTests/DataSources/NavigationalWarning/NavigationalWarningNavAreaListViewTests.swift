@@ -91,14 +91,14 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
-
+            @State var path: NavigationPath = NavigationPath()
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                NavigationStack(path: $path) {
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
                 }
             }
         }
@@ -229,14 +229,15 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                NavigationStack(path: $path) {
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
                 }
             }
         }
@@ -300,14 +301,15 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                NavigationStack(path: $path) {
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
                 }
             }
         }
@@ -372,14 +374,15 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                NavigationStack(path: $path) {
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
                 }
             }
         }
@@ -447,14 +450,15 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                NavigationStack(path: $path) {
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
                 }
             }
         }
