@@ -10,7 +10,11 @@ import UIKit
 import CoreData
 import Combine
 
-extension Asam: DataSourceLocation {
+extension Asam: DataSourceLocation, GeoPackageExportable {
+    var sfGeometry: SFGeometry? {
+        return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+    }
+    
     static var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"

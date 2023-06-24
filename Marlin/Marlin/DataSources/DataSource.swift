@@ -11,6 +11,7 @@ import SwiftUI
 import MapKit
 import CoreData
 import Alamofire
+import ExceptionCatcher
 
 struct Throwable<T: Decodable>: Decodable {
     let result: Result<T, Error>
