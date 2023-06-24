@@ -59,14 +59,19 @@ extension GeoPackageExportable {
         var columns: [GPKGFeatureColumn] = []
         var dataColumns: [GPKGDataColumns] = []
         
-        for property in properties {
-            columns.append(GPKGFeatureColumn.createColumn(withName: property.key, andDataType: property.type.geoPackageType))
-            let dc = GPKGDataColumns()
-            dc.tableName = key
-            dc.columnName = property.key
-            dc.name = property.name
-            dc.title = property.name
-            dataColumns.append(dc)
+        let propertiesByName = Dictionary(grouping: properties, by: \.key)
+        for (_, properties) in propertiesByName {
+            if let property = properties.filter({ property in
+                property.subEntityKey == nil
+            }).first {
+                columns.append(GPKGFeatureColumn.createColumn(withName: property.key, andDataType: property.type.geoPackageType))
+                let dc = GPKGDataColumns()
+                dc.tableName = key
+                dc.columnName = property.key
+                dc.name = property.name
+                dc.title = property.name
+                dataColumns.append(dc)
+            }
         }
         
         // for now.  Calculate this properly at some point
@@ -134,9 +139,14 @@ extension GeoPackageExportable {
             row.setValueWithColumnName("geometry", andValue: gpkgGeometry)
         }
         
-        for property in Self.properties {
-            if let value = self.value(forKey: property.key) as? NSObject {
-                row.setValueWithColumnName(property.key, andValue: value)
+        let propertiesByName = Dictionary(grouping: Self.properties, by: \.key)
+        for (_, properties) in propertiesByName {
+            if let property = properties.filter({ property in
+                property.subEntityKey == nil
+            }).first {
+                if let value = self.value(forKey: property.key) as? NSObject {
+                    row.setValueWithColumnName(property.key, andValue: value)
+                }
             }
         }
         do {

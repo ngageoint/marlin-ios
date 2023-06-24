@@ -11,7 +11,11 @@ import CoreData
 import Alamofire
 import MapKit
 
-extension Light: DataSourceLocation {
+extension Light: DataSourceLocation, GeoPackageExportable {
+    var sfGeometry: SFGeometry? {
+        return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+    }
+    
     static var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"

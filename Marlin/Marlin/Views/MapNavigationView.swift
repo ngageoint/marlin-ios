@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+enum MarlinRoute: Hashable {
+    case exportGeoPackage(DataSourceItem)
+}
+
 struct MapNavigationView: View {
     @EnvironmentObject var dataSourceList: DataSourceList
     @Binding var filterOpen: Bool

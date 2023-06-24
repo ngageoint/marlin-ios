@@ -9,7 +9,11 @@ import Foundation
 import UIKit
 import CoreData
 
-extension RadioBeacon: DataSourceLocation {
+extension RadioBeacon: DataSourceLocation, GeoPackageExportable {
+    var sfGeometry: SFGeometry? {
+        return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+    }
+    
     var color: UIColor {
         return RadioBeacon.color
     }
