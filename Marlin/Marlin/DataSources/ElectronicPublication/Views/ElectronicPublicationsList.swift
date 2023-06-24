@@ -16,43 +16,41 @@ struct ElectronicPublicationsList: View {
     }
     
     var body: some View {
-        NavigationStack {
-            List {
-                ForEach(electronicPublicationSections.sorted(by: { section1, section2 in
-                    PublicationTypeEnum(rawValue: Int(section1.id))?.description ?? "" < PublicationTypeEnum(rawValue: Int(section2.id))?.description ?? ""
-                })) { section in
-                    NavigationLink {
-                        Group {
-                            switch(PublicationTypeEnum(rawValue: Int(section.id))) {
-                            case .americanPracticalNavigator:
-                                completeVolumes(section: section)
-                            case .atlasOfPilotCharts, .listOfLights, .sightReductionTablesForMarineNavigation:
-                                nestedFolder(section: section)
-                            case .sailingDirectionsPlanningGuides, .chartNo1, .sailingDirectionsEnroute, .sightReductionTablesForAirNavigation, .uscgLightList:
-                                completeAndChapters(section: section)
-                            case .distanceBetweenPorts, .internationalCodeOfSignals, .radarNavigationAndManeuveringBoardManual, .radioNavigationAids:
-                                completeAndChapters(section: section, completeTitle: "Complete Volume")
-                            case .worldPortIndex:
-                                completeAndChapters(section: section, completeTitle: "Complete Volume", chapterTitle: "Additional Formats")
-                            default:
-                                defaultPublications(section: section)
-                            }
+        List {
+            ForEach(electronicPublicationSections.sorted(by: { section1, section2 in
+                PublicationTypeEnum(rawValue: Int(section1.id))?.description ?? "" < PublicationTypeEnum(rawValue: Int(section2.id))?.description ?? ""
+            })) { section in
+                NavigationLink {
+                    Group {
+                        switch(PublicationTypeEnum(rawValue: Int(section.id))) {
+                        case .americanPracticalNavigator:
+                            completeVolumes(section: section)
+                        case .atlasOfPilotCharts, .listOfLights, .sightReductionTablesForMarineNavigation:
+                            nestedFolder(section: section)
+                        case .sailingDirectionsPlanningGuides, .chartNo1, .sailingDirectionsEnroute, .sightReductionTablesForAirNavigation, .uscgLightList:
+                            completeAndChapters(section: section)
+                        case .distanceBetweenPorts, .internationalCodeOfSignals, .radarNavigationAndManeuveringBoardManual, .radioNavigationAids:
+                            completeAndChapters(section: section, completeTitle: "Complete Volume")
+                        case .worldPortIndex:
+                            completeAndChapters(section: section, completeTitle: "Complete Volume", chapterTitle: "Additional Formats")
+                        default:
+                            defaultPublications(section: section)
                         }
-                        .onAppear {
-                            Metrics.shared.appRoute(["epubs", PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "pubType"])
-                        }
-                    } label: {
-                        folderLabel(name: "\(PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "")", count: section.count)
-                            .accessibilityElement()
-                            .accessibilityLabel("\(PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "")")
                     }
+                    .onAppear {
+                        Metrics.shared.appRoute(["epubs", PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "pubType"])
+                    }
+                } label: {
+                    folderLabel(name: "\(PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "")", count: section.count)
+                        .accessibilityElement()
+                        .accessibilityLabel("\(PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "")")
                 }
             }
-            
-            .listStyle(.plain)
-            .navigationTitle(ElectronicPublication.fullDataSourceName)
-            .navigationBarTitleDisplayMode(.inline)
         }
+        
+        .listStyle(.plain)
+        .navigationTitle(ElectronicPublication.fullDataSourceName)
+        .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             Metrics.shared.appRoute(["epubs"])
         }
