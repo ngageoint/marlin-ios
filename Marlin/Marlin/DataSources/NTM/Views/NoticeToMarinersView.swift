@@ -7,7 +7,9 @@
 
 import SwiftUI
 
-struct NoticeToMarinersView: View {    
+struct NoticeToMarinersView: View {
+    @Binding var path: NavigationPath
+    
     func getFirstDay(WeekNumber weekNumber:Int, CurrentYear currentYear: Int)->Date?{
         let calendar = Calendar(identifier: .gregorian)
         var dayComponent = DateComponents()
@@ -46,7 +48,7 @@ struct NoticeToMarinersView: View {
     var body: some View {
         List {
             NavigationLink {
-                MSIListView<NoticeToMariners,AnyView,NoticeToMarinersFullNoticeView>(watchFocusedItem: false, allowUserSort: false, allowUserFilter: false, sectionHeaderIsSubList: true, sectionGroupNameBuilder: { section in
+                MSIListView<NoticeToMariners,AnyView,NoticeToMarinersFullNoticeView>(path: $path, watchFocusedItem: false, allowUserSort: false, allowUserFilter: false, sectionHeaderIsSubList: true, sectionGroupNameBuilder: { section in
                     if let sectionInt = Int(section.name) {
                         return "\(Int(sectionInt / 100))"
                     } else {

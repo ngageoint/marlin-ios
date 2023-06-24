@@ -14,9 +14,9 @@ struct NavigationalWarningsOverview {
     let MAP_NAME = "Navigational Warning List View Map"
     @State var expandMap: Bool = false
     @State var selection: String? = nil
-    @State private var path: NavigationPath = NavigationPath()
+    @Binding var path: NavigationPath
     
-    @ObservedObject var focusedItem: ItemWrapper = ItemWrapper()
+    @ObservedObject var focusedItem: ItemWrapper
     var watchFocusedItem: Bool = false
     
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
@@ -26,33 +26,30 @@ struct NavigationalWarningsOverview {
 
 extension NavigationalWarningsOverview: View {
     var body: some View {
-        Self._printChanges()
-        return NavigationStack(path: $path) {
+        GeometryReader { geometry in
             VStack(spacing: 0) {
-                GeometryReader { geometry in
-                    
-                    NavigationalWarningMapView(bottomButtons: {
-                        ViewExpandButton(expanded: $expandMap)
-                    })
-                    .frame(minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3, maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5)
-                    .edgesIgnoringSafeArea([.leading, .trailing])
-                }
+                NavigationalWarningMapView(bottomButtons: {
+                    ViewExpandButton(expanded: $expandMap)
+                })
+                .frame(minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3, maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5)
+                .edgesIgnoringSafeArea([.leading, .trailing])
+                
                 NavigationalWarningAreasView(mapName: MAP_NAME, path: $path)
                     .currentNavArea(generalLocation.currentNavArea?.name)
             }
-            .navigationTitle(NavigationalWarning.fullDataSourceName)
-            .navigationBarTitleDisplayMode(.inline)
-            .background(Color.surfaceColor)
-            .navigationDestination(for: NavigationalWarning.self) { item in
-                item.detailView
-                    .onDisappear {
-                        focusedItem.dataSource = nil
-                    }
-            }
-            .navigationDestination(for: NavigationalWarningSection.self) { section in
-                NavigationalWarningNavAreaListView(warnings: section.warnings, navArea: section.id, mapName: MAP_NAME, path: $path)
-                    .accessibilityElement(children: .contain)
-            }
+        }
+        .navigationTitle(NavigationalWarning.fullDataSourceName)
+        .navigationBarTitleDisplayMode(.inline)
+        .background(Color.surfaceColor)
+        .navigationDestination(for: NavigationalWarning.self) { item in
+            item.detailView
+                .onDisappear {
+                    focusedItem.dataSource = nil
+                }
+        }
+        .navigationDestination(for: NavigationalWarningSection.self) { section in
+            NavigationalWarningNavAreaListView(warnings: section.warnings, navArea: section.id, mapName: MAP_NAME, path: $path)
+                .accessibilityElement(children: .contain)
         }
         .onChange(of: focusedItem.date) { newValue in
             if watchFocusedItem, let focusedItem = focusedItem.dataSource as? NavigationalWarning {

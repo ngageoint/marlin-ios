@@ -19,6 +19,8 @@ struct MarlinCompactWidth: View {
     
     @Binding var filterOpen: Bool
     
+    @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
+    
     let mapFocus = NotificationCenter.default.publisher(for: .TabRequestFocus)
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
@@ -43,7 +45,7 @@ struct MarlinCompactWidth: View {
                 .accentColor(Color.onPrimaryColor)
                 
                 ForEach(dataSourceList.tabs, id: \.self) { dataSource in
-                    DataSourceListView(dataSource: dataSource)
+                    DataSourceNavView(dataSource: dataSource, focusedItem: itemWrapper)
                         .modifier(Hamburger(menuOpen: $menuOpen))
                         // This is deprecated, but in iOS16 this is the only way to set the back button color
                         .accentColor(Color.onPrimaryColor)

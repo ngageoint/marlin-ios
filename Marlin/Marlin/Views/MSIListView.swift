@@ -9,19 +9,21 @@ import SwiftUI
 import CoreData
 
 extension MSIListView where SectionHeader == EmptyView, Content == EmptyView {
-    init(focusedItem: ItemWrapper = ItemWrapper(),
+    init(path: Binding<NavigationPath>,
+         focusedItem: ItemWrapper = ItemWrapper(),
          watchFocusedItem: Bool = false,
          allowUserSort: Bool = true,
          allowUserFilter: Bool = true,
          sectionHeaderIsSubList: Bool = false,
          sectionGroupNameBuilder: ((MSISection<T>) -> String)? = nil,
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil) {
-        self.init(focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: { _ in EmptyView() }, content: { _ in EmptyView() })
+        self.init(path: path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: { _ in EmptyView() }, content: { _ in EmptyView() })
     }
 }
 
 extension MSIListView where Content == EmptyView {
-    init(focusedItem: ItemWrapper = ItemWrapper(),
+    init(path: Binding<NavigationPath>,
+         focusedItem: ItemWrapper = ItemWrapper(),
          watchFocusedItem: Bool = false,
          allowUserSort: Bool = true,
          allowUserFilter: Bool = true,
@@ -29,7 +31,7 @@ extension MSIListView where Content == EmptyView {
          sectionGroupNameBuilder: ((MSISection<T>) -> String)? = nil,
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
          @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader) {
-        self.init(focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: { _ in EmptyView() })
+        self.init(path: path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: { _ in EmptyView() })
     }
 }
 
@@ -39,7 +41,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
     @ObservedObject var focusedItem: ItemWrapper
     @State var selection: String? = nil
     @State var filterOpen: Bool = false
-    @State private var path: NavigationPath = NavigationPath()
+    @Binding var path: NavigationPath
 
     var allowUserSort: Bool = true
     var allowUserFilter: Bool = true
@@ -54,7 +56,8 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
 
     let content: ((MSISection<T>) -> Content)
     
-    init(focusedItem: ItemWrapper = ItemWrapper(),
+    init(path: Binding<NavigationPath>,
+         focusedItem: ItemWrapper = ItemWrapper(),
          watchFocusedItem: Bool = false,
          allowUserSort: Bool = true,
          allowUserFilter: Bool = true,
@@ -63,6 +66,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
          @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader,
          @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
+        _path = path
         self.focusedItem = focusedItem
         self.watchFocusedItem = watchFocusedItem
         self.allowUserSort = allowUserSort
@@ -77,25 +81,27 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
     
     var body: some View {
         Self._printChanges()
-        return NavigationStack(path: $path) {
-            GenericSectionedList<T, SectionHeader, Content>(path: $path, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content)
-                .onAppear {
-                    if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
-                        path.append(focusedItem)
+        return ZStack(alignment: .bottomTrailing) {
+                
+                GenericSectionedList<T, SectionHeader, Content>(path: $path, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content)
+            }
+            .onAppear {
+                if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
+                    path.append(focusedItem)
+                }
+                Metrics.shared.dataSourceList(dataSource: T.self)
+            }
+            .onChange(of: focusedItem.date) { newValue in
+                if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
+                    path.append(focusedItem)
+                }
+            }
+            .navigationDestination(for: T.self) { item in
+                item.detailView
+                    .onDisappear {
+                        focusedItem.dataSource = nil
                     }
-                    Metrics.shared.dataSourceList(dataSource: T.self)
-                }
-                .onChange(of: focusedItem.date) { newValue in
-                    if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
-                        path.append(focusedItem)
-                    }
-                }
-                .navigationDestination(for: T.self) { item in
-                    item.detailView
-                        .onDisappear {
-                            focusedItem.dataSource = nil
-                        }
-                }
+            }
             .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)]), allowSorting: allowUserSort, allowFiltering: allowUserFilter))
             .background {
                 DataSourceFilter(filterViewModel: filterViewModel, showBottomSheet: $filterOpen)
@@ -134,7 +140,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
                     Metrics.shared.dataSourceSort(dataSource: T.self)
                 }
             }
-        }
+        
     }
 }
 

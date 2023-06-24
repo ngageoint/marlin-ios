@@ -24,7 +24,8 @@ struct MapNavigationView: View {
     }
 
     var body: some View {
-        NavigationStack(path: $path) {
+        Self._printChanges()
+        return NavigationStack(path: $path) {
             VStack(spacing: 0) {
                 DataLoadedNotificationBanner()
                 CurrentLocation()
@@ -57,7 +58,7 @@ struct MapNavigationView: View {
                 }
             }
             .navigationDestination(for: DataSourceItem.self) { item in
-                DataSourceListView(dataSource: item)
+                DataSourceListView(dataSource: item, focusedItem: itemWrapper, path: $path)
             }
             .navigationDestination(for: MapStateNavigation.self) { item in
                 if item.view == "mapSettings" {
@@ -72,6 +73,7 @@ struct MapNavigationView: View {
                 }
             }
             .onReceive(switchTabPub) { output in
+                print("switch tab pub map navigation view \(output)")
                 if let output = output as? String {
                     if output == "settings" {
                         path.append("settings")
@@ -84,6 +86,7 @@ struct MapNavigationView: View {
                         if !tab, let dataSourceItem = dataSourceList.allTabs.first(where: { item in
                             item.key == output
                         }) {
+                            print("append \(dataSourceItem) to path")
                             path.append(dataSourceItem)
                         }
                     }
