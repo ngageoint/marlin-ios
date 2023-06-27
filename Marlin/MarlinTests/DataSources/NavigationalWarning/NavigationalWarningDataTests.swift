@@ -621,7 +621,8 @@ final class NavigationalWarningDataTests: XCTestCase {
         let request = requests[0]
         XCTAssertEqual(request.method, .get)
         let parameters = request.parameters
-        XCTAssertEqual(parameters?.count, 1)
+        XCTAssertEqual(parameters?.count, 2)
+        XCTAssertEqual(parameters?["status"] as? String, "active")
         XCTAssertEqual(parameters?["output"] as? String, "json")
     }
     
