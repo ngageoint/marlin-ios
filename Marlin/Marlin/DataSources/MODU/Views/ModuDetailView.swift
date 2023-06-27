@@ -33,6 +33,12 @@ struct ModuDetailView: View {
                     Group {
                         Text(modu.dateString ?? "")
                             .overline()
+                        Text("\(modu.rigStatus ?? "")")
+                            .lineLimit(1)
+                            .secondary()
+                        Text("\(modu.specialStatus ?? "")")
+                            .lineLimit(1)
+                            .secondary()
                         DataSourceActionBar(data: modu)
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
@@ -45,8 +51,6 @@ struct ModuDetailView: View {
             
             Section("Additional Information") {
                 VStack(alignment: .leading, spacing: 8) {
-                    Property(property: "Rig Status", value: modu.rigStatus)
-                    Property(property: "Special Status", value: modu.specialStatus)
                     if modu.distance != 0 {
                         Property(property: "Distance", value: "\(modu.distance)")
                     }
