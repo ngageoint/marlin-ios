@@ -27,10 +27,10 @@ struct ModuSummaryView: View {
                 Text("\(modu.name ?? "")")
                     .primary()
             }
-            Text("Rig Status: \(modu.rigStatus ?? "")")
+            Text("\(modu.rigStatus ?? "")")
                 .lineLimit(1)
                 .secondary()
-            Text("Special Status: \(modu.specialStatus ?? "")")
+            Text("\(modu.specialStatus ?? "")")
                 .lineLimit(1)
                 .secondary()
             DataSourceActionBar(data: modu, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)

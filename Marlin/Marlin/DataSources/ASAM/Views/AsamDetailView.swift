@@ -43,15 +43,6 @@ struct AsamDetailView: View {
             }
             .dataSourceSection()
 
-            Section("Description") {
-                Text(asam.asamDescription ?? "")
-                    .secondary()
-                    .frame(maxWidth:.infinity)
-                    .padding(.all, 16)
-                    .card()
-            }
-            .dataSourceSection()
-
             Section("Additional Information") {
                 VStack(alignment: .leading, spacing: 8) {
                     Property(property: "Hostility", value: asam.hostility)
