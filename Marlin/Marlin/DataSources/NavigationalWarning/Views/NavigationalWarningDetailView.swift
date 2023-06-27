@@ -34,7 +34,6 @@ struct NavigationalWarningDetailView: View {
                         Text(navigationalWarning.dateString ?? "")
                             .overline()
                             .padding(.top, 16)
-                        Property(property: "Status", value: navigationalWarning.status)
                         Property(property: "Authority", value: navigationalWarning.authority)
                         Property(property: "Cancel Date", value: navigationalWarning.cancelDateString)
                         if let cancelNavArea = navigationalWarning.cancelNavArea, let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea){
