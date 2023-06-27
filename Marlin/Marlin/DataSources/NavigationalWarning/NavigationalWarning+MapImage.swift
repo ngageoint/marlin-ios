@@ -51,34 +51,29 @@ extension NavigationalWarning: MapImage {
                     } else if let polygon = shape as? MKPolygon {
                         let points = polygon.points()
                         let path = UIBezierPath()
-                        var first = true
                         var firstPoint: CLLocationCoordinate2D?
                         var previousPoint: CLLocationCoordinate2D?
                         for point in UnsafeBufferPointer(start: points, count: polygon.pointCount) {
                             
                             let pixel = point.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
-                            if first {
-                                firstPoint = point.coordinate
-                                previousPoint = point.coordinate
-                                path.move(to: pixel)
-                                first = false
-                            } else {
-                                // make a geodesic line between the points and then plot that
-                                if let previousPoint = previousPoint {
-                                    var coords: [CLLocationCoordinate2D] = [previousPoint, point.coordinate]
-                                    let gl = MKGeodesicPolyline(coordinates: &coords, count: 2)
+                            // make a geodesic line between the points and then plot that
+                            if let previousPoint = previousPoint {
+                                var coords: [CLLocationCoordinate2D] = [previousPoint, point.coordinate]
+                                let gl = MKGeodesicPolyline(coordinates: &coords, count: 2)
+                                
+                                let glpoints = gl.points()
+                                
+                                for point in UnsafeBufferPointer(start: glpoints, count: gl.pointCount) {
                                     
-                                    let glpoints = gl.points()
+                                    let pixel = point.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+                                    path.addLine(to: pixel)
                                     
-                                    for point in UnsafeBufferPointer(start: glpoints, count: gl.pointCount) {
-                                        
-                                        let pixel = point.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
-                                        path.addLine(to: pixel)
-                                        
-                                    }
                                 }
-                                previousPoint = point.coordinate
+                            } else {
+                                firstPoint = point.coordinate
+                                path.move(to: pixel)
                             }
+                            previousPoint = point.coordinate
                             
                         }
                         

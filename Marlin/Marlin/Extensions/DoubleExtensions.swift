@@ -16,3 +16,9 @@ extension Double {
         return "\(String(format: "%.2f", abs(self)))° \(self < 0 ? "W" : "E")"
     }
 }
+
+extension UnsafeMutablePointer {
+    func toArray(capacity: Int) -> [Pointee] {
+        return Array(UnsafeBufferPointer(start: self, count: capacity))
+    }
+}

@@ -203,12 +203,12 @@ class NavigationalWarningMap: NSObject, MapMixin {
                     let navPoly = NavigationalWarningPolygon(points: polygon.points(), count: polygon.pointCount)
                     navPoly.warning = warning
                     mapOverlays.append(navPoly)
-                } else if let polyline = shape as? MKPolyline {
-                    let navline = NavigationalWarningPolyline(points: polyline.points(), count: polyline.pointCount)
-                    navline.warning = warning
-                    mapOverlays.append(navline)
                 } else if let polyline = shape as? MKGeodesicPolyline {
                     let navline = NavigationalWarningGeodesicPolyline(points: polyline.points(), count: polyline.pointCount)
+                    navline.warning = warning
+                    mapOverlays.append(navline)
+                } else if let polyline = shape as? MKPolyline {
+                    let navline = NavigationalWarningPolyline(points: polyline.points(), count: polyline.pointCount)
                     navline.warning = warning
                     mapOverlays.append(navline)
                 } else if let point = shape as? MKPointAnnotation {

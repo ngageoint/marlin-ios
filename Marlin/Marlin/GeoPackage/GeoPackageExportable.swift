@@ -104,11 +104,14 @@ extension GeoPackageExportable {
         let featureTableStyles = GPKGFeatureTableStyles(geoPackage: geoPackage, andTable: table)
         let tableStyleDefault = styleDao?.newRow()
         tableStyleDefault?.setName("\(key) Style")
-        tableStyleDefault?.setColor(CLRColor(hex: "#FFDD66FF"))
-        tableStyleDefault?.setOpacity(1.0)
-        tableStyleDefault?.setWidth(10.0)
-        tableStyleDefault?.setFillColor(CLRColor(hex: "#FFDD66FF"))
-        tableStyleDefault?.setFillOpacity(1.0)
+        tableStyleDefault?.setColor(CLRColor(red: Int32(color.redComponent * 255.0), andGreen: Int32(color.greenComponent * 255.0), andBlue: Int32(color.blueComponent * 255.0)))
+        tableStyleDefault?.setFillColor(CLRColor(red: Int32(color.redComponent * 255.0), andGreen: Int32(color.greenComponent * 255.0), andBlue: Int32(color.blueComponent * 255.0)))
+        if let alpha = color.alphaComponent as? NSDecimalNumber {
+            tableStyleDefault?.setOpacity(alpha)
+        }
+        tableStyleDefault?.setFillOpacity(0.3)
+
+        tableStyleDefault?.setWidth(2.0)
         featureTableStyles?.setTableStyleDefault(tableStyleDefault)
         
         if let image = image {
