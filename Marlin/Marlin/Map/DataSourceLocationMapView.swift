@@ -22,7 +22,7 @@ struct DataSourceLocationMapView: View {
             .onAppear {
                 mapMixins.mixins.append(contentsOf: mixins + [UserLayersMap()])
                 if let region = dataSourceLocation.coordinateRegion {
-                    mapState.center = region.padded(percent: 0.1)
+                    mapState.center = region.padded(percent: 0.1, maxDelta: 45)
                 } else {
                     mapState.center = MKCoordinateRegion(center: dataSourceLocation.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
                 }

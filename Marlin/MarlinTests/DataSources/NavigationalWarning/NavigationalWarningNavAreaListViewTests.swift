@@ -151,14 +151,16 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
+            @StateObject var focusedItem: ItemWrapper = ItemWrapper()
+            @State var path: NavigationPath = NavigationPath()
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    NavigationalWarningsOverview()
+                NavigationStack(path: $path) {
+                    NavigationalWarningsOverview(path: $path, focusedItem: focusedItem)
 
 //                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
                 }

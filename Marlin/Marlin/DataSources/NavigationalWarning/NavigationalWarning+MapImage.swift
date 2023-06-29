@@ -47,7 +47,7 @@ extension NavigationalWarning: MapImage {
                             path.fill()
                             path.stroke()
                         }
-                        images.append(contentsOf: defaultMapImage(marker: marker, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context, tileSize: 512.0))
+                        images.append(contentsOf: defaultMapImage(marker: marker, zoomLevel: zoomLevel, pointCoordinate: coordinate, tileBounds3857: tileBounds3857, context: context, tileSize: 512.0))
                     } else if let polygon = shape as? MKPolygon {
                         let points = polygon.points()
                         let path = UIBezierPath()

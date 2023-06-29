@@ -10,9 +10,13 @@ import SwiftUI
 struct GeoPackageExportView: View {
     @StateObject var exporter: GeoPackageExporter = GeoPackageExporter()
     
-    var dataSource: GeoPackageExportable.Type
+    var exportRequest: [DataSourceExportRequest]
     var body: some View {
-        Text("GeoPackage Export \(dataSource.fullDataSourceName)")
+        
+        Text("GeoPackage Export")
+        ForEach(exportRequest) { request in
+            Text("\(request.dataSourceItem.dataSource.fullDataSourceName)")
+        }
         if exporter.complete {
             Text("Export complete")
         } else if exporter.exporting {
@@ -22,8 +26,7 @@ struct GeoPackageExportView: View {
             Text("Error \(creationError)")
         }
         Button("Export") {
-            print("Export it")
-            exporter.export(dataSources: [dataSource])
+            exporter.export(exportRequest: exportRequest)
         }
         .buttonStyle(MaterialButtonStyle(type:.contained))
     }

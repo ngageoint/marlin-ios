@@ -9,9 +9,24 @@ import Foundation
 import geopackage_ios
 import ExceptionCatcher
 
+struct DataSourceExportRequest: Identifiable, Hashable, Equatable {
+    
+    static func == (lhs: DataSourceExportRequest, rhs: DataSourceExportRequest) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    var id: String { dataSourceItem.key }
+    var dataSourceItem: DataSourceItem
+    var filters: [DataSourceFilterParameter]?
+}
+
 class GeoPackageExporter: ObservableObject {
     var manager: GPKGGeoPackageManager = GPKGGeoPackageFactory.manager()
-    var dataSources: [GeoPackageExportable.Type] = []
+    var exportRequest: [DataSourceExportRequest]?
     var geoPackage: GPKGGeoPackage?
     var filename: String?
     
@@ -44,8 +59,8 @@ class GeoPackageExporter: ObservableObject {
         return false
     }
     
-    func export(dataSources: [GeoPackageExportable.Type]) {
-        self.dataSources = dataSources
+    func export(exportRequest: [DataSourceExportRequest]) {
+        self.exportRequest = exportRequest
         exporting = true
         complete = false
         backgroundExport()
@@ -53,6 +68,9 @@ class GeoPackageExporter: ObservableObject {
     
     private func backgroundExport() {
         DispatchQueue.global(qos: .userInitiated).async { [self] in
+            guard let exportRequest = exportRequest else {
+                return
+            }
             if !createGeoPackage() {
                 DispatchQueue.main.async {
                     self.exporting = false
@@ -70,35 +88,21 @@ class GeoPackageExporter: ObservableObject {
             }
             print("GeoPackage created \(geoPackage.path ?? "who knows")")
             let rtree = GPKGRTreeIndexExtension(geoPackage: geoPackage)
-            for dataSource in dataSources {
+            
+            for request in exportRequest {
+                guard let dataSource = request.dataSourceItem.dataSource as? GeoPackageExportable.Type else {
+                    continue
+                }
                 do {
-                    let table = try dataSource.self.createTable(geoPackage: geoPackage)
-                    let filters = UserDefaults.standard.filter(dataSource)
-                    let fetchRequest = dataSource.fetchRequest()
-                    var predicates: [NSPredicate] = []
-                    for filter in filters {
-                        if let predicate = filter.toPredicate() {
-                            predicates.append(predicate)
-                        }
+                    guard let table = try dataSource.self.createTable(geoPackage: geoPackage) else {
+                        continue
                     }
-                    let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-                    var sort: [NSSortDescriptor] = []
-                    let sortDescriptors = dataSource.defaultSort
-                    for sortDescriptor in sortDescriptors {
-                        sort.append(sortDescriptor.toNSSortDescriptor())
+                    var filters = request.filters
+                    if filters == nil, let dataSource = dataSource as? any DataSource.Type {
+                        filters = UserDefaults.standard.filter(dataSource)
                     }
-
-                    fetchRequest.sortDescriptors = sort
-                    fetchRequest.predicate = predicate
-                    let context = PersistenceController.current.newTaskContext()
-                    try context.performAndWait {
-                        let results = try context.fetch(fetchRequest)
-                        for result in results where result is GeoPackageExportable {
-                            if let gpExportable = result as? GeoPackageExportable, let table = table {
-                                gpExportable.createFeature(geoPackage: geoPackage, table: table)
-                            }
-                        }
-                    }
+                    
+                    try dataSource.createFeatures(geoPackage: geoPackage, table: table, filters: filters)
                     rtree?.create(with: table)
                 } catch {
                     DispatchQueue.main.async { [self] in

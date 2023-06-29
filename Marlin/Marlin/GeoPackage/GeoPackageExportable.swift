@@ -38,9 +38,14 @@ extension DataSourcePropertyType {
     }
 }
 
-protocol GeoPackageExportable: DataSource, NSManagedObject {
+protocol GeoPackageExportable: NSObject {
+    static var properties: [DataSourceProperty] { get }
+    static var key: String { get }
+    static var color: UIColor { get }
+    static var image: UIImage? { get }
     var sfGeometry: SFGeometry? { get }
     static func createTable(geoPackage: GPKGGeoPackage) throws -> GPKGFeatureTable?
+    static func createFeatures(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, filters: [DataSourceFilterParameter]?) throws
     func createFeature(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable)
 }
 
@@ -131,6 +136,33 @@ extension GeoPackageExportable {
         }
 
         return table
+    }
+    
+    static func createFeatures(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, filters: [DataSourceFilterParameter]?) throws {
+        guard let dataSource = self as? NSManagedObject.Type else {
+            return
+        }
+        let fetchRequest = dataSource.fetchRequest()
+        var predicates: [NSPredicate] = []
+        if let filters = filters {
+            for filter in filters {
+                if let predicate = filter.toPredicate() {
+                    predicates.append(predicate)
+                }
+            }
+        }
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+
+        fetchRequest.predicate = predicate
+        let context = PersistenceController.current.newTaskContext()
+        try context.performAndWait {
+            let results = try context.fetch(fetchRequest)
+            for result in results where result is GeoPackageExportable {
+                if let gpExportable = result as? GeoPackageExportable {
+                    gpExportable.createFeature(geoPackage: geoPackage, table: table)
+                }
+            }
+        }
     }
     
     func createFeature(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable) {

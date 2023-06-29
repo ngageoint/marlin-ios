@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum MarlinRoute: Hashable {
-    case exportGeoPackage(DataSourceItem)
+    case exportGeoPackage([DataSourceExportRequest])
 }
 
 struct MapNavigationView: View {

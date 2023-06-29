@@ -100,14 +100,14 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
-            
+            @State var path: NavigationPath = NavigationPath()
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
                 }
             }
         }
@@ -133,14 +133,15 @@ final class MSIListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
+            @State var path: NavigationPath = NavigationPath()
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
                 }
             }
         }
@@ -164,14 +165,15 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
+            @State var path: NavigationPath = NavigationPath()
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
                 }
             }
         }
@@ -230,14 +232,15 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
+            @State var path: NavigationPath = NavigationPath()
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
                 }
             }
         }
@@ -328,14 +331,15 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
+            @State var path: NavigationPath = NavigationPath()
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
                 }
             }
         }
@@ -397,14 +401,15 @@ final class MSIListViewTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             @EnvironmentObject var locationManager: LocationManager
+            @State var path: NavigationPath = NavigationPath()
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
                         .environmentObject(locationManager)
                 }
             }
@@ -479,14 +484,15 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
+            @State var path: NavigationPath = NavigationPath()
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
                 }
             }
         }
@@ -558,13 +564,14 @@ final class MSIListViewTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
+            @State var path: NavigationPath = NavigationPath()
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>(sectionHeaderIsSubList: true)
+                NavigationStack(path: $path) {
+                    MSIListView<Asam, EmptyView, EmptyView>(path: $path, sectionHeaderIsSubList: true)
                 }
             }
         }
@@ -637,14 +644,15 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
+            @State var path: NavigationPath = NavigationPath()
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>(sectionHeaderIsSubList: true, sectionGroupNameBuilder: { section in
+                NavigationStack(path: $path) {
+                    MSIListView<Asam, EmptyView, EmptyView>(path: $path, sectionHeaderIsSubList: true, sectionGroupNameBuilder: { section in
                         "\(section.name) Header"
                     })
                 }
@@ -716,14 +724,15 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
+            @State var path: NavigationPath = NavigationPath()
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    MSIListView<Asam, EmptyView, AnyView>(sectionHeaderIsSubList: true, sectionNameBuilder: { section in
+                NavigationStack(path: $path) {
+                    MSIListView<Asam, EmptyView, AnyView>(path: $path, sectionHeaderIsSubList: true, sectionNameBuilder: { section in
                         return "ASAM SECTION \(section.name) (\(section.items.count))"
                     }, sectionViewBuilder: { _ in EmptyView()}, content: { section in
                         AnyView(Text("content of the section \(section.name) \(section.items.count)"))
@@ -794,14 +803,15 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
+            @State var path: NavigationPath = NavigationPath()
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
                 }
             }
         }
@@ -867,6 +877,7 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
+            @State var path: NavigationPath = NavigationPath()
             
             @ObservedObject var passThrough: PassThrough
             
@@ -875,8 +886,8 @@ final class MSIListViewTests: XCTestCase {
             }
             
             var body: some View {
-                NavigationView {
-                    MSIListView<Asam, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
+                NavigationStack(path: $path) {
+                    MSIListView<Asam, EmptyView, EmptyView>(path: $path, focusedItem: itemWrapper, watchFocusedItem: true)
                 }
                 .onChange(of: passThrough.date) { newValue in
                     print("change date to \(newValue)")

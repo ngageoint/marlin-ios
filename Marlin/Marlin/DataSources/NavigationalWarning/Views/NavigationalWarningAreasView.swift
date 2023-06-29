@@ -105,11 +105,14 @@ struct NavigationalWarningAreasView: View {
             .listStyle(.plain)
             .listRowBackground(Color.surfaceColor)
             .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
+            .onChange(of: generalLocation.currentNavAreaName, perform: { newValue in
+                navigationalWarningsSections.nsPredicate = NSPredicate(format: "navArea != %@", newValue ?? "")
+            })
             .onAppear {
                 navigationalWarningsSections.nsPredicate = NSPredicate(format: "navArea != %@", generalLocation.currentNavAreaName ?? "")
             }
             .accessibilityElement(children: .contain)
-            NavigationLink(value: MarlinRoute.exportGeoPackage(DataSourceItem(dataSource: NavigationalWarning.self))) {
+            NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(dataSourceItem: DataSourceItem(dataSource: NavigationalWarning.self), filters: [])])) {
                 Label(
                     title: {},
                     icon: { Image(systemName: "square.and.arrow.down")
@@ -125,10 +128,8 @@ struct NavigationalWarningAreasView: View {
             .padding(16)
             .navigationDestination(for: MarlinRoute.self) { item in
                 switch item {
-                case .exportGeoPackage(let dataSource):
-                    if let exportable = dataSource.dataSource as? GeoPackageExportable.Type {
-                        GeoPackageExportView(dataSource: exportable)
-                    }
+                case .exportGeoPackage(let exportRequest):
+                    GeoPackageExportView(exportRequest: exportRequest)
                     
                 default:
                     EmptyView()
