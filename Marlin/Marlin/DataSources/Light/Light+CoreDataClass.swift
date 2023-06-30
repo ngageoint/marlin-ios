@@ -33,11 +33,11 @@ class Light: NSManagedObject, LightProtocol {
         LightVolume(volumeQuery: "116", volumeNumber: "PUB 116")
     ]
     
-    static let whiteLight = UIColor(argbValue: 0xffffff00)
+    static let whiteLight = UIColor(argbValue: 0xfffffe00)
     static let greenLight = UIColor(argbValue: 0xff0de319)
     static let redLight = UIColor(argbValue: 0xfffa0000)
-    static let yellowLight = UIColor(argbValue: 0xffffff00)
-    static let blueLight = UIColor(argbValue: 0xff0000ff)
+    static let yellowLight = UIColor(argbValue: 0xfffffe00)
+    static let blueLight = UIColor(argbValue: 0xff0001ff)
     static let violetLight = UIColor(argbValue: 0xffaf52de)
     static let orangeLight = UIColor(argbValue: 0xffff9500)
     static let raconColor = UIColor(argbValue: 0xffb52bb5)
