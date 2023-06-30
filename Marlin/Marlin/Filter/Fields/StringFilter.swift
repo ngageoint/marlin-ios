@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIIntrospect
 
 struct StringFilter: View {
     @ObservedObject var filterViewModel: FilterViewModel
@@ -20,7 +21,11 @@ struct StringFilter: View {
             }
             VStack(alignment: .leading, spacing: 0) {
                 TextField(viewModel.dataSourceProperty.name, text: $viewModel.valueString)
+                    .introspect(.textField, on: .iOS(.v16, .v17)) { field in
+                        field.smartDashesType = .no
+                    }
                     .keyboardType(.default)
+                    .disableAutocorrection(true)
                     .textInputAutocapitalization(.never)
                     .underlineTextField()
                     .onTapGesture(perform: {
