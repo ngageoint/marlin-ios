@@ -64,7 +64,7 @@ extension Light: MapImage {
                 // TODO: figure out what to do with multi colored lights over the same sector
                 continue
             }
-            let circleCoordinates = circleCoordinates(center: self.coordinate, radiusMeters: metersMeasurement.value, startDegrees: sector.startDegrees + 90.0, endDegrees: sector.endDegrees + 90.0)
+            let circleCoordinates = coordinate.circleCoordinates(radiusMeters: metersMeasurement.value, startDegrees: sector.startDegrees + 90.0, endDegrees: sector.endDegrees + 90.0)
             let path = UIBezierPath()
             
             var pixel = self.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
@@ -87,7 +87,7 @@ extension Light: MapImage {
         let nauticalMilesMeasurement = NSMeasurement(doubleValue: range, unit: UnitLength.nauticalMiles)
         let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
         
-        let circleCoordinates = circleCoordinates(center: self.coordinate, radiusMeters: metersMeasurement.value)
+        let circleCoordinates = coordinate.circleCoordinates(radiusMeters: metersMeasurement.value)
         let path = UIBezierPath()
         
         var pixel = circleCoordinates[0].toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
@@ -111,42 +111,5 @@ extension Light: MapImage {
         centerDot.stroke()
         lightColors[0].setFill()
         centerDot.fill()
-    }
-    
-    func circleCoordinates(center: CLLocationCoordinate2D, radiusMeters: Double, startDegrees: Double = 0.0, endDegrees: Double = 360.0) -> [CLLocationCoordinate2D] {
-        var coordinates: [CLLocationCoordinate2D] = []
-        let centerLatRad = center.latitude.toRadians()
-        let centerLonRad = center.longitude.toRadians()
-        let dRad = radiusMeters / 6378137
-        
-        let radial = Double(startDegrees).toRadians()
-        let latRad = asin(sin(centerLatRad) * cos(dRad) + cos(centerLatRad) * sin(dRad) * cos(radial))
-        let dlonRad = atan2(sin(radial) * sin(dRad) * cos(centerLatRad), cos(dRad) - sin(centerLatRad) * sin(latRad))
-        let lonRad = fmod((centerLonRad + dlonRad + .pi), 2.0 * .pi) - .pi
-        coordinates.append(CLLocationCoordinate2D(latitude: latRad.toDegrees(), longitude: lonRad.toDegrees()))
-        
-        if startDegrees >= endDegrees {
-            // this could be an error in the data, or sometimes lights are defined as follows:
-            // characteristic Q.W.R.
-            // remarks R. 289°-007°, W.-007°.
-            // that would mean this light flashes between red and white over those angles
-            // TODO: figure out what to do with multi colored lights over the same sector
-            return coordinates
-        }
-        for i in Int(startDegrees)...Int(endDegrees) {
-            let radial = Double(i).toRadians()
-            let latRad = asin(sin(centerLatRad) * cos(dRad) + cos(centerLatRad) * sin(dRad) * cos(radial))
-            let dlonRad = atan2(sin(radial) * sin(dRad) * cos(centerLatRad), cos(dRad) - sin(centerLatRad) * sin(latRad))
-            let lonRad = fmod((centerLonRad + dlonRad + .pi), 2.0 * .pi) - .pi
-            coordinates.append(CLLocationCoordinate2D(latitude: latRad.toDegrees(), longitude: lonRad.toDegrees()))
-        }
-        
-        let endRadial = Double(endDegrees).toRadians()
-        let endLatRad = asin(sin(centerLatRad) * cos(dRad) + cos(centerLatRad) * sin(dRad) * cos(endRadial))
-        let endDlonRad = atan2(sin(endRadial) * sin(dRad) * cos(centerLatRad), cos(dRad) - sin(centerLatRad) * sin(endLatRad))
-        let endLonRad = fmod((centerLonRad + endDlonRad + .pi), 2.0 * .pi) - .pi
-        coordinates.append(CLLocationCoordinate2D(latitude: endLatRad.toDegrees(), longitude: endLonRad.toDegrees()))
-        
-        return coordinates
     }
 }

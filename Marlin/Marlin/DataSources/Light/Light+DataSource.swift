@@ -37,7 +37,7 @@ extension Light: DataSourceLocation, GeoPackageExportable {
                         // TODO: figure out what to do with multi colored lights over the same sector
                         continue
                     }
-                    let circleCoordinates = circleCoordinates(center: self.coordinate, radiusMeters: metersMeasurement.value, startDegrees: sector.startDegrees + 90.0, endDegrees: sector.endDegrees + 90.0)
+                    let circleCoordinates = coordinate.circleCoordinates(radiusMeters: metersMeasurement.value, startDegrees: sector.startDegrees + 90.0, endDegrees: sector.endDegrees + 90.0)
                     
                     let ring = SFLineString()
                     ring?.addPoint(SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude))
