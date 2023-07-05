@@ -97,14 +97,6 @@ class LightMapViewModel: NSObject, LightMapViewModelProtocol {
     
     static var cacheTiles: Bool = false
     
-    func toRadians(degrees: Double) -> Double {
-        return degrees * .pi / 180.0
-    }
-    
-    func toDegrees(radians: Double) -> Double {
-        return radians * 180.0 / .pi
-    }
-    
     var coordinate: CLLocationCoordinate2D
     
     var coordinateRegion: MKCoordinateRegion? {

@@ -15,6 +15,14 @@ extension Double {
     var longitudeDisplay: String {
         return "\(String(format: "%.2f", abs(self)))° \(self < 0 ? "W" : "E")"
     }
+    
+    func toRadians() -> Double {
+        return self * .pi / 180.0
+    }
+    
+    func toDegrees() -> Double {
+        return self * 180.0 / .pi
+    }
 }
 
 extension UnsafeMutablePointer {
