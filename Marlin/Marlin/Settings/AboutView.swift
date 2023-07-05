@@ -18,12 +18,7 @@ struct AboutView: View {
 
     var body: some View {
         List {
-            NavigationLink {
-                ScrollView {
-                    DisclaimerView()
-                }
-                .navigationTitle("Disclaimer")
-            } label: {
+            NavigationLink(value: MarlinRoute.disclaimer) {
                 Image(systemName: "shield.lefthalf.filled")
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)
@@ -40,10 +35,7 @@ struct AboutView: View {
                     .tint(Color.onSurfaceColor)
             }
             
-            NavigationLink {
-                AcknowledgementsView()
-                .navigationTitle("Acknowledgements")
-            } label: {
+            NavigationLink(value: MarlinRoute.acknowledgements) {
                 Image(systemName: "hands.clap")
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)

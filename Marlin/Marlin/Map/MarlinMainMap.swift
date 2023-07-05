@@ -6,21 +6,7 @@
 //
 
 import SwiftUI
-
-struct MapStateNavigation: Hashable {
-    static func == (lhs: MapStateNavigation, rhs: MapStateNavigation) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
-    var id = UUID()
-    
-    @ObservedObject var mapState: MapState
-    var view: String
-}
+import MapKit
 
 struct MarlinMainMap: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
@@ -32,11 +18,16 @@ struct MarlinMainMap: View {
     
     @EnvironmentObject var dataSourceList: DataSourceList
     
+    let focusMapAtLocation = NotificationCenter.default.publisher(for: .FocusMapAtLocation)
+    
     var body: some View {
         Self._printChanges()
         return VStack {
             MarlinMap(name: "Marlin Map", mixins: mixins, mapState: mapState)
                 .ignoresSafeArea()
+        }
+        .onReceive(focusMapAtLocation) { notification in
+            mapState.forceCenter = notification.object as? MKCoordinateRegion
         }
         .overlay(bottomButtons(), alignment: .bottom)
         .overlay(topButtons(), alignment: .top)
@@ -54,7 +45,7 @@ struct MarlinMainMap: View {
             Spacer()
             // top right button stack
             VStack(alignment: .trailing, spacing: 16) {
-                NavigationLink(value: MapStateNavigation(mapState: mapState, view: "mapSettings")) {
+                NavigationLink(value: MarlinRoute.mapSettings) {
                     Label(
                         title: {},
                         icon: { Image(systemName: "square.3.stack.3d")

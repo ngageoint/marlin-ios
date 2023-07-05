@@ -16,6 +16,7 @@ def common_pods
   pod 'gars-ios'
   pod 'MatomoTracker', '~> 7.5'
   pod 'SWXMLHash', '~> 7'
+  pod 'SwiftUIIntrospect'
 end
 
 target 'Marlin' do

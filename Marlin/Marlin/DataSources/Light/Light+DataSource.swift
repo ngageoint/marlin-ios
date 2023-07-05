@@ -10,10 +10,214 @@ import UIKit
 import CoreData
 import Alamofire
 import MapKit
+import sf_ios
+import geopackage_ios
+import ExceptionCatcher
 
 extension Light: DataSourceLocation, GeoPackageExportable {
+    
+    func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
+        var geometryByColor: [UIColor:SFGeometry] = [:]
+        if let lightSectors = lightSectors {
+            let sectorsByColor = Dictionary(grouping: lightSectors, by: \.color)
+            for (color, sectors) in sectorsByColor {
+                let collection = SFGeometryCollection()
+
+                for sector in sectors {
+                    if sector.obscured {
+                        continue
+                    }
+                    let nauticalMilesMeasurement = NSMeasurement(doubleValue: sector.range ?? 0.0, unit: UnitLength.nauticalMiles)
+                    let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
+                    if sector.startDegrees >= sector.endDegrees {
+                        // this could be an error in the data, or sometimes lights are defined as follows:
+                        // characteristic Q.W.R.
+                        // remarks R. 289°-007°, W.-007°.
+                        // that would mean this light flashes between red and white over those angles
+                        // TODO: figure out what to do with multi colored lights over the same sector
+                        continue
+                    }
+                    let circleCoordinates = circleCoordinates(center: self.coordinate, radiusMeters: metersMeasurement.value, startDegrees: sector.startDegrees + 90.0, endDegrees: sector.endDegrees + 90.0)
+                    
+                    let ring = SFLineString()
+                    ring?.addPoint(SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude))
+                    for circleCoordinate in circleCoordinates {
+                        let point = SFPoint(xValue: circleCoordinate.longitude, andYValue: circleCoordinate.latitude)
+                        ring?.addPoint(point)
+                    }
+                    let poly = SFPolygon(ring: ring)
+                    if let poly = poly {
+                        collection?.addGeometry(poly)
+                    }
+                }
+                geometryByColor[color] = collection
+            }
+            
+            return geometryByColor
+        }
+        return nil
+    }
+    
     var sfGeometry: SFGeometry? {
-        return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+        if let geometryByColor = sfGeometryByColor() {
+            
+            let collection = SFGeometryCollection()
+        
+            for geometry in geometryByColor.values {
+                collection?.addGeometry(geometry)
+            }
+            return collection
+        } else {
+            return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+        }
+    }
+    
+    static func createStyles(tableStyles: GPKGFeatureTableStyles) -> [GPKGStyleRow] {
+        var styleRows: [GPKGStyleRow] = []
+        
+        let red = tableStyles.styleDao().newRow()
+        red?.setName("RedLightStyle")
+        red?.setColor(CLRColor(red: Int32(Light.redLight.redComponent * 255.0), andGreen: Int32(Light.redLight.greenComponent * 255.0), andBlue: Int32(Light.redLight.blueComponent * 255.0)))
+        red?.setFillColor(CLRColor(red: Int32(Light.redLight.redComponent * 255.0), andGreen: Int32(Light.redLight.greenComponent * 255.0), andBlue: Int32(Light.redLight.blueComponent * 255.0)))
+        red?.setFillOpacity(0.3)
+        red?.setWidth(2.0)
+        if let red = red {
+            styleRows.append(red)
+        }
+        let green = tableStyles.styleDao().newRow()
+        green?.setName("GreenLightStyle")
+        green?.setColor(CLRColor(red: Int32(Light.greenLight.redComponent * 255.0), andGreen: Int32(Light.greenLight.greenComponent * 255.0), andBlue: Int32(Light.greenLight.blueComponent * 255.0)))
+        green?.setFillColor(CLRColor(red: Int32(Light.greenLight.redComponent * 255.0), andGreen: Int32(Light.greenLight.greenComponent * 255.0), andBlue: Int32(Light.greenLight.blueComponent * 255.0)))
+        green?.setFillOpacity(0.3)
+        green?.setWidth(2.0)
+        if let green = green {
+            styleRows.append(green)
+        }
+        let blue = tableStyles.styleDao().newRow()
+        blue?.setName("BlueLightStyle")
+        blue?.setColor(CLRColor(red: Int32(Light.blueLight.redComponent * 255.0), andGreen: Int32(Light.blueLight.greenComponent * 255.0), andBlue: Int32(Light.blueLight.blueComponent * 255.0)))
+        blue?.setFillColor(CLRColor(red: Int32(Light.blueLight.redComponent * 255.0), andGreen: Int32(Light.blueLight.greenComponent * 255.0), andBlue: Int32(Light.blueLight.blueComponent * 255.0)))
+        blue?.setFillOpacity(0.3)
+        blue?.setWidth(2.0)
+        if let blue = blue {
+            styleRows.append(blue)
+        }
+        let white = tableStyles.styleDao().newRow()
+        white?.setName("WhiteLightStyle")
+        white?.setColor(CLRColor(red: Int32(Light.whiteLight.redComponent * 255.0), andGreen: Int32(Light.whiteLight.greenComponent * 255.0), andBlue: Int32(Light.whiteLight.blueComponent * 255.0)))
+        white?.setFillColor(CLRColor(red: Int32(Light.whiteLight.redComponent * 255.0), andGreen: Int32(Light.whiteLight.greenComponent * 255.0), andBlue: Int32(Light.whiteLight.blueComponent * 255.0)))
+        white?.setFillOpacity(0.3)
+        white?.setWidth(2.0)
+        if let white = white {
+            styleRows.append(white)
+        }
+        let yellow = tableStyles.styleDao().newRow()
+        yellow?.setName("YellowLightStyle")
+        yellow?.setColor(CLRColor(red: Int32(Light.yellowLight.redComponent * 255.0), andGreen: Int32(Light.yellowLight.greenComponent * 255.0), andBlue: Int32(Light.yellowLight.blueComponent * 255.0)))
+        yellow?.setFillColor(CLRColor(red: Int32(Light.yellowLight.redComponent * 255.0), andGreen: Int32(Light.yellowLight.greenComponent * 255.0), andBlue: Int32(Light.yellowLight.blueComponent * 255.0)))
+        yellow?.setFillOpacity(0.3)
+        yellow?.setWidth(2.0)
+        if let yellow = yellow {
+            styleRows.append(yellow)
+        }
+        let violet = tableStyles.styleDao().newRow()
+        violet?.setName("VioletLightStyle")
+        violet?.setColor(CLRColor(red: Int32(Light.violetLight.redComponent * 255.0), andGreen: Int32(Light.violetLight.greenComponent * 255.0), andBlue: Int32(Light.violetLight.blueComponent * 255.0)))
+        violet?.setFillColor(CLRColor(red: Int32(Light.violetLight.redComponent * 255.0), andGreen: Int32(Light.violetLight.greenComponent * 255.0), andBlue: Int32(Light.violetLight.blueComponent * 255.0)))
+        violet?.setFillOpacity(0.3)
+        violet?.setWidth(2.0)
+        if let violet = violet {
+            styleRows.append(violet)
+        }
+        let orange = tableStyles.styleDao().newRow()
+        orange?.setName("OrangeLightStyle")
+        orange?.setColor(CLRColor(red: Int32(Light.orangeLight.redComponent * 255.0), andGreen: Int32(Light.orangeLight.greenComponent * 255.0), andBlue: Int32(Light.orangeLight.blueComponent * 255.0)))
+        orange?.setFillColor(CLRColor(red: Int32(Light.orangeLight.redComponent * 255.0), andGreen: Int32(Light.orangeLight.greenComponent * 255.0), andBlue: Int32(Light.orangeLight.blueComponent * 255.0)))
+        orange?.setFillOpacity(0.3)
+        orange?.setWidth(2.0)
+        if let orange = orange {
+            styleRows.append(orange)
+        }
+
+        return styleRows
+    }
+    
+    func createFeature(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, styleRows: [GPKGStyleRow]) {
+        
+        guard let featureDao = geoPackage.featureDao(with: table), let featureTableStyles = GPKGFeatureTableStyles(geoPackage: geoPackage, andTable: table) else {
+            return
+        }
+        if let geometryColors = sfGeometryByColor() {
+            featureTableStyles.createStyleRelationship()
+            for (color, geometry) in geometryColors {
+                if let geometry = geometry, let row = featureDao.newRow() {
+                    
+                    let gpkgGeometry = GPKGGeometryData(geometry: geometry)
+                    row.setValueWithColumnName("geometry", andValue: gpkgGeometry)
+                    
+                    let propertiesByName = Dictionary(grouping: Self.properties, by: \.key)
+                    for (_, properties) in propertiesByName {
+                        if let property = properties.filter({ property in
+                            property.subEntityKey == nil
+                        }).first {
+                            if let value = self.value(forKey: property.key) as? NSObject {
+                                row.setValueWithColumnName(property.key, andValue: value)
+                            }
+                        }
+                    }
+                    do {
+                        try ExceptionCatcher.catch {
+                            let rowId = featureDao.create(row)
+                            if color == Light.redLight {
+                                featureTableStyles.setStyleDefault(styleRows[0], withId: Int32(rowId))
+                            } else if color == Light.greenLight {
+                                featureTableStyles.setStyleDefault(styleRows[1], withId: Int32(rowId))
+                            } else if color == Light.blueLight {
+                                featureTableStyles.setStyleDefault(styleRows[2], withId: Int32(rowId))
+                            }  else if color == Light.whiteLight {
+                                featureTableStyles.setStyleDefault(styleRows[3], withId: Int32(rowId))
+                            } else if color == Light.yellowLight {
+                                featureTableStyles.setStyleDefault(styleRows[4], withId: Int32(rowId))
+                            } else if color == Light.violetLight {
+                                featureTableStyles.setStyleDefault(styleRows[5], withId: Int32(rowId))
+                            } else if color == Light.orangeLight {
+                                featureTableStyles.setStyleDefault(styleRows[6], withId: Int32(rowId))
+                            }
+                        }
+                    } catch {
+                        print("Excetion creating feature \(error.localizedDescription)")
+                    }
+                }
+            }
+            
+        } else {
+            guard let row = featureDao.newRow() else {
+                return
+            }
+            if let sfGeometry = sfGeometry {
+                let gpkgGeometry = GPKGGeometryData(geometry: sfGeometry)
+                row.setValueWithColumnName("geometry", andValue: gpkgGeometry)
+            }
+            
+            let propertiesByName = Dictionary(grouping: Self.properties, by: \.key)
+            for (_, properties) in propertiesByName {
+                if let property = properties.filter({ property in
+                    property.subEntityKey == nil
+                }).first {
+                    if let value = self.value(forKey: property.key) as? NSObject {
+                        row.setValueWithColumnName(property.key, andValue: value)
+                    }
+                }
+            }
+            do {
+                try ExceptionCatcher.catch {
+                    let rowId = featureDao.create(row)
+                    
+                }
+            } catch {
+                print("Excetion creating feature \(error.localizedDescription)")
+            }
+        }
     }
     
     static var dateFormatter: DateFormatter {

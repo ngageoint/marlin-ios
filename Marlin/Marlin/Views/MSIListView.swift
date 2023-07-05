@@ -117,14 +117,6 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
                     focusedItem.dataSource = nil
                 }
         }
-        .navigationDestination(for: MarlinRoute.self) { item in
-            switch item {
-            case .exportGeoPackage(let exportRequest):
-                GeoPackageExportView(exportRequest: exportRequest)
-            default:
-                EmptyView()
-            }
-        }
         .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)]), allowSorting: allowUserSort, allowFiltering: allowUserFilter))
         .background {
             DataSourceFilter(filterViewModel: filterViewModel, showBottomSheet: $filterOpen)

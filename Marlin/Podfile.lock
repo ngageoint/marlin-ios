@@ -54,6 +54,7 @@ PODS:
     - sf-ios (~> 4.1.2)
   - sf-wkt-ios (2.1.2):
     - sf-ios (~> 4.1.2)
+  - SwiftUIIntrospect (0.7.0)
   - SWXMLHash (7.0.2)
   - tiff-ios (4.0.1)
 
@@ -69,6 +70,7 @@ DEPENDENCIES:
   - OHHTTPStubs/Swift
   - sf-ios
   - sf-wkt-ios
+  - SwiftUIIntrospect
   - SWXMLHash (~> 7)
 
 SPEC REPOS:
@@ -92,6 +94,7 @@ SPEC REPOS:
     - sf-proj-ios
     - sf-wkb-ios
     - sf-wkt-ios
+    - SwiftUIIntrospect
     - SWXMLHash
     - tiff-ios
 
@@ -115,9 +118,10 @@ SPEC CHECKSUMS:
   sf-proj-ios: b5388d60181b0e368eb754e5b2a773233b49af01
   sf-wkb-ios: 6a32a00f36ddf79adbd4f74a088ca569607da8de
   sf-wkt-ios: a8bb6be99b6e209557ce5feba64d961d896da049
+  SwiftUIIntrospect: 22e0d86711f28242c7a24e257cb71fc543a49d30
   SWXMLHash: dd733a457e9c4fe93b1538654057aefae4acb382
   tiff-ios: 6f74cf7fefc371e2523807ea38cd808fd594f86b
 
-PODFILE CHECKSUM: cf8e87812cba5cdf08bacc383c1dea4fbc1c1ea4
+PODFILE CHECKSUM: 2cceaff3b285236c27180bd594182508533a1ace
 
 COCOAPODS: 1.12.1

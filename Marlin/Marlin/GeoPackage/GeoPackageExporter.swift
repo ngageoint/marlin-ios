@@ -94,15 +94,17 @@ class GeoPackageExporter: ObservableObject {
                     continue
                 }
                 do {
-                    guard let table = try dataSource.self.createTable(geoPackage: geoPackage) else {
+                    guard let table = try dataSource.self.createTable(geoPackage: geoPackage), let featureTableStyles = GPKGFeatureTableStyles(geoPackage: geoPackage, andTable: table) else {
                         continue
                     }
+
+                    let styles = dataSource.self.createStyles(tableStyles: featureTableStyles)
                     var filters = request.filters
                     if filters == nil, let dataSource = dataSource as? any DataSource.Type {
                         filters = UserDefaults.standard.filter(dataSource)
                     }
                     
-                    try dataSource.createFeatures(geoPackage: geoPackage, table: table, filters: filters)
+                    try dataSource.createFeatures(geoPackage: geoPackage, table: table, filters: filters, styleRows: styles)
                     rtree?.create(with: table)
                 } catch {
                     DispatchQueue.main.async { [self] in

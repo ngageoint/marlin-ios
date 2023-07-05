@@ -175,7 +175,7 @@ struct LightSettingsView: View {
                         .tint(Color.primaryColor)
                         .accessibilityElement()
                         .accessibilityLabel("Show Sector Range Toggle")
-                        
+
                         Toggle(isOn: $actualRangeLights, label: {
                             HStack {
                                 Image(systemName: "smallcircle.filled.circle.fill")

@@ -45,8 +45,9 @@ protocol GeoPackageExportable: NSObject {
     static var image: UIImage? { get }
     var sfGeometry: SFGeometry? { get }
     static func createTable(geoPackage: GPKGGeoPackage) throws -> GPKGFeatureTable?
-    static func createFeatures(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, filters: [DataSourceFilterParameter]?) throws
-    func createFeature(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable)
+    static func createFeatures(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, filters: [DataSourceFilterParameter]?, styleRows: [GPKGStyleRow]) throws
+    func createFeature(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, styleRows: [GPKGStyleRow])
+    static func createStyles(tableStyles: GPKGFeatureTableStyles) -> [GPKGStyleRow]
 }
 
 extension GeoPackageExportable {
@@ -138,7 +139,11 @@ extension GeoPackageExportable {
         return table
     }
     
-    static func createFeatures(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, filters: [DataSourceFilterParameter]?) throws {
+    static func createStyles(tableStyles: GPKGFeatureTableStyles) -> [GPKGStyleRow] {
+        return []
+    }
+    
+    static func createFeatures(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, filters: [DataSourceFilterParameter]?, styleRows: [GPKGStyleRow]) throws {
         guard let dataSource = self as? NSManagedObject.Type else {
             return
         }
@@ -159,13 +164,13 @@ extension GeoPackageExportable {
             let results = try context.fetch(fetchRequest)
             for result in results where result is GeoPackageExportable {
                 if let gpExportable = result as? GeoPackageExportable {
-                    gpExportable.createFeature(geoPackage: geoPackage, table: table)
+                    gpExportable.createFeature(geoPackage: geoPackage, table: table, styleRows: styleRows)
                 }
             }
         }
     }
     
-    func createFeature(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable) {
+    func createFeature(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, styleRows: [GPKGStyleRow]) {
         guard let featureDao = geoPackage.featureDao(with: table), let row = featureDao.newRow() else {
             return
         }

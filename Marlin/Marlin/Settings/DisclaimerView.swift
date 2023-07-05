@@ -16,6 +16,7 @@ struct DisclaimerView: View {
             endorsementDisclaimer()
         }
         .padding([.leading, .top, .bottom, .trailing], 16)
+        .navigationTitle("Disclaimer")
     }
     
     @ViewBuilder

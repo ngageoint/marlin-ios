@@ -17,6 +17,7 @@ struct DataSourceNavView: View {
         Self._printChanges()
         return NavigationStack(path: $path) {
             DataSourceListView(dataSource: dataSource, focusedItem: focusedItem, path: $path)
+                .marlinRoutes(path: $path)
         }
     }
 }

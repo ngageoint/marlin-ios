@@ -257,6 +257,8 @@ extension LightProtocol {
                     return Light.redLight
                 } else if color == "G" {
                     return Light.greenLight
+                } else if color == "Y" {
+                    return Light.yellowLight
                 }
                 return visibleColor ?? (lightColors?[0] ?? UIColor.clear)
             }()

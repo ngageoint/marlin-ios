@@ -126,15 +126,6 @@ struct NavigationalWarningAreasView: View {
             .accessibilityElement(children: .contain)
             .accessibilityLabel("Export Button")
             .padding(16)
-            .navigationDestination(for: MarlinRoute.self) { item in
-                switch item {
-                case .exportGeoPackage(let exportRequest):
-                    GeoPackageExportView(exportRequest: exportRequest)
-                    
-                default:
-                    EmptyView()
-                }
-            }
         }
     }
 }

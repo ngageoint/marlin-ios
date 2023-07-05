@@ -11,6 +11,8 @@
 		D7A569C784B0F2D5720432C4 /* libPods-MarlinTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */; };
 		F7066DA92A45D8C10058122E /* GeoPackageExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DA82A45D8C10058122E /* GeoPackageExporter.swift */; };
 		F7066DAB2A462A740058122E /* GeoPackageExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DAA2A462A740058122E /* GeoPackageExportable.swift */; };
+		F7066DAD2A4F08B70058122E /* CoordinateDisplaySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DAC2A4F08B70058122E /* CoordinateDisplaySettings.swift */; };
+		F7066DB02A4F7AF90058122E /* MarlinRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DAF2A4F7AF90058122E /* MarlinRoute.swift */; };
 		F707BA722874B9F4006A94C4 /* userDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = F707BA712874B9F4006A94C4 /* userDefaults.plist */; };
 		F707BA7728760EE7006A94C4 /* Light+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7628760EE7006A94C4 /* Light+CoreDataClass.swift */; };
 		F707BA7B28763309006A94C4 /* LightSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7A28763309006A94C4 /* LightSummaryView.swift */; };
@@ -431,6 +433,8 @@
 		F32BF352638699CBFE1A8D52 /* Pods-Marlin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Marlin.release.xcconfig"; path = "Target Support Files/Pods-Marlin/Pods-Marlin.release.xcconfig"; sourceTree = "<group>"; };
 		F7066DA82A45D8C10058122E /* GeoPackageExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExporter.swift; sourceTree = "<group>"; };
 		F7066DAA2A462A740058122E /* GeoPackageExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExportable.swift; sourceTree = "<group>"; };
+		F7066DAC2A4F08B70058122E /* CoordinateDisplaySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateDisplaySettings.swift; sourceTree = "<group>"; };
+		F7066DAF2A4F7AF90058122E /* MarlinRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinRoute.swift; sourceTree = "<group>"; };
 		F707BA712874B9F4006A94C4 /* userDefaults.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = userDefaults.plist; sourceTree = "<group>"; };
 		F707BA7628760EE7006A94C4 /* Light+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F707BA7A28763309006A94C4 /* LightSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightSummaryView.swift; sourceTree = "<group>"; };
@@ -879,6 +883,14 @@
 				C95BD18A52FCC50ED2ED6E21 /* Pods-MarlinTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		F7066DAE2A4F7AE70058122E /* Routing */ = {
+			isa = PBXGroup;
+			children = (
+				F7066DAF2A4F7AF90058122E /* MarlinRoute.swift */,
+			);
+			path = Routing;
 			sourceTree = "<group>";
 		};
 		F707BA7528760894006A94C4 /* Light */ = {
@@ -1372,6 +1384,7 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
+				F7066DAE2A4F7AE70058122E /* Routing */,
 				F7DF1BBB29E98B2700F92E14 /* Keychain */,
 				F7C23DFA2906F1360002A7DF /* Metrics */,
 				F7275FE028FEF8A000ED8D9A /* Onboarding */,
@@ -1777,6 +1790,7 @@
 				F71FC0CE2A3B879800911BAC /* FocusButton.swift */,
 				F71FC0D02A3B9D9000911BAC /* MoreDetailsButton.swift */,
 				F71FC0D22A3B9DDA00911BAC /* DataSourceActionBar.swift */,
+				F7066DAC2A4F08B70058122E /* CoordinateDisplaySettings.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2336,6 +2350,7 @@
 				F70BCE9929C4F1AE00AEF73D /* UserLayersMap.swift in Sources */,
 				F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */,
 				F70BCEA529DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift in Sources */,
+				F7066DAD2A4F08B70058122E /* CoordinateDisplaySettings.swift in Sources */,
 				F7FFB31428D63CB000C31AA3 /* Modu+DataSourceViewBuilder.swift in Sources */,
 				F7BDF7762A1C11640083B97F /* DataSourceToggles.swift in Sources */,
 				F7364E382A1D55D10098F243 /* LoadingCapsule.swift in Sources */,
@@ -2467,6 +2482,7 @@
 				F7D8FA3C2939232100E7D0A1 /* FilterViewModel.swift in Sources */,
 				F75E32C129C4BC1F006F2394 /* LayerConfigurationView.swift in Sources */,
 				F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */,
+				F7066DB02A4F7AF90058122E /* MarlinRoute.swift in Sources */,
 				F7D8FA6E293E92A900E7D0A1 /* SortViewModel.swift in Sources */,
 				F71D286E28BE8CB800F1775C /* DFRS+CoreDataClass.swift in Sources */,
 				F7D8FA5A293AA15B00E7D0A1 /* DataSourceSortParameter.swift in Sources */,
