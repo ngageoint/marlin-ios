@@ -52,8 +52,6 @@ struct MarlinRouteModifier: ViewModifier {
                     }
                 case .acknowledgements:
                     AcknowledgementsView()
-                default:
-                    EmptyView()
                 }
             }
             .navigationDestination(for: ItemWrapper.self) { item in
