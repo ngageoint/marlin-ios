@@ -22,7 +22,7 @@ final class StringFilterTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "String", key: "stringProperty", type: .string))
             
             init(passThrough: PassThrough) {

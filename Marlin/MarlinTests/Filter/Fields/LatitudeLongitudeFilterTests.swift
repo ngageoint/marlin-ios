@@ -23,7 +23,7 @@ final class LatitudeLongitudeFilterTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Latitude", key: "latitudeProperty", type: .latitude))
             
             init(passThrough: PassThrough) {
@@ -68,7 +68,7 @@ final class LatitudeLongitudeFilterTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Longitude", key: "longitudeProperty", type: .latitude))
             
             init(passThrough: PassThrough) {
@@ -113,7 +113,7 @@ final class LatitudeLongitudeFilterTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Latitude", key: "latitudeProperty", type: .latitude))
             
             init(passThrough: PassThrough) {
@@ -159,7 +159,7 @@ final class LatitudeLongitudeFilterTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Longitude", key: "longitudeProperty", type: .latitude))
             
             init(passThrough: PassThrough) {

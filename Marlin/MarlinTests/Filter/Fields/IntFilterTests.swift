@@ -22,7 +22,7 @@ final class IntFilterTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Int", key: "intProperty", type: .int))
             
             init(passThrough: PassThrough) {
@@ -63,7 +63,7 @@ final class IntFilterTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Int", key: "intProperty", type: .int))
             
             init(passThrough: PassThrough) {
@@ -103,7 +103,7 @@ final class IntFilterTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Int", key: "intProperty", type: .int))
             
             init(passThrough: PassThrough) {

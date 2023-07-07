@@ -6,14 +6,21 @@
 //
 
 import Foundation
+import Combine
+import CoreData
 
 class FilterViewModel: ObservableObject {
-    let dataSource: any DataSource.Type
+    var dataSource: any DataSource.Type
     @Published var filters: [DataSourceFilterParameter] {
         didSet {
-            UserDefaults.standard.setFilter(dataSource.key, filter: filters)
+            if let fetchRequest = fetchRequest() {
+                count = (try? PersistenceController.current.viewContext.count(for: fetchRequest)) ?? 0
+            }
         }
     }
+    @Published var selectedProperty: DataSourceProperty?
+    @Published var filterParameter: DataSourceFilterParameter?
+    @Published var count: Int = 0
     
     var requiredProperties: [DataSourceProperty] {
         dataSource.properties.filter({ property in
@@ -28,19 +35,14 @@ class FilterViewModel: ObservableObject {
         }
     }
     
-    @Published var selectedProperty: DataSourceProperty?
-    @Published var filterParameter: DataSourceFilterParameter?
-    
-    init(dataSource: any DataSource.Type, useDefaultForEmptyFilter: Bool = false) {
+    init(dataSource: any DataSource.Type) {
         self.dataSource = dataSource
-        let savedFilter = UserDefaults.standard.filter(dataSource)
-        if useDefaultForEmptyFilter && savedFilter.isEmpty {
-            self.filters = dataSource.defaultFilter
-        } else {
-            self.filters = savedFilter
-        }
+        self.filters = []
         if !dataSource.properties.isEmpty {
             selectedProperty = dataSource.properties[0]
+        }
+        if let fetchRequest = fetchRequest() {
+            count = (try? PersistenceController.current.viewContext.count(for: fetchRequest)) ?? 0
         }
     }
     
@@ -55,5 +57,48 @@ class FilterViewModel: ObservableObject {
         viewModel.valueLatitudeString = ""
         viewModel.valueLongitudeString = ""
         viewModel.windowUnits = .last30Days
+    }
+    
+    func fetchRequest() -> NSFetchRequest<any NSFetchRequestResult>? {
+        guard let dataSource = self.dataSource as? NSManagedObject.Type else {
+            return nil
+        }
+        let fetchRequest = dataSource.fetchRequest()
+        var predicates: [NSPredicate] = []
+        for filter in filters {
+            if let predicate = filter.toPredicate() {
+                predicates.append(predicate)
+            }
+        }
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        
+        fetchRequest.predicate = predicate
+        return fetchRequest
+    }
+}
+
+class PersistedFilterViewModel: FilterViewModel {
+    override var filters: [DataSourceFilterParameter] {
+        didSet {
+            UserDefaults.standard.setFilter(dataSource.key, filter: filters)
+        }
+    }
+    
+    init(dataSource: any DataSource.Type, useDefaultForEmptyFilter: Bool = false) {
+        super.init(dataSource: dataSource)
+        let savedFilter = UserDefaults.standard.filter(dataSource)
+        if useDefaultForEmptyFilter && savedFilter.isEmpty {
+            self.filters = dataSource.defaultFilter
+        } else {
+            self.filters = savedFilter
+        }
+
+    }
+}
+
+class TemporaryFilterViewModel: FilterViewModel {
+    init(dataSource: any DataSource.Type, filters: [DataSourceFilterParameter]) {
+        super.init(dataSource: dataSource)
+        self.filters = filters
     }
 }

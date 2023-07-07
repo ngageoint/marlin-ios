@@ -64,6 +64,14 @@ struct MarlinMainMap: View {
         }
     }
     
+    func exportRequest() -> [DataSourceExportRequest] {
+        var exports: [DataSourceExportRequest] = []
+        for dataSource in dataSourceList.mappedDataSources {
+            exports.append(DataSourceExportRequest(dataSourceItem: dataSource, filters: UserDefaults.standard.filter(dataSource.dataSource)))
+        }
+        return exports
+    }
+    
     @ViewBuilder
     func bottomButtons() -> some View {
         HStack(alignment: .bottom, spacing: 0) {
@@ -78,6 +86,20 @@ struct MarlinMainMap: View {
             Spacer()
             // bottom right button stack
             VStack(alignment: .trailing, spacing: 16) {
+                NavigationLink(value: MarlinRoute.exportGeoPackage(exportRequest())) {
+                    Label(
+                        title: {},
+                        icon: { Image(systemName: "square.and.arrow.down")
+                                .renderingMode(.template)
+                        }
+                    )
+                }
+                .isDetailLink(false)
+                .fixedSize()
+                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Export Button")
+                
                 UserTrackingButton(mapState: mapState)
                     .fixedSize()
                     .accessibilityElement(children: .contain)

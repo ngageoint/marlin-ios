@@ -45,7 +45,8 @@ protocol GeoPackageExportable: NSObject {
     static var image: UIImage? { get }
     var sfGeometry: SFGeometry? { get }
     static func createTable(geoPackage: GPKGGeoPackage) throws -> GPKGFeatureTable?
-    static func createFeatures(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, filters: [DataSourceFilterParameter]?, styleRows: [GPKGStyleRow]) throws
+    static func fetchRequest(filters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>?
+    static func createFeatures(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, filters: [DataSourceFilterParameter]?, styleRows: [GPKGStyleRow], dataSourceProgress: DataSourceExportProgress) throws
     func createFeature(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, styleRows: [GPKGStyleRow])
     static func createStyles(tableStyles: GPKGFeatureTableStyles) -> [GPKGStyleRow]
 }
@@ -143,9 +144,9 @@ extension GeoPackageExportable {
         return []
     }
     
-    static func createFeatures(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, filters: [DataSourceFilterParameter]?, styleRows: [GPKGStyleRow]) throws {
+    static func fetchRequest(filters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>? {
         guard let dataSource = self as? NSManagedObject.Type else {
-            return
+            return nil
         }
         let fetchRequest = dataSource.fetchRequest()
         var predicates: [NSPredicate] = []
@@ -157,15 +158,33 @@ extension GeoPackageExportable {
             }
         }
         let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-
+        
         fetchRequest.predicate = predicate
+        return fetchRequest
+    }
+    
+    static func createFeatures(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, filters: [DataSourceFilterParameter]?, styleRows: [GPKGStyleRow], dataSourceProgress: DataSourceExportProgress) throws {
+        guard let fetchRequest = fetchRequest(filters: filters) else {
+            return
+        }
+        
         let context = PersistenceController.current.newTaskContext()
         try context.performAndWait {
             let results = try context.fetch(fetchRequest)
+            var exported = 0
             for result in results where result is GeoPackageExportable {
                 if let gpExportable = result as? GeoPackageExportable {
                     gpExportable.createFeature(geoPackage: geoPackage, table: table, styleRows: styleRows)
+                    exported += 1
+                    if exported % 10 == 0 {
+                        DispatchQueue.main.async {
+                            dataSourceProgress.exportCount = Float(exported)
+                        }
+                    }
                 }
+            }
+            DispatchQueue.main.async {
+                dataSourceProgress.exportCount = Float(exported)
             }
         }
     }

@@ -76,7 +76,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
         self.sectionNameBuilder = sectionNameBuilder
         self.sectionViewBuilder = sectionViewBuilder
         self.content = content
-        self.filterViewModel = FilterViewModel(dataSource: T.self)
+        self.filterViewModel = PersistedFilterViewModel(dataSource: T.self)
     }
     
     var body: some View {
@@ -84,7 +84,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
         return ZStack(alignment: .bottomTrailing) {
             GenericSectionedList<T, SectionHeader, Content>(path: $path, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content)
             if let _ = T.self as? GeoPackageExportable.Type {
-                NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(dataSourceItem: DataSourceItem(dataSource: T.self))])) {
+                NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(dataSourceItem: DataSourceItem(dataSource: T.self), filters: UserDefaults.standard.filter(T.self))])) {
                     Label(
                         title: {},
                         icon: { Image(systemName: "square.and.arrow.down")

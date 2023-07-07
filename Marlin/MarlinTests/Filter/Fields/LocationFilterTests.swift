@@ -23,7 +23,7 @@ final class LocationFilterTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Location", key: "locationProperty", type: .location))
             
             init(passThrough: PassThrough) {
@@ -96,7 +96,7 @@ final class LocationFilterTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Location", key: "locationProperty", type: .location))
             
             init(passThrough: PassThrough) {
@@ -158,7 +158,7 @@ final class LocationFilterTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Location", key: "locationProperty", type: .location))
             
             init(passThrough: PassThrough) {
@@ -234,7 +234,7 @@ final class LocationFilterTests: XCTestCase {
             @EnvironmentObject var locationManager: LocationManager
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Location", key: "locationProperty", type: .location))
             
             
@@ -284,7 +284,7 @@ final class LocationFilterTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel: DataSourcePropertyFilterViewModel
             
             var locationManager: LocationManager

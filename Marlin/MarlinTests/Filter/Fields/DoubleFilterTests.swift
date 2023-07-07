@@ -22,7 +22,7 @@ final class DoubleFilterTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Double", key: "doubleProperty", type: .double))
             
             init(passThrough: PassThrough) {
@@ -61,7 +61,7 @@ final class DoubleFilterTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @ObservedObject var filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
             @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Double", key: "doubleProperty", type: .double))
             
             init(passThrough: PassThrough) {
