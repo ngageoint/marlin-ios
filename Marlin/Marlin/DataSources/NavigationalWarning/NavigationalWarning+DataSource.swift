@@ -123,6 +123,12 @@ extension NavigationalWarning: DataSourceLocation, GeoPackageExportable {
         return nil
     }
     
+    static func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
+        return NSPredicate(
+            format: "maxLatitude >= %lf AND minLatitude <= %lf AND maxLongitude >= %lf AND minLongitude <= %lf", minLat, maxLat, minLon, maxLon
+        )
+    }
+    
     static var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"

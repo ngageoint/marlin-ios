@@ -51,6 +51,21 @@ struct DMSCoordinate {
 
 extension CLLocationCoordinate2D {
     
+    func format() -> String {
+        switch UserDefaults.standard.coordinateDisplay {
+        case .latitudeLongitude:
+            let nf = NumberFormatter()
+            nf.maximumFractionDigits = 4
+            return "\(nf.string(for: self.latitude) ?? "")°, \(nf.string(for: self.longitude) ?? "")°"
+        case .degreesMinutesSeconds:
+            return "\(CLLocationCoordinate2D.latitudeDMSString(coordinate: self.latitude)), \(CLLocationCoordinate2D.longitudeDMSString(coordinate: self.longitude))"
+        case .gars:
+            return GARS.from(self).coordinate()
+        case .mgrs:
+            return MGRS.from(self).coordinate()
+        }
+    }
+    
     func circleCoordinates(radiusMeters: Double, startDegrees: Double = 0.0, endDegrees: Double = 360.0) -> [CLLocationCoordinate2D] {
         let center = self
         var coordinates: [CLLocationCoordinate2D] = []

@@ -72,6 +72,12 @@ extension Light: DataSourceLocation, GeoPackageExportable {
         }
     }
     
+    static func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
+        return NSPredicate(
+            format: "characteristicNumber = 1 AND latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
+        )
+    }
+    
     static func createStyles(tableStyles: GPKGFeatureTableStyles) -> [GPKGStyleRow] {
         var styleRows: [GPKGStyleRow] = []
         

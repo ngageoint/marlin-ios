@@ -13,6 +13,7 @@ struct GeoPackageExportView: View {
     @StateObject var exporter: GeoPackageExporter = GeoPackageExporter()
     
     @State var exportRequest: [DataSourceExportRequest]
+    
     var body: some View {
         VStack {
             ScrollView {
@@ -24,9 +25,9 @@ struct GeoPackageExportView: View {
                     Spacer()
                 }
                 HStack {
-                    ForEach(dataSourceList.mappableDataSources, id: \.self) { dataSource in
-                        let included = exportRequest.contains { request in
-                            request.dataSourceItem.key == dataSource.key
+                    ForEach(dataSourceList.mappableDataSources, id: \.self) { dataSourceItem in
+                        let included = exporter.filterViewModels.contains { viewModel in
+                            viewModel.dataSource.key == dataSourceItem.key
                         }
                         
                         Button(action: {
@@ -34,27 +35,37 @@ struct GeoPackageExportView: View {
                                 return
                             }
                             if included {
-                                exportRequest.removeAll { request in
-                                    request.dataSourceItem.key == dataSource.key
-                                }
+                                exporter.removeExportDataSource(dataSourceItem: dataSourceItem)
                             } else {
-                                exportRequest.append(DataSourceExportRequest(dataSourceItem: dataSource, filters: UserDefaults.standard.filter(dataSource.dataSource)))
+                                exporter.addExportDataSource(dataSourceItem: dataSourceItem)
                             }
                         }) {
                             Label(title: {}) {
-                                if let image = dataSource.dataSource.image {
+                                if let image = dataSourceItem.dataSource.image {
                                     Image(uiImage: image)
                                         .renderingMode(.template)
                                         .tint(Color.white)
                                 }
                             }
                         }
-                        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: included ? Color.white : Color.disabledColor, backgroundColor: included ? Color(uiColor: dataSource.dataSource.color) : Color.disabledBackground))
+                        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: included ? Color.white : Color.disabledColor, backgroundColor: included ? Color(uiColor: dataSourceItem.dataSource.color) : Color.disabledBackground))
                         .accessibilityElement(children: .contain)
-                        .accessibilityLabel("\(dataSource.dataSource.key) Export Toggle")
+                        .accessibilityLabel("\(dataSourceItem.dataSource.key) Export Toggle")
                     }
                 }
                 if !exporter.exporting && !exporter.complete {
+                    HStack {
+                        Text("Common Filters".uppercased())
+                            .overline()
+                            .padding(.top, 8)
+                            .padding(.all, 8)
+                        Spacer()
+                    }
+                    VStack(spacing: 0) {
+                        ExportFilterRow(viewModel: exporter.commonViewModel)
+                        Divider()
+                    }
+                    
                     HStack {
                         Text("Data Source Filters".uppercased())
                             .overline()
@@ -63,8 +74,8 @@ struct GeoPackageExportView: View {
                         Spacer()
                     }
                     VStack(spacing: 0) {
-                        ForEach(exportRequest) { request in
-                            ExportFilterRow(exportRequest: request)
+                        ForEach(exporter.filterViewModels) { viewModel in
+                            ExportFilterRow(viewModel: viewModel)
                             Divider()
                         }
                         .background(Color.surfaceColor)
@@ -78,30 +89,64 @@ struct GeoPackageExportView: View {
                         Spacer()
                     }
                     VStack(spacing: 0) {
-                        ForEach(exportRequest) { request in
-                            ExportProgressRow(progress: request.progress)
-                            Divider()
+                        ForEach(exporter.exportProgresses) { progress in
+                            if progress.totalCount != 0.0 {
+                                ExportProgressRow(progress: progress)
+                                Divider()
+                            }
                         }
                         .background(Color.surfaceColor)
                     }
                 }
             }
-            if exporter.complete {
-                Text("Export complete")
-            } else if exporter.exporting {
-                Text("Exporting")
-            }
             if let creationError = exporter.creationError {
                 Text("Error \(creationError)")
             }
-            Button("Export") {
-                exporter.export(exportRequest: exportRequest)
-            }
-            .buttonStyle(MaterialButtonStyle(type:.contained))
-            .padding(.all, 16)
         }
+        .safeAreaInset(edge: .bottom, content: {
+            HStack {
+                Spacer()
+                if exporter.complete {
+                    if let path = exporter.geoPackage?.path {
+                        ShareLink(
+                            item: URL(fileURLWithPath: path)
+                        ) {
+                            Label(
+                                title: {
+                                    Text("Share")
+                                },
+                                icon: { Image(systemName: "square.and.arrow.up")
+                                        .renderingMode(.template)
+                                })
+                        }
+                        .accessibilityElement()
+                        .accessibilityLabel("share")
+                        .buttonStyle(MaterialButtonStyle(type:.contained))
+                        .padding(.all, 16)
+                    }
+                } else if !exporter.exporting {
+                    Button {
+                        exporter.export()
+                    } label: {
+                        Label(
+                            title: {
+                                Text("Export")
+                            },
+                            icon: { Image(systemName: "square.and.arrow.down")
+                                    .renderingMode(.template)
+                            }
+                        )
+                    }
+                    .buttonStyle(MaterialButtonStyle(type:.contained))
+                    .padding(.all, 16)
+                }
+            }
+        })
         .navigationTitle("GeoPackage Export")
         .background(Color.backgroundColor)
+        .onAppear {
+            exporter.setExportRequests(exportRequests: exportRequest)
+        }
     }
 }
 
@@ -115,17 +160,17 @@ struct ExportProgressRow: View {
         return VStack(alignment: .leading) {
             VStack {
                 HStack(alignment: .center, spacing: 8) {
-                    if let systemImageName = progress.dataSourceItem.dataSource.systemImageName {
+                    if let systemImageName = progress.dataSource.systemImageName {
                         Image(systemName: systemImageName)
                             .tint(Color.onSurfaceColor)
                             .opacity(0.60)
-                    } else if let imageName = progress.dataSourceItem.dataSource.imageName {
+                    } else if let imageName = progress.dataSource.imageName {
                         Image(imageName)
                             .tint(Color.onSurfaceColor)
                             .opacity(0.60)
                     }
                     
-                    Text(progress.dataSourceItem.dataSource.fullDataSourceName)
+                    Text(progress.dataSource.fullDataSourceName)
                         .primary()
                         .multilineTextAlignment(.leading)
                     Spacer()
@@ -141,11 +186,11 @@ struct ExportProgressRow: View {
             }
             .contentShape(Rectangle())
             .accessibilityElement(children: .contain)
-            .accessibilityLabel("export \(progress.dataSourceItem.dataSource.fullDataSourceName) progress")
+            .accessibilityLabel("export \(progress.dataSource.fullDataSourceName) progress")
             .background(
                 HStack {
                     Rectangle()
-                        .fill(Color(progress.dataSourceItem.dataSource.color))
+                        .fill(Color(progress.dataSource.color))
                         .frame(maxWidth: 8, maxHeight: .infinity)
                     Spacer()
                 }
@@ -158,69 +203,66 @@ struct ExportProgressRow: View {
 
 struct ExportFilterLabel: View {
     @ObservedObject var viewModel: TemporaryFilterViewModel
-    var exportRequest: DataSourceExportRequest
     
     var body: some View {
         HStack(alignment: .center, spacing: 8) {
-            if let systemImageName = exportRequest.dataSourceItem.dataSource.systemImageName {
+            if let systemImageName = viewModel.dataSource.systemImageName {
                 Image(systemName: systemImageName)
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)
-            } else if let imageName = exportRequest.dataSourceItem.dataSource.imageName {
+            } else if let imageName = viewModel.dataSource.imageName {
                 Image(imageName)
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)
             }
             
-            Text(exportRequest.dataSourceItem.dataSource.fullDataSourceName)
+            Text(viewModel.dataSource.fullDataSourceName)
                 .primary()
                 .multilineTextAlignment(.leading)
             Spacer()
-            Text("\(viewModel.count)")
-                .overline()
+            if viewModel.dataSource.key == CommonDataSource.key {
+                Text("\(viewModel.filters.count) common filter\(viewModel.filters.count == 1 ? "" : "s") set")
+                    .overline()
+            } else {
+                Text("\(viewModel.count)")
+                    .overline()
+            }
         }
     }
 }
 
 struct ExportFilterRow: View {
     @State var filterCount: Int = 0
-
-    var exportRequest: DataSourceExportRequest
-    @State var viewModel: TemporaryFilterViewModel?
+    @ObservedObject var viewModel: TemporaryFilterViewModel
 
     var body: some View {
         Self._printChanges()
         return VStack(alignment: .leading) {
-            if let viewModel = viewModel {
-                DisclosureGroup {
-                    FilterView(viewModel: viewModel)
-                        .accessibilityElement(children: .contain)
-                        .accessibilityLabel("\(exportRequest.dataSourceItem.dataSource.fullDataSourceName) filters")
-                } label: {
-                    ExportFilterLabel(viewModel: viewModel, exportRequest: exportRequest)
-                        .contentShape(Rectangle())
-                        .padding([.leading, .top, .bottom, .trailing], 16)
-                        .accessibilityElement(children: .contain)
-                        .accessibilityLabel("\(filterCount) \(exportRequest.dataSourceItem.dataSource.fullDataSourceName) filters")
-                }
-                .padding(.trailing, 16)
-                .contentShape(Rectangle())
-                .accessibilityElement(children: .contain)
-                .accessibilityLabel("expand \(exportRequest.dataSourceItem.dataSource.fullDataSourceName) filters")
-                .background(
-                    HStack {
-                        Rectangle()
-                            .fill(Color(exportRequest.dataSourceItem.dataSource.color))
-                            .frame(maxWidth: 8, maxHeight: .infinity)
-                        Spacer()
-                    }
-                    .background(Color.surfaceColor)
-                )
-                .tint(Color.primaryColorVariant)
+            DisclosureGroup {
+                FilterView(viewModel: viewModel)
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("\(viewModel.dataSource.fullDataSourceName) filters")
+            } label: {
+                ExportFilterLabel(viewModel: viewModel)
+                    .contentShape(Rectangle())
+                    .padding([.leading, .top, .bottom, .trailing], 16)
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("\(filterCount) \(viewModel.dataSource.fullDataSourceName) filters")
             }
-        }
-        .onAppear {
-            viewModel = TemporaryFilterViewModel(dataSource: exportRequest.dataSourceItem.dataSource, filters: exportRequest.filters ?? UserDefaults.standard.filter(exportRequest.dataSourceItem.dataSource))
+            .padding(.trailing, 16)
+            .contentShape(Rectangle())
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("expand \(viewModel.dataSource.fullDataSourceName) filters")
+            .background(
+                HStack {
+                    Rectangle()
+                        .fill(Color(viewModel.dataSource.color))
+                        .frame(maxWidth: 8, maxHeight: .infinity)
+                    Spacer()
+                }
+                .background(Color.surfaceColor)
+            )
+            .tint(Color.primaryColorVariant)
         }
     }
 }

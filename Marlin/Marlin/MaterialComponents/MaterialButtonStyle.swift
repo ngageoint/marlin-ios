@@ -37,8 +37,7 @@ struct MaterialButtonLabelStyle: LabelStyle {
                 .frame(width: 24, height: 24, alignment: .center)
             configuration.title
                 .foregroundColor(color)
-                .font(Font.overline)
-                .textCase(.uppercase)
+                .font(.system(size: 14))
         }
     }
 }

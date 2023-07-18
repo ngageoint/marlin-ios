@@ -54,6 +54,12 @@ extension DFRS: DataSourceLocation {
     }
     
     static func postProcess() {}
+    
+    static func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
+        NSPredicate(
+            format: "(rxPosition != nil AND rxLatitude >= %lf AND rxLatitude <= %lf AND rxLongitude >= %lf AND rxLongitude <= %lf) OR (txPosition != nil AND txLatitude >= %lf AND txLatitude <= %lf AND txLongitude >= %lf AND txLongitude <= %lf)", minLat, maxLat, minLon, maxLon, minLat, maxLat, minLon, maxLon
+        )
+    }
 }
 
 extension DFRS: BatchImportable {

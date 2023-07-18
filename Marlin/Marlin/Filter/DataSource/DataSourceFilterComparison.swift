@@ -21,6 +21,7 @@ enum DataSourceFilterComparison: String, CaseIterable, Identifiable, Codable {
     case window = "within"
     case closeTo = "near"
     case nearMe = "near me"
+    case bounds = "bounded by"
     var id: String { rawValue }
     
     static func dateSubset() -> [DataSourceFilterComparison] {
@@ -40,7 +41,7 @@ enum DataSourceFilterComparison: String, CaseIterable, Identifiable, Codable {
     }
     
     static func locationSubset() -> [DataSourceFilterComparison] {
-        return [.nearMe, .closeTo]
+        return [.nearMe, .closeTo, .bounds]
     }
     
     static func latitudeSubset() -> [DataSourceFilterComparison] {

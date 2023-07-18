@@ -18,9 +18,48 @@ protocol PredicateBasedTileOverlay {
     var key: String? { get set }
 }
 
-struct MapBoundingBox {
+struct MapBoundingBox: Codable {
     var swCorner: (x: Double, y: Double)
     var neCorner: (x: Double, y: Double)
+    
+    enum CodingKeys: String, CodingKey {
+        case swCornerX
+        case swCornerY
+        case neCornerX
+        case neCornerY
+    }
+    
+    init(swCorner: (x: Double, y: Double), neCorner: (x: Double, y: Double)) {
+        self.swCorner = swCorner
+        self.neCorner = neCorner
+    }
+    
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let swCornerX = try values.decode(Double.self, forKey: .swCornerX)
+        let swCornerY = try values.decode(Double.self, forKey: .swCornerY)
+        swCorner = (x: swCornerX, y: swCornerY)
+        
+        let neCornerX = try values.decode(Double.self, forKey: .neCornerX)
+        let neCornerY = try values.decode(Double.self, forKey: .neCornerY)
+        neCorner = (x: neCornerX, y: neCornerY)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(swCorner.x, forKey: .swCornerX)
+        try container.encode(swCorner.y, forKey: .swCornerY)
+        try container.encode(neCorner.x, forKey: .neCornerX)
+        try container.encode(neCorner.y, forKey: .neCornerY)
+    }
+    
+    var swCoordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: swCorner.y, longitude: swCorner.x)
+    }
+    
+    var neCoordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: neCorner.y, longitude: neCorner.x)
+    }
 }
 
 class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverlay {

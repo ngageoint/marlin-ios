@@ -27,10 +27,11 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
     let valueDouble: Double?
     let valueLatitude: Double?
     let valueLongitude: Double?
+    let valueBounds: MapBoundingBox?
     let windowUnits: DataSourceWindowUnits?
     let comparison: DataSourceFilterComparison
     
-    init(property: DataSourceProperty, comparison: DataSourceFilterComparison, valueString: String? = nil, valueDate: Date? = nil, valueInt: Int? = nil, valueDouble: Double? = nil, valueLatitude: Double? = nil, valueLongitude: Double? = nil, windowUnits: DataSourceWindowUnits? = nil) {
+    init(property: DataSourceProperty, comparison: DataSourceFilterComparison, valueString: String? = nil, valueDate: Date? = nil, valueInt: Int? = nil, valueDouble: Double? = nil, valueLatitude: Double? = nil, valueLongitude: Double? = nil, valueMinLatitude: Double? = nil, valueMinLongitude: Double? = nil, valueMaxLatitude: Double? = nil, valueMaxLongitude: Double? = nil, windowUnits: DataSourceWindowUnits? = nil) {
         self.property = property
         self.comparison = comparison
         self.valueString = valueString
@@ -39,6 +40,11 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
         self.valueDouble = valueDouble
         self.valueLatitude = valueLatitude
         self.valueLongitude = valueLongitude
+        if let valueMinLatitude = valueMinLatitude, let valueMinLongitude = valueMinLongitude, let valueMaxLatitude = valueMaxLatitude, let valueMaxLongitude = valueMaxLongitude {
+            self.valueBounds = MapBoundingBox(swCorner: (x: valueMinLongitude, y: valueMinLatitude), neCorner: (x: valueMaxLongitude, y: valueMaxLatitude))
+        } else {
+            self.valueBounds = nil
+        }
         self.windowUnits = windowUnits
     }
     
@@ -75,8 +81,10 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
         case .location:
             if comparison == .nearMe {
                 stringValue = "**\(property.name)** within **\(valueInt ?? 0)nm** of my location"
+            } else if comparison == .closeTo {
+                stringValue = "**\(property.name)** within **\(valueInt ?? 0)nm** of **\(CLLocationCoordinate2D(latitude: valueLatitude ?? 0.0, longitude: valueLongitude ?? 0.0).format())**"
             } else {
-                stringValue = "**\(property.name)** within **\(valueInt ?? 0)nm** of **\(valueLatitude ?? 0.0)°, \(valueLongitude ?? 0.0)°**"
+                stringValue = "**\(property.name)** within bounds of **\(valueBounds?.swCoordinate.format() ?? "")** and **\(valueBounds?.neCoordinate.format() ?? "")**"
             }
         case .latitude:
             stringValue = "**\(property.name)** \(comparison.rawValue) **\(valueString ?? "")**"
@@ -86,7 +94,7 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
         return stringValue
     }
     
-    func toPredicate() -> NSPredicate? {
+    func toPredicate(dataSource: any DataSource.Type) -> NSPredicate? {
         var propertyAndComparison: String = "\(property.key) \(comparison.coreDataComparison())"
         if let subEntityKey = property.subEntityKey {
             propertyAndComparison = "ANY \(property.key).\(subEntityKey) \(comparison.coreDataComparison())"
@@ -148,6 +156,15 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
             
             return NSPredicate(format: "\(propertyAndComparison) %@", value)
         } else if property.type == .location {
+            if comparison == .bounds {
+                guard let bounds = valueBounds else {
+                    return nil
+                }
+                if let dataSource = dataSource as? DataSourceLocation {
+                    return type(of: dataSource).getBoundingPredicate(minLat: bounds.swCorner.y, maxLat: bounds.neCorner.y, minLon: bounds.swCorner.x, maxLon: bounds.neCorner.x)
+                }
+                return NSPredicate(format: "latitude <= %f AND latitude >= %f AND longitude <= %f AND longitude >= %f", bounds.neCorner.y, bounds.swCorner.y, bounds.neCorner.x, bounds.swCorner.x)
+            }
             var centralLongitude: Double?
             var centralLatitude: Double?
             
@@ -174,6 +191,9 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
                 let southWest = SFGeometryUtils.metersToDegreesWith(x: x - metersDistance, andY: y - metersDistance)
                 let northEast = SFGeometryUtils.metersToDegreesWith(x: x + metersDistance, andY: y + metersDistance)
                 if let southWest = southWest, let northEast = northEast, let maxy = northEast.y, let miny = southWest.y, let minx = southWest.x, let maxx = northEast.x {
+                    if let dataSource = dataSource as? DataSourceLocation {
+                        return type(of: dataSource).getBoundingPredicate(minLat: miny.doubleValue, maxLat: maxy.doubleValue, minLon: minx.doubleValue, maxLon: maxx.doubleValue)
+                    }
                     return NSPredicate(format: "latitude <= %f AND latitude >= %f AND longitude <= %f AND longitude >= %f", maxy.floatValue, miny.floatValue, maxx.floatValue, minx.floatValue)
                 }
             }

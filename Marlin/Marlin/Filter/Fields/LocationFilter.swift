@@ -123,6 +123,100 @@ struct LocationFilter: View {
                         .secondary()
                         .padding([.leading, .top], 12)
                 }
+            } else if viewModel.selectedComparison == .bounds {
+                VStack {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Min Latitude")
+                                .overline()
+                                .padding(.leading, 8)
+                                .padding(.bottom, -16)
+                            TextField("Min Latitude", text: $viewModel.valueMinLatitudeString)
+                                .underlineTextField()
+                                .textInputAutocapitalization(.never)
+                                .onTapGesture(perform: {
+                                    mapTapped = false
+                                    viewModel.startValidating = true
+                                })
+                                .focused($isInputActive)
+                                .accessibilityElement()
+                                .accessibilityLabel("\(viewModel.dataSourceProperty.name) min latitude input")
+                            if let validationLatitudeText = viewModel.validationMinLatitudeText {
+                                Text(validationLatitudeText)
+                                    .overline()
+                                    .padding(.leading, 8)
+                            }
+                        }
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Min Longitude")
+                                .overline()
+                                .padding(.leading, 8)
+                                .padding(.bottom, -16)
+                            TextField("Min Longitude", text: $viewModel.valueMinLongitudeString)
+                                .underlineTextField()
+                                .textInputAutocapitalization(.never)
+                                .onTapGesture(perform: {
+                                    mapTapped = false
+                                    viewModel.startValidating = true
+                                })
+                                .focused($isInputActive)
+                                .accessibilityElement()
+                                .accessibilityLabel("\(viewModel.dataSourceProperty.name) min longitude input")
+                            if let validationLongitudeText = viewModel.validationMinLongitudeText {
+                                Text(validationLongitudeText)
+                                    .overline()
+                                    .padding(.leading, 8)
+                            }
+                        }
+                    }
+                    .padding(.leading, 4)
+                    
+                    HStack {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Max Latitude")
+                                .overline()
+                                .padding(.leading, 8)
+                                .padding(.bottom, -16)
+                            TextField("Max Latitude", text: $viewModel.valueMaxLatitudeString)
+                                .underlineTextField()
+                                .textInputAutocapitalization(.never)
+                                .onTapGesture(perform: {
+                                    mapTapped = false
+                                    viewModel.startValidating = true
+                                })
+                                .focused($isInputActive)
+                                .accessibilityElement()
+                                .accessibilityLabel("\(viewModel.dataSourceProperty.name) max latitude input")
+                            if let validationLatitudeText = viewModel.validationMaxLatitudeText {
+                                Text(validationLatitudeText)
+                                    .overline()
+                                    .padding(.leading, 8)
+                            }
+                        }
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Max Longitude")
+                                .overline()
+                                .padding(.leading, 8)
+                                .padding(.bottom, -16)
+                            TextField("Max Longitude", text: $viewModel.valueMaxLongitudeString)
+                                .underlineTextField()
+                                .textInputAutocapitalization(.never)
+                                .onTapGesture(perform: {
+                                    mapTapped = false
+                                    viewModel.startValidating = true
+                                })
+                                .focused($isInputActive)
+                                .accessibilityElement()
+                                .accessibilityLabel("\(viewModel.dataSourceProperty.name) max longitude input")
+                            if let validationLongitudeText = viewModel.validationMaxLongitudeText {
+                                Text(validationLongitudeText)
+                                    .overline()
+                                    .padding(.leading, 8)
+                            }
+                        }
+                    }
+                    .padding(.leading, 4)
+                }
             }
         }
         .toolbar {

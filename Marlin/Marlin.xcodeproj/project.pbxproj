@@ -13,6 +13,7 @@
 		F7066DAB2A462A740058122E /* GeoPackageExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DAA2A462A740058122E /* GeoPackageExportable.swift */; };
 		F7066DAD2A4F08B70058122E /* CoordinateDisplaySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DAC2A4F08B70058122E /* CoordinateDisplaySettings.swift */; };
 		F7066DB02A4F7AF90058122E /* MarlinRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DAF2A4F7AF90058122E /* MarlinRoute.swift */; };
+		F7066DB32A5CB2720058122E /* CommonDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DB22A5CB2720058122E /* CommonDataSource.swift */; };
 		F707BA722874B9F4006A94C4 /* userDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = F707BA712874B9F4006A94C4 /* userDefaults.plist */; };
 		F707BA7728760EE7006A94C4 /* Light+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7628760EE7006A94C4 /* Light+CoreDataClass.swift */; };
 		F707BA7B28763309006A94C4 /* LightSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7A28763309006A94C4 /* LightSummaryView.swift */; };
@@ -435,6 +436,7 @@
 		F7066DAA2A462A740058122E /* GeoPackageExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExportable.swift; sourceTree = "<group>"; };
 		F7066DAC2A4F08B70058122E /* CoordinateDisplaySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateDisplaySettings.swift; sourceTree = "<group>"; };
 		F7066DAF2A4F7AF90058122E /* MarlinRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinRoute.swift; sourceTree = "<group>"; };
+		F7066DB22A5CB2720058122E /* CommonDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonDataSource.swift; sourceTree = "<group>"; };
 		F707BA712874B9F4006A94C4 /* userDefaults.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = userDefaults.plist; sourceTree = "<group>"; };
 		F707BA7628760EE7006A94C4 /* Light+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F707BA7A28763309006A94C4 /* LightSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightSummaryView.swift; sourceTree = "<group>"; };
@@ -893,6 +895,14 @@
 			path = Routing;
 			sourceTree = "<group>";
 		};
+		F7066DB12A5CB2620058122E /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				F7066DB22A5CB2720058122E /* CommonDataSource.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		F707BA7528760894006A94C4 /* Light */ = {
 			isa = PBXGroup;
 			children = (
@@ -939,6 +949,7 @@
 		F71D285F28BD688800F1775C /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
+				F7066DB12A5CB2620058122E /* Common */,
 				F72EAAD8291D913D00AC6026 /* NTM */,
 				F7D671EE287475BC00758F1C /* DataSource.swift */,
 				F71D286F28BE958F00F1775C /* DFRS */,
@@ -2376,6 +2387,7 @@
 				F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */,
 				F7BDF76E2A13D7790083B97F /* ViewExpandButton.swift in Sources */,
 				F7D8FA772940EF7400E7D0A1 /* ChartCorrectionListViewModel.swift in Sources */,
+				F7066DB32A5CB2720058122E /* CommonDataSource.swift in Sources */,
 				F71FC0CB2A3B3EB200911BAC /* CoordinateButton.swift in Sources */,
 				F7FFB33F28DA104200C31AA3 /* FilterBottomSheet.swift in Sources */,
 				F7D8FA49293A954D00E7D0A1 /* EnumerationFilter.swift in Sources */,
