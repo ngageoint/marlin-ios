@@ -13,7 +13,7 @@ struct DataSourcePropertyFilterView: View {
 
     var filterViewModel: FilterViewModel
     
-    @ObservedObject var viewModel: DataSourcePropertyFilterViewModel
+    @StateObject var viewModel: DataSourcePropertyFilterViewModel
     
     init(dataSourceProperty: DataSourceProperty? = nil, filterViewModel: FilterViewModel) {
         var prop = dataSourceProperty ?? DataSourceProperty(name: "", key: "", type: .string)
@@ -22,7 +22,7 @@ struct DataSourcePropertyFilterView: View {
         }
         self.filterViewModel = filterViewModel
 
-        viewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: prop, isStaticProperty: dataSourceProperty != nil)
+        _viewModel = StateObject(wrappedValue:DataSourcePropertyFilterViewModel(dataSourceProperty: prop, isStaticProperty: dataSourceProperty != nil))
     }
     
     var body: some View {
