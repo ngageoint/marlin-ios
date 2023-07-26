@@ -61,52 +61,71 @@ struct NavigationalWarningAreasView: View {
     
     var body: some View {
         Self._printChanges()
-        return List {
-            if let navArea = generalLocation.currentNavAreaName {
-                CurrentNavigationalWarningSection(navArea: navArea, mapName: mapName, path: $path)
-            }
-            ForEach(navigationalWarningsSections) { section in
-                NavigationalWarningSectionRow(section: section, mapName: mapName, path: $path)
-                    .accessibilityElement(children: .contain)
-                    .accessibilityLabel("\(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area")")
-            }
-            .accessibilityElement(children: .contain)
-            .listRowBackground(Color.surfaceColor)
-            .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
-            .accessibilityElement(children: .contain)
-            
-            if showUnparsedNavigationalWarnings {
-                NavigationLink(value: NavigationalWarningSection(id: "Unknown", warnings: Array<NavigationalWarning>(noParsedLocationNavigationalWarnings))) {
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text("Unparsed Locations")
-                                .font(Font.body1)
-                                .foregroundColor(Color.onSurfaceColor)
-                                .opacity(0.87)
-                            Text("\(noParsedLocationNavigationalWarnings.count)")
-                                .font(Font.caption)
-                                .foregroundColor(Color.onSurfaceColor)
-                                .opacity(0.6)
-                        }
-                        Spacer()
-                    }
+        return ZStack(alignment: .bottomTrailing) {
+            List {
+                if let navArea = generalLocation.currentNavAreaName {
+                    CurrentNavigationalWarningSection(navArea: navArea, mapName: mapName, path: $path)
                 }
-                .isDetailLink(false)
+                ForEach(navigationalWarningsSections) { section in
+                    NavigationalWarningSectionRow(section: section, mapName: mapName, path: $path)
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel("\(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area")")
+                }
                 .accessibilityElement(children: .contain)
-                .accessibilityLabel("Unparsed Locations Navigation Area")
-                .padding(.leading, 8)
-                .padding(.top, 8)
-                .padding(.bottom, 8)
                 .listRowBackground(Color.surfaceColor)
                 .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
+                .accessibilityElement(children: .contain)
+                
+                if showUnparsedNavigationalWarnings {
+                    NavigationLink(value: NavigationalWarningSection(id: "Unknown", warnings: Array<NavigationalWarning>(noParsedLocationNavigationalWarnings))) {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text("Unparsed Locations")
+                                    .font(Font.body1)
+                                    .foregroundColor(Color.onSurfaceColor)
+                                    .opacity(0.87)
+                                Text("\(noParsedLocationNavigationalWarnings.count)")
+                                    .font(Font.caption)
+                                    .foregroundColor(Color.onSurfaceColor)
+                                    .opacity(0.6)
+                            }
+                            Spacer()
+                        }
+                    }
+                    .isDetailLink(false)
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("Unparsed Locations Navigation Area")
+                    .padding(.leading, 8)
+                    .padding(.top, 8)
+                    .padding(.bottom, 8)
+                    .listRowBackground(Color.surfaceColor)
+                    .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
+                }
             }
+            .listStyle(.plain)
+            .listRowBackground(Color.surfaceColor)
+            .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
+            .onChange(of: generalLocation.currentNavAreaName, perform: { newValue in
+                navigationalWarningsSections.nsPredicate = NSPredicate(format: "navArea != %@", newValue ?? "")
+            })
+            .onAppear {
+                navigationalWarningsSections.nsPredicate = NSPredicate(format: "navArea != %@", generalLocation.currentNavAreaName ?? "")
+            }
+            .accessibilityElement(children: .contain)
+            NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(dataSourceItem: DataSourceItem(dataSource: NavigationalWarning.self), filters: UserDefaults.standard.filter(NavigationalWarning.self))])) {
+                Label(
+                    title: {},
+                    icon: { Image(systemName: "square.and.arrow.down")
+                            .renderingMode(.template)
+                    }
+                )
+            }
+            .isDetailLink(false)
+            .fixedSize()
+            .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.onPrimaryColor, backgroundColor: Color.primaryColor))
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("Export Button")
+            .padding(16)
         }
-        .listStyle(.plain)
-        .listRowBackground(Color.surfaceColor)
-        .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
-        .onAppear {
-            navigationalWarningsSections.nsPredicate = NSPredicate(format: "navArea != %@", generalLocation.currentNavAreaName ?? "")
-        }
-        .accessibilityElement(children: .contain)
     }
 }

@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		7982FB9B536447055E423E94 /* libPods-Marlin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0F14076A8393C9747AD1FE /* libPods-Marlin.a */; };
 		D7A569C784B0F2D5720432C4 /* libPods-MarlinTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */; };
+		F7066DA92A45D8C10058122E /* GeoPackageExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DA82A45D8C10058122E /* GeoPackageExporter.swift */; };
+		F7066DAB2A462A740058122E /* GeoPackageExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DAA2A462A740058122E /* GeoPackageExportable.swift */; };
+		F7066DAD2A4F08B70058122E /* CoordinateDisplaySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DAC2A4F08B70058122E /* CoordinateDisplaySettings.swift */; };
+		F7066DB02A4F7AF90058122E /* MarlinRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DAF2A4F7AF90058122E /* MarlinRoute.swift */; };
+		F7066DB32A5CB2720058122E /* CommonDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DB22A5CB2720058122E /* CommonDataSource.swift */; };
 		F707BA722874B9F4006A94C4 /* userDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = F707BA712874B9F4006A94C4 /* userDefaults.plist */; };
 		F707BA7728760EE7006A94C4 /* Light+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7628760EE7006A94C4 /* Light+CoreDataClass.swift */; };
 		F707BA7B28763309006A94C4 /* LightSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F707BA7A28763309006A94C4 /* LightSummaryView.swift */; };
@@ -145,6 +150,7 @@
 		F7364E3E2A1E46860098F243 /* NavigationalWarningAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E3D2A1E46860098F243 /* NavigationalWarningAreasView.swift */; };
 		F7364E402A1E495C0098F243 /* NavigationalWarningSectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E3F2A1E495C0098F243 /* NavigationalWarningSectionRow.swift */; };
 		F7364E422A26A1740098F243 /* MarlinTestInitialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E412A26A1740098F243 /* MarlinTestInitialization.swift */; };
+		F73927962A439D2700DE1E79 /* GeoPackageExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */; };
 		F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC7F294D2E240085EDC5 /* LightRange.swift */; };
 		F73ABC82295102480085EDC5 /* DataSourceTileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */; };
 		F73ABC84295245BB0085EDC5 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC83295245BB0085EDC5 /* OnboardingView.swift */; };
@@ -324,6 +330,8 @@
 		F7D8FA7D29414FA100E7D0A1 /* NoticeToMarinersFullNoticeViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA7C29414FA100E7D0A1 /* NoticeToMarinersFullNoticeViewViewModel.swift */; };
 		F7D8FA7F294240B400E7D0A1 /* NoticeToMarinersFullNoticeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA7E294240B400E7D0A1 /* NoticeToMarinersFullNoticeViewModelTests.swift */; };
 		F7D8FA8129424F8400E7D0A1 /* ntmGraphics.json in Resources */ = {isa = PBXBuildFile; fileRef = F7D8FA8029424F8400E7D0A1 /* ntmGraphics.json */; };
+		F7DCCF732A67118600B0700C /* LocationFilterFullScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DCCF722A67118600B0700C /* LocationFilterFullScreen.swift */; };
+		F7DCCF752A698B5D00B0700C /* LocationBoundsMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DCCF742A698B5D00B0700C /* LocationBoundsMixin.swift */; };
 		F7DF1BBD29E98B5700F92E14 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DF1BBC29E98B5700F92E14 /* Keychain.swift */; };
 		F7DF1BBF29E9EBF800F92E14 /* AcknowledgementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DF1BBE29E9EBF800F92E14 /* AcknowledgementsView.swift */; };
 		F7E768B329EECAF2001EFFFF /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F7E768B229EECAF2001EFFFF /* Settings.bundle */; };
@@ -426,6 +434,11 @@
 		96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MarlinTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C95BD18A52FCC50ED2ED6E21 /* Pods-MarlinTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarlinTests.release.xcconfig"; path = "Target Support Files/Pods-MarlinTests/Pods-MarlinTests.release.xcconfig"; sourceTree = "<group>"; };
 		F32BF352638699CBFE1A8D52 /* Pods-Marlin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Marlin.release.xcconfig"; path = "Target Support Files/Pods-Marlin/Pods-Marlin.release.xcconfig"; sourceTree = "<group>"; };
+		F7066DA82A45D8C10058122E /* GeoPackageExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExporter.swift; sourceTree = "<group>"; };
+		F7066DAA2A462A740058122E /* GeoPackageExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExportable.swift; sourceTree = "<group>"; };
+		F7066DAC2A4F08B70058122E /* CoordinateDisplaySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateDisplaySettings.swift; sourceTree = "<group>"; };
+		F7066DAF2A4F7AF90058122E /* MarlinRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinRoute.swift; sourceTree = "<group>"; };
+		F7066DB22A5CB2720058122E /* CommonDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonDataSource.swift; sourceTree = "<group>"; };
 		F707BA712874B9F4006A94C4 /* userDefaults.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = userDefaults.plist; sourceTree = "<group>"; };
 		F707BA7628760EE7006A94C4 /* Light+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F707BA7A28763309006A94C4 /* LightSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightSummaryView.swift; sourceTree = "<group>"; };
@@ -564,6 +577,7 @@
 		F7364E3D2A1E46860098F243 /* NavigationalWarningAreasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreasView.swift; sourceTree = "<group>"; };
 		F7364E3F2A1E495C0098F243 /* NavigationalWarningSectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningSectionRow.swift; sourceTree = "<group>"; };
 		F7364E412A26A1740098F243 /* MarlinTestInitialization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTestInitialization.swift; sourceTree = "<group>"; };
+		F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExportView.swift; sourceTree = "<group>"; };
 		F73ABC7F294D2E240085EDC5 /* LightRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightRange.swift; sourceTree = "<group>"; };
 		F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceTileProvider.swift; sourceTree = "<group>"; };
 		F73ABC83295245BB0085EDC5 /* OnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -748,6 +762,8 @@
 		F7D8FA7C29414FA100E7D0A1 /* NoticeToMarinersFullNoticeViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersFullNoticeViewViewModel.swift; sourceTree = "<group>"; };
 		F7D8FA7E294240B400E7D0A1 /* NoticeToMarinersFullNoticeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersFullNoticeViewModelTests.swift; sourceTree = "<group>"; };
 		F7D8FA8029424F8400E7D0A1 /* ntmGraphics.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ntmGraphics.json; sourceTree = "<group>"; };
+		F7DCCF722A67118600B0700C /* LocationFilterFullScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFilterFullScreen.swift; sourceTree = "<group>"; };
+		F7DCCF742A698B5D00B0700C /* LocationBoundsMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationBoundsMixin.swift; sourceTree = "<group>"; };
 		F7DF1BBC29E98B5700F92E14 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		F7DF1BBE29E9EBF800F92E14 /* AcknowledgementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsView.swift; sourceTree = "<group>"; };
 		F7E049902A02A103001ABE0B /* Marlin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Marlin-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -875,6 +891,22 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		F7066DAE2A4F7AE70058122E /* Routing */ = {
+			isa = PBXGroup;
+			children = (
+				F7066DAF2A4F7AF90058122E /* MarlinRoute.swift */,
+			);
+			path = Routing;
+			sourceTree = "<group>";
+		};
+		F7066DB12A5CB2620058122E /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				F7066DB22A5CB2720058122E /* CommonDataSource.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		F707BA7528760894006A94C4 /* Light */ = {
 			isa = PBXGroup;
 			children = (
@@ -921,6 +953,7 @@
 		F71D285F28BD688800F1775C /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
+				F7066DB12A5CB2620058122E /* Common */,
 				F72EAAD8291D913D00AC6026 /* NTM */,
 				F7D671EE287475BC00758F1C /* DataSource.swift */,
 				F71D286F28BE958F00F1775C /* DFRS */,
@@ -1366,6 +1399,7 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
+				F7066DAE2A4F7AE70058122E /* Routing */,
 				F7DF1BBB29E98B2700F92E14 /* Keychain */,
 				F7C23DFA2906F1360002A7DF /* Metrics */,
 				F7275FE028FEF8A000ED8D9A /* Onboarding */,
@@ -1543,6 +1577,9 @@
 				F7D671C2286C860900758F1C /* GeoPackageMap.swift */,
 				F7D671C4286C8A3100758F1C /* GeoPackageLayer.swift */,
 				F70BCEA029D48ED800AEF73D /* GeoPackageImporter.swift */,
+				F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */,
+				F7066DA82A45D8C10058122E /* GeoPackageExporter.swift */,
+				F7066DAA2A462A740058122E /* GeoPackageExportable.swift */,
 			);
 			path = GeoPackage;
 			sourceTree = "<group>";
@@ -1615,6 +1652,8 @@
 				F7D8FA4C293A95D000E7D0A1 /* LatitudeLongitudeFilter.swift */,
 				F7D8FA4E293A960E00E7D0A1 /* StringFilter.swift */,
 				F7D8FA50293A999600E7D0A1 /* BooleanFilter.swift */,
+				F7DCCF722A67118600B0700C /* LocationFilterFullScreen.swift */,
+				F7DCCF742A698B5D00B0700C /* LocationBoundsMixin.swift */,
 			);
 			path = Fields;
 			sourceTree = "<group>";
@@ -1768,6 +1807,7 @@
 				F71FC0CE2A3B879800911BAC /* FocusButton.swift */,
 				F71FC0D02A3B9D9000911BAC /* MoreDetailsButton.swift */,
 				F71FC0D22A3B9DDA00911BAC /* DataSourceActionBar.swift */,
+				F7066DAC2A4F08B70058122E /* CoordinateDisplaySettings.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2320,12 +2360,15 @@
 				F73ABC84295245BB0085EDC5 /* OnboardingView.swift in Sources */,
 				F70BCEA929DEFDA900AEF73D /* DoubleExtensions.swift in Sources */,
 				F70F50192992DAFF0062E555 /* DataLoadedNotificationBanner.swift in Sources */,
+				F7DCCF732A67118600B0700C /* LocationFilterFullScreen.swift in Sources */,
+				F73927962A439D2700DE1E79 /* GeoPackageExportView.swift in Sources */,
 				F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */,
 				F7C23E06290844740002A7DF /* ElectronicPublication+Decodable.swift in Sources */,
 				F7D671C5286C8A3100758F1C /* GeoPackageLayer.swift in Sources */,
 				F70BCE9929C4F1AE00AEF73D /* UserLayersMap.swift in Sources */,
 				F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */,
 				F70BCEA529DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift in Sources */,
+				F7066DAD2A4F08B70058122E /* CoordinateDisplaySettings.swift in Sources */,
 				F7FFB31428D63CB000C31AA3 /* Modu+DataSourceViewBuilder.swift in Sources */,
 				F7BDF7762A1C11640083B97F /* DataSourceToggles.swift in Sources */,
 				F7364E382A1D55D10098F243 /* LoadingCapsule.swift in Sources */,
@@ -2351,6 +2394,7 @@
 				F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */,
 				F7BDF76E2A13D7790083B97F /* ViewExpandButton.swift in Sources */,
 				F7D8FA772940EF7400E7D0A1 /* ChartCorrectionListViewModel.swift in Sources */,
+				F7066DB32A5CB2720058122E /* CommonDataSource.swift in Sources */,
 				F71FC0CB2A3B3EB200911BAC /* CoordinateButton.swift in Sources */,
 				F7FFB33F28DA104200C31AA3 /* FilterBottomSheet.swift in Sources */,
 				F7D8FA49293A954D00E7D0A1 /* EnumerationFilter.swift in Sources */,
@@ -2394,6 +2438,7 @@
 				F7FFB32228D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift in Sources */,
 				F7D8FA5E293AA17C00E7D0A1 /* DataSourceFilterParameter.swift in Sources */,
 				F71D287728BE976300F1775C /* DFRSSummaryView.swift in Sources */,
+				F7066DAB2A462A740058122E /* GeoPackageExportable.swift in Sources */,
 				F7FFB2E628D6217900C31AA3 /* DFRSArea+Decodable.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				F7C23E122909B6C70002A7DF /* DownloadManager.swift in Sources */,
@@ -2431,6 +2476,7 @@
 				F71CC6F828AE71BA000A326C /* KeyValueSection.swift in Sources */,
 				F71DF4AD28591BA200686951 /* UIApplicationExtensions.swift in Sources */,
 				F7FFB30228D6383900C31AA3 /* Asam+DataSource.swift in Sources */,
+				F7066DA92A45D8C10058122E /* GeoPackageExporter.swift in Sources */,
 				F73ABC96295250EE0085EDC5 /* AsyncImage.swift in Sources */,
 				F7D8FA2C2925756F00E7D0A1 /* ChartCorrectionQuery.swift in Sources */,
 				F7BDF76A2A0E8D160083B97F /* UITextViewContainer.swift in Sources */,
@@ -2455,9 +2501,11 @@
 				F7D8FA3C2939232100E7D0A1 /* FilterViewModel.swift in Sources */,
 				F75E32C129C4BC1F006F2394 /* LayerConfigurationView.swift in Sources */,
 				F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */,
+				F7066DB02A4F7AF90058122E /* MarlinRoute.swift in Sources */,
 				F7D8FA6E293E92A900E7D0A1 /* SortViewModel.swift in Sources */,
 				F71D286E28BE8CB800F1775C /* DFRS+CoreDataClass.swift in Sources */,
 				F7D8FA5A293AA15B00E7D0A1 /* DataSourceSortParameter.swift in Sources */,
+				F7DCCF752A698B5D00B0700C /* LocationBoundsMixin.swift in Sources */,
 				F7F597AE2864DE2900F9B32E /* NavigationalWarningDetailView.swift in Sources */,
 				F7D8FA1A2922BB0400E7D0A1 /* NoticeToMarinersSummaryView.swift in Sources */,
 				F71DF4A52859120A00686951 /* BottomSheetView.swift in Sources */,

@@ -72,8 +72,9 @@ struct GeoPackageFeatureItemDetailView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .onTapGesture {
-                                    if let imageData = image.pngData(), let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                                        
+                                    if let imageData = image.pngData() {
+                                        let docsUrl = URL.documentsDirectory
+
                                         let filename = docsUrl.appendingPathComponent("gp_image_\(tableName)_\(id).png")
                                         try? imageData.write(to: filename)
                                         NotificationCenter.default.post(name: .DocumentPreview, object: filename)

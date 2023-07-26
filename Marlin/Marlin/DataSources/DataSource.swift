@@ -11,6 +11,7 @@ import SwiftUI
 import MapKit
 import CoreData
 import Alamofire
+import ExceptionCatcher
 
 struct Throwable<T: Decodable>: Decodable {
     let result: Result<T, Error>
@@ -115,11 +116,18 @@ struct DataSourceProperty: Hashable, Identifiable, Codable {
 protocol DataSourceLocation: DataSource {
     var coordinate: CLLocationCoordinate2D { get }
     var coordinateRegion: MKCoordinateRegion? { get }
+    static func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate
 }
 
 extension DataSourceLocation {
     var coordinateRegion: MKCoordinateRegion? {
         return nil
+    }
+    
+    static func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
+        return NSPredicate(
+            format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
+        )
     }
 }
 
@@ -144,9 +152,39 @@ protocol DataSource {
     static func cachedImage(zoomLevel: Int) -> UIImage?
     static func cacheImage(zoomLevel: Int, image: UIImage)
     static var dateFormatter: DateFormatter { get }
+    
+    static func fetchRequest(filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>?
 }
 
 extension DataSource {
+    
+    static func fetchRequest(filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>? {
+        guard let dataSourceNSManaged = self as? NSManagedObject.Type else {
+            return nil
+        }
+        let fetchRequest = dataSourceNSManaged.fetchRequest()
+        var predicates: [NSPredicate] = []
+        
+        if let commonFilters = commonFilters {
+            for filter in commonFilters {
+                if let predicate = filter.toPredicate(dataSource: self) {
+                    predicates.append(predicate)
+                }
+            }
+        }
+        
+        if let filters = filters {
+            for filter in filters {
+                if let predicate = filter.toPredicate(dataSource: self) {
+                    predicates.append(predicate)
+                }
+            }
+        }
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        
+        fetchRequest.predicate = predicate
+        return fetchRequest
+    }
     
     static func cachedImage(zoomLevel: Int) -> UIImage? {
         return DataSourceImageCache.shared.getCachedImage(dataSourceKey: key, zoomLevel: zoomLevel)

@@ -22,7 +22,17 @@ class MapSingleTap: UITapGestureRecognizer {
     var mapView: MKMapView?
 }
 
-class MapState: ObservableObject {
+class MapState: ObservableObject, Hashable {
+    static func == (lhs: MapState, rhs: MapState) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    var id = UUID()
+    
     @Published var userTrackingMode: Int = Int(MKUserTrackingMode.none.rawValue)
     var centerDate: Date?
     @Published var center: MKCoordinateRegion? {

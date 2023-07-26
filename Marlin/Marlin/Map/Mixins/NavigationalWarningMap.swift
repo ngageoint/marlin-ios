@@ -46,12 +46,6 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
         mapView.register(ImageAnnotationView.self, forAnnotationViewWithReuseIdentifier: NavigationalWarning.key)
     }
     
-    override func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
-        return NSPredicate(
-            format: "maxLatitude >= %lf AND minLatitude <= %lf AND maxLongitude >= %lf AND minLongitude <= %lf", minLat, maxLat, minLon, maxLon
-        )
-    }
-    
     override func focus(item: T) {
         DispatchQueue.main.async {
             self.mapState?.center = MKCoordinateRegion(center: item.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
@@ -203,12 +197,12 @@ class NavigationalWarningMap: NSObject, MapMixin {
                     let navPoly = NavigationalWarningPolygon(points: polygon.points(), count: polygon.pointCount)
                     navPoly.warning = warning
                     mapOverlays.append(navPoly)
-                } else if let polyline = shape as? MKPolyline {
-                    let navline = NavigationalWarningPolyline(points: polyline.points(), count: polyline.pointCount)
-                    navline.warning = warning
-                    mapOverlays.append(navline)
                 } else if let polyline = shape as? MKGeodesicPolyline {
                     let navline = NavigationalWarningGeodesicPolyline(points: polyline.points(), count: polyline.pointCount)
+                    navline.warning = warning
+                    mapOverlays.append(navline)
+                } else if let polyline = shape as? MKPolyline {
+                    let navline = NavigationalWarningPolyline(points: polyline.points(), count: polyline.pointCount)
                     navline.warning = warning
                     mapOverlays.append(navline)
                 } else if let point = shape as? MKPointAnnotation {

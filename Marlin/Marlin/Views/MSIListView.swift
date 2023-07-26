@@ -37,12 +37,12 @@ extension MSIListView where Content == EmptyView {
 
 struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: View, Content: View>: View {
     @State var sortOpen: Bool = false
-
+    
     @ObservedObject var focusedItem: ItemWrapper
     @State var selection: String? = nil
     @State var filterOpen: Bool = false
     @Binding var path: NavigationPath
-
+    
     var allowUserSort: Bool = true
     var allowUserFilter: Bool = true
     var sectionHeaderIsSubList: Bool = false
@@ -53,7 +53,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
     var sectionGroupNameBuilder: ((MSISection<T>) -> String)?
     var sectionNameBuilder: ((MSISection<T>) -> String)?
     let sectionViewBuilder: ((MSISection<T>) -> SectionHeader)
-
+    
     let content: ((MSISection<T>) -> Content)
     
     init(path: Binding<NavigationPath>,
@@ -76,70 +76,85 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
         self.sectionNameBuilder = sectionNameBuilder
         self.sectionViewBuilder = sectionViewBuilder
         self.content = content
-        self.filterViewModel = FilterViewModel(dataSource: T.self)
+        self.filterViewModel = PersistedFilterViewModel(dataSource: T.self)
     }
     
     var body: some View {
         Self._printChanges()
         return ZStack(alignment: .bottomTrailing) {
-                
-                GenericSectionedList<T, SectionHeader, Content>(path: $path, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content)
-            }
-            .onAppear {
-                if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
-                    path.append(focusedItem)
-                }
-                Metrics.shared.dataSourceList(dataSource: T.self)
-            }
-            .onChange(of: focusedItem.date) { newValue in
-                if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
-                    path.append(focusedItem)
-                }
-            }
-            .navigationDestination(for: T.self) { item in
-                item.detailView
-                    .onDisappear {
-                        focusedItem.dataSource = nil
-                    }
-            }
-            .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)]), allowSorting: allowUserSort, allowFiltering: allowUserFilter))
-            .background {
-                DataSourceFilter(filterViewModel: filterViewModel, showBottomSheet: $filterOpen)
-            }
-            .sheet(isPresented: $sortOpen) {
-                NavigationStack {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 0) {
-                            SortView(dataSource: T.self)
-                                .background(Color.surfaceColor)
-                            
-                            Spacer()
+            GenericSectionedList<T, SectionHeader, Content>(path: $path, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content)
+            if let _ = T.self as? GeoPackageExportable.Type {
+                NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(dataSourceItem: DataSourceItem(dataSource: T.self), filters: UserDefaults.standard.filter(T.self))])) {
+                    Label(
+                        title: {},
+                        icon: { Image(systemName: "square.and.arrow.down")
+                                .renderingMode(.template)
                         }
+                    )
+                }
+                .isDetailLink(false)
+                .fixedSize()
+                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.onPrimaryColor, backgroundColor: Color.primaryColor))
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Export Button")
+                .padding(16)
+            }
+        }
+        .onAppear {
+            if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
+                path.append(focusedItem)
+            }
+            Metrics.shared.dataSourceList(dataSource: T.self)
+        }
+        .onChange(of: focusedItem.date) { newValue in
+            if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
+                path.append(focusedItem)
+            }
+        }
+        .navigationDestination(for: T.self) { item in
+            item.detailView
+                .onDisappear {
+                    focusedItem.dataSource = nil
+                }
+        }
+        .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)]), allowSorting: allowUserSort, allowFiltering: allowUserFilter))
+        .background {
+            DataSourceFilter(filterViewModel: filterViewModel, showBottomSheet: $filterOpen)
+        }
+        .sheet(isPresented: $sortOpen) {
+            NavigationStack {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 0) {
+                        SortView(dataSource: T.self)
+                            .background(Color.surfaceColor)
                         
+                        Spacer()
                     }
-                    .navigationTitle("\(T.dataSourceName) Sort")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .background(Color.backgroundColor)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(action: {
-                                sortOpen.toggle()
-                            }) {
-                                Image(systemName: "xmark.circle.fill")
-                                    .imageScale(.large)
-                                    .foregroundColor(Color.onPrimaryColor.opacity(0.87))
-                            }
-                            .accessibilityElement()
-                            .accessibilityLabel("Close Sort")
+                    
+                }
+                .navigationTitle("\(T.dataSourceName) Sort")
+                .navigationBarTitleDisplayMode(.inline)
+                .background(Color.backgroundColor)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            sortOpen.toggle()
+                        }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .imageScale(.large)
+                                .foregroundColor(Color.onPrimaryColor.opacity(0.87))
                         }
+                        .accessibilityElement()
+                        .accessibilityLabel("Close Sort")
                     }
-                    .presentationDetents([.large])
                 }
-                
-                .onAppear {
-                    Metrics.shared.dataSourceSort(dataSource: T.self)
-                }
+                .presentationDetents([.large])
             }
+            
+            .onAppear {
+                Metrics.shared.dataSourceSort(dataSource: T.self)
+            }
+        }
         
     }
 }

@@ -30,7 +30,7 @@ extension MapImage {
         return 512.0
     }
     
-    func defaultMapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil, context: CGContext? = nil, tileSize: Double) -> [UIImage] {
+    func defaultMapImage(marker: Bool, zoomLevel: Int, pointCoordinate: CLLocationCoordinate2D? = nil, tileBounds3857: MapBoundingBox? = nil, context: CGContext? = nil, tileSize: Double) -> [UIImage] {
         var images: [UIImage] = []
         if let dataSource = self as? (any DataSource) {
             var radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * type(of:dataSource).imageScale
@@ -40,6 +40,7 @@ extension MapImage {
                 if let tileBounds3857 = tileBounds3857, let _ = context {
                     // have to do this b/c an ImageRenderer will automatically do this
                     radius *= UIScreen.main.scale
+                    let coordinate = pointCoordinate ?? coordinate
                     if CLLocationCoordinate2DIsValid(coordinate) {
                         let pixel = coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: tileSize)
                         let circle = UIBezierPath(arcCenter: pixel, radius: radius, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: true)

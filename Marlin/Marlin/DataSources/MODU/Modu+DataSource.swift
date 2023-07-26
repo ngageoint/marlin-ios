@@ -9,7 +9,10 @@ import Foundation
 import UIKit
 import CoreData
 
-extension Modu: DataSourceLocation {
+extension Modu: DataSourceLocation, GeoPackageExportable {
+    var sfGeometry: SFGeometry? {
+        return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+    }
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("MODU", comment: "MODU data source display name")
     static var fullDataSourceName: String = NSLocalizedString("Mobile Offshore Drilling Units", comment: "MODU data source display name")

@@ -191,12 +191,19 @@ class GeoPackage {
                     var style: GPKGStyleRow?
                     var image: UIImage?
 
-                    if let featureTiles = GPKGFeatureTiles(geoPackage: geoPackage, andFeatureDao: featureDao), let featureTableStyles = featureTiles.featureTableStyles, let featureStyle = featureTableStyles.featureStyle(withFeature: featureRow) {
-
-                        if featureStyle.hasIcon() {
-                            image = featureStyle.icon.dataImage()
+                    do {
+                        try ExceptionCatcher.catch {
+                            let featureTiles = GPKGFeatureTiles(geoPackage: geoPackage, andFeatureDao: featureDao)
+                            if let featureTiles = featureTiles, let featureTableStyles = featureTiles.featureTableStyles, let featureStyle = featureTableStyles.featureStyle(withFeature: featureRow) {
+                                
+                                if featureStyle.hasIcon() {
+                                    image = featureStyle.icon.dataImage()
+                                }
+                                style = featureStyle.style
+                            }
                         }
-                        style = featureStyle.style
+                    } catch {
+                        print("Exception \(error)")
                     }
                     
                     let featureItem = GeoPackageFeatureItem(layerName: layerName, featureId: Int(featureId), featureRowData: featureRowData, featureDataTypes: featureDataTypes, coordinate: coordinate, icon: image, style: style, mediaRows: media, attributeRows: attributeFeatureRowData)

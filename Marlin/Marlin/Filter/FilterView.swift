@@ -16,6 +16,9 @@ struct FilterView: View {
             if !viewModel.filters.isEmpty {
                 Text("Current Filter")
                     .secondary()
+            } else {
+                Text("No Current Filter")
+                    .secondary()
             }
             ForEach(Array(viewModel.filters.enumerated()), id: \.element) { index, filter in
                 HStack {

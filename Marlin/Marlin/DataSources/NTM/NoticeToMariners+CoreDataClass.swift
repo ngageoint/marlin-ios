@@ -20,8 +20,8 @@ class NoticeToMariners: NSManagedObject, Downloadable {
     }
     
     var savePath: String {
-        let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        return "\(docsUrl?.absoluteString ?? "")\(odsKey ?? "")"
+        let docsUrl = URL.documentsDirectory
+        return "\(docsUrl.absoluteString)\(odsKey ?? "")"
     }
         
     func checkFileExists() -> Bool {
@@ -45,8 +45,8 @@ class NoticeToMariners: NSManagedObject, Downloadable {
         guard let odsKey else {
             return
         }
-        let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let fileUrl = "\(docsUrl?.absoluteString ?? "")\(odsKey)"
+        let docsUrl = URL.documentsDirectory
+        let fileUrl = "\(docsUrl.absoluteString)\(odsKey)"
         let destinationUrl = URL(string: fileUrl)
         
         if let destinationUrl = destinationUrl {

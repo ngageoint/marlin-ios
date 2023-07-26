@@ -6,21 +6,7 @@
 //
 
 import SwiftUI
-
-struct MapStateNavigation: Hashable {
-    static func == (lhs: MapStateNavigation, rhs: MapStateNavigation) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
-    var id = UUID()
-    
-    @ObservedObject var mapState: MapState
-    var view: String
-}
+import MapKit
 
 struct MarlinMainMap: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
@@ -32,11 +18,16 @@ struct MarlinMainMap: View {
     
     @EnvironmentObject var dataSourceList: DataSourceList
     
+    let focusMapAtLocation = NotificationCenter.default.publisher(for: .FocusMapAtLocation)
+    
     var body: some View {
         Self._printChanges()
         return VStack {
             MarlinMap(name: "Marlin Map", mixins: mixins, mapState: mapState)
                 .ignoresSafeArea()
+        }
+        .onReceive(focusMapAtLocation) { notification in
+            mapState.forceCenter = notification.object as? MKCoordinateRegion
         }
         .overlay(bottomButtons(), alignment: .bottom)
         .overlay(topButtons(), alignment: .top)
@@ -54,7 +45,7 @@ struct MarlinMainMap: View {
             Spacer()
             // top right button stack
             VStack(alignment: .trailing, spacing: 16) {
-                NavigationLink(value: MapStateNavigation(mapState: mapState, view: "mapSettings")) {
+                NavigationLink(value: MarlinRoute.mapSettings) {
                     Label(
                         title: {},
                         icon: { Image(systemName: "square.3.stack.3d")
@@ -73,6 +64,30 @@ struct MarlinMainMap: View {
         }
     }
     
+    func exportRequest() -> [DataSourceExportRequest] {
+        var exports: [DataSourceExportRequest] = []
+        let region = UserDefaults.standard.mapRegion
+        let commonExportRequest = DataSourceExportRequest(
+            dataSourceItem: DataSourceItem(
+                dataSource: CommonDataSource.self),
+            filters: [
+                DataSourceFilterParameter(property:
+                                            DataSourceProperty(name: "Location",
+                                                               key: #keyPath(CommonDataSource.location),
+                                                               type: .location),
+                                          comparison: .bounds,
+                                          valueMinLatitude: region.center.latitude - (region.span.latitudeDelta / 2.0),
+                                          valueMinLongitude: region.center.longitude - (region.span.longitudeDelta / 2.0),
+                                          valueMaxLatitude: region.center.latitude + (region.span.latitudeDelta / 2.0),
+                                          valueMaxLongitude: region.center.longitude + (region.span.longitudeDelta / 2.0))])
+        exports.append(commonExportRequest)
+        
+        for dataSource in dataSourceList.mappedDataSources {
+            exports.append(DataSourceExportRequest(dataSourceItem: dataSource, filters: UserDefaults.standard.filter(dataSource.dataSource)))
+        }
+        return exports
+    }
+    
     @ViewBuilder
     func bottomButtons() -> some View {
         HStack(alignment: .bottom, spacing: 0) {
@@ -87,6 +102,20 @@ struct MarlinMainMap: View {
             Spacer()
             // bottom right button stack
             VStack(alignment: .trailing, spacing: 16) {
+                NavigationLink(value: MarlinRoute.exportGeoPackage(exportRequest())) {
+                    Label(
+                        title: {},
+                        icon: { Image(systemName: "square.and.arrow.down")
+                                .renderingMode(.template)
+                        }
+                    )
+                }
+                .isDetailLink(false)
+                .fixedSize()
+                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Export Button")
+                
                 UserTrackingButton(mapState: mapState)
                     .fixedSize()
                     .accessibilityElement(children: .contain)

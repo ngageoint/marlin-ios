@@ -56,7 +56,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         } else if show == true {
             let filters = UserDefaults.standard.filter(D.self)
             for filter in filters {
-                if let predicate = filter.toPredicate() {
+                if let predicate = filter.toPredicate(dataSource: D.self) {
                     filterPredicates.append(predicate)
                 }
             }
@@ -68,6 +68,9 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
     }
     
     func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
+        if let dataSourceLocationType = T.self as? any DataSourceLocation.Type {
+            return dataSourceLocationType.getBoundingPredicate(minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon)
+        }
         return NSPredicate(
             format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
         )

@@ -12,8 +12,7 @@ import MapKit
 struct MapLayerRow: View {
     @ObservedObject var layer: MapLayer
     @Binding var isVisible: Bool
-    @ObservedObject var mapState: MapState
-    
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
@@ -33,7 +32,7 @@ struct MapLayerRow: View {
                 let lonSpan = layer.maxLongitude - layer.minLongitude
                 let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: layer.maxLatitude - (latSpan / 2.0), longitude: layer.maxLongitude - (lonSpan / 2.0))
                 let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latSpan, longitudeDelta: lonSpan)
-                mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                NotificationCenter.default.post(name: .FocusMapAtLocation, object: MKCoordinateRegion(center: center, span: span))
                 
                 NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
             }) {
@@ -58,7 +57,6 @@ struct MapLayerRow: View {
 }
 
 struct MapLayersView: View {
-    @ObservedObject var mapState: MapState
     @StateObject var model: MapLayersViewModel = MapLayersViewModel()
     @State var isMapLayersPresented: Bool = false
     @State var editPresented: Bool = false
@@ -70,7 +68,7 @@ struct MapLayersView: View {
                 if !model.layers.isEmpty {
                     Section {
                         ForEach(model.layers, id: \.self) { layer in
-                            MapLayerRow(layer: layer, isVisible: model.toggleVisibility(of: layer), mapState: mapState)
+                            MapLayerRow(layer: layer, isVisible: model.toggleVisibility(of: layer))
                                 .onTapGesture {
                                     editPresented = true
                                     editLayerViewModel = MapLayerViewModel(mapLayer: layer)

@@ -108,6 +108,7 @@ enum MSIRouter: URLRequestConvertible
             return params
         case .readNavigationalWarnings:
             return [
+                "status": "active",
                 "output": "json"
             ]
         case .readLights(volume: let volume, noticeYear: let noticeYear, noticeWeek: let noticeWeek):

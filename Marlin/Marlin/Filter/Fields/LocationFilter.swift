@@ -17,6 +17,11 @@ struct LocationFilter: View {
     @ObservedObject var viewModel: DataSourcePropertyFilterViewModel
     @FocusState var isInputActive: Bool
     @State var mapTapped: Bool = false
+    @StateObject var mapState: MapState = MapState()
+    @StateObject private var mapMixins: MapMixins = MapMixins()
+    @State var boundsMixin: LocationBoundsMixin?
+    @State var coordinateOne: ObservableCoordinate = ObservableCoordinate()
+    @State var coordinateTwo: ObservableCoordinate = ObservableCoordinate()
     
     init(filterViewModel: FilterViewModel, viewModel: DataSourcePropertyFilterViewModel) {
         self.filterViewModel = filterViewModel
@@ -46,12 +51,18 @@ struct LocationFilter: View {
                                     .disabled(true)
                             }
 
-                            Text("Tap To Set Location")
+                            Text("Tap To Set Location Via Map")
                                 .secondary()
+                                .padding(.all, 4)
+                                .background(Color.surfaceColor)
                                 .padding(.all, 4)
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
+                            mapTapped = true
+                            isInputActive = false
+                        }
+                        .onLongPressGesture {
                             mapTapped = true
                             isInputActive = false
                         }
@@ -123,6 +134,145 @@ struct LocationFilter: View {
                         .secondary()
                         .padding([.leading, .top], 12)
                 }
+            } else if viewModel.selectedComparison == .bounds {
+                VStack {
+                    ZStack(alignment: .topLeading) {
+                        VStack {
+                            MarlinMap(name: "Location Filter", mixins: mapMixins, mapState: mapState, allowMapTapsOnItems: false)
+                                .onAppear {
+                                    if let boundsMixin = boundsMixin {
+                                        mapMixins.mixins.append(boundsMixin)
+                                    } else {
+                                        boundsMixin = LocationBoundsMixin(region: $viewModel.region, coordinateOne: $coordinateOne, coordinateTwo: $coordinateTwo)
+                                        mapMixins.mixins.append(boundsMixin!)
+                                    }
+                                    mapMixins.mixins.append(UserLayersMap())
+                                    mapState.center = viewModel.region
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 250)
+                                .onChange(of: [viewModel.valueMinLatitudeString, viewModel.valueMinLongitudeString, viewModel.valueMaxLatitudeString, viewModel.valueMaxLongitudeString]) { newValue in
+                                    if let minLat = viewModel.valueMinLatitude, let minLon = viewModel.valueMinLongitude, let maxLat = viewModel.valueMaxLatitude, let maxLon = viewModel.valueMaxLongitude {
+                                        coordinateOne.latitude = minLat
+                                        coordinateOne.longitude = minLon
+                                        coordinateTwo.latitude = maxLat
+                                        coordinateTwo.longitude = maxLon
+                                        let center = CLLocationCoordinate2D(latitude: maxLat - ((maxLat - minLat) / 2.0), longitude: maxLon - ((maxLon - minLon) / 2.0))
+                                        mapState.center = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: maxLat - minLat, longitudeDelta: maxLon - minLon))
+                                    }
+                                }
+                        }
+                        
+                        Text("Tap To Set Location Via Map")
+                            .secondary()
+                            .padding(.all, 4)
+                            .background(Color.surfaceColor)
+                            .padding(.all, 4)
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        mapTapped = true
+                        isInputActive = false
+                    }
+                    .onLongPressGesture {
+                        mapTapped = true
+                        isInputActive = false
+                    }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("\(viewModel.dataSourceProperty.name) map input")
+                    
+                    HStack {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Min Latitude")
+                                .overline()
+                                .padding(.leading, 8)
+                                .padding(.bottom, -16)
+                            TextField("Min Latitude", text: $viewModel.valueMinLatitudeString)
+                                .underlineTextField()
+                                .textInputAutocapitalization(.never)
+                                .onTapGesture(perform: {
+                                    mapTapped = false
+                                    viewModel.startValidating = true
+                                })
+                                .focused($isInputActive)
+                                .accessibilityElement()
+                                .accessibilityLabel("\(viewModel.dataSourceProperty.name) min latitude input")
+                            if let validationLatitudeText = viewModel.validationMinLatitudeText {
+                                Text(validationLatitudeText)
+                                    .overline()
+                                    .padding(.leading, 8)
+                            }
+                        }
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Min Longitude")
+                                .overline()
+                                .padding(.leading, 8)
+                                .padding(.bottom, -16)
+                            TextField("Min Longitude", text: $viewModel.valueMinLongitudeString)
+                                .underlineTextField()
+                                .textInputAutocapitalization(.never)
+                                .onTapGesture(perform: {
+                                    mapTapped = false
+                                    viewModel.startValidating = true
+                                })
+                                .focused($isInputActive)
+                                .accessibilityElement()
+                                .accessibilityLabel("\(viewModel.dataSourceProperty.name) min longitude input")
+                            if let validationLongitudeText = viewModel.validationMinLongitudeText {
+                                Text(validationLongitudeText)
+                                    .overline()
+                                    .padding(.leading, 8)
+                            }
+                        }
+                    }
+                    .padding(.leading, 4)
+                    
+                    HStack {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Max Latitude")
+                                .overline()
+                                .padding(.leading, 8)
+                                .padding(.bottom, -16)
+                            TextField("Max Latitude", text: $viewModel.valueMaxLatitudeString)
+                                .underlineTextField()
+                                .textInputAutocapitalization(.never)
+                                .onTapGesture(perform: {
+                                    mapTapped = false
+                                    viewModel.startValidating = true
+                                })
+                                .focused($isInputActive)
+                                .accessibilityElement()
+                                .accessibilityLabel("\(viewModel.dataSourceProperty.name) max latitude input")
+                            if let validationLatitudeText = viewModel.validationMaxLatitudeText {
+                                Text(validationLatitudeText)
+                                    .overline()
+                                    .padding(.leading, 8)
+                            }
+                        }
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Max Longitude")
+                                .overline()
+                                .padding(.leading, 8)
+                                .padding(.bottom, -16)
+                            TextField("Max Longitude", text: $viewModel.valueMaxLongitudeString)
+                                .underlineTextField()
+                                .textInputAutocapitalization(.never)
+                                .onTapGesture(perform: {
+                                    mapTapped = false
+                                    viewModel.startValidating = true
+                                })
+                                .focused($isInputActive)
+                                .accessibilityElement()
+                                .accessibilityLabel("\(viewModel.dataSourceProperty.name) max longitude input")
+                            if let validationLongitudeText = viewModel.validationMaxLongitudeText {
+                                Text(validationLongitudeText)
+                                    .overline()
+                                    .padding(.leading, 8)
+                            }
+                        }
+                    }
+                    .padding(.leading, 4)
+                }
             }
         }
         .toolbar {
@@ -135,6 +285,17 @@ struct LocationFilter: View {
                 }
                 .tint(Color.primaryColorVariant)
             }
+        }
+        .sheet(isPresented: $mapTapped) {
+            NavigationStack {
+                LocationFilterFullScreen(viewModel: viewModel, expanded: $mapTapped)
+
+                .navigationTitle("Set \(viewModel.dataSourceProperty.name)")
+                .navigationBarTitleDisplayMode(.inline)
+                .background(Color.backgroundColor)
+            }
+            .environmentObject(LocationManager.shared())
+            .presentationDetents([.large])
         }
     }
     

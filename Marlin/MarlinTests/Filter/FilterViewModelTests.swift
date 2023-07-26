@@ -22,7 +22,7 @@ final class FilterViewModelTests: XCTestCase {
     }
     
     func testFilterProperties() {
-        let filterViewModel = FilterViewModel(dataSource: MockDataSource.self)
+        let filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
         XCTAssertEqual(filterViewModel.filters, [])
     }
     
@@ -30,7 +30,7 @@ final class FilterViewModelTests: XCTestCase {
         let savedFilter = UserDefaults.standard.filter(MockDataSourceDefaultSort.self)
         XCTAssertEqual([], savedFilter)
         
-        let filterViewModel = FilterViewModel(dataSource: MockDataSourceDefaultSort.self)
+        let filterViewModel = PersistedFilterViewModel(dataSource: MockDataSourceDefaultSort.self)
         XCTAssertEqual(filterViewModel.filters, [])
         
         let model = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Date", key: #keyPath(MockDataSource.dateProperty), type: .date))
@@ -43,7 +43,7 @@ final class FilterViewModelTests: XCTestCase {
     }
     
     func testFilterPropertiesUsingDefault() {
-        let filterViewModel = FilterViewModel(dataSource: MockDataSourceDefaultSort.self, useDefaultForEmptyFilter: true)
+        let filterViewModel = PersistedFilterViewModel(dataSource: MockDataSourceDefaultSort.self, useDefaultForEmptyFilter: true)
         XCTAssertEqual(filterViewModel.filters.count, MockDataSourceDefaultSort.defaultFilter.count)
         
         let model = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Date", key: #keyPath(MockDataSource.dateProperty), type: .date))
@@ -56,7 +56,7 @@ final class FilterViewModelTests: XCTestCase {
     }
     
     func testChartCorrectionModel() {
-        let filterViewModel: FilterViewModel = FilterViewModel(dataSource: ChartCorrection.self, useDefaultForEmptyFilter: true)
+        let filterViewModel = PersistedFilterViewModel(dataSource: ChartCorrection.self, useDefaultForEmptyFilter: true)
         XCTAssertEqual(filterViewModel.requiredProperties.count, 1)
         XCTAssertEqual(filterViewModel.requiredNotSet.count, 0)
         

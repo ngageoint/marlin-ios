@@ -25,6 +25,14 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
             valueLatitude = nil
             valueLatitudeString = ""
             valueLongitudeString = ""
+            valueMinLongitude = nil
+            valueMinLatitude = nil
+            valueMaxLongitude = nil
+            valueMaxLatitude = nil
+            valueMaxLatitudeString = ""
+            valueMaxLongitudeString = ""
+            valueMaxLatitudeString = ""
+            valueMaxLongitudeString = ""
             windowUnits = .last30Days
         }
     }
@@ -47,6 +55,38 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
         didSet {
             if let parsed = Double(coordinateString: valueLatitudeString) {
                 valueLatitude = parsed
+            }
+        }
+    }
+    var valueMinLatitude: Double? = nil
+    var valueMinLongitude: Double? = nil
+    var valueMaxLatitude: Double? = nil
+    var valueMaxLongitude: Double? = nil
+    @Published var valueMinLongitudeString: String = "" {
+        didSet {
+            if let parsed = Double(coordinateString: valueMinLongitudeString) {
+                valueMinLongitude = parsed
+            }
+        }
+    }
+    @Published var valueMinLatitudeString: String = "" {
+        didSet {
+            if let parsed = Double(coordinateString: valueMinLatitudeString) {
+                valueMinLatitude = parsed
+            }
+        }
+    }
+    @Published var valueMaxLongitudeString: String = "" {
+        didSet {
+            if let parsed = Double(coordinateString: valueMaxLongitudeString) {
+                valueMaxLongitude = parsed
+            }
+        }
+    }
+    @Published var valueMaxLatitudeString: String = "" {
+        didSet {
+            if let parsed = Double(coordinateString: valueMaxLatitudeString) {
+                valueMaxLatitude = parsed
             }
         }
     }
@@ -94,6 +134,30 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
         }
         set {
             _readableRegion = newValue
+        }
+    }
+    
+    var bounds: MapBoundingBox? {
+        get {
+            if let valueMinLongitude = valueMinLongitude, let valueMinLatitude = valueMinLatitude, let valueMaxLongitude = valueMaxLongitude, let valueMaxLatitude = valueMaxLatitude {
+                return MapBoundingBox(swCorner: (x: valueMinLongitude, y: valueMinLatitude), neCorner: (x: valueMaxLongitude, y: valueMaxLatitude))
+            }
+            return nil
+        }
+        set {
+            DispatchQueue.main.async {
+                if let newValue = newValue {
+                    self.valueMinLongitudeString = "\(newValue.swCorner.x)"
+                    self.valueMinLatitudeString = "\(newValue.swCorner.y)"
+                    self.valueMaxLongitudeString = "\(newValue.neCorner.x)"
+                    self.valueMaxLatitudeString = "\(newValue.neCorner.y)"
+                } else {
+                    self.valueMinLongitudeString = ""
+                    self.valueMinLatitudeString = ""
+                    self.valueMaxLongitudeString = ""
+                    self.valueMaxLatitudeString = ""
+                }
+            }
         }
     }
     
@@ -153,6 +217,42 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
         }
         return "Invalid Longitude"
     }
+    var validationMinLatitudeText: String? {
+        if valueMinLatitudeString.isEmpty {
+            return nil
+        }
+        if let parsed = Double(coordinateString: valueMinLatitudeString) {
+            return "\(parsed)"
+        }
+        return "Invalid Latitude"
+    }
+    var validationMinLongitudeText: String? {
+        if valueMinLongitudeString.isEmpty {
+            return nil
+        }
+        if let parsed = Double(coordinateString: valueMinLongitudeString) {
+            return "\(parsed)"
+        }
+        return "Invalid Longitude"
+    }
+    var validationMaxLatitudeText: String? {
+        if valueMaxLatitudeString.isEmpty {
+            return nil
+        }
+        if let parsed = Double(coordinateString: valueMaxLatitudeString) {
+            return "\(parsed)"
+        }
+        return "Invalid Latitude"
+    }
+    var validationMaxLongitudeText: String? {
+        if valueMaxLongitudeString.isEmpty {
+            return nil
+        }
+        if let parsed = Double(coordinateString: valueMaxLongitudeString) {
+            return "\(parsed)"
+        }
+        return "Invalid Longitude"
+    }
     var isValid: Bool {
         switch dataSourceProperty.type {
         case .double, .float:
@@ -172,7 +272,7 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
         case .location:
             if selectedComparison == .nearMe {
                 return locationManager != nil && locationManager!.lastLocation != nil && valueInt != nil
-            } else {
+            } else if selectedComparison == .closeTo {
                 if let parsed = Double(coordinateString: valueLongitudeString) {
                     valueLongitude = parsed
                 } else {
@@ -185,6 +285,28 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
                 }
                 
                 return valueLatitude != nil && valueLongitude != nil && valueInt != nil
+            } else {
+                if let parsed = Double(coordinateString: valueMinLongitudeString) {
+                    valueMinLongitude = parsed
+                } else {
+                    valueMinLongitude = nil
+                }
+                if let parsed = Double(coordinateString: valueMinLatitudeString) {
+                    valueMinLatitude = parsed
+                } else {
+                    valueMinLatitude = nil
+                }
+                if let parsed = Double(coordinateString: valueMaxLongitudeString) {
+                    valueMaxLongitude = parsed
+                } else {
+                    valueMaxLongitude = nil
+                }
+                if let parsed = Double(coordinateString: valueMaxLatitudeString) {
+                    valueMaxLatitude = parsed
+                } else {
+                    valueMaxLatitude = nil
+                }
+                return valueMinLongitude != nil && valueMinLatitude != nil && valueMaxLongitude != nil && valueMaxLatitude != nil
             }
         case .latitude:
             if valueString.isEmpty {

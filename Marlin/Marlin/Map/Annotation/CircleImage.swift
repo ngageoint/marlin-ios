@@ -48,11 +48,18 @@ class CircleImage: UIImage {
         self.init(cgImage: cgImage)
     }
     
-    convenience init?(color: UIColor, radius: CGFloat, fill: Bool = false, arcWidth: CGFloat? = nil) {
+    convenience init?(color: UIColor, radius: CGFloat, fill: Bool = false, withoutScreenScale: Bool = false, arcWidth: CGFloat? = nil) {
         let strokeWidth = arcWidth ?? 0.5
         let rect = CGRect(x: 0, y: 0, width: strokeWidth + radius * 2, height: strokeWidth + radius * 2)
         
-        let renderer = UIGraphicsImageRenderer(size: rect.size)
+        let renderer = {
+            if withoutScreenScale {
+                let format = UIGraphicsImageRendererFormat()
+                format.scale = 1
+                return UIGraphicsImageRenderer(size: rect.size, format: format)
+            }
+            return UIGraphicsImageRenderer(size: rect.size)
+        }()
         let image = renderer.image { _ in
             let circle = UIBezierPath()
             let center = CGPoint(x: (rect.width / 2.0), y: rect.height / 2.0)

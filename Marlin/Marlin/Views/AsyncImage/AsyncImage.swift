@@ -43,7 +43,8 @@ struct AsyncImage<Placeholder: View>: View {
             }
         }
         .onTapGesture {
-            if let image = loader.image, let imageData = image.pngData(), let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            if let image = loader.image, let imageData = image.pngData() {
+                let docsUrl = URL.documentsDirectory
 
                 let filename = docsUrl.appendingPathComponent(name)
                 try? imageData.write(to: filename)

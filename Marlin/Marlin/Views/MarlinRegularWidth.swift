@@ -89,18 +89,7 @@ struct MarlinRegularWidth: View {
                     loadingCapsule()
                 }
             }
-            .navigationDestination(for: String.self) { destination in
-                if destination == "settings" {
-                    AboutView()
-                } else if destination == "submitReport" {
-                    SubmitReportView()
-                }
-            }
-            .navigationDestination(for: MapStateNavigation.self) { item in
-                if item.view == "mapSettings" {
-                    MapSettings(mapState: item.mapState)
-                }
-            }
+            .marlinRoutes(path: $path)
             .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
             .navigationTitle("Marlin")
             .navigationBarTitleDisplayMode(.inline)
@@ -134,9 +123,9 @@ struct MarlinRegularWidth: View {
         .onReceive(switchTabPub) { output in
             if let output = output as? String {
                 if output == "settings" {
-                    path.append("settings")
+                    path.append(MarlinRoute.about)
                 } else if output == "submitReport" {
-                    path.append("submitReport")
+                    path.append(MarlinRoute.submitReport)
                 } else {
                     let dataSource = dataSourceList.allTabs.first { item in
                         item.key == output

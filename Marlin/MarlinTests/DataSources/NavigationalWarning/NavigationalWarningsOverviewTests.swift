@@ -107,14 +107,16 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
 
             @ObservedObject var passThrough: PassThrough
             @EnvironmentObject var locationManager: LocationManager
+            @StateObject var focusedItem: ItemWrapper = ItemWrapper()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    NavigationalWarningsOverview()
+                NavigationStack(path: $path) {
+                    NavigationalWarningsOverview(path: $path, focusedItem: focusedItem)
                         .environmentObject(locationManager)
                 }
             }
@@ -187,14 +189,16 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
         struct Container: View {
             @EnvironmentObject var locationManager: LocationManager
             @ObservedObject var passThrough: PassThrough
+            @StateObject var focusedItem: ItemWrapper = ItemWrapper()
+            @State var path: NavigationPath = NavigationPath()
             
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationView {
-                    NavigationalWarningsOverview()
+                NavigationStack(path: $path) {
+                    NavigationalWarningsOverview(path: $path, focusedItem: focusedItem)
                         .environmentObject(locationManager)
                 }
                 .onAppear {

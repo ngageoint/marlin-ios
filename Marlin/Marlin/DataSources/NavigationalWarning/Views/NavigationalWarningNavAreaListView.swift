@@ -146,6 +146,22 @@ struct NavigationalWarningNavAreaListView: View {
                     }
                 }
             }
+            .safeAreaInset(edge: .bottom, alignment: .trailing) {
+                NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(dataSourceItem: DataSourceItem(dataSource: NavigationalWarning.self), filters: [DataSourceFilterParameter(property: DataSourceProperty(name: "Nav Area", key: "navArea", type: DataSourcePropertyType.string), comparison: DataSourceFilterComparison.equals, valueString: navArea)])])) {
+                    Label(
+                        title: {},
+                        icon: { Image(systemName: "square.and.arrow.down")
+                                .renderingMode(.template)
+                        }
+                    )
+                }
+                .isDetailLink(false)
+                .fixedSize()
+                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.onPrimaryColor, backgroundColor: Color.primaryColor))
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Export Button")
+                .padding(16)
+            }
             .background(Color.backgroundColor)
             .coordinateSpace(name: "scroll")
             .accessibilityElement(children: .contain)

@@ -127,8 +127,8 @@ class ElectronicPublication: NSManagedObject, Downloadable {
         return URL(string: "\(MSIRouter.baseURLString)/publications/download?key=\(s3Key)&type=download")
     }
     var savePath: String {
-        let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        return "\(docsUrl?.absoluteString ?? "")\(s3Key ?? "")"
+        let docsUrl = URL.documentsDirectory
+        return "\(docsUrl.absoluteString)\(s3Key ?? "")"
     }
     override var description: String {
         return "Electronic Publication\n\n" +
@@ -139,8 +139,8 @@ class ElectronicPublication: NSManagedObject, Downloadable {
         guard let s3Key else {
             return
         }
-        let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let fileUrl = "\(docsUrl?.absoluteString ?? "")\(s3Key)"
+        let docsUrl = URL.documentsDirectory
+        let fileUrl = "\(docsUrl.absoluteString)\(s3Key)"
         let destinationUrl = URL(string: fileUrl)
         
         if let destinationUrl = destinationUrl {

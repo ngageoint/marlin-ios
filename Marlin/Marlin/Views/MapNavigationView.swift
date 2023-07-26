@@ -45,26 +45,10 @@ struct MapNavigationView: View {
                     LoadingCapsule()
                 }
             }
-            .navigationDestination(for: String.self) { destination in
-                if destination == "settings" {
-                    AboutView()
-                } else if destination == "submitReport" {
-                    SubmitReportView()
-                }
-            }
-            .navigationDestination(for: ItemWrapper.self) { item in
-                if let dataSourceViewBuilder = item.dataSource as? (any DataSourceViewBuilder) {
-                    dataSourceViewBuilder.detailView
-                }
-            }
             .navigationDestination(for: DataSourceItem.self) { item in
                 DataSourceListView(dataSource: item, focusedItem: itemWrapper, path: $path)
             }
-            .navigationDestination(for: MapStateNavigation.self) { item in
-                if item.view == "mapSettings" {
-                    MapSettings(mapState: item.mapState)
-                }
-            }
+            .marlinRoutes(path: $path)
             .onReceive(viewDataSourcePub) { output in
                 if let dataSource = output.dataSource {
                     if output.mapName == nil || output.mapName == "Marlin Map" {
@@ -73,12 +57,11 @@ struct MapNavigationView: View {
                 }
             }
             .onReceive(switchTabPub) { output in
-                print("switch tab pub map navigation view \(output)")
                 if let output = output as? String {
                     if output == "settings" {
-                        path.append("settings")
+                        path.append(MarlinRoute.about)
                     } else if output == "submitReport" {
-                        path.append("submitReport")
+                        path.append(MarlinRoute.submitReport)
                     } else {
                         let tab = dataSourceList.tabs.contains(where: { item in
                             item.key == output

@@ -51,7 +51,7 @@ final class ChartCorrectionQueryTests: XCTestCase {
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         mockLocationManager.currentNavArea = nil
         
-        var filterViewModel: FilterViewModel = FilterViewModel(dataSource: ChartCorrection.self, useDefaultForEmptyFilter: true)
+        var filterViewModel = PersistedFilterViewModel(dataSource: ChartCorrection.self, useDefaultForEmptyFilter: true)
 
         let queryView = ChartCorrectionQuery(filterViewModel: filterViewModel)
             .environmentObject(mockLocationManager as LocationManager)
