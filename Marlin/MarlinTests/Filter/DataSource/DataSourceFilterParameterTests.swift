@@ -82,7 +82,7 @@ final class DataSourceFilterParameterTests: XCTestCase {
     
     func testStringValuePredicate() {
         let p = DataSourceFilterParameter(property: DataSourceProperty(name: "String", key: "string", type: .string), comparison: .equals, valueString: "Hi")
-        let predicate = p.toPredicate()
+        let predicate = p.toPredicate(dataSource: CommonDataSource.self)
         let compare = NSPredicate(format: "string == %@", "Hi")
         XCTAssertEqual(predicate, compare)
     }
@@ -96,7 +96,7 @@ final class DataSourceFilterParameterTests: XCTestCase {
         let equalDate = calendar.startOfDay(for: date)
         let nextDate = calendar.date(byAdding: .day, value: 1, to: equalDate)!
         let p = DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: "date", type: .date), comparison: .equals, valueDate: date)
-        let predicate = p.toPredicate()
+        let predicate = p.toPredicate(dataSource: CommonDataSource.self)
         let compare = NSPredicate(format: "date >= %@ AND date < %@", equalDate as NSDate, nextDate as NSDate)
         XCTAssertEqual(predicate, compare)
                 
@@ -104,88 +104,88 @@ final class DataSourceFilterParameterTests: XCTestCase {
         let start = calendar.startOfDay(for: Date())
         let windowDate = calendar.date(byAdding: .day, value: -7, to: start)!
             
-        let predicate2 = p2.toPredicate()
+        let predicate2 = p2.toPredicate(dataSource: CommonDataSource.self)
         let compare2 = NSPredicate(format: "date >= %@", windowDate as NSDate)
         XCTAssertEqual(predicate2, compare2)
         
         let p3 = DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: "date", type: .date), comparison: .greaterThanEqual, valueDate: date)
-        let predicate3 = p3.toPredicate()
+        let predicate3 = p3.toPredicate(dataSource: CommonDataSource.self)
         let compare3 = NSPredicate(format: "date >= %@", equalDate as NSDate)
         XCTAssertEqual(predicate3, compare3)
     }
     
     func testIntValuePredicate() {
         let p = DataSourceFilterParameter(property: DataSourceProperty(name: "Int", key: "int", type: .int), comparison: .equals, valueInt: 1)
-        let predicate = p.toPredicate()
+        let predicate = p.toPredicate(dataSource: CommonDataSource.self)
         let compare = NSPredicate(format: "int == %d", 1)
         XCTAssertEqual(predicate, compare)
     }
     
     func testFloatValuePredicate() {
         let p = DataSourceFilterParameter(property: DataSourceProperty(name: "Float", key: "float", type: .float), comparison: .equals, valueDouble: 1.0)
-        let predicate = p.toPredicate()
+        let predicate = p.toPredicate(dataSource: CommonDataSource.self)
         let compare = NSPredicate(format: "float == %f", 1.0)
         XCTAssertEqual(predicate, compare)
     }
     
     func testDoubleValuePredicate() {
         let p = DataSourceFilterParameter(property: DataSourceProperty(name: "Double", key: "double", type: .double), comparison: .equals, valueDouble: 1.0)
-        let predicate = p.toPredicate()
+        let predicate = p.toPredicate(dataSource: CommonDataSource.self)
         let compare = NSPredicate(format: "double == %f", 1.0)
         XCTAssertEqual(predicate, compare)
     }
     
     func testEnumerationValuePredicate() {
         let p = DataSourceFilterParameter(property: DataSourceProperty(name: "Enumeration", key: "Enumeration", type: .enumeration), comparison: .equals, valueString: "Hi")
-        let predicate = p.toPredicate()
+        let predicate = p.toPredicate(dataSource: CommonDataSource.self)
         let compare = NSPredicate(format: "Enumeration == %@", "Hi")
         XCTAssertEqual(predicate, compare)
         
         let p2 = DataSourceFilterParameter(property: DataSourceProperty(name: "Enumeration", key: "Enumeration", type: .enumeration, enumerationValues: ["Yes": ["Y"], "No": ["N"], "Unknown": ["U", "UNK", "unknown"]]), comparison: .equals, valueString: "Unknown")
         print("\(DecisionEnum.keyValueMap)")
-        let predicate2 = p2.toPredicate()
+        let predicate2 = p2.toPredicate(dataSource: CommonDataSource.self)
         let compare2 = NSPredicate(format: "Enumeration == %@ OR Enumeration == %@ OR Enumeration == %@", "U", "UNK", "unknown")
         XCTAssertEqual(predicate2, compare2)
     }
     
     func testBooleanValuePredicate() {
         let p = DataSourceFilterParameter(property: DataSourceProperty(name: "Boolean", key: "Boolean", type: .boolean), comparison: .equals, valueInt: 1)
-        let predicate = p.toPredicate()
+        let predicate = p.toPredicate(dataSource: CommonDataSource.self)
         let compare = NSPredicate(format: "Boolean == %d", 1)
         XCTAssertEqual(predicate, compare)
         
         let p2 = DataSourceFilterParameter(property: DataSourceProperty(name: "Boolean", key: "Boolean", type: .boolean), comparison: .equals, valueInt: 0)
-        let predicate2 = p2.toPredicate()
+        let predicate2 = p2.toPredicate(dataSource: CommonDataSource.self)
         let compare2 = NSPredicate(format: "Boolean == %d", 0)
         XCTAssertEqual(predicate2, compare2)
     }
     
     func testLatitudeValuePredicate() {
         let p = DataSourceFilterParameter(property: DataSourceProperty(name: "Latitude", key: "Latitude", type: .latitude), comparison: .equals, valueString: "4.0N", valueLatitude: 4.0)
-        let predicate = p.toPredicate()
+        let predicate = p.toPredicate(dataSource: CommonDataSource.self)
         let compare = NSPredicate(format: "Latitude == %f", 4.0)
         XCTAssertEqual(predicate, compare)
     }
     
     func testLongitudeValuePredicate() {
         let p = DataSourceFilterParameter(property: DataSourceProperty(name: "Longitude", key: "Longitude", type: .longitude), comparison: .equals, valueString: "4.0E", valueLongitude: 4.0)
-        let predicate = p.toPredicate()
+        let predicate = p.toPredicate(dataSource: CommonDataSource.self)
         let compare = NSPredicate(format: "Longitude == %f", 4.0)
         XCTAssertEqual(predicate, compare)
     }
     
     func testLocationValuePredicate() {
         let p = DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "Location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)
-        let predicate = p.toPredicate()
+        let predicate = p.toPredicate(dataSource: CommonDataSource.self)
         let compare = NSPredicate(format: "latitude <= %f AND latitude >= %f AND longitude <= %f AND longitude >= %f", 2.016627, 1.983373, 3.016637, 2.983363)
         XCTAssertEqual(predicate?.kifPredicateDescription, compare.kifPredicateDescription)
 
         let p2 = DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "Location", type: .location), comparison: .nearMe, valueInt: 1)
-        let predicate2 = p2.toPredicate()
+        let predicate2 = p2.toPredicate(dataSource: CommonDataSource.self)
         XCTAssertNil(predicate2)
 
         LocationManager.shared().locationManager(CLLocationManager(), didUpdateLocations: [CLLocation(latitude: 2.0, longitude: 3.0)])
-        let predicate3 = p2.toPredicate()
+        let predicate3 = p2.toPredicate(dataSource: CommonDataSource.self)
         XCTAssertEqual(predicate3?.kifPredicateDescription, compare.kifPredicateDescription)
     }
 }

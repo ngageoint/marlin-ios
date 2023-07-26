@@ -18,7 +18,7 @@ final class MapSettingsTests: XCTestCase {
         UserDefaults.standard.actualRangeLights = false
         UserDefaults.standard.actualRangeSectorLights = false
         
-        let view = MapSettings(mapState: MapState())
+        let view = MapSettings()
         let nav = NavigationView {
             view
         }
@@ -47,7 +47,7 @@ final class MapSettingsTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "flyoverMapsEnabled")
         UserDefaults.standard.set(Int(MKMapType.standard.rawValue), forKey: "mapType")
         
-        let view = MapSettings(mapState: MapState())
+        let view = MapSettings()
         let nav = NavigationView {
             view
         }
@@ -89,7 +89,7 @@ final class MapSettingsTests: XCTestCase {
         UserDefaults.standard.set(false, forKey: "showMGRS")
         UserDefaults.standard.set(false, forKey: "showGARS")
         
-        let view = MapSettings(mapState: MapState())
+        let view = MapSettings()
         let nav = NavigationView {
             view
         }

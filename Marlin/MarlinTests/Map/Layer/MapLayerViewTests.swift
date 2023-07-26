@@ -50,7 +50,7 @@ final class MapLayerViewTests: XCTestCase {
             return
         }
         
-        let view = MapLayersView(mapState: MapState())
+        let view = MapLayersView()
         let nav = NavigationView {
             view
                 .environment(\.managedObjectContext, persistentStore.viewContext)
