@@ -113,7 +113,7 @@ struct GeoPackageExportView: View {
                         ) {
                             Label(
                                 title: {
-                                    Text("Share")
+                                    Text("Download Created GeoPackage")
                                 },
                                 icon: { Image(systemName: "square.and.arrow.up")
                                         .renderingMode(.template)

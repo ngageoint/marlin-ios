@@ -18,9 +18,9 @@ protocol PredicateBasedTileOverlay {
     var key: String? { get set }
 }
 
-struct MapBoundingBox: Codable {
-    var swCorner: (x: Double, y: Double)
-    var neCorner: (x: Double, y: Double)
+class MapBoundingBox: Codable, ObservableObject {
+    @Published var swCorner: (x: Double, y: Double)
+    @Published var neCorner: (x: Double, y: Double)
     
     enum CodingKeys: String, CodingKey {
         case swCornerX
@@ -34,7 +34,7 @@ struct MapBoundingBox: Codable {
         self.neCorner = neCorner
     }
     
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let swCornerX = try values.decode(Double.self, forKey: .swCornerX)
         let swCornerY = try values.decode(Double.self, forKey: .swCornerY)
@@ -57,8 +57,16 @@ struct MapBoundingBox: Codable {
         return CLLocationCoordinate2D(latitude: swCorner.y, longitude: swCorner.x)
     }
     
+    var seCoordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: swCorner.y, longitude: neCorner.x)
+    }
+    
     var neCoordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: neCorner.y, longitude: neCorner.x)
+    }
+    
+    var nwCoordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: neCorner.y, longitude: swCorner.x)
     }
 }
 

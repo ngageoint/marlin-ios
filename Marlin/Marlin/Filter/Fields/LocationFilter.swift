@@ -17,6 +17,11 @@ struct LocationFilter: View {
     @ObservedObject var viewModel: DataSourcePropertyFilterViewModel
     @FocusState var isInputActive: Bool
     @State var mapTapped: Bool = false
+    @StateObject var mapState: MapState = MapState()
+    @StateObject private var mapMixins: MapMixins = MapMixins()
+    @State var boundsMixin: LocationBoundsMixin?
+    @State var coordinateOne: ObservableCoordinate = ObservableCoordinate()
+    @State var coordinateTwo: ObservableCoordinate = ObservableCoordinate()
     
     init(filterViewModel: FilterViewModel, viewModel: DataSourcePropertyFilterViewModel) {
         self.filterViewModel = filterViewModel
@@ -46,12 +51,18 @@ struct LocationFilter: View {
                                     .disabled(true)
                             }
 
-                            Text("Tap To Set Location")
+                            Text("Tap To Set Location Via Map")
                                 .secondary()
+                                .padding(.all, 4)
+                                .background(Color.surfaceColor)
                                 .padding(.all, 4)
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
+                            mapTapped = true
+                            isInputActive = false
+                        }
+                        .onLongPressGesture {
                             mapTapped = true
                             isInputActive = false
                         }
@@ -125,6 +136,51 @@ struct LocationFilter: View {
                 }
             } else if viewModel.selectedComparison == .bounds {
                 VStack {
+                    ZStack(alignment: .topLeading) {
+                        VStack {
+                            MarlinMap(name: "Location Filter", mixins: mapMixins, mapState: mapState, allowMapTapsOnItems: false)
+                                .onAppear {
+                                    if let boundsMixin = boundsMixin {
+                                        mapMixins.mixins.append(boundsMixin)
+                                    } else {
+                                        boundsMixin = LocationBoundsMixin(region: $viewModel.region, coordinateOne: $coordinateOne, coordinateTwo: $coordinateTwo)
+                                        mapMixins.mixins.append(boundsMixin!)
+                                    }
+                                    mapMixins.mixins.append(UserLayersMap())
+                                    mapState.center = viewModel.region
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 250)
+                                .onChange(of: [viewModel.valueMinLatitudeString, viewModel.valueMinLongitudeString, viewModel.valueMaxLatitudeString, viewModel.valueMaxLongitudeString]) { newValue in
+                                    if let minLat = viewModel.valueMinLatitude, let minLon = viewModel.valueMinLongitude, let maxLat = viewModel.valueMaxLatitude, let maxLon = viewModel.valueMaxLongitude {
+                                        coordinateOne.latitude = minLat
+                                        coordinateOne.longitude = minLon
+                                        coordinateTwo.latitude = maxLat
+                                        coordinateTwo.longitude = maxLon
+                                        let center = CLLocationCoordinate2D(latitude: maxLat - ((maxLat - minLat) / 2.0), longitude: maxLon - ((maxLon - minLon) / 2.0))
+                                        mapState.center = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: maxLat - minLat, longitudeDelta: maxLon - minLon))
+                                    }
+                                }
+                        }
+                        
+                        Text("Tap To Set Location Via Map")
+                            .secondary()
+                            .padding(.all, 4)
+                            .background(Color.surfaceColor)
+                            .padding(.all, 4)
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        mapTapped = true
+                        isInputActive = false
+                    }
+                    .onLongPressGesture {
+                        mapTapped = true
+                        isInputActive = false
+                    }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("\(viewModel.dataSourceProperty.name) map input")
+                    
                     HStack {
                         VStack(alignment: .leading, spacing: 0) {
                             Text("Min Latitude")
@@ -229,6 +285,17 @@ struct LocationFilter: View {
                 }
                 .tint(Color.primaryColorVariant)
             }
+        }
+        .sheet(isPresented: $mapTapped) {
+            NavigationStack {
+                LocationFilterFullScreen(viewModel: viewModel, expanded: $mapTapped)
+
+                .navigationTitle("Set \(viewModel.dataSourceProperty.name)")
+                .navigationBarTitleDisplayMode(.inline)
+                .background(Color.backgroundColor)
+            }
+            .environmentObject(LocationManager.shared())
+            .presentationDetents([.large])
         }
     }
     
