@@ -9,10 +9,14 @@ import Foundation
 import UIKit
 import CoreData
 
-extension DifferentialGPSStation: DataSourceLocation, GeoPackageExportable {
+extension DifferentialGPSStation: Bookmarkable {
     var itemKey: String? {
         return "\(featureNumber)--\(volumeNumber ?? "")"
     }
+}
+
+extension DifferentialGPSStation: DataSourceLocation, GeoPackageExportable {
+
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

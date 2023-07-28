@@ -8,24 +8,24 @@
 import Foundation
 
 class BookmarkViewModel: ObservableObject {
-    var dataSource: (any DataSource)? {
+    var bookmarkable: (any Bookmarkable)? {
         didSet {
-            bookmark = dataSource?.bookmark
+            bookmark = bookmarkable?.bookmark
         }
     }
     
     @Published var bookmark: Bookmark?
     
     func createBookmark(notes: String) {
-        guard let dataSource = dataSource else {
+        guard let bookmarkable = bookmarkable else {
             return
         }
         let viewContext = PersistenceController.current.viewContext
         viewContext.perform {
             let bookmark = Bookmark(context: viewContext)
             bookmark.notes = notes
-            bookmark.dataSource = dataSource.key
-            bookmark.id = dataSource.itemKey
+            bookmark.dataSource = bookmarkable.key
+            bookmark.id = bookmarkable.itemKey
             do {
                 try viewContext.save()
             } catch {

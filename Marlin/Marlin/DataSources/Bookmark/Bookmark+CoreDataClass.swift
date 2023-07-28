@@ -8,6 +8,18 @@
 import Foundation
 import CoreData
 
+protocol Bookmarkable {
+    var key: String { get }
+    var itemKey: String? { get }
+    var bookmark: Bookmark? { get }
+}
+
+extension Bookmarkable {
+    var bookmark: Bookmark? {
+        return try? PersistenceController.current.viewContext.fetchFirst(Bookmark.self, predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey ?? "", key))
+    }
+}
+
 class Bookmark: NSManagedObject {
     
     func getDataSource() -> (any DataSource)? {

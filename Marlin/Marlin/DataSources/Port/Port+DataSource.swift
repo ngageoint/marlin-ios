@@ -9,10 +9,13 @@ import Foundation
 import UIKit
 import CoreData
 
-extension Port: DataSourceLocation, GeoPackageExportable {
+extension Port: Bookmarkable {
     var itemKey: String? {
         return "\(portNumber)"
     }
+}
+
+extension Port: DataSourceLocation, GeoPackageExportable {
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

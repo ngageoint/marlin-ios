@@ -9,10 +9,13 @@ import Foundation
 import UIKit
 import CoreData
 
-extension RadioBeacon: DataSourceLocation, GeoPackageExportable {
+extension RadioBeacon: Bookmarkable {
     var itemKey: String? {
         return "\(volumeNumber ?? "")--\(featureNumber)"
     }
+}
+
+extension RadioBeacon: DataSourceLocation, GeoPackageExportable {
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

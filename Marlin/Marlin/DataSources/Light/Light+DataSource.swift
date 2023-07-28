@@ -14,12 +14,13 @@ import sf_ios
 import geopackage_ios
 import ExceptionCatcher
 
-extension Light: DataSourceLocation, GeoPackageExportable {
-    
+extension Light: Bookmarkable {
     var itemKey: String? {
         return "\(featureNumber ?? "")--\(volumeNumber ?? "")--\(characteristicNumber)"
     }
-    
+}
+
+extension Light: DataSourceLocation, GeoPackageExportable {
     func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
         var geometryByColor: [UIColor:SFGeometry] = [:]
         if let lightSectors = lightSectors {

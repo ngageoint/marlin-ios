@@ -9,12 +9,14 @@ import Foundation
 import UIKit
 import CoreData
 
-extension ElectronicPublication: DataSource {
-    static let backgroundDownloadIdentifier: String = { "\(key)Download" }()
-    
+extension ElectronicPublication: Bookmarkable {
     var itemKey: String? {
         return s3Key
     }
+}
+
+extension ElectronicPublication: DataSource {
+    static let backgroundDownloadIdentifier: String = { "\(key)Download" }()
     
     var color: UIColor {
         ElectronicPublication.color

@@ -9,10 +9,13 @@ import Foundation
 import UIKit
 import CoreData
 
-extension Modu: DataSourceLocation, GeoPackageExportable {
+extension Modu: Bookmarkable {
     var itemKey: String? {
         return name
     }
+}
+
+extension Modu: DataSourceLocation, GeoPackageExportable {
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BookmarkButton: View {
-    var dataSource: any DataSource
+    var bookmarkable: any Bookmarkable
     @State var bookmarkBottomSheet: Bool = false
     @State var notes: String = ""
     @ObservedObject var viewModel: BookmarkViewModel = BookmarkViewModel()
@@ -72,7 +72,7 @@ struct BookmarkButton: View {
             .presentationDetents([.height(200)])
         }
         .onAppear {
-            viewModel.dataSource = dataSource
+            viewModel.bookmarkable = bookmarkable
         }
     }
 }

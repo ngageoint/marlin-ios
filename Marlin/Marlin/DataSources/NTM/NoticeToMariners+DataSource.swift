@@ -12,9 +12,6 @@ import Combine
 import CoreLocation
 
 extension NoticeToMariners: DataSource {
-    var itemKey: String? {
-        return "\(odsEntryId)"
-    }
     static var properties: [DataSourceProperty] {
         return []
     }
@@ -44,6 +41,12 @@ extension NoticeToMariners: DataSource {
     static func postProcess() {}
     var coordinate: CLLocationCoordinate2D? {
         return nil
+    }
+}
+
+extension NoticeToMariners: Bookmarkable {
+    var itemKey: String? {
+        return "\(odsEntryId)"
     }
 }
 

@@ -12,10 +12,13 @@ import MapKit
 import sf_ios
 import sf_wkt_ios
 
-extension NavigationalWarning: DataSourceLocation, GeoPackageExportable {
+extension NavigationalWarning: Bookmarkable {
     var itemKey: String? {
         return "\(msgYear)--\(msgNumber)--\(navArea ?? "")"
     }
+}
+
+extension NavigationalWarning: DataSourceLocation, GeoPackageExportable {
     var sfGeometry: SFGeometry? {
         let collection = SFGeometryCollection()
         if let locations = locations {

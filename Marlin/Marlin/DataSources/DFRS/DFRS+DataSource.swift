@@ -10,10 +10,14 @@ import UIKit
 import CoreData
 import CoreLocation
 
-extension DFRS: DataSourceLocation {
+extension DFRS: Bookmarkable {
     var itemKey: String? {
         return stationNumber
     }
+}
+
+extension DFRS: DataSourceLocation {
+
     var color: UIColor {
         return DFRS.color
     }

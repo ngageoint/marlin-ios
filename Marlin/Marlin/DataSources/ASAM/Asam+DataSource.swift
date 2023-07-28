@@ -10,11 +10,13 @@ import UIKit
 import CoreData
 import Combine
 
-extension Asam: DataSourceLocation, GeoPackageExportable {
+extension Asam: Bookmarkable {
     var itemKey: String? {
         return reference
     }
-    
+}
+
+extension Asam: DataSourceLocation, GeoPackageExportable {
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }
