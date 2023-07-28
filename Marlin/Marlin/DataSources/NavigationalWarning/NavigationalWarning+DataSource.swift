@@ -13,6 +13,9 @@ import sf_ios
 import sf_wkt_ios
 
 extension NavigationalWarning: DataSourceLocation, GeoPackageExportable {
+    var itemKey: String? {
+        return "\(msgYear)--\(msgNumber)--\(navArea ?? "")"
+    }
     var sfGeometry: SFGeometry? {
         let collection = SFGeometryCollection()
         if let locations = locations {

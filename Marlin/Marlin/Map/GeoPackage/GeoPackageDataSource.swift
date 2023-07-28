@@ -10,6 +10,9 @@ import SwiftUI
 import geopackage_ios
 
 class GeoPackageFeatureItem: NSObject, DataSourceLocation, DataSourceViewBuilder {
+    var itemKey: String? {
+        return "\(layerName ?? "")--\(featureId)"
+    }
     var coordinate: CLLocationCoordinate2D
     
     var latitude: Double { coordinate.latitude }

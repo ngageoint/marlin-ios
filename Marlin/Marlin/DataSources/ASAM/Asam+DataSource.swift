@@ -11,6 +11,10 @@ import CoreData
 import Combine
 
 extension Asam: DataSourceLocation, GeoPackageExportable {
+    var itemKey: String? {
+        return reference
+    }
+    
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

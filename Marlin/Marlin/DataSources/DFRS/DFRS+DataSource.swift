@@ -11,6 +11,9 @@ import CoreData
 import CoreLocation
 
 extension DFRS: DataSourceLocation {
+    var itemKey: String? {
+        return stationNumber
+    }
     var color: UIColor {
         return DFRS.color
     }

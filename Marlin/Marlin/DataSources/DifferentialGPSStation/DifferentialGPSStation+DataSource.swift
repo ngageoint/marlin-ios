@@ -10,6 +10,9 @@ import UIKit
 import CoreData
 
 extension DifferentialGPSStation: DataSourceLocation, GeoPackageExportable {
+    var itemKey: String? {
+        return "\(featureNumber)--\(volumeNumber ?? "")"
+    }
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

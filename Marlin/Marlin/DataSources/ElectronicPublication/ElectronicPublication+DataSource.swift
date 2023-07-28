@@ -12,6 +12,10 @@ import CoreData
 extension ElectronicPublication: DataSource {
     static let backgroundDownloadIdentifier: String = { "\(key)Download" }()
     
+    var itemKey: String? {
+        return s3Key
+    }
+    
     var color: UIColor {
         ElectronicPublication.color
     }

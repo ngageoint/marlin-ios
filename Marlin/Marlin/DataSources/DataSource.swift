@@ -154,6 +154,9 @@ protocol DataSource {
     static var dateFormatter: DateFormatter { get }
     
     static func fetchRequest(filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>?
+    
+    var itemKey: String? { get }
+    var bookmark: Bookmark? { get }
 }
 
 extension DataSource {
@@ -213,6 +216,10 @@ extension DataSource {
     
     var metricsKey: String {
         return Self.metricsKey
+    }
+    
+    var bookmark: Bookmark? {
+        return try? PersistenceController.current.viewContext.fetchFirst(Bookmark.self, predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey ?? "", key))
     }
 }
 

@@ -10,6 +10,9 @@ import CoreData
 import MapKit
 
 class LightMapViewModel: NSObject, LightMapViewModelProtocol {
+    var itemKey: String? {
+        return "\(featureNumber ?? "")--\(volumeNumber ?? "")--\(characteristicNumber)"
+    }
     static var metricsKey: String = Light.metricsKey
     
     static var properties: [DataSourceProperty] = Light.properties

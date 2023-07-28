@@ -12,6 +12,9 @@ import Combine
 import CoreLocation
 
 extension NoticeToMariners: DataSource {
+    var itemKey: String? {
+        return "\(odsEntryId)"
+    }
     static var properties: [DataSourceProperty] {
         return []
     }

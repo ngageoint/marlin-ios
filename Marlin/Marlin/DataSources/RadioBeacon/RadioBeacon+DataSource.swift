@@ -10,6 +10,9 @@ import UIKit
 import CoreData
 
 extension RadioBeacon: DataSourceLocation, GeoPackageExportable {
+    var itemKey: String? {
+        return "\(volumeNumber ?? "")--\(featureNumber)"
+    }
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

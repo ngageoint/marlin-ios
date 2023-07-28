@@ -16,6 +16,10 @@ import ExceptionCatcher
 
 extension Light: DataSourceLocation, GeoPackageExportable {
     
+    var itemKey: String? {
+        return "\(featureNumber ?? "")--\(volumeNumber ?? "")--\(characteristicNumber)"
+    }
+    
     func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
         var geometryByColor: [UIColor:SFGeometry] = [:]
         if let lightSectors = lightSectors {

@@ -10,6 +10,9 @@ import UIKit
 import MapKit
 
 class CommonDataSource: NSObject, DataSource {
+    var itemKey: String? {
+        return nil
+    }
     static var metricsKey: String = "Common"
     
     static var key: String = "Common"
