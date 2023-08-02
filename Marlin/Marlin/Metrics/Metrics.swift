@@ -92,6 +92,24 @@ class Metrics {
         appRoute(["\(dataSource.metricsKey)", "detail"])
     }
     
+    func geoPackageExportView() {
+        NSLog("Record GeoPackage Export View")
+        appRoute(["geoPackageExport"])
+    }
+    
+    func geoPackageExport(dataSources: [any DataSource.Type]) {
+        NSLog("Record GeoPackage Export - \(dataSources.map {$0.key}.joined(separator: ","))")
+        if let tracker = MatomoTracker.shared {
+            let event = Event(tracker: tracker,
+                              action: ["export geopackage"],
+                              eventCategory: "download",
+                              eventAction: "export geopackage",
+                              eventName: dataSources.map {$0.metricsKey}.joined(separator: ","),
+                              isCustomAction: true )
+            MatomoTracker.shared?.track(event)
+        }
+    }
+    
     func search(query: String, resultCount: Int) {
         NSLog("Record search")
         MatomoTracker.shared?.trackSearch(query: query, category: nil, resultCount: resultCount)
