@@ -8,7 +8,11 @@
 import SwiftUI
 import MapKit
 
-struct PortSummaryView: View {
+struct PortSummaryView: DataSourceSummaryView {
+    var showSectionHeader: Bool = false
+    
+    var bookmark: Bookmark?
+    
     @EnvironmentObject var locationManager: LocationManager
     @State var distance: String?
 
@@ -50,6 +54,8 @@ struct PortSummaryView: View {
                         .secondary()
                 }
             }
+            BookmarkNotes(notes: bookmark?.notes)
+
             DataSourceActionBar(data: port, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
         .onAppear {

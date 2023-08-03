@@ -10,6 +10,7 @@ import SwiftUI
 import geopackage_ios
 
 class GeoPackageFeatureItem: NSObject, DataSourceLocation, DataSourceViewBuilder {
+    typealias Summary = GeoPackageFeatureItemSummaryView
     var itemKey: String? {
         return "\(layerName ?? "")--\(featureId)"
     }
@@ -58,8 +59,12 @@ class GeoPackageFeatureItem: NSObject, DataSourceLocation, DataSourceViewBuilder
         AnyView(GeoPackageFeatureItemDetailView(featureItem: self))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil, showTitle: Bool = true) -> AnyView {
-        AnyView(GeoPackageFeatureItemSummaryView(featureItem: self))
+    func summaryView() -> Summary {
+        GeoPackageFeatureItemSummaryView(featureItem: self)
+    }
+    
+    var summary: GeoPackageFeatureItemSummaryView {
+        GeoPackageFeatureItemSummaryView(featureItem: self)
     }
     
     static var properties: [DataSourceProperty] = []

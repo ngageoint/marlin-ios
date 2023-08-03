@@ -32,6 +32,8 @@
 	<true/>
 	<key>ntmDataSourceEnabled</key>
 	<true/>
+	<key>bookmarkDataSourceEnabled</key>
+	<true/>
 	<key>forceReloadDate</key>
 	<date>2022-12-19T17:52:33Z</date>
 	<key>metricsEnabled</key>

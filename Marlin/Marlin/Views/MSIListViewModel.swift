@@ -53,7 +53,7 @@ class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResu
         } else {
             self.sortDescriptors = userSort
         }
-        if self.sortDescriptors[0].section {
+        if !self.sortDescriptors.isEmpty && self.sortDescriptors[0].section {
             self.sectionKey = self.sortDescriptors[0].property.key
         } else {
             self.sectionKey = nil

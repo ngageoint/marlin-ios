@@ -218,7 +218,11 @@ extension DataSource {
 
 protocol DataSourceViewBuilder: DataSource {
     var detailView: AnyView { get }
-    func summaryView(showMoreDetails: Bool, showSectionHeader: Bool, mapName: String?, showTitle: Bool) -> AnyView
+    associatedtype Summary: DataSourceSummaryView
+    
+//    func summaryView() -> Summary
     var itemTitle: String { get }
+    @ViewBuilder
+    var summary: Summary { get }
 }
 

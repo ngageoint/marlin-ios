@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 extension NavigationalWarning: DataSourceViewBuilder {
+//    typealias Summary = NavigationalWarningSummaryView
     var itemTitle: String {
         return "\(self.navAreaName) \(String(self.msgNumber))/\(String(self.msgYear)) (\(self.subregion ?? ""))"
     }
@@ -16,7 +17,11 @@ extension NavigationalWarning: DataSourceViewBuilder {
         AnyView(NavigationalWarningDetailView(navigationalWarning: self))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil, showTitle: Bool = true) -> AnyView {
-        AnyView(NavigationalWarningSummaryView(navigationalWarning: self, showMoreDetails: showMoreDetails, mapName: mapName, showTitle: showTitle))
+//    func summaryView() -> some DataSourceSummaryView {
+//        NavigationalWarningSummaryView(navigationalWarning: self)
+//    }
+    
+    var summary: some DataSourceSummaryView {
+        NavigationalWarningSummaryView(navigationalWarning: self)
     }
 }

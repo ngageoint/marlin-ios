@@ -9,6 +9,8 @@ import Foundation
 import SwiftUI
 
 extension DifferentialGPSStation: DataSourceViewBuilder {
+//    typealias Summary = DifferentialGPSStationSummaryView
+    
     var itemTitle: String {
         return "\(self.name ?? "\(self.featureNumber)")"
     }
@@ -17,7 +19,11 @@ extension DifferentialGPSStation: DataSourceViewBuilder {
         AnyView(DifferentialGPSStationDetailView(differentialGPSStation: self))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil, showTitle: Bool = true) -> AnyView {
-        AnyView(DifferentialGPSStationSummaryView(differentialGPSStation: self, showMoreDetails: showMoreDetails, showSectionHeader: showSectionHeader, showTitle: showTitle))
+//    func summaryView() -> Summary {
+//        DifferentialGPSStationSummaryView(differentialGPSStation: self)
+//    }
+    
+    var summary: some DataSourceSummaryView {
+        DifferentialGPSStationSummaryView(differentialGPSStation: self)
     }
 }

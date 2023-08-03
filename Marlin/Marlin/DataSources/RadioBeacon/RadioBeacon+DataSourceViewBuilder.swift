@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 extension RadioBeacon: DataSourceViewBuilder {
+//    typealias Summary = RadioBeaconSummaryView
     var itemTitle: String {
         return "\(self.name ?? "\(self.featureNumber)")"
     }
@@ -17,7 +18,11 @@ extension RadioBeacon: DataSourceViewBuilder {
         AnyView(RadioBeaconDetailView(radioBeacon: self))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil, showTitle: Bool = true) -> AnyView {
-        AnyView(RadioBeaconSummaryView(radioBeacon: self, showMoreDetails: showMoreDetails, showSectionHeader: showSectionHeader))
+//    func summaryView() -> Summary {
+//        RadioBeaconSummaryView(radioBeacon: self)
+//    }
+    
+    var summary: some DataSourceSummaryView {
+        RadioBeaconSummaryView(radioBeacon: self)
     }
 }

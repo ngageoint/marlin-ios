@@ -22,10 +22,10 @@ struct DataSourceActionBar: View {
             
             Spacer()
             Group {
-                if let bookmarkable = data as? Bookmarkable {
-                    BookmarkButton(bookmarkable: bookmarkable)
+                if let bookmarkable = data as? Bookmarkable, let itemKey = bookmarkable.itemKey {
+                    BookmarkButton(itemKey: itemKey, dataSource: bookmarkable.key)
                 }
-                ShareButton(shareText: data.description, dataSource: data as? DataSourceViewBuilder)
+                ShareButton(shareText: data.description, dataSource: data as? (any DataSourceViewBuilder))
                 if showFocusButton {
                     FocusButton(data: data)
                 }

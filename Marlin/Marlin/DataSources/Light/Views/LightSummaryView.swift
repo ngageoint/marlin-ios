@@ -7,7 +7,10 @@
 
 import SwiftUI
 
-struct LightSummaryView: View {
+struct LightSummaryView: DataSourceSummaryView {
+    var showSectionHeader: Bool = false
+    
+    var bookmark: Bookmark?
     
     var light: Light
     var showMoreDetails: Bool = false
@@ -29,6 +32,8 @@ struct LightSummaryView: View {
                 Text(structure)
                     .secondary()
             }
+            BookmarkNotes(notes: bookmark?.notes)
+
             DataSourceActionBar(data: light, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }

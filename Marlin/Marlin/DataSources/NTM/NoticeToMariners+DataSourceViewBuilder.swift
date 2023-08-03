@@ -9,6 +9,8 @@ import Foundation
 import SwiftUI
 
 extension NoticeToMariners: DataSourceViewBuilder {
+//    typealias Summary = NoticeToMarinersSummaryView
+    
     var itemTitle: String {
         return "\(self.title ?? "") \(self.isFullPublication ? (self.fileExtension ?? "") : "")"
     }
@@ -16,7 +18,11 @@ extension NoticeToMariners: DataSourceViewBuilder {
         AnyView(NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: self.noticeNumber)))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil, showTitle: Bool = true) -> AnyView {
-        AnyView(NoticeToMarinersSummaryView(noticeToMariners: self))
+//    func summaryView() -> Summary {
+//        NoticeToMarinersSummaryView(noticeToMariners: self)
+//    }
+    
+    var summary: some DataSourceSummaryView {
+        NoticeToMarinersSummaryView(noticeToMariners: self)
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-extension Asam: DataSourceViewBuilder {
+extension Asam: DataSourceViewBuilder {    
     var itemTitle: String {
         return "\(self.hostility ?? "")\(self.hostility != nil && self.victim != nil ? ": " : "")\(self.victim ?? "")"
     }
@@ -16,7 +16,7 @@ extension Asam: DataSourceViewBuilder {
         AnyView(AsamDetailView(asam: self))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil, showTitle: Bool = true) -> AnyView {
-        AnyView(AsamSummaryView(asam: self, showMoreDetails: showMoreDetails, showTitle: showTitle))
+    var summary: some DataSourceSummaryView {
+        AsamSummaryView(asam: self)
     }
 }

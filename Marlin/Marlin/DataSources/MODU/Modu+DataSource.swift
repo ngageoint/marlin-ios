@@ -13,6 +13,17 @@ extension Modu: Bookmarkable {
     var itemKey: String? {
         return name
     }
+    
+    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
+        return getModu(context: context, name: itemKey)
+    }
+    
+    static func getModu(context: NSManagedObjectContext, name: String?) -> Modu? {
+        if let name = name {
+            return context.fetchFirst(Modu.self, key: "name", value: name)
+        }
+        return nil
+    }
 }
 
 extension Modu: DataSourceLocation, GeoPackageExportable {

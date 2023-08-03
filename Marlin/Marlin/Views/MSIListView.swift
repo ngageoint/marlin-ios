@@ -338,7 +338,10 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
             
             ZStack {
                 HStack {
-                    item.summaryView(showMoreDetails: false, showSectionHeader: false, mapName: nil, showTitle: true)
+                    item.summary
+                        .setShowMoreDetails(false)
+                        .setShowSectionHeader(false)
+                        .setShowTitle(true)
                 }
                 .padding(.all, 16)
                 .card()

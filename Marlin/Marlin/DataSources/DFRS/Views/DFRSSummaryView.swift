@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct DFRSSummaryView: View {
+struct DFRSSummaryView: DataSourceSummaryView {
+    var bookmark: Bookmark?
     
     var dfrs: DFRS
     var showMoreDetails: Bool = false

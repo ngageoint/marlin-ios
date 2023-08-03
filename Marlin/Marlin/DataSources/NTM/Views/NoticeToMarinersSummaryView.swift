@@ -7,8 +7,12 @@
 
 import SwiftUI
 
-struct NoticeToMarinersSummaryView: View {
+struct NoticeToMarinersSummaryView: DataSourceSummaryView {
+    var showTitle: Bool = false
     
+    var showSectionHeader: Bool = false
+    
+    var bookmark: Bookmark?
     @ObservedObject var noticeToMariners: NoticeToMariners
     var showMoreDetails: Bool = false
     

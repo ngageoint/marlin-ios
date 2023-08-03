@@ -29,7 +29,8 @@ struct RadioBeaconDetailView: View {
                         DataSourceLocationMapView(dataSourceLocation: radioBeacon, mapName: "Radio Beacon Detail Map", mixins: [RadioBeaconMap(fetchPredicate: predicate)])
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
-                    radioBeacon.summaryView(showSectionHeader: true)
+                    radioBeacon.summary
+                        .setShowSectionHeader(true)
                         .padding(.all, 16)
                 }
                 .card()

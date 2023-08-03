@@ -11,6 +11,7 @@ import OSLog
 
 final class DownloadManager: NSObject {        
     var urlToDownloadableMap: [URL: Downloadable] = [:]
+    var urlToDownloadTask: [URL: URLSessionDownloadTask] = [:]
     
     static let shared: DownloadManager = DownloadManager()
     // since it is impossible to stub http requests on a background session, this is purely to be able
@@ -59,6 +60,25 @@ final class DownloadManager: NSObject {
                 
                 let downloadTask = urlSession.downloadTask(with: urlRequest)
                 downloadTask.resume()
+                urlToDownloadTask[requestUrl] = downloadTask
+            }
+        }
+    }
+    
+    func cancel(downloadable: Downloadable) {
+        guard let requestUrl = downloadable.remoteLocation else {
+            return
+        }
+        let task = urlToDownloadTask[requestUrl]
+        task?.cancel()
+        urlToDownloadTask.removeValue(forKey: requestUrl)
+        urlToDownloadableMap.removeValue(forKey: requestUrl)
+        PersistenceController.current.perform {
+            downloadable.objectWillChange.send()
+            downloadable.isDownloading = false
+            downloadable.isDownloaded = false
+            DispatchQueue.main.async {
+                try? PersistenceController.current.save()
             }
         }
     }
@@ -112,6 +132,9 @@ extension DownloadManager: URLSessionDownloadDelegate {
         guard let url = downloadTask.currentRequest?.url, let downloadable = urlToDownloadableMap[url] else {
             return
         }
+        
+        urlToDownloadTask.removeValue(forKey: url)
+        urlToDownloadableMap.removeValue(forKey: url)
         
         var destinationUrl: URL?
         

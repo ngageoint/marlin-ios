@@ -148,8 +148,13 @@ struct MarlinBottomSheet: View {
                 }
                 
                 if let item = itemList.bottomSheetItems?[selectedItem] {
-                    if let dataSource = item.item as? DataSourceViewBuilder {
-                        dataSource.summaryView(showMoreDetails: true, showSectionHeader: true, mapName: item.mapName, showTitle: true)
+                    if let dataSource = item.item as? (any DataSourceViewBuilder) {
+                        AnyView(
+                            dataSource.summary
+                                .setShowMoreDetails(true)
+                                .setShowSectionHeader(true)
+                                .setShowTitle(true)
+                            )
                             .transition(.opacity)
                     }
                 }

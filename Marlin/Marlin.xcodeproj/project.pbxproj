@@ -343,6 +343,10 @@
 		F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89D28946C8900E7CCE2 /* RailItem.swift */; };
 		F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */; };
 		F7EB1B0E2A0D7FC200D1433B /* SFGeometryExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EB1B0D2A0D7FC200D1433B /* SFGeometryExtensions.swift */; };
+		F7EFFEBF2A7C0F300097E5EF /* DataSourceSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEBE2A7C0F300097E5EF /* DataSourceSummaryView.swift */; };
+		F7EFFEC12A7C0FC80097E5EF /* BookmarkNotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC02A7C0FC80097E5EF /* BookmarkNotes.swift */; };
+		F7EFFEC32A7C10C90097E5EF /* BookmarkSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC22A7C10C90097E5EF /* BookmarkSummary.swift */; };
+		F7EFFEC52A7C113A0097E5EF /* DataSourceIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC42A7C113A0097E5EF /* DataSourceIcon.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
 		F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59785285A206700F9B32E /* AsamDetailView.swift */; };
 		F7F59789285A277000F9B32E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59788285A277000F9B32E /* Card.swift */; };
@@ -779,6 +783,10 @@
 		F7E8C89D28946C8900E7CCE2 /* RailItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailItem.swift; sourceTree = "<group>"; };
 		F7E8C89F2894701C00E7CCE2 /* DataSourceRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceRail.swift; sourceTree = "<group>"; };
 		F7EB1B0D2A0D7FC200D1433B /* SFGeometryExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFGeometryExtensions.swift; sourceTree = "<group>"; };
+		F7EFFEBE2A7C0F300097E5EF /* DataSourceSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceSummaryView.swift; sourceTree = "<group>"; };
+		F7EFFEC02A7C0FC80097E5EF /* BookmarkNotes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkNotes.swift; sourceTree = "<group>"; };
+		F7EFFEC22A7C10C90097E5EF /* BookmarkSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkSummary.swift; sourceTree = "<group>"; };
+		F7EFFEC42A7C113A0097E5EF /* DataSourceIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceIcon.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
 		F7F59785285A206700F9B32E /* AsamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDetailView.swift; sourceTree = "<group>"; };
 		F7F59788285A277000F9B32E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
@@ -972,6 +980,8 @@
 				F7F59780285A1B6000F9B32E /* MODU */,
 				F707BA7528760894006A94C4 /* Light */,
 				F74B9B0528B7CDC20097D448 /* RadioBeacon */,
+				F7EFFEBE2A7C0F300097E5EF /* DataSourceSummaryView.swift */,
+				F7EFFEC42A7C113A0097E5EF /* DataSourceIcon.swift */,
 			);
 			path = DataSources;
 			sourceTree = "<group>";
@@ -1482,6 +1492,8 @@
 				F7B84E1F2A72C83B00640C76 /* Bookmark+CoreDataClass.swift */,
 				F7B84E212A72DEB200640C76 /* BookmarkButton.swift */,
 				F7B84E232A7309A600640C76 /* BookmarkViewModel.swift */,
+				F7EFFEC02A7C0FC80097E5EF /* BookmarkNotes.swift */,
+				F7EFFEC22A7C10C90097E5EF /* BookmarkSummary.swift */,
 			);
 			path = Bookmark;
 			sourceTree = "<group>";
@@ -2448,6 +2460,7 @@
 				F7B84E222A72DEB200640C76 /* BookmarkButton.swift in Sources */,
 				F7D671F1287484FE00758F1C /* MarlinUserDefaults.swift in Sources */,
 				F7364E3E2A1E46860098F243 /* NavigationalWarningAreasView.swift in Sources */,
+				F7EFFEBF2A7C0F300097E5EF /* DataSourceSummaryView.swift in Sources */,
 				F71DF4862857954A00686951 /* Modu+CoreDataClass.swift in Sources */,
 				F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */,
 				F7D671E72871D46000758F1C /* SideMenuContent.swift in Sources */,
@@ -2514,6 +2527,7 @@
 				F7D8FA51293A999600E7D0A1 /* BooleanFilter.swift in Sources */,
 				F71D287528BE96EB00F1775C /* DFRSMap.swift in Sources */,
 				F7F59795285BE27400F9B32E /* Property.swift in Sources */,
+				F7EFFEC12A7C0FC80097E5EF /* BookmarkNotes.swift in Sources */,
 				F7F597B02866241100F9B32E /* NavigationalWarningsAreaDataSource.swift in Sources */,
 				F7FFB2DA28D61B3A00C31AA3 /* DFRS+DataSource.swift in Sources */,
 				F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */,
@@ -2528,6 +2542,7 @@
 				F7F597AE2864DE2900F9B32E /* NavigationalWarningDetailView.swift in Sources */,
 				F7D8FA1A2922BB0400E7D0A1 /* NoticeToMarinersSummaryView.swift in Sources */,
 				F71DF4A52859120A00686951 /* BottomSheetView.swift in Sources */,
+				F7EFFEC32A7C10C90097E5EF /* BookmarkSummary.swift in Sources */,
 				F70BCE9D29D2104D00AEF73D /* GeoPackage.swift in Sources */,
 				F71D287F28C293A000F1775C /* AboutView.swift in Sources */,
 				F7FFB2FA28D6349900C31AA3 /* Port+DataSourceViewBuilder.swift in Sources */,
@@ -2606,6 +2621,7 @@
 				F7D8FA212923F99C00E7D0A1 /* NoticeToMarinersFullNoticeView.swift in Sources */,
 				F79168FE28B56031004FFEBA /* PortMap.swift in Sources */,
 				F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */,
+				F7EFFEC52A7C113A0097E5EF /* DataSourceIcon.swift in Sources */,
 				F7D8FA4F293A960E00E7D0A1 /* StringFilter.swift in Sources */,
 				F7C23E0A29084F280002A7DF /* ElectronicPublicationSummaryView.swift in Sources */,
 				F7FFB2F628D6340B00C31AA3 /* Port+MapImage.swift in Sources */,

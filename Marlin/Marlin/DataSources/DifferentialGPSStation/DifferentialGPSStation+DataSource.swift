@@ -13,6 +13,21 @@ extension DifferentialGPSStation: Bookmarkable {
     var itemKey: String? {
         return "\(featureNumber)--\(volumeNumber ?? "")"
     }
+    
+    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
+        if let split = itemKey?.split(separator: "--"), split.count == 2 {
+            return getDifferentialGPSStation(context: context, featureNumber: "\(split[0])", volumeNumber: "\(split[1])")
+        }
+        
+        return nil
+    }
+    
+    static func getDifferentialGPSStation(context: NSManagedObjectContext, featureNumber: String?, volumeNumber: String?) -> DifferentialGPSStation? {
+        if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
+            return try? context.fetchFirst(DifferentialGPSStation.self, predicate: NSPredicate(format: "featureNumber = %@ AND volumeNumber = %@", argumentArray: [featureNumber, volumeNumber]))
+        }
+        return nil
+    }
 }
 
 extension DifferentialGPSStation: DataSourceLocation, GeoPackageExportable {

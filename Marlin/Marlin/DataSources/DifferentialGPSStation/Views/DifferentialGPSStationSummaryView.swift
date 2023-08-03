@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct DifferentialGPSStationSummaryView: View {
+struct DifferentialGPSStationSummaryView: DataSourceSummaryView {
+    var bookmark: Bookmark?
     
     var differentialGPSStation: DifferentialGPSStation
     var showMoreDetails: Bool = false
@@ -45,6 +46,8 @@ struct DifferentialGPSStationSummaryView: View {
                 Text(remarks)
                     .secondary()
             }
+            BookmarkNotes(notes: bookmark?.notes)
+
             DataSourceActionBar(data: differentialGPSStation, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }

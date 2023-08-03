@@ -49,6 +49,8 @@ struct DataSourceListView: View {
             ElectronicPublicationsList()
         } else if dataSource.key == NoticeToMariners.key {
             NoticeToMarinersView(path: $path)
+        } else if dataSource.key == Bookmark.key {
+            MSIListView<Bookmark, EmptyView, EmptyView>(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
         }
     }
 }

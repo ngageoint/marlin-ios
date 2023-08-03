@@ -7,8 +7,11 @@
 
 import SwiftUI
 
-struct ModuSummaryView: View {
-        
+struct ModuSummaryView: DataSourceSummaryView {
+    var showSectionHeader: Bool = false
+    
+    var bookmark: Bookmark?
+    
     var modu: Modu
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
@@ -33,6 +36,8 @@ struct ModuSummaryView: View {
             Text("\(modu.specialStatus ?? "")")
                 .lineLimit(1)
                 .secondary()
+            BookmarkNotes(notes: bookmark?.notes)
+
             DataSourceActionBar(data: modu, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }

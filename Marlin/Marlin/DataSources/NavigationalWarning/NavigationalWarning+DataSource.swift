@@ -16,6 +16,20 @@ extension NavigationalWarning: Bookmarkable {
     var itemKey: String? {
         return "\(msgYear)--\(msgNumber)--\(navArea ?? "")"
     }
+    
+    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
+        if let split = itemKey?.split(separator: "--"), split.count == 3 {
+            return getNavigationalWarning(context: context, msgYear: Int64(split[0]) ?? 0, msgNumber: Int64(split[1]) ?? 0, navArea: "\(split[2])")
+        }
+        return nil
+    }
+    
+    static func getNavigationalWarning(context: NSManagedObjectContext, msgYear: Int64, msgNumber: Int64, navArea: String?) -> NavigationalWarning? {
+        if let navArea = navArea {
+            return try? context.fetchFirst(NavigationalWarning.self, predicate: NSPredicate(format: "msgYear = %d AND msgNumber = %d AND navArea = %@", argumentArray: [msgYear, msgNumber, navArea]))
+        }
+        return nil
+    }
 }
 
 extension NavigationalWarning: DataSourceLocation, GeoPackageExportable {

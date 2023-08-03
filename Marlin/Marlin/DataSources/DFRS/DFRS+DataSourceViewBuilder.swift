@@ -9,15 +9,21 @@ import Foundation
 import SwiftUI
 
 extension DFRS: DataSourceViewBuilder {
+//    func summaryView() -> DFRSSummaryView {
+//        DFRSSummaryView(dfrs: self)
+//    }
+    
+    var summary: some DataSourceSummaryView {
+        DFRSSummaryView(dfrs: self)
+    }
+    
+//    typealias Summary = DFRSSummaryView
+    
     var itemTitle: String {
         return "\(self.stationName ?? "")"
     }
     
     var detailView: AnyView {
         AnyView(DFRSDetailView(dfrs: self))
-    }
-    
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil, showTitle: Bool = true) -> AnyView {
-        AnyView(DFRSSummaryView(dfrs: self, showMoreDetails: showMoreDetails, showSectionHeader: showSectionHeader, showTitle: showTitle))
     }
 }

@@ -7,7 +7,12 @@
 
 import SwiftUI
 
-struct ElectronicPublicationSummaryView: View {
+struct ElectronicPublicationSummaryView: DataSourceSummaryView {
+    var showTitle: Bool = false
+    
+    var showSectionHeader: Bool = false
+    
+    var bookmark: Bookmark?
     
     var electronicPublication: ElectronicPublication
     var showMoreDetails: Bool = false
@@ -31,6 +36,7 @@ struct ElectronicPublicationSummaryView: View {
                 Text("Upload Time: \(uploadTime.formatted())")
                     .overline()
             }
+            BookmarkNotes(notes: bookmark?.notes)
             ElectronicPublicationActionBar(electronicPublication: electronicPublication)
         }
     }

@@ -8,17 +8,18 @@
 import SwiftUI
 import MapKit
 
-struct NavigationalWarningSummaryView: View {
+struct NavigationalWarningSummaryView: DataSourceSummaryView {
+    var showSectionHeader: Bool = false
+    
+    var bookmark: Bookmark?
+    
     var navigationalWarning: NavigationalWarning
-    var showMoreDetails: Bool
+    var showMoreDetails: Bool = false
     var mapName: String?
     var showTitle: Bool = true
     
-    init(navigationalWarning: NavigationalWarning, showMoreDetails: Bool, mapName: String? = nil, showTitle: Bool = true) {
+    init(navigationalWarning: NavigationalWarning) {
         self.navigationalWarning = navigationalWarning
-        self.showMoreDetails = showMoreDetails
-        self.mapName = mapName
-        self.showTitle = showTitle
     }
     
     var body: some View {
@@ -33,6 +34,7 @@ struct NavigationalWarningSummaryView: View {
                 .multilineTextAlignment(.leading)
                 .lineLimit(8)
                 .secondary()
+            BookmarkNotes(notes: bookmark?.notes)
             NavigationalWarningActionBar(navigationalWarning: navigationalWarning, showMoreDetails: showMoreDetails, mapName: mapName)
         }
     }

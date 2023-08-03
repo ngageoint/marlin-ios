@@ -7,7 +7,14 @@
 
 import SwiftUI
 
-struct GeoPackageFeatureItemSummaryView: View {
+struct GeoPackageFeatureItemSummaryView: DataSourceSummaryView {
+    var showMoreDetails: Bool = true
+    
+    var showTitle: Bool = false
+    
+    var showSectionHeader: Bool = false
+    
+    var bookmark: Bookmark?
     var featureItem: GeoPackageFeatureItem
     
     var body: some View {

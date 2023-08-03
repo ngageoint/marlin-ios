@@ -13,6 +13,17 @@ extension ElectronicPublication: Bookmarkable {
     var itemKey: String? {
         return s3Key
     }
+    
+    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
+        return getElectronicPublication(context: context, s3Key: itemKey)
+    }
+    
+    static func getElectronicPublication(context: NSManagedObjectContext, s3Key: String?) -> ElectronicPublication? {
+        if let s3Key = s3Key {
+            return context.fetchFirst(ElectronicPublication.self, key: "s3Key", value: s3Key)
+        }
+        return nil
+    }
 }
 
 extension ElectronicPublication: DataSource {

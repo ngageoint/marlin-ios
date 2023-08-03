@@ -17,7 +17,7 @@ extension Port: DataSourceViewBuilder {
         AnyView(PortDetailView(port: self))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil, showTitle: Bool = true) -> AnyView {
-        AnyView(PortSummaryView(port: self, showMoreDetails: showMoreDetails, showTitle: showTitle))
+    var summary: some DataSourceSummaryView {
+        PortSummaryView(port: self)
     }
 }

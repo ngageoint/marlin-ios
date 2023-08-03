@@ -13,6 +13,17 @@ extension Port: Bookmarkable {
     var itemKey: String? {
         return "\(portNumber)"
     }
+    
+    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
+        return getPort(context: context, portNumber: itemKey)
+    }
+    
+    static func getPort(context: NSManagedObjectContext, portNumber: String?) -> Port? {
+        if let portNumber = portNumber {
+            return context.fetchFirst(Port.self, key: "portNumber", value: portNumber)
+        }
+        return nil
+    }
 }
 
 extension Port: DataSourceLocation, GeoPackageExportable {
