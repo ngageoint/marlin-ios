@@ -86,4 +86,8 @@ class NoticeToMariners: NSManagedObject, Downloadable {
         }
         DownloadManager.shared.download(downloadable: self)
     }
+    
+    func cancelDownload() {
+        DownloadManager.shared.cancel(downloadable: self)
+    }
 }

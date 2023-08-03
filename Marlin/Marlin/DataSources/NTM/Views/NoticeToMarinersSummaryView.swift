@@ -40,26 +40,57 @@ struct NoticeToMarinersSummaryView: DataSourceSummaryView {
                         .tint(Color.primaryColorVariant)
                 }
                 if noticeToMariners.isDownloaded, noticeToMariners.checkFileExists(), let url = URL(string: noticeToMariners.savePath) {
-                    Button("Delete") {
+                    Button(action: {
+                        NotificationCenter.default.post(name: .DocumentPreview, object: url)
+                    }) {
+                        Label(
+                            title: {},
+                            icon: { Image("preview")
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.primaryColorVariant)
+                            })
+                    }
+                    .accessibilityElement()
+                    .accessibilityLabel("Open")
+                    
+                    Button(action: {
                         noticeToMariners.deleteFile()
+                    }) {
+                        Label(
+                            title: {},
+                            icon: { Image(systemName: "trash.fill")
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.primaryColorVariant)
+                            })
                     }
-                    VStack {
-                        Button("Open") {
-                            NotificationCenter.default.post(name: .DocumentPreview, object: url)
-                        }
-                    }
+                    .accessibilityElement()
+                    .accessibilityLabel("Delete")
                 } else if !noticeToMariners.isDownloading {
-                    Link(destination: noticeToMariners.remoteLocation!, label: {
-                        Text("Open In Browser")
-                            .buttonStyle(MaterialButtonStyle(type: .text))
-                    })
-                    Button("Download") {
+                    Button(action: {
                         noticeToMariners.downloadFile()
+                    }) {
+                        Label(
+                            title: {},
+                            icon: { Image(systemName: "square.and.arrow.down")
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.primaryColorVariant)
+                            })
                     }
+                    .accessibilityElement()
+                    .accessibilityLabel("Download")
                 } else {
-                    Button("Re-Download") {
-                        noticeToMariners.downloadFile()
+                    Button(action: {
+                        noticeToMariners.cancelDownload()
+                    }) {
+                        Label(
+                            title: {},
+                            icon: { Image(systemName: "xmark.circle.fill")
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.primaryColorVariant)
+                            })
                     }
+                    .accessibilityElement()
+                    .accessibilityLabel("Cancel")
                 }
             }
             .buttonStyle(MaterialButtonStyle(type: .text))
