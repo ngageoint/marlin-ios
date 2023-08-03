@@ -33,6 +33,19 @@ struct ElectronicPublicationActionBar: View {
             }
             if electronicPublication.isDownloaded, electronicPublication.checkFileExists(), let url = URL(string: electronicPublication.savePath) {
                 Button(action: {
+                    NotificationCenter.default.post(name: .DocumentPreview, object: url)
+                }) {
+                    Label(
+                        title: {},
+                        icon: { Image("preview")
+                                .renderingMode(.template)
+                                .foregroundColor(Color.primaryColorVariant)
+                        })
+                }
+                .accessibilityElement()
+                .accessibilityLabel("Open")
+                
+                Button(action: {
                     electronicPublication.deleteFile()
                 }) {
                     Label(
@@ -44,20 +57,6 @@ struct ElectronicPublicationActionBar: View {
                 }
                 .accessibilityElement()
                 .accessibilityLabel("Delete")
-                VStack {
-                    Button(action: {
-                        NotificationCenter.default.post(name: .DocumentPreview, object: url)
-                    }) {
-                        Label(
-                            title: {},
-                            icon: { Image("preview")
-                                    .renderingMode(.template)
-                                    .foregroundColor(Color.primaryColorVariant)
-                            })
-                    }
-                    .accessibilityElement()
-                    .accessibilityLabel("Open")
-                }
             } else if !electronicPublication.isDownloading {
                 Button(action: {
                     electronicPublication.downloadFile()
