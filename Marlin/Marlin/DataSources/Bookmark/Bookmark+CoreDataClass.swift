@@ -61,8 +61,6 @@ class Bookmark: NSManagedObject, BatchImportable {
             return NavigationalWarning.getItem(context: context, itemKey: self.id)
         case NoticeToMariners.key:
             return NoticeToMariners.getItem(context: context, itemKey: self.id)
-        case DFRS.key:
-            print("dfrs")
         case DifferentialGPSStation.key:
             return DifferentialGPSStation.getItem(context: context, itemKey: self.id)
         case Light.key:
@@ -110,19 +108,13 @@ extension Bookmark: DataSource {
     }
 }
 
-extension Bookmark: DataSourceViewBuilder {
-//    typealias Summary = BookmarkSummary
-    
+extension Bookmark: DataSourceViewBuilder {    
     var itemTitle: String {
         return "Bookmark \(self.id ?? "")"
     }
     var detailView: AnyView {
         AnyView(Text("Bookmark detail \(self.dataSource ?? "") \(self.id ?? "")"))
     }
-    
-//    func summaryView() -> Summary {
-//        BookmarkSummary(bookmark: self)
-//    }
     
     var summary: some DataSourceSummaryView {
         BookmarkSummary(bookmark: self)

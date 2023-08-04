@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 extension Light: DataSourceViewBuilder {
-//    typealias Summary = LightSummaryView
     var itemTitle: String {
         return "\(self.name ?? "")"
     }
@@ -20,10 +19,6 @@ extension Light: DataSourceViewBuilder {
         }
         return AnyView(EmptyView())
     }
-    
-//    func summaryView() -> Summary {
-//        LightSummaryView(light: self)
-//    }
     
     var summary: some DataSourceSummaryView {
         LightSummaryView(light: self)

@@ -220,7 +220,6 @@ protocol DataSourceViewBuilder: DataSource {
     var detailView: AnyView { get }
     associatedtype Summary: DataSourceSummaryView
     
-//    func summaryView() -> Summary
     var itemTitle: String { get }
     @ViewBuilder
     var summary: Summary { get }

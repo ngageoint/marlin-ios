@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 extension ElectronicPublication: DataSourceViewBuilder {
-//    typealias Summary = ElectronicPublicationSummaryView
     var itemTitle: String {
         return "\(self.sectionDisplayName ?? "")"
     }
@@ -17,10 +16,6 @@ extension ElectronicPublication: DataSourceViewBuilder {
     var detailView: AnyView {
         AnyView(ElectronicPublicationDetailView(electronicPublication: self))
     }
-    
-//    func summaryView() -> Summary {
-//        ElectronicPublicationSummaryView(electronicPublication: self)
-//    }
     
     var summary: some DataSourceSummaryView {
         ElectronicPublicationSummaryView(electronicPublication: self)

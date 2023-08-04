@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 extension Modu: DataSourceViewBuilder {
-//    typealias Summary = ModuSummaryView
     var itemTitle: String {
         return "\(self.name ?? "")"
     }
@@ -17,10 +16,6 @@ extension Modu: DataSourceViewBuilder {
     var detailView: AnyView {
         AnyView(ModuDetailView(modu: self))
     }
-    
-//    func summaryView() -> Summary {
-//        ModuSummaryView(modu: self)
-//    }
     
     var summary: some DataSourceSummaryView {
         ModuSummaryView(modu: self)
