@@ -46,6 +46,7 @@ struct BookmarkButton: View {
                 TextEditor(text: $notes)
                     .lineLimit(4...)
                     .overlay(Rectangle().frame(height: 2).foregroundColor(Color.primaryColorVariant), alignment: .bottom)
+                    .scrollContentBackground(.hidden)
                     .background(Color.backgroundColor)
                     .tint(Color.primaryColorVariant)
                 HStack {
