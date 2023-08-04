@@ -48,8 +48,7 @@ class Bookmark: NSManagedObject, BatchImportable {
         
     }
     
-    
-    func getDataSource(context: NSManagedObjectContext) -> (any Bookmarkable)? {
+    func getDataSourceItem(context: NSManagedObjectContext) -> (any Bookmarkable)? {
         switch(dataSource) {
         case Asam.key:
             return Asam.getItem(context: context, itemKey: self.id)
@@ -113,7 +112,10 @@ extension Bookmark: DataSourceViewBuilder {
         return "Bookmark \(self.id ?? "")"
     }
     var detailView: AnyView {
-        AnyView(Text("Bookmark detail \(self.dataSource ?? "") \(self.id ?? "")"))
+        if let viewBuilder = getDataSourceItem(context: PersistenceController.current.viewContext) as? (any DataSourceViewBuilder) {
+            return viewBuilder.detailView
+        }
+        return AnyView(Text("Bookmark detail \(self.dataSource ?? "") \(self.id ?? "")"))
     }
     
     var summary: some DataSourceSummaryView {

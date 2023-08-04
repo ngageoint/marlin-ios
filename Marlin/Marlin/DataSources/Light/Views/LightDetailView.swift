@@ -59,6 +59,7 @@ struct LightDetailView: View {
                                     Text("Focal Plane Elevation: \(Int(firstLight.heightFeet))ft (\(Int(firstLight.heightMeters))m)")
                                         .secondary()
                                 }
+                                BookmarkNotes(notes: firstLight.bookmark?.notes)
                                 DataSourceActionBar(data: firstLight, showMoreDetailsButton: false, showFocusButton: true)
                                     .padding(.bottom, 16)
                             }.padding([.leading, .trailing], 16)

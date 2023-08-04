@@ -23,8 +23,6 @@ struct BookmarkSummary: DataSourceSummaryView {
                 HStack {
                     DataSourceIcon(dataSource: dataSource)
                     Spacer()
-//                    Text(bookmark?.timestamp?.formatted() ?? "")
-//                        .overline()
                 }
                 AnyView(
                     dataSource.summary
@@ -39,7 +37,7 @@ struct BookmarkSummary: DataSourceSummaryView {
         .task {
             let context = PersistenceController.current.viewContext
             context.perform {
-                dataSource = bookmark?.getDataSource(context: PersistenceController.current.viewContext) as? (any DataSource)
+                dataSource = bookmark?.getDataSourceItem(context: PersistenceController.current.viewContext) as? (any DataSource)
             }
         }
     }

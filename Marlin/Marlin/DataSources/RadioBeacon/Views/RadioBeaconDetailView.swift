@@ -30,6 +30,7 @@ struct RadioBeaconDetailView: View {
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     radioBeacon.summary
+                        .setBookmark(radioBeacon.bookmark)
                         .setShowSectionHeader(true)
                         .padding(.all, 16)
                 }
