@@ -8,19 +8,13 @@
 import Foundation
 import SwiftUI
 
-extension NoticeToMariners: DataSourceViewBuilder {
-//    typealias Summary = NoticeToMarinersSummaryView
-    
+extension NoticeToMariners: DataSourceViewBuilder {    
     var itemTitle: String {
         return "\(self.title ?? "") \(self.isFullPublication ? (self.fileExtension ?? "") : "")"
     }
     var detailView: AnyView {
         AnyView(NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: self.noticeNumber)))
     }
-    
-//    func summaryView() -> Summary {
-//        NoticeToMarinersSummaryView(noticeToMariners: self)
-//    }
     
     var summary: some DataSourceSummaryView {
         NoticeToMarinersSummaryView(noticeToMariners: self)

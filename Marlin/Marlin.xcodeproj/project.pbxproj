@@ -299,7 +299,7 @@
 		F7D8D2EA2922A35F00EA2296 /* NoticeToMariners+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8D2E92922A35F00EA2296 /* NoticeToMariners+CoreDataClass.swift */; };
 		F7D8FA142922ABF500E7D0A1 /* NoticeToMariners+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA132922ABF500E7D0A1 /* NoticeToMariners+Decodable.swift */; };
 		F7D8FA162922BA3B00E7D0A1 /* NoticeToMariners+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA152922BA3B00E7D0A1 /* NoticeToMariners+DataSourceViewBuilder.swift */; };
-		F7D8FA1A2922BB0400E7D0A1 /* NoticeToMarinersSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA192922BB0400E7D0A1 /* NoticeToMarinersSummaryView.swift */; };
+		F7D8FA1A2922BB0400E7D0A1 /* NoticeToMarinersFileSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA192922BB0400E7D0A1 /* NoticeToMarinersFileSummaryView.swift */; };
 		F7D8FA1D2922F7F300E7D0A1 /* NoticeToMarinersDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA1C2922F7F300E7D0A1 /* NoticeToMarinersDataTests.swift */; };
 		F7D8FA1F2922F8D700E7D0A1 /* ntmMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F7D8FA1E2922F8D700E7D0A1 /* ntmMockData.json */; };
 		F7D8FA212923F99C00E7D0A1 /* NoticeToMarinersFullNoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8FA202923F99C00E7D0A1 /* NoticeToMarinersFullNoticeView.swift */; };
@@ -347,6 +347,7 @@
 		F7EFFEC12A7C0FC80097E5EF /* BookmarkNotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC02A7C0FC80097E5EF /* BookmarkNotes.swift */; };
 		F7EFFEC32A7C10C90097E5EF /* BookmarkSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC22A7C10C90097E5EF /* BookmarkSummary.swift */; };
 		F7EFFEC52A7C113A0097E5EF /* DataSourceIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC42A7C113A0097E5EF /* DataSourceIcon.swift */; };
+		F7EFFEC72A7D57980097E5EF /* NoticeToMarinersSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC62A7D57980097E5EF /* NoticeToMarinersSummaryView.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
 		F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59785285A206700F9B32E /* AsamDetailView.swift */; };
 		F7F59789285A277000F9B32E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59788285A277000F9B32E /* Card.swift */; };
@@ -738,7 +739,7 @@
 		F7D8D2E92922A35F00EA2296 /* NoticeToMariners+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoticeToMariners+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7D8FA132922ABF500E7D0A1 /* NoticeToMariners+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoticeToMariners+Decodable.swift"; sourceTree = "<group>"; };
 		F7D8FA152922BA3B00E7D0A1 /* NoticeToMariners+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoticeToMariners+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
-		F7D8FA192922BB0400E7D0A1 /* NoticeToMarinersSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersSummaryView.swift; sourceTree = "<group>"; };
+		F7D8FA192922BB0400E7D0A1 /* NoticeToMarinersFileSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersFileSummaryView.swift; sourceTree = "<group>"; };
 		F7D8FA1C2922F7F300E7D0A1 /* NoticeToMarinersDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersDataTests.swift; sourceTree = "<group>"; };
 		F7D8FA1E2922F8D700E7D0A1 /* ntmMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ntmMockData.json; sourceTree = "<group>"; };
 		F7D8FA202923F99C00E7D0A1 /* NoticeToMarinersFullNoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersFullNoticeView.swift; sourceTree = "<group>"; };
@@ -787,6 +788,7 @@
 		F7EFFEC02A7C0FC80097E5EF /* BookmarkNotes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkNotes.swift; sourceTree = "<group>"; };
 		F7EFFEC22A7C10C90097E5EF /* BookmarkSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkSummary.swift; sourceTree = "<group>"; };
 		F7EFFEC42A7C113A0097E5EF /* DataSourceIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceIcon.swift; sourceTree = "<group>"; };
+		F7EFFEC62A7D57980097E5EF /* NoticeToMarinersSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersSummaryView.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
 		F7F59785285A206700F9B32E /* AsamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDetailView.swift; sourceTree = "<group>"; };
 		F7F59788285A277000F9B32E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
@@ -1255,9 +1257,10 @@
 				F72EAADC291D955000AC6026 /* ChartCorrectionListView.swift */,
 				F72EAADE291EECF400AC6026 /* NTMActionBar.swift */,
 				F72EAAE0291F040D00AC6026 /* NoticeToMarinersView.swift */,
-				F7D8FA192922BB0400E7D0A1 /* NoticeToMarinersSummaryView.swift */,
+				F7D8FA192922BB0400E7D0A1 /* NoticeToMarinersFileSummaryView.swift */,
 				F7D8FA202923F99C00E7D0A1 /* NoticeToMarinersFullNoticeView.swift */,
 				F7D8FA2B2925756F00E7D0A1 /* ChartCorrectionQuery.swift */,
+				F7EFFEC62A7D57980097E5EF /* NoticeToMarinersSummaryView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2540,7 +2543,7 @@
 				F7D8FA5A293AA15B00E7D0A1 /* DataSourceSortParameter.swift in Sources */,
 				F7DCCF752A698B5D00B0700C /* LocationBoundsMixin.swift in Sources */,
 				F7F597AE2864DE2900F9B32E /* NavigationalWarningDetailView.swift in Sources */,
-				F7D8FA1A2922BB0400E7D0A1 /* NoticeToMarinersSummaryView.swift in Sources */,
+				F7D8FA1A2922BB0400E7D0A1 /* NoticeToMarinersFileSummaryView.swift in Sources */,
 				F71DF4A52859120A00686951 /* BottomSheetView.swift in Sources */,
 				F7EFFEC32A7C10C90097E5EF /* BookmarkSummary.swift in Sources */,
 				F70BCE9D29D2104D00AEF73D /* GeoPackage.swift in Sources */,
@@ -2572,6 +2575,7 @@
 				F7D8FA232924394900E7D0A1 /* NTMGraphics.swift in Sources */,
 				F71E3E3A28F49ABE002F2019 /* SearchResultsMap.swift in Sources */,
 				F7C23E0E2908609E0002A7DF /* ElectronicPublicationsList.swift in Sources */,
+				F7EFFEC72A7D57980097E5EF /* NoticeToMarinersSummaryView.swift in Sources */,
 				F7FFB30428D6389700C31AA3 /* Asam+Decodable.swift in Sources */,
 				F7E8C8A02894701C00E7CCE2 /* DataSourceRail.swift in Sources */,
 				F76B4A7228EB8AB20012BF4F /* MSIListViewModel.swift in Sources */,

@@ -52,6 +52,14 @@ extension NSManagedObjectContext {
         let predicate = NSPredicate(format: "%K = %@", key,value)
         return try? self.fetchFirst(entityClass, sortBy: nil, predicate: predicate)
     }
+    
+    func fetchFirst<T: NSManagedObject>(_ entityClass:T.Type,
+                                        key:String,
+                                        value:Int64) -> T? {
+        let predicate = NSPredicate(format: "%K = %d", key,value)
+        return try? self.fetchFirst(entityClass, sortBy: nil, predicate: predicate)
+    }
+    
     func fetchAll<T: NSManagedObject>(_ entityClass:T.Type) -> [T]? {
         return try? self.fetchObjects(entityClass)
     }

@@ -60,7 +60,7 @@ class Bookmark: NSManagedObject, BatchImportable {
         case NavigationalWarning.key:
             return NavigationalWarning.getItem(context: context, itemKey: self.id)
         case NoticeToMariners.key:
-            print("notice to mariners")
+            return NoticeToMariners.getItem(context: context, itemKey: self.id)
         case DFRS.key:
             print("dfrs")
         case DifferentialGPSStation.key:
