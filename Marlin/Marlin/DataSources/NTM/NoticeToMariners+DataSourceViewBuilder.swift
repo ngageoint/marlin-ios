@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-extension NoticeToMariners: DataSourceViewBuilder {    
+extension NoticeToMariners: DataSourceViewBuilder {
     var itemTitle: String {
         return "\(self.title ?? "") \(self.isFullPublication ? (self.fileExtension ?? "") : "")"
     }
