@@ -348,6 +348,7 @@
 		F7EFFEC32A7C10C90097E5EF /* BookmarkSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC22A7C10C90097E5EF /* BookmarkSummary.swift */; };
 		F7EFFEC52A7C113A0097E5EF /* DataSourceIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC42A7C113A0097E5EF /* DataSourceIcon.swift */; };
 		F7EFFEC72A7D57980097E5EF /* NoticeToMarinersSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC62A7D57980097E5EF /* NoticeToMarinersSummaryView.swift */; };
+		F7EFFEC92A7DA4260097E5EF /* BookmarkListEmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC82A7DA4260097E5EF /* BookmarkListEmptyState.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
 		F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59785285A206700F9B32E /* AsamDetailView.swift */; };
 		F7F59789285A277000F9B32E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59788285A277000F9B32E /* Card.swift */; };
@@ -789,6 +790,7 @@
 		F7EFFEC22A7C10C90097E5EF /* BookmarkSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkSummary.swift; sourceTree = "<group>"; };
 		F7EFFEC42A7C113A0097E5EF /* DataSourceIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceIcon.swift; sourceTree = "<group>"; };
 		F7EFFEC62A7D57980097E5EF /* NoticeToMarinersSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersSummaryView.swift; sourceTree = "<group>"; };
+		F7EFFEC82A7DA4260097E5EF /* BookmarkListEmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkListEmptyState.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
 		F7F59785285A206700F9B32E /* AsamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDetailView.swift; sourceTree = "<group>"; };
 		F7F59788285A277000F9B32E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
@@ -1497,6 +1499,7 @@
 				F7B84E232A7309A600640C76 /* BookmarkViewModel.swift */,
 				F7EFFEC02A7C0FC80097E5EF /* BookmarkNotes.swift */,
 				F7EFFEC22A7C10C90097E5EF /* BookmarkSummary.swift */,
+				F7EFFEC82A7DA4260097E5EF /* BookmarkListEmptyState.swift */,
 			);
 			path = Bookmark;
 			sourceTree = "<group>";
@@ -2398,6 +2401,7 @@
 				F7C23E06290844740002A7DF /* ElectronicPublication+Decodable.swift in Sources */,
 				F7D671C5286C8A3100758F1C /* GeoPackageLayer.swift in Sources */,
 				F70BCE9929C4F1AE00AEF73D /* UserLayersMap.swift in Sources */,
+				F7EFFEC92A7DA4260097E5EF /* BookmarkListEmptyState.swift in Sources */,
 				F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */,
 				F70BCEA529DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift in Sources */,
 				F7066DAD2A4F08B70058122E /* CoordinateDisplaySettings.swift in Sources */,

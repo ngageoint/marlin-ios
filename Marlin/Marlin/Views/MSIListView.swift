@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreData
 
-extension MSIListView where SectionHeader == EmptyView, Content == EmptyView {
+extension MSIListView where SectionHeader == EmptyView, Content == EmptyView, EmptyContent == EmptyView {
     init(path: Binding<NavigationPath>,
          focusedItem: ItemWrapper = ItemWrapper(),
          watchFocusedItem: Bool = false,
@@ -16,12 +16,13 @@ extension MSIListView where SectionHeader == EmptyView, Content == EmptyView {
          allowUserFilter: Bool = true,
          sectionHeaderIsSubList: Bool = false,
          sectionGroupNameBuilder: ((MSISection<T>) -> String)? = nil,
-         sectionNameBuilder: ((MSISection<T>) -> String)? = nil) {
-        self.init(path: path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: { _ in EmptyView() }, content: { _ in EmptyView() })
+         sectionNameBuilder: ((MSISection<T>) -> String)? = nil
+    ) {
+        self.init(path: path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: { _ in EmptyView() }, content: { _ in EmptyView() }, emptyView: { EmptyView() })
     }
 }
 
-extension MSIListView where Content == EmptyView {
+extension MSIListView where Content == EmptyView, EmptyContent == EmptyView {
     init(path: Binding<NavigationPath>,
          focusedItem: ItemWrapper = ItemWrapper(),
          watchFocusedItem: Bool = false,
@@ -31,11 +32,11 @@ extension MSIListView where Content == EmptyView {
          sectionGroupNameBuilder: ((MSISection<T>) -> String)? = nil,
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
          @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader) {
-        self.init(path: path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: { _ in EmptyView() })
+        self.init(path: path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: { _ in EmptyView() }, emptyView: { EmptyView() })
     }
 }
 
-struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: View, Content: View>: View {
+struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: View, Content: View, EmptyContent: View>: View {
     @State var sortOpen: Bool = false
     
     @ObservedObject var focusedItem: ItemWrapper
@@ -55,6 +56,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
     let sectionViewBuilder: ((MSISection<T>) -> SectionHeader)
     
     let content: ((MSISection<T>) -> Content)
+    let emptyView: (() -> EmptyContent)
     
     init(path: Binding<NavigationPath>,
          focusedItem: ItemWrapper = ItemWrapper(),
@@ -65,7 +67,8 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
          sectionGroupNameBuilder: ((MSISection<T>) -> String)? = nil,
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
          @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader,
-         @ViewBuilder content: @escaping (MSISection<T>) -> Content) {
+         @ViewBuilder content: @escaping (MSISection<T>) -> Content,
+         @ViewBuilder emptyView: @escaping () -> EmptyContent) {
         _path = path
         self.focusedItem = focusedItem
         self.watchFocusedItem = watchFocusedItem
@@ -77,12 +80,13 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
         self.sectionViewBuilder = sectionViewBuilder
         self.content = content
         self.filterViewModel = PersistedFilterViewModel(dataSource: T.self)
+        self.emptyView = emptyView
     }
     
     var body: some View {
         Self._printChanges()
         return ZStack(alignment: .bottomTrailing) {
-            GenericSectionedList<T, SectionHeader, Content>(path: $path, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content)
+            GenericSectionedList<T, SectionHeader, Content, EmptyContent>(path: $path, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content, emptyView: emptyView)
             if let _ = T.self as? GeoPackageExportable.Type {
                 NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(dataSourceItem: DataSourceItem(dataSource: T.self), filters: UserDefaults.standard.filter(T.self))])) {
                     Label(
@@ -159,20 +163,21 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
     }
 }
 
-struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionHeader: View, Content: View>: View {
+struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionHeader: View, Content: View, EmptyContent: View>: View {
     @Binding var path: NavigationPath
     let sectionHeaderIsSubList: Bool
     var sectionGroupNameBuilder: ((MSISection<T>) -> String)?
     var sectionNameBuilder: ((MSISection<T>) -> String)?
     var sectionViewBuilder: ((MSISection<T>) -> SectionHeader)
     let content: ((MSISection<T>) -> Content)
+    let emptyView: (() -> EmptyContent)
     
     @StateObject var itemsViewModel: MSIListViewModel<T> = MSIListViewModel<T>()
     @State var tappedItem: T?
     @State private var showDetail = false
 
     var body: some View {
-        ZStack {
+        Group {
             if !sectionHeaderIsSubList {
                 sectionHeaderList()
             } else if sectionGroupNameBuilder != nil {
@@ -181,6 +186,7 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
                 sectionHeaderSublist()
             }
         }
+        .emptyPlaceholder(itemsViewModel.fetchedResultsController?.fetchedObjects ?? [], emptyView)
             
         .navigationTitle(T.fullDataSourceName)
         .navigationBarTitleDisplayMode(.inline)
