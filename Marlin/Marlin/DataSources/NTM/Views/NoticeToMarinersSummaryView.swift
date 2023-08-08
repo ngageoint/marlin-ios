@@ -27,7 +27,7 @@ struct NoticeToMarinersSummaryView: DataSourceSummaryView {
                 }
                 Spacer()
                 if let itemKey = noticeToMariners.itemKey {
-                    BookmarkButton(itemKey: itemKey, dataSource: NoticeToMariners.key)
+                    BookmarkButton(BookmarkViewModel(itemKey: itemKey, dataSource: NoticeToMariners.key))
                 }
             }
         

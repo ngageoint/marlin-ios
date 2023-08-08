@@ -49,6 +49,7 @@ class Bookmark: NSManagedObject, BatchImportable {
     }
     
     func getDataSourceItem(context: NSManagedObjectContext) -> (any Bookmarkable)? {
+        print("data source is \(dataSource)")
         switch(dataSource) {
         case Asam.key:
             return Asam.getItem(context: context, itemKey: self.id)
@@ -68,6 +69,8 @@ class Bookmark: NSManagedObject, BatchImportable {
             return RadioBeacon.getItem(context: context, itemKey: self.id)
         case ElectronicPublication.key:
             return ElectronicPublication.getItem(context: context, itemKey: self.id)
+        case GeoPackageFeatureItem.key:
+            return GeoPackageFeatureItem.getItem(context: context, itemKey: self.id)
         default:
             print("default")
         }

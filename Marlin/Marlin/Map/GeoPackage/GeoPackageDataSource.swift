@@ -8,11 +8,32 @@
 import Foundation
 import SwiftUI
 import geopackage_ios
+import CoreData
+
+extension GeoPackageFeatureItem: Bookmarkable {
+    var itemKey: String? {
+        return "\(geoPackageName ?? "")--\(tableName ?? "")--\(featureId)"
+    }
+    
+    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
+        print("item key \(itemKey)")
+        if let split = itemKey?.split(separator: "--"), split.count == 3 {
+            return getFeature(context: context, geoPackageName: "\(split[0])", tableName: "\(split[1])", featureId: Int(split[2]) ?? 0)
+        }
+        
+        return nil
+    }
+    
+    static func getFeature(context: NSManagedObjectContext, geoPackageName: String?, tableName: String?, featureId: Int) -> GeoPackageFeatureItem? {
+        if let geoPackageName = geoPackageName, let tableName = tableName {
+            return GeoPackage.shared.getFeature(geoPackageName: geoPackageName, tableName: tableName, featureId: featureId)
+        }
+        return nil
+    }
+}
 
 class GeoPackageFeatureItem: NSObject, DataSourceLocation, DataSourceViewBuilder {
-    var itemKey: String? {
-        return "\(layerName ?? "")--\(featureId)"
-    }
+
     var coordinate: CLLocationCoordinate2D
     
     var latitude: Double { coordinate.latitude }
@@ -101,20 +122,24 @@ class GeoPackageFeatureItem: NSObject, DataSourceLocation, DataSourceViewBuilder
     var featureRowData: GPKGFeatureRowData?
     var featureDataTypes: [String : String]?
     var layerName: String?
+    var geoPackageName: String?
+    var tableName: String?
     var style: GPKGStyleRow?
     var maxFeaturesReached: Bool
     var featureCount: Int
     
-    init(maxFeaturesReached: Bool = false, featureCount: Int = 0, layerName: String? = nil) {
+    init(maxFeaturesReached: Bool = false, featureCount: Int = 0, layerName: String? = nil, geoPackageName: String? = nil, tableName: String? = nil) {
         self.maxFeaturesReached = maxFeaturesReached
         self.featureCount = featureCount
         self.layerName = layerName
+        self.geoPackageName = geoPackageName
+        self.tableName = tableName
         self.featureId = 0
         self.coordinate = kCLLocationCoordinate2DInvalid
     }
     
-    convenience init(layerName: String? = nil, featureId: Int = 0, featureRowData: GPKGFeatureRowData?, featureDataTypes: [String : String]? = nil, coordinate: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid, icon: UIImage? = nil, style: GPKGStyleRow? = nil, mediaRows: [GPKGMediaRow]? = nil, attributeRows: [GeoPackageFeatureItem]? = nil) {
-        self.init(maxFeaturesReached: false, featureCount: 1, layerName: layerName)
+    convenience init(layerName: String? = nil, geoPackageName: String? = nil, tableName: String? = nil, featureId: Int = 0, featureRowData: GPKGFeatureRowData?, featureDataTypes: [String : String]? = nil, coordinate: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid, icon: UIImage? = nil, style: GPKGStyleRow? = nil, mediaRows: [GPKGMediaRow]? = nil, attributeRows: [GeoPackageFeatureItem]? = nil) {
+        self.init(maxFeaturesReached: false, featureCount: 1, layerName: layerName, geoPackageName: geoPackageName, tableName: tableName)
         self.featureId = featureId
         self.featureRowData = featureRowData
         self.featureDataTypes = featureDataTypes

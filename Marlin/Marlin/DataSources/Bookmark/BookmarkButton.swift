@@ -8,11 +8,9 @@
 import SwiftUI
 
 struct BookmarkButton: View {
-    var itemKey: String
-    var dataSource: String
     @State var bookmarkBottomSheet: Bool = false
     @State var notes: String = ""
-    @StateObject var viewModel: BookmarkViewModel = BookmarkViewModel()
+    @ObservedObject var viewModel: BookmarkViewModel
     
     var body: some View {
         Button(action: {
@@ -25,7 +23,7 @@ struct BookmarkButton: View {
             }
         }) {
             Label(
-                title: {},
+                title: { },
                 icon: { Image(systemName: viewModel.isBookmarked ? "bookmark.fill" : "bookmark")
                         .renderingMode(.template)
                         .foregroundColor(Color.primaryColorVariant)
@@ -62,9 +60,6 @@ struct BookmarkButton: View {
             }
             .padding(.all, 16)
             .presentationDetents([.height(200)])
-        }
-        .onAppear {
-            viewModel.setViewModel(itemKey: itemKey, dataSource: dataSource)
         }
     }
 }

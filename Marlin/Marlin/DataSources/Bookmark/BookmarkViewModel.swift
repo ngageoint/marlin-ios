@@ -8,19 +8,17 @@
 import Foundation
 
 class BookmarkViewModel: ObservableObject {
-//    var bookmarkable: (any Bookmarkable)? {
-//        didSet {
-//            isBookmarked = true
-////            bookmark = bookmarkable?.bookmark
-//        }
-//    }
-    
     var itemKey: String?
     var dataSource: String?
     @Published var isBookmarked: Bool = false
     
+    init(itemKey: String?, dataSource: String?) {
+        if let itemKey = itemKey, let dataSource = dataSource {
+            setViewModel(itemKey: itemKey, dataSource: dataSource)
+        }
+    }
+    
     func setViewModel(itemKey: String, dataSource: String) {
-        print("set view model")
         self.itemKey = itemKey
         self.dataSource = dataSource
         let viewContext = PersistenceController.current.viewContext
@@ -29,7 +27,6 @@ class BookmarkViewModel: ObservableObject {
             request.predicate = NSPredicate(format: "id = %@ AND dataSource = %@", itemKey, dataSource)
             
             let bookmarks = viewContext.fetch(request: request) ?? []
-            print("setting is bookmarked to \(!bookmarks.isEmpty)")
             self.isBookmarked = !bookmarks.isEmpty
         }
     }

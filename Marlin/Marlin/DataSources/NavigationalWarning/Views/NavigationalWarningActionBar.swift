@@ -25,7 +25,7 @@ struct NavigationalWarningActionBar: View {
             }
             Spacer()
             if let itemKey = navigationalWarning.itemKey {
-                BookmarkButton(itemKey: itemKey, dataSource: navigationalWarning.key)
+                BookmarkButton(viewModel: BookmarkViewModel(itemKey: itemKey, dataSource: navigationalWarning.key))
             }
             ShareButton(shareText: navigationalWarning.description, dataSource: navigationalWarning)
             if !showMoreDetails {

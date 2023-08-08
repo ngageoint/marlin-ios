@@ -53,7 +53,51 @@ class GeoPackage {
         }
         return columnName
     }
+    
+    func getFeature(geoPackageName: String, tableName: String, featureId: Int) -> GeoPackageFeatureItem? {
+        let geoPackage = GeoPackage.shared.getGeoPackage(name: geoPackageName)
+        if !GPKGContentsDataTypes.isFeaturesType(geoPackage.type(ofTable: tableName)) {
+            return nil
+        }
 
+        guard let featureDao = geoPackage.featureDao(withTableName: tableName) else {
+            return nil
+        }
+        
+        let rte = GPKGRelatedTablesExtension(geoPackage: geoPackage)
+        
+        var mediaTables: [GPKGExtendedRelation] = []
+        var attributeTables: [GPKGExtendedRelation] = []
+        
+        if let relationsDao = GPKGExtendedRelationsDao(database: geoPackage.database), relationsDao.tableExists(), let relations = relationsDao.relations(toBaseTable: tableName) {
+            do {
+                try ExceptionCatcher.catch {
+                    while relations.moveToNext() {
+                        let extendedRelation: GPKGExtendedRelation = relationsDao.relation(relations)
+                        if extendedRelation.relationType() == GPKGRelationTypes.fromName("media") {
+                            mediaTables.append(extendedRelation)
+                        } else if extendedRelation.relationType() == GPKGRelationTypes.fromName("attributes") || extendedRelation.relationType() == GPKGRelationTypes.fromName("simple_attributes") {
+                            attributeTables.append(extendedRelation)
+                        }
+                    }
+                    relations.close()
+                }
+            } catch {
+                print("Error getting relations from the GeoPackage \(error)")
+                relations.close()
+            }
+        }
+        
+        let dataColumnsDao = self.dataColumnsDao(database: geoPackage.database)
+        
+        let result = featureDao.query(forIdRow: Int32(featureId))
+        if let featureRow = result as? GPKGFeatureRow, let featureItem = rowToFeatureItem(featureRow: featureRow, geoPackage: geoPackage, rte: rte, mediaTables: mediaTables, attributeTables: attributeTables, dataColumnsDao: dataColumnsDao, featureDao: featureDao, layerName: nil) {
+            return featureItem
+        }
+        
+        return nil
+    }
+    
     func getFeaturesFromTable(at location: CLLocationCoordinate2D, mapView: MKMapView, table: String, geoPackageName: String, layerName: String) -> [GeoPackageFeatureItem] {
         var featureItems: [GeoPackageFeatureItem] = []
         let geoPackage = GeoPackage.shared.getGeoPackage(name: geoPackageName)
@@ -90,128 +134,131 @@ class GeoPackage {
 
             if let results = indexManager.query(with: boundingBox, in: PROJProjectionFactory.projection(withEpsgInt: 4326)) {
                 for row in results {
-                    guard let featureRow = row as? GPKGFeatureRow else {
-                        continue
+                    if let featureRow = row as? GPKGFeatureRow, let featureItem = rowToFeatureItem(featureRow: featureRow, geoPackage: geoPackage, rte: rte, mediaTables: mediaTables, attributeTables: attributeTables, dataColumnsDao: dataColumnsDao, featureDao: featureDao, layerName: layerName) {
+                        featureItems.append(featureItem)
                     }
-                    var media: [GPKGMediaRow] = []
-                    var attributes: [GPKGAttributesRow] = []
-                    
-                    let featureId = featureRow.idValue()
-                    
-                    for relation in mediaTables {
-                        let relatedMedia = rte?.mappings(forTableName: relation.mappingTableName, withBaseId: featureId)
-                        let mediaDao = rte?.mediaDao(forTableName: relation.relatedTableName)
-                        media.append(contentsOf: mediaDao?.rows(withIds: relatedMedia) ?? [])
-                    }
-                    
-                    for relation in attributeTables {
-                        let relatedAttributes = rte?.mappings(forTableName: relation.mappingTableName, withBaseId: featureId) ?? []
-                        let attributesDao = geoPackage.attributesDao(withTableName: relation.relatedTableName)
-                        
-                        for relatedAttribute in relatedAttributes {
-                            if let row = attributesDao?.query(forIdObject: relatedAttribute) as? GPKGAttributesRow {
-                                attributes.append(row)
-                            }
-                        }
-                    }
-                    
-                    var values: [String : AnyHashable] = [:]
-                    var featureDataTypes: [String : String] = [:]
-                    let geometryColumn = featureRow.geometryColumnIndex()
-                    var geometryColumnName: String?
-                    
-                    var coordinate = location
-                    
-                    for i in 0...(featureRow.columnCount() - 1) {
-                        let value = featureRow.value(with: i)
-                        let columnName = self.displayColumnName(dataColumnsDao: dataColumnsDao, featureRow: featureRow, columnName: featureRow.columnName(with: i))
-                        if i == geometryColumn {
-                            geometryColumnName = columnName
-                            if let geometry = value as? GPKGGeometryData {
-                                let centroid = geometry.geometry.centroid()
-                                let transform = SFPGeometryTransform(from: featureDao.projection, andToEpsg: 4326)
-                                if let centroid = transform?.transform(centroid) {
-                                    coordinate = CLLocationCoordinate2D(latitude: centroid.y.doubleValue, longitude: centroid.x.doubleValue)
-                                }
-                            }
-                        }
-                        
-                        if let dataType = GPKGDataTypes.name(featureRow.featureColumns.columns()[Int(i)].dataType) {
-                            featureDataTypes[columnName] = dataType
-                        }
-                        
-                        if let value = value {
-                            values[columnName] = value
-                        }
-                    }
-                    
-                    let featureRowData = GPKGFeatureRowData(values: values, andGeometryColumnName: geometryColumnName)
-                    var attributeFeatureRowData: [GeoPackageFeatureItem] = []
-                    for row in attributes {
-                        var attributeMediaTables: [GPKGExtendedRelation] = []
-                        var attributeMedias: [GPKGMediaRow] = []
-                        if let relationsDao = GPKGExtendedRelationsDao(database: geoPackage.database), relationsDao.tableExists(), let relations = relationsDao.relations(toBaseTable: row.attributesTable.tableName()) {
-                            do {
-                                try ExceptionCatcher.catch {
-                                    while relations.moveToNext() {
-                                        let extendedRelation: GPKGExtendedRelation = relationsDao.relation(relations)
-                                        if extendedRelation.relationType() == GPKGRelationTypes.fromName("media") {
-                                            attributeMediaTables.append(extendedRelation)
-                                        }
-                                    }
-                                    relations.close()
-                                }
-                            } catch {
-                                print("Error getting relations from the GeoPackage \(error)")
-                                relations.close()
-                            }
-                        }
-                        let attributeId = row.idValue()
-                        for relation in attributeMediaTables {
-                            let relatedMedia = rte?.mappings(forTableName: relation.mappingTableName, withBaseId: attributeId)
-                            let mediaDao = rte?.mediaDao(forTableName: relation.relatedTableName)
-                            attributeMedias.append(contentsOf: mediaDao?.rows(withIds: relatedMedia) ?? [])
-                        }
-                        
-                        let values: [String : AnyHashable] = [:]
-                        var attributeDataTypes: [String : String] = [:]
-                        
-                        for i in 0...(row.columnCount() - 1) {
-                            let columnName = self.displayColumnName(dataColumnsDao: dataColumnsDao, attributeRow: row, columnName: row.columnName(with: i))
-                            if let dataType = GPKGDataTypes.name(row.attributesColumns.columns()[Int(i)].dataType) {
-                                attributeDataTypes[columnName] = dataType
-                            }
-                        }
-                        
-                        let attributeRowData = GPKGFeatureRowData(values: values, andGeometryColumnName: nil)
-                        let featureItem = GeoPackageFeatureItem(layerName: layerName, featureId: Int(attributeId), featureRowData: attributeRowData, featureDataTypes: attributeDataTypes, coordinate: coordinate, mediaRows: attributeMedias)
-                        attributeFeatureRowData.append(featureItem)
-                    }
-                    
-                    var style: GPKGStyleRow?
-                    var image: UIImage?
-
-                    do {
-                        try ExceptionCatcher.catch {
-                            let featureTiles = GPKGFeatureTiles(geoPackage: geoPackage, andFeatureDao: featureDao)
-                            if let featureTiles = featureTiles, let featureTableStyles = featureTiles.featureTableStyles, let featureStyle = featureTableStyles.featureStyle(withFeature: featureRow) {
-                                
-                                if featureStyle.hasIcon() {
-                                    image = featureStyle.icon.dataImage()
-                                }
-                                style = featureStyle.style
-                            }
-                        }
-                    } catch {
-                        print("Exception \(error)")
-                    }
-                    
-                    let featureItem = GeoPackageFeatureItem(layerName: layerName, featureId: Int(featureId), featureRowData: featureRowData, featureDataTypes: featureDataTypes, coordinate: coordinate, icon: image, style: style, mediaRows: media, attributeRows: attributeFeatureRowData)
-                    featureItems.append(featureItem)
                 }
             }
         }
         return featureItems
+    }
+    
+    func rowToFeatureItem(featureRow: GPKGFeatureRow, geoPackage: GPKGGeoPackage, rte: GPKGRelatedTablesExtension?, mediaTables: [GPKGExtendedRelation], attributeTables: [GPKGExtendedRelation], dataColumnsDao: GPKGDataColumnsDao?, featureDao: GPKGFeatureDao, layerName: String?) -> GeoPackageFeatureItem? {
+        var media: [GPKGMediaRow] = []
+        var attributes: [GPKGAttributesRow] = []
+        
+        let featureId = featureRow.idValue()
+        
+        for relation in mediaTables {
+            let relatedMedia = rte?.mappings(forTableName: relation.mappingTableName, withBaseId: featureId)
+            let mediaDao = rte?.mediaDao(forTableName: relation.relatedTableName)
+            media.append(contentsOf: mediaDao?.rows(withIds: relatedMedia) ?? [])
+        }
+        
+        for relation in attributeTables {
+            let relatedAttributes = rte?.mappings(forTableName: relation.mappingTableName, withBaseId: featureId) ?? []
+            let attributesDao = geoPackage.attributesDao(withTableName: relation.relatedTableName)
+            
+            for relatedAttribute in relatedAttributes {
+                if let row = attributesDao?.query(forIdObject: relatedAttribute) as? GPKGAttributesRow {
+                    attributes.append(row)
+                }
+            }
+        }
+        
+        var values: [String : AnyHashable] = [:]
+        var featureDataTypes: [String : String] = [:]
+        let geometryColumn = featureRow.geometryColumnIndex()
+        var geometryColumnName: String?
+        
+        var coordinate: CLLocationCoordinate2D?
+        
+        for i in 0...(featureRow.columnCount() - 1) {
+            let value = featureRow.value(with: i)
+            let columnName = self.displayColumnName(dataColumnsDao: dataColumnsDao, featureRow: featureRow, columnName: featureRow.columnName(with: i))
+            if i == geometryColumn {
+                geometryColumnName = columnName
+                if let geometry = value as? GPKGGeometryData {
+                    let centroid = geometry.geometry.centroid()
+                    let transform = SFPGeometryTransform(from: featureDao.projection, andToEpsg: 4326)
+                    if let centroid = transform?.transform(centroid) {
+                        coordinate = CLLocationCoordinate2D(latitude: centroid.y.doubleValue, longitude: centroid.x.doubleValue)
+                    }
+                }
+            }
+            
+            if let dataType = GPKGDataTypes.name(featureRow.featureColumns.columns()[Int(i)].dataType) {
+                featureDataTypes[columnName] = dataType
+            }
+            
+            if let value = value {
+                values[columnName] = value
+            }
+        }
+        
+        let featureRowData = GPKGFeatureRowData(values: values, andGeometryColumnName: geometryColumnName)
+        var attributeFeatureRowData: [GeoPackageFeatureItem] = []
+        for row in attributes {
+            var attributeMediaTables: [GPKGExtendedRelation] = []
+            var attributeMedias: [GPKGMediaRow] = []
+            if let relationsDao = GPKGExtendedRelationsDao(database: geoPackage.database), relationsDao.tableExists(), let relations = relationsDao.relations(toBaseTable: row.attributesTable.tableName()) {
+                do {
+                    try ExceptionCatcher.catch {
+                        while relations.moveToNext() {
+                            let extendedRelation: GPKGExtendedRelation = relationsDao.relation(relations)
+                            if extendedRelation.relationType() == GPKGRelationTypes.fromName("media") {
+                                attributeMediaTables.append(extendedRelation)
+                            }
+                        }
+                        relations.close()
+                    }
+                } catch {
+                    print("Error getting relations from the GeoPackage \(error)")
+                    relations.close()
+                }
+            }
+            let attributeId = row.idValue()
+            for relation in attributeMediaTables {
+                let relatedMedia = rte?.mappings(forTableName: relation.mappingTableName, withBaseId: attributeId)
+                let mediaDao = rte?.mediaDao(forTableName: relation.relatedTableName)
+                attributeMedias.append(contentsOf: mediaDao?.rows(withIds: relatedMedia) ?? [])
+            }
+            
+            let values: [String : AnyHashable] = [:]
+            var attributeDataTypes: [String : String] = [:]
+            
+            for i in 0...(row.columnCount() - 1) {
+                let columnName = self.displayColumnName(dataColumnsDao: dataColumnsDao, attributeRow: row, columnName: row.columnName(with: i))
+                if let dataType = GPKGDataTypes.name(row.attributesColumns.columns()[Int(i)].dataType) {
+                    attributeDataTypes[columnName] = dataType
+                }
+            }
+            
+            let attributeRowData = GPKGFeatureRowData(values: values, andGeometryColumnName: nil)
+            let featureItem = GeoPackageFeatureItem(layerName: layerName, geoPackageName: geoPackage.name, tableName: featureRow.tableName(), featureId: Int(attributeId), featureRowData: attributeRowData, featureDataTypes: attributeDataTypes, coordinate: coordinate ?? kCLLocationCoordinate2DInvalid, mediaRows: attributeMedias)
+            attributeFeatureRowData.append(featureItem)
+        }
+        
+        var style: GPKGStyleRow?
+        var image: UIImage?
+        
+        do {
+            try ExceptionCatcher.catch {
+                let featureTiles = GPKGFeatureTiles(geoPackage: geoPackage, andFeatureDao: featureDao)
+                if let featureTiles = featureTiles, let featureTableStyles = featureTiles.featureTableStyles, let featureStyle = featureTableStyles.featureStyle(withFeature: featureRow) {
+                    
+                    if featureStyle.hasIcon() {
+                        image = featureStyle.icon.dataImage()
+                    }
+                    style = featureStyle.style
+                }
+            }
+        } catch {
+            print("Exception \(error)")
+        }
+        
+        let featureItem = GeoPackageFeatureItem(layerName: layerName, geoPackageName: geoPackage.name, tableName: featureRow.tableName(), featureId: Int(featureId), featureRowData: featureRowData, featureDataTypes: featureDataTypes, coordinate: coordinate ?? kCLLocationCoordinate2DInvalid, icon: image, style: style, mediaRows: media, attributeRows: attributeFeatureRowData)
+        return featureItem
     }
 }
 
