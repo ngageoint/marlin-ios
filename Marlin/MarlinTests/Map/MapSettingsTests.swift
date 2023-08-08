@@ -17,13 +17,19 @@ final class MapSettingsTests: XCTestCase {
     func testLoadingLightSettings() {
         UserDefaults.standard.actualRangeLights = false
         UserDefaults.standard.actualRangeSectorLights = false
-        
-        let view = MapSettings()
-        let nav = NavigationView {
-            view
+    
+        struct Container: View {
+            @State var path: NavigationPath = NavigationPath()
+            var body: some View {
+                NavigationStack(path: $path) {
+                    MapSettings()
+                        .marlinRoutes(path: $path)
+                }
+                
+            }
         }
-        
-        let controller = UIHostingController(rootView: nav)
+        let container = Container()
+        let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         

@@ -93,7 +93,8 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         epub.fullFilename = "UpdatedPub110bk.pdf"
         epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
         
-        let summary = epub.summaryView(showMoreDetails: false)
+        let summary = epub.summary
+            .setShowMoreDetails(false)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -131,7 +132,8 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
         epub.isDownloaded = false
 
-        let summary = epub.summaryView(showMoreDetails: false)
+        let summary = epub.summary
+            .setShowMoreDetails(false)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -198,7 +200,8 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
         epub.isDownloaded = false
         
-        let summary = epub.summaryView(showMoreDetails: false)
+        let summary = epub.summary
+            .setShowMoreDetails(false)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -248,7 +251,8 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         epub.isDownloaded = false
         epub.isDownloading = true
         
-        let summary = epub.summaryView(showMoreDetails: false)
+        let summary = epub.summary
+            .setShowMoreDetails(false)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -269,8 +273,10 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         }
         
         tester().wait(forTimeInterval: 1)
-        tester().waitForView(withAccessibilityLabel: "Re-Download")
-        tester().tapView(withAccessibilityLabel: "Re-Download")
+        tester().waitForView(withAccessibilityLabel: "Cancel")
+        tester().tapView(withAccessibilityLabel: "Cancel")
+        tester().waitForView(withAccessibilityLabel: "Download")
+        tester().tapView(withAccessibilityLabel: "Download")
         
         let e = XCTKeyPathExpectation(keyPath: \ElectronicPublication.downloadProgress, observedObject: epub, expectedValue: 1.0)
         wait(for: [e], timeout: 10)

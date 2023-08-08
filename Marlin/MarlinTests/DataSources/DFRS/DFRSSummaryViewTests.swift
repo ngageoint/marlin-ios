@@ -53,7 +53,8 @@ final class DFRSSummaryViewTests: XCTestCase {
         newItem.notes = "notes"
         newItem.areaName = "BULGARIA"
         
-        let summary = newItem.summaryView(showMoreDetails: false)
+        let summary = newItem.summary
+            .setShowMoreDetails(false)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -115,7 +116,8 @@ final class DFRSSummaryViewTests: XCTestCase {
         newItem.notes = "notes"
         newItem.areaName = "BULGARIA"
         
-        let summary = newItem.summaryView(showMoreDetails: true)
+        let summary = newItem.summary
+            .setShowMoreDetails(true)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -157,7 +159,9 @@ final class DFRSSummaryViewTests: XCTestCase {
         newItem.notes = "notes"
         newItem.areaName = "BULGARIA"
         
-        let summary = newItem.summaryView(showMoreDetails: false, showSectionHeader: true)
+        let summary = newItem.summary
+            .setShowMoreDetails(false)
+            .setShowSectionHeader(true)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

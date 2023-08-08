@@ -68,7 +68,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
             return
         }
         
-        let summaryView = newItem.summaryView().environment(\.managedObjectContext, persistentStore.viewContext)
+        let summaryView = NoticeToMarinersFileSummaryView(noticeToMariners: newItem).environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summaryView)
         let window = TestHelpers.getKeyWindowVisible()
@@ -109,7 +109,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
             return
         }
         
-        let summaryView = newItem.summaryView().environment(\.managedObjectContext, persistentStore.viewContext)
+        let summaryView = NoticeToMarinersFileSummaryView(noticeToMariners: newItem).environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summaryView)
         let window = TestHelpers.getKeyWindowVisible()
@@ -130,8 +130,10 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         }
         
         tester().wait(forTimeInterval: 1)
-        tester().waitForView(withAccessibilityLabel: "Re-Download")
-        tester().tapView(withAccessibilityLabel: "Re-Download")
+        tester().waitForView(withAccessibilityLabel: "Cancel")
+        tester().tapView(withAccessibilityLabel: "Cancel")
+        tester().waitForView(withAccessibilityLabel: "Download")
+        tester().tapView(withAccessibilityLabel: "Download")
         
         let e = XCTKeyPathExpectation(keyPath: \NoticeToMariners.downloadProgress, observedObject: newItem, expectedValue: 1.0)
         wait(for: [e], timeout: 10)
@@ -183,7 +185,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
             return
         }
         
-        let summaryView = newItem.summaryView().environment(\.managedObjectContext, persistentStore.viewContext)
+        let summaryView = NoticeToMarinersFileSummaryView(noticeToMariners: newItem).environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summaryView)
         let window = TestHelpers.getKeyWindowVisible()

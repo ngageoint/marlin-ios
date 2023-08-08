@@ -184,21 +184,6 @@ extension CLLocationCoordinate2D {
         return directions[index]
     }
     
-    public func toDisplay() -> String {
-        switch UserDefaults.standard.coordinateDisplay {
-        case .latitudeLongitude:
-            let nf = NumberFormatter()
-            nf.maximumFractionDigits = 4
-            return "\(nf.string(for: self.latitude) ?? ""), \(nf.string(for: self.longitude) ?? "")"
-        case .degreesMinutesSeconds:
-            return "\(CLLocationCoordinate2D.latitudeDMSString(coordinate: self.latitude)), \(CLLocationCoordinate2D.longitudeDMSString(coordinate: self.longitude))"
-        case .gars:
-            return GARS.from(self).coordinate()
-        case .mgrs:
-            return MGRS.from(self).coordinate()
-        }
-    }
-    
     // splits the string into possibly two coordinates with all spaces removed
     // no further normalization takes place
     static func splitCoordinates(coordinates: String?) -> [String] {

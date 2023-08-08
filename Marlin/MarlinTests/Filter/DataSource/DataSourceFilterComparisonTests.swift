@@ -33,7 +33,7 @@ final class DataSourceFilterComparisonTests: XCTestCase {
     
     func testLocationComparison() {
         let comparisons = DataSourceFilterComparison.locationSubset()
-        XCTAssertEqual(comparisons, [.nearMe, .closeTo])
+        XCTAssertEqual(comparisons, [.nearMe, .closeTo, .bounds])
     }
     
     func testLatitudeComparison() {

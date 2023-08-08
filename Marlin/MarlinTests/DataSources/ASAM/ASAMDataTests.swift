@@ -568,7 +568,7 @@ final class ASAMDataTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = "Boat"
         
-        let summary = newItem.summaryView()
+        let summary = newItem.summary
         XCTAssertNotNil(summary)
     }
     

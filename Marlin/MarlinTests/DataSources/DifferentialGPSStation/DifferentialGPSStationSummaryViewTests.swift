@@ -61,7 +61,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         newItem.noticeWeek = "34"
         newItem.noticeYear = "2011"
         
-        let summary = newItem.summaryView()
+        let summary = newItem.summary
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -104,7 +104,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         newItem.noticeWeek = "34"
         newItem.noticeYear = "2011"
         
-        let summary = newItem.summaryView()
+        let summary = newItem.summary
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -169,7 +169,9 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         newItem.noticeWeek = "34"
         newItem.noticeYear = "2011"
         
-        let summary = newItem.summaryView(showMoreDetails: true, showSectionHeader: true)
+        let summary = newItem.summary
+            .setShowMoreDetails(true)
+            .setShowSectionHeader(true)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

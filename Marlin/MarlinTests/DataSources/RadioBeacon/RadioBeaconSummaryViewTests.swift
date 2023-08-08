@@ -63,7 +63,8 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         rb.longitude = 2.0
         rb.sectionHeader = "section"
 
-        let summary = rb.summaryView(showMoreDetails: false)
+        let summary = rb.summary
+            .setShowMoreDetails(false)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -134,7 +135,8 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         rb.longitude = 2.0
         rb.sectionHeader = "section"
         
-        let summary = rb.summaryView(showMoreDetails: true)
+        let summary = rb.summary
+            .setShowMoreDetails(true)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -181,7 +183,8 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         rb.longitude = 2.0
         rb.sectionHeader = "section"
         
-        let summary = rb.summaryView(showSectionHeader: true)
+        let summary = rb.summary
+            .setShowSectionHeader(true)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

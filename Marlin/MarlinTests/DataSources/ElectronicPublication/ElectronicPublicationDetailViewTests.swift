@@ -67,8 +67,11 @@ final class ElectronicPublicationDetailViewTests: XCTestCase {
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: epub.pubDownloadDisplayName)
-        tester().waitForView(withAccessibilityLabel: PublicationTypeEnum(rawValue: Int(epub.pubTypeId))?.description)
-        tester().waitForView(withAccessibilityLabel: "\(ElectronicPublication.dateFormatter.string(from: epub.uploadTime!))")
+        tester().waitForView(withAccessibilityLabel: epub.sectionDisplayName)
+        tester().waitForView(withAccessibilityLabel: "File Size: 2.4 MB")
+        tester().waitForView(withAccessibilityLabel: "Upload Time: \(epub.uploadTime?.formatted() ?? "")")
+        
+        tester().wait(forTimeInterval: 1)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Download")
     }
 }

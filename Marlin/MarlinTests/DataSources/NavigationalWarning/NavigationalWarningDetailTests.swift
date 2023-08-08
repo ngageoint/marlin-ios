@@ -79,9 +79,6 @@ final class NavigationalWarningDetailTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "Close")
         tester().tapView(withAccessibilityLabel: "Close")
         
-        tester().waitForView(withAccessibilityLabel: "Status")
-        tester().waitForView(withAccessibilityLabel: newItem.status)
-        
         tester().waitForView(withAccessibilityLabel: "Authority")
         tester().waitForView(withAccessibilityLabel: newItem.authority)
         

@@ -55,7 +55,8 @@ final class LightSummaryViewTests: XCTestCase {
         light.structure = "Yellow pedestal, red band; 7.\n"
         light.name = "-Outer."
 
-        let summary = light.summaryView(showMoreDetails: false)
+        let summary = light.summary
+            .setShowMoreDetails(false)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -115,7 +116,8 @@ final class LightSummaryViewTests: XCTestCase {
         light.structure = "Yellow pedestal, red band; 7.\n"
         light.name = "-Outer."
         
-        let summary = light.summaryView(showMoreDetails: true)
+        let summary = light.summary
+            .setShowMoreDetails(true)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

@@ -154,7 +154,8 @@ final class PortSummaryViewTests: XCTestCase {
         
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
-        let summary = port.summaryView(showMoreDetails: false)
+        let summary = port.summary
+            .setShowMoreDetails(false)
             .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: summary)
@@ -314,7 +315,8 @@ final class PortSummaryViewTests: XCTestCase {
         
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
-        let summary = port.summaryView(showMoreDetails: true)
+        let summary = port.summary
+            .setShowMoreDetails(true)
             .environmentObject(mockLocationManager as LocationManager)
         
         let controller = UIHostingController(rootView: summary)

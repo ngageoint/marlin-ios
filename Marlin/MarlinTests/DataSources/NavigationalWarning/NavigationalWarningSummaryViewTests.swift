@@ -62,7 +62,8 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         nw.subregion = "subregion"
         nw.text = "text of the warning"
         
-        let summary = nw.summaryView(showMoreDetails: false)
+        let summary = nw.summary
+            .setShowMoreDetails(false)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
