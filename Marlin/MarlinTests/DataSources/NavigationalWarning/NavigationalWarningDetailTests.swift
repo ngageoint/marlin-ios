@@ -91,5 +91,7 @@ final class NavigationalWarningDetailTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Text")
         let textView = viewTester().usingLabel("Text").view as! UITextView
         XCTAssertEqual(textView.text, newItem.text)
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
     }
 }

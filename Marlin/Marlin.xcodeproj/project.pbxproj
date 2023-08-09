@@ -349,6 +349,7 @@
 		F7EFFEC52A7C113A0097E5EF /* DataSourceIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC42A7C113A0097E5EF /* DataSourceIcon.swift */; };
 		F7EFFEC72A7D57980097E5EF /* NoticeToMarinersSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC62A7D57980097E5EF /* NoticeToMarinersSummaryView.swift */; };
 		F7EFFEC92A7DA4260097E5EF /* BookmarkListEmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC82A7DA4260097E5EF /* BookmarkListEmptyState.swift */; };
+		F7EFFECC2A82DED70097E5EF /* BookmarkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFECB2A82DED70097E5EF /* BookmarkHelper.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
 		F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59785285A206700F9B32E /* AsamDetailView.swift */; };
 		F7F59789285A277000F9B32E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59788285A277000F9B32E /* Card.swift */; };
@@ -791,6 +792,7 @@
 		F7EFFEC42A7C113A0097E5EF /* DataSourceIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceIcon.swift; sourceTree = "<group>"; };
 		F7EFFEC62A7D57980097E5EF /* NoticeToMarinersSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersSummaryView.swift; sourceTree = "<group>"; };
 		F7EFFEC82A7DA4260097E5EF /* BookmarkListEmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkListEmptyState.swift; sourceTree = "<group>"; };
+		F7EFFECB2A82DED70097E5EF /* BookmarkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkHelper.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
 		F7F59785285A206700F9B32E /* AsamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDetailView.swift; sourceTree = "<group>"; };
 		F7F59788285A277000F9B32E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
@@ -1129,6 +1131,7 @@
 		F727A68F284E605800BD728A /* MarlinTests */ = {
 			isa = PBXGroup;
 			children = (
+				F7EFFECA2A82DEBE0097E5EF /* ComponentHelpers */,
 				F75324BC298197AF005C509F /* Onboarding */,
 				F75324B92980905B005C509F /* Extensions */,
 				F72281DB296F3FC700218FC0 /* SideMenu */,
@@ -1755,6 +1758,14 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		F7EFFECA2A82DEBE0097E5EF /* ComponentHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				F7EFFECB2A82DED70097E5EF /* BookmarkHelper.swift */,
+			);
+			path = ComponentHelpers;
+			sourceTree = "<group>";
+		};
 		F7F5977F285A1B2400F9B32E /* ASAM */ = {
 			isa = PBXGroup;
 			children = (
@@ -2308,6 +2319,7 @@
 				F73ABC8D295250C70085EDC5 /* DataSourcePropertyFilterViewModelTests.swift in Sources */,
 				F7A42E7529A0316700635E16 /* MarlinViewTests.swift in Sources */,
 				F72D88F62971E9D900D022FB /* FilterBottomSheetRowTests.swift in Sources */,
+				F7EFFECC2A82DED70097E5EF /* BookmarkHelper.swift in Sources */,
 				F72D89002979B87800D022FB /* ModuSummaryTests.swift in Sources */,
 				F73ABC86295250A90085EDC5 /* LocationManagerTests.swift in Sources */,
 				F73D9E252970E54C008AF40D /* MapSettingsTests.swift in Sources */,

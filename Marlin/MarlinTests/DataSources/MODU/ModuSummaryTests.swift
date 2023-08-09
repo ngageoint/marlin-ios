@@ -94,6 +94,8 @@ final class ModuSummaryTests: XCTestCase {
         
         tester().waitForTappableView(withAccessibilityLabel: "Close")
         tester().tapView(withAccessibilityLabel: "Close")
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: modu)
     }
     
     func testShowMoreDetails() {

@@ -11,24 +11,20 @@ import MapKit
 struct PortSummaryView: DataSourceSummaryView {
     var showSectionHeader: Bool = false
     
-    var bookmark: Bookmark?
-    
+    var showBookmarkNotes: Bool = false
+
     @EnvironmentObject var locationManager: LocationManager
     @State var distance: String?
 
     var port: Port
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
-    var measurementFormatter: MeasurementFormatter
-    
-    init(port: Port, showMoreDetails: Bool = false, showTitle: Bool = true) {
-        self.port = port
-        self.showMoreDetails = showMoreDetails
-        self.showTitle = showTitle
-        self.measurementFormatter = MeasurementFormatter();
-        measurementFormatter.unitOptions = .providedUnit;
-        measurementFormatter.unitStyle = .short;
-        measurementFormatter.numberFormatter.maximumFractionDigits = 2;
+    var measurementFormatter: MeasurementFormatter {
+        var measurementFormatter = MeasurementFormatter()
+        measurementFormatter.unitOptions = .providedUnit
+        measurementFormatter.unitStyle = .short
+        measurementFormatter.numberFormatter.maximumFractionDigits = 2
+        return measurementFormatter
     }
     
     var body: some View {
@@ -54,8 +50,7 @@ struct PortSummaryView: DataSourceSummaryView {
                         .secondary()
                 }
             }
-            BookmarkNotes(notes: bookmark?.notes)
-
+            bookmarkNotesView(port)
             DataSourceActionBar(data: port, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
         .onAppear {

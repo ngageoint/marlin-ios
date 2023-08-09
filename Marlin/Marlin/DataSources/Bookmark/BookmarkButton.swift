@@ -30,7 +30,7 @@ struct BookmarkButton: View {
                 })
         }
         .accessibilityElement()
-        .accessibilityLabel("bookmark")
+        .accessibilityLabel("\(viewModel.isBookmarked ? "remove bookmark" : "bookmark")")
         .animation(.easeOut, value: viewModel.isBookmarked)
         .sheet(isPresented: $bookmarkBottomSheet) {
             VStack(alignment: .leading) {
@@ -47,6 +47,8 @@ struct BookmarkButton: View {
                     .scrollContentBackground(.hidden)
                     .background(Color.backgroundColor)
                     .tint(Color.primaryColorVariant)
+                    .accessibilityElement()
+                    .accessibilityLabel("notes")
                 HStack {
                     Spacer()
                     Button("Bookmark") {
@@ -56,6 +58,8 @@ struct BookmarkButton: View {
                         bookmarkBottomSheet = false
                     }
                     .buttonStyle(MaterialButtonStyle(type:.text))
+                    .accessibilityElement()
+                    .accessibilityLabel("Bookmark")
                 }
             }
             .padding(.all, 16)

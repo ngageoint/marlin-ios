@@ -8,19 +8,12 @@
 import SwiftUI
 
 struct DifferentialGPSStationSummaryView: DataSourceSummaryView {
-    var bookmark: Bookmark?
-    
+    var showBookmarkNotes: Bool = false
+
     var differentialGPSStation: DifferentialGPSStation
     var showMoreDetails: Bool = false
     var showSectionHeader: Bool = false
     var showTitle: Bool = true
-    
-    init(differentialGPSStation: DifferentialGPSStation, showMoreDetails: Bool = false, showSectionHeader: Bool = false, showTitle: Bool = true) {
-        self.differentialGPSStation = differentialGPSStation
-        self.showMoreDetails = showMoreDetails
-        self.showSectionHeader = showSectionHeader
-        self.showTitle = showTitle
-    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -46,7 +39,7 @@ struct DifferentialGPSStationSummaryView: DataSourceSummaryView {
                 Text(remarks)
                     .secondary()
             }
-            BookmarkNotes(notes: bookmark?.notes)
+            bookmarkNotesView(differentialGPSStation)
 
             DataSourceActionBar(data: differentialGPSStation, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }

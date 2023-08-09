@@ -78,6 +78,46 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Upload Time: \(newItem.uploadTime!.formatted(date: .complete, time: .omitted))")
     }
     
+    func testSummary() {
+        var newItem: NoticeToMariners?
+        persistentStore.viewContext.performAndWait {
+            let ntm = NoticeToMariners(context: persistentStore.viewContext)
+            
+            ntm.publicationIdentifier = 41791
+            ntm.noticeNumber = 202247
+            ntm.title = "Front Cover"
+            ntm.odsKey = "16694429/SFH00000/UNTM/202247/Front_Cover.pdf"
+            ntm.sectionOrder = 20
+            ntm.limitedDist = false
+            ntm.odsEntryId = 29431
+            ntm.odsContentId = 16694429
+            ntm.internalPath = "UNTM/202247"
+            ntm.filenameBase = "Front_Cover"
+            ntm.fileExtension = "pdf"
+            ntm.fileSize = 63491
+            ntm.isFullPublication = false
+            ntm.uploadTime = NoticeToMariners.dateFormatter.date(from: "2022-11-08T12:28:33.961+0000")
+            ntm.lastModified = NoticeToMariners.dateFormatter.date(from: "2022-11-08T12:28:33.961Z")
+            
+            newItem = ntm
+            try? persistentStore.viewContext.save()
+        }
+        guard let newItem = newItem else {
+            XCTFail()
+            return
+        }
+        
+        let summaryView = NoticeToMarinersSummaryView(noticeToMariners: newItem).environment(\.managedObjectContext, persistentStore.viewContext)
+        
+        let controller = UIHostingController(rootView: summaryView)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        tester().waitForView(withAccessibilityLabel: "202247")
+        tester().waitForView(withAccessibilityLabel: "November 19 - November 25")
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
+    }
+    
     func testReDownloadFullPublication() {
         var newItem: NoticeToMariners?
         persistentStore.viewContext.performAndWait {

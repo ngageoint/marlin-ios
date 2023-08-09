@@ -15,7 +15,7 @@ extension ElectronicPublication: DataSourceViewBuilder {
     
     var detailView: AnyView {
         AnyView(ElectronicPublicationSummaryView(electronicPublication: self)
-            .setBookmark(bookmark))
+            .showBookmarkNotes(true))
     }
     
     var summary: some DataSourceSummaryView {

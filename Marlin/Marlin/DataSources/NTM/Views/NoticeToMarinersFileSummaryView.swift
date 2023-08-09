@@ -12,7 +12,7 @@ struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
     
     var showSectionHeader: Bool = false
     
-    var bookmark: Bookmark?
+    var showBookmarkNotes: Bool = false
     @ObservedObject var noticeToMariners: NoticeToMariners
     var showMoreDetails: Bool = false
     

@@ -73,5 +73,7 @@ final class ElectronicPublicationDetailViewTests: XCTestCase {
         
         tester().wait(forTimeInterval: 1)
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Download")
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: epub)
     }
 }

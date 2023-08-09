@@ -295,5 +295,7 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         XCTAssertTrue(epub.checkFileExists())
         tester().tapView(withAccessibilityLabel: "Delete")
         XCTAssertFalse(epub.checkFileExists())
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: epub)
     }
 }

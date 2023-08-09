@@ -12,18 +12,16 @@ struct ElectronicPublicationSummaryView: DataSourceSummaryView {
     
     var showSectionHeader: Bool = false
     
-    var bookmark: Bookmark?
-    
+    var showBookmarkNotes: Bool = false
+
     var electronicPublication: ElectronicPublication
     var showMoreDetails: Bool = false
     
-    let bcf = ByteCountFormatter()
-    
-    init(electronicPublication: ElectronicPublication, showMoreDetails: Bool = false) {
-        self.electronicPublication = electronicPublication
-        self.showMoreDetails = showMoreDetails
+    var bcf: ByteCountFormatter {
+        let bcf = ByteCountFormatter()
         bcf.allowedUnits = [.useAll]
         bcf.countStyle = .file
+        return bcf
     }
     
     var body: some View {
@@ -36,7 +34,7 @@ struct ElectronicPublicationSummaryView: DataSourceSummaryView {
                 Text("Upload Time: \(uploadTime.formatted())")
                     .overline()
             }
-            BookmarkNotes(notes: bookmark?.notes)
+            bookmarkNotesView(electronicPublication)
             ElectronicPublicationActionBar(electronicPublication: electronicPublication)
         }
     }

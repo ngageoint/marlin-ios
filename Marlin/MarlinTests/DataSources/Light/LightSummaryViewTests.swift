@@ -39,21 +39,34 @@ final class LightSummaryViewTests: XCTestCase {
     }
     
     func testLoading() {
-        let light = Light(context: persistentStore.viewContext)
         
-        light.characteristicNumber = 1
-        light.volumeNumber = "PUB 110"
-        light.featureNumber = "14840"
-        light.noticeWeek = "06"
-        light.noticeYear = "2015"
-        light.latitude = 1.0
-        light.longitude = 2.0
-        light.remarks = "R. 120°-163°, W.-170°, G.-200°.\n"
-        light.characteristic = "Fl.(2)W.R.G.\nperiod 6s \nfl. 1.0s, ec. 1.0s \nfl. 1.0s, ec. 3.0s \n"
-        light.range = "W. 12 ; R. 9 ; G. 9"
-        light.sectionHeader = "Section"
-        light.structure = "Yellow pedestal, red band; 7.\n"
-        light.name = "-Outer."
+        var newItem: Light?
+        
+        persistentStore.viewContext.performAndWait {
+            let light = Light(context: persistentStore.viewContext)
+            
+            light.characteristicNumber = 1
+            light.volumeNumber = "PUB 110"
+            light.featureNumber = "14840"
+            light.noticeWeek = "06"
+            light.noticeYear = "2015"
+            light.latitude = 1.0
+            light.longitude = 2.0
+            light.remarks = "R. 120°-163°, W.-170°, G.-200°.\n"
+            light.characteristic = "Fl.(2)W.R.G.\nperiod 6s \nfl. 1.0s, ec. 1.0s \nfl. 1.0s, ec. 3.0s \n"
+            light.range = "W. 12 ; R. 9 ; G. 9"
+            light.sectionHeader = "Section"
+            light.structure = "Yellow pedestal, red band; 7.\n"
+            light.name = "-Outer."
+            
+            try? persistentStore.viewContext.save()
+            newItem = light
+        }
+        
+        guard let light = newItem else {
+            XCTFail()
+            return
+        }
 
         let summary = light.summary
             .setShowMoreDetails(false)
@@ -97,6 +110,8 @@ final class LightSummaryViewTests: XCTestCase {
         
         tester().waitForTappableView(withAccessibilityLabel: "Close")
         tester().tapView(withAccessibilityLabel: "Close")
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: light)
     }
     
     func testShowMoreDetails() {

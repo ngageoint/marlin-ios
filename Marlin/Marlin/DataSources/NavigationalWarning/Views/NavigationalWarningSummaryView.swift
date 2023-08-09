@@ -11,16 +11,12 @@ import MapKit
 struct NavigationalWarningSummaryView: DataSourceSummaryView {
     var showSectionHeader: Bool = false
     
-    var bookmark: Bookmark?
-    
+    var showBookmarkNotes: Bool = false
+
     var navigationalWarning: NavigationalWarning
     var showMoreDetails: Bool = false
     var mapName: String?
     var showTitle: Bool = true
-    
-    init(navigationalWarning: NavigationalWarning) {
-        self.navigationalWarning = navigationalWarning
-    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -34,7 +30,7 @@ struct NavigationalWarningSummaryView: DataSourceSummaryView {
                 .multilineTextAlignment(.leading)
                 .lineLimit(8)
                 .secondary()
-            BookmarkNotes(notes: bookmark?.notes)
+            bookmarkNotesView(navigationalWarning)
             NavigationalWarningActionBar(navigationalWarning: navigationalWarning, showMoreDetails: showMoreDetails, mapName: mapName)
         }
     }

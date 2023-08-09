@@ -125,6 +125,8 @@ final class LightDetailViewTests: XCTestCase {
         
         tester().waitForTappableView(withAccessibilityLabel: "Close")
         tester().tapView(withAccessibilityLabel: "Close")
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
     }
     
     func testLoadingWithColors() {

@@ -12,6 +12,7 @@ struct BookmarkSummary: DataSourceSummaryView {
     var showTitle: Bool = false
     var showSectionHeader: Bool = false
     
+    var showBookmarkNotes: Bool = true
     var bookmark: Bookmark?
     @State var dataSource: (any DataSource)?
     
@@ -29,7 +30,7 @@ struct BookmarkSummary: DataSourceSummaryView {
                         .setShowTitle(true)
                         .setShowSectionHeader(false)
                         .setShowMoreDetails(false)
-                        .setBookmark(bookmark)
+                        .showBookmarkNotes(showBookmarkNotes)
                 )
             }
             

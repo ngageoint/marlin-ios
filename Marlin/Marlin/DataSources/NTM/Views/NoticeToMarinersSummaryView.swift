@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NoticeToMarinersSummaryView: DataSourceSummaryView {
     var noticeToMariners: NoticeToMariners
-    var bookmark: Bookmark?
+    var showBookmarkNotes: Bool = false
 
     var showMoreDetails: Bool = false
     var showTitle: Bool = false
@@ -31,7 +31,7 @@ struct NoticeToMarinersSummaryView: DataSourceSummaryView {
                 }
             }
         
-            BookmarkNotes(notes: bookmark?.notes)
+            bookmarkNotesView(noticeToMariners)
         }
     }
 }

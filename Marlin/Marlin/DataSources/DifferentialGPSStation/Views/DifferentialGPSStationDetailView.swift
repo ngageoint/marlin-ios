@@ -31,7 +31,7 @@ struct DifferentialGPSStationDetailView: View {
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     differentialGPSStation.summary
-                        .setBookmark(differentialGPSStation.bookmark)
+                        .showBookmarkNotes(true)
                         .setShowSectionHeader(true)
                         .setShowTitle(false)
                         .padding(.all, 16)

@@ -14,7 +14,7 @@ struct GeoPackageFeatureItemSummaryView: DataSourceSummaryView {
     
     var showSectionHeader: Bool = false
     
-    var bookmark: Bookmark?
+    var showBookmarkNotes: Bool = false
     var featureItem: GeoPackageFeatureItem
     
     var body: some View {
@@ -32,6 +32,7 @@ struct GeoPackageFeatureItemSummaryView: DataSourceSummaryView {
             }
             Text(featureItem.layerName ?? "")
                 .overline()
+            bookmarkNotesView(featureItem)
             DataSourceActionBar(data: featureItem, showMoreDetailsButton: true, showFocusButton: false)
         }
         

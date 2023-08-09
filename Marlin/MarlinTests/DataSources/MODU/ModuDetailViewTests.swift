@@ -109,5 +109,6 @@ final class ModuDetailViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: newItem.navArea)
         tester().waitForView(withAccessibilityLabel: "\(newItem.subregion)")
         
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
     }
 }

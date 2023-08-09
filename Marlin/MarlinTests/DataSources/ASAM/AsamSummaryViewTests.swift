@@ -65,6 +65,8 @@ final class AsamSummaryViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Location")
         
         waitForExpectations(timeout: 10, handler: nil)
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
     }
     
     func testLoadingNoHostility() {

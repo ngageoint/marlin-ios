@@ -29,7 +29,7 @@ struct NoticeToMarinersFullNoticeView: View {
     func sectionHeader() -> some View {
         if let pub = noticeToMarinersPublications.first {
             NoticeToMarinersSummaryView(noticeToMariners: pub)
-                .setBookmark(bookmark.first)
+                .showBookmarkNotes(true)
         }
     }
 

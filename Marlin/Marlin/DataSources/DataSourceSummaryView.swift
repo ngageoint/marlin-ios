@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 protocol DataSourceSummaryView: View {
-    var bookmark: Bookmark? { get set }
+    var showBookmarkNotes: Bool { get set }
     var showMoreDetails: Bool { get set }
     var showTitle: Bool { get set }
     var showSectionHeader: Bool { get set }
@@ -31,9 +31,16 @@ extension View where Self: DataSourceSummaryView {
         newView.showSectionHeader = showSectionHeader
         return newView
     }
-    func setBookmark(_ bookmark: Bookmark?) -> some DataSourceSummaryView {
+    func showBookmarkNotes(_ showBookmarkNotes: Bool) -> some DataSourceSummaryView {
         var newView = self
-        newView.bookmark = bookmark
+        newView.showBookmarkNotes = showBookmarkNotes
         return newView
+    }
+    
+    @ViewBuilder
+    func bookmarkNotesView(_ bookmarkable: Bookmarkable?) -> some View {
+        if let bookmarkable = bookmarkable, showBookmarkNotes {
+            BookmarkNotes(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key)
+        }
     }
 }

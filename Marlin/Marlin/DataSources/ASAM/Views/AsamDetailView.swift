@@ -34,7 +34,7 @@ struct AsamDetailView: View {
                     }
                     Group {
                         asam.summary
-                            .setBookmark(asam.bookmark)
+                            .showBookmarkNotes(true)
                             .setShowTitle(false)
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)

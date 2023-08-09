@@ -137,6 +137,8 @@ final class RadioBeaconDetailViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: newItem.sequenceText)
         tester().waitForView(withAccessibilityLabel: newItem.frequency)
         tester().waitForView(withAccessibilityLabel: newItem.stationRemark)
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
     }
 }
 

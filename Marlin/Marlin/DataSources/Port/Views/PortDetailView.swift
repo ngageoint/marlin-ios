@@ -31,7 +31,7 @@ struct PortDetailView: View {
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     port.summary
-                        .setBookmark(port.bookmark)
+                        .showBookmarkNotes(true)
                         .setShowTitle(false)
                         .padding(.all, 16)
                 }

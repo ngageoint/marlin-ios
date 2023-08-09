@@ -79,6 +79,7 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "Close")
         tester().tapView(withAccessibilityLabel: "Close")
         
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: nw)
 
     }
 }

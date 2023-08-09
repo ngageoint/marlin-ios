@@ -15,6 +15,7 @@ struct AsamSummaryView: DataSourceSummaryView {
     var asam: Asam
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
+    var showBookmarkNotes: Bool = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -27,7 +28,7 @@ struct AsamSummaryView: DataSourceSummaryView {
             Text(asam.asamDescription ?? "")
                 .lineLimit(8)
                 .secondary()
-            BookmarkNotes(notes: bookmark?.notes)
+            bookmarkNotesView(asam)
             DataSourceActionBar(data: asam, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }
