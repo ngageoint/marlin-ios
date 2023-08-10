@@ -44,6 +44,23 @@ extension NoticeToMariners: DataSource {
     }
 }
 
+extension NoticeToMariners: Bookmarkable {
+    var itemKey: String? {
+        return "\(noticeNumber)"
+    }
+    
+    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
+        if let itemKey = itemKey, let noticeNumber = Int64(itemKey) {
+            return getNoticeToMariner(context: context, noticeNumber: noticeNumber)
+        }
+        return nil
+    }
+    
+    static func getNoticeToMariner(context: NSManagedObjectContext, noticeNumber: Int64) -> NoticeToMariners? {
+        return context.fetchFirst(NoticeToMariners.self, key: "noticeNumber", value: noticeNumber)
+    }
+}
+
 extension NoticeToMariners: BatchImportable {
     static var seedDataFiles: [String]? = ["ntm"]
     static var decodableRoot: Decodable.Type = NoticeToMarinersPropertyContainer.self

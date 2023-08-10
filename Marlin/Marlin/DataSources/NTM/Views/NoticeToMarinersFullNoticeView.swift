@@ -12,21 +12,39 @@ struct NoticeToMarinersFullNoticeView: View {
 
     @FetchRequest<NoticeToMariners>
     var noticeToMarinersPublications: FetchedResults<NoticeToMariners>
+    
+    @FetchRequest<Bookmark>
+    var bookmark: FetchedResults<Bookmark>
         
     private var gridColumns = Array(repeating: GridItem(.flexible()), count: 3)
     private var numColumns = 3
     
     init(viewModel: NoticeToMarinersFullNoticeViewViewModel) {
         self._noticeToMarinersPublications = viewModel.createFetchRequest()
+        self._bookmark = viewModel.createBookmarkFetchRequest()
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
     
+    @ViewBuilder
+    func sectionHeader() -> some View {
+        if let pub = noticeToMarinersPublications.first {
+            NoticeToMarinersSummaryView(noticeToMariners: pub)
+                .showBookmarkNotes(true)
+        }
+    }
+
     var body: some View {
         List {
+            Section("Notice") {
+                sectionHeader()
+                    .padding(.all, 16)
+                    .card()
+            }
+            .dataSourceSection()
             graphicsView()
             Section("Files") {
                 ForEach(noticeToMarinersPublications) { ntm in
-                    NoticeToMarinersSummaryView(noticeToMariners: ntm)
+                    NoticeToMarinersFileSummaryView(noticeToMariners: ntm)
                         .padding(.all, 16)
                         .card()
                 }
@@ -47,7 +65,7 @@ struct NoticeToMarinersFullNoticeView: View {
     func graphicsView() -> some View {
         ForEach(Array(viewModel.sortedGraphicKeys), id: \.self) { key in
             if let items = viewModel.graphics[key], !items.isEmpty {
-                Section("\(items[0].graphicType ?? "Graphics")") {
+                Section("\(items[0].graphicType ?? "Graphic")s") {
                     LazyVGrid(columns: gridColumns) {
                         ForEach(items) { item in
                             VStack {
@@ -62,8 +80,10 @@ struct NoticeToMarinersFullNoticeView: View {
                             }
                         }
                     }
+                    .padding(.all, 16)
+                    .card()
                 }
-                .padding(.all, 8)
+                .dataSourceSection()
             }
             
         }

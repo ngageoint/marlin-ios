@@ -7,17 +7,14 @@
 
 import SwiftUI
 
-struct ModuSummaryView: View {
-        
+struct ModuSummaryView: DataSourceSummaryView {
+    var showSectionHeader: Bool = false
+    
+    var showBookmarkNotes: Bool = false
+
     var modu: Modu
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
-    
-    init(modu: Modu, showMoreDetails: Bool = false, showTitle: Bool = true) {
-        self.modu = modu
-        self.showMoreDetails = showMoreDetails
-        self.showTitle = showTitle
-    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -33,6 +30,8 @@ struct ModuSummaryView: View {
             Text("\(modu.specialStatus ?? "")")
                 .lineLimit(1)
                 .secondary()
+            bookmarkNotesView(modu)
+
             DataSourceActionBar(data: modu, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }

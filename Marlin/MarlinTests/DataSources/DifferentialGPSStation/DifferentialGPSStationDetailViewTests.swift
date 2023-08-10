@@ -73,6 +73,7 @@ final class DifferentialGPSStationDetailViewTests: XCTestCase {
         }
         
         let view = newItem.detailView
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
@@ -100,5 +101,7 @@ final class DifferentialGPSStationDetailViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Location")
         
         waitForExpectations(timeout: 10, handler: nil)
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
     }
 }

@@ -33,7 +33,9 @@ struct AsamDetailView: View {
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     Group {
-                        AsamSummaryView(asam: asam, showTitle: false)
+                        asam.summary
+                            .showBookmarkNotes(true)
+                            .setShowTitle(false)
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
                 }

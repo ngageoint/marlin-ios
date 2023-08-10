@@ -14,10 +14,11 @@ extension ElectronicPublication: DataSourceViewBuilder {
     }
     
     var detailView: AnyView {
-        AnyView(ElectronicPublicationDetailView(electronicPublication: self))
+        AnyView(ElectronicPublicationSummaryView(electronicPublication: self)
+            .showBookmarkNotes(true))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil, showTitle: Bool = true) -> AnyView {
-        AnyView(ElectronicPublicationSummaryView(electronicPublication: self, showMoreDetails: showMoreDetails))
+    var summary: some DataSourceSummaryView {
+        ElectronicPublicationSummaryView(electronicPublication: self)
     }
 }

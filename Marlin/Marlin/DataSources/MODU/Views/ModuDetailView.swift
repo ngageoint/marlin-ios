@@ -39,6 +39,7 @@ struct ModuDetailView: View {
                         Text("\(modu.specialStatus ?? "")")
                             .lineLimit(1)
                             .secondary()
+                        BookmarkNotes(notes: modu.bookmark?.notes)
                         DataSourceActionBar(data: modu)
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)

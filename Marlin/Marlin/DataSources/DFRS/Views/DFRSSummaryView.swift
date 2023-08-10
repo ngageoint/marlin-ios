@@ -7,19 +7,13 @@
 
 import SwiftUI
 
-struct DFRSSummaryView: View {
-    
+struct DFRSSummaryView: DataSourceSummaryView {
+    var showBookmarkNotes: Bool = false
+
     var dfrs: DFRS
     var showMoreDetails: Bool = false
     var showSectionHeader: Bool = false
-    var showTitle: Bool = false
-    
-    init(dfrs: DFRS, showMoreDetails: Bool = false, showSectionHeader: Bool = false, showTitle: Bool = true) {
-        self.dfrs = dfrs
-        self.showMoreDetails = showMoreDetails
-        self.showSectionHeader = showSectionHeader
-        self.showTitle = showTitle
-    }
+    var showTitle: Bool = true
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

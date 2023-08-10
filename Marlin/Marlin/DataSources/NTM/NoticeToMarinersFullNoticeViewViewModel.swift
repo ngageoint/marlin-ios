@@ -72,6 +72,13 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
         }
     }
     
+    func createBookmarkFetchRequest() -> FetchRequest<Bookmark> {
+        if let noticeNumber = noticeNumber {
+            return FetchRequest(entity: Bookmark.entity(), sortDescriptors: [], predicate: NSPredicate(format: "id == %@ AND dataSource == %@", "\(noticeNumber)", NoticeToMariners.key))
+        }
+        return FetchRequest(entity: Bookmark.entity(), sortDescriptors: [], predicate: NSPredicate(value: false))
+    }
+    
     func loadGraphics() {
         guard let url = URL(string:"\(MSIRouter.baseURLString)/publications/ntm/ntm-graphics?noticeNumber=\(noticeNumber ?? 0)&graphicType=All&output=json") else {
             print("Your API end point is Invalid")

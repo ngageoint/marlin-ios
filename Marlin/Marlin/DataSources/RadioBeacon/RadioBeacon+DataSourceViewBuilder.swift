@@ -17,7 +17,7 @@ extension RadioBeacon: DataSourceViewBuilder {
         AnyView(RadioBeaconDetailView(radioBeacon: self))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil, showTitle: Bool = true) -> AnyView {
-        AnyView(RadioBeaconSummaryView(radioBeacon: self, showMoreDetails: showMoreDetails, showSectionHeader: showSectionHeader))
+    var summary: some DataSourceSummaryView {
+        RadioBeaconSummaryView(radioBeacon: self)
     }
 }

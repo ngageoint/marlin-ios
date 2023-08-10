@@ -14,8 +14,28 @@ import sf_ios
 import geopackage_ios
 import ExceptionCatcher
 
-extension Light: DataSourceLocation, GeoPackageExportable {
+extension Light: Bookmarkable {
+    var itemKey: String? {
+        return "\(featureNumber ?? "")--\(volumeNumber ?? "")--\(characteristicNumber)"
+    }
     
+    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
+        if let split = itemKey?.split(separator: "--"), split.count == 3 {
+            return getLight(context: context, featureNumber: "\(split[0])", volumeNumber: "\(split[1])", characteristicNumber: Int64(split[2]) ?? 0)
+        }
+        
+        return nil
+    }
+    
+    static func getLight(context: NSManagedObjectContext, featureNumber: String?, volumeNumber: String?, characteristicNumber: Int64) -> Light? {
+        if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
+            return try? context.fetchFirst(Light.self, predicate: NSPredicate(format: "featureNumber = %@ AND volumeNumber = %@ AND characteristicNumber = %d", argumentArray: [featureNumber, volumeNumber, characteristicNumber]))
+        }
+        return nil
+    }
+}
+
+extension Light: DataSourceLocation, GeoPackageExportable {
     func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
         var geometryByColor: [UIColor:SFGeometry] = [:]
         if let lightSectors = lightSectors {

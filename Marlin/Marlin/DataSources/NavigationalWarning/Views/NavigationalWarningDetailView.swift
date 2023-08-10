@@ -39,6 +39,7 @@ struct NavigationalWarningDetailView: View {
                         if let cancelNavArea = navigationalWarning.cancelNavArea, let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea){
                             Property(property: "Cancelled By", value: "\(navAreaEnum.display) \(navigationalWarning.cancelMsgNumber)/\(navigationalWarning.cancelMsgYear)")
                         }
+                        BookmarkNotes(notes: navigationalWarning.bookmark?.notes)
                         NavigationalWarningActionBar(navigationalWarning: navigationalWarning, showMoreDetails: false, mapName: "Navigational Warning Detail Map")
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)

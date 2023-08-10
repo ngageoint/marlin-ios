@@ -7,18 +7,21 @@
 
 import SwiftUI
 
-struct ElectronicPublicationSummaryView: View {
+struct ElectronicPublicationSummaryView: DataSourceSummaryView {
+    var showTitle: Bool = false
     
+    var showSectionHeader: Bool = false
+    
+    var showBookmarkNotes: Bool = false
+
     var electronicPublication: ElectronicPublication
     var showMoreDetails: Bool = false
     
-    let bcf = ByteCountFormatter()
-    
-    init(electronicPublication: ElectronicPublication, showMoreDetails: Bool = false) {
-        self.electronicPublication = electronicPublication
-        self.showMoreDetails = showMoreDetails
+    var bcf: ByteCountFormatter {
+        let bcf = ByteCountFormatter()
         bcf.allowedUnits = [.useAll]
         bcf.countStyle = .file
+        return bcf
     }
     
     var body: some View {
@@ -31,6 +34,7 @@ struct ElectronicPublicationSummaryView: View {
                 Text("Upload Time: \(uploadTime.formatted())")
                     .overline()
             }
+            bookmarkNotesView(electronicPublication)
             ElectronicPublicationActionBar(electronicPublication: electronicPublication)
         }
     }

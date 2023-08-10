@@ -62,7 +62,9 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         nw.subregion = "subregion"
         nw.text = "text of the warning"
         
-        let summary = nw.summaryView(showMoreDetails: false)
+        let summary = nw.summary
+            .setShowMoreDetails(false)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -78,6 +80,7 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "Close")
         tester().tapView(withAccessibilityLabel: "Close")
         
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: nw)
 
     }
 }

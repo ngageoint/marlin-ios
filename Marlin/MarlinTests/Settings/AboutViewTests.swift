@@ -25,13 +25,19 @@ final class AboutViewTests: XCTestCase {
     }
     
     func testTapDisclaimer() {
-        let about = AboutView()
-
-        let nav = NavigationView<AboutView> {
-            about
-        }
         
-        let controller = UIHostingController(rootView: nav)
+        struct Container: View {
+            @State var path: NavigationPath = NavigationPath()
+            var body: some View {
+                NavigationStack(path: $path) {
+                    AboutView()
+                        .marlinRoutes(path: $path)
+                }
+                
+            }
+        }
+        let container = Container()
+        let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         
@@ -46,13 +52,18 @@ final class AboutViewTests: XCTestCase {
     }
     
     func testTapContactUs() {
-        let about = AboutView()
-        
-        let nav = NavigationView<AboutView> {
-            about
+        struct Container: View {
+            @State var path: NavigationPath = NavigationPath()
+            var body: some View {
+                NavigationStack(path: $path) {
+                    AboutView()
+                        .marlinRoutes(path: $path)
+                }
+                
+            }
         }
-        
-        let controller = UIHostingController(rootView: nav)
+        let container = Container()
+        let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         

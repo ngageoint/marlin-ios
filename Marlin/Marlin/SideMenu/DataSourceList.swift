@@ -20,7 +20,8 @@ class DataSourceList: ObservableObject {
         DataSourceItem(dataSource: DifferentialGPSStation.self),
         DataSourceItem(dataSource: DFRS.self),
         DataSourceItem(dataSource: ElectronicPublication.self),
-        DataSourceItem(dataSource: NoticeToMariners.self)
+        DataSourceItem(dataSource: NoticeToMariners.self),
+        DataSourceItem(dataSource: Bookmark.self)
     ]
     
     var enabledTabs: [DataSourceItem] {

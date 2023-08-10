@@ -282,6 +282,8 @@ final class NoticeToMarinersFullNoticeViewTests: XCTestCase {
         for title in publicationTitles {
             tester().waitForView(withAccessibilityLabel: title)
         }
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
     }
 
 }

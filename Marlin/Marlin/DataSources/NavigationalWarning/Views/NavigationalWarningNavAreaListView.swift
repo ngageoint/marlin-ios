@@ -39,7 +39,7 @@ struct NavigationalWarningNavAreaListView: View {
                 LazyVStack (alignment: .leading) {
                     ForEach(dataSource.items) { navigationalWarning in
                         HStack {
-                            navigationalWarning.summaryView(mapName: mapName)
+                            navigationalWarning.summary
                                 .padding(.all, 16)
                         }
                         .card()

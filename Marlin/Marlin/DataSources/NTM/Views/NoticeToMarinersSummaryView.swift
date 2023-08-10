@@ -2,64 +2,36 @@
 //  NoticeToMarinersSummaryView.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 11/14/22.
+//  Created by Daniel Barela on 8/4/23.
 //
 
 import SwiftUI
 
-struct NoticeToMarinersSummaryView: View {
-    
-    @ObservedObject var noticeToMariners: NoticeToMariners
+struct NoticeToMarinersSummaryView: DataSourceSummaryView {
+    var noticeToMariners: NoticeToMariners
+    var showBookmarkNotes: Bool = false
+
     var showMoreDetails: Bool = false
-    
-    var bcf: ByteCountFormatter {
-        let bcf = ByteCountFormatter()
-        bcf.allowedUnits = [.useAll]
-        bcf.countStyle = .file
-        return bcf
-    }
+    var showTitle: Bool = false
+    var showSectionHeader: Bool = false
     
     var body: some View {
+        
         VStack(alignment: .leading, spacing: 8) {
-            Text("\(noticeToMariners.title ?? "")\(noticeToMariners.isFullPublication ? (" \(noticeToMariners.fileExtension ?? "")") : "")")
-                .primary()
-            Text("File Size: \(bcf.string(fromByteCount: noticeToMariners.fileSize))")
-                .secondary()
-            if let uploadTime = noticeToMariners.uploadTime {
-                Text("Upload Time: \(uploadTime.formatted(date: .complete, time: .omitted))")
-                    .overline()
-            }
-            HStack(spacing: 8) {
+            HStack {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(verbatim: "\(noticeToMariners.noticeNumber)")
+                        .overline()
+                    Text(noticeToMariners.dateRange())
+                        .secondary()
+                }
                 Spacer()
-                if noticeToMariners.isDownloading {
-                    ProgressView(value: noticeToMariners.downloadProgress)
-                        .tint(Color.primaryColorVariant)
-                }
-                if noticeToMariners.isDownloaded, noticeToMariners.checkFileExists(), let url = URL(string: noticeToMariners.savePath) {
-                    Button("Delete") {
-                        noticeToMariners.deleteFile()
-                    }
-                    VStack {
-                        Button("Open") {
-                            NotificationCenter.default.post(name: .DocumentPreview, object: url)
-                        }
-                    }
-                } else if !noticeToMariners.isDownloading {
-                    Link(destination: noticeToMariners.remoteLocation!, label: {
-                        Text("Open In Browser")
-                            .buttonStyle(MaterialButtonStyle(type: .text))
-                    })
-                    Button("Download") {
-                        noticeToMariners.downloadFile()
-                    }
-                } else {
-                    Button("Re-Download") {
-                        noticeToMariners.downloadFile()
-                    }
+                if let itemKey = noticeToMariners.itemKey {
+                    BookmarkButton(viewModel: BookmarkViewModel(itemKey: itemKey, dataSource: NoticeToMariners.key))
                 }
             }
-            .buttonStyle(MaterialButtonStyle(type: .text))
+        
+            bookmarkNotesView(noticeToMariners)
         }
-        .frame(maxWidth: .infinity)
     }
 }

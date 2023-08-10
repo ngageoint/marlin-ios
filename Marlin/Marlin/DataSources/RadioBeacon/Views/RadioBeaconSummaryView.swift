@@ -7,8 +7,11 @@
 
 import SwiftUI
 
-struct RadioBeaconSummaryView: View {
+struct RadioBeaconSummaryView: DataSourceSummaryView {
+    var showTitle: Bool = false
     
+    var showBookmarkNotes: Bool = false
+
     var radioBeacon: RadioBeacon
     var showMoreDetails: Bool = false
     var showSectionHeader: Bool = false
@@ -42,6 +45,7 @@ struct RadioBeaconSummaryView: View {
                 Text(stationRemark)
                     .secondary()
             }
+            bookmarkNotesView(radioBeacon)
             DataSourceActionBar(data: radioBeacon, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }

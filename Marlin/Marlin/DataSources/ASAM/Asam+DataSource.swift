@@ -10,6 +10,23 @@ import UIKit
 import CoreData
 import Combine
 
+extension Asam: Bookmarkable {
+    var itemKey: String? {
+        return reference
+    }
+    
+    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
+        return getAsam(context: context, reference: itemKey)
+    }
+    
+    static func getAsam(context: NSManagedObjectContext, reference: String?) -> Asam? {
+        if let reference = reference {
+            return context.fetchFirst(Asam.self, key: "reference", value: reference)
+        }
+        return nil
+    }
+}
+
 extension Asam: DataSourceLocation, GeoPackageExportable {
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)

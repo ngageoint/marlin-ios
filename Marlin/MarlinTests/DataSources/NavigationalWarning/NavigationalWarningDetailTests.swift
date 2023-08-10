@@ -79,9 +79,6 @@ final class NavigationalWarningDetailTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "Close")
         tester().tapView(withAccessibilityLabel: "Close")
         
-        tester().waitForView(withAccessibilityLabel: "Status")
-        tester().waitForView(withAccessibilityLabel: newItem.status)
-        
         tester().waitForView(withAccessibilityLabel: "Authority")
         tester().waitForView(withAccessibilityLabel: newItem.authority)
         
@@ -94,5 +91,7 @@ final class NavigationalWarningDetailTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Text")
         let textView = viewTester().usingLabel("Text").view as! UITextView
         XCTAssertEqual(textView.text, newItem.text)
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
     }
 }

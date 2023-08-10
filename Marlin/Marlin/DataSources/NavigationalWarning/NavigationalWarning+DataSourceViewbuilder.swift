@@ -16,7 +16,7 @@ extension NavigationalWarning: DataSourceViewBuilder {
         AnyView(NavigationalWarningDetailView(navigationalWarning: self))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil, showTitle: Bool = true) -> AnyView {
-        AnyView(NavigationalWarningSummaryView(navigationalWarning: self, showMoreDetails: showMoreDetails, mapName: mapName, showTitle: showTitle))
+    var summary: some DataSourceSummaryView {
+        NavigationalWarningSummaryView(navigationalWarning: self)
     }
 }

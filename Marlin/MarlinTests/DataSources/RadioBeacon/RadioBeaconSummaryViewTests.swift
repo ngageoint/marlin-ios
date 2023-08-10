@@ -38,32 +38,46 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
     }
     
     func testLoading() {
-        let rb = RadioBeacon(context: persistentStore.viewContext)
         
-        rb.volumeNumber = "PUB 110"
-        rb.aidType = "Radiobeacons"
-        rb.geopoliticalHeading = "GREENLAND"
-        rb.regionHeading = nil
-        rb.precedingNote = nil
-        rb.featureNumber = 10
-        rb.name = "Ittoqqortoormit, Scoresbysund"
-        rb.position = "70°29'11.99\"N \n21°58'20\"W"
-        rb.characteristic = "SC\n(• • •  - • - • ).\n"
-        rb.range = 200
-        rb.sequenceText = nil
-        rb.frequency = "343\nNON, A2A."
-        rb.stationRemark = "Aeromarine."
-        rb.postNote = nil
-        rb.noticeNumber = 199706
-        rb.removeFromList = "N"
-        rb.deleteFlag = "N"
-        rb.noticeWeek = "06"
-        rb.noticeYear = "1997"
-        rb.latitude = 1.0
-        rb.longitude = 2.0
-        rb.sectionHeader = "section"
+        var newItem: RadioBeacon?
+        persistentStore.viewContext.performAndWait {
+            let rb = RadioBeacon(context: persistentStore.viewContext)
+            
+            rb.volumeNumber = "PUB 110"
+            rb.aidType = "Radiobeacons"
+            rb.geopoliticalHeading = "GREENLAND"
+            rb.regionHeading = nil
+            rb.precedingNote = nil
+            rb.featureNumber = 10
+            rb.name = "Ittoqqortoormit, Scoresbysund"
+            rb.position = "70°29'11.99\"N \n21°58'20\"W"
+            rb.characteristic = "SC\n(• • •  - • - • ).\n"
+            rb.range = 200
+            rb.sequenceText = nil
+            rb.frequency = "343\nNON, A2A."
+            rb.stationRemark = "Aeromarine."
+            rb.postNote = nil
+            rb.noticeNumber = 199706
+            rb.removeFromList = "N"
+            rb.deleteFlag = "N"
+            rb.noticeWeek = "06"
+            rb.noticeYear = "1997"
+            rb.latitude = 1.0
+            rb.longitude = 2.0
+            rb.sectionHeader = "section"
+            
+            try? persistentStore.viewContext.save()
+            newItem = rb
+        }
+        
+        guard let rb = newItem else {
+            XCTFail()
+            return
+        }
 
-        let summary = rb.summaryView(showMoreDetails: false)
+        let summary = rb.summary
+            .setShowMoreDetails(false)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -106,6 +120,8 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         
         tester().waitForTappableView(withAccessibilityLabel: "Close")
         tester().tapView(withAccessibilityLabel: "Close")
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: rb)
     }
     
     func testShowMoreDetails() {
@@ -134,7 +150,9 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         rb.longitude = 2.0
         rb.sectionHeader = "section"
         
-        let summary = rb.summaryView(showMoreDetails: true)
+        let summary = rb.summary
+            .setShowMoreDetails(true)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -181,7 +199,9 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         rb.longitude = 2.0
         rb.sectionHeader = "section"
         
-        let summary = rb.summaryView(showSectionHeader: true)
+        let summary = rb.summary
+            .setShowSectionHeader(true)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

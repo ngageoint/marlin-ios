@@ -64,6 +64,7 @@ final class AsamDetailViewTests: XCTestCase {
         }
         
         let view = AsamDetailView(asam: newItem)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -85,6 +86,8 @@ final class AsamDetailViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Location")
         
         waitForExpectations(timeout: 10, handler: nil)
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
     }
     
     func testLoadingNoHostility() {
@@ -111,6 +114,7 @@ final class AsamDetailViewTests: XCTestCase {
         }
 
         let summary = AsamDetailView(asam: newItem)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -157,6 +161,7 @@ final class AsamDetailViewTests: XCTestCase {
         }
 
         let summary = AsamDetailView(asam: newItem)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller

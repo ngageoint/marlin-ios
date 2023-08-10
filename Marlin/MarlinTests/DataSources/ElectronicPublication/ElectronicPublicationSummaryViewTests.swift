@@ -93,7 +93,9 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         epub.fullFilename = "UpdatedPub110bk.pdf"
         epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
         
-        let summary = epub.summaryView(showMoreDetails: false)
+        let summary = epub.summary
+            .setShowMoreDetails(false)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -131,7 +133,9 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
         epub.isDownloaded = false
 
-        let summary = epub.summaryView(showMoreDetails: false)
+        let summary = epub.summary
+            .setShowMoreDetails(false)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -198,7 +202,9 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
         epub.isDownloaded = false
         
-        let summary = epub.summaryView(showMoreDetails: false)
+        let summary = epub.summary
+            .setShowMoreDetails(false)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -223,32 +229,46 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
     }
     
     func testReDownload() {
-        let epub = ElectronicPublication(context: persistentStore.viewContext)
+        var newEpub: ElectronicPublication?
         
-        epub.pubTypeId = 9
-        epub.pubDownloadId = 3
-        epub.fullPubFlag = false
-        epub.pubDownloadOrder = 1
-        epub.pubDownloadDisplayName = "Pub. 110 - Greenland, East Coasts of North and South America, and West Indies"
-        epub.pubsecId = 129
-        epub.odsEntryId = 22266
-        epub.sectionOrder = 1
-        epub.sectionName = "UpdatedPub110bk"
-        epub.sectionDisplayName = "Pub 110 - Updated to NTM 44/22"
-        epub.sectionLastModified = Date(timeIntervalSince1970: 0)
-        epub.contentId = 16694312
-        epub.internalPath = "NIMA_LOL/Pub110"
-        epub.filenameBase = "UpdatedPub110bk"
-        epub.fileExtension = "pdf"
-        epub.s3Key = "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf"
-        epub.fileSize = 2389496
-        epub.uploadTime = Date(timeIntervalSince1970: 0)
-        epub.fullFilename = "UpdatedPub110bk.pdf"
-        epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
-        epub.isDownloaded = false
-        epub.isDownloading = true
+        persistentStore.viewContext.performAndWait {
+            let epub = ElectronicPublication(context: persistentStore.viewContext)
+            
+            epub.pubTypeId = 9
+            epub.pubDownloadId = 3
+            epub.fullPubFlag = false
+            epub.pubDownloadOrder = 1
+            epub.pubDownloadDisplayName = "Pub. 110 - Greenland, East Coasts of North and South America, and West Indies"
+            epub.pubsecId = 129
+            epub.odsEntryId = 22266
+            epub.sectionOrder = 1
+            epub.sectionName = "UpdatedPub110bk"
+            epub.sectionDisplayName = "Pub 110 - Updated to NTM 44/22"
+            epub.sectionLastModified = Date(timeIntervalSince1970: 0)
+            epub.contentId = 16694312
+            epub.internalPath = "NIMA_LOL/Pub110"
+            epub.filenameBase = "UpdatedPub110bk"
+            epub.fileExtension = "pdf"
+            epub.s3Key = "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf"
+            epub.fileSize = 2389496
+            epub.uploadTime = Date(timeIntervalSince1970: 0)
+            epub.fullFilename = "UpdatedPub110bk.pdf"
+            epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
+            epub.isDownloaded = false
+            epub.isDownloading = true
+            try? persistentStore.viewContext.save()
+            
+            newEpub = epub
+        }
         
-        let summary = epub.summaryView(showMoreDetails: false)
+        guard let epub = newEpub else {
+            XCTFail()
+            return
+        }
+        
+        let summary = epub.summary
+            .setShowMoreDetails(false)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -269,8 +289,10 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         }
         
         tester().wait(forTimeInterval: 1)
-        tester().waitForView(withAccessibilityLabel: "Re-Download")
-        tester().tapView(withAccessibilityLabel: "Re-Download")
+        tester().waitForView(withAccessibilityLabel: "Cancel")
+        tester().tapView(withAccessibilityLabel: "Cancel")
+        tester().waitForView(withAccessibilityLabel: "Download")
+        tester().tapView(withAccessibilityLabel: "Download")
         
         let e = XCTKeyPathExpectation(keyPath: \ElectronicPublication.downloadProgress, observedObject: epub, expectedValue: 1.0)
         wait(for: [e], timeout: 10)
@@ -289,5 +311,7 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         XCTAssertTrue(epub.checkFileExists())
         tester().tapView(withAccessibilityLabel: "Delete")
         XCTAssertFalse(epub.checkFileExists())
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: epub)
     }
 }

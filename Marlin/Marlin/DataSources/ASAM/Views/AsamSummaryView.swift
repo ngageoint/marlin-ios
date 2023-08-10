@@ -7,23 +7,28 @@
 
 import SwiftUI
 
-struct AsamSummaryView: View {
+struct AsamSummaryView: DataSourceSummaryView {
+    var showSectionHeader: Bool = false
+    
+    var bookmark: Bookmark?
         
     var asam: Asam
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
+    var showBookmarkNotes: Bool = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(asam.dateString ?? "")
                 .overline()
             if showTitle {
-                Text("\(asam.hostility ?? "")\(asam.hostility != nil && asam.victim != nil ? ": " : "")\(asam.victim ?? "")")
+                Text(asam.itemTitle)
                     .primary()
             }
             Text(asam.asamDescription ?? "")
                 .lineLimit(8)
                 .secondary()
+            bookmarkNotesView(asam)
             DataSourceActionBar(data: asam, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }

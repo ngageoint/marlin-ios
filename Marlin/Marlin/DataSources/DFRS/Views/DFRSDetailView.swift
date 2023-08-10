@@ -35,7 +35,10 @@ struct DFRSDetailView: View {
                         DataSourceLocationMapView(dataSourceLocation: dfrs, mapName: "DFRS Detail Map", mixins: [DFRSMap(fetchPredicate: predicate)])
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
-                    dfrs.summaryView(showMoreDetails: false, showSectionHeader: true, showTitle: false)
+                    dfrs.summary
+                        .setShowTitle(false)
+                        .setShowSectionHeader(true)
+                        .setShowMoreDetails(false)
                         .padding(.all, 16)
                 }
                 .card()

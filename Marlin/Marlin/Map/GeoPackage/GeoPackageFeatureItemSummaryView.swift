@@ -7,7 +7,14 @@
 
 import SwiftUI
 
-struct GeoPackageFeatureItemSummaryView: View {
+struct GeoPackageFeatureItemSummaryView: DataSourceSummaryView {
+    var showMoreDetails: Bool = true
+    
+    var showTitle: Bool = false
+    
+    var showSectionHeader: Bool = false
+    
+    var showBookmarkNotes: Bool = false
     var featureItem: GeoPackageFeatureItem
     
     var body: some View {
@@ -25,6 +32,7 @@ struct GeoPackageFeatureItemSummaryView: View {
             }
             Text(featureItem.layerName ?? "")
                 .overline()
+            bookmarkNotesView(featureItem)
             DataSourceActionBar(data: featureItem, showMoreDetailsButton: true, showFocusButton: false)
         }
         

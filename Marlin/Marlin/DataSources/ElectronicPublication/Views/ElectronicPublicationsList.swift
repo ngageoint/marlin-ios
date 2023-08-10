@@ -60,7 +60,10 @@ struct ElectronicPublicationsList: View {
     func defaultPublications(section: SectionedFetchResults<Int64, ElectronicPublication>.Element) -> some View {
         List {
             ForEach(section) { epub in
-                epub.summaryView()
+                epub.summary
+                    .setShowSectionHeader(false)
+                    .setShowMoreDetails(false)
+                    .setShowTitle(true)
                     .padding([.top, .bottom], 16)
             }
         }
@@ -82,7 +85,10 @@ struct ElectronicPublicationsList: View {
             if !completeVolumes.isEmpty {
                 Section(completeTitle) {
                     ForEach(completeVolumes) { epub in
-                        epub.summaryView()
+                        epub.summary
+                            .setShowSectionHeader(false)
+                            .setShowMoreDetails(false)
+                            .setShowTitle(true)
                             .padding([.top, .bottom], 16)
                     }
                 }
@@ -106,7 +112,7 @@ struct ElectronicPublicationsList: View {
             if !completeVolumes.isEmpty {
                 Section(completeTitle) {
                     ForEach(completeVolumes) { epub in
-                        epub.summaryView()
+                        epub.summary
                             .padding([.top, .bottom], 16)
                     }
                 }
@@ -126,7 +132,10 @@ struct ElectronicPublicationsList: View {
                         }
                         return $0.sectionOrder < $1.sectionOrder
                     }) { epub in
-                        epub.summaryView()
+                        epub.summary
+                            .setShowSectionHeader(false)
+                            .setShowMoreDetails(false)
+                            .setShowTitle(true)
                             .padding([.top, .bottom], 16)
                     }
                 }
@@ -153,7 +162,10 @@ struct ElectronicPublicationsList: View {
                             ForEach(group.sorted {
                                 return $0.sectionOrder < $1.sectionOrder
                             }, id: \.self) { epub in
-                                epub.summaryView()
+                                epub.summary
+                                    .setShowSectionHeader(false)
+                                    .setShowMoreDetails(false)
+                                    .setShowTitle(true)
                                     .padding([.top, .bottom], 16)
                             }
                         }

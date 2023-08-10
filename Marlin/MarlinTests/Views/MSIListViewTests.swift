@@ -107,7 +107,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $path) {
-                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
+                    MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path)
                 }
             }
         }
@@ -141,7 +141,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $path) {
-                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
+                    MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path)
                 }
             }
         }
@@ -173,7 +173,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $path) {
-                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
+                    MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path)
                 }
             }
         }
@@ -240,7 +240,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $path) {
-                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
+                    MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path)
                 }
             }
         }
@@ -339,7 +339,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $path) {
-                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
+                    MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path)
                 }
             }
         }
@@ -409,7 +409,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $path) {
-                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
+                    MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path)
                         .environmentObject(locationManager)
                 }
             }
@@ -492,7 +492,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $path) {
-                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
+                    MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path)
                 }
             }
         }
@@ -571,7 +571,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $path) {
-                    MSIListView<Asam, EmptyView, EmptyView>(path: $path, sectionHeaderIsSubList: true)
+                    MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path, sectionHeaderIsSubList: true)
                 }
             }
         }
@@ -652,7 +652,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $path) {
-                    MSIListView<Asam, EmptyView, EmptyView>(path: $path, sectionHeaderIsSubList: true, sectionGroupNameBuilder: { section in
+                    MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path, sectionHeaderIsSubList: true, sectionGroupNameBuilder: { section in
                         "\(section.name) Header"
                     })
                 }
@@ -732,11 +732,11 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $path) {
-                    MSIListView<Asam, EmptyView, AnyView>(path: $path, sectionHeaderIsSubList: true, sectionNameBuilder: { section in
+                    MSIListView<Asam, EmptyView, AnyView, EmptyView>(path: $path, sectionHeaderIsSubList: true, sectionNameBuilder: { section in
                         return "ASAM SECTION \(section.name) (\(section.items.count))"
                     }, sectionViewBuilder: { _ in EmptyView()}, content: { section in
                         AnyView(Text("content of the section \(section.name) \(section.items.count)"))
-                    })
+                    }, emptyView: {})
                 }
             }
         }
@@ -811,7 +811,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $path) {
-                    MSIListView<Asam, EmptyView, EmptyView>(path: $path)
+                    MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path)
                 }
             }
         }
@@ -820,6 +820,7 @@ final class MSIListViewTests: XCTestCase {
         
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -887,7 +888,7 @@ final class MSIListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $path) {
-                    MSIListView<Asam, EmptyView, EmptyView>(path: $path, focusedItem: itemWrapper, watchFocusedItem: true)
+                    MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path, focusedItem: itemWrapper, watchFocusedItem: true)
                 }
                 .onChange(of: passThrough.date) { newValue in
                     print("change date to \(newValue)")
@@ -901,6 +902,7 @@ final class MSIListViewTests: XCTestCase {
         
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()

@@ -38,19 +38,29 @@ final class AsamSummaryViewTests: XCTestCase {
     }
 
     func testLoading() {
-        let newItem = Asam(context: persistentStore.viewContext)
-        newItem.asamDescription = "description"
-        newItem.longitude = 1.0
-        newItem.latitude = 1.0
-        newItem.date = Date()
-        newItem.navArea = "XI"
-        newItem.reference = "2022-100"
-        newItem.subreg = "71"
-        newItem.position = "1°00'00\"N \n1°00'00\"E"
-        newItem.hostility = "Boarding"
-        newItem.victim = "Boat"
+        var asam: Asam?
+        persistentStore.viewContext.performAndWait {
+            let newItem = Asam(context: persistentStore.viewContext)
+            newItem.asamDescription = "description"
+            newItem.longitude = 1.0
+            newItem.latitude = 1.0
+            newItem.date = Date()
+            newItem.navArea = "XI"
+            newItem.reference = "2022-100"
+            newItem.subreg = "71"
+            newItem.position = "1°00'00\"N \n1°00'00\"E"
+            newItem.hostility = "Boarding"
+            newItem.victim = "Boat"
+            asam = newItem
+            try? persistentStore.viewContext.save()
+        }
+        guard let newItem = asam else {
+            XCTFail()
+            return
+        }
         
         let summary = AsamSummaryView(asam: newItem)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -65,6 +75,8 @@ final class AsamSummaryViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Location")
         
         waitForExpectations(timeout: 10, handler: nil)
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
     }
     
     func testLoadingNoHostility() {

@@ -9,6 +9,27 @@ import Foundation
 import UIKit
 import CoreData
 
+extension RadioBeacon: Bookmarkable {
+    var itemKey: String? {
+        return "\(featureNumber)--\(volumeNumber ?? "")"
+    }
+    
+    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
+        if let split = itemKey?.split(separator: "--"), split.count == 2 {
+            return getRadioBeacon(context: context, featureNumber: "\(split[0])", volumeNumber: "\(split[1])")
+        }
+        
+        return nil
+    }
+    
+    static func getRadioBeacon(context: NSManagedObjectContext, featureNumber: String?, volumeNumber: String?) -> RadioBeacon? {
+        if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
+            return try? context.fetchFirst(RadioBeacon.self, predicate: NSPredicate(format: "featureNumber = %@ AND volumeNumber = %@", argumentArray: [featureNumber, volumeNumber]))
+        }
+        return nil
+    }
+}
+
 extension RadioBeacon: DataSourceLocation, GeoPackageExportable {
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)

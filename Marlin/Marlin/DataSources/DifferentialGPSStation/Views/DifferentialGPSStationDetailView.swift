@@ -30,7 +30,10 @@ struct DifferentialGPSStationDetailView: View {
                         DataSourceLocationMapView(dataSourceLocation: differentialGPSStation, mapName: "DifferentialGPSStation Detail Map", mixins: [DifferentialGPSStationMap(fetchPredicate: predicate)])
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
-                    differentialGPSStation.summaryView(showSectionHeader: true, showTitle: false)
+                    differentialGPSStation.summary
+                        .showBookmarkNotes(true)
+                        .setShowSectionHeader(true)
+                        .setShowTitle(false)
                         .padding(.all, 16)
                 }
                 .card()

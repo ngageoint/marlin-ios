@@ -52,13 +52,15 @@ final class ModuSummaryTests: XCTestCase {
         modu.region = 6
         modu.subregion = 63
         
-        let summary = modu.summaryView(showMoreDetails: false)
+        let summary = modu.summary
+            .setShowMoreDetails(false)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "Rig Status: Active")
-        tester().waitForView(withAccessibilityLabel: "Special Status: Wide Berth Requested")
+        tester().waitForView(withAccessibilityLabel: "Active")
+        tester().waitForView(withAccessibilityLabel: "Wide Berth Requested")
         tester().waitForView(withAccessibilityLabel: "ABAN II")
         tester().waitForView(withAccessibilityLabel: modu.dateString)
         
@@ -93,6 +95,8 @@ final class ModuSummaryTests: XCTestCase {
         
         tester().waitForTappableView(withAccessibilityLabel: "Close")
         tester().tapView(withAccessibilityLabel: "Close")
+        
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: modu)
     }
     
     func testShowMoreDetails() {
@@ -110,12 +114,14 @@ final class ModuSummaryTests: XCTestCase {
         modu.region = 6
         modu.subregion = 63
         
-        let summary = modu.summaryView(showMoreDetails: true)
+        let summary = modu.summary
+            .setShowMoreDetails(true)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "Rig Status: Active")
+        tester().waitForView(withAccessibilityLabel: "Active")
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in

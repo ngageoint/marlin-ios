@@ -74,7 +74,8 @@ final class DataSourceFilterParameterTests: XCTestCase {
     
     func testLocationValueDisplay() {
         let p = DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "Location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)
-        XCTAssertEqual(p.display(), "**Location** within **1nm** of **2.0°, 3.0°**")
+        let coordinate = CLLocationCoordinate2D(latitude: 2.0, longitude: 3.0)
+        XCTAssertEqual(p.display(), "**Location** within **1nm** of **\(coordinate.format())**")
         
         let p2 = DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "Location", type: .location), comparison: .nearMe, valueInt: 1)
         XCTAssertEqual(p2.display(), "**Location** within **1nm** of my location")

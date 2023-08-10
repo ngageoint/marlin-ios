@@ -30,7 +30,9 @@ struct PortDetailView: View {
                         DataSourceLocationMapView(dataSourceLocation: port, mapName: "Port Detail Map", mixins: [PortMap(fetchPredicate: predicate)])
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
-                    port.summaryView(showTitle: false)
+                    port.summary
+                        .showBookmarkNotes(true)
+                        .setShowTitle(false)
                         .padding(.all, 16)
                 }
                 .card()

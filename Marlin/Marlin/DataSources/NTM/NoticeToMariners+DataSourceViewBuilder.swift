@@ -16,7 +16,7 @@ extension NoticeToMariners: DataSourceViewBuilder {
         AnyView(NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: self.noticeNumber)))
     }
     
-    func summaryView(showMoreDetails: Bool = false, showSectionHeader: Bool = false, mapName: String? = nil, showTitle: Bool = true) -> AnyView {
-        AnyView(NoticeToMarinersSummaryView(noticeToMariners: self))
+    var summary: some DataSourceSummaryView {
+        NoticeToMarinersSummaryView(noticeToMariners: self)
     }
 }

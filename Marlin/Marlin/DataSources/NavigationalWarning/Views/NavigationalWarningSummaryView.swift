@@ -8,18 +8,15 @@
 import SwiftUI
 import MapKit
 
-struct NavigationalWarningSummaryView: View {
+struct NavigationalWarningSummaryView: DataSourceSummaryView {
+    var showSectionHeader: Bool = false
+    
+    var showBookmarkNotes: Bool = false
+
     var navigationalWarning: NavigationalWarning
-    var showMoreDetails: Bool
+    var showMoreDetails: Bool = false
     var mapName: String?
     var showTitle: Bool = true
-    
-    init(navigationalWarning: NavigationalWarning, showMoreDetails: Bool, mapName: String? = nil, showTitle: Bool = true) {
-        self.navigationalWarning = navigationalWarning
-        self.showMoreDetails = showMoreDetails
-        self.mapName = mapName
-        self.showTitle = showTitle
-    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -33,6 +30,7 @@ struct NavigationalWarningSummaryView: View {
                 .multilineTextAlignment(.leading)
                 .lineLimit(8)
                 .secondary()
+            bookmarkNotesView(navigationalWarning)
             NavigationalWarningActionBar(navigationalWarning: navigationalWarning, showMoreDetails: showMoreDetails, mapName: mapName)
         }
     }

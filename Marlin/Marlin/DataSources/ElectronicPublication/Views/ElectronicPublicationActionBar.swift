@@ -16,8 +16,11 @@ struct ElectronicPublicationActionBar: View {
     }
     
     var body: some View {
-        HStack(spacing:8) {
+        HStack(spacing:0) {
             Spacer()
+            if let itemKey = electronicPublication.itemKey {
+                BookmarkButton(viewModel: BookmarkViewModel(itemKey: itemKey, dataSource: ElectronicPublication.key))
+            }
             if electronicPublication.isDownloading {
                 if let error = electronicPublication.error {
                     Text(error)
@@ -29,30 +32,57 @@ struct ElectronicPublicationActionBar: View {
                 }
             }
             if electronicPublication.isDownloaded, electronicPublication.checkFileExists(), let url = URL(string: electronicPublication.savePath) {
-                Button("Delete") {
+                Button(action: {
+                    NotificationCenter.default.post(name: .DocumentPreview, object: url)
+                }) {
+                    Label(
+                        title: {},
+                        icon: { Image("preview")
+                                .renderingMode(.template)
+                                .foregroundColor(Color.primaryColorVariant)
+                        })
+                }
+                .accessibilityElement()
+                .accessibilityLabel("Open")
+                
+                Button(action: {
                     electronicPublication.deleteFile()
+                }) {
+                    Label(
+                        title: {},
+                        icon: { Image(systemName: "trash.fill")
+                                .renderingMode(.template)
+                                .foregroundColor(Color.primaryColorVariant)
+                        })
                 }
                 .accessibilityElement()
                 .accessibilityLabel("Delete")
-                VStack {
-                    Button("Open") {
-                        NotificationCenter.default.post(name: .DocumentPreview, object: url)
-                    }
-                    .accessibilityElement()
-                    .accessibilityLabel("Open")
-                }
             } else if !electronicPublication.isDownloading {
-                Button("Download") {
+                Button(action: {
                     electronicPublication.downloadFile()
+                }) {
+                    Label(
+                        title: {},
+                        icon: { Image(systemName: "square.and.arrow.down")
+                                .renderingMode(.template)
+                                .foregroundColor(Color.primaryColorVariant)
+                        })
                 }
                 .accessibilityElement()
                 .accessibilityLabel("Download")
             } else {
-                Button("Re-Download") {
-                    electronicPublication.downloadFile()
+                Button(action: {
+                    electronicPublication.cancelDownload()
+                }) {
+                    Label(
+                        title: {},
+                        icon: { Image(systemName: "xmark.circle.fill")
+                                .renderingMode(.template)
+                                .foregroundColor(Color.primaryColorVariant)
+                        })
                 }
                 .accessibilityElement()
-                .accessibilityLabel("Re-Download")
+                .accessibilityLabel("Cancel")
             }
         }
         .padding(.trailing, -8)

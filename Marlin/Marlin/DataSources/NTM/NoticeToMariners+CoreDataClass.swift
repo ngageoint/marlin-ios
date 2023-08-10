@@ -86,4 +86,31 @@ class NoticeToMariners: NSManagedObject, Downloadable {
         }
         DownloadManager.shared.download(downloadable: self)
     }
+    
+    func cancelDownload() {
+        DownloadManager.shared.cancel(downloadable: self)
+    }
+    
+    func getFirstDay(WeekNumber weekNumber:Int, CurrentYear currentYear: Int) -> Date? {
+        let calendar = Calendar(identifier: .gregorian)
+        var dayComponent = DateComponents()
+        dayComponent.weekOfYear = weekNumber
+        dayComponent.weekday = 7
+        dayComponent.yearForWeekOfYear = currentYear
+        var date = calendar.date(from: dayComponent)!
+        if(weekNumber == 1 && calendar.component(.month, from: date) != 1){
+            dayComponent.year = currentYear - 1
+            date = calendar.date(from: dayComponent)!
+        }
+        return date
+        
+    }
+    
+    func dateRange() -> String {
+        let firstDate = getFirstDay(WeekNumber: Int(noticeNumber) % 100, CurrentYear: Int(noticeNumber / 100)) ?? Date()
+        let lastDate = Calendar.current.date(byAdding: .day, value: 6, to: firstDate) ?? Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM d"
+        return "\(dateFormatter.string(from: firstDate)) - \(dateFormatter.string(from: lastDate))"
+    }
 }

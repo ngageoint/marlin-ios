@@ -37,9 +37,11 @@
 	<key>epubOrder</key>
 	<integer>8</integer>
 	<key>dfrsOrder</key>
-	<integer>10</integer>
+	<integer>11</integer>
 	<key>ntmOrder</key>
 	<integer>9</integer>
+	<key>bookmarkOrder</key>
+	<string>10</string>
 	<key>userTabs</key>
 	<integer>3</integer>
 	<key>actualRangeLights</key>
