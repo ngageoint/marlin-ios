@@ -146,6 +146,7 @@ class GeoPackageExporter: ObservableObject {
         exporting = true
         complete = false
         backgroundExport()
+        Metrics.shared.geoPackageExport(dataSources: filterViewModels.map(\.dataSource))
     }
     
     private func backgroundExport() {

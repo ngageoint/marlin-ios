@@ -146,6 +146,7 @@ struct GeoPackageExportView: View {
         .background(Color.backgroundColor)
         .onAppear {
             exporter.setExportRequests(exportRequests: exportRequest)
+            Metrics.shared.geoPackageExportView()
         }
     }
 }
