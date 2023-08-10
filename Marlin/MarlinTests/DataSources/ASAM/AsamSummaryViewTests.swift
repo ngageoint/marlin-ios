@@ -51,6 +51,7 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.victim = "Boat"
         
         let summary = AsamSummaryView(asam: newItem)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller

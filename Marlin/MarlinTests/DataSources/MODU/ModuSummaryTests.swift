@@ -54,6 +54,7 @@ final class ModuSummaryTests: XCTestCase {
         
         let summary = modu.summary
             .setShowMoreDetails(false)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -115,6 +116,7 @@ final class ModuSummaryTests: XCTestCase {
         
         let summary = modu.summary
             .setShowMoreDetails(true)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

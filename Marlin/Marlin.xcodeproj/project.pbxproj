@@ -350,6 +350,9 @@
 		F7EFFEC72A7D57980097E5EF /* NoticeToMarinersSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC62A7D57980097E5EF /* NoticeToMarinersSummaryView.swift */; };
 		F7EFFEC92A7DA4260097E5EF /* BookmarkListEmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFEC82A7DA4260097E5EF /* BookmarkListEmptyState.swift */; };
 		F7EFFECC2A82DED70097E5EF /* BookmarkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFECB2A82DED70097E5EF /* BookmarkHelper.swift */; };
+		F7EFFECF2A8419CD0097E5EF /* BookmarkListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFECE2A8419CD0097E5EF /* BookmarkListTests.swift */; };
+		F7EFFED12A84212B0097E5EF /* BookmarkListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFED02A84212B0097E5EF /* BookmarkListView.swift */; };
+		F7EFFED32A85196F0097E5EF /* BookmarkSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFFED22A85196F0097E5EF /* BookmarkSummaryViewTests.swift */; };
 		F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */; };
 		F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59785285A206700F9B32E /* AsamDetailView.swift */; };
 		F7F59789285A277000F9B32E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F59788285A277000F9B32E /* Card.swift */; };
@@ -793,6 +796,9 @@
 		F7EFFEC62A7D57980097E5EF /* NoticeToMarinersSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersSummaryView.swift; sourceTree = "<group>"; };
 		F7EFFEC82A7DA4260097E5EF /* BookmarkListEmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkListEmptyState.swift; sourceTree = "<group>"; };
 		F7EFFECB2A82DED70097E5EF /* BookmarkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkHelper.swift; sourceTree = "<group>"; };
+		F7EFFECE2A8419CD0097E5EF /* BookmarkListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkListTests.swift; sourceTree = "<group>"; };
+		F7EFFED02A84212B0097E5EF /* BookmarkListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkListView.swift; sourceTree = "<group>"; };
+		F7EFFED22A85196F0097E5EF /* BookmarkSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkSummaryViewTests.swift; sourceTree = "<group>"; };
 		F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSummaryView.swift; sourceTree = "<group>"; };
 		F7F59785285A206700F9B32E /* AsamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDetailView.swift; sourceTree = "<group>"; };
 		F7F59788285A277000F9B32E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
@@ -1503,6 +1509,7 @@
 				F7EFFEC02A7C0FC80097E5EF /* BookmarkNotes.swift */,
 				F7EFFEC22A7C10C90097E5EF /* BookmarkSummary.swift */,
 				F7EFFEC82A7DA4260097E5EF /* BookmarkListEmptyState.swift */,
+				F7EFFED02A84212B0097E5EF /* BookmarkListView.swift */,
 			);
 			path = Bookmark;
 			sourceTree = "<group>";
@@ -1542,6 +1549,7 @@
 		F7C23E152911C7920002A7DF /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
+				F7EFFECD2A8419B30097E5EF /* Bookmark */,
 				F72D8915297F017500D022FB /* DFRS */,
 				F7D8FA1B2922F7DC00E7D0A1 /* NoticeToMariners */,
 				F72EAAD3291D525300AC6026 /* RadioBeacon */,
@@ -1764,6 +1772,15 @@
 				F7EFFECB2A82DED70097E5EF /* BookmarkHelper.swift */,
 			);
 			path = ComponentHelpers;
+			sourceTree = "<group>";
+		};
+		F7EFFECD2A8419B30097E5EF /* Bookmark */ = {
+			isa = PBXGroup;
+			children = (
+				F7EFFECE2A8419CD0097E5EF /* BookmarkListTests.swift */,
+				F7EFFED22A85196F0097E5EF /* BookmarkSummaryViewTests.swift */,
+			);
+			path = Bookmark;
 			sourceTree = "<group>";
 		};
 		F7F5977F285A1B2400F9B32E /* ASAM */ = {
@@ -2297,6 +2314,7 @@
 				F7ABB608299D532800BAD868 /* NavigationalWarningAreaUnreadBadgeTests.swift in Sources */,
 				F73D9E1F29709A69008AF40D /* DifferentialGPSStationSummaryViewTests.swift in Sources */,
 				F75F81D529526E9C0062A708 /* AsamSummaryViewTests.swift in Sources */,
+				F7EFFECF2A8419CD0097E5EF /* BookmarkListTests.swift in Sources */,
 				F72E0F6C2A28D5160099BFFD /* LightSectorsTests.swift in Sources */,
 				F73D9E212970AA66008AF40D /* DifferentialGPSStationDetailViewTests.swift in Sources */,
 				F73ABC8C295250C70085EDC5 /* DataSourceFilterParameterTests.swift in Sources */,
@@ -2324,6 +2342,7 @@
 				F73ABC86295250A90085EDC5 /* LocationManagerTests.swift in Sources */,
 				F73D9E252970E54C008AF40D /* MapSettingsTests.swift in Sources */,
 				F75324CB298BFFED005C509F /* MSIListViewTests.swift in Sources */,
+				F7EFFED32A85196F0097E5EF /* BookmarkSummaryViewTests.swift in Sources */,
 				F75F81E42960B4D90062A708 /* StringFilterTests.swift in Sources */,
 				F7ABB604299C1ECE00BAD868 /* NavigationalWarningNavAreaListViewTests.swift in Sources */,
 				F76052BD29A96F5A00F13260 /* NoticeToMarinersFullNoticeViewTests.swift in Sources */,
@@ -2646,6 +2665,7 @@
 				F7C23E0A29084F280002A7DF /* ElectronicPublicationSummaryView.swift in Sources */,
 				F7FFB2F628D6340B00C31AA3 /* Port+MapImage.swift in Sources */,
 				F76052C329AD279E00F13260 /* MapLayersViewModel.swift in Sources */,
+				F7EFFED12A84212B0097E5EF /* BookmarkListView.swift in Sources */,
 				F707BA81287768FA006A94C4 /* LightDetailView.swift in Sources */,
 				F73ABC98295250EE0085EDC5 /* ImageLoader.swift in Sources */,
 				F7C23E0829084F110002A7DF /* ElectronicPublication+DataSourceViewBuilder.swift in Sources */,

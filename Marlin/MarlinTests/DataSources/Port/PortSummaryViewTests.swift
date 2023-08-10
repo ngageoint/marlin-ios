@@ -168,6 +168,7 @@ final class PortSummaryViewTests: XCTestCase {
         let summary = port.summary
             .setShowMoreDetails(false)
             .environmentObject(mockLocationManager as LocationManager)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -331,6 +332,7 @@ final class PortSummaryViewTests: XCTestCase {
         let summary = port.summary
             .setShowMoreDetails(true)
             .environmentObject(mockLocationManager as LocationManager)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

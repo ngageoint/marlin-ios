@@ -62,6 +62,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         newItem.noticeYear = "2011"
         
         let summary = newItem.summary
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -107,6 +108,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         newItem.noticeYear = "2011"
         
         let summary = newItem.summary
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -174,6 +176,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         let summary = newItem.summary
             .setShowMoreDetails(true)
             .setShowSectionHeader(true)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

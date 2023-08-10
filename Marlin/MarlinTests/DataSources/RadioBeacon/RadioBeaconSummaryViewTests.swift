@@ -77,6 +77,7 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
 
         let summary = rb.summary
             .setShowMoreDetails(false)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -151,6 +152,7 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         
         let summary = rb.summary
             .setShowMoreDetails(true)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -199,6 +201,7 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         
         let summary = rb.summary
             .setShowSectionHeader(true)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

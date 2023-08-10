@@ -50,9 +50,7 @@ struct DataSourceListView: View {
         } else if dataSource.key == NoticeToMariners.key {
             NoticeToMarinersView(path: $path)
         } else if dataSource.key == Bookmark.key {
-            MSIListView<Bookmark, EmptyView, EmptyView, BookmarkListEmptyState>(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, sectionViewBuilder: { _ in EmptyView() }, content: { _ in EmptyView() }, emptyView: {
-                BookmarkListEmptyState()
-            })
+            BookmarkListView(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
         }
     }
 }

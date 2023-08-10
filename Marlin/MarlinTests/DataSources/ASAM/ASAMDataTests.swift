@@ -569,6 +569,7 @@ final class ASAMDataTests: XCTestCase {
         newItem.victim = "Boat"
         
         let summary = newItem.summary
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         XCTAssertNotNil(summary)
     }
     
@@ -586,6 +587,7 @@ final class ASAMDataTests: XCTestCase {
         newItem.victim = "Boat"
         
         let detail = newItem.detailView
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         XCTAssertNotNil(detail)
     }
 }

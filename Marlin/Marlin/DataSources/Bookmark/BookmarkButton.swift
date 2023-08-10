@@ -30,7 +30,7 @@ struct BookmarkButton: View {
                 })
         }
         .accessibilityElement()
-        .accessibilityLabel("\(viewModel.isBookmarked ? "remove bookmark" : "bookmark")")
+        .accessibilityLabel("\(viewModel.isBookmarked ? "remove bookmark \(viewModel.itemKey ?? "")" : "bookmark")")
         .animation(.easeOut, value: viewModel.isBookmarked)
         .sheet(isPresented: $bookmarkBottomSheet) {
             VStack(alignment: .leading) {

@@ -73,6 +73,7 @@ final class DifferentialGPSStationDetailViewTests: XCTestCase {
         }
         
         let view = newItem.detailView
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()

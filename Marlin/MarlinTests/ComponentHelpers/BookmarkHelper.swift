@@ -28,8 +28,8 @@ class BookmarkHelper: XCTestCase {
             XCTAssertNotNil(foundItem?.bookmark)
             XCTAssertEqual(foundItem?.bookmark?.notes, "Bookmark notes")
         }
-        tester().waitForView(withAccessibilityLabel: "remove bookmark")
-        tester().tapView(withAccessibilityLabel: "remove bookmark")
+        tester().waitForView(withAccessibilityLabel: "remove bookmark \(bookmarkable.itemKey ?? "")")
+        tester().tapView(withAccessibilityLabel: "remove bookmark \(bookmarkable.itemKey ?? "")")
         
         viewContext.performAndWait {
             let bookmark = viewContext.fetchFirst(Bookmark.self, key: "id", value: bookmarkable.itemKey ?? "")

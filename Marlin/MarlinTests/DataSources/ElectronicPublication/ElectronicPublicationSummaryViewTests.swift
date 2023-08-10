@@ -95,6 +95,7 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         
         let summary = epub.summary
             .setShowMoreDetails(false)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -134,6 +135,7 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
 
         let summary = epub.summary
             .setShowMoreDetails(false)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -202,6 +204,7 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         
         let summary = epub.summary
             .setShowMoreDetails(false)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -226,33 +229,46 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
     }
     
     func testReDownload() {
-        let epub = ElectronicPublication(context: persistentStore.viewContext)
+        var newEpub: ElectronicPublication?
         
-        epub.pubTypeId = 9
-        epub.pubDownloadId = 3
-        epub.fullPubFlag = false
-        epub.pubDownloadOrder = 1
-        epub.pubDownloadDisplayName = "Pub. 110 - Greenland, East Coasts of North and South America, and West Indies"
-        epub.pubsecId = 129
-        epub.odsEntryId = 22266
-        epub.sectionOrder = 1
-        epub.sectionName = "UpdatedPub110bk"
-        epub.sectionDisplayName = "Pub 110 - Updated to NTM 44/22"
-        epub.sectionLastModified = Date(timeIntervalSince1970: 0)
-        epub.contentId = 16694312
-        epub.internalPath = "NIMA_LOL/Pub110"
-        epub.filenameBase = "UpdatedPub110bk"
-        epub.fileExtension = "pdf"
-        epub.s3Key = "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf"
-        epub.fileSize = 2389496
-        epub.uploadTime = Date(timeIntervalSince1970: 0)
-        epub.fullFilename = "UpdatedPub110bk.pdf"
-        epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
-        epub.isDownloaded = false
-        epub.isDownloading = true
+        persistentStore.viewContext.performAndWait {
+            let epub = ElectronicPublication(context: persistentStore.viewContext)
+            
+            epub.pubTypeId = 9
+            epub.pubDownloadId = 3
+            epub.fullPubFlag = false
+            epub.pubDownloadOrder = 1
+            epub.pubDownloadDisplayName = "Pub. 110 - Greenland, East Coasts of North and South America, and West Indies"
+            epub.pubsecId = 129
+            epub.odsEntryId = 22266
+            epub.sectionOrder = 1
+            epub.sectionName = "UpdatedPub110bk"
+            epub.sectionDisplayName = "Pub 110 - Updated to NTM 44/22"
+            epub.sectionLastModified = Date(timeIntervalSince1970: 0)
+            epub.contentId = 16694312
+            epub.internalPath = "NIMA_LOL/Pub110"
+            epub.filenameBase = "UpdatedPub110bk"
+            epub.fileExtension = "pdf"
+            epub.s3Key = "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf"
+            epub.fileSize = 2389496
+            epub.uploadTime = Date(timeIntervalSince1970: 0)
+            epub.fullFilename = "UpdatedPub110bk.pdf"
+            epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
+            epub.isDownloaded = false
+            epub.isDownloading = true
+            try? persistentStore.viewContext.save()
+            
+            newEpub = epub
+        }
+        
+        guard let epub = newEpub else {
+            XCTFail()
+            return
+        }
         
         let summary = epub.summary
             .setShowMoreDetails(false)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

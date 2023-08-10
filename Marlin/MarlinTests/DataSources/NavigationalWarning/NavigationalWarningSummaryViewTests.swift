@@ -64,6 +64,7 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         
         let summary = nw.summary
             .setShowMoreDetails(false)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

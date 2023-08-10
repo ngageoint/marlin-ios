@@ -30,7 +30,7 @@ struct BookmarkSummary: DataSourceSummaryView {
                         .setShowTitle(true)
                         .setShowSectionHeader(false)
                         .setShowMoreDetails(false)
-                        .showBookmarkNotes(showBookmarkNotes)
+                        .showBookmarkNotes(true)
                 )
             }
             

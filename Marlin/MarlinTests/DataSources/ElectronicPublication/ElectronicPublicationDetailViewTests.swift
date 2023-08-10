@@ -63,6 +63,7 @@ final class ElectronicPublicationDetailViewTests: XCTestCase {
         epub.isDownloading = true
         
         let detailView = epub.detailView
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()
