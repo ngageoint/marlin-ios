@@ -114,6 +114,7 @@ final class AsamDetailViewTests: XCTestCase {
         }
 
         let summary = AsamDetailView(asam: newItem)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -160,6 +161,7 @@ final class AsamDetailViewTests: XCTestCase {
         }
 
         let summary = AsamDetailView(asam: newItem)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller

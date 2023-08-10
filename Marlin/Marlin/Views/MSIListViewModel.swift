@@ -81,10 +81,12 @@ class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResu
                                                                                          sectionNameKeyPath: sectionKey,
                                                                                          cacheName: nil)
         self.fetchedResultsController?.delegate = self
-        sections = []
-        try? fetchedResultsController?.performFetch()
-        self.update(for: 0)
-        self.update(for: 1)
+        DispatchQueue.main.async { [self] in
+            sections = []
+            try? fetchedResultsController?.performFetch()
+            self.update(for: 0)
+            self.update(for: 1)
+        }
     }
     
     func update(for sectionIndex: Int) {

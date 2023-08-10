@@ -820,6 +820,7 @@ final class MSIListViewTests: XCTestCase {
         
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -901,6 +902,7 @@ final class MSIListViewTests: XCTestCase {
         
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
