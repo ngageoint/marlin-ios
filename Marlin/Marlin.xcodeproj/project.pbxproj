@@ -274,6 +274,7 @@
 		F7D2225028E4A27C00F527F2 /* FilterBottomSheetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */; };
 		F7D2225228E4F83000F527F2 /* SortButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2225128E4F83000F527F2 /* SortButton.swift */; };
 		F7D2225428E5F03500F527F2 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2225328E5F03500F527F2 /* SortView.swift */; };
+		F7D4B7692A86C2AC00914E3D /* USCGLight+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D4B7682A86C2AC00914E3D /* USCGLight+CoreDataClass.swift */; };
 		F7D5C05328A2CAAB000C2C29 /* BottomSheetItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05228A2CAAB000C2C29 /* BottomSheetItem.swift */; };
 		F7D5C05528A68C43000C2C29 /* appFeatures.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7D5C05428A68C43000C2C29 /* appFeatures.plist */; };
 		F7D5C05728A68E56000C2C29 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */; };
@@ -719,6 +720,8 @@
 		F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterBottomSheetRow.swift; sourceTree = "<group>"; };
 		F7D2225128E4F83000F527F2 /* SortButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortButton.swift; sourceTree = "<group>"; };
 		F7D2225328E5F03500F527F2 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
+		F7D4B7662A867EE900914E3D /* Shared 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Shared 4.xcdatamodel"; sourceTree = "<group>"; };
+		F7D4B7682A86C2AC00914E3D /* USCGLight+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "USCGLight+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7D5C05228A2CAAB000C2C29 /* BottomSheetItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetItem.swift; sourceTree = "<group>"; };
 		F7D5C05428A68C43000C2C29 /* appFeatures.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = appFeatures.plist; sourceTree = "<group>"; };
 		F7D5C05628A68E56000C2C29 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
@@ -979,6 +982,7 @@
 		F71D285F28BD688800F1775C /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
+				F7D4B7672A86AE9800914E3D /* USCGLight */,
 				F7B84E1E2A72C81E00640C76 /* Bookmark */,
 				F7066DB12A5CB2620058122E /* Common */,
 				F72EAAD8291D913D00AC6026 /* NTM */,
@@ -1615,6 +1619,14 @@
 				F7DF1BBE29E9EBF800F92E14 /* AcknowledgementsView.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		F7D4B7672A86AE9800914E3D /* USCGLight */ = {
+			isa = PBXGroup;
+			children = (
+				F7D4B7682A86C2AC00914E3D /* USCGLight+CoreDataClass.swift */,
+			);
+			path = USCGLight;
 			sourceTree = "<group>";
 		};
 		F7D671C1286C85EF00758F1C /* GeoPackage */ = {
@@ -2521,6 +2533,7 @@
 				F75E32BD29C4BB13006F2394 /* MapLayerViewModel.swift in Sources */,
 				F7B84E202A72C83B00640C76 /* Bookmark+CoreDataClass.swift in Sources */,
 				F71FC0D12A3B9D9000911BAC /* MoreDetailsButton.swift in Sources */,
+				F7D4B7692A86C2AC00914E3D /* USCGLight+CoreDataClass.swift in Sources */,
 				F7D671DA286E3B3D00758F1C /* ExtraMapTypes.swift in Sources */,
 				F7FFB33A28D9EFDB00C31AA3 /* SearchView.swift in Sources */,
 				F740AA77289D68D800754293 /* MarlinCompactWidth.swift in Sources */,
@@ -3065,11 +3078,12 @@
 		F7A54CA82848149500E5F565 /* Marlin.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F7D4B7662A867EE900914E3D /* Shared 4.xcdatamodel */,
 				F7BEE47C2A04221D00EC282D /* Shared 3.xcdatamodel */,
 				F76052C429AD29E000F13260 /* Shared 2.xcdatamodel */,
 				F7A54CA92848149500E5F565 /* Shared.xcdatamodel */,
 			);
-			currentVersion = F7BEE47C2A04221D00EC282D /* Shared 3.xcdatamodel */;
+			currentVersion = F7D4B7662A867EE900914E3D /* Shared 4.xcdatamodel */;
 			path = Marlin.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
