@@ -917,12 +917,12 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		F7066DAE2A4F7AE70058122E /* Routing */ = {
+		F7066DAE2A4F7AE70058122E /* Router */ = {
 			isa = PBXGroup;
 			children = (
 				F7066DAF2A4F7AF90058122E /* MarlinRoute.swift */,
 			);
-			path = Routing;
+			path = Router;
 			sourceTree = "<group>";
 		};
 		F7066DB12A5CB2620058122E /* Common */ = {
@@ -1430,7 +1430,7 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
-				F7066DAE2A4F7AE70058122E /* Routing */,
+				F7066DAE2A4F7AE70058122E /* Router */,
 				F7DF1BBB29E98B2700F92E14 /* Keychain */,
 				F7C23DFA2906F1360002A7DF /* Metrics */,
 				F7275FE028FEF8A000ED8D9A /* Onboarding */,
