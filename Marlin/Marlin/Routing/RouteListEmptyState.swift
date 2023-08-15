@@ -7,24 +7,27 @@
 
 import SwiftUI
 
-struct ImageContainerView: View {
+struct MultiImageContainerView: View {
+    var visibleImage: String
+    var maskingImage: String
+    
     var body: some View {
         GeometryReader { geo in
             Group {
                 ZStack {
-                    Image(systemName: "arrow.triangle.turn.up.right.diamond")
+                    Image(systemName: visibleImage)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .opacity(0.87)
                         .offset(x: min(geo.size.width, geo.size.height) / 10.0, y: -(min(geo.size.width, geo.size.height) / 15.0))
                         .foregroundColor(Color.onSurfaceColor)
-                    Image(systemName: "diamond.fill")
+                    Image(systemName: maskingImage)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .foregroundColor(Color.backgroundColor)
-                        .tint(Color.surfaceColor)
+                        .tint(Color.backgroundColor)
                         .opacity(1.0)
-                    Image(systemName: "arrow.triangle.turn.up.right.diamond")
+                    Image(systemName: visibleImage)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .foregroundColor(Color.onSurfaceColor)
@@ -42,7 +45,7 @@ struct RouteListEmptyState: View {
         VStack(alignment: .center, spacing: 16) {
             HStack(alignment: .center, spacing: 0) {
                 Spacer()
-                ImageContainerView()
+                MultiImageContainerView(visibleImage: "arrow.triangle.turn.up.right.diamond", maskingImage: "diamond.fill")
                     .frame(maxHeight: .infinity)
                     .padding([.trailing, .leading], 24)
                 Spacer()
@@ -61,5 +64,6 @@ struct RouteListEmptyState: View {
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.backgroundColor)
     }
 }

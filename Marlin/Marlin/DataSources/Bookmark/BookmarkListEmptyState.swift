@@ -12,35 +12,13 @@ struct BookmarkListEmptyState: View {
         GeometryReader { geo in
             VStack(alignment: .center, spacing: 16) {
                 Spacer()
-                HStack {
+                HStack(alignment: .center, spacing: 0) {
                     Spacer()
-                    
-                    HStack {
-                        Spacer()
-                        ZStack {
-                            Image(systemName: "bookmark")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(maxWidth: geo.size.width / 2.0, maxHeight: geo.size.width / 2.0)
-                                .opacity(0.87)
-                                .offset(x: min(geo.size.width, geo.size.height) / 20.0, y: -(min(geo.size.width, geo.size.height) / 20.0))
-                                .foregroundColor(Color.onSurfaceColor)
-                            Image(systemName: "bookmark.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(maxWidth: geo.size.width / 2.0, maxHeight: geo.size.width / 2.0)
-                                .foregroundColor(Color.backgroundColor)
-                            Image(systemName: "bookmark")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(maxWidth: geo.size.width / 2.0, maxHeight: geo.size.width / 2.0)
-                                .foregroundColor(Color.onSurfaceColor)
-                                .opacity(0.87)
-                        }
-                        Spacer()
-                    }
+                    MultiImageContainerView(visibleImage: "bookmark", maskingImage: "bookmark.fill")
+                        .frame(maxHeight: 300)
+                        .padding([.trailing, .leading], 24)
+                    Spacer()
                 }
-                .padding(24)
                 Text("No Bookmarks")
                     .font(.headline5)
                     .fixedSize(horizontal: false, vertical: true)
@@ -52,10 +30,10 @@ struct BookmarkListEmptyState: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .multilineTextAlignment(.center)
                 Spacer()
-                
             }
             .padding(24)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.backgroundColor)
     }
 }
