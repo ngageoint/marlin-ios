@@ -24,7 +24,7 @@ struct BookmarkListEmptyState: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .multilineTextAlignment(.center)
                     .opacity(0.94)
-                Text("Bookmark an item and it will show up here.")
+                Text("Bookmark an item for quick access in the future.  Bookmarks you create will appear here.")
                     .font(.headline6)
                     .opacity(0.87)
                     .fixedSize(horizontal: false, vertical: true)
