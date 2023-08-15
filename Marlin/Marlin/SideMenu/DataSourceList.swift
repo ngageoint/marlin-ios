@@ -21,7 +21,8 @@ class DataSourceList: ObservableObject {
         DataSourceItem(dataSource: DFRS.self),
         DataSourceItem(dataSource: ElectronicPublication.self),
         DataSourceItem(dataSource: NoticeToMariners.self),
-        DataSourceItem(dataSource: Bookmark.self)
+        DataSourceItem(dataSource: Bookmark.self),
+        DataSourceItem(dataSource: Route.self)
     ]
     
     var enabledTabs: [DataSourceItem] {

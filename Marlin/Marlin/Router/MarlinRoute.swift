@@ -18,6 +18,7 @@ enum MarlinRoute: Hashable {
     case submitReport
     case disclaimer
     case acknowledgements
+    case createRoute
 }
 
 extension View {
@@ -52,6 +53,8 @@ struct MarlinRouteModifier: ViewModifier {
                     }
                 case .acknowledgements:
                     AcknowledgementsView()
+                case .createRoute:
+                    CreateRouteView()
                 }
             }
             .navigationDestination(for: ItemWrapper.self) { item in

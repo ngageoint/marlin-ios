@@ -88,20 +88,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
         return ZStack(alignment: .bottomTrailing) {
             GenericSectionedList<T, SectionHeader, Content, EmptyContent>(path: $path, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content, emptyView: emptyView)
             if let _ = T.self as? GeoPackageExportable.Type {
-                NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(dataSourceItem: DataSourceItem(dataSource: T.self), filters: UserDefaults.standard.filter(T.self))])) {
-                    Label(
-                        title: {},
-                        icon: { Image(systemName: "square.and.arrow.down")
-                                .renderingMode(.template)
-                        }
-                    )
-                }
-                .isDetailLink(false)
-                .fixedSize()
-                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.onPrimaryColor, backgroundColor: Color.primaryColor))
-                .accessibilityElement(children: .contain)
-                .accessibilityLabel("Export Button")
-                .padding(16)
+                GeoPackageExportButton(dataSource: T.self)
             }
         }
         .onAppear {

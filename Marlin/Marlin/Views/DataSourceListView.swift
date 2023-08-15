@@ -51,6 +51,8 @@ struct DataSourceListView: View {
             NoticeToMarinersView(path: $path)
         } else if dataSource.key == Bookmark.key {
             BookmarkListView(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
+        } else if dataSource.key == Route.key {
+            RouteList(path: $path)
         }
     }
 }

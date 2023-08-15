@@ -120,7 +120,7 @@ struct MaterialFloatingButtonStyle: ButtonStyle {
 
 struct MaterialButtonStyle: ButtonStyle {
         
-    let cornerRadius: CGFloat = 4.0
+    let cornerRadius: CGFloat = 22.0
     let maxWidth: Bool = false
     let type: ButtonType
     @Environment(\.isEnabled) private var isEnabled: Bool

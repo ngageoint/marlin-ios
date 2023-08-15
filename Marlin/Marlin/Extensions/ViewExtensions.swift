@@ -63,9 +63,7 @@ struct EmptyPlaceholderModifier<Items: Collection>: ViewModifier {
         if !items.isEmpty {
             content
         } else {
-            content.overlay {
-                placeholder
-            }
+            placeholder
         }
     }
 }
