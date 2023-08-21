@@ -20,6 +20,8 @@
 	<true/>
 	<key>showOnMapnavWarning</key>
 	<true/>
+	<key>showOnMaproute</key>
+	<true/>
 	<key>asamOrder</key>
 	<integer>0</integer>
 	<key>moduOrder</key>

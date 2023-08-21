@@ -54,7 +54,7 @@ struct MarlinRouteModifier: ViewModifier {
                 case .acknowledgements:
                     AcknowledgementsView()
                 case .createRoute:
-                    CreateRouteView()
+                    CreateRouteView(path: $path)
                 }
             }
             .navigationDestination(for: ItemWrapper.self) { item in

@@ -18,6 +18,9 @@ struct MarlinMainMap: View {
     
     @EnvironmentObject var dataSourceList: DataSourceList
     
+    var showSettings: Bool = true
+    var showExport: Bool = true
+    
     let focusMapAtLocation = NotificationCenter.default.publisher(for: .FocusMapAtLocation)
     
     var body: some View {
@@ -45,19 +48,21 @@ struct MarlinMainMap: View {
             Spacer()
             // top right button stack
             VStack(alignment: .trailing, spacing: 16) {
-                NavigationLink(value: MarlinRoute.mapSettings) {
-                    Label(
-                        title: {},
-                        icon: { Image(systemName: "square.3.stack.3d")
-                                .renderingMode(.template)
-                        }
-                    )
+                if showSettings {
+                    NavigationLink(value: MarlinRoute.mapSettings) {
+                        Label(
+                            title: {},
+                            icon: { Image(systemName: "square.3.stack.3d")
+                                    .renderingMode(.template)
+                            }
+                        )
+                    }
+                    .isDetailLink(false)
+                    .fixedSize()
+                    .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("Map Settings Button")
                 }
-                .isDetailLink(false)
-                .fixedSize()
-                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
-                .accessibilityElement(children: .contain)
-                .accessibilityLabel("Map Settings Button")
             }
             .padding(.trailing, 8)
             .padding(.top, 16)
@@ -91,30 +96,30 @@ struct MarlinMainMap: View {
     @ViewBuilder
     func bottomButtons() -> some View {
         HStack(alignment: .bottom, spacing: 0) {
-            let layout = verticalSizeClass != .compact ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8)) : AnyLayout(HStackLayout(alignment: .bottom, spacing: 8))
-            
-            layout {
-                DataSourceToggles()
-            }
-            .padding(.leading, 8)
-            .padding(.bottom, 30)
+            DataSourceToggles()
+                .padding(.leading, 8)
+                .padding(.bottom, 30)
             
             Spacer()
+                .frame(maxWidth: .infinity)
+
             // bottom right button stack
             VStack(alignment: .trailing, spacing: 16) {
-                NavigationLink(value: MarlinRoute.exportGeoPackage(exportRequest())) {
-                    Label(
-                        title: {},
-                        icon: { Image(systemName: "square.and.arrow.down")
-                                .renderingMode(.template)
-                        }
-                    )
+                if showExport {
+                    NavigationLink(value: MarlinRoute.exportGeoPackage(exportRequest())) {
+                        Label(
+                            title: {},
+                            icon: { Image(systemName: "square.and.arrow.down")
+                                    .renderingMode(.template)
+                            }
+                        )
+                    }
+                    .isDetailLink(false)
+                    .fixedSize()
+                    .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("Export Button")
                 }
-                .isDetailLink(false)
-                .fixedSize()
-                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
-                .accessibilityElement(children: .contain)
-                .accessibilityLabel("Export Button")
                 
                 UserTrackingButton(mapState: mapState)
                     .fixedSize()

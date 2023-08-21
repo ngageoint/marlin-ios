@@ -222,6 +222,8 @@
 		F7830C012A8BCA89008376F7 /* CreateRouteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830C002A8BCA89008376F7 /* CreateRouteButton.swift */; };
 		F7830C032A8BCAD0008376F7 /* CreateRouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830C022A8BCAD0008376F7 /* CreateRouteView.swift */; };
 		F7830C052A8BCEF2008376F7 /* RouteListEmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830C042A8BCEF1008376F7 /* RouteListEmptyState.swift */; };
+		F7830C092A93B517008376F7 /* UIBezierPathExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830C082A93B517008376F7 /* UIBezierPathExtensions.swift */; };
+		F7830C0B2A93CDD4008376F7 /* RouteMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830C0A2A93CDD4008376F7 /* RouteMapView.swift */; };
 		F79168FE28B56031004FFEBA /* PortMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79168FD28B56031004FFEBA /* PortMap.swift */; };
 		F79C994229955262004D9E82 /* DataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79C994129955262004D9E82 /* DataLoadOperation.swift */; };
 		F7A42E7529A0316700635E16 /* MarlinViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A42E7429A0316700635E16 /* MarlinViewTests.swift */; };
@@ -670,6 +672,8 @@
 		F7830C002A8BCA89008376F7 /* CreateRouteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRouteButton.swift; sourceTree = "<group>"; };
 		F7830C022A8BCAD0008376F7 /* CreateRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRouteView.swift; sourceTree = "<group>"; };
 		F7830C042A8BCEF1008376F7 /* RouteListEmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteListEmptyState.swift; sourceTree = "<group>"; };
+		F7830C082A93B517008376F7 /* UIBezierPathExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBezierPathExtensions.swift; sourceTree = "<group>"; };
+		F7830C0A2A93CDD4008376F7 /* RouteMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteMapView.swift; sourceTree = "<group>"; };
 		F79168FD28B56031004FFEBA /* PortMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortMap.swift; sourceTree = "<group>"; };
 		F79C994129955262004D9E82 /* DataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadOperation.swift; sourceTree = "<group>"; };
 		F7A42E7429A0316700635E16 /* MarlinViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinViewTests.swift; sourceTree = "<group>"; };
@@ -1433,6 +1437,7 @@
 				F7830C002A8BCA89008376F7 /* CreateRouteButton.swift */,
 				F7830C022A8BCAD0008376F7 /* CreateRouteView.swift */,
 				F7830C042A8BCEF1008376F7 /* RouteListEmptyState.swift */,
+				F7830C0A2A93CDD4008376F7 /* RouteMapView.swift */,
 			);
 			path = Routing;
 			sourceTree = "<group>";
@@ -1863,6 +1868,7 @@
 				F70BCEA829DEFDA800AEF73D /* DoubleExtensions.swift */,
 				F7BEE47D2A0443D200EC282D /* MKShapeExtensions.swift */,
 				F7EB1B0D2A0D7FC200D1433B /* SFGeometryExtensions.swift */,
+				F7830C082A93B517008376F7 /* UIBezierPathExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2461,6 +2467,7 @@
 				F70BCE9929C4F1AE00AEF73D /* UserLayersMap.swift in Sources */,
 				F7EFFEC92A7DA4260097E5EF /* BookmarkListEmptyState.swift in Sources */,
 				F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */,
+				F7830C092A93B517008376F7 /* UIBezierPathExtensions.swift in Sources */,
 				F70BCEA529DC5B1C00AEF73D /* NSDecimalNumberExtensions.swift in Sources */,
 				F7066DAD2A4F08B70058122E /* CoordinateDisplaySettings.swift in Sources */,
 				F7FFB31428D63CB000C31AA3 /* Modu+DataSourceViewBuilder.swift in Sources */,
@@ -2532,6 +2539,7 @@
 				F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */,
 				F7D671E72871D46000758F1C /* SideMenuContent.swift in Sources */,
 				F7F59789285A277000F9B32E /* Card.swift in Sources */,
+				F7830C0B2A93CDD4008376F7 /* RouteMapView.swift in Sources */,
 				F7FFB2FC28D6361800C31AA3 /* NavigationalWarning+DataSource.swift in Sources */,
 				F7FFB32228D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift in Sources */,
 				F7D8FA5E293AA17C00E7D0A1 /* DataSourceFilterParameter.swift in Sources */,

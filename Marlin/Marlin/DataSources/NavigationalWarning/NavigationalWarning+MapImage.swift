@@ -11,7 +11,7 @@ import MapKit
 import sf_wkt_ios
 
 extension NavigationalWarning: MapImage {
-    static var cacheTiles: Bool = true
+    static var cacheTiles: Bool = false
     
     func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {
         var images: [UIImage] = []
@@ -94,7 +94,11 @@ extension NavigationalWarning: MapImage {
                         
                         path.lineWidth = 4
                         path.close()
-                        NavigationalWarning.color.withAlphaComponent(0.3).setFill()
+                        if let color = NavigationalWarningNavArea.fromId(id: self.navArea ?? "")?.color {
+                            color.withAlphaComponent(0.9).setFill()
+                        } else {
+                            NavigationalWarning.color.withAlphaComponent(0.3).setFill()
+                        }
                         NavigationalWarning.color.setStroke()
                         path.fill()
                         path.stroke()

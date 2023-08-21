@@ -9,30 +9,91 @@ import SwiftUI
 
 struct DataSourceToggles: View {
     @EnvironmentObject var dataSourceList: DataSourceList
-    // force an updates
+    @State var expanded: Bool = false
+    // force an update
     @State var date = Date()
     
     let mappedDataSourcesUpdatedPub = NotificationCenter.default.publisher(for: .MappedDataSourcesUpdated)
     
     var body: some View {
-        ForEach(dataSourceList.mappableDataSources, id: \.self) { dataSource in
-            Button(action: {
-                dataSource.showOnMap.toggle()
-            }) {
-                Label(title: {}) {
-                    if let image = dataSource.dataSource.image {
-                        Image(uiImage: image)
-                            .renderingMode(.template)
-                            .tint(Color.white)
+        ZStack(alignment: .bottomLeading) {
+            firstColumn()
+                .background(alignment: .bottomLeading) {
+                    // two arcs
+                    // outer arc
+                    ForEach(Array(dataSourceList.mappableDataSources.prefix(5).enumerated()), id: \.element) { index, dataSourceItem in
+                        dataSourceButton(dataSourceItem: dataSourceItem)
+                            .offset(expanded ? position(position: index, arcSize: 5, radius: 120.0) : .zero)
+                            .opacity(expanded ? 1.0 : 0.0)
+                    }
+                    // inner arc
+                    ForEach(Array(dataSourceList.mappableDataSources[5...7].enumerated()), id: \.element) { index, dataSourceItem in
+                        dataSourceButton(dataSourceItem: dataSourceItem)
+                            .offset(expanded ? position(position: index, arcSize: 3, radius: 65.0) : .zero)
+                            .opacity(expanded ? 1.0 : 0.0)
                     }
                 }
-            }
-            .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: dataSource.showOnMap ? Color.white : Color.disabledColor, backgroundColor: dataSource.showOnMap ? Color(uiColor: dataSource.dataSource.color) : Color.disabledBackground))
-            .accessibilityElement(children: .contain)
-            .accessibilityLabel("\(dataSource.dataSource.key) Map Toggle")
         }
         .onReceive(mappedDataSourcesUpdatedPub) { updated in
             date = Date()
         }
+    }
+    
+    func position(position: Int, arcSize: Int, radius: CGFloat) -> CGSize {
+        let r: CGFloat = radius
+        let range = -CGFloat.pi / 2 ... 0
+        let angle = range.lowerBound + CGFloat(position) / CGFloat(arcSize - 1) * (range.upperBound - range.lowerBound)
+        return CGSize(width: r * cos(angle) + 8, height: r * sin(angle))
+    }
+    
+    @ViewBuilder
+    func firstColumn() -> some View {
+        VStack {
+            Button(action: {
+                withAnimation {
+                    expanded.toggle()
+                }
+            }) {
+                Label(title: {}) {
+                    Group {
+                        if expanded {
+                            Image(systemName: "xmark")
+                                .renderingMode(.template)
+                                .tint(expanded ? Color.primaryColor : Color.onPrimaryColor)
+                        } else {
+                            Image("marlin_large")
+                                .resizable()
+                                .renderingMode(.template)
+                                .tint(expanded ? Color.primaryColor : Color.onPrimaryColor)
+                                .aspectRatio(contentMode: .fit)
+                        }
+                    }
+                        
+                }
+            }
+            .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: expanded ? .mini : .regular, foregroundColor: expanded ? Color.primaryColor : Color.onPrimaryColor, backgroundColor: expanded ? Color.onPrimaryColor : Color.primaryColor))
+            .overlay(Badge(count: dataSourceList.mappedDataSources.count, positionShift: 10))
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("Expand Map Toggle")
+            .offset(x: expanded ? 8 : 0, y: 0)
+        }
+    }
+    
+    @ViewBuilder
+    func dataSourceButton(dataSourceItem: DataSourceItem) -> some View {
+        Button(action: {
+            dataSourceItem.showOnMap.toggle()
+        }) {
+            Label(title: {}) {
+                if let image = dataSourceItem.dataSource.image {
+                    Image(uiImage: image)
+                        .renderingMode(.template)
+                        .tint(Color.white)
+                }
+            }
+        }
+        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: dataSourceItem.showOnMap ? Color.white : Color.disabledColor, backgroundColor: dataSourceItem.showOnMap ? Color(uiColor: dataSourceItem.dataSource.color) : Color.disabledBackground))
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("\(dataSourceItem.dataSource.key) Map Toggle")
     }
 }

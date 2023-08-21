@@ -41,16 +41,6 @@ struct DataSourceCell: View {
                     .primary()
 
                 Spacer()
-                if dataSourceItem.dataSource.isMappable {
-                    Image(systemName: dataSourceItem.showOnMap ? "mappin.circle.fill" : "mappin.slash.circle.fill")
-                        .renderingMode(.template)
-                        .foregroundColor(dataSourceItem.showOnMap ? Color.primaryColorVariant : Color.disabledColor)
-                        .onTapGesture {
-                            dataSourceItem.showOnMap = !dataSourceItem.showOnMap
-                        }
-                        .accessibilityElement()
-                        .accessibilityLabel(dataSourceItem.showOnMap ? "shown on map" : "not shown on map")
-                }
             }
             .contentShape(Rectangle())
             .onTapGesture {

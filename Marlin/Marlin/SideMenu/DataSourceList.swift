@@ -34,7 +34,9 @@ class DataSourceList: ObservableObject {
     var mappableDataSources: [DataSourceItem] {
         return enabledTabs.filter { item in
             item.dataSource.isMappable
-        }
+        }.sorted(by: { one, two in
+            return one.order < two.order
+        })
     }
     
     var allTabs: [DataSourceItem] {
