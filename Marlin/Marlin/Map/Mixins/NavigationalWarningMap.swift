@@ -376,11 +376,7 @@ class NavigationalWarningMap: NSObject, MapMixin {
             let renderer = MKPolygonRenderer(polygon: polygon)
             renderer.strokeColor = NavigationalWarning.color
             renderer.lineWidth = 3
-            if let color = NavigationalWarningNavArea.fromId(id: polygon.warning?.navAreaName ?? "")?.color {
-                renderer.fillColor = color.withAlphaComponent(0.2)
-            } else {
-                renderer.fillColor = NavigationalWarning.color.withAlphaComponent(0.2)
-            }
+            renderer.fillColor = NavigationalWarning.color.withAlphaComponent(0.3)
             return renderer
         } else if let polyline = overlay as? NavigationalWarningGeodesicPolyline {
             let renderer = MKPolylineRenderer(polyline: polyline)

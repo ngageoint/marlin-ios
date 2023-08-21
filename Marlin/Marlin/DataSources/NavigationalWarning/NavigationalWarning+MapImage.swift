@@ -94,11 +94,7 @@ extension NavigationalWarning: MapImage {
                         
                         path.lineWidth = 4
                         path.close()
-                        if let color = NavigationalWarningNavArea.fromId(id: self.navArea ?? "")?.color {
-                            color.withAlphaComponent(0.9).setFill()
-                        } else {
-                            NavigationalWarning.color.withAlphaComponent(0.3).setFill()
-                        }
+                        NavigationalWarning.color.withAlphaComponent(0.3).setFill()
                         NavigationalWarning.color.setStroke()
                         path.fill()
                         path.stroke()
