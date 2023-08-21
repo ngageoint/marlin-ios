@@ -12,24 +12,22 @@ struct DataSourceToggles: View {
     @State var expanded: Bool = false
     
     var body: some View {
-        ZStack(alignment: .bottomLeading) {
-            expandButton()
-                .background(alignment: .bottomLeading) {
-                    // two arcs
-                    // outer arc
-                    ForEach(Array(dataSourceList.mappableDataSources.prefix(5).enumerated()), id: \.element) { index, dataSourceItem in
-                        dataSourceButton(dataSourceItem: dataSourceItem)
-                            .offset(expanded ? position(position: index, arcSize: 5, radius: 120.0) : .zero)
-                            .opacity(expanded ? 1.0 : 0.0)
-                    }
-                    // inner arc
-                    ForEach(Array(dataSourceList.mappableDataSources[5...7].enumerated()), id: \.element) { index, dataSourceItem in
-                        dataSourceButton(dataSourceItem: dataSourceItem)
-                            .offset(expanded ? position(position: index, arcSize: 3, radius: 65.0) : .zero)
-                            .opacity(expanded ? 1.0 : 0.0)
-                    }
+        expandButton()
+            .background(alignment: .bottomLeading) {
+                // two arcs
+                // outer arc
+                ForEach(Array(dataSourceList.mappableDataSources.prefix(5).enumerated()), id: \.element) { index, dataSourceItem in
+                    dataSourceButton(dataSourceItem: dataSourceItem)
+                        .offset(expanded ? position(position: index, arcSize: 5, radius: 120.0) : .zero)
+                        .opacity(expanded ? 1.0 : 0.0)
                 }
-        }
+                // inner arc
+                ForEach(Array(dataSourceList.mappableDataSources[5...7].enumerated()), id: \.element) { index, dataSourceItem in
+                    dataSourceButton(dataSourceItem: dataSourceItem)
+                        .offset(expanded ? position(position: index, arcSize: 3, radius: 65.0) : .zero)
+                        .opacity(expanded ? 1.0 : 0.0)
+                }
+            }
     }
     
     func position(position: Int, arcSize: Int, radius: CGFloat) -> CGSize {
