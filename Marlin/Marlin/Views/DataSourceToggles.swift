@@ -10,14 +10,10 @@ import SwiftUI
 struct DataSourceToggles: View {
     @EnvironmentObject var dataSourceList: DataSourceList
     @State var expanded: Bool = false
-    // force an update
-    @State var date = Date()
-    
-    let mappedDataSourcesUpdatedPub = NotificationCenter.default.publisher(for: .MappedDataSourcesUpdated)
     
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            firstColumn()
+            expandButton()
                 .background(alignment: .bottomLeading) {
                     // two arcs
                     // outer arc
@@ -34,9 +30,6 @@ struct DataSourceToggles: View {
                     }
                 }
         }
-        .onReceive(mappedDataSourcesUpdatedPub) { updated in
-            date = Date()
-        }
     }
     
     func position(position: Int, arcSize: Int, radius: CGFloat) -> CGSize {
@@ -47,36 +40,34 @@ struct DataSourceToggles: View {
     }
     
     @ViewBuilder
-    func firstColumn() -> some View {
-        VStack {
-            Button(action: {
-                withAnimation {
-                    expanded.toggle()
-                }
-            }) {
-                Label(title: {}) {
-                    Group {
-                        if expanded {
-                            Image(systemName: "xmark")
-                                .renderingMode(.template)
-                                .tint(expanded ? Color.primaryColor : Color.onPrimaryColor)
-                        } else {
-                            Image("marlin_large")
-                                .resizable()
-                                .renderingMode(.template)
-                                .tint(expanded ? Color.primaryColor : Color.onPrimaryColor)
-                                .aspectRatio(contentMode: .fit)
-                        }
-                    }
-                        
-                }
+    func expandButton() -> some View {
+        Button(action: {
+            withAnimation {
+                expanded.toggle()
             }
-            .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: expanded ? .mini : .regular, foregroundColor: expanded ? Color.primaryColor : Color.onPrimaryColor, backgroundColor: expanded ? Color.onPrimaryColor : Color.primaryColor))
-            .overlay(Badge(count: dataSourceList.mappedDataSources.count, positionShift: 10))
-            .accessibilityElement(children: .contain)
-            .accessibilityLabel("Expand Map Toggle")
-            .offset(x: expanded ? 8 : 0, y: 0)
+        }) {
+            Label(title: {}) {
+                Group {
+                    if expanded {
+                        Image(systemName: "xmark")
+                            .renderingMode(.template)
+                            .tint(expanded ? Color.primaryColor : Color.onPrimaryColor)
+                    } else {
+                        Image("marlin_large")
+                            .resizable()
+                            .renderingMode(.template)
+                            .tint(expanded ? Color.primaryColor : Color.onPrimaryColor)
+                            .aspectRatio(contentMode: .fit)
+                    }
+                }
+                    
+            }
         }
+        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: expanded ? .mini : .regular, foregroundColor: expanded ? Color.primaryColor : Color.onPrimaryColor, backgroundColor: expanded ? Color.onPrimaryColor : Color.primaryColor))
+        .overlay(Badge(count: dataSourceList.mappedDataSources.count, positionShift: 10))
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Expand Map Toggle")
+        .offset(x: expanded ? 8 : 0, y: 0)
     }
     
     @ViewBuilder
