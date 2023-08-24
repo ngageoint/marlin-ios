@@ -184,6 +184,7 @@ class GeoPackage {
                     if let centroid = transform?.transform(centroid) {
                         coordinate = CLLocationCoordinate2D(latitude: centroid.y.doubleValue, longitude: centroid.x.doubleValue)
                     }
+                    transform?.destroy()
                 }
             }
             
@@ -252,6 +253,7 @@ class GeoPackage {
                     }
                     style = featureStyle.style
                 }
+                featureTiles?.close()
             }
         } catch {
             print("Exception \(error)")

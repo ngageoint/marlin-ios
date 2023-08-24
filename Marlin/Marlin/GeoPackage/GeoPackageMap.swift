@@ -52,6 +52,7 @@ class GeoPackageMap: NSObject, MapMixin {
     
     func removeMixin(mapView: MKMapView, mapState: MapState) {
         if let overlay = overlay {
+            overlay.close()
             mapView.removeOverlay(overlay)
         }
     }
