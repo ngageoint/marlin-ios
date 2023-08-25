@@ -18,8 +18,8 @@ class DifferentialGPSStationMap<T: DifferentialGPSStation & MapImage>: FetchRequ
         self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMapdifferentialGPSStation)
     }
     
-    override func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
-        super.setupMixin(marlinMap: marlinMap, mapView: mapView)
+    override func setupMixin(mapState: MapState, mapView: MKMapView) {
+        super.setupMixin(mapState: mapState, mapView: mapView)
         mapView.register(ImageAnnotationView.self, forAnnotationViewWithReuseIdentifier: DifferentialGPSStation.key)
     }
 }

@@ -19,6 +19,8 @@ protocol MapImage {
     static var key: String { get }
     static var cacheTiles: Bool { get }
     static var imageCache: Kingfisher.ImageCache { get }
+    static var color: UIColor { get }
+    static var image: UIImage? { get }
 }
 
 extension MapImage {
@@ -30,7 +32,19 @@ extension MapImage {
         return 512.0
     }
     
+    static func defaultCircleImage() -> [UIImage] {
+        var images: [UIImage] = []
+        if let circleImage = CircleImage(color: color, radius: 40 * UIScreen.main.scale, fill: true) {
+            images.append(circleImage)
+            if let image = image, let dataSourceImage = image.aspectResize(to: CGSize(width: circleImage.size.width / 1.5, height: circleImage.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
+                images.append(dataSourceImage)
+            }
+        }
+        return images
+    }
+    
     func defaultMapImage(marker: Bool, zoomLevel: Int, pointCoordinate: CLLocationCoordinate2D? = nil, tileBounds3857: MapBoundingBox? = nil, context: CGContext? = nil, tileSize: Double) -> [UIImage] {
+
         var images: [UIImage] = []
         if let dataSource = self as? (any DataSource) {
             var radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * type(of:dataSource).imageScale
@@ -62,15 +76,9 @@ extension MapImage {
                     }
                 }
             } else {
-                if let image = CircleImage(color: dataSource.color, radius: 100 * UIScreen.main.scale, fill: true) {
-                    images.append(image)
-                    if let dataSourceImage = type(of:dataSource).image?.aspectResize(to: CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
-                        images.append(dataSourceImage)
-                    }
-                }
+                images.append(contentsOf: Self.defaultCircleImage())
             }
         }
-        
         return images
     }
 }

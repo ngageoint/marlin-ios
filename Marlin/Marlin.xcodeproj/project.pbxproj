@@ -224,6 +224,7 @@
 		F7830C052A8BCEF2008376F7 /* RouteListEmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830C042A8BCEF1008376F7 /* RouteListEmptyState.swift */; };
 		F7830C092A93B517008376F7 /* UIBezierPathExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830C082A93B517008376F7 /* UIBezierPathExtensions.swift */; };
 		F7830C0B2A93CDD4008376F7 /* RouteMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830C0A2A93CDD4008376F7 /* RouteMapView.swift */; };
+		F7830C0D2A96623C008376F7 /* DataSourceCircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830C0C2A96623C008376F7 /* DataSourceCircleImage.swift */; };
 		F79168FE28B56031004FFEBA /* PortMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79168FD28B56031004FFEBA /* PortMap.swift */; };
 		F79C994229955262004D9E82 /* DataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79C994129955262004D9E82 /* DataLoadOperation.swift */; };
 		F7A42E7529A0316700635E16 /* MarlinViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A42E7429A0316700635E16 /* MarlinViewTests.swift */; };
@@ -674,6 +675,7 @@
 		F7830C042A8BCEF1008376F7 /* RouteListEmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteListEmptyState.swift; sourceTree = "<group>"; };
 		F7830C082A93B517008376F7 /* UIBezierPathExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBezierPathExtensions.swift; sourceTree = "<group>"; };
 		F7830C0A2A93CDD4008376F7 /* RouteMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteMapView.swift; sourceTree = "<group>"; };
+		F7830C0C2A96623C008376F7 /* DataSourceCircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceCircleImage.swift; sourceTree = "<group>"; };
 		F79168FD28B56031004FFEBA /* PortMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortMap.swift; sourceTree = "<group>"; };
 		F79C994129955262004D9E82 /* DataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadOperation.swift; sourceTree = "<group>"; };
 		F7A42E7429A0316700635E16 /* MarlinViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinViewTests.swift; sourceTree = "<group>"; };
@@ -1904,6 +1906,7 @@
 				F71FC0D02A3B9D9000911BAC /* MoreDetailsButton.swift */,
 				F71FC0D22A3B9DDA00911BAC /* DataSourceActionBar.swift */,
 				F7066DAC2A4F08B70058122E /* CoordinateDisplaySettings.swift */,
+				F7830C0C2A96623C008376F7 /* DataSourceCircleImage.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2698,6 +2701,7 @@
 				F71CC6EE28AD163D000A326C /* PortSummaryView.swift in Sources */,
 				F7D8FA212923F99C00E7D0A1 /* NoticeToMarinersFullNoticeView.swift in Sources */,
 				F79168FE28B56031004FFEBA /* PortMap.swift in Sources */,
+				F7830C0D2A96623C008376F7 /* DataSourceCircleImage.swift in Sources */,
 				F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */,
 				F7EFFEC52A7C113A0097E5EF /* DataSourceIcon.swift in Sources */,
 				F7D8FA4F293A960E00E7D0A1 /* StringFilter.swift in Sources */,

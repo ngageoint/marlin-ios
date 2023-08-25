@@ -11,17 +11,17 @@ import MapKit
 class PersistedMapState: NSObject, MapMixin {
     var uuid: UUID = UUID()
     
-    func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
+    func setupMixin(mapState: MapState, mapView: MKMapView) {
         let region = UserDefaults.standard.mapRegion
         if CLLocationCoordinate2DIsValid(region.center) {
-            if MKUserTrackingMode(rawValue: marlinMap.mapState.userTrackingMode) ?? MKUserTrackingMode.none == .none {
+            if MKUserTrackingMode(rawValue: mapState.userTrackingMode) ?? MKUserTrackingMode.none == .none {
                 DispatchQueue.main.async {
-                    marlinMap.mapState.center = region
+                    mapState.center = region
                 }
             }
         } else {
             DispatchQueue.main.async {
-                marlinMap.mapState.center = MKCoordinateRegion(center: mapView.centerCoordinate, zoom: 4, bounds: UIScreen.main.bounds)
+                mapState.center = MKCoordinateRegion(center: mapView.centerCoordinate, zoom: 4, bounds: UIScreen.main.bounds)
             }
         }
     }

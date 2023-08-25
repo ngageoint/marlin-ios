@@ -20,8 +20,8 @@ class UserLayersMap: MapMixin {
     var lastChange: Date?
     var cancellable = Set<AnyCancellable>()
    
-    func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
-        mapState = marlinMap.mapState
+    func setupMixin(mapState: MapState, mapView: MKMapView) {
+        self.mapState = mapState
         viewModel.$layers
             .receive(on: RunLoop.main)
             .sink() { [weak self] layers in

@@ -20,6 +20,18 @@ protocol OverlayRenderable {
 
 class MapSingleTap: UITapGestureRecognizer {
     var mapView: MKMapView?
+    var coordinator: MapCoordinator
+        
+    init(coordinator: MapCoordinator, mapView: MKMapView) {
+        self.mapView = mapView
+        self.coordinator = coordinator
+        super.init(target: nil, action: nil)
+        self.addTarget(self, action: #selector(execute))
+    }
+    
+    @objc private func execute() {
+        coordinator.singleTapGesture(tapGestureRecognizer: self)
+    }
 }
 
 class MapState: ObservableObject, Hashable {
@@ -109,12 +121,18 @@ class NavigationalMapMixins: MapMixins {
     }
 }
 
-struct MarlinMap: UIViewRepresentable {
+struct MarlinMap: UIViewRepresentable, MarlinMapProtocol {
+    var notificationOnTap: NSNotification.Name = .MapItemsTapped
+    var focusNotification: NSNotification.Name = .FocusMapOnItem
     @State var name: String
 
     @ObservedObject var mixins: MapMixins
     @StateObject var mapState: MapState = MapState()
     var allowMapTapsOnItems: Bool = true
+    
+    func singleTap(context: Context, gesture: UITapGestureRecognizer) {
+        context.coordinator.singleTapGesture(tapGestureRecognizer: gesture)
+    }
 
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView(frame: UIScreen.main.bounds)
@@ -124,8 +142,7 @@ struct MarlinMap: UIViewRepresentable {
         doubleTapRecognizer.numberOfTouchesRequired = 1
         mapView.addGestureRecognizer(doubleTapRecognizer)
                 
-        let singleTapGestureRecognizer = MapSingleTap(target: context.coordinator, action: #selector(context.coordinator.singleTapGensture(tapGestureRecognizer:)))
-        singleTapGestureRecognizer.mapView = mapView
+        let singleTapGestureRecognizer = MapSingleTap(coordinator: context.coordinator, mapView: mapView)
         singleTapGestureRecognizer.numberOfTapsRequired = 1
         singleTapGestureRecognizer.numberOfTouchesRequired = 1
         singleTapGestureRecognizer.delaysTouchesBegan = true
@@ -149,7 +166,7 @@ struct MarlinMap: UIViewRepresentable {
         mapView.register(EnlargedAnnotationView.self, forAnnotationViewWithReuseIdentifier: EnlargedAnnotationView.ReuseID)
 
         for mixin in mixins.mixins {
-            mixin.setupMixin(marlinMap: self, mapView: mapView)
+            mixin.setupMixin(mapState: mapState, mapView: mapView)
         }
         context.coordinator.mixins = mixins.mixins
         context.coordinator.allowMapTapsOnItems = allowMapTapsOnItems
@@ -256,7 +273,7 @@ struct MarlinMap: UIViewRepresentable {
                 mixinFromCoordinator.uuid == mixin.uuid
             }) {
                 // this means it is new
-                mixin.setupMixin(marlinMap: self, mapView: mapView)
+                mixin.setupMixin(mapState: mapState, mapView: mapView)
             } else {
                 // just update it
                 mixin.updateMixin(mapView: mapView, mapState: mapState)
@@ -265,53 +282,44 @@ struct MarlinMap: UIViewRepresentable {
         context.coordinator.mixins = mixins.mixins
     }
  
-    func makeCoordinator() -> MarlinMapCoordinator {
-        return MarlinMapCoordinator(self)
+    func makeCoordinator() -> MapCoordinator {
+        return MarlinMapCoordinator(self, focusNotification: focusNotification)
     }
 
 }
 
-class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDelegate {
+protocol MapCoordinator: MKMapViewDelegate, UIGestureRecognizerDelegate {
+    var mapView: MKMapView? { get set }
+    var mixins: [any MapMixin] { get set }
+    var osmOverlay: MKTileOverlay? { get set }
+    var garsOverlay: GARSTileOverlay? { get set }
+    var mgrsOverlay: MGRSTileOverlay? { get set }
+    var mapScale: MKScaleView? { get set }
+    var currentRegion: MKCoordinateRegion? { get set }
+    var allowMapTapsOnItems: Bool { get set }
     
-    var osmOverlay: MKTileOverlay?
-    var garsOverlay: GARSTileOverlay?
-    var mgrsOverlay: MGRSTileOverlay?
+    var setCenter: CLLocationCoordinate2D? { get set }
+    var trackingModeSet: MKUserTrackingMode? { get set }
+    
+    var forceCenterDate: Date? { get set }
+    var centerDate: Date? { get set }
+    
+    var marlinMap: MarlinMapProtocol { get set }
+    
+    var focusedAnnotation: EnlargableAnnotation? { get set }
 
-    var mapView: MKMapView?
-    var mapScale: MKScaleView?
-    var marlinMap: MarlinMap
-    var focusedAnnotation: EnlargableAnnotation?
-    var focusMapOnItemSink: AnyCancellable?
+    
+    func setMapRegion(region: MKCoordinateRegion)
+    func singleTapGesture(tapGestureRecognizer: UITapGestureRecognizer)
+    func handleTappedItems(annotations: [MKAnnotation], items: [any DataSource], mapName: String)
+    
+}
 
-    var setCenter: CLLocationCoordinate2D?
-    var trackingModeSet: MKUserTrackingMode?
-    
-    var forceCenterDate: Date?
-    var centerDate: Date?
-    
-    var currentRegion: MKCoordinateRegion?
-    
-    var mixins: [any MapMixin] = []
-    
-    var allowMapTapsOnItems: Bool = true
-    
+extension MapCoordinator {
     func setMapRegion(region: MKCoordinateRegion) {
         currentRegion = region
         self.mapView?.setRegion(region, animated: true)
     }
-
-    init(_ marlinMap: MarlinMap) {
-        self.marlinMap = marlinMap
-        super.init()
-        
-        focusMapOnItemSink =
-        NotificationCenter.default.publisher(for: .FocusMapOnItem)
-            .compactMap {$0.object as? FocusMapOnItemNotification}
-            .sink(receiveValue: { [weak self] in
-                self?.focusItem(notification:$0)
-            })
-    }
-
     
     func addAnnotation(annotation: MKAnnotation) {
         mapView?.addAnnotation(annotation)
@@ -354,7 +362,99 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         mapView?.addAnnotation(ea)
     }
     
-    @objc func singleTapGensture(tapGestureRecognizer: UITapGestureRecognizer) {
+    func mapTap(tapPoint:CGPoint, gesture: UITapGestureRecognizer, mapView: MKMapView?) {
+        guard let mapView = mapView, allowMapTapsOnItems else {
+            return
+        }
+        
+        mapView.isZoomEnabled = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            mapView.isZoomEnabled = true
+        }
+        
+        let tapCoord = mapView.convert(tapPoint, toCoordinateFrom: mapView)
+        var annotationsTapped: [MKAnnotation] = []
+        let visibleMapRect = mapView.visibleMapRect
+        let annotationsVisible = mapView.annotations(in: visibleMapRect)
+        
+        for annotation in annotationsVisible {
+            if let mkAnnotation = annotation as? MKAnnotation, let view = mapView.view(for: mkAnnotation) {
+                let location = gesture.location(in: view)
+                if view.bounds.contains(location) {
+                    if let annotation = annotation as? MKClusterAnnotation {
+                        if mapView.zoomLevel >= MKMapView.MAX_CLUSTER_ZOOM {
+                            annotationsTapped.append(contentsOf: annotation.memberAnnotations)
+                        } else {
+                            mapView.showAnnotations(annotation.memberAnnotations, animated: true)
+                            return
+                        }
+                    } else {
+                        annotationsTapped.append(mkAnnotation)
+                    }
+                }
+            }
+        }
+        
+        var items: [any DataSource] = []
+        for mixin in marlinMap.mixins.mixins.reversed() {
+            if let matchedItems = mixin.items(at: tapCoord, mapView: mapView, touchPoint: tapPoint) {
+                items.append(contentsOf: matchedItems)
+            }
+        }
+        handleTappedItems(annotations: annotationsTapped, items: items, mapName: marlinMap.name)
+    }
+}
+
+protocol MarlinMapProtocol {
+    var mixins: MapMixins { get set }
+    var mapState: MapState { get }
+    var name: String { get set }
+    var notificationOnTap: NSNotification.Name { get set }
+}
+
+class MarlinMapCoordinator: NSObject, MapCoordinator {
+    
+    var osmOverlay: MKTileOverlay?
+    var garsOverlay: GARSTileOverlay?
+    var mgrsOverlay: MGRSTileOverlay?
+
+    var mapView: MKMapView?
+    var mapScale: MKScaleView?
+    var marlinMap: MarlinMapProtocol
+    var focusedAnnotation: EnlargableAnnotation?
+    var focusMapOnItemSink: AnyCancellable?
+
+    var setCenter: CLLocationCoordinate2D?
+    var trackingModeSet: MKUserTrackingMode?
+    
+    var forceCenterDate: Date?
+    var centerDate: Date?
+    
+    var currentRegion: MKCoordinateRegion?
+    
+    var mixins: [any MapMixin] = []
+    
+    var allowMapTapsOnItems: Bool = true
+    
+    init(_ marlinMap: MarlinMapProtocol, focusNotification: NSNotification.Name) {
+        self.marlinMap = marlinMap
+        super.init()
+        
+        focusMapOnItemSink =
+        NotificationCenter.default.publisher(for: focusNotification)
+            .compactMap {$0.object as? FocusMapOnItemNotification}
+            .sink(receiveValue: { [weak self] in
+                NSLog("Focus notification recieved")
+                self?.focusItem(notification:$0)
+            })
+    }
+    
+    func handleTappedItems(annotations: [MKAnnotation], items: [DataSource], mapName: String) {
+        let notification = MapItemsTappedNotification(annotations: annotations, items: items, mapName: mapName)
+        NotificationCenter.default.post(name: marlinMap.notificationOnTap, object: notification)
+    }
+    
+    @objc func singleTapGesture(tapGestureRecognizer: UITapGestureRecognizer) {
         guard let mapGesture = tapGestureRecognizer as? MapSingleTap, let mapView = mapGesture.mapView else {
             return
         }
@@ -369,7 +469,7 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
             guard let annotation = view.annotation as? EnlargableAnnotation else {
                 continue
             }
-            
+            NSLog("check if should enlarge \(annotation.shouldEnlarge)")
             if annotation.shouldEnlarge {
                 UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut) {
                     annotation.enlargeAnnoation()
@@ -388,45 +488,6 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         
     }
     
-    func mapTap(tapPoint:CGPoint, gesture: UITapGestureRecognizer, mapView: MKMapView?) {
-        guard let mapView = mapView, allowMapTapsOnItems else {
-            return
-        }
-        
-        let tapCoord = mapView.convert(tapPoint, toCoordinateFrom: mapView)
-        var annotationsTapped: [Any] = []
-        let visibleMapRect = mapView.visibleMapRect
-        let annotationsVisible = mapView.annotations(in: visibleMapRect)
-        
-        for annotation in annotationsVisible {
-            if let mkAnnotation = annotation as? MKAnnotation, let view = mapView.view(for: mkAnnotation) {
-                let location = gesture.location(in: view)
-                if view.bounds.contains(location) {
-                    if let annotation = annotation as? MKClusterAnnotation {
-                        if mapView.zoomLevel >= MKMapView.MAX_CLUSTER_ZOOM {
-                            annotationsTapped.append(contentsOf: annotation.memberAnnotations)
-                        } else {
-                            mapView.showAnnotations(annotation.memberAnnotations, animated: true)
-                            return
-                        }
-                    } else {
-                        annotationsTapped.append(annotation)
-                    }
-                }
-            }
-        }
-        
-        var items: [any DataSource] = []
-        for mixin in marlinMap.mixins.mixins.reversed() {
-            if let matchedItems = mixin.items(at: tapCoord, mapView: mapView, touchPoint: tapPoint) {
-                items.append(contentsOf: matchedItems)
-            }
-        }
-
-        let notification = MapItemsTappedNotification(annotations: annotationsTapped, items: items, mapName: marlinMap.name)
-        NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
-    }
-        
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if let renderableOverlay = overlay as? OverlayRenderable {
             return renderableOverlay.renderer

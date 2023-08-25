@@ -8,8 +8,38 @@
 import Foundation
 import UIKit
 import MapKit
+import SwiftUI
 
-class CommonDataSource: NSObject, DataSource {
+struct CommonSummaryView: DataSourceSummaryView {
+    var showSectionHeader: Bool = false
+    
+    var bookmark: Bookmark?
+    
+    var common: CommonDataSource
+    var showMoreDetails: Bool = false
+    var showTitle: Bool = true
+    var showBookmarkNotes: Bool = false
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(common.name ?? "")
+                .overline()
+        }
+    }
+}
+
+class CommonDataSource: NSObject, DataSource, DataSourceViewBuilder, ObservableObject {
+    var itemTitle: String {
+        return "\(self.name ?? "")"
+    }
+    var detailView: AnyView {
+        AnyView(Text(name ?? ""))
+    }
+    
+    var summary: some DataSourceSummaryView {
+        CommonSummaryView(common: self)
+    }
+    
     static var metricsKey: String = "Common"
     
     static var key: String = "Common"
@@ -44,5 +74,11 @@ class CommonDataSource: NSObject, DataSource {
         return dateFormatter
     }
     
-    @objc var location: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid
+    @Published @objc var location: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid
+    @Published var name: String?
+        
+    init(name: String? = nil, location: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid){
+        self.name = name
+        self.location = location
+    }
 }

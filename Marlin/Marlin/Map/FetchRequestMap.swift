@@ -76,8 +76,8 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         )
     }
     
-    func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
-        mapState = marlinMap.mapState
+    func setupMixin(mapState: MapState, mapView: MKMapView) {
+        self.mapState = mapState
         
         if let focusNotificationName = focusNotificationName {
             NotificationCenter.default.publisher(for: focusNotificationName)
@@ -101,10 +101,10 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
                         print("New data for \(T.key), refresh overlay, clear the cache")
                         // Clear the cache
                         self.imageCache.clearCache(completion: {
-                            self.refreshOverlay(marlinMap: marlinMap)
+                            self.refreshOverlay(mapState: mapState)
                         })
                     } else {
-                        self.refreshOverlay(marlinMap: marlinMap)
+                        self.refreshOverlay(mapState: mapState)
                     }
                 }
             }
@@ -117,7 +117,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
             })
             .sink() { [weak self] show in
                 self?.show = show
-                self?.refreshOverlay(marlinMap: marlinMap)
+                self?.refreshOverlay(mapState: mapState)
             }
             .store(in: &cancellable)
         
@@ -127,14 +127,14 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
                 print("Order update \(T.self): \(order)")
             })
             .sink() { [weak self] _ in
-                self?.refreshOverlay(marlinMap: marlinMap)
+                self?.refreshOverlay(mapState: mapState)
             }
             .store(in: &cancellable)
         
         LocationManager.shared().$current10kmMGRS
             .receive(on: RunLoop.main)
             .sink() { [weak self] mgrsZone in
-                self?.refreshOverlay(marlinMap: marlinMap)
+                self?.refreshOverlay(mapState: mapState)
             }
             .store(in: &cancellable)
     }
@@ -186,7 +186,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         }
     }
     
-    func refreshOverlay(marlinMap: MarlinMap) {
+    func refreshOverlay(mapState: MapState) {
         DispatchQueue.main.async {
             self.mapState?.mixinStates["FetchRequestMixin\(T.key)DateUpdated"] = Date()
         }

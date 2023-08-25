@@ -44,8 +44,8 @@ class LocationBoundsMixin: NSObject, MapMixin, ObservableObject {
         }
     }
 
-    func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
-        mapState = marlinMap.mapState
+    func setupMixin(mapState: MapState, mapView: MKMapView) {
+        self.mapState = mapState
         coordinateOne.$latitude
             .receive(on: RunLoop.main)
             .sink() { [self] neCorner in

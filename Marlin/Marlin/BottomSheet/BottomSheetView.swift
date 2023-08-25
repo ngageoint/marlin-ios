@@ -28,7 +28,7 @@ struct MarlinDataBottomSheet: View {
             .sheet(isPresented: $showBottomSheet, onDismiss: {
                 NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
             }) {
-                MarlinBottomSheet(itemList: itemList)
+                MarlinBottomSheet(itemList: itemList, focusNotification: .FocusMapOnItem)
                     .environmentObject(LocationManager.shared())
                     .presentationDetents([.medium])
             }
@@ -62,12 +62,34 @@ struct MarlinDataBottomSheet: View {
     }
 }
 
-struct MarlinBottomSheet: View {
+struct MarlinBottomSheet <Content: View>: View {
     @ObservedObject var itemList: BottomSheetItemList
     @State var selectedItem: Int = 0
 
     var pages: Int { itemList.bottomSheetItems?.count ?? 0 }
+    let focusNotification: NSNotification.Name
+        
+    let contentBuilder: (_ item: any DataSourceViewBuilder) -> Content
     
+    init(itemList: BottomSheetItemList, focusNotification: NSNotification.Name, @ViewBuilder contentBuilder: @escaping (_ item: any DataSourceViewBuilder) -> Content) {
+        self.itemList = itemList
+        self.contentBuilder = contentBuilder
+        self.focusNotification = focusNotification
+    }
+    
+    init(itemList: BottomSheetItemList, focusNotification: NSNotification.Name) where Content == AnyView {
+        self.init(itemList: itemList, focusNotification: focusNotification) { item in
+            AnyView(
+                item.summary
+                    .setShowMoreDetails(true)
+                    .setShowSectionHeader(true)
+                    .setShowTitle(true)
+            )
+        }
+    }
+
+    
+    //action: @escaping () -> Void
     @ViewBuilder
     private var rectangle: some View {
         Rectangle()
@@ -80,29 +102,11 @@ struct MarlinBottomSheet: View {
         return
             VStack {
                 ZStack {
-                    if let bottomSheetItems = itemList.bottomSheetItems {
+                    if let bottomSheetItems = itemList.bottomSheetItems, bottomSheetItems.count >= selectedItem + 1 {
                         let item = bottomSheetItems[selectedItem].item
-                        
-                        if let imageName = type(of: item).imageName {
-                            HStack {
-                                Image(imageName)
-                                    .frame(width: 30, height: 30)
-                                    .foregroundColor(.white)
-                                    .padding(5)
-                                    .background(Color(item.color))
-                                    .clipShape(Circle())
-                                Spacer()
-                            }
-                        } else if let systemImageName = type(of: item).systemImageName {
-                            HStack {
-                                Image(systemName: systemImageName)
-                                    .frame(width: 30, height: 30)
-                                    .foregroundColor(.white)
-                                    .padding(5)
-                                    .background(Color(item.color))
-                                    .clipShape(Circle())
-                                Spacer()
-                            }
+                        HStack {
+                            DataSourceCircleImage(dataSource: item, size: 30)
+                            Spacer()
                         }
                         
                         if bottomSheetItems.count > 1 {
@@ -147,14 +151,9 @@ struct MarlinBottomSheet: View {
                     }
                 }
                 
-                if let item = itemList.bottomSheetItems?[selectedItem] {
+                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1, let item = itemList.bottomSheetItems?[selectedItem] {
                     if let dataSource = item.item as? (any DataSourceViewBuilder) {
-                        AnyView(
-                            dataSource.summary
-                                .setShowMoreDetails(true)
-                                .setShowSectionHeader(true)
-                                .setShowTitle(true)
-                            )
+                        contentBuilder(dataSource)
                             .transition(.opacity)
                     }
                 }
@@ -171,13 +170,13 @@ struct MarlinBottomSheet: View {
                     .ignoresSafeArea()
             )
             .onChange(of: selectedItem) { item in
-                if let bottomSheetItem = itemList.bottomSheetItems?[selectedItem], let item = bottomSheetItem.item as? DataSourceLocation {
-                    NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: item, zoom: bottomSheetItem.zoom, mapName: bottomSheetItem.mapName))
+                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1, let bottomSheetItem = itemList.bottomSheetItems?[selectedItem], let item = bottomSheetItem.item as? DataSourceLocation {
+                    NotificationCenter.default.post(name: focusNotification, object: FocusMapOnItemNotification(item: item, zoom: bottomSheetItem.zoom, mapName: bottomSheetItem.mapName))
                 }
             }
             .onAppear {
-                if let bottomSheetItem = itemList.bottomSheetItems?[selectedItem], let item = bottomSheetItem.item as? DataSourceLocation {
-                    NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: item, zoom: bottomSheetItem.zoom, mapName: bottomSheetItem.mapName))
+                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1, let bottomSheetItem = itemList.bottomSheetItems?[selectedItem], let item = bottomSheetItem.item as? DataSourceLocation {
+                    NotificationCenter.default.post(name: focusNotification, object: FocusMapOnItemNotification(item: item, zoom: bottomSheetItem.zoom, mapName: bottomSheetItem.mapName))
                     Metrics.shared.dataSourceBottomSheet(dataSource: type(of: item))
                 }
             }
