@@ -4,10 +4,10 @@ PODS:
   - crs-ios (1.0.4)
   - gars-ios (1.1.3):
     - grid-ios (~> 1.0.5)
-  - geopackage-ios (7.4.2):
+  - geopackage-ios (8.0.3):
     - color-ios (~> 1.0.1)
     - ogc-api-features-json-ios (~> 4.2.3)
-    - sf-proj-ios (~> 5.1.2)
+    - sf-proj-ios (~> 6.0.1)
     - sf-wkb-ios (~> 4.1.2)
     - sf-wkt-ios (~> 2.1.2)
     - tiff-ios (~> 4.0.1)
@@ -40,15 +40,17 @@ PODS:
   - OHHTTPStubs/OHPathHelpers (9.1.0)
   - OHHTTPStubs/Swift (9.1.0):
     - OHHTTPStubs/Default
-  - proj-ios (1.0.4):
+  - PROJ (9.2.1.4):
+    - PROJ-include (~> 9.2.1.4)
+  - PROJ-include (9.2.1.4)
+  - proj-ios (2.0.1):
     - crs-ios (~> 1.0.4)
-    - proj4-ios (~> 4.9.3)
-  - proj4-ios (4.9.3)
+    - PROJ (~> 9.2.1.4)
   - sf-geojson-ios (4.2.3):
     - sf-ios (~> 4.1.2)
   - sf-ios (4.1.2)
-  - sf-proj-ios (5.1.2):
-    - proj-ios (~> 1.0.4)
+  - sf-proj-ios (6.0.1):
+    - proj-ios (~> 2.0.1)
     - sf-ios (~> 4.1.2)
   - sf-wkb-ios (4.1.2):
     - sf-ios (~> 4.1.2)
@@ -68,8 +70,7 @@ DEPENDENCIES:
   - mgrs-ios
   - OHHTTPStubs
   - OHHTTPStubs/Swift
-  - sf-ios
-  - sf-wkt-ios
+  - PROJ
   - SwiftUIIntrospect
   - SWXMLHash (~> 7)
 
@@ -87,8 +88,9 @@ SPEC REPOS:
     - mgrs-ios
     - ogc-api-features-json-ios
     - OHHTTPStubs
+    - PROJ
+    - PROJ-include
     - proj-ios
-    - proj4-ios
     - sf-geojson-ios
     - sf-ios
     - sf-proj-ios
@@ -103,7 +105,7 @@ SPEC CHECKSUMS:
   color-ios: ab7521e896b4e061905d292aa7ff675d7e7f801d
   crs-ios: 87d8e59c7289cea83248164f5038efe04e3ffebc
   gars-ios: 8caa81a296a802f53400a41588b9cdc26e730b92
-  geopackage-ios: b9cfb3c3954d0705286cc39ade5e655c07e39cd8
+  geopackage-ios: 4b1a8c12c68adf9d2b18bbfb7f654e7d983400b2
   grid-ios: 29d32ac8d78771b1d7a91ebeba85c5d49785c4bd
   KIF: 7660c626b0f2d4562533590960db70a36d640558
   Kingfisher: 6c5449c6450c5239166510ba04afe374a98afc4f
@@ -111,17 +113,18 @@ SPEC CHECKSUMS:
   mgrs-ios: d96be2123562dbd99194bcdc75d54d8ac13afa3a
   ogc-api-features-json-ios: ca8cac7f529afced45d338ece9a94e234843a706
   OHHTTPStubs: 90eac6d8f2c18317baeca36698523dc67c513831
-  proj-ios: 5b0b6fc999f215b1bdd0c2964281d16760fc56ed
-  proj4-ios: fa2f3ab9ba9ba727bd10bc12aea735d0c3927ef4
+  PROJ: 1cbc64537165c45d83932b455f894223c5650112
+  PROJ-include: 29015f2b6af3795ebc581edf250edd090bac6dcf
+  proj-ios: 241849ac37889d6951c5d359ab052085463fc094
   sf-geojson-ios: be596c33fdc178ea7fd4d1b6db6bcf0007a68603
   sf-ios: 16cfda9dd8971cb0216ac911840bb72727bf2397
-  sf-proj-ios: b5388d60181b0e368eb754e5b2a773233b49af01
+  sf-proj-ios: aab8713340b1eda363ef086c036e502492d86e60
   sf-wkb-ios: 6a32a00f36ddf79adbd4f74a088ca569607da8de
   sf-wkt-ios: a8bb6be99b6e209557ce5feba64d961d896da049
   SwiftUIIntrospect: 22e0d86711f28242c7a24e257cb71fc543a49d30
   SWXMLHash: dd733a457e9c4fe93b1538654057aefae4acb382
   tiff-ios: 6f74cf7fefc371e2523807ea38cd808fd594f86b
 
-PODFILE CHECKSUM: 2cceaff3b285236c27180bd594182508533a1ace
+PODFILE CHECKSUM: 28984b5c5952a31aa0bbc96c83e52cdc1e77daf3
 
 COCOAPODS: 1.12.1

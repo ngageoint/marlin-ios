@@ -9,11 +9,10 @@ use_modular_headers!
 def common_pods
   pod "Alamofire"
   pod "Kingfisher"
-  pod 'sf-ios'
-  pod 'sf-wkt-ios'
   pod 'geopackage-ios'
   pod 'mgrs-ios'
   pod 'gars-ios'
+  pod 'PROJ', :modular_headers => false
   pod 'MatomoTracker', '~> 7.5'
   pod 'SWXMLHash', '~> 7'
   pod 'SwiftUIIntrospect'
