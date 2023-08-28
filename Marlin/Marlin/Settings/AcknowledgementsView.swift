@@ -48,7 +48,8 @@ struct Acknowledgement: Identifiable, Hashable {
 
 class AcknowledgementModel {
     var acknowledgements: [Acknowledgement] = [
-        Acknowledgement(title: "Exception Catcher", copyright: "Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)", license: "This product includes software licensed under the [MIT license](https://raw.githubusercontent.com/sindresorhus/ExceptionCatcher/main/license).")
+        Acknowledgement(title: "Exception Catcher", copyright: "Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)", license: "This product includes software licensed under the [MIT license](https://raw.githubusercontent.com/sindresorhus/ExceptionCatcher/main/license)."),
+        Acknowledgement(title: "GeoJSON", copyright: "Copyright (c) 2020 Kilian Koeltzsch", license: "This product includes software licensed under the [MIT license](https://github.com/kiliankoe/GeoJSON/blob/main/LICENSE).")
     ]
     init() {
         if let path = Bundle.main.url(forResource: "Settings", withExtension: "bundle")?.appendingPathComponent("Acknowledgements.plist"), let dictionary = NSDictionary(contentsOf: path) {

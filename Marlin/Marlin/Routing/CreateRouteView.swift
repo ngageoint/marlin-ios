@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreLocation
+import GeoJSON
 
 struct CreateRouteView: View {
     @EnvironmentObject var locationManager: LocationManager
@@ -16,6 +17,8 @@ struct CreateRouteView: View {
     
     @State private var contentSize: CGSize = .zero
     @State var waypoints: [any DataSource] = []
+    
+    @State var routeViewModel: RouteViewModel = RouteViewModel()
         
     var body: some View {
         VStack(spacing: 0) {
@@ -74,7 +77,7 @@ struct CreateRouteView: View {
                         }
                     }
                     GridRow {
-                        Text("Select a feature to add to the route")
+                        Text("Select a feature to add to the route, long press to add custom point")
                             .secondary()
                             .padding(8)
                             .gridCellColumns(3)
@@ -94,7 +97,7 @@ struct CreateRouteView: View {
             }
             .scrollDisabled(contentSize.height < maxFeatureAreaSize)
             .frame(maxWidth: contentSize.width, maxHeight: contentSize.height)
-            RouteMapView(path: $path, waypoints: $waypoints)
+            RouteMapView(path: $path, waypoints: $waypoints, routeViewModel: routeViewModel)
                 .edgesIgnoringSafeArea([.leading, .trailing])
         }
         .onAppear {
@@ -102,6 +105,19 @@ struct CreateRouteView: View {
                 waypoints.append(CommonDataSource(name: "Your Current Location", location: locationManager.lastLocation?.coordinate ?? kCLLocationCoordinate2DInvalid))
             }
         }
+        .onChange(of: waypoints.count, perform: { newValue in
+            print("waypoints changed \(waypoints)")
+            var features: [Feature] = []
+            for waypoint in waypoints {
+                if let waypoint = waypoint as? GeoJSONExportable {
+                    if let feature = waypoint.geoJsonFeature {
+                        features.append(feature)
+                    }
+                }
+            }
+            let featureCollection = FeatureCollection(features: features)
+            routeViewModel.routeFeatureCollection = featureCollection
+        })
         .navigationTitle(Route.fullDataSourceName)
         .navigationBarTitleDisplayMode(.inline)
     }

@@ -8,6 +8,7 @@
 import Foundation
 import MapKit
 import sf_wkt_ios
+import GeoJSON
 
 extension MKShape {
     static func fromWKT(wkt: String, distance: Double?) -> MKShape? {
@@ -45,5 +46,39 @@ extension MKShape {
             return MKGeodesicPolyline(points: &mapPoints, count: mapPoints.count)
         }
         return nil
+    }
+    
+    static func fromFeatureCollection(featureCollection: FeatureCollection) -> MKGeodesicPolyline? {
+        var mapPoints: [MKMapPoint] = []
+        
+        for feature in featureCollection.features {
+            let geom = feature.geometry
+            switch feature.geometry {
+            case .point(let point):
+                let coordinates = point.coordinates
+                mapPoints.append(MKMapPoint(coordinates.coordinate))
+                print("point")
+            case .lineString(let line):
+                for coordinate in line.coordinates {
+                    mapPoints.append(MKMapPoint(coordinate.coordinate))
+                }
+                print("line")
+            case .polygon(let polygon):
+                for ring in polygon.coordinates {
+                    for coordinate in ring.coordinates {
+                        mapPoints.append(MKMapPoint(coordinate.coordinate))
+                    }
+                }
+                print("poly")
+            default:
+                print("default")
+            }
+        }
+        
+        if mapPoints.isEmpty {
+            return nil
+        }
+        
+        return MKGeodesicPolyline(points: &mapPoints, count: mapPoints.count)
     }
 }

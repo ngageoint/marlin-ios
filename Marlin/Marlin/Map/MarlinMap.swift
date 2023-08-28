@@ -34,6 +34,22 @@ class MapSingleTap: UITapGestureRecognizer {
     }
 }
 
+class MapLongPress: UILongPressGestureRecognizer {
+    var mapView: MKMapView?
+    var coordinator: MapCoordinator
+    
+    init(coordinator: MapCoordinator, mapView: MKMapView) {
+        self.mapView = mapView
+        self.coordinator = coordinator
+        super.init(target: nil, action: nil)
+        self.addTarget(self, action: #selector(execute))
+    }
+    
+    @objc private func execute() {
+        coordinator.longPressGesture(longPressGestureRecognizer: self)
+    }
+}
+
 class MapState: ObservableObject, Hashable {
     static func == (lhs: MapState, rhs: MapState) -> Bool {
         return lhs.id == rhs.id
@@ -123,6 +139,7 @@ class NavigationalMapMixins: MapMixins {
 
 struct MarlinMap: UIViewRepresentable, MarlinMapProtocol {
     var notificationOnTap: NSNotification.Name = .MapItemsTapped
+    var notificationOnLongPress: NSNotification.Name = .MapLongPress
     var focusNotification: NSNotification.Name = .FocusMapOnItem
     @State var name: String
 
@@ -130,10 +147,6 @@ struct MarlinMap: UIViewRepresentable, MarlinMapProtocol {
     @StateObject var mapState: MapState = MapState()
     var allowMapTapsOnItems: Bool = true
     
-    func singleTap(context: Context, gesture: UITapGestureRecognizer) {
-        context.coordinator.singleTapGesture(tapGestureRecognizer: gesture)
-    }
-
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView(frame: UIScreen.main.bounds)
         // double tap recognizer has no action
@@ -149,8 +162,11 @@ struct MarlinMap: UIViewRepresentable, MarlinMapProtocol {
         singleTapGestureRecognizer.cancelsTouchesInView = true
         singleTapGestureRecognizer.delegate = context.coordinator
         singleTapGestureRecognizer.require(toFail: doubleTapRecognizer)
-
         mapView.addGestureRecognizer(singleTapGestureRecognizer)
+        
+        let longPressGestureRecognizer = MapLongPress(coordinator: context.coordinator, mapView: mapView)
+        mapView.addGestureRecognizer(longPressGestureRecognizer)
+        
         mapView.delegate = context.coordinator
         mapView.showsUserLocation = true
         mapView.isPitchEnabled = false
@@ -312,6 +328,8 @@ protocol MapCoordinator: MKMapViewDelegate, UIGestureRecognizerDelegate {
     func setMapRegion(region: MKCoordinateRegion)
     func singleTapGesture(tapGestureRecognizer: UITapGestureRecognizer)
     func handleTappedItems(annotations: [MKAnnotation], items: [any DataSource], mapName: String)
+    func longPressGesture(longPressGestureRecognizer: UILongPressGestureRecognizer)
+
     
 }
 
@@ -410,6 +428,7 @@ protocol MarlinMapProtocol {
     var mapState: MapState { get }
     var name: String { get set }
     var notificationOnTap: NSNotification.Name { get set }
+    var notificationOnLongPress: NSNotification.Name { get set }
 }
 
 class MarlinMapCoordinator: NSObject, MapCoordinator {
@@ -460,6 +479,17 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
         }
         if tapGestureRecognizer.state == .ended {
             self.mapTap(tapPoint: tapGestureRecognizer.location(in: mapView), gesture: tapGestureRecognizer, mapView: mapView)
+        }
+    }
+    
+    @objc func longPressGesture(longPressGestureRecognizer: UILongPressGestureRecognizer) {
+        guard let mapGesture = longPressGestureRecognizer as? MapLongPress, let mapView = mapGesture.mapView else {
+            return
+        }
+        
+        if mapGesture.state == .began {
+            let coordinate = mapView.convert(mapGesture.location(in: mapView), toCoordinateFrom: mapView)
+            NotificationCenter.default.post(name: marlinMap.notificationOnLongPress, object: coordinate)
         }
     }
     

@@ -38,6 +38,7 @@ extension Notification.Name {
     public static let LocationAuthorizationStatusChanged = Notification.Name("LocationAuthorizationStatusChanged")
     public static let DocumentPreview = Notification.Name("DocumentPreview")
     public static let FocusMapAtLocation = Notification.Name("FocusMapAtLocation")
+    public static let MapLongPress = Notification.Name("MapLongPress")
 }
 
 struct FocusMapOnItemNotification {

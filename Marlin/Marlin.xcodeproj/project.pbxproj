@@ -142,6 +142,8 @@
 		F72EAADD291D955000AC6026 /* ChartCorrectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAADC291D955000AC6026 /* ChartCorrectionListView.swift */; };
 		F72EAADF291EECF400AC6026 /* NTMActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAADE291EECF400AC6026 /* NTMActionBar.swift */; };
 		F72EAAE1291F040D00AC6026 /* NoticeToMarinersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72EAAE0291F040D00AC6026 /* NoticeToMarinersView.swift */; };
+		F730DFC42A99000D0051775C /* GeoJSON in Frameworks */ = {isa = PBXBuildFile; productRef = F730DFC32A99000D0051775C /* GeoJSON */; };
+		F730DFC72A9950B20051775C /* GeoJSONExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F730DFC62A9950B20051775C /* GeoJSONExportable.swift */; };
 		F7364E342A1D4BD10098F243 /* MarlinMainMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E332A1D4BD10098F243 /* MarlinMainMap.swift */; };
 		F7364E362A1D53970098F243 /* MapNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E352A1D53970098F243 /* MapNavigationView.swift */; };
 		F7364E382A1D55D10098F243 /* LoadingCapsule.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E372A1D55D10098F243 /* LoadingCapsule.swift */; };
@@ -591,6 +593,7 @@
 		F72EAADC291D955000AC6026 /* ChartCorrectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartCorrectionListView.swift; sourceTree = "<group>"; };
 		F72EAADE291EECF400AC6026 /* NTMActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NTMActionBar.swift; sourceTree = "<group>"; };
 		F72EAAE0291F040D00AC6026 /* NoticeToMarinersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersView.swift; sourceTree = "<group>"; };
+		F730DFC62A9950B20051775C /* GeoJSONExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoJSONExportable.swift; sourceTree = "<group>"; };
 		F7364E332A1D4BD10098F243 /* MarlinMainMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinMainMap.swift; sourceTree = "<group>"; };
 		F7364E352A1D53970098F243 /* MapNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapNavigationView.swift; sourceTree = "<group>"; };
 		F7364E372A1D55D10098F243 /* LoadingCapsule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingCapsule.swift; sourceTree = "<group>"; };
@@ -900,6 +903,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F730DFC42A99000D0051775C /* GeoJSON in Frameworks */,
 				7982FB9B536447055E423E94 /* libPods-Marlin.a in Frameworks */,
 				F7FFB33428D8A58D00C31AA3 /* ExceptionCatcher in Frameworks */,
 			);
@@ -1295,6 +1299,14 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		F730DFC52A9950930051775C /* Conversions */ = {
+			isa = PBXGroup;
+			children = (
+				F730DFC62A9950B20051775C /* GeoJSONExportable.swift */,
+			);
+			path = Conversions;
+			sourceTree = "<group>";
+		};
 		F74B9B0528B7CDC20097D448 /* RadioBeacon */ = {
 			isa = PBXGroup;
 			children = (
@@ -1462,6 +1474,7 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
+				F730DFC52A9950930051775C /* Conversions */,
 				F7830BF82A8A847D008376F7 /* Routing */,
 				F7066DAE2A4F7AE70058122E /* Router */,
 				F7DF1BBB29E98B2700F92E14 /* Keychain */,
@@ -2097,6 +2110,7 @@
 			name = Marlin;
 			packageProductDependencies = (
 				F7FFB33328D8A58D00C31AA3 /* ExceptionCatcher */,
+				F730DFC32A99000D0051775C /* GeoJSON */,
 			);
 			productName = "Marlin (iOS)";
 			productReference = F7A54CB22848149700E5F565 /* Marlin.app */;
@@ -2155,6 +2169,7 @@
 			mainGroup = F7A54CA22848149500E5F565;
 			packageReferences = (
 				F7FFB33228D8A58D00C31AA3 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */,
+				F730DFC22A99000D0051775C /* XCRemoteSwiftPackageReference "GeoJSON" */,
 			);
 			productRefGroup = F7A54CB32848149700E5F565 /* Products */;
 			projectDirPath = "";
@@ -2544,6 +2559,7 @@
 				F7F59789285A277000F9B32E /* Card.swift in Sources */,
 				F7830C0B2A93CDD4008376F7 /* RouteMapView.swift in Sources */,
 				F7FFB2FC28D6361800C31AA3 /* NavigationalWarning+DataSource.swift in Sources */,
+				F730DFC72A9950B20051775C /* GeoJSONExportable.swift in Sources */,
 				F7FFB32228D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift in Sources */,
 				F7D8FA5E293AA17C00E7D0A1 /* DataSourceFilterParameter.swift in Sources */,
 				F71D287728BE976300F1775C /* DFRSSummaryView.swift in Sources */,
@@ -3088,6 +3104,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		F730DFC22A99000D0051775C /* XCRemoteSwiftPackageReference "GeoJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kiliankoe/GeoJSON.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.2;
+			};
+		};
 		F7FFB33228D8A58D00C31AA3 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/ExceptionCatcher";
@@ -3099,6 +3123,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F730DFC32A99000D0051775C /* GeoJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F730DFC22A99000D0051775C /* XCRemoteSwiftPackageReference "GeoJSON" */;
+			productName = GeoJSON;
+		};
 		F7FFB33328D8A58D00C31AA3 /* ExceptionCatcher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F7FFB33228D8A58D00C31AA3 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */;

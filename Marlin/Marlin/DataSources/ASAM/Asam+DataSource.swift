@@ -27,7 +27,8 @@ extension Asam: Bookmarkable {
     }
 }
 
-extension Asam: DataSourceLocation, GeoPackageExportable {
+extension Asam: DataSourceLocation, GeoPackageExportable, GeoJSONExportable {
+    
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

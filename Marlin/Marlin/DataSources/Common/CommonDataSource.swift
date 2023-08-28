@@ -28,7 +28,11 @@ struct CommonSummaryView: DataSourceSummaryView {
     }
 }
 
-class CommonDataSource: NSObject, DataSource, DataSourceViewBuilder, ObservableObject {
+class CommonDataSource: NSObject, DataSource, DataSourceViewBuilder, ObservableObject, GeoJSONExportable {
+    var sfGeometry: SFGeometry? {
+        return SFPoint(xValue: location.longitude, andYValue: location.latitude)
+    }
+    
     var itemTitle: String {
         return "\(self.name ?? "")"
     }
@@ -58,13 +62,13 @@ class CommonDataSource: NSObject, DataSource, DataSourceViewBuilder, ObservableO
     
     static var fullDataSourceName: String = "Common"
     
-    static var color: UIColor = .clear
+    static var color: UIColor = Color.primaryUIColor
     
     static var imageName: String?
     
-    static var systemImageName: String?
+    static var systemImageName: String? = "mappin"
     
-    var color: UIColor = .clear
+    var color: UIColor = Color.primaryUIColor
     
     static var imageScale: CGFloat = 0.0
     
