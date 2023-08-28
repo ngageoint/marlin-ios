@@ -32,8 +32,7 @@ public class MSI {
     static let shared = MSI()
     let appState = AppState()
     lazy var configuration: URLSessionConfiguration = URLSessionConfiguration.af.default
-    var manager = ServerTrustManager(evaluators: ["msi.gs.mil": DisabledTrustEvaluator()
-                                                           , "msi.om.east.paas.nga.mil": DisabledTrustEvaluator()])
+    var manager = ServerTrustManager(evaluators: ["msi.nga.mil": DefaultTrustEvaluator(validateHost: true)])
     var loadAllDataTime: Date?
     lazy var session: Session = {
         
