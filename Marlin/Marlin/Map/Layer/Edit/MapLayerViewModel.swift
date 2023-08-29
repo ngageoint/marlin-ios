@@ -296,7 +296,9 @@ class MapLayerViewModel: ObservableObject, Identifiable {
         if let geoPackage = geoPackage {
             for tileTable in geoPackage.tileTables() {
                 if let tileDao = geoPackage.tileDao(withTableName: tileTable) {
-                    let bb: GPKGBoundingBox = tileDao.contents().boundingBox().transform(SFPGeometryTransform(from: tileDao.projection, andToEpsg: 4326)) ?? GPKGBoundingBox.worldWGS84()
+                    let transform = SFPGeometryTransform(from: tileDao.projection, andToEpsg: 4326)
+                    let bb: GPKGBoundingBox = tileDao.contents().boundingBox().transform(transform) ?? GPKGBoundingBox.worldWGS84()
+                    transform?.destroy()
                     tileLayers.append(TileLayerInfo(name: tileDao.tableName, minZoom: Int(tileDao.mapMinZoom()), maxZoom: Int(tileDao.mapMaxZoom()), boundingBox: bb))
                 }
             }
@@ -309,7 +311,9 @@ class MapLayerViewModel: ObservableObject, Identifiable {
         if let geoPackage = geoPackage {
             for featureTable in geoPackage.featureTables() {
                 if let featureDao = geoPackage.featureDao(withTableName: featureTable) {
-                    let bb: GPKGBoundingBox = featureDao.contents().boundingBox().transform(SFPGeometryTransform(from: featureDao.projection, andToEpsg: 4326)) ?? GPKGBoundingBox.worldWGS84()
+                    let transform = SFPGeometryTransform(from: featureDao.projection, andToEpsg: 4326)
+                    let bb: GPKGBoundingBox = featureDao.contents().boundingBox().transform(transform) ?? GPKGBoundingBox.worldWGS84()
+                    transform?.destroy()
                     featureLayers.append(FeatureLayerInfo(name: featureDao.tableName, count: Int(featureDao.count()), boundingBox: bb))
                 }
             }
