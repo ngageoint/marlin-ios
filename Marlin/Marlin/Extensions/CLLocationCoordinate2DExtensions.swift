@@ -116,7 +116,7 @@ extension CLLocationCoordinate2D {
                 let newCoordinate = CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude - 360.0)
                 object3857Location = newCoordinate.to3857()
             }
-            
+
             // if the x value has fallen off the right side and this tile is on the other side of the world
             if object3857Location.x < tileBounds3857.neCorner.x && tileBounds3857.neCorner.x > 0 && object3857Location.x < 0 {
                 let newCoordinate = CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude + 360.0)

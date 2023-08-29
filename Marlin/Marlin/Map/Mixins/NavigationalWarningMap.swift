@@ -109,8 +109,7 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
                     if let shape = MKShape.fromWKT(wkt: wkt, distance: distance) {
                         // TODO: what if we use the same renderer logic here
                         if let polygon = shape as? MKPolygon {
-                            let pg = NavigationalWarning.geoDesicClickAreas(from:polygon)
-                            for polyline in pg {
+                            for polyline in polygon.getGeodesicClickAreas() {
                                 if polygonHitTest(closedPolyline: polyline, location: location) {
                                     print("**** you sank my battleship!")
                                     return true
