@@ -109,6 +109,7 @@ extension CLLocationCoordinate2D {
         
         // TODO: this logic should be improved
         // just check on the edges of the world presuming that no light will span 90 degrees, which none will
+        // TODO: this is also being used with nav warnings, some of which **WILL** span 90 degrees
         if longitude < -90 || longitude > 90 {
             // if the x location has fallen off the left side and this tile is on the other side of the world
             if object3857Location.x > tileBounds3857.swCorner.x && tileBounds3857.swCorner.x < 0 && object3857Location.x > 0 {

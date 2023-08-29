@@ -42,6 +42,7 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
     }
     
     override func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
+        print("**** FetchMap.setupMixin()")
         super.setupMixin(marlinMap: marlinMap, mapView: mapView)
         mapView.register(ImageAnnotationView.self, forAnnotationViewWithReuseIdentifier: NavigationalWarning.key)
     }
@@ -59,29 +60,35 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
         guard show == true else {
             return nil
         }
+        
+        // TODO: account for crossing the date line -- do we need to care when fuzzing the tap?
         let screenPercentage = 0.03
         let tolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
         let minLon = location.longitude - tolerance
         let maxLon = location.longitude + tolerance
         let minLat = location.latitude - tolerance
         let maxLat = location.latitude + tolerance
-        
+        print("**** clicked lat: \(location.latitude) - lon: \(location.longitude)")
         guard let fetchRequest = self.getFetchRequest(show: self.show) else {
             return nil
         }
-        var predicates: [NSPredicate] = []
-        if let predicate = fetchRequest.predicate {
-            predicates.append(predicate)
-        }
-        
-        predicates.append(getBoundingPredicate(minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon))
-        
-        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-        
+        // TODO: does this need to be bounded
+//        var predicates: [NSPredicate] = []
+//        if let predicate = fetchRequest.predicate {
+//            predicates.append(predicate)
+//        }
+//
+//        predicates.append(getBoundingPredicate(minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon))
+//
+//        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+//
+        fetchRequest.predicate = nil
         var matched: [NavigationalWarning] = []
         if let navWarnings = try? PersistenceController.current.fetch(fetchRequest: fetchRequest) as? [NavigationalWarning] {
+            print("**** navWarnings.count: \(navWarnings.count)")
             // verify the actual shapes match and not just the bounding box
             for warning in navWarnings {
+//                print("**** matches predicate: minLon \(warning.minLongitude) - maxLon \(warning.maxLongitude)")
                 if verifyMatch(warning: warning, location: location, tolerance: tolerance) {
                     matched.append(warning)
                 }
@@ -100,9 +107,14 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
                         distance = Double(distanceString)
                     }
                     if let shape = MKShape.fromWKT(wkt: wkt, distance: distance) {
+                        // TODO: what if we use the same renderer logic here
                         if let polygon = shape as? MKPolygon {
-                            if polygonHitTest(polygon: polygon, location: location) {
-                                return true
+                            let pg = NavigationalWarning.geoDesicClickAreas(from:polygon)
+                            for polyline in pg {
+                                if polygonHitTest(closedPolyline: polyline, location: location) {
+                                    print("**** you sank my battleship!")
+                                    return true
+                                }
                             }
                         } else if let polyline = shape as? MKPolyline {
                             if lineHitTest(line: polyline, location: location, tolerance: tolerance * 2.0) {
@@ -156,6 +168,7 @@ class NavigationalWarningMap: NSObject, MapMixin {
     }
     
     func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
+        print("**** NavigationalWarningMap.setupMixin()")
         mapView.register(MKAnnotationView.self, forAnnotationViewWithReuseIdentifier: NavigationalWarning.key)
         mapState = marlinMap.mapState
         if warning != nil {

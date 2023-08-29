@@ -22,8 +22,8 @@ enum MSIRouter: URLRequestConvertible
     case readElectronicPublications
     case readNoticeToMariners(noticeNumber: Int64? = nil)
     
-//    static let baseURLString = "https://msi.nga.mil/api"
-    static let baseURLString = "https://msi.om.east.paas.nga.mil/api"
+    static let baseURLString = "https://msi.nga.mil/api"
+//    static let baseURLString = "https://msi.om.east.paas.nga.mil/api"
     static let ntmGraphicKeyBase = "16920957/SFH00000/UNTM"
     
     var method: HTTPMethod

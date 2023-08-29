@@ -96,6 +96,7 @@ class NavigationalWarning: NSManagedObject {
     }()
     
     lazy var region: MKCoordinateRegion? = {
+        // TODO: address crossing dateline
         if let locations = locations, !locations.isEmpty {
             var latitudeDelta = maxLatitude - minLatitude
             var longitudeDelta = maxLongitude - minLongitude

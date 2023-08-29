@@ -30,14 +30,25 @@ extension MapMixin {
         let mapPoint = MKMapPoint.init(location)
         let point = renderer.point(for: mapPoint)
         var onShape = renderer.path?.contains(point) ?? false
-        // If not on the polygon, check the complementary polygon path in case it crosses -180 / 180 longitude
+        
         if !onShape {
             if let complementaryPath: Unmanaged<CGPath> = GPKGMapUtils.complementaryWorldPath(of: polygon) {
+                // not reached
                 let retained = complementaryPath.takeRetainedValue()
                 onShape = retained.contains(CGPoint(x: mapPoint.x, y: mapPoint.y))
             }
         }
         
+        return onShape
+    }
+    
+    func polygonHitTest(closedPolyline: MKGeodesicPolyline, location: CLLocationCoordinate2D) -> Bool {
+        guard let renderer = (renderer(overlay: closedPolyline) as? MKPolylineRenderer ?? standardRenderer(overlay: closedPolyline) as? MKPolylineRenderer) else {
+            return false
+        }
+        let mapPoint = MKMapPoint.init(location)
+        let point = renderer.point(for: mapPoint)
+        let onShape = renderer.path?.contains(point) ?? false
         return onShape
     }
     

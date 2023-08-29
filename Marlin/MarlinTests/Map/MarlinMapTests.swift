@@ -499,19 +499,19 @@ final class MarlinMapTests: XCTestCase {
     func testTapAsamFeature() {
         UserDefaults.standard.set(true, forKey: "showOnMap\(Asam.key)")
         UserDefaults.standard.setFilter(Asam.key, filter: [])
-        class PassThrough {
-        }
+//        class PassThrough {
+//        }
         
         struct Container: View {
             @StateObject var mapState: MapState = MapState()
             @State var filterOpen: Bool = false
             
-            var passThrough: PassThrough
+//            var passThrough: PassThrough
             @StateObject var mixins: MainMapMixins = MainMapMixins()
 
-            init(passThrough: PassThrough) {
-                self.passThrough = passThrough
-            }
+//            init(passThrough: PassThrough) {
+//                self.passThrough = passThrough
+//            }
             
             var body: some View {
                 ZStack {
@@ -560,9 +560,10 @@ final class MarlinMapTests: XCTestCase {
         }
         
         let appState = AppState()
-        let passThrough = PassThrough()
+//        let passThrough = PassThrough()
         UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
-        let container = Container(passThrough: passThrough)
+//        let container = Container(passThrough: passThrough)
+        let container = Container()
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
         
@@ -648,4 +649,110 @@ final class MarlinMapTests: XCTestCase {
         tester().wait(forTimeInterval: 5)
     }
 
+    func testTapNavWarningCrossingDateline()  {
+        // TODO: why does nav warning cut out when zoomed in
+        // render map
+        UserDefaults.standard.set(true, forKey: "showOnMap\(NavigationalWarning.key)")
+        UserDefaults.standard.setFilter(NavigationalWarning.key, filter: [])
+        
+        struct Container: View {
+            @StateObject var mapState: MapState = MapState()
+            @State var filterOpen: Bool = false
+            @StateObject var mixins: MainMapMixins = MainMapMixins()
+            
+            var body: some View {
+                ZStack {
+                    MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
+                }
+                .onAppear {
+                    // TODO: center this on dateline
+                    mapState.center = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 50, longitude: -175), latitudinalMeters: 5000000, longitudinalMeters: 4000000)
+                }
+            }
+        }
+//
+        let jsonString = """
+        {
+            "msgYear": 2023,
+            "msgNumber": 372,
+            "navArea": "12",
+            "subregion": "19,97",
+            "text": "NORTH PACIFIC.\\n1. HAZARDOUS OPERATIONS, SPACE DEBRIS\\n 0554Z TO 0912Z DAILY 22 THRU 28 JUN\\n IN AREA BOUND BY\\n 34-54.00N 152-04.00W, 36-53.00N 151-46.00W,\\n 44-04.00N 165-24.00E, 42-05.00N 165-03.00E.\\n2. CANCEL THIS MSG 281012Z JUN 23.\\n",
+            "status": "A",
+            "issueDate": "210124Z JUN 2023",
+            "authority": "SPACEX 0/23 210000Z JUN 23.",
+            "cancelDate": null,
+            "cancelNavArea": null,
+            "cancelMsgYear": null,
+            "cancelMsgNumber": null,
+            "year": 2023,
+            "area": "12",
+            "number": 372
+        }
+        """
+//        let jsonString = """
+//        {
+//            "msgYear": 2023,
+//            "msgNumber": 372,
+//            "navArea": "12",
+//            "subregion": "19,97",
+//            "text": "NORTH PACIFIC.\\n1. HAZARDOUS OPERATIONS, SPACE DEBRIS\\n 0554Z TO 0912Z DAILY 22 THRU 28 JUN\\n IN AREA BOUND BY\\n 44-04.00N 165-24.00E, 42-05.00N 165-03.00E,\\n 34-54.00N 152-04.00W, 36-53.00N 151-46.00W.\\n2. CANCEL THIS MSG 281012Z JUN 23.\\n",
+//            "status": "A",
+//            "issueDate": "210124Z JUN 2023",
+//            "authority": "SPACEX 0/23 210000Z JUN 23.",
+//            "cancelDate": null,
+//            "cancelNavArea": null,
+//            "cancelMsgYear": null,
+//            "cancelMsgNumber": null,
+//            "year": 2023,
+//            "area": "12",
+//            "number": 372
+//        }
+//        """
+        let testCase: NavigationalWarningProperties = try! JSONDecoder().decode(NavigationalWarningProperties.self, from: Data(jsonString.utf8))
+        Task {
+            guard let count = try? await NavigationalWarning.importRecords(from:[testCase],taskContext:persistentStore.viewContext), count > 0 else {
+                XCTFail()
+                return
+            }
+            NavigationalWarning.postProcess()
+        }
+
+        // show app
+        let appState = AppState()
+        UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
+        let container = Container()
+            .environmentObject(appState)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
+        
+        let controller = UIHostingController(rootView: container)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        
+        // tap warning
+        expectation(forNotification: .MapItemsTapped, object: nil) { notification in
+            let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
+            let navWarning = tapNotification.items as! [NavigationalWarning]
+            print("**** count: \(navWarning.count)")
+            XCTAssertEqual(navWarning.count, 1)
+            if navWarning.count == 1 {
+                // TODO: remove conditional
+                XCTAssertEqual(navWarning[0].msgNumber, 372)
+                return true
+            }
+            return false
+        }
+        tester().wait(forTimeInterval: 5)
+//        tester().tapScreen(at: CGPoint(x: 206, y: 524)) // x: 206, y: 524 = lat: 41.56, lon: -173.65 -- works
+        tester().tapScreen(at: CGPoint(x: 129, y: 510)) // x: 129, y: 510 = lat: 43.03, lon: 175.42 -- doesn't
+        
+        
+        // assert that the warning shows/posts to bottom sheet
+        print("**** waiting")
+        
+        tester().wait(forTimeInterval: 5000)
+        waitForExpectations(timeout: 10)
+        print("**** finished waiting for expectations")
+        tester().wait(forTimeInterval: 5)
+    }
 }

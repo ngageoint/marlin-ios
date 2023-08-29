@@ -392,13 +392,14 @@ class MarlinMapCoordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDele
         guard let mapView = mapView, allowMapTapsOnItems else {
             return
         }
-        
+        print("**** tapPoint: \(tapPoint.x),\(tapPoint.y)")
         let tapCoord = mapView.convert(tapPoint, toCoordinateFrom: mapView)
         var annotationsTapped: [Any] = []
         let visibleMapRect = mapView.visibleMapRect
         let annotationsVisible = mapView.annotations(in: visibleMapRect)
         
         for annotation in annotationsVisible {
+            print("**** Annotation: \(annotation.description)")
             if let mkAnnotation = annotation as? MKAnnotation, let view = mapView.view(for: mkAnnotation) {
                 let location = gesture.location(in: view)
                 if view.bounds.contains(location) {

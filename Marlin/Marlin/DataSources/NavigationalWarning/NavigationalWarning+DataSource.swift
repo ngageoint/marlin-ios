@@ -167,6 +167,7 @@ extension NavigationalWarning: DataSourceLocation, GeoPackageExportable {
     static func postProcess() {
         if !UserDefaults.standard.navigationalWarningsLocationsParsed {
             DispatchQueue.global(qos: .utility).async {
+                print("**** getting navwarnings")
                 let fetchRequest = NavigationalWarning.fetchRequest()
                 fetchRequest.predicate = NSPredicate(format: "locations == nil")
                 let context = PersistenceController.current.newTaskContext()
@@ -176,6 +177,7 @@ extension NavigationalWarning: DataSourceLocation, GeoPackageExportable {
                         for warning in objects {
                             if let mappedLocation = warning.mappedLocation {
                                 if let region = mappedLocation.region {
+                                    // TODO: account for crossing the dateline
                                     warning.latitude = region.center.latitude
                                     warning.longitude = region.center.longitude
                                     warning.minLatitude = region.center.latitude - (region.span.latitudeDelta / 2.0)
@@ -185,6 +187,7 @@ extension NavigationalWarning: DataSourceLocation, GeoPackageExportable {
                                 }
                                 warning.locations = mappedLocation.wktDistance
                             }
+                            print("**** navwarnings loaded")
                         }
                     }
                     do {
