@@ -10,6 +10,7 @@ import CoreLocation
 import GeoJSON
 
 struct CreateRouteView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var locationManager: LocationManager
     
     let maxFeatureAreaSize: CGFloat = 300
@@ -25,6 +26,17 @@ struct CreateRouteView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Route Name")
+                    .overline()
+                TextField("Route Name", text: $routeViewModel.routeName)
+                    .keyboardType(.default)
+                    .underlineTextFieldWithLabel()
+                    .accessibilityElement()
+                    .accessibilityLabel("Route Name input")
+            }
+            .padding([.leading, .trailing], 16)
+            .padding(.top, 8)
             sizingOnlyStack()
                 .frame(maxWidth: waypointsFrameSize.width, maxHeight: waypointsFrameSize.height)
                 .overlay {
@@ -52,6 +64,15 @@ struct CreateRouteView: View {
             let featureCollection = FeatureCollection(features: features)
             routeViewModel.routeFeatureCollection = featureCollection
         })
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                if waypoints.count > 1 {
+                    Button("Save") {
+                        routeViewModel.createRoute(context: managedObjectContext)
+                    }
+                }
+            }
+        }
         .navigationTitle(Route.fullDataSourceName)
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -93,7 +114,7 @@ struct CreateRouteView: View {
     
     @ViewBuilder
     func instructions() -> some View {
-        Text("Select a feature to add to the route, long press to add custom point")
+        Text("Select a feature to add to the route, long press to add custom point, drag to reorder")
             .font(Font.overline)
             .frame(maxWidth: .infinity, alignment: .center)
             .fixedSize(horizontal: false, vertical: true)

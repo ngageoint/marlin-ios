@@ -18,6 +18,7 @@ struct RouteList: View {
                 VStack {
                     Text("Route")
                     Text("\(route.name ?? "")")
+                    Text("geojson \(route.geojson ?? "")")
                 }
             }
             CreateRouteButton()

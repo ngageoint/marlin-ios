@@ -55,8 +55,14 @@ extension GeoJSONExportable {
         var geoJsonProperties: [String: AnyCodable] = [:]
         for property in Self.properties {
             if let gjObject = self as? NSObject, let value = gjObject.value(forKey: property.key) {
-                let codable = AnyCodable(value)
-                geoJsonProperties[property.key] = codable
+                switch (property.type) {
+                case .location:
+                    print("ignore")
+                default:
+                    let codable = AnyCodable(value)
+                    geoJsonProperties[property.key] = codable
+                }
+                
             }
         }
         return getFeature(sf: sfGeometry, geoJsonProperties: geoJsonProperties)

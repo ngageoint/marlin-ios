@@ -9,13 +9,9 @@ import SwiftUI
 import MapKit
 import Combine
 import GeoJSON
+import CoreData
 
 class RouteViewModel: ObservableObject, Identifiable {
-    @Published var route: String? {
-        didSet {
-            
-        }
-    }
     @Published var routeMKLine: MKGeodesicPolyline?
     @Published var routeFeatureCollection: FeatureCollection? {
         didSet {
@@ -23,6 +19,36 @@ class RouteViewModel: ObservableObject, Identifiable {
                 routeMKLine = MKShape.fromFeatureCollection(featureCollection: routeFeatureCollection)
             } else {
                 routeMKLine = nil
+            }
+        }
+    }
+    
+    @Published var routeName: String = ""
+    
+    var route: Route? {
+        didSet {
+            
+        }
+    }
+    
+    func createRoute(context: NSManagedObjectContext) {
+        if route == nil {
+            context.perform {
+                let route = Route(context: context)
+                route.name = self.routeName
+                if let routeFeatureCollection = self.routeFeatureCollection {
+                    do {
+                        let json = try JSONEncoder().encode(routeFeatureCollection)
+                            let geoJson = String(data: json, encoding: .utf8)
+                            if let geoJson = geoJson {
+                                route.geojson = geoJson
+                            }
+                    } catch {
+                        print("error is \(error)")
+                    }
+                }
+                
+                try? context.save()
             }
         }
     }
