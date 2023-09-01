@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 extension DifferentialGPSStation: Bookmarkable {
-    var itemKey: String? {
+    var itemKey: String {
         return "\(featureNumber)--\(volumeNumber ?? "")"
     }
     
@@ -30,7 +30,7 @@ extension DifferentialGPSStation: Bookmarkable {
     }
 }
 
-extension DifferentialGPSStation: DataSourceLocation, GeoPackageExportable {
+extension DifferentialGPSStation: DataSourceLocation, GeoPackageExportable, GeoJSONExportable {
 
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)

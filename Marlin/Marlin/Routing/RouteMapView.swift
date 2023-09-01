@@ -34,6 +34,7 @@ class RouteMixin: MapMixin {
     var cancellable = Set<AnyCancellable>()
     
     var currentRoute: MKGeodesicPolyline?
+    var updatedRoute: MKGeodesicPolyline?
     
     var viewModel: RouteViewModel
     
@@ -46,13 +47,8 @@ class RouteMixin: MapMixin {
         viewModel.$routeMKLine
             .receive(on: RunLoop.main)
             .sink() { [weak self] mkline in
-                if let currentRoute = self?.currentRoute {
-                    mapView.removeOverlay(currentRoute)
-                }
-                if let mkline = mkline {
-                    mapView.addOverlay(mkline)
-                    self?.currentRoute = mkline
-                }
+                self?.updatedRoute = mkline
+                self?.refreshLine()
             }
             .store(in: &cancellable)
     }
@@ -61,7 +57,23 @@ class RouteMixin: MapMixin {
         
     }
     
+    func refreshLine() {
+        DispatchQueue.main.async {
+            self.mapState?.mixinStates["\(String(describing: RouteMixin.self))DataUpdated"] = Date()
+        }
+    }
     
+    func updateMixin(mapView: MKMapView, mapState: MapState) {
+        if let currentRoute = self.currentRoute {
+            print("remove current route")
+            mapView.removeOverlay(currentRoute)
+        }
+        print("adding mkline \(updatedRoute)")
+        if let mkline = updatedRoute {
+            mapView.addOverlay(mkline)
+            self.currentRoute = mkline
+        }
+    }
 }
 
 extension Notification.Name {
@@ -75,7 +87,7 @@ struct RouteMapView: View {
     @StateObject var itemList: BottomSheetItemList = BottomSheetItemList()
     
     @Binding var path: NavigationPath
-    @Binding var waypoints: [any DataSource]
+    @Binding var waypoints: [AnyGeoJSONExportable]
     
     @ObservedObject var routeViewModel: RouteViewModel
 
@@ -105,7 +117,7 @@ struct RouteMapView: View {
                 return
             }
             
-            waypoints.append(CommonDataSource(name: "User Added Location", location: coordinate))
+            waypoints.append(AnyGeoJSONExportable(CommonDataSource(name: "User Added Location", location: coordinate)))
         }
         .onReceive(mapItemsTappedPub) { output in
             guard let notification = output.object as? MapItemsTappedNotification else {
@@ -136,7 +148,9 @@ struct RouteMapView: View {
                     HStack {
                         Button("Add To Route") {
                             print("add to route")
-                            waypoints.append(dataSourceViewBuilder)
+                            if let exportable = dataSourceViewBuilder as? any GeoJSONExportable {
+                                waypoints.append(AnyGeoJSONExportable(exportable))
+                            }
                         }
                         .buttonStyle(MaterialButtonStyle(type:.text))
                     }

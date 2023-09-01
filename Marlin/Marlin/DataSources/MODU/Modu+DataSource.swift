@@ -10,8 +10,8 @@ import UIKit
 import CoreData
 
 extension Modu: Bookmarkable {
-    var itemKey: String? {
-        return name
+    var itemKey: String {
+        return name ?? ""
     }
     
     static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
@@ -26,7 +26,7 @@ extension Modu: Bookmarkable {
     }
 }
 
-extension Modu: DataSourceLocation, GeoPackageExportable {
+extension Modu: DataSourceLocation, GeoPackageExportable, GeoJSONExportable {
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

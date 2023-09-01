@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 extension Port: Bookmarkable {
-    var itemKey: String? {
+    var itemKey: String {
         return "\(portNumber)"
     }
     
@@ -26,7 +26,7 @@ extension Port: Bookmarkable {
     }
 }
 
-extension Port: DataSourceLocation, GeoPackageExportable {
+extension Port: DataSourceLocation, GeoPackageExportable, GeoJSONExportable {
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

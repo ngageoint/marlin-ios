@@ -11,7 +11,7 @@ import geopackage_ios
 import CoreData
 
 extension GeoPackageFeatureItem: Bookmarkable {
-    var itemKey: String? {
+    var itemKey: String {
         return "\(geoPackageName ?? "")--\(tableName ?? "")--\(featureId)"
     }
     

@@ -15,7 +15,7 @@ import geopackage_ios
 import ExceptionCatcher
 
 extension Light: Bookmarkable {
-    var itemKey: String? {
+    var itemKey: String {
         return "\(featureNumber ?? "")--\(volumeNumber ?? "")--\(characteristicNumber)"
     }
     
@@ -35,7 +35,7 @@ extension Light: Bookmarkable {
     }
 }
 
-extension Light: DataSourceLocation, GeoPackageExportable {
+extension Light: DataSourceLocation, GeoPackageExportable, GeoJSONExportable {
     func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
         var geometryByColor: [UIColor:SFGeometry] = [:]
         if let lightSectors = lightSectors {

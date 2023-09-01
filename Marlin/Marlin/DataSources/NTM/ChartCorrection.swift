@@ -24,7 +24,7 @@ struct ChartCorrectionPropertyContainer: Decodable {
 }
 
 extension ChartCorrection: Bookmarkable {
-    var itemKey: String? {
+    var itemKey: String {
         return "\(chartId ?? 0)--\(noticeYear)--\(noticeWeek)"
     }
 }

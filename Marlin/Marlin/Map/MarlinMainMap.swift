@@ -78,7 +78,7 @@ struct MarlinMainMap: View {
             filters: [
                 DataSourceFilterParameter(property:
                                             DataSourceProperty(name: "Location",
-                                                               key: #keyPath(CommonDataSource.location),
+                                                               key: #keyPath(CommonDataSource.coordinate),
                                                                type: .location),
                                           comparison: .bounds,
                                           valueMinLatitude: region.center.latitude - (region.span.latitudeDelta / 2.0),

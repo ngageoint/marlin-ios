@@ -11,8 +11,8 @@ import CoreData
 import Combine
 
 extension Asam: Bookmarkable {
-    var itemKey: String? {
-        return reference
+    var itemKey: String {
+        return reference ?? ""
     }
     
     static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {

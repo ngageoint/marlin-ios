@@ -11,8 +11,8 @@ import CoreData
 import CoreLocation
 
 extension DFRS: Bookmarkable {
-    var itemKey: String? {
-        return stationNumber
+    var itemKey: String {
+        return stationNumber ?? ""
     }
 }
 

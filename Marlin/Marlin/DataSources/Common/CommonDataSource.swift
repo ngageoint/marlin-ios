@@ -28,9 +28,14 @@ struct CommonSummaryView: DataSourceSummaryView {
     }
 }
 
-class CommonDataSource: NSObject, DataSource, DataSourceViewBuilder, ObservableObject, GeoJSONExportable {
+class CommonDataSource: NSObject, DataSourceLocation, DataSourceViewBuilder, ObservableObject, GeoJSONExportable {
+    
+    var itemKey: String {
+        return "\(itemTitle)--\(coordinate.latitude)--\(coordinate.longitude)"
+    }
+    
     var sfGeometry: SFGeometry? {
-        return SFPoint(xValue: location.longitude, andYValue: location.latitude)
+        return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }
     
     var itemTitle: String {
@@ -49,7 +54,7 @@ class CommonDataSource: NSObject, DataSource, DataSourceViewBuilder, ObservableO
     static var key: String = "Common"
     
     static var properties: [DataSourceProperty] = [
-        DataSourceProperty(name: "Location", key: #keyPath(CommonDataSource.location), type: .location)
+        DataSourceProperty(name: "Location", key: #keyPath(CommonDataSource.coordinate), type: .location)
     ]
     
     static var defaultSort: [DataSourceSortParameter] = []
@@ -78,11 +83,11 @@ class CommonDataSource: NSObject, DataSource, DataSourceViewBuilder, ObservableO
         return dateFormatter
     }
     
-    @Published @objc var location: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid
+    @Published @objc var coordinate: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid
     @Published var name: String?
         
     init(name: String? = nil, location: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid){
         self.name = name
-        self.location = location
+        self.coordinate = location
     }
 }

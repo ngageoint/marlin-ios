@@ -13,7 +13,7 @@ import sf_ios
 import sf_wkt_ios
 
 extension NavigationalWarning: Bookmarkable {
-    var itemKey: String? {
+    var itemKey: String {
         return "\(msgYear)--\(msgNumber)--\(navArea ?? "")"
     }
     
@@ -32,7 +32,7 @@ extension NavigationalWarning: Bookmarkable {
     }
 }
 
-extension NavigationalWarning: DataSourceLocation, GeoPackageExportable {
+extension NavigationalWarning: DataSourceLocation, GeoPackageExportable, GeoJSONExportable {
     var sfGeometry: SFGeometry? {
         let collection = SFGeometryCollection()
         if let locations = locations {

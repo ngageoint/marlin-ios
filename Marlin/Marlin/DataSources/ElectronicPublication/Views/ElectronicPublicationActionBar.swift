@@ -18,9 +18,7 @@ struct ElectronicPublicationActionBar: View {
     var body: some View {
         HStack(spacing:0) {
             Spacer()
-            if let itemKey = electronicPublication.itemKey {
-                BookmarkButton(viewModel: BookmarkViewModel(itemKey: itemKey, dataSource: ElectronicPublication.key))
-            }
+            BookmarkButton(viewModel: BookmarkViewModel(itemKey: electronicPublication.itemKey, dataSource: ElectronicPublication.key))
             if electronicPublication.isDownloading {
                 if let error = electronicPublication.error {
                     Text(error)

@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 extension RadioBeacon: Bookmarkable {
-    var itemKey: String? {
+    var itemKey: String {
         return "\(featureNumber)--\(volumeNumber ?? "")"
     }
     
@@ -30,7 +30,7 @@ extension RadioBeacon: Bookmarkable {
     }
 }
 
-extension RadioBeacon: DataSourceLocation, GeoPackageExportable {
+extension RadioBeacon: DataSourceLocation, GeoPackageExportable, GeoJSONExportable {
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

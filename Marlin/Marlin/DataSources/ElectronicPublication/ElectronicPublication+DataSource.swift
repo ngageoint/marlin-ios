@@ -10,8 +10,8 @@ import UIKit
 import CoreData
 
 extension ElectronicPublication: Bookmarkable {
-    var itemKey: String? {
-        return s3Key
+    var itemKey: String {
+        return s3Key ?? ""
     }
     
     static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
