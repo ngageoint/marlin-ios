@@ -26,8 +26,10 @@ class GeoPackage {
         return manager.delete(name, andFile: true)
     }
     
-    func getGeoPackage(name: String) -> GPKGGeoPackage {
-        return cache.geoPackageOpenName(name)
+    func getGeoPackage(name: String) -> GPKGGeoPackage? {
+        return try? ExceptionCatcher.catch {
+            return cache.geoPackageOpenName(name)
+        }
     }
     
     func dataColumnsDao(database: GPKGConnection) -> GPKGDataColumnsDao? {
@@ -55,7 +57,9 @@ class GeoPackage {
     }
     
     func getFeature(geoPackageName: String, tableName: String, featureId: Int) -> GeoPackageFeatureItem? {
-        let geoPackage = GeoPackage.shared.getGeoPackage(name: geoPackageName)
+        guard let geoPackage = GeoPackage.shared.getGeoPackage(name: geoPackageName) else {
+            return nil
+        }
         if !GPKGContentsDataTypes.isFeaturesType(geoPackage.type(ofTable: tableName)) {
             return nil
         }
@@ -100,7 +104,9 @@ class GeoPackage {
     
     func getFeaturesFromTable(at location: CLLocationCoordinate2D, mapView: MKMapView, table: String, geoPackageName: String, layerName: String) -> [GeoPackageFeatureItem] {
         var featureItems: [GeoPackageFeatureItem] = []
-        let geoPackage = GeoPackage.shared.getGeoPackage(name: geoPackageName)
+        guard let geoPackage = GeoPackage.shared.getGeoPackage(name: geoPackageName) else {
+            return []
+        }
         if !GPKGContentsDataTypes.isFeaturesType(geoPackage.type(ofTable: table)) {
             return []
         }
