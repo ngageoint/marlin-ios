@@ -35,6 +35,8 @@ class RouteViewModel: ObservableObject, Identifiable {
         if route == nil {
             context.perform {
                 let route = Route(context: context)
+                route.createdTime = Date()
+                route.updatedTime = Date()
                 route.name = self.routeName
                 if let routeFeatureCollection = self.routeFeatureCollection {
                     do {
