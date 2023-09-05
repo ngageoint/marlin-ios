@@ -53,6 +53,10 @@ extension GeoJSONExportable {
     }
     var geoJsonFeatures: [Feature] {
         var geoJsonProperties: [String: AnyCodable] = [:]
+        
+        if let dataSource = self as? DataSource {
+            geoJsonProperties["marlin_data_source"] = AnyCodable(dataSource.key)
+        }
         for property in Self.properties {
             if let gjObject = self as? NSObject, let value = gjObject.value(forKey: property.key) {
                 switch (property.type) {

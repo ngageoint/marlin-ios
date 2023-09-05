@@ -34,6 +34,7 @@ extension SFPolygon {
                         }
                     }
                 }
+                try? linearRings.append(Polygon.LinearRing(coordinates: positions))
             }
         }
         return Polygon(coordinates: linearRings)

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct RouteList: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
     @Binding var path: NavigationPath
 
     @FetchRequest(sortDescriptors: [SortDescriptor(\.updatedTime, order: .reverse)])
@@ -19,6 +20,19 @@ struct RouteList: View {
                     Text("Route")
                     Text("\(route.name ?? "")")
                     Text("geojson \(route.geojson ?? "")")
+                }
+                .swipeActions(edge: .trailing) {
+                    Button(role: .destructive)  {
+                        managedObjectContext.perform {
+                            managedObjectContext.delete(route)
+                            try? managedObjectContext.save()
+                        }
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                    .accessibilityElement()
+                    .accessibilityLabel("remove route \(route.name ?? "")")
+                    .tint(Color.red)
                 }
             }
             CreateRouteButton()
