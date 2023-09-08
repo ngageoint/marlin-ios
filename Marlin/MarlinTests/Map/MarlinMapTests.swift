@@ -670,7 +670,7 @@ final class MarlinMapTests: XCTestCase {
                 }
             }
         }
-//
+        
         let jsonString = """
         {
             "msgYear": 2023,
@@ -690,25 +690,6 @@ final class MarlinMapTests: XCTestCase {
             "number": 372
         }
         """
-//        let jsonString = """
-//        {
-//            "msgYear": 2023,
-//            "msgNumber": 372,
-//            "navArea": "12",
-//            "subregion": "19,97",
-//            "text": "NORTH PACIFIC.\\n1. HAZARDOUS OPERATIONS, SPACE DEBRIS\\n 0554Z TO 0912Z DAILY 22 THRU 28 JUN\\n IN AREA BOUND BY\\n 44-04.00N 165-24.00E, 42-05.00N 165-03.00E,\\n 34-54.00N 152-04.00W, 36-53.00N 151-46.00W.\\n2. CANCEL THIS MSG 281012Z JUN 23.\\n",
-//            "status": "A",
-//            "issueDate": "210124Z JUN 2023",
-//            "authority": "SPACEX 0/23 210000Z JUN 23.",
-//            "cancelDate": null,
-//            "cancelNavArea": null,
-//            "cancelMsgYear": null,
-//            "cancelMsgNumber": null,
-//            "year": 2023,
-//            "area": "12",
-//            "number": 372
-//        }
-//        """
         let testCase: NavigationalWarningProperties = try! JSONDecoder().decode(NavigationalWarningProperties.self, from: Data(jsonString.utf8))
         Task {
             guard let count = try? await NavigationalWarning.importRecords(from:[testCase],taskContext:persistentStore.viewContext), count > 0 else {
@@ -745,6 +726,80 @@ final class MarlinMapTests: XCTestCase {
         tester().wait(forTimeInterval: 5)
 //        tester().tapScreen(at: CGPoint(x: 206, y: 524)) // x: 206, y: 524 = lat: 41.56, lon: -173.65 -- works
         tester().tapScreen(at: CGPoint(x: 129, y: 510)) // x: 129, y: 510 = lat: 43.03, lon: 175.42 -- doesn't
+        
+        
+        // assert that the warning shows/posts to bottom sheet
+        print("**** waiting")
+        
+        tester().wait(forTimeInterval: 5000)
+        waitForExpectations(timeout: 10)
+        print("**** finished waiting for expectations")
+        tester().wait(forTimeInterval: 5)
+    }
+    
+    func testRenderNavWarningCorrectly() {
+        // TODO: why does nav warning cut out when zoomed in
+        // render map
+        UserDefaults.standard.set(true, forKey: "showOnMap\(NavigationalWarning.key)")
+        UserDefaults.standard.setFilter(NavigationalWarning.key, filter: [])
+        
+        struct Container: View {
+            @StateObject var mapState: MapState = MapState()
+            @State var filterOpen: Bool = false
+            @StateObject var mixins: MainMapMixins = MainMapMixins()
+            
+            var body: some View {
+                ZStack {
+                    MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
+                }
+                .onAppear {
+                    mapState.center = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: -25), latitudinalMeters: 10000000, longitudinalMeters: 8000000)
+                }
+            }
+        }
+
+        let jsonString = """
+        {
+            "msgYear": 2023,
+            "msgNumber": 1805,
+            "navArea": "A",
+            "subregion": "57,61,71",
+            "text": "EASTERN SOUTH ATLANTIC.\\nINDIAN OCEAN.\\nDNC 01, DNC 02, DNC 03.\\n1. HAZARDOUS OPERATIONS, SPACE DEBRIS\\n   0043Z TO 0815Z DAILY 17 THRU 23 AUG\\n   IN AREA BOUND BY\\n   08-53.00S 092-28.00E, 07-46.00S 089-27.00E,\\n   30-12.00S 061-09.00E, 40-45.00S 002-21.00W,\\n   42-56.00S 002-24.00W, 32-16.00S 063-10.00E.\\n2. CANCEL THIS MSG 230915Z AUG 23.\\n",
+            "status": "A",
+            "issueDate": "150121Z AUG 2023",
+            "authority": "SPACEX 0/23 142102Z AUG 23.",
+            "cancelDate": null,
+            "cancelNavArea": null,
+            "cancelMsgYear": null,
+            "cancelMsgNumber": null,
+            "year": 2023,
+            "area": "A",
+            "number": 1805
+        }
+        """
+        let testCase: NavigationalWarningProperties = try! JSONDecoder().decode(NavigationalWarningProperties.self, from: Data(jsonString.utf8))
+        Task {
+            guard let count = try? await NavigationalWarning.importRecords(from:[testCase],taskContext:persistentStore.viewContext), count > 0 else {
+                XCTFail()
+                return
+            }
+            NavigationalWarning.postProcess()
+        }
+
+        // show app
+        let appState = AppState()
+        UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
+        let container = Container()
+            .environmentObject(appState)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
+        
+        let controller = UIHostingController(rootView: container)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        
+        // TODO: figure out how to do an assertion for this
+        // there shouldn't be a rectangle over south america
+        
         
         
         // assert that the warning shows/posts to bottom sheet
