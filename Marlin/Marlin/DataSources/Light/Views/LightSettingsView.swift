@@ -10,7 +10,8 @@ import CoreData
 import MapKit
 
 class LightMapViewModel: NSObject, LightMapViewModelProtocol {
-    var itemKey: String? {
+   
+    var itemKey: String {
         return "\(featureNumber ?? "")--\(volumeNumber ?? "")--\(characteristicNumber)"
     }
     static var metricsKey: String = Light.metricsKey
@@ -39,6 +40,9 @@ class LightMapViewModel: NSObject, LightMapViewModelProtocol {
     
     static var dateFormatter: DateFormatter = Light.dateFormatter
     
+    var itemTitle: String {
+        return "\(name ?? "")"
+    }
     
     init(light: Light) {
         self.characteristicNumber = light.characteristicNumber

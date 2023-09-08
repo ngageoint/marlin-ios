@@ -341,7 +341,7 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
             }
             .padding(.all, 8)
             .onTapGesture {
-                path.append(item)
+                path.append(MarlinRoute.dataSourceDetail(dataSourceKey: item.key, itemKey: item.itemKey))
             }
             .accessibilityElement(children: .contain)
             .accessibilityLabel("\(item.itemTitle) summary")

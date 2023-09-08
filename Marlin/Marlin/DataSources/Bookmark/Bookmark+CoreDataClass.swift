@@ -110,7 +110,10 @@ extension Bookmark: DataSource {
     }
 }
 
-extension Bookmark: DataSourceViewBuilder {    
+extension Bookmark: DataSourceViewBuilder {
+    var itemKey: String {
+        self.id ?? ""
+    }
     var itemTitle: String {
         return "Bookmark \(self.id ?? "")"
     }

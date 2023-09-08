@@ -153,6 +153,9 @@ protocol DataSource {
     static func cacheImage(zoomLevel: Int, image: UIImage)
     static var dateFormatter: DateFormatter { get }
     
+    var itemKey: String { get }
+    var itemTitle: String { get }
+    
     static func fetchRequest(filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>?
 }
 
@@ -219,7 +222,7 @@ extension DataSource {
 protocol DataSourceViewBuilder: DataSource {
     var detailView: AnyView { get }
     associatedtype Summary: DataSourceSummaryView
-    
+    var itemKey: String { get }
     var itemTitle: String { get }
     @ViewBuilder
     var summary: Summary { get }

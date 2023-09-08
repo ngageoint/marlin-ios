@@ -9,35 +9,34 @@ import SwiftUI
 import MapKit
 import CoreData
 
-struct AsamDetailView: View {
-    @State var predicate: NSPredicate?
-
-    @ObservedObject var asam: Asam
+struct AsamDetailView: View {    
+    @ObservedObject var viewModel: AsamViewModel
+    @State var reference: String
     
     var body: some View {
         Self._printChanges()
         return List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(asam.itemTitle)
+                    Text(viewModel.asam?.itemTitle ?? "")
                         .padding(.all, 8)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .itemTitle()
                         .foregroundColor(Color.white)
-                        .background(Color(uiColor: asam.color))
+                        .background(Color(uiColor: Asam.color))
                         .padding(.bottom, -8)
                         .accessibilityElement(children: .contain)
-                    if let predicate = predicate {
+                    if let predicate = viewModel.predicate, let asam = viewModel.asam as? DataSourceLocation {
                         DataSourceLocationMapView(dataSourceLocation: asam, mapName: "Asam Detail Map", mixins: [AsamMap(fetchPredicate: predicate)])
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
-                    Group {
-                        asam.summary
-                            .showBookmarkNotes(true)
-                            .setShowTitle(false)
-                            .padding(.bottom, 16)
-                    }.padding([.leading, .trailing], 16)
+                    if let asam = viewModel.asam {
+                        Group {
+                            AsamSummaryView(asam: asam, showTitle: false, showBookmarkNotes: true)
+                                .padding(.bottom, 16)
+                        }.padding([.leading, .trailing], 16)
+                    }
                 }
                 .card()
             } header: {
@@ -47,12 +46,12 @@ struct AsamDetailView: View {
 
             Section("Additional Information") {
                 VStack(alignment: .leading, spacing: 8) {
-                    Property(property: "Hostility", value: asam.hostility)
-                    Property(property: "Victim", value: asam.victim)
-                    Property(property: "Reference Number", value: asam.reference)
-                    Property(property: "Date of Occurence", value: asam.dateString)
-                    Property(property: "Geographical Subregion", value: asam.subreg)
-                    Property(property: "Navigational Area", value: asam.navArea)
+                    Property(property: "Hostility", value: viewModel.asam?.hostility)
+                    Property(property: "Victim", value: viewModel.asam?.victim)
+                    Property(property: "Reference Number", value: viewModel.asam?.reference)
+                    Property(property: "Date of Occurence", value: viewModel.asam?.dateString)
+                    Property(property: "Geographical Subregion", value: viewModel.asam?.subreg)
+                    Property(property: "Navigational Area", value: viewModel.asam?.navArea)
                 }
                 .padding(.all, 16)
                 .card()
@@ -61,13 +60,13 @@ struct AsamDetailView: View {
             .dataSourceSection()
         }
         .dataSourceDetailList()
-        .navigationTitle(asam.reference ?? Asam.dataSourceName)
+        .navigationTitle(viewModel.asam?.reference ?? Asam.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: asam, perform: { newValue in
-            predicate = NSPredicate(format: "reference == %@", asam.reference ?? "")
-        })
+        .onChange(of: reference) { newValue in
+            viewModel.getAsam(reference: reference)
+        }
         .onAppear {
-            predicate = NSPredicate(format: "reference == %@", asam.reference ?? "")
+            viewModel.getAsam(reference: reference)
             Metrics.shared.dataSourceDetail(dataSource: Asam.self)
         }
     }

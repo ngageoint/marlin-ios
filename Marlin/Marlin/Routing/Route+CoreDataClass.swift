@@ -44,4 +44,12 @@ extension Route: DataSource {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter
     }
+    
+    var itemKey: String {
+        return "\(name ?? "")"
+    }
+    
+    var itemTitle: String {
+        return "\(name ?? "")"
+    }
 }

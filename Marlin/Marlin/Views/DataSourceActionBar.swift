@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DataSourceActionBar: View {
-    var data: DataSource & CustomStringConvertible
+    var data: any DataSource
     var showMoreDetailsButton = false
     var showFocusButton = true
     
@@ -25,7 +25,9 @@ struct DataSourceActionBar: View {
                 if let bookmarkable = data as? Bookmarkable {
                     BookmarkButton(viewModel: BookmarkViewModel(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key))
                 }
-                ShareButton(shareText: data.description, dataSource: data as? (any DataSourceViewBuilder))
+                if let data = data as? CustomStringConvertible {
+                    ShareButton(shareText: data.description, dataSource: data as? (any DataSourceViewBuilder))
+                }
                 if showFocusButton {
                     FocusButton(data: data)
                 }

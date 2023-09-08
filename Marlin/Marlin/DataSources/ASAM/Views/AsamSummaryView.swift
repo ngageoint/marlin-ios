@@ -12,7 +12,7 @@ struct AsamSummaryView: DataSourceSummaryView {
     
     var bookmark: Bookmark?
         
-    var asam: Asam
+    var asam: any AsamModel
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
     var showBookmarkNotes: Bool = false
@@ -28,8 +28,13 @@ struct AsamSummaryView: DataSourceSummaryView {
             Text(asam.asamDescription ?? "")
                 .lineLimit(8)
                 .secondary()
-            bookmarkNotesView(asam)
-            DataSourceActionBar(data: asam, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+            if let asam = asam as? Bookmarkable {
+                bookmarkNotesView(asam)
+                
+            }
+            if let asam = asam as? DataSource {
+                DataSourceActionBar(data: asam, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+            }
         }
     }
 }
