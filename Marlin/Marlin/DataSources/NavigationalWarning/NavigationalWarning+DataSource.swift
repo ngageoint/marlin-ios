@@ -145,7 +145,7 @@ extension NavigationalWarning: DataSourceLocation, GeoPackageExportable {
     
     static func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
         return NSPredicate(
-            format: "maxLatitude >= %lf AND minLatitude <= %lf AND maxLongitude >= %lf AND minLongitude <= %lf", minLat, maxLat, minLon, maxLon
+            format: "(maxLatitude >= %lf AND minLatitude <= %lf AND maxLongitude >= %lf AND minLongitude <= %lf) OR (minLongitude * maxLongitude < 0)", minLat, maxLat, minLon, maxLon
         )
     }
     

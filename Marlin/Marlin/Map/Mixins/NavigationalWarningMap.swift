@@ -72,23 +72,22 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
         guard let fetchRequest = self.getFetchRequest(show: self.show) else {
             return nil
         }
-        // TODO: does this need to be bounded
-//        var predicates: [NSPredicate] = []
-//        if let predicate = fetchRequest.predicate {
-//            predicates.append(predicate)
-//        }
-//
-//        predicates.append(getBoundingPredicate(minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon))
-//
-//        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-//
+
+        var predicates: [NSPredicate] = []
+        if let predicate = fetchRequest.predicate {
+            predicates.append(predicate)
+        }
+
+        predicates.append(getBoundingPredicate(minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon))
+
+        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+
         fetchRequest.predicate = nil
         var matched: [NavigationalWarning] = []
         if let navWarnings = try? PersistenceController.current.fetch(fetchRequest: fetchRequest) as? [NavigationalWarning] {
             print("**** navWarnings.count: \(navWarnings.count)")
             // verify the actual shapes match and not just the bounding box
             for warning in navWarnings {
-//                print("**** matches predicate: minLon \(warning.minLongitude) - maxLon \(warning.maxLongitude)")
                 if verifyMatch(warning: warning, location: location, tolerance: tolerance) {
                     matched.append(warning)
                 }
