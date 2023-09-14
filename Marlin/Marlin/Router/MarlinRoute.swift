@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import CoreData
 
 enum MarlinRoute: Hashable {
     case exportGeoPackage([DataSourceExportRequest])
@@ -20,6 +21,7 @@ enum MarlinRoute: Hashable {
     case acknowledgements
     case createRoute
     case dataSourceDetail(dataSourceKey: String, itemKey: String)
+    case dataSourceRouteDetail(dataSourceKey: String, itemKey: String, waypointURI: URL)
 }
 
 enum AsamRoute: Hashable {
@@ -67,8 +69,7 @@ struct MarlinRouteModifier: ViewModifier {
                 case .dataSourceDetail(let dataSourceKey, let itemKey):
                     switch dataSourceKey {
                     case Asam.key:
-                        let viewModel = AsamViewModel(repository: MainAsamRepository(context: PersistenceController.current.viewContext))
-                        AsamDetailView(viewModel: viewModel, reference: itemKey)
+                        AsamDetailView(reference: itemKey)
                     case Modu.key:
                         if let modu = Modu.getItem(context: PersistenceController.current.viewContext, itemKey: itemKey) as? Modu {
                             ModuDetailView(modu: modu)
@@ -110,14 +111,19 @@ struct MarlinRouteModifier: ViewModifier {
                     default:
                         EmptyView()
                     }
+                case .dataSourceRouteDetail(let dataSourceKey, let itemKey, let waypointURI):
+                    switch dataSourceKey {
+                    case Asam.key:
+                        AsamDetailView(reference: itemKey, waypointURI: waypointURI)
+                    default:
+                        EmptyView()
+                    }
                 }
             }
             .navigationDestination(for: AsamRoute.self) { item in
-                let viewModel = AsamViewModel(repository: MainAsamRepository(context: PersistenceController.current.viewContext))
-
                 switch item {
                 case .detail(let reference):
-                    AsamDetailView(viewModel: viewModel, reference: reference)
+                    AsamDetailView(reference: reference)
                 }
             }
             .navigationDestination(for: ItemWrapper.self) { item in

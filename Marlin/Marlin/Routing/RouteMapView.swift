@@ -12,6 +12,8 @@ import GeoJSON
 import CoreData
 
 class RouteViewModel: ObservableObject, Identifiable {
+    var locationManager = LocationManager.shared()
+    
     @Published var routeMKLine: MKGeodesicPolyline?
     @Published var routeFeatureCollection: FeatureCollection? {
         didSet {
@@ -23,7 +25,39 @@ class RouteViewModel: ObservableObject, Identifiable {
         }
     }
     
+    @Published var waypoints: [AnyGeoJSONExportable] = []
+    
     @Published var routeName: String = ""
+    
+    init() {
+        if let coordinate = locationManager.lastLocation?.coordinate {
+            addWaypoint(waypoint: AnyGeoJSONExportable(CommonDataSource(name: "Your Current Location", location: coordinate)))
+        }
+    }
+    
+    func reorder(fromOffsets source: IndexSet, toOffset destination: Int) {
+        waypoints.move(fromOffsets: source, toOffset: destination)
+        setupFeatureCollection()
+    }
+    
+    func addWaypoint(waypoint: AnyGeoJSONExportable) {
+        waypoints.append(waypoint)
+        setupFeatureCollection()
+    }
+    
+    func setupFeatureCollection() {
+        var features: [Feature] = []
+
+        for waypoint in waypoints {
+            let waypoint = waypoint.base
+            for feature in waypoint.geoJsonFeatures {
+                features.append(feature)
+            }
+            
+        }
+        let featureCollection = FeatureCollection(features: features)
+        routeFeatureCollection = featureCollection
+    }
     
     var route: Route? {
         didSet {
@@ -38,6 +72,17 @@ class RouteViewModel: ObservableObject, Identifiable {
                 route.createdTime = Date()
                 route.updatedTime = Date()
                 route.name = self.routeName
+                var set: Set<RouteWaypoint> = Set<RouteWaypoint>()
+                for (i,waypoint) in self.waypoints.enumerated() {
+                    let routeWaypoint = RouteWaypoint(context: context)
+                    routeWaypoint.dataSource = waypoint.key
+                    routeWaypoint.json = waypoint.geoJson
+                    routeWaypoint.order = Int64(i)
+                    routeWaypoint.route = route
+                    routeWaypoint.itemKey = waypoint.itemKey
+                    set.insert(routeWaypoint)
+                }
+                route.waypoints = NSSet(set: set)
                 if let routeFeatureCollection = self.routeFeatureCollection {
                     do {
                         let json = try JSONEncoder().encode(routeFeatureCollection)
@@ -115,7 +160,6 @@ struct RouteMapView: View {
     @StateObject var itemList: BottomSheetItemList = BottomSheetItemList()
     
     @Binding var path: NavigationPath
-    @Binding var waypoints: [AnyGeoJSONExportable]
     
     @ObservedObject var routeViewModel: RouteViewModel
 
@@ -145,7 +189,7 @@ struct RouteMapView: View {
                 return
             }
             
-            waypoints.append(AnyGeoJSONExportable(CommonDataSource(name: "User Added Location", location: coordinate)))
+            routeViewModel.addWaypoint(waypoint: AnyGeoJSONExportable(CommonDataSource(name: "User Added Location", location: coordinate)))
         }
         .onReceive(mapItemsTappedPub) { output in
             guard let notification = output.object as? MapItemsTappedNotification else {
@@ -177,7 +221,7 @@ struct RouteMapView: View {
                         Button("Add To Route") {
                             print("add to route")
                             if let exportable = dataSourceViewBuilder as? any GeoJSONExportable {
-                                waypoints.append(AnyGeoJSONExportable(exportable))
+                                routeViewModel.addWaypoint(waypoint: AnyGeoJSONExportable(exportable))
                             }
                         }
                         .buttonStyle(MaterialButtonStyle(type:.text))

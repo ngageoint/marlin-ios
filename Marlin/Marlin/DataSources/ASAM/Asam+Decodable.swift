@@ -39,6 +39,10 @@ struct AsamProperties: Decodable {
         case date
     }
     
+    private enum InternalCodingKeys: String, CodingKey {
+        case description
+    }
+    
     let reference: String?
     let latitude: Double
     let longitude: Double
@@ -47,7 +51,7 @@ struct AsamProperties: Decodable {
     let subreg: String?
     let hostility: String?
     let victim: String?
-    let asamDescription: String?
+    var asamDescription: String?
     let date: Date?
     let mgrs10km: String?
     
@@ -80,6 +84,10 @@ struct AsamProperties: Decodable {
         self.hostility = try? values.decode(String.self, forKey: .hostility)
         self.victim = try? values.decode(String.self, forKey: .victim)
         self.asamDescription = try? values.decode(String.self, forKey: .asamDescription)
+        if self.asamDescription == nil {
+            let otherValues = try decoder.container(keyedBy: InternalCodingKeys.self)
+            self.asamDescription = try otherValues.decode(String.self, forKey: .description)
+        }
         var parsedDate: Date? = nil
         if let dateString = try? values.decode(String.self, forKey: .date) {
             if let date = Asam.dateFormatter.date(from: dateString) {

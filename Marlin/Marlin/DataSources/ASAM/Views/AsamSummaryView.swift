@@ -12,7 +12,7 @@ struct AsamSummaryView: DataSourceSummaryView {
     
     var bookmark: Bookmark?
         
-    var asam: any AsamModel
+    var asam: AsamModel
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
     var showBookmarkNotes: Bool = false

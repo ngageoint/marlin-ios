@@ -27,7 +27,7 @@ extension Asam: Bookmarkable {
     }
 }
 
-extension Asam: DataSourceLocation, GeoPackageExportable, GeoJSONExportable {
+extension Asam: DataSource, Locatable, GeoPackageExportable, GeoJSONExportable {
     
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
@@ -44,7 +44,7 @@ extension Asam: DataSourceLocation, GeoPackageExportable, GeoJSONExportable {
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")
     static var fullDataSourceName: String = NSLocalizedString("Anti-Shipping Activity Messages", comment: "ASAM data source full display name")
-    static var key: String = "asam"
+    static var key: String = DataSourceType.asam.rawValue
     static var metricsKey: String = "asams"
     static var imageName: String? = "asam"
     static var systemImageName: String? = nil

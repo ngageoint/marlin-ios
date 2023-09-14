@@ -8,9 +8,33 @@
 import Foundation
 import CoreData
 import UIKit
+import GeoJSON
+
+class RouteWaypoint: NSManagedObject {
+    func decodeToDataSource() -> Any? {
+        do {
+            let decoder = JSONDecoder()
+            if let json = json {
+                let jsonData = Data(json.utf8)
+                let ds = try decoder.decode(FeatureCollection.self, from: jsonData)
+                // TODO decode the correct type
+                let asamModel = AsamModel(feature: ds.features[0])
+                return asamModel
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+        return nil
+    }
+}
 
 class Route: NSManagedObject {
-    
+    public var waypointArray: [RouteWaypoint] {
+        let set = waypoints as? Set<RouteWaypoint> ?? []
+        return set.sorted {
+            $0.order < $1.order
+        }
+    }
 }
 
 extension Route: DataSource {

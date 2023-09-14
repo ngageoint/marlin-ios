@@ -185,14 +185,8 @@ struct DataSourceTileProvider<T : MapImage>: ImageDataProvider {
     
     func getMatchingObjects(predicate: NSPredicate, context: NSManagedObjectContext) -> [T]? {
         if let objects = objects {
-            
-            let filteredObjects: [T] = objects.filter { object in
-                return predicate.evaluate(with: object)
-            }
-            
-            return filteredObjects
+            return objects
         }
-        
         if let M = T.self as? NSManagedObject.Type {
             
             let tileFetchRequest = M.fetchRequest()

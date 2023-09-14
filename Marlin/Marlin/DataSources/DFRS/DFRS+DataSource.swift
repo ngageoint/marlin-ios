@@ -16,7 +16,7 @@ extension DFRS: Bookmarkable {
     }
 }
 
-extension DFRS: DataSourceLocation {
+extension DFRS: Locatable {
 
     var color: UIColor {
         return DFRS.color

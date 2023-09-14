@@ -16,10 +16,38 @@ struct RouteList: View {
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             List(routes) { route in
-                VStack {
-                    Text("Route")
+                VStack(alignment: .leading) {
                     Text("\(route.name ?? "")")
-                    Text("geojson \(route.geojson ?? "")")
+                        .primary()
+                    Text("Created \(route.createdTime?.formatted() ?? "")")
+                        .overline()
+                    HStack {
+                        if let first = route.waypointArray.first {
+                            let _ = first.decodeToDataSource()
+                            if let dataSourceKey = first.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
+                                DataSourceCircleImage(dataSource: type, size: 15)
+                            }
+                            Text(first.itemKey ?? "")
+                                .overline()
+                        }
+                        Image(systemName: "ellipsis")
+                        if let last = route.waypointArray.last {
+                            let _ = last.decodeToDataSource()
+                            Group {
+                                if let dataSourceKey = last.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
+                                    DataSourceCircleImage(dataSource: type, size: 15)
+                                }
+                                Text(last.itemKey ?? "")
+                                    .overline()
+                            }
+                            .onTapGesture {
+                                if let dataSource = last.dataSource, let itemKey = last.itemKey {
+                                    
+                                    path.append(MarlinRoute.dataSourceRouteDetail(dataSourceKey: dataSource, itemKey: itemKey, waypointURI: last.objectID.uriRepresentation()))
+                                }
+                            }
+                        }
+                    }
                 }
                 .swipeActions(edge: .trailing) {
                     Button(role: .destructive)  {

@@ -13,11 +13,11 @@ extension Asam: DataSourceViewBuilder {
         return "\(self.hostility ?? "")\(self.hostility != nil && self.victim != nil ? ": " : "")\(self.victim ?? "")"
     }
     var detailView: AnyView {
-        AnyView(AsamDetailView(viewModel: AsamViewModel(repository: MainAsamRepository(context: PersistenceController.current.viewContext)), reference: self.reference!))
+        AnyView(AsamDetailView(reference: self.reference!))
 //        AnyView(AsamDetailView(asam: self))
     }
     
     var summary: some DataSourceSummaryView {
-        AsamSummaryView(asam: self)
+        AsamSummaryView(asam: AsamModel(asam: self))
     }
 }

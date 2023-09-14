@@ -32,7 +32,7 @@ extension NavigationalWarning: Bookmarkable {
     }
 }
 
-extension NavigationalWarning: DataSourceLocation, GeoPackageExportable, GeoJSONExportable {
+extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportable {
     var sfGeometry: SFGeometry? {
         let collection = SFGeometryCollection()
         if let locations = locations {

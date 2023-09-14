@@ -30,7 +30,7 @@ extension RadioBeacon: Bookmarkable {
     }
 }
 
-extension RadioBeacon: DataSourceLocation, GeoPackageExportable, GeoJSONExportable {
+extension RadioBeacon: Locatable, GeoPackageExportable, GeoJSONExportable {
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

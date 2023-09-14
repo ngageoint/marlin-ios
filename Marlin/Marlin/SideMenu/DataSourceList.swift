@@ -9,6 +9,24 @@ import Foundation
 import SwiftUI
 import Combine
 
+enum DataSourceType: String, CaseIterable {
+    case asam
+    case Common
+    
+    static func fromKey(_ key: String) -> DataSourceType? {
+        return self.allCases.first{ "\($0)" == key }
+    }
+    
+    func toDataSource() -> DataSource.Type {
+        switch (self) {
+        case .asam:
+            return Asam.self
+        case .Common:
+            return CommonDataSource.self
+        }
+    }
+}
+
 class DataSourceList: ObservableObject {
     let tabItems: [DataSourceItem] = [
         DataSourceItem(dataSource: Asam.self),

@@ -10,9 +10,9 @@ import MapKit
 import CoreData
 import Combine
 
-class AsamMap<T: Asam & MapImage>: FetchRequestMap<T> {
+class AsamMap<T: MapImage>: FetchRequestMap<T> {
     override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
-        super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
+        super.init(fetchPredicate: fetchPredicate, objects: objects, showAsTiles: showAsTiles)
         self.sortDescriptors = [NSSortDescriptor(keyPath: \Asam.date, ascending: true)]
         self.focusNotificationName = .FocusAsam
         self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMapasam)

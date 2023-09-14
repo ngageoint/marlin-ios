@@ -9,9 +9,11 @@ import SwiftUI
 import MapKit
 import CoreData
 
-struct AsamDetailView: View {    
-    @ObservedObject var viewModel: AsamViewModel
+struct AsamDetailView: View {
+    @EnvironmentObject var asamRepository: AsamRepositoryManager
+    @StateObject var viewModel: AsamViewModel = AsamViewModel()
     @State var reference: String
+    @State var waypointURI: URL?
     
     var body: some View {
         Self._printChanges()
@@ -27,8 +29,8 @@ struct AsamDetailView: View {
                         .background(Color(uiColor: Asam.color))
                         .padding(.bottom, -8)
                         .accessibilityElement(children: .contain)
-                    if let predicate = viewModel.predicate, let asam = viewModel.asam as? DataSourceLocation {
-                        DataSourceLocationMapView(dataSourceLocation: asam, mapName: "Asam Detail Map", mixins: [AsamMap(fetchPredicate: predicate)])
+                    if let asam = viewModel.asam {
+                        DataSourceLocationMapView(dataSourceLocation: asam, mapName: "Asam Detail Map", mixins: [AsamMap<AsamModel>(objects: [asam])])
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     if let asam = viewModel.asam {
@@ -63,10 +65,12 @@ struct AsamDetailView: View {
         .navigationTitle(viewModel.asam?.reference ?? Asam.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: reference) { newValue in
-            viewModel.getAsam(reference: reference)
+            viewModel.getAsam(reference: reference, waypointURI: waypointURI)
         }
         .onAppear {
-            viewModel.getAsam(reference: reference)
+            viewModel.repository = asamRepository
+
+            viewModel.getAsam(reference: reference, waypointURI: waypointURI)
             Metrics.shared.dataSourceDetail(dataSource: Asam.self)
         }
     }

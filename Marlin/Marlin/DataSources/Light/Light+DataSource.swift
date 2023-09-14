@@ -35,7 +35,7 @@ extension Light: Bookmarkable {
     }
 }
 
-extension Light: DataSourceLocation, GeoPackageExportable, GeoJSONExportable {
+extension Light: Locatable, GeoPackageExportable, GeoJSONExportable {
     func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
         var geometryByColor: [UIColor:SFGeometry] = [:]
         if let lightSectors = lightSectors {

@@ -105,7 +105,7 @@ struct MarlinBottomSheet <Content: View>: View {
                     if let bottomSheetItems = itemList.bottomSheetItems, bottomSheetItems.count >= selectedItem + 1 {
                         let item = bottomSheetItems[selectedItem].item
                         HStack {
-                            DataSourceCircleImage(dataSource: item, size: 30)
+                            DataSourceCircleImage(dataSource: type(of:item), size: 30)
                             Spacer()
                         }
                         
@@ -167,17 +167,19 @@ struct MarlinBottomSheet <Content: View>: View {
                     rectangle
                     Spacer()
                 }
-                    .ignoresSafeArea()
+                .ignoresSafeArea()
             )
             .onChange(of: selectedItem) { item in
-                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1, let bottomSheetItem = itemList.bottomSheetItems?[selectedItem], let item = bottomSheetItem.item as? DataSourceLocation {
+                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1, let bottomSheetItem = itemList.bottomSheetItems?[selectedItem], let item = bottomSheetItem.item as? Locatable {
                     NotificationCenter.default.post(name: focusNotification, object: FocusMapOnItemNotification(item: item, zoom: bottomSheetItem.zoom, mapName: bottomSheetItem.mapName))
                 }
             }
             .onAppear {
-                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1, let bottomSheetItem = itemList.bottomSheetItems?[selectedItem], let item = bottomSheetItem.item as? DataSourceLocation {
+                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1, let bottomSheetItem = itemList.bottomSheetItems?[selectedItem], let item = bottomSheetItem.item as? Locatable {
                     NotificationCenter.default.post(name: focusNotification, object: FocusMapOnItemNotification(item: item, zoom: bottomSheetItem.zoom, mapName: bottomSheetItem.mapName))
-                    Metrics.shared.dataSourceBottomSheet(dataSource: type(of: item))
+                    if let dataSource = item as? DataSource {
+                        Metrics.shared.dataSourceBottomSheet(dataSource: type(of: dataSource))
+                    }
                 }
             }
     }

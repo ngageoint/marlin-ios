@@ -26,7 +26,7 @@ extension Port: Bookmarkable {
     }
 }
 
-extension Port: DataSourceLocation, GeoPackageExportable, GeoJSONExportable {
+extension Port: Locatable, GeoPackageExportable, GeoJSONExportable {
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

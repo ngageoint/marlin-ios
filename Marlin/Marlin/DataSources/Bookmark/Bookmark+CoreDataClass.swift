@@ -19,7 +19,7 @@ protocol Bookmarkable {
 
 extension Bookmarkable {
     var bookmark: Bookmark? {
-        return try? PersistenceController.current.viewContext.fetchFirst(Bookmark.self, predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey ?? "", key))
+        return try? PersistenceController.current.viewContext.fetchFirst(Bookmark.self, predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey, key))
     }
     
     static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {

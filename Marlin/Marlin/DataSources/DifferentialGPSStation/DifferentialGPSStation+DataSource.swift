@@ -30,7 +30,7 @@ extension DifferentialGPSStation: Bookmarkable {
     }
 }
 
-extension DifferentialGPSStation: DataSourceLocation, GeoPackageExportable, GeoJSONExportable {
+extension DifferentialGPSStation: Locatable, GeoPackageExportable, GeoJSONExportable {
 
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)

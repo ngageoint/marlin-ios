@@ -16,7 +16,7 @@ struct DataSourceActionBar: View {
         HStack(spacing:0) {
             if showMoreDetailsButton {
                 MoreDetailsButton(data: data)
-            } else if let data = data as? DataSourceLocation {
+            } else if let data = data as? Locatable {
                 CoordinateButton(coordinate: data.coordinate)
             }
             

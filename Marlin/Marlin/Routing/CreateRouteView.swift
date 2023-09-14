@@ -20,9 +20,8 @@ struct CreateRouteView: View {
     @State private var firstWaypointFrameSize: CGSize = .zero
     @State private var lastWaypointFrameSize: CGSize = .zero
     @State private var instructionsFrameSize: CGSize = .zero
-    @State var waypoints: [AnyGeoJSONExportable] = []
     
-    @State var routeViewModel: RouteViewModel = RouteViewModel()
+    @StateObject var routeViewModel: RouteViewModel = RouteViewModel()
     
     var body: some View {
         VStack(spacing: 0) {
@@ -42,31 +41,12 @@ struct CreateRouteView: View {
                 .overlay {
                     routeList()
                 }
-            RouteMapView(path: $path, waypoints: $waypoints, routeViewModel: routeViewModel)
+            RouteMapView(path: $path, routeViewModel: routeViewModel)
                 .edgesIgnoringSafeArea([.leading, .trailing])
         }
-        .onAppear {
-            if waypoints.count == 0 {
-                if let coordinate = locationManager.lastLocation?.coordinate {
-                    waypoints.append(AnyGeoJSONExportable(CommonDataSource(name: "Your Current Location", location: coordinate)))
-                }
-            }
-        }
-        .onChange(of: waypoints, perform: { newValue in
-            var features: [Feature] = []
-            for waypoint in waypoints {
-                let waypoint = waypoint.base
-                    for feature in waypoint.geoJsonFeatures {
-                        features.append(feature)
-                    }
-                
-            }
-            let featureCollection = FeatureCollection(features: features)
-            routeViewModel.routeFeatureCollection = featureCollection
-        })
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                if waypoints.count > 1 {
+                if routeViewModel.waypoints.count > 1 {
                     Button("Save") {
                         routeViewModel.createRoute(context: managedObjectContext)
                     }
@@ -81,14 +61,14 @@ struct CreateRouteView: View {
     func waypointRow(waypointViewBuilder: any DataSourceViewBuilder, first: Bool = false, last: Bool = false) -> some View {
         HStack {
             Group {
-                DataSourceCircleImage(dataSource: waypointViewBuilder, size: 12)
+                DataSourceCircleImage(dataSource: type(of: waypointViewBuilder), size: 12)
                 HStack {
                     VStack(alignment: .leading) {
                         Text(waypointViewBuilder.itemTitle)
                             .font(Font.body2)
                             .foregroundColor(Color.onSurfaceColor)
                             .fixedSize(horizontal: false, vertical: true)
-                        if let waypointLocation = waypointViewBuilder as? DataSourceLocation {
+                        if let waypointLocation = waypointViewBuilder as? Locatable {
                             Text(waypointLocation.coordinate.format())
                                 .overline()
                         }
@@ -129,13 +109,13 @@ struct CreateRouteView: View {
     func routeList() -> some View {
         VStack {
             List {
-                ForEach(waypoints, id: \.uniqueId) { waypoint in
+                ForEach(routeViewModel.waypoints, id: \.uniqueId) { waypoint in
                     if let waypointViewBuilder = waypoint.base as? any DataSourceViewBuilder {
-                        waypointRow(waypointViewBuilder: waypointViewBuilder, first: !waypoints.isEmpty && waypoints.first! == waypoint, last: !waypoints.isEmpty && waypoints.last! == waypoint)
+                        waypointRow(waypointViewBuilder: waypointViewBuilder, first: !routeViewModel.waypoints.isEmpty && routeViewModel.waypoints.first! == waypoint, last: !routeViewModel.waypoints.isEmpty && routeViewModel.waypoints.last! == waypoint)
                             
                             .swipeActions(edge: .trailing) {
                                 Button(role: .destructive)  {
-                                    waypoints.removeAll { exportable in
+                                    routeViewModel.waypoints.removeAll { exportable in
                                         exportable.uniqueId == waypoint.uniqueId
                                     }
                                 } label: {
@@ -151,15 +131,13 @@ struct CreateRouteView: View {
                     }
                 }
                 .onMove { from, to in
-                    waypoints.move(fromOffsets: from, toOffset: to)
+                    routeViewModel.reorder(fromOffsets: from, toOffset: to)
                 }
                 instructions()
             }
             .listStyle(.plain)
             .padding(.top, 10)
             .padding(.leading, -4)
-            
-            
         }
     }
     
@@ -170,25 +148,25 @@ struct CreateRouteView: View {
     @ViewBuilder
     func sizingOnlyStack() -> some View {
         VStack(spacing: 0) {
-            ForEach(waypoints.indices, id: \.self) { i in
-                if let waypointViewBuilder = waypoints[i].base as? any DataSourceViewBuilder {
+            ForEach($routeViewModel.waypoints.indices, id: \.self) { i in
+                if let waypointViewBuilder = routeViewModel.waypoints[i].base as? any DataSourceViewBuilder {
                     waypointRow(waypointViewBuilder: waypointViewBuilder)
                         .opacity(0)
                         .overlay(
                             GeometryReader { geo in
                                 Color.clear.onAppear {
-                                    if i == waypoints.indices.lowerBound {
+                                    if i == routeViewModel.waypoints.indices.lowerBound {
                                         firstWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
                                     }
-                                    if i == waypoints.indices.upperBound.advanced(by: -1) {
+                                    if i == routeViewModel.waypoints.indices.upperBound.advanced(by: -1) {
                                         lastWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
                                     }
                                 }
                                 .onChange(of: geo.size) { geoSize in
-                                    if i == waypoints.indices.lowerBound {
+                                    if i == routeViewModel.waypoints.indices.lowerBound {
                                         firstWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
                                     }
-                                    if i == waypoints.indices.upperBound.advanced(by: -1) {
+                                    if i == routeViewModel.waypoints.indices.upperBound.advanced(by: -1) {
                                         lastWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
                                     }
                                 }

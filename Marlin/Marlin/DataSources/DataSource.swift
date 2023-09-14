@@ -113,13 +113,13 @@ struct DataSourceProperty: Hashable, Identifiable, Codable {
     }
 }
 
-protocol DataSourceLocation: DataSource {
+protocol Locatable {
     var coordinate: CLLocationCoordinate2D { get }
     var coordinateRegion: MKCoordinateRegion? { get }
     static func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate
 }
 
-extension DataSourceLocation {
+extension Locatable {
     var coordinateRegion: MKCoordinateRegion? {
         return nil
     }

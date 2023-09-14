@@ -28,7 +28,7 @@ struct CommonSummaryView: DataSourceSummaryView {
     }
 }
 
-class CommonDataSource: NSObject, DataSourceLocation, DataSourceViewBuilder, ObservableObject, GeoJSONExportable {
+class CommonDataSource: NSObject, Locatable, DataSourceViewBuilder, ObservableObject, GeoJSONExportable {
     
     var itemKey: String {
         return "\(itemTitle)--\(coordinate.latitude)--\(coordinate.longitude)"

@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct DataSourceCircleImage: View {
-    var dataSource: any DataSource
+    var dataSource: DataSource.Type
     var size: CGFloat = 30
     var body: some View {
-        if let imageName = type(of: dataSource).imageName {
+        if let imageName = dataSource.imageName {
             Image(imageName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -20,7 +20,7 @@ struct DataSourceCircleImage: View {
                 .padding(size / 3)
                 .background(Color(dataSource.color))
                 .clipShape(Circle())
-        } else if let systemImageName = type(of: dataSource).systemImageName {
+        } else if let systemImageName = dataSource.systemImageName {
             Image(systemName: systemImageName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)

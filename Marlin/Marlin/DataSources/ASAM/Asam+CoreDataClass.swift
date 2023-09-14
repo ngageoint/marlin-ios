@@ -10,84 +10,122 @@ import Foundation
 import CoreData
 import MapKit
 import CoreData
+import GeoJSON
 
-protocol AsamRepostory {
-    associatedtype A: AsamModel
-    @discardableResult
-    func getAsam(reference: String?) -> A?
+class AsamRepositoryManager: AsamRepository, ObservableObject {
+    private var repository: AsamRepository
+    init(repository: AsamRepository) {
+        self.repository = repository
+    }
+    func getAsam(reference: String?, waypointURI: URL?) -> AsamModel? {
+        repository.getAsam(reference: reference, waypointURI: waypointURI)
+    }
 }
 
-class MainAsamRepository: AsamRepostory {
-    typealias A = Asam
+protocol AsamRepository {
+    @discardableResult
+    func getAsam(reference: String?, waypointURI: URL?) -> AsamModel?
+}
+
+class AsamCoreDataRepository: AsamRepository, ObservableObject {
     private var context: NSManagedObjectContext
     
     required init(context: NSManagedObjectContext) {
         self.context = context
     }
     
-    func getAsam(reference: String?) -> A? {
+    func getAsam(reference: String?, waypointURI: URL?) -> AsamModel? {
+        if let waypointURI = waypointURI, let reference = reference {
+            if let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: waypointURI), let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
+                let dataSource = waypoint.decodeToDataSource()
+                if let dataSource = dataSource as? AsamModel {
+                    return dataSource
+                }
+            }
+        }
         if let reference = reference {
-            return context.fetchFirst(Asam.self, key: "reference", value: reference)
+            if let asam = context.fetchFirst(Asam.self, key: "reference", value: reference) {
+                return AsamModel(asam: asam)
+            }
         }
         return nil
     }
 }
 
-class RouteAsamRepository: AsamRepostory {
-    typealias A = AsamPlain
-    private var context: NSManagedObjectContext
-    private var routeId: String
-    
-    required init(context: NSManagedObjectContext, routeId: String) {
-        self.context = context
-        self.routeId = routeId
+class AsamModel: NSObject, Locatable {
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
-    func getAsam(reference: String?) -> A? {
-//        if let reference = reference {
-//            return context.fetchFirst(Asam.self, key: "reference", value: reference)
-//        }
-        return nil
-    }
-}
-
-class AsamViewModel: ObservableObject, Identifiable {
-    @Published var modelChange: Date = Date()
-    @Published var asam: (any AsamModel)?
-    @Published var predicate: NSPredicate?
+    var asam: Asam?
+    var asamProperties: AsamProperties?
     
-    var repository: any AsamRepostory
-    init(repository: any AsamRepostory) {
-        self.repository = repository
-    }
+    var asamDescription: String?
+    var date: Date?
+    var hostility: String?
+    var latitude: Double
+    var longitude: Double
+    var mgrs10km: String?
+    var navArea: String?
+    var position: String?
+    var reference: String?
+    var subreg: String?
+    var victim: String?
     
-    @discardableResult
-    func getAsam(reference: String) -> (any AsamModel)? {
-        predicate = NSPredicate(format: "reference == %@", reference)
-        asam = repository.getAsam(reference: reference)
-        return asam
-    }
-}
-
-protocol AsamModel: Equatable {
-    var asamDescription: String? { get set }
-    var date: Date? { get set }
-    var hostility: String? { get set }
-    var latitude: Double { get set }
-    var longitude: Double { get set }
-    var mgrs10km: String? { get set }
-    var navArea: String? { get set }
-    var position: String? { get set }
-    var reference: String? { get set }
-    var subreg: String? { get set }
-    var victim: String? { get set }
-    func isEqualTo(_ other: any AsamModel) -> Bool
-}
-
-extension AsamModel where Self: Equatable  {
-    func isEqualTo(_ other: any AsamModel) -> Bool {
+    func isEqualTo(_ other: AsamModel) -> Bool {
         guard let otherShape = other as? Self else { return false }
-        return self == otherShape
+        return self.asam == otherShape.asam
+    }
+    
+    static func == (lhs: AsamModel, rhs: AsamModel) -> Bool {
+        lhs.isEqualTo(rhs)
+    }
+    
+    init(asam: Asam) {
+        self.asam = asam
+        self.asamDescription = asam.asamDescription
+        self.date = asam.date
+        self.hostility = asam.hostility
+        self.latitude = asam.latitude
+        self.longitude = asam.longitude
+        self.mgrs10km = asam.mgrs10km
+        self.navArea = asam.navArea
+        self.position = asam.position
+        self.reference = asam.reference
+        self.subreg = asam.subreg
+        self.victim = asam.victim
+    }
+    
+    init(asamProperties: AsamProperties) {
+        self.asamProperties = asamProperties
+        self.asamDescription = asamProperties.asamDescription
+        self.date = asamProperties.date
+        self.hostility = asamProperties.hostility
+        self.latitude = asamProperties.latitude
+        self.longitude = asamProperties.longitude
+        self.mgrs10km = asamProperties.mgrs10km
+        self.navArea = asamProperties.navArea
+        self.position = asamProperties.position
+        self.reference = asamProperties.reference
+        self.subreg = asamProperties.subreg
+        self.victim = asamProperties.victim
+    }
+    
+    convenience init?(feature: Feature) {
+        if let json = try? JSONEncoder().encode(feature.properties), let string = String(data: json, encoding: .utf8) {
+            
+            print(string)
+            let decoder = JSONDecoder()
+            print("json is \(string)")
+            let jsonData = Data(string.utf8)
+            if let ds = try? decoder.decode(AsamProperties.self, from: jsonData) {
+                self.init(asamProperties: ds)
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
     }
 }
 
@@ -104,45 +142,60 @@ extension AsamModel {
     }
 }
 
-extension AsamPlain: Equatable {
-    static func ==(lhs: AsamPlain, rhs: AsamPlain) -> Bool {
-        if let reference = lhs.reference {
-            return reference == rhs.reference
-        }
-        return false
+extension AsamModel: DataSource {
+    var color: UIColor {
+        Self.color
+    }
+    
+    static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }
+    
+    static func postProcess() {}
+    
+    static var isMappable: Bool = true
+    static var dataSourceName: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")
+    static var fullDataSourceName: String = NSLocalizedString("Anti-Shipping Activity Messages", comment: "ASAM data source full display name")
+    static var key: String = "asam"
+    static var metricsKey: String = "asams"
+    static var imageName: String? = "asam"
+    static var systemImageName: String? = nil
+    
+    static var color: UIColor = .black
+    static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
+    
+    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), ascending: false)]
+    static var defaultFilter: [DataSourceFilterParameter] = [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last365Days)]
+    
+    static var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date),
+        DataSourceProperty(name: "Location", key: #keyPath(Asam.mgrs10km), type: .location),
+        DataSourceProperty(name: "Reference", key: #keyPath(Asam.reference), type: .string),
+        DataSourceProperty(name: "Latitude", key: #keyPath(Asam.latitude), type: .latitude),
+        DataSourceProperty(name: "Longitude", key: #keyPath(Asam.longitude), type: .longitude),
+        DataSourceProperty(name: "Navigation Area", key: #keyPath(Asam.navArea), type: .string),
+        DataSourceProperty(name: "Subregion", key: #keyPath(Asam.subreg), type: .string),
+        DataSourceProperty(name: "Description", key: #keyPath(Asam.asamDescription), type: .string),
+        DataSourceProperty(name: "Hostility", key: #keyPath(Asam.hostility), type: .string),
+        DataSourceProperty(name: "Victim", key: #keyPath(Asam.victim), type: .string)
+    ]
+    
+    var itemKey: String {
+        return reference ?? ""
     }
 }
 
-class AsamPlain: AsamModel {
-    var asamDescription: String?
-    
-    var date: Date?
-    
-    var hostility: String?
-    
-    var latitude: Double = kCLLocationCoordinate2DInvalid.latitude
-    
-    var longitude: Double = kCLLocationCoordinate2DInvalid.longitude
-    
-    var mgrs10km: String?
-    
-    var navArea: String?
-    
-    var position: String?
-    
-    var reference: String?
-    
-    var subreg: String?
-    
-    var victim: String?
-    
-    func isEqualTo(_ other: any AsamModel) -> Bool {
-        guard let otherShape = other as? Self else { return false }
-        return self == otherShape
+extension AsamModel: MapImage {
+    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext?) -> [UIImage] {
+        return defaultMapImage(marker: marker, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context, tileSize: 512.0)
     }
+    
+    static var cacheTiles: Bool = true
 }
 
-class Asam: NSManagedObject, EnlargableAnnotation, AsamModel {
+class Asam: NSManagedObject, EnlargableAnnotation {
     var clusteringIdentifierWhenShrunk: String? = "msi"
     
     var enlarged: Bool = false

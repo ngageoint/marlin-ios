@@ -32,7 +32,7 @@ extension GeoPackageFeatureItem: Bookmarkable {
     }
 }
 
-class GeoPackageFeatureItem: NSObject, DataSourceLocation, DataSourceViewBuilder {
+class GeoPackageFeatureItem: NSObject, Locatable, DataSourceViewBuilder {
 
     var coordinate: CLLocationCoordinate2D
     

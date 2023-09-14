@@ -125,6 +125,7 @@ struct MarlinApp: App {
     var appState: AppState
     
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
+    var asamRepository: AsamRepositoryManager
 
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
@@ -140,7 +141,7 @@ struct MarlinApp: App {
         }
         .store(in: &cancellable)
         persistentStore = PersistenceController.shared
-        
+        asamRepository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
         UNUserNotificationCenter.current().delegate = appDelegate
     }
 
@@ -151,6 +152,7 @@ struct MarlinApp: App {
                 .environmentObject(LocationManager.shared())
                 .environmentObject(appState)
                 .environmentObject(dataSourceList)
+                .environmentObject(asamRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
                 .background(Color.surfaceColor)
         }

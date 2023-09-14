@@ -307,7 +307,7 @@ extension LightProtocol {
     }
 }
 
-protocol LightMapViewModelProtocol: LightProtocol, MapImage, DataSourceLocation {
+protocol LightMapViewModelProtocol: LightProtocol, MapImage, Locatable, DataSource {
     
 }
 
