@@ -17,9 +17,17 @@ class RouteWaypoint: NSManagedObject {
             if let json = json {
                 let jsonData = Data(json.utf8)
                 let ds = try decoder.decode(FeatureCollection.self, from: jsonData)
-                // TODO decode the correct type
-                let asamModel = AsamModel(feature: ds.features[0])
-                return asamModel
+                if !ds.features.isEmpty {
+                    let feature = ds.features[0]
+                    
+                    switch(dataSource) {
+                    case Asam.key:
+                        let asamModel = AsamModel(feature: ds.features[0])
+                        return asamModel
+                    default:
+                        print("no")
+                    }
+                }
             }
         } catch {
             print(error.localizedDescription)
