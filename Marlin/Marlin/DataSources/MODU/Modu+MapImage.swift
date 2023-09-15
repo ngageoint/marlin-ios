@@ -7,8 +7,12 @@
 
 import Foundation
 import UIKit
+import CoreLocation
 
 extension Modu: MapImage {
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
     
     static var cacheTiles: Bool = true
     

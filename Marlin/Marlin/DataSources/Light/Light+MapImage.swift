@@ -10,6 +10,9 @@ import UIKit
 import CoreLocation
 
 extension Light: MapImage {
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
         
     static var cacheTiles: Bool = true
     
