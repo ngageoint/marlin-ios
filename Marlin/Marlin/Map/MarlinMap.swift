@@ -322,7 +322,7 @@ protocol MapCoordinator: MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     var marlinMap: MarlinMapProtocol { get set }
     
-    var focusedAnnotation: EnlargableAnnotation? { get set }
+    var focusedAnnotation: EnlargedAnnotation? { get set }
 
     
     func setMapRegion(region: MKCoordinateRegion)
@@ -440,7 +440,7 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
     var mapView: MKMapView?
     var mapScale: MKScaleView?
     var marlinMap: MarlinMapProtocol
-    var focusedAnnotation: EnlargableAnnotation?
+    var focusedAnnotation: EnlargedAnnotation?
     var focusMapOnItemSink: AnyCancellable?
 
     var setCenter: CLLocationCoordinate2D?
@@ -496,7 +496,7 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
     func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
         for view in views {
             
-            guard let annotation = view.annotation as? EnlargableAnnotation else {
+            guard let annotation = view.annotation as? EnlargedAnnotation else {
                 continue
             }
             NSLog("check if should enlarge \(annotation.shouldEnlarge)")
@@ -553,7 +553,7 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
             annotationView.zPriority = .max
             annotationView.selectedZPriority = .max
 
-            (annotation as? EnlargableAnnotation)?.annotationView = annotationView
+            enlarged.annotationView = annotationView
             return annotationView
         }
         for mixin in marlinMap.mixins.mixins {
@@ -586,7 +586,7 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
     }
 }
 
-class EnlargedAnnotation: NSObject, MKAnnotation, EnlargableAnnotation {
+class EnlargedAnnotation: NSObject, MKAnnotation {
     var enlarged: Bool = false
     
     var shouldEnlarge: Bool = false
@@ -611,6 +611,39 @@ class EnlargedAnnotation: NSObject, MKAnnotation, EnlargableAnnotation {
         self.mapImage = mapImage
     }
     
+    func markForEnlarging() {
+        clusteringIdentifier = nil
+        shouldEnlarge = true
+    }
+    
+    func markForShrinking() {
+        clusteringIdentifier = clusteringIdentifierWhenShrunk
+        shouldShrink = true
+    }
+    
+    func enlargeAnnoation() {
+        guard let annotationView = annotationView else {
+            return
+        }
+        enlarged = true
+        shouldEnlarge = false
+        annotationView.clusteringIdentifier = nil
+        let currentOffset = annotationView.centerOffset
+        annotationView.transform = annotationView.transform.scaledBy(x: 2.0, y: 2.0)
+        annotationView.centerOffset = CGPoint(x: currentOffset.x * 2.0, y: currentOffset.y * 2.0)
+    }
+    
+    func shrinkAnnotation() {
+        guard let annotationView = annotationView else {
+            return
+        }
+        enlarged = false
+        shouldShrink = false
+        annotationView.clusteringIdentifier = clusteringIdentifier
+        let currentOffset = annotationView.centerOffset
+        annotationView.transform = annotationView.transform.scaledBy(x: 0.5, y: 0.5)
+        annotationView.centerOffset = CGPoint(x: currentOffset.x * 0.5, y: currentOffset.y * 0.5)
+    }
 }
 
 class EnlargedAnnotationView: MKAnnotationView {

@@ -7,6 +7,8 @@
 
 import Foundation
 import CoreLocation
+import GeoJSON
+import UIKit
 
 class AsamModel: NSObject, Locatable {
     var coordinate: CLLocationCoordinate2D {

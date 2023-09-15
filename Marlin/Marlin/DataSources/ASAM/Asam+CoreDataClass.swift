@@ -12,7 +12,7 @@ import MapKit
 import CoreData
 import GeoJSON
 
-class Asam: NSManagedObject, EnlargableAnnotation {
+class Asam: NSManagedObject {
     var clusteringIdentifierWhenShrunk: String? = "msi"
     
     var enlarged: Bool = false
