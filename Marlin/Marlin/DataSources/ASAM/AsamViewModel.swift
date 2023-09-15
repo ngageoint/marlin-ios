@@ -8,7 +8,6 @@
 import Foundation
 
 class AsamViewModel: ObservableObject, Identifiable {
-    @Published var modelChange: Date = Date()
     @Published var asam: AsamModel?
     @Published var predicate: NSPredicate?
     

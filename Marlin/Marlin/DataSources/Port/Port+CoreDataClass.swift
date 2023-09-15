@@ -472,3 +472,12 @@ extension Int64 {
         return "\(self)"
     }
 }
+
+extension Double {
+    var zeroIsEmptyString: String {
+        if self == 0.0 {
+            return ""
+        }
+        return "\(self)"
+    }
+}

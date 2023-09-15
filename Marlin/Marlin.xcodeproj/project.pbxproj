@@ -384,6 +384,9 @@
 		F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB156E284AB09C004ACAC5 /* MSI.swift */; };
 		F7FDF2AC2AB49C95009A5E8F /* AsamRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FDF2AB2AB49C95009A5E8F /* AsamRepository.swift */; };
 		F7FDF2AE2AB49DEA009A5E8F /* AsamModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FDF2AD2AB49DEA009A5E8F /* AsamModel.swift */; };
+		F7FDF2B02AB4D53D009A5E8F /* ModuRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FDF2AF2AB4D53D009A5E8F /* ModuRepository.swift */; };
+		F7FDF2B22AB4D5EA009A5E8F /* ModuModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FDF2B12AB4D5EA009A5E8F /* ModuModel.swift */; };
+		F7FDF2B42AB4E8BB009A5E8F /* ModuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FDF2B32AB4E8BB009A5E8F /* ModuViewModel.swift */; };
 		F7FF8A0A28D2064900502E9E /* lights.json in Resources */ = {isa = PBXBuildFile; fileRef = F7FF8A0928D2064900502E9E /* lights.json */; };
 		F7FFB2DA28D61B3A00C31AA3 /* DFRS+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2D928D61B3A00C31AA3 /* DFRS+DataSource.swift */; };
 		F7FFB2DC28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2DB28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift */; };
@@ -836,6 +839,9 @@
 		F7FB156E284AB09C004ACAC5 /* MSI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSI.swift; sourceTree = "<group>"; };
 		F7FDF2AB2AB49C95009A5E8F /* AsamRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRepository.swift; sourceTree = "<group>"; };
 		F7FDF2AD2AB49DEA009A5E8F /* AsamModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamModel.swift; sourceTree = "<group>"; };
+		F7FDF2AF2AB4D53D009A5E8F /* ModuRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuRepository.swift; sourceTree = "<group>"; };
+		F7FDF2B12AB4D5EA009A5E8F /* ModuModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuModel.swift; sourceTree = "<group>"; };
+		F7FDF2B32AB4E8BB009A5E8F /* ModuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuViewModel.swift; sourceTree = "<group>"; };
 		F7FF8A0928D2064900502E9E /* lights.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = lights.json; sourceTree = "<group>"; };
 		F7FFB2D928D61B3A00C31AA3 /* DFRS+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DFRS+DataSource.swift"; sourceTree = "<group>"; };
 		F7FFB2DB28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DFRS+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
@@ -1839,6 +1845,9 @@
 				F7FFB30D28D63C2700C31AA3 /* Modu+Decodable.swift */,
 				F7FFB30F28D63C4700C31AA3 /* Modu+MapImage.swift */,
 				F7FFB31328D63CB000C31AA3 /* Modu+DataSourceViewBuilder.swift */,
+				F7FDF2AF2AB4D53D009A5E8F /* ModuRepository.swift */,
+				F7FDF2B12AB4D5EA009A5E8F /* ModuModel.swift */,
+				F7FDF2B32AB4E8BB009A5E8F /* ModuViewModel.swift */,
 			);
 			path = MODU;
 			sourceTree = "<group>";
@@ -2519,6 +2528,7 @@
 				F7FFB2E228D6202E00C31AA3 /* DFRSArea+BatchImportable.swift in Sources */,
 				F7FFB31628D63D3600C31AA3 /* Light+DataSource.swift in Sources */,
 				F7D8FA162922BA3B00E7D0A1 /* NoticeToMariners+DataSourceViewBuilder.swift in Sources */,
+				F7FDF2B22AB4D5EA009A5E8F /* ModuModel.swift in Sources */,
 				F7FDF2AC2AB49C95009A5E8F /* AsamRepository.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
 				F71D286428BE431900F1775C /* DifferentialGPSStationMap.swift in Sources */,
@@ -2526,6 +2536,7 @@
 				F71FC0CD2A3B86EB00911BAC /* ShareButton.swift in Sources */,
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
 				F7FFB33D28DA061D00C31AA3 /* FilterButton.swift in Sources */,
+				F7FDF2B02AB4D53D009A5E8F /* ModuRepository.swift in Sources */,
 				F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */,
 				F71D288128C29F0200F1775C /* BundleExtensions.swift in Sources */,
 				F71FC0DB2A3BBC7E00911BAC /* DataSourceMapGrid.swift in Sources */,
@@ -2564,6 +2575,7 @@
 				F7FFB33A28D9EFDB00C31AA3 /* SearchView.swift in Sources */,
 				F740AA77289D68D800754293 /* MarlinCompactWidth.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
+				F7FDF2B42AB4E8BB009A5E8F /* ModuViewModel.swift in Sources */,
 				F7FFB34328DD06EF00C31AA3 /* MSIListView.swift in Sources */,
 				F7D2225428E5F03500F527F2 /* SortView.swift in Sources */,
 				F7FFB2F028D626DC00C31AA3 /* DifferentialGPSStation+Decodable.swift in Sources */,

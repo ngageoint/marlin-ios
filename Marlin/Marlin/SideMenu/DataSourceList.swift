@@ -11,6 +11,7 @@ import Combine
 
 enum DataSourceType: String, CaseIterable {
     case asam
+    case modu
     case Common
     
     static func fromKey(_ key: String) -> DataSourceType? {
@@ -21,6 +22,8 @@ enum DataSourceType: String, CaseIterable {
         switch (self) {
         case .asam:
             return Asam.self
+        case .modu:
+            return Modu.self
         case .Common:
             return CommonDataSource.self
         }

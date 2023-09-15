@@ -71,9 +71,7 @@ struct MarlinRouteModifier: ViewModifier {
                     case Asam.key:
                         AsamDetailView(reference: itemKey)
                     case Modu.key:
-                        if let modu = Modu.getItem(context: PersistenceController.current.viewContext, itemKey: itemKey) as? Modu {
-                            ModuDetailView(modu: modu)
-                        }
+                        ModuDetailView(name: itemKey)
                     case Port.key:
                         if let port = Port.getItem(context: PersistenceController.current.viewContext, itemKey: itemKey) as? Port {
                             PortDetailView(port: port)
@@ -115,6 +113,8 @@ struct MarlinRouteModifier: ViewModifier {
                     switch dataSourceKey {
                     case Asam.key:
                         AsamDetailView(reference: itemKey, waypointURI: waypointURI)
+                    case Modu.key:
+                        ModuDetailView(name: itemKey, waypointURI: waypointURI)
                     default:
                         EmptyView()
                     }
