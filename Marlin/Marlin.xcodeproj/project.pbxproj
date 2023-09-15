@@ -383,6 +383,8 @@
 		F7F7CFC529BA955900A14350 /* BaseOverlaysMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F7CFC429BA955900A14350 /* BaseOverlaysMap.swift */; };
 		F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB156C284AAF1B004ACAC5 /* MSIRouter.swift */; };
 		F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB156E284AB09C004ACAC5 /* MSI.swift */; };
+		F7FDF2AC2AB49C95009A5E8F /* AsamRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FDF2AB2AB49C95009A5E8F /* AsamRepository.swift */; };
+		F7FDF2AE2AB49DEA009A5E8F /* AsamModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FDF2AD2AB49DEA009A5E8F /* AsamModel.swift */; };
 		F7FF8A0A28D2064900502E9E /* lights.json in Resources */ = {isa = PBXBuildFile; fileRef = F7FF8A0928D2064900502E9E /* lights.json */; };
 		F7FFB2DA28D61B3A00C31AA3 /* DFRS+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2D928D61B3A00C31AA3 /* DFRS+DataSource.swift */; };
 		F7FFB2DC28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2DB28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift */; };
@@ -841,6 +843,8 @@
 		F7F7CFC429BA955900A14350 /* BaseOverlaysMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseOverlaysMap.swift; sourceTree = "<group>"; };
 		F7FB156C284AAF1B004ACAC5 /* MSIRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIRouter.swift; sourceTree = "<group>"; };
 		F7FB156E284AB09C004ACAC5 /* MSI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSI.swift; sourceTree = "<group>"; };
+		F7FDF2AB2AB49C95009A5E8F /* AsamRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRepository.swift; sourceTree = "<group>"; };
+		F7FDF2AD2AB49DEA009A5E8F /* AsamModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamModel.swift; sourceTree = "<group>"; };
 		F7FF8A0928D2064900502E9E /* lights.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = lights.json; sourceTree = "<group>"; };
 		F7FFB2D928D61B3A00C31AA3 /* DFRS+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DFRS+DataSource.swift"; sourceTree = "<group>"; };
 		F7FFB2DB28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DFRS+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
@@ -1843,6 +1847,8 @@
 				F7FFB30728D63A9F00C31AA3 /* Asam+MapImage.swift */,
 				F7FFB30928D63ACE00C31AA3 /* Asam+Annotation.swift */,
 				F7648ED32AABC8D2007E9A54 /* AsamViewModel.swift */,
+				F7FDF2AB2AB49C95009A5E8F /* AsamRepository.swift */,
+				F7FDF2AD2AB49DEA009A5E8F /* AsamModel.swift */,
 			);
 			path = ASAM;
 			sourceTree = "<group>";
@@ -2540,6 +2546,7 @@
 				F7FFB31628D63D3600C31AA3 /* Light+DataSource.swift in Sources */,
 				F7ADDCEC28902D1500137D95 /* EnlargableAnnotation.swift in Sources */,
 				F7D8FA162922BA3B00E7D0A1 /* NoticeToMariners+DataSourceViewBuilder.swift in Sources */,
+				F7FDF2AC2AB49C95009A5E8F /* AsamRepository.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
 				F71D286428BE431900F1775C /* DifferentialGPSStationMap.swift in Sources */,
 				F7667CED2A0025B0005B36A0 /* NavigationalWarningMap.swift in Sources */,
@@ -2737,6 +2744,7 @@
 				F71D286628BE453A00F1775C /* DifferentialGPSStationSummaryView.swift in Sources */,
 				F707BA97288590E2006A94C4 /* FogSignalImage.swift in Sources */,
 				F7ADDCDF2885E53E00137D95 /* UIColorExtensions.swift in Sources */,
+				F7FDF2AE2AB49DEA009A5E8F /* AsamModel.swift in Sources */,
 				F7FFB2DC28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift in Sources */,
 				F7830C012A8BCA89008376F7 /* CreateRouteButton.swift in Sources */,
 			);

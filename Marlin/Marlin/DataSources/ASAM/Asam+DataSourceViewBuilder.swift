@@ -14,7 +14,6 @@ extension Asam: DataSourceViewBuilder {
     }
     var detailView: AnyView {
         AnyView(AsamDetailView(reference: self.reference!))
-//        AnyView(AsamDetailView(asam: self))
     }
     
     var summary: some DataSourceSummaryView {
