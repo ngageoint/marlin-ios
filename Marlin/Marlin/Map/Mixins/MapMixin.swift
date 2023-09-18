@@ -41,6 +41,16 @@ extension MapMixin {
         return onShape
     }
     
+    func polygonHitTest(closedPolyline: MKGeodesicPolyline, location: CLLocationCoordinate2D) -> Bool {
+        guard let renderer = (renderer(overlay: closedPolyline) as? MKPolylineRenderer ?? standardRenderer(overlay: closedPolyline) as? MKPolylineRenderer) else {
+            return false
+        }
+        let mapPoint = MKMapPoint.init(location)
+        let point = renderer.point(for: mapPoint)
+        let onShape = renderer.path?.contains(point) ?? false
+        return onShape
+    }
+    
     func lineHitTest(line: MKPolyline, location: CLLocationCoordinate2D, tolerance: Double) -> Bool {
         guard let renderer = (renderer(overlay: line) as? MKPolylineRenderer ?? standardRenderer(overlay: line) as? MKPolylineRenderer) else {
             return false
