@@ -152,6 +152,8 @@
 		F7364E3E2A1E46860098F243 /* NavigationalWarningAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E3D2A1E46860098F243 /* NavigationalWarningAreasView.swift */; };
 		F7364E402A1E495C0098F243 /* NavigationalWarningSectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E3F2A1E495C0098F243 /* NavigationalWarningSectionRow.swift */; };
 		F7364E422A26A1740098F243 /* MarlinTestInitialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E412A26A1740098F243 /* MarlinTestInitialization.swift */; };
+		F7391CA52ABA28590002ABDD /* BookmarkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CA42ABA28590002ABDD /* BookmarkModel.swift */; };
+		F7391CA72ABA348F0002ABDD /* BookmarkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CA62ABA348F0002ABDD /* BookmarkRepository.swift */; };
 		F73927962A439D2700DE1E79 /* GeoPackageExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */; };
 		F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC7F294D2E240085EDC5 /* LightRange.swift */; };
 		F73ABC82295102480085EDC5 /* DataSourceTileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */; };
@@ -387,6 +389,8 @@
 		F7FDF2B02AB4D53D009A5E8F /* ModuRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FDF2AF2AB4D53D009A5E8F /* ModuRepository.swift */; };
 		F7FDF2B22AB4D5EA009A5E8F /* ModuModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FDF2B12AB4D5EA009A5E8F /* ModuModel.swift */; };
 		F7FDF2B42AB4E8BB009A5E8F /* ModuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FDF2B32AB4E8BB009A5E8F /* ModuViewModel.swift */; };
+		F7FDF2B62AB8D644009A5E8F /* LightRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FDF2B52AB8D644009A5E8F /* LightRepository.swift */; };
+		F7FDF2B82AB8DA60009A5E8F /* LightViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FDF2B72AB8DA60009A5E8F /* LightViewModel.swift */; };
 		F7FF8A0A28D2064900502E9E /* lights.json in Resources */ = {isa = PBXBuildFile; fileRef = F7FF8A0928D2064900502E9E /* lights.json */; };
 		F7FFB2DA28D61B3A00C31AA3 /* DFRS+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2D928D61B3A00C31AA3 /* DFRS+DataSource.swift */; };
 		F7FFB2DC28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2DB28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift */; };
@@ -600,6 +604,8 @@
 		F7364E3D2A1E46860098F243 /* NavigationalWarningAreasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreasView.swift; sourceTree = "<group>"; };
 		F7364E3F2A1E495C0098F243 /* NavigationalWarningSectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningSectionRow.swift; sourceTree = "<group>"; };
 		F7364E412A26A1740098F243 /* MarlinTestInitialization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTestInitialization.swift; sourceTree = "<group>"; };
+		F7391CA42ABA28590002ABDD /* BookmarkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkModel.swift; sourceTree = "<group>"; };
+		F7391CA62ABA348F0002ABDD /* BookmarkRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkRepository.swift; sourceTree = "<group>"; };
 		F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExportView.swift; sourceTree = "<group>"; };
 		F73ABC7F294D2E240085EDC5 /* LightRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightRange.swift; sourceTree = "<group>"; };
 		F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceTileProvider.swift; sourceTree = "<group>"; };
@@ -842,6 +848,8 @@
 		F7FDF2AF2AB4D53D009A5E8F /* ModuRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuRepository.swift; sourceTree = "<group>"; };
 		F7FDF2B12AB4D5EA009A5E8F /* ModuModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuModel.swift; sourceTree = "<group>"; };
 		F7FDF2B32AB4E8BB009A5E8F /* ModuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuViewModel.swift; sourceTree = "<group>"; };
+		F7FDF2B52AB8D644009A5E8F /* LightRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightRepository.swift; sourceTree = "<group>"; };
+		F7FDF2B72AB8DA60009A5E8F /* LightViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightViewModel.swift; sourceTree = "<group>"; };
 		F7FF8A0928D2064900502E9E /* lights.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = lights.json; sourceTree = "<group>"; };
 		F7FFB2D928D61B3A00C31AA3 /* DFRS+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DFRS+DataSource.swift"; sourceTree = "<group>"; };
 		F7FFB2DB28D61B8100C31AA3 /* DFRS+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DFRS+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
@@ -967,6 +975,8 @@
 				F7FFB31D28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift */,
 				F7275FDE28FA252800ED8D9A /* LightProtocol.swift */,
 				F73ABC7F294D2E240085EDC5 /* LightRange.swift */,
+				F7FDF2B52AB8D644009A5E8F /* LightRepository.swift */,
+				F7FDF2B72AB8DA60009A5E8F /* LightViewModel.swift */,
 			);
 			path = Light;
 			sourceTree = "<group>";
@@ -1546,6 +1556,8 @@
 				F7EFFEC22A7C10C90097E5EF /* BookmarkSummary.swift */,
 				F7EFFEC82A7DA4260097E5EF /* BookmarkListEmptyState.swift */,
 				F7EFFED02A84212B0097E5EF /* BookmarkListView.swift */,
+				F7391CA42ABA28590002ABDD /* BookmarkModel.swift */,
+				F7391CA62ABA348F0002ABDD /* BookmarkRepository.swift */,
 			);
 			path = Bookmark;
 			sourceTree = "<group>";
@@ -2509,6 +2521,7 @@
 				F7BDF76E2A13D7790083B97F /* ViewExpandButton.swift in Sources */,
 				F7D8FA772940EF7400E7D0A1 /* ChartCorrectionListViewModel.swift in Sources */,
 				F7066DB32A5CB2720058122E /* CommonDataSource.swift in Sources */,
+				F7FDF2B82AB8DA60009A5E8F /* LightViewModel.swift in Sources */,
 				F71FC0CB2A3B3EB200911BAC /* CoordinateButton.swift in Sources */,
 				F7FFB33F28DA104200C31AA3 /* FilterBottomSheet.swift in Sources */,
 				F7D8FA49293A954D00E7D0A1 /* EnumerationFilter.swift in Sources */,
@@ -2574,6 +2587,7 @@
 				F7D671DA286E3B3D00758F1C /* ExtraMapTypes.swift in Sources */,
 				F7FFB33A28D9EFDB00C31AA3 /* SearchView.swift in Sources */,
 				F740AA77289D68D800754293 /* MarlinCompactWidth.swift in Sources */,
+				F7391CA52ABA28590002ABDD /* BookmarkModel.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
 				F7FDF2B42AB4E8BB009A5E8F /* ModuViewModel.swift in Sources */,
 				F7FFB34328DD06EF00C31AA3 /* MSIListView.swift in Sources */,
@@ -2584,6 +2598,7 @@
 				F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */,
 				F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */,
 				F73ABC82295102480085EDC5 /* DataSourceTileProvider.swift in Sources */,
+				F7FDF2B62AB8D644009A5E8F /* LightRepository.swift in Sources */,
 				F707BA91287F1767006A94C4 /* RaconImage.swift in Sources */,
 				F7D671EF287475BC00758F1C /* DataSource.swift in Sources */,
 				F71DF4992858DA4700686951 /* AsamMap.swift in Sources */,
@@ -2643,6 +2658,7 @@
 				F7FFB31E28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift in Sources */,
 				F7D8FA302936C01F00E7D0A1 /* MapImage.swift in Sources */,
 				F76052C729AD37EE00F13260 /* MapLayer.swift in Sources */,
+				F7391CA72ABA348F0002ABDD /* BookmarkRepository.swift in Sources */,
 				F7D8FA3829391C7C00E7D0A1 /* FilterComparison.swift in Sources */,
 				F7F597AC2864DD5200F9B32E /* NavigationalWarningOverview.swift in Sources */,
 				F7FFB31C28D63F5500C31AA3 /* Light+MapImage.swift in Sources */,

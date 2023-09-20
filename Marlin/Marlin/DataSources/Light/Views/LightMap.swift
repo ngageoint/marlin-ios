@@ -10,7 +10,7 @@ import MapKit
 import CoreData
 import Combine
 
-class LightMap<T: LightProtocol & MapImage>: FetchRequestMap<T> {
+class LightMap<T: MapImage>: FetchRequestMap<T> {
     var userDefaultsShowLightRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
     var userDefaultsShowLightSectorRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
 

@@ -125,8 +125,10 @@ struct MarlinApp: App {
     var appState: AppState
     
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
+    var bookmarkRepository: BookmarkRepositoryManager
     var asamRepository: AsamRepositoryManager
     var moduRepository: ModuRepositoryManager
+    var lightRepository: LightRepositoryManager
 
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
@@ -142,8 +144,10 @@ struct MarlinApp: App {
         }
         .store(in: &cancellable)
         persistentStore = PersistenceController.shared
+        bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         asamRepository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
         moduRepository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        lightRepository = LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext))
         UNUserNotificationCenter.current().delegate = appDelegate
     }
 
@@ -154,8 +158,10 @@ struct MarlinApp: App {
                 .environmentObject(LocationManager.shared())
                 .environmentObject(appState)
                 .environmentObject(dataSourceList)
+                .environmentObject(bookmarkRepository)
                 .environmentObject(asamRepository)
                 .environmentObject(moduRepository)
+                .environmentObject(lightRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
                 .background(Color.surfaceColor)
         }

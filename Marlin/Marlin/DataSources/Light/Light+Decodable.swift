@@ -49,6 +49,7 @@ struct LightsProperties: Decodable {
         case deleteFlag
         case noticeWeek
         case noticeYear
+        case sectionHeader
     }
     
     let aidType: String?
@@ -79,6 +80,7 @@ struct LightsProperties: Decodable {
     let longitude: Double
     let mgrs10km: String?
     let requiresPostProcessing: Bool?
+    let sectionHeader: String?
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -168,6 +170,7 @@ struct LightsProperties: Decodable {
         
         let mgrsPosition = MGRS.from(longitude, latitude)
         self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        self.sectionHeader = nil
     }
     
     static func parsePosition(position: String) -> CLLocationCoordinate2D {

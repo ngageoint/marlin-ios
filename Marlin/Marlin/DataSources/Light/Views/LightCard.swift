@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct LightCard: View {
-    var light: Light
+    var light: LightModel
     var image: Image?
     
-    init(light: Light) {
+    init(light: LightModel) {
         self.light = light
         if let lightSectors = light.lightSectors, let uiImage = CircleImage(
             suggestedFrame: CGRect(x: 0, y: 0, width: 25, height: 25),

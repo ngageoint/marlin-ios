@@ -28,13 +28,11 @@ struct AsamSummaryView: DataSourceSummaryView {
             Text(asam.asamDescription ?? "")
                 .lineLimit(8)
                 .secondary()
-            if let asam = asam as? Bookmarkable {
+            if asam.canBookmark {
                 bookmarkNotesView(asam)
                 
             }
-            if let asam = asam as? DataSource {
-                DataSourceActionBar(data: asam, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
-            }
+            DataSourceActionBar(data: asam, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
     }
 }

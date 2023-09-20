@@ -10,6 +10,10 @@ import UIKit
 import CoreData
 
 extension ElectronicPublication: Bookmarkable {
+    var canBookmark: Bool {
+        return true
+    }
+    
     var itemKey: String {
         return s3Key ?? ""
     }

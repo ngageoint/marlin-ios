@@ -93,13 +93,13 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
         }
         .onAppear {
             if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
-                path.append(focusedItem)
+                path.append(MarlinRoute.dataSourceDetail(dataSourceKey: focusedItem.key, itemKey: focusedItem.itemKey))
             }
             Metrics.shared.dataSourceList(dataSource: T.self)
         }
         .onChange(of: focusedItem.date) { newValue in
             if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
-                path.append(focusedItem)
+                path.append(MarlinRoute.dataSourceDetail(dataSourceKey: focusedItem.key, itemKey: focusedItem.itemKey))
             }
         }
         .navigationDestination(for: T.self) { item in

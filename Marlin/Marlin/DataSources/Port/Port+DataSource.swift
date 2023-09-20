@@ -10,6 +10,10 @@ import UIKit
 import CoreData
 
 extension Port: Bookmarkable {
+    var canBookmark: Bool {
+        return true
+    }
+    
     var itemKey: String {
         return "\(portNumber)"
     }

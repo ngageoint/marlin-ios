@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RaconCard: View {    
-    @State var racon: Light
+    @State var racon: LightModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

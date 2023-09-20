@@ -24,6 +24,12 @@ class RouteWaypoint: NSManagedObject {
                     case Asam.key:
                         let asamModel = AsamModel(feature: ds.features[0])
                         return asamModel
+                    case Modu.key:
+                        let moduModel = ModuModel(feature: ds.features[0])
+                        return moduModel
+                    case Light.key:
+                        let lightModel = LightModel(feature: ds.features[0])
+                        return lightModel
                     default:
                         print("no")
                     }

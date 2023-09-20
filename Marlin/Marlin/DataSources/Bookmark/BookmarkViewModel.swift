@@ -11,24 +11,17 @@ class BookmarkViewModel: ObservableObject {
     var itemKey: String?
     var dataSource: String?
     @Published var isBookmarked: Bool = false
+    @Published var bookmark: BookmarkModel?
     
-    init(itemKey: String?, dataSource: String?) {
-        if let itemKey = itemKey, let dataSource = dataSource {
-            setViewModel(itemKey: itemKey, dataSource: dataSource)
-        }
-    }
+    var repository: (any BookmarkRepository)?
     
-    func setViewModel(itemKey: String, dataSource: String) {
+    @discardableResult
+    func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel? {
         self.itemKey = itemKey
         self.dataSource = dataSource
-        let viewContext = PersistenceController.current.viewContext
-        viewContext.perform {
-            let request = Bookmark.fetchRequest()
-            request.predicate = NSPredicate(format: "id = %@ AND dataSource = %@", itemKey, dataSource)
-            
-            let bookmarks = viewContext.fetch(request: request) ?? []
-            self.isBookmarked = !bookmarks.isEmpty
-        }
+        bookmark = repository?.getBookmark(itemKey: itemKey, dataSource: dataSource)
+        self.isBookmarked = bookmark != nil
+        return bookmark
     }
     
     func createBookmark(notes: String) {

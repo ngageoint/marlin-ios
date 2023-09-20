@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct NoticeToMarinersSummaryView: DataSourceSummaryView {
+    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+
     var noticeToMariners: NoticeToMariners
     var showBookmarkNotes: Bool = false
 
@@ -26,10 +29,13 @@ struct NoticeToMarinersSummaryView: DataSourceSummaryView {
                         .secondary()
                 }
                 Spacer()
-                BookmarkButton(viewModel: BookmarkViewModel(itemKey: noticeToMariners.itemKey, dataSource: NoticeToMariners.key))
+                BookmarkButton(viewModel: bookmarkViewModel)
             }
-        
             bookmarkNotesView(noticeToMariners)
+        }
+        .onAppear {
+            bookmarkViewModel.repository = bookmarkRepository
+            bookmarkViewModel.getBookmark(itemKey: noticeToMariners.itemKey, dataSource: noticeToMariners.key)
         }
     }
 }

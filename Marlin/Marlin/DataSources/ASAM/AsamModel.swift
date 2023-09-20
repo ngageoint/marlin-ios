@@ -10,7 +10,9 @@ import CoreLocation
 import GeoJSON
 import UIKit
 
-class AsamModel: NSObject, Locatable {
+class AsamModel: NSObject, Locatable, Bookmarkable {
+    var canBookmark: Bool = false
+    
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
@@ -41,6 +43,7 @@ class AsamModel: NSObject, Locatable {
     
     init(asam: Asam) {
         self.asam = asam
+        self.canBookmark = true
         self.asamDescription = asam.asamDescription
         self.date = asam.date
         self.hostility = asam.hostility
@@ -72,9 +75,7 @@ class AsamModel: NSObject, Locatable {
     convenience init?(feature: Feature) {
         if let json = try? JSONEncoder().encode(feature.properties), let string = String(data: json, encoding: .utf8) {
             
-            print(string)
             let decoder = JSONDecoder()
-            print("json is \(string)")
             let jsonData = Data(string.utf8)
             if let ds = try? decoder.decode(AsamProperties.self, from: jsonData) {
                 self.init(asamProperties: ds)

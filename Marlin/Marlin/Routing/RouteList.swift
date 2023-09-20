@@ -23,7 +23,6 @@ struct RouteList: View {
                         .overline()
                     HStack {
                         if let first = route.waypointArray.first {
-                            let _ = first.decodeToDataSource()
                             if let dataSourceKey = first.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
                                 DataSourceCircleImage(dataSource: type, size: 15)
                             }
@@ -32,7 +31,6 @@ struct RouteList: View {
                         }
                         Image(systemName: "ellipsis")
                         if let last = route.waypointArray.last {
-                            let _ = last.decodeToDataSource()
                             Group {
                                 if let dataSourceKey = last.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
                                     DataSourceCircleImage(dataSource: type, size: 15)

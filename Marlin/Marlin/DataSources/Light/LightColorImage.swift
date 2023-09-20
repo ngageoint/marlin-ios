@@ -16,7 +16,7 @@ struct LightSector {
 }
 
 class LightImage {
-    static func image(light: LightProtocol, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil) -> [UIImage] {
+    static func image(light: LightModel, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil) -> [UIImage] {
         var images: [UIImage] = []
         
         let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale
@@ -55,8 +55,8 @@ class LightImage {
         return images
     }
     
-    static func sectorImage(light: LightProtocol, lightSectors: [ImageSector], scale: Int, zoomLevel: Int) -> UIImage? {
-        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale - ((CGFloat(light.characteristicNumber) - 1.0) * 2)
+    static func sectorImage(light: LightModel, lightSectors: [ImageSector], scale: Int, zoomLevel: Int) -> UIImage? {
+        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale - ((CGFloat(light.characteristicNumber ?? 0) - 1.0) * 2)
         if zoomLevel > 7 {
             return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: 40 * radius, height: 40 * radius), sectors: lightSectors, radius: 8 * radius, fill: false, arcWidth: radius * 0.75)
         } else {
@@ -73,7 +73,7 @@ class LightImage {
         }
     }
     
-    static func colorImage(light: LightProtocol, lightColors: [UIColor], scale: Int, zoomLevel: Int) -> UIImage? {
+    static func colorImage(light: LightModel, lightColors: [UIColor], scale: Int, zoomLevel: Int) -> UIImage? {
         let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale
 
         // if zoom level greater than 12, draw the light more detailed, otherwise, draw a dot
@@ -91,7 +91,7 @@ class LightImage {
         }
     }
     
-    static func raconImage(light: LightProtocol, scale: Int, sectors: [ImageSector]? = nil, zoomLevel: Int) -> UIImage? {
+    static func raconImage(light: LightModel, scale: Int, sectors: [ImageSector]? = nil, zoomLevel: Int) -> UIImage? {
         let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale
 
         if zoomLevel > 10 {

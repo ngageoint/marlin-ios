@@ -8,7 +8,10 @@
 import SwiftUI
 import MapKit
 
-struct NavigationalWarningActionBar: View {    
+struct NavigationalWarningActionBar: View {
+    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+    
     var navigationalWarning: NavigationalWarning
     var showMoreDetails: Bool
     var mapName: String?
@@ -24,12 +27,16 @@ struct NavigationalWarningActionBar: View {
                 }
             }
             Spacer()
-            BookmarkButton(viewModel: BookmarkViewModel(itemKey: navigationalWarning.itemKey, dataSource: navigationalWarning.key))
+            BookmarkButton(viewModel: bookmarkViewModel)
             ShareButton(shareText: navigationalWarning.description, dataSource: navigationalWarning)
             if !showMoreDetails {
                 FocusButton(data: navigationalWarning)
             }
         }
         .buttonStyle(MaterialButtonStyle())
+        .onAppear {
+            bookmarkViewModel.repository = bookmarkRepository
+            bookmarkViewModel.getBookmark(itemKey: navigationalWarning.itemKey, dataSource: navigationalWarning.key)
+        }
     }
 }

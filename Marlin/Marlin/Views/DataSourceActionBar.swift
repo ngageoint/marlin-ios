@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct DataSourceActionBar: View {
+    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+
     var data: any DataSource
     var showMoreDetailsButton = false
     var showFocusButton = true
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     
     var body: some View {
         HStack(spacing:0) {
@@ -22,8 +25,8 @@ struct DataSourceActionBar: View {
             
             Spacer()
             Group {
-                if let bookmarkable = data as? Bookmarkable {
-                    BookmarkButton(viewModel: BookmarkViewModel(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key))
+                if let bookmarkable = data as? Bookmarkable, bookmarkable.canBookmark {
+                    BookmarkButton(viewModel: bookmarkViewModel)
                 }
                 if let data = data as? CustomStringConvertible {
                     ShareButton(shareText: data.description, dataSource: data as? (any DataSourceViewBuilder))
@@ -34,5 +37,11 @@ struct DataSourceActionBar: View {
             }.padding(.trailing, -8)
         }
         .buttonStyle(MaterialButtonStyle())
+        .onAppear {
+            bookmarkViewModel.repository = bookmarkRepository
+            if let bookmarkable = data as? Bookmarkable {
+                bookmarkViewModel.getBookmark(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key)
+            }
+        }
     }
 }

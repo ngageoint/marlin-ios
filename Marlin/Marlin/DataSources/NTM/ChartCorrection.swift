@@ -24,6 +24,10 @@ struct ChartCorrectionPropertyContainer: Decodable {
 }
 
 struct ChartCorrection: Decodable, Hashable, Identifiable, DataSource, Bookmarkable {
+    var canBookmark: Bool {
+        return true
+    }
+    
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Notice Number", key: "currNoticeNum", type: .int, requiredInFilter: false),
         DataSourceProperty(name: "Location", key: "location", type: .location, requiredInFilter: true)

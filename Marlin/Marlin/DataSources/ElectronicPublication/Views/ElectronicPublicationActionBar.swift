@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct ElectronicPublicationActionBar: View {
-
+    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+    
     @ObservedObject var electronicPublication: ElectronicPublication
     
     init(electronicPublication: ElectronicPublication) {
@@ -18,7 +20,7 @@ struct ElectronicPublicationActionBar: View {
     var body: some View {
         HStack(spacing:0) {
             Spacer()
-            BookmarkButton(viewModel: BookmarkViewModel(itemKey: electronicPublication.itemKey, dataSource: ElectronicPublication.key))
+            BookmarkButton(viewModel: bookmarkViewModel)
             if electronicPublication.isDownloading {
                 if let error = electronicPublication.error {
                     Text(error)
@@ -85,5 +87,9 @@ struct ElectronicPublicationActionBar: View {
         }
         .padding(.trailing, -8)
         .buttonStyle(MaterialButtonStyle())
+        .onAppear {
+            bookmarkViewModel.repository = bookmarkRepository
+            bookmarkViewModel.getBookmark(itemKey: electronicPublication.itemKey, dataSource: electronicPublication.key)
+        }
     }
 }

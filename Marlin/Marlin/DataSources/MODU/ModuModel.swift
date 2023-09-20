@@ -11,6 +11,7 @@ import GeoJSON
 import UIKit
 
 class ModuModel: NSObject, Locatable, Bookmarkable {
+    var canBookmark: Bool = false
     
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
@@ -45,6 +46,7 @@ class ModuModel: NSObject, Locatable, Bookmarkable {
     
     init(modu: Modu) {
         self.modu = modu
+        self.canBookmark = true
         self.date = modu.date
         self.latitude = modu.latitude
         self.longitude = modu.longitude

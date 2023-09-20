@@ -9,7 +9,7 @@ import SwiftUI
 import CoreData
 import MapKit
 
-class LightMapViewModel: NSObject, LightMapViewModelProtocol {
+class LightMapViewModel: NSObject {
    
     var itemKey: String {
         return "\(featureNumber ?? "")--\(volumeNumber ?? "")--\(characteristicNumber)"
@@ -115,10 +115,11 @@ struct LightSettingsView: View {
     @AppStorage("actualRangeLights") var actualRangeLights = false
     @AppStorage("actualRangeSectorLights") var actualRangeSectorLights = false
     
-    var lights: [LightMapViewModel] = []
+    var lights: [LightModel] = []
     
     init() {
-        let light1: LightMapViewModel = LightMapViewModel(
+        // need to allow passing these to the light model
+        let light1: LightModel = LightModel(
             characteristicNumber: 1,
             volumeNumber: "PUB 110",
             featureNumber: "14840",
@@ -129,7 +130,7 @@ struct LightSettingsView: View {
             remarks: "R. 120°-163°, W.-170°, G.-200°.\n",
             characteristic: "Fl.(2)W.R.G.\nperiod 6s \nfl. 1.0s, ec. 1.0s \nfl. 1.0s, ec. 3.0s \n",
             range: "W. 12 ; R. 9 ; G. 9")
-        let light2: LightMapViewModel = LightMapViewModel(
+        let light2: LightModel = LightModel(
             characteristicNumber: 1,
             volumeNumber: "PUB 110",
             featureNumber: "14836",
@@ -147,7 +148,7 @@ struct LightSettingsView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
-                    DataSourceLocationMapView(dataSourceLocation: lights[0], mapName: "Light Detail Map", mixins: [LightMap<LightMapViewModel>(objects: lights)])
+                    DataSourceLocationMapView(dataSourceLocation: lights[0], mapName: "Light Detail Map", mixins: [LightMap<LightModel>(objects: lights)])
                     .frame(maxWidth: .infinity, minHeight: geometry.size.height * 0.3, maxHeight: geometry.size.height * 0.3)
                 List {
                     Section {

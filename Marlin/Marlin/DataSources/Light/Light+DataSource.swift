@@ -15,6 +15,10 @@ import geopackage_ios
 import ExceptionCatcher
 
 extension Light: Bookmarkable {
+    var canBookmark: Bool {
+        return true
+    }
+    
     var itemKey: String {
         return "\(featureNumber ?? "")--\(volumeNumber ?? "")--\(characteristicNumber)"
     }

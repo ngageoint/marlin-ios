@@ -11,6 +11,10 @@ import CoreData
 import Combine
 
 extension Asam: Bookmarkable {
+    var canBookmark: Bool {
+        return true
+    }
+    
     var itemKey: String {
         return reference ?? ""
     }

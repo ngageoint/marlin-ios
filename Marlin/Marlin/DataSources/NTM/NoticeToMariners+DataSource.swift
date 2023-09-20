@@ -45,6 +45,10 @@ extension NoticeToMariners: DataSource {
 }
 
 extension NoticeToMariners: Bookmarkable {
+    var canBookmark: Bool {
+        return true
+    }
+    
     var itemKey: String {
         return "\(noticeNumber)"
     }

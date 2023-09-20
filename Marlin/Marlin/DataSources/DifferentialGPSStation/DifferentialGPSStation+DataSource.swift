@@ -10,6 +10,10 @@ import UIKit
 import CoreData
 
 extension DifferentialGPSStation: Bookmarkable {
+    var canBookmark: Bool {
+        return true
+    }
+    
     var itemKey: String {
         return "\(featureNumber)--\(volumeNumber ?? "")"
     }

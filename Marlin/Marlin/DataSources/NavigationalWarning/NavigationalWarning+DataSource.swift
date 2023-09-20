@@ -13,6 +13,10 @@ import sf_ios
 import sf_wkt_ios
 
 extension NavigationalWarning: Bookmarkable {
+    var canBookmark: Bool {
+        return true
+    }
+    
     var itemKey: String {
         return "\(msgYear)--\(msgNumber)--\(navArea ?? "")"
     }

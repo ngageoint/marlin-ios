@@ -40,7 +40,7 @@ struct AsamProperties: Decodable {
     }
     
     private enum InternalCodingKeys: String, CodingKey {
-        case description
+        case asamDescription
     }
     
     let reference: String?
@@ -86,7 +86,7 @@ struct AsamProperties: Decodable {
         self.asamDescription = try? values.decode(String.self, forKey: .asamDescription)
         if self.asamDescription == nil {
             let otherValues = try decoder.container(keyedBy: InternalCodingKeys.self)
-            self.asamDescription = try otherValues.decode(String.self, forKey: .description)
+            self.asamDescription = try? otherValues.decode(String.self, forKey: .asamDescription)
         }
         var parsedDate: Date? = nil
         if let dateString = try? values.decode(String.self, forKey: .date) {

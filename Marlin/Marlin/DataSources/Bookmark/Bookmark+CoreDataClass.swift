@@ -11,10 +11,11 @@ import UIKit
 import SwiftUI
 
 protocol Bookmarkable {
+    var canBookmark: Bool { get }
     var key: String { get }
     var itemKey: String { get }
-    var bookmark: Bookmark? { get }
-    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable?
+//    var bookmark: Bookmark? { get }
+//    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable?
 }
 
 extension Bookmarkable {

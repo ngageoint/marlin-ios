@@ -115,6 +115,11 @@ struct MarlinRouteModifier: ViewModifier {
                         AsamDetailView(reference: itemKey, waypointURI: waypointURI)
                     case Modu.key:
                         ModuDetailView(name: itemKey, waypointURI: waypointURI)
+                    case Light.key:
+                        let split = itemKey.split(separator: "--")
+                        if split.count == 3 {
+                            LightDetailView(featureNumber: "\(split[0])", volumeNumber: "\(split[1])", waypointURI: waypointURI)
+                        }
                     default:
                         EmptyView()
                     }

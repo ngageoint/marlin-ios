@@ -10,6 +10,10 @@ import UIKit
 import CoreData
 
 extension Modu: Bookmarkable {
+    var canBookmark: Bool {
+        return true
+    }
+    
     var itemKey: String {
         return name ?? ""
     }
