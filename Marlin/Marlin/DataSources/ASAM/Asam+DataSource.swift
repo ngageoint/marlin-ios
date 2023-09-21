@@ -108,7 +108,7 @@ extension Asam: BatchImportable {
         return UserDefaults.standard.dataSourceEnabled(Asam.self) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(Asam.self)
     }
     
-    static func newBatchInsertRequest(with propertyList: [AsamProperties]) -> NSBatchInsertRequest {
+    static func newBatchInsertRequest(with propertyList: [AsamModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
         
@@ -124,7 +124,7 @@ extension Asam: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [AsamProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(from propertiesList: [AsamModel], taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

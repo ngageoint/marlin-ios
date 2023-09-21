@@ -9,16 +9,34 @@ import Foundation
 import CoreLocation
 import GeoJSON
 import UIKit
+import OSLog
+import mgrs_ios
 
-class AsamModel: NSObject, Locatable, Bookmarkable {
+struct AsamModel: Locatable, Bookmarkable, Decodable {
     var canBookmark: Bool = false
+    
+    private enum CodingKeys: String, CodingKey {
+        case reference
+        case position
+        case navArea
+        case subreg
+        case hostility
+        case victim
+        case latitude
+        case longitude
+        case asamDescription = "description"
+        case date
+    }
+    
+    private enum InternalCodingKeys: String, CodingKey {
+        case asamDescription
+    }
     
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
     var asam: Asam?
-    var asamProperties: AsamProperties?
     
     var asamDescription: String?
     var date: Date?
@@ -33,8 +51,7 @@ class AsamModel: NSObject, Locatable, Bookmarkable {
     var victim: String?
     
     func isEqualTo(_ other: AsamModel) -> Bool {
-        guard let otherShape = other as? Self else { return false }
-        return self.asam == otherShape.asam
+        return self.asam == other.asam
     }
     
     static func == (lhs: AsamModel, rhs: AsamModel) -> Bool {
@@ -57,34 +74,81 @@ class AsamModel: NSObject, Locatable, Bookmarkable {
         self.victim = asam.victim
     }
     
-    init(asamProperties: AsamProperties) {
-        self.asamProperties = asamProperties
-        self.asamDescription = asamProperties.asamDescription
-        self.date = asamProperties.date
-        self.hostility = asamProperties.hostility
-        self.latitude = asamProperties.latitude
-        self.longitude = asamProperties.longitude
-        self.mgrs10km = asamProperties.mgrs10km
-        self.navArea = asamProperties.navArea
-        self.position = asamProperties.position
-        self.reference = asamProperties.reference
-        self.subreg = asamProperties.subreg
-        self.victim = asamProperties.victim
-    }
-    
-    convenience init?(feature: Feature) {
+    init?(feature: Feature) {
         if let json = try? JSONEncoder().encode(feature.properties), let string = String(data: json, encoding: .utf8) {
             
             let decoder = JSONDecoder()
             let jsonData = Data(string.utf8)
-            if let ds = try? decoder.decode(AsamProperties.self, from: jsonData) {
-                self.init(asamProperties: ds)
+            
+            if let ds = try? decoder.decode(AsamModel.self, from: jsonData) {
+                self = ds
             } else {
                 return nil
             }
         } else {
             return nil
         }
+    }
+    
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let rawReference = try? values.decode(String.self, forKey: .reference)
+        let rawLatitude = try? values.decode(Double.self, forKey: .latitude)
+        let rawLongitude = try? values.decode(Double.self, forKey: .longitude)
+        
+        guard let reference = rawReference,
+              let latitude = rawLatitude,
+              let longitude = rawLongitude
+        else {
+            let values = "reference = \(rawReference?.description ?? "nil"), "
+            + "latitude = \(rawLatitude?.description ?? "nil"), "
+            + "longitude = \(rawLongitude?.description ?? "nil")"
+            
+            let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "parsing")
+            logger.info("Ignored: \(values)")
+            
+            throw MSIError.missingData
+        }
+        
+        self.reference = reference
+        self.latitude = latitude
+        self.longitude = longitude
+        self.position = try? values.decode(String.self, forKey: .position)
+        self.navArea = try? values.decode(String.self, forKey: .navArea)
+        self.subreg = try? values.decode(String.self, forKey: .subreg)
+        self.hostility = try? values.decode(String.self, forKey: .hostility)
+        self.victim = try? values.decode(String.self, forKey: .victim)
+        self.asamDescription = try? values.decode(String.self, forKey: .asamDescription)
+        if self.asamDescription == nil {
+            let otherValues = try decoder.container(keyedBy: InternalCodingKeys.self)
+            self.asamDescription = try? otherValues.decode(String.self, forKey: .asamDescription)
+        }
+        var parsedDate: Date? = nil
+        if let dateString = try? values.decode(String.self, forKey: .date) {
+            if let date = Asam.dateFormatter.date(from: dateString) {
+                parsedDate = date
+            }
+        }
+        self.date = parsedDate
+        
+        let mgrsPosition = MGRS.from(longitude, latitude)
+        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+    }
+    
+    var dictionaryValue: [String: Any?] {
+        [
+            "reference": reference,
+            "latitude": latitude,
+            "longitude": longitude,
+            "position": position,
+            "navArea": navArea,
+            "subreg": subreg,
+            "hostility": hostility,
+            "victim": victim,
+            "asamDescription": asamDescription,
+            "date": date,
+            "mgrs10km": mgrs10km
+        ]
     }
 }
 
