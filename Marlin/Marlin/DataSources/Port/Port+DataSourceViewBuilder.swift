@@ -14,10 +14,10 @@ extension Port: DataSourceViewBuilder {
     }
     
     var detailView: AnyView {
-        AnyView(PortDetailView(port: self))
+        return AnyView(PortDetailView(portNumber: portNumber))
     }
     
     var summary: some DataSourceSummaryView {
-        PortSummaryView(port: self)
+        PortSummaryView(port: PortModel(port: self))
     }
 }

@@ -154,6 +154,9 @@
 		F7364E422A26A1740098F243 /* MarlinTestInitialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E412A26A1740098F243 /* MarlinTestInitialization.swift */; };
 		F7391CA52ABA28590002ABDD /* BookmarkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CA42ABA28590002ABDD /* BookmarkModel.swift */; };
 		F7391CA72ABA348F0002ABDD /* BookmarkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CA62ABA348F0002ABDD /* BookmarkRepository.swift */; };
+		F7391CA92ABB690D0002ABDD /* PortModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CA82ABB690D0002ABDD /* PortModel.swift */; };
+		F7391CAB2ABB98440002ABDD /* PortRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CAA2ABB98440002ABDD /* PortRepository.swift */; };
+		F7391CAD2ABC85140002ABDD /* PortViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CAC2ABC85140002ABDD /* PortViewModel.swift */; };
 		F73927962A439D2700DE1E79 /* GeoPackageExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */; };
 		F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC7F294D2E240085EDC5 /* LightRange.swift */; };
 		F73ABC82295102480085EDC5 /* DataSourceTileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */; };
@@ -606,6 +609,9 @@
 		F7364E412A26A1740098F243 /* MarlinTestInitialization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTestInitialization.swift; sourceTree = "<group>"; };
 		F7391CA42ABA28590002ABDD /* BookmarkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkModel.swift; sourceTree = "<group>"; };
 		F7391CA62ABA348F0002ABDD /* BookmarkRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkRepository.swift; sourceTree = "<group>"; };
+		F7391CA82ABB690D0002ABDD /* PortModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortModel.swift; sourceTree = "<group>"; };
+		F7391CAA2ABB98440002ABDD /* PortRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortRepository.swift; sourceTree = "<group>"; };
+		F7391CAC2ABC85140002ABDD /* PortViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortViewModel.swift; sourceTree = "<group>"; };
 		F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExportView.swift; sourceTree = "<group>"; };
 		F73ABC7F294D2E240085EDC5 /* LightRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightRange.swift; sourceTree = "<group>"; };
 		F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceTileProvider.swift; sourceTree = "<group>"; };
@@ -999,6 +1005,9 @@
 				F7FFB2F528D6340B00C31AA3 /* Port+MapImage.swift */,
 				F7FFB2F728D6344000C31AA3 /* Port+Decodable.swift */,
 				F7FFB2F928D6349900C31AA3 /* Port+DataSourceViewBuilder.swift */,
+				F7391CA82ABB690D0002ABDD /* PortModel.swift */,
+				F7391CAA2ABB98440002ABDD /* PortRepository.swift */,
+				F7391CAC2ABC85140002ABDD /* PortViewModel.swift */,
 			);
 			path = Port;
 			sourceTree = "<group>";
@@ -2488,6 +2497,7 @@
 				F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */,
 				F7C23E06290844740002A7DF /* ElectronicPublication+Decodable.swift in Sources */,
 				F7D671C5286C8A3100758F1C /* GeoPackageLayer.swift in Sources */,
+				F7391CA92ABB690D0002ABDD /* PortModel.swift in Sources */,
 				F70BCE9929C4F1AE00AEF73D /* UserLayersMap.swift in Sources */,
 				F7EFFEC92A7DA4260097E5EF /* BookmarkListEmptyState.swift in Sources */,
 				F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */,
@@ -2554,6 +2564,7 @@
 				F71D288128C29F0200F1775C /* BundleExtensions.swift in Sources */,
 				F71FC0DB2A3BBC7E00911BAC /* DataSourceMapGrid.swift in Sources */,
 				F7648ED42AABC8D2007E9A54 /* AsamViewModel.swift in Sources */,
+				F7391CAD2ABC85140002ABDD /* PortViewModel.swift in Sources */,
 				F71FC0D92A3BBBD000911BAC /* DataSourceGridSquare.swift in Sources */,
 				F7FFB30028D6376100C31AA3 /* NavigationalWarning+Decodable.swift in Sources */,
 				F7FFB30628D63A7200C31AA3 /* Asam+DataSourceViewBuilder.swift in Sources */,
@@ -2564,6 +2575,7 @@
 				F71DF4862857954A00686951 /* Modu+CoreDataClass.swift in Sources */,
 				F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */,
 				F7D671E72871D46000758F1C /* SideMenuContent.swift in Sources */,
+				F7391CAB2ABB98440002ABDD /* PortRepository.swift in Sources */,
 				F7F59789285A277000F9B32E /* Card.swift in Sources */,
 				F7830C0B2A93CDD4008376F7 /* RouteMapView.swift in Sources */,
 				F7FFB2FC28D6361800C31AA3 /* NavigationalWarning+DataSource.swift in Sources */,

@@ -30,6 +30,9 @@ class RouteWaypoint: NSManagedObject {
                     case Light.key:
                         let lightModel = LightModel(feature: ds.features[0])
                         return lightModel
+                    case Port.key:
+                        let portModel = PortModel(feature: ds.features[0])
+                        return portModel
                     default:
                         print("no")
                     }

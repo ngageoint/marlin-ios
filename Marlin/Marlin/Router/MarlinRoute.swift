@@ -73,9 +73,7 @@ struct MarlinRouteModifier: ViewModifier {
                     case Modu.key:
                         ModuDetailView(name: itemKey)
                     case Port.key:
-                        if let port = Port.getItem(context: PersistenceController.current.viewContext, itemKey: itemKey) as? Port {
-                            PortDetailView(port: port)
-                        }
+                        PortDetailView(portNumber: Int64(itemKey))
                     case NavigationalWarning.key:
 
                         if let navWarning = NavigationalWarning.getItem(context: PersistenceController.current.viewContext, itemKey: itemKey) as? NavigationalWarning {
@@ -120,6 +118,8 @@ struct MarlinRouteModifier: ViewModifier {
                         if split.count == 3 {
                             LightDetailView(featureNumber: "\(split[0])", volumeNumber: "\(split[1])", waypointURI: waypointURI)
                         }
+                    case Port.key:
+                        PortDetailView(portNumber: Int64(itemKey), waypointURI: waypointURI)
                     default:
                         EmptyView()
                     }

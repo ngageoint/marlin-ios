@@ -10,9 +10,9 @@ import MapKit
 import CoreData
 import Combine
 
-class PortMap<T: Port & MapImage>: FetchRequestMap<T> {
+class PortMap<T: MapImage>: FetchRequestMap<T> {
     override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
-        super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
+        super.init(fetchPredicate: fetchPredicate, objects: objects, showAsTiles: showAsTiles)
         self.sortDescriptors = [NSSortDescriptor(keyPath: \Port.portNumber, ascending: true)]
         self.focusNotificationName = .FocusPort
         self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMapport)

@@ -16,7 +16,7 @@ struct PortSummaryView: DataSourceSummaryView {
     @EnvironmentObject var locationManager: LocationManager
     @State var distance: String?
 
-    var port: Port
+    var port: PortModel
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
     var measurementFormatter: MeasurementFormatter {

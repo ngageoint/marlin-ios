@@ -56,6 +56,7 @@ struct PortProperties: Decodable {
         case etaMessage
         case firstPortOfEntry
         case garbageDisposal
+        case goodHoldingGround
         case harborSize
         case harborType
         case harborUse
@@ -167,6 +168,7 @@ struct PortProperties: Decodable {
     let etaMessage: String?
     let firstPortOfEntry: String?
     let garbageDisposal: String?
+    let goodHoldingGround: String?
     let harborSize: String?
     let harborType: String?
     let harborUse: String?
@@ -313,6 +315,7 @@ struct PortProperties: Decodable {
         self.etaMessage = try? values.decode(String.self, forKey: .etaMessage)
         self.firstPortOfEntry = try? values.decode(String.self, forKey: .firstPortOfEntry)
         self.garbageDisposal = try? values.decode(String.self, forKey: .garbageDisposal)
+        self.goodHoldingGround = try? values.decode(String.self, forKey: .goodHoldingGround)
         self.harborSize = try? values.decode(String.self, forKey: .harborSize)
         self.harborType = try? values.decode(String.self, forKey: .harborType)
         self.harborUse = try? values.decode(String.self, forKey: .harborUse)
@@ -444,6 +447,7 @@ struct PortProperties: Decodable {
             "etaMessage": etaMessage,
             "firstPortOfEntry": firstPortOfEntry,
             "garbageDisposal": garbageDisposal,
+            "goodHoldingGround": goodHoldingGround,
             "harborSize": harborSize,
             "harborType": harborType,
             "harborUse": harborUse,
