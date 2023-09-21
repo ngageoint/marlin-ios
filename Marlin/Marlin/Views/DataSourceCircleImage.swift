@@ -12,7 +12,6 @@ struct DataSourceCircleImage: View {
     var size: CGFloat = 30
     var body: some View {
         if let imageName = dataSource.imageName {
-            let _ = NSLog("image name \(imageName)")
             Image(imageName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -22,7 +21,6 @@ struct DataSourceCircleImage: View {
                 .background(Color(dataSource.color))
                 .clipShape(Circle())
         } else if let systemImageName = dataSource.systemImageName {
-            let _ = NSLog("system name \(systemImageName)")
             Image(systemName: systemImageName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
