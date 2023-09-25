@@ -98,7 +98,7 @@ extension Modu: BatchImportable {
         return UserDefaults.standard.dataSourceEnabled(Modu.self) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(Modu.self)
     }
     
-    static func newBatchInsertRequest(with propertyList: [ModuProperties]) -> NSBatchInsertRequest {
+    static func newBatchInsertRequest(with propertyList: [ModuModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
         
@@ -114,7 +114,7 @@ extension Modu: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [ModuProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(from propertiesList: [ModuModel], taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

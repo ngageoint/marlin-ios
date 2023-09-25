@@ -9,16 +9,47 @@ import Foundation
 import CoreLocation
 import GeoJSON
 import UIKit
+import OSLog
+import mgrs_ios
 
-class ModuModel: NSObject, Locatable, Bookmarkable {
+struct ModuModel: Locatable, Bookmarkable, Decodable {
     var canBookmark: Bool = false
+    
+    private enum CodingKeys: String, CodingKey {
+        case subregion
+        case region
+        case longitude
+        case latitude
+        case distance
+        case specialStatus
+        case rigStatus
+        case position
+        case navArea
+        case name
+        case date
+    }
+    
+    var dictionaryValue: [String: Any?] {
+        [
+            "subregion": subregion,
+            "region": region,
+            "longitude": longitude,
+            "latitude": latitude,
+            "distance": distance,
+            "specialStatus": specialStatus,
+            "rigStatus": rigStatus,
+            "position": position,
+            "navArea": navArea,
+            "name": name,
+            "date": date
+        ]
+    }
     
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
     var modu: Modu?
-    var moduProperties: ModuProperties?
     
     var date: Date?
     var distance: Double?
@@ -28,16 +59,15 @@ class ModuModel: NSObject, Locatable, Bookmarkable {
     var name: String?
     var navArea: String?
     var position: String?
-    var region: Int64
+    var region: Int?
     var rigStatus: String?
     var specialStatus: String?
-    var subregion: Int64
+    var subregion: Int?
     
     var bookmark: Bookmark?
     
     func isEqualTo(_ other: ModuModel) -> Bool {
-        guard let otherShape = other as? Self else { return false }
-        return self.modu == otherShape.modu
+        return self.modu == other.modu
     }
     
     static func == (lhs: ModuModel, rhs: ModuModel) -> Bool {
@@ -54,36 +84,64 @@ class ModuModel: NSObject, Locatable, Bookmarkable {
         self.name = modu.name
         self.navArea = modu.navArea
         self.position = modu.position
-        self.region = modu.region
+        self.region = Int(modu.region)
         self.rigStatus = modu.rigStatus
         self.specialStatus = modu.specialStatus
-        self.subregion = modu.subregion
+        self.subregion = Int(modu.subregion)
     }
     
-    init(moduProperties: ModuProperties) {
-        self.moduProperties = moduProperties
-        self.date = moduProperties.date
-        self.latitude = moduProperties.latitude
-        self.longitude = moduProperties.longitude
-        self.mgrs10km = moduProperties.mgrs10km
-        self.name = moduProperties.name
-        self.navArea = moduProperties.navArea
-        self.position = moduProperties.position
-        self.region = Int64(moduProperties.region ?? 0)
-        self.rigStatus = moduProperties.rigStatus
-        self.specialStatus = moduProperties.specialStatus
-        self.subregion = Int64(moduProperties.subregion ?? 0)
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let rawName = try? values.decode(String.self, forKey: .name)
+        let rawLatitude = try? values.decode(Double.self, forKey: .latitude)
+        let rawLongitude = try? values.decode(Double.self, forKey: .longitude)
+        
+        guard let name = rawName,
+              let latitude = rawLatitude,
+              let longitude = rawLongitude
+        else {
+            let values = "name = \(rawName?.description ?? "nil"), "
+            + "latitude = \(rawLatitude?.description ?? "nil"), "
+            + "longitude = \(rawLongitude?.description ?? "nil")"
+            
+            let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "parsing")
+            logger.debug("Ignored: \(values)")
+            
+            throw MSIError.missingData
+        }
+        
+        self.name = name
+        self.latitude = latitude
+        self.longitude = longitude
+        self.subregion = try? values.decode(Int.self, forKey: .subregion)
+        self.region = try? values.decode(Int.self, forKey: .region)
+        self.distance = try? values.decode(Double.self, forKey: .distance)
+        self.specialStatus = try? values.decode(String.self, forKey: .specialStatus)
+        self.rigStatus = try? values.decode(String.self, forKey: .rigStatus)
+        self.position = try? values.decode(String.self, forKey: .position)
+        self.navArea = try? values.decode(String.self, forKey: .navArea)
+        
+        var parsedDate: Date? = nil
+        if let dateString = try? values.decode(String.self, forKey: .date) {
+            if let date = Modu.dateFormatter.date(from: dateString) {
+                parsedDate = date
+            }
+        }
+        self.date = parsedDate
+        
+        let mgrsPosition = MGRS.from(longitude, latitude)
+        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
     }
     
-    convenience init?(feature: Feature) {
+    init?(feature: Feature) {
         if let json = try? JSONEncoder().encode(feature.properties), let string = String(data: json, encoding: .utf8) {
             
             print(string)
             let decoder = JSONDecoder()
             print("json is \(string)")
             let jsonData = Data(string.utf8)
-            if let ds = try? decoder.decode(ModuProperties.self, from: jsonData) {
-                self.init(moduProperties: ds)
+            if let ds = try? decoder.decode(ModuModel.self, from: jsonData) {
+                self = ds
             } else {
                 return nil
             }
