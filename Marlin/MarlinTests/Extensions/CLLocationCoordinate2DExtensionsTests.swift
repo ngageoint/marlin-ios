@@ -295,4 +295,26 @@ final class CLLocationCoordinate2DExtensionsTests: XCTestCase {
         invalidString = "100089S"
         XCTAssertFalse(CLLocationCoordinate2D.validateLatitudeFromDMS(latitude: invalidString))
     }
+    
+    func testRenderNavWarningCorrectly() {
+        let tileSize = 512.0
+        // Check behavior when a nav warning crosses the prime meridian AND 90E
+        // Tile (left of prime meridian): 66.51S,90.00W - 0,0
+        let tileBounds1 = MapBoundingBox(swCorner: (x: -10018754, y: -10018754), neCorner: (x: 0, y: 0))
+        let testCoord1 = CLLocationCoordinate2D(latitude: -8.89, longitude: 92.46)
+        let pixel = testCoord1.toPixel(zoomLevel: 2, tileBounds3857: tileBounds1, tileSize: tileSize, canCross180thMeridian: false)
+        // 182 degrees between left edge of tile (90W) and coord (92E) => coord is 2.03 tiles to the right
+        XCTAssertGreaterThan(pixel.x, 2 * tileSize)
+        XCTAssertLessThan(pixel.x, 2.1 * tileSize)
+        
+        // Check behavior when a nav warning nears the 180th meridian AND crosses 90W
+        // Tile (left of 180th meridian): 90.00E,0.00N - 180.00E,66.51N
+        let tileBounds2 = MapBoundingBox(swCorner: (x: 10018754, y: 0), neCorner: (x: 20037508, y: 10018754))
+        let testCoord2 = CLLocationCoordinate2D(latitude: 28.88, longitude: -175.0)
+        let pixel2 = testCoord2.toPixel(zoomLevel: 2, tileBounds3857: tileBounds2, tileSize: tileSize, canCross180thMeridian: false)
+        // avoid placing coord right of the current tile (beyond 180 degrees) to prevent render issues
+        // 265 degrees between left edge of tile (90E) and coord (175W) => coord is 2.94 tiles to the left
+        XCTAssertLessThan(pixel2.x, -2.9 * tileSize)
+        XCTAssertGreaterThan(pixel2.x, -3 * tileSize)
+    }
 }
