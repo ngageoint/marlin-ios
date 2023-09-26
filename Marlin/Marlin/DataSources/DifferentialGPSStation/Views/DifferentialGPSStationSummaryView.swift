@@ -10,14 +10,14 @@ import SwiftUI
 struct DifferentialGPSStationSummaryView: DataSourceSummaryView {
     var showBookmarkNotes: Bool = false
 
-    var differentialGPSStation: DifferentialGPSStation
+    var differentialGPSStation: DifferentialGPSStationModel
     var showMoreDetails: Bool = false
     var showSectionHeader: Bool = false
     var showTitle: Bool = true
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("\(differentialGPSStation.featureNumber) \(differentialGPSStation.volumeNumber ?? "")")
+            Text("\(differentialGPSStation.featureNumber ?? 0) \(differentialGPSStation.volumeNumber ?? "")")
                 .overline()
             if showTitle {
                 Text("\(differentialGPSStation.name ?? "")")

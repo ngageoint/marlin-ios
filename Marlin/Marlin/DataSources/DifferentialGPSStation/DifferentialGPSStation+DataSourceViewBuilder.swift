@@ -14,10 +14,14 @@ extension DifferentialGPSStation: DataSourceViewBuilder {
     }
     
     var detailView: AnyView {
-        AnyView(DifferentialGPSStationDetailView(differentialGPSStation: self))
+        if let volumeNumber = volumeNumber {
+            return AnyView(DifferentialGPSStationDetailView(featureNumber: Int(featureNumber), volumeNumber: volumeNumber))
+        } else {
+            return AnyView(EmptyView())
+        }
     }
     
     var summary: some DataSourceSummaryView {
-        DifferentialGPSStationSummaryView(differentialGPSStation: self)
+        DifferentialGPSStationSummaryView(differentialGPSStation: DifferentialGPSStationModel(differentialGPSStation: self))
     }
 }

@@ -14,18 +14,24 @@ struct DifferentialGPSStationPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
         case ngalol
     }
-    let ngalol: [DifferentialGPSStationProperties]
+    let ngalol: [DifferentialGPSStationModel]
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        ngalol = try container.decode([Throwable<DifferentialGPSStationProperties>].self, forKey: .ngalol).compactMap { try? $0.result.get() }
+        ngalol = try container.decode([Throwable<DifferentialGPSStationModel>].self, forKey: .ngalol).compactMap { try? $0.result.get() }
     }
 }
 
-struct DifferentialGPSStationProperties: Decodable {
-    
-    // MARK: Codable
-    
+struct DifferentialGPSStationModel: Locatable, Bookmarkable, Decodable {
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+        
+    var itemKey: String {
+        return "\(featureNumber ?? 0)--\(volumeNumber ?? "")"
+    }
+    var canBookmark: Bool = false
+        
     private enum CodingKeys: String, CodingKey {
         case aidType
         case deleteFlag
@@ -48,6 +54,8 @@ struct DifferentialGPSStationProperties: Decodable {
         case volumeNumber
     }
     
+    var differentialGPSStation: DifferentialGPSStation?
+    
     let aidType: String?
     let deleteFlag: String?
     let featureNumber: Int?
@@ -66,10 +74,39 @@ struct DifferentialGPSStationProperties: Decodable {
     let regionHeading: String?
     let remarks: String?
     let removeFromList: String?
+    let sectionHeader: String?
     let stationID: String?
     let transferRate: Int?
     let volumeNumber: String?
     let mgrs10km: String?
+    
+    init(differentialGPSStation: DifferentialGPSStation) {
+        self.canBookmark = true
+        self.differentialGPSStation = differentialGPSStation
+        self.aidType = differentialGPSStation.aidType
+        self.deleteFlag = differentialGPSStation.deleteFlag
+        self.featureNumber = Int(differentialGPSStation.featureNumber)
+        self.frequency = Int(differentialGPSStation.frequency)
+        self.geopoliticalHeading = differentialGPSStation.geopoliticalHeading
+        self.latitude = differentialGPSStation.latitude
+        self.longitude = differentialGPSStation.longitude
+        self.name = differentialGPSStation.name
+        self.noticeNumber = Int(differentialGPSStation.noticeNumber)
+        self.noticeWeek = differentialGPSStation.noticeWeek
+        self.noticeYear = differentialGPSStation.noticeYear
+        self.position = differentialGPSStation.position
+        self.postNote = differentialGPSStation.postNote
+        self.precedingNote = differentialGPSStation.precedingNote
+        self.range = Int(differentialGPSStation.range)
+        self.regionHeading = differentialGPSStation.regionHeading
+        self.remarks = differentialGPSStation.remarks
+        self.removeFromList = differentialGPSStation.removeFromList
+        self.sectionHeader = differentialGPSStation.sectionHeader
+        self.stationID = differentialGPSStation.stationID
+        self.transferRate = Int(differentialGPSStation.transferRate)
+        self.volumeNumber = differentialGPSStation.volumeNumber
+        self.mgrs10km = differentialGPSStation.mgrs10km
+    }
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -126,10 +163,11 @@ struct DifferentialGPSStationProperties: Decodable {
         } else {
             self.stationID = nil
         }
+        self.sectionHeader = nil
         self.transferRate = try? values.decode(Int.self, forKey: .transferRate)
         
         if let position = self.position {
-            let coordinate = DifferentialGPSStationProperties.parsePosition(position: position)
+            let coordinate = DifferentialGPSStationModel.parsePosition(position: position)
             self.longitude = coordinate.longitude
             self.latitude = coordinate.latitude
         } else {
@@ -213,8 +251,111 @@ struct DifferentialGPSStationProperties: Decodable {
             "removeFromList": removeFromList,
             "stationID": stationID,
             "transferRate": transferRate,
-            "volumeNumber": volumeNumber
+            "volumeNumber": volumeNumber,
+            "sectionHeader": sectionHeader
             
         ]
+    }
+    
+    var additionalKeyValues: [KeyValue] {
+        return [
+            KeyValue(key: "Number", value: featureNumber?.zeroIsEmptyString),
+            KeyValue(key: "Name & Location", value: name),
+            KeyValue(key: "Geopolitical Heading", value: geopoliticalHeading),
+            KeyValue(key: "Position", value: position),
+            KeyValue(key: "Station ID", value: stationID),
+            KeyValue(key: "Range (nmi)", value: range?.zeroIsEmptyString),
+            KeyValue(key: "Frequency (kHz)", value: frequency?.zeroIsEmptyString),
+            KeyValue(key: "Transfer Rate", value: transferRate?.zeroIsEmptyString),
+            KeyValue(key: "Remarks", value: remarks),
+            KeyValue(key: "Notice Number", value: noticeNumber?.zeroIsEmptyString),
+            KeyValue(key: "Preceding Note", value: precedingNote),
+            KeyValue(key: "Post Note", value: postNote)
+        ]
+    }
+    
+    var description: String {
+        return "Differential GPS Station\n\n" +
+        "aidType \(aidType ?? "")\n" +
+        "deleteFlag \(deleteFlag ?? "")\n" +
+        "featureNumber \(featureNumber ?? 0)\n" +
+        "frequency \(frequency ?? 0)\n" +
+        "geopoliticalHeading \(geopoliticalHeading ?? "")\n" +
+        "latitude \(latitude)\n" +
+        "longitude \(longitude)\n" +
+        "name \(name ?? "")\n" +
+        "noticeNumber \(noticeNumber ?? 0)\n" +
+        "noticeWeek \(noticeWeek ?? "")\n" +
+        "noticeYear \(noticeYear ?? "")\n" +
+        "position \(position ?? "")\n" +
+        "postNote \(postNote ?? "")\n" +
+        "precedingNote \(precedingNote ?? "")\n" +
+        "range \(range ?? 0)\n" +
+        "remarks \(remarks ?? "")\n" +
+        "regionHeading \(regionHeading ?? "")\n" +
+        "removeFromList \(removeFromList ?? "")\n" +
+        "stationID \(stationID ?? "")\n" +
+        "transferRate \(transferRate ?? 0)\n" +
+        "volumeNumber \(volumeNumber ?? "")"
+    }
+}
+
+extension DifferentialGPSStationModel: DataSource {
+    var itemTitle: String {
+        return "\(self.name ?? "\(self.featureNumber ?? 0)")"
+    }
+    
+    var color: UIColor {
+        return Self.color
+    }
+    static var isMappable: Bool = true
+    static var dataSourceName: String = NSLocalizedString("DGPS", comment: "Differential GPS Station data source display name")
+    static var fullDataSourceName: String = NSLocalizedString("Differential GPS Stations", comment: "Differential GPS Station data source display name")
+    
+    static var key: String = "differentialGPSStation"
+    static var metricsKey: String = "dgpsStations"
+    static var imageName: String? = "dgps"
+    static var systemImageName: String? = nil
+    static var color: UIColor = UIColor(argbValue: 0xFF00E676)
+    static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
+    
+    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(DifferentialGPSStation.geopoliticalHeading), type: .string), ascending: true, section: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(DifferentialGPSStation.featureNumber), type: .int), ascending: true)]
+    static var defaultFilter: [DataSourceFilterParameter] = []
+    
+    static var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Location", key: #keyPath(DifferentialGPSStation.mgrs10km), type: .location),
+        DataSourceProperty(name: "Latitude", key: #keyPath(DifferentialGPSStation.latitude), type: .latitude),
+        DataSourceProperty(name: "Longitude", key: #keyPath(DifferentialGPSStation.longitude), type: .longitude),
+        DataSourceProperty(name: "Number", key: #keyPath(DifferentialGPSStation.featureNumber), type: .int),
+        DataSourceProperty(name: "Name", key: #keyPath(DifferentialGPSStation.name), type: .string),
+        DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(DifferentialGPSStation.geopoliticalHeading), type: .string),
+        DataSourceProperty(name: "Station ID", key: #keyPath(DifferentialGPSStation.stationID), type: .int),
+        DataSourceProperty(name: "Range (nmi)", key: #keyPath(DifferentialGPSStation.range), type: .int),
+        DataSourceProperty(name: "Frequency (kHz)", key: #keyPath(DifferentialGPSStation.frequency), type: .int),
+        DataSourceProperty(name: "Transfer Rate", key: #keyPath(DifferentialGPSStation.transferRate), type: .int),
+        DataSourceProperty(name: "Remarks", key: #keyPath(DifferentialGPSStation.remarks), type: .string),
+        DataSourceProperty(name: "Notice Number", key: #keyPath(DifferentialGPSStation.noticeNumber), type: .int),
+        DataSourceProperty(name: "Notice Week", key: #keyPath(DifferentialGPSStation.noticeWeek), type: .string),
+        DataSourceProperty(name: "Notice Year", key: #keyPath(DifferentialGPSStation.noticeYear), type: .string),
+        DataSourceProperty(name: "Volume Number", key: #keyPath(DifferentialGPSStation.volumeNumber), type: .string),
+        DataSourceProperty(name: "Preceding Note", key: #keyPath(DifferentialGPSStation.precedingNote), type: .string),
+        DataSourceProperty(name: "Post Note", key: #keyPath(DifferentialGPSStation.postNote), type: .string),
+        
+    ]
+    
+    static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }
+    
+    static func postProcess() {}
+}
+
+extension DifferentialGPSStationModel: MapImage {
+    static var cacheTiles: Bool = true
+    
+    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {
+        return defaultMapImage(marker: marker, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context, tileSize: 512.0)
     }
 }

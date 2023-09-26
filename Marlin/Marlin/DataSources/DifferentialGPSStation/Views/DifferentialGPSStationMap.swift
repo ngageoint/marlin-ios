@@ -10,9 +10,9 @@ import MapKit
 import CoreData
 import Combine
 
-class DifferentialGPSStationMap<T: DifferentialGPSStation & MapImage>: FetchRequestMap<T> {
+class DifferentialGPSStationMap<T: MapImage>: FetchRequestMap<T> {
     override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
-        super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
+        super.init(fetchPredicate: fetchPredicate, objects: objects, showAsTiles: showAsTiles)
         self.sortDescriptors = [NSSortDescriptor(keyPath: \DifferentialGPSStation.featureNumber, ascending: true)]
         self.focusNotificationName = .FocusDifferentialGPSStation
         self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMapdifferentialGPSStation)

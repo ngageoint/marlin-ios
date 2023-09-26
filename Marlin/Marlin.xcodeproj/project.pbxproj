@@ -157,6 +157,8 @@
 		F7391CA92ABB690D0002ABDD /* PortModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CA82ABB690D0002ABDD /* PortModel.swift */; };
 		F7391CAB2ABB98440002ABDD /* PortRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CAA2ABB98440002ABDD /* PortRepository.swift */; };
 		F7391CAD2ABC85140002ABDD /* PortViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CAC2ABC85140002ABDD /* PortViewModel.swift */; };
+		F7391CAF2AC213670002ABDD /* DifferentialGPSStationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CAE2AC213670002ABDD /* DifferentialGPSStationRepository.swift */; };
+		F7391CB12AC336CD0002ABDD /* DifferentialGPSStationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CB02AC336CD0002ABDD /* DifferentialGPSStationViewModel.swift */; };
 		F73927962A439D2700DE1E79 /* GeoPackageExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */; };
 		F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC7F294D2E240085EDC5 /* LightRange.swift */; };
 		F73ABC82295102480085EDC5 /* DataSourceTileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */; };
@@ -404,7 +406,7 @@
 		F7FFB2E828D6238A00C31AA3 /* DifferentialGPSStation+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2E728D6238A00C31AA3 /* DifferentialGPSStation+DataSourceViewBuilder.swift */; };
 		F7FFB2EA28D623B000C31AA3 /* DifferentialGPSStation+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2E928D623B000C31AA3 /* DifferentialGPSStation+DataSource.swift */; };
 		F7FFB2EE28D624FE00C31AA3 /* DifferentialGPSStation+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2ED28D624FE00C31AA3 /* DifferentialGPSStation+MapImage.swift */; };
-		F7FFB2F028D626DC00C31AA3 /* DifferentialGPSStation+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2EF28D626DC00C31AA3 /* DifferentialGPSStation+Decodable.swift */; };
+		F7FFB2F028D626DC00C31AA3 /* DifferentialGPSStationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2EF28D626DC00C31AA3 /* DifferentialGPSStationModel.swift */; };
 		F7FFB2F228D627E800C31AA3 /* Port+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2F128D627E700C31AA3 /* Port+DataSource.swift */; };
 		F7FFB2F628D6340B00C31AA3 /* Port+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2F528D6340B00C31AA3 /* Port+MapImage.swift */; };
 		F7FFB2F828D6344000C31AA3 /* Port+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2F728D6344000C31AA3 /* Port+Decodable.swift */; };
@@ -612,6 +614,8 @@
 		F7391CA82ABB690D0002ABDD /* PortModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortModel.swift; sourceTree = "<group>"; };
 		F7391CAA2ABB98440002ABDD /* PortRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortRepository.swift; sourceTree = "<group>"; };
 		F7391CAC2ABC85140002ABDD /* PortViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortViewModel.swift; sourceTree = "<group>"; };
+		F7391CAE2AC213670002ABDD /* DifferentialGPSStationRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationRepository.swift; sourceTree = "<group>"; };
+		F7391CB02AC336CD0002ABDD /* DifferentialGPSStationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationViewModel.swift; sourceTree = "<group>"; };
 		F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExportView.swift; sourceTree = "<group>"; };
 		F73ABC7F294D2E240085EDC5 /* LightRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightRange.swift; sourceTree = "<group>"; };
 		F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceTileProvider.swift; sourceTree = "<group>"; };
@@ -866,7 +870,7 @@
 		F7FFB2E728D6238A00C31AA3 /* DifferentialGPSStation+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DifferentialGPSStation+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
 		F7FFB2E928D623B000C31AA3 /* DifferentialGPSStation+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DifferentialGPSStation+DataSource.swift"; sourceTree = "<group>"; };
 		F7FFB2ED28D624FE00C31AA3 /* DifferentialGPSStation+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DifferentialGPSStation+MapImage.swift"; sourceTree = "<group>"; };
-		F7FFB2EF28D626DC00C31AA3 /* DifferentialGPSStation+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DifferentialGPSStation+Decodable.swift"; sourceTree = "<group>"; };
+		F7FFB2EF28D626DC00C31AA3 /* DifferentialGPSStationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationModel.swift; sourceTree = "<group>"; };
 		F7FFB2F128D627E700C31AA3 /* Port+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+DataSource.swift"; sourceTree = "<group>"; };
 		F7FFB2F528D6340B00C31AA3 /* Port+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+MapImage.swift"; sourceTree = "<group>"; };
 		F7FFB2F728D6344000C31AA3 /* Port+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+Decodable.swift"; sourceTree = "<group>"; };
@@ -1042,7 +1046,9 @@
 				F7FFB2E728D6238A00C31AA3 /* DifferentialGPSStation+DataSourceViewBuilder.swift */,
 				F7FFB2E928D623B000C31AA3 /* DifferentialGPSStation+DataSource.swift */,
 				F7FFB2ED28D624FE00C31AA3 /* DifferentialGPSStation+MapImage.swift */,
-				F7FFB2EF28D626DC00C31AA3 /* DifferentialGPSStation+Decodable.swift */,
+				F7FFB2EF28D626DC00C31AA3 /* DifferentialGPSStationModel.swift */,
+				F7391CAE2AC213670002ABDD /* DifferentialGPSStationRepository.swift */,
+				F7391CB02AC336CD0002ABDD /* DifferentialGPSStationViewModel.swift */,
 			);
 			path = DifferentialGPSStation;
 			sourceTree = "<group>";
@@ -2540,6 +2546,7 @@
 				F7DF1BBD29E98B5700F92E14 /* Keychain.swift in Sources */,
 				F7D671CA286C945500758F1C /* GeopackageFeatureOverlay.swift in Sources */,
 				F707BA87287C6596006A94C4 /* LightCard.swift in Sources */,
+				F7391CAF2AC213670002ABDD /* DifferentialGPSStationRepository.swift in Sources */,
 				F74B9B1128B7DACB0097D448 /* RadioBeaconDetailView.swift in Sources */,
 				F7D671EB2871D73200758F1C /* Hamburger.swift in Sources */,
 				F79C994229955262004D9E82 /* DataLoadOperation.swift in Sources */,
@@ -2604,7 +2611,7 @@
 				F7FDF2B42AB4E8BB009A5E8F /* ModuViewModel.swift in Sources */,
 				F7FFB34328DD06EF00C31AA3 /* MSIListView.swift in Sources */,
 				F7D2225428E5F03500F527F2 /* SortView.swift in Sources */,
-				F7FFB2F028D626DC00C31AA3 /* DifferentialGPSStation+Decodable.swift in Sources */,
+				F7FFB2F028D626DC00C31AA3 /* DifferentialGPSStationModel.swift in Sources */,
 				F7D8FA44293A941100E7D0A1 /* IntFilter.swift in Sources */,
 				F71D286A28BE467200F1775C /* DifferentialGPSStationDetailView.swift in Sources */,
 				F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */,
@@ -2697,6 +2704,7 @@
 				F7C23E102909AC430002A7DF /* ElectronicPublicationActionBar.swift in Sources */,
 				F707BA8D287C89ED006A94C4 /* LightMap.swift in Sources */,
 				F76052CC29AE6F0700F13260 /* MapLayerView.swift in Sources */,
+				F7391CB12AC336CD0002ABDD /* DifferentialGPSStationViewModel.swift in Sources */,
 				F73ABC97295250EE0085EDC5 /* ImageCache.swift in Sources */,
 				F7C361C12921370B001C7C84 /* NoticeToMariners+DataSource.swift in Sources */,
 				F7C23E0C290850D70002A7DF /* ElectronicPublicationDetailView.swift in Sources */,

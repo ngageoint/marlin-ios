@@ -84,8 +84,9 @@ struct MarlinRouteModifier: ViewModifier {
                             NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: noticeNumber))
                         }
                     case DifferentialGPSStation.key:
-                        if let dgps = DifferentialGPSStation.getItem(context: PersistenceController.current.viewContext, itemKey: itemKey) as? DifferentialGPSStation {
-                            DifferentialGPSStationDetailView(differentialGPSStation: dgps)
+                        let split = itemKey.split(separator: "--")
+                        if split.count == 2 {
+                            DifferentialGPSStationDetailView(featureNumber: Int(split[0]), volumeNumber: "\(split[1])")
                         }
                     case Light.key:
                         let split = itemKey.split(separator: "--")
@@ -120,6 +121,11 @@ struct MarlinRouteModifier: ViewModifier {
                         }
                     case Port.key:
                         PortDetailView(portNumber: Int64(itemKey), waypointURI: waypointURI)
+                    case DifferentialGPSStation.key:
+                        let split = itemKey.split(separator: "--")
+                        if split.count == 2 {
+                            DifferentialGPSStationDetailView(featureNumber: Int(split[0]), volumeNumber: "\(split[1])", waypointURI: waypointURI)
+                        }
                     default:
                         EmptyView()
                     }
