@@ -101,8 +101,10 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
                     }
                     if let shape = MKShape.fromWKT(wkt: wkt, distance: distance) {
                         if let polygon = shape as? MKPolygon {
-                            if polygonHitTest(polygon: polygon, location: location) {
-                                return true
+                            for polyline in polygon.getGeodesicClickAreas() {
+                                if polygonHitTest(closedPolyline: polyline, location: location) {
+                                    return true
+                                }
                             }
                         } else if let polyline = shape as? MKPolyline {
                             if lineHitTest(line: polyline, location: location, tolerance: tolerance * 2.0) {

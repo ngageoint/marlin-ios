@@ -648,4 +648,101 @@ final class MarlinMapTests: XCTestCase {
         tester().wait(forTimeInterval: 5)
     }
 
+    func testTapNavWarningCrossingDateline()  {
+        // render map
+        UserDefaults.standard.set(true, forKey: "showOnMap\(NavigationalWarning.key)")
+        UserDefaults.standard.setFilter(NavigationalWarning.key, filter: [])
+        struct Container: View {
+            @StateObject var mapState: MapState = MapState()
+            @State var filterOpen: Bool = false
+            @StateObject var mixins: MainMapMixins = MainMapMixins()
+            
+            var body: some View {
+                ZStack {
+                    MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
+                }
+                .onAppear {
+                    mapState.center = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 50, longitude: -175), latitudinalMeters: 5000000, longitudinalMeters: 4000000)
+                }
+            }
+        }
+        
+        // Insert test case
+        let jsonString = """
+        {
+            "msgYear": 2023,
+            "msgNumber": 372,
+            "navArea": "12",
+            "subregion": "19,97",
+            "text": "NORTH PACIFIC.\\n1. HAZARDOUS OPERATIONS, SPACE DEBRIS\\n 0554Z TO 0912Z DAILY 22 THRU 28 JUN\\n IN AREA BOUND BY\\n 34-54.00N 152-00.00W, 36-53.00N 151-00.00W,\\n 44-04.00N 165-00.00E, 42-05.00N 165-00.00E.\\n2. CANCEL THIS MSG 281012Z JUN 23.\\n",
+            "status": "A",
+            "issueDate": "210124Z JUN 2023",
+            "authority": "SPACEX 0/23 210000Z JUN 23.",
+            "cancelDate": null,
+            "cancelNavArea": null,
+            "cancelMsgYear": null,
+            "cancelMsgNumber": null,
+            "year": 2023,
+            "area": "12",
+            "number": 372
+        }
+        """
+        let testCase: NavigationalWarningProperties = try! JSONDecoder().decode(NavigationalWarningProperties.self, from: Data(jsonString.utf8))
+        Task {
+            guard let count = try? await NavigationalWarning.importRecords(from:[testCase],taskContext:persistentStore.viewContext), count > 0 else {
+                XCTFail()
+                return
+            }
+            NavigationalWarning.postProcess()
+        }
+        
+        // show app
+        let appState = AppState()
+        UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
+        let container = Container()
+            .environmentObject(appState)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
+        
+        let controller = UIHostingController(rootView: container)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        tester().wait(forTimeInterval: 5)
+        
+        // tap right side of the nav warning
+        let e1 = expectation(forNotification: .MapItemsTapped, object: nil) { notification in
+            let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
+            let warnings = tapNotification.items as! [NavigationalWarning]
+            guard warnings.count > 0 else {
+                return false
+            }
+            return warnings[0].msgNumber == 372
+        }
+        tester().tapScreen(at: CGPoint(x: 206, y: 524)) // lat: 41.56, lon: -173.65
+        wait(for: [e1], timeout: 10)
+        
+        // left side of the nav warning
+        let e2 = expectation(forNotification: .MapItemsTapped, object: nil) { notification in
+            let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
+            let warnings = tapNotification.items as! [NavigationalWarning]
+            guard warnings.count > 0 else {
+                return false
+            }
+            return warnings[0].msgNumber == 372
+        }
+        tester().tapScreen(at: CGPoint(x: 129, y: 510)) // lat: 43.03, lon: 175.42
+        wait(for: [e2], timeout: 10)
+        
+        // check that the map scrolls to the correct location
+        let map = viewTester().usingLabel("Marlin Compact Map").view as! MKMapView
+        let e3 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
+            guard let map = observedObject as? MKMapView else {
+                return false
+            }
+            let center = map.centerCoordinate
+            return center.longitude <= -172 && center.longitude >= -174
+        }), object: map)
+        let navWarn = try! persistentStore.viewContext.fetchFirst(NavigationalWarning.self, predicate: NSPredicate(format: "msgYear = %d AND msgNumber = %d", argumentArray: ["2023", "372"]))
+        NotificationCenter.default.post(Notification(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: navWarn)))
+        wait(for: [e3], timeout: 10)
+    }
 }
