@@ -50,6 +50,7 @@ struct DifferentialGPSStationModel: Locatable, Bookmarkable, Decodable {
         case regionHeading
         case remarks
         case removeFromList
+        case sectionHeader
         case stationID
         case transferRate
         case volumeNumber
@@ -180,7 +181,7 @@ struct DifferentialGPSStationModel: Locatable, Bookmarkable, Decodable {
         } else {
             self.stationID = nil
         }
-        self.sectionHeader = nil
+        self.sectionHeader = try? values.decode(String.self, forKey: .sectionHeader)
         self.transferRate = try? values.decode(Int.self, forKey: .transferRate)
         
         if let position = self.position {

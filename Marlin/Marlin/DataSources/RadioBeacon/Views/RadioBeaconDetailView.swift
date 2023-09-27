@@ -10,44 +10,59 @@ import MapKit
 import CoreData
 
 struct RadioBeaconDetailView: View {
-    @State var predicate: NSPredicate?
-    @ObservedObject var radioBeacon: RadioBeacon
+    @EnvironmentObject var radioBeaconRepository: RadioBeaconRepositoryManager
+    @StateObject var viewModel: RadioBeaconViewModel = RadioBeaconViewModel()
+    @State var featureNumber: Int?
+    @State var volumeNumber: String?
+    @State var waypointURI: URL?
     
     var body: some View {
-        List {
-            Section {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(radioBeacon.itemTitle)
-                        .padding(.all, 8)
-                        .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .itemTitle()
-                        .foregroundColor(Color.white)
-                        .background(Color(uiColor: radioBeacon.color))
-                        .padding(.bottom, -8)
-                    if let predicate = predicate {
-                        DataSourceLocationMapView(dataSourceLocation: radioBeacon, mapName: "Radio Beacon Detail Map", mixins: [RadioBeaconMap(fetchPredicate: predicate)])
-                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                    }
-                    radioBeacon.summary
-                        .showBookmarkNotes(true)
-                        .setShowSectionHeader(true)
-                        .padding(.all, 16)
+        Group {
+            switch(viewModel.radioBeacon) {
+            case nil:
+                Color.clear.onAppear {
+                    viewModel.repository = radioBeaconRepository
+                    viewModel.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
                 }
-                .card()
-            } header: {
-                EmptyView().frame(width: 0, height: 0, alignment: .leading)
+            case .some(let radioBeacon):
+                List {
+                    Section {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(radioBeacon.itemTitle)
+                                .padding(.all, 8)
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .itemTitle()
+                                .foregroundColor(Color.white)
+                                .background(Color(uiColor: radioBeacon.color))
+                                .padding(.bottom, -8)
+                            DataSourceLocationMapView(dataSourceLocation: radioBeacon, mapName: "Radio Beacon Detail Map", mixins: [RadioBeaconMap<RadioBeaconModel>(objects: [radioBeacon])])
+                                .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                            RadioBeaconSummaryView(radioBeacon: radioBeacon)
+                                .showBookmarkNotes(true)
+                                .setShowSectionHeader(true)
+                                .padding(.all, 16)
+                        }
+                        .card()
+                    } header: {
+                        EmptyView().frame(width: 0, height: 0, alignment: .leading)
+                    }
+                    .dataSourceSection()
+                    
+                    KeyValueSection(sectionName: "Additional Information", properties: radioBeacon.additionalKeyValues)
+                        .dataSourceSection()
+                }
+                .dataSourceDetailList()
             }
-            .dataSourceSection()
-            
-            KeyValueSection(sectionName: "Additional Information", properties: radioBeacon.additionalKeyValues)
-                .dataSourceSection()
         }
-        .dataSourceDetailList()
-        .navigationTitle("\(radioBeacon.name ?? RadioBeacon.dataSourceName)" )
+        .navigationTitle("\(viewModel.radioBeacon?.name ?? RadioBeacon.dataSourceName)" )
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: featureNumber) { newValue in
+            viewModel.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+        }
         .onAppear {
-            predicate = NSPredicate(format: "featureNumber == %i AND volumeNumber == %@", radioBeacon.featureNumber, radioBeacon.volumeNumber ?? "")
+            viewModel.repository = radioBeaconRepository
+            viewModel.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
             Metrics.shared.dataSourceDetail(dataSource: RadioBeacon.self)
         }
     }

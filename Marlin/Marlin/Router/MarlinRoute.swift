@@ -94,8 +94,9 @@ struct MarlinRouteModifier: ViewModifier {
                             LightDetailView(featureNumber: "\(split[0])", volumeNumber: "\(split[1])")
                         }
                     case RadioBeacon.key:
-                        if let radioBeacon = RadioBeacon.getItem(context: PersistenceController.current.viewContext, itemKey: itemKey) as? RadioBeacon {
-                            RadioBeaconDetailView(radioBeacon: radioBeacon)
+                        let split = itemKey.split(separator: "--")
+                        if split.count == 2 {
+                            RadioBeaconDetailView(featureNumber: Int(split[0]), volumeNumber: "\(split[1])")
                         }
                     case ElectronicPublication.key:
                         if let epub = ElectronicPublication.getItem(context: PersistenceController.current.viewContext, itemKey: itemKey) as? ElectronicPublication {
@@ -125,6 +126,11 @@ struct MarlinRouteModifier: ViewModifier {
                         let split = itemKey.split(separator: "--")
                         if split.count == 2 {
                             DifferentialGPSStationDetailView(featureNumber: Int(split[0]), volumeNumber: "\(split[1])", waypointURI: waypointURI)
+                        }
+                    case RadioBeacon.key:
+                        let split = itemKey.split(separator: "--")
+                        if split.count == 2 {
+                            RadioBeaconDetailView(featureNumber: Int(split[0]), volumeNumber: "\(split[1])", waypointURI: waypointURI)
                         }
                     default:
                         EmptyView()

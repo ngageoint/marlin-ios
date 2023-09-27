@@ -15,6 +15,7 @@ enum DataSourceType: String, CaseIterable {
     case light
     case port
     case differentialGPSStation
+    case radioBeacon
     case Common
     
     static func fromKey(_ key: String) -> DataSourceType? {
@@ -33,6 +34,8 @@ enum DataSourceType: String, CaseIterable {
             return Port.self
         case .differentialGPSStation:
             return DifferentialGPSStation.self
+        case .radioBeacon:
+            return RadioBeacon.self
         case .Common:
             return CommonDataSource.self
         }

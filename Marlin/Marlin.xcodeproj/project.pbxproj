@@ -162,6 +162,7 @@
 		F7391CB12AC336CD0002ABDD /* DifferentialGPSStationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CB02AC336CD0002ABDD /* DifferentialGPSStationViewModel.swift */; };
 		F7391CB32AC4982C0002ABDD /* RadioBeaconModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CB22AC4982C0002ABDD /* RadioBeaconModel.swift */; };
 		F7391CB52AC49A440002ABDD /* RadioBeaconRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CB42AC49A440002ABDD /* RadioBeaconRepository.swift */; };
+		F7391CB72AC4C3E40002ABDD /* RadioBeaconViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CB62AC4C3E40002ABDD /* RadioBeaconViewModel.swift */; };
 		F73927962A439D2700DE1E79 /* GeoPackageExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */; };
 		F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC7F294D2E240085EDC5 /* LightRange.swift */; };
 		F73ABC82295102480085EDC5 /* DataSourceTileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */; };
@@ -622,6 +623,7 @@
 		F7391CB02AC336CD0002ABDD /* DifferentialGPSStationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationViewModel.swift; sourceTree = "<group>"; };
 		F7391CB22AC4982C0002ABDD /* RadioBeaconModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconModel.swift; sourceTree = "<group>"; };
 		F7391CB42AC49A440002ABDD /* RadioBeaconRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconRepository.swift; sourceTree = "<group>"; };
+		F7391CB62AC4C3E40002ABDD /* RadioBeaconViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconViewModel.swift; sourceTree = "<group>"; };
 		F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExportView.swift; sourceTree = "<group>"; };
 		F73ABC7F294D2E240085EDC5 /* LightRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightRange.swift; sourceTree = "<group>"; };
 		F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceTileProvider.swift; sourceTree = "<group>"; };
@@ -1340,6 +1342,7 @@
 				F7FFB32728D6427200C31AA3 /* RadioBeacon+Decodable.swift */,
 				F7391CB22AC4982C0002ABDD /* RadioBeaconModel.swift */,
 				F7391CB42AC49A440002ABDD /* RadioBeaconRepository.swift */,
+				F7391CB62AC4C3E40002ABDD /* RadioBeaconViewModel.swift */,
 			);
 			path = RadioBeacon;
 			sourceTree = "<group>";
@@ -2768,6 +2771,7 @@
 				F73ABC98295250EE0085EDC5 /* ImageLoader.swift in Sources */,
 				F7C23E0829084F110002A7DF /* ElectronicPublication+DataSourceViewBuilder.swift in Sources */,
 				F7830BFD2A8AB6E1008376F7 /* RouteList.swift in Sources */,
+				F7391CB72AC4C3E40002ABDD /* RadioBeaconViewModel.swift in Sources */,
 				F7D8FA56293AA13300E7D0A1 /* DataSourceFilterComparison.swift in Sources */,
 				F71D286628BE453A00F1775C /* DifferentialGPSStationSummaryView.swift in Sources */,
 				F707BA97288590E2006A94C4 /* FogSignalImage.swift in Sources */,

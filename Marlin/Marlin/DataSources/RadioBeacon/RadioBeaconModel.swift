@@ -45,6 +45,7 @@ struct RadioBeaconModel: Decodable, Bookmarkable, Locatable {
         case range
         case regionHeading
         case removeFromList
+        case sectionHeader
         case sequenceText
         case stationRemark
         case volumeNumber
@@ -68,6 +69,7 @@ struct RadioBeaconModel: Decodable, Bookmarkable, Locatable {
     let range: Int?
     let regionHeading: String?
     let removeFromList: String?
+    let sectionHeader: String?
     let sequenceText: String?
     let stationRemark: String?
     let volumeNumber: String?
@@ -93,6 +95,7 @@ struct RadioBeaconModel: Decodable, Bookmarkable, Locatable {
         self.range = Int(radioBeacon.range)
         self.regionHeading = radioBeacon.regionHeading
         self.removeFromList = radioBeacon.removeFromList
+        self.sectionHeader = radioBeacon.sectionHeader
         self.sequenceText = radioBeacon.sequenceText
         self.stationRemark = radioBeacon.stationRemark
         self.volumeNumber = radioBeacon.volumeNumber
@@ -164,6 +167,7 @@ struct RadioBeaconModel: Decodable, Bookmarkable, Locatable {
             self.regionHeading = nil
         }
         self.removeFromList = try? values.decode(String.self, forKey: .removeFromList)
+        self.sectionHeader = try? values.decode(String.self, forKey: .sectionHeader)
         self.sequenceText = try? values.decode(String.self, forKey: .sequenceText)
         self.stationRemark = try? values.decode(String.self, forKey: .stationRemark)
         

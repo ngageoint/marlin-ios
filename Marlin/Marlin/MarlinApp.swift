@@ -131,6 +131,7 @@ struct MarlinApp: App {
     var lightRepository: LightRepositoryManager
     var portRepository: PortRepositoryManager
     var dgpsRepository: DifferentialGPSStationRepositoryManager
+    var radioBeaconRepository: RadioBeaconRepositoryManager
 
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
@@ -152,6 +153,7 @@ struct MarlinApp: App {
         lightRepository = LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext))
         portRepository = PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext))
         dgpsRepository = DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
+        radioBeaconRepository = RadioBeaconRepositoryManager(repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
         UNUserNotificationCenter.current().delegate = appDelegate
     }
 
@@ -168,6 +170,7 @@ struct MarlinApp: App {
                 .environmentObject(lightRepository)
                 .environmentObject(portRepository)
                 .environmentObject(dgpsRepository)
+                .environmentObject(radioBeaconRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
                 .background(Color.surfaceColor)
         }

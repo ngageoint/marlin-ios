@@ -14,10 +14,14 @@ extension RadioBeacon: DataSourceViewBuilder {
     }
     
     var detailView: AnyView {
-        AnyView(RadioBeaconDetailView(radioBeacon: self))
+        if let volumeNumber = volumeNumber {
+            return AnyView(RadioBeaconDetailView(featureNumber: Int(featureNumber), volumeNumber: volumeNumber))
+        } else {
+            return AnyView(EmptyView())
+        }
     }
     
     var summary: some DataSourceSummaryView {
-        RadioBeaconSummaryView(radioBeacon: self)
+        RadioBeaconSummaryView(radioBeacon: RadioBeaconModel(radioBeacon: self))
     }
 }

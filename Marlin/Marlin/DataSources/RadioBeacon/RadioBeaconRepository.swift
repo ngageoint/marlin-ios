@@ -8,12 +8,6 @@
 import Foundation
 import CoreData
 
-/**
- if let split = itemKey?.split(separator: "--"), split.count == 2 {
- return getRadioBeacon(context: context, featureNumber: "\(split[0])", volumeNumber: "\(split[1])")
- }
- */
-
 protocol RadioBeaconRepository {
     @discardableResult
     func getRadioBeacon(featureNumber: Int?, volumeNumber: String?, waypointURI: URL?) -> RadioBeaconModel?

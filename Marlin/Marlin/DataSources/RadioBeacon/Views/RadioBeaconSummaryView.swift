@@ -12,11 +12,11 @@ struct RadioBeaconSummaryView: DataSourceSummaryView {
     
     var showBookmarkNotes: Bool = false
 
-    var radioBeacon: RadioBeacon
+    var radioBeacon: RadioBeaconModel
     var showMoreDetails: Bool = false
     var showSectionHeader: Bool = false
     
-    init(radioBeacon: RadioBeacon, showMoreDetails: Bool = false, showSectionHeader: Bool = false) {
+    init(radioBeacon: RadioBeaconModel, showMoreDetails: Bool = false, showSectionHeader: Bool = false) {
         self.radioBeacon = radioBeacon
         self.showMoreDetails = showMoreDetails
         self.showSectionHeader = showSectionHeader
@@ -24,7 +24,7 @@ struct RadioBeaconSummaryView: DataSourceSummaryView {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("\(radioBeacon.featureNumber) \(radioBeacon.volumeNumber ?? "")")
+            Text("\(radioBeacon.featureNumber ?? 0) \(radioBeacon.volumeNumber ?? "")")
                 .overline()
             Text("\(radioBeacon.name ?? "")")
                 .primary()

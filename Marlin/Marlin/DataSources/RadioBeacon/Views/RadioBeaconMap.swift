@@ -10,9 +10,9 @@ import MapKit
 import CoreData
 import Combine
 
-class RadioBeaconMap<T: RadioBeacon & MapImage>: FetchRequestMap<T> {
+class RadioBeaconMap<T: MapImage>: FetchRequestMap<T> {
     override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
-        super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
+        super.init(fetchPredicate: fetchPredicate, objects: objects, showAsTiles: showAsTiles)
         self.sortDescriptors = [NSSortDescriptor(keyPath: \RadioBeacon.featureNumber, ascending: true)]
         self.focusNotificationName = .FocusRadioBeacon
         self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMapradioBeacon)
