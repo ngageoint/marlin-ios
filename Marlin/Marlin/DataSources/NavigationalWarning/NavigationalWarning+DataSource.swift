@@ -149,7 +149,7 @@ extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportabl
     
     static func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
         return NSPredicate(
-            format: "maxLatitude >= %lf AND minLatitude <= %lf AND maxLongitude >= %lf AND minLongitude <= %lf", minLat, maxLat, minLon, maxLon
+            format: "(maxLatitude >= %lf AND minLatitude <= %lf AND maxLongitude >= %lf AND minLongitude <= %lf) OR minLongitude < -180 OR maxLongitude > 180", minLat, maxLat, minLon, maxLon
         )
     }
     

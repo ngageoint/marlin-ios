@@ -69,7 +69,7 @@ struct LocationWithType: CustomStringConvertible {
                     points.append(MKMapPoint(coordinate))
                 }
             }
-            return MKPolygon(points: &points, count: points.count)
+            return MKPolygon(points: &points, count: points.count).toGeodesicPolyline()
         } else if locationType == "LineString" {
             for locationPoint in location {
                 if let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {

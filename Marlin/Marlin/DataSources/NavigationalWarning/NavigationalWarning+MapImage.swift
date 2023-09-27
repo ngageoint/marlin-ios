@@ -49,47 +49,20 @@ extension NavigationalWarning: MapImage {
                         }
                         images.append(contentsOf: defaultMapImage(marker: marker, zoomLevel: zoomLevel, pointCoordinate: coordinate, tileBounds3857: tileBounds3857, context: context, tileSize: 512.0))
                     } else if let polygon = shape as? MKPolygon {
-                        let points = polygon.points()
+                        let polyline = polygon.toGeodesicPolyline()
                         let path = UIBezierPath()
-                        var firstPoint: CLLocationCoordinate2D?
-                        var previousPoint: CLLocationCoordinate2D?
-                        for point in UnsafeBufferPointer(start: points, count: polygon.pointCount) {
-                            
-                            let pixel = point.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
-                            // make a geodesic line between the points and then plot that
-                            if let previousPoint = previousPoint {
-                                var coords: [CLLocationCoordinate2D] = [previousPoint, point.coordinate]
-                                let gl = MKGeodesicPolyline(coordinates: &coords, count: 2)
-                                
-                                let glpoints = gl.points()
-                                
-                                for point in UnsafeBufferPointer(start: glpoints, count: gl.pointCount) {
-                                    
-                                    let pixel = point.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
-                                    path.addLine(to: pixel)
-                                    
-                                }
-                            } else {
-                                firstPoint = point.coordinate
-                                path.move(to: pixel)
-                            }
-                            previousPoint = point.coordinate
-                            
-                        }
+                        var first = true
                         
-                        // now draw the geodesic line between the last and the first
-                        if let previousPoint = previousPoint, let firstPoint = firstPoint {
-                            var coords: [CLLocationCoordinate2D] = [previousPoint, firstPoint]
-                            let gl = MKGeodesicPolyline(coordinates: &coords, count: 2)
+                        for point in UnsafeBufferPointer(start: polyline.points(), count: polyline.pointCount) {
                             
-                            let glpoints = gl.points()
-                            
-                            for point in UnsafeBufferPointer(start: glpoints, count: gl.pointCount) {
-                                
-                                let pixel = point.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+                            let pixel = point.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE, canCross180thMeridian: polyline.boundingMapRect.spans180thMeridian)
+                            if first {
+                                path.move(to: pixel)
+                                first = false
+                            } else {
                                 path.addLine(to: pixel)
-                                
                             }
+                           
                         }
                         
                         path.lineWidth = 4
