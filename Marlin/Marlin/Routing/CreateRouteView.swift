@@ -49,6 +49,7 @@ struct CreateRouteView: View {
                 if routeViewModel.waypoints.count > 1 {
                     Button("Save") {
                         routeViewModel.createRoute(context: managedObjectContext)
+                        path.removeLast()
                     }
                 }
             }
