@@ -9,6 +9,7 @@ import Foundation
 import OSLog
 import CoreLocation
 import mgrs_ios
+import GeoJSON
 
 struct DifferentialGPSStationPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
@@ -106,6 +107,22 @@ struct DifferentialGPSStationModel: Locatable, Bookmarkable, Decodable {
         self.transferRate = Int(differentialGPSStation.transferRate)
         self.volumeNumber = differentialGPSStation.volumeNumber
         self.mgrs10km = differentialGPSStation.mgrs10km
+    }
+    
+    init?(feature: Feature) {
+        if let json = try? JSONEncoder().encode(feature.properties), let string = String(data: json, encoding: .utf8) {
+            
+            let decoder = JSONDecoder()
+            let jsonData = Data(string.utf8)
+            
+            if let ds = try? decoder.decode(DifferentialGPSStationModel.self, from: jsonData) {
+                self = ds
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
     }
     
     init(from decoder: Decoder) throws {

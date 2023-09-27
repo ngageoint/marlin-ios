@@ -121,7 +121,7 @@ extension RadioBeacon: BatchImportable {
         return UserDefaults.standard.dataSourceEnabled(RadioBeacon.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(RadioBeacon.self)
     }
     
-    static func newBatchInsertRequest(with propertyList: [RadioBeaconProperties]) -> NSBatchInsertRequest {
+    static func newBatchInsertRequest(with propertyList: [RadioBeaconModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
         NSLog("Creating batch insert request of radio beacons for \(total) radio beacons")
@@ -179,7 +179,7 @@ extension RadioBeacon: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [RadioBeaconProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(from propertiesList: [RadioBeaconModel], taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

@@ -33,6 +33,12 @@ class RouteWaypoint: NSManagedObject {
                     case Port.key:
                         let portModel = PortModel(feature: ds.features[0])
                         return portModel
+                    case DifferentialGPSStation.key:
+                        let dgpsModel = DifferentialGPSStationModel(feature: ds.features[0])
+                        return dgpsModel
+                    case RadioBeacon.key:
+                        let rbModel = RadioBeaconModel(feature: ds.features[0])
+                        return rbModel
                     default:
                         print("no")
                     }

@@ -31,6 +31,14 @@ class DifferentialGPSStationCoreDataRepository: DifferentialGPSStationRepository
     }
     
     func getDifferentialGPSStation(featureNumber: Int?, volumeNumber: String?, waypointURI: URL?) -> DifferentialGPSStationModel? {
+        if let waypointURI = waypointURI {
+            if let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: waypointURI), let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
+                let dataSource = waypoint.decodeToDataSource()
+                if let dataSource = dataSource as? DifferentialGPSStationModel {
+                    return dataSource
+                }
+            }
+        }
         if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
             if let dgps = try? context.fetchFirst(DifferentialGPSStation.self, predicate: NSPredicate(format: "featureNumber = %ld AND volumeNumber = %@", argumentArray: [featureNumber, volumeNumber])) {
                 return DifferentialGPSStationModel(differentialGPSStation: dgps)

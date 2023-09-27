@@ -159,6 +159,8 @@
 		F7391CAD2ABC85140002ABDD /* PortViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CAC2ABC85140002ABDD /* PortViewModel.swift */; };
 		F7391CAF2AC213670002ABDD /* DifferentialGPSStationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CAE2AC213670002ABDD /* DifferentialGPSStationRepository.swift */; };
 		F7391CB12AC336CD0002ABDD /* DifferentialGPSStationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CB02AC336CD0002ABDD /* DifferentialGPSStationViewModel.swift */; };
+		F7391CB32AC4982C0002ABDD /* RadioBeaconModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CB22AC4982C0002ABDD /* RadioBeaconModel.swift */; };
+		F7391CB52AC49A440002ABDD /* RadioBeaconRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CB42AC49A440002ABDD /* RadioBeaconRepository.swift */; };
 		F73927962A439D2700DE1E79 /* GeoPackageExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */; };
 		F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC7F294D2E240085EDC5 /* LightRange.swift */; };
 		F73ABC82295102480085EDC5 /* DataSourceTileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */; };
@@ -616,6 +618,8 @@
 		F7391CAC2ABC85140002ABDD /* PortViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortViewModel.swift; sourceTree = "<group>"; };
 		F7391CAE2AC213670002ABDD /* DifferentialGPSStationRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationRepository.swift; sourceTree = "<group>"; };
 		F7391CB02AC336CD0002ABDD /* DifferentialGPSStationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationViewModel.swift; sourceTree = "<group>"; };
+		F7391CB22AC4982C0002ABDD /* RadioBeaconModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconModel.swift; sourceTree = "<group>"; };
+		F7391CB42AC49A440002ABDD /* RadioBeaconRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconRepository.swift; sourceTree = "<group>"; };
 		F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExportView.swift; sourceTree = "<group>"; };
 		F73ABC7F294D2E240085EDC5 /* LightRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightRange.swift; sourceTree = "<group>"; };
 		F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceTileProvider.swift; sourceTree = "<group>"; };
@@ -1332,6 +1336,8 @@
 				F7FFB32128D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift */,
 				F7FFB32528D6422F00C31AA3 /* RadioBeacon+MapImage.swift */,
 				F7FFB32728D6427200C31AA3 /* RadioBeacon+Decodable.swift */,
+				F7391CB22AC4982C0002ABDD /* RadioBeaconModel.swift */,
+				F7391CB42AC49A440002ABDD /* RadioBeaconRepository.swift */,
 			);
 			path = RadioBeacon;
 			sourceTree = "<group>";
@@ -2590,6 +2596,7 @@
 				F7FFB32228D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift in Sources */,
 				F7D8FA5E293AA17C00E7D0A1 /* DataSourceFilterParameter.swift in Sources */,
 				F71D287728BE976300F1775C /* DFRSSummaryView.swift in Sources */,
+				F7391CB52AC49A440002ABDD /* RadioBeaconRepository.swift in Sources */,
 				F7066DAB2A462A740058122E /* GeoPackageExportable.swift in Sources */,
 				F7FFB2E628D6217900C31AA3 /* DFRSArea+Decodable.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
@@ -2623,6 +2630,7 @@
 				F71DF4992858DA4700686951 /* AsamMap.swift in Sources */,
 				F7275FDF28FA252800ED8D9A /* LightProtocol.swift in Sources */,
 				F7D8FA4B293A958900E7D0A1 /* LocationFilter.swift in Sources */,
+				F7391CB32AC4982C0002ABDD /* RadioBeaconModel.swift in Sources */,
 				F727A684284E351800BD728A /* MSIError.swift in Sources */,
 				F7BDF76C2A13BFC80083B97F /* NavigationalWarning+MapImage.swift in Sources */,
 				F7D8FA142922ABF500E7D0A1 /* NoticeToMariners+Decodable.swift in Sources */,
