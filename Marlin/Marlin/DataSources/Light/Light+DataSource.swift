@@ -78,6 +78,22 @@ extension Light: Locatable, GeoPackageExportable, GeoJSONExportable {
             }
             
             return geometryByColor
+        } else if let stringRange = range, let range = Double(stringRange), let lightColors = lightColors {
+            let nauticalMilesMeasurement = NSMeasurement(doubleValue: range, unit: UnitLength.nauticalMiles)
+            let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
+            
+            let circleCoordinates = coordinate.circleCoordinates(radiusMeters: metersMeasurement.value)
+            
+            let ring = SFLineString()
+            for circleCoordinate in circleCoordinates {
+                let point = SFPoint(xValue: circleCoordinate.longitude, andYValue: circleCoordinate.latitude)
+                ring?.addPoint(point)
+            }
+            let poly = SFPolygon(ring: ring)
+            if let poly = poly {
+                geometryByColor[lightColors[0]] = poly
+            }
+            return geometryByColor
         }
         return nil
     }

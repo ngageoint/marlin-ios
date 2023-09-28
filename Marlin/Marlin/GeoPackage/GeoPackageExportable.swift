@@ -132,6 +132,9 @@ extension GeoPackageExportable {
                 iconStyleDefault?.setData(imageData)
                 iconStyleDefault?.setWidthValue(Double(combined?.size.width ?? image.size.width))
                 iconStyleDefault?.setHeightValue(Double(combined?.size.height ?? image.size.height))
+                iconStyleDefault?.setAnchorU(0.5)
+                iconStyleDefault?.setAnchorV(0.5)
+                
                 featureTableStyles?.setTableIconDefault(iconStyleDefault)
             }
         }
