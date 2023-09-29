@@ -52,11 +52,28 @@ class RouteWaypoint: NSManagedObject {
 }
 
 class Route: NSManagedObject {
+    var measurementFormatter: MeasurementFormatter {
+        var measurementFormatter = MeasurementFormatter()
+        measurementFormatter.unitOptions = .providedUnit
+        measurementFormatter.unitStyle = .short
+        measurementFormatter.numberFormatter.maximumFractionDigits = 2
+        return measurementFormatter
+    }
+    
     public var waypointArray: [RouteWaypoint] {
         let set = waypoints as? Set<RouteWaypoint> ?? []
         return set.sorted {
             $0.order < $1.order
         }
+    }
+    
+    var nauticalMilesDistance: String? {
+        if distanceMeters != 0.0 {
+            let metersMeasurement = NSMeasurement(doubleValue: distanceMeters, unit: UnitLength.meters)
+            var convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles)
+            return measurementFormatter.string(from: convertedMeasurement)
+        }
+        return nil
     }
 }
 

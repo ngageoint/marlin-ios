@@ -27,7 +27,9 @@ struct RouteList: View {
                                 DataSourceCircleImage(dataSource: type, size: 15)
                             }
                             Text(first.itemKey ?? "")
-                                .overline()
+                                .font(Font.overline)
+                                .foregroundColor(Color.onSurfaceColor)
+                                .opacity(0.8)
                         }
                         Image(systemName: "ellipsis")
                         if let last = route.waypointArray.last {
@@ -36,7 +38,9 @@ struct RouteList: View {
                                     DataSourceCircleImage(dataSource: type, size: 15)
                                 }
                                 Text(last.itemKey ?? "")
-                                    .overline()
+                                    .font(Font.overline)
+                                    .foregroundColor(Color.onSurfaceColor)
+                                    .opacity(0.8)
                             }
                             .onTapGesture {
                                 if let dataSource = last.dataSource, let itemKey = last.itemKey {
@@ -45,6 +49,10 @@ struct RouteList: View {
                                 }
                             }
                         }
+                    }
+                    if let distance = route.nauticalMilesDistance {
+                        Text("Total Distance: \(distance)")
+                            .overline()
                     }
                 }
                 .swipeActions(edge: .trailing) {

@@ -10,6 +10,7 @@ import MapKit
 import Combine
 import GeoJSON
 import CoreData
+import CoreLocation
 
 class RouteViewModel: ObservableObject, Identifiable {
     var locationManager = LocationManager.shared()
@@ -29,6 +30,23 @@ class RouteViewModel: ObservableObject, Identifiable {
     
     @Published var routeName: String = ""
     
+    @Published var routeDistance: Double = 0.0
+    var measurementFormatter: MeasurementFormatter {
+        var measurementFormatter = MeasurementFormatter()
+        measurementFormatter.unitOptions = .providedUnit
+        measurementFormatter.unitStyle = .short
+        measurementFormatter.numberFormatter.maximumFractionDigits = 2
+        return measurementFormatter
+    }
+    var nauticalMilesDistance: String? {
+        if routeDistance != 0.0 {
+            let metersMeasurement = NSMeasurement(doubleValue: routeDistance, unit: UnitLength.meters)
+            var convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles)
+            return measurementFormatter.string(from: convertedMeasurement)
+        }
+        return nil
+    }
+    
     init() {
         if let coordinate = locationManager.lastLocation?.coordinate {
             addWaypoint(waypoint: AnyGeoJSONExportable(CommonDataSource(name: "Your Current Location", location: coordinate)))
@@ -47,9 +65,17 @@ class RouteViewModel: ObservableObject, Identifiable {
     
     func setupFeatureCollection() {
         var features: [Feature] = []
-
+        routeDistance = 0.0
+        var previousCoordinate: CLLocation?
         for waypoint in waypoints {
             let waypoint = waypoint.base
+            if let centerPoint = waypoint.sfGeometry?.degreesCentroid() {
+                let location = CLLocation(latitude: centerPoint.y.doubleValue, longitude: centerPoint.x.doubleValue)
+                if let previousCoordinate = previousCoordinate {
+                    routeDistance += previousCoordinate.distance(from: location)
+                }
+                previousCoordinate = location
+            }
             for feature in waypoint.geoJsonFeatures {
                 features.append(feature)
             }
@@ -72,6 +98,7 @@ class RouteViewModel: ObservableObject, Identifiable {
                 route.createdTime = Date()
                 route.updatedTime = Date()
                 route.name = self.routeName
+                route.distanceMeters = self.routeDistance
                 var set: Set<RouteWaypoint> = Set<RouteWaypoint>()
                 for (i,waypoint) in self.waypoints.enumerated() {
                     let routeWaypoint = RouteWaypoint(context: context)

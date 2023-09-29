@@ -20,6 +20,7 @@ struct CreateRouteView: View {
     @State private var firstWaypointFrameSize: CGSize = .zero
     @State private var lastWaypointFrameSize: CGSize = .zero
     @State private var instructionsFrameSize: CGSize = .zero
+    @State private var distanceFrameSize: CGSize = .zero
     
     @StateObject var routeViewModel: RouteViewModel = RouteViewModel()
     
@@ -94,6 +95,22 @@ struct CreateRouteView: View {
     }
     
     @ViewBuilder
+    func distance() -> some View {
+        if let nauticalMilesDistance = routeViewModel.nauticalMilesDistance {
+            Text("Total Distance: \(nauticalMilesDistance)")
+                .font(Font.overline)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .foregroundColor(Color.onSurfaceColor)
+                .opacity(0.8)
+                .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
+                .listRowSeparator(.hidden, edges: .bottom)
+        }
+        else {
+            EmptyView()
+        }
+    }
+    
+    @ViewBuilder
     func instructions() -> some View {
         Text("Select a feature to add to the route, long press to add custom point, drag to reorder")
             .font(Font.overline)
@@ -110,6 +127,7 @@ struct CreateRouteView: View {
     func routeList() -> some View {
         VStack {
             List {
+                instructions()
                 ForEach(routeViewModel.waypoints, id: \.uniqueId) { waypoint in
                     if let waypointViewBuilder = waypoint.base as? any DataSourceViewBuilder {
                         waypointRow(waypointViewBuilder: waypointViewBuilder, first: !routeViewModel.waypoints.isEmpty && routeViewModel.waypoints.first! == waypoint, last: !routeViewModel.waypoints.isEmpty && routeViewModel.waypoints.last! == waypoint)
@@ -134,7 +152,7 @@ struct CreateRouteView: View {
                 .onMove { from, to in
                     routeViewModel.reorder(fromOffsets: from, toOffset: to)
                 }
-                instructions()
+                distance()
             }
             .listStyle(.plain)
             .padding(.top, 10)
@@ -149,6 +167,20 @@ struct CreateRouteView: View {
     @ViewBuilder
     func sizingOnlyStack() -> some View {
         VStack(spacing: 0) {
+            instructions()
+                .padding(.top, 1)
+                .padding(.bottom, 7)
+                .opacity(0)
+                .overlay(
+                    GeometryReader { geo in
+                        Color.clear.onAppear {
+                            instructionsFrameSize = CGSize(width: .infinity, height: geo.size.height)
+                        }
+                        .onChange(of: geo.size) { geoSize in
+                            instructionsFrameSize = CGSize(width: .infinity, height: geo.size.height)
+                        }
+                    }
+                )
             ForEach($routeViewModel.waypoints.indices, id: \.self) { i in
                 if let waypointViewBuilder = routeViewModel.waypoints[i].base as? any DataSourceViewBuilder {
                     waypointRow(waypointViewBuilder: waypointViewBuilder)
@@ -175,18 +207,20 @@ struct CreateRouteView: View {
                         )
                 }
             }
-            instructions()
+            distance()
+                .padding(.top, 16)
                 .opacity(0)
                 .overlay(
                     GeometryReader { geo in
                         Color.clear.onAppear {
-                            instructionsFrameSize = CGSize(width: .infinity, height: geo.size.height)
+                            distanceFrameSize = CGSize(width: .infinity, height: geo.size.height)
                         }
                         .onChange(of: geo.size) { geoSize in
-                            instructionsFrameSize = CGSize(width: .infinity, height: geo.size.height)
+                            distanceFrameSize = CGSize(width: .infinity, height: geo.size.height)
                         }
                     }
                 )
+            
         }
         .padding(16)
         
