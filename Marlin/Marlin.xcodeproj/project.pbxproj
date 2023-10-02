@@ -290,6 +290,7 @@
 		F7C23E1429115AF40002A7DF /* DocumentPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23E1329115AF40002A7DF /* DocumentPreview.swift */; };
 		F7C23E182911C7D50002A7DF /* ASAMDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23E172911C7D50002A7DF /* ASAMDataTests.swift */; };
 		F7C23E1C2914269D0002A7DF /* asamMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = F7C23E1B2914269D0002A7DF /* asamMockData.json */; };
+		F7C255CD2AC76431003A5B7E /* EncodableExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C255CC2AC76431003A5B7E /* EncodableExtensions.swift */; };
 		F7C361BF29213520001C7C84 /* ntm.json in Resources */ = {isa = PBXBuildFile; fileRef = F7C361BE29213520001C7C84 /* ntm.json */; };
 		F7C361C12921370B001C7C84 /* NoticeToMariners+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C361C02921370B001C7C84 /* NoticeToMariners+DataSource.swift */; };
 		F7C3679428CCC8E500AE1265 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C3679328CCC8E500AE1265 /* DisclaimerView.swift */; };
@@ -757,6 +758,7 @@
 		F7C23E1329115AF40002A7DF /* DocumentPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPreview.swift; sourceTree = "<group>"; };
 		F7C23E172911C7D50002A7DF /* ASAMDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASAMDataTests.swift; sourceTree = "<group>"; };
 		F7C23E1B2914269D0002A7DF /* asamMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = asamMockData.json; sourceTree = "<group>"; };
+		F7C255CC2AC76431003A5B7E /* EncodableExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodableExtensions.swift; sourceTree = "<group>"; };
 		F7C361BE29213520001C7C84 /* ntm.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ntm.json; sourceTree = "<group>"; };
 		F7C361C02921370B001C7C84 /* NoticeToMariners+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoticeToMariners+DataSource.swift"; sourceTree = "<group>"; };
 		F7C3679328CCC8E500AE1265 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
@@ -1917,6 +1919,7 @@
 				F7EB1B0D2A0D7FC200D1433B /* SFGeometryExtensions.swift */,
 				F7830C082A93B517008376F7 /* UIBezierPathExtensions.swift */,
 				D67E5C992A9E4AA5002FCE03 /* MKPolygonExtensions.swift */,
+				F7C255CC2AC76431003A5B7E /* EncodableExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2754,6 +2757,7 @@
 				F7EB1B0E2A0D7FC200D1433B /* SFGeometryExtensions.swift in Sources */,
 				F7B84E242A7309A600640C76 /* BookmarkViewModel.swift in Sources */,
 				F7FFB31028D63C4700C31AA3 /* Modu+MapImage.swift in Sources */,
+				F7C255CD2AC76431003A5B7E /* EncodableExtensions.swift in Sources */,
 				F7FFB30E28D63C2700C31AA3 /* Modu+Decodable.swift in Sources */,
 				F7F597A62862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift in Sources */,
 				F71CC6EE28AD163D000A326C /* PortSummaryView.swift in Sources */,

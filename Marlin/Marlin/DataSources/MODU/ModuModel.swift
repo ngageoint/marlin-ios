@@ -12,7 +12,7 @@ import UIKit
 import OSLog
 import mgrs_ios
 
-struct ModuModel: Locatable, Bookmarkable, Decodable {
+struct ModuModel: Locatable, Bookmarkable, Codable {
     var canBookmark: Bool = false
     
     private enum CodingKeys: String, CodingKey {
@@ -27,6 +27,23 @@ struct ModuModel: Locatable, Bookmarkable, Decodable {
         case navArea
         case name
         case date
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try? container.encode(subregion, forKey: .subregion)
+        try? container.encode(region, forKey: .region)
+        try? container.encode(latitude, forKey: .latitude)
+        try? container.encode(longitude, forKey: .longitude)
+        try? container.encode(distance, forKey: .distance)
+        try? container.encode(specialStatus, forKey: .specialStatus)
+        try? container.encode(rigStatus, forKey: .rigStatus)
+        try? container.encode(position, forKey: .position)
+        try? container.encode(navArea, forKey: .navArea)
+        try? container.encode(name, forKey: .name)
+        if let date = date {
+            try? container.encode(Modu.dateFormatter.string(from: date), forKey: .date)
+        }
     }
     
     var dictionaryValue: [String: Any?] {

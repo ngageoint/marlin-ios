@@ -377,7 +377,7 @@ extension Light: BatchImportable {
         return UserDefaults.standard.dataSourceEnabled(Light.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(Light.self)
     }
     
-    static func newBatchInsertRequest(with propertyList: [LightsProperties]) -> NSBatchInsertRequest {
+    static func newBatchInsertRequest(with propertyList: [LightModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
         NSLog("Creating batch insert request of lights for \(total) lights")
@@ -435,7 +435,7 @@ extension Light: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [LightsProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(from propertiesList: [LightModel], taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

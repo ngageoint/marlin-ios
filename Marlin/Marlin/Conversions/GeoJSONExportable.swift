@@ -29,6 +29,7 @@ struct AnyGeoJSONExportable : GeoJSONExportable {
     
     var id: String { base.uniqueId }
     
+    var name: String?
     
     var base: any GeoJSONExportable
     
@@ -55,37 +56,33 @@ extension GeoJSONExportable {
         var geoJsonProperties: [String: AnyCodable] = [:]
         
         if let exportable = self as? AnyGeoJSONExportable {
-            if let dataSource = exportable.base as? DataSource {
-                geoJsonProperties["marlin_data_source"] = AnyCodable(dataSource.key)
-                for property in type(of:dataSource).properties {
-                    if let gjObject = exportable.base as? NSObject, let value = gjObject.value(forKey: property.key) {
-                        switch (property.type) {
-                        case .location:
-                            print("ignore")
-                        default:
-                            let codable = AnyCodable(value)
-                            geoJsonProperties[property.key] = codable
-                        }
-                        
-                    }
-                }
-            }
-            
+            return exportable.base.geoJsonFeatures
         } else {
             
             if let dataSource = self as? DataSource {
                 geoJsonProperties["marlin_data_source"] = AnyCodable(dataSource.key)
-            }
-            for property in Self.properties {
-                if let gjObject = self as? NSObject, let value = gjObject.value(forKey: property.key) {
-                    switch (property.type) {
-                    case .location:
-                        print("ignore")
-                    default:
-                        let codable = AnyCodable(value)
-                        geoJsonProperties[property.key] = codable
+                
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = .prettyPrinted
+                
+                if let encodable = dataSource as? Encodable, let data = encodable.dictionary {
+                    for (key, value) in data {
+                        geoJsonProperties[key] = AnyCodable(value)
                     }
+                } else {
                     
+                    for property in Self.properties {
+                        if let gjObject = self as? NSObject, let value = gjObject.value(forKey: property.key) {
+                            switch (property.type) {
+                            case .location:
+                                print("ignore")
+                            default:
+                                let codable = AnyCodable(value)
+                                geoJsonProperties[property.key] = codable
+                            }
+                            
+                        }
+                    }
                 }
             }
         }

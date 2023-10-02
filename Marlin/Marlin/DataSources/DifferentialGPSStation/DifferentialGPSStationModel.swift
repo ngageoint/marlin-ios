@@ -56,6 +56,30 @@ struct DifferentialGPSStationModel: Locatable, Bookmarkable, Decodable {
         case volumeNumber
     }
     
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try? container.encode(aidType, forKey: .aidType)
+        try? container.encode(deleteFlag, forKey: .deleteFlag)
+        try? container.encode(featureNumber, forKey: .featureNumber)
+        try? container.encode(frequency, forKey: .frequency)
+        try? container.encode(geopoliticalHeading, forKey: .geopoliticalHeading)
+        try? container.encode(name, forKey: .name)
+        try? container.encode(noticeNumber, forKey: .noticeNumber)
+        try? container.encode(noticeWeek, forKey: .noticeWeek)
+        try? container.encode(noticeYear, forKey: .noticeYear)
+        try? container.encode(position, forKey: .position)
+        try? container.encode(postNote, forKey: .postNote)
+        try? container.encode(precedingNote, forKey: .precedingNote)
+        try? container.encode(range, forKey: .range)
+        try? container.encode(regionHeading, forKey: .regionHeading)
+        try? container.encode(remarks, forKey: .remarks)
+        try? container.encode(removeFromList, forKey: .removeFromList)
+        try? container.encode(sectionHeader, forKey: .sectionHeader)
+        try? container.encode(stationID, forKey: .stationID)
+        try? container.encode(transferRate, forKey: .transferRate)
+        try? container.encode(volumeNumber, forKey: .volumeNumber)
+    }
+    
     var differentialGPSStation: DifferentialGPSStation?
     
     let aidType: String?

@@ -40,6 +40,40 @@ enum DataSourceType: String, CaseIterable {
             return CommonDataSource.self
         }
     }
+    
+    func createModel(dataSource: DataSource?) -> DataSource? {
+        switch (self) {
+        case .asam:
+            if let asam = dataSource as? Asam {
+                return AsamModel(asam: asam)
+            }
+        case .modu:
+            if let modu = dataSource as? Modu {
+                return ModuModel(modu: modu)
+            }
+        case .light:
+            if let light = dataSource as? Light {
+                return LightModel(light: light)
+            }
+        case .port:
+            if let port = dataSource as? Port {
+                return PortModel(port: port)
+            }
+        case .differentialGPSStation:
+            if let differentialGPSStation = dataSource as? DifferentialGPSStation {
+                return DifferentialGPSStationModel(differentialGPSStation: differentialGPSStation)
+            }
+        case .radioBeacon:
+            if let radioBeacon = dataSource as? RadioBeacon {
+                return RadioBeaconModel(radioBeacon: radioBeacon)
+            }
+        case .Common:
+            if let common = dataSource as? CommonDataSource {
+                return common
+            }
+        }
+        return nil
+    }
 }
 
 class DataSourceList: ObservableObject {

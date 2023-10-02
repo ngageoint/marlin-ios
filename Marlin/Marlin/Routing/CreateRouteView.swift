@@ -60,7 +60,7 @@ struct CreateRouteView: View {
     }
     
     @ViewBuilder
-    func waypointRow(waypointViewBuilder: any DataSourceViewBuilder, first: Bool = false, last: Bool = false) -> some View {
+    func waypointRow(waypointViewBuilder: any DataSource, first: Bool = false, last: Bool = false) -> some View {
         HStack {
             Group {
                 DataSourceCircleImage(dataSource: type(of: waypointViewBuilder), size: 12)
@@ -129,7 +129,7 @@ struct CreateRouteView: View {
             List {
                 instructions()
                 ForEach(routeViewModel.waypoints, id: \.uniqueId) { waypoint in
-                    if let waypointViewBuilder = waypoint.base as? any DataSourceViewBuilder {
+                    if let waypointViewBuilder = waypoint.base as? any DataSource {
                         waypointRow(waypointViewBuilder: waypointViewBuilder, first: !routeViewModel.waypoints.isEmpty && routeViewModel.waypoints.first! == waypoint, last: !routeViewModel.waypoints.isEmpty && routeViewModel.waypoints.last! == waypoint)
                             
                             .swipeActions(edge: .trailing) {
@@ -182,7 +182,7 @@ struct CreateRouteView: View {
                     }
                 )
             ForEach($routeViewModel.waypoints.indices, id: \.self) { i in
-                if let waypointViewBuilder = routeViewModel.waypoints[i].base as? any DataSourceViewBuilder {
+                if let waypointViewBuilder = routeViewModel.waypoints[i].base as? any DataSource {
                     waypointRow(waypointViewBuilder: waypointViewBuilder)
                         .opacity(0)
                         .overlay(

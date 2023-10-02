@@ -12,7 +12,7 @@ import UIKit
 import mgrs_ios
 import OSLog
 
-struct PortModel: Locatable, Bookmarkable, DataSource, Decodable {
+struct PortModel: Locatable, Bookmarkable, DataSource, Codable {
     var key: String { Self.key }
     
     var coordinate: CLLocationCoordinate2D {
@@ -144,6 +144,133 @@ struct PortModel: Locatable, Bookmarkable, DataSource, Decodable {
     
     func distanceTo(_ location: CLLocation) -> Double {
         location.distance(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try? container.encode(portNumber, forKey: .portNumber)
+        try? container.encode(latitude, forKey: .latitude)
+        try? container.encode(longitude, forKey: .longitude)
+        try? container.encode(alternateName, forKey: .alternateName)
+        if let anchorageDepth = anchorageDepth {
+            try? container.encode("\(anchorageDepth)", forKey: .anchorageDepth)
+        }
+        if let cargoPierDepth = cargoPierDepth {
+            try? container.encode("\(cargoPierDepth)", forKey: .cargoPierDepth)
+        }
+        if let channelDepth = channelDepth {
+            try? container.encode("\(channelDepth)", forKey: .channelDepth)
+        }
+        try? container.encode(chartNumber, forKey: .chartNumber)
+        try? container.encode(chemicalHoldingTank, forKey: .chemicalHoldingTank)
+        try? container.encode(cmAir, forKey: .cmAir)
+        try? container.encode(cmRadio, forKey: .cmRadio)
+        try? container.encode(cmRadioTel, forKey: .cmRadioTel)
+        try? container.encode(cmRail, forKey: .cmRail)
+        try? container.encode(cmTelephone, forKey: .cmTelephone)
+        try? container.encode(cmTelegraph, forKey: .cmTelegraph)
+        try? container.encode(countryCode, forKey: .countryCode)
+        try? container.encode(countryName, forKey: .countryName)
+        try? container.encode(craneContainer, forKey: .craneContainer)
+        try? container.encode(craneFixed, forKey: .craneFixed)
+        try? container.encode(craneFloating, forKey: .craneFloating)
+        try? container.encode(craneMobile, forKey: .craneMobile)
+        try? container.encode(degauss, forKey: .degauss)
+        try? container.encode(dirtyBallast, forKey: .dirtyBallast)
+        try? container.encode(dnc, forKey: .dnc)
+        try? container.encode(dodWaterBody, forKey: .dodWaterBody)
+        try? container.encode(drydock, forKey: .drydock)
+        try? container.encode(entranceWidth, forKey: .entranceWidth)
+        try? container.encode(erIce, forKey: .erIce)
+        try? container.encode(erOther, forKey: .erOther)
+        try? container.encode(erSwell, forKey: .erSwell)
+        try? container.encode(erTide, forKey: .erTide)
+        try? container.encode(etaMessage, forKey: .etaMessage)
+        try? container.encode(firstPortOfEntry, forKey: .firstPortOfEntry)
+        try? container.encode(garbageDisposal, forKey: .garbageDisposal)
+        try? container.encode(goodHoldingGround, forKey: .goodHoldingGround)
+        try? container.encode(harborSize, forKey: .harborSize)
+        try? container.encode(harborType, forKey: .harborType)
+        try? container.encode(harborUse, forKey: .harborUse)
+        try? container.encode(latitudeDms, forKey: .latitudeDms)
+        try? container.encode(lifts0, forKey: .lifts0)
+        try? container.encode(lifts25, forKey: .lifts25)
+        try? container.encode(lifts50, forKey: .lifts50)
+        try? container.encode(lifts100, forKey: .lifts100)
+        try? container.encode(liquifiedNaturalGasTerminalDepth, forKey: .liquifiedNaturalGasTerminalDepth)
+        try? container.encode(loAnchor, forKey: .loAnchor)
+        try? container.encode(loBeachMoor, forKey: .loBeachMoor)
+        try? container.encode(loBreakBulk, forKey: .loBreakBulk)
+        try? container.encode(loContainer, forKey: .loContainer)
+        try? container.encode(loDangCargo, forKey: .loDangCargo)
+        try? container.encode(loIceMoor, forKey: .loIceMoor)
+        try? container.encode(loLiquidBulk, forKey: .loLiquidBulk)
+        try? container.encode(loLongTerm, forKey: .loLongTerm)
+        try? container.encode(loMedMoor, forKey: .loMedMoor)
+        try? container.encode(longitudeDms, forKey: .longitudeDms)
+        try? container.encode(loOilTerm, forKey: .loOilTerm)
+        try? container.encode(loOther, forKey: .loOther)
+        try? container.encode(loRoro, forKey: .loRoro)
+        try? container.encode(loSolidBulk, forKey: .loSolidBulk)
+        try? container.encode(loWharves, forKey: .loWharves)
+        if let maxVesselBeam = maxVesselBeam {
+            try? container.encode("\(maxVesselBeam)", forKey: .maxVesselBeam)
+        }
+        if let maxVesselDraft = maxVesselDraft {
+            try? container.encode("\(maxVesselDraft)", forKey: .maxVesselDraft)
+        }
+        if let maxVesselLength = maxVesselLength {
+            try? container.encode("\(maxVesselLength)", forKey: .maxVesselLength)
+        }
+        try? container.encode(medFacilities, forKey: .medFacilities)
+        try? container.encode(navArea, forKey: .navArea)
+        try? container.encode(offshoreMaxVesselBeam, forKey: .offshoreMaxVesselBeam)
+        try? container.encode(offshoreMaxVesselDraft, forKey: .offshoreMaxVesselDraft)
+        try? container.encode(offshoreMaxVesselLength, forKey: .offshoreMaxVesselLength)
+        if let oilTerminalDepth = oilTerminalDepth {
+            try? container.encode("\(oilTerminalDepth)", forKey: .oilTerminalDepth)
+        }
+        try? container.encode(overheadLimits, forKey: .overheadLimits)
+        try? container.encode(portName, forKey: .portName)
+        try? container.encode(portSecurity, forKey: .portSecurity)
+        try? container.encode(ptAdvisable, forKey: .ptAdvisable)
+        try? container.encode(ptAvailable, forKey: .ptAvailable)
+        try? container.encode(ptCompulsory, forKey: .ptCompulsory)
+        try? container.encode(ptLocalAssist, forKey: .ptLocalAssist)
+        try? container.encode(publicationNumber, forKey: .publicationNumber)
+        try? container.encode(qtOther, forKey: .qtOther)
+        try? container.encode(qtPratique, forKey: .qtPratique)
+        try? container.encode(qtSanitation, forKey: .qtSanitation)
+        try? container.encode(railway, forKey: .railway)
+        try? container.encode(regionName, forKey: .regionName)
+        try? container.encode(repairCode, forKey: .repairCode)
+        try? container.encode(s57Enc, forKey: .s57Enc)
+        try? container.encode(s101Enc, forKey: .s101Enc)
+        try? container.encode(searchAndRescue, forKey: .searchAndRescue)
+        try? container.encode(shelter, forKey: .shelter)
+        try? container.encode(srDiving, forKey: .srDiving)
+        try? container.encode(srElectricalRepair, forKey: .srElectricalRepair)
+        try? container.encode(srElectrical, forKey: .srElectrical)
+        try? container.encode(srIceBreaking, forKey: .srIceBreaking)
+        try? container.encode(srLongshore, forKey: .srLongshore)
+        try? container.encode(srNavigationalEquipment, forKey: .srNavigationalEquipment)
+        try? container.encode(srSteam, forKey: .srSteam)
+        try? container.encode(suAviationFuel, forKey: .suAviationFuel)
+        try? container.encode(suDeck, forKey: .suDeck)
+        try? container.encode(suDiesel, forKey: .suDiesel)
+        try? container.encode(suEngine, forKey: .suEngine)
+        try? container.encode(suFuel, forKey: .suFuel)
+        try? container.encode(suProvisions, forKey: .suProvisions)
+        try? container.encode(suWater, forKey: .suWater)
+        try? container.encode(tide, forKey: .tide)
+        try? container.encode(trafficSeparationScheme, forKey: .trafficSeparationScheme)
+        try? container.encode(tugsAssist, forKey: .tugsAssist)
+        try? container.encode(tugsSalvage, forKey: .tugsSalvage)
+        try? container.encode(turningArea, forKey: .turningArea)
+        try? container.encode(ukcMgmtSystem, forKey: .ukcMgmtSystem)
+        try? container.encode(unloCode, forKey: .unloCode)
+        try? container.encode(usRep, forKey: .usRep)
+        try? container.encode(vesselTrafficService, forKey: .vesselTrafficService)
     }
     
     init(from decoder: Decoder) throws {

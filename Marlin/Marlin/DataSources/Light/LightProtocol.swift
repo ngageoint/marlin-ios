@@ -9,8 +9,11 @@ import Foundation
 import UIKit
 import MapKit
 import GeoJSON
+import sf_ios
+import OSLog
+import mgrs_ios
 
-class LightModel: NSObject, Locatable, Identifiable, Bookmarkable {
+struct LightModel: Locatable, Bookmarkable, Codable {
     var canBookmark: Bool = false
     var id: String { self.itemKey }
     var itemTitle: String {
@@ -22,42 +25,102 @@ class LightModel: NSObject, Locatable, Identifiable, Bookmarkable {
     }
     
     var light: Light?
-    var lightProperties: LightsProperties?
+//    var lightProperties: LightsProperties?
     
-    var aidType: String?
-    var characteristic: String?
-    var characteristicNumber: Int64?
-    var deleteFlag: String?
-    var featureNumber: String?
-    var geopoliticalHeading: String?
-    var heightFeet: Float?
-    var heightMeters: Float?
-    var internationalFeature: String?
+    private enum CodingKeys: String, CodingKey {
+        case volumeNumber
+        case aidType
+        case geopoliticalHeading
+        case regionHeading
+        case subregionHeading
+        case localHeading
+        case precedingNote
+        case featureNumber
+        case name
+        case position
+        case charNo
+        case characteristic
+        case heightFeetMeters
+        case range
+        case structure
+        case remarks
+        case postNote
+        case noticeNumber
+        case removeFromList
+        case deleteFlag
+        case noticeWeek
+        case noticeYear
+        case sectionHeader
+    }
+    
+    var aidType: String? = nil
+    var characteristic: String? = nil
+    var characteristicNumber: Int? = nil
+    var deleteFlag: String? = nil
+    var featureNumber: String? = nil
+    var geopoliticalHeading: String? = nil
+    var heightFeet: Float? = nil
+    var heightMeters: Float? = nil
+    var internationalFeature: String? = nil
+    var localHeading: String? = nil
     var latitude: Double
     var longitude: Double
-    var mgrs10km: String?
-    var name: String?
-    var noticeNumber: Int64?
-    var noticeWeek: String?
-    var noticeYear: String?
-    var position: String?
-    var postNote: String?
-    var precedingNote: String?
-    var range: String?
-    var regionHeading: String?
-    var remarks: String?
-    var removeFromList: String?
-    var sectionHeader: String?
-    var structure: String?
-    var subregionHeading: String?
-    var volumeNumber: String?
+    var mgrs10km: String? = nil
+    var name: String? = nil
+    var noticeNumber: Int? = nil
+    var noticeWeek: String? = nil
+    var noticeYear: String? = nil
+    var position: String? = nil
+    var postNote: String? = nil
+    var precedingNote: String? = nil
+    var range: String? = nil
+    var regionHeading: String? = nil
+    var remarks: String? = nil
+    var removeFromList: String? = nil
+    var sectionHeader: String? = nil
+    var structure: String? = nil
+    var subregionHeading: String? = nil
+    var volumeNumber: String? = nil
+    var requiresPostProcessing: Bool? = nil
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try? container.encode(aidType, forKey: .aidType)
+        try? container.encode(characteristic, forKey: .characteristic)
+        try? container.encode(characteristicNumber, forKey: .charNo)
+        try? container.encode(deleteFlag, forKey: .deleteFlag)
+        if let featureNumber = featureNumber, let internationalFeature = internationalFeature {
+            try? container.encode("\(featureNumber)\n\(internationalFeature)", forKey: .featureNumber)
+        } else if let featureNumber = featureNumber {
+            try? container.encode("\(featureNumber)", forKey: .featureNumber)
+        }
+        try? container.encode(geopoliticalHeading, forKey: .geopoliticalHeading)
+        if let heightFeet = heightFeet, let heightMeters = heightMeters {
+            try? container.encode("\(heightFeet)\n\(heightMeters)", forKey: .heightFeetMeters)
+        }
+        try? container.encode(localHeading, forKey: .localHeading)
+        try? container.encode(name, forKey: .name)
+        try? container.encode(noticeNumber, forKey: .noticeNumber)
+        try? container.encode(noticeWeek, forKey: .noticeWeek)
+        try? container.encode(noticeYear, forKey: .noticeYear)
+        try? container.encode(postNote, forKey: .postNote)
+        try? container.encode(precedingNote, forKey: .precedingNote)
+        try? container.encode(range, forKey: .range)
+        try? container.encode(regionHeading, forKey: .regionHeading)
+        try? container.encode(remarks, forKey: .remarks)
+        try? container.encode(removeFromList, forKey: .removeFromList)
+        try? container.encode(structure, forKey: .structure)
+        try? container.encode(subregionHeading, forKey: .subregionHeading)
+        try? container.encode(position, forKey: .position)
+        try? container.encode(volumeNumber, forKey: .volumeNumber)
+    }
     
     init(light: Light) {
         self.light = light
         self.canBookmark = true
         self.aidType = light.aidType
         self.characteristic = light.characteristic
-        self.characteristicNumber = light.characteristicNumber
+        self.characteristicNumber = Int(light.characteristicNumber)
         self.deleteFlag = light.deleteFlag
         self.featureNumber = light.featureNumber
         self.geopoliticalHeading = light.geopoliticalHeading
@@ -65,10 +128,11 @@ class LightModel: NSObject, Locatable, Identifiable, Bookmarkable {
         self.heightMeters = light.heightMeters
         self.internationalFeature = light.internationalFeature
         self.latitude = light.latitude
+        self.localHeading = light.localHeading
         self.longitude = light.longitude
         self.mgrs10km = light.mgrs10km
         self.name = light.name
-        self.noticeNumber = light.noticeNumber
+        self.noticeNumber = Int(light.noticeNumber)
         self.noticeWeek = light.noticeWeek
         self.noticeYear = light.noticeYear
         self.position = light.position
@@ -82,52 +146,53 @@ class LightModel: NSObject, Locatable, Identifiable, Bookmarkable {
         self.structure = light.structure
         self.subregionHeading = light.subregionHeading
         self.volumeNumber = light.volumeNumber
+        self.requiresPostProcessing = light.requiresPostProcessing
     }
     
-    init(lightProperties: LightsProperties) {
-        self.lightProperties = lightProperties
-        self.aidType = lightProperties.aidType
-        self.characteristic = lightProperties.characteristic
-        if let characteristicNumber = lightProperties.characteristicNumber {
-            self.characteristicNumber = Int64(characteristicNumber)
-        }
-        self.deleteFlag = lightProperties.deleteFlag
-        self.featureNumber = lightProperties.featureNumber
-        self.geopoliticalHeading = lightProperties.geopoliticalHeading
-        self.heightFeet = lightProperties.heightFeet
-        self.heightMeters = lightProperties.heightMeters
-        self.internationalFeature = lightProperties.internationalFeature
-        self.latitude = lightProperties.latitude
-        self.longitude = lightProperties.longitude
-        self.mgrs10km = lightProperties.mgrs10km
-        self.name = lightProperties.name
-        if let noticeNumber = lightProperties.noticeNumber {
-            self.noticeNumber = Int64(noticeNumber)
-        }
-        self.noticeWeek = lightProperties.noticeWeek
-        self.noticeYear = lightProperties.noticeYear
-        self.position = lightProperties.position
-        self.postNote = lightProperties.postNote
-        self.precedingNote = lightProperties.precedingNote
-        self.range = lightProperties.range
-        self.regionHeading = lightProperties.regionHeading
-        self.remarks = lightProperties.remarks
-        self.removeFromList = lightProperties.removeFromList
-        self.sectionHeader = lightProperties.sectionHeader
-        self.structure = lightProperties.structure
-        self.subregionHeading = lightProperties.subregionHeading
-        self.volumeNumber = lightProperties.volumeNumber
-    }
+//    init(lightProperties: LightsProperties) {
+//        self.lightProperties = lightProperties
+//        self.aidType = lightProperties.aidType
+//        self.characteristic = lightProperties.characteristic
+//        if let characteristicNumber = lightProperties.characteristicNumber {
+//            self.characteristicNumber = Int64(characteristicNumber)
+//        }
+//        self.deleteFlag = lightProperties.deleteFlag
+//        self.featureNumber = lightProperties.featureNumber
+//        self.geopoliticalHeading = lightProperties.geopoliticalHeading
+//        self.heightFeet = lightProperties.heightFeet
+//        self.heightMeters = lightProperties.heightMeters
+//        self.internationalFeature = lightProperties.internationalFeature
+//        self.latitude = lightProperties.latitude
+//        self.longitude = lightProperties.longitude
+//        self.mgrs10km = lightProperties.mgrs10km
+//        self.name = lightProperties.name
+//        if let noticeNumber = lightProperties.noticeNumber {
+//            self.noticeNumber = Int64(noticeNumber)
+//        }
+//        self.noticeWeek = lightProperties.noticeWeek
+//        self.noticeYear = lightProperties.noticeYear
+//        self.position = lightProperties.position
+//        self.postNote = lightProperties.postNote
+//        self.precedingNote = lightProperties.precedingNote
+//        self.range = lightProperties.range
+//        self.regionHeading = lightProperties.regionHeading
+//        self.remarks = lightProperties.remarks
+//        self.removeFromList = lightProperties.removeFromList
+//        self.sectionHeader = lightProperties.sectionHeader
+//        self.structure = lightProperties.structure
+//        self.subregionHeading = lightProperties.subregionHeading
+//        self.volumeNumber = lightProperties.volumeNumber
+//    }
     
-    convenience init?(feature: Feature) {
+    init?(feature: Feature) {
         if let json = try? JSONEncoder().encode(feature.properties), let string = String(data: json, encoding: .utf8) {
             
             print(string)
             let decoder = JSONDecoder()
             print("json is \(string)")
             let jsonData = Data(string.utf8)
-            if let ds = try? decoder.decode(LightsProperties.self, from: jsonData) {
-                self.init(lightProperties: ds)
+            if let ds = try? decoder.decode(LightModel.self, from: jsonData) {
+                self = ds
             } else {
                 return nil
             }
@@ -136,8 +201,181 @@ class LightModel: NSObject, Locatable, Identifiable, Bookmarkable {
         }
     }
     
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        // this potentially is US and international feature number combined with a new line
+        let rawFeatureNumber = try? values.decode(String.self, forKey: .featureNumber)
+        let rawVolumeNumber = try? values.decode(String.self, forKey: .volumeNumber)
+        let rawPosition = try? values.decode(String.self, forKey: .position)
+        
+        guard let featureNumber = rawFeatureNumber,
+              let volumeNumber = rawVolumeNumber,
+              let position = rawPosition
+        else {
+            let values = "featureNumber = \(rawFeatureNumber?.description ?? "nil"), "
+            + "volumeNumber = \(rawVolumeNumber?.description ?? "nil"), "
+            + "position = \(rawPosition?.description ?? "nil")"
+            
+            let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "parsing")
+            logger.debug("Ignored: \(values)")
+            
+            throw MSIError.missingData
+        }
+        
+        self.volumeNumber = volumeNumber
+        self.position = position
+        self.aidType = try? values.decode(String.self, forKey: .aidType)
+        self.characteristic = try? values.decode(String.self, forKey: .characteristic)
+        self.characteristicNumber = try? values.decode(Int.self, forKey: .charNo)
+        self.deleteFlag = try? values.decode(String.self, forKey: .deleteFlag)
+        let featureNumberSplit = featureNumber.split(separator: "\n")
+        self.featureNumber = "\(featureNumberSplit[0])"
+        if featureNumberSplit.count == 2 {
+            self.internationalFeature = "\(featureNumberSplit[1])"
+        } else {
+            self.internationalFeature = nil
+        }
+        self.geopoliticalHeading = try? values.decode(String.self, forKey: .geopoliticalHeading)
+        let heightFeetMeters = try? values.decode(String.self, forKey: .heightFeetMeters)
+        let heightFeetMetersSplit = heightFeetMeters?.split(separator: "\n")
+        self.heightFeet = Float(heightFeetMetersSplit?[0] ?? "0.0")
+        self.heightMeters = Float(heightFeetMetersSplit?[1] ?? "0.0")
+        self.localHeading = try? values.decode(String.self, forKey: .localHeading)
+        self.name = try? values.decode(String.self, forKey: .name)
+        self.noticeNumber = try? values.decode(Int.self, forKey: .noticeNumber)
+        self.noticeWeek = try? values.decode(String.self, forKey: .noticeWeek)
+        self.noticeYear = try? values.decode(String.self, forKey: .noticeYear)
+        self.postNote = try? values.decode(String.self, forKey: .postNote)
+        self.precedingNote = try? values.decode(String.self, forKey: .precedingNote)
+        self.range = try? values.decode(String.self, forKey: .range)
+        if let range = self.range {
+            if Double(range) != nil {
+                self.requiresPostProcessing = false
+            } else {
+                self.requiresPostProcessing = true
+            }
+        } else {
+            self.requiresPostProcessing = false
+        }
+        // TODO: should post process characterstic (colors) and remarks (sectors)
+        if var rawRegionHeading = try? values.decode(String.self, forKey: .regionHeading) {
+            if rawRegionHeading.last == ":" {
+                rawRegionHeading.removeLast()
+            }
+            self.regionHeading = rawRegionHeading
+        } else {
+            self.regionHeading = nil
+        }
+        self.remarks = try? values.decode(String.self, forKey: .remarks)
+        self.removeFromList = try? values.decode(String.self, forKey: .removeFromList)
+        self.structure = try? values.decode(String.self, forKey: .structure)
+        self.subregionHeading = try? values.decode(String.self, forKey: .subregionHeading)
+        
+        if let position = self.position {
+            let coordinate = LightsProperties.parsePosition(position: position)
+            self.longitude = coordinate.longitude
+            self.latitude = coordinate.latitude
+        } else {
+            self.longitude = 0.0
+            self.latitude = 0.0
+        }
+        
+        if characteristic == "" && remarks == nil && name == "" {
+            let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "parsing")
+            logger.debug("Ignored \(featureNumber ) \(volumeNumber ) due to no name, remarks, and characteristic")
+            
+            throw MSIError.missingData
+        }
+        
+        let mgrsPosition = MGRS.from(longitude, latitude)
+        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        self.sectionHeader = nil
+    }
+    
+    static func parsePosition(position: String) -> CLLocationCoordinate2D {
+        var latitude = 0.0
+        var longitude = 0.0
+        
+        let pattern = #"(?<latdeg>[0-9]*)°(?<latminutes>[0-9]*)'(?<latseconds>[0-9]*\.?[0-9]*)\"(?<latdirection>[NS]) \n(?<londeg>[0-9]*)°(?<lonminutes>[0-9]*)'(?<lonseconds>[0-9]*\.?[0-9]*)\"(?<londirection>[EW])"#
+        let regex = try? NSRegularExpression(pattern: pattern, options: [])
+        let nsrange = NSRange(position.startIndex..<position.endIndex,
+                              in: position)
+        if let match = regex?.firstMatch(in: position,
+                                         options: [],
+                                         range: nsrange)
+        {
+            for component in ["latdeg", "latminutes", "latseconds", "latdirection"] {
+                let nsrange = match.range(withName: component)
+                if nsrange.location != NSNotFound,
+                   let range = Range(nsrange, in: position)
+                {
+                    if component == "latdeg" {
+                        latitude = Double(position[range]) ?? 0.0
+                    } else if component == "latminutes" {
+                        latitude += (Double(position[range]) ?? 0.0) / 60
+                    } else if component == "latseconds" {
+                        latitude += (Double(position[range]) ?? 0.0) / 3600
+                    } else if component == "latdirection", position[range] == "S" {
+                        latitude *= -1
+                    }
+                }
+            }
+            for component in ["londeg", "lonminutes", "lonseconds", "londirection"] {
+                let nsrange = match.range(withName: component)
+                if nsrange.location != NSNotFound,
+                   let range = Range(nsrange, in: position)
+                {
+                    if component == "londeg" {
+                        longitude = Double(position[range]) ?? 0.0
+                    } else if component == "lonminutes" {
+                        longitude += (Double(position[range]) ?? 0.0) / 60
+                    } else if component == "lonseconds" {
+                        longitude += (Double(position[range]) ?? 0.0) / 3600
+                    } else if component == "londirection", position[range] == "W" {
+                        longitude *= -1
+                    }
+                }
+            }
+        }
+        
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    
+    // The keys must have the same name as the attributes of the Lights entity.
+    var dictionaryValue: [String: Any?] {
+        [
+            "aidType": aidType,
+            "characteristic": characteristic,
+            "characteristicNumber": characteristicNumber,
+            "deleteFlag": deleteFlag,
+            "featureNumber": featureNumber,
+            "geopoliticalHeading": geopoliticalHeading,
+            "heightFeet": heightFeet,
+            "heightMeters": heightMeters,
+            "internationalFeature": internationalFeature,
+            "localHeading": localHeading,
+            "name": name,
+            "noticeNumber": noticeNumber,
+            "noticeWeek": noticeWeek,
+            "noticeYear": noticeYear,
+            "position": position,
+            "postNote": postNote,
+            "precedingNote": precedingNote,
+            "range": range,
+            "regionHeading": regionHeading,
+            "remarks": remarks,
+            "removeFromList": removeFromList,
+            "structure": structure,
+            "subregionHeading": subregionHeading,
+            "volumeNumber": volumeNumber,
+            "latitude": latitude,
+            "longitude": longitude,
+            "requiresPostProcessing": requiresPostProcessing
+        ]
+    }
+    
     init(characteristicNumber: Int64, structure: String? = nil, name: String? = nil, volumeNumber: String? = nil, featureNumber: String? = nil, noticeWeek: String? = nil, noticeYear: String? = nil, latitude: Double, longitude: Double, remarks: String? = nil, characteristic: String? = nil, range: String? = nil) {
-        self.characteristicNumber = characteristicNumber
+        self.characteristicNumber = Int(characteristicNumber)
         self.structure = structure
         self.name = name
         self.volumeNumber = volumeNumber
@@ -152,8 +390,7 @@ class LightModel: NSObject, Locatable, Identifiable, Bookmarkable {
     }
     
     func isEqualTo(_ other: LightModel) -> Bool {
-        guard let otherShape = other as? Self else { return false }
-        return self.light == otherShape.light
+        return self.light == other.light
     }
     
     static func == (lhs: LightModel, rhs: LightModel) -> Bool {
@@ -471,7 +708,79 @@ class LightModel: NSObject, Locatable, Identifiable, Bookmarkable {
     }
 }
 
-extension LightModel: DataSource {
+extension LightModel: DataSource, GeoJSONExportable {
+    func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
+        var geometryByColor: [UIColor:SFGeometry] = [:]
+        if let lightSectors = lightSectors {
+            let sectorsByColor = Dictionary(grouping: lightSectors, by: \.color)
+            for (color, sectors) in sectorsByColor {
+                let collection = SFGeometryCollection()
+                
+                for sector in sectors {
+                    if sector.obscured {
+                        continue
+                    }
+                    let nauticalMilesMeasurement = NSMeasurement(doubleValue: sector.range ?? 0.0, unit: UnitLength.nauticalMiles)
+                    let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
+                    if sector.startDegrees >= sector.endDegrees {
+                        // this could be an error in the data, or sometimes lights are defined as follows:
+                        // characteristic Q.W.R.
+                        // remarks R. 289°-007°, W.-007°.
+                        // that would mean this light flashes between red and white over those angles
+                        // TODO: figure out what to do with multi colored lights over the same sector
+                        continue
+                    }
+                    let circleCoordinates = coordinate.circleCoordinates(radiusMeters: metersMeasurement.value, startDegrees: sector.startDegrees + 90.0, endDegrees: sector.endDegrees + 90.0)
+                    
+                    let ring = SFLineString()
+                    ring?.addPoint(SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude))
+                    for circleCoordinate in circleCoordinates {
+                        let point = SFPoint(xValue: circleCoordinate.longitude, andYValue: circleCoordinate.latitude)
+                        ring?.addPoint(point)
+                    }
+                    let poly = SFPolygon(ring: ring)
+                    if let poly = poly {
+                        collection?.addGeometry(poly)
+                    }
+                }
+                geometryByColor[color] = collection
+            }
+            
+            return geometryByColor
+        } else if let stringRange = range, let range = Double(stringRange), let lightColors = lightColors {
+            let nauticalMilesMeasurement = NSMeasurement(doubleValue: range, unit: UnitLength.nauticalMiles)
+            let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
+            
+            let circleCoordinates = coordinate.circleCoordinates(radiusMeters: metersMeasurement.value)
+            
+            let ring = SFLineString()
+            for circleCoordinate in circleCoordinates {
+                let point = SFPoint(xValue: circleCoordinate.longitude, andYValue: circleCoordinate.latitude)
+                ring?.addPoint(point)
+            }
+            let poly = SFPolygon(ring: ring)
+            if let poly = poly {
+                geometryByColor[lightColors[0]] = poly
+            }
+            return geometryByColor
+        }
+        return nil
+    }
+    
+    var sfGeometry: SFGeometry? {
+        if let geometryByColor = sfGeometryByColor() {
+            
+            let collection = SFGeometryCollection()
+            
+            for geometry in geometryByColor.values {
+                collection?.addGeometry(geometry)
+            }
+            return collection
+        } else {
+            return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+        }
+    }
+    
     var color: UIColor {
         Self.color
     }

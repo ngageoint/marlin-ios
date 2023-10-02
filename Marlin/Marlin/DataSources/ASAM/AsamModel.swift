@@ -12,7 +12,7 @@ import UIKit
 import OSLog
 import mgrs_ios
 
-struct AsamModel: Locatable, Bookmarkable, Decodable {
+struct AsamModel: Locatable, Bookmarkable, Codable {
     var canBookmark: Bool = false
     
     private enum CodingKeys: String, CodingKey {
@@ -133,6 +133,22 @@ struct AsamModel: Locatable, Bookmarkable, Decodable {
         
         let mgrsPosition = MGRS.from(longitude, latitude)
         self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try? container.encode(reference, forKey: .reference)
+        try? container.encode(latitude, forKey: .latitude)
+        try? container.encode(longitude, forKey: .longitude)
+        try? container.encode(position, forKey: .position)
+        try? container.encode(navArea, forKey: .navArea)
+        try? container.encode(subreg, forKey: .subreg)
+        try? container.encode(hostility, forKey: .hostility)
+        try? container.encode(victim, forKey: .victim)
+        try? container.encode(asamDescription, forKey: .asamDescription)
+        if let date = date {
+            try? container.encode(Asam.dateFormatter.string(from: date), forKey: .date)
+        }
     }
     
     var dictionaryValue: [String: Any?] {

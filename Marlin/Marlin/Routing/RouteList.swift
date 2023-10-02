@@ -26,10 +26,12 @@ struct RouteList: View {
                             if let dataSourceKey = first.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
                                 DataSourceCircleImage(dataSource: type, size: 15)
                             }
-                            Text(first.itemKey ?? "")
-                                .font(Font.overline)
-                                .foregroundColor(Color.onSurfaceColor)
-                                .opacity(0.8)
+                            if let ds = first.decodeToDataSource() {
+                                Text(ds.itemTitle)
+                                    .font(Font.overline)
+                                    .foregroundColor(Color.onSurfaceColor)
+                                    .opacity(0.8)
+                            }
                         }
                         Image(systemName: "ellipsis")
                         if let last = route.waypointArray.last {
@@ -37,10 +39,12 @@ struct RouteList: View {
                                 if let dataSourceKey = last.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
                                     DataSourceCircleImage(dataSource: type, size: 15)
                                 }
-                                Text(last.itemKey ?? "")
-                                    .font(Font.overline)
-                                    .foregroundColor(Color.onSurfaceColor)
-                                    .opacity(0.8)
+                                if let ds = last.decodeToDataSource() {
+                                    Text(ds.itemTitle)
+                                        .font(Font.overline)
+                                        .foregroundColor(Color.onSurfaceColor)
+                                        .opacity(0.8)
+                                }
                             }
                             .onTapGesture {
                                 if let dataSource = last.dataSource, let itemKey = last.itemKey {

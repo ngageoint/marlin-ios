@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import MapKit
 import SwiftUI
+import GeoJSON
 
 struct CommonSummaryView: DataSourceSummaryView {
     var showSectionHeader: Bool = false
@@ -28,7 +29,21 @@ struct CommonSummaryView: DataSourceSummaryView {
     }
 }
 
-class CommonDataSource: NSObject, Locatable, DataSourceViewBuilder, ObservableObject, GeoJSONExportable {
+class CommonDataSource: NSObject, Locatable, DataSourceViewBuilder, ObservableObject, GeoJSONExportable, Codable {
+    
+    private enum CodingKeys: String, CodingKey {
+        case name
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try? values.decode(String.self, forKey: .name)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try? container.encode(name, forKey: .name)
+    }
     
     var itemKey: String {
         return "\(itemTitle)--\(coordinate.latitude)--\(coordinate.longitude)"
@@ -89,5 +104,19 @@ class CommonDataSource: NSObject, Locatable, DataSourceViewBuilder, ObservableOb
     init(name: String? = nil, location: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid){
         self.name = name
         self.coordinate = location
+    }
+    
+    convenience init?(feature: Feature) {
+        if let json = try? JSONEncoder().encode(feature.properties), let string = String(data: json, encoding: .utf8) {
+            let decoder = JSONDecoder()
+            let jsonData = Data(string.utf8)
+            if let ds = try? decoder.decode(CommonDataSource.self, from: jsonData) {
+                self.init(name: ds.name, location: ds.coordinate)
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
     }
 }

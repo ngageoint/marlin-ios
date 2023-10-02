@@ -248,7 +248,9 @@ struct RouteMapView: View {
                         Button("Add To Route") {
                             print("add to route")
                             if let exportable = dataSourceViewBuilder as? any GeoJSONExportable {
-                                routeViewModel.addWaypoint(waypoint: AnyGeoJSONExportable(exportable))
+                                if let model = DataSourceType.fromKey(dataSourceViewBuilder.key)?.createModel(dataSource: dataSourceViewBuilder) as? any GeoJSONExportable {
+                                    routeViewModel.addWaypoint(waypoint: AnyGeoJSONExportable(model))
+                                }
                             }
                         }
                         .buttonStyle(MaterialButtonStyle(type:.text))

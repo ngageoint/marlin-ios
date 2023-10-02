@@ -11,7 +11,7 @@ import CoreLocation
 import mgrs_ios
 import GeoJSON
 
-struct RadioBeaconModel: Decodable, Bookmarkable, Locatable {
+struct RadioBeaconModel: Codable, Bookmarkable, Locatable {
     
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
@@ -49,6 +49,30 @@ struct RadioBeaconModel: Decodable, Bookmarkable, Locatable {
         case sequenceText
         case stationRemark
         case volumeNumber
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try? container.encode(aidType, forKey: .aidType)
+        try? container.encode(characteristic, forKey: .characteristic)
+        try? container.encode(deleteFlag, forKey: .deleteFlag)
+        try? container.encode(featureNumber, forKey: .featureNumber)
+        try? container.encode(frequency, forKey: .frequency)
+        try? container.encode(geopoliticalHeading, forKey: .geopoliticalHeading)
+        try? container.encode(name, forKey: .name)
+        try? container.encode(noticeNumber, forKey: .noticeNumber)
+        try? container.encode(noticeWeek, forKey: .noticeWeek)
+        try? container.encode(noticeYear, forKey: .noticeYear)
+        try? container.encode(position, forKey: .position)
+        try? container.encode(postNote, forKey: .postNote)
+        try? container.encode(precedingNote, forKey: .precedingNote)
+        try? container.encode(range, forKey: .range)
+        try? container.encode(regionHeading, forKey: .regionHeading)
+        try? container.encode(removeFromList, forKey: .removeFromList)
+        try? container.encode(sectionHeader, forKey: .sectionHeader)
+        try? container.encode(sequenceText, forKey: .sequenceText)
+        try? container.encode(stationRemark, forKey: .stationRemark)
+        try? container.encode(volumeNumber, forKey: .volumeNumber)
     }
     
     let aidType: String?

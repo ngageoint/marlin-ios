@@ -11,7 +11,7 @@ import UIKit
 import GeoJSON
 
 class RouteWaypoint: NSManagedObject {
-    func decodeToDataSource() -> Any? {
+    func decodeToDataSource() -> DataSource? {
         do {
             let decoder = JSONDecoder()
             if let json = json {
@@ -39,6 +39,9 @@ class RouteWaypoint: NSManagedObject {
                     case RadioBeacon.key:
                         let rbModel = RadioBeaconModel(feature: ds.features[0])
                         return rbModel
+                    case CommonDataSource.key:
+                        let commonModel = CommonDataSource(feature: ds.features[0])
+                        return commonModel
                     default:
                         print("no")
                     }
@@ -53,7 +56,7 @@ class RouteWaypoint: NSManagedObject {
 
 class Route: NSManagedObject {
     var measurementFormatter: MeasurementFormatter {
-        var measurementFormatter = MeasurementFormatter()
+        let measurementFormatter = MeasurementFormatter()
         measurementFormatter.unitOptions = .providedUnit
         measurementFormatter.unitStyle = .short
         measurementFormatter.numberFormatter.maximumFractionDigits = 2
@@ -70,7 +73,7 @@ class Route: NSManagedObject {
     var nauticalMilesDistance: String? {
         if distanceMeters != 0.0 {
             let metersMeasurement = NSMeasurement(doubleValue: distanceMeters, unit: UnitLength.meters)
-            var convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles)
+            let convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles)
             return measurementFormatter.string(from: convertedMeasurement)
         }
         return nil
