@@ -289,7 +289,7 @@ struct RouteMapView: View {
         HStack(alignment: .top, spacing: 8) {
             // top left button stack
             VStack(alignment: .leading, spacing: 8) {
-                SearchView(mapState: mapState)
+                EmptyView()
             }
             .padding(.leading, 8)
             .padding(.top, 16)
