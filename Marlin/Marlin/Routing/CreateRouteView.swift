@@ -140,9 +140,7 @@ struct CreateRouteView: View {
                             
                             .swipeActions(edge: .trailing) {
                                 Button(role: .destructive)  {
-                                    routeViewModel.waypoints.removeAll { exportable in
-                                        exportable.uniqueId == waypoint.uniqueId
-                                    }
+                                    routeViewModel.removeWaypoint(waypoint: waypoint)
                                 } label: {
                                     Label("Delete", systemImage: "trash")
                                 }

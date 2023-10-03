@@ -75,6 +75,13 @@ class RouteViewModel: ObservableObject, Identifiable {
         setupFeatureCollection()
     }
     
+    func removeWaypoint(waypoint: AnyGeoJSONExportable) {
+        waypoints.removeAll { exportable in
+            exportable.uniqueId == waypoint.uniqueId
+        }
+        setupFeatureCollection()
+    }
+    
     func addWaypoint(waypoint: AnyGeoJSONExportable) {
         waypoints.append(waypoint)
         setupFeatureCollection()
@@ -103,45 +110,43 @@ class RouteViewModel: ObservableObject, Identifiable {
     }
     
     func createRoute(context: NSManagedObjectContext) {
-//        if route == nil {
-            context.perform {
-                var route: Route? = self.route
-                
-                if route == nil {
-                    route = Route(context: context)
-                    route?.createdTime = Date()
-                }
-                if let route = route {
-                    route.updatedTime = Date()
-                    route.name = self.routeName
-                    route.distanceMeters = self.routeDistance
-                    var set: Set<RouteWaypoint> = Set<RouteWaypoint>()
-                    for (i,waypoint) in self.waypoints.enumerated() {
-                        let routeWaypoint = RouteWaypoint(context: context)
-                        routeWaypoint.dataSource = waypoint.key
-                        routeWaypoint.json = waypoint.geoJson
-                        routeWaypoint.order = Int64(i)
-                        routeWaypoint.route = route
-                        routeWaypoint.itemKey = waypoint.itemKey
-                        set.insert(routeWaypoint)
-                    }
-                    route.waypoints = NSSet(set: set)
-                    if let routeFeatureCollection = self.routeFeatureCollection {
-                        do {
-                            let json = try JSONEncoder().encode(routeFeatureCollection)
-                            let geoJson = String(data: json, encoding: .utf8)
-                            if let geoJson = geoJson {
-                                route.geojson = geoJson
-                            }
-                        } catch {
-                            print("error is \(error)")
-                        }
-                    }
-                    
-                    try? context.save()
-                }
+        context.perform {
+            var route: Route? = self.route
+            
+            if route == nil {
+                route = Route(context: context)
+                route?.createdTime = Date()
             }
-//        }
+            if let route = route {
+                route.updatedTime = Date()
+                route.name = self.routeName
+                route.distanceMeters = self.routeDistance
+                var set: Set<RouteWaypoint> = Set<RouteWaypoint>()
+                for (i,waypoint) in self.waypoints.enumerated() {
+                    let routeWaypoint = RouteWaypoint(context: context)
+                    routeWaypoint.dataSource = waypoint.key
+                    routeWaypoint.json = waypoint.geoJson
+                    routeWaypoint.order = Int64(i)
+                    routeWaypoint.route = route
+                    routeWaypoint.itemKey = waypoint.itemKey
+                    set.insert(routeWaypoint)
+                }
+                route.waypoints = NSSet(set: set)
+                if let routeFeatureCollection = self.routeFeatureCollection {
+                    do {
+                        let json = try JSONEncoder().encode(routeFeatureCollection)
+                        let geoJson = String(data: json, encoding: .utf8)
+                        if let geoJson = geoJson {
+                            route.geojson = geoJson
+                        }
+                    } catch {
+                        print("error is \(error)")
+                    }
+                }
+                
+                try? context.save()
+            }
+        }
     }
 }
 
