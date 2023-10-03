@@ -11,7 +11,7 @@ import Combine
 struct NavigationalWarningNavAreaListView: View {
     @AppStorage<String> var lastSeen: String
     @State var lastSavedDate: Date = Date(timeIntervalSince1970: 0)
-    @State var scrollingTo: ObjectIdentifier?
+    @State var scrollingTo: String?
     @State var shouldSavePosition: Bool = false
     
     @State var firstUnseenNavigationalWarning: NavigationalWarning?

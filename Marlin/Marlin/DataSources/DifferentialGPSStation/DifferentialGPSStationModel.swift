@@ -23,7 +23,7 @@ struct DifferentialGPSStationPropertyContainer: Decodable {
     }
 }
 
-struct DifferentialGPSStationModel: Locatable, Bookmarkable, Decodable {
+struct DifferentialGPSStationModel: Locatable, Bookmarkable, Codable {
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }

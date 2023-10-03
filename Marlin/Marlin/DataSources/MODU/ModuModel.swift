@@ -12,7 +12,7 @@ import UIKit
 import OSLog
 import mgrs_ios
 
-struct ModuModel: Locatable, Bookmarkable, Codable {
+struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable {
     var canBookmark: Bool = false
     
     private enum CodingKeys: String, CodingKey {

@@ -48,7 +48,9 @@ protocol GeoJSONExportable: Identifiable, Equatable {
     var uniqueId: String { get }
 }
 extension GeoJSONExportable {
-    
+    var id: String {
+        uniqueId
+    }
     var uniqueId: String {
         return "\(key)--\(itemKey)"
     }

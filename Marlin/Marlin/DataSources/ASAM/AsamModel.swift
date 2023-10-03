@@ -12,7 +12,11 @@ import UIKit
 import OSLog
 import mgrs_ios
 
-struct AsamModel: Locatable, Bookmarkable, Codable {
+struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable {
+    var sfGeometry: SFGeometry? {
+        return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+    }
+    
     var canBookmark: Bool = false
     
     private enum CodingKeys: String, CodingKey {

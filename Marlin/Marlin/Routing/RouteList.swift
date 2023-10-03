@@ -59,6 +59,9 @@ struct RouteList: View {
                             .overline()
                     }
                 }
+                .onTapGesture {
+                    path.append(MarlinRoute.editRoute(routeURI: route.objectID.uriRepresentation()))
+                }
                 .swipeActions(edge: .trailing) {
                     Button(role: .destructive)  {
                         managedObjectContext.perform {

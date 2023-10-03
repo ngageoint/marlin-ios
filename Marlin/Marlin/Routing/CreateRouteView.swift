@@ -15,6 +15,7 @@ struct CreateRouteView: View {
     
     let maxFeatureAreaSize: CGFloat = 300
     @Binding var path: NavigationPath
+    @State var routeURI: URL?
     
     @State private var waypointsFrameSize: CGSize = .zero
     @State private var firstWaypointFrameSize: CGSize = .zero

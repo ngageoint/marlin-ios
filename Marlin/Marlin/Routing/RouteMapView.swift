@@ -15,6 +15,12 @@ import CoreLocation
 class RouteViewModel: ObservableObject, Identifiable {
     var locationManager = LocationManager.shared()
     
+    var routeURI: URL? {
+        didSet {
+            
+        }
+    }
+    
     @Published var routeMKLine: MKGeodesicPolyline?
     @Published var routeFeatureCollection: FeatureCollection? {
         didSet {

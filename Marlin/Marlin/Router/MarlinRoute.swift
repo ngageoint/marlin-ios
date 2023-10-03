@@ -20,6 +20,7 @@ enum MarlinRoute: Hashable {
     case disclaimer
     case acknowledgements
     case createRoute
+    case editRoute(routeURI: URL?)
     case dataSourceDetail(dataSourceKey: String, itemKey: String)
     case dataSourceRouteDetail(dataSourceKey: String, itemKey: String, waypointURI: URL)
 }
@@ -66,6 +67,8 @@ struct MarlinRouteModifier: ViewModifier {
                     AcknowledgementsView()
                 case .createRoute:
                     CreateRouteView(path: $path)
+                case .editRoute(let routeURI):
+                    CreateRouteView(path: $path, routeURI: routeURI)
                 case .dataSourceDetail(let dataSourceKey, let itemKey):
                     switch dataSourceKey {
                     case Asam.key:

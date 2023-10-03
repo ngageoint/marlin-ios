@@ -12,7 +12,11 @@ import UIKit
 import mgrs_ios
 import OSLog
 
-struct PortModel: Locatable, Bookmarkable, DataSource, Codable {
+struct PortModel: Locatable, Bookmarkable, DataSource, Codable, GeoJSONExportable {
+    var sfGeometry: SFGeometry? {
+        return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+    }
+        
     var key: String { Self.key }
     
     var coordinate: CLLocationCoordinate2D {
