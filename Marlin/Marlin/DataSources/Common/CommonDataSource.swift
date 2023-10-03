@@ -33,16 +33,25 @@ class CommonDataSource: NSObject, Locatable, DataSourceViewBuilder, ObservableOb
     
     private enum CodingKeys: String, CodingKey {
         case name
+        case latitude
+        case longitude
     }
     
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         self.name = try? values.decode(String.self, forKey: .name)
+        let latitude = try? values.decode(Double.self, forKey: .latitude)
+        let longitude = try? values.decode(Double.self, forKey: .longitude)
+        if let latitude = latitude, let longitude = longitude {
+            self.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        }
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try? container.encode(name, forKey: .name)
+        try? container.encode(coordinate.latitude, forKey: .latitude)
+        try? container.encode(coordinate.longitude, forKey: .longitude)
     }
     
     var itemKey: String {

@@ -14,10 +14,21 @@ import CoreLocation
 
 class RouteViewModel: ObservableObject, Identifiable {
     var locationManager = LocationManager.shared()
-    
+    var route: Route?
     var routeURI: URL? {
         didSet {
-            
+            let context = PersistenceController.current.viewContext
+            if let routeURI = routeURI, let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: routeURI), let route = try? context.existingObject(with: id) as? Route {
+                self.route = route
+                routeName = route.name ?? ""
+                routeDistance = route.distanceMeters
+                waypoints = []
+                for waypoint in route.waypointArray {
+                    if let exportable = waypoint.decodeToDataSource() as? any GeoJSONExportable {
+                        addWaypoint(waypoint: AnyGeoJSONExportable(exportable))
+                    }
+                }
+            }
         }
     }
     
@@ -38,7 +49,7 @@ class RouteViewModel: ObservableObject, Identifiable {
     
     @Published var routeDistance: Double = 0.0
     var measurementFormatter: MeasurementFormatter {
-        var measurementFormatter = MeasurementFormatter()
+        let measurementFormatter = MeasurementFormatter()
         measurementFormatter.unitOptions = .providedUnit
         measurementFormatter.unitStyle = .short
         measurementFormatter.numberFormatter.maximumFractionDigits = 2
@@ -47,14 +58,14 @@ class RouteViewModel: ObservableObject, Identifiable {
     var nauticalMilesDistance: String? {
         if routeDistance != 0.0 {
             let metersMeasurement = NSMeasurement(doubleValue: routeDistance, unit: UnitLength.meters)
-            var convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles)
+            let convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles)
             return measurementFormatter.string(from: convertedMeasurement)
         }
         return nil
     }
     
     init() {
-        if let coordinate = locationManager.lastLocation?.coordinate {
+        if let coordinate = locationManager.lastLocation?.coordinate, CLLocationCoordinate2DIsValid(coordinate) {
             addWaypoint(waypoint: AnyGeoJSONExportable(CommonDataSource(name: "Your Current Location", location: coordinate)))
         }
     }
@@ -91,46 +102,46 @@ class RouteViewModel: ObservableObject, Identifiable {
         routeFeatureCollection = featureCollection
     }
     
-    var route: Route? {
-        didSet {
-            
-        }
-    }
-    
     func createRoute(context: NSManagedObjectContext) {
-        if route == nil {
+//        if route == nil {
             context.perform {
-                let route = Route(context: context)
-                route.createdTime = Date()
-                route.updatedTime = Date()
-                route.name = self.routeName
-                route.distanceMeters = self.routeDistance
-                var set: Set<RouteWaypoint> = Set<RouteWaypoint>()
-                for (i,waypoint) in self.waypoints.enumerated() {
-                    let routeWaypoint = RouteWaypoint(context: context)
-                    routeWaypoint.dataSource = waypoint.key
-                    routeWaypoint.json = waypoint.geoJson
-                    routeWaypoint.order = Int64(i)
-                    routeWaypoint.route = route
-                    routeWaypoint.itemKey = waypoint.itemKey
-                    set.insert(routeWaypoint)
+                var route: Route? = self.route
+                
+                if route == nil {
+                    route = Route(context: context)
+                    route?.createdTime = Date()
                 }
-                route.waypoints = NSSet(set: set)
-                if let routeFeatureCollection = self.routeFeatureCollection {
-                    do {
-                        let json = try JSONEncoder().encode(routeFeatureCollection)
+                if let route = route {
+                    route.updatedTime = Date()
+                    route.name = self.routeName
+                    route.distanceMeters = self.routeDistance
+                    var set: Set<RouteWaypoint> = Set<RouteWaypoint>()
+                    for (i,waypoint) in self.waypoints.enumerated() {
+                        let routeWaypoint = RouteWaypoint(context: context)
+                        routeWaypoint.dataSource = waypoint.key
+                        routeWaypoint.json = waypoint.geoJson
+                        routeWaypoint.order = Int64(i)
+                        routeWaypoint.route = route
+                        routeWaypoint.itemKey = waypoint.itemKey
+                        set.insert(routeWaypoint)
+                    }
+                    route.waypoints = NSSet(set: set)
+                    if let routeFeatureCollection = self.routeFeatureCollection {
+                        do {
+                            let json = try JSONEncoder().encode(routeFeatureCollection)
                             let geoJson = String(data: json, encoding: .utf8)
                             if let geoJson = geoJson {
                                 route.geojson = geoJson
                             }
-                    } catch {
-                        print("error is \(error)")
+                        } catch {
+                            print("error is \(error)")
+                        }
                     }
+                    
+                    try? context.save()
                 }
-                
-                try? context.save()
             }
-        }
+//        }
     }
 }
 

@@ -58,6 +58,11 @@ struct CreateRouteView: View {
         }
         .navigationTitle(Route.fullDataSourceName)
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            if let routeURI = routeURI {
+                routeViewModel.routeURI = routeURI
+            }
+        }
     }
     
     @ViewBuilder
