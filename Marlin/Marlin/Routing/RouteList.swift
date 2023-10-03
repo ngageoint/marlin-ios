@@ -16,49 +16,53 @@ struct RouteList: View {
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             List(routes) { route in
-                VStack(alignment: .leading) {
-                    Text("\(route.name ?? "")")
-                        .primary()
-                    Text("Created \(route.createdTime?.formatted() ?? "")")
-                        .overline()
-                    HStack {
-                        if let first = route.waypointArray.first {
-                            if let dataSourceKey = first.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
-                                DataSourceCircleImage(dataSource: type, size: 15)
-                            }
-                            if let ds = first.decodeToDataSource() {
-                                Text(ds.itemTitle)
-                                    .font(Font.overline)
-                                    .foregroundColor(Color.onSurfaceColor)
-                                    .opacity(0.8)
-                            }
-                        }
-                        Image(systemName: "ellipsis")
-                        if let last = route.waypointArray.last {
-                            Group {
-                                if let dataSourceKey = last.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("\(route.name ?? "")")
+                            .primary()
+                        Text("Created \(route.createdTime?.formatted() ?? "")")
+                            .overline()
+                        HStack {
+                            if let first = route.waypointArray.first {
+                                if let dataSourceKey = first.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
                                     DataSourceCircleImage(dataSource: type, size: 15)
                                 }
-                                if let ds = last.decodeToDataSource() {
+                                if let ds = first.decodeToDataSource() {
                                     Text(ds.itemTitle)
                                         .font(Font.overline)
                                         .foregroundColor(Color.onSurfaceColor)
                                         .opacity(0.8)
                                 }
                             }
-                            .onTapGesture {
-                                if let dataSource = last.dataSource, let itemKey = last.itemKey {
-                                    
-                                    path.append(MarlinRoute.dataSourceRouteDetail(dataSourceKey: dataSource, itemKey: itemKey, waypointURI: last.objectID.uriRepresentation()))
+                            Image(systemName: "ellipsis")
+                            if let last = route.waypointArray.last {
+                                Group {
+                                    if let dataSourceKey = last.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
+                                        DataSourceCircleImage(dataSource: type, size: 15)
+                                    }
+                                    if let ds = last.decodeToDataSource() {
+                                        Text(ds.itemTitle)
+                                            .font(Font.overline)
+                                            .foregroundColor(Color.onSurfaceColor)
+                                            .opacity(0.8)
+                                    }
+                                }
+                                .onTapGesture {
+                                    if let dataSource = last.dataSource, let itemKey = last.itemKey {
+                                        
+                                        path.append(MarlinRoute.dataSourceRouteDetail(dataSourceKey: dataSource, itemKey: itemKey, waypointURI: last.objectID.uriRepresentation()))
+                                    }
                                 }
                             }
                         }
+                        if let distance = route.nauticalMilesDistance {
+                            Text("Total Distance: \(distance)")
+                                .overline()
+                        }
                     }
-                    if let distance = route.nauticalMilesDistance {
-                        Text("Total Distance: \(distance)")
-                            .overline()
-                    }
+                    Spacer()
                 }
+                .contentShape(Rectangle())
                 .onTapGesture {
                     path.append(MarlinRoute.editRoute(routeURI: route.objectID.uriRepresentation()))
                 }
