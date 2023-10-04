@@ -23,7 +23,11 @@ struct DifferentialGPSStationPropertyContainer: Decodable {
     }
 }
 
-struct DifferentialGPSStationModel: Locatable, Bookmarkable, Codable {
+struct DifferentialGPSStationModel: Locatable, Bookmarkable, Codable, GeoJSONExportable {
+    var sfGeometry: SFGeometry? {
+        return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+    }
+    
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
