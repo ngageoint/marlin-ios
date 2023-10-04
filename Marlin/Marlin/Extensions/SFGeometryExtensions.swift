@@ -8,6 +8,15 @@
 import Foundation
 import CoreLocation
 import GeoJSON
+import sf_ios
+
+// Need this here so that XCode will compile the SFGeometryCollection class before it is used in a subsequent file
+// why XCode will not just compile the class in the file it is referenced in is beyond me..... DRB 2023 OCT 4
+extension SFGeometryCollection {
+    var thingToMakeItCompile: String {
+        "hi"
+    }
+}
 
 extension SFPolygon {
 
