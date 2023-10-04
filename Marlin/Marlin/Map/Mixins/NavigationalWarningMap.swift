@@ -60,12 +60,12 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
             return nil
         }
         let screenPercentage = 0.03
-        let tolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
-        let minLon = location.longitude - tolerance
-        let maxLon = location.longitude + tolerance
-        let minLat = location.latitude - tolerance
-        let maxLat = location.latitude + tolerance
-        
+        let distanceTolerance = mapView.visibleMapRect.size.width * Double(screenPercentage)
+        let longitudeTolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
+        let minLon = location.longitude - longitudeTolerance
+        let maxLon = location.longitude + longitudeTolerance
+        let minLat = location.latitude - longitudeTolerance
+        let maxLat = location.latitude + longitudeTolerance
         guard let fetchRequest = self.getFetchRequest(show: self.show) else {
             return nil
         }
@@ -82,7 +82,7 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
         if let navWarnings = try? PersistenceController.current.fetch(fetchRequest: fetchRequest) as? [NavigationalWarning] {
             // verify the actual shapes match and not just the bounding box
             for warning in navWarnings {
-                if verifyMatch(warning: warning, location: location, tolerance: tolerance) {
+                if verifyMatch(warning: warning, location: location, longitudeTolerance: longitudeTolerance, distanceTolerance: distanceTolerance) {
                     matched.append(warning)
                 }
             }
@@ -91,7 +91,7 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
         return matched
     }
     
-    func verifyMatch(warning: NavigationalWarning, location: CLLocationCoordinate2D, tolerance: Double) -> Bool {
+    func verifyMatch(warning: NavigationalWarning, location: CLLocationCoordinate2D, longitudeTolerance: Double, distanceTolerance: Double) -> Bool {
         if let locations = warning.locations {
             for wktLocation in locations {
                 if let wkt = wktLocation["wkt"] {
@@ -107,14 +107,14 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
                                 }
                             }
                         } else if let polyline = shape as? MKPolyline {
-                            if lineHitTest(line: polyline, location: location, tolerance: tolerance * 2.0) {
+                            if lineHitTest(line: polyline, location: location, distanceTolerance: distanceTolerance) {
                                 return true
                             }
                         } else if let point = shape as? MKPointAnnotation {
-                            let minLon = location.longitude - tolerance
-                            let maxLon = location.longitude + tolerance
-                            let minLat = location.latitude - tolerance
-                            let maxLat = location.latitude + tolerance
+                            let minLon = location.longitude - longitudeTolerance
+                            let maxLon = location.longitude + longitudeTolerance
+                            let minLat = location.latitude - longitudeTolerance
+                            let maxLat = location.latitude + longitudeTolerance
                             if minLon <= point.coordinate.longitude && maxLon >= point.coordinate.longitude && minLat <= point.coordinate.latitude && maxLat >= point.coordinate.latitude {
                                 return true
                             }
@@ -314,7 +314,7 @@ class NavigationalWarningMap: NSObject, MapMixin {
         
         for overlay in mapOverlays {
             if let overlay = overlay as? NavigationalWarningPolyline {
-                if lineHitTest(line: overlay, location: location, tolerance: tolerance), let warning = overlay.warning {
+                if lineHitTest(line: overlay, location: location, distanceTolerance: tolerance), let warning = overlay.warning {
                     PersistenceController.current.viewContext.performAndWait {
                         if let thing = PersistenceController.current.viewContext.object(with: warning.objectID) as? NavigationalWarning {
                             items.insert(thing)

@@ -745,4 +745,100 @@ final class MarlinMapTests: XCTestCase {
         NotificationCenter.default.post(Notification(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: navWarn)))
         wait(for: [e3], timeout: 10)
     }
+    
+    func testTapPolylineNavWarning()  {
+        // render map
+        UserDefaults.standard.set(true, forKey: "showOnMap\(NavigationalWarning.key)")
+        UserDefaults.standard.setFilter(NavigationalWarning.key, filter: [])
+        struct Container: View {
+            @StateObject var mapState: MapState = MapState()
+            @State var filterOpen: Bool = false
+            @StateObject var mixins: MainMapMixins = MainMapMixins()
+            
+            var body: some View {
+                ZStack {
+                    MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
+                }
+                .onAppear {
+                    mapState.center = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 10, longitude: -18), latitudinalMeters: 5000000, longitudinalMeters: 4000000)
+                }
+            }
+        }
+        
+        // Insert test case: Multi-polyline consisting of 3 disjointed lines
+        let jsonString = """
+        {
+            "msgYear": 2023,
+            "msgNumber": 2044,
+            "navArea": "A",
+            "subregion": "51",
+            "text": "EASTERN NORTH ATLANTIC.\\nSENEGAL.\\nDNC 01.\\n1. CABLE OPERATIONS IN PROGRESS UNTIL 010100Z NOV\\n   BY CABLESHIP ILE D'AIX ALONG TRACKLINES JOINING:\\n   A. 04-04.00N 013-40.00W, 06-55.00N 018-25.00W.\\n   B. 06-51.00N 018-21.00W, 14-43.00N 019-44.00W.\\n   C. 14-48.00N 018-10.00W, 20-07.00N 019-57.00W.\\n   WIDE BERTH REQUESTED.\\n2. CANCEL HYDROLANT 2007/23.\\n3. CANCEL THIS MSG 010200Z NOV 23.\\n",
+            "status": "A",
+            "issueDate": "111705Z SEP 2023",
+            "authority": "NAVAREA II 243/23 111602Z SEP 23.",
+            "cancelDate": null,
+            "cancelNavArea": null,
+            "cancelMsgYear": null,
+            "cancelMsgNumber": null,
+            "year": 2023,
+            "area": "A",
+            "number": 2044
+        }
+        """
+        let testCase: NavigationalWarningProperties = try! JSONDecoder().decode(NavigationalWarningProperties.self, from: Data(jsonString.utf8))
+        Task {
+            guard let count = try? await NavigationalWarning.importRecords(from:[testCase],taskContext:persistentStore.viewContext), count > 0 else {
+                XCTFail()
+                return
+            }
+            NavigationalWarning.postProcess()
+        }
+        // show app
+        let appState = AppState()
+        UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
+        let container = Container()
+            .environmentObject(appState)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
+        
+        let controller = UIHostingController(rootView: container)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        tester().wait(forTimeInterval: 5)
+        
+        // tap to the right of the upper line
+        let e1 = expectation(forNotification: .MapItemsTapped, object: nil) { notification in
+            let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
+            let warnings = tapNotification.items as! [NavigationalWarning]
+            guard warnings.count > 0 else {
+                return false
+            }
+            return warnings[0].msgNumber == 2044
+        }
+        tester().tapScreen(at: CGPoint(x: 196, y: 351))
+        wait(for: [e1], timeout: 3)
+        
+        // tap to the left of the middle line
+        let e2 = expectation(forNotification: .MapItemsTapped, object: nil) { notification in
+            let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
+            let warnings = tapNotification.items as! [NavigationalWarning]
+            guard warnings.count > 0 else {
+                return false
+            }
+            return warnings[0].msgNumber == 2044
+        }
+        tester().tapScreen(at: CGPoint(x: 176, y: 440))
+        wait(for: [e2], timeout: 3)
+        
+        // tap below the bottom line
+        let e3 = expectation(forNotification: .MapItemsTapped, object: nil) { notification in
+            let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
+            let warnings = tapNotification.items as! [NavigationalWarning]
+            guard warnings.count > 0 else {
+                return false
+            }
+            return warnings[0].msgNumber == 2044
+        }
+        tester().tapScreen(at: CGPoint(x: 210, y: 496))
+        wait(for: [e3], timeout: 3)
+    }
 }

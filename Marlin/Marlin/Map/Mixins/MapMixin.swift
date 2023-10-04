@@ -51,7 +51,7 @@ extension MapMixin {
         return onShape
     }
     
-    func lineHitTest(line: MKPolyline, location: CLLocationCoordinate2D, tolerance: Double) -> Bool {
+    func lineHitTest(line: MKPolyline, location: CLLocationCoordinate2D, distanceTolerance: Double) -> Bool {
         guard let renderer = (renderer(overlay: line) as? MKPolylineRenderer ?? standardRenderer(overlay: line) as? MKPolylineRenderer) else {
             return false
         }
@@ -59,7 +59,8 @@ extension MapMixin {
         
         let mapPoint = MKMapPoint(location)
         let point = renderer.point(for: mapPoint)
-        let onShape = renderer.path.contains(point)
+        let bufferedPath = renderer.path.copy(strokingWithWidth: distanceTolerance * 2, lineCap: renderer.lineCap, lineJoin: renderer.lineJoin, miterLimit: renderer.miterLimit)
+        let onShape = bufferedPath.contains(point)
         return onShape
     }
     
