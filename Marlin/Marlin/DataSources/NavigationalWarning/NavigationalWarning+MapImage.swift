@@ -92,6 +92,31 @@ extension NavigationalWarning: MapImage {
                         path.lineWidth = 4
                         NavigationalWarning.color.setStroke()
                         path.stroke()
+                    } else if let circle = shape as? MKCircle {
+                        let circleCoordinates = circle.coordinate.circleCoordinates(radiusMeters: circle.radius)
+                        let path = UIBezierPath()
+                        
+                        var pixel = circleCoordinates[0].toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+                        path.move(to: pixel)
+                        for circleCoordinate in circleCoordinates {
+                            pixel = circleCoordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+                            path.addLine(to: pixel)
+                        }
+                        path.lineWidth = 4
+                        path.close()
+                        NavigationalWarning.color.withAlphaComponent(0.3).setFill()
+                        NavigationalWarning.color.setStroke()
+                        path.fill()
+                        path.stroke()
+                        
+                        // put a dot in the middle
+                        pixel = circle.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+                        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * 0.5
+                        let centerDot = UIBezierPath(arcCenter: pixel, radius: radius, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: true)
+                        centerDot.lineWidth = 0.5
+                        centerDot.stroke()
+                        NavigationalWarning.color.setFill()
+                        centerDot.fill()
                     }
                 }
             }

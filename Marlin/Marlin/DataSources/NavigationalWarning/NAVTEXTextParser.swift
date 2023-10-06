@@ -382,7 +382,7 @@ class NAVTEXTextParser {
             currentLocationType = "Circle"
         } else if line.contains("TRACKLINE") {
             currentLocationType = "LineString"
-        } else if line.contains("POSITION") {
+        } else if line.contains("POSITION") || line.contains("VICINITY") {
             currentLocationType = "Point"
         }
     }

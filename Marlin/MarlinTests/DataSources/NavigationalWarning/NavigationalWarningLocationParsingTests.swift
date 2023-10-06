@@ -185,6 +185,31 @@ final class NavigationalWarningLocationParsingTests: XCTestCase {
 //        print("\(parser20.parseToMappedLocation())\n\n")
     }
     
+    func testPointAndPolygon() {
+        let text = "1. UNDERWATER OPERATIONS IN PROGRESS UNTIL\n" +
+        "   FURTHER NOTICE:\n" +
+        "   A. IN AREA BOUND BY\n" +
+        "      20-26.10S 057-43.1E0, 20-25.10S 057-44.00E,\n" +
+        "      20-24.00S 057-45.50E.\n" +
+        "   B. IN VICINITY 20-26.60S 057-44.60E.\n" +
+        "   TWO MILE BERTH REQUESTED.\n" +
+        "2. CANCEL HYDROPAC 536/23.\n"
+        let parser = NAVTEXTextParser(text: text)
+        let mapped = parser.parseToMappedLocation()
+        XCTAssertEqual(2, mapped?.locations.count)
+        let location1: LocationWithType = mapped!.locations.first!
+        XCTAssertEqual(location1.locationType, "Polygon")
+        XCTAssertEqual(location1.location.count, 3)
+        XCTAssertEqual(location1.location[0], "20-26.10S 057-43.1E")
+        XCTAssertEqual(location1.location[1], "20-25.10S 057-44.00E")
+        XCTAssertEqual(location1.location[2], "20-24.00S 057-45.50E")
+        let location2 = mapped!.locations.last!
+        XCTAssertEqual(location2.locationType, "Point")
+        XCTAssertEqual(location2.location.count, 1)
+        XCTAssertEqual(location2.location[0], "20-26.60S 057-44.60E")
+        XCTAssertEqual(location2.distanceFromLocation, "TWO MILE BERTH")
+    }
+    
     func testGetHeadingAndSections() {
         let parser = NAVTEXTextParser(text: "Somewhere.\nSpecific.\nCHART 10\nSubject has something to say.\n1. number 1 thing\n")
         let hs = parser.getHeadingAndSections(string: parser.text)
