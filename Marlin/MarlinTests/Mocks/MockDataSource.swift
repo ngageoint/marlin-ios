@@ -40,6 +40,10 @@ enum MockEnum: String, CaseIterable, CustomStringConvertible {
 }
 
 class MockDataSource: DataSource {
+    var itemKey: String { "itemKey" }
+    
+    var itemTitle: String { "itemTitle" }
+    
     static var properties: [Marlin.DataSourceProperty] = [
         DataSourceProperty(name: "String", key: "stringProperty", type: .string),
         DataSourceProperty(name: "Date", key: "dateProperty", type: .date),
@@ -102,6 +106,10 @@ class MockDataSource: DataSource {
 }
 
 class MockDataSourceDefaultSort: DataSource {
+    var itemKey: String { "itemKey" }
+    
+    var itemTitle: String { "itemTitle" }
+    
     static var properties: [Marlin.DataSourceProperty] = [
         DataSourceProperty(name: "String", key: "stringProperty", type: .string),
         DataSourceProperty(name: "Date", key: "dateProperty", type: .date),
@@ -156,6 +164,10 @@ class MockDataSourceDefaultSort: DataSource {
 }
 
 class MockDataSourceNonMappable: DataSource {
+    var itemKey: String { "itemKey" }
+    
+    var itemTitle: String { "itemTitle" }
+    
     static var properties: [Marlin.DataSourceProperty] = [
         DataSourceProperty(name: "String", key: "stringProperty", type: .string),
         DataSourceProperty(name: "Date", key: "dateProperty", type: .date),

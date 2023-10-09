@@ -59,7 +59,7 @@ final class AsamSummaryViewTests: XCTestCase {
             return
         }
         
-        let summary = AsamSummaryView(asam: newItem)
+        let summary = AsamSummaryView(asam: AsamModel(asam:newItem))
             .environment(\.managedObjectContext, persistentStore.viewContext)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -92,7 +92,7 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = nil
         newItem.victim = "Boat"
         
-        let summary = AsamSummaryView(asam: newItem)
+        let summary = AsamSummaryView(asam: AsamModel(asam: newItem))
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -122,7 +122,7 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = nil
         
-        let summary = AsamSummaryView(asam: newItem)
+        let summary = AsamSummaryView(asam: AsamModel(asam: newItem))
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -152,7 +152,7 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = "Boat"
         
-        let summary = AsamSummaryView(asam: newItem, showMoreDetails: true)
+        let summary = AsamSummaryView(asam: AsamModel(asam: newItem), showMoreDetails: true)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -186,7 +186,7 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = "Boat"
         
-        let summary = AsamSummaryView(asam: newItem, showMoreDetails: false)
+        let summary = AsamSummaryView(asam: AsamModel(asam: newItem), showMoreDetails: false)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller

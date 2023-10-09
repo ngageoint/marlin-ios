@@ -50,7 +50,7 @@ final class MarlinBottomSheetTests: XCTestCase {
                 Text("stack")
             }
             .sheet(isPresented: $show) {
-                MarlinBottomSheet(itemList: bottomSheetItemList)
+                MarlinBottomSheet(itemList: bottomSheetItemList, focusNotification: .FocusMapOnItem)
             }
             .onAppear {
                 self.bottomSheetItemList.bottomSheetItems = bottomSheetItems

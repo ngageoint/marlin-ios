@@ -9,9 +9,10 @@ import Foundation
 import CoreData
 import UIKit
 import GeoJSON
+import MapKit
 
 class RouteWaypoint: NSManagedObject {
-    func decodeToDataSource() -> DataSource? {
+    func decodeToDataSource() -> (any GeoJSONExportable)? {
         do {
             let decoder = JSONDecoder()
             if let json = json {
@@ -78,6 +79,64 @@ class Route: NSManagedObject {
         }
         return nil
     }
+    
+    var mkLine: MKGeodesicPolyline? {
+        var coordinates: [CLLocationCoordinate2D] = []
+        if let waypoints = waypoints {
+            for waypoint in waypoints {
+                if let waypoint = waypoint as? RouteWaypoint, let ds = waypoint.decodeToDataSource() {
+                    for feature in ds.geoJsonFeatures {
+                        if let g: Geometry = feature.geometry {
+                            addGeometry(g: g, coordinates: &coordinates)
+                        }
+                    }
+                }
+            }
+        }
+        let line = MKGeodesicPolyline(coordinates: &coordinates, count: coordinates.count)
+
+        
+        return line
+    }
+    
+    func addGeometry(g: Geometry, coordinates: inout [CLLocationCoordinate2D]) {
+        switch(g) {
+        case .point(let point):
+            coordinates.append(point.coordinates.coordinate)
+        case .multiPoint(let multiPoint):
+            coordinates.append(contentsOf: multiPoint.coordinates.map { position in
+                position.coordinate
+            })
+        case .lineString(let lineString):
+            coordinates.append(contentsOf: lineString.coordinates.map { position in
+                position.coordinate
+            })
+        case .multiLineString(let multiLineString):
+            coordinates.append(contentsOf: multiLineString.coordinates.flatMap { lineString in
+                lineString.coordinates.map { position in
+                    position.coordinate
+                }
+            })
+        case .polygon(let poly):
+            coordinates.append(contentsOf: poly.coordinates.flatMap { ring in
+                ring.coordinates.map { position in
+                    position.coordinate
+                }
+            })
+        case .multiPolygon(let multipoly):
+            coordinates.append(contentsOf: multipoly.coordinates.flatMap { poly in
+                poly.coordinates.flatMap { ring in
+                    ring.coordinates.map { position in
+                        position.coordinate
+                    }
+                }
+            })
+        case .geometryCollection(let collection):
+            for geometry in collection {
+                addGeometry(g: geometry, coordinates: &coordinates)
+            }
+        }
+    }
 }
 
 extension Route: DataSource {
@@ -118,5 +177,109 @@ extension Route: DataSource {
     
     var itemTitle: String {
         return "\(name ?? "")"
+    }
+}
+
+
+extension Route: MapImage {
+    var latitude: Double {
+        0.0
+    }
+    
+    var longitude: Double {
+        0.0
+    }
+    
+    var coordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    
+    static var cacheTiles: Bool = false
+    
+    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {
+        var images: [UIImage] = []
+//        guard let tileBounds3857 = tileBounds3857 else {
+//            return images
+//        }
+//        if let locations = locations {
+//            for location in locations {
+//                if let wkt = location["wkt"] {
+//                    var distance: Double?
+//                    if let distanceString = location["distance"] {
+//                        distance = Double(distanceString)
+//                    }
+//                    
+//                    let shape = MKShape.fromWKT(wkt: wkt, distance: distance)
+//                    
+//                    if let point = shape as? MKPointAnnotation {
+//                        let coordinate = point.coordinate
+//                        if let distance = distance {
+//                            let circleCoordinates = coordinate.circleCoordinates(radiusMeters: distance)
+//                            let path = UIBezierPath()
+//                            
+//                            var pixel = circleCoordinates[0].toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+//                            path.move(to: pixel)
+//                            for circleCoordinate in circleCoordinates {
+//                                pixel = circleCoordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+//                                path.addLine(to: pixel)
+//                            }
+//                            path.lineWidth = 4
+//                            path.close()
+//                            NavigationalWarning.color.withAlphaComponent(0.3).setFill()
+//                            NavigationalWarning.color.setStroke()
+//                            path.fill()
+//                            path.stroke()
+//                        }
+//                        images.append(contentsOf: defaultMapImage(marker: marker, zoomLevel: zoomLevel, pointCoordinate: coordinate, tileBounds3857: tileBounds3857, context: context, tileSize: 512.0))
+//                    } else if let polygon = shape as? MKPolygon {
+//                        let polyline = polygon.toGeodesicPolyline()
+//                        let path = UIBezierPath()
+//                        var first = true
+//                        
+//                        for point in UnsafeBufferPointer(start: polyline.points(), count: polyline.pointCount) {
+//                            
+//                            let pixel = point.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE, canCross180thMeridian: polyline.boundingMapRect.spans180thMeridian)
+//                            if first {
+//                                path.move(to: pixel)
+//                                first = false
+//                            } else {
+//                                path.addLine(to: pixel)
+//                            }
+//                            
+//                        }
+//                        
+//                        path.lineWidth = 4
+//                        path.close()
+//                        NavigationalWarning.color.withAlphaComponent(0.3).setFill()
+//                        NavigationalWarning.color.setStroke()
+//                        path.fill()
+//                        path.stroke()
+//                    } else if let lineShape = shape as? MKGeodesicPolyline {
+//                        
+//                        let path = UIBezierPath()
+//                        var first = true
+//                        let points = lineShape.points()
+//                        
+//                        for point in UnsafeBufferPointer(start: points, count: lineShape.pointCount) {
+//                            
+//                            let pixel = point.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+//                            if first {
+//                                path.move(to: pixel)
+//                                first = false
+//                            } else {
+//                                path.addLine(to: pixel)
+//                            }
+//                            
+//                        }
+//                        
+//                        path.lineWidth = 4
+//                        NavigationalWarning.color.setStroke()
+//                        path.stroke()
+//                    }
+//                }
+//            }
+//        }
+        
+        return images
     }
 }

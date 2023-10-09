@@ -67,3 +67,27 @@ struct RouteListEmptyState: View {
         .background(Color.backgroundColor)
     }
 }
+
+struct RouteListLoadingState: View {
+    var body: some View {
+        VStack(alignment: .center, spacing: 16) {
+            Spacer()
+            HStack(alignment: .center, spacing: 0) {
+                Spacer()
+                MultiImageContainerView(visibleImage: "arrow.triangle.turn.up.right.diamond", maskingImage: "diamond.fill")
+                    .frame(maxHeight: .infinity)
+                    .padding([.trailing, .leading], 24)
+                Spacer()
+            }
+            Text("Loading Routes...")
+                .font(.headline6)
+                .opacity(0.87)
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.center)
+            Spacer()
+        }
+        .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.backgroundColor)
+    }
+}

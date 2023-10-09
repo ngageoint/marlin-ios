@@ -11,6 +11,10 @@ import MapKit
 @testable import Marlin
 
 class MockMapImage: MapImage, DataSource {
+    var itemKey: String { "itemKey"}
+    
+    var itemTitle: String { "itemTitle" }
+    
     static var cacheTiles: Bool = false
     
     static var properties: [Marlin.DataSourceProperty] = []

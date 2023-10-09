@@ -10,6 +10,7 @@ import MapKit
 
 struct MarlinMainMap: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
+    @EnvironmentObject var routeRepository: RouteRepositoryManager
     
     @StateObject var mixins: MainMapMixins = MainMapMixins()
     @StateObject var mapState: MapState = MapState()
@@ -34,6 +35,9 @@ struct MarlinMainMap: View {
         }
         .overlay(bottomButtons(), alignment: .bottom)
         .overlay(topButtons(), alignment: .top)
+        .onAppear {
+            mixins.addRouteMixin(routeRepository: routeRepository)
+        }
     }
     
     @ViewBuilder

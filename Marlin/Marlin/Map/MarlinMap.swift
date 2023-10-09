@@ -123,6 +123,10 @@ class MainMapMixins: MapMixins {
         mixins.append(NavigationalWarningFetchMap())
         self.mixins = mixins
     }
+    
+    func addRouteMixin(routeRepository: (any RouteRepository)) {
+        self.mixins.append(AllRoutesMixin(repository: routeRepository))
+    }
 }
 
 class NavigationalMapMixins: MapMixins {

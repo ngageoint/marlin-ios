@@ -8,14 +8,13 @@
 import SwiftUI
 
 struct RouteList: View {
-    @Environment(\.managedObjectContext) var managedObjectContext
+    @EnvironmentObject var routeRepository: RouteRepositoryManager
+    @StateObject var viewModel: RoutesViewModel = RoutesViewModel()
+    
     @Binding var path: NavigationPath
-
-    @FetchRequest(sortDescriptors: [SortDescriptor(\.updatedTime, order: .reverse)])
-    private var routes: FetchedResults<Route>
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            List(routes) { route in
+            List(viewModel.routes) { route in
                 HStack {
                     VStack(alignment: .leading) {
                         Text("\(route.name ?? "")")
@@ -27,7 +26,7 @@ struct RouteList: View {
                                 if let dataSourceKey = first.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
                                     DataSourceCircleImage(dataSource: type, size: 15)
                                 }
-                                if let ds = first.decodeToDataSource() {
+                                if let ds = first.decodeToDataSource() as? DataSource {
                                     Text(ds.itemTitle)
                                         .font(Font.overline)
                                         .foregroundColor(Color.onSurfaceColor)
@@ -40,7 +39,7 @@ struct RouteList: View {
                                     if let dataSourceKey = last.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
                                         DataSourceCircleImage(dataSource: type, size: 15)
                                     }
-                                    if let ds = last.decodeToDataSource() {
+                                    if let ds = last.decodeToDataSource() as? DataSource  {
                                         Text(ds.itemTitle)
                                             .font(Font.overline)
                                             .foregroundColor(Color.onSurfaceColor)
@@ -48,9 +47,9 @@ struct RouteList: View {
                                     }
                                 }
                                 .onTapGesture {
-                                    if let dataSource = last.dataSource, let itemKey = last.itemKey {
+                                    if let dataSource = last.dataSource, let itemKey = last.itemKey, let waypointURL = last.waypointId {
                                         
-                                        path.append(MarlinRoute.dataSourceRouteDetail(dataSourceKey: dataSource, itemKey: itemKey, waypointURI: last.objectID.uriRepresentation()))
+                                        path.append(MarlinRoute.dataSourceRouteDetail(dataSourceKey: dataSource, itemKey: itemKey, waypointURI: waypointURL))
                                     }
                                 }
                             }
@@ -64,14 +63,12 @@ struct RouteList: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    path.append(MarlinRoute.editRoute(routeURI: route.objectID.uriRepresentation()))
+                    path.append(MarlinRoute.editRoute(routeURI: route.routeURL))
                 }
                 .swipeActions(edge: .trailing) {
                     Button(role: .destructive)  {
-                        managedObjectContext.perform {
-                            managedObjectContext.delete(route)
-                            try? managedObjectContext.save()
-                        }
+                        print("delete")
+                        viewModel.deleteRoute(route: route.routeURL)
                     } label: {
                         Label("Delete", systemImage: "trash")
                     }
@@ -82,8 +79,14 @@ struct RouteList: View {
             }
             CreateRouteButton()
         }
-        .emptyPlaceholder(routes) {
-            RouteListEmptyState()
+        .emptyPlaceholder(viewModel.routes) {
+            Group {
+                if viewModel.loaded {
+                    RouteListEmptyState()
+                } else {
+                    RouteListLoadingState()
+                }
+            }
         }
         .navigationTitle(Route.fullDataSourceName)
         .navigationBarTitleDisplayMode(.inline)
@@ -92,6 +95,8 @@ struct RouteList: View {
         .background(Color.backgroundColor)
         .foregroundColor(Color.onSurfaceColor)
         .onAppear {
+            viewModel.repository = routeRepository
+            viewModel.fetchRoutes()
             Metrics.shared.dataSourceList(dataSource: Route.self)
         }
     }

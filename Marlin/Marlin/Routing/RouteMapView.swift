@@ -156,7 +156,6 @@ class RouteMixin: MapMixin {
     var cancellable = Set<AnyCancellable>()
     
     var currentRoute: MKGeodesicPolyline?
-    var updatedRoute: MKGeodesicPolyline?
     
     var viewModel: RouteViewModel
     
@@ -169,7 +168,6 @@ class RouteMixin: MapMixin {
         viewModel.$routeMKLine
             .receive(on: RunLoop.main)
             .sink() { [weak self] mkline in
-                self?.updatedRoute = mkline
                 self?.refreshLine()
             }
             .store(in: &cancellable)
@@ -190,11 +188,160 @@ class RouteMixin: MapMixin {
             print("remove current route")
             mapView.removeOverlay(currentRoute)
         }
-        print("adding mkline \(updatedRoute)")
-        if let mkline = updatedRoute {
+        if let mkline = viewModel.routeMKLine {
             mapView.addOverlay(mkline)
             self.currentRoute = mkline
         }
+    }
+}
+
+protocol RouteRepository {
+    @discardableResult
+    func getRoute(routeURI: URL?) -> RouteModel?
+    func observeRouteListItems() -> AnyPublisher<CollectionDifference<RouteModel>, Never>
+    func deleteRoute(route: URL)
+}
+
+class RouteCoreDataRepository: RouteRepository, ObservableObject {
+    func observeRouteListItems() -> AnyPublisher<CollectionDifference<RouteModel>, Never> {
+        var request = Route.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "updatedTime", ascending: false)]
+        return context.changesPublisher(for: request, transformer: { route in
+            RouteModel(route: route)
+        })
+            .receive(on: DispatchQueue.main)
+            .catch { _ in Empty() }
+            .eraseToAnyPublisher()
+    }
+    
+    private var context: NSManagedObjectContext
+    
+    required init(context: NSManagedObjectContext) {
+        self.context = context
+    }
+    
+    func getRoute(routeURI: URL?) -> RouteModel? {
+        if let routeURI = routeURI, let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: routeURI), let route = try? self.context.existingObject(with: id) as? Route {
+            return RouteModel(route: route)
+        }
+        return nil
+    }
+    
+    func deleteRoute(route: URL) {
+        context.perform {
+            if let id = self.context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: route), let route = try? self.context.existingObject(with: id) as? Route {
+                self.context.delete(route)
+                try? self.context.save()
+            }
+        }
+    }
+}
+
+class RouteRepositoryManager: RouteRepository, ObservableObject {
+    func getRoute(routeURI: URL?) -> RouteModel? {
+        repository.getRoute(routeURI: routeURI)
+    }
+
+    func observeRouteListItems() -> AnyPublisher<CollectionDifference<RouteModel>, Never> {
+        repository.observeRouteListItems()
+    }
+    
+    func deleteRoute(route: URL) {
+        repository.deleteRoute(route: route)
+    }
+    
+    private var repository: RouteRepository
+    init(repository: RouteRepository) {
+        self.repository = repository
+    }
+}
+
+class RoutesViewModel: ObservableObject {
+    @Published var routes: [RouteModel] = []
+    @Published var loaded: Bool = false
+    private var disposables = Set<AnyCancellable>()
+    
+    var repository: (any RouteRepository)?
+    
+    var publisher: AnyPublisher<CollectionDifference<RouteModel>, Never>?
+    
+    func fetchRoutes() {
+        NSLog("Fetch the routes")
+        if publisher != nil {
+            return
+        }
+        self.publisher = repository?.observeRouteListItems()
+        
+        if let publisher = publisher {
+            $routes.applyingChanges(publisher) { route in
+                self.loaded = true
+                NSLog("Route")
+                return route
+            }
+            .sink(receiveCompletion: { completion in
+                NSLog("Completion \(completion)")
+            }, receiveValue: { value in
+                NSLog("value \(value)")
+                self.loaded = true
+                self.routes = value
+            })
+            .store(in: &disposables)
+        }
+    }
+    
+    func deleteRoute(route: URL?) {
+        if let url = route {
+            repository?.deleteRoute(route: url)
+        }
+    }
+}
+
+class AllRoutesMixin: MapMixin {
+    var uuid: UUID = UUID()
+    var mapState: MapState?
+    var cancellable = Set<AnyCancellable>()
+    
+    var currentLines: [MKGeodesicPolyline] = []
+    
+    var viewModel: RoutesViewModel
+    
+    init(repository: (any RouteRepository)) {
+        self.viewModel = RoutesViewModel()
+        self.viewModel.repository = repository
+        self.viewModel.fetchRoutes()
+    }
+    
+    func setupMixin(mapState: MapState, mapView: MKMapView) {
+        self.mapState = mapState
+        viewModel.$routes
+            .receive(on: RunLoop.main)
+            .sink() { [weak self] routes in
+                self?.refreshLine()
+            }
+            .store(in: &cancellable)
+    }
+    
+    func removeMixin(mapView: MKMapView, mapState: MapState) {
+        mapView.removeOverlays(currentLines)
+        currentLines = []
+    }
+    
+    func refreshLine() {
+        DispatchQueue.main.async {
+            self.mapState?.mixinStates["\(String(describing: AllRoutesMixin.self))DataUpdated"] = Date()
+        }
+    }
+    
+    func updateMixin(mapView: MKMapView, mapState: MapState) {
+        mapView.removeOverlays(currentLines)
+        currentLines = []
+        
+        for route in viewModel.routes {
+//            if let line = route.mkLine {
+//                currentLines.append(line)
+//            }
+        }
+        mapView.addOverlays(currentLines)
     }
 }
 
