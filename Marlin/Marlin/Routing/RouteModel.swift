@@ -12,7 +12,7 @@ import GeoJSON
 
 struct RouteModel: Codable, GeoJSONExportable {
     var itemKey: String {
-        self.createdTime?.formatted() ?? ""
+        routeURL?.absoluteString ?? ""
     }
     
     var key: String = "route"
@@ -168,6 +168,49 @@ extension RouteModel {
                 addGeometry(g: geometry, coordinates: &coordinates)
             }
         }
+    }
+}
+
+extension RouteModel: DataSource {
+    var itemTitle: String {
+        name ?? ""
+    }
+    
+    var color: UIColor {
+        Route.color
+    }
+    
+    static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }
+    
+    static func postProcess() {}
+    
+    static var isMappable: Bool = true
+    static var dataSourceName: String = Route.dataSourceName
+    static var fullDataSourceName: String = Route.fullDataSourceName
+    static var key: String = Route.key
+    static var metricsKey: String = Route.metricsKey
+    static var imageName: String? = Route.imageName
+    static var systemImageName: String? = Route.systemImageName
+    
+    static var color: UIColor = Route.color
+    static var imageScale = Route.imageScale
+    
+    static var defaultSort: [DataSourceSortParameter] = Route.defaultSort
+    static var defaultFilter: [DataSourceFilterParameter] = Route.defaultFilter
+}
+
+import SwiftUI
+extension RouteModel: DataSourceViewBuilder {
+    var detailView: AnyView {
+        return AnyView(EmptyView())
+    }
+        
+    var summary: some DataSourceSummaryView {
+        return RouteSummaryView(route: self)
     }
 }
 

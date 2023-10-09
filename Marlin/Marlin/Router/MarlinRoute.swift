@@ -109,6 +109,8 @@ struct MarlinRouteModifier: ViewModifier {
                         if let gpFeature = GeoPackageFeatureItem.getItem(context: PersistenceController.current.viewContext, itemKey: itemKey) as? GeoPackageFeatureItem {
                             GeoPackageFeatureItemDetailView(featureItem: gpFeature)
                         }
+                    case Route.key:
+                        CreateRouteView(path: $path, routeURI: URL(string:itemKey))
                     default:
                         EmptyView()
                     }

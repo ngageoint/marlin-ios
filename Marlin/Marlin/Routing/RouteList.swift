@@ -7,6 +7,65 @@
 
 import SwiftUI
 
+struct RouteSummaryView: DataSourceSummaryView {
+    var showBookmarkNotes: Bool = false
+    
+    var showMoreDetails: Bool = false
+    
+    var showTitle: Bool = false
+    
+    var showSectionHeader: Bool = false
+    
+    var route: RouteModel
+    
+    var body: some View {
+        VStack {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("\(route.name ?? "")")
+                        .primary()
+                    Text("Created \(route.createdTime?.formatted() ?? "")")
+                        .overline()
+                    HStack {
+                        if let first = route.waypointArray.first {
+                            if let dataSourceKey = first.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
+                                DataSourceCircleImage(dataSource: type, size: 15)
+                            }
+                            if let ds = first.decodeToDataSource() as? DataSource {
+                                Text(ds.itemTitle)
+                                    .font(Font.overline)
+                                    .foregroundColor(Color.onSurfaceColor)
+                                    .opacity(0.8)
+                            }
+                        }
+                        Image(systemName: "ellipsis")
+                        if let last = route.waypointArray.last {
+                            Group {
+                                if let dataSourceKey = last.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
+                                    DataSourceCircleImage(dataSource: type, size: 15)
+                                }
+                                if let ds = last.decodeToDataSource() as? DataSource  {
+                                    Text(ds.itemTitle)
+                                        .font(Font.overline)
+                                        .foregroundColor(Color.onSurfaceColor)
+                                        .opacity(0.8)
+                                }
+                            }
+                            
+                        }
+                    }
+                    if let distance = route.nauticalMilesDistance {
+                        Text("Total Distance: \(distance)")
+                            .overline()
+                    }
+                }
+                Spacer()
+            }
+            DataSourceActionBar(data: route, showMoreDetailsButton: showMoreDetails, showFocusButton: false)
+        }
+    }
+}
+
 struct RouteList: View {
     @EnvironmentObject var routeRepository: RouteRepositoryManager
     @StateObject var viewModel: RoutesViewModel = RoutesViewModel()
@@ -15,52 +74,7 @@ struct RouteList: View {
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             List(viewModel.routes) { route in
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("\(route.name ?? "")")
-                            .primary()
-                        Text("Created \(route.createdTime?.formatted() ?? "")")
-                            .overline()
-                        HStack {
-                            if let first = route.waypointArray.first {
-                                if let dataSourceKey = first.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
-                                    DataSourceCircleImage(dataSource: type, size: 15)
-                                }
-                                if let ds = first.decodeToDataSource() as? DataSource {
-                                    Text(ds.itemTitle)
-                                        .font(Font.overline)
-                                        .foregroundColor(Color.onSurfaceColor)
-                                        .opacity(0.8)
-                                }
-                            }
-                            Image(systemName: "ellipsis")
-                            if let last = route.waypointArray.last {
-                                Group {
-                                    if let dataSourceKey = last.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
-                                        DataSourceCircleImage(dataSource: type, size: 15)
-                                    }
-                                    if let ds = last.decodeToDataSource() as? DataSource  {
-                                        Text(ds.itemTitle)
-                                            .font(Font.overline)
-                                            .foregroundColor(Color.onSurfaceColor)
-                                            .opacity(0.8)
-                                    }
-                                }
-                                .onTapGesture {
-                                    if let dataSource = last.dataSource, let itemKey = last.itemKey, let waypointURL = last.waypointId {
-                                        
-                                        path.append(MarlinRoute.dataSourceRouteDetail(dataSourceKey: dataSource, itemKey: itemKey, waypointURI: waypointURL))
-                                    }
-                                }
-                            }
-                        }
-                        if let distance = route.nauticalMilesDistance {
-                            Text("Total Distance: \(distance)")
-                                .overline()
-                        }
-                    }
-                    Spacer()
-                }
+                RouteSummaryView(route: route)
                 .contentShape(Rectangle())
                 .onTapGesture {
                     path.append(MarlinRoute.editRoute(routeURI: route.routeURL))

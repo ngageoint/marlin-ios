@@ -58,4 +58,21 @@ class AllRoutesMixin: MapMixin {
             mapView.addOverlays(currentLines)
         }
     }
+    
+    func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [DataSource]? {
+        guard UserDefaults.standard.showOnMaproute == true else {
+            return nil
+        }
+        var matched: [RouteModel] = []
+        let screenPercentage = 0.03
+        let distanceTolerance = mapView.visibleMapRect.size.width * Double(screenPercentage)
+        let longitudeTolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
+
+        for route in viewModel.routes {
+            if let line = route.mkLine, lineHitTest(line: line, location: location, distanceTolerance: distanceTolerance) {
+                matched.append(route)
+            }
+        }
+        return matched
+    }
 }
