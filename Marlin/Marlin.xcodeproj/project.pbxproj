@@ -268,6 +268,10 @@
 		F7ADDCEA288F14DA00137D95 /* MKMapViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCE9288F14DA00137D95 /* MKMapViewExtensions.swift */; };
 		F7ADDCEE28902D5300137D95 /* AnnotationWithView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADDCED28902D5300137D95 /* AnnotationWithView.swift */; };
 		F7AFF93B2AD05AEA00555960 /* RouteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AFF93A2AD05AEA00555960 /* RouteModel.swift */; };
+		F7AFF93D2AD4603000555960 /* RouteRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AFF93C2AD4603000555960 /* RouteRepository.swift */; };
+		F7AFF93F2AD462ED00555960 /* RoutesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AFF93E2AD462ED00555960 /* RoutesViewModel.swift */; };
+		F7AFF9412AD46A2300555960 /* AllRoutesMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AFF9402AD46A2300555960 /* AllRoutesMixin.swift */; };
+		F7AFF9432AD46C6B00555960 /* RouteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AFF9422AD46C6B00555960 /* RouteViewModel.swift */; };
 		F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */; };
 		F7B7064328BAADD50026DE88 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B7064228BAADD50026DE88 /* CircleImage.swift */; };
 		F7B84E202A72C83B00640C76 /* Bookmark+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B84E1F2A72C83B00640C76 /* Bookmark+CoreDataClass.swift */; };
@@ -738,6 +742,10 @@
 		F7ADDCE9288F14DA00137D95 /* MKMapViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKMapViewExtensions.swift; sourceTree = "<group>"; };
 		F7ADDCED28902D5300137D95 /* AnnotationWithView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationWithView.swift; sourceTree = "<group>"; };
 		F7AFF93A2AD05AEA00555960 /* RouteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteModel.swift; sourceTree = "<group>"; };
+		F7AFF93C2AD4603000555960 /* RouteRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteRepository.swift; sourceTree = "<group>"; };
+		F7AFF93E2AD462ED00555960 /* RoutesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesViewModel.swift; sourceTree = "<group>"; };
+		F7AFF9402AD46A2300555960 /* AllRoutesMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllRoutesMixin.swift; sourceTree = "<group>"; };
+		F7AFF9422AD46C6B00555960 /* RouteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteViewModel.swift; sourceTree = "<group>"; };
 		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7B7064228BAADD50026DE88 /* CircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
 		F7B84E1F2A72C83B00640C76 /* Bookmark+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bookmark+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -1144,6 +1152,7 @@
 				F7F7CFC429BA955900A14350 /* BaseOverlaysMap.swift */,
 				F70BCE9829C4F1AE00AEF73D /* UserLayersMap.swift */,
 				F7667CEC2A0025B0005B36A0 /* NavigationalWarningMap.swift */,
+				F7AFF9402AD46A2300555960 /* AllRoutesMixin.swift */,
 			);
 			path = Mixins;
 			sourceTree = "<group>";
@@ -1496,6 +1505,9 @@
 				F7830C042A8BCEF1008376F7 /* RouteListEmptyState.swift */,
 				F7830C0A2A93CDD4008376F7 /* RouteMapView.swift */,
 				F7AFF93A2AD05AEA00555960 /* RouteModel.swift */,
+				F7AFF93C2AD4603000555960 /* RouteRepository.swift */,
+				F7AFF93E2AD462ED00555960 /* RoutesViewModel.swift */,
+				F7AFF9422AD46C6B00555960 /* RouteViewModel.swift */,
 			);
 			path = Routing;
 			sourceTree = "<group>";
@@ -2597,6 +2609,7 @@
 				F7667CED2A0025B0005B36A0 /* NavigationalWarningMap.swift in Sources */,
 				F71FC0CD2A3B86EB00911BAC /* ShareButton.swift in Sources */,
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
+				F7AFF93F2AD462ED00555960 /* RoutesViewModel.swift in Sources */,
 				F7FFB33D28DA061D00C31AA3 /* FilterButton.swift in Sources */,
 				F7FDF2B02AB4D53D009A5E8F /* ModuRepository.swift in Sources */,
 				F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */,
@@ -2656,6 +2669,7 @@
 				F7D671EF287475BC00758F1C /* DataSource.swift in Sources */,
 				F71DF4992858DA4700686951 /* AsamMap.swift in Sources */,
 				F7275FDF28FA252800ED8D9A /* LightProtocol.swift in Sources */,
+				F7AFF9432AD46C6B00555960 /* RouteViewModel.swift in Sources */,
 				F7D8FA4B293A958900E7D0A1 /* LocationFilter.swift in Sources */,
 				F7391CB32AC4982C0002ABDD /* RadioBeaconModel.swift in Sources */,
 				F727A684284E351800BD728A /* MSIError.swift in Sources */,
@@ -2689,6 +2703,7 @@
 				F7F597B02866241100F9B32E /* NavigationalWarningsAreaDataSource.swift in Sources */,
 				F7FFB2DA28D61B3A00C31AA3 /* DFRS+DataSource.swift in Sources */,
 				F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */,
+				F7AFF9412AD46A2300555960 /* AllRoutesMixin.swift in Sources */,
 				F7D8FA3C2939232100E7D0A1 /* FilterViewModel.swift in Sources */,
 				F75E32C129C4BC1F006F2394 /* LayerConfigurationView.swift in Sources */,
 				F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */,
@@ -2775,6 +2790,7 @@
 				F7830C052A8BCEF2008376F7 /* RouteListEmptyState.swift in Sources */,
 				F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */,
 				F7EB1B0E2A0D7FC200D1433B /* SFGeometryExtensions.swift in Sources */,
+				F7AFF93D2AD4603000555960 /* RouteRepository.swift in Sources */,
 				F7B84E242A7309A600640C76 /* BookmarkViewModel.swift in Sources */,
 				F7FFB31028D63C4700C31AA3 /* Modu+MapImage.swift in Sources */,
 				F7C255CD2AC76431003A5B7E /* EncodableExtensions.swift in Sources */,
