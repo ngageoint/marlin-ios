@@ -88,6 +88,10 @@ extension UserDefaults {
     @objc var showOnMapnavWarning: Bool {
         bool(forKey: "showOnMap\(NavigationalWarning.key)")
     }
+    
+    @objc var showOnMaproute: Bool {
+        bool(forKey: "showOnMap\(Route.key)")
+    }
 
     @objc var mapRegion: MKCoordinateRegion {
         get {

@@ -204,7 +204,7 @@ protocol RouteRepository {
 
 class RouteCoreDataRepository: RouteRepository, ObservableObject {
     func observeRouteListItems() -> AnyPublisher<CollectionDifference<RouteModel>, Never> {
-        var request = Route.fetchRequest()
+        let request = Route.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "updatedTime", ascending: false)]
         return context.changesPublisher(for: request, transformer: { route in
             RouteModel(route: route)
@@ -336,12 +336,14 @@ class AllRoutesMixin: MapMixin {
         mapView.removeOverlays(currentLines)
         currentLines = []
         
-        for route in viewModel.routes {
-//            if let line = route.mkLine {
-//                currentLines.append(line)
-//            }
+        if UserDefaults.standard.showOnMaproute {
+            for route in viewModel.routes {
+                if let line = route.mkLine {
+                    currentLines.append(line)
+                }
+            }
+            mapView.addOverlays(currentLines)
         }
-        mapView.addOverlays(currentLines)
     }
 }
 
