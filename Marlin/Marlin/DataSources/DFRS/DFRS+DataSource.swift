@@ -98,8 +98,12 @@ extension DFRS: BatchImportable {
         // Provide one dictionary at a time when the closure is called.
         let batchInsertRequest = NSBatchInsertRequest(entity: DFRS.entity(), dictionaryHandler: { dictionary in
             guard index < total else { return true }
-            dictionary.addEntries(from: propertyList[index].dictionaryValue.filter({
-                return $0.value != nil
+            let propertyDictionary = propertyList[index].dictionaryValue
+            dictionary.addEntries(from: propertyDictionary.mapValues({ value in
+                if let value = value {
+                    return value
+                }
+                return NSNull()
             }) as [AnyHashable : Any])
             index += 1
             return false

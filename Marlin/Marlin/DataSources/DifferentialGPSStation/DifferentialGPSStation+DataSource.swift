@@ -151,11 +151,17 @@ extension DifferentialGPSStation: BatchImportable {
             }
             previousHeadingPerVolume[volumeNumber] = previousLocation ?? PreviousLocation(previousRegionHeading: region, previousSubregionHeading: nil, previousLocalHeading: nil)
             
-            dictionary.addEntries(from: propertyDictionary.filter({
-                return $0.value != nil
+            dictionary.addEntries(from: propertyDictionary.mapValues({ value in
+                if let value = value {
+                    return value
+                }
+                return NSNull()
             }) as [AnyHashable : Any])
-            dictionary.addEntries(from: correctedLocationDictionary.filter({
-                return $0.value != nil
+            dictionary.addEntries(from: correctedLocationDictionary.mapValues({ value in
+                if let value = value {
+                    return value
+                }
+                return NSNull()
             }) as [AnyHashable : Any])
             index += 1
             return false
