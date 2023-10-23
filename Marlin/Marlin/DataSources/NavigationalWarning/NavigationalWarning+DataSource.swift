@@ -206,7 +206,9 @@ extension NavigationalWarning: DataSourceLocation, GeoPackageExportable {
     
     static var defaultFilter: [DataSourceFilterParameter] = []
     
-    static var properties: [DataSourceProperty] = []
+    static var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Navigational Area", key: #keyPath(NavigationalWarning.navArea), type: .string)
+    ]
     
     var coordinateRegion: MKCoordinateRegion? {
         region
