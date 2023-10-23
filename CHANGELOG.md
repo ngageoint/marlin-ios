@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
     * Navigational Warning drawing bugs fixed
     * Navigational Warning tap areas consistently work now
     * Fix for iOS 17 batch import
+## 1.2.1
+ ### Bug Fixes
+    * Set the correct URL for MSI
 ## 1.2.0
  ### Bug Fixes
     * UI Improvements to prevent unncessary redraws, ongoing fixes
