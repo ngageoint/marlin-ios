@@ -4,6 +4,14 @@ Changelog
 All notable changes to this project will be documented in this file.
 
 ---
+## 1.3.0
+ ### Features
+    * You can now bookmark your favorite pieces of Maritime Safety Information
+    * You can now export Maritime Safety Information to the GeoPackage format
+ ### Bug Fixes
+    * Navigational Warning drawing bugs fixed
+    * Navigational Warning tap areas consistently work now
+    * Fix for iOS 17 batch import
 ## 1.2.0
  ### Bug Fixes
     * UI Improvements to prevent unncessary redraws, ongoing fixes
