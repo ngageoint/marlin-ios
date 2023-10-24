@@ -31,6 +31,7 @@ extension Modu: Bookmarkable {
 }
 
 extension Modu: Locatable, GeoPackageExportable, GeoJSONExportable {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.modu.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }
@@ -95,7 +96,7 @@ extension Modu: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every hour
-        return UserDefaults.standard.dataSourceEnabled(Modu.self) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(Modu.self)
+        return UserDefaults.standard.dataSourceEnabled(Modu.definition) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(Modu.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [ModuModel]) -> NSBatchInsertRequest {

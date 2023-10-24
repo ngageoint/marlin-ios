@@ -77,8 +77,7 @@ struct MarlinMainMap: View {
         var exports: [DataSourceExportRequest] = []
         let region = UserDefaults.standard.mapRegion
         let commonExportRequest = DataSourceExportRequest(
-            dataSourceItem: DataSourceItem(
-                dataSource: CommonDataSource.self),
+            filterable: DataSourceDefinitions.common.filterable,
             filters: [
                 DataSourceFilterParameter(property:
                                             DataSourceProperty(name: "Location",
@@ -92,7 +91,7 @@ struct MarlinMainMap: View {
         exports.append(commonExportRequest)
         
         for dataSource in dataSourceList.mappedDataSources {
-            exports.append(DataSourceExportRequest(dataSourceItem: dataSource, filters: UserDefaults.standard.filter(dataSource.dataSource)))
+            exports.append(DataSourceExportRequest(filterable: DataSourceDefinitions.filterableFromDefintion(dataSource.dataSource.definition), filters: UserDefaults.standard.filter(dataSource.dataSource.definition)))
         }
         return exports
     }

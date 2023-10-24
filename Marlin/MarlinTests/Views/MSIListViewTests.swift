@@ -21,7 +21,7 @@ final class MSIListViewTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
@@ -114,8 +114,13 @@ final class MSIListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough()
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -180,8 +185,13 @@ final class MSIListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough()
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -247,8 +257,13 @@ final class MSIListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough()
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -346,8 +361,13 @@ final class MSIListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough()
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -420,9 +440,14 @@ final class MSIListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough()
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(mockLocationManager as LocationManager)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -499,8 +524,13 @@ final class MSIListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough()
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -578,8 +608,13 @@ final class MSIListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough()
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -661,8 +696,13 @@ final class MSIListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough()
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -743,8 +783,13 @@ final class MSIListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough()
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -812,15 +857,21 @@ final class MSIListViewTests: XCTestCase {
             var body: some View {
                 NavigationStack(path: $path) {
                     MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path)
+                        .marlinRoutes(path: $path)
                 }
             }
         }
         let appState = AppState()
         let passThrough = PassThrough()
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -889,6 +940,7 @@ final class MSIListViewTests: XCTestCase {
             var body: some View {
                 NavigationStack(path: $path) {
                     MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path, focusedItem: itemWrapper, watchFocusedItem: true)
+                        .marlinRoutes(path: $path)
                 }
                 .onChange(of: passThrough.date) { newValue in
                     print("change date to \(newValue)")
@@ -900,9 +952,14 @@ final class MSIListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough()
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()

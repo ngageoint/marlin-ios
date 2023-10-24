@@ -272,6 +272,7 @@
 		F7AFF93F2AD462ED00555960 /* RoutesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AFF93E2AD462ED00555960 /* RoutesViewModel.swift */; };
 		F7AFF9412AD46A2300555960 /* AllRoutesMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AFF9402AD46A2300555960 /* AllRoutesMixin.swift */; };
 		F7AFF9432AD46C6B00555960 /* RouteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AFF9422AD46C6B00555960 /* RouteViewModel.swift */; };
+		F7AFF9452AD8718900555960 /* Filterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AFF9442AD8718900555960 /* Filterable.swift */; };
 		F7B349132849212B00E10ABF /* Asam+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */; };
 		F7B7064328BAADD50026DE88 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B7064228BAADD50026DE88 /* CircleImage.swift */; };
 		F7B84E202A72C83B00640C76 /* Bookmark+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B84E1F2A72C83B00640C76 /* Bookmark+CoreDataClass.swift */; };
@@ -746,6 +747,7 @@
 		F7AFF93E2AD462ED00555960 /* RoutesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesViewModel.swift; sourceTree = "<group>"; };
 		F7AFF9402AD46A2300555960 /* AllRoutesMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllRoutesMixin.swift; sourceTree = "<group>"; };
 		F7AFF9422AD46C6B00555960 /* RouteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteViewModel.swift; sourceTree = "<group>"; };
+		F7AFF9442AD8718900555960 /* Filterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filterable.swift; sourceTree = "<group>"; };
 		F7B349112849212B00E10ABF /* Asam+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7B7064228BAADD50026DE88 /* CircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
 		F7B84E1F2A72C83B00640C76 /* Bookmark+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bookmark+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -1058,6 +1060,7 @@
 				F74B9B0528B7CDC20097D448 /* RadioBeacon */,
 				F7EFFEBE2A7C0F300097E5EF /* DataSourceSummaryView.swift */,
 				F7EFFEC42A7C113A0097E5EF /* DataSourceIcon.swift */,
+				F7AFF9442AD8718900555960 /* Filterable.swift */,
 			);
 			path = DataSources;
 			sourceTree = "<group>";
@@ -2557,6 +2560,7 @@
 				F7FFB31428D63CB000C31AA3 /* Modu+DataSourceViewBuilder.swift in Sources */,
 				F7BDF7762A1C11640083B97F /* DataSourceToggles.swift in Sources */,
 				F7830BFB2A8AB3FE008376F7 /* Route+CoreDataClass.swift in Sources */,
+				F7AFF9452AD8718900555960 /* Filterable.swift in Sources */,
 				F7364E382A1D55D10098F243 /* LoadingCapsule.swift in Sources */,
 				F7C23E1429115AF40002A7DF /* DocumentPreview.swift in Sources */,
 				F7F59786285A206700F9B32E /* AsamDetailView.swift in Sources */,

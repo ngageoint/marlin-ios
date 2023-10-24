@@ -67,27 +67,42 @@ class Metrics {
         appRoute(["ntms", "home"])
     }
     
-    func dataSourceSort(dataSource: any DataSource.Type) {
+    func dataSourceSort(dataSource: (any DataSourceDefinition)?) {
+        guard let dataSource = dataSource else {
+            return
+        }
         NSLog("Record Data Source Sort \(dataSource.key)")
         appRoute(["\(dataSource.metricsKey)", "sort"])
     }
     
-    func dataSourceFilter(dataSource: any DataSource.Type) {
+    func dataSourceFilter(dataSource: (any DataSourceDefinition)?) {
+        guard let dataSource = dataSource else {
+            return
+        }
         NSLog("Record Data Source Filter \(dataSource.key)")
         appRoute(["\(dataSource.metricsKey)", "filter"])
     }
     
-    func dataSourceBottomSheet(dataSource: any DataSource.Type) {
+    func dataSourceBottomSheet(dataSource: (any DataSourceDefinition)?) {
+        guard let dataSource = dataSource else {
+            return
+        }
         NSLog("Record Data Source BottomSheet \(dataSource.key)")
         appRoute(["\(dataSource.metricsKey)", "sheet"])
     }
     
-    func dataSourceList(dataSource: any DataSource.Type) {
+    func dataSourceList(dataSource: (any DataSourceDefinition)?) {
+        guard let dataSource = dataSource else {
+            return
+        }
         NSLog("Record Data Source List \(dataSource.key)")
         appRoute(["\(dataSource.metricsKey)", "list"])
     }
     
-    func dataSourceDetail(dataSource: any DataSource.Type) {
+    func dataSourceDetail(dataSource: (any DataSourceDefinition)?) {
+        guard let dataSource = dataSource else {
+            return
+        }
         NSLog("Record Data Source Detail \(dataSource.key)")
         appRoute(["\(dataSource.metricsKey)", "detail"])
     }
@@ -97,14 +112,14 @@ class Metrics {
         appRoute(["geoPackageExport"])
     }
     
-    func geoPackageExport(dataSources: [any DataSource.Type]) {
-        NSLog("Record GeoPackage Export - \(dataSources.map {$0.key}.joined(separator: ","))")
+    func geoPackageExport(dataSources: [Filterable]) {
+        NSLog("Record GeoPackage Export - \(dataSources.map {$0.definition.key}.joined(separator: ","))")
         if let tracker = MatomoTracker.shared {
             let event = Event(tracker: tracker,
                               action: ["export geopackage"],
                               eventCategory: "download",
                               eventAction: "export geopackage",
-                              eventName: dataSources.map {$0.metricsKey}.joined(separator: ","),
+                              eventName: dataSources.map {$0.definition.metricsKey}.joined(separator: ","),
                               isCustomAction: true )
             MatomoTracker.shared?.track(event)
         }

@@ -20,7 +20,6 @@ extension GeoPackageFeatureItem: Bookmarkable {
     }
     
     static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
-        print("item key \(itemKey)")
         if let split = itemKey?.split(separator: "--"), split.count == 3 {
             return getFeature(context: context, geoPackageName: "\(split[0])", tableName: "\(split[1])", featureId: Int(split[2]) ?? 0)
         }
@@ -37,7 +36,7 @@ extension GeoPackageFeatureItem: Bookmarkable {
 }
 
 class GeoPackageFeatureItem: NSObject, Locatable, DataSourceViewBuilder {
-
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.geoPackage.definition
     var coordinate: CLLocationCoordinate2D
     
     var latitude: Double { coordinate.latitude }

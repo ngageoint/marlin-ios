@@ -23,7 +23,8 @@ struct DifferentialGPSStationPropertyContainer: Decodable {
     }
 }
 
-struct DifferentialGPSStationModel: Locatable, Bookmarkable, Codable, GeoJSONExportable {
+struct DifferentialGPSStationModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStringConvertible {    
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.dgps.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

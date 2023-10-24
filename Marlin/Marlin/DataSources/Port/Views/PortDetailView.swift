@@ -82,7 +82,7 @@ struct PortDetailView: View {
                 viewModel.getPort(portNumber: portNumber, waypointURI: waypointURI)
             }
             .onAppear {
-                Metrics.shared.dataSourceDetail(dataSource: Port.self)
+                Metrics.shared.dataSourceDetail(dataSource: Port.definition)
             }
         }
     }

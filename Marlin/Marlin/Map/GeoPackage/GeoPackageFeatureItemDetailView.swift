@@ -56,7 +56,7 @@ struct GeoPackageFeatureItemDetailView: View {
         .navigationTitle("GeoPackage Feature")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            Metrics.shared.dataSourceDetail(dataSource: GeoPackageFeatureItem.self)
+            Metrics.shared.dataSourceDetail(dataSource: GeoPackageFeatureItem.definition)
         }
     }
     

@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct GeoPackageExportButton: View {
-    var dataSource: any DataSource.Type
+    var filterable: Filterable
     
     var body: some View {
-        NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(dataSourceItem: DataSourceItem(dataSource: dataSource), filters: UserDefaults.standard.filter(dataSource))])) {
+        NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(filterable: filterable, filters: UserDefaults.standard.filter(filterable.definition))])) {
             Label(
                 title: {},
                 icon: { Image(systemName: "square.and.arrow.down")

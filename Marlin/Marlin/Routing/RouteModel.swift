@@ -172,6 +172,7 @@ extension RouteModel {
 }
 
 extension RouteModel: DataSource {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.route.definition
     var itemTitle: String {
         name ?? ""
     }

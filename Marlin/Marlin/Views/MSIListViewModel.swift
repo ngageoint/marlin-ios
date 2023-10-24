@@ -59,12 +59,12 @@ class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResu
             self.sectionKey = nil
         }
         
-        self.filters = UserDefaults.standard.filter(T.self)
+        self.filters = UserDefaults.standard.filter(T.definition)
         
         var predicates: [NSPredicate] = []
         
         for filter in filters {
-            if let predicate = filter.toPredicate(dataSource: T.self) {
+            if let predicate = filter.toPredicate(dataSource: DataSourceDefinitions.filterableFromDefintion(T.definition)) {
                 predicates.append(predicate)
             }
         }

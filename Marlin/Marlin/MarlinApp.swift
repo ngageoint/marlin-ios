@@ -73,7 +73,7 @@ struct PhaseWatcher: View {
                         item.key == dataSourceKey
                     }
                     if inserts != 0 {
-                        notificationStrings.append("\(inserts) new \(dataSourceItem?.dataSource.fullDataSourceName ?? "")")
+                        notificationStrings.append("\(inserts) new \(dataSourceItem?.dataSource.definition.fullName ?? "")")
                     }
                 }
                 if !notificationStrings.isEmpty {

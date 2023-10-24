@@ -11,25 +11,30 @@ struct ChartCorrectionQuery: View {
     @AppStorage("\(ChartCorrection.key)Filter") var chartCorrectionFilter: Data?
     @State private var requiredParametersSet: Bool = false
     
-    var filterViewModel: PersistedFilterViewModel = PersistedFilterViewModel(dataSource: ChartCorrection.self, useDefaultForEmptyFilter: true)
+    @State var filterViewModel: PersistedFilterViewModel?
     
     var body: some View {
         VStack {
-            FilterView(viewModel: filterViewModel)
-            
-            if requiredParametersSet {
-                NavigationLink {
-                    ChartCorrectionList()
-                } label: {
-                    Text("Query")
+            if let filterViewModel = filterViewModel {
+                FilterView(viewModel: filterViewModel)
+                
+                if requiredParametersSet {
+                    NavigationLink {
+                        ChartCorrectionList()
+                    } label: {
+                        Text("Query")
+                    }
+                    .buttonStyle(MaterialButtonStyle(type: .text))
+                    .accessibilityElement()
+                    .accessibilityLabel("Query")
                 }
-                .buttonStyle(MaterialButtonStyle(type: .text))
-                .accessibilityElement()
-                .accessibilityLabel("Query")
             }
         }
         .padding(.trailing, 8)
         .onAppear {
+            if let filterable = DataSourceDefinitions.chartCorrection.filterable {
+                filterViewModel = PersistedFilterViewModel(dataSource: filterable, useDefaultForEmptyFilter: true)
+            }
             Metrics.shared.appRoute(["ntms", "query"])
             checkRequiredParameters()
         }
@@ -39,7 +44,7 @@ struct ChartCorrectionQuery: View {
     }
     
     func checkRequiredParameters() {
-        for filter in UserDefaults.standard.filter(ChartCorrection.self) {
+        for filter in UserDefaults.standard.filter(ChartCorrection.definition) {
             if filter.property.key == "location" {
                 requiredParametersSet = true
                 return

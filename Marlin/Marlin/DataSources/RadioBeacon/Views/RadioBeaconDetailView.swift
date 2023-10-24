@@ -63,7 +63,7 @@ struct RadioBeaconDetailView: View {
         .onAppear {
             viewModel.repository = radioBeaconRepository
             viewModel.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
-            Metrics.shared.dataSourceDetail(dataSource: RadioBeacon.self)
+            Metrics.shared.dataSourceDetail(dataSource: RadioBeacon.definition)
         }
     }
 }

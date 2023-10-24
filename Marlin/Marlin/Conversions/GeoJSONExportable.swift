@@ -10,44 +10,50 @@ import GeoJSON
 import AnyCodable
 import sf_ios
 
-struct AnyGeoJSONExportable : GeoJSONExportable {
-    static func == (lhs: AnyGeoJSONExportable, rhs: AnyGeoJSONExportable) -> Bool {
-        return lhs.uniqueId == rhs.uniqueId
-    }
-    
-    func isEqualTo(other: AnyGeoJSONExportable) -> Bool {
-        return self.uniqueId == other.uniqueId
-    }
-    
-    var itemKey: String { base.itemKey }
-    
-    var key: String { base.key }
-    
-    static var properties: [DataSourceProperty] = []
-    
-    var sfGeometry: SFGeometry? { base.sfGeometry }
-    
-    var id: String { base.uniqueId }
-    
-    var name: String?
-    
-    var base: any GeoJSONExportable
-    
-    init(_ base: any GeoJSONExportable) {
-        self.base = base
-    }
-}
+//struct AnyGeoJSONExportable : GeoJSONExportable {
+//    static func == (lhs: AnyGeoJSONExportable, rhs: AnyGeoJSONExportable) -> Bool {
+//        return lhs.uniqueId == rhs.uniqueId
+//    }
+//    
+//    func isEqualTo(other: AnyGeoJSONExportable) -> Bool {
+//        return self.uniqueId == other.uniqueId
+//    }
+//    
+//    var definition: DataSourceDefinition { base.definition }
+//    
+//    var itemKey: String { base.itemKey }
+//    
+//    var key: String { base.key }
+//    
+//    static var properties: [DataSourceProperty] = []
+//    
+//    var sfGeometry: SFGeometry? { base.sfGeometry }
+//    
+//    var id: String { base.uniqueId }
+//    
+//    var name: String?
+//    
+//    var base: any GeoJSONExportable
+//    
+//    init(_ base: any GeoJSONExportable) {
+//        self.base = base
+//    }
+//}
 
 
-protocol GeoJSONExportable: Identifiable, Equatable {
+protocol GeoJSONExportable: Identifiable, Equatable, DataSource {
+    static var definition: any DataSourceDefinition { get }
     var itemKey: String { get }
-    var key: String { get }
+//    var key: String { get }
     var geoJson: String? { get }
     static var properties: [DataSourceProperty] { get }
     var sfGeometry: SFGeometry? { get }
     var uniqueId: String { get }
 }
 extension GeoJSONExportable {
+    var key: String {
+        Self.definition.key
+    }
     var id: String {
         uniqueId
     }
@@ -57,12 +63,12 @@ extension GeoJSONExportable {
     var geoJsonFeatures: [Feature] {
         var geoJsonProperties: [String: AnyCodable] = [:]
         
-        if let exportable = self as? AnyGeoJSONExportable {
-            return exportable.base.geoJsonFeatures
-        } else {
+//        if let exportable = self as? AnyGeoJSONExportable {
+//            return exportable.base.geoJsonFeatures
+//        } else {
             
             if let dataSource = self as? DataSource {
-                geoJsonProperties["marlin_data_source"] = AnyCodable(dataSource.key)
+                geoJsonProperties["marlin_data_source"] = AnyCodable(Self.definition.key)
                 
                 let encoder = JSONEncoder()
                 encoder.outputFormatting = .prettyPrinted
@@ -86,7 +92,7 @@ extension GeoJSONExportable {
                         }
                     }
                 }
-            }
+//            }
         }
         return getFeature(sf: sfGeometry, geoJsonProperties: geoJsonProperties)
     }

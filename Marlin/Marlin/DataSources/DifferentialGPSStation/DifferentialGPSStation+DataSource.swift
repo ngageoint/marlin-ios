@@ -35,7 +35,7 @@ extension DifferentialGPSStation: Bookmarkable {
 }
 
 extension DifferentialGPSStation: Locatable, GeoPackageExportable, GeoJSONExportable {
-
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.dgps.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }
@@ -118,7 +118,7 @@ extension DifferentialGPSStation: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(DifferentialGPSStation.self)
+        return UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(DifferentialGPSStation.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [DifferentialGPSStationModel]) -> NSBatchInsertRequest {

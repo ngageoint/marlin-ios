@@ -88,7 +88,7 @@ struct LightDetailView: View {
         .onAppear {
             viewModel.repository = lightRepository
             viewModel.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
-            Metrics.shared.dataSourceDetail(dataSource: Light.self)
+            Metrics.shared.dataSourceDetail(dataSource: Light.definition)
         }
     }
 }

@@ -20,7 +20,7 @@ final class AsamSummaryViewTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -59,8 +59,13 @@ final class AsamSummaryViewTests: XCTestCase {
             return
         }
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let summary = AsamSummaryView(asam: AsamModel(asam:newItem))
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -92,7 +97,12 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = nil
         newItem.victim = "Boat"
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let summary = AsamSummaryView(asam: AsamModel(asam: newItem))
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -122,7 +132,12 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = nil
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let summary = AsamSummaryView(asam: AsamModel(asam: newItem))
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -152,7 +167,12 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = "Boat"
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let summary = AsamSummaryView(asam: AsamModel(asam: newItem), showMoreDetails: true)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -162,7 +182,7 @@ final class AsamSummaryViewTests: XCTestCase {
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
             let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let asam = try! XCTUnwrap(vds.dataSource as? Asam)
+            let asam = try! XCTUnwrap(vds.dataSource as? AsamModel)
             XCTAssertEqual(asam.hostility, "Boarding")
             XCTAssertEqual(asam.victim, "Boat")
             return true
@@ -186,7 +206,12 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = "Boat"
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let summary = AsamSummaryView(asam: AsamModel(asam: newItem), showMoreDetails: false)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -201,7 +226,7 @@ final class AsamSummaryViewTests: XCTestCase {
         expectation(forNotification: .MapItemsTapped, object: nil) { notification in
             
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let asams = tapNotification.items as! [Asam]
+            let asams = tapNotification.items as! [AsamModel]
             XCTAssertEqual(asams.count, 1)
             XCTAssertEqual(asams[0].hostility, "Boarding")
             XCTAssertEqual(asams[0].victim, "Boat")
@@ -214,8 +239,8 @@ final class AsamSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
         
-        tester().waitForTappableView(withAccessibilityLabel: "Close")
-        tester().tapView(withAccessibilityLabel: "Close")
+        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
+        tester().tapView(withAccessibilityLabel: "dismiss popup")
     }
 
 }

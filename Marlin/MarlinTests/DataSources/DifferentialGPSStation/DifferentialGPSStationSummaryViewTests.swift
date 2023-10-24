@@ -20,7 +20,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -61,8 +61,13 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         newItem.noticeWeek = "34"
         newItem.noticeYear = "2011"
         
+        let repository = DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let summary = newItem.summary
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -107,8 +112,13 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         newItem.noticeWeek = "34"
         newItem.noticeYear = "2011"
         
+        let repository = DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let summary = newItem.summary
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -132,7 +142,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         expectation(forNotification: .MapItemsTapped, object: nil) { notification in
 
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let dgps = tapNotification.items as! [DifferentialGPSStation]
+            let dgps = tapNotification.items as! [DifferentialGPSStationModel]
             XCTAssertEqual(dgps.count, 1)
             XCTAssertEqual(dgps[0].featureNumber, 6)
             return true
@@ -144,8 +154,8 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
 
-        tester().waitForTappableView(withAccessibilityLabel: "Close")
-        tester().tapView(withAccessibilityLabel: "Close")
+        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
+        tester().tapView(withAccessibilityLabel: "dismiss popup")
     }
     
     func testLoadingShowMoreDetails() {
@@ -173,10 +183,15 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         newItem.noticeWeek = "34"
         newItem.noticeYear = "2011"
         
+        let repository = DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let summary = newItem.summary
             .setShowMoreDetails(true)
             .setShowSectionHeader(true)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -190,7 +205,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
             let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let dgps = try! XCTUnwrap(vds.dataSource as? DifferentialGPSStation)
+            let dgps = try! XCTUnwrap(vds.dataSource as? DifferentialGPSStationModel)
             XCTAssertEqual(dgps.featureNumber, 6)
             return true
         }

@@ -1,61 +1,167 @@
 //
-//  Port+DataSource.swift
+//  Filterable.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 9/17/22.
+//  Created by Daniel Barela on 10/12/23.
 //
 
 import Foundation
-import UIKit
 import CoreData
 
-extension Port: Bookmarkable {
-    var canBookmark: Bool {
-        return true
+protocol Filterable {
+    var id: String { get }
+    var definition: any DataSourceDefinition { get }
+    var properties: [DataSourceProperty] { get }
+    var defaultFilter: [DataSourceFilterParameter] { get }
+    var locatableClass: Locatable.Type? { get }
+    func fetchRequest(filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>?
+}
+
+extension Filterable {
+    var id: String {
+        definition.key
+    }
+    var locatableClass: Locatable.Type? {
+        nil
     }
     
-    var itemKey: String {
-        return "\(portNumber)"
-    }
-    
-    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
-        return getPort(context: context, portNumber: itemKey)
-    }
-    
-    static func getPort(context: NSManagedObjectContext, portNumber: String?) -> Port? {
-        if let portNumber = portNumber {
-            return context.fetchFirst(Port.self, key: "portNumber", value: portNumber)
+    func fetchRequest(filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>? {
+        // TODO: this should take a repostory
+        var dataSourceNSManaged: NSManagedObject.Type? = self as? NSManagedObject.Type ?? DataSourceType.fromKey(definition.key)?.toDataSource() as? NSManagedObject.Type
+        
+        guard let dataSourceNSManaged = dataSourceNSManaged else {
+            return nil
         }
-        return nil
+        let fetchRequest = dataSourceNSManaged.fetchRequest()
+        var predicates: [NSPredicate] = []
+        
+        if let commonFilters = commonFilters {
+            for filter in commonFilters {
+                if let predicate = filter.toPredicate(dataSource: self) {
+                    predicates.append(predicate)
+                }
+            }
+        }
+        
+        if let filters = filters {
+            for filter in filters {
+                if let predicate = filter.toPredicate(dataSource: self) {
+                    predicates.append(predicate)
+                }
+            }
+        }
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        
+        fetchRequest.predicate = predicate
+        return fetchRequest
     }
 }
 
-extension Port: Locatable, GeoPackageExportable, GeoJSONExportable {
-    static var definition: any DataSourceDefinition = DataSourceDefinitions.port.definition
-    var sfGeometry: SFGeometry? {
-        return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+struct ChartCorrectionFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSourceDefinitions.chartCorrection.definition
     }
     
-    var color: UIColor {
-        return Port.color
+    var properties: [DataSourceProperty] {
+        [
+            DataSourceProperty(name: "Notice Number", key: "currNoticeNum", type: .int, requiredInFilter: false),
+            DataSourceProperty(name: "Location", key: "location", type: .location, requiredInFilter: true)
+        ]
     }
     
-    static func postProcess() {}
+    var defaultFilter: [DataSourceFilterParameter] {
+        if LocationManager.shared().lastLocation != nil {
+            return [
+                DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .nearMe, valueInt: 2500)
+            ]
+        } else {
+            return [
+                DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 2500, valueLatitude: 0.0, valueLongitude: 0.0)
+            ]
+        }
+    }
+}
+
+struct AsamFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSourceDefinitions.asam.definition
+    }
     
-    static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("Ports", comment: "Port data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("World Ports", comment: "Port data source display name")
-    static var key: String = "port"
-    static var metricsKey: String = "ports"
-    static var imageName: String? = "port"
-    static var systemImageName: String? = nil
-    static var color: UIColor = UIColor(argbValue: 0xFF5856d6)
-    static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
+    var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date),
+        DataSourceProperty(name: "Location", key: #keyPath(Asam.mgrs10km), type: .location),
+        DataSourceProperty(name: "Reference", key: #keyPath(Asam.reference), type: .string),
+        DataSourceProperty(name: "Latitude", key: #keyPath(Asam.latitude), type: .latitude),
+        DataSourceProperty(name: "Longitude", key: #keyPath(Asam.longitude), type: .longitude),
+        DataSourceProperty(name: "Navigation Area", key: #keyPath(Asam.navArea), type: .string),
+        DataSourceProperty(name: "Subregion", key: #keyPath(Asam.subreg), type: .string),
+        DataSourceProperty(name: "Description", key: #keyPath(Asam.asamDescription), type: .string),
+        DataSourceProperty(name: "Hostility", key: #keyPath(Asam.hostility), type: .string),
+        DataSourceProperty(name: "Victim", key: #keyPath(Asam.victim), type: .string)
+    ]
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "World Port Index Number", key: #keyPath(Port.portNumber), type: .int), ascending: false)]
-    static var defaultFilter: [DataSourceFilterParameter] = []
+    var defaultFilter: [DataSourceFilterParameter] = [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last365Days)]
     
-    static var properties: [DataSourceProperty] = [
+}
+
+struct ModuFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSourceDefinitions.modu.definition
+    }
+    
+    var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Location", key: #keyPath(Modu.mgrs10km), type: .location),
+        DataSourceProperty(name: "Subregion", key: #keyPath(Modu.subregion), type: .int),
+        DataSourceProperty(name: "Region", key: #keyPath(Modu.region), type: .int),
+        DataSourceProperty(name: "Longitude", key: #keyPath(Modu.longitude), type: .longitude),
+        DataSourceProperty(name: "Latitude", key: #keyPath(Modu.latitude), type: .latitude),
+        DataSourceProperty(name: "Distance", key: #keyPath(Modu.distance), type: .double),
+        DataSourceProperty(name: "Special Status", key: #keyPath(Modu.specialStatus), type: .string),
+        DataSourceProperty(name: "Rig Status", key: #keyPath(Modu.rigStatus), type: .string),
+        DataSourceProperty(name: "Nav Area", key: #keyPath(Modu.navArea), type: .string),
+        DataSourceProperty(name: "Name", key: #keyPath(Modu.name), type: .string),
+        DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date),
+    ]
+    
+    var defaultFilter: [DataSourceFilterParameter] = []
+    
+}
+
+struct DifferentialGPSStationFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSourceDefinitions.dgps.definition
+    }
+    
+    var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Location", key: #keyPath(DifferentialGPSStation.mgrs10km), type: .location),
+        DataSourceProperty(name: "Latitude", key: #keyPath(DifferentialGPSStation.latitude), type: .latitude),
+        DataSourceProperty(name: "Longitude", key: #keyPath(DifferentialGPSStation.longitude), type: .longitude),
+        DataSourceProperty(name: "Number", key: #keyPath(DifferentialGPSStation.featureNumber), type: .int),
+        DataSourceProperty(name: "Name", key: #keyPath(DifferentialGPSStation.name), type: .string),
+        DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(DifferentialGPSStation.geopoliticalHeading), type: .string),
+        DataSourceProperty(name: "Station ID", key: #keyPath(DifferentialGPSStation.stationID), type: .int),
+        DataSourceProperty(name: "Range (nmi)", key: #keyPath(DifferentialGPSStation.range), type: .int),
+        DataSourceProperty(name: "Frequency (kHz)", key: #keyPath(DifferentialGPSStation.frequency), type: .int),
+        DataSourceProperty(name: "Transfer Rate", key: #keyPath(DifferentialGPSStation.transferRate), type: .int),
+        DataSourceProperty(name: "Remarks", key: #keyPath(DifferentialGPSStation.remarks), type: .string),
+        DataSourceProperty(name: "Notice Number", key: #keyPath(DifferentialGPSStation.noticeNumber), type: .int),
+        DataSourceProperty(name: "Notice Week", key: #keyPath(DifferentialGPSStation.noticeWeek), type: .string),
+        DataSourceProperty(name: "Notice Year", key: #keyPath(DifferentialGPSStation.noticeYear), type: .string),
+        DataSourceProperty(name: "Volume Number", key: #keyPath(DifferentialGPSStation.volumeNumber), type: .string),
+        DataSourceProperty(name: "Preceding Note", key: #keyPath(DifferentialGPSStation.precedingNote), type: .string),
+        DataSourceProperty(name: "Post Note", key: #keyPath(DifferentialGPSStation.postNote), type: .string),
+    ]
+    
+    var defaultFilter: [DataSourceFilterParameter] = []
+    
+}
+
+struct PortFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSourceDefinitions.port.definition
+    }
+    
+    var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Location", key: #keyPath(Port.mgrs10km), type: .location),
         // Name and Location
         DataSourceProperty(name: "Latitude", key: #keyPath(Port.latitude), type: .latitude),
@@ -82,7 +188,7 @@ extension Port: Locatable, GeoPackageExportable, GeoJSONExportable {
         DataSourceProperty(name: "Cargo Pier Depth (m)", key: #keyPath(Port.cargoPierDepth), type: .int),
         DataSourceProperty(name: "Oil Terminal Depth (m)", key: #keyPath(Port.oilTerminalDepth), type: .int),
         DataSourceProperty(name: "Liquified Natural Gas Terminal Depth (m)", key: #keyPath(Port.liquifiedNaturalGasTerminalDepth), type: .int),
-
+        
         // Maximum Vessel Size
         DataSourceProperty(name: "Maximum Vessel Length (m)", key: #keyPath(Port.maxVesselLength), type: .int),
         DataSourceProperty(name: "Maximum Vessel Beam (m)", key: #keyPath(Port.maxVesselBeam), type: .int),
@@ -90,7 +196,7 @@ extension Port: Locatable, GeoPackageExportable, GeoJSONExportable {
         DataSourceProperty(name: "Offshore Maximum Vessel Length (m)", key: #keyPath(Port.offshoreMaxVesselLength), type: .int),
         DataSourceProperty(name: "Offshore Maximum Vessel Beam (m)", key: #keyPath(Port.offshoreMaxVesselBeam), type: .int),
         DataSourceProperty(name: "Offshore Maximum Vessel Draft (m)", key: #keyPath(Port.offshoreMaxVesselDraft), type: .int),
-
+        
         
         // Physical Environment
         DataSourceProperty(name: "Harbor Size", key: #keyPath(Port.harborSize), type: .enumeration, enumerationValues: SizeEnum.keyValueMap),
@@ -105,7 +211,7 @@ extension Port: Locatable, GeoPackageExportable, GeoJSONExportable {
         DataSourceProperty(name: "Underkeel Clearance Management System", key: #keyPath(Port.ukcMgmtSystem), type: .enumeration, enumerationValues: UnderkeelClearanceEnum.keyValueMap),
         DataSourceProperty(name: "Good Holding Ground", key: #keyPath(Port.goodHoldingGround), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
         DataSourceProperty(name: "Turning Area", key: #keyPath(Port.turningArea), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
-
+        
         // Approach
         DataSourceProperty(name: "Port Security", key: #keyPath(Port.portSecurity), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
         DataSourceProperty(name: "Estimated Time Of Arrival Message", key: #keyPath(Port.etaMessage), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
@@ -115,7 +221,7 @@ extension Port: Locatable, GeoPackageExportable, GeoJSONExportable {
         DataSourceProperty(name: "Traffic Separation Scheme", key: #keyPath(Port.trafficSeparationScheme), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
         DataSourceProperty(name: "Vessel Traffic Service", key: #keyPath(Port.vesselTrafficService), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
         DataSourceProperty(name: "First Port Of Entry", key: #keyPath(Port.firstPortOfEntry), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
-
+        
         // Pilots Tugs Communications
         DataSourceProperty(name: "Pilotage - Compulsory", key: #keyPath(Port.ptCompulsory), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
         DataSourceProperty(name: "Pilotage - Available", key: #keyPath(Port.ptAvailable), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
@@ -131,7 +237,7 @@ extension Port: Locatable, GeoPackageExportable, GeoJSONExportable {
         DataSourceProperty(name: "Communications - Rail", key: #keyPath(Port.cmRail), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
         DataSourceProperty(name: "Search and Rescue", key: #keyPath(Port.searchAndRescue), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
         DataSourceProperty(name: "NAVAREA", key: #keyPath(Port.navArea), type: .string),
-
+        
         // Facilities
         DataSourceProperty(name: "Facilities - Wharves", key: #keyPath(Port.loWharves), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
         DataSourceProperty(name: "Facilities - Anchorage", key: #keyPath(Port.loAnchor), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
@@ -152,7 +258,7 @@ extension Port: Locatable, GeoPackageExportable, GeoJSONExportable {
         DataSourceProperty(name: "Chemical Holding Tank Disposal", key: #keyPath(Port.chemicalHoldingTank), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
         DataSourceProperty(name: "Degaussing", key: #keyPath(Port.degauss), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
         DataSourceProperty(name: "Dirty Ballast Disposal", key: #keyPath(Port.dirtyBallast), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
-
+        
         // Cranes
         DataSourceProperty(name: "Cranes - Fixed", key: #keyPath(Port.craneFixed), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
         DataSourceProperty(name: "Cranes - Mobile", key: #keyPath(Port.craneMobile), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
@@ -162,7 +268,7 @@ extension Port: Locatable, GeoPackageExportable, GeoJSONExportable {
         DataSourceProperty(name: "Lifts - 50-100 Tons", key: #keyPath(Port.lifts50), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
         DataSourceProperty(name: "Lifts - 25-49 Tons", key: #keyPath(Port.lifts25), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
         DataSourceProperty(name: "Lifts - 0-24 Tons", key: #keyPath(Port.lifts0), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
-
+        
         // Services Supplies
         DataSourceProperty(name: "Services - Longshoremen", key: #keyPath(Port.srLongshore), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
         DataSourceProperty(name: "Services - Electricity", key: #keyPath(Port.srElectrical), type: .enumeration, enumerationValues: DecisionEnum.keyValueMap),
@@ -183,75 +289,131 @@ extension Port: Locatable, GeoPackageExportable, GeoJSONExportable {
         DataSourceProperty(name: "Railway", key: #keyPath(Port.railway), type: .enumeration, enumerationValues: SizeEnum.keyValueMap)
     ]
     
-    static var dateFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-        return dateFormatter
-    }
+    var defaultFilter: [DataSourceFilterParameter] = []
+    
 }
 
-extension Port: BatchImportable {
-    static var seedDataFiles: [String]? = ["port"]
-    static var decodableRoot: Decodable.Type = PortPropertyContainer.self
-    
-    static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
-        guard let value = value as? PortPropertyContainer else {
-            return 0
-        }
-        let count = value.ports.count
-        NSLog("Received \(count) \(Self.key) records.")
-        return try await Port.importRecords(from: value.ports, taskContext: PersistenceController.current.newTaskContext())
+struct LightFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSourceDefinitions.light.definition
     }
     
-    static func dataRequest() -> [MSIRouter] {
-        return [MSIRouter.readPorts]
+    var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Location", key: #keyPath(Light.mgrs10km), type: .location),
+        DataSourceProperty(name: "Latitude", key: #keyPath(Light.latitude), type: .latitude),
+        DataSourceProperty(name: "Longitude", key: #keyPath(Light.longitude), type: .longitude),
+        DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .string),
+        DataSourceProperty(name: "International Feature Number", key: #keyPath(Light.internationalFeature), type: .string),
+        DataSourceProperty(name: "Name", key: #keyPath(Light.name), type: .string),
+        DataSourceProperty(name: "Structure", key: #keyPath(Light.structure), type: .string),
+        DataSourceProperty(name: "Focal Plane Elevation (ft)", key: #keyPath(Light.heightFeet), type: .double),
+        DataSourceProperty(name: "Focal Plane Elevation (m)", key: #keyPath(Light.heightMeters), type: .double),
+        DataSourceProperty(name: "Range (nm)", key: #keyPath(Light.lightRange), type: .double, subEntityKey: #keyPath(LightRange.range)),
+        DataSourceProperty(name: "Remarks", key: #keyPath(Light.remarks), type: .string),
+        DataSourceProperty(name: "Characteristic", key: #keyPath(Light.characteristic), type: .string),
+        DataSourceProperty(name: "Signal", key: #keyPath(Light.characteristic), type: .string),
+        DataSourceProperty(name: "Notice Number", key: #keyPath(Light.noticeNumber), type: .int),
+        DataSourceProperty(name: "Notice Week", key: #keyPath(Light.noticeWeek), type: .string),
+        DataSourceProperty(name: "Notice Year", key: #keyPath(Light.noticeYear), type: .string),
+        DataSourceProperty(name: "Volume Number", key: #keyPath(Light.volumeNumber), type: .string),
+        DataSourceProperty(name: "Preceding Note", key: #keyPath(Light.precedingNote), type: .string),
+        DataSourceProperty(name: "Post Note", key: #keyPath(Light.postNote), type: .string),
+        DataSourceProperty(name: "Region", key: #keyPath(Light.sectionHeader), type: .string),
+        DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(Light.geopoliticalHeading), type: .string),
+        DataSourceProperty(name: "Region Heading", key: #keyPath(Light.regionHeading), type: .string),
+        DataSourceProperty(name: "Subregion Heading", key: #keyPath(Light.subregionHeading), type: .string),
+        DataSourceProperty(name: "Local Heading", key: #keyPath(Light.localHeading), type: .string)
+    ]
+    
+    var defaultFilter: [DataSourceFilterParameter] = []
+    
+}
+
+struct RadioBeaconFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSourceDefinitions.radioBeacon.definition
     }
     
-    static func shouldSync() -> Bool {
-        // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(Port.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(Port.definition)
+    var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Location", key: #keyPath(RadioBeacon.mgrs10km), type: .location),
+        DataSourceProperty(name: "Latitude", key: #keyPath(RadioBeacon.latitude), type: .latitude),
+        DataSourceProperty(name: "Longitude", key: #keyPath(RadioBeacon.longitude), type: .longitude),
+        DataSourceProperty(name: "Feature Number", key: #keyPath(RadioBeacon.featureNumber), type: .int),
+        DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(RadioBeacon.geopoliticalHeading), type: .string),
+        DataSourceProperty(name: "Name", key: #keyPath(RadioBeacon.name), type: .string),
+        DataSourceProperty(name: "Range (nm)", key: #keyPath(RadioBeacon.range), type: .int),
+        DataSourceProperty(name: "Frequency (kHz)", key: #keyPath(RadioBeacon.frequency), type: .string),
+        DataSourceProperty(name: "Station Remark", key: #keyPath(RadioBeacon.stationRemark), type: .string),
+        DataSourceProperty(name: "Characteristic", key: #keyPath(RadioBeacon.characteristic), type: .string),
+        DataSourceProperty(name: "Sequence Text", key: #keyPath(RadioBeacon.sequenceText), type: .string),
+        DataSourceProperty(name: "Notice Number", key: #keyPath(RadioBeacon.noticeNumber), type: .int),
+        DataSourceProperty(name: "Notice Week", key: #keyPath(RadioBeacon.noticeWeek), type: .string),
+        DataSourceProperty(name: "Notice Year", key: #keyPath(RadioBeacon.noticeYear), type: .string),
+        DataSourceProperty(name: "Volume Number", key: #keyPath(RadioBeacon.volumeNumber), type: .string),
+        DataSourceProperty(name: "Preceding Note", key: #keyPath(RadioBeacon.precedingNote), type: .string),
+        DataSourceProperty(name: "Post Note", key: #keyPath(RadioBeacon.postNote), type: .string),
+        DataSourceProperty(name: "Aid Type", key: #keyPath(RadioBeacon.aidType), type: .string),
+        DataSourceProperty(name: "Region Heading", key: #keyPath(RadioBeacon.regionHeading), type: .string),
+        DataSourceProperty(name: "Remove From List", key: #keyPath(RadioBeacon.removeFromList), type: .string),
+        DataSourceProperty(name: "Delete Flag", key: #keyPath(RadioBeacon.deleteFlag), type: .string)
+    ]
+    
+    var defaultFilter: [DataSourceFilterParameter] = []
+}
+
+struct CommonFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSourceDefinitions.common.definition
     }
     
-    static func newBatchInsertRequest(with propertyList: [PortModel]) -> NSBatchInsertRequest {
-        var index = 0
-        let total = propertyList.count
-        
-        // Provide one dictionary at a time when the closure is called.
-        let batchInsertRequest = NSBatchInsertRequest(entity: Port.entity(), dictionaryHandler: { dictionary in
-            guard index < total else { return true }
-            dictionary.addEntries(from: propertyList[index].dictionaryValue.filter({
-                return $0.value != nil
-            }) as [AnyHashable : Any])
-            index += 1
-            return false
-        })
-        return batchInsertRequest
+    var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Location", key: #keyPath(CommonDataSource.coordinate), type: .location)
+    ]
+    
+    var defaultFilter: [DataSourceFilterParameter] = []
+}
+
+struct NoticeToMarinersFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSourceDefinitions.noticeToMariners.definition
     }
     
-    static func importRecords(from propertiesList: [PortModel], taskContext: NSManagedObjectContext) async throws -> Int {
-        guard !propertiesList.isEmpty else { return 0 }
-        
-        // Add name and author to identify source of persistent history changes.
-        taskContext.name = "importContext"
-        taskContext.transactionAuthor = "importPorts"
-        
-        return try await taskContext.perform {
-            // Execute the batch insert.
-            /// - Tag: batchInsertRequest
-            let batchInsertRequest = Port.newBatchInsertRequest(with: propertiesList)
-            batchInsertRequest.resultType = .count
-            if let fetchResult = try? taskContext.execute(batchInsertRequest),
-               let batchInsertResult = fetchResult as? NSBatchInsertResult {
-                try? taskContext.save()
-                if let count = batchInsertResult.result as? Int, count > 0 {
-                    NSLog("Inserted \(count) Port records")
-                    return count
-                } else {
-                    NSLog("No new Port records")
-                }
-                return 0
-            }
-            throw MSIError.batchInsertError
-        }
+    var properties: [DataSourceProperty] {
+        return []
     }
+    
+    var defaultFilter: [DataSourceFilterParameter] = []
+}
+
+struct ElectronicPublicationFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSourceDefinitions.epub.definition
+    }
+    
+    var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Type", key: #keyPath(ElectronicPublication.pubTypeId), type: .enumeration, enumerationValues: PublicationTypeEnum.keyValueMap),
+        DataSourceProperty(name: "Display Name", key: #keyPath(ElectronicPublication.pubDownloadDisplayName), type: .string)
+    ]
+    
+    var defaultFilter: [DataSourceFilterParameter] = []
+}
+
+struct NavigationalWarningFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSourceDefinitions.navWarning.definition
+    }
+    
+    var defaultFilter: [DataSourceFilterParameter] = []
+    
+    var properties: [DataSourceProperty] = []
+}
+
+struct RouteFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSourceDefinitions.route.definition
+    }
+    
+    var defaultFilter: [DataSourceFilterParameter] = []
+    
+    var properties: [DataSourceProperty] = []
 }

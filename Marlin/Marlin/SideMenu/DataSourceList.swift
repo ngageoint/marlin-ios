@@ -8,6 +8,353 @@
 import Foundation
 import SwiftUI
 import Combine
+import CoreData
+
+protocol DataSourceDefinition: ObservableObject {
+    var mappable: Bool { get }
+    var color: UIColor { get }
+    var imageName: String? { get }
+    var systemImageName: String? { get }
+    var image: UIImage? { get }
+    var key: String { get }
+    var metricsKey: String { get }
+    var name: String { get }
+    var fullName: String { get }
+    var order: Int { get }
+    // this should be moved to a map centric protocol
+    var imageScale: CGFloat { get }
+}
+
+extension DataSourceDefinition {
+//    var order: Int {
+//        UserDefaults.standard.dataSourceMapOrder(key)
+//    }
+    
+    var imageScale: CGFloat {
+        UserDefaults.standard.imageScale(key) ?? 1.0
+    }
+    
+    var image: UIImage? {
+        if let imageName = imageName {
+            return UIImage(named: imageName)
+        } else if let systemImageName = systemImageName {
+            return UIImage(systemName: systemImageName)
+        }
+        return nil
+    }
+}
+
+class RouteDefinition: DataSourceDefinition {
+    var mappable: Bool = true
+    var color: UIColor = .black
+    var imageName: String?
+    var systemImageName: String? = "arrow.triangle.turn.up.right.diamond.fill"
+    var key: String = "route"
+    var metricsKey: String = "routes"
+    var name: String = NSLocalizedString("Routes", comment: "Route data source display name")
+    var fullName: String = NSLocalizedString("Routes", comment: "Route data source full display name")
+    @AppStorage("routeOrder") var order: Int = 0
+}
+
+class AsamDefinition: DataSourceDefinition {
+    var mappable: Bool = true
+    var color: UIColor = .black
+    var imageName: String? = "asam"
+    var systemImageName: String?
+    var key: String = "asam"
+    var metricsKey: String = "asams"
+    var name: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")
+    var fullName: String = NSLocalizedString("Anti-Shipping Activity Messages", comment: "ASAM data source full display name")
+    @AppStorage("asamOrder") var order: Int = 0
+}
+
+class ModuDefinition: DataSourceDefinition {
+    var mappable: Bool = true
+    var color: UIColor = UIColor(argbValue: 0xFF0042A4)
+    var imageName: String? = "modu"
+    var systemImageName: String?
+    var key: String = "modu"
+    var metricsKey: String = "modus"
+    var name: String = NSLocalizedString("MODU", comment: "MODU data source display name")
+    var fullName: String = NSLocalizedString("Mobile Offshore Drilling Units", comment: "MODU data source full display name")
+    @AppStorage("moduOrder") var order: Int = 0
+}
+
+class CommonDefinition: DataSourceDefinition {
+    var mappable: Bool = false
+    var color: UIColor = Color.primaryUIColor
+    var imageName: String?
+    var systemImageName: String? = "mappin"
+    var key: String = "Common"
+    var metricsKey: String = "Common"
+    var name: String = "Common"
+    var fullName: String = "Common"
+    @AppStorage("CommonOrder") var order: Int = 0
+}
+
+class NoticeToMarinersDefinition: DataSourceDefinition {
+    var mappable: Bool = false
+    var color: UIColor = UIColor.red
+    var imageName: String?
+    var systemImageName: String? = "speaker.badge.exclamationmark.fill"
+    var key: String = "ntm"
+    var metricsKey: String = "ntms"
+    var name: String = "NTM"
+    var fullName: String = "Notice To Mariners"
+    @AppStorage("ntmOrder") var order: Int = 0
+}
+
+class DFRSDefinition: DataSourceDefinition {
+    var mappable: Bool = true
+    var color: UIColor = UIColor(argbValue: 0xFFFFB300)
+    var imageName: String?
+    var systemImageName: String? = "antenna.radiowaves.left.and.right.circle"
+    var key: String = "dfrs"
+    var metricsKey: String = "dfrs"
+    var name: String = NSLocalizedString("DFRS", comment: "Radio Direction Finders and Radar station data source display name")
+    var fullName: String = NSLocalizedString("Radio Direction Finders & Radar Stations", comment: "Radio Direction Finders and Radar station data source full display name")
+    var imageScale: CGFloat {
+        UserDefaults.standard.imageScale(key) ?? 0.66
+    }
+    @AppStorage("dfrsOrder") var order: Int = 0
+}
+
+class DifferentialGPSStationDefinition: DataSourceDefinition {
+    var mappable: Bool = true
+    var color: UIColor = UIColor(argbValue: 0xFF00E676)
+    var imageName: String? = "dgps"
+    var systemImageName: String?
+    var key: String = "differentialGPSStation"
+    var metricsKey: String = "dgpsStations"
+    var name: String = NSLocalizedString("DGPS", comment: "Differential GPS Station data source display name")
+    var fullName: String = NSLocalizedString("Differential GPS Stations", comment: "Differential GPS Station data source full display name")
+    var imageScale: CGFloat {
+        UserDefaults.standard.imageScale(key) ?? 0.66
+    }
+    @AppStorage("differentialGPSStationOrder") var order: Int = 0
+}
+
+class ElectronicPublicationDefinition: DataSourceDefinition {
+    var mappable: Bool = false
+    var color: UIColor = UIColor(argbValue: 0xFF30B0C7)
+    var imageName: String?
+    var systemImageName: String? = "doc.text.fill"
+    var key: String = "epub"
+    var metricsKey: String = "epubs"
+    var name: String = NSLocalizedString("EPUB", comment: "Electronic Publication data source display name")
+    var fullName: String = NSLocalizedString("Electronic Publications", comment: "Electronic Publication data source full display name")
+    @AppStorage("epubOrder") var order: Int = 0
+}
+
+class PortDefinition: DataSourceDefinition {
+    var mappable: Bool = true
+    var color: UIColor = UIColor(argbValue: 0xFF5856d6)
+    var imageName: String? = "port"
+    var systemImageName: String?
+    var key: String = "port"
+    var metricsKey: String = "ports"
+    var name: String = NSLocalizedString("Ports", comment: "Port data source display name")
+    var fullName: String = NSLocalizedString("World Ports", comment: "Port data source full display name")
+    @AppStorage("portOrder") var order: Int = 0
+}
+
+class NavigationalWarningDefinition: DataSourceDefinition {
+    var mappable: Bool = true
+    var color: UIColor = UIColor(argbValue: 0xFFD32F2F)
+    var imageName: String?
+    var systemImageName: String? = "exclamationmark.triangle.fill"
+    var key: String = "navWarning"
+    var metricsKey: String = "navigational_warnings"
+    var name: String = NSLocalizedString("Warnings", comment: "Warnings data source display name")
+    var fullName: String = NSLocalizedString("Navigational Warnings", comment: "Warnings data source full display name")
+    @AppStorage("navWarningOrder") var order: Int = 0
+}
+
+class LightDefinition: DataSourceDefinition {
+    var mappable: Bool = true
+    var color: UIColor = UIColor(argbValue: 0xFFFFC500)
+    var imageName: String?
+    var systemImageName: String? = "lightbulb.fill"
+    var key: String = "light"
+    var metricsKey: String = "lights"
+    var name: String = NSLocalizedString("Lights", comment: "Lights data source display name")
+    var fullName: String = NSLocalizedString("Lights", comment: "Lights data source full display name")
+    var imageScale: CGFloat {
+        UserDefaults.standard.imageScale(key) ?? 0.66
+    }
+    @AppStorage("lightOrder") var order: Int = 0
+}
+
+class RadioBeaconDefinition: DataSourceDefinition {
+    var mappable: Bool = true
+    var color: UIColor = UIColor(argbValue: 0xFF007BFF)
+    var imageName: String?
+    var systemImageName: String? = "antenna.radiowaves.left.and.right"
+    var key: String = "radioBeacon"
+    var metricsKey: String = "radioBeacons"
+    var name: String = NSLocalizedString("Beacons", comment: "Radio Beacons data source display name")
+    var fullName: String = NSLocalizedString("Radio Beacons", comment: "Radio Beacons data source full display name")
+    var imageScale: CGFloat {
+        UserDefaults.standard.imageScale(key) ?? 0.66
+    }
+    @AppStorage("radioBeaconOrder") var order: Int = 0
+}
+
+class BookmarkDefinition: DataSourceDefinition {
+    var mappable: Bool = false
+    var color: UIColor = UIColor(argbValue: 0xFFFF9500)
+    var imageName: String?
+    var systemImageName: String? = "bookmark.fill"
+    var key: String = "bookmark"
+    var metricsKey: String = "bookmark"
+    var name: String = NSLocalizedString("Bookmarks", comment: "Bookmarks data source display name")
+    var fullName: String = NSLocalizedString("Bookmarks", comment: "Bookmarks data source full display name")
+    @AppStorage("bookmarkOrder") var order: Int = 0
+}
+
+class ChartCorrectionDefinition: DataSourceDefinition {
+    var mappable: Bool = false
+    var color: UIColor = UIColor.red
+    var imageName: String?
+    var systemImageName: String? = "antenna.radiowaves.left.and.right"
+    var key: String = "chartCorrection"
+    var metricsKey: String = "corrections"
+    var name: String = NSLocalizedString("Chart Corrections", comment: "Chart Corrections data source display name")
+    var fullName: String = NSLocalizedString("Chart Corrections", comment: "Chart Corrections data source full display name")
+    @AppStorage("chartCorrectionOrder") var order: Int = 0
+}
+
+class GeoPackageDefinition: DataSourceDefinition {
+    var mappable: Bool = true
+    var color: UIColor = UIColor.brown
+    var imageName: String?
+    var systemImageName: String?
+    var key: String = "gpfeature"
+    var metricsKey: String = "geopackage"
+    var name: String = NSLocalizedString("GeoPackage Feature", comment: "GeoPackage Feature data source display name")
+    var fullName: String = NSLocalizedString("GeoPackage Feature", comment: "GeoPackage Feature data source full display name")
+    @AppStorage("gpfeatureOrder") var order: Int = 0
+}
+
+enum DataSourceDefinitions: String {
+    case route
+    case asam
+    case modu
+    case common
+    case noticeToMariners
+    case dfrs
+    case dgps
+    case epub
+    case port
+    case navWarning
+    case light
+    case radioBeacon
+    case bookmark
+    case chartCorrection
+    case geoPackage
+    
+    var definition: any DataSourceDefinition {
+        switch(self) {
+        case .route:
+            return RouteDefinition()
+        case .asam:
+            return AsamDefinition()
+        case .modu:
+            return ModuDefinition()
+        case .common:
+            return CommonDefinition()
+        case .noticeToMariners:
+            return NoticeToMarinersDefinition()
+        case .dfrs:
+            return DFRSDefinition()
+        case .dgps:
+            return DifferentialGPSStationDefinition()
+        case .epub:
+            return ElectronicPublicationDefinition()
+        case .port:
+            return PortDefinition()
+        case .navWarning:
+            return NavigationalWarningDefinition()
+        case .light:
+            return LightDefinition()
+        case .radioBeacon:
+            return RadioBeaconDefinition()
+        case .bookmark:
+            return BookmarkDefinition()
+        case .chartCorrection:
+            return ChartCorrectionDefinition()
+        case .geoPackage:
+            return GeoPackageDefinition()
+        }
+    }
+    
+    var filterable: Filterable? {
+        switch(self) {
+        case .route:
+            return RouteFilterable()
+        case .asam:
+            return AsamFilterable()
+        case .modu:
+            return ModuFilterable()
+        case .common:
+            return CommonFilterable()
+        case .noticeToMariners:
+            return NoticeToMarinersFilterable()
+        case .dgps:
+            return DifferentialGPSStationFilterable()
+        case .epub:
+            return ElectronicPublicationFilterable()
+        case .port:
+            return PortFilterable()
+        case .navWarning:
+            return NavigationalWarningFilterable()
+        case .light:
+            return LightFilterable()
+        case .radioBeacon:
+            return RadioBeaconFilterable()
+//        case .bookmark:
+//            return BookmarkDefinition()
+        case .chartCorrection:
+            return ChartCorrectionFilterable()
+        default:
+            return nil
+//        case .geoPackage:
+//            return GeoPackageDefinition()
+        }
+    }
+    
+    static func filterableFromDefintion(_ definition: any DataSourceDefinition) -> Filterable? {
+        switch(definition) {
+        case is RouteDefinition:
+            return DataSourceDefinitions.route.filterable
+        case is AsamDefinition:
+            return DataSourceDefinitions.asam.filterable
+        case is ModuDefinition:
+            return DataSourceDefinitions.modu.filterable
+        case is CommonDefinition:
+            return DataSourceDefinitions.common.filterable
+        case is NoticeToMarinersDefinition:
+            return DataSourceDefinitions.noticeToMariners.filterable
+        case is DifferentialGPSStationDefinition:
+            return DataSourceDefinitions.dgps.filterable
+        case is ElectronicPublicationDefinition:
+            return DataSourceDefinitions.epub.filterable
+        case is PortDefinition:
+            return DataSourceDefinitions.port.filterable
+        case is NavigationalWarningDefinition:
+            return DataSourceDefinitions.navWarning.filterable
+        case is LightDefinition:
+            return DataSourceDefinitions.light.filterable
+        case is RadioBeaconDefinition:
+            return DataSourceDefinitions.radioBeacon.filterable
+        case is ChartCorrectionDefinition:
+            return DataSourceDefinitions.chartCorrection.filterable
+            
+        default:
+            return nil
+        }
+    }
+}
 
 enum DataSourceType: String, CaseIterable {
     case asam
@@ -17,6 +364,10 @@ enum DataSourceType: String, CaseIterable {
     case differentialGPSStation
     case radioBeacon
     case Common
+    case route
+    case ntm
+    case epub
+    case navWarning
     
     static func fromKey(_ key: String) -> DataSourceType? {
         return self.allCases.first{ "\($0)" == key }
@@ -38,6 +389,14 @@ enum DataSourceType: String, CaseIterable {
             return RadioBeacon.self
         case .Common:
             return CommonDataSource.self
+        case .route:
+            return Route.self
+        case .ntm:
+            return NoticeToMariners.self
+        case .epub:
+            return ElectronicPublication.self
+        case .navWarning:
+            return NavigationalWarning.self
         }
     }
     
@@ -71,6 +430,22 @@ enum DataSourceType: String, CaseIterable {
             if let common = dataSource as? CommonDataSource {
                 return common
             }
+        case .route:
+            if let route = dataSource as? Route {
+                return route
+            }
+        case .ntm:
+            if let ntm = dataSource as? NoticeToMariners {
+                return ntm
+            }
+        case .epub:
+            if let epub = dataSource as? ElectronicPublication {
+                return epub
+            }
+        case .navWarning:
+            if let navWarning = dataSource as? NavigationalWarning {
+                return navWarning
+            }
         }
         return nil
     }
@@ -100,7 +475,7 @@ class DataSourceList: ObservableObject {
     
     var mappableDataSources: [DataSourceItem] {
         return enabledTabs.filter { item in
-            item.dataSource.isMappable
+            item.dataSource.definition.mappable
         }.sorted(by: { one, two in
             return one.order < two.order
         })
@@ -115,6 +490,7 @@ class DataSourceList: ObservableObject {
     @Published var nonTabs: [DataSourceItem] = []
     @Published var mappedDataSources: [DataSourceItem] = []
     
+    @Published var mappedFilterableDataSources: [Filterable] = []
     static let MAX_TABS = 4
     @AppStorage("userTabs") var userTabs: Int = MAX_TABS
     
@@ -122,15 +498,28 @@ class DataSourceList: ObservableObject {
     
     init() {
         _tabs = Published(initialValue: Array(allTabs.prefix(userTabs).filter({ item in
-            UserDefaults.standard.dataSourceEnabled(item.dataSource)
+            UserDefaults.standard.dataSourceEnabled(item.dataSource.definition)
         })))
         _nonTabs = Published(initialValue: Array(allTabs.dropFirst(userTabs).filter({ item in
-            UserDefaults.standard.dataSourceEnabled(item.dataSource)
+            UserDefaults.standard.dataSourceEnabled(item.dataSource.definition)
         })))
         _mappedDataSources = Published(initialValue: Array(allTabs.filter({ item in
             // no filtering Navigational Warnings for right now..
-            UserDefaults.standard.dataSourceEnabled(item.dataSource) && UserDefaults.standard.showOnMap(key: item.key)
+            UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) && UserDefaults.standard.showOnMap(key: item.key)
         })))
+        
+        _mappedFilterableDataSources = Published(initialValue: Array(
+            allTabs.filter({ item in
+                // no filtering Navigational Warnings for right now..
+                UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) && UserDefaults.standard.showOnMap(key: item.key)
+            })
+            .compactMap({ item in
+                return DataSourceDefinitions.filterableFromDefintion(item.dataSource.definition)
+            })
+            .sorted(by: { filterable1, filterable2 in
+                filterable1.definition.order < filterable2.definition.order
+            })
+        ))
         
         NotificationCenter.default.publisher(for: .MappedDataSourcesUpdated)
             .sink(receiveValue: { [weak self] _ in
@@ -138,8 +527,16 @@ class DataSourceList: ObservableObject {
                     return
                 }
                 self?._mappedDataSources = Published(initialValue: Array(allTabs.filter({ item in
-                    UserDefaults.standard.dataSourceEnabled(item.dataSource) && UserDefaults.standard.showOnMap(key: item.key)
+                    UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) && UserDefaults.standard.showOnMap(key: item.key)
                 })))
+                self?._mappedFilterableDataSources = Published(initialValue: Array(allTabs.filter({ item in
+                    // no filtering Navigational Warnings for right now..
+                    UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) && UserDefaults.standard.showOnMap(key: item.key)
+                })
+                    .compactMap({ item in
+                        DataSourceDefinitions.filterableFromDefintion(item.dataSource.definition)
+                    })
+                                                                                  ))
                 self?.objectWillChange.send()
             })
             .store(in: &cancellable)
@@ -212,7 +609,7 @@ class DataSourceItem: ObservableObject, Identifiable, Hashable, Equatable {
     }
     
     var id: String { key }
-    var key: String { dataSource.key }
+    var key: String { dataSource.definition.key }
     var dataSource: any DataSource.Type
     
     @AppStorage<Int> var order: Int
@@ -232,10 +629,10 @@ class DataSourceItem: ObservableObject, Identifiable, Hashable, Equatable {
     
     init(dataSource: any DataSource.Type) {
         self.dataSource = dataSource
-        self._order = AppStorage(wrappedValue: 0, "\(dataSource.key)Order")
-        self._showOnMap = AppStorage(wrappedValue: dataSource.isMappable, "showOnMap\(dataSource.key)")
-        self._filterData = AppStorage(wrappedValue: Data(), "\(dataSource.key)Filter")
-        self._enabled = AppStorage(wrappedValue: UserDefaults.standard.dataSourceEnabled(dataSource.self), "\(dataSource.key)DataSourceEnabled")
+        self._order = AppStorage(wrappedValue: 0, "\(dataSource.definition.key)Order")
+        self._showOnMap = AppStorage(wrappedValue: dataSource.definition.mappable, "showOnMap\(dataSource.definition.key)")
+        self._filterData = AppStorage(wrappedValue: Data(), "\(dataSource.definition.key)Filter")
+        self._enabled = AppStorage(wrappedValue: UserDefaults.standard.dataSourceEnabled(dataSource.definition), "\(dataSource.definition.key)DataSourceEnabled")
         
     }
     

@@ -27,7 +27,7 @@ struct GeoPackageExportView: View {
                 HStack {
                     ForEach(dataSourceList.mappableDataSources, id: \.self) { dataSourceItem in
                         let included = exporter.filterViewModels.contains { viewModel in
-                            viewModel.dataSource.key == dataSourceItem.key
+                            viewModel.dataSource?.definition.key == dataSourceItem.key
                         }
                         
                         Button(action: {
@@ -35,9 +35,9 @@ struct GeoPackageExportView: View {
                                 return
                             }
                             if included {
-                                exporter.removeExportDataSource(dataSourceItem: dataSourceItem)
+                                exporter.removeExportDataSource(filterable: DataSourceDefinitions.filterableFromDefintion(dataSourceItem.dataSource.definition))
                             } else {
-                                exporter.addExportDataSource(dataSourceItem: dataSourceItem)
+                                exporter.addExportDataSource(filterable: DataSourceDefinitions.filterableFromDefintion(dataSourceItem.dataSource.definition))
                             }
                         }) {
                             Label(title: {}) {
@@ -48,9 +48,9 @@ struct GeoPackageExportView: View {
                                 }
                             }
                         }
-                        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: included ? Color.white : Color.disabledColor, backgroundColor: included ? Color(uiColor: dataSourceItem.dataSource.color) : Color.disabledBackground))
+                        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: included ? Color.white : Color.disabledColor, backgroundColor: included ? Color(uiColor: dataSourceItem.dataSource.definition.color) : Color.disabledBackground))
                         .accessibilityElement(children: .contain)
-                        .accessibilityLabel("\(dataSourceItem.dataSource.key) Export Toggle")
+                        .accessibilityLabel("\(dataSourceItem.dataSource.definition.key) Export Toggle")
                     }
                 }
                 if !exporter.exporting && !exporter.complete {
@@ -161,17 +161,17 @@ struct ExportProgressRow: View {
         return VStack(alignment: .leading) {
             VStack {
                 HStack(alignment: .center, spacing: 8) {
-                    if let systemImageName = progress.dataSource.systemImageName {
+                    if let systemImageName = progress.filterable.definition.systemImageName {
                         Image(systemName: systemImageName)
                             .tint(Color.onSurfaceColor)
                             .opacity(0.60)
-                    } else if let imageName = progress.dataSource.imageName {
+                    } else if let imageName = progress.filterable.definition.imageName {
                         Image(imageName)
                             .tint(Color.onSurfaceColor)
                             .opacity(0.60)
                     }
                     
-                    Text(progress.dataSource.fullDataSourceName)
+                    Text(progress.filterable.definition.fullName)
                         .primary()
                         .multilineTextAlignment(.leading)
                     Spacer()
@@ -187,11 +187,11 @@ struct ExportProgressRow: View {
             }
             .contentShape(Rectangle())
             .accessibilityElement(children: .contain)
-            .accessibilityLabel("export \(progress.dataSource.fullDataSourceName) progress")
+            .accessibilityLabel("export \(progress.filterable.definition.fullName) progress")
             .background(
                 HStack {
                     Rectangle()
-                        .fill(Color(progress.dataSource.color))
+                        .fill(Color(progress.filterable.definition.color))
                         .frame(maxWidth: 8, maxHeight: .infinity)
                     Spacer()
                 }
@@ -207,21 +207,21 @@ struct ExportFilterLabel: View {
     
     var body: some View {
         HStack(alignment: .center, spacing: 8) {
-            if let systemImageName = viewModel.dataSource.systemImageName {
+            if let systemImageName = viewModel.dataSource?.definition.systemImageName {
                 Image(systemName: systemImageName)
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)
-            } else if let imageName = viewModel.dataSource.imageName {
+            } else if let imageName = viewModel.dataSource?.definition.imageName {
                 Image(imageName)
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)
             }
             
-            Text(viewModel.dataSource.fullDataSourceName)
+            Text(viewModel.dataSource?.definition.fullName ?? "")
                 .primary()
                 .multilineTextAlignment(.leading)
             Spacer()
-            if viewModel.dataSource.key == CommonDataSource.key {
+            if viewModel.dataSource?.definition.key == CommonDataSource.key {
                 Text("\(viewModel.filters.count) common filter\(viewModel.filters.count == 1 ? "" : "s") set")
                     .overline()
             } else {
@@ -242,22 +242,22 @@ struct ExportFilterRow: View {
             DisclosureGroup {
                 FilterView(viewModel: viewModel)
                     .accessibilityElement(children: .contain)
-                    .accessibilityLabel("\(viewModel.dataSource.fullDataSourceName) filters")
+                    .accessibilityLabel("\(viewModel.dataSource?.definition.fullName ?? "") filters")
             } label: {
                 ExportFilterLabel(viewModel: viewModel)
                     .contentShape(Rectangle())
                     .padding([.leading, .top, .bottom, .trailing], 16)
                     .accessibilityElement(children: .contain)
-                    .accessibilityLabel("\(filterCount) \(viewModel.dataSource.fullDataSourceName) filters")
+                    .accessibilityLabel("\(filterCount) \(viewModel.dataSource?.definition.fullName ?? "") filters")
             }
             .padding(.trailing, 16)
             .contentShape(Rectangle())
             .accessibilityElement(children: .contain)
-            .accessibilityLabel("expand \(viewModel.dataSource.fullDataSourceName) filters")
+            .accessibilityLabel("expand \(viewModel.dataSource?.definition.fullName ?? "") filters")
             .background(
                 HStack {
                     Rectangle()
-                        .fill(Color(viewModel.dataSource.color))
+                        .fill(Color(viewModel.dataSource?.definition.color ?? .clear))
                         .frame(maxWidth: 8, maxHeight: .infinity)
                     Spacer()
                 }

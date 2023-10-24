@@ -99,25 +99,25 @@ class MainMapMixins: MapMixins {
         super.init()
         var mixins: [any MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
         
-        if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) {
+        if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.definition) {
             mixins.append(DifferentialGPSStationMap<DifferentialGPSStation>(showAsTiles: true))
         }
-        if UserDefaults.standard.dataSourceEnabled(DFRS.self) {
+        if UserDefaults.standard.dataSourceEnabled(DFRS.definition) {
             mixins.append(DFRSMap<DFRS>(showAsTiles: true))
         }
-        if UserDefaults.standard.dataSourceEnabled(Light.self) {
+        if UserDefaults.standard.dataSourceEnabled(Light.definition) {
             mixins.append(LightMap<Light>(showAsTiles: true))
         }
-        if UserDefaults.standard.dataSourceEnabled(Port.self) {
+        if UserDefaults.standard.dataSourceEnabled(Port.definition) {
             mixins.append(PortMap<Port>(showAsTiles: true))
         }
-        if UserDefaults.standard.dataSourceEnabled(RadioBeacon.self) {
+        if UserDefaults.standard.dataSourceEnabled(RadioBeacon.definition) {
             mixins.append(RadioBeaconMap<RadioBeacon>(showAsTiles: true))
         }
-        if UserDefaults.standard.dataSourceEnabled(Modu.self) {
+        if UserDefaults.standard.dataSourceEnabled(Modu.definition) {
             mixins.append(ModuMap<Modu>(showAsTiles: true))
         }
-        if UserDefaults.standard.dataSourceEnabled(Asam.self) {
+        if UserDefaults.standard.dataSourceEnabled(Asam.definition) {
             mixins.append(AsamMap<Asam>(showAsTiles: true))
         }
         mixins.append(NavigationalWarningFetchMap())

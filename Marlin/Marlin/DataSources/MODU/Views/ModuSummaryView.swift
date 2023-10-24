@@ -12,7 +12,7 @@ struct ModuSummaryView: DataSourceSummaryView {
     
     var showBookmarkNotes: Bool = false
 
-    var modu: Modu
+    var modu: ModuModel
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
     

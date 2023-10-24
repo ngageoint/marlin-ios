@@ -13,7 +13,7 @@ import sf_ios
 import OSLog
 import mgrs_ios
 
-struct LightModel: Locatable, Bookmarkable, Codable {
+struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
     var canBookmark: Bool = false
     var id: String { self.itemKey }
     var itemTitle: String {
@@ -148,41 +148,6 @@ struct LightModel: Locatable, Bookmarkable, Codable {
         self.volumeNumber = light.volumeNumber
         self.requiresPostProcessing = light.requiresPostProcessing
     }
-    
-//    init(lightProperties: LightsProperties) {
-//        self.lightProperties = lightProperties
-//        self.aidType = lightProperties.aidType
-//        self.characteristic = lightProperties.characteristic
-//        if let characteristicNumber = lightProperties.characteristicNumber {
-//            self.characteristicNumber = Int64(characteristicNumber)
-//        }
-//        self.deleteFlag = lightProperties.deleteFlag
-//        self.featureNumber = lightProperties.featureNumber
-//        self.geopoliticalHeading = lightProperties.geopoliticalHeading
-//        self.heightFeet = lightProperties.heightFeet
-//        self.heightMeters = lightProperties.heightMeters
-//        self.internationalFeature = lightProperties.internationalFeature
-//        self.latitude = lightProperties.latitude
-//        self.longitude = lightProperties.longitude
-//        self.mgrs10km = lightProperties.mgrs10km
-//        self.name = lightProperties.name
-//        if let noticeNumber = lightProperties.noticeNumber {
-//            self.noticeNumber = Int64(noticeNumber)
-//        }
-//        self.noticeWeek = lightProperties.noticeWeek
-//        self.noticeYear = lightProperties.noticeYear
-//        self.position = lightProperties.position
-//        self.postNote = lightProperties.postNote
-//        self.precedingNote = lightProperties.precedingNote
-//        self.range = lightProperties.range
-//        self.regionHeading = lightProperties.regionHeading
-//        self.remarks = lightProperties.remarks
-//        self.removeFromList = lightProperties.removeFromList
-//        self.sectionHeader = lightProperties.sectionHeader
-//        self.structure = lightProperties.structure
-//        self.subregionHeading = lightProperties.subregionHeading
-//        self.volumeNumber = lightProperties.volumeNumber
-//    }
     
     init?(feature: Feature) {
         if let json = try? JSONEncoder().encode(feature.properties), let string = String(data: json, encoding: .utf8) {
@@ -706,9 +671,39 @@ struct LightModel: Locatable, Bookmarkable, Codable {
         expanded = expanded?.replacingOccurrences(of: "Y.", with: "Yellow ")
         return expanded
     }
+    
+    var description: String {
+        return "LIGHT\n\n" +
+        "aidType \(aidType ?? "")\n" +
+        "characteristic \(characteristic ?? "")\n" +
+        "characteristicNumber \(characteristicNumber)\n" +
+        "deleteFlag \(deleteFlag ?? "")\n" +
+        "featureNumber \(featureNumber ?? "")\n" +
+        "geopoliticalHeading \(geopoliticalHeading ?? "")\n" +
+        "heightFeet \(heightFeet)\n" +
+        "heightMeters \(heightMeters)\n" +
+        "internationalFeature \(internationalFeature ?? "")\n" +
+        "localHeading \(localHeading ?? "")\n" +
+        "name \(name ?? "")\n" +
+        "noticeNumber \(noticeNumber)\n" +
+        "noticeWeek \(noticeWeek ?? "")\n" +
+        "noticeYear \(noticeYear ?? "")\n" +
+        "position \(position ?? "")\n" +
+        "postNote \(postNote ?? "")\n" +
+        "precedingNote \(precedingNote ?? "")\n" +
+        "range \(range ?? "")\n" +
+        "regionHeading \(regionHeading ?? "")\n" +
+        "remarks \(remarks ?? "")\n" +
+        "removeFromList \(removeFromList ?? "")\n" +
+        "structure \(structure ?? "")\n" +
+        "subregionHeading \(subregionHeading ?? "")\n" +
+        "volumeNumber \(volumeNumber ?? "")"
+    }
 }
 
 extension LightModel: DataSource, GeoJSONExportable {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.light.definition
+
     func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
         var geometryByColor: [UIColor:SFGeometry] = [:]
         if let lightSectors = lightSectors {

@@ -94,7 +94,10 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
         return stringValue
     }
     
-    func toPredicate(dataSource: any DataSource.Type) -> NSPredicate? {
+    func toPredicate(dataSource: Filterable?) -> NSPredicate? {
+        guard let dataSource = dataSource else {
+            return nil
+        }
         var propertyAndComparison: String = "\(property.key) \(comparison.coreDataComparison())"
         if let subEntityKey = property.subEntityKey {
             propertyAndComparison = "ANY \(property.key).\(subEntityKey) \(comparison.coreDataComparison())"
@@ -160,7 +163,7 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
                 guard let bounds = valueBounds else {
                     return nil
                 }
-                if let dataSource = dataSource as? Locatable.Type {
+                if let dataSource = dataSource.locatableClass {
                     return dataSource.getBoundingPredicate(minLat: bounds.swCorner.y, maxLat: bounds.neCorner.y, minLon: bounds.swCorner.x, maxLon: bounds.neCorner.x)
                 }
                 return nil

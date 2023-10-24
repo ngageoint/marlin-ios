@@ -80,6 +80,7 @@ struct MarlinBottomSheet <Content: View>: View {
     init(itemList: BottomSheetItemList, focusNotification: NSNotification.Name) where Content == AnyView {
         self.init(itemList: itemList, focusNotification: focusNotification) { item in
             AnyView(
+                // TODO: need a way to specify views for the models, maybe just move the data source view builder stuff to the models
                 item.summary
                     .setShowMoreDetails(true)
                     .setShowSectionHeader(true)
@@ -92,9 +93,11 @@ struct MarlinBottomSheet <Content: View>: View {
     //action: @escaping () -> Void
     @ViewBuilder
     private var rectangle: some View {
-        Rectangle()
-            .fill(Color(itemList.bottomSheetItems?[selectedItem].item.color ?? .clear))
-            .frame(maxWidth: 8, maxHeight: .infinity)
+        if let item = itemList.bottomSheetItems?[selectedItem].item {
+            Rectangle()
+                .fill(Color(type(of:item).definition.color))
+                .frame(maxWidth: 8, maxHeight: .infinity)
+        }
     }
     
     var body: some View {
@@ -178,7 +181,7 @@ struct MarlinBottomSheet <Content: View>: View {
                 if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1, let bottomSheetItem = itemList.bottomSheetItems?[selectedItem], let item = bottomSheetItem.item as? Locatable {
                     NotificationCenter.default.post(name: focusNotification, object: FocusMapOnItemNotification(item: item, zoom: bottomSheetItem.zoom, mapName: bottomSheetItem.mapName))
                     if let dataSource = item as? DataSource {
-                        Metrics.shared.dataSourceBottomSheet(dataSource: type(of: dataSource))
+                        Metrics.shared.dataSourceBottomSheet(dataSource: type(of:dataSource).definition)
                     }
                 }
             }

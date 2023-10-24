@@ -81,6 +81,6 @@ struct MapNavigationView: View {
     func viewData(_ data: any DataSource) {
         NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
         NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
-        path.append(MarlinRoute.dataSourceDetail(dataSourceKey: data.key, itemKey: data.itemKey))
+        path.append(MarlinRoute.dataSourceDetail(dataSourceKey: type(of:data).definition.key, itemKey: data.itemKey))
     }
 }

@@ -13,6 +13,7 @@ import OSLog
 import mgrs_ios
 
 struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.asam.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }
@@ -236,4 +237,19 @@ extension AsamModel: MapImage {
     }
     
     static var cacheTiles: Bool = true
+}
+
+extension AsamModel: CustomStringConvertible {
+    var description: String {
+        return "ASAM\n\n" +
+        "Reference: \(reference ?? "")\n" +
+        "Date: \(dateString ?? "")\n" +
+        "Latitude: \(latitude)\n" +
+        "Longitude: \(longitude)\n" +
+        "Navigation Area: \(navArea ?? "")\n" +
+        "Subregion: \(subreg ?? "")\n" +
+        "Description: \(asamDescription ?? "")\n" +
+        "Hostility: \(hostility ?? "")\n" +
+        "Victim: \(victim ?? "")\n"
+    }
 }

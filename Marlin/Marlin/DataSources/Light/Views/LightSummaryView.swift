@@ -12,7 +12,7 @@ struct LightSummaryView: DataSourceSummaryView {
     
     var showBookmarkNotes: Bool = false
 
-    var light: Light
+    var light: LightModel
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
     

@@ -30,7 +30,8 @@ struct CommonSummaryView: DataSourceSummaryView {
 }
 
 class CommonDataSource: NSObject, Locatable, DataSourceViewBuilder, ObservableObject, GeoJSONExportable, Codable {
-    
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.common.definition
+
     private enum CodingKeys: String, CodingKey {
         case name
         case latitude

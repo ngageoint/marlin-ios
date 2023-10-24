@@ -11,8 +11,9 @@ import UIKit
 import SwiftUI
 
 protocol Bookmarkable {
+    static var definition: any DataSourceDefinition { get }
     var canBookmark: Bool { get }
-    var key: String { get }
+//    var key: String { get }
     var itemKey: String { get }
 //    var bookmark: Bookmark? { get }
 //    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable?
@@ -25,6 +26,10 @@ extension Bookmarkable {
     
     static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
         return nil
+    }
+    
+    var key: String {
+        Self.definition.key
     }
 }
 
@@ -80,6 +85,7 @@ class Bookmark: NSManagedObject, BatchImportable {
 }
 
 extension Bookmark: DataSource {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.bookmark.definition
     static var metricsKey: String = "bookmark"
     
     static var key: String = "bookmark"

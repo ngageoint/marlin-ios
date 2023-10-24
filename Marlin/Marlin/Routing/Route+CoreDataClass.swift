@@ -140,6 +140,7 @@ class Route: NSManagedObject {
 }
 
 extension Route: DataSource {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.route.definition
     static var key: String = "route"
     static var metricsKey: String = "routes"
     

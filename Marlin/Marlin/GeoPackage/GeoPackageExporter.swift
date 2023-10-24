@@ -21,8 +21,8 @@ class DataSourceExportRequest: Identifiable, Hashable, Equatable, ObservableObje
         hasher.combine(id)
     }
     
-    var id: String { dataSourceItem.key }
-    var dataSourceItem: DataSourceItem
+    var id: String { filterable?.definition.key ?? "" }
+    var filterable: Filterable?
     @Published var filters: [DataSourceFilterParameter]? {
         didSet {
             print("set the filters")
@@ -30,13 +30,13 @@ class DataSourceExportRequest: Identifiable, Hashable, Equatable, ObservableObje
     }
     @Published var count: Int = 0
     
-    init(dataSourceItem: DataSourceItem, filters: [DataSourceFilterParameter]?) {
-        self.dataSourceItem = dataSourceItem
+    init(filterable: Filterable?, filters: [DataSourceFilterParameter]?) {
+        self.filterable = filterable
         self.filters = filters
     }
     
     func fetchRequest(commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<any NSFetchRequestResult>? {
-        return self.dataSourceItem.dataSource.fetchRequest(filters: filters, commonFilters: commonFilters)
+        return filterable?.fetchRequest(filters: filters, commonFilters: commonFilters)
     }
 }
 
@@ -49,15 +49,15 @@ class DataSourceExportProgress: Identifiable, Hashable, Equatable, ObservableObj
         hasher.combine(id)
     }
     
-    var id: String { dataSource.key }
-    var dataSource: DataSource.Type
+    var id: String { filterable.definition.key }
+    var filterable: Filterable
     @Published var complete: Bool = false
     @Published var exporting: Bool = false
     @Published var totalCount: Float = 0.0
     @Published var exportCount: Float = 0.0
     
-    init(dataSource: DataSource.Type) {
-        self.dataSource = dataSource
+    init(filterable: Filterable) {
+        self.filterable = filterable
     }
 }
 
@@ -66,7 +66,7 @@ class GeoPackageExporter: ObservableObject {
 
     var manager: GPKGGeoPackageManager = GPKGGeoPackageFactory.manager()
     @Published var filterViewModels: [TemporaryFilterViewModel] = []
-    @Published var commonViewModel: TemporaryFilterViewModel = TemporaryFilterViewModel(dataSource: CommonDataSource.self, filters: [])
+    @Published var commonViewModel: TemporaryFilterViewModel = TemporaryFilterViewModel(dataSource: DataSourceDefinitions.common.filterable, filters: [])
     
     var commonFilters: [DataSourceFilterParameter]?
     var geoPackage: GPKGGeoPackage?
@@ -92,14 +92,14 @@ class GeoPackageExporter: ObservableObject {
     
     func setExportRequests(exportRequests: [DataSourceExportRequest]) {
         for request in exportRequests.filter({ request in
-            request.dataSourceItem.dataSource.key != CommonDataSource.key
+            request.filterable?.definition.key != CommonDataSource.key
         }) {
-            let model = TemporaryFilterViewModel(dataSource: request.dataSourceItem.dataSource, filters: request.filters)
+            let model = TemporaryFilterViewModel(dataSource: request.filterable, filters: request.filters)
             filterViewModels.append(model)
         }
         
         if let commonRequest = exportRequests.first(where: { request in
-            request.dataSourceItem.dataSource.key == CommonDataSource.key
+            request.filterable?.definition.key == CommonDataSource.key
         }) {
             if let filters = commonRequest.filters {
                 commonViewModel.filters = filters
@@ -107,13 +107,19 @@ class GeoPackageExporter: ObservableObject {
         }
     }
     
-    func addExportDataSource(dataSourceItem: DataSourceItem) {
-        filterViewModels.append(TemporaryFilterViewModel(dataSource: dataSourceItem.dataSource, filters: UserDefaults.standard.filter(dataSourceItem.dataSource)))
+    func addExportDataSource(filterable: Filterable?) {
+        guard let filterable = filterable else {
+            return
+        }
+        filterViewModels.append(TemporaryFilterViewModel(dataSource: filterable, filters: UserDefaults.standard.filter(filterable.definition)))
     }
     
-    func removeExportDataSource(dataSourceItem: DataSourceItem) {
+    func removeExportDataSource(filterable: Filterable?) {
+        guard let filterable = filterable else {
+            return
+        }
         filterViewModels.removeAll { model in
-            model.dataSource.key == dataSourceItem.key
+            model.dataSource?.definition.key == filterable.definition.key
         }
     }
         
@@ -146,7 +152,7 @@ class GeoPackageExporter: ObservableObject {
         exporting = true
         complete = false
         backgroundExport()
-        Metrics.shared.geoPackageExport(dataSources: filterViewModels.map(\.dataSource))
+        Metrics.shared.geoPackageExport(dataSources: filterViewModels.compactMap(\.dataSource))
     }
     
     private func backgroundExport() {
@@ -169,11 +175,13 @@ class GeoPackageExporter: ObservableObject {
             
             for viewModel in filterViewModels {
                 let filters = viewModel.filters
-                let exportProgress = DataSourceExportProgress(dataSource: viewModel.dataSource)
-                DispatchQueue.main.sync {
-                    self.exportProgresses.append(exportProgress)
-                    if let fetchRequest = viewModel.dataSource.fetchRequest(filters: filters, commonFilters: viewModel.commonFilters) {
-                        exportProgress.totalCount = Float((try? PersistenceController.current.viewContext.count(for: fetchRequest)) ?? 0)
+                if let filterable = viewModel.dataSource {
+                    let exportProgress = DataSourceExportProgress(filterable: filterable)
+                    DispatchQueue.main.sync {
+                        self.exportProgresses.append(exportProgress)
+                        if let fetchRequest = filterable.fetchRequest(filters: filters, commonFilters: viewModel.commonFilters) {
+                            exportProgress.totalCount = Float((try? PersistenceController.current.viewContext.count(for: fetchRequest)) ?? 0)
+                        }
                     }
                 }
             }
@@ -183,7 +191,7 @@ class GeoPackageExporter: ObservableObject {
             
             for viewModel in filterViewModels {
                 guard let dataSource = viewModel.dataSource as? GeoPackageExportable.Type, let exportProgress = exportProgresses.first(where: { progress in
-                    progress.dataSource.key == viewModel.dataSource.key
+                    progress.filterable.definition.key == viewModel.dataSource?.definition.key
                 }) else {
                     continue
                 }
@@ -195,7 +203,7 @@ class GeoPackageExporter: ObservableObject {
                     let styles = dataSource.self.createStyles(tableStyles: featureTableStyles)
 
                     DispatchQueue.main.async {
-                        if let fetchRequest = viewModel.dataSource.fetchRequest(filters: viewModel.filters, commonFilters: viewModel.commonFilters) {
+                        if let fetchRequest = viewModel.dataSource?.fetchRequest(filters: viewModel.filters, commonFilters: viewModel.commonFilters) {
                             exportProgress.totalCount = Float((try? PersistenceController.current.viewContext.count(for: fetchRequest)) ?? 0)
                         }
                         exportProgress.exporting = true

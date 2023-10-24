@@ -81,7 +81,7 @@ struct DFRSDetailView: View {
         })
         .onAppear {
             predicate = NSPredicate(format: "stationNumber == %@", dfrs.stationNumber ?? "")
-            Metrics.shared.dataSourceDetail(dataSource: DFRS.self)
+            Metrics.shared.dataSourceDetail(dataSource: DFRS.definition)
         }
     }
 }

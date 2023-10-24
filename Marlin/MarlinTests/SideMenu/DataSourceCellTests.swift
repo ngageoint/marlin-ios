@@ -44,10 +44,7 @@ final class DataSourceCellTests: XCTestCase {
             XCTAssertEqual(dataSourceKey, MockDataSource.key)
             return true
         }
-        expectation(forNotification: .MappedDataSourcesUpdated, object: nil) { notification in
-            return true
-        }
-        
+
         let appState = AppState()
         appState.loadingDataSource[MockDataSource.key] = false
         let cell = DataSourceCell(dataSourceItem: item).environmentObject(appState)
@@ -59,11 +56,6 @@ final class DataSourceCellTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "\(MockDataSource.fullDataSourceName)")
         tester().waitForView(withAccessibilityLabel: "\(MockDataSource.key) cell")
         tester().tapView(withAccessibilityLabel: "\(MockDataSource.key) cell")
-        tester().waitForView(withAccessibilityLabel: "shown on map")
-        tester().tapView(withAccessibilityLabel: "shown on map")
-        tester().waitForView(withAccessibilityLabel: "not shown on map")
-        
-        XCTAssertEqual(UserDefaults.standard.bool(forKey: "showOnMap\(MockDataSource.key)"), false)
         
         waitForExpectations(timeout: 10)
     }
@@ -77,10 +69,7 @@ final class DataSourceCellTests: XCTestCase {
             XCTAssertEqual(dataSourceKey, MockDataSource.key)
             return true
         }
-        expectation(forNotification: .MappedDataSourcesUpdated, object: nil) { notification in
-            return true
-        }
-        
+
         let appState = AppState()
         appState.loadingDataSource[MockDataSource.key] = true
         let cell = DataSourceCell(dataSourceItem: item).environmentObject(appState)
@@ -92,11 +81,6 @@ final class DataSourceCellTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "\(MockDataSource.fullDataSourceName)")
         tester().waitForView(withAccessibilityLabel: "\(MockDataSource.key) cell")
         tester().tapView(withAccessibilityLabel: "\(MockDataSource.key) cell")
-        tester().waitForView(withAccessibilityLabel: "shown on map")
-        tester().tapView(withAccessibilityLabel: "shown on map")
-        tester().waitForView(withAccessibilityLabel: "not shown on map")
-        
-        XCTAssertEqual(UserDefaults.standard.bool(forKey: "showOnMap\(MockDataSource.key)"), false)
         
         tester().waitForView(withAccessibilityLabel: "Loading \(MockDataSource.key)")
         

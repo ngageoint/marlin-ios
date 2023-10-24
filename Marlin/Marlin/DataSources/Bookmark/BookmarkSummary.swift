@@ -22,7 +22,7 @@ struct BookmarkSummary: DataSourceSummaryView {
         return VStack(alignment: .leading) {
             if let dataSource = dataSource as? (any DataSourceViewBuilder) {
                 HStack {
-                    DataSourceIcon(dataSource: dataSource)
+                    DataSourceIcon(dataSource: type(of:dataSource).definition)
                     Spacer()
                 }
                 AnyView(

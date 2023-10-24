@@ -97,7 +97,7 @@ struct RouteMapView: View {
                 return
             }
             
-            routeViewModel.addWaypoint(waypoint: AnyGeoJSONExportable(CommonDataSource(name: "User Added Location", location: coordinate)))
+            routeViewModel.addWaypoint(waypoint: CommonDataSource(name: "User Added Location", location: coordinate))
         }
         .onReceive(mapItemsTappedPub) { output in
             guard let notification = output.object as? MapItemsTappedNotification else {
@@ -129,8 +129,8 @@ struct RouteMapView: View {
                         Button("Add To Route") {
                             print("add to route")
                             if let exportable = dataSourceViewBuilder as? any GeoJSONExportable {
-                                if let model = DataSourceType.fromKey(dataSourceViewBuilder.key)?.createModel(dataSource: dataSourceViewBuilder) as? any GeoJSONExportable {
-                                    routeViewModel.addWaypoint(waypoint: AnyGeoJSONExportable(model))
+                                if let model = DataSourceType.fromKey(type(of:exportable).definition.key)?.createModel(dataSource: dataSourceViewBuilder) as? any GeoJSONExportable {
+                                    routeViewModel.addWaypoint(waypoint: model)
                                 }
                             }
                         }

@@ -79,7 +79,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
         self.sectionNameBuilder = sectionNameBuilder
         self.sectionViewBuilder = sectionViewBuilder
         self.content = content
-        self.filterViewModel = PersistedFilterViewModel(dataSource: T.self)
+        self.filterViewModel = PersistedFilterViewModel(dataSource: DataSourceDefinitions.filterableFromDefintion(T.definition))
         self.emptyView = emptyView
     }
     
@@ -87,19 +87,21 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
         Self._printChanges()
         return ZStack(alignment: .bottomTrailing) {
             GenericSectionedList<T, SectionHeader, Content, EmptyContent>(path: $path, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content, emptyView: emptyView)
-            if let _ = T.self as? GeoPackageExportable.Type {
-                GeoPackageExportButton(dataSource: T.self)
+            if let _ = T.self as? GeoPackageExportable.Type, let filterable = DataSourceDefinitions.filterableFromDefintion(T.definition) {
+                GeoPackageExportButton(filterable: filterable)
             }
         }
+        .navigationTitle(T.definition.fullName)
+        .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
-                path.append(MarlinRoute.dataSourceDetail(dataSourceKey: focusedItem.key, itemKey: focusedItem.itemKey))
+                path.append(MarlinRoute.dataSourceDetail(dataSourceKey: T.definition.key, itemKey: focusedItem.itemKey))
             }
-            Metrics.shared.dataSourceList(dataSource: T.self)
+            Metrics.shared.dataSourceList(dataSource: T.definition)
         }
         .onChange(of: focusedItem.date) { newValue in
             if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
-                path.append(MarlinRoute.dataSourceDetail(dataSourceKey: focusedItem.key, itemKey: focusedItem.itemKey))
+                path.append(MarlinRoute.dataSourceDetail(dataSourceKey: T.definition.key, itemKey: focusedItem.itemKey))
             }
         }
         .navigationDestination(for: T.self) { item in
@@ -123,7 +125,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
                     }
                     
                 }
-                .navigationTitle("\(T.dataSourceName) Sort")
+                .navigationTitle("\(T.definition.name) Sort")
                 .navigationBarTitleDisplayMode(.inline)
                 .background(Color.backgroundColor)
                 .toolbar {
@@ -143,7 +145,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
             }
             
             .onAppear {
-                Metrics.shared.dataSourceSort(dataSource: T.self)
+                Metrics.shared.dataSourceSort(dataSource: T.definition)
             }
         }
         
@@ -174,9 +176,6 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
             }
         }
         .emptyPlaceholder(itemsViewModel.fetchedResultsController?.fetchedObjects ?? [], emptyView)
-            
-        .navigationTitle(T.fullDataSourceName)
-        .navigationBarTitleDisplayMode(.inline)
     }
     
     var groups: [String: [MSISection<T>]] {
@@ -341,7 +340,7 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
             }
             .padding(.all, 8)
             .onTapGesture {
-                path.append(MarlinRoute.dataSourceDetail(dataSourceKey: item.key, itemKey: item.itemKey))
+                path.append(MarlinRoute.dataSourceDetail(dataSourceKey: T.definition.key, itemKey: item.itemKey))
             }
             .accessibilityElement(children: .contain)
             .accessibilityLabel("\(item.itemTitle) summary")

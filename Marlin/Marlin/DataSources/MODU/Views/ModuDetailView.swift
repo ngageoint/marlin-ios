@@ -77,7 +77,7 @@ struct ModuDetailView: View {
         .onAppear {
             viewModel.repository = moduRepository
             viewModel.getModu(name: name, waypointURI: waypointURI)
-            Metrics.shared.dataSourceDetail(dataSource: Modu.self)
+            Metrics.shared.dataSourceDetail(dataSource: Modu.definition)
         }
     }
 }

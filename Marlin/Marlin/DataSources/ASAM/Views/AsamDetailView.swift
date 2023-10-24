@@ -71,7 +71,7 @@ struct AsamDetailView: View {
             viewModel.repository = asamRepository
 
             viewModel.getAsam(reference: reference, waypointURI: waypointURI)
-            Metrics.shared.dataSourceDetail(dataSource: Asam.self)
+            Metrics.shared.dataSourceDetail(dataSource: Asam.definition)
         }
     }
 }

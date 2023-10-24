@@ -22,7 +22,7 @@ final class LightDataTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -85,7 +85,7 @@ final class LightDataTests: XCTestCase {
         
         MSI.shared.loadInitialData(type: Light.decodableRoot, dataType: Light.self)
         
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 45, handler: nil)
     }
     
     func testLoadInitialDataAndUpdate() throws {

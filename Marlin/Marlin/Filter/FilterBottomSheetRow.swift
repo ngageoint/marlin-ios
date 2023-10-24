@@ -8,31 +8,33 @@
 import SwiftUI
 
 struct FilterBottomSheetRow: View {
-    @Binding var dataSourceItem: DataSourceItem
+//    @Binding var filterable: Filterable
+    // TODO: refactor- is this right
+    var filterable: Filterable
     @State var filterCount: Int = 0
     let dataSourceUpdatedPub = NotificationCenter.default.publisher(for: .DataSourceUpdated)
     
     var body: some View {
         VStack(alignment: .leading) {
             DisclosureGroup {
-                let dataSourceType = dataSourceItem.dataSource
-                FilterView(viewModel: PersistedFilterViewModel(dataSource: dataSourceType))
+                let dataSourceType = filterable.definition
+                FilterView(viewModel: PersistedFilterViewModel(dataSource: filterable))
                     .accessibilityElement(children: .contain)
-                    .accessibilityLabel("\(dataSourceItem.dataSource.fullDataSourceName) filters")
+                    .accessibilityLabel("\(filterable.definition.fullName) filters")
             } label : {
                 HStack(alignment: .center, spacing: 8) {
                     
-                    if let systemImageName = dataSourceItem.dataSource.systemImageName {
+                    if let systemImageName = filterable.definition.systemImageName {
                         Image(systemName: systemImageName)
                             .tint(Color.onSurfaceColor)
                             .opacity(0.60)
-                    } else if let imageName = dataSourceItem.dataSource.imageName {
+                    } else if let imageName = filterable.definition.imageName {
                         Image(imageName)
                             .tint(Color.onSurfaceColor)
                             .opacity(0.60)
                     }
                     
-                    Text(dataSourceItem.dataSource.fullDataSourceName)
+                    Text(filterable.definition.fullName)
                         .primary()
                     Spacer()
                     if filterCount != 0 {
@@ -44,18 +46,18 @@ struct FilterBottomSheetRow: View {
                 .contentShape(Rectangle())
                 .padding([.leading, .top, .bottom, .trailing], 16)
                 .accessibilityElement(children: .contain)
-                .accessibilityLabel("\(filterCount) \(dataSourceItem.dataSource.fullDataSourceName) filters")
+                .accessibilityLabel("\(filterCount) \(filterable.definition.fullName) filters")
             }
             .padding(.trailing, 16)
             .contentShape(Rectangle())
             .accessibilityElement(children: .contain)
-            .accessibilityLabel("expand \(dataSourceItem.dataSource.fullDataSourceName) filters")
+            .accessibilityLabel("expand \(filterable.definition.fullName) filters")
             
             .background(
                 
                 HStack {
                     Rectangle()
-                        .fill(Color(dataSourceItem.dataSource.color))
+                        .fill(Color(filterable.definition.color))
                         .frame(maxWidth: 8, maxHeight: .infinity)
                     Spacer()
                 }
@@ -64,10 +66,10 @@ struct FilterBottomSheetRow: View {
             .tint(Color.primaryColorVariant)
         }
         .onReceive(dataSourceUpdatedPub) { output in
-            filterCount = UserDefaults.standard.filter(dataSourceItem.dataSource).count
+            filterCount = UserDefaults.standard.filter(filterable.definition).count
         }
         .onAppear {
-            filterCount = UserDefaults.standard.filter(dataSourceItem.dataSource).count
+            filterCount = UserDefaults.standard.filter(filterable.definition).count
         }
     }
 }

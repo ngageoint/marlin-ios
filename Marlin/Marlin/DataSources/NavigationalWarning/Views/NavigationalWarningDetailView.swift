@@ -69,7 +69,7 @@ struct NavigationalWarningDetailView: View {
         .onAppear {
             self.mappedLocation = navigationalWarning.mappedLocation
             self.fetchPredicate = NSPredicate(format: "self == %@", navigationalWarning.objectID)
-            Metrics.shared.dataSourceDetail(dataSource: NavigationalWarning.self)
+            Metrics.shared.dataSourceDetail(dataSource: NavigationalWarning.definition)
         }
     }
 }

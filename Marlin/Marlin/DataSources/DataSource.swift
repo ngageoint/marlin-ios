@@ -31,6 +31,8 @@ protocol BatchImportable: NSManagedObject, Identifiable {
     static func shouldSync() -> Bool
     static func getRequeryRequest(initialRequest: URLRequestConvertible) -> URLRequestConvertible?
     static func postProcess()
+    
+    static var definition: any DataSourceDefinition { get }
 }
 
 extension BatchImportable {
@@ -132,21 +134,22 @@ extension Locatable {
 }
 
 protocol DataSource {
+    static var definition: any DataSourceDefinition { get }
     static var properties: [DataSourceProperty] { get }
     static var defaultSort: [DataSourceSortParameter] { get }
     static var defaultFilter: [DataSourceFilterParameter] { get }
-    static var isMappable: Bool { get }
-    static var dataSourceName: String { get }
-    static var fullDataSourceName: String { get }
-    static var key: String { get }
-    var key: String { get }
-    static var metricsKey: String { get }
-    var metricsKey: String { get }
-    static var color: UIColor { get }
-    static var imageName: String? { get }
-    static var systemImageName: String? { get }
-    var color: UIColor { get }
-    static var image: UIImage? { get }
+//    static var isMappable: Bool { get }
+//    static var dataSourceName: String { get }
+//    static var fullDataSourceName: String { get }
+//    static var key: String { get }
+//    var key: String { get }
+//    static var metricsKey: String { get }
+//    var metricsKey: String { get }
+//    static var color: UIColor { get }
+//    static var imageName: String? { get }
+//    static var systemImageName: String? { get }
+//    var color: UIColor { get }
+//    static var image: UIImage? { get }
     static var imageScale: CGFloat { get }
     func view(on: MKMapView) -> MKAnnotationView?
     static func cachedImage(zoomLevel: Int) -> UIImage?
@@ -156,51 +159,51 @@ protocol DataSource {
     var itemKey: String { get }
     var itemTitle: String { get }
     
-    static func fetchRequest(filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>?
+//    static func fetchRequest(filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>?
 }
 
 extension DataSource {
     
-    static func fetchRequest(filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>? {
-        guard let dataSourceNSManaged = self as? NSManagedObject.Type else {
-            return nil
-        }
-        let fetchRequest = dataSourceNSManaged.fetchRequest()
-        var predicates: [NSPredicate] = []
-        
-        if let commonFilters = commonFilters {
-            for filter in commonFilters {
-                if let predicate = filter.toPredicate(dataSource: self) {
-                    predicates.append(predicate)
-                }
-            }
-        }
-        
-        if let filters = filters {
-            for filter in filters {
-                if let predicate = filter.toPredicate(dataSource: self) {
-                    predicates.append(predicate)
-                }
-            }
-        }
-        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-        
-        fetchRequest.predicate = predicate
-        return fetchRequest
-    }
+//    static func fetchRequest(filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>? {
+//        guard let dataSourceNSManaged = self as? NSManagedObject.Type else {
+//            return nil
+//        }
+//        let fetchRequest = dataSourceNSManaged.fetchRequest()
+//        var predicates: [NSPredicate] = []
+//        
+//        if let commonFilters = commonFilters {
+//            for filter in commonFilters {
+//                if let predicate = filter.toPredicate(dataSource: self) {
+//                    predicates.append(predicate)
+//                }
+//            }
+//        }
+//        
+//        if let filters = filters {
+//            for filter in filters {
+//                if let predicate = filter.toPredicate(dataSource: self) {
+//                    predicates.append(predicate)
+//                }
+//            }
+//        }
+//        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+//        
+//        fetchRequest.predicate = predicate
+//        return fetchRequest
+//    }
     
     static func cachedImage(zoomLevel: Int) -> UIImage? {
-        return DataSourceImageCache.shared.getCachedImage(dataSourceKey: key, zoomLevel: zoomLevel)
+        return DataSourceImageCache.shared.getCachedImage(dataSourceKey: definition.key, zoomLevel: zoomLevel)
     }
     
     static func cacheImage(zoomLevel: Int, image: UIImage) {
-        DataSourceImageCache.shared.addCachedImage(dataSourceKey: key, zoomLevel: zoomLevel, image: image)
+        DataSourceImageCache.shared.addCachedImage(dataSourceKey: definition.key, zoomLevel: zoomLevel, image: image)
     }
     
     static var image: UIImage? {
-        if let imageName = imageName {
+        if let imageName = definition.imageName {
             return UIImage(named: imageName)
-        } else if let systemImageName = systemImageName {
+        } else if let systemImageName = definition.systemImageName {
             return UIImage(systemName: systemImageName)
         }
         return nil
@@ -208,14 +211,6 @@ extension DataSource {
     
     func view(on: MKMapView) -> MKAnnotationView? {
         return nil
-    }
-    
-    var key: String {
-        return Self.key
-    }
-    
-    var metricsKey: String {
-        return Self.metricsKey
     }
 }
 

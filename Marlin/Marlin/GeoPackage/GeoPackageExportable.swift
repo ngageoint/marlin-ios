@@ -147,7 +147,7 @@ extension GeoPackageExportable {
     }
     
     static func createFeatures(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?, styleRows: [GPKGStyleRow], dataSourceProgress: DataSourceExportProgress) throws {
-        guard let fetchRequest = dataSourceProgress.dataSource.fetchRequest(filters: filters, commonFilters: commonFilters) else {
+        guard let fetchRequest = dataSourceProgress.filterable.fetchRequest(filters: filters, commonFilters: commonFilters) else {
             return
         }
         

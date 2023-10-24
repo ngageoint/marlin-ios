@@ -12,7 +12,7 @@ import UIKit
 import OSLog
 import mgrs_ios
 
-struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable {
+struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStringConvertible {
     var canBookmark: Bool = false
     
     private enum CodingKeys: String, CodingKey {
@@ -95,6 +95,7 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable {
         self.modu = modu
         self.canBookmark = true
         self.date = modu.date
+        self.distance = modu.distance
         self.latitude = modu.latitude
         self.longitude = modu.longitude
         self.mgrs10km = modu.mgrs10km
@@ -166,6 +167,21 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable {
             return nil
         }
     }
+    
+    var description: String {
+        return "MODU\n\n" +
+        "Name: \(name ?? "")\n" +
+        "Date: \(dateString ?? "")\n" +
+        "Latitude: \(latitude)\n" +
+        "Longitude: \(longitude)\n" +
+        "Position: \(position ?? "")\n" +
+        "Rig Status: \(rigStatus ?? "")\n" +
+        "Special Status: \(specialStatus ?? "")\n" +
+        "distance: \(distance ?? 0)\n" +
+        "Navigation Area: \(navArea ?? "")\n" +
+        "Region: \(region ?? 0)\n" +
+        "Sub Region: \(subregion ?? 0)\n"
+    }
 }
 
 extension ModuModel {
@@ -182,6 +198,7 @@ extension ModuModel {
 }
 
 extension ModuModel: DataSource {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.modu.definition
     var color: UIColor {
         Self.color
     }

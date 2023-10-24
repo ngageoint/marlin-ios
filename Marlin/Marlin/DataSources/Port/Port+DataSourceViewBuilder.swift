@@ -21,3 +21,13 @@ extension Port: DataSourceViewBuilder {
         PortSummaryView(port: PortModel(port: self))
     }
 }
+
+extension PortModel: DataSourceViewBuilder {
+    var detailView: AnyView {
+        return AnyView(PortDetailView(portNumber: Int64(portNumber)))
+    }
+    
+    var summary: some DataSourceSummaryView {
+        PortSummaryView(port: self)
+    }
+}

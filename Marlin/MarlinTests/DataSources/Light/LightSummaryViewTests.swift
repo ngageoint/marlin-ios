@@ -21,7 +21,7 @@ final class LightSummaryViewTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -67,10 +67,15 @@ final class LightSummaryViewTests: XCTestCase {
             XCTFail()
             return
         }
+        
+        let repository = LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
 
         let summary = light.summary
             .setShowMoreDetails(false)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -97,7 +102,7 @@ final class LightSummaryViewTests: XCTestCase {
         expectation(forNotification: .MapItemsTapped, object: nil) { notification in
             
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let light = tapNotification.items as! [Light]
+            let light = tapNotification.items as! [LightModel]
             XCTAssertEqual(light.count, 1)
             XCTAssertEqual(light[0].featureNumber, "14840")
             return true
@@ -109,8 +114,8 @@ final class LightSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
         
-        tester().waitForTappableView(withAccessibilityLabel: "Close")
-        tester().tapView(withAccessibilityLabel: "Close")
+        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
+        tester().tapView(withAccessibilityLabel: "dismiss popup")
         
         BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: light)
     }
@@ -132,9 +137,14 @@ final class LightSummaryViewTests: XCTestCase {
         light.structure = "Yellow pedestal, red band; 7.\n"
         light.name = "-Outer."
         
+        let repository = LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let summary = light.summary
             .setShowMoreDetails(true)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -147,7 +157,7 @@ final class LightSummaryViewTests: XCTestCase {
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
             let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let light = try! XCTUnwrap(vds.dataSource as? Light)
+            let light = try! XCTUnwrap(vds.dataSource as? LightModel)
             XCTAssertEqual(light.featureNumber, "14840")
             return true
         }

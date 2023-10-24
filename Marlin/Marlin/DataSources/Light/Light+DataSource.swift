@@ -40,6 +40,7 @@ extension Light: Bookmarkable {
 }
 
 extension Light: Locatable, GeoPackageExportable, GeoJSONExportable {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.light.definition
     func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
         var geometryByColor: [UIColor:SFGeometry] = [:]
         if let lightSectors = lightSectors {
@@ -374,7 +375,7 @@ extension Light: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(Light.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(Light.self)
+        return UserDefaults.standard.dataSourceEnabled(Light.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(Light.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [LightModel]) -> NSBatchInsertRequest {

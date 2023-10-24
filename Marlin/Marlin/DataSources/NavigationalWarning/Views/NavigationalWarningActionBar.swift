@@ -36,7 +36,7 @@ struct NavigationalWarningActionBar: View {
         .buttonStyle(MaterialButtonStyle())
         .onAppear {
             bookmarkViewModel.repository = bookmarkRepository
-            bookmarkViewModel.getBookmark(itemKey: navigationalWarning.itemKey, dataSource: navigationalWarning.key)
+            bookmarkViewModel.getBookmark(itemKey: navigationalWarning.itemKey, dataSource: NavigationalWarning.definition.key)
         }
     }
 }

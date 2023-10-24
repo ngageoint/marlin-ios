@@ -25,3 +25,17 @@ extension RadioBeacon: DataSourceViewBuilder {
         RadioBeaconSummaryView(radioBeacon: RadioBeaconModel(radioBeacon: self))
     }
 }
+
+extension RadioBeaconModel: DataSourceViewBuilder {
+    var detailView: AnyView {
+        if let volumeNumber = volumeNumber, let featureNumber = featureNumber {
+            return AnyView(RadioBeaconDetailView(featureNumber: Int(featureNumber), volumeNumber: volumeNumber))
+        } else {
+            return AnyView(EmptyView())
+        }
+    }
+    
+    var summary: some DataSourceSummaryView {
+        RadioBeaconSummaryView(radioBeacon: self)
+    }
+}

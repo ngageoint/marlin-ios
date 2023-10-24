@@ -12,6 +12,7 @@ import Combine
 import CoreLocation
 
 extension NoticeToMariners: DataSource {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.noticeToMariners.definition
     static var properties: [DataSourceProperty] {
         return []
     }
@@ -91,7 +92,7 @@ extension NoticeToMariners: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every day
-        return UserDefaults.standard.dataSourceEnabled(NoticeToMariners.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24)) > UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.self)
+        return UserDefaults.standard.dataSourceEnabled(NoticeToMariners.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24)) > UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [NoticeToMarinersProperties]) -> NSBatchInsertRequest {

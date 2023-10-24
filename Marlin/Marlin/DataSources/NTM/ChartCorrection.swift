@@ -24,6 +24,7 @@ struct ChartCorrectionPropertyContainer: Decodable {
 }
 
 struct ChartCorrection: Decodable, Hashable, Identifiable, DataSource, Bookmarkable {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.chartCorrection.definition
     var canBookmark: Bool {
         return true
     }

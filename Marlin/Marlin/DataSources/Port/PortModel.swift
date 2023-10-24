@@ -12,7 +12,8 @@ import UIKit
 import mgrs_ios
 import OSLog
 
-struct PortModel: Locatable, Bookmarkable, DataSource, Codable, GeoJSONExportable {
+struct PortModel: Locatable, Bookmarkable, DataSource, Codable, GeoJSONExportable, CustomStringConvertible {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.port.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }
@@ -1107,6 +1108,11 @@ struct PortModel: Locatable, Bookmarkable, DataSource, Codable, GeoJSONExportabl
         case unloCode
         case usRep
         case vesselTrafficService = "vts"
+    }
+    
+    var description: String {
+        return "Port\n\n" +
+        "World Port Index Number: \(portNumber)\n"
     }
 }
 

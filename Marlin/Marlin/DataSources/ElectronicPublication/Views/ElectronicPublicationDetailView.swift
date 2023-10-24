@@ -47,7 +47,7 @@ struct ElectronicPublicationDetailView: View {
         .navigationTitle("\(electronicPublication.sectionDisplayName ?? ElectronicPublication.fullDataSourceName)")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            Metrics.shared.dataSourceDetail(dataSource: ElectronicPublication.self)
+            Metrics.shared.dataSourceDetail(dataSource: ElectronicPublication.definition)
         }
     }
 }

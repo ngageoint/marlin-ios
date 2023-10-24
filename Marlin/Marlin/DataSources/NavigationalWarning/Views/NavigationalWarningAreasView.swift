@@ -112,7 +112,7 @@ struct NavigationalWarningAreasView: View {
                 navigationalWarningsSections.nsPredicate = NSPredicate(format: "navArea != %@", generalLocation.currentNavAreaName ?? "")
             }
             .accessibilityElement(children: .contain)
-            NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(dataSourceItem: DataSourceItem(dataSource: NavigationalWarning.self), filters: UserDefaults.standard.filter(NavigationalWarning.self))])) {
+            NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(filterable: DataSourceDefinitions.filterableFromDefintion(NavigationalWarning.definition), filters: UserDefaults.standard.filter(NavigationalWarning.definition))])) {
                 Label(
                     title: {},
                     icon: { Image(systemName: "square.and.arrow.down")

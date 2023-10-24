@@ -108,8 +108,8 @@ class DataLoadOperation: Operation {
                                         self.endBackgroundTaskIfActive()
                                         if let dataSource = dataType as? any DataSource.Type {
                                             NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: dataSource))
-                                            NotificationCenter.default.post(name: .DataSourceNeedsProcessed, object: DataSourceUpdatedNotification(key: dataSource.key))
-                                            NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: dataSource.key))
+                                            NotificationCenter.default.post(name: .DataSourceNeedsProcessed, object: DataSourceUpdatedNotification(key: dataSource.definition.key))
+                                            NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: dataSource.definition.key))
                                         }
                                     }
                                 }
@@ -156,12 +156,12 @@ class DataLoadOperation: Operation {
                                     self.doOnMainQueueAndBlockUntilFinished {
                                         self.appState.loadingDataSource[D.key] = false
                                         self.endBackgroundTaskIfActive()
-                                        UserDefaults.standard.updateLastSyncTimeSeconds(D.self)
+                                        UserDefaults.standard.updateLastSyncTimeSeconds(D.definition)
                                         if let dataSource = dataType as? any DataSource.Type {
                                             NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: dataSource))
                                             if totalCount != 0 {
-                                                NotificationCenter.default.post(name: .DataSourceNeedsProcessed, object: DataSourceUpdatedNotification(key: dataSource.key))
-                                                NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: dataSource.key))
+                                                NotificationCenter.default.post(name: .DataSourceNeedsProcessed, object: DataSourceUpdatedNotification(key: dataSource.definition.key))
+                                                NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: dataSource.definition.key))
                                             }
                                         }
                                     }
@@ -189,12 +189,12 @@ class DataLoadOperation: Operation {
                                                         self.doOnMainQueueAndBlockUntilFinished {
                                                             self.appState.loadingDataSource[D.key] = false
                                                             self.endBackgroundTaskIfActive()
-                                                            UserDefaults.standard.updateLastSyncTimeSeconds(D.self)
+                                                            UserDefaults.standard.updateLastSyncTimeSeconds(D.definition)
                                                             if let dataSource = dataType as? any DataSource.Type {
                                                                 NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: dataSource))
                                                                 if totalCount != 0 {
-                                                                    NotificationCenter.default.post(name: .DataSourceNeedsProcessed, object: DataSourceUpdatedNotification(key: dataSource.key))
-                                                                    NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: dataSource.key))
+                                                                    NotificationCenter.default.post(name: .DataSourceNeedsProcessed, object: DataSourceUpdatedNotification(key: dataSource.definition.key))
+                                                                    NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: dataSource.definition.key))
                                                                 }
                                                             }
                                                         }

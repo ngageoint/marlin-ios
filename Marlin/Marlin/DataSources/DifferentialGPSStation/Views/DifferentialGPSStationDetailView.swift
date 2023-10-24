@@ -70,7 +70,7 @@ struct DifferentialGPSStationDetailView: View {
         .onAppear {
             viewModel.repository = dgpsRepository
             viewModel.getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
-            Metrics.shared.dataSourceDetail(dataSource: DifferentialGPSStation.self)
+            Metrics.shared.dataSourceDetail(dataSource: DifferentialGPSStation.definition)
         }
     }
 }

@@ -43,7 +43,7 @@ class ChartCorrectionListViewModel: NSObject, ObservableObject {
     
     func createQueryParameters() -> [String]? {
         var validQuery = false
-        let filters = UserDefaults.standard.filter(ChartCorrection.self)
+        let filters = UserDefaults.standard.filter(ChartCorrection.definition)
         var queryParameters: [String] = ["output=json"]
         for filter in filters {
             if filter.property.key == "currNoticeNum", let valueInt = filter.valueInt {

@@ -35,6 +35,7 @@ extension RadioBeacon: Bookmarkable {
 }
 
 extension RadioBeacon: Locatable, GeoPackageExportable, GeoJSONExportable {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.radioBeacon.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }
@@ -118,7 +119,7 @@ extension RadioBeacon: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(RadioBeacon.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(RadioBeacon.self)
+        return UserDefaults.standard.dataSourceEnabled(RadioBeacon.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(RadioBeacon.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [RadioBeaconModel]) -> NSBatchInsertRequest {

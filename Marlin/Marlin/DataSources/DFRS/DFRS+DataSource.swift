@@ -21,7 +21,7 @@ extension DFRS: Bookmarkable {
 }
 
 extension DFRS: Locatable {
-
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.dfrs.definition
     var color: UIColor {
         return DFRS.color
     }
@@ -92,7 +92,7 @@ extension DFRS: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(DFRS.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(DFRS.self)
+        return UserDefaults.standard.dataSourceEnabled(DFRS.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(DFRS.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [DFRSProperties]) -> NSBatchInsertRequest {

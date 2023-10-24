@@ -37,6 +37,8 @@ extension NavigationalWarning: Bookmarkable {
 }
 
 extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportable {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.navWarning.definition
+
     var sfGeometry: SFGeometry? {
         let collection = SFGeometryCollection()
         if let locations = locations {
@@ -237,7 +239,7 @@ extension NavigationalWarning: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every hour
-        return UserDefaults.standard.dataSourceEnabled(NavigationalWarning.self) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(NavigationalWarning.self)
+        return UserDefaults.standard.dataSourceEnabled(NavigationalWarning.definition) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(NavigationalWarning.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [NavigationalWarningProperties]) -> NSBatchInsertRequest {

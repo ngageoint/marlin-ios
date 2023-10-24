@@ -147,7 +147,7 @@ struct NavigationalWarningNavAreaListView: View {
                 }
             }
             .safeAreaInset(edge: .bottom, alignment: .trailing) {
-                NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(dataSourceItem: DataSourceItem(dataSource: NavigationalWarning.self), filters: [DataSourceFilterParameter(property: DataSourceProperty(name: "Nav Area", key: "navArea", type: DataSourcePropertyType.string), comparison: DataSourceFilterComparison.equals, valueString: navArea)])])) {
+                NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(filterable: DataSourceDefinitions.filterableFromDefintion(NavigationalWarning.definition), filters: [DataSourceFilterParameter(property: DataSourceProperty(name: "Nav Area", key: "navArea", type: DataSourcePropertyType.string), comparison: DataSourceFilterComparison.equals, valueString: navArea)])])) {
                     Label(
                         title: {},
                         icon: { Image(systemName: "square.and.arrow.down")

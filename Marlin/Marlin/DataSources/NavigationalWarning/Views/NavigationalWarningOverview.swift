@@ -61,7 +61,7 @@ extension NavigationalWarningsOverview: View {
                 path.append(focusedItem)
             }
             Metrics.shared.appRoute([NavigationalWarning.metricsKey, "group"])
-            Metrics.shared.dataSourceList(dataSource: NavigationalWarning.self)
+            Metrics.shared.dataSourceList(dataSource: NavigationalWarning.definition)
         }
         .onReceive(viewDataSourcePub) { output in
             if let dataSource = output.dataSource as? NavigationalWarning, output.mapName == MAP_NAME {

@@ -23,7 +23,7 @@ class RouteViewModel: ObservableObject, Identifiable {
                 waypoints = []
                 for waypoint in route.waypointArray {
                     if let exportable = waypoint.decodeToDataSource() {
-                        addWaypoint(waypoint: AnyGeoJSONExportable(exportable))
+                        addWaypoint(waypoint: exportable)
                     }
                 }
             }
@@ -41,7 +41,7 @@ class RouteViewModel: ObservableObject, Identifiable {
         }
     }
     
-    @Published var waypoints: [AnyGeoJSONExportable] = []
+    @Published var waypoints: [any GeoJSONExportable] = []
     
     @Published var routeName: String = ""
     
@@ -64,7 +64,7 @@ class RouteViewModel: ObservableObject, Identifiable {
     
     init() {
         if let coordinate = locationManager.lastLocation?.coordinate, CLLocationCoordinate2DIsValid(coordinate) {
-            addWaypoint(waypoint: AnyGeoJSONExportable(CommonDataSource(name: "Your Current Location", location: coordinate)))
+            addWaypoint(waypoint: CommonDataSource(name: "Your Current Location", location: coordinate))
         }
     }
     
@@ -73,14 +73,14 @@ class RouteViewModel: ObservableObject, Identifiable {
         setupFeatureCollection()
     }
     
-    func removeWaypoint(waypoint: AnyGeoJSONExportable) {
+    func removeWaypoint(waypoint: any GeoJSONExportable) {
         waypoints.removeAll { exportable in
             exportable.uniqueId == waypoint.uniqueId
         }
         setupFeatureCollection()
     }
     
-    func addWaypoint(waypoint: AnyGeoJSONExportable) {
+    func addWaypoint(waypoint: any GeoJSONExportable) {
         waypoints.append(waypoint)
         setupFeatureCollection()
     }
@@ -90,7 +90,7 @@ class RouteViewModel: ObservableObject, Identifiable {
         routeDistance = 0.0
         var previousCoordinate: CLLocation?
         for waypoint in waypoints {
-            let waypoint = waypoint.base
+//            let waypoint = waypoint.base
             if let centerPoint = waypoint.sfGeometry?.degreesCentroid() {
                 let location = CLLocation(latitude: centerPoint.y.doubleValue, longitude: centerPoint.x.doubleValue)
                 if let previousCoordinate = previousCoordinate {

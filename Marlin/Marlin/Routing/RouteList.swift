@@ -111,7 +111,7 @@ struct RouteList: View {
         .onAppear {
             viewModel.repository = routeRepository
             viewModel.fetchRoutes()
-            Metrics.shared.dataSourceList(dataSource: Route.self)
+            Metrics.shared.dataSourceList(dataSource: Route.definition)
         }
     }
 }

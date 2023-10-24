@@ -21,7 +21,7 @@ final class DFRSDataTests: XCTestCase {
     
     override func setUp(completion: @escaping (Error?) -> Void) {
         UserDefaults.standard.initialDataLoaded = false
-        UserDefaults.standard.clearLastSyncTimeSeconds(DFRS.self as any BatchImportable.Type)
+        UserDefaults.standard.clearLastSyncTimeSeconds(DFRS.definition)
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")

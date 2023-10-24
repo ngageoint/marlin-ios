@@ -11,8 +11,8 @@ import CoreLocation
 import mgrs_ios
 import GeoJSON
 
-struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable {
-    
+struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, CustomStringConvertible {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.radioBeacon.definition
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }

@@ -178,6 +178,9 @@ struct LightsProperties: Codable {
             self.regionHeading = nil
         }
         self.remarks = try? values.decode(String.self, forKey: .remarks)
+        if self.featureNumber == "3808" {
+            NSLog("Remarks are in decodable \(remarks)")
+        }
         self.removeFromList = try? values.decode(String.self, forKey: .removeFromList)
         self.structure = try? values.decode(String.self, forKey: .structure)
         self.subregionHeading = try? values.decode(String.self, forKey: .subregionHeading)

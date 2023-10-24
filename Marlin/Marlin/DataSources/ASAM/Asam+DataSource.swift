@@ -32,7 +32,7 @@ extension Asam: Bookmarkable {
 }
 
 extension Asam: DataSource, Locatable, GeoPackageExportable, GeoJSONExportable {
-    
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.asam.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }
@@ -105,7 +105,7 @@ extension Asam: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every hour
-        return UserDefaults.standard.dataSourceEnabled(Asam.self) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(Asam.self)
+        return UserDefaults.standard.dataSourceEnabled(DataSourceDefinitions.asam.definition) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(DataSourceDefinitions.asam.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [AsamModel]) -> NSBatchInsertRequest {

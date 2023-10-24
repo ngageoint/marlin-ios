@@ -135,24 +135,24 @@ struct CreateRouteView: View {
             List {
                 instructions()
                 ForEach(routeViewModel.waypoints, id: \.uniqueId) { waypoint in
-                    if let waypointViewBuilder = waypoint.base as? any DataSource {
-                        waypointRow(waypointViewBuilder: waypointViewBuilder, first: !routeViewModel.waypoints.isEmpty && routeViewModel.waypoints.first! == waypoint, last: !routeViewModel.waypoints.isEmpty && routeViewModel.waypoints.last! == waypoint)
-                            
-                            .swipeActions(edge: .trailing) {
-                                Button(role: .destructive)  {
-                                    routeViewModel.removeWaypoint(waypoint: waypoint)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                                .accessibilityElement()
-                                .accessibilityLabel("remove waypoint \(waypoint.uniqueId)")
-                                .tint(Color.red)
-                            }
-                            .listRowInsets(.init(top: 0, leading: 20, bottom: 0, trailing: 0))
-                            .listRowSeparator(.hidden, edges: .top)
-                            .listRowSeparator(.visible, edges: .bottom)
+//                    if let waypointViewBuilder = waypoint.base as? any DataSource {
+//                        waypointRow(waypointViewBuilder: waypoint, first: !routeViewModel.waypoints.isEmpty && routeViewModel.waypoints.first! == waypoint, last: !routeViewModel.waypoints.isEmpty && routeViewModel.waypoints.last! == waypoint)
+//                            
+//                            .swipeActions(edge: .trailing) {
+//                                Button(role: .destructive)  {
+//                                    routeViewModel.removeWaypoint(waypoint: waypoint)
+//                                } label: {
+//                                    Label("Delete", systemImage: "trash")
+//                                }
+//                                .accessibilityElement()
+//                                .accessibilityLabel("remove waypoint \(waypoint.uniqueId)")
+//                                .tint(Color.red)
+//                            }
+//                            .listRowInsets(.init(top: 0, leading: 20, bottom: 0, trailing: 0))
+//                            .listRowSeparator(.hidden, edges: .top)
+//                            .listRowSeparator(.visible, edges: .bottom)
                     }
-                }
+//                }
                 .onMove { from, to in
                     routeViewModel.reorder(fromOffsets: from, toOffset: to)
                 }
@@ -186,7 +186,7 @@ struct CreateRouteView: View {
                     }
                 )
             ForEach($routeViewModel.waypoints.indices, id: \.self) { i in
-                if let waypointViewBuilder = routeViewModel.waypoints[i].base as? any DataSource {
+                let waypointViewBuilder = routeViewModel.waypoints[i]
                     waypointRow(waypointViewBuilder: waypointViewBuilder)
                         .opacity(0)
                         .overlay(
@@ -209,7 +209,7 @@ struct CreateRouteView: View {
                                 }
                             }
                         )
-                }
+                
             }
             distance()
                 .padding(.top, 16)

@@ -16,7 +16,7 @@ struct DataSourceRail: View {
         ScrollView {
             VStack {
                 ForEach(dataSourceList.allTabs) { dataSourceItem in
-                    RailItem(imageName: dataSourceItem.dataSource.imageName, systemImageName: dataSourceItem.dataSource.systemImageName, itemText: dataSourceItem.dataSource.dataSourceName)
+                    RailItem(imageName: dataSourceItem.dataSource.definition.imageName, systemImageName: dataSourceItem.dataSource.definition.systemImageName, itemText: dataSourceItem.dataSource.definition.name)
                         .onTapGesture {
                             if activeRailItem == dataSourceItem {
                                 activeRailItem = nil
@@ -26,7 +26,7 @@ struct DataSourceRail: View {
                         }
                         .foregroundColor(activeRailItem == dataSourceItem ? Color.primaryColorVariant.opacity(0.87) : Color.onSurfaceColor.opacity(0.6))
                         .accessibilityElement()
-                        .accessibilityLabel("\(dataSourceItem.dataSource.fullDataSourceName) rail item")
+                        .accessibilityLabel("\(dataSourceItem.dataSource.definition.fullName) rail item")
                 }
             }
             Spacer()

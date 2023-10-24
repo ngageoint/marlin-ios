@@ -39,7 +39,21 @@ enum MockEnum: String, CaseIterable, CustomStringConvertible {
     }
 }
 
+class MockDataSourceDefinition: DataSourceDefinition {
+    var mappable: Bool = true
+    var color: UIColor = .black
+    var imageName: String?
+    var systemImageName: String? = "face.smiling"
+    var key: String = "mockdatasource"
+    var metricsKey: String = "mockdatasource"
+    var name: String = NSLocalizedString("mockdatasource", comment: "mockdatasource data source display name")
+    var fullName: String = NSLocalizedString("mock data source", comment: "mock data source data source full display name")
+    var order: Int = 0
+}
+
 class MockDataSource: DataSource {
+    static var definition: any DataSourceDefinition = MockDataSourceDefinition()
+    
     var itemKey: String { "itemKey" }
     
     var itemTitle: String { "itemTitle" }
@@ -105,7 +119,21 @@ class MockDataSource: DataSource {
     @objc var longitudeProperty: Double = 0.0
 }
 
+class MockDataSourceDefaultSortDefinition: DataSourceDefinition {
+    var mappable: Bool = true
+    var color: UIColor = .black
+    var imageName: String?
+    var systemImageName: String? = "face.smiling"
+    var key: String = "mockdefaultsort"
+    var metricsKey: String = "mockdefaultsort"
+    var name: String = NSLocalizedString("mockdefaultsort", comment: "mockdatasource data source display name")
+    var fullName: String = NSLocalizedString("mock default sort", comment: "mock data source data source full display name")
+    var order: Int = 0
+}
+
 class MockDataSourceDefaultSort: DataSource {
+    static var definition: any DataSourceDefinition = MockDataSourceDefaultSortDefinition()
+    
     var itemKey: String { "itemKey" }
     
     var itemTitle: String { "itemTitle" }
@@ -122,22 +150,22 @@ class MockDataSourceDefaultSort: DataSource {
     
     static var defaultFilter: [Marlin.DataSourceFilterParameter] = [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(MockDataSourceDefaultSort.dateProperty), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last365Days)]
     
-    static var isMappable: Bool = true
+    static var isMappable: Bool { definition.mappable }
     
-    static var dataSourceName: String = "mockdefaultsort"
+    static var dataSourceName: String { definition.name }
     
-    static var fullDataSourceName: String = "mockdefaultsort data source"
+    static var fullDataSourceName: String { definition.fullName }
     
-    static var key: String = "mockdefaultsort"
-    static var metricsKey: String = "mockdefaultsort"
+    static var key: String { definition.key }
+    static var metricsKey: String { definition.metricsKey }
     
-    static var color: UIColor = UIColor.black
+    static var color: UIColor { definition.color }
     
-    static var imageName: String?
+    static var imageName: String? { definition.imageName }
     
-    static var systemImageName: String? = "face.smiling"
+    static var systemImageName: String? { definition.systemImageName }
     
-    var color: UIColor = UIColor.black
+    var color: UIColor { Self.definition.color }
     
     static var imageScale: CGFloat = 0.5
     
@@ -163,7 +191,20 @@ class MockDataSourceDefaultSort: DataSource {
     @objc var booleanProperty: Bool = true
 }
 
+class MockDataSourceNonMappableDefinition: DataSourceDefinition {
+    var mappable: Bool = true
+    var color: UIColor = .black
+    var imageName: String? = "marlin_small"
+    var systemImageName: String?
+    var key: String = "mocknonmappable"
+    var metricsKey: String = "mocknonmappable"
+    var name: String = NSLocalizedString("mocknonmappable", comment: "mockdatasource data source display name")
+    var fullName: String = NSLocalizedString("mock non mappable", comment: "mock data source data source full display name")
+    var order: Int = 0
+}
+
 class MockDataSourceNonMappable: DataSource {
+    static var definition: any DataSourceDefinition = MockDataSourceNonMappableDefinition()
     var itemKey: String { "itemKey" }
     
     var itemTitle: String { "itemTitle" }
@@ -184,22 +225,22 @@ class MockDataSourceNonMappable: DataSource {
     
     static var defaultFilter: [Marlin.DataSourceFilterParameter] = []
     
-    static var isMappable: Bool = false
+    static var isMappable: Bool { definition.mappable }
     
-    static var dataSourceName: String = "mocknonmappable"
+    static var dataSourceName: String { definition.name }
     
-    static var fullDataSourceName: String = "mock non mappable"
+    static var fullDataSourceName: String { definition.fullName }
     
-    static var key: String = "mocknonmappable"
-    static var metricsKey: String = "mocknonmappable"
+    static var key: String { definition.key }
+    static var metricsKey: String { definition.metricsKey }
     
-    static var color: UIColor = UIColor.black
+    static var color: UIColor { definition.color }
     
-    static var imageName: String? = "marlin_small"
+    static var imageName: String? { definition.imageName }
     
-    static var systemImageName: String? = nil
+    static var systemImageName: String? { definition.systemImageName }
     
-    var color: UIColor = UIColor.black
+    var color: UIColor { Self.definition.color }
     
     static var imageScale: CGFloat = 0.5
     
