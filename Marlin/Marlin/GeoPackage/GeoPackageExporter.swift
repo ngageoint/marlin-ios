@@ -62,6 +62,14 @@ class DataSourceExportProgress: Identifiable, Hashable, Equatable, ObservableObj
 }
 
 class GeoPackageExporter: ObservableObject {
+    var asamRepository: AsamRepositoryManager?
+    var moduRepository: ModuRepositoryManager?
+    var lightRepository: LightRepositoryManager?
+    var portRepository: PortRepositoryManager?
+    var dgpsRepository: DifferentialGPSStationRepositoryManager?
+    var radioBeaconRepository: RadioBeaconRepositoryManager?
+    var routeRepository: RouteRepositoryManager?
+    
     var cancellable = Set<AnyCancellable>()
 
     var manager: GPKGGeoPackageManager = GPKGGeoPackageFactory.manager()
@@ -82,7 +90,7 @@ class GeoPackageExporter: ObservableObject {
         commonViewModel.$filters
             .receive(on: RunLoop.main)
             .sink() { [self] commonFilters in
-                print("common filters changed")
+                print("common filters changed \(commonFilters.count)")
                 for viewModel in self.filterViewModels {
                     viewModel.commonFilters = commonFilters
                 }
@@ -175,10 +183,21 @@ class GeoPackageExporter: ObservableObject {
             
             for viewModel in filterViewModels {
                 let filters = viewModel.filters
-                if let filterable = viewModel.dataSource {
+                guard let dataSource = viewModel.dataSource else { continue }
+                if let filterable = DataSourceDefinitions.filterableFromDefintion(dataSource.definition) {
                     let exportProgress = DataSourceExportProgress(filterable: filterable)
                     DispatchQueue.main.sync {
+//                        var count: Int?
+                        NSLog("Created a export progress \(exportProgress)")
                         self.exportProgresses.append(exportProgress)
+//                        switch(filterable.definition.key) {
+//                        case DataSourceDefinitions.asam.definition.key:
+//                            count = asamRepository?.getCount(filters: filters)
+//                        default:
+//                            NSLog("What is this?")
+//                        }
+//                        
+//                        exportProgress.totalCount = Float(count ?? 0)
                         if let fetchRequest = filterable.fetchRequest(filters: filters, commonFilters: viewModel.commonFilters) {
                             exportProgress.totalCount = Float((try? PersistenceController.current.viewContext.count(for: fetchRequest)) ?? 0)
                         }
@@ -186,29 +205,30 @@ class GeoPackageExporter: ObservableObject {
                 }
             }
             
-            print("Begining export to \(geoPackage.path ?? "who knows")")
+//            print("Begining export to \(geoPackage.path ?? "who knows")")
             let rtree = GPKGRTreeIndexExtension(geoPackage: geoPackage)
             
             for viewModel in filterViewModels {
-                guard let dataSource = viewModel.dataSource as? GeoPackageExportable.Type, let exportProgress = exportProgresses.first(where: { progress in
-                    progress.filterable.definition.key == viewModel.dataSource?.definition.key
+                guard let dataSource = viewModel.dataSource, let exportable = DataSourceType.fromKey(dataSource.definition.key)?.toDataSource() as? GeoPackageExportable.Type else { continue }
+                guard let dataSource = viewModel.dataSource, let exportProgress = exportProgresses.first(where: { progress in
+                    progress.filterable.definition.key == dataSource.definition.key
                 }) else {
                     continue
                 }
                 do {
-                    guard let table = try dataSource.self.createTable(geoPackage: geoPackage), let featureTableStyles = GPKGFeatureTableStyles(geoPackage: geoPackage, andTable: table) else {
+                    guard let filterable = DataSourceDefinitions.filterableFromDefintion(dataSource.definition), let table = try exportable.createTable(geoPackage: geoPackage), let featureTableStyles = GPKGFeatureTableStyles(geoPackage: geoPackage, andTable: table) else {
                         continue
                     }
 
-                    let styles = dataSource.self.createStyles(tableStyles: featureTableStyles)
+                    let styles = exportable.createStyles(tableStyles: featureTableStyles)
 
                     DispatchQueue.main.async {
-                        if let fetchRequest = viewModel.dataSource?.fetchRequest(filters: viewModel.filters, commonFilters: viewModel.commonFilters) {
+                        if let fetchRequest = filterable.fetchRequest(filters: viewModel.filters, commonFilters: viewModel.commonFilters) {
                             exportProgress.totalCount = Float((try? PersistenceController.current.viewContext.count(for: fetchRequest)) ?? 0)
                         }
                         exportProgress.exporting = true
                     }
-                    try dataSource.createFeatures(geoPackage: geoPackage, table: table, filters: viewModel.filters, commonFilters: viewModel.commonFilters, styleRows: styles, dataSourceProgress: exportProgress)
+                    try exportable.createFeatures(geoPackage: geoPackage, table: table, filters: viewModel.filters, commonFilters: viewModel.commonFilters, styleRows: styles, dataSourceProgress: exportProgress)
                     rtree?.create(with: table)
                     DispatchQueue.main.async {
                         exportProgress.exporting = false

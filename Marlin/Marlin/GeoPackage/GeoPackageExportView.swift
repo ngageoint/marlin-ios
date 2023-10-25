@@ -10,6 +10,14 @@ import SwiftUI
 struct GeoPackageExportView: View {
     @EnvironmentObject var dataSourceList: DataSourceList
 
+    @EnvironmentObject var asamRepository: AsamRepositoryManager
+    @EnvironmentObject var moduRepository: ModuRepositoryManager
+    @EnvironmentObject var lightRepository: LightRepositoryManager
+    @EnvironmentObject var portRepository: PortRepositoryManager
+    @EnvironmentObject var dgpsRepository: DifferentialGPSStationRepositoryManager
+    @EnvironmentObject var radioBeaconRepository: RadioBeaconRepositoryManager
+    @EnvironmentObject var routeRepository: RouteRepositoryManager
+
     @StateObject var exporter: GeoPackageExporter = GeoPackageExporter()
     
     @State var exportRequest: [DataSourceExportRequest]
@@ -145,6 +153,13 @@ struct GeoPackageExportView: View {
         .navigationTitle("GeoPackage Export")
         .background(Color.backgroundColor)
         .onAppear {
+            exporter.asamRepository = asamRepository
+            exporter.moduRepository = moduRepository
+            exporter.lightRepository = lightRepository
+            exporter.portRepository = portRepository
+            exporter.dgpsRepository = dgpsRepository
+            exporter.radioBeaconRepository = radioBeaconRepository
+            exporter.routeRepository = routeRepository
             exporter.setExportRequests(exportRequests: exportRequest)
             Metrics.shared.geoPackageExportView()
         }

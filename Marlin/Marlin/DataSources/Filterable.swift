@@ -102,6 +102,7 @@ struct AsamFilterable: Filterable {
     
     var defaultFilter: [DataSourceFilterParameter] = [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last365Days)]
     
+    var locatableClass: Locatable.Type? = Asam.self
 }
 
 struct ModuFilterable: Filterable {
@@ -125,6 +126,7 @@ struct ModuFilterable: Filterable {
     
     var defaultFilter: [DataSourceFilterParameter] = []
     
+    var locatableClass: Locatable.Type? = Modu.self
 }
 
 struct DifferentialGPSStationFilterable: Filterable {
@@ -154,6 +156,7 @@ struct DifferentialGPSStationFilterable: Filterable {
     
     var defaultFilter: [DataSourceFilterParameter] = []
     
+    var locatableClass: Locatable.Type? = DifferentialGPSStation.self
 }
 
 struct PortFilterable: Filterable {
@@ -291,6 +294,7 @@ struct PortFilterable: Filterable {
     
     var defaultFilter: [DataSourceFilterParameter] = []
     
+    var locatableClass: Locatable.Type? = Port.self
 }
 
 struct LightFilterable: Filterable {
@@ -327,6 +331,8 @@ struct LightFilterable: Filterable {
     
     var defaultFilter: [DataSourceFilterParameter] = []
     
+    var locatableClass: Locatable.Type? = Light.self
+    
 }
 
 struct RadioBeaconFilterable: Filterable {
@@ -359,6 +365,8 @@ struct RadioBeaconFilterable: Filterable {
     ]
     
     var defaultFilter: [DataSourceFilterParameter] = []
+    
+    var locatableClass: Locatable.Type? = RadioBeacon.self
 }
 
 struct CommonFilterable: Filterable {
@@ -383,7 +391,7 @@ struct NoticeToMarinersFilterable: Filterable {
     }
     
     var defaultFilter: [DataSourceFilterParameter] = []
-}
+    }
 
 struct ElectronicPublicationFilterable: Filterable {
     var definition: any DataSourceDefinition {
@@ -396,6 +404,7 @@ struct ElectronicPublicationFilterable: Filterable {
     ]
     
     var defaultFilter: [DataSourceFilterParameter] = []
+    
 }
 
 struct NavigationalWarningFilterable: Filterable {
@@ -406,6 +415,8 @@ struct NavigationalWarningFilterable: Filterable {
     var defaultFilter: [DataSourceFilterParameter] = []
     
     var properties: [DataSourceProperty] = []
+    
+    var locatableClass: Locatable.Type? = NavigationalWarning.self
 }
 
 struct RouteFilterable: Filterable {
@@ -416,4 +427,5 @@ struct RouteFilterable: Filterable {
     var defaultFilter: [DataSourceFilterParameter] = []
     
     var properties: [DataSourceProperty] = []
+    
 }

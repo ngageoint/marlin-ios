@@ -302,6 +302,7 @@
 		F7C361BF29213520001C7C84 /* ntm.json in Resources */ = {isa = PBXBuildFile; fileRef = F7C361BE29213520001C7C84 /* ntm.json */; };
 		F7C361C12921370B001C7C84 /* NoticeToMariners+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C361C02921370B001C7C84 /* NoticeToMariners+DataSource.swift */; };
 		F7C3679428CCC8E500AE1265 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C3679328CCC8E500AE1265 /* DisclaimerView.swift */; };
+		F7C5F1E42AE958D90091BC01 /* GeoPackageExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C5F1E32AE958D90091BC01 /* GeoPackageExportViewModel.swift */; };
 		F7D2225028E4A27C00F527F2 /* FilterBottomSheetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */; };
 		F7D2225228E4F83000F527F2 /* SortButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2225128E4F83000F527F2 /* SortButton.swift */; };
 		F7D2225428E5F03500F527F2 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2225328E5F03500F527F2 /* SortView.swift */; };
@@ -778,6 +779,7 @@
 		F7C361BE29213520001C7C84 /* ntm.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ntm.json; sourceTree = "<group>"; };
 		F7C361C02921370B001C7C84 /* NoticeToMariners+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoticeToMariners+DataSource.swift"; sourceTree = "<group>"; };
 		F7C3679328CCC8E500AE1265 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
+		F7C5F1E32AE958D90091BC01 /* GeoPackageExportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExportViewModel.swift; sourceTree = "<group>"; };
 		F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterBottomSheetRow.swift; sourceTree = "<group>"; };
 		F7D2225128E4F83000F527F2 /* SortButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortButton.swift; sourceTree = "<group>"; };
 		F7D2225328E5F03500F527F2 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
@@ -1735,6 +1737,7 @@
 				F7066DA82A45D8C10058122E /* GeoPackageExporter.swift */,
 				F7066DAA2A462A740058122E /* GeoPackageExportable.swift */,
 				F7830BFE2A8BC9F8008376F7 /* GeoPackageExportButton.swift */,
+				F7C5F1E32AE958D90091BC01 /* GeoPackageExportViewModel.swift */,
 			);
 			path = GeoPackage;
 			sourceTree = "<group>";
@@ -2649,6 +2652,7 @@
 				F7FFB34128DA486500C31AA3 /* FilterView.swift in Sources */,
 				F75E32BF29C4BC00006F2394 /* LayerURLView.swift in Sources */,
 				D67E5C9A2A9E4AA5002FCE03 /* MKPolygonExtensions.swift in Sources */,
+				F7C5F1E42AE958D90091BC01 /* GeoPackageExportViewModel.swift in Sources */,
 				F7364E362A1D53970098F243 /* MapNavigationView.swift in Sources */,
 				F7FFB2EA28D623B000C31AA3 /* DifferentialGPSStation+DataSource.swift in Sources */,
 				F75E32BD29C4BB13006F2394 /* MapLayerViewModel.swift in Sources */,

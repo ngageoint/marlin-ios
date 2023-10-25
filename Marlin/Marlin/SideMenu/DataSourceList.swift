@@ -356,6 +356,7 @@ enum DataSourceDefinitions: String {
     }
 }
 
+// TODO: this should go away
 enum DataSourceType: String, CaseIterable {
     case asam
     case modu

@@ -16,11 +16,19 @@ class AsamRepositoryManager: AsamRepository, ObservableObject {
     func getAsam(reference: String?, waypointURI: URL?) -> AsamModel? {
         repository.getAsam(reference: reference, waypointURI: waypointURI)
     }
+    func getAsams(filters: [DataSourceFilterParameter]) -> [AsamModel] {
+        repository.getAsams(filters: filters)
+    }
+    func getCount(filters: [DataSourceFilterParameter]) -> Int {
+        repository.getCount(filters: filters)
+    }
 }
 
 protocol AsamRepository {
     @discardableResult
     func getAsam(reference: String?, waypointURI: URL?) -> AsamModel?
+    func getAsams(filters: [DataSourceFilterParameter]) -> [AsamModel]
+    func getCount(filters: [DataSourceFilterParameter]) -> Int
 }
 
 class AsamCoreDataRepository: AsamRepository, ObservableObject {
@@ -45,5 +53,13 @@ class AsamCoreDataRepository: AsamRepository, ObservableObject {
             }
         }
         return nil
+    }
+    
+    func getAsams(filters: [DataSourceFilterParameter]) -> [AsamModel] {
+        return []
+    }
+    
+    func getCount(filters: [DataSourceFilterParameter]) -> Int {
+        return 0
     }
 }
