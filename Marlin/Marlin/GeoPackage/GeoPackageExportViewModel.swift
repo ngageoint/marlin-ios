@@ -24,9 +24,7 @@ class GeoPackageExportViewModel: ObservableObject {
     @Published var complete: Bool = false
     @Published var exporting: Bool = false
     @Published var creationError: String?
-    
-    @Published var dataSources: [any DataSourceDefinition] = []
-    
+        
     @Published var exporter: GeoPackageExporter = GeoPackageExporter()
     
     @Published var filterViewModels: [TemporaryFilterViewModel] = []
@@ -47,10 +45,10 @@ class GeoPackageExportViewModel: ObservableObject {
     
     func toggleDataSource(dataSource: (any DataSourceDefinition)?) {
         guard let dataSource = dataSource, !exporting else { return }
-        if dataSources.contains(where: { definition in
+        if exporter.dataSources.contains(where: { definition in
             definition.key == dataSource.key
         }) {
-            dataSources.removeAll { definition in
+            exporter.dataSources.removeAll { definition in
                 definition.key == dataSource.key
             }
             guard let filterable = DataSourceDefinitions.filterableFromDefintion(dataSource) else {
@@ -60,7 +58,7 @@ class GeoPackageExportViewModel: ObservableObject {
                 model.dataSource?.definition.key == filterable.definition.key
             }
         } else {
-            dataSources.append(dataSource)
+            exporter.dataSources.append(dataSource)
             guard let filterable = DataSourceDefinitions.filterableFromDefintion(dataSource) else {
                 return
             }

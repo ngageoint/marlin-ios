@@ -80,6 +80,8 @@ class GeoPackageExporter: ObservableObject {
     var geoPackage: GPKGGeoPackage?
     var filename: String?
     
+    @Published var dataSources: [any DataSourceDefinition] = []
+    
     @Published var exportProgresses: [DataSourceExportProgress] = []
     
     @Published var complete: Bool = false
@@ -96,6 +98,21 @@ class GeoPackageExporter: ObservableObject {
                 }
             }
             .store(in: &cancellable)
+    }
+    
+    func toggleDataSource(definition: any DataSourceDefinition) {
+        if exporting {
+            return
+        }
+        let included = filterViewModels.contains { viewModel in
+            viewModel.dataSource?.definition.key == definition.key
+        }
+        
+        if included {
+            removeExportDataSource(filterable: DataSourceDefinitions.filterableFromDefintion(definition))
+        } else {
+            addExportDataSource(filterable: DataSourceDefinitions.filterableFromDefintion(definition))
+        }
     }
     
     func setExportRequests(exportRequests: [DataSourceExportRequest]) {

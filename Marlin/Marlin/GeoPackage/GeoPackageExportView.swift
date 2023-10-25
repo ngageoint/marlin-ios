@@ -39,14 +39,7 @@ struct GeoPackageExportView: View {
                         }
                         
                         Button(action: {
-                            if exporter.exporting {
-                                return
-                            }
-                            if included {
-                                exporter.removeExportDataSource(filterable: DataSourceDefinitions.filterableFromDefintion(dataSourceItem.dataSource.definition))
-                            } else {
-                                exporter.addExportDataSource(filterable: DataSourceDefinitions.filterableFromDefintion(dataSourceItem.dataSource.definition))
-                            }
+                            exporter.toggleDataSource(definition: dataSourceItem.dataSource.definition)
                         }) {
                             Label(title: {}) {
                                 if let image = dataSourceItem.dataSource.image {
