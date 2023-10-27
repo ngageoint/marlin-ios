@@ -1013,7 +1013,6 @@
 				F7FFB31D28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift */,
 				F7275FDE28FA252800ED8D9A /* LightProtocol.swift */,
 				F73ABC7F294D2E240085EDC5 /* LightRange.swift */,
-				F7FDF2B52AB8D644009A5E8F /* LightRepository.swift */,
 				F7FDF2B72AB8DA60009A5E8F /* LightViewModel.swift */,
 			);
 			path = Light;
@@ -1038,7 +1037,6 @@
 				F7FFB2F728D6344000C31AA3 /* Port+Decodable.swift */,
 				F7FFB2F928D6349900C31AA3 /* Port+DataSourceViewBuilder.swift */,
 				F7391CA82ABB690D0002ABDD /* PortModel.swift */,
-				F7391CAA2ABB98440002ABDD /* PortRepository.swift */,
 				F7391CAC2ABC85140002ABDD /* PortViewModel.swift */,
 			);
 			path = Port;
@@ -1076,7 +1074,6 @@
 				F7FFB2E928D623B000C31AA3 /* DifferentialGPSStation+DataSource.swift */,
 				F7FFB2ED28D624FE00C31AA3 /* DifferentialGPSStation+MapImage.swift */,
 				F7FFB2EF28D626DC00C31AA3 /* DifferentialGPSStationModel.swift */,
-				F7391CAE2AC213670002ABDD /* DifferentialGPSStationRepository.swift */,
 				F7391CB02AC336CD0002ABDD /* DifferentialGPSStationViewModel.swift */,
 			);
 			path = DifferentialGPSStation;
@@ -1184,8 +1181,16 @@
 		F71F2B1E2ACF3CAB00DFB5BA /* Repository */ = {
 			isa = PBXGroup;
 			children = (
-				F71F2B1F2ACF3CC700DFB5BA /* PublisherExtensions.swift */,
+				F7C5F1E92AEC4AC70091BC01 /* ASAM */,
+				F7C5F1EA2AEC4AF40091BC01 /* Bookmark */,
+				F7C5F1EB2AEC4C730091BC01 /* DifferentialGPSStation */,
+				F7C5F1EC2AEC4C990091BC01 /* Light */,
 				F71F2B212ACF3D2D00DFB5BA /* ManagedObjectChangesPublisher.swift */,
+				F7C5F1ED2AEC4CAB0091BC01 /* MODU */,
+				F7C5F1EE2AEC4CBE0091BC01 /* NavigationalWarning */,
+				F7C5F1EF2AEC4CDD0091BC01 /* Port */,
+				F71F2B1F2ACF3CC700DFB5BA /* PublisherExtensions.swift */,
+				F7C5F1F02AEC4CEA0091BC01 /* RadioBeacon */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -1372,7 +1377,6 @@
 				F7FFB32528D6422F00C31AA3 /* RadioBeacon+MapImage.swift */,
 				F7FFB32728D6427200C31AA3 /* RadioBeacon+Decodable.swift */,
 				F7391CB22AC4982C0002ABDD /* RadioBeaconModel.swift */,
-				F7391CB42AC49A440002ABDD /* RadioBeaconRepository.swift */,
 				F7391CB62AC4C3E40002ABDD /* RadioBeaconViewModel.swift */,
 			);
 			path = RadioBeacon;
@@ -1619,7 +1623,6 @@
 				F7EFFEC82A7DA4260097E5EF /* BookmarkListEmptyState.swift */,
 				F7EFFED02A84212B0097E5EF /* BookmarkListView.swift */,
 				F7391CA42ABA28590002ABDD /* BookmarkModel.swift */,
-				F7391CA62ABA348F0002ABDD /* BookmarkRepository.swift */,
 			);
 			path = Bookmark;
 			sourceTree = "<group>";
@@ -1725,6 +1728,70 @@
 				F7DF1BBE29E9EBF800F92E14 /* AcknowledgementsView.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		F7C5F1E92AEC4AC70091BC01 /* ASAM */ = {
+			isa = PBXGroup;
+			children = (
+				F7FDF2AB2AB49C95009A5E8F /* AsamRepository.swift */,
+			);
+			path = ASAM;
+			sourceTree = "<group>";
+		};
+		F7C5F1EA2AEC4AF40091BC01 /* Bookmark */ = {
+			isa = PBXGroup;
+			children = (
+				F7391CA62ABA348F0002ABDD /* BookmarkRepository.swift */,
+			);
+			path = Bookmark;
+			sourceTree = "<group>";
+		};
+		F7C5F1EB2AEC4C730091BC01 /* DifferentialGPSStation */ = {
+			isa = PBXGroup;
+			children = (
+				F7391CAE2AC213670002ABDD /* DifferentialGPSStationRepository.swift */,
+			);
+			path = DifferentialGPSStation;
+			sourceTree = "<group>";
+		};
+		F7C5F1EC2AEC4C990091BC01 /* Light */ = {
+			isa = PBXGroup;
+			children = (
+				F7FDF2B52AB8D644009A5E8F /* LightRepository.swift */,
+			);
+			path = Light;
+			sourceTree = "<group>";
+		};
+		F7C5F1ED2AEC4CAB0091BC01 /* MODU */ = {
+			isa = PBXGroup;
+			children = (
+				F7FDF2AF2AB4D53D009A5E8F /* ModuRepository.swift */,
+			);
+			path = MODU;
+			sourceTree = "<group>";
+		};
+		F7C5F1EE2AEC4CBE0091BC01 /* NavigationalWarning */ = {
+			isa = PBXGroup;
+			children = (
+				F7C5F1E72AEC44430091BC01 /* NavigationalWarningRepository.swift */,
+			);
+			path = NavigationalWarning;
+			sourceTree = "<group>";
+		};
+		F7C5F1EF2AEC4CDD0091BC01 /* Port */ = {
+			isa = PBXGroup;
+			children = (
+				F7391CAA2ABB98440002ABDD /* PortRepository.swift */,
+			);
+			path = Port;
+			sourceTree = "<group>";
+		};
+		F7C5F1F02AEC4CEA0091BC01 /* RadioBeacon */ = {
+			isa = PBXGroup;
+			children = (
+				F7391CB42AC49A440002ABDD /* RadioBeaconRepository.swift */,
+			);
+			path = RadioBeacon;
 			sourceTree = "<group>";
 		};
 		F7D671C1286C85EF00758F1C /* GeoPackage */ = {
@@ -1904,7 +1971,6 @@
 				F7FFB30528D63A7200C31AA3 /* Asam+DataSourceViewBuilder.swift */,
 				F7FFB30728D63A9F00C31AA3 /* Asam+MapImage.swift */,
 				F7648ED32AABC8D2007E9A54 /* AsamViewModel.swift */,
-				F7FDF2AB2AB49C95009A5E8F /* AsamRepository.swift */,
 				F7FDF2AD2AB49DEA009A5E8F /* AsamModel.swift */,
 			);
 			path = ASAM;
@@ -1919,7 +1985,6 @@
 				F7FFB30D28D63C2700C31AA3 /* Modu+Decodable.swift */,
 				F7FFB30F28D63C4700C31AA3 /* Modu+MapImage.swift */,
 				F7FFB31328D63CB000C31AA3 /* Modu+DataSourceViewBuilder.swift */,
-				F7FDF2AF2AB4D53D009A5E8F /* ModuRepository.swift */,
 				F7FDF2B12AB4D5EA009A5E8F /* ModuModel.swift */,
 				F7FDF2B32AB4E8BB009A5E8F /* ModuViewModel.swift */,
 			);
@@ -2004,7 +2069,6 @@
 				F7FFB2FF28D6376100C31AA3 /* NavigationalWarning+Decodable.swift */,
 				F7E768B629EF11CC001EFFFF /* NAVTEXTextParser.swift */,
 				F7BDF76B2A13BFC80083B97F /* NavigationalWarning+MapImage.swift */,
-				F7C5F1E72AEC44430091BC01 /* NavigationalWarningRepository.swift */,
 			);
 			path = NavigationalWarning;
 			sourceTree = "<group>";
