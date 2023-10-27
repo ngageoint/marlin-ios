@@ -11,6 +11,7 @@ import CoreData
 protocol RadioBeaconRepository {
     @discardableResult
     func getRadioBeacon(featureNumber: Int?, volumeNumber: String?, waypointURI: URL?) -> RadioBeaconModel?
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int
 }
 
 class RadioBeaconRepositoryManager: RadioBeaconRepository, ObservableObject {
@@ -21,6 +22,10 @@ class RadioBeaconRepositoryManager: RadioBeaconRepository, ObservableObject {
     
     func getRadioBeacon(featureNumber: Int?, volumeNumber: String?, waypointURI: URL?) -> RadioBeaconModel? {
         repository.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+    }
+    
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        repository.getCount(filters: filters)
     }
 }
 
@@ -46,5 +51,12 @@ class RadioBeaconCoreDataRepository: RadioBeaconRepository, ObservableObject {
             }
         }
         return nil
+    }
+    
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        guard let fetchRequest = AsamFilterable().fetchRequest(filters: filters, commonFilters: nil) else {
+            return 0
+        }
+        return (try? context.count(for: fetchRequest)) ?? 0
     }
 }

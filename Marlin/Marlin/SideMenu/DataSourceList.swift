@@ -236,7 +236,9 @@ class GeoPackageDefinition: DataSourceDefinition {
     @AppStorage("gpfeatureOrder") var order: Int = 0
 }
 
-enum DataSourceDefinitions: String {
+enum DataSourceDefinitions: String, Identifiable {
+    var id: String { rawValue }
+    
     case route
     case asam
     case modu
@@ -252,6 +254,38 @@ enum DataSourceDefinitions: String {
     case bookmark
     case chartCorrection
     case geoPackage
+    
+    static func from(_ definition: (any DataSourceDefinition)? = nil) -> DataSourceDefinitions? {
+        switch(definition) {
+        case is RouteDefinition:
+            return DataSourceDefinitions.route
+        case is AsamDefinition:
+            return DataSourceDefinitions.asam
+        case is ModuDefinition:
+            return DataSourceDefinitions.modu
+        case is CommonDefinition:
+            return DataSourceDefinitions.common
+        case is NoticeToMarinersDefinition:
+            return DataSourceDefinitions.noticeToMariners
+        case is DifferentialGPSStationDefinition:
+            return DataSourceDefinitions.dgps
+        case is ElectronicPublicationDefinition:
+            return DataSourceDefinitions.epub
+        case is PortDefinition:
+            return DataSourceDefinitions.port
+        case is NavigationalWarningDefinition:
+            return DataSourceDefinitions.navWarning
+        case is LightDefinition:
+            return DataSourceDefinitions.light
+        case is RadioBeaconDefinition:
+            return DataSourceDefinitions.radioBeacon
+        case is ChartCorrectionDefinition:
+            return DataSourceDefinitions.chartCorrection
+            
+        default:
+            return nil
+        }
+    }
     
     var definition: any DataSourceDefinition {
         switch(self) {

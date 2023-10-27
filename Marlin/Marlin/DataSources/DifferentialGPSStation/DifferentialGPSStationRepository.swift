@@ -11,6 +11,7 @@ import CoreData
 protocol DifferentialGPSStationRepository {
     @discardableResult
     func getDifferentialGPSStation(featureNumber: Int?, volumeNumber: String?, waypointURI: URL?) -> DifferentialGPSStationModel?
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int
 }
 
 class DifferentialGPSStationRepositoryManager: DifferentialGPSStationRepository, ObservableObject {
@@ -21,6 +22,10 @@ class DifferentialGPSStationRepositoryManager: DifferentialGPSStationRepository,
     
     func getDifferentialGPSStation(featureNumber: Int?, volumeNumber: String?, waypointURI: URL?) -> DifferentialGPSStationModel? {
         repository.getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+    }
+    
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        repository.getCount(filters: filters)
     }
 }
 
@@ -45,5 +50,12 @@ class DifferentialGPSStationCoreDataRepository: DifferentialGPSStationRepository
             }
         }
         return nil
+    }
+    
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        guard let fetchRequest = DifferentialGPSStationFilterable().fetchRequest(filters: filters, commonFilters: nil) else {
+            return 0
+        }
+        return (try? context.count(for: fetchRequest)) ?? 0
     }
 }

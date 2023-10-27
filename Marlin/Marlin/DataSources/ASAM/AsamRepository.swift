@@ -16,10 +16,10 @@ class AsamRepositoryManager: AsamRepository, ObservableObject {
     func getAsam(reference: String?, waypointURI: URL?) -> AsamModel? {
         repository.getAsam(reference: reference, waypointURI: waypointURI)
     }
-    func getAsams(filters: [DataSourceFilterParameter]) -> [AsamModel] {
+    func getAsams(filters: [DataSourceFilterParameter]?) -> [AsamModel] {
         repository.getAsams(filters: filters)
     }
-    func getCount(filters: [DataSourceFilterParameter]) -> Int {
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
         repository.getCount(filters: filters)
     }
 }
@@ -27,8 +27,8 @@ class AsamRepositoryManager: AsamRepository, ObservableObject {
 protocol AsamRepository {
     @discardableResult
     func getAsam(reference: String?, waypointURI: URL?) -> AsamModel?
-    func getAsams(filters: [DataSourceFilterParameter]) -> [AsamModel]
-    func getCount(filters: [DataSourceFilterParameter]) -> Int
+    func getAsams(filters: [DataSourceFilterParameter]?) -> [AsamModel]
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int
 }
 
 class AsamCoreDataRepository: AsamRepository, ObservableObject {
@@ -55,11 +55,15 @@ class AsamCoreDataRepository: AsamRepository, ObservableObject {
         return nil
     }
     
-    func getAsams(filters: [DataSourceFilterParameter]) -> [AsamModel] {
+    func getAsams(filters: [DataSourceFilterParameter]?) -> [AsamModel] {
         return []
     }
     
-    func getCount(filters: [DataSourceFilterParameter]) -> Int {
-        return 0
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        NSLog("Get the count for filters \(filters)")
+        guard let fetchRequest = AsamFilterable().fetchRequest(filters: filters, commonFilters: nil) else {
+            return 0
+        }
+        return (try? context.count(for: fetchRequest)) ?? 0
     }
 }

@@ -11,6 +11,7 @@ import CoreData
 protocol PortRepository {
     @discardableResult
     func getPort(portNumber: Int64?, waypointURI: URL?) -> PortModel?
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int
 }
 
 class PortRepositoryManager: PortRepository, ObservableObject {
@@ -21,6 +22,10 @@ class PortRepositoryManager: PortRepository, ObservableObject {
     
     func getPort(portNumber: Int64?, waypointURI: URL?) -> PortModel? {
         repository.getPort(portNumber: portNumber, waypointURI: waypointURI)
+    }
+    
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        repository.getCount(filters: filters)
     }
 }
 
@@ -45,5 +50,12 @@ class PortCoreDataRepository: PortRepository, ObservableObject {
             }
         }
         return nil
+    }
+    
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        guard let fetchRequest = PortFilterable().fetchRequest(filters: filters, commonFilters: nil) else {
+            return 0
+        }
+        return (try? context.count(for: fetchRequest)) ?? 0
     }
 }

@@ -11,6 +11,7 @@ import CoreData
 protocol LightRepository {
     @discardableResult
     func getLights(featureNumber: String?, volumeNumber: String?, waypointURI: URL?) -> [LightModel]
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int
 }
 
 class LightRepositoryManager: LightRepository, ObservableObject {
@@ -20,6 +21,9 @@ class LightRepositoryManager: LightRepository, ObservableObject {
     }
     func getLights(featureNumber: String?, volumeNumber: String?, waypointURI: URL?) -> [LightModel] {
         repository.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+    }
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        repository.getCount(filters: filters)
     }
 }
 
@@ -49,5 +53,12 @@ class LightCoreDataRepository: LightRepository, ObservableObject {
             }
         }
         return []
+    }
+    
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        guard let fetchRequest = LightFilterable().fetchRequest(filters: filters, commonFilters: nil) else {
+            return 0
+        }
+        return (try? context.count(for: fetchRequest)) ?? 0
     }
 }

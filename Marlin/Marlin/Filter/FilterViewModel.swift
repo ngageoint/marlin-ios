@@ -12,23 +12,11 @@ import CoreData
 class FilterViewModel: ObservableObject, Identifiable {
     var id: String { dataSource?.definition.key ?? "" }
     var dataSource: Filterable?
-    var commonFilters: [DataSourceFilterParameter]? {
-        didSet {
-            if let fetchRequest = dataSource?.fetchRequest(filters: filters, commonFilters: commonFilters) {
-                count = (try? PersistenceController.current.viewContext.count(for: fetchRequest)) ?? 0
-            }
-        }
-    }
-    @Published var filters: [DataSourceFilterParameter] {
-        didSet {
-            if let fetchRequest = dataSource?.fetchRequest(filters: filters, commonFilters: commonFilters) {
-                count = (try? PersistenceController.current.viewContext.count(for: fetchRequest)) ?? 0
-            }
-        }
-    }
+
+    @Published var filters: [DataSourceFilterParameter]
+
     @Published var selectedProperty: DataSourceProperty?
     @Published var filterParameter: DataSourceFilterParameter?
-    @Published var count: Int = 0
     
     var requiredProperties: [DataSourceProperty] {
         dataSource?.properties.filter({ property in
@@ -43,15 +31,11 @@ class FilterViewModel: ObservableObject, Identifiable {
         }
     }
     
-    init(dataSource: Filterable?, commonFilters: [DataSourceFilterParameter]? = nil) {
+    init(dataSource: Filterable?) {
         self.dataSource = dataSource
         self.filters = []
-        self.commonFilters = commonFilters
         if let dataSource = dataSource, !dataSource.properties.isEmpty {
             selectedProperty = dataSource.properties[0]
-        }
-        if let fetchRequest = dataSource?.fetchRequest(filters: filters, commonFilters: commonFilters) {
-            count = (try? PersistenceController.current.viewContext.count(for: fetchRequest)) ?? 0
         }
     }
     
@@ -86,8 +70,8 @@ class PersistedFilterViewModel: FilterViewModel {
         }
     }
     
-    init(dataSource: Filterable?, useDefaultForEmptyFilter: Bool = false, commonFilters: [DataSourceFilterParameter]? = nil) {
-        super.init(dataSource: dataSource, commonFilters: commonFilters)
+    init(dataSource: Filterable?, useDefaultForEmptyFilter: Bool = false) {
+        super.init(dataSource: dataSource)
         if let dataSource = dataSource {
             let savedFilter = UserDefaults.standard.filter(dataSource.definition)
             if useDefaultForEmptyFilter && savedFilter.isEmpty {
@@ -100,8 +84,8 @@ class PersistedFilterViewModel: FilterViewModel {
 }
 
 class TemporaryFilterViewModel: FilterViewModel {
-    init(dataSource: Filterable?, filters: [DataSourceFilterParameter]? = nil, commonFilters: [DataSourceFilterParameter]? = nil) {
-        super.init(dataSource: dataSource, commonFilters: commonFilters)
+    init(dataSource: Filterable?, filters: [DataSourceFilterParameter]? = nil) {
+        super.init(dataSource: dataSource)
         if let definition = dataSource?.definition {
             self.filters = filters ?? UserDefaults.standard.filter(definition)
         }

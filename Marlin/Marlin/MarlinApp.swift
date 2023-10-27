@@ -133,6 +133,7 @@ struct MarlinApp: App {
     var dgpsRepository: DifferentialGPSStationRepositoryManager
     var radioBeaconRepository: RadioBeaconRepositoryManager
     var routeRepository: RouteRepositoryManager
+    var navigationalWarningRepository: NavigationalWarningRepositoryManager
     
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
@@ -156,6 +157,7 @@ struct MarlinApp: App {
         dgpsRepository = DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
         radioBeaconRepository = RadioBeaconRepositoryManager(repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
         routeRepository = RouteRepositoryManager(repository: RouteCoreDataRepository(context: persistentStore.viewContext))
+        navigationalWarningRepository = NavigationalWarningRepositoryManager(repository: NavigationalWarningCoreDataRepository(context: persistentStore.viewContext))
         UNUserNotificationCenter.current().delegate = appDelegate
     }
 
@@ -174,6 +176,7 @@ struct MarlinApp: App {
                 .environmentObject(dgpsRepository)
                 .environmentObject(radioBeaconRepository)
                 .environmentObject(routeRepository)
+                .environmentObject(navigationalWarningRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
                 .background(Color.surfaceColor)
         }

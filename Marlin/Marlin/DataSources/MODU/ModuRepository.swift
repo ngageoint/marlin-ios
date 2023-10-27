@@ -11,6 +11,7 @@ import CoreData
 protocol ModuRepository {
     @discardableResult
     func getModu(name: String?, waypointURI: URL?) -> ModuModel?
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int
 }
 
 class ModuRepositoryManager: ModuRepository, ObservableObject {
@@ -22,6 +23,10 @@ class ModuRepositoryManager: ModuRepository, ObservableObject {
     
     func getModu(name: String?, waypointURI: URL?) -> ModuModel? {
         repository.getModu(name: name, waypointURI: waypointURI)
+    }
+    
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        repository.getCount(filters: filters)
     }
 }
 
@@ -47,5 +52,12 @@ class ModuCoreDataRepository: ModuRepository, ObservableObject {
             }
         }
         return nil
+    }
+    
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        guard let fetchRequest = ModuFilterable().fetchRequest(filters: filters, commonFilters: nil) else {
+            return 0
+        }
+        return (try? context.count(for: fetchRequest)) ?? 0
     }
 }
