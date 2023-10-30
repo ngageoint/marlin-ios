@@ -12,6 +12,7 @@ import Combine
 protocol RouteRepository {
     @discardableResult
     func getRoute(routeURI: URL?) -> RouteModel?
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int
     func observeRouteListItems() -> AnyPublisher<CollectionDifference<RouteModel>, Never>
     func deleteRoute(route: URL)
 }
@@ -41,6 +42,12 @@ class RouteCoreDataRepository: RouteRepository, ObservableObject {
         return nil
     }
     
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        guard let fetchRequest = RouteFilterable().fetchRequest(filters: filters, commonFilters: nil) else {
+            return 0
+        }
+        return (try? context.count(for: fetchRequest)) ?? 0    }
+    
     func deleteRoute(route: URL) {
         context.perform {
             if let id = self.context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: route), let route = try? self.context.existingObject(with: id) as? Route {
@@ -62,6 +69,10 @@ class RouteRepositoryManager: RouteRepository, ObservableObject {
     
     func deleteRoute(route: URL) {
         repository.deleteRoute(route: route)
+    }
+    
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        repository.getCount(filters: filters)
     }
     
     private var repository: RouteRepository

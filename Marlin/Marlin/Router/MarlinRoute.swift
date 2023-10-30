@@ -10,7 +10,8 @@ import SwiftUI
 import CoreData
 
 enum MarlinRoute: Hashable {
-    case exportGeoPackage([DataSourceExportRequest])
+    case exportGeoPackage(useMapRegion: Bool)
+    case exportGeoPackageDataSource(dataSource: DataSourceDefinitions?, filters: [DataSourceFilterParameter]? = nil)
     case lightSettings
     case mapLayers
     case coordinateDisplaySettings
@@ -41,12 +42,27 @@ extension View {
 
 struct MarlinRouteModifier: ViewModifier {
     @Binding var path: NavigationPath
+    @EnvironmentObject var dataSourceList: DataSourceList
+    
+    func createExportDataSources() -> [DataSourceDefinitions] {
+        var dataSources: [DataSourceDefinitions] = []
+        
+        for dataSource in dataSourceList.mappedDataSources {
+            if let def = DataSourceDefinitions.from(dataSource.dataSource.definition) {
+                dataSources.append(def)
+            }
+        }
+        return dataSources
+    }
+    
     func body(content: Content) -> some View {
         content
             .navigationDestination(for: MarlinRoute.self) { item in
                 switch item {
-                case .exportGeoPackage(let exportRequest):
-                    GeoPackageExportView(exportRequest: exportRequest)
+                case .exportGeoPackageDataSource(let dataSource, let filters):
+                    GeoPackageExportView(dataSources: dataSource != nil ? [dataSource!] : [], filters: filters, useMapRegion: false)
+                case .exportGeoPackage(let useMapRegion):
+                    GeoPackageExportView(dataSources: createExportDataSources(), useMapRegion: useMapRegion)
                 case .lightSettings:
                     LightSettingsView()
                 case .mapSettings:

@@ -21,7 +21,11 @@ struct GeoPackageExportView: View {
 
     @StateObject var viewModel: GeoPackageExportViewModel = GeoPackageExportViewModel()
     
-    @State var exportRequest: [DataSourceExportRequest]
+    @State var exportRequest: [DataSourceExportRequest] = []
+    
+    @State var dataSources: [DataSourceDefinitions]
+    @State var filters: [DataSourceFilterParameter]?
+    @State var useMapRegion: Bool
     
     var body: some View {
         VStack {
@@ -100,7 +104,7 @@ struct GeoPackageExportView: View {
             viewModel.radioBeaconRepository = radioBeaconRepository
             viewModel.routeRepository = routeRepository
             viewModel.navigationalWarningRepository = navigationalWarningRepository
-            viewModel.setExportRequests(exportRequests: exportRequest)
+            viewModel.setExportParameters(dataSources: dataSources, filters: filters, useMapRegion: useMapRegion)
             Metrics.shared.geoPackageExportView()
         }
     }

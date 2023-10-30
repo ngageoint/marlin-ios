@@ -73,29 +73,6 @@ struct MarlinMainMap: View {
         }
     }
     
-    func exportRequest() -> [DataSourceExportRequest] {
-        var exports: [DataSourceExportRequest] = []
-        let region = UserDefaults.standard.mapRegion
-        let commonExportRequest = DataSourceExportRequest(
-            filterable: DataSourceDefinitions.common.filterable,
-            filters: [
-                DataSourceFilterParameter(property:
-                                            DataSourceProperty(name: "Location",
-                                                               key: #keyPath(CommonDataSource.coordinate),
-                                                               type: .location),
-                                          comparison: .bounds,
-                                          valueMinLatitude: region.center.latitude - (region.span.latitudeDelta / 2.0),
-                                          valueMinLongitude: region.center.longitude - (region.span.longitudeDelta / 2.0),
-                                          valueMaxLatitude: region.center.latitude + (region.span.latitudeDelta / 2.0),
-                                          valueMaxLongitude: region.center.longitude + (region.span.longitudeDelta / 2.0))])
-        exports.append(commonExportRequest)
-        
-        for dataSource in dataSourceList.mappedDataSources {
-            exports.append(DataSourceExportRequest(filterable: DataSourceDefinitions.filterableFromDefintion(dataSource.dataSource.definition), filters: UserDefaults.standard.filter(dataSource.dataSource.definition)))
-        }
-        return exports
-    }
-    
     @ViewBuilder
     func bottomButtons() -> some View {
         HStack(alignment: .bottom, spacing: 0) {
@@ -109,7 +86,7 @@ struct MarlinMainMap: View {
             // bottom right button stack
             VStack(alignment: .trailing, spacing: 16) {
                 if showExport {
-                    NavigationLink(value: MarlinRoute.exportGeoPackage(exportRequest())) {
+                    NavigationLink(value: MarlinRoute.exportGeoPackage(useMapRegion: true)) {
                         Label(
                             title: {},
                             icon: { Image(systemName: "square.and.arrow.down")

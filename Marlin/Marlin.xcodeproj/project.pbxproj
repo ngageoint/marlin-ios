@@ -1178,6 +1178,7 @@
 		F71F2B1E2ACF3CAB00DFB5BA /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				F7C5F1FD2AEC5DF90091BC01 /* Route */,
 				F7C5F1E92AEC4AC70091BC01 /* ASAM */,
 				F7C5F1EA2AEC4AF40091BC01 /* Bookmark */,
 				F7C5F1EB2AEC4C730091BC01 /* DifferentialGPSStation */,
@@ -1495,15 +1496,7 @@
 			isa = PBXGroup;
 			children = (
 				F7830BFA2A8AB3FE008376F7 /* Route+CoreDataClass.swift */,
-				F7830BFC2A8AB6E1008376F7 /* RouteList.swift */,
-				F7830C002A8BCA89008376F7 /* CreateRouteButton.swift */,
-				F7830C022A8BCAD0008376F7 /* CreateRouteView.swift */,
-				F7830C042A8BCEF1008376F7 /* RouteListEmptyState.swift */,
-				F7830C0A2A93CDD4008376F7 /* RouteMapView.swift */,
 				F7AFF93A2AD05AEA00555960 /* RouteModel.swift */,
-				F7AFF93C2AD4603000555960 /* RouteRepository.swift */,
-				F7AFF93E2AD462ED00555960 /* RoutesViewModel.swift */,
-				F7AFF9422AD46C6B00555960 /* RouteViewModel.swift */,
 			);
 			path = Routing;
 			sourceTree = "<group>";
@@ -1778,6 +1771,7 @@
 		F7C5F1F12AEC4DA90091BC01 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				F7C5F1FC2AEC5DD80091BC01 /* Route */,
 				F7C5F1FB2AEC57A70091BC01 /* RadioBeacon */,
 				F7C5F1FA2AEC57780091BC01 /* Light */,
 				F7C5F1F92AEC55640091BC01 /* NavigationalWarning */,
@@ -1907,6 +1901,28 @@
 				F7391CB62AC4C3E40002ABDD /* RadioBeaconViewModel.swift */,
 			);
 			path = RadioBeacon;
+			sourceTree = "<group>";
+		};
+		F7C5F1FC2AEC5DD80091BC01 /* Route */ = {
+			isa = PBXGroup;
+			children = (
+				F7830BFC2A8AB6E1008376F7 /* RouteList.swift */,
+				F7830C002A8BCA89008376F7 /* CreateRouteButton.swift */,
+				F7830C022A8BCAD0008376F7 /* CreateRouteView.swift */,
+				F7830C042A8BCEF1008376F7 /* RouteListEmptyState.swift */,
+				F7830C0A2A93CDD4008376F7 /* RouteMapView.swift */,
+				F7AFF93E2AD462ED00555960 /* RoutesViewModel.swift */,
+				F7AFF9422AD46C6B00555960 /* RouteViewModel.swift */,
+			);
+			path = Route;
+			sourceTree = "<group>";
+		};
+		F7C5F1FD2AEC5DF90091BC01 /* Route */ = {
+			isa = PBXGroup;
+			children = (
+				F7AFF93C2AD4603000555960 /* RouteRepository.swift */,
+			);
+			path = Route;
 			sourceTree = "<group>";
 		};
 		F7D671C1286C85EF00758F1C /* GeoPackage */ = {

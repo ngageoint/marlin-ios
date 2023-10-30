@@ -11,7 +11,7 @@ struct GeoPackageExportButton: View {
     var filterable: Filterable
     
     var body: some View {
-        NavigationLink(value: MarlinRoute.exportGeoPackage([DataSourceExportRequest(filterable: filterable, filters: UserDefaults.standard.filter(filterable.definition))])) {
+        NavigationLink(value: MarlinRoute.exportGeoPackageDataSource(dataSource: DataSourceDefinitions.from(filterable.definition))) {
             Label(
                 title: {},
                 icon: { Image(systemName: "square.and.arrow.down")

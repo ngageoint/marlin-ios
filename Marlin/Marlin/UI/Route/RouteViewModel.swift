@@ -90,7 +90,6 @@ class RouteViewModel: ObservableObject, Identifiable {
         routeDistance = 0.0
         var previousCoordinate: CLLocation?
         for waypoint in waypoints {
-//            let waypoint = waypoint.base
             if let centerPoint = waypoint.sfGeometry?.degreesCentroid() {
                 let location = CLLocation(latitude: centerPoint.y.doubleValue, longitude: centerPoint.x.doubleValue)
                 if let previousCoordinate = previousCoordinate {
@@ -130,6 +129,13 @@ class RouteViewModel: ObservableObject, Identifiable {
                     set.insert(routeWaypoint)
                 }
                 route.waypoints = NSSet(set: set)
+                if let routeGeom = route.sfGeometry, let envelope = routeGeom.envelope(), let minLat = envelope.minY, let maxLat = envelope.maxY, let minLon = envelope.minX, let maxLon = envelope.maxX {
+                    route.minLatitude = minLat.doubleValue
+                    route.maxLatitude = maxLat.doubleValue
+                    route.minLongitude = minLon.doubleValue
+                    route.maxLongitude = maxLon.doubleValue
+                }
+                
                 if let routeFeatureCollection = self.routeFeatureCollection {
                     do {
                         let json = try JSONEncoder().encode(routeFeatureCollection)

@@ -155,7 +155,7 @@ class GeoPackageExportViewModel: ObservableObject {
                 let filters = (self.filterViewModels[definition]?.filters ?? []) + self.commonViewModel.filters
                 
                 switch(definition) {
-                case .route: break
+                case .route: $0[definition] = self.routeRepository?.getCount(filters: filters)
                 case .asam: $0[definition] = self.asamRepository?.getCount(filters: filters)
                 case .modu: $0[definition] = self.moduRepository?.getCount(filters: filters)
                 case .dgps: $0[definition] = self.dgpsRepository?.getCount(filters: filters)
@@ -184,21 +184,28 @@ class GeoPackageExportViewModel: ObservableObject {
         }
     }
     
-    func setExportRequests(exportRequests: [DataSourceExportRequest]) {
-        for request in exportRequests.filter({ request in
-            request.filterable?.definition.key != CommonDataSource.key
-        }) {
-            if let definition = request.filterable?.definition {
-                toggleDataSource(definition: definition)
+    func setExportParameters(dataSources: [DataSourceDefinitions], filters: [DataSourceFilterParameter]?, useMapRegion: Bool) {
+        let region = UserDefaults.standard.mapRegion
+        
+        for dataSource in dataSources {
+            toggleDataSource(definition: dataSource.definition)
+            if let filters = filters {
+                filterViewModels[dataSource]?.filters.append(contentsOf: filters)
             }
         }
         
-        if let commonRequest = exportRequests.first(where: { request in
-            request.filterable?.definition.key == CommonDataSource.key
-        }) {
-            if let filters = commonRequest.filters {
-                commonViewModel.filters = filters
-            }
+        if useMapRegion {
+            commonViewModel.filters = [
+                DataSourceFilterParameter(
+                    property: DataSourceProperty(name: "Location",
+                                                 key: #keyPath(CommonDataSource.coordinate),
+                                                 type: .location),
+                    comparison: .bounds,
+                    valueMinLatitude: region.center.latitude - (region.span.latitudeDelta / 2.0),
+                    valueMinLongitude: region.center.longitude - (region.span.longitudeDelta / 2.0),
+                    valueMaxLatitude: region.center.latitude + (region.span.latitudeDelta / 2.0),
+                    valueMaxLongitude: region.center.longitude + (region.span.longitudeDelta / 2.0))
+            ]
         }
     }
     

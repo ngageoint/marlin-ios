@@ -428,4 +428,5 @@ struct RouteFilterable: Filterable {
     
     var properties: [DataSourceProperty] = []
     
+    var locatableClass: Locatable.Type? = Route.self
 }
