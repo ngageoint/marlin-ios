@@ -141,13 +141,9 @@ extension RadioBeacon: BatchImportable {
             let volumeNumber = propertyDictionary["volumeNumber"] as? String ?? ""
             var previousLocation = previousHeadingPerVolume[volumeNumber]
             let region = propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading
-            let subregion = propertyDictionary["subregionHeading"] as? String ?? previousLocation?.previousSubregionHeading
-            let local = propertyDictionary["localHeading"] as? String ?? previousLocation?.previousSubregionHeading
             
             var correctedLocationDictionary: [String:String?] = [
-                "regionHeading": propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading,
-                "subregionHeading": propertyDictionary["subregionHeading"] as? String ?? previousLocation?.previousSubregionHeading,
-                "localHeading": propertyDictionary["localHeading"] as? String ?? previousLocation?.previousSubregionHeading
+                "regionHeading": propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading
             ]
             correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? "")\(correctedLocationDictionary["regionHeading"] != nil ? ": \(correctedLocationDictionary["regionHeading"] as? String ?? "")" : "")"
             if let rh = correctedLocationDictionary["regionHeading"] as? String {
@@ -160,23 +156,25 @@ extension RadioBeacon: BatchImportable {
                 previousLocation?.previousRegionHeading = region
                 previousLocation?.previousSubregionHeading = nil
                 previousLocation?.previousLocalHeading = nil
-            } else if previousLocation?.previousSubregionHeading != subregion {
-                previousLocation?.previousSubregionHeading = subregion
-                previousLocation?.previousLocalHeading = nil
-            } else if previousLocation?.previousLocalHeading != local {
-                previousLocation?.previousLocalHeading = local
             }
-            previousHeadingPerVolume[volumeNumber] = previousLocation ?? PreviousLocation(previousRegionHeading: region, previousSubregionHeading: subregion, previousLocalHeading: local)
+            previousHeadingPerVolume[volumeNumber] = previousLocation ?? PreviousLocation(previousRegionHeading: region, previousSubregionHeading: nil, previousLocalHeading: nil)
             
-            dictionary.addEntries(from: propertyDictionary.filter({
-                return $0.value != nil
+            dictionary.addEntries(from: propertyDictionary.mapValues({ value in
+                if let value = value {
+                    return value
+                }
+                return NSNull()
             }) as [AnyHashable : Any])
-            dictionary.addEntries(from: correctedLocationDictionary.filter({
-                return $0.value != nil
+            dictionary.addEntries(from: correctedLocationDictionary.mapValues({ value in
+                if let value = value {
+                    return value
+                }
+                return NSNull()
             }) as [AnyHashable : Any])
             index += 1
             return false
         })
+        NSLog("inserting the radio beacons")
         return batchInsertRequest
     }
     
@@ -191,19 +189,28 @@ extension RadioBeacon: BatchImportable {
         return try await taskContext.perform {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
+            NSLog("Perform insert")
             let batchInsertRequest = RadioBeacon.newBatchInsertRequest(with: propertiesList)
             batchInsertRequest.resultType = .count
-            if let fetchResult = try? taskContext.execute(batchInsertRequest),
-               let batchInsertResult = fetchResult as? NSBatchInsertResult {
-                try? taskContext.save()
-                if let count = batchInsertResult.result as? Int, count > 0 {
-                    NSLog("Inserted \(count) RadioBeacon records")
-                    return count
-                } else {
-                    NSLog("No new RadioBeacon records")
+            do {
+                let fetchResult = try taskContext.execute(batchInsertRequest)
+                if let batchInsertResult = fetchResult as? NSBatchInsertResult {
+                    NSLog("insert result happened")
+                    
+                    try taskContext.save()
+                    if let count = batchInsertResult.result as? Int, count > 0 {
+                        NSLog("Inserted \(count) RadioBeacon records")
+                        return count
+                    } else {
+                        NSLog("No new RadioBeacon records")
+                    }
+                    
+                    return 0
                 }
-                return 0
+            } catch {
+                NSLog("Error inserting radio beacons \(error)")
             }
+            NSLog("throwing error")
             throw MSIError.batchInsertError
         }
     }

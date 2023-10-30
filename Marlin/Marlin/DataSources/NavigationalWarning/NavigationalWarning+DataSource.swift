@@ -212,7 +212,9 @@ extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportabl
     
     static var defaultFilter: [DataSourceFilterParameter] = []
     
-    static var properties: [DataSourceProperty] = []
+    static var properties: [DataSourceProperty] = [
+        DataSourceProperty(name: "Navigational Area", key: #keyPath(NavigationalWarning.navArea), type: .string)
+    ]
     
     var coordinateRegion: MKCoordinateRegion? {
         region
@@ -249,9 +251,14 @@ extension NavigationalWarning: BatchImportable {
         // Provide one dictionary at a time when the closure is called.
         let batchInsertRequest = NSBatchInsertRequest(entity: NavigationalWarning.entity(), dictionaryHandler: { dictionary in
             guard index < total else { return true }
-            dictionary.addEntries(from: propertyList[index].dictionaryValue.filter({
-                return $0.value != nil
+            let propertyDictionary = propertyList[index].dictionaryValue
+            dictionary.addEntries(from: propertyDictionary.mapValues({ value in
+                if let value = value {
+                    return value
+                }
+                return NSNull()
             }) as [AnyHashable : Any])
+            
             index += 1
             return false
         })

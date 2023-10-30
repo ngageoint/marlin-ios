@@ -16,7 +16,6 @@
 #import "SFPoint.h"
 #import "SFGeometryCollection.h"
 
-
 //#import "sf-ios-umbrella.h"
 
 #endif /* Marlin_Bridging_Header_h */

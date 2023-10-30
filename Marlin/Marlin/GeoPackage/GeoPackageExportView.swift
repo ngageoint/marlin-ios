@@ -50,9 +50,6 @@ struct GeoPackageExportView: View {
                 }
                 DataSourceFilters(dataSources: viewModel.dataSourceDefinitions, exportProgresses: viewModel.exportProgresses, filterViewModels: viewModel.filterViewModels, counts: viewModel.counts, exporting: viewModel.exporting)
             }
-            if let creationError = viewModel.creationError {
-                Text("Error \(creationError)")
-            }
         }
         .safeAreaInset(edge: .bottom, content: {
             HStack {
@@ -64,7 +61,7 @@ struct GeoPackageExportView: View {
                         ) {
                             Label(
                                 title: {
-                                    Text("Download Created GeoPackage")
+                                    Text("Share Export")
                                 },
                                 icon: { Image(systemName: "square.and.arrow.up")
                                         .renderingMode(.template)
@@ -106,6 +103,16 @@ struct GeoPackageExportView: View {
             viewModel.navigationalWarningRepository = navigationalWarningRepository
             viewModel.setExportParameters(dataSources: dataSources, filters: filters, useMapRegion: useMapRegion)
             Metrics.shared.geoPackageExportView()
+        }
+        .onChange(of: exporter.complete) { complete in
+            guard let path = exporter.geoPackage?.path else { return }
+            let activityVC = UIActivityViewController(activityItems: [URL(fileURLWithPath: path)], applicationActivities: nil)
+            UIApplication.shared.windows.first?.rootViewController?.present(activityVC, animated: true, completion: nil)
+        }
+        .alert("Export Error", isPresented: $exporter.error) {
+            Button("OK") { }
+        } message: {
+            Text("We apologize, it looks like we were unable to export Marlin data for the selected data sources.  Please try again later or reach out if this issue persists.")
         }
     }
     
