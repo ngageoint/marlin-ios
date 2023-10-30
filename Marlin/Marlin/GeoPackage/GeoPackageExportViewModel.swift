@@ -88,6 +88,7 @@ class GeoPackageExportViewModel: ObservableObject {
     @Published var complete: Bool = false
     @Published var exporting: Bool = false
     @Published var creationError: String?
+    @Published var error: Bool = false
     
     @Published var counts: [DataSourceDefinitions : Int] = [:]
     
@@ -245,6 +246,7 @@ class GeoPackageExportViewModel: ObservableObject {
             return geoPackage != nil
         } catch {
             DispatchQueue.main.async {
+                self.error = true
                 self.creationError = error.localizedDescription
             }
             print("Error:", error.localizedDescription)
@@ -255,6 +257,8 @@ class GeoPackageExportViewModel: ObservableObject {
     func export() {
         exporting = true
         complete = false
+        error = false
+        exportProgresses.removeAll()
         backgroundExport()
         Metrics.shared.geoPackageExport(dataSources: filterViewModels.values.compactMap(\.dataSource))
     }
@@ -272,6 +276,7 @@ class GeoPackageExportViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self.exporting = false
                     self.complete = false
+                    self.error = true
                     self.creationError = "Unable to create GeoPackage file"
                 }
                 return
@@ -307,6 +312,7 @@ class GeoPackageExportViewModel: ObservableObject {
                     DispatchQueue.main.async { [self] in
                         complete = false
                         exporting = false
+                        self.error = true
                         creationError = error.localizedDescription
                         print("Error:", error.localizedDescription)
                     }
