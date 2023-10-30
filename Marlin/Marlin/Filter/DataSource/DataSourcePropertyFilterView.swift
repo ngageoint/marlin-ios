@@ -17,8 +17,8 @@ struct DataSourcePropertyFilterView: View {
     
     init(dataSourceProperty: DataSourceProperty? = nil, filterViewModel: FilterViewModel) {
         var prop = dataSourceProperty ?? DataSourceProperty(name: "", key: "", type: .string)
-        if dataSourceProperty == nil && !filterViewModel.dataSource.properties.isEmpty {
-            prop = filterViewModel.dataSource.properties[0]
+        if let filterable = filterViewModel.dataSource, dataSourceProperty == nil && !filterable.properties.isEmpty {
+            prop = filterable.properties[0]
         }
         self.filterViewModel = filterViewModel
 

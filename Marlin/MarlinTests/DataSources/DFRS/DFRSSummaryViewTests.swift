@@ -19,7 +19,7 @@ final class DFRSSummaryViewTests: XCTestCase {
     
     override func setUp(completion: @escaping (Error?) -> Void) {
         UserDefaults.standard.initialDataLoaded = false
-        UserDefaults.standard.clearLastSyncTimeSeconds(DFRS.self as any BatchImportable.Type)
+        UserDefaults.standard.clearLastSyncTimeSeconds(DFRS.definition)
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
@@ -53,9 +53,11 @@ final class DFRSSummaryViewTests: XCTestCase {
         newItem.notes = "notes"
         newItem.areaName = "BULGARIA"
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         let summary = newItem.summary
             .setShowMoreDetails(false)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -95,8 +97,8 @@ final class DFRSSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
         
-        tester().waitForTappableView(withAccessibilityLabel: "Close")
-        tester().tapView(withAccessibilityLabel: "Close")
+        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
+        tester().tapView(withAccessibilityLabel: "dismiss popup")
     }
     
     func testShowMoreDetails() {
@@ -117,9 +119,11 @@ final class DFRSSummaryViewTests: XCTestCase {
         newItem.notes = "notes"
         newItem.areaName = "BULGARIA"
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         let summary = newItem.summary
             .setShowMoreDetails(true)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -161,10 +165,12 @@ final class DFRSSummaryViewTests: XCTestCase {
         newItem.notes = "notes"
         newItem.areaName = "BULGARIA"
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         let summary = newItem.summary
             .setShowMoreDetails(false)
             .setShowSectionHeader(true)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

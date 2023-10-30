@@ -69,7 +69,7 @@ struct MarlinRegularWidth: View {
             DataSourceNavView(dataSource: activeRailItem, focusedItem: itemWrapper, watchFocusedItem: true)
                 .background(Color.backgroundColor)
                 .accessibilityElement(children: .contain)
-                .accessibilityLabel("\(activeRailItem.dataSource.fullDataSourceName) List")
+                .accessibilityLabel("\(activeRailItem.dataSource.definition.fullName) List")
         }
     }
     

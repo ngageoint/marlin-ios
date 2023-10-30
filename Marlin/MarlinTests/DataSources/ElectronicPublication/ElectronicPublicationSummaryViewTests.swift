@@ -25,7 +25,7 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
 
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
@@ -93,9 +93,12 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         epub.fullFilename = "UpdatedPub110bk.pdf"
         epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+
         let summary = epub.summary
             .setShowMoreDetails(false)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -133,9 +136,12 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
         epub.isDownloaded = false
 
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+
         let summary = epub.summary
             .setShowMoreDetails(false)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -202,9 +208,12 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
         epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
         epub.isDownloaded = false
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+
         let summary = epub.summary
             .setShowMoreDetails(false)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -266,9 +275,12 @@ final class ElectronicPublicationSummaryViewTests: XCTestCase {
             return
         }
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let summary = epub.summary
             .setShowMoreDetails(false)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

@@ -7,8 +7,18 @@
 
 import Foundation
 import UIKit
+import CoreLocation
 
 extension DFRS: MapImage {
+    var coordinate: CLLocationCoordinate2D {
+        if txPosition != nil {
+            return txCoordinate
+        } else if rxPosition != nil {
+            return rxCoordinate
+        }
+        return kCLLocationCoordinate2DInvalid
+    }
+    
     static var cacheTiles: Bool = true
 
     func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {

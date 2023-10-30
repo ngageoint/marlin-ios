@@ -10,7 +10,11 @@ import UIKit
 import CoreData
 
 extension Port: Bookmarkable {
-    var itemKey: String? {
+    var canBookmark: Bool {
+        return true
+    }
+    
+    var itemKey: String {
         return "\(portNumber)"
     }
     
@@ -26,7 +30,8 @@ extension Port: Bookmarkable {
     }
 }
 
-extension Port: DataSourceLocation, GeoPackageExportable {
+extension Port: Locatable, GeoPackageExportable, GeoJSONExportable {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.port.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }
@@ -204,10 +209,10 @@ extension Port: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(Port.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(Port.self)
+        return UserDefaults.standard.dataSourceEnabled(Port.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(Port.definition)
     }
     
-    static func newBatchInsertRequest(with propertyList: [PortProperties]) -> NSBatchInsertRequest {
+    static func newBatchInsertRequest(with propertyList: [PortModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
         
@@ -228,7 +233,7 @@ extension Port: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [PortProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(from propertiesList: [PortModel], taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

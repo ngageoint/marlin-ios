@@ -20,7 +20,7 @@ final class MarlinBottomSheetTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -50,7 +50,7 @@ final class MarlinBottomSheetTests: XCTestCase {
                 Text("stack")
             }
             .sheet(isPresented: $show) {
-                MarlinBottomSheet(itemList: bottomSheetItemList)
+                MarlinBottomSheet(itemList: bottomSheetItemList, focusNotification: .FocusMapOnItem)
             }
             .onAppear {
                 self.bottomSheetItemList.bottomSheetItems = bottomSheetItems
@@ -79,7 +79,12 @@ final class MarlinBottomSheetTests: XCTestCase {
         
         let bottomSheetItem = BottomSheetItem(item: newItem, zoom: false)
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem])
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
@@ -91,7 +96,7 @@ final class MarlinBottomSheetTests: XCTestCase {
                     object: nil) { notification in
             
             let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let asam = try! XCTUnwrap(vds.dataSource as? Asam)
+            let asam = try! XCTUnwrap(vds.dataSource as? AsamModel)
             XCTAssertEqual(asam.hostility, "Boarding")
             XCTAssertEqual(asam.victim, "Boat")
             return true
@@ -133,7 +138,14 @@ final class MarlinBottomSheetTests: XCTestCase {
         
         let bottomSheetItem2 = BottomSheetItem(item: newItem2, zoom: false)
         
+        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        let moduRepository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        
         let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem, bottomSheetItem2])
+            .environmentObject(repository)
+            .environmentObject(moduRepository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
@@ -144,7 +156,7 @@ final class MarlinBottomSheetTests: XCTestCase {
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
             let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let asam = try! XCTUnwrap(vds.dataSource as? Asam)
+            let asam = try! XCTUnwrap(vds.dataSource as? AsamModel)
             XCTAssertEqual(asam.hostility, "Boarding")
             XCTAssertEqual(asam.victim, "Boat")
             return true
@@ -160,7 +172,7 @@ final class MarlinBottomSheetTests: XCTestCase {
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
             let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let modu = try! XCTUnwrap(vds.dataSource as? Modu)
+            let modu = try! XCTUnwrap(vds.dataSource as? ModuModel)
             XCTAssertEqual(modu.name, "name")
             XCTAssertEqual(modu.rigStatus, "Inactive")
             return true
@@ -176,7 +188,7 @@ final class MarlinBottomSheetTests: XCTestCase {
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
             let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let asam = try! XCTUnwrap(vds.dataSource as? Asam)
+            let asam = try! XCTUnwrap(vds.dataSource as? AsamModel)
             XCTAssertEqual(asam.hostility, "Boarding")
             XCTAssertEqual(asam.victim, "Boat")
             return true

@@ -14,7 +14,25 @@ extension Modu: DataSourceViewBuilder {
     }
     
     var detailView: AnyView {
-        AnyView(ModuDetailView(modu: self))
+        if let name = self.name {
+            return AnyView(ModuDetailView(name: name))
+        } else {
+            return AnyView(EmptyView())
+        }
+    }
+    
+    var summary: some DataSourceSummaryView {
+        ModuSummaryView(modu: ModuModel(modu: self))
+    }
+}
+
+extension ModuModel: DataSourceViewBuilder {
+    var detailView: AnyView {
+        if let name = self.name {
+            return AnyView(ModuDetailView(name: name))
+        } else {
+            return AnyView(EmptyView())
+        }
     }
     
     var summary: some DataSourceSummaryView {

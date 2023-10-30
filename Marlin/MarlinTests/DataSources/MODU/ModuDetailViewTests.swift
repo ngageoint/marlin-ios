@@ -20,7 +20,7 @@ final class ModuDetailViewTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -63,7 +63,12 @@ final class ModuDetailViewTests: XCTestCase {
             return
         }
 
+        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let detailView = newItem.detailView.environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()
@@ -88,7 +93,7 @@ final class ModuDetailViewTests: XCTestCase {
         expectation(forNotification: .MapItemsTapped, object: nil) { notification in
             
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let modu = tapNotification.items as! [Modu]
+            let modu = tapNotification.items as! [ModuModel]
             XCTAssertEqual(modu.count, 1)
             XCTAssertEqual(modu[0].name, "ABAN II")
             return true
@@ -100,8 +105,8 @@ final class ModuDetailViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
         
-        tester().waitForTappableView(withAccessibilityLabel: "Close")
-        tester().tapView(withAccessibilityLabel: "Close")
+        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
+        tester().tapView(withAccessibilityLabel: "dismiss popup")
         
         tester().waitForView(withAccessibilityLabel: newItem.rigStatus)
         tester().waitForView(withAccessibilityLabel: newItem.specialStatus)

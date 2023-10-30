@@ -20,7 +20,7 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -62,9 +62,12 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         nw.subregion = "subregion"
         nw.text = "text of the warning"
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+
         let summary = nw.summary
             .setShowMoreDetails(false)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -77,8 +80,8 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
         
-        tester().waitForTappableView(withAccessibilityLabel: "Close")
-        tester().tapView(withAccessibilityLabel: "Close")
+        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
+        tester().tapView(withAccessibilityLabel: "dismiss popup")
         
         BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: nw)
 

@@ -69,7 +69,7 @@ final class OnboardingViewTests: XCTestCase {
         let passThrough = PassThrough()
         UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
         let dataSourceList: DataSourceList = DataSourceList()
-        XCTAssertEqual(dataSourceList.tabItems.count, 11)
+        XCTAssertEqual(dataSourceList.tabItems.count, 12)
         
         let container = Container(passThrough: passThrough, userNotificationCenter: mockUserNotificationCenter)
             .environmentObject(locationManager)
@@ -94,36 +94,36 @@ final class OnboardingViewTests: XCTestCase {
         
         tester().waitForView(withAccessibilityLabel: "Marlin Tabs")
         for tab in dataSourceList.allTabs {
-            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullDataSourceName) Tab")
+            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.definition.fullName) Tab")
         }
         
         XCTAssertEqual(dataSourceList.tabs.count, initialTabs)
         for tab in dataSourceList.tabs {
             // verify they are checked
-            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullDataSourceName) Tab On")
+            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.definition.fullName) Tab On")
         }
         
         for nontab in dataSourceList.nonTabs {
             // verify they are not checked
-            tester().waitForView(withAccessibilityLabel: "\(nontab.dataSource.fullDataSourceName) Tab Off")
+            tester().waitForView(withAccessibilityLabel: "\(nontab.dataSource.definition.fullName) Tab Off")
         }
         
-        let firstNonTab = dataSourceList.nonTabs[0].dataSource.fullDataSourceName
+        let firstNonTab = dataSourceList.nonTabs[0].dataSource.definition.fullName
         tester().tapView(withAccessibilityLabel: "\(firstNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(firstNonTab) Tab On")
         XCTAssertEqual(dataSourceList.tabs.count, initialTabs + 1)
         
-        let secondNonTab = dataSourceList.nonTabs[0].dataSource.fullDataSourceName
+        let secondNonTab = dataSourceList.nonTabs[0].dataSource.definition.fullName
         tester().tapView(withAccessibilityLabel: "\(secondNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(secondNonTab) Tab On")
         XCTAssertEqual(dataSourceList.tabs.count, initialTabs + 2)
         
-        let thirdNonTab = dataSourceList.nonTabs[0].dataSource.fullDataSourceName
+        let thirdNonTab = dataSourceList.nonTabs[0].dataSource.definition.fullName
         tester().tapView(withAccessibilityLabel: "\(thirdNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(thirdNonTab) Tab On")
         XCTAssertEqual(dataSourceList.tabs.count, DataSourceList.MAX_TABS)
         
-        let fourthNonTab = dataSourceList.nonTabs[0].dataSource.fullDataSourceName
+        let fourthNonTab = dataSourceList.nonTabs[0].dataSource.definition.fullName
         tester().tapView(withAccessibilityLabel: "\(fourthNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(fourthNonTab) Tab On")
         XCTAssertEqual(dataSourceList.tabs.count, DataSourceList.MAX_TABS)
@@ -132,41 +132,41 @@ final class OnboardingViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Next")
         
         // order should match the order the user chose
-        XCTAssertEqual(dataSourceList.tabs[0].dataSource.fullDataSourceName, firstNonTab)
-        XCTAssertEqual(dataSourceList.tabs[1].dataSource.fullDataSourceName, secondNonTab)
-        XCTAssertEqual(dataSourceList.tabs[2].dataSource.fullDataSourceName, thirdNonTab)
-        XCTAssertEqual(dataSourceList.tabs[3].dataSource.fullDataSourceName, fourthNonTab)
+        XCTAssertEqual(dataSourceList.tabs[0].dataSource.definition.fullName, firstNonTab)
+        XCTAssertEqual(dataSourceList.tabs[1].dataSource.definition.fullName, secondNonTab)
+        XCTAssertEqual(dataSourceList.tabs[2].dataSource.definition.fullName, thirdNonTab)
+        XCTAssertEqual(dataSourceList.tabs[3].dataSource.definition.fullName, fourthNonTab)
         
         
         tester().waitForView(withAccessibilityLabel: "Marlin Map")
         for tab in dataSourceList.allTabs.filter({ item in
-            item.dataSource.isMappable
+            item.dataSource.definition.mappable
         }) {
-            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullDataSourceName) Map")
+            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.definition.fullName) Map")
         }
         
         for mapped in dataSourceList.mappedDataSources {
             // verify they are checked
-            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.fullDataSourceName) Map On")
+            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map On")
             // flip em
-            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.fullDataSourceName) Map On")
-            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.fullDataSourceName) Map Off")
+            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map On")
+            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map Off")
             // flip it back
-            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.fullDataSourceName) Map Off")
-            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.fullDataSourceName) Map On")
+            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map Off")
+            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map On")
         }
         
         for nonmapped in dataSourceList.allTabs.filter({ item in
-            !item.showOnMap && item.dataSource.isMappable
+            !item.showOnMap && item.dataSource.definition.mappable
         }) {
             // verify they are not checked
-            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.fullDataSourceName) Map Off")
+            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map Off")
             // flip it
-            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.fullDataSourceName) Map Off")
-            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.fullDataSourceName) Map On")
+            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map Off")
+            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map On")
             // flip it back
-            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.fullDataSourceName) Map On")
-            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.fullDataSourceName) Map Off")
+            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map On")
+            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map Off")
         }
         
         tester().waitForView(withAccessibilityLabel: "Take Me To Marlin")
@@ -261,36 +261,36 @@ final class OnboardingViewTests: XCTestCase {
         
         tester().waitForView(withAccessibilityLabel: "Marlin Tabs")
         for tab in passThrough.dataSourceListAll! {
-            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullDataSourceName) Tab")
+            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.definition.fullName) Tab")
         }
         
         XCTAssertEqual(passThrough.dataSourceListTabs!.count, initialTabs)
         for tab in passThrough.dataSourceListTabs! {
             // verify they are checked
-            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullDataSourceName) Tab On")
+            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.definition.fullName) Tab On")
         }
         
         for nontab in passThrough.dataSourceListNonTabs! {
             // verify they are not checked
-            tester().waitForView(withAccessibilityLabel: "\(nontab.dataSource.fullDataSourceName) Tab Off")
+            tester().waitForView(withAccessibilityLabel: "\(nontab.dataSource.definition.fullName) Tab Off")
         }
         
-        let firstNonTab = passThrough.dataSourceListNonTabs![0].dataSource.fullDataSourceName
+        let firstNonTab = passThrough.dataSourceListNonTabs![0].dataSource.definition.fullName
         tester().tapView(withAccessibilityLabel: "\(firstNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(firstNonTab) Tab On")
         XCTAssertEqual(passThrough.dataSourceListTabs!.count, initialTabs + 1)
         
-        let secondNonTab = passThrough.dataSourceListNonTabs![0].dataSource.fullDataSourceName
+        let secondNonTab = passThrough.dataSourceListNonTabs![0].dataSource.definition.fullName
         tester().tapView(withAccessibilityLabel: "\(secondNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(secondNonTab) Tab On")
         XCTAssertEqual(passThrough.dataSourceListTabs!.count, initialTabs + 2)
         
-        let thirdNonTab = passThrough.dataSourceListNonTabs![0].dataSource.fullDataSourceName
+        let thirdNonTab = passThrough.dataSourceListNonTabs![0].dataSource.definition.fullName
         tester().tapView(withAccessibilityLabel: "\(thirdNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(thirdNonTab) Tab On")
         XCTAssertEqual(passThrough.dataSourceListTabs!.count, DataSourceList.MAX_TABS)
         
-        let fourthNonTab = passThrough.dataSourceListNonTabs![0].dataSource.fullDataSourceName
+        let fourthNonTab = passThrough.dataSourceListNonTabs![0].dataSource.definition.fullName
         tester().tapView(withAccessibilityLabel: "\(fourthNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(fourthNonTab) Tab On")
         XCTAssertEqual(passThrough.dataSourceListTabs!.count, DataSourceList.MAX_TABS)
@@ -299,41 +299,41 @@ final class OnboardingViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Next")
         
         // order should match the order the user chose
-        XCTAssertEqual(passThrough.dataSourceListTabs![0].dataSource.fullDataSourceName, firstNonTab)
-        XCTAssertEqual(passThrough.dataSourceListTabs![1].dataSource.fullDataSourceName, secondNonTab)
-        XCTAssertEqual(passThrough.dataSourceListTabs![2].dataSource.fullDataSourceName, thirdNonTab)
-        XCTAssertEqual(passThrough.dataSourceListTabs![3].dataSource.fullDataSourceName, fourthNonTab)
+        XCTAssertEqual(passThrough.dataSourceListTabs![0].dataSource.definition.fullName, firstNonTab)
+        XCTAssertEqual(passThrough.dataSourceListTabs![1].dataSource.definition.fullName, secondNonTab)
+        XCTAssertEqual(passThrough.dataSourceListTabs![2].dataSource.definition.fullName, thirdNonTab)
+        XCTAssertEqual(passThrough.dataSourceListTabs![3].dataSource.definition.fullName, fourthNonTab)
         
         
         tester().waitForView(withAccessibilityLabel: "Marlin Map")
         for tab in passThrough.dataSourceListAll!.filter({ item in
-            item.dataSource.isMappable
+            item.dataSource.definition.mappable
         }) {
-            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullDataSourceName) Map")
+            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.definition.fullName) Map")
         }
         
         for mapped in passThrough.dataSourceMapped! {
             // verify they are checked
-            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.fullDataSourceName) Map On")
+            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map On")
             // flip em
-            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.fullDataSourceName) Map On")
-            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.fullDataSourceName) Map Off")
+            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map On")
+            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map Off")
             // flip it back
-            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.fullDataSourceName) Map Off")
-            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.fullDataSourceName) Map On")
+            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map Off")
+            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map On")
         }
         
         for nonmapped in passThrough.dataSourceListAll!.filter({ item in
-            !item.showOnMap && item.dataSource.isMappable
+            !item.showOnMap && item.dataSource.definition.mappable
         }) {
             // verify they are not checked
-            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.fullDataSourceName) Map Off")
+            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map Off")
             // flip it
-            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.fullDataSourceName) Map Off")
-            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.fullDataSourceName) Map On")
+            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map Off")
+            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map On")
             // flip it back
-            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.fullDataSourceName) Map On")
-            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.fullDataSourceName) Map Off")
+            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map On")
+            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map Off")
         }
         
         tester().waitForView(withAccessibilityLabel: "Take Me To Marlin")

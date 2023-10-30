@@ -23,9 +23,9 @@ struct DataSourceGridSquare: View {
                     .frame(width: gridSize / 2, height: gridSize / 2)
                     .clipShape(Circle())
                     .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                        .background(Circle().fill(Color(uiColor: dataSource.color))))
+                        .background(Circle().fill(Color(uiColor: dataSource.definition.color))))
             }
-            Text(dataSource.dataSourceName)
+            Text(dataSource.definition.name)
                 .foregroundColor(Color.onPrimaryColor)
         }
         .frame(width: gridSize, height: gridSize)

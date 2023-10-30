@@ -11,7 +11,7 @@ import OSLog
 import MapKit
 import SwiftUI
 
-class Modu: NSManagedObject, EnlargableAnnotation {
+class Modu: NSManagedObject {
     var clusteringIdentifierWhenShrunk: String? = "msi"
     var enlarged: Bool = false
     

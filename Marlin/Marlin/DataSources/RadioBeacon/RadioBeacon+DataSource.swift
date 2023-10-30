@@ -10,7 +10,11 @@ import UIKit
 import CoreData
 
 extension RadioBeacon: Bookmarkable {
-    var itemKey: String? {
+    var canBookmark: Bool {
+        return true
+    }
+    
+    var itemKey: String {
         return "\(featureNumber)--\(volumeNumber ?? "")"
     }
     
@@ -30,7 +34,8 @@ extension RadioBeacon: Bookmarkable {
     }
 }
 
-extension RadioBeacon: DataSourceLocation, GeoPackageExportable {
+extension RadioBeacon: Locatable, GeoPackageExportable, GeoJSONExportable {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.radioBeacon.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }
@@ -114,10 +119,10 @@ extension RadioBeacon: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(RadioBeacon.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(RadioBeacon.self)
+        return UserDefaults.standard.dataSourceEnabled(RadioBeacon.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(RadioBeacon.definition)
     }
     
-    static func newBatchInsertRequest(with propertyList: [RadioBeaconProperties]) -> NSBatchInsertRequest {
+    static func newBatchInsertRequest(with propertyList: [RadioBeaconModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
         NSLog("Creating batch insert request of radio beacons for \(total) radio beacons")
@@ -173,8 +178,7 @@ extension RadioBeacon: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [RadioBeaconProperties], taskContext: NSManagedObjectContext) async throws -> Int {
-        NSLog("Importing the records \(propertiesList.count)")
+    static func importRecords(from propertiesList: [RadioBeaconModel], taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

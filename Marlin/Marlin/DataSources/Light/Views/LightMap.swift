@@ -10,7 +10,7 @@ import MapKit
 import CoreData
 import Combine
 
-class LightMap<T: LightProtocol & MapImage>: FetchRequestMap<T> {
+class LightMap<T: MapImage>: FetchRequestMap<T> {
     var userDefaultsShowLightRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
     var userDefaultsShowLightSectorRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
 
@@ -24,8 +24,8 @@ class LightMap<T: LightProtocol & MapImage>: FetchRequestMap<T> {
         self.userDefaultsShowLightSectorRangesPublisher = UserDefaults.standard.publisher(for: \.actualRangeSectorLights)
     }
     
-    override func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
-        super.setupMixin(marlinMap: marlinMap, mapView: mapView)
+    override func setupMixin(mapState: MapState, mapView: MKMapView) {
+        super.setupMixin(mapState: mapState, mapView: mapView)
         
         userDefaultsShowLightRangesPublisher?
             .dropFirst()
@@ -35,7 +35,7 @@ class LightMap<T: LightProtocol & MapImage>: FetchRequestMap<T> {
             })
             .sink() { [weak self] _ in
                 self?.imageCache.clearCache(completion: {
-                    self?.refreshOverlay(marlinMap: marlinMap)
+                    self?.refreshOverlay(mapState: mapState)
                 })
             }
             .store(in: &cancellable)
@@ -48,7 +48,7 @@ class LightMap<T: LightProtocol & MapImage>: FetchRequestMap<T> {
             })
             .sink() { [weak self] _ in
                 self?.imageCache.clearCache(completion: {
-                    self?.refreshOverlay(marlinMap: marlinMap)
+                    self?.refreshOverlay(mapState: mapState)
                 })
             }
             .store(in: &cancellable)

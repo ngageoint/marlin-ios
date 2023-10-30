@@ -7,8 +7,13 @@
 
 import Foundation
 import UIKit
+import CoreLocation
 
 extension RadioBeacon: MapImage {
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    
     static var cacheTiles: Bool = true
     
     func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {

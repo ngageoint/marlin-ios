@@ -13,7 +13,7 @@ class SortViewModel: ObservableObject {
     
     @Published var sort: [DataSourceSortParameter] {
         didSet {
-            UserDefaults.standard.setSort(dataSource.key, sort: sort)
+            UserDefaults.standard.setSort(dataSource.definition.key, sort: sort)
         }
     }
     
@@ -30,7 +30,7 @@ class SortViewModel: ObservableObject {
     init(dataSource: any DataSource.Type) {
         self.dataSource = dataSource
         self.dataSourceProperties = dataSource.properties
-        let userSort = UserDefaults.standard.sort(dataSource.key)
+        let userSort = UserDefaults.standard.sort(dataSource.definition.key)
         if userSort.isEmpty {
             self.sort = dataSource.defaultSort
             if !dataSource.defaultSort.isEmpty {

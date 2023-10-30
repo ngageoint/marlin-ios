@@ -20,7 +20,7 @@ final class PortSummaryViewTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -163,12 +163,17 @@ final class PortSummaryViewTests: XCTestCase {
             return
         }
         
+        let repository = PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         let summary = port.summary
             .setShowMoreDetails(false)
             .environmentObject(mockLocationManager as LocationManager)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -194,7 +199,7 @@ final class PortSummaryViewTests: XCTestCase {
         expectation(forNotification: .MapItemsTapped, object: nil) { notification in
             
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let port = tapNotification.items as! [Marlin.Port]
+            let port = tapNotification.items as! [PortModel]
             XCTAssertEqual(port.count, 1)
             XCTAssertEqual(port[0].portName, "Aasiaat")
             return true
@@ -208,8 +213,8 @@ final class PortSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
         
-        tester().waitForTappableView(withAccessibilityLabel: "Close")
-        tester().tapView(withAccessibilityLabel: "Close")
+        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
+        tester().tapView(withAccessibilityLabel: "dismiss popup")
     }
     
     func testShowMoreDetails() {
@@ -327,12 +332,17 @@ final class PortSummaryViewTests: XCTestCase {
         port.latitude = 1.0
         port.longitude = 2.0
         
+        let repository = PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         let summary = port.summary
             .setShowMoreDetails(true)
             .environmentObject(mockLocationManager as LocationManager)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -342,7 +352,7 @@ final class PortSummaryViewTests: XCTestCase {
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
             let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let port = try! XCTUnwrap(vds.dataSource as? Marlin.Port)
+            let port = try! XCTUnwrap(vds.dataSource as? PortModel)
             XCTAssertEqual(port.portName, "Aasiaat")
             return true
         }

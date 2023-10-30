@@ -22,7 +22,7 @@ final class NoticeToMarinersFullNoticeViewTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -270,7 +270,10 @@ final class NoticeToMarinersFullNoticeViewTests: XCTestCase {
             HTTPStubsResponse(data: TestHelpers.createGradientImage(startColor: UIColor(Color.ngaGreen), endColor: UIColor(Color.ngaBlue), size: CGSize(width: 50, height: 50)).jpegData(compressionQuality: 0.8)!, statusCode: 200, headers: ["Content-Type":"image/jpeg"])
         }
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let detailView = newItem.detailView.environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()

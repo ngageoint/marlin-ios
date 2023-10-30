@@ -94,7 +94,10 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
         return stringValue
     }
     
-    func toPredicate(dataSource: any DataSource.Type) -> NSPredicate? {
+    func toPredicate(dataSource: Filterable?) -> NSPredicate? {
+        guard let dataSource = dataSource else {
+            return nil
+        }
         var propertyAndComparison: String = "\(property.key) \(comparison.coreDataComparison())"
         if let subEntityKey = property.subEntityKey {
             propertyAndComparison = "ANY \(property.key).\(subEntityKey) \(comparison.coreDataComparison())"
@@ -160,10 +163,10 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
                 guard let bounds = valueBounds else {
                     return nil
                 }
-                if let dataSource = dataSource as? DataSourceLocation {
-                    return type(of: dataSource).getBoundingPredicate(minLat: bounds.swCorner.y, maxLat: bounds.neCorner.y, minLon: bounds.swCorner.x, maxLon: bounds.neCorner.x)
+                if let dataSource = dataSource.locatableClass {
+                    return dataSource.getBoundingPredicate(minLat: bounds.swCorner.y, maxLat: bounds.neCorner.y, minLon: bounds.swCorner.x, maxLon: bounds.neCorner.x)
                 }
-                return NSPredicate(format: "latitude <= %f AND latitude >= %f AND longitude <= %f AND longitude >= %f", bounds.neCorner.y, bounds.swCorner.y, bounds.neCorner.x, bounds.swCorner.x)
+                return nil
             }
             var centralLongitude: Double?
             var centralLatitude: Double?
@@ -191,10 +194,10 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
                 let southWest = SFGeometryUtils.metersToDegreesWith(x: x - metersDistance, andY: y - metersDistance)
                 let northEast = SFGeometryUtils.metersToDegreesWith(x: x + metersDistance, andY: y + metersDistance)
                 if let southWest = southWest, let northEast = northEast, let maxy = northEast.y, let miny = southWest.y, let minx = southWest.x, let maxx = northEast.x {
-                    if let dataSource = dataSource as? DataSourceLocation {
-                        return type(of: dataSource).getBoundingPredicate(minLat: miny.doubleValue, maxLat: maxy.doubleValue, minLon: minx.doubleValue, maxLon: maxx.doubleValue)
+                    if let dataSource = dataSource as? Locatable.Type {
+                        return dataSource.getBoundingPredicate(minLat: miny.doubleValue, maxLat: maxy.doubleValue, minLon: minx.doubleValue, maxLon: maxx.doubleValue)
                     }
-                    return NSPredicate(format: "latitude <= %f AND latitude >= %f AND longitude <= %f AND longitude >= %f", maxy.floatValue, miny.floatValue, maxx.floatValue, minx.floatValue)
+                    return nil
                 }
             }
         }

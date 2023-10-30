@@ -10,7 +10,7 @@ import SwiftUI
 import MapKit
 
 struct DataSourceLocationMapView: View {
-    var dataSourceLocation: any DataSourceLocation
+    var dataSourceLocation: any Locatable
     @StateObject var mapState: MapState = MapState()
     @StateObject private var mapMixins: MapMixins = MapMixins()
     var mapName: String

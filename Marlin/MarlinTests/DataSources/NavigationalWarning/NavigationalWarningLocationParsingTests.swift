@@ -21,7 +21,7 @@ final class NavigationalWarningLocationParsingTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -183,6 +183,31 @@ final class NavigationalWarningLocationParsingTests: XCTestCase {
         
 //        let parser20 = NAVTEXTextParser(text: "LANCASTER SOUND.\nCANADA.\nDNC 28.\nSCIENTIFIC MOORINGS ESTABLISHED:\nA. 74-36.37N 091-15.05W, TOP FLOAT 147 METERS.\nB. 74-36.27N 091-15.73W, TOP FLOAT 59 METERS.\nC. 74-36.24N 091-15.17W, TOP FLOAT 44 METERS.\nD. 74-04.85N 090-01.25W, TOP FLOAT 32 METERS.\nE. 74-12.57N 090-49.64W, TOP FLOAT 246 METERS.\nF. 74-11.87N 090-49.04W, TOP FLOAT 26 METERS.\nG. 74-35.73N 091-08.05W, TOP FLOAT 72 METERS.\nH. 74-12.67N 090-46.24W, TOP FLOAT 61 METERS.\nI. 74-11.89N 090-46.29W, TOP FLOAT 36 METERS.\n")
 //        print("\(parser20.parseToMappedLocation())\n\n")
+    }
+    
+    func testPointAndPolygon() {
+        let text = "1. UNDERWATER OPERATIONS IN PROGRESS UNTIL\n" +
+        "   FURTHER NOTICE:\n" +
+        "   A. IN AREA BOUND BY\n" +
+        "      20-26.10S 057-43.1E0, 20-25.10S 057-44.00E,\n" +
+        "      20-24.00S 057-45.50E.\n" +
+        "   B. IN VICINITY 20-26.60S 057-44.60E.\n" +
+        "   TWO MILE BERTH REQUESTED.\n" +
+        "2. CANCEL HYDROPAC 536/23.\n"
+        let parser = NAVTEXTextParser(text: text)
+        let mapped = parser.parseToMappedLocation()
+        XCTAssertEqual(2, mapped?.locations.count)
+        let location1: LocationWithType = mapped!.locations.first!
+        XCTAssertEqual(location1.locationType, "Polygon")
+        XCTAssertEqual(location1.location.count, 3)
+        XCTAssertEqual(location1.location[0], "20-26.10S 057-43.1E")
+        XCTAssertEqual(location1.location[1], "20-25.10S 057-44.00E")
+        XCTAssertEqual(location1.location[2], "20-24.00S 057-45.50E")
+        let location2 = mapped!.locations.last!
+        XCTAssertEqual(location2.locationType, "Point")
+        XCTAssertEqual(location2.location.count, 1)
+        XCTAssertEqual(location2.location[0], "20-26.60S 057-44.60E")
+        XCTAssertEqual(location2.distanceFromLocation, "TWO MILE BERTH")
     }
     
     func testGetHeadingAndSections() {

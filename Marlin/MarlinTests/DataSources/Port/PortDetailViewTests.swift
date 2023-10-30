@@ -20,7 +20,7 @@ final class PortDetailViewTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -165,8 +165,13 @@ final class PortDetailViewTests: XCTestCase {
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         
+        let repository = PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+
         let detailView = newItem.detailView.environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(mockLocationManager as LocationManager)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
 
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()
@@ -192,7 +197,7 @@ final class PortDetailViewTests: XCTestCase {
         expectation(forNotification: .MapItemsTapped, object: nil) { notification in
             
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let port = tapNotification.items as! [Marlin.Port]
+            let port = tapNotification.items as! [PortModel]
             XCTAssertEqual(port.count, 1)
             XCTAssertEqual(port[0].portNumber, 760)
             return true
@@ -204,8 +209,8 @@ final class PortDetailViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
         
-        tester().waitForTappableView(withAccessibilityLabel: "Close")
-        tester().tapView(withAccessibilityLabel: "Close")
+        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
+        tester().tapView(withAccessibilityLabel: "dismiss popup")
         
         // name and location
         tester().waitForView(withAccessibilityLabel: "World Port Index Number")

@@ -10,7 +10,11 @@ import UIKit
 import CoreData
 
 extension DifferentialGPSStation: Bookmarkable {
-    var itemKey: String? {
+    var canBookmark: Bool {
+        return true
+    }
+    
+    var itemKey: String {
         return "\(featureNumber)--\(volumeNumber ?? "")"
     }
     
@@ -30,8 +34,8 @@ extension DifferentialGPSStation: Bookmarkable {
     }
 }
 
-extension DifferentialGPSStation: DataSourceLocation, GeoPackageExportable {
-
+extension DifferentialGPSStation: Locatable, GeoPackageExportable, GeoJSONExportable {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.dgps.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }
@@ -114,10 +118,10 @@ extension DifferentialGPSStation: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(DifferentialGPSStation.self)
+        return UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(DifferentialGPSStation.definition)
     }
     
-    static func newBatchInsertRequest(with propertyList: [DifferentialGPSStationProperties]) -> NSBatchInsertRequest {
+    static func newBatchInsertRequest(with propertyList: [DifferentialGPSStationModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
         NSLog("Creating batch insert request of Differential GPS Stations for \(total) Differential GPS Stations")
@@ -169,7 +173,7 @@ extension DifferentialGPSStation: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [DifferentialGPSStationProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(from propertiesList: [DifferentialGPSStationModel], taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

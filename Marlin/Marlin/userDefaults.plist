@@ -20,6 +20,8 @@
 	<true/>
 	<key>showOnMapnavWarning</key>
 	<true/>
+	<key>showOnMaproute</key>
+	<true/>
 	<key>asamOrder</key>
 	<integer>0</integer>
 	<key>moduOrder</key>
@@ -37,11 +39,13 @@
 	<key>epubOrder</key>
 	<integer>8</integer>
 	<key>dfrsOrder</key>
-	<integer>11</integer>
+	<integer>99</integer>
 	<key>ntmOrder</key>
 	<integer>9</integer>
 	<key>bookmarkOrder</key>
 	<string>10</string>
+	<key>routeOrder</key>
+	<string>11</string>
 	<key>userTabs</key>
 	<integer>3</integer>
 	<key>actualRangeLights</key>

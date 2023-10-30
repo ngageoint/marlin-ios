@@ -25,18 +25,18 @@ struct DataSourceTabGrid: View {
     func dataSourceTabSquare(dataSource: any DataSource.Type) -> some View {
         DataSourceGridSquare(dataSource: dataSource)
         .onTapGesture {
-            if isTab(dataSource.key) {
+            if isTab(dataSource.definition.key) {
                 dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: dataSource), position: 0)
             } else {
                 dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: dataSource), position: 0)
             }
         }
-        .overlay(CheckBadge(on: .constant(isTab(dataSource.key)))
+        .overlay(CheckBadge(on: .constant(isTab(dataSource.definition.key)))
             .accessibilityElement()
-            .accessibilityLabel("\(dataSource.fullDataSourceName) Tab \(isTab(dataSource.key) ? "On" : "Off")"))
+            .accessibilityLabel("\(dataSource.definition.fullName) Tab \(isTab(dataSource.definition.key) ? "On" : "Off")"))
         .padding(8)
         .accessibilityElement(children: .contain)
-        .accessibilityLabel("\(dataSource.fullDataSourceName) Tab")
+        .accessibilityLabel("\(dataSource.definition.fullName) Tab")
     }
 
     var body: some View {

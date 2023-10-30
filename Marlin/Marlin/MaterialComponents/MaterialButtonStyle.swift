@@ -28,14 +28,15 @@ enum FloatingButtonSize {
 struct MaterialButtonLabelStyle: LabelStyle {
     
     let color: Color
+    let size: FloatingButtonSize
 
     func makeBody(configuration: Configuration) -> some View {
         HStack {
             configuration.icon
                 .foregroundColor(color)
-                .font(.system(size: 18))
-                .frame(width: 24, height: 24, alignment: .center)
-            configuration.title
+                .font(.system(size: size == .mini ? 18 : 24))
+                .frame(width: size == .mini ? 24 : 36, height: size == .mini ? 24 : 36, alignment: .center)
+                configuration.title
                 .foregroundColor(color)
                 .font(.system(size: 14))
         }
@@ -59,7 +60,7 @@ struct MaterialFloatingButtonStyle: ButtonStyle {
         
         return configuration
             .label
-            .labelStyle(MaterialButtonLabelStyle(color: foregroundColor))
+            .labelStyle(MaterialButtonLabelStyle(color: foregroundColor, size: size))
             .frame(minWidth: finalSize, maxWidth: extended ? .infinity : finalSize, minHeight: finalSize, maxHeight: finalSize)
             .padding([.trailing, .leading], extended ? 16 : 0)
             .font(Font.body2)
@@ -120,7 +121,7 @@ struct MaterialFloatingButtonStyle: ButtonStyle {
 
 struct MaterialButtonStyle: ButtonStyle {
         
-    let cornerRadius: CGFloat = 4.0
+    let cornerRadius: CGFloat = 22.0
     let maxWidth: Bool = false
     let type: ButtonType
     @Environment(\.isEnabled) private var isEnabled: Bool
@@ -139,7 +140,7 @@ struct MaterialButtonStyle: ButtonStyle {
         
         return configuration
             .label
-            .labelStyle(MaterialButtonLabelStyle(color: foregroundColor))
+            .labelStyle(MaterialButtonLabelStyle(color: foregroundColor, size: .mini))
             .frame(minWidth: 44.0, maxWidth: maxWidth ? .infinity : nil, minHeight: 44.0)
             .padding([.trailing, .leading], 8)
             .font(Font.body2)

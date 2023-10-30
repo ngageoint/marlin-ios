@@ -10,16 +10,16 @@ import MapKit
 import CoreData
 import Combine
 
-class AsamMap<T: Asam & MapImage>: FetchRequestMap<T> {
+class AsamMap<T: MapImage>: FetchRequestMap<T> {
     override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
-        super.init(fetchPredicate: fetchPredicate, showAsTiles: showAsTiles)
+        super.init(fetchPredicate: fetchPredicate, objects: objects, showAsTiles: showAsTiles)
         self.sortDescriptors = [NSSortDescriptor(keyPath: \Asam.date, ascending: true)]
         self.focusNotificationName = .FocusAsam
         self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMapasam)
     }
     
-    override func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
-        super.setupMixin(marlinMap: marlinMap, mapView: mapView)
+    override func setupMixin(mapState: MapState, mapView: MKMapView) {
+        super.setupMixin(mapState: mapState, mapView: mapView)
         mapView.register(ImageAnnotationView.self, forAnnotationViewWithReuseIdentifier: Asam.key)
     }
 }

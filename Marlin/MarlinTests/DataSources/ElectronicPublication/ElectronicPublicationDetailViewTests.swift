@@ -20,7 +20,7 @@ final class ElectronicPublicationDetailViewTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -62,8 +62,10 @@ final class ElectronicPublicationDetailViewTests: XCTestCase {
         epub.isDownloaded = false
         epub.isDownloading = true
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         let detailView = epub.detailView
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()

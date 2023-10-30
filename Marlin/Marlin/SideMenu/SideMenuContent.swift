@@ -32,7 +32,7 @@ struct SideMenuContent: View {
                     ForEach(model.dataSourceList.tabs, id: \.self) { dataSource in
                         DataSourceCell(dataSourceItem: dataSource)
                             .accessibilityElement()
-                            .accessibilityLabel("\(dataSource.dataSource.fullDataSourceName) tab cell")
+                            .accessibilityLabel("\(dataSource.dataSource.definition.fullName) tab cell")
                             .overlay(model.validDropTarget && model.draggedItem == dataSource.key ? Color.white.opacity(0.8) : Color.clear)
                             .onDrag {
                                 model.onDrag(dataSource: dataSource)
@@ -68,7 +68,7 @@ struct SideMenuContent: View {
                     ForEach(model.dataSourceList.nonTabs, id: \.self) { dataSource in
                         DataSourceCell(dataSourceItem: dataSource)
                             .accessibilityElement()
-                            .accessibilityLabel("\(dataSource.dataSource.fullDataSourceName) nontab cell")
+                            .accessibilityLabel("\(dataSource.dataSource.definition.fullName) nontab cell")
                             .overlay(model.validDropTarget && model.draggedItem == dataSource.key ? Color.white.opacity(0.8) : Color.clear)
                             .onDrag {
                                 model.onDrag(dataSource: dataSource)

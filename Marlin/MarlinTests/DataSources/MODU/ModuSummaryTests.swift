@@ -20,7 +20,7 @@ final class ModuSummaryTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -52,9 +52,14 @@ final class ModuSummaryTests: XCTestCase {
         modu.region = 6
         modu.subregion = 63
         
+        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let summary = modu.summary
             .setShowMoreDetails(false)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -81,7 +86,7 @@ final class ModuSummaryTests: XCTestCase {
         expectation(forNotification: .MapItemsTapped, object: nil) { notification in
             
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let modu = tapNotification.items as! [Modu]
+            let modu = tapNotification.items as! [ModuModel]
             XCTAssertEqual(modu.count, 1)
             XCTAssertEqual(modu[0].name, "ABAN II")
             return true
@@ -93,8 +98,8 @@ final class ModuSummaryTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
         
-        tester().waitForTappableView(withAccessibilityLabel: "Close")
-        tester().tapView(withAccessibilityLabel: "Close")
+        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
+        tester().tapView(withAccessibilityLabel: "dismiss popup")
         
         BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: modu)
     }
@@ -114,9 +119,14 @@ final class ModuSummaryTests: XCTestCase {
         modu.region = 6
         modu.subregion = 63
         
+        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
         let summary = modu.summary
             .setShowMoreDetails(true)
             .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -126,7 +136,7 @@ final class ModuSummaryTests: XCTestCase {
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
             let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let modu = try! XCTUnwrap(vds.dataSource as? Modu)
+            let modu = try! XCTUnwrap(vds.dataSource as? ModuModel)
             XCTAssertEqual(modu.name, "ABAN II")
             return true
         }

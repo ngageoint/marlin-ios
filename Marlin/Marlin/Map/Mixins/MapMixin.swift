@@ -12,7 +12,7 @@ import geopackage_ios
 
 protocol MapMixin: AnyObject {
     var uuid: UUID { get }
-    func setupMixin(marlinMap: MarlinMap, mapView: MKMapView)
+    func setupMixin(mapState: MapState, mapView: MKMapView)
     func updateMixin(mapView: MKMapView, mapState: MapState)
     func renderer(overlay: MKOverlay) -> MKOverlayRenderer?
     func traitCollectionUpdated(previous: UITraitCollection?)

@@ -24,7 +24,7 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
 
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
@@ -99,14 +99,18 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             var body: some View {
                 NavigationStack(path: $path) {
                     NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
+                        .marlinRoutes(path: $path)
                 }
             }
         }
         let appState = AppState()
         let passThrough = PassThrough(navArea: "4", warnings: warnings)
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -161,6 +165,7 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             var body: some View {
                 NavigationStack(path: $path) {
                     NavigationalWarningsOverview(path: $path, focusedItem: focusedItem)
+                        .marlinRoutes(path: $path)
 
 //                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
                 }
@@ -171,10 +176,13 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+
         let container = Container(passThrough: passThrough)
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(appState)
             .environmentObject(mockLocationManager as LocationManager)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -240,14 +248,18 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             var body: some View {
                 NavigationStack(path: $path) {
                     NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
+                        .marlinRoutes(path: $path)
                 }
             }
         }
         let appState = AppState()
         let passThrough = PassThrough(navArea: "4", warnings: warnings)
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -312,14 +324,18 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             var body: some View {
                 NavigationStack(path: $path) {
                     NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
+                        .marlinRoutes(path: $path)
                 }
             }
         }
         let appState = AppState()
         let passThrough = PassThrough(navArea: "4", warnings: warnings)
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -385,16 +401,20 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             var body: some View {
                 NavigationStack(path: $path) {
                     NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
+                        .marlinRoutes(path: $path)
                 }
             }
         }
         let appState = AppState()
         let passThrough = PassThrough(navArea: "4", warnings: warnings)
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+
         UserDefaults.standard.setValue(warnings[5].primaryKey, forKey: "lastSeen-4")
         
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -461,6 +481,7 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             var body: some View {
                 NavigationStack(path: $path) {
                     NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
+                        .marlinRoutes(path: $path)
                 }
             }
         }
@@ -469,8 +490,11 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         
         UserDefaults.standard.setValue("no", forKey: "lastSeen-4")
         
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
+            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()

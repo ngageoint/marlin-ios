@@ -15,7 +15,11 @@ import geopackage_ios
 import ExceptionCatcher
 
 extension Light: Bookmarkable {
-    var itemKey: String? {
+    var canBookmark: Bool {
+        return true
+    }
+    
+    var itemKey: String {
         return "\(featureNumber ?? "")--\(volumeNumber ?? "")--\(characteristicNumber)"
     }
     
@@ -35,7 +39,8 @@ extension Light: Bookmarkable {
     }
 }
 
-extension Light: DataSourceLocation, GeoPackageExportable {
+extension Light: Locatable, GeoPackageExportable, GeoJSONExportable {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.light.definition
     func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
         var geometryByColor: [UIColor:SFGeometry] = [:]
         if let lightSectors = lightSectors {
@@ -73,6 +78,22 @@ extension Light: DataSourceLocation, GeoPackageExportable {
                 geometryByColor[color] = collection
             }
             
+            return geometryByColor
+        } else if let stringRange = range, let range = Double(stringRange), let lightColors = lightColors {
+            let nauticalMilesMeasurement = NSMeasurement(doubleValue: range, unit: UnitLength.nauticalMiles)
+            let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
+            
+            let circleCoordinates = coordinate.circleCoordinates(radiusMeters: metersMeasurement.value)
+            
+            let ring = SFLineString()
+            for circleCoordinate in circleCoordinates {
+                let point = SFPoint(xValue: circleCoordinate.longitude, andYValue: circleCoordinate.latitude)
+                ring?.addPoint(point)
+            }
+            let poly = SFPolygon(ring: ring)
+            if let poly = poly {
+                geometryByColor[lightColors[0]] = poly
+            }
             return geometryByColor
         }
         return nil
@@ -354,10 +375,10 @@ extension Light: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(Light.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(Light.self)
+        return UserDefaults.standard.dataSourceEnabled(Light.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(Light.definition)
     }
     
-    static func newBatchInsertRequest(with propertyList: [LightsProperties]) -> NSBatchInsertRequest {
+    static func newBatchInsertRequest(with propertyList: [LightModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
         NSLog("Creating batch insert request of lights for \(total) lights")
@@ -421,7 +442,7 @@ extension Light: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [LightsProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(from propertiesList: [LightModel], taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

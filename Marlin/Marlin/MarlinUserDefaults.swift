@@ -88,6 +88,10 @@ extension UserDefaults {
     @objc var showOnMapnavWarning: Bool {
         bool(forKey: "showOnMap\(NavigationalWarning.key)")
     }
+    
+    @objc var showOnMaproute: Bool {
+        bool(forKey: "showOnMap\(Route.key)")
+    }
 
     @objc var mapRegion: MKCoordinateRegion {
         get {
@@ -287,7 +291,7 @@ extension UserDefaults {
         data(forKey: #function)
     }
     
-    func filter(_ dataSource: any DataSource.Type) -> [DataSourceFilterParameter] {
+    func filter(_ dataSource: any DataSourceDefinition) -> [DataSourceFilterParameter] {
         if let data = data(forKey: "\(dataSource.key)Filter") {
             do {
                 // Create JSON Decoder
@@ -301,8 +305,8 @@ extension UserDefaults {
                 print("Unable to Decode Notes (\(error))")
             }
         }
-        
-        return dataSource.defaultFilter
+        return []
+//        return dataSource.defaultFilter
     }
     
     func setFilter(_ key: String, filter: [DataSourceFilterParameter]) {
@@ -438,19 +442,19 @@ extension UserDefaults {
         }
     }
     
-    func dataSourceEnabled(_ dataSource: any DataSource.Type) -> Bool {
+    func dataSourceEnabled(_ dataSource: any DataSourceDefinition) -> Bool {
         bool(forKey: "\(dataSource.key)DataSourceEnabled")
     }
     
-    func lastSyncTimeSeconds(_ dataSource: any DataSource.Type) -> Double {
+    func lastSyncTimeSeconds(_ dataSource: any DataSourceDefinition) -> Double {
         return double(forKey: "\(dataSource.key)LastSyncTime")
     }
     
-    func updateLastSyncTimeSeconds(_ dataSource: any BatchImportable.Type) {
+    func updateLastSyncTimeSeconds(_ dataSource: any DataSourceDefinition) {
         setValue(Date().timeIntervalSince1970, forKey: "\(dataSource.key)LastSyncTime")
     }
     
-    func clearLastSyncTimeSeconds(_ dataSource: any BatchImportable.Type) {
+    func clearLastSyncTimeSeconds(_ dataSource: any DataSourceDefinition) {
         removeObject(forKey: "\(dataSource.key)LastSyncTime")
     }
         

@@ -10,30 +10,18 @@ import Combine
 import CoreData
 
 class FilterViewModel: ObservableObject, Identifiable {
-    var id: String { dataSource.key }
-    var dataSource: any DataSource.Type
-    var commonFilters: [DataSourceFilterParameter]? {
-        didSet {
-            if let fetchRequest = dataSource.fetchRequest(filters: filters, commonFilters: commonFilters) {
-                count = (try? PersistenceController.current.viewContext.count(for: fetchRequest)) ?? 0
-            }
-        }
-    }
-    @Published var filters: [DataSourceFilterParameter] {
-        didSet {
-            if let fetchRequest = dataSource.fetchRequest(filters: filters, commonFilters: commonFilters) {
-                count = (try? PersistenceController.current.viewContext.count(for: fetchRequest)) ?? 0
-            }
-        }
-    }
+    var id: String { dataSource?.definition.key ?? "" }
+    var dataSource: Filterable?
+
+    @Published var filters: [DataSourceFilterParameter]
+
     @Published var selectedProperty: DataSourceProperty?
     @Published var filterParameter: DataSourceFilterParameter?
-    @Published var count: Int = 0
     
     var requiredProperties: [DataSourceProperty] {
-        dataSource.properties.filter({ property in
+        dataSource?.properties.filter({ property in
             property.requiredInFilter
-        })
+        }) ?? []
     }
     var requiredNotSet: [DataSourceProperty] {
         return requiredProperties.filter { property in
@@ -43,15 +31,11 @@ class FilterViewModel: ObservableObject, Identifiable {
         }
     }
     
-    init(dataSource: any DataSource.Type, commonFilters: [DataSourceFilterParameter]? = nil) {
+    init(dataSource: Filterable?) {
         self.dataSource = dataSource
         self.filters = []
-        self.commonFilters = commonFilters
-        if !dataSource.properties.isEmpty {
+        if let dataSource = dataSource, !dataSource.properties.isEmpty {
             selectedProperty = dataSource.properties[0]
-        }
-        if let fetchRequest = dataSource.fetchRequest(filters: filters, commonFilters: commonFilters) {
-            count = (try? PersistenceController.current.viewContext.count(for: fetchRequest)) ?? 0
         }
     }
     
@@ -80,25 +64,30 @@ class FilterViewModel: ObservableObject, Identifiable {
 class PersistedFilterViewModel: FilterViewModel {
     override var filters: [DataSourceFilterParameter] {
         didSet {
-            UserDefaults.standard.setFilter(dataSource.key, filter: filters)
+            if let definition = dataSource?.definition {
+                UserDefaults.standard.setFilter(definition.key, filter: filters)
+            }
         }
     }
     
-    init(dataSource: any DataSource.Type, useDefaultForEmptyFilter: Bool = false, commonFilters: [DataSourceFilterParameter]? = nil) {
-        super.init(dataSource: dataSource, commonFilters: commonFilters)
-        let savedFilter = UserDefaults.standard.filter(dataSource)
-        if useDefaultForEmptyFilter && savedFilter.isEmpty {
-            self.filters = dataSource.defaultFilter
-        } else {
-            self.filters = savedFilter
+    init(dataSource: Filterable?, useDefaultForEmptyFilter: Bool = false) {
+        super.init(dataSource: dataSource)
+        if let dataSource = dataSource {
+            let savedFilter = UserDefaults.standard.filter(dataSource.definition)
+            if useDefaultForEmptyFilter && savedFilter.isEmpty {
+                self.filters = dataSource.defaultFilter
+            } else {
+                self.filters = savedFilter
+            }
         }
-
     }
 }
 
 class TemporaryFilterViewModel: FilterViewModel {
-    init(dataSource: any DataSource.Type, filters: [DataSourceFilterParameter]? = nil, commonFilters: [DataSourceFilterParameter]? = nil) {
-        super.init(dataSource: dataSource, commonFilters: commonFilters)
-        self.filters = filters ?? UserDefaults.standard.filter(dataSource)
+    init(dataSource: Filterable?, filters: [DataSourceFilterParameter]? = nil) {
+        super.init(dataSource: dataSource)
+        if let definition = dataSource?.definition {
+            self.filters = filters ?? UserDefaults.standard.filter(definition)
+        }
     }
 }

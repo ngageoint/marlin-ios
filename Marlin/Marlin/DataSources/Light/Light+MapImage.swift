@@ -10,6 +10,9 @@ import UIKit
 import CoreLocation
 
 extension Light: MapImage {
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
         
     static var cacheTiles: Bool = true
     
@@ -21,7 +24,7 @@ extension Light: MapImage {
             if lightSectors.contains(where: { sector in
                 sector.range == nil
             }) {
-                images.append(contentsOf: LightImage.image(light: self, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857))
+                images.append(contentsOf: LightImage.image(light: LightModel(light: self), zoomLevel: zoomLevel, tileBounds3857: tileBounds3857))
             } else {
                 
                 if context == nil {
@@ -41,7 +44,7 @@ extension Light: MapImage {
                 actualSizeNonSectorLight(lightColors: lightColors, range: range, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context)
             }
         } else {
-            images.append(contentsOf: LightImage.image(light: self, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857))
+            images.append(contentsOf: LightImage.image(light: LightModel(light: self), zoomLevel: zoomLevel, tileBounds3857: tileBounds3857))
         }
         
         return images

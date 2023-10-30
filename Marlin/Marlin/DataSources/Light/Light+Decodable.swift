@@ -14,18 +14,16 @@ struct LightsPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
         case ngalol
     }
-    let ngalol: [LightsProperties]
+    let ngalol: [LightModel]
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        ngalol = try container.decode([Throwable<LightsProperties>].self, forKey: .ngalol).compactMap { try? $0.result.get() }
+        ngalol = try container.decode([Throwable<LightModel>].self, forKey: .ngalol).compactMap { try? $0.result.get() }
     }
 }
 
-struct LightsProperties: Decodable {
-    
-    // MARK: Codable
-    
+struct LightsProperties: Codable {
+        
     private enum CodingKeys: String, CodingKey {
         case volumeNumber
         case aidType
@@ -49,6 +47,7 @@ struct LightsProperties: Decodable {
         case deleteFlag
         case noticeWeek
         case noticeYear
+        case sectionHeader
     }
     
     let aidType: String?
@@ -79,6 +78,39 @@ struct LightsProperties: Decodable {
     let longitude: Double
     let mgrs10km: String?
     let requiresPostProcessing: Bool?
+    let sectionHeader: String?
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try? container.encode(aidType, forKey: .aidType)
+        try? container.encode(characteristic, forKey: .characteristic)
+        try? container.encode(characteristicNumber, forKey: .charNo)
+        try? container.encode(deleteFlag, forKey: .deleteFlag)
+        if let featureNumber = featureNumber, let internationalFeature = internationalFeature {
+            try? container.encode("\(featureNumber)\n\(internationalFeature)", forKey: .featureNumber)
+        } else if let featureNumber = featureNumber {
+            try? container.encode("\(featureNumber)", forKey: .featureNumber)
+        }
+        try? container.encode(geopoliticalHeading, forKey: .geopoliticalHeading)
+        if let heightFeet = heightFeet, let heightMeters = heightMeters {
+            try? container.encode("\(heightFeet)\n\(heightMeters)", forKey: .heightFeetMeters)
+        }
+        try? container.encode(localHeading, forKey: .localHeading)
+        try? container.encode(name, forKey: .name)
+        try? container.encode(noticeNumber, forKey: .noticeNumber)
+        try? container.encode(noticeWeek, forKey: .noticeWeek)
+        try? container.encode(noticeYear, forKey: .noticeYear)
+        try? container.encode(postNote, forKey: .postNote)
+        try? container.encode(precedingNote, forKey: .precedingNote)
+        try? container.encode(range, forKey: .range)
+        try? container.encode(regionHeading, forKey: .regionHeading)
+        try? container.encode(remarks, forKey: .remarks)
+        try? container.encode(removeFromList, forKey: .removeFromList)
+        try? container.encode(structure, forKey: .structure)
+        try? container.encode(subregionHeading, forKey: .subregionHeading)
+        try? container.encode(position, forKey: .position)
+        try? container.encode(volumeNumber, forKey: .volumeNumber)
+    }
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -146,6 +178,9 @@ struct LightsProperties: Decodable {
             self.regionHeading = nil
         }
         self.remarks = try? values.decode(String.self, forKey: .remarks)
+        if self.featureNumber == "3808" {
+            NSLog("Remarks are in decodable \(remarks)")
+        }
         self.removeFromList = try? values.decode(String.self, forKey: .removeFromList)
         self.structure = try? values.decode(String.self, forKey: .structure)
         self.subregionHeading = try? values.decode(String.self, forKey: .subregionHeading)
@@ -168,6 +203,7 @@ struct LightsProperties: Decodable {
         
         let mgrsPosition = MGRS.from(longitude, latitude)
         self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        self.sectionHeader = nil
     }
     
     static func parsePosition(position: String) -> CLLocationCoordinate2D {

@@ -23,13 +23,12 @@ struct ChartCorrectionPropertyContainer: Decodable {
     }
 }
 
-extension ChartCorrection: Bookmarkable {
-    var itemKey: String? {
-        return "\(chartId ?? 0)--\(noticeYear)--\(noticeWeek)"
+struct ChartCorrection: Decodable, Hashable, Identifiable, DataSource, Bookmarkable {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.chartCorrection.definition
+    var canBookmark: Bool {
+        return true
     }
-}
-
-struct ChartCorrection: Decodable, Hashable, Identifiable, DataSource {
+    
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Notice Number", key: "currNoticeNum", type: .int, requiredInFilter: false),
         DataSourceProperty(name: "Location", key: "location", type: .location, requiredInFilter: true)
@@ -57,6 +56,14 @@ struct ChartCorrection: Decodable, Hashable, Identifiable, DataSource {
     var color: UIColor = NoticeToMariners.color
     static var imageScale: CGFloat = 1.0
     static var dateFormatter: DateFormatter = DateFormatter()
+    
+    var itemKey: String {
+        return "\(chartId ?? 0)--\(noticeYear)--\(noticeWeek)"
+    }
+    
+    var itemTitle: String {
+        return "\(currNoticeNum ?? "")"
+    }
     
     static func postProcess() {
     }

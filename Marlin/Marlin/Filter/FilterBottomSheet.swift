@@ -29,7 +29,7 @@ struct DataSourceFilter: View {
                         Spacer()
                             .foregroundColor(Color.backgroundColor)
                     }
-                    .navigationTitle("\(filterViewModel.dataSource.dataSourceName) Filters")
+                    .navigationTitle("\(filterViewModel.dataSource?.definition.name ?? "") Filters")
                     .navigationBarTitleDisplayMode(.inline)
                     .background(Color.backgroundColor)
                     .toolbar {
@@ -46,7 +46,7 @@ struct DataSourceFilter: View {
                         }
                     }
                     .onAppear {
-                        Metrics.shared.dataSourceFilter(dataSource: filterViewModel.dataSource)
+                        Metrics.shared.dataSourceFilter(dataSource: filterViewModel.dataSource?.definition)
                     }
                 }
                 .environmentObject(LocationManager.shared())
@@ -60,15 +60,24 @@ struct MappedDataSourcesFilter: View {
     @Binding var showBottomSheet: Bool
 
     var body: some View {
-        FilterBottomSheet(showBottomSheet: $showBottomSheet, dataSources: $dataSourceList.mappedDataSources)
+        FilterBottomSheet(showBottomSheet: $showBottomSheet, dataSources: $dataSourceList.mappedFilterableDataSources)
     }
 }
 
 struct FilterBottomSheet: View {
     
     @Binding var showBottomSheet: Bool
-    @Binding var dataSources: [DataSourceItem]
+    @Binding var dataSources: [Filterable]
     let dismissBottomSheetPub = NotificationCenter.default.publisher(for: .DismissBottomSheet)
+    
+    var filteredFilterables: [Filterable] {
+        dataSources.filter { filterable in
+            !filterable.properties.isEmpty
+        }
+        .sorted { item1, item2 in
+            item1.definition.order < item2.definition.order
+        }
+    }
 
     var body: some View {
         Self._printChanges()
@@ -77,14 +86,10 @@ struct FilterBottomSheet: View {
                 NavigationStack {
                     ScrollView {
                         VStack(spacing: 8) {
-                            ForEach($dataSources.filter({ item in
-                                item.showOnMap.wrappedValue && item.dataSource.wrappedValue.properties.count != 0
-                            }).sorted(by: { item1, item2 in
-                                item1.order.wrappedValue < item2.order.wrappedValue
-                            })) { $dataSourceItem in
-                                FilterBottomSheetRow(dataSourceItem: $dataSourceItem)
+                            ForEach(filteredFilterables, id: \.id) { filterable in
+                                FilterBottomSheetRow(filterable: filterable)
                                     .accessibilityElement(children: .contain)
-                                    .accessibilityLabel("\(dataSourceItem.dataSource.fullDataSourceName) filter row")
+                                    .accessibilityLabel("\(filterable.definition.fullName) filter row")
                             }
                             .background(Color.surfaceColor)
                         }

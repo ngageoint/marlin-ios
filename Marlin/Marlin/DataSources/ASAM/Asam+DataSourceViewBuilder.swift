@@ -13,7 +13,25 @@ extension Asam: DataSourceViewBuilder {
         return "\(self.hostility ?? "")\(self.hostility != nil && self.victim != nil ? ": " : "")\(self.victim ?? "")"
     }
     var detailView: AnyView {
-        AnyView(AsamDetailView(asam: self))
+        if let reference = self.reference {
+            return AnyView(AsamDetailView(reference: reference))
+        } else {
+            return AnyView(EmptyView())
+        }
+    }
+    
+    var summary: some DataSourceSummaryView {
+        AsamSummaryView(asam: AsamModel(asam: self))
+    }
+}
+
+extension AsamModel: DataSourceViewBuilder {
+    var detailView: AnyView {
+        if let reference = self.reference {
+            return AnyView(AsamDetailView(reference: reference))
+        } else {
+            return AnyView(EmptyView())
+        }
     }
     
     var summary: some DataSourceSummaryView {

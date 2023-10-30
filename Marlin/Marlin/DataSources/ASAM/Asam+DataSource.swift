@@ -11,8 +11,12 @@ import CoreData
 import Combine
 
 extension Asam: Bookmarkable {
-    var itemKey: String? {
-        return reference
+    var canBookmark: Bool {
+        return true
+    }
+    
+    var itemKey: String {
+        return reference ?? ""
     }
     
     static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
@@ -27,7 +31,8 @@ extension Asam: Bookmarkable {
     }
 }
 
-extension Asam: DataSourceLocation, GeoPackageExportable {
+extension Asam: DataSource, Locatable, GeoPackageExportable, GeoJSONExportable {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.asam.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }
@@ -43,7 +48,7 @@ extension Asam: DataSourceLocation, GeoPackageExportable {
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")
     static var fullDataSourceName: String = NSLocalizedString("Anti-Shipping Activity Messages", comment: "ASAM data source full display name")
-    static var key: String = "asam"
+    static var key: String = DataSourceType.asam.rawValue
     static var metricsKey: String = "asams"
     static var imageName: String? = "asam"
     static var systemImageName: String? = nil
@@ -100,10 +105,10 @@ extension Asam: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every hour
-        return UserDefaults.standard.dataSourceEnabled(Asam.self) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(Asam.self)
+        return UserDefaults.standard.dataSourceEnabled(DataSourceDefinitions.asam.definition) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(DataSourceDefinitions.asam.definition)
     }
     
-    static func newBatchInsertRequest(with propertyList: [AsamProperties]) -> NSBatchInsertRequest {
+    static func newBatchInsertRequest(with propertyList: [AsamModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
         
@@ -123,7 +128,7 @@ extension Asam: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [AsamProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(from propertiesList: [AsamModel], taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

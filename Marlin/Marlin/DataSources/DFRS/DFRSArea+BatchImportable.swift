@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 
 extension DFRSArea: BatchImportable {
+    static var definition: any DataSourceDefinition = DFRSDefinition()
     static var seedDataFiles: [String]? = ["dfrsAreas"]
     static var key: String = "dfrsAreas"
     static var decodableRoot: Decodable.Type = DFRSAreaPropertyContainer.self

@@ -23,29 +23,29 @@ class BaseOverlaysMap: NSObject, MapMixin {
     init(viewModel: MapLayerViewModel) {
         self.viewModel = viewModel
     }
-    func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
-        mapState = marlinMap.mapState
+    func setupMixin(mapState: MapState, mapView: MKMapView) {
+        self.mapState = mapState
         viewModel.$url
             .receive(on: RunLoop.main)
             .sink() { [weak self] urlTemplate in
-                self?.refreshOverlay(marlinMap: marlinMap)
+                self?.refreshOverlay(mapState: mapState)
             }
             .store(in: &cancellable)
         viewModel.$layerType
             .receive(on: RunLoop.main)
             .sink() { [weak self] urlTemplate in
-                self?.refreshOverlay(marlinMap: marlinMap)
+                self?.refreshOverlay(mapState: mapState)
             }
             .store(in: &cancellable)
         viewModel.$selectedLayers
             .receive(on: RunLoop.main)
             .sink() { [weak self] urlTemplate in
-                self?.refreshOverlay(marlinMap: marlinMap)
+                self?.refreshOverlay(mapState: mapState)
             }
             .store(in: &cancellable)
     }
     
-    func refreshOverlay(marlinMap: MarlinMap) {
+    func refreshOverlay(mapState: MapState) {
         DispatchQueue.main.async {
             self.mapState?.mixinStates["\(String(describing: BaseOverlaysMap.self))DataUpdated"] = Date()
         }

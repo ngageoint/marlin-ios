@@ -10,8 +10,12 @@ import UIKit
 import CoreData
 
 extension ElectronicPublication: Bookmarkable {
-    var itemKey: String? {
-        return s3Key
+    var canBookmark: Bool {
+        return true
+    }
+    
+    var itemKey: String {
+        return s3Key ?? ""
     }
     
     static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
@@ -27,6 +31,7 @@ extension ElectronicPublication: Bookmarkable {
 }
 
 extension ElectronicPublication: DataSource {
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.epub.definition
     static let backgroundDownloadIdentifier: String = { "\(key)Download" }()
     
     var color: UIColor {
@@ -143,6 +148,6 @@ extension ElectronicPublication: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every day
-        return UserDefaults.standard.dataSourceEnabled(ElectronicPublication.self) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 1)) > UserDefaults.standard.lastSyncTimeSeconds(ElectronicPublication.self)
+        return UserDefaults.standard.dataSourceEnabled(ElectronicPublication.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 1)) > UserDefaults.standard.lastSyncTimeSeconds(ElectronicPublication.definition)
     }
 }

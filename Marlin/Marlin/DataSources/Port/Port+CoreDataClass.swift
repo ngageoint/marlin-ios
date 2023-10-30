@@ -464,9 +464,27 @@ enum ConditionEnum: String, CaseIterable, CustomStringConvertible {
     }
 }
 
+extension Int {
+    var zeroIsEmptyString: String {
+        if self == 0 {
+            return ""
+        }
+        return "\(self)"
+    }
+}
+
 extension Int64 {
     var zeroIsEmptyString: String {
         if self == 0 {
+            return ""
+        }
+        return "\(self)"
+    }
+}
+
+extension Double {
+    var zeroIsEmptyString: String {
+        if self == 0.0 {
             return ""
         }
         return "\(self)"

@@ -18,6 +18,17 @@ final class MarlinCompactWidthViewTests: XCTestCase {
     var persistentStore: PersistentStore = PersistenceController.shared
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
+    
+    var bookmarkRepository: BookmarkRepositoryManager {
+        BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+    }
+    var asamRepository: AsamRepositoryManager { AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext)) }
+    var moduRepository: ModuRepositoryManager { ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext)) }
+    var lightRepository: LightRepositoryManager { LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext)) }
+    var portRepository: PortRepositoryManager { PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext)) }
+    var dgpsRepository: DifferentialGPSStationRepositoryManager { DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext)) }
+    var radioBeaconRepository: RadioBeaconRepositoryManager { RadioBeaconRepositoryManager(repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext)) }
+    var routeRepository: RouteRepositoryManager { RouteRepositoryManager(repository: RouteCoreDataRepository(context: persistentStore.viewContext)) }
 
     override func setUp(completion: @escaping (Error?) -> Void) {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
@@ -26,7 +37,7 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         UserDefaults.standard.initialDataLoaded = false
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource as! any BatchImportable.Type)
+            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
 
@@ -83,7 +94,15 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
-            .environmentObject(mockLocationManager as LocationManager)
+            .environmentObject(mockLocationManager as LocationManager)            
+            .environmentObject(bookmarkRepository)
+            .environmentObject(asamRepository)
+            .environmentObject(moduRepository)
+            .environmentObject(lightRepository)
+            .environmentObject(portRepository)
+            .environmentObject(dgpsRepository)
+            .environmentObject(radioBeaconRepository)
+            .environmentObject(routeRepository)
 
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -96,17 +115,20 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Loading initial data")
         tester().waitForView(withAccessibilityLabel: "Map Settings Button")
         tester().waitForView(withAccessibilityLabel: "User Tracking")
+        tester().tapView(withAccessibilityLabel: "Expand Map Toggle")
         
         if let dataSourceList = passThrough.dataSourceList {
             for dataSource in dataSourceList.tabs {
-                tester().waitForView(withAccessibilityLabel: "\(dataSource.dataSource.key)List")
+                tester().waitForView(withAccessibilityLabel: "\(dataSource.dataSource.definition.key)List")
             }
             for dataSource in dataSourceList.allTabs.filter({ item in
-                item.dataSource.isMappable
+                item.dataSource.definition.mappable
             }) {
-                tester().waitForView(withAccessibilityLabel: "\(dataSource.dataSource.key) Map Toggle")
+                tester().waitForView(withAccessibilityLabel: "\(dataSource.dataSource.definition.key) Map Toggle")
             }
         }
+        
+        tester().tapView(withAccessibilityLabel: "Collapse Map Toggle")
         
         UserDefaults.standard.initialDataLoaded = true
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Loading initial data")
@@ -151,6 +173,14 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(mockLocationManager as LocationManager)
+            .environmentObject(bookmarkRepository)
+            .environmentObject(asamRepository)
+            .environmentObject(moduRepository)
+            .environmentObject(lightRepository)
+            .environmentObject(portRepository)
+            .environmentObject(dgpsRepository)
+            .environmentObject(radioBeaconRepository)
+            .environmentObject(routeRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -159,16 +189,16 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Marlin Map")
         if let dataSourceList = passThrough.dataSourceList {
             for dataSource in dataSourceList.tabs {
-                tester().waitForView(withAccessibilityLabel: "\(dataSource.dataSource.key)List")
-                tester().tapView(withAccessibilityLabel: "\(dataSource.dataSource.key)List")
+                tester().waitForView(withAccessibilityLabel: "\(dataSource.dataSource.definition.key)List")
+                tester().tapView(withAccessibilityLabel: "\(dataSource.dataSource.definition.key)List")
                 tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
-                tester().waitForView(withAccessibilityLabel: dataSource.dataSource.fullDataSourceName)
+                tester().waitForView(withAccessibilityLabel: dataSource.dataSource.definition.fullName)
                 tester().tapView(withAccessibilityLabel: "Marlin Map Tab")
                 tester().waitForView(withAccessibilityLabel: "Marlin Map")
             }
             
-            tester().tapView(withAccessibilityLabel: "\(dataSourceList.tabs[0].dataSource.key)List")
-            tester().waitForView(withAccessibilityLabel: dataSourceList.tabs[0].dataSource.fullDataSourceName)
+            tester().tapView(withAccessibilityLabel: "\(dataSourceList.tabs[0].dataSource.definition.key)List")
+            tester().waitForView(withAccessibilityLabel: dataSourceList.tabs[0].dataSource.definition.fullName)
             tester().waitForAbsenceOfView(withAccessibilityLabel: "Marlin Map")
             NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
             tester().waitForView(withAccessibilityLabel: "Marlin Map")
@@ -214,6 +244,14 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(mockLocationManager as LocationManager)
+            .environmentObject(bookmarkRepository)
+            .environmentObject(asamRepository)
+            .environmentObject(moduRepository)
+            .environmentObject(lightRepository)
+            .environmentObject(portRepository)
+            .environmentObject(dgpsRepository)
+            .environmentObject(radioBeaconRepository)
+            .environmentObject(routeRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -222,8 +260,8 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Marlin Map")
         if let dataSourceList = passThrough.dataSourceList {
             for dataSource in dataSourceList.tabs {
-                NotificationCenter.default.post(name: .SwitchTabs, object: dataSource.dataSource.key)
-                tester().waitForView(withAccessibilityLabel: dataSource.dataSource.fullDataSourceName)
+                NotificationCenter.default.post(name: .SwitchTabs, object: dataSource.dataSource.definition.key)
+                tester().waitForView(withAccessibilityLabel: dataSource.dataSource.definition.fullName)
                 NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
                 tester().waitForView(withAccessibilityLabel: "Marlin Map")
             }
@@ -280,6 +318,14 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(mockLocationManager as LocationManager)
+            .environmentObject(bookmarkRepository)
+            .environmentObject(asamRepository)
+            .environmentObject(moduRepository)
+            .environmentObject(lightRepository)
+            .environmentObject(portRepository)
+            .environmentObject(dgpsRepository)
+            .environmentObject(radioBeaconRepository)
+            .environmentObject(routeRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -350,6 +396,14 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(mockLocationManager as LocationManager)
+            .environmentObject(bookmarkRepository)
+            .environmentObject(asamRepository)
+            .environmentObject(moduRepository)
+            .environmentObject(lightRepository)
+            .environmentObject(portRepository)
+            .environmentObject(dgpsRepository)
+            .environmentObject(radioBeaconRepository)
+            .environmentObject(routeRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()

@@ -35,10 +35,10 @@ class SearchResultsMap: NSObject, MapMixin {
     var cancellable = Set<AnyCancellable>()
     var annotations: [SearchResultAnnotation] = []
     
-    func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
+    func setupMixin(mapState: MapState, mapView: MKMapView) {
         mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: "placemark")
 
-        marlinMap.mapState.$searchResults
+        mapState.$searchResults
             .sink { items in
                 guard let items = items else {
                     return
@@ -56,14 +56,14 @@ class SearchResultsMap: NSObject, MapMixin {
         // TODO: this seems like the wrong place for this
         let region = UserDefaults.standard.mapRegion
         if CLLocationCoordinate2DIsValid(region.center) {
-            if MKUserTrackingMode(rawValue: marlinMap.mapState.userTrackingMode) ?? MKUserTrackingMode.none == .none {
+            if MKUserTrackingMode(rawValue: mapState.userTrackingMode) ?? MKUserTrackingMode.none == .none {
                 DispatchQueue.main.async {
-                    marlinMap.mapState.center = region
+                    mapState.center = region
                 }
             }
         } else {
             DispatchQueue.main.async {
-                marlinMap.mapState.center = MKCoordinateRegion(center: mapView.centerCoordinate, zoom: 4, bounds: UIScreen.main.bounds)
+                mapState.center = MKCoordinateRegion(center: mapView.centerCoordinate, zoom: 4, bounds: UIScreen.main.bounds)
             }
         }
     }

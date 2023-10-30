@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Badge: View {
     let count: Int
+    var positionShift: CGFloat = 0
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
@@ -17,7 +18,7 @@ struct Badge: View {
                 Image(systemName: "\(count).circle.fill")
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(Color.white, Color.secondaryColor)
-                    .alignmentGuide(.top) { $0[.bottom] - 5 }
+                    .alignmentGuide(.top) { $0[.bottom] - 5 - positionShift }
                     .alignmentGuide(.trailing) { $0[.trailing] - $0.width * 0.25 }
             }
         }

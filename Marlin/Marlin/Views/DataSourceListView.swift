@@ -13,6 +13,7 @@ struct DataSourceNavView: View {
     var watchFocusedItem: Bool = false
     @State private var path: NavigationPath = NavigationPath()
     
+    
     var body: some View {
         Self._printChanges()
         return NavigationStack(path: $path) {
@@ -51,6 +52,8 @@ struct DataSourceListView: View {
             NoticeToMarinersView(path: $path)
         } else if dataSource.key == Bookmark.key {
             BookmarkListView(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
+        } else if dataSource.key == Route.key {
+            RouteList(path: $path)
         }
     }
 }

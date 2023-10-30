@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreLocation
+import GeoJSON
 import sf_ios
 
 // Need this here so that XCode will compile the SFGeometryCollection class before it is used in a subsequent file
@@ -29,6 +30,24 @@ extension SFPolygon {
         
         self.init(ring: SFLineString(points: NSMutableArray(array: points)))
     }
+    
+    func toGeoJSON() -> Polygon? {
+        var linearRings: [Polygon.LinearRing] = []
+        for ring in self.rings {
+            if let ring = ring as? SFLineString {
+                var positions: [Position] = []
+                if let points = ring.points {
+                    for point in points {
+                        if let point = point as? SFPoint {
+                            positions.append(Position(longitude: point.x.doubleValue, latitude: point.y.doubleValue, altitude: nil))
+                        }
+                    }
+                }
+                try? linearRings.append(Polygon.LinearRing(coordinates: positions))
+            }
+        }
+        return Polygon(coordinates: linearRings)
+    }
 }
 
 extension SFLineString {
@@ -40,5 +59,17 @@ extension SFLineString {
             }
         }
         self.init(points: NSMutableArray(array: points))
+    }
+    
+    func toGeoJSON() -> LineString? {
+        var positions: [Position] = []
+        if let points = self.points {
+            for point in points {
+                if let point = point as? SFPoint {
+                    positions.append(Position(longitude: point.x.doubleValue, latitude: point.y.doubleValue, altitude: nil))
+                }
+            }
+        }
+        return try? LineString(coordinates: positions)
     }
 }

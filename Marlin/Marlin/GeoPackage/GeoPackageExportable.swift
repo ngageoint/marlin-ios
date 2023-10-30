@@ -132,6 +132,9 @@ extension GeoPackageExportable {
                 iconStyleDefault?.setData(imageData)
                 iconStyleDefault?.setWidthValue(Double(combined?.size.width ?? image.size.width))
                 iconStyleDefault?.setHeightValue(Double(combined?.size.height ?? image.size.height))
+                iconStyleDefault?.setAnchorU(0.5)
+                iconStyleDefault?.setAnchorV(0.5)
+                
                 featureTableStyles?.setTableIconDefault(iconStyleDefault)
             }
         }
@@ -144,7 +147,7 @@ extension GeoPackageExportable {
     }
     
     static func createFeatures(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?, styleRows: [GPKGStyleRow], dataSourceProgress: DataSourceExportProgress) throws {
-        guard let fetchRequest = dataSourceProgress.dataSource.fetchRequest(filters: filters, commonFilters: commonFilters) else {
+        guard let fetchRequest = dataSourceProgress.filterable.fetchRequest(filters: filters, commonFilters: commonFilters) else {
             return
         }
         

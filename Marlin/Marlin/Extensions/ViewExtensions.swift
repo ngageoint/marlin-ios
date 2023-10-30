@@ -53,6 +53,16 @@ extension View {
             .foregroundColor(Color.primaryColorVariant)
             .padding(.bottom, 10)
     }
+    
+    func borderedTextField() -> some View {
+        self
+            .foregroundColor(Color.onSurfaceColor.opacity(0.87))
+            .padding(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(Color.primaryColor, lineWidth: 1)
+            )
+    }
 }
 
 struct EmptyPlaceholderModifier<Items: Collection>: ViewModifier {
@@ -63,9 +73,7 @@ struct EmptyPlaceholderModifier<Items: Collection>: ViewModifier {
         if !items.isEmpty {
             content
         } else {
-            content.overlay {
-                placeholder
-            }
+            placeholder
         }
     }
 }

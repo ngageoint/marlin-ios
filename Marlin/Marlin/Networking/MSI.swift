@@ -190,7 +190,7 @@ public class MSI {
         
         let initialDataLoadList: [any BatchImportable.Type] = self.masterDataList.filter { importable in
             if let ds = importable as? any DataSource.Type {
-                return UserDefaults.standard.dataSourceEnabled(ds) && !self.isLoaded(type: importable) && !(importable.seedDataFiles ?? []).isEmpty
+                return UserDefaults.standard.dataSourceEnabled(ds.definition) && !self.isLoaded(type: importable) && !(importable.seedDataFiles ?? []).isEmpty
             }
             return false
         }
@@ -227,7 +227,7 @@ public class MSI {
             if let dataSourceItem = inserts.first as? (any DataSource) {
                 var allLoaded = true
                 for (dataSource, loading) in self.appState.loadingDataSource {
-                    if loading && type(of: dataSourceItem).key != dataSource {
+                    if loading && type(of: dataSourceItem).definition.key != dataSource {
                         allLoaded = false
                     }
                 }
@@ -235,7 +235,7 @@ public class MSI {
                     PersistenceController.current.removeViewContextObserver(self, name: .NSManagedObjectContextObjectsDidChange)
                 }
                 DispatchQueue.main.async {
-                    self.appState.loadingDataSource[type(of: dataSourceItem).key] = false
+                    self.appState.loadingDataSource[type(of: dataSourceItem).definition.key] = false
                     
                     if allLoaded {
                         UserDefaults.standard.initialDataLoaded = true

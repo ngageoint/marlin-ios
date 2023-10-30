@@ -41,8 +41,8 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
         self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMapnavWarning)
     }
     
-    override func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
-        super.setupMixin(marlinMap: marlinMap, mapView: mapView)
+    override func setupMixin(mapState: MapState, mapView: MKMapView) {
+        super.setupMixin(mapState: mapState, mapView: mapView)
         mapView.register(ImageAnnotationView.self, forAnnotationViewWithReuseIdentifier: NavigationalWarning.key)
     }
     
@@ -157,9 +157,9 @@ class NavigationalWarningMap: NSObject, MapMixin {
         self.zoomOnFocus = zoomOnFocus
     }
     
-    func setupMixin(marlinMap: MarlinMap, mapView: MKMapView) {
+    func setupMixin(mapState: MapState, mapView: MKMapView) {
         mapView.register(MKAnnotationView.self, forAnnotationViewWithReuseIdentifier: NavigationalWarning.key)
-        mapState = marlinMap.mapState
+        self.mapState = mapState
         if warning != nil {
             setupSingleNavigationalWarning(mapView: mapView)
         }
@@ -378,7 +378,7 @@ class NavigationalWarningMap: NSObject, MapMixin {
             let renderer = MKPolygonRenderer(polygon: polygon)
             renderer.strokeColor = NavigationalWarning.color
             renderer.lineWidth = 3
-            renderer.fillColor = NavigationalWarning.color.withAlphaComponent(0.2)
+            renderer.fillColor = NavigationalWarning.color.withAlphaComponent(0.3)
             return renderer
         } else if let polyline = overlay as? NavigationalWarningGeodesicPolyline {
             let renderer = MKPolylineRenderer(polyline: polyline)

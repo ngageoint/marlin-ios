@@ -44,27 +44,27 @@ struct MarlinCompactWidth: View {
                 // This is deprecated, but in iOS16 this is the only way to set the back button color
                 .accentColor(Color.onPrimaryColor)
                 
-                ForEach(dataSourceList.tabs, id: \.self) { dataSource in
-                    DataSourceNavView(dataSource: dataSource, focusedItem: itemWrapper)
+                ForEach(dataSourceList.tabs, id: \.self) { item in
+                    DataSourceNavView(dataSource: item, focusedItem: itemWrapper)
                         .modifier(Hamburger(menuOpen: $menuOpen))
                         // This is deprecated, but in iOS16 this is the only way to set the back button color
                         .accentColor(Color.onPrimaryColor)
                         .tabItem {
-                            if let imageName = dataSource.dataSource.imageName {
-                                Label(dataSource.dataSource.dataSourceName, image: imageName)
+                            if let imageName = item.dataSource.definition.imageName {
+                                Label(item.dataSource.definition.name, image: imageName)
                                     .accessibilityElement(children: .contain)
-                                    .accessibilityLabel("\(dataSource.key)List")
-                            } else if let imageName = dataSource.dataSource.systemImageName {
-                                Label(dataSource.dataSource.dataSourceName, systemImage: imageName)
+                                    .accessibilityLabel("\(item.dataSource.definition.key)List")
+                            } else if let imageName = item.dataSource.definition.systemImageName {
+                                Label(item.dataSource.definition.name, systemImage: imageName)
                                     .accessibilityElement(children: .contain)
-                                    .accessibilityLabel("\(dataSource.key)List")
+                                    .accessibilityLabel("\(item.dataSource.definition.key)List")
                             } else {
-                                Label(dataSource.dataSource.dataSourceName, systemImage: "list.bullet.rectangle.fill")
+                                Label(item.dataSource.definition.name, systemImage: "list.bullet.rectangle.fill")
                                     .accessibilityElement(children: .contain)
-                                    .accessibilityLabel("\(dataSource.key)List")
+                                    .accessibilityLabel("\(item.dataSource.definition.key)List")
                             }
                         }
-                        .tag("\(dataSource.key)List")
+                        .tag("\(item.dataSource.definition.key)List")
                 }
             }
             .onReceive(mapFocus) { output in
