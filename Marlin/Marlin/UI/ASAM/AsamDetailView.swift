@@ -10,7 +10,8 @@ import MapKit
 import CoreData
 
 struct AsamDetailView: View {
-    @EnvironmentObject var asamRepository: AsamRepositoryManager
+    @EnvironmentObject var asamRepository: AsamRepository
+    @EnvironmentObject var routeWaypointRepository: RouteWaypointRepository
     @StateObject var viewModel: AsamViewModel = AsamViewModel()
     @State var reference: String
     @State var waypointURI: URL?
@@ -69,7 +70,7 @@ struct AsamDetailView: View {
         }
         .onAppear {
             viewModel.repository = asamRepository
-
+            viewModel.routeWaypointRepository = routeWaypointRepository
             viewModel.getAsam(reference: reference, waypointURI: waypointURI)
             Metrics.shared.dataSourceDetail(dataSource: Asam.definition)
         }

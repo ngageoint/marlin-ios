@@ -59,7 +59,7 @@ final class AsamSummaryViewTests: XCTestCase {
             return
         }
         
-        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(repository: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         
         let summary = AsamSummaryView(asam: AsamModel(asam:newItem))
@@ -97,7 +97,7 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = nil
         newItem.victim = "Boat"
         
-        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(repository: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         
         let summary = AsamSummaryView(asam: AsamModel(asam: newItem))
@@ -132,7 +132,7 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = nil
         
-        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(repository: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         
         let summary = AsamSummaryView(asam: AsamModel(asam: newItem))
@@ -167,7 +167,7 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = "Boat"
         
-        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(repository: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         
         let summary = AsamSummaryView(asam: AsamModel(asam: newItem), showMoreDetails: true)
@@ -206,7 +206,7 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = "Boat"
         
-        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(repository: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         
         let summary = AsamSummaryView(asam: AsamModel(asam: newItem), showMoreDetails: false)

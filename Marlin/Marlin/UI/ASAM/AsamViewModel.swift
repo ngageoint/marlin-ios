@@ -11,17 +11,17 @@ class AsamViewModel: ObservableObject, Identifiable {
     @Published var asam: AsamModel?
     @Published var predicate: NSPredicate?
     
-    var repository: (any AsamRepository)?
+    var repository: AsamRepository?
+    var routeWaypointRepository: RouteWaypointRepository?
     
     @discardableResult
     func getAsam(reference: String, waypointURI: URL? = nil) -> AsamModel? {
+        predicate = NSPredicate(format: "reference == %@", reference)
         if let waypointURI = waypointURI {
-            predicate = NSPredicate(format: "reference == %@", reference)
-            asam = repository?.getAsam(reference: reference, waypointURI: waypointURI)
+            asam = routeWaypointRepository?.getAsam(waypointURI: waypointURI)
             return asam
         } else {
-            predicate = NSPredicate(format: "reference == %@", reference)
-            asam = repository?.getAsam(reference: reference, waypointURI: waypointURI)
+            asam = repository?.getAsam(reference: reference)
             return asam
         }
     }

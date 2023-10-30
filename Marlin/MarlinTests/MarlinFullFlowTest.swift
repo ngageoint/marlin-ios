@@ -53,7 +53,7 @@ final class MarlinFullFlowTest: XCTestCase {
     // TODO: this is failing when trying to tap the second tab
     func xtestNavigateToTabFocusOnMap() {
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        let asamRepository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let asamRepository = AsamRepository(repository: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let moduRepository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
         let lightRepository = LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext))
         let portRepository = PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext))
@@ -265,7 +265,7 @@ final class MarlinFullFlowTest: XCTestCase {
         let dataSourceList: DataSourceList = DataSourceList()
         
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        let asamRepository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let asamRepository = AsamRepository(repository: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let moduRepository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
         let lightRepository = LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext))
         let portRepository = PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext))

@@ -79,7 +79,7 @@ final class MarlinBottomSheetTests: XCTestCase {
         
         let bottomSheetItem = BottomSheetItem(item: newItem, zoom: false)
         
-        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(repository: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         
         let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem])
@@ -138,7 +138,7 @@ final class MarlinBottomSheetTests: XCTestCase {
         
         let bottomSheetItem2 = BottomSheetItem(item: newItem2, zoom: false)
         
-        let repository = AsamRepositoryManager(repository: AsamCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(repository: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         let moduRepository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
         

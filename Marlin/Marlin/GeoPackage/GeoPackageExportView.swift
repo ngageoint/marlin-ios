@@ -10,7 +10,7 @@ import SwiftUI
 struct GeoPackageExportView: View {
     @EnvironmentObject var dataSourceList: DataSourceList
 
-    @EnvironmentObject var asamRepository: AsamRepositoryManager
+    @EnvironmentObject var asamRepository: AsamRepository
     @EnvironmentObject var moduRepository: ModuRepositoryManager
     @EnvironmentObject var lightRepository: LightRepositoryManager
     @EnvironmentObject var portRepository: PortRepositoryManager
@@ -104,12 +104,12 @@ struct GeoPackageExportView: View {
             viewModel.setExportParameters(dataSources: dataSources, filters: filters, useMapRegion: useMapRegion)
             Metrics.shared.geoPackageExportView()
         }
-        .onChange(of: exporter.complete) { complete in
-            guard let path = exporter.geoPackage?.path else { return }
+        .onChange(of: viewModel.complete) { complete in
+            guard let path = viewModel.geoPackage?.path else { return }
             let activityVC = UIActivityViewController(activityItems: [URL(fileURLWithPath: path)], applicationActivities: nil)
             UIApplication.shared.windows.first?.rootViewController?.present(activityVC, animated: true, completion: nil)
         }
-        .alert("Export Error", isPresented: $exporter.error) {
+        .alert("Export Error", isPresented: $viewModel.error) {
             Button("OK") { }
         } message: {
             Text("We apologize, it looks like we were unable to export Marlin data for the selected data sources.  Please try again later or reach out if this issue persists.")
