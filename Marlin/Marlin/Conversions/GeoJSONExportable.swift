@@ -10,37 +10,6 @@ import GeoJSON
 import AnyCodable
 import sf_ios
 
-//struct AnyGeoJSONExportable : GeoJSONExportable {
-//    static func == (lhs: AnyGeoJSONExportable, rhs: AnyGeoJSONExportable) -> Bool {
-//        return lhs.uniqueId == rhs.uniqueId
-//    }
-//    
-//    func isEqualTo(other: AnyGeoJSONExportable) -> Bool {
-//        return self.uniqueId == other.uniqueId
-//    }
-//    
-//    var definition: DataSourceDefinition { base.definition }
-//    
-//    var itemKey: String { base.itemKey }
-//    
-//    var key: String { base.key }
-//    
-//    static var properties: [DataSourceProperty] = []
-//    
-//    var sfGeometry: SFGeometry? { base.sfGeometry }
-//    
-//    var id: String { base.uniqueId }
-//    
-//    var name: String?
-//    
-//    var base: any GeoJSONExportable
-//    
-//    init(_ base: any GeoJSONExportable) {
-//        self.base = base
-//    }
-//}
-
-
 protocol GeoJSONExportable: Identifiable, Equatable, DataSource {
     static var definition: any DataSourceDefinition { get }
     var itemKey: String { get }

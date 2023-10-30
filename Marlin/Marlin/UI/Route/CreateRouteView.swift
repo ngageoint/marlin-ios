@@ -134,25 +134,23 @@ struct CreateRouteView: View {
         VStack {
             List {
                 instructions()
-                ForEach(routeViewModel.waypoints, id: \.uniqueId) { waypoint in
-//                    if let waypointViewBuilder = waypoint.base as? any DataSource {
-//                        waypointRow(waypointViewBuilder: waypoint, first: !routeViewModel.waypoints.isEmpty && routeViewModel.waypoints.first! == waypoint, last: !routeViewModel.waypoints.isEmpty && routeViewModel.waypoints.last! == waypoint)
-//                            
-//                            .swipeActions(edge: .trailing) {
-//                                Button(role: .destructive)  {
-//                                    routeViewModel.removeWaypoint(waypoint: waypoint)
-//                                } label: {
-//                                    Label("Delete", systemImage: "trash")
-//                                }
-//                                .accessibilityElement()
-//                                .accessibilityLabel("remove waypoint \(waypoint.uniqueId)")
-//                                .tint(Color.red)
-//                            }
-//                            .listRowInsets(.init(top: 0, leading: 20, bottom: 0, trailing: 0))
-//                            .listRowSeparator(.hidden, edges: .top)
-//                            .listRowSeparator(.visible, edges: .bottom)
+                ForEach(routeViewModel.waypoints.indices, id: \.self) { index in
+                    let waypoint = routeViewModel.waypoints[index]
+                    waypointRow(waypointViewBuilder: waypoint, first: index == 0, last: index == (routeViewModel.waypoints.count - 1))
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive)  {
+                            routeViewModel.removeWaypoint(waypoint: waypoint)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                        .accessibilityElement()
+                        .accessibilityLabel("remove waypoint \(waypoint.uniqueId)")
+                        .tint(Color.red)
                     }
-//                }
+                    .listRowInsets(.init(top: 0, leading: 20, bottom: 0, trailing: 0))
+                    .listRowSeparator(.hidden, edges: .top)
+                    .listRowSeparator(.visible, edges: .bottom)
+                }
                 .onMove { from, to in
                     routeViewModel.reorder(fromOffsets: from, toOffset: to)
                 }
