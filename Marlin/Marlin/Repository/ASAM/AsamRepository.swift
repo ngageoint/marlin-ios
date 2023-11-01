@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class AsamRepository: ObservableObject {
     private var localDataSource: AsamLocalDataSource
@@ -20,5 +21,8 @@ class AsamRepository: ObservableObject {
     }
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
         localDataSource.getCount(filters: filters)
+    }
+    func observeAsamListItems(filters: [DataSourceFilterParameter]?) -> AnyPublisher<CollectionDifference<AsamModel>, Never> {
+        localDataSource.observeAsamListItems(filters: filters)
     }
 }

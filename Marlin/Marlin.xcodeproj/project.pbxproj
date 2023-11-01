@@ -306,6 +306,7 @@
 		F7CCDC7E2AF0555100BF41F9 /* AsamRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC7D2AF0555100BF41F9 /* AsamRepository.swift */; };
 		F7CCDC802AF0583E00BF41F9 /* RouteWaypointRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC7F2AF0583E00BF41F9 /* RouteWaypointRepository.swift */; };
 		F7CCDC822AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC812AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift */; };
+		F7CCDC862AF1482900BF41F9 /* AsamCoreDataDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC852AF1482900BF41F9 /* AsamCoreDataDataSourceTests.swift */; };
 		F7D2225028E4A27C00F527F2 /* FilterBottomSheetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */; };
 		F7D2225228E4F83000F527F2 /* SortButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2225128E4F83000F527F2 /* SortButton.swift */; };
 		F7D2225428E5F03500F527F2 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2225328E5F03500F527F2 /* SortView.swift */; };
@@ -786,6 +787,7 @@
 		F7CCDC7D2AF0555100BF41F9 /* AsamRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRepository.swift; sourceTree = "<group>"; };
 		F7CCDC7F2AF0583E00BF41F9 /* RouteWaypointRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteWaypointRepository.swift; sourceTree = "<group>"; };
 		F7CCDC812AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteWaypointLocalDataSource.swift; sourceTree = "<group>"; };
+		F7CCDC852AF1482900BF41F9 /* AsamCoreDataDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamCoreDataDataSourceTests.swift; sourceTree = "<group>"; };
 		F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterBottomSheetRow.swift; sourceTree = "<group>"; };
 		F7D2225128E4F83000F527F2 /* SortButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortButton.swift; sourceTree = "<group>"; };
 		F7D2225328E5F03500F527F2 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
@@ -1224,6 +1226,7 @@
 		F727A68F284E605800BD728A /* MarlinTests */ = {
 			isa = PBXGroup;
 			children = (
+				F7CCDC832AF147FE00BF41F9 /* Repository */,
 				F7EFFECA2A82DEBE0097E5EF /* ComponentHelpers */,
 				F75324BC298197AF005C509F /* Onboarding */,
 				F75324B92980905B005C509F /* Extensions */,
@@ -1932,6 +1935,22 @@
 				F7CCDC812AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift */,
 			);
 			path = Route;
+			sourceTree = "<group>";
+		};
+		F7CCDC832AF147FE00BF41F9 /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				F7CCDC842AF1480800BF41F9 /* ASAM */,
+			);
+			path = Repository;
+			sourceTree = "<group>";
+		};
+		F7CCDC842AF1480800BF41F9 /* ASAM */ = {
+			isa = PBXGroup;
+			children = (
+				F7CCDC852AF1482900BF41F9 /* AsamCoreDataDataSourceTests.swift */,
+			);
+			path = ASAM;
 			sourceTree = "<group>";
 		};
 		F7D671C1286C85EF00758F1C /* GeoPackage */ = {
@@ -2649,6 +2668,7 @@
 				F7364E422A26A1740098F243 /* MarlinTestInitialization.swift in Sources */,
 				F72D88F82971FF8000D022FB /* HamburgerTests.swift in Sources */,
 				F7D8FA64293AB5B000E7D0A1 /* MockDataSource.swift in Sources */,
+				F7CCDC862AF1482900BF41F9 /* AsamCoreDataDataSourceTests.swift in Sources */,
 				F72D890A2979E7FC00D022FB /* RadioBeaconDetailViewTests.swift in Sources */,
 				F76052BB29A94FA800F13260 /* MarlinRegularWidthTests.swift in Sources */,
 				F7D8FA342936C08200E7D0A1 /* MapImageTests.swift in Sources */,

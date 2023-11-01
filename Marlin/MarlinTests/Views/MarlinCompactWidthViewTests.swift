@@ -22,7 +22,7 @@ final class MarlinCompactWidthViewTests: XCTestCase {
     var bookmarkRepository: BookmarkRepositoryManager {
         BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
     }
-    var asamRepository: AsamRepository { AsamRepository(repository: AsamCoreDataDataSource(context: persistentStore.viewContext)) }
+    var asamRepository: AsamRepository { AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext)) }
     var moduRepository: ModuRepositoryManager { ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext)) }
     var lightRepository: LightRepositoryManager { LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext)) }
     var portRepository: PortRepositoryManager { PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext)) }

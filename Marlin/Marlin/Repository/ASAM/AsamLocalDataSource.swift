@@ -7,12 +7,14 @@
 
 import Foundation
 import CoreData
+import Combine
 
 protocol AsamLocalDataSource {
     @discardableResult
     func getAsam(reference: String?) -> AsamModel?
     func getAsams(filters: [DataSourceFilterParameter]?) -> [AsamModel]
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
+    func observeAsamListItems(filters: [DataSourceFilterParameter]?) -> AnyPublisher<CollectionDifference<AsamModel>, Never>
 }
 
 class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
@@ -40,5 +42,18 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
             return 0
         }
         return (try? context.count(for: fetchRequest)) ?? 0
+    }
+    
+    func observeAsamListItems(filters: [DataSourceFilterParameter]?) -> AnyPublisher<CollectionDifference<AsamModel>, Never> {
+        let request: NSFetchRequest<Asam> = AsamFilterable().fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
+        request.sortDescriptors = UserDefaults.standard.sort(Asam.key).map({ sortParameter in
+            sortParameter.toNSSortDescriptor()
+        })
+        return context.changesPublisher(for: request, transformer: { asam in
+            AsamModel(asam: asam)
+        })
+        .receive(on: DispatchQueue.main)
+        .catch { _ in Empty() }
+        .eraseToAnyPublisher()
     }
 }
