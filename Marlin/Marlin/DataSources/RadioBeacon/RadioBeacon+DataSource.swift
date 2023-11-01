@@ -48,8 +48,8 @@ extension RadioBeacon: Locatable, GeoPackageExportable, GeoJSONExportable {
     static var fullDataSourceName: String = NSLocalizedString("Radio Beacons", comment: "Radio Beacons data source display name")
     static var key: String = "radioBeacon"
     static var metricsKey: String = "radioBeacons"
-    static var imageName: String? = nil
-    static var systemImageName: String? = "antenna.radiowaves.left.and.right"
+    static var imageName: String? = "settings_input_antenna"
+    static var systemImageName: String? = nil
     static var color: UIColor = UIColor(argbValue: 0xFF007BFF)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
