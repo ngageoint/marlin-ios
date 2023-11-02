@@ -672,7 +672,10 @@ class MapLayerViewModel: ObservableObject, Identifiable {
             config.caseInsensitive = true
         }.parse(string)
         do {
-            let capabilities: WMSCapabilities? = try xml["WMS_Capabilities"].value()
+            var capabilities: WMSCapabilities? = try? xml["WMS_Capabilities"].value()
+            if capabilities == nil {
+                capabilities = try? xml["WMT_MS_Capabilities"].value()
+            }
             capabilities?.correctBounds()
             return capabilities
         } catch {
@@ -888,14 +891,21 @@ final class WMSLayer: XMLObjectDeserialization, Identifiable, ObservableObject, 
             transparent = false
         }
         
+        var crs = node["CRS"].all.map { elem in
+            let crs: String? = try? elem.value()
+            return crs ?? ""
+        }
+        
+        crs += node["SRS"].all.map { elem in
+            let crs: String? = try? elem.value()
+            return crs ?? ""
+        }
+        
         return try WMSLayer(
             title: node["Title"].value(),
             abstract: node["Abstract"].value(),
             name: node["Name"].value(),
-            crs: node["CRS"].all.map { elem in
-                let crs: String? = try? elem.value()
-                return crs ?? ""
-            },
+            crs: crs,
             layers: node["Layer"].value(),
             boundingBox: node["EX_GeographicBoundingBox"].value(),
             transparent: transparent
