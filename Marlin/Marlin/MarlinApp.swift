@@ -58,7 +58,6 @@ struct PhaseWatcher: View {
             }
             .onReceive(appState.$lastNotificationRequestDate) { newValue in
                 var insertsPerDataSource: [String : Int] = [:]
-                
                 for (_, importNotifications) in appState.dataSourceBatchImportNotificationsPending {
                     for notification in importNotifications {
                         let inserts: Int = insertsPerDataSource[notification.key] ?? 0
@@ -151,7 +150,7 @@ struct MarlinApp: App {
         .store(in: &cancellable)
         persistentStore = PersistenceController.shared
         bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        asamRepository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
+        asamRepository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         moduRepository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
         lightRepository = LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext))
         portRepository = PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext))
@@ -160,6 +159,9 @@ struct MarlinApp: App {
         routeRepository = RouteRepositoryManager(repository: RouteCoreDataRepository(context: persistentStore.viewContext))
         routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
         navigationalWarningRepository = NavigationalWarningRepositoryManager(repository: NavigationalWarningCoreDataRepository(context: persistentStore.viewContext))
+        
+        MSI.shared.addRepositories(asamRepository: asamRepository)
+        
         UNUserNotificationCenter.current().delegate = appDelegate
     }
 

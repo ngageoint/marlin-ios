@@ -44,6 +44,7 @@
 		F70F50192992DAFF0062E555 /* DataLoadedNotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70F50182992DAFF0062E555 /* DataLoadedNotificationBanner.swift */; };
 		F70F501D2993EA470062E555 /* DataLoadedNotificationBannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70F501C2993EA470062E555 /* DataLoadedNotificationBannerTests.swift */; };
 		F713616B28B79D310005C69C /* set_build_number.sh in Resources */ = {isa = PBXBuildFile; fileRef = F713616A28B79D310005C69C /* set_build_number.sh */; };
+		F7194E102AFC3E7D0018E4B4 /* AsamInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7194E0F2AFC3E7D0018E4B4 /* AsamInitializer.swift */; };
 		F71CC6EA28AC178F000A326C /* Port+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6E928AC178F000A326C /* Port+CoreDataClass.swift */; };
 		F71CC6EE28AD163D000A326C /* PortSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6ED28AD163D000A326C /* PortSummaryView.swift */; };
 		F71CC6F028AD1647000A326C /* PortDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6EF28AD1647000A326C /* PortDetailView.swift */; };
@@ -102,6 +103,8 @@
 		F72281DA296F27D000218FC0 /* CurrentLocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72281D9296F27D000218FC0 /* CurrentLocationTests.swift */; };
 		F72281DD296F3FDE00218FC0 /* DataSourceCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72281DC296F3FDE00218FC0 /* DataSourceCellTests.swift */; };
 		F72281DF296F644600218FC0 /* DataSourceRailTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72281DE296F644600218FC0 /* DataSourceRailTests.swift */; };
+		F7249AEB2AF4321A00961E65 /* AsamService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7249AEA2AF4321A00961E65 /* AsamService.swift */; };
+		F7249AED2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */; };
 		F7275FDF28FA252800ED8D9A /* LightProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7275FDE28FA252800ED8D9A /* LightProtocol.swift */; };
 		F727A684284E351800BD728A /* MSIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A683284E351800BD728A /* MSIError.swift */; };
 		F727A691284E605800BD728A /* MarlinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A690284E605800BD728A /* MarlinTests.swift */; };
@@ -278,6 +281,10 @@
 		F7B84E202A72C83B00640C76 /* Bookmark+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B84E1F2A72C83B00640C76 /* Bookmark+CoreDataClass.swift */; };
 		F7B84E222A72DEB200640C76 /* BookmarkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B84E212A72DEB200640C76 /* BookmarkButton.swift */; };
 		F7B84E242A7309A600640C76 /* BookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B84E232A7309A600640C76 /* BookmarkViewModel.swift */; };
+		F7BAECA92AFAD49C00DE9BE7 /* AsamDataFetchOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BAECA82AFAD49C00DE9BE7 /* AsamDataFetchOperation.swift */; };
+		F7BAECAB2AFADFB900DE9BE7 /* AsamDataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BAECAA2AFADFB900DE9BE7 /* AsamDataLoadOperation.swift */; };
+		F7BAECAD2AFAE76800DE9BE7 /* AsamRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BAECAC2AFAE76800DE9BE7 /* AsamRepositoryTests.swift */; };
+		F7BAECB12AFC0F9F00DE9BE7 /* AsamInitialDataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BAECB02AFC0F9F00DE9BE7 /* AsamInitialDataLoadOperation.swift */; };
 		F7BDF76A2A0E8D160083B97F /* UITextViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF7692A0E8D160083B97F /* UITextViewContainer.swift */; };
 		F7BDF76C2A13BFC80083B97F /* NavigationalWarning+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF76B2A13BFC80083B97F /* NavigationalWarning+MapImage.swift */; };
 		F7BDF76E2A13D7790083B97F /* ViewExpandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF76D2A13D7790083B97F /* ViewExpandButton.swift */; };
@@ -307,6 +314,7 @@
 		F7CCDC802AF0583E00BF41F9 /* RouteWaypointRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC7F2AF0583E00BF41F9 /* RouteWaypointRepository.swift */; };
 		F7CCDC822AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC812AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift */; };
 		F7CCDC862AF1482900BF41F9 /* AsamCoreDataDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC852AF1482900BF41F9 /* AsamCoreDataDataSourceTests.swift */; };
+		F7CCDC882AF2C22B00BF41F9 /* AsamRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC872AF2C22B00BF41F9 /* AsamRemoteDataSource.swift */; };
 		F7D2225028E4A27C00F527F2 /* FilterBottomSheetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */; };
 		F7D2225228E4F83000F527F2 /* SortButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2225128E4F83000F527F2 /* SortButton.swift */; };
 		F7D2225428E5F03500F527F2 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2225328E5F03500F527F2 /* SortView.swift */; };
@@ -518,6 +526,7 @@
 		F70F50182992DAFF0062E555 /* DataLoadedNotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadedNotificationBanner.swift; sourceTree = "<group>"; };
 		F70F501C2993EA470062E555 /* DataLoadedNotificationBannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadedNotificationBannerTests.swift; sourceTree = "<group>"; };
 		F713616A28B79D310005C69C /* set_build_number.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = set_build_number.sh; sourceTree = "<group>"; };
+		F7194E0F2AFC3E7D0018E4B4 /* AsamInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamInitializer.swift; sourceTree = "<group>"; };
 		F71CC6E928AC178F000A326C /* Port+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F71CC6ED28AD163D000A326C /* PortSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortSummaryView.swift; sourceTree = "<group>"; };
 		F71CC6EF28AD1647000A326C /* PortDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDetailView.swift; sourceTree = "<group>"; };
@@ -575,6 +584,8 @@
 		F72281D9296F27D000218FC0 /* CurrentLocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLocationTests.swift; sourceTree = "<group>"; };
 		F72281DC296F3FDE00218FC0 /* DataSourceCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceCellTests.swift; sourceTree = "<group>"; };
 		F72281DE296F644600218FC0 /* DataSourceRailTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceRailTests.swift; sourceTree = "<group>"; };
+		F7249AEA2AF4321A00961E65 /* AsamService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamService.swift; sourceTree = "<group>"; };
+		F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRemoteDataSourceTests.swift; sourceTree = "<group>"; };
 		F7275FDE28FA252800ED8D9A /* LightProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightProtocol.swift; sourceTree = "<group>"; };
 		F727A682284E29AE00BD728A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F727A683284E351800BD728A /* MSIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIError.swift; sourceTree = "<group>"; };
@@ -758,6 +769,10 @@
 		F7B84E1F2A72C83B00640C76 /* Bookmark+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bookmark+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7B84E212A72DEB200640C76 /* BookmarkButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkButton.swift; sourceTree = "<group>"; };
 		F7B84E232A7309A600640C76 /* BookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewModel.swift; sourceTree = "<group>"; };
+		F7BAECA82AFAD49C00DE9BE7 /* AsamDataFetchOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDataFetchOperation.swift; sourceTree = "<group>"; };
+		F7BAECAA2AFADFB900DE9BE7 /* AsamDataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDataLoadOperation.swift; sourceTree = "<group>"; };
+		F7BAECAC2AFAE76800DE9BE7 /* AsamRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRepositoryTests.swift; sourceTree = "<group>"; };
+		F7BAECB02AFC0F9F00DE9BE7 /* AsamInitialDataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamInitialDataLoadOperation.swift; sourceTree = "<group>"; };
 		F7BDF7692A0E8D160083B97F /* UITextViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextViewContainer.swift; sourceTree = "<group>"; };
 		F7BDF76B2A13BFC80083B97F /* NavigationalWarning+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+MapImage.swift"; sourceTree = "<group>"; };
 		F7BDF76D2A13D7790083B97F /* ViewExpandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExpandButton.swift; sourceTree = "<group>"; };
@@ -788,6 +803,7 @@
 		F7CCDC7F2AF0583E00BF41F9 /* RouteWaypointRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteWaypointRepository.swift; sourceTree = "<group>"; };
 		F7CCDC812AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteWaypointLocalDataSource.swift; sourceTree = "<group>"; };
 		F7CCDC852AF1482900BF41F9 /* AsamCoreDataDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamCoreDataDataSourceTests.swift; sourceTree = "<group>"; };
+		F7CCDC872AF2C22B00BF41F9 /* AsamRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRemoteDataSource.swift; sourceTree = "<group>"; };
 		F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterBottomSheetRow.swift; sourceTree = "<group>"; };
 		F7D2225128E4F83000F527F2 /* SortButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortButton.swift; sourceTree = "<group>"; };
 		F7D2225328E5F03500F527F2 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
@@ -1211,6 +1227,24 @@
 			path = SideMenu;
 			sourceTree = "<group>";
 		};
+		F7249AE62AF41D7D00961E65 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				F7249AE72AF41D8300961E65 /* ASAM */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		F7249AE72AF41D8300961E65 /* ASAM */ = {
+			isa = PBXGroup;
+			children = (
+				F7249AEA2AF4321A00961E65 /* AsamService.swift */,
+				F7BAECA82AFAD49C00DE9BE7 /* AsamDataFetchOperation.swift */,
+				F7BAECAA2AFADFB900DE9BE7 /* AsamDataLoadOperation.swift */,
+			);
+			path = ASAM;
+			sourceTree = "<group>";
+		};
 		F7275FE028FEF8A000ED8D9A /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
@@ -1528,6 +1562,9 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
+				F7BAECB22AFC3E0400DE9BE7 /* Startup */,
+				F7BAECAE2AFC0F7D00DE9BE7 /* Data */,
+				F7249AE62AF41D7D00961E65 /* Network */,
 				F7C5F1F12AEC4DA90091BC01 /* UI */,
 				F71F2B1E2ACF3CAB00DFB5BA /* Repository */,
 				F730DFC52A9950930051775C /* Conversions */,
@@ -1612,6 +1649,38 @@
 				F7391CA42ABA28590002ABDD /* BookmarkModel.swift */,
 			);
 			path = Bookmark;
+			sourceTree = "<group>";
+		};
+		F7BAECAE2AFC0F7D00DE9BE7 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				F7BAECAF2AFC0F8200DE9BE7 /* ASAM */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		F7BAECAF2AFC0F8200DE9BE7 /* ASAM */ = {
+			isa = PBXGroup;
+			children = (
+				F7BAECB02AFC0F9F00DE9BE7 /* AsamInitialDataLoadOperation.swift */,
+			);
+			path = ASAM;
+			sourceTree = "<group>";
+		};
+		F7BAECB22AFC3E0400DE9BE7 /* Startup */ = {
+			isa = PBXGroup;
+			children = (
+				F7BAECB32AFC3E1000DE9BE7 /* ASAM */,
+			);
+			path = Startup;
+			sourceTree = "<group>";
+		};
+		F7BAECB32AFC3E1000DE9BE7 /* ASAM */ = {
+			isa = PBXGroup;
+			children = (
+				F7194E0F2AFC3E7D0018E4B4 /* AsamInitializer.swift */,
+			);
+			path = ASAM;
 			sourceTree = "<group>";
 		};
 		F7C23DFA2906F1360002A7DF /* Metrics */ = {
@@ -1718,6 +1787,7 @@
 			children = (
 				F7FDF2AB2AB49C95009A5E8F /* AsamLocalDataSource.swift */,
 				F7CCDC7D2AF0555100BF41F9 /* AsamRepository.swift */,
+				F7CCDC872AF2C22B00BF41F9 /* AsamRemoteDataSource.swift */,
 			);
 			path = ASAM;
 			sourceTree = "<group>";
@@ -1949,6 +2019,8 @@
 			isa = PBXGroup;
 			children = (
 				F7CCDC852AF1482900BF41F9 /* AsamCoreDataDataSourceTests.swift */,
+				F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */,
+				F7BAECAC2AFAE76800DE9BE7 /* AsamRepositoryTests.swift */,
 			);
 			path = ASAM;
 			sourceTree = "<group>";
@@ -2690,6 +2762,7 @@
 				F73ABC8E295250C70085EDC5 /* DataSourceSortTests.swift in Sources */,
 				F75324B629806329005C509F /* DFRSDetailViewTests.swift in Sources */,
 				F76052CA29AD4B2700F13260 /* MapLayerViewTests.swift in Sources */,
+				F7BAECAD2AFAE76800DE9BE7 /* AsamRepositoryTests.swift in Sources */,
 				F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */,
 				F75324C529885521005C509F /* SearchResultsMapTests.swift in Sources */,
 				F749E43929AEA39E00B2FF8B /* NewMapLayerViewTests.swift in Sources */,
@@ -2709,6 +2782,7 @@
 				F72D88FA297211BC00D022FB /* FilterButtonTests.swift in Sources */,
 				F71DF482284E783600686951 /* TestHelper.swift in Sources */,
 				F72EAAC6291C334200AC6026 /* ElectronicPublicationDataTests.swift in Sources */,
+				F7249AED2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift in Sources */,
 				F72281DF296F644600218FC0 /* DataSourceRailTests.swift in Sources */,
 				F75F81D8295DE0EF0062A708 /* AboutCellTests.swift in Sources */,
 			);
@@ -2806,11 +2880,13 @@
 				F7FFB2E228D6202E00C31AA3 /* DFRSArea+BatchImportable.swift in Sources */,
 				F7FFB31628D63D3600C31AA3 /* Light+DataSource.swift in Sources */,
 				F7D8FA162922BA3B00E7D0A1 /* NoticeToMariners+DataSourceViewBuilder.swift in Sources */,
+				F7CCDC882AF2C22B00BF41F9 /* AsamRemoteDataSource.swift in Sources */,
 				F7FDF2B22AB4D5EA009A5E8F /* ModuModel.swift in Sources */,
 				F7FDF2AC2AB49C95009A5E8F /* AsamLocalDataSource.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
 				F71D286428BE431900F1775C /* DifferentialGPSStationMap.swift in Sources */,
 				F7667CED2A0025B0005B36A0 /* NavigationalWarningMap.swift in Sources */,
+				F7249AEB2AF4321A00961E65 /* AsamService.swift in Sources */,
 				F71FC0CD2A3B86EB00911BAC /* ShareButton.swift in Sources */,
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
 				F7AFF93F2AD462ED00555960 /* RoutesViewModel.swift in Sources */,
@@ -2852,6 +2928,7 @@
 				D67E5C9A2A9E4AA5002FCE03 /* MKPolygonExtensions.swift in Sources */,
 				F7364E362A1D53970098F243 /* MapNavigationView.swift in Sources */,
 				F7FFB2EA28D623B000C31AA3 /* DifferentialGPSStation+DataSource.swift in Sources */,
+				F7194E102AFC3E7D0018E4B4 /* AsamInitializer.swift in Sources */,
 				F75E32BD29C4BB13006F2394 /* MapLayerViewModel.swift in Sources */,
 				F7B84E202A72C83B00640C76 /* Bookmark+CoreDataClass.swift in Sources */,
 				F71FC0D12A3B9D9000911BAC /* MoreDetailsButton.swift in Sources */,
@@ -2872,6 +2949,7 @@
 				F7FDF2B62AB8D644009A5E8F /* LightRepository.swift in Sources */,
 				F707BA91287F1767006A94C4 /* RaconImage.swift in Sources */,
 				F7D671EF287475BC00758F1C /* DataSource.swift in Sources */,
+				F7BAECB12AFC0F9F00DE9BE7 /* AsamInitialDataLoadOperation.swift in Sources */,
 				F71DF4992858DA4700686951 /* AsamMap.swift in Sources */,
 				F7275FDF28FA252800ED8D9A /* LightProtocol.swift in Sources */,
 				F7AFF9432AD46C6B00555960 /* RouteViewModel.swift in Sources */,
@@ -2887,6 +2965,7 @@
 				F7066DA92A45D8C10058122E /* GeoPackageExportViewModel.swift in Sources */,
 				F73ABC96295250EE0085EDC5 /* AsyncImage.swift in Sources */,
 				F7D8FA2C2925756F00E7D0A1 /* ChartCorrectionQuery.swift in Sources */,
+				F7BAECAB2AFADFB900DE9BE7 /* AsamDataLoadOperation.swift in Sources */,
 				F7BDF76A2A0E8D160083B97F /* UITextViewContainer.swift in Sources */,
 				F70BCEB129E5E35E00AEF73D /* GeoPackageFeatureItemDetailView.swift in Sources */,
 				F7FFB2E428D6213C00C31AA3 /* DFRS+Decodable.swift in Sources */,
@@ -2962,6 +3041,7 @@
 				F7F7CFC329BA56C400A14350 /* StringExtensions.swift in Sources */,
 				F7C23E102909AC430002A7DF /* ElectronicPublicationActionBar.swift in Sources */,
 				F707BA8D287C89ED006A94C4 /* LightMap.swift in Sources */,
+				F7BAECA92AFAD49C00DE9BE7 /* AsamDataFetchOperation.swift in Sources */,
 				F76052CC29AE6F0700F13260 /* MapLayerView.swift in Sources */,
 				F7391CB12AC336CD0002ABDD /* DifferentialGPSStationViewModel.swift in Sources */,
 				F73ABC97295250EE0085EDC5 /* ImageCache.swift in Sources */,

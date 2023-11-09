@@ -14,6 +14,12 @@ import SwiftUI
 import BackgroundTasks
 
 public class MSI {
+    
+    var asamInitializer: AsamInitializer?
+    func addRepositories(asamRepository: AsamRepository) {
+        asamInitializer = AsamInitializer(repository: asamRepository)
+    }
+    
     var backgroundTask: UIBackgroundTaskIdentifier = .invalid
     
     let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "persistence")
@@ -50,7 +56,7 @@ public class MSI {
     }()
     
     let masterDataList: [any BatchImportable.Type] = [Asam.self, Modu.self, NavigationalWarning.self, Light.self, Port.self, RadioBeacon.self, DifferentialGPSStation.self, DFRS.self, DFRSArea.self, ElectronicPublication.self, NoticeToMariners.self]
-    
+
     lazy var initialLoadQueue: OperationQueue = {
         var queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
@@ -112,6 +118,8 @@ public class MSI {
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "mil.nga.msi.refresh", using: nil) { task in
             MSI.shared.backgroundFetch(task: task)
         }
+        
+        asamInitializer?.registerBackgroundHandler()
     }
     
     func backgroundFetch(task: BGTask) {
@@ -130,8 +138,12 @@ public class MSI {
         }
         
         for importable in allLoadList {
-            NSLog("Fetching new data for \(importable.key)")
-            self.loadData(type: importable.decodableRoot, dataType: importable, operationQueue: self.backgroundFetchQueue)
+            if importable.key == Asam.key {
+                NSLog("Skipping ASAM in MSI.shared")
+            } else {
+                NSLog("Fetching new data for \(importable.key)")
+                self.loadData(type: importable.decodableRoot, dataType: importable, operationQueue: self.backgroundFetchQueue)
+            }
         }
         
         var expired = false
@@ -188,13 +200,16 @@ public class MSI {
         loadAllDataTime = Date()
         NSLog("Load all data")
         
+        asamInitializer?.fetchAsams()
+        
         let initialDataLoadList: [any BatchImportable.Type] = self.masterDataList.filter { importable in
             if let ds = importable as? any DataSource.Type {
-                return UserDefaults.standard.dataSourceEnabled(ds.definition) && !self.isLoaded(type: importable) && !(importable.seedDataFiles ?? []).isEmpty
+                if ds.definition.key != Asam.key {
+                    return UserDefaults.standard.dataSourceEnabled(ds.definition) && !self.isLoaded(type: importable) && !(importable.seedDataFiles ?? []).isEmpty
+                }
             }
             return false
         }
-        
         if !initialDataLoadList.isEmpty {
             
             NSLog("Loading initial data from \(initialDataLoadList.count) data sources")
@@ -208,7 +223,7 @@ public class MSI {
             UserDefaults.standard.initialDataLoaded = true
             
             let allLoadList: [any BatchImportable.Type] = self.masterDataList.filter { importable in
-                let sync = importable.shouldSync()
+                let sync = importable.shouldSync() && importable.key != Asam.key
                 return sync
             }
             
@@ -248,6 +263,10 @@ public class MSI {
     }
         
     func loadInitialData<T: Decodable, D: NSManagedObject & BatchImportable>(type: T.Type, dataType: D.Type, operationQueue: OperationQueue? = nil) {
+        if dataType.key == Asam.key {
+            return
+        }
+        
         let initialDataLoadOperation = DataLoadOperation(appState: appState, taskName: "Load Initial Data \(dataType.key)")
         initialDataLoadOperation.action = { [weak initialDataLoadOperation] in
             guard let initialDataLoadOperation = initialDataLoadOperation else {
@@ -262,6 +281,9 @@ public class MSI {
     }
     
     func loadData<T: Decodable, D: NSManagedObject & BatchImportable>(type: T.Type, dataType: D.Type, operationQueue: OperationQueue? = nil) {
+        if dataType.key == Asam.key {
+            return
+        }
         let dataLoadOperation = DataLoadOperation(appState: appState, taskName: "Load Data \(dataType.key)")
         dataLoadOperation.action = { [weak dataLoadOperation] in
             guard let dataLoadOperation = dataLoadOperation else {
@@ -269,6 +291,7 @@ public class MSI {
             }
             dataLoadOperation.loadData(type: type.self, dataType: dataType)
         }
+
         DispatchQueue.main.async {
             self.appState.loadingDataSource[dataType.key] = true
         }

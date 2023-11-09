@@ -236,5 +236,55 @@ final class AsamCoreDataDataSourceTests: XCTestCase {
         
         wait(for: [expectation], timeout: 5)
     }
+    
+    func testInsert() async {
+        var asam = AsamModel()
+        asam.asamDescription = "description"
+        asam.longitude = 1.0
+        asam.latitude = 1.0
+        asam.date = Date(timeIntervalSince1970: 0)
+        asam.navArea = "XI"
+        asam.reference = "2022-100"
+        asam.subreg = "71"
+        asam.position = "1°00'00\"N \n1°00'00\"E"
+        asam.hostility = "Boarding"
+        asam.victim = "Ship"
+        
+        let dataSource = AsamCoreDataDataSource(context: persistentStore.viewContext)
+
+        let inserted = await dataSource.insert(asams: [asam])
+        XCTAssertEqual(1, inserted)
+        
+        let retrieved = dataSource.getAsam(reference: asam.reference)
+        XCTAssertEqual(retrieved?.reference, asam.reference)
+        XCTAssertEqual(retrieved?.victim, asam.victim)
+    }
+    
+    func testGetAsams() async {
+        var asam = AsamModel()
+        asam.asamDescription = "description"
+        asam.longitude = 1.0
+        asam.latitude = 1.0
+        asam.date = Date(timeIntervalSince1970: 0)
+        asam.navArea = "XI"
+        asam.reference = "2022-100"
+        asam.subreg = "71"
+        asam.position = "1°00'00\"N \n1°00'00\"E"
+        asam.hostility = "Boarding"
+        asam.victim = "Ship"
+        
+        let dataSource = AsamCoreDataDataSource(context: persistentStore.viewContext)
+        
+        let inserted = await dataSource.insert(asams: [asam])
+        XCTAssertEqual(1, inserted)
+
+        let retrieved = dataSource.getAsams(filters: [DataSourceFilterParameter(property: DataSourceProperty(name: "reference", key: "reference", type: .string), comparison: DataSourceFilterComparison.equals, valueString: asam.reference)])
+        XCTAssertEqual(1, retrieved.count)
+        XCTAssertEqual(retrieved[0].reference, asam.reference)
+        XCTAssertEqual(retrieved[0].victim, asam.victim)
+        
+        let retrievedNone = dataSource.getAsams(filters: [DataSourceFilterParameter(property: DataSourceProperty(name: "reference", key: "reference", type: .string), comparison: DataSourceFilterComparison.equals, valueString: "no")])
+        XCTAssertEqual(0, retrievedNone.count)
+    }
 
 }

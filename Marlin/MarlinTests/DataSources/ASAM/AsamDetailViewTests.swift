@@ -63,7 +63,7 @@ final class AsamDetailViewTests: XCTestCase {
             return
         }
         
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         let view = AsamDetailView(reference: newItem.reference!)
             .environment(\.managedObjectContext, persistentStore.viewContext)
@@ -116,7 +116,7 @@ final class AsamDetailViewTests: XCTestCase {
             XCTFail()
             return
         }
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
 
         let summary = AsamDetailView(reference: newItem.reference!)
@@ -167,7 +167,7 @@ final class AsamDetailViewTests: XCTestCase {
             XCTFail()
             return
         }
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
 
         let summary = AsamDetailView(reference: newItem.reference!)

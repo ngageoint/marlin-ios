@@ -63,6 +63,12 @@ struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable {
         lhs.isEqualTo(rhs)
     }
     
+    init() {
+        self.canBookmark = false
+        self.latitude = kCLLocationCoordinate2DInvalid.latitude
+        self.longitude = kCLLocationCoordinate2DInvalid.longitude
+    }
+    
     init(asam: Asam) {
         self.asam = asam
         self.canBookmark = true
