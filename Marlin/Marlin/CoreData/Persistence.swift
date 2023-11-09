@@ -435,6 +435,10 @@ class CoreDataPersistentStore: PersistentStore {
             return partialResult
         }
         self.logger.info("Received \(history.count) persistent history transactions.")
+        if let newToken = history.last?.token {
+            self.lastToken = newToken
+            self.storeHistoryToken(newToken)
+        }
         // Update view context with objectIDs from history change request.
         /// - Tag: mergeChanges
         let viewContext = container.viewContext
@@ -442,6 +446,7 @@ class CoreDataPersistentStore: PersistentStore {
             var updateCounts: [String? : Int] = [:]
             var insertCounts: [String? : Int] = [:]
             for transaction in history {
+                NSLog("Transaction author \(transaction.author ?? "No author")")
                 let notif = transaction.objectIDNotification()
                 let inserts: Set<NSManagedObjectID> = notif.userInfo?["inserted_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
                 let updates: Set<NSManagedObjectID> = notif.userInfo?["updated_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
@@ -455,12 +460,8 @@ class CoreDataPersistentStore: PersistentStore {
                     updateCounts[entityKey] = (updateCounts[entityKey] ?? 0) + 1
                 }
                 viewContext.mergeChanges(fromContextDidSave: transaction.objectIDNotification())
-                self.lastToken = transaction.token
             }
             
-            if let newToken = history.last?.token {
-                self.storeHistoryToken(newToken)
-            }
             var dataSourceUpdatedNotifications: [DataSourceUpdatedNotification] = []
             for dataSource in MSI.shared.masterDataList {
                 let inserts = insertCounts[dataSource.key] ?? 0
