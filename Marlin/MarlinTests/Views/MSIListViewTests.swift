@@ -866,12 +866,13 @@ final class MSIListViewTests: XCTestCase {
         
         let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
+            .environmentObject(routeWaypointRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -954,12 +955,13 @@ final class MSIListViewTests: XCTestCase {
         
         let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
+            .environmentObject(routeWaypointRepository)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()

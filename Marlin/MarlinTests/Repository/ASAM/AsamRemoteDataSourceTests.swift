@@ -13,6 +13,11 @@ import Combine
 
 final class AsamRemoteDataSourceTests: XCTestCase {
     
+    override class func setUp() {
+        UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+        UserDefaults.registerMarlinDefaults()
+    }
+    
     func testFetchAsamsWithoutTask() async {
         let dataSource = AsamRemoteDataSource()
         

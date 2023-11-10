@@ -16,9 +16,11 @@ enum AsamInitialDataLoadOperationState: String {
 class AsamInitialDataLoadOperation: Operation {
     var count: Int = 0
     var localDataSource: AsamLocalDataSource
+    var bundle: Bundle
     
-    init(localDataSource: AsamLocalDataSource) {
+    init(localDataSource: AsamLocalDataSource, bundle: Bundle = .main) {
         self.localDataSource = localDataSource
+        self.bundle = bundle
     }
     
     var state: AsamInitialDataLoadOperationState = .isReady {
@@ -68,7 +70,7 @@ class AsamInitialDataLoadOperation: Operation {
         if self.isCancelled {
             return
         }
-        if let url = Bundle.main.url(forResource: "asam", withExtension: "json") {
+        if let url = bundle.url(forResource: "asam", withExtension: "json") {
                 do {
                     let data = try Data(contentsOf: url)
                     let decoder = JSONDecoder()

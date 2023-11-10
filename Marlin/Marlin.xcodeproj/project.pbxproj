@@ -45,6 +45,7 @@
 		F70F501D2993EA470062E555 /* DataLoadedNotificationBannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70F501C2993EA470062E555 /* DataLoadedNotificationBannerTests.swift */; };
 		F713616B28B79D310005C69C /* set_build_number.sh in Resources */ = {isa = PBXBuildFile; fileRef = F713616A28B79D310005C69C /* set_build_number.sh */; };
 		F7194E102AFC3E7D0018E4B4 /* AsamInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7194E0F2AFC3E7D0018E4B4 /* AsamInitializer.swift */; };
+		F7194E122AFD9C0B0018E4B4 /* MockBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7194E112AFD9C0B0018E4B4 /* MockBundle.swift */; };
 		F71CC6EA28AC178F000A326C /* Port+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6E928AC178F000A326C /* Port+CoreDataClass.swift */; };
 		F71CC6EE28AD163D000A326C /* PortSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6ED28AD163D000A326C /* PortSummaryView.swift */; };
 		F71CC6F028AD1647000A326C /* PortDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6EF28AD1647000A326C /* PortDetailView.swift */; };
@@ -527,6 +528,7 @@
 		F70F501C2993EA470062E555 /* DataLoadedNotificationBannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadedNotificationBannerTests.swift; sourceTree = "<group>"; };
 		F713616A28B79D310005C69C /* set_build_number.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = set_build_number.sh; sourceTree = "<group>"; };
 		F7194E0F2AFC3E7D0018E4B4 /* AsamInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamInitializer.swift; sourceTree = "<group>"; };
+		F7194E112AFD9C0B0018E4B4 /* MockBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBundle.swift; sourceTree = "<group>"; };
 		F71CC6E928AC178F000A326C /* Port+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F71CC6ED28AD163D000A326C /* PortSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortSummaryView.swift; sourceTree = "<group>"; };
 		F71CC6EF28AD1647000A326C /* PortDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortDetailView.swift; sourceTree = "<group>"; };
@@ -1744,6 +1746,7 @@
 			children = (
 				F7C23E1A291426590002A7DF /* Data */,
 				F7D8FA63293AB5B000E7D0A1 /* MockDataSource.swift */,
+				F7194E112AFD9C0B0018E4B4 /* MockBundle.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -2717,6 +2720,7 @@
 				F72D8914297EF99400D022FB /* ElectronicPublicationDetailViewTests.swift in Sources */,
 				F7ABB602299BD35C00BAD868 /* SearchViewTests.swift in Sources */,
 				F75324C92989D143005C509F /* MSIListViewModelTests.swift in Sources */,
+				F7194E122AFD9C0B0018E4B4 /* MockBundle.swift in Sources */,
 				F75324CE298C5E87005C509F /* SideMenuContentTests.swift in Sources */,
 				F75F81E2295F70A50062A708 /* BooleanFilterTests.swift in Sources */,
 				F72D89022979BCA300D022FB /* ModuDetailViewTests.swift in Sources */,

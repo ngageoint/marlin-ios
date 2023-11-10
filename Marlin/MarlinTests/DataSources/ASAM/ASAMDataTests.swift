@@ -42,14 +42,12 @@ final class ASAMDataTests: XCTestCase {
 
     func testLoadInitialData() throws {
 
-        for seedDataFile in Asam.seedDataFiles ?? [] {
-            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
-                return HTTPStubsResponse(
-                    fileAtPath: OHPathForFile("asamMockData.json", type(of: self))!,
-                    statusCode: 200,
-                    headers: ["Content-Type":"application/json"]
-                )
-            }
+        stub(condition: isScheme("file") && pathEndsWith("asam.json")) { request in
+            return HTTPStubsResponse(
+                fileAtPath: OHPathForFile("asamMockData.json", type(of: self))!,
+                statusCode: 200,
+                headers: ["Content-Type":"application/json"]
+            )
         }
         
         expectation(forNotification: .DataSourceLoading,
@@ -94,25 +92,30 @@ final class ASAMDataTests: XCTestCase {
             XCTAssertEqual(0, update.updates)
             return true
         }
-            
-        MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
+        
+        let bundle = MockBundle()
+        bundle.mockPath = "asamMockData.json"
+        
+        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(context: PersistenceController.current.viewContext), bundle: bundle)
+        operation.start()
+//        MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
         
         waitForExpectations(timeout: 10, handler: nil)
     }
     
-    func testLoadInitialDataAndUpdate() throws {
+    func testLoadInitialDataAndUpdate() async throws {
         
-        for seedDataFile in Asam.seedDataFiles ?? [] {
-            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
-                return HTTPStubsResponse(
-                    fileAtPath: OHPathForFile("asamMockData.json", type(of: self))!,
-                    statusCode: 200,
-                    headers: ["Content-Type":"application/json"]
-                )
-            }
-        }
+//        for seedDataFile in Asam.seedDataFiles ?? [] {
+//            stub(condition: isScheme("file") && pathEndsWith("asam.json")) { request in
+//                return HTTPStubsResponse(
+//                    fileAtPath: OHPathForFile("asamMockData.json", type(of: self))!,
+//                    statusCode: 200,
+//                    headers: ["Content-Type":"application/json"]
+//                )
+//            }
+//        }
         
-        expectation(forNotification: .DataSourceLoading,
+        let loadingNotification = expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
             if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
                 XCTAssertTrue(loading)
@@ -122,7 +125,7 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
-        expectation(forNotification: .DataSourceLoaded,
+        let loadedNotification = expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
             if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
                 XCTAssertFalse(loading)
@@ -132,13 +135,13 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
-        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+        let didSaveNotification = expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
             let count = try? self.persistentStore.countOfObjects(Asam.self)
             XCTAssertEqual(count, 2)
             return true
         }
         
-        expectation(forNotification: .BatchUpdateComplete,
+        let batchUpdateCompleteNotification = expectation(forNotification: .BatchUpdateComplete,
                     object: nil) { notification in
             guard let updatedNotification = notification.object as? BatchUpdateComplete else {
                 XCTFail("Incorrect notification")
@@ -155,9 +158,18 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
-        MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
+        let bundle = MockBundle()
+        bundle.mockPath = "asamMockData.json"
         
-        waitForExpectations(timeout: 10, handler: nil)
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: PersistenceController.current.viewContext), remoteDataSource: AsamRemoteDataSource())
+        
+        let operation = AsamInitialDataLoadOperation(localDataSource: repository.localDataSource, bundle: bundle)
+        operation.start()
+        
+//        MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
+        
+        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
+//        waitForExpectations(timeout: 10, handler: nil)
         
         stub(condition: isScheme("https") && pathEndsWith("/publications/asam")) { request in
             let jsonObject = [
@@ -204,7 +216,7 @@ final class ASAMDataTests: XCTestCase {
             return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
         }
         
-        expectation(forNotification: .DataSourceLoading,
+        let loadingNotification2 = expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
             if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
                 XCTAssertTrue(loading)
@@ -214,7 +226,7 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
-        expectation(forNotification: .DataSourceLoaded,
+        let loadedNotification2 = expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
             if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
                 XCTAssertFalse(loading)
@@ -224,7 +236,7 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
-        expectation(forNotification: .BatchUpdateComplete,
+        let batchUpdateCompleteNotification2 = expectation(forNotification: .BatchUpdateComplete,
                     object: nil) { notification in
             guard let updatedNotification = notification.object as? BatchUpdateComplete else {
                 XCTFail("Incorrect notification")
@@ -241,33 +253,28 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
-        let e5 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
-            if let count = try? self.persistentStore.countOfObjects(Asam.self) {
-                print("count is \(count)")
-                return count == 3
-            }
-            return false
-        }), object: self.persistentStore.viewContext)
+        await repository.fetchAsams(refresh: true)
         
-        MSI.shared.loadData(type: Asam.decodableRoot, dataType: Asam.self)
-        wait(for: [e5], timeout: 10)
+        await fulfillment(of: [loadingNotification2, loadedNotification2, batchUpdateCompleteNotification2], timeout: 10)
 
-        waitForExpectations(timeout: 10, handler: nil)
-        
-        let updatedAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [Asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-216"), context: nil))
-        
-        XCTAssertEqual(updatedAsam.reference, "2022-216")
-        XCTAssertEqual(updatedAsam.asamDescription, "UPDATED")
-        
-        let newAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [Asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-218"), context: nil))
-        
-        XCTAssertEqual(newAsam.reference, "2022-218")
-        XCTAssertEqual(newAsam.asamDescription, "THIS ONE IS NEW")
+        await self.persistentStore.viewContext.perform {
+            let count = try? self.persistentStore.countOfObjects(Asam.self)
+            XCTAssertEqual(3, count)
+            
+            let updatedAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [Asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-216"), context: nil))
+            
+            XCTAssertEqual(updatedAsam.reference, "2022-216")
+            XCTAssertEqual(updatedAsam.asamDescription, "UPDATED")
+            
+            let newAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [Asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-218"), context: nil))
+            
+            XCTAssertEqual(newAsam.reference, "2022-218")
+            XCTAssertEqual(newAsam.asamDescription, "THIS ONE IS NEW")
+        }
     }
     
     func testRejectInvalidAsamNoReference() throws {
-        for seedDataFile in Asam.seedDataFiles ?? [] {
-            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
+//            stub(condition: isScheme("file") && pathEndsWith("asam.json")) { request in
                 let jsonObject = [
                     "asam": [
                         [
@@ -296,9 +303,8 @@ final class ASAMDataTests: XCTestCase {
                         ]
                     ]
                 ]
-                return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
-            }
-        }
+//                return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
+//            }
 
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
@@ -325,15 +331,18 @@ final class ASAMDataTests: XCTestCase {
             XCTAssertEqual(count, 1)
             return true
         }
+        
+        let bundle = MockBundle()
+        bundle.tempFileContents = jsonObject
 
-        MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
+        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(context: PersistenceController.current.viewContext), bundle: bundle)
+        operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
     }
 
     func testRejectInvalidAsamNoLatitude() throws {
-        for seedDataFile in Asam.seedDataFiles ?? [] {
-            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
+ 
                 let jsonObject = [
                     "asam": [
                         [
@@ -362,9 +371,6 @@ final class ASAMDataTests: XCTestCase {
                         ]
                     ]
                 ]
-                return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
-            }
-        }
 
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
@@ -391,15 +397,19 @@ final class ASAMDataTests: XCTestCase {
             XCTAssertEqual(count, 1)
             return true
         }
+        
+        let bundle = MockBundle()
+        bundle.tempFileContents = jsonObject
+        
+        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(context: PersistenceController.current.viewContext), bundle: bundle)
+        operation.start()
 
-        MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
+//        MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
 
         waitForExpectations(timeout: 10, handler: nil)
     }
 
     func testRejectInvalidAsamNoLongitude() throws {
-        for seedDataFile in Asam.seedDataFiles ?? [] {
-            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
                 let jsonObject = [
                     "asam": [
                         [
@@ -428,9 +438,6 @@ final class ASAMDataTests: XCTestCase {
                         ]
                     ]
                 ]
-                return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
-            }
-        }
 
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
@@ -457,30 +464,24 @@ final class ASAMDataTests: XCTestCase {
             XCTAssertEqual(count, 1)
             return true
         }
+        
+        let bundle = MockBundle()
+        bundle.tempFileContents = jsonObject
+        
+        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(context: PersistenceController.current.viewContext), bundle: bundle)
+        operation.start()
 
-        MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
+//        MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
 
         waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testDataRequest() {
 
-        let newItem = Asam(context: persistentStore.viewContext)
-        newItem.asamDescription = "description"
-        newItem.longitude = 1.0
-        newItem.latitude = 1.0
-        newItem.date = Date()
-        newItem.navArea = "XI"
-        newItem.reference = "2022-100"
-        newItem.subreg = "71"
-        newItem.position = "1°00'00\"N \n1°00'00\"E"
-        newItem.hostility = "Boarding"
-        newItem.victim = "Boat"
-        try? persistentStore.viewContext.save()
-
-        let requests = Asam.dataRequest()
-        XCTAssertEqual(requests.count, 1)
-        let request = requests[0]
+        let request = AsamService.getAsams(date: nil)
+//        let requests = Asam.dataRequest()
+//        XCTAssertEqual(requests.count, 1)
+//        let request = requests[0]
         XCTAssertEqual(request.method, .get)
         let parameters = request.parameters
         XCTAssertEqual(parameters?.count, 2)
@@ -500,7 +501,7 @@ final class ASAMDataTests: XCTestCase {
     }
     
     func testDescription() {
-        let newItem = Asam(context: persistentStore.viewContext)
+        var newItem = AsamModel()
         newItem.asamDescription = "description"
         newItem.longitude = 1.0
         newItem.latitude = 1.0
@@ -553,41 +554,5 @@ final class ASAMDataTests: XCTestCase {
             XCTAssertGreaterThan(images[0].size.width, imageSize.width)
             imageSize = images[0].size
         }
-    }
-    
-    func testSummaryView() {
-        let newItem = Asam(context: persistentStore.viewContext)
-        newItem.asamDescription = "description"
-        newItem.longitude = 1.0
-        newItem.latitude = 1.0
-        newItem.date = Date()
-        newItem.navArea = "XI"
-        newItem.reference = "2022-100"
-        newItem.subreg = "71"
-        newItem.position = "1°00'00\"N \n1°00'00\"E"
-        newItem.hostility = "Boarding"
-        newItem.victim = "Boat"
-        
-        let summary = newItem.summary
-            .environment(\.managedObjectContext, persistentStore.viewContext)
-        XCTAssertNotNil(summary)
-    }
-    
-    func testDetailView() {
-        let newItem = Asam(context: persistentStore.viewContext)
-        newItem.asamDescription = "description"
-        newItem.longitude = 1.0
-        newItem.latitude = 1.0
-        newItem.date = Date()
-        newItem.navArea = "XI"
-        newItem.reference = "2022-100"
-        newItem.subreg = "71"
-        newItem.position = "1°00'00\"N \n1°00'00\"E"
-        newItem.hostility = "Boarding"
-        newItem.victim = "Boat"
-        
-        let detail = newItem.detailView
-            .environment(\.managedObjectContext, persistentStore.viewContext)
-        XCTAssertNotNil(detail)
     }
 }

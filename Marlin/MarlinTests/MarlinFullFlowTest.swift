@@ -60,6 +60,7 @@ final class MarlinFullFlowTest: XCTestCase {
         let dgpsRepository = DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
         let radioBeaconRepository = RadioBeaconRepositoryManager(repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
         let routeRepository = RouteRepositoryManager(repository: RouteCoreDataRepository(context: persistentStore.viewContext))
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
         
         guard let objects = TestHelpers.createOneOfEachType(persistentStore.viewContext) else {
             XCTFail()
@@ -105,6 +106,7 @@ final class MarlinFullFlowTest: XCTestCase {
             .environmentObject(dgpsRepository)
             .environmentObject(radioBeaconRepository)
             .environmentObject(routeRepository)
+            .environmentObject(routeWaypointRepository)
         
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
@@ -272,6 +274,7 @@ final class MarlinFullFlowTest: XCTestCase {
         let dgpsRepository = DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
         let radioBeaconRepository = RadioBeaconRepositoryManager(repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
         let routeRepository = RouteRepositoryManager(repository: RouteCoreDataRepository(context: persistentStore.viewContext))
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
         
         let view = MarlinView()
             .environment(\.managedObjectContext, PersistenceController.shared.viewContext)
@@ -286,6 +289,7 @@ final class MarlinFullFlowTest: XCTestCase {
             .environmentObject(dgpsRepository)
             .environmentObject(radioBeaconRepository)
             .environmentObject(routeRepository)
+            .environmentObject(routeWaypointRepository)
         
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()

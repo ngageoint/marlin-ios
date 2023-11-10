@@ -23,6 +23,9 @@ final class AsamRepositoryTests: XCTestCase {
         Task.init {
             await TestHelpers.asyncGetKeyWindowVisible()
         }
+        UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+        UserDefaults.registerMarlinDefaults()
+        
         for item in DataSourceList().allTabs {
             UserDefaults.standard.initialDataLoaded = false
             UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
