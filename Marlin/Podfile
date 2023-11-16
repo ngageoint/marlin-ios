@@ -4,15 +4,12 @@ platform :ios, '15.5'
 workspace 'Marlin'
 project 'Marlin.xcodeproj'
 
-use_modular_headers!
-
 def common_pods
   pod "Alamofire"
   pod "Kingfisher"
   pod 'geopackage-ios'
   pod 'mgrs-ios'
   pod 'gars-ios'
-  pod 'PROJ', :modular_headers => false
   pod 'MatomoTracker', '~> 7.5'
   pod 'SWXMLHash', '~> 7'
   pod 'SwiftUIIntrospect'
