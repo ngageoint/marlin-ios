@@ -12,38 +12,38 @@ import XCTest
 final class DataSourceSortTests: XCTestCase {
 
     func testToNSSortDescriptorAscending() {
-        let p = DataSourceSortParameter(property: DataSourceProperty(name: "String", key: "string", type: .string), ascending: true)
-        XCTAssertEqual(p.property.key, "string")
-        XCTAssertTrue(p.ascending)
-        XCTAssertFalse(p.section)
+        let parameter = DataSourceSortParameter(property: DataSourceProperty(name: "String", key: "string", type: .string), ascending: true)
+        XCTAssertEqual(parameter.property.key, "string")
+        XCTAssertTrue(parameter.ascending)
+        XCTAssertFalse(parameter.section)
         let sort = NSSortDescriptor(key: "string", ascending: true)
-        XCTAssertEqual(p.toNSSortDescriptor(), sort)
+        XCTAssertEqual(parameter.toNSSortDescriptor(), sort)
     }
     
     func testToNSSortDescriptorDescending() {
-        let p = DataSourceSortParameter(property: DataSourceProperty(name: "String", key: "string", type: .string), ascending: false)
-        XCTAssertEqual(p.property.key, "string")
-        XCTAssertFalse(p.ascending)
-        XCTAssertFalse(p.section)
+        let parameter = DataSourceSortParameter(property: DataSourceProperty(name: "String", key: "string", type: .string), ascending: false)
+        XCTAssertEqual(parameter.property.key, "string")
+        XCTAssertFalse(parameter.ascending)
+        XCTAssertFalse(parameter.section)
         let sort = NSSortDescriptor(key: "string", ascending: false)
-        XCTAssertEqual(p.toNSSortDescriptor(), sort)
+        XCTAssertEqual(parameter.toNSSortDescriptor(), sort)
     }
     
     func testToNSSortDescriptorSectionAscending() {
-        let p = DataSourceSortParameter(property: DataSourceProperty(name: "String", key: "string", type: .string), ascending: true, section: true)
-        XCTAssertEqual(p.property.key, "string")
-        XCTAssertTrue(p.ascending)
-        XCTAssertTrue(p.section)
+        let parameter = DataSourceSortParameter(property: DataSourceProperty(name: "String", key: "string", type: .string), ascending: true, section: true)
+        XCTAssertEqual(parameter.property.key, "string")
+        XCTAssertTrue(parameter.ascending)
+        XCTAssertTrue(parameter.section)
         let sort = NSSortDescriptor(key: "string", ascending: true)
-        XCTAssertEqual(p.toNSSortDescriptor(), sort)
+        XCTAssertEqual(parameter.toNSSortDescriptor(), sort)
     }
     
     func testToNSSortDescriptorSectionDescending() {
-        let p = DataSourceSortParameter(property: DataSourceProperty(name: "String", key: "string", type: .string), ascending: false, section: true)
-        XCTAssertEqual(p.property.key, "string")
-        XCTAssertFalse(p.ascending)
-        XCTAssertTrue(p.section)
+        let parameter = DataSourceSortParameter(property: DataSourceProperty(name: "String", key: "string", type: .string), ascending: false, section: true)
+        XCTAssertEqual(parameter.property.key, "string")
+        XCTAssertFalse(parameter.ascending)
+        XCTAssertTrue(parameter.section)
         let sort = NSSortDescriptor(key: "string", ascending: false)
-        XCTAssertEqual(p.toNSSortDescriptor(), sort)
+        XCTAssertEqual(parameter.toNSSortDescriptor(), sort)
     }
 }

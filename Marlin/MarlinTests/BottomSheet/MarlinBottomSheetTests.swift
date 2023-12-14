@@ -94,12 +94,16 @@ final class MarlinBottomSheetTests: XCTestCase {
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-            
-            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let asam = try! XCTUnwrap(vds.dataSource as? AsamModel)
-            XCTAssertEqual(asam.hostility, "Boarding")
-            XCTAssertEqual(asam.victim, "Boat")
-            return true
+            do {
+                let vds = try XCTUnwrap(notification.object as? ViewDataSource)
+                let asam = try XCTUnwrap(vds.dataSource as? AsamModel)
+                XCTAssertEqual(asam.hostility, "Boarding")
+                XCTAssertEqual(asam.victim, "Boat")
+                return true
+            } catch {
+                XCTFail()
+                return true
+            }
         }
         tester().tapView(withAccessibilityLabel: "More Details")
         
@@ -155,11 +159,16 @@ final class MarlinBottomSheetTests: XCTestCase {
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let asam = try! XCTUnwrap(vds.dataSource as? AsamModel)
-            XCTAssertEqual(asam.hostility, "Boarding")
-            XCTAssertEqual(asam.victim, "Boat")
-            return true
+            do {
+                let vds = try XCTUnwrap(notification.object as? ViewDataSource)
+                let asam = try XCTUnwrap(vds.dataSource as? AsamModel)
+                XCTAssertEqual(asam.hostility, "Boarding")
+                XCTAssertEqual(asam.victim, "Boat")
+                return true
+            } catch {
+                XCTFail()
+                return true
+            }
         }
         tester().tapView(withAccessibilityLabel: "More Details")
         
@@ -171,11 +180,16 @@ final class MarlinBottomSheetTests: XCTestCase {
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let modu = try! XCTUnwrap(vds.dataSource as? ModuModel)
-            XCTAssertEqual(modu.name, "name")
-            XCTAssertEqual(modu.rigStatus, "Inactive")
-            return true
+            do {
+                let vds = try XCTUnwrap(notification.object as? ViewDataSource)
+                let modu = try XCTUnwrap(vds.dataSource as? ModuModel)
+                XCTAssertEqual(modu.name, "name")
+                XCTAssertEqual(modu.rigStatus, "Inactive")
+                return true
+            } catch {
+                XCTFail()
+                return true
+            }
         }
         tester().tapView(withAccessibilityLabel: "More Details")
         
