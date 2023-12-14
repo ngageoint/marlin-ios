@@ -429,11 +429,19 @@ class CoreDataPersistentStore: PersistentStore {
     }
     
     private func mergePersistentHistoryChanges(from history: [NSPersistentHistoryTransaction]) {
-        let entityMap: [String?: String] = MSI.shared.masterDataList.reduce([String?:String]()) { (partialResult, importable) -> [String?:String] in
-            var partialResult = partialResult
-            partialResult[importable.entity().name] = importable.key
-            return partialResult
-        }
+        let entityMap: [String? : String] = [
+            Asam.entity().name : DataSources.asam.key,
+            DFRS.entity().name : DataSources.dfrs.key,
+            DifferentialGPSStation.entity().name : DataSources.dgps.key,
+            ElectronicPublication.entity().name : DataSources.epub.key,
+            Light.entity().name : DataSources.light.key,
+            Modu.entity().name : DataSources.modu.key,
+            NavigationalWarning.entity().name : DataSources.navWarning.key,
+            NoticeToMariners.entity().name : DataSources.noticeToMariners.key,
+            Port.entity().name : DataSources.port.key,
+            RadioBeacon.entity().name : DataSources.radioBeacon.key
+        ]
+
         self.logger.info("Received \(history.count) persistent history transactions.")
         if let newToken = history.last?.token {
             self.lastToken = newToken

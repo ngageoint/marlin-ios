@@ -68,7 +68,9 @@ extension Modu: Locatable, GeoPackageExportable, GeoJSONExportable {
         return dateFormatter
     }
 
-    static func postProcess() {}
+    static func postProcess() {
+        imageCache.clearCache()
+    }
 }
 
 extension Modu: BatchImportable {

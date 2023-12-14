@@ -54,6 +54,8 @@ struct MapNavigationView: View {
                     if output.mapName == nil || output.mapName == "Marlin Map" {
                         viewData(dataSource)
                     }
+                } else if let definition = output.definition, let itemKey = output.itemKey {
+                    viewData(definition: definition, itemKey: itemKey)
                 }
             }
             .onReceive(switchTabPub) { output in
@@ -76,6 +78,12 @@ struct MapNavigationView: View {
                 }
             }
         }
+    }
+    
+    func viewData(definition: any DataSourceDefinition, itemKey: String) {
+        NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
+        NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
+        path.append(MarlinRoute.dataSourceDetail(dataSourceKey: definition.key, itemKey: itemKey))
     }
     
     func viewData(_ data: any DataSource) {

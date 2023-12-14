@@ -179,9 +179,9 @@ class GeoPackageExportViewModel: ObservableObject {
         }
         
         if included {
-            removeExportDataSource(filterable: DataSourceDefinitions.filterableFromDefintion(definition))
+            removeExportDataSource(filterable: DataSources.filterableFromDefintion(definition))
         } else {
-            addExportDataSource(filterable: DataSourceDefinitions.filterableFromDefintion(definition))
+            addExportDataSource(filterable: DataSources.filterableFromDefintion(definition))
         }
     }
     

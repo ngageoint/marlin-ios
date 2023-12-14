@@ -9,6 +9,67 @@ import Foundation
 import Combine
 import CoreData
 
+struct Trigger {
+    typealias Index = Int
+    typealias Signal = AnyPublisher<Void, Never>
+    
+    private let sender = PassthroughSubject<Index, Never>()
+    
+    func signal(activatedBy index: Index) -> Signal {
+        return sender
+            .filter { $0 == index }
+            .map { _ in }
+            .eraseToAnyPublisher()
+    }
+    
+    func activate(for index: Index) {
+        sender.send(index)
+    }
+}
+
+extension Trigger {
+    func signal<T>(activatedBy t: T) -> Signal where T: Hashable {
+        return signal(activatedBy: t.hashValue)
+    }
+    
+    func activate<T>(for t: T) where T: Hashable {
+        activate(for: t.hashValue)
+    }
+}
+
+extension Publisher {
+    func wait<S>(untilOutputFrom signal: S) -> AnyPublisher<Self.Output, Self.Failure> where S: Publisher, S.Failure == Never {
+        return prepend(
+            Empty(completeImmediately: false)
+                .prefix(untilOutputFrom: signal)
+        )
+        .eraseToAnyPublisher()
+    }
+}
+
+extension Publishers {
+    static func Publish<S, P>(onOutputFrom signal: S, _ publisher: @escaping () -> P) -> AnyPublisher<P.Output, P.Failure> where S: Publisher, P: Publisher, S.Failure == Never {
+        return signal
+            .map { _ in }
+            .map { _ in
+                return publisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+    
+    static func PublishAndRepeat<S, P>(onOutputFrom signal: S, _ publisher: @escaping () -> P) -> AnyPublisher<P.Output, P.Failure> where S: Publisher, P: Publisher, S.Failure == Never {
+        return signal
+            .map { _ in }
+            .prepend(())
+            .map { _ in
+                return publisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+}
+
 extension NSManagedObjectContext {
     func changesPublisher<Object: NSManagedObject, TransformedObject: Equatable>(for fetchRequest: NSFetchRequest<Object>, transformer: @escaping (Object) -> TransformedObject)
     -> ManagedObjectChangesPublisher<Object, TransformedObject>

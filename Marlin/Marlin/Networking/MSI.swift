@@ -88,9 +88,6 @@ public class MSI {
                 let dataSource = self.masterDataList.first { type in
                     item.key == type.key
                 }
-                if let mapImageDataSource = dataSource as? (any MapImage) {
-                    type(of: mapImageDataSource).imageCache.clearCache()
-                }
                 dataSource?.postProcess()
             }
             .store(in: &cancellable)

@@ -84,7 +84,9 @@ extension DifferentialGPSStation: Locatable, GeoPackageExportable, GeoJSONExport
         return dateFormatter
     }
     
-    static func postProcess() {}
+    static func postProcess() {
+        imageCache.clearCache()
+    }
 }
 
 extension DifferentialGPSStation: BatchImportable {

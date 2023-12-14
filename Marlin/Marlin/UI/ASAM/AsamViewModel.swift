@@ -11,6 +11,13 @@ class AsamViewModel: ObservableObject, Identifiable {
     @Published var asam: AsamModel?
     @Published var predicate: NSPredicate?
     
+    var asamListModel: AsamListModel? {
+        if let asam = asam {
+            return AsamListModel(asamModel: asam)
+        }
+        return nil
+    }
+    
     var repository: AsamRepository?
     var routeWaypointRepository: RouteWaypointRepository?
     

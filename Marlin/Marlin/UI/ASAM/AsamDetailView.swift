@@ -7,7 +7,6 @@
 
 import SwiftUI
 import MapKit
-import CoreData
 
 struct AsamDetailView: View {
     @EnvironmentObject var asamRepository: AsamRepository
@@ -35,10 +34,10 @@ struct AsamDetailView: View {
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     if let asam = viewModel.asam {
-                        Group {
-                            AsamSummaryView(asam: asam, showTitle: false, showBookmarkNotes: true)
-                                .padding(.bottom, 16)
-                        }.padding([.leading, .trailing], 16)
+//                        Group {
+//                            AsamSummaryView(asam: asam, showTitle: false, showBookmarkNotes: true)
+//                                .padding(.bottom, 16)
+//                        }.padding([.leading, .trailing], 16)
                     }
                 }
                 .card()
@@ -47,19 +46,19 @@ struct AsamDetailView: View {
             }
             .dataSourceSection()
 
-            Section("Additional Information") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Property(property: "Hostility", value: viewModel.asam?.hostility)
-                    Property(property: "Victim", value: viewModel.asam?.victim)
-                    Property(property: "Reference Number", value: viewModel.asam?.reference)
-                    Property(property: "Date of Occurence", value: viewModel.asam?.dateString)
-                    Property(property: "Geographical Subregion", value: viewModel.asam?.subreg)
-                    Property(property: "Navigational Area", value: viewModel.asam?.navArea)
-                }
-                .padding(.all, 16)
-                .card()
-                .frame(maxWidth: .infinity)
+            Text("Additional Information")
+                .sectionHeader()
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Property(property: "Hostility", value: viewModel.asam?.hostility)
+                Property(property: "Victim", value: viewModel.asam?.victim)
+                Property(property: "Reference Number", value: viewModel.asam?.reference)
+                Property(property: "Date of Occurence", value: viewModel.asam?.dateString)
+                Property(property: "Geographical Subregion", value: viewModel.asam?.subreg)
+                Property(property: "Navigational Area", value: viewModel.asam?.navArea)
             }
+            .paddedCard()
+            .frame(maxWidth: .infinity)
             .dataSourceSection()
         }
         .dataSourceDetailList()

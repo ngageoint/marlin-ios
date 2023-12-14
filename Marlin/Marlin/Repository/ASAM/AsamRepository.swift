@@ -8,6 +8,20 @@
 import Foundation
 import Combine
 
+enum AsamItem: Hashable, Identifiable {
+    var id: String {
+        switch self {
+        case .listItem(let asam):
+            return asam.id
+        case .sectionHeader(let header):
+            return header
+        }
+    }
+    
+    case listItem(_ asam: AsamListModel)
+    case sectionHeader(header: String)
+}
+
 class AsamRepository: ObservableObject {
     var localDataSource: AsamLocalDataSource
     private var remoteDataSource: AsamRemoteDataSource
@@ -24,7 +38,11 @@ class AsamRepository: ObservableObject {
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
         localDataSource.getCount(filters: filters)
     }
-    func observeAsamListItems(filters: [DataSourceFilterParameter]?) -> AnyPublisher<CollectionDifference<AsamModel>, Never> {
+    func asams(filters: [DataSourceFilterParameter]?, paginatedBy paginator: Trigger.Signal? = nil) -> AnyPublisher<[AsamItem], Error> {
+        localDataSource.asams(filters: filters, paginatedBy: paginator)
+    }
+    
+    func observeAsamListItems(filters: [DataSourceFilterParameter]?, limit: Int = 100) -> AnyPublisher<CollectionDifference<AsamModel>, Never> {
         localDataSource.observeAsamListItems(filters: filters)
     }
     func fetchAsams(refresh: Bool = false) async -> [AsamModel] {
@@ -54,4 +72,9 @@ class AsamRepository: ObservableObject {
         }
         return localDataSource.getAsams(filters: nil)
     }
+    
+    func observeAsamListItemsSectioned(filters: [DataSourceFilterParameter]?) -> AnyPublisher<CollectionDifference<AsamModel>, Never>? {
+        return nil
+    }
+    
 }

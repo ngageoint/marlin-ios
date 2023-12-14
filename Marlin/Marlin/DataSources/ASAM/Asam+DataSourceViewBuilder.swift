@@ -21,20 +21,20 @@ extension Asam: DataSourceViewBuilder {
     }
     
     var summary: some DataSourceSummaryView {
-        AsamSummaryView(asam: AsamModel(asam: self))
+        AsamSummaryView(asam: AsamListModel(asam: self))
     }
 }
 
-extension AsamModel: DataSourceViewBuilder {
-    var detailView: AnyView {
-        if let reference = self.reference {
-            return AnyView(AsamDetailView(reference: reference))
-        } else {
-            return AnyView(EmptyView())
-        }
-    }
-    
-    var summary: some DataSourceSummaryView {
-        AsamSummaryView(asam: self)
-    }
-}
+//extension AsamModel: DataSourceViewBuilder {
+//    var detailView: AnyView {
+//        if let reference = self.reference {
+//            return AnyView(AsamDetailView(reference: reference))
+//        } else {
+//            return AnyView(EmptyView())
+//        }
+//    }
+//    
+//    var summary: some DataSourceSummaryView {
+//        AsamSummaryView(asam: self)
+//    }
+//}

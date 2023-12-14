@@ -43,6 +43,7 @@ class Light: NSManagedObject, LightProtocol {
     static let raconColor = UIColor(argbValue: 0xffb52bb5)
     
     static func postProcess() {
+        imageCache.clearCache()
         DispatchQueue.global(qos: .utility).async {
             let fetchRequest = NSFetchRequest<Light>(entityName: "Light")
             fetchRequest.predicate = NSPredicate(format: "requiresPostProcessing == true")

@@ -135,7 +135,8 @@ extension Locatable {
 
 protocol DataSource {
     static var definition: any DataSourceDefinition { get }
-    static var properties: [DataSourceProperty] { get }
+    var definition: any DataSourceDefinition { get }
+//    static var properties: [DataSourceProperty] { get }
     static var defaultSort: [DataSourceSortParameter] { get }
     static var defaultFilter: [DataSourceFilterParameter] { get }
     static var imageScale: CGFloat { get }
@@ -149,6 +150,10 @@ protocol DataSource {
 }
 
 extension DataSource {
+    var definition: any DataSourceDefinition {
+        Self.definition
+    }
+    
     static func cachedImage(zoomLevel: Int) -> UIImage? {
         return DataSourceImageCache.shared.getCachedImage(dataSourceKey: definition.key, zoomLevel: zoomLevel)
     }

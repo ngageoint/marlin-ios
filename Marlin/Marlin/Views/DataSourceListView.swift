@@ -31,7 +31,8 @@ struct DataSourceListView: View {
     
     var body: some View {
         if dataSource.key == Asam.key {
-            MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
+            AsamList(path: $path)
+//            MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
         } else if dataSource.key == Modu.key {
             MSIListView<Modu, EmptyView, EmptyView, EmptyView>(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
         } else if dataSource.key == Light.key {

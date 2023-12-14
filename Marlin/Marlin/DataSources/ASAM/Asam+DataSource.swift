@@ -43,7 +43,9 @@ extension Asam: DataSource, Locatable, GeoPackageExportable, GeoJSONExportable {
         return dateFormatter
     }
     
-    static func postProcess() {}
+    static func postProcess() {
+        imageCache.clearCache()
+    }
     
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")
@@ -78,7 +80,7 @@ extension Asam: DataSource, Locatable, GeoPackageExportable, GeoJSONExportable {
     }
 }
 
-// TODO: This is only for the MSIListView depending on BatchImportable
+// TODO: This is only for the MSI masterDataList depending on BatchImportable
 extension Asam : BatchImportable {
     static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
         return 0

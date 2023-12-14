@@ -79,7 +79,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
         self.sectionNameBuilder = sectionNameBuilder
         self.sectionViewBuilder = sectionViewBuilder
         self.content = content
-        self.filterViewModel = PersistedFilterViewModel(dataSource: DataSourceDefinitions.filterableFromDefintion(T.definition))
+        self.filterViewModel = PersistedFilterViewModel(dataSource: DataSources.filterableFromDefintion(T.definition))
         self.emptyView = emptyView
     }
     
@@ -87,7 +87,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
         Self._printChanges()
         return ZStack(alignment: .bottomTrailing) {
             GenericSectionedList<T, SectionHeader, Content, EmptyContent>(path: $path, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content, emptyView: emptyView)
-            if let _ = T.self as? GeoPackageExportable.Type, let filterable = DataSourceDefinitions.filterableFromDefintion(T.definition) {
+            if let _ = T.self as? GeoPackageExportable.Type, let filterable = DataSources.filterableFromDefintion(T.definition) {
                 GeoPackageExportButton(filterable: filterable)
             }
         }
@@ -118,7 +118,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
             NavigationStack {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
-                        SortView(dataSource: T.self)
+                        SortView(definition: T.definition)
                             .background(Color.surfaceColor)
                         
                         Spacer()

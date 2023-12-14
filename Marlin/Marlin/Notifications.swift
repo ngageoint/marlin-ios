@@ -56,6 +56,22 @@ struct MapItemsTappedNotification {
     var items: [any DataSource]?
     var mapName: String?
     var zoom: Bool = false
+    var itemKeys: [String : [String]]? = nil
+        
+    @available(*, deprecated)
+    init(annotations: [Any]? = nil, items: [any DataSource]?, mapName: String? = nil, zoom: Bool = false) {
+        self.annotations = annotations
+        self.items = items
+        self.mapName = mapName
+        self.zoom = zoom
+    }
+    
+    init(annotations: [Any]? = nil, itemKeys: [String : [String]]?, mapName: String? = nil, zoom: Bool = false) {
+        self.annotations = annotations
+        self.itemKeys = itemKeys
+        self.mapName = mapName
+        self.zoom = zoom
+    }
 }
 
 struct SnackbarNotification {
@@ -75,5 +91,18 @@ struct BatchUpdateComplete {
 
 struct ViewDataSource {
     var mapName: String?
+    @available(*, deprecated)
     var dataSource: (any DataSource)?
+    var definition: (any DataSourceDefinition)?
+    var itemKey: String?
+    
+    @available(*, deprecated)
+    init(mapName: String? = nil, dataSource: (any DataSource)?) {
+        self.dataSource = dataSource
+    }
+    
+    init(mapName: String? = nil, definition: (any DataSourceDefinition)?, itemKey: String?) {
+        self.definition = definition
+        self.itemKey = itemKey
+    }
 }

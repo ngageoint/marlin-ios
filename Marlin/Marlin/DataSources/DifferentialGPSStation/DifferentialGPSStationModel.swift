@@ -396,7 +396,9 @@ extension DifferentialGPSStationModel: DataSource {
         return dateFormatter
     }
     
-    static func postProcess() {}
+    static func postProcess() {
+        imageCache.clearCache()
+    }
 }
 
 extension DifferentialGPSStationModel: MapImage {

@@ -20,6 +20,14 @@ protocol AsamLocalDataSource {
     func observeAsamListItems(filters: [DataSourceFilterParameter]?) -> AnyPublisher<CollectionDifference<AsamModel>, Never>
     func insert(task: BGTask?, asams: [AsamModel]) async -> Int
     func batchImport(from propertiesList: [AsamModel]) async throws -> Int
+    
+    func asams(filters: [DataSourceFilterParameter]?, paginatedBy paginator: Trigger.Signal?) -> AnyPublisher<[AsamItem], Error>
+}
+
+struct AsamModelPage {
+    var asamList: [AsamItem]
+    var next: Int?
+    var currentHeader: String?
 }
 
 class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
@@ -80,8 +88,121 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
         return count
     }
     
+    typealias Page = Int
+    
+    func asams(filters: [DataSourceFilterParameter]?, paginatedBy paginator: Trigger.Signal? = nil) -> AnyPublisher<[AsamItem], Error> {
+        return asams(filters: filters, at: nil, currentHeader: nil, paginatedBy: paginator)
+            .map(\.asamList)
+            .eraseToAnyPublisher()
+    }
+    
+    func asams(filters: [DataSourceFilterParameter]?, at page: Page?, currentHeader: String?) -> AnyPublisher<AsamModelPage, Error> {
+        
+        let request: NSFetchRequest<Asam> = AsamFilterable().fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
+        request.fetchLimit = 5
+        request.fetchOffset = (page ?? 0) * 5
+        //        request.fetchLimit = 100
+        let userSort = UserDefaults.standard.sort(Asam.key)
+        var sortDescriptors: [DataSourceSortParameter] = []
+        if userSort.isEmpty {
+            sortDescriptors = Asam.defaultSort
+        } else {
+            sortDescriptors = userSort
+        }
+        
+        request.sortDescriptors = sortDescriptors.map({ sortParameter in
+            sortParameter.toNSSortDescriptor()
+        })
+        var previousHeader: String? = currentHeader
+        var asams: [AsamItem] = []
+        context.performAndWait {
+            if let fetched = context.fetch(request: request) {
+                
+                asams = fetched.flatMap { asam in
+                    if sortDescriptors.isEmpty {
+                        return [AsamItem.listItem(AsamListModel(asam: asam))]
+                    }
+
+                    let sortDescriptor = sortDescriptors[0]
+                    
+                    if !sortDescriptor.section {
+                        return [AsamItem.listItem(AsamListModel(asam: asam))]
+                    }
+                    
+                    let currentValue = asam.value(forKey: sortDescriptor.property.key)
+                    var currentValueString: String?
+                    switch sortDescriptor.property.type {
+                    case .string:
+                        currentValueString = currentValue as? String
+                    case .date:
+                        if let currentValue = currentValue as? Date {
+                            currentValueString = asam.dateString
+                        }
+                    case .int:
+                        currentValueString = (currentValue as? Int)?.zeroIsEmptyString
+                    case .float:
+                        currentValueString = (currentValue as? Float)?.zeroIsEmptyString
+                    case .double:
+                        currentValueString = (currentValue as? Double)?.zeroIsEmptyString
+                    case .boolean:
+                        currentValueString = ((currentValue as? Bool) ?? false) ? "True" : "False"
+                    case .enumeration:
+                        currentValueString = currentValue as? String
+                    case .latitude:
+                        currentValueString = (currentValue as? Double)?.latitudeDisplay
+                    case .longitude:
+                        currentValueString = (currentValue as? Double)?.longitudeDisplay
+                    default:
+                        return [AsamItem.listItem(AsamListModel(asam: asam))]
+                        
+                    }
+                    
+                    if let p = previousHeader, let currentValueString = currentValueString {
+                        if p != currentValueString {
+                            previousHeader = currentValueString
+                            return [AsamItem.sectionHeader(header: currentValueString),  AsamItem.listItem(AsamListModel(asam: asam))]
+                        }
+                    } else if previousHeader == nil, let currentValueString = currentValueString {
+                        previousHeader = currentValueString
+                        return [AsamItem.sectionHeader(header: currentValueString),  AsamItem.listItem(AsamListModel(asam: asam))]
+                    }
+                    
+                    return [AsamItem.listItem(AsamListModel(asam: asam))]
+                }
+            }
+        }
+        
+        let asamPage: AsamModelPage = AsamModelPage(asamList: asams, next: (page ?? 0) + 1, currentHeader: previousHeader)
+        
+        return Just(asamPage)
+            .setFailureType(to: Error.self)
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+    
+    func asams(filters: [DataSourceFilterParameter]?, at page: Page?, currentHeader: String?, paginatedBy paginator: Trigger.Signal?) -> AnyPublisher<AsamModelPage, Error> {
+        return asams(filters: filters, at: page, currentHeader: currentHeader)
+            .map { result -> AnyPublisher<AsamModelPage, Error> in
+                if let paginator = paginator, let next = result.next {
+                    return self.asams(filters: filters, at: next, currentHeader: result.currentHeader, paginatedBy: paginator)
+                        .wait(untilOutputFrom: paginator)
+                        .retry(.max)
+                        .prepend(result)
+                        .eraseToAnyPublisher()
+                }
+                else {
+                    return Just(result)
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
+                }
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+    
     func observeAsamListItems(filters: [DataSourceFilterParameter]?) -> AnyPublisher<CollectionDifference<AsamModel>, Never> {
         let request: NSFetchRequest<Asam> = AsamFilterable().fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
+//        request.fetchLimit = 100
         request.sortDescriptors = UserDefaults.standard.sort(Asam.key).map({ sortParameter in
             sortParameter.toNSSortDescriptor()
         })

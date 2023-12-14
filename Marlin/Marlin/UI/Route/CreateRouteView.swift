@@ -69,7 +69,7 @@ struct CreateRouteView: View {
     func waypointRow(waypointViewBuilder: any DataSource, first: Bool = false, last: Bool = false) -> some View {
         HStack {
             Group {
-                DataSourceCircleImage(dataSource: type(of: waypointViewBuilder), size: 12)
+                DataSourceCircleImage(definition: waypointViewBuilder.definition, size: 12)
                 HStack {
                     VStack(alignment: .leading) {
                         Text(waypointViewBuilder.itemTitle)

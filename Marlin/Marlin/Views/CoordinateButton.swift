@@ -32,3 +32,18 @@ struct CoordinateButton: View {
         }
     }
 }
+
+struct CoordinateButton2: View {
+    var action: Actions.Location
+        
+    @AppStorage("coordinateDisplay") var coordinateDisplay: CoordinateDisplayType = .latitudeLongitude
+
+    var body: some View {
+        Button(action: action.action) {
+            Text(coordinateDisplay.format(coordinate: action.latLng))
+                .foregroundColor(Color.primaryColorVariant)
+        }
+        .accessibilityElement()
+        .accessibilityLabel("Location")
+    }
+}

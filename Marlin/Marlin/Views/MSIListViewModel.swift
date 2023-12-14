@@ -64,7 +64,7 @@ class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResu
         var predicates: [NSPredicate] = []
         
         for filter in filters {
-            if let predicate = filter.toPredicate(dataSource: DataSourceDefinitions.filterableFromDefintion(T.definition)) {
+            if let predicate = filter.toPredicate(dataSource: DataSources.filterableFromDefintion(T.definition)) {
                 predicates.append(predicate)
             }
         }

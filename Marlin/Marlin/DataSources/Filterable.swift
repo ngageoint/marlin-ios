@@ -12,6 +12,7 @@ protocol Filterable {
     var id: String { get }
     var definition: any DataSourceDefinition { get }
     var properties: [DataSourceProperty] { get }
+    var defaultSort: [DataSourceSortParameter] { get }
     var defaultFilter: [DataSourceFilterParameter] { get }
     var locatableClass: Locatable.Type? { get }
     func fetchRequest(filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>?
@@ -55,6 +56,8 @@ extension Filterable {
         fetchRequest.predicate = predicate
         return fetchRequest
     }
+    
+    var defaultSort: [DataSourceSortParameter] { [] }
 }
 
 struct ChartCorrectionFilterable: Filterable {
@@ -103,6 +106,8 @@ struct AsamFilterable: Filterable {
     var defaultFilter: [DataSourceFilterParameter] = [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last365Days)]
     
     var locatableClass: Locatable.Type? = Asam.self
+    
+    var defaultSort = [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), ascending: false)]
 }
 
 struct ModuFilterable: Filterable {
@@ -127,6 +132,8 @@ struct ModuFilterable: Filterable {
     var defaultFilter: [DataSourceFilterParameter] = []
     
     var locatableClass: Locatable.Type? = Modu.self
+    
+    var defaultSort = [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date), ascending: false)]
 }
 
 struct DifferentialGPSStationFilterable: Filterable {
@@ -157,6 +164,8 @@ struct DifferentialGPSStationFilterable: Filterable {
     var defaultFilter: [DataSourceFilterParameter] = []
     
     var locatableClass: Locatable.Type? = DifferentialGPSStation.self
+    
+    var defaultSort = [DataSourceSortParameter(property:DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(DifferentialGPSStation.geopoliticalHeading), type: .string), ascending: true, section: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(DifferentialGPSStation.featureNumber), type: .int), ascending: true)]
 }
 
 struct PortFilterable: Filterable {
@@ -295,6 +304,8 @@ struct PortFilterable: Filterable {
     var defaultFilter: [DataSourceFilterParameter] = []
     
     var locatableClass: Locatable.Type? = Port.self
+    
+    var defaultSort = [DataSourceSortParameter(property:DataSourceProperty(name: "World Port Index Number", key: #keyPath(Port.portNumber), type: .int), ascending: false)]
 }
 
 struct LightFilterable: Filterable {
@@ -333,6 +344,7 @@ struct LightFilterable: Filterable {
     
     var locatableClass: Locatable.Type? = Light.self
     
+    var defaultSort = [DataSourceSortParameter(property:DataSourceProperty(name: "Region", key: #keyPath(Light.sectionHeader), type: .string), ascending: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .int), ascending: true)]
 }
 
 struct RadioBeaconFilterable: Filterable {
@@ -367,6 +379,8 @@ struct RadioBeaconFilterable: Filterable {
     var defaultFilter: [DataSourceFilterParameter] = []
     
     var locatableClass: Locatable.Type? = RadioBeacon.self
+    
+    var defaultSort = [DataSourceSortParameter(property:DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(RadioBeacon.geopoliticalHeading), type: .string), ascending: true, section: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(RadioBeacon.featureNumber), type: .int), ascending: true)]
 }
 
 struct CommonFilterable: Filterable {
@@ -391,7 +405,8 @@ struct NoticeToMarinersFilterable: Filterable {
     }
     
     var defaultFilter: [DataSourceFilterParameter] = []
-    }
+    var defaultSort = [DataSourceSortParameter(property:DataSourceProperty(name: "Notice Number", key: #keyPath(NoticeToMariners.noticeNumber), type: .int), ascending: false, section: true), DataSourceSortParameter(property:DataSourceProperty(name: "Full Publication", key: #keyPath(NoticeToMariners.isFullPublication), type: .int), ascending: false, section: false), DataSourceSortParameter(property:DataSourceProperty(name: "Section Order", key: #keyPath(NoticeToMariners.sectionOrder), type: .int), ascending: true, section: false)]
+}
 
 struct ElectronicPublicationFilterable: Filterable {
     var definition: any DataSourceDefinition {
@@ -405,6 +420,7 @@ struct ElectronicPublicationFilterable: Filterable {
     
     var defaultFilter: [DataSourceFilterParameter] = []
     
+    var defaultSort = [DataSourceSortParameter(property:DataSourceProperty(name: "Type", key: #keyPath(ElectronicPublication.pubTypeId), type: .int), ascending: true, section: true)]
 }
 
 struct NavigationalWarningFilterable: Filterable {
@@ -417,6 +433,8 @@ struct NavigationalWarningFilterable: Filterable {
     var properties: [DataSourceProperty] = []
     
     var locatableClass: Locatable.Type? = NavigationalWarning.self
+    
+    var defaultSort = [DataSourceSortParameter(property:DataSourceProperty(name: "Navigational Area", key: "navArea", type: .string), ascending: false), DataSourceSortParameter(property:DataSourceProperty(name: "Issue Date", key: "issueDate", type: .date), ascending: false)]
 }
 
 struct RouteFilterable: Filterable {
