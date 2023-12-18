@@ -24,8 +24,10 @@
 //            @ObservedObject var passThrough: PassThrough
 //            
 //            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
-//            @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Location", key: "locationProperty", type: .location))
-//            
+//            @ObservedObject var dataSourcePropertyFilterViewModel = 
+// DataSourcePropertyFilterViewModel(dataSourceProperty:
+// DataSourceProperty(name: "Location", key: "locationProperty", type: .location))
+//
 //            init(passThrough: PassThrough) {
 //                self.passThrough = passThrough
 //                self.passThrough.viewModel = dataSourcePropertyFilterViewModel

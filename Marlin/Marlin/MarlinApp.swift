@@ -144,22 +144,32 @@ struct MarlinApp: App {
         UserDefaults.registerMarlinDefaults()
         shared = MSI.shared
         appState = MSI.shared.appState
-        persistentStoreLoadedPub.sink { notification in
+        persistentStoreLoadedPub.sink { _ in
             NSLog("Persistent store loaded, load all data")
             MSI.shared.loadAllData()
         }
         .store(in: &cancellable)
         persistentStore = PersistenceController.shared
-        bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        asamRepository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
-        moduRepository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
-        lightRepository = LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext))
-        portRepository = PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext))
-        dgpsRepository = DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
-        radioBeaconRepository = RadioBeaconRepositoryManager(repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
-        routeRepository = RouteRepositoryManager(repository: RouteCoreDataRepository(context: persistentStore.viewContext))
-        routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
-        navigationalWarningRepository = NavigationalWarningRepositoryManager(repository: NavigationalWarningCoreDataRepository(context: persistentStore.viewContext))
+        bookmarkRepository = BookmarkRepositoryManager(
+            repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        asamRepository = AsamRepository(
+            localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
+        moduRepository = ModuRepositoryManager(
+            repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        lightRepository = LightRepositoryManager(
+            repository: LightCoreDataRepository(context: persistentStore.viewContext))
+        portRepository = PortRepositoryManager(
+            repository: PortCoreDataRepository(context: persistentStore.viewContext))
+        dgpsRepository = DifferentialGPSStationRepositoryManager(
+            repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
+        radioBeaconRepository = RadioBeaconRepositoryManager(
+            repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
+        routeRepository = RouteRepositoryManager(
+            repository: RouteCoreDataRepository(context: persistentStore.viewContext))
+        routeWaypointRepository = RouteWaypointRepository(
+            localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
+        navigationalWarningRepository = NavigationalWarningRepositoryManager(
+            repository: NavigationalWarningCoreDataRepository(context: persistentStore.viewContext))
         UNUserNotificationCenter.current().delegate = appDelegate
     }
 
@@ -192,7 +202,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         Metrics.shared.dispatch()
     }
     
-    public var backgroundCompletionHandler: (() -> Void)? = nil
+    public var backgroundCompletionHandler: (() -> Void)?
     
     func application(_ application: UIApplication,
                      handleEventsForBackgroundURLSession identifier: String,
@@ -208,12 +218,17 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         backgroundCompletionHandler()
     }
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let presentationOption: UNNotificationPresentationOptions = [.sound, .banner, .list]
         completionHandler(presentationOption)
     }
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         MSI.shared.registerBackgroundHandler()
         return true
     }

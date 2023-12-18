@@ -16,7 +16,10 @@ struct DataSourceRail: View {
         ScrollView {
             VStack {
                 ForEach(dataSourceList.allTabs) { dataSourceItem in
-                    RailItem(imageName: dataSourceItem.dataSource.definition.imageName, systemImageName: dataSourceItem.dataSource.definition.systemImageName, itemText: dataSourceItem.dataSource.definition.name)
+                    RailItem(
+                        imageName: dataSourceItem.dataSource.definition.imageName,
+                        systemImageName: dataSourceItem.dataSource.definition.systemImageName,
+                        itemText: dataSourceItem.dataSource.definition.name)
                         .onTapGesture {
                             if activeRailItem == dataSourceItem {
                                 activeRailItem = nil

@@ -129,7 +129,12 @@ class RouteViewModel: ObservableObject, Identifiable {
                     set.insert(routeWaypoint)
                 }
                 route.waypoints = NSSet(set: set)
-                if let routeGeom = route.sfGeometry, let envelope = routeGeom.envelope(), let minLat = envelope.minY, let maxLat = envelope.maxY, let minLon = envelope.minX, let maxLon = envelope.maxX {
+                if let routeGeom = route.sfGeometry, 
+                    let envelope = routeGeom.envelope(),
+                    let minLat = envelope.minY,
+                    let maxLat = envelope.maxY,
+                    let minLon = envelope.minX,
+                    let maxLon = envelope.maxX {
                     route.minLatitude = minLat.doubleValue
                     route.maxLatitude = maxLat.doubleValue
                     route.minLongitude = minLon.doubleValue

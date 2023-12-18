@@ -135,7 +135,17 @@ class Metrics {
             return
         }
         if let tracker = MatomoTracker.shared {
-            let event = Event(tracker: tracker, action: ["download"], url: url, eventCategory: "download", eventAction: "download", eventName: nil, eventValue: nil, customTrackingParameters: ["download": url.absoluteString], dimensions: [], isCustomAction: true)
+            let event = Event(
+                tracker: tracker,
+                action: ["download"],
+                url: url,
+                eventCategory: "download",
+                eventAction: "download",
+                eventName: nil,
+                eventValue: nil,
+                customTrackingParameters: ["download": url.absoluteString],
+                dimensions: [],
+                isCustomAction: true)
             MatomoTracker.shared?.track(event)
         }
     }
@@ -147,5 +157,8 @@ class Metrics {
 }
 
 extension MatomoTracker {
-    static let shared: MatomoTracker? = UserDefaults.standard.metricsEnabled ? MatomoTracker(siteId: Metrics.MATOMO_SITEID, baseURL: URL(string: Metrics.MATOMO_URL)!) : nil
+    static let shared: MatomoTracker? = 
+    UserDefaults.standard.metricsEnabled ? MatomoTracker(
+        siteId: Metrics.MATOMO_SITEID,
+        baseURL: URL(string: Metrics.MATOMO_URL)!) : nil
 }

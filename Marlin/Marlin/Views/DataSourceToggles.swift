@@ -31,10 +31,9 @@ struct DataSourceToggles: View {
     }
     
     func position(position: Int, arcSize: Int, radius: CGFloat) -> CGSize {
-        let r: CGFloat = radius
         let range = -CGFloat.pi / 2 ... 0
         let angle = range.lowerBound + CGFloat(position) / CGFloat(arcSize - 1) * (range.upperBound - range.lowerBound)
-        return CGSize(width: r * cos(angle) + 8, height: r * sin(angle))
+        return CGSize(width: radius * cos(angle) + 8, height: radius * sin(angle))
     }
     
     @ViewBuilder
@@ -61,7 +60,12 @@ struct DataSourceToggles: View {
                     
             }
         }
-        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: expanded ? .mini : .regular, foregroundColor: expanded ? Color.primaryColor : Color.onPrimaryColor, backgroundColor: expanded ? Color.onPrimaryColor : Color.primaryColor))
+        .buttonStyle(
+            MaterialFloatingButtonStyle(
+                type: .custom,
+                size: expanded ? .mini : .regular,
+                foregroundColor: expanded ? Color.primaryColor : Color.onPrimaryColor,
+                backgroundColor: expanded ? Color.onPrimaryColor : Color.primaryColor))
         .overlay(Badge(count: dataSourceList.mappedDataSources.count, positionShift: 10))
         .accessibilityElement(children: .contain)
         .accessibilityLabel("\(expanded ? "Collapse" : "Expand") Map Toggle")
@@ -81,7 +85,12 @@ struct DataSourceToggles: View {
                 }
             }
         }
-        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: dataSourceItem.showOnMap ? Color.white : Color.disabledColor, backgroundColor: dataSourceItem.showOnMap ? Color(uiColor: dataSourceItem.dataSource.definition.color) : Color.disabledBackground))
+        .buttonStyle(
+            MaterialFloatingButtonStyle(
+                type: .custom, size: .mini,
+                foregroundColor: dataSourceItem.showOnMap ? Color.white : Color.disabledColor,
+                backgroundColor: dataSourceItem.showOnMap ?
+                Color(uiColor: dataSourceItem.dataSource.definition.color) : Color.disabledBackground))
         .accessibilityElement(children: .contain)
         .accessibilityLabel("\(dataSourceItem.dataSource.definition.key) Map Toggle")
     }

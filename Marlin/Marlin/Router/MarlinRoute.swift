@@ -55,12 +55,17 @@ struct MarlinRouteModifier: ViewModifier {
         return dataSources
     }
     
+    // this is being refactored, ignore this error for now
+    // swiftlint:disable cyclomatic_complexity function_body_length
     func body(content: Content) -> some View {
         content
             .navigationDestination(for: MarlinRoute.self) { item in
                 switch item {
                 case .exportGeoPackageDataSource(let dataSource, let filters):
-                    GeoPackageExportView(dataSources: dataSource != nil ? [dataSource!] : [], filters: filters, useMapRegion: false)
+                    GeoPackageExportView(
+                        dataSources: dataSource != nil ? [dataSource!] : [],
+                        filters: filters,
+                        useMapRegion: false)
                 case .exportGeoPackage(let useMapRegion):
                     GeoPackageExportView(dataSources: createExportDataSources(), useMapRegion: useMapRegion)
                 case .lightSettings:
@@ -95,12 +100,15 @@ struct MarlinRouteModifier: ViewModifier {
                         PortDetailView(portNumber: Int64(itemKey))
                     case NavigationalWarning.key:
 
-                        if let navWarning = NavigationalWarning.getItem(context: PersistenceController.current.viewContext, itemKey: itemKey) as? NavigationalWarning {
+                        if let navWarning = NavigationalWarning.getItem(
+                            context: PersistenceController.current.viewContext,
+                            itemKey: itemKey) as? NavigationalWarning {
                             NavigationalWarningDetailView(navigationalWarning: navWarning)
                         }
                     case NoticeToMariners.key:
                         if let noticeNumber = Int64(itemKey) {
-                            NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: noticeNumber))
+                            NoticeToMarinersFullNoticeView(
+                                viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: noticeNumber))
                         }
                     case DifferentialGPSStation.key:
                         let split = itemKey.split(separator: "--")
@@ -118,15 +126,19 @@ struct MarlinRouteModifier: ViewModifier {
                             RadioBeaconDetailView(featureNumber: Int(split[0]), volumeNumber: "\(split[1])")
                         }
                     case ElectronicPublication.key:
-                        if let epub = ElectronicPublication.getItem(context: PersistenceController.current.viewContext, itemKey: itemKey) as? ElectronicPublication {
+                        if let epub = ElectronicPublication.getItem(
+                            context: PersistenceController.current.viewContext,
+                            itemKey: itemKey) as? ElectronicPublication {
                             ElectronicPublicationDetailView(electronicPublication: epub)
                         }
                     case GeoPackageFeatureItem.key:
-                        if let gpFeature = GeoPackageFeatureItem.getItem(context: PersistenceController.current.viewContext, itemKey: itemKey) as? GeoPackageFeatureItem {
+                        if let gpFeature = GeoPackageFeatureItem.getItem(
+                            context: PersistenceController.current.viewContext,
+                            itemKey: itemKey) as? GeoPackageFeatureItem {
                             GeoPackageFeatureItemDetailView(featureItem: gpFeature)
                         }
                     case Route.key:
-                        CreateRouteView(path: $path, routeURI: URL(string:itemKey))
+                        CreateRouteView(path: $path, routeURI: URL(string: itemKey))
                     default:
                         EmptyView()
                     }
@@ -139,19 +151,28 @@ struct MarlinRouteModifier: ViewModifier {
                     case Light.key:
                         let split = itemKey.split(separator: "--")
                         if split.count == 3 {
-                            LightDetailView(featureNumber: "\(split[0])", volumeNumber: "\(split[1])", waypointURI: waypointURI)
+                            LightDetailView(
+                                featureNumber: "\(split[0])",
+                                volumeNumber: "\(split[1])",
+                                waypointURI: waypointURI)
                         }
                     case Port.key:
                         PortDetailView(portNumber: Int64(itemKey), waypointURI: waypointURI)
                     case DifferentialGPSStation.key:
                         let split = itemKey.split(separator: "--")
                         if split.count == 2 {
-                            DifferentialGPSStationDetailView(featureNumber: Int(split[0]), volumeNumber: "\(split[1])", waypointURI: waypointURI)
+                            DifferentialGPSStationDetailView(
+                                featureNumber: Int(split[0]),
+                                volumeNumber: "\(split[1])",
+                                waypointURI: waypointURI)
                         }
                     case RadioBeacon.key:
                         let split = itemKey.split(separator: "--")
                         if split.count == 2 {
-                            RadioBeaconDetailView(featureNumber: Int(split[0]), volumeNumber: "\(split[1])", waypointURI: waypointURI)
+                            RadioBeaconDetailView(
+                                featureNumber: Int(split[0]),
+                                volumeNumber: "\(split[1])",
+                                waypointURI: waypointURI)
                         }
                     default:
                         EmptyView()
@@ -170,4 +191,5 @@ struct MarlinRouteModifier: ViewModifier {
                 }
             }
     }
+    // swiftlint:enable cyclomatic_complexity function_body_length
 }

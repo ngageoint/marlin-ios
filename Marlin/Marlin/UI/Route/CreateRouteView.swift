@@ -110,8 +110,7 @@ struct CreateRouteView: View {
                 .opacity(0.8)
                 .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
                 .listRowSeparator(.hidden, edges: .bottom)
-        }
-        else {
+        } else {
             EmptyView()
         }
     }
@@ -136,9 +135,12 @@ struct CreateRouteView: View {
                 instructions()
                 ForEach(routeViewModel.waypoints.indices, id: \.self) { index in
                     let waypoint = routeViewModel.waypoints[index]
-                    waypointRow(waypointViewBuilder: waypoint, first: index == 0, last: index == (routeViewModel.waypoints.count - 1))
+                    waypointRow(
+                        waypointViewBuilder: waypoint,
+                        first: index == 0,
+                        last: index == (routeViewModel.waypoints.count - 1))
                     .swipeActions(edge: .trailing) {
-                        Button(role: .destructive)  {
+                        Button(role: .destructive) {
                             routeViewModel.removeWaypoint(waypoint: waypoint)
                         } label: {
                             Label("Delete", systemImage: "trash")
@@ -162,9 +164,11 @@ struct CreateRouteView: View {
         }
     }
     
-    // this seems dumb, and it is.  This is used only for sizing because you cannot add swipe actions to anything
-    // other than a list AND you can't get the content size of a list because, of course you can't
-    // so we use this to create the right size, and set the list as an overlay because the list will take up all the room
+    // this seems dumb, and it is.  This is used only for sizing because you 
+    // cannot add swipe actions to anything
+    // other than a list AND you can't get the content size of a list because,
+    // of course you can't so we use this to create the right size, and set
+    // the list as an overlay because the list will take up all the room
     // that it is given
     @ViewBuilder
     func sizingOnlyStack() -> some View {

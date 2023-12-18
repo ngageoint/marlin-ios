@@ -26,9 +26,16 @@ extension RadioBeacon: Bookmarkable {
         return nil
     }
     
-    static func getRadioBeacon(context: NSManagedObjectContext, featureNumber: String?, volumeNumber: String?) -> RadioBeacon? {
+    static func getRadioBeacon(
+        context: NSManagedObjectContext,
+        featureNumber: String?,
+        volumeNumber: String?) -> RadioBeacon? {
         if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
-            return try? context.fetchFirst(RadioBeacon.self, predicate: NSPredicate(format: "featureNumber = %@ AND volumeNumber = %@", argumentArray: [featureNumber, volumeNumber]))
+            return try? context.fetchFirst(
+                RadioBeacon.self,
+                predicate: NSPredicate(
+                    format: "featureNumber = %@ AND volumeNumber = %@",
+                    argumentArray: [featureNumber, volumeNumber]))
         }
         return nil
     }
@@ -44,16 +51,32 @@ extension RadioBeacon: Locatable, GeoPackageExportable, GeoJSONExportable {
         return RadioBeacon.color
     }
     static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("Beacons", comment: "Radio Beacons data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Radio Beacons", comment: "Radio Beacons data source display name")
+    static var dataSourceName: String = 
+    NSLocalizedString("Beacons", comment: "Radio Beacons data source display name")
+    static var fullDataSourceName: String = 
+    NSLocalizedString("Radio Beacons", comment: "Radio Beacons data source display name")
     static var key: String = "radioBeacon"
     static var metricsKey: String = "radioBeacons"
     static var imageName: String? = "settings_input_antenna"
-    static var systemImageName: String? = nil
+    static var systemImageName: String?
     static var color: UIColor = UIColor(argbValue: 0xFF007BFF)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(RadioBeacon.geopoliticalHeading), type: .string), ascending: true, section: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(RadioBeacon.featureNumber), type: .int), ascending: true)]
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Geopolitical Heading",
+                key: #keyPath(RadioBeacon.geopoliticalHeading),
+                type: .string),
+            ascending: true,
+            section: true),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Feature Number",
+                key: #keyPath(RadioBeacon.featureNumber),
+                type: .int),
+            ascending: true)
+    ]
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
@@ -99,7 +122,9 @@ extension RadioBeacon: BatchImportable {
         }
         let count = value.ngalol.count
         NSLog("Received \(count) \(Self.key) records.")
-        return try await Self.importRecords(from: value.ngalol, taskContext: PersistenceController.current.newTaskContext())
+        return try await Self.importRecords(
+            from: value.ngalol,
+            taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -108,7 +133,11 @@ extension RadioBeacon: BatchImportable {
         var noticeYear: String?
         
         context.performAndWait {
-            let newestRadioBeacon = try? PersistenceController.current.fetchFirst(RadioBeacon.self, sortBy: [NSSortDescriptor(keyPath: \RadioBeacon.noticeNumber, ascending: false)], predicate: nil, context: context)
+            let newestRadioBeacon = try? PersistenceController.current.fetchFirst(
+                RadioBeacon.self,
+                sortBy: [NSSortDescriptor(keyPath: \RadioBeacon.noticeNumber, ascending: false)],
+                predicate: nil,
+                context: context)
             noticeWeek = Int(newestRadioBeacon?.noticeWeek ?? "0") ?? 0
             noticeYear = newestRadioBeacon?.noticeYear
         }
@@ -119,7 +148,10 @@ extension RadioBeacon: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(RadioBeacon.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(RadioBeacon.definition)
+        return UserDefaults.standard
+            .dataSourceEnabled(RadioBeacon.definition)
+        && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) >
+        UserDefaults.standard.lastSyncTimeSeconds(RadioBeacon.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [RadioBeaconModel]) -> NSBatchInsertRequest {
@@ -133,7 +165,7 @@ extension RadioBeacon: BatchImportable {
             var previousLocalHeading: String?
         }
         
-        var previousHeadingPerVolume: [String : PreviousLocation] = [:]
+        var previousHeadingPerVolume: [String: PreviousLocation] = [:]
         // Provide one dictionary at a time when the closure is called.
         let batchInsertRequest = NSBatchInsertRequest(entity: RadioBeacon.entity(), dictionaryHandler: { dictionary in
             guard index < total else { return true }
@@ -142,14 +174,20 @@ extension RadioBeacon: BatchImportable {
             var previousLocation = previousHeadingPerVolume[volumeNumber]
             let region = propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading
             
-            var correctedLocationDictionary: [String:String?] = [
+            var correctedLocationDictionary: [String: String?] = [
                 "regionHeading": propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading
             ]
-            correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? "")\(correctedLocationDictionary["regionHeading"] != nil ? ": \(correctedLocationDictionary["regionHeading"] as? String ?? "")" : "")"
+            correctedLocationDictionary["sectionHeader"] = """
+                \(propertyDictionary["geopoliticalHeading"] as? String ?? "")\
+                \(correctedLocationDictionary["regionHeading"] != nil ?
+                ": \(correctedLocationDictionary["regionHeading"] as? String ?? "")" : "")
+            """
             if let rh = correctedLocationDictionary["regionHeading"] as? String {
-                correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? ""): \(rh)"
+                correctedLocationDictionary["sectionHeader"] = 
+                "\(propertyDictionary["geopoliticalHeading"] as? String ?? ""): \(rh)"
             } else {
-                correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? "")"
+                correctedLocationDictionary["sectionHeader"] = 
+                "\(propertyDictionary["geopoliticalHeading"] as? String ?? "")"
             }
             
             if previousLocation?.previousRegionHeading != region {
@@ -157,8 +195,12 @@ extension RadioBeacon: BatchImportable {
                 previousLocation?.previousSubregionHeading = nil
                 previousLocation?.previousLocalHeading = nil
             }
-            previousHeadingPerVolume[volumeNumber] = previousLocation ?? PreviousLocation(previousRegionHeading: region, previousSubregionHeading: nil, previousLocalHeading: nil)
-            
+            previousHeadingPerVolume[volumeNumber] = previousLocation ?? 
+            PreviousLocation(
+                previousRegionHeading: region,
+                previousSubregionHeading: nil,
+                previousLocalHeading: nil)
+
             dictionary.addEntries(from: propertyDictionary.mapValues({ value in
                 if let value = value {
                     return value
@@ -178,7 +220,9 @@ extension RadioBeacon: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [RadioBeaconModel], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(
+        from propertiesList: [RadioBeaconModel],
+        taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

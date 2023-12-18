@@ -78,7 +78,14 @@ extension Route: Locatable, GeoPackageExportable {
     
     static func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
         return NSPredicate(
-            format: "(maxLatitude >= %lf AND minLatitude <= %lf AND maxLongitude >= %lf AND minLongitude <= %lf) OR minLongitude < -180 OR maxLongitude > 180", minLat, maxLat, minLon, maxLon
+            format: """
+                (maxLatitude >= %lf \
+                AND minLatitude <= %lf \
+                AND maxLongitude >= %lf \
+                AND minLongitude <= %lf) \
+                OR minLongitude < -180 \
+                OR maxLongitude > 180
+            """, minLat, maxLat, minLon, maxLon
         )
     }
 }
@@ -95,7 +102,9 @@ class Route: NSManagedObject {
     lazy var region: MKCoordinateRegion? = {
         if let geometry = self.sfGeometry, let envelope = geometry.envelope() {
             // get coordinate region from envelope
-            return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: envelope.midY(), longitude: envelope.midX()), span: MKCoordinateSpan(latitudeDelta: envelope.yRange(), longitudeDelta: envelope.xRange()))
+            return MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: envelope.midY(), longitude: envelope.midX()),
+                span: MKCoordinateSpan(latitudeDelta: envelope.yRange(), longitudeDelta: envelope.xRange()))
         }
         return nil
     }()
@@ -128,10 +137,10 @@ class Route: NSManagedObject {
         var coordinates: [CLLocationCoordinate2D] = []
         if let waypoints = waypoints {
             for waypoint in waypoints {
-                if let waypoint = waypoint as? RouteWaypoint, let ds = waypoint.decodeToDataSource() {
-                    for feature in ds.geoJsonFeatures {
-                        if let g: Geometry = feature.geometry {
-                            addGeometry(g: g, coordinates: &coordinates)
+                if let waypoint = waypoint as? RouteWaypoint, let dataSource = waypoint.decodeToDataSource() {
+                    for feature in dataSource.geoJsonFeatures {
+                        if let geometry: Geometry = feature.geometry {
+                            addGeometry(geometry: geometry, coordinates: &coordinates)
                         }
                     }
                 }
@@ -139,12 +148,11 @@ class Route: NSManagedObject {
         }
         let line = MKGeodesicPolyline(coordinates: &coordinates, count: coordinates.count)
 
-        
         return line
     }
     
-    func addGeometry(g: Geometry, coordinates: inout [CLLocationCoordinate2D]) {
-        switch(g) {
+    func addGeometry(geometry: Geometry, coordinates: inout [CLLocationCoordinate2D]) {
+        switch geometry {
         case .point(let point):
             coordinates.append(point.coordinates.coordinate)
         case .multiPoint(let multiPoint):
@@ -177,7 +185,7 @@ class Route: NSManagedObject {
             })
         case .geometryCollection(let collection):
             for geometry in collection {
-                addGeometry(g: geometry, coordinates: &coordinates)
+                addGeometry(geometry: geometry, coordinates: &coordinates)
             }
         }
     }
@@ -206,7 +214,7 @@ extension Route: DataSource {
     
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
-    static var imageName: String? = nil
+    static var imageName: String?
     
     static var systemImageName: String? = "arrow.triangle.turn.up.right.diamond.fill"
         
@@ -225,10 +233,8 @@ extension Route: DataSource {
     }
 }
 
-
 extension Route: MapImage {
 
-    
     var latitude: Double {
         coordinate.latitude
     }
@@ -239,7 +245,11 @@ extension Route: MapImage {
     
     static var cacheTiles: Bool = false
     
-    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {
+    func mapImage(
+        marker: Bool,
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox?,
+        context: CGContext? = nil) -> [UIImage] {
         var images: [UIImage] = []
         return images
     }

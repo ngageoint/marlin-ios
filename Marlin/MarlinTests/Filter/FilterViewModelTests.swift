@@ -59,7 +59,8 @@
 //    }
 //    
 //    func testChartCorrectionModel() {
-//        let filterViewModel = PersistedFilterViewModel(dataSource: ChartCorrection.self, useDefaultForEmptyFilter: true)
+//        let filterViewModel = PersistedFilterViewModel(dataSource: ChartCorrection.self, 
+// useDefaultForEmptyFilter: true)
 //        XCTAssertEqual(filterViewModel.requiredProperties.count, 1)
 //        XCTAssertEqual(filterViewModel.requiredNotSet.count, 0)
 //        

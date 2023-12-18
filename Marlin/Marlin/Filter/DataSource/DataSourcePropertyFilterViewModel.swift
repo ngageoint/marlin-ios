@@ -116,7 +116,14 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
     private var _currentRegion: MKCoordinateRegion?
     var currentRegion: MKCoordinateRegion {
         get {
-            MKCoordinateRegion(center: locationManager?.lastLocation?.coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+            MKCoordinateRegion(
+                center: locationManager?.lastLocation?.coordinate ?? CLLocationCoordinate2D(
+                    latitude: 0.0,
+                    longitude: 0.0),
+                span: MKCoordinateSpan(
+                    latitudeDelta: latitudeDelta,
+                    longitudeDelta: longitudeDelta)
+            )
         }
         set {
             _currentRegion = newValue
@@ -128,9 +135,21 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
         get {
             let coordinate = CLLocationCoordinate2D(latitude: valueLatitude ?? 0.0, longitude: valueLongitude ?? 0.0)
             if CLLocationCoordinate2DIsValid(coordinate) {
-                return MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+                return MKCoordinateRegion(
+                    center: coordinate,
+                    span: MKCoordinateSpan(
+                        latitudeDelta: latitudeDelta,
+                        longitudeDelta: longitudeDelta)
+                )
             }
-            return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+            return MKCoordinateRegion(
+                center: CLLocationCoordinate2D(
+                    latitude: 0.0,
+                    longitude: 0.0),
+                span: MKCoordinateSpan(
+                    latitudeDelta: latitudeDelta,
+                    longitudeDelta: longitudeDelta)
+            )
         }
         set {
             _readableRegion = newValue
@@ -139,8 +158,14 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
     
     var bounds: MapBoundingBox? {
         get {
-            if let valueMinLongitude = valueMinLongitude, let valueMinLatitude = valueMinLatitude, let valueMaxLongitude = valueMaxLongitude, let valueMaxLatitude = valueMaxLatitude {
-                return MapBoundingBox(swCorner: (x: valueMinLongitude, y: valueMinLatitude), neCorner: (x: valueMaxLongitude, y: valueMaxLatitude))
+            if let valueMinLongitude = valueMinLongitude,
+               let valueMinLatitude = valueMinLatitude,
+               let valueMaxLongitude = valueMaxLongitude,
+               let valueMaxLatitude = valueMaxLatitude {
+                return MapBoundingBox(
+                    swCorner: (x: valueMinLongitude, y: valueMinLatitude),
+                    neCorner: (x: valueMaxLongitude, y: valueMaxLatitude)
+                )
             }
             return nil
         }
@@ -306,7 +331,10 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
                 } else {
                     valueMaxLatitude = nil
                 }
-                return valueMinLongitude != nil && valueMinLatitude != nil && valueMaxLongitude != nil && valueMaxLatitude != nil
+                return valueMinLongitude != nil 
+                && valueMinLatitude != nil
+                && valueMaxLongitude != nil
+                && valueMaxLatitude != nil
             }
         case .latitude:
             if valueString.isEmpty {

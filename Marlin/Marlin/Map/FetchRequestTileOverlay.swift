@@ -70,7 +70,7 @@ class MapBoundingBox: Codable, ObservableObject {
     }
 }
 
-class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverlay {
+class PredicateTileOverlay<T: MapImage>: MKTileOverlay, PredicateBasedTileOverlay {
     var predicate: NSPredicate?
     var sortDescriptors: [NSSortDescriptor]?
     var objects: [T]?
@@ -80,7 +80,7 @@ class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverl
     var boundingPredicate: ((Double, Double, Double, Double) -> NSPredicate)?
     
     var clearImage: UIImage {
-        let rect = CGRect(origin: CGPoint(x: 0, y:0), size: CGSize(width: 1, height: 1))
+        let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 1, height: 1))
         UIGraphicsBeginImageContext(rect.size)
         let context = UIGraphicsGetCurrentContext()!
         
@@ -93,7 +93,12 @@ class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverl
         return image!
     }
 
-    convenience init(predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]? = nil, boundingPredicate: @escaping (Double, Double, Double, Double) -> NSPredicate, objects: [T]? = nil, imageCache: Kingfisher.ImageCache? = nil) {
+    convenience init(
+        predicate: NSPredicate?,
+        sortDescriptors: [NSSortDescriptor]? = nil,
+        boundingPredicate: @escaping (Double, Double, Double, Double) -> NSPredicate,
+        objects: [T]? = nil,
+        imageCache: Kingfisher.ImageCache? = nil) {
         self.init()
         self.predicate = predicate
         self.sortDescriptors = sortDescriptors
@@ -105,17 +110,27 @@ class PredicateTileOverlay<T : MapImage>: MKTileOverlay, PredicateBasedTileOverl
     
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
         
-        let options: KingfisherOptionsInfo? = T.cacheTiles ? (imageCache != nil ? [.targetCache(imageCache!)] : nil) : [.forceRefresh]
-                
+        let options: KingfisherOptionsInfo? = T.cacheTiles ?
+        (imageCache != nil ?
+         [.targetCache(imageCache!)] : nil) : [.forceRefresh]
+
         guard let boundingPredicate = boundingPredicate else {
             return
         }
-        KingfisherManager.shared.retrieveImage(with: .provider(DataSourceTileProvider<T>(path: path, predicate: predicate, sortDescriptors: sortDescriptors, boundingPredicate: boundingPredicate, objects: objects, tileSize: tileSize)), options: options) { imageResult in
+        KingfisherManager.shared.retrieveImage(
+            with: .provider(DataSourceTileProvider<T>(
+                path: path,
+                predicate: predicate,
+                sortDescriptors: sortDescriptors,
+                boundingPredicate: boundingPredicate,
+                objects: objects,
+                tileSize: tileSize)),
+            options: options) { imageResult in
             switch imageResult {
             case .success(let value):
                 result(value.image.pngData(), nil)
                 
-            case .failure(_):
+            case .failure:
                 break
             }
         }

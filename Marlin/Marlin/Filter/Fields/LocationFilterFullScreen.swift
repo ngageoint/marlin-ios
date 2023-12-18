@@ -140,7 +140,7 @@ struct LocationFilterFullScreen: View {
                                 }
                             )
                         }
-                        .buttonStyle(MaterialButtonStyle(type:.contained))
+                        .buttonStyle(MaterialButtonStyle(type: .contained))
                         .accessibilityElement()
                         .accessibilityLabel("set North East corner")
                     }
@@ -150,7 +150,10 @@ struct LocationFilterFullScreen: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
-                    if let valueLatitudeOne = coordinateOne.latitude, let valueLongitudeOne = coordinateOne.longitude, let valueLatitudeTwo = coordinateTwo.latitude, let valueLongitudeTwo = coordinateTwo.longitude {
+                    if let valueLatitudeOne = coordinateOne.latitude, 
+                        let valueLongitudeOne = coordinateOne.longitude,
+                        let valueLatitudeTwo = coordinateTwo.latitude,
+                        let valueLongitudeTwo = coordinateTwo.longitude {
                         viewModel.valueMinLatitudeString = "\(min(valueLatitudeOne, valueLatitudeTwo))"
                         viewModel.valueMinLongitudeString = "\(min(valueLongitudeOne, valueLongitudeTwo))"
                         viewModel.valueMaxLatitudeString = "\(max(valueLatitudeTwo, valueLatitudeOne))"

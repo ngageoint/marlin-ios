@@ -76,7 +76,7 @@ class WMSTileOverlay: MKTileOverlay {
     }
     
     func y(row: Int, zoom: Int) -> Double {
-        let n: Double = .pi - 2.0 * .pi * Double(row) / pow(2.0, Double(zoom))
-        return 180.0 / .pi * atan(0.5 * (exp(n) - exp(-n)))
+        let yPosition: Double = .pi - 2.0 * .pi * Double(row) / pow(2.0, Double(zoom))
+        return 180.0 / .pi * atan(0.5 * (exp(yPosition) - exp(-yPosition)))
     }
 }

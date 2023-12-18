@@ -100,7 +100,7 @@ class GeoPackageExportViewModel: ObservableObject {
         // when the filterViewModels values changes, re-set up the filter subscriber
         $filterViewModels
             .receive(on: RunLoop.main)
-            .sink { [weak self] viewModels in
+            .sink { [weak self] _ in
                 self?.bindFilters()
             }
             .store(in: &cancellable)
@@ -110,7 +110,8 @@ class GeoPackageExportViewModel: ObservableObject {
             .sink { [weak self] dataSources in
                 guard let self = self else { return }
                 for dataSource in dataSources {
-                    if let definitions = DataSourceDefinitions.from(dataSource), let filterable = definitions.filterable {
+                    if let definitions = DataSourceDefinitions.from(dataSource), 
+                        let filterable = definitions.filterable {
                         let exportProgress = DataSourceExportProgress(filterable: filterable)
                         self.exportProgresses[definitions] = exportProgress
                     }
@@ -122,14 +123,14 @@ class GeoPackageExportViewModel: ObservableObject {
     
     func bindFilters() {
         let observables = filterViewModels.values.map { Publishers.MergeMany($0.$filters) }
-        let p = Publishers.MergeMany(observables)
-        
+        let publisher = Publishers.MergeMany(observables)
+
         if let countChangeCancellable = countChangeCancellable {
             countChangeCancellable.cancel()
         }
-        countChangeCancellable = Publishers.CombineLatest3($dataSources, commonViewModel.$filters, p)
+        countChangeCancellable = Publishers.CombineLatest3($dataSources, commonViewModel.$filters, publisher)
             .receive(on: RunLoop.main)
-            .sink() { [weak self] commonFilters in
+            .sink { [weak self] commonFilters in
                 guard let self = self else { return }
                 self.updateCounts()
             }
@@ -150,12 +151,12 @@ class GeoPackageExportViewModel: ObservableObject {
     
     func updateCounts() {
         NSLog("Update Counts commonFilters are \(self.commonViewModel.filters)")
-        self.counts = dataSources.reduce(into: [DataSourceDefinitions : Int]()) {
+        self.counts = dataSources.reduce(into: [DataSourceDefinitions: Int]()) {
             
             if let definition = DataSourceDefinitions.from($1) {
                 let filters = (self.filterViewModels[definition]?.filters ?? []) + self.commonViewModel.filters
                 
-                switch(definition) {
+                switch definition {
                 case .route: $0[definition] = self.routeRepository?.getCount(filters: filters)
                 case .asam: $0[definition] = self.asamRepository?.getCount(filters: filters)
                 case .modu: $0[definition] = self.moduRepository?.getCount(filters: filters)
@@ -185,7 +186,10 @@ class GeoPackageExportViewModel: ObservableObject {
         }
     }
     
-    func setExportParameters(dataSources: [DataSourceDefinitions], filters: [DataSourceFilterParameter]?, useMapRegion: Bool) {
+    func setExportParameters(
+        dataSources: [DataSourceDefinitions],
+        filters: [DataSourceFilterParameter]?,
+        useMapRegion: Bool) {
         let region = UserDefaults.standard.mapRegion
         
         for dataSource in dataSources {
@@ -214,7 +218,9 @@ class GeoPackageExportViewModel: ObservableObject {
         guard let filterable = filterable, let def = DataSourceDefinitions.from(filterable.definition) else {
             return
         }
-        filterViewModels[def] = TemporaryFilterViewModel(dataSource: filterable, filters: UserDefaults.standard.filter(filterable.definition))
+        filterViewModels[def] = TemporaryFilterViewModel(
+            dataSource: filterable,
+            filters: UserDefaults.standard.filter(filterable.definition))
         dataSources.append(filterable.definition)
     }
     
@@ -284,15 +290,21 @@ class GeoPackageExportViewModel: ObservableObject {
 
             let rtree = GPKGRTreeIndexExtension(geoPackage: geoPackage)
             
-            for viewModel in filterViewModels.values.sorted(by: { d1, d2 in
-                (d1.dataSource?.definition.order ?? -1) < (d2.dataSource?.definition.order ?? -1)
+            for viewModel in filterViewModels.values.sorted(by: { viewModel1, viewModel2 in
+                (viewModel1.dataSource?.definition.order ?? -1) <
+                    (viewModel2.dataSource?.definition.order ?? -1)
             }) {
-                guard let dataSource = viewModel.dataSource, let exportable = DataSourceType.fromKey(dataSource.definition.key)?.toDataSource() as? GeoPackageExportable.Type else { continue }
-                guard let dataSource = viewModel.dataSource, let definitions = DataSourceDefinitions.from(dataSource.definition), let exportProgress = exportProgresses[definitions] else {
+                guard let dataSource = viewModel.dataSource, 
+                        let exportable = DataSourceType.fromKey(dataSource.definition.key)?
+                    .toDataSource() as? GeoPackageExportable.Type else { continue }
+                guard let dataSource = viewModel.dataSource, 
+                        let definitions = DataSourceDefinitions.from(dataSource.definition),
+                      let exportProgress = exportProgresses[definitions] else {
                     continue
                 }
                 do {
-                    guard let table = try exportable.createTable(geoPackage: geoPackage), let featureTableStyles = GPKGFeatureTableStyles(geoPackage: geoPackage, andTable: table) else {
+                    guard let table = try exportable.createTable(geoPackage: geoPackage), 
+                            let featureTableStyles = GPKGFeatureTableStyles(geoPackage: geoPackage, andTable: table) else {
                         continue
                     }
                     let filterable = exportProgress.filterable
@@ -302,7 +314,13 @@ class GeoPackageExportViewModel: ObservableObject {
                         exportProgress.totalCount = Float(self.counts[definitions] ?? 0)
                         exportProgress.exporting = true
                     }
-                    try exportable.createFeatures(geoPackage: geoPackage, table: table, filters: viewModel.filters, commonFilters: commonViewModel.filters, styleRows: styles, dataSourceProgress: exportProgress)
+                    try exportable.createFeatures(
+                        geoPackage: geoPackage,
+                        table: table,
+                        filters: viewModel.filters,
+                        commonFilters: commonViewModel.filters,
+                        styleRows: styles,
+                        dataSourceProgress: exportProgress)
                     rtree?.create(with: table)
                     DispatchQueue.main.async {
                         exportProgress.exporting = false

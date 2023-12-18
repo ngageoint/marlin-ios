@@ -85,8 +85,8 @@ struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable {
             let decoder = JSONDecoder()
             let jsonData = Data(string.utf8)
             
-            if let ds = try? decoder.decode(AsamModel.self, from: jsonData) {
-                self = ds
+            if let model = try? decoder.decode(AsamModel.self, from: jsonData) {
+                self = model
             } else {
                 return nil
             }
@@ -128,7 +128,7 @@ struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable {
             let otherValues = try decoder.container(keyedBy: InternalCodingKeys.self)
             self.asamDescription = try? otherValues.decode(String.self, forKey: .asamDescription)
         }
-        var parsedDate: Date? = nil
+        var parsedDate: Date?
         if let dateString = try? values.decode(String.self, forKey: .date) {
             if let date = Asam.dateFormatter.date(from: dateString) {
                 parsedDate = date
@@ -205,14 +205,29 @@ extension AsamModel: DataSource {
     static var key: String = "asam"
     static var metricsKey: String = "asams"
     static var imageName: String? = "asam"
-    static var systemImageName: String? = nil
+    static var systemImageName: String?
     
     static var color: UIColor = .black
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), ascending: false)]
-    static var defaultFilter: [DataSourceFilterParameter] = [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last365Days)]
-    
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Date",
+                key: #keyPath(Asam.date),
+                type: .date),
+            ascending: false)
+    ]
+    static var defaultFilter: [DataSourceFilterParameter] = [
+        DataSourceFilterParameter(
+            property: DataSourceProperty(
+                name: "Date",
+                key: #keyPath(Asam.date),
+                type: .date),
+            comparison: .window,
+            windowUnits: DataSourceWindowUnits.last365Days)
+    ]
+
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date),
         DataSourceProperty(name: "Location", key: #keyPath(Asam.mgrs10km), type: .location),
@@ -233,7 +248,13 @@ extension AsamModel: DataSource {
 
 extension AsamModel: MapImage {
     func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext?) -> [UIImage] {
-        return defaultMapImage(marker: marker, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context, tileSize: 512.0)
+        return defaultMapImage(
+            marker: marker,
+            zoomLevel: zoomLevel,
+            tileBounds3857: tileBounds3857,
+            context: context,
+            tileSize: 512.0
+        )
     }
     
     static var cacheTiles: Bool = true

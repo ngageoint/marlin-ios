@@ -50,21 +50,19 @@ class UserLayersMap: MapMixin {
                 mapView.removeOverlay(overlay)
             }
 
-            for (index, layer) in viewModel.layers.reversed().enumerated() {
-                if layer.showOnMap {
-                    var overlay: MKTileOverlay?
-                    if layer.type == LayerType.wms.rawValue {
-                        overlay = WMSTileOverlay(mapLayer: layer)
-                    } else if layer.type == LayerType.xyz.rawValue || layer.type == LayerType.tms.rawValue {
-                        overlay = XYZTileOverlay(mapLayer: layer)
-                    } else if layer.type == LayerType.geopackage.rawValue {
-                        overlay = GeopackageCompositeOverlay(mapLayer: layer)
-                    }
-                    
-                    if let overlay = overlay {
-                        mapView.insertOverlay(overlay, at: index)
-                        overlays.append(overlay)
-                    }
+            for (index, layer) in viewModel.layers.reversed().enumerated() where layer.showOnMap {
+                var overlay: MKTileOverlay?
+                if layer.type == LayerType.wms.rawValue {
+                    overlay = WMSTileOverlay(mapLayer: layer)
+                } else if layer.type == LayerType.xyz.rawValue || layer.type == LayerType.tms.rawValue {
+                    overlay = XYZTileOverlay(mapLayer: layer)
+                } else if layer.type == LayerType.geopackage.rawValue {
+                    overlay = GeopackageCompositeOverlay(mapLayer: layer)
+                }
+
+                if let overlay = overlay {
+                    mapView.insertOverlay(overlay, at: index)
+                    overlays.append(overlay)
                 }
             }
         }
@@ -78,18 +76,20 @@ class UserLayersMap: MapMixin {
     
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [DataSource]? {
         var featureItems: [GeoPackageFeatureItem] = []
-        for (_, layer) in viewModel.layers.reversed().enumerated() {
-            if layer.showOnMap {
-                if layer.type == LayerType.geopackage.rawValue {
-                    if let geoPackageName = layer.name {
-                        for table in layer.layerNames {
-                            featureItems.append(contentsOf: GeoPackage.shared.getFeaturesFromTable(at: location, mapView: mapView, table: table, geoPackageName: geoPackageName, layerName: layer.displayName ?? "GeoPackage Layer"))
-                        }
+        for layer in viewModel.layers.reversed() where layer.showOnMap {
+            if layer.type == LayerType.geopackage.rawValue {
+                if let geoPackageName = layer.name {
+                    for table in layer.layerNames {
+                        featureItems.append(
+                            contentsOf: GeoPackage.shared.getFeaturesFromTable(
+                                at: location,
+                                mapView: mapView,
+                                table: table,
+                                geoPackageName: geoPackageName,
+                                layerName: layer.displayName ?? "GeoPackage Layer"))
                     }
                 }
-                
             }
-            
         }
         return featureItems
     }

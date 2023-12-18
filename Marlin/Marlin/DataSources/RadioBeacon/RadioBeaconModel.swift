@@ -11,6 +11,8 @@ import CoreLocation
 import mgrs_ios
 import GeoJSON
 
+// this will be refactored
+// swiftlint:disable type_body_length
 struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, CustomStringConvertible {
     static var definition: any DataSourceDefinition = DataSourceDefinitions.radioBeacon.definition
     var coordinate: CLLocationCoordinate2D {
@@ -132,8 +134,8 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
             let decoder = JSONDecoder()
             let jsonData = Data(string.utf8)
             
-            if let ds = try? decoder.decode(RadioBeaconModel.self, from: jsonData) {
-                self = ds
+            if let model = try? decoder.decode(RadioBeaconModel.self, from: jsonData) {
+                self = model
             } else {
                 return nil
             }
@@ -212,19 +214,22 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
         var latitude = 0.0
         var longitude = 0.0
         
-        let pattern = #"(?<latdeg>[0-9]*)°(?<latminutes>[0-9]*)'(?<latseconds>[0-9]*\.?[0-9]*)\"(?<latdirection>[NS]) \n(?<londeg>[0-9]*)°(?<lonminutes>[0-9]*)'(?<lonseconds>[0-9]*\.?[0-9]*)\"(?<londirection>[EW])"#
+        let pattern = #"""
+            (?<latdeg>[0-9]*)°(?<latminutes>[0-9]*)'(?<latseconds>[0-9]*\.?[0-9]*)\"\
+            (?<latdirection>[NS])\
+            \n(?<londeg>[0-9]*)°(?<lonminutes>[0-9]*)'(?<lonseconds>[0-9]*\.?[0-9]*)\"\
+            (?<londirection>[EW])
+        """#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(position.startIndex..<position.endIndex,
                               in: position)
         if let match = regex?.firstMatch(in: position,
                                          options: [],
-                                         range: nsrange)
-        {
+                                         range: nsrange) {
             for component in ["latdeg", "latminutes", "latseconds", "latdirection"] {
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: position)
-                {
+                   let range = Range(nsrange, in: position) {
                     if component == "latdeg" {
                         latitude = Double(position[range]) ?? 0.0
                     } else if component == "latminutes" {
@@ -239,8 +244,7 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
             for component in ["londeg", "lonminutes", "lonseconds", "londirection"] {
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: position)
-                {
+                   let range = Range(nsrange, in: position) {
                     if component == "londeg" {
                         longitude = Double(position[range]) ?? 0.0
                     } else if component == "lonminutes" {
@@ -305,7 +309,7 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
             KeyValue(key: "Range (nmi)", value: range?.zeroIsEmptyString),
             KeyValue(key: "Sequence", value: sequenceText),
             KeyValue(key: "Frequency (kHz)", value: frequency),
-            KeyValue(key: "Remarks", value: stationRemark),
+            KeyValue(key: "Remarks", value: stationRemark)
         ]
     }
     
@@ -332,7 +336,9 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
     }
     
     var morseCode: String? {
-        guard let characteristic = characteristic, let leftParen = characteristic.firstIndex(of: "("), let lastIndex = characteristic.firstIndex(of: ")") else {
+        guard let characteristic = characteristic,
+              let leftParen = characteristic.firstIndex(of: "("),
+              let lastIndex = characteristic.firstIndex(of: ")") else {
             return nil
         }
         
@@ -353,7 +359,11 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
             return nil
         }
         var sectors: [ImageSector] = []
-        let pattern = #"(?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\^)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))\^)?(?<endminutes>[0-9]*)[\`']?\."#
+        let pattern = #"""
+            (?<azimuth>(Azimuth coverage)?).?\
+            ((?<startdeg>(\d*))\^)?((?<startminutes>[0-9]*)[\`'])?\
+            (-(?<enddeg>(\d*))\^)?(?<endminutes>[0-9]*)[\`']?\.
+        """#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
                               in: remarks)
@@ -367,11 +377,9 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
             var start: Double?
             for component in ["startdeg", "startminutes", "enddeg", "endminutes"] {
                 
-                
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: remarks)
-                {
+                   let range = Range(nsrange, in: remarks) {
                     if component == "startdeg" {
                         if start != nil {
                             start = start! + ((Double(remarks[range]) ?? 0.0) - 90)
@@ -431,6 +439,7 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
         "volumeNumber \(volumeNumber ?? "")"
     }
 }
+// swiftlint:enable type_body_length
 
 extension RadioBeaconModel: DataSource {
     var itemTitle: String {
@@ -445,16 +454,32 @@ extension RadioBeaconModel: DataSource {
         return RadioBeacon.color
     }
     static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("Beacons", comment: "Radio Beacons data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Radio Beacons", comment: "Radio Beacons data source display name")
+    static var dataSourceName: String = 
+    NSLocalizedString("Beacons", comment: "Radio Beacons data source display name")
+    static var fullDataSourceName: String = 
+    NSLocalizedString("Radio Beacons", comment: "Radio Beacons data source display name")
     static var key: String = "radioBeacon"
     static var metricsKey: String = "radioBeacons"
-    static var imageName: String? = nil
+    static var imageName: String?
     static var systemImageName: String? = "antenna.radiowaves.left.and.right"
     static var color: UIColor = UIColor(argbValue: 0xFF007BFF)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(RadioBeacon.geopoliticalHeading), type: .string), ascending: true, section: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(RadioBeacon.featureNumber), type: .int), ascending: true)]
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Geopolitical Heading",
+                key: #keyPath(RadioBeacon.geopoliticalHeading),
+                type: .string),
+            ascending: true,
+            section: true),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Feature Number",
+                key: #keyPath(RadioBeacon.featureNumber),
+                type: .int),
+            ascending: true)
+    ]
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
@@ -488,7 +513,12 @@ extension RadioBeaconModel: MapImage {
     
     static var cacheTiles: Bool = true
     
-    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {
+    func mapImage(
+        marker: Bool,
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox?,
+        context: CGContext? = nil
+    ) -> [UIImage] {
         let scale = marker ? 1 : 2
         
         var images: [UIImage] = []
@@ -503,9 +533,19 @@ extension RadioBeaconModel: MapImage {
         let sectors = azimuthCoverage ?? [ImageSector(startDegrees: 0, endDegrees: 360, color: RadioBeacon.color)]
         
         if zoomLevel > 8 {
-            return RaconImage(frame: CGRect(x: 0, y: 0, width: 3 * (radius + 3.0), height: 3 * (radius + 3.0)), sectors: sectors, arcWidth: 3.0, arcRadius: radius + 3.0, text: "Racon (\(morseLetter))", darkMode: false)
+            return RaconImage(
+                frame: CGRect(x: 0, y: 0, width: 3 * (radius + 3.0), height: 3 * (radius + 3.0)),
+                sectors: sectors,
+                arcWidth: 3.0,
+                arcRadius: radius + 3.0,
+                text: "Racon (\(morseLetter))",
+                darkMode: false)
         } else {
-            return CircleImage(color: RadioBeacon.color, radius: radius, fill: false, arcWidth: min(3.0, radius / 2.0))
+            return CircleImage(
+                color: RadioBeacon.color,
+                radius: radius,
+                fill: false,
+                arcWidth: min(3.0, radius / 2.0))
         }
     }
 }

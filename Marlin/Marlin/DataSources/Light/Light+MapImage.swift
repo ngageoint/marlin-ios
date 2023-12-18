@@ -16,10 +16,16 @@ extension Light: MapImage {
         
     static var cacheTiles: Bool = true
     
-    func mapImage(marker: Bool = false, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil, context: CGContext? = nil) -> [UIImage] {
+    func mapImage(
+        marker: Bool = false,
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox? = nil,
+        context: CGContext? = nil) -> [UIImage] {
         var images: [UIImage] = []
         
-        if UserDefaults.standard.actualRangeSectorLights, let tileBounds3857 = tileBounds3857, let lightSectors = lightSectors {
+        if UserDefaults.standard.actualRangeSectorLights, 
+            let tileBounds3857 = tileBounds3857,
+            let lightSectors = lightSectors {
             // if any sectors have no range, just make a sector image
             if lightSectors.contains(where: { sector in
                 sector.range == nil
@@ -32,19 +38,36 @@ extension Light: MapImage {
                     UIGraphicsBeginImageContext(size)
                 }
                 if let context: CGContext = context ?? UIGraphicsGetCurrentContext() {
-                    actualSizeSectorLight(lightSectors: lightSectors, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context)
+                    actualSizeSectorLight(
+                        lightSectors: lightSectors,
+                        zoomLevel: zoomLevel,
+                        tileBounds3857: tileBounds3857,
+                        context: context)
                 }
             }
-        } else if lightSectors == nil, UserDefaults.standard.actualRangeLights, let stringRange = range, let range = Double(stringRange), let tileBounds3857 = tileBounds3857, let lightColors = lightColors {
+        } else if lightSectors == nil, 
+                    UserDefaults.standard.actualRangeLights,
+                    let stringRange = range,
+                    let range = Double(stringRange),
+                    let tileBounds3857 = tileBounds3857,
+                    let lightColors = lightColors {
             if context == nil {
                 let size = CGSize(width: TILE_SIZE, height: TILE_SIZE)
                 UIGraphicsBeginImageContext(size)
             }
             if let context: CGContext = context ?? UIGraphicsGetCurrentContext() {
-                actualSizeNonSectorLight(lightColors: lightColors, range: range, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context)
+                actualSizeNonSectorLight(
+                    lightColors: lightColors,
+                    range: range,
+                    zoomLevel: zoomLevel,
+                    tileBounds3857: tileBounds3857,
+                    context: context)
             }
         } else {
-            images.append(contentsOf: LightImage.image(light: LightModel(light: self), zoomLevel: zoomLevel, tileBounds3857: tileBounds3857))
+            images.append(contentsOf: LightImage.image(
+                light: LightModel(light: self),
+                zoomLevel: zoomLevel,
+                tileBounds3857: tileBounds3857))
         }
         
         return images
@@ -57,7 +80,9 @@ extension Light: MapImage {
             if sector.obscured {
                 continue
             }
-            let nauticalMilesMeasurement = NSMeasurement(doubleValue: sector.range ?? 0.0, unit: UnitLength.nauticalMiles)
+            let nauticalMilesMeasurement = NSMeasurement(
+                doubleValue: sector.range ?? 0.0,
+                unit: UnitLength.nauticalMiles)
             let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
             if sector.startDegrees >= sector.endDegrees {
                 // this could be an error in the data, or sometimes lights are defined as follows:
@@ -67,13 +92,22 @@ extension Light: MapImage {
                 // TODO: figure out what to do with multi colored lights over the same sector
                 continue
             }
-            let circleCoordinates = coordinate.circleCoordinates(radiusMeters: metersMeasurement.value, startDegrees: sector.startDegrees + 90.0, endDegrees: sector.endDegrees + 90.0)
+            let circleCoordinates = coordinate.circleCoordinates(
+                radiusMeters: metersMeasurement.value,
+                startDegrees: sector.startDegrees + 90.0,
+                endDegrees: sector.endDegrees + 90.0)
             let path = UIBezierPath()
             
-            var pixel = self.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+            var pixel = self.coordinate.toPixel(
+                zoomLevel: zoomLevel,
+                tileBounds3857: tileBounds3857,
+                tileSize: TILE_SIZE)
             path.move(to: pixel)
             for circleCoordinate in circleCoordinates {
-                pixel = circleCoordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+                pixel = circleCoordinate.toPixel(
+                    zoomLevel: zoomLevel,
+                    tileBounds3857: tileBounds3857,
+                    tileSize: TILE_SIZE)
                 path.addLine(to: pixel)
             }
             path.close()
@@ -86,17 +120,28 @@ extension Light: MapImage {
         }
     }
     
-    func actualSizeNonSectorLight(lightColors: [UIColor], range: Double, zoomLevel: Int, tileBounds3857: MapBoundingBox, context: CGContext) {
+    func actualSizeNonSectorLight(
+        lightColors: [UIColor],
+        range: Double,
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox,
+        context: CGContext) {
         let nauticalMilesMeasurement = NSMeasurement(doubleValue: range, unit: UnitLength.nauticalMiles)
         let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
         
         let circleCoordinates = coordinate.circleCoordinates(radiusMeters: metersMeasurement.value)
         let path = UIBezierPath()
         
-        var pixel = circleCoordinates[0].toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+        var pixel = circleCoordinates[0].toPixel(
+            zoomLevel: zoomLevel,
+            tileBounds3857: tileBounds3857,
+            tileSize: TILE_SIZE)
         path.move(to: pixel)
         for circleCoordinate in circleCoordinates {
-            pixel = circleCoordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+            pixel = circleCoordinate.toPixel(
+                zoomLevel: zoomLevel,
+                tileBounds3857: tileBounds3857,
+                tileSize: TILE_SIZE)
             path.addLine(to: pixel)
         }
         path.lineWidth = 4
@@ -107,9 +152,17 @@ extension Light: MapImage {
         path.stroke()
         
         // put a dot in the middle
-        pixel = self.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+        pixel = self.coordinate.toPixel(
+            zoomLevel: zoomLevel,
+            tileBounds3857: tileBounds3857,
+            tileSize: TILE_SIZE)
         let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * 0.5
-        let centerDot = UIBezierPath(arcCenter: pixel, radius: radius, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: true)
+        let centerDot = UIBezierPath(
+            arcCenter: pixel,
+            radius: radius,
+            startAngle: 0,
+            endAngle: 2 * CGFloat.pi,
+            clockwise: true)
         centerDot.lineWidth = 0.5
         centerDot.stroke()
         lightColors[0].setFill()

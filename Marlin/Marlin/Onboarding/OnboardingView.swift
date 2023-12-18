@@ -32,8 +32,9 @@ struct OnboardingView: View {
     @AppStorage("onboardingComplete") var onboardingComplete: Bool = false
     
     @State private var requestedLocationAuthorization = false
-    let locationAuthorizationStatusChangedPub = NotificationCenter.default.publisher(for: .LocationAuthorizationStatusChanged)
-    
+    let locationAuthorizationStatusChangedPub = 
+    NotificationCenter.default.publisher(for: .LocationAuthorizationStatusChanged)
+
     @State private var notificationsAuthorized = false
     
     @EnvironmentObject var dataSourceList: DataSourceList
@@ -107,8 +108,8 @@ struct OnboardingView: View {
             }
         }
         .onAppear {
-            userNotificationCenter.getNotificationSettings { (settings) in
-                if(settings.authorizationStatus == .authorized) {
+            userNotificationCenter.getNotificationSettings { settings in
+                if settings.authorizationStatus == .authorized {
                     notificationsAuthorized = true
                 } else {
                     notificationsAuthorized = false
@@ -146,11 +147,12 @@ struct OnboardingView: View {
         case WELCOME_TAB:
             if !disclaimerAccepted {
                 tabSelection = DISCLAIMER_TAB
-            } else if locationAuthorizationStatus != .authorizedWhenInUse && locationAuthorizationStatus != .authorizedAlways {
+            } else if locationAuthorizationStatus != .authorizedWhenInUse 
+                        && locationAuthorizationStatus != .authorizedAlways {
                 tabSelection = LOCATION_TAB
             } else {
-                userNotificationCenter.getNotificationSettings { (settings) in
-                    if(settings.authorizationStatus == .authorized) {
+                userNotificationCenter.getNotificationSettings { settings in
+                    if settings.authorizationStatus == .authorized {
                         tabSelection = DATA_TABS_TAB
                     } else {
                         tabSelection = NOTIFICATION_TAB
@@ -161,8 +163,8 @@ struct OnboardingView: View {
             if locationAuthorizationStatus != .authorizedWhenInUse && locationAuthorizationStatus != .authorizedAlways {
                 tabSelection = LOCATION_TAB
             } else {
-                userNotificationCenter.getNotificationSettings { (settings) in
-                    if(settings.authorizationStatus == .authorized) {
+                userNotificationCenter.getNotificationSettings { settings in
+                    if settings.authorizationStatus == .authorized {
                         tabSelection = DATA_TABS_TAB
                     } else {
                         tabSelection = NOTIFICATION_TAB
@@ -170,8 +172,8 @@ struct OnboardingView: View {
                 }
             }
         case LOCATION_TAB:
-            userNotificationCenter.getNotificationSettings { (settings) in
-                if(settings.authorizationStatus == .authorized) {
+            userNotificationCenter.getNotificationSettings { settings in
+                if settings.authorizationStatus == .authorized {
                     tabSelection = DATA_TABS_TAB
                 } else {
                     tabSelection = NOTIFICATION_TAB
@@ -190,7 +192,10 @@ struct OnboardingView: View {
     func welcomeTab() -> some View {
         OnboardingTabTemplate(
             title: "Welcome To Marlin",
-            explanation: "Marlin puts NGA's Maritime Safety Information datasets at your fingertips even when offline. The next few screens will allow you to customize your experience to meet your needs.",
+            explanation: """
+                Marlin puts NGA's Maritime Safety Information datasets at your fingertips even when offline. \
+                The next few screens will allow you to customize your experience to meet your needs.
+            """,
             imageName: "marlin_large",
             buttons:
             Button("Set Sail") {
@@ -229,7 +234,10 @@ struct OnboardingView: View {
     func locationTab() -> some View {
         OnboardingTabTemplate(
             title: "Enable Location",
-            explanation: "Marlin can show your location on the map and provide location aware filtering. Would you like to allow Marlin to access your location?",
+            explanation: """
+                Marlin can show your location on the map and provide location aware filtering. \
+                Would you like to allow Marlin to access your location?
+            """,
             systemImageName: "location.circle.fill",
             buttons:
                 VStack(spacing: 16) {
@@ -260,7 +268,8 @@ struct OnboardingView: View {
             buttons:
                 VStack(spacing: 16) {
                     Button("Yes, Enable Notifications") {
-                        userNotificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+                        userNotificationCenter.requestAuthorization(
+                            options: [.alert, .sound, .badge]) { granted, error in
                             nextTab(currentTab: NOTIFICATION_TAB)
                         }
                     }
@@ -282,13 +291,17 @@ struct OnboardingView: View {
     func dataTabsTab() -> some View {
         OnboardingTabTemplate(
             title: "Marlin Tabs",
-            explanation: "Choose up to 4 dataset tabs for the tab bar.  Other datasets will be accessible in the navigation menu.",
+            explanation: """
+                Choose up to 4 dataset tabs for the tab bar. \
+                Other datasets will be accessible in the navigation menu.
+            """,
             imageAreaContent:
                 DataSourceTabGrid()
                 .frame(maxHeight: .infinity),
             buttons:
                 Button("Next") {
-                    // when we add the tabs to the tab list, we are adding them to the front of the tab list, so we need to reverse that list
+                    // when we add the tabs to the tab list, we are adding them to the front of the tab list, 
+                    // so we need to reverse that list
                     // This will make the tabs appear in the order the user chose them
                     dataSourceList.tabs.reverse()
                     for i in 0...(dataSourceList.tabs.count - 1) {
@@ -307,7 +320,10 @@ struct OnboardingView: View {
     func dataMapTab() -> some View {
         OnboardingTabTemplate(
             title: "Marlin Map",
-            explanation: "Choose what datasets you want to see on the map.  This can always be changed via the navigation menu.",
+            explanation: """
+                Choose what datasets you want to see on the map. \
+                This can always be changed via the navigation menu.
+            """,
             imageAreaContent:
                 DataSourceMapGrid()
                 .frame(maxHeight: .infinity),

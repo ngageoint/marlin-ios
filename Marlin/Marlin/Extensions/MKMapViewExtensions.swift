@@ -53,7 +53,13 @@ extension MKCoordinateRegion {
     }
     
     func padded(percent: Double, maxDelta: Double = 10.0) -> MKCoordinateRegion {
-        return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude), span: MKCoordinateSpan(latitudeDelta: min(maxDelta, span.latitudeDelta * (1.0 + percent)), longitudeDelta: min(maxDelta, span.longitudeDelta * (1.0 + percent))))
+        return MKCoordinateRegion(
+            center: CLLocationCoordinate2D(
+                latitude: center.latitude,
+                longitude: center.longitude),
+            span: MKCoordinateSpan(
+                latitudeDelta: min(maxDelta, span.latitudeDelta * (1.0 + percent)),
+                longitudeDelta: min(maxDelta, span.longitudeDelta * (1.0 + percent))))
     }
 }
 
@@ -72,7 +78,8 @@ extension MKCoordinateSpan {
     }
     
     private static func latitudeToPixelSpaceY(latitude: Double) -> Double {
-        return round(mercatorOffset - mercatorRadius * log((1 + sin(latitude * Double.pi / 180.0)) / (1 - sin(latitude * Double.pi / 180.0))) / 2.0)
+        return round(mercatorOffset - mercatorRadius * log((1 + sin(latitude * Double.pi / 180.0)) 
+                                                           / (1 - sin(latitude * Double.pi / 180.0))) / 2.0)
     }
     
     private static func pixelSpaceXToLongitude(pixelX: Double) -> Double {
@@ -80,7 +87,8 @@ extension MKCoordinateSpan {
     }
     
     private static func pixelSpaceYToLatitude(pixelY: Double) -> Double {
-        return (Double.pi / 2.0 - 2.0 * atan(exp((round(pixelY) - mercatorOffset) / mercatorRadius))) * 180.0 / Double.pi
+        return (Double.pi / 2.0 - 2.0 * atan(exp((round(pixelY) - mercatorOffset) 
+                                                 / mercatorRadius))) * 180.0 / Double.pi
     }
     
     init(center: CLLocationCoordinate2D, zoom: Double, bounds: CGRect) {

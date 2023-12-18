@@ -42,13 +42,18 @@ struct GeoPackageExportView: View {
                         let included = viewModel.dataSources.contains { definition in
                             definition.key == dataSourceItem.key
                         }
-                        DataSourceButton(definition: dataSourceItem.dataSource.definition, enabled: included)
+                        dataSourceButton(definition: dataSourceItem.dataSource.definition, enabled: included)
                     }
                 }
                 if !viewModel.exporting && !viewModel.complete {
-                    CommonFilters(viewModel: viewModel.commonViewModel)
+                    commonFilters(viewModel: viewModel.commonViewModel)
                 }
-                DataSourceFilters(dataSources: viewModel.dataSourceDefinitions, exportProgresses: viewModel.exportProgresses, filterViewModels: viewModel.filterViewModels, counts: viewModel.counts, exporting: viewModel.exporting)
+                dataSourceFilters(
+                    dataSources: viewModel.dataSourceDefinitions,
+                    exportProgresses: viewModel.exportProgresses,
+                    filterViewModels: viewModel.filterViewModels,
+                    counts: viewModel.counts,
+                    exporting: viewModel.exporting)
             }
         }
         .safeAreaInset(edge: .bottom, content: {
@@ -69,7 +74,7 @@ struct GeoPackageExportView: View {
                         }
                         .accessibilityElement()
                         .accessibilityLabel("share")
-                        .buttonStyle(MaterialButtonStyle(type:.contained))
+                        .buttonStyle(MaterialButtonStyle(type: .contained))
                         .padding(.all, 16)
                     }
                 } else if !viewModel.exporting {
@@ -85,7 +90,7 @@ struct GeoPackageExportView: View {
                             }
                         )
                     }
-                    .buttonStyle(MaterialButtonStyle(type:.contained))
+                    .buttonStyle(MaterialButtonStyle(type: .contained))
                     .padding(.all, 16)
                 }
             }
@@ -104,7 +109,7 @@ struct GeoPackageExportView: View {
             viewModel.setExportParameters(dataSources: dataSources, filters: filters, useMapRegion: useMapRegion)
             Metrics.shared.geoPackageExportView()
         }
-        .onChange(of: viewModel.complete) { complete in
+        .onChange(of: viewModel.complete) { _ in
             guard let path = viewModel.geoPackage?.path else { return }
             let activityVC = UIActivityViewController(activityItems: [URL(fileURLWithPath: path)], applicationActivities: nil)
             UIApplication.shared.windows.first?.rootViewController?.present(activityVC, animated: true, completion: nil)
@@ -112,12 +117,15 @@ struct GeoPackageExportView: View {
         .alert("Export Error", isPresented: $viewModel.error) {
             Button("OK") { }
         } message: {
-            Text("We apologize, it looks like we were unable to export Marlin data for the selected data sources.  Please try again later or reach out if this issue persists.")
+            Text("""
+                We apologize, it looks like we were unable to export Marlin data for the selected data \
+                sources.  Please try again later or reach out if this issue persists.
+            """)
         }
     }
     
     @ViewBuilder
-    func DataSourceButton(
+    func dataSourceButton(
         definition: any DataSourceDefinition,
         enabled: Bool
     ) -> some View {
@@ -132,13 +140,18 @@ struct GeoPackageExportView: View {
                 }
             }
         }
-        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: enabled ? Color.white : Color.disabledColor, backgroundColor: enabled ? Color(uiColor: definition.color) : Color.disabledBackground))
+        .buttonStyle(
+            MaterialFloatingButtonStyle(
+                type: .custom,
+                size: .mini,
+                foregroundColor: enabled ? Color.white : Color.disabledColor,
+                backgroundColor: enabled ? Color(uiColor: definition.color) : Color.disabledBackground))
         .accessibilityElement(children: .contain)
         .accessibilityLabel("\(definition.key) Export Toggle")
     }
     
     @ViewBuilder
-    func CommonFilters(
+    func commonFilters(
         viewModel: FilterViewModel
     ) -> some View {
         HStack {
@@ -182,11 +195,11 @@ struct GeoPackageExportView: View {
     }
     
     @ViewBuilder
-    func DataSourceFilters(
+    func dataSourceFilters(
         dataSources: [DataSourceDefinitions],
-        exportProgresses: [DataSourceDefinitions : DataSourceExportProgress],
-        filterViewModels: [DataSourceDefinitions : FilterViewModel],
-        counts: [DataSourceDefinitions : Int],
+        exportProgresses: [DataSourceDefinitions: DataSourceExportProgress],
+        filterViewModels: [DataSourceDefinitions: FilterViewModel],
+        counts: [DataSourceDefinitions: Int],
         exporting: Bool
     ) -> some View {
         HStack {
@@ -200,8 +213,13 @@ struct GeoPackageExportView: View {
             ForEach(dataSources.sorted(by: { d1, d2 in
                 d1.definition.order < d2.definition.order
             })) { dataSourceDefinition in
-                if let progress = exportProgresses[dataSourceDefinition], let viewModel = filterViewModels[dataSourceDefinition] {
-                    ExportFilterRow(exporting: exporting, progress: progress, viewModel: viewModel, count: counts[dataSourceDefinition] ?? 0)
+                if let progress = exportProgresses[dataSourceDefinition], 
+                    let viewModel = filterViewModels[dataSourceDefinition] {
+                    ExportFilterRow(
+                        exporting: exporting,
+                        progress: progress,
+                        viewModel: viewModel,
+                        count: counts[dataSourceDefinition] ?? 0)
                     Divider()
                 }
             }
@@ -257,8 +275,9 @@ struct ExportFilterRow: View {
                             .contentShape(Rectangle())
                             .padding([.leading, .top, .bottom, .trailing], 16)
                             .accessibilityElement(children: .contain)
-                            .accessibilityLabel("\(filterCount) \(viewModel.dataSource?.definition.fullName ?? "") filters")
-                        
+                            .accessibilityLabel(
+                                "\(filterCount) \(viewModel.dataSource?.definition.fullName ?? "") filters")
+
                         ProgressView(value: progress.exportCount, total: progress.totalCount)
                             .progressViewStyle(.linear)
                             .tint(Color.primaryColorVariant)
@@ -273,7 +292,8 @@ struct ExportFilterRow: View {
                             .contentShape(Rectangle())
                             .padding([.leading, .top, .bottom, .trailing], 16)
                             .accessibilityElement(children: .contain)
-                            .accessibilityLabel("\(filterCount) \(viewModel.dataSource?.definition.fullName ?? "") filters")
+                            .accessibilityLabel(
+                                "\(filterCount) \(viewModel.dataSource?.definition.fullName ?? "") filters")
                     }
                     .padding(.trailing, 16)
                     .accessibilityElement(children: .contain)

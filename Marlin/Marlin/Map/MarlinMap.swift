@@ -192,15 +192,12 @@ struct MarlinMap: UIViewRepresentable, MarlinMapProtocol {
         context.coordinator.allowMapTapsOnItems = allowMapTapsOnItems
         return mapView
     }
-    
-    func updateUIView(_ mapView: MKMapView, context: Context) {
-        context.coordinator.mapView = mapView
-        context.coordinator.allowMapTapsOnItems = allowMapTapsOnItems
 
+    func setupScale(mapView: MKMapView, context: Context) {
         let scale = context.coordinator.mapScale ?? mapView.subviews.first { view in
             return (view as? MKScaleView) != nil
         }
-        
+
         if mapState.showMapScale {
             if scale == nil {
                 let scale = MKScaleView(mapView: mapView)
@@ -209,7 +206,7 @@ struct MarlinMap: UIViewRepresentable, MarlinMapProtocol {
                 scale.accessibilityLabel = "Map Scale"
                 scale.translatesAutoresizingMaskIntoConstraints = false
                 mapView.addSubview(scale)
-                
+
                 NSLayoutConstraint.activate([
                     scale.centerXAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.centerXAnchor),
                     scale.bottomAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.bottomAnchor, constant: -16),
@@ -225,22 +222,23 @@ struct MarlinMap: UIViewRepresentable, MarlinMapProtocol {
         } else if let scale = scale {
             scale.removeFromSuperview()
         }
+    }
 
-        if let center = mapState.center, center.center.latitude != context.coordinator.setCenter?.latitude, center.center.longitude != context.coordinator.setCenter?.longitude {
+    func setMapLocation(context: Context) {
+        if let center = mapState.center, 
+            center.center.latitude != context.coordinator.setCenter?.latitude,
+            center.center.longitude != context.coordinator.setCenter?.longitude {
             context.coordinator.setMapRegion(region: center)
             context.coordinator.setCenter = center.center
         }
-        
+
         if let center = mapState.forceCenter, context.coordinator.forceCenterDate != mapState.forceCenterDate {
             context.coordinator.setMapRegion(region: center)
             context.coordinator.forceCenterDate = mapState.forceCenterDate
         }
-        
-        if context.coordinator.trackingModeSet != MKUserTrackingMode(rawValue: mapState.userTrackingMode) {
-            mapView.userTrackingMode = MKUserTrackingMode(rawValue: mapState.userTrackingMode) ?? .none
-            context.coordinator.trackingModeSet = MKUserTrackingMode(rawValue: mapState.userTrackingMode)
-        }
-                
+    }
+
+    func setMapType(mapView: MKMapView, context: Context) {
         if mapState.mapType == ExtraMapTypes.osm.rawValue {
             if context.coordinator.osmOverlay == nil {
                 context.coordinator.osmOverlay = MKTileOverlay(urlTemplate: "https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png")
@@ -255,7 +253,9 @@ struct MarlinMap: UIViewRepresentable, MarlinMapProtocol {
                 mapView.removeOverlay(osmOverlay)
             }
         }
-        
+    }
+
+    func setGrids(mapView: MKMapView, context: Context) {
         if mapState.showGARS {
             if context.coordinator.garsOverlay == nil {
                 context.coordinator.garsOverlay = GARSTileOverlay(512, 512)
@@ -266,7 +266,7 @@ struct MarlinMap: UIViewRepresentable, MarlinMapProtocol {
                 mapView.removeOverlay(garsOverlay)
             }
         }
-        
+
         if mapState.showMGRS {
             if context.coordinator.mgrsOverlay == nil {
                 context.coordinator.mgrsOverlay = MGRSTileOverlay(512, 512)
@@ -277,7 +277,25 @@ struct MarlinMap: UIViewRepresentable, MarlinMapProtocol {
                 mapView.removeOverlay(mgrsOverlay)
             }
         }
-        
+    }
+
+    func updateUIView(_ mapView: MKMapView, context: Context) {
+        context.coordinator.mapView = mapView
+        context.coordinator.allowMapTapsOnItems = allowMapTapsOnItems
+
+        setupScale(mapView: mapView, context: context)
+
+        setMapLocation(context: context)
+
+        if context.coordinator.trackingModeSet != MKUserTrackingMode(rawValue: mapState.userTrackingMode) {
+            mapView.userTrackingMode = MKUserTrackingMode(rawValue: mapState.userTrackingMode) ?? .none
+            context.coordinator.trackingModeSet = MKUserTrackingMode(rawValue: mapState.userTrackingMode)
+        }
+                
+        setMapType(mapView: mapView, context: context)
+
+        setGrids(mapView: mapView, context: context)
+
         // remove any mixins that were removed
         for mixin in context.coordinator.mixins {
             if !mixins.mixins.contains(where: { mixinFromMixins in
@@ -333,8 +351,6 @@ protocol MapCoordinator: MKMapViewDelegate, UIGestureRecognizerDelegate {
     func singleTapGesture(tapGestureRecognizer: UITapGestureRecognizer)
     func handleTappedItems(annotations: [MKAnnotation], items: [any DataSource], mapName: String)
     func longPressGesture(longPressGestureRecognizer: UILongPressGestureRecognizer)
-
-    
 }
 
 extension MapCoordinator {
@@ -356,18 +372,28 @@ extension MapCoordinator {
             }
             self.focusedAnnotation = nil
         }
-        if let ds = notification.item {
-            if notification.zoom, let warning = ds as? NavigationalWarning, let region = warning.region {
+        if let dataSource = notification.item {
+            if notification.zoom, let warning = dataSource as? NavigationalWarning, let region = warning.region {
                 let span = region.span
-                let adjustedCenter = CLLocationCoordinate2D(latitude: region.center.latitude - (span.latitudeDelta / 4.0), longitude: region.center.longitude)
+                let adjustedCenter = CLLocationCoordinate2D(
+                    latitude: region.center.latitude - (span.latitudeDelta / 4.0),
+                    longitude: region.center.longitude)
                 if CLLocationCoordinate2DIsValid(adjustedCenter) {
-                    let newRegion = MKCoordinateRegion(center: adjustedCenter, span: MKCoordinateSpan(latitudeDelta: span.latitudeDelta + (span.latitudeDelta / 4.0), longitudeDelta: span.longitudeDelta))
+                    let newRegion = MKCoordinateRegion(
+                        center: adjustedCenter,
+                        span: MKCoordinateSpan(
+                            latitudeDelta: span.latitudeDelta + (span.latitudeDelta / 4.0),
+                            longitudeDelta: span.longitudeDelta))
                     setMapRegion(region: newRegion)
                 }
                 
             } else {
-                let span = mapView?.region.span ?? MKCoordinateSpan(zoomLevel: 17, pixelWidth: Double(mapView?.frame.size.width ?? UIScreen.main.bounds.width))
-                let adjustedCenter = CLLocationCoordinate2D(latitude: ds.coordinate.latitude - (span.latitudeDelta / 4.0), longitude: ds.coordinate.longitude)
+                let span = mapView?.region.span ?? MKCoordinateSpan(
+                    zoomLevel: 17,
+                    pixelWidth: Double(mapView?.frame.size.width ?? UIScreen.main.bounds.width))
+                let adjustedCenter = CLLocationCoordinate2D(
+                    latitude: dataSource.coordinate.latitude - (span.latitudeDelta / 4.0),
+                    longitude: dataSource.coordinate.longitude)
                 if CLLocationCoordinate2DIsValid(adjustedCenter) {
                     setMapRegion(region: MKCoordinateRegion(center: adjustedCenter, span: span))
                 }
@@ -378,13 +404,13 @@ extension MapCoordinator {
             return
         }
         
-        let ea = EnlargedAnnotation(mapImage: mapItem)
-        ea.markForEnlarging()
-        focusedAnnotation = ea
-        mapView?.addAnnotation(ea)
+        let enlarged = EnlargedAnnotation(mapImage: mapItem)
+        enlarged.markForEnlarging()
+        focusedAnnotation = enlarged
+        mapView?.addAnnotation(enlarged)
     }
     
-    func mapTap(tapPoint:CGPoint, gesture: UITapGestureRecognizer, mapView: MKMapView?) {
+    func mapTap(tapPoint: CGPoint, gesture: UITapGestureRecognizer, mapView: MKMapView?) {
         guard let mapView = mapView, allowMapTapsOnItems else {
             return
         }
@@ -468,7 +494,7 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
             .compactMap {$0.object as? FocusMapOnItemNotification}
             .sink(receiveValue: { [weak self] in
                 NSLog("Focus notification recieved")
-                self?.focusItem(notification:$0)
+                self?.focusItem(notification: $0)
             })
     }
     
@@ -482,7 +508,10 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
             return
         }
         if tapGestureRecognizer.state == .ended {
-            self.mapTap(tapPoint: tapGestureRecognizer.location(in: mapView), gesture: tapGestureRecognizer, mapView: mapView)
+            self.mapTap(
+                tapPoint: tapGestureRecognizer.location(in: mapView),
+                gesture: tapGestureRecognizer,
+                mapView: mapView)
         }
     }
     
@@ -536,7 +565,9 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if let enlarged = annotation as? EnlargedAnnotation {
-            let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: EnlargedAnnotationView.ReuseID, for: enlarged)
+            let annotationView = mapView.dequeueReusableAnnotationView(
+                withIdentifier: EnlargedAnnotationView.ReuseID,
+                for: enlarged)
             let mapImage = enlarged.mapImage
             let mapImages = mapImage.mapImage(marker: true, zoomLevel: 36, tileBounds3857: nil, context: nil)
             var finalImage: UIImage? = mapImages.first
@@ -548,8 +579,8 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
             annotationView.image = finalImage
             var size = CGSize(width: 40, height: 40)
             let max = max(finalImage?.size.height ?? 40, finalImage?.size.width ?? 40)
-            size.width = size.width * ((finalImage?.size.width ?? 40) / max)
-            size.height = size.height * ((finalImage?.size.height ?? 40) / max)
+            size.width *= ((finalImage?.size.width ?? 40) / max)
+            size.height *= ((finalImage?.size.height ?? 40) / max)
             annotationView.frame.size = size
             annotationView.canShowCallout = false
             annotationView.isEnabled = false
@@ -561,7 +592,7 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
             return annotationView
         }
         for mixin in marlinMap.mixins.mixins {
-            if let view = mixin.viewForAnnotation(annotation: annotation, mapView: mapView){
+            if let view = mixin.viewForAnnotation(annotation: annotation, mapView: mapView) {
                 return view
             }
         }
@@ -597,9 +628,9 @@ class EnlargedAnnotation: NSObject, MKAnnotation {
     
     var shouldShrink: Bool = false
     
-    var clusteringIdentifierWhenShrunk: String? = nil
+    var clusteringIdentifierWhenShrunk: String?
     
-    var clusteringIdentifier: String? = nil
+    var clusteringIdentifier: String?
     
     var annotationView: MKAnnotationView?
     

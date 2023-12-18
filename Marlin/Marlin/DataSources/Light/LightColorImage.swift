@@ -23,13 +23,18 @@ class LightImage {
 
         // if the zoom level is greater than 12 draw the structure
         if zoomLevel > 12 && light.isBuoy {
-            if let structureImage = StructureImage(frame: CGRect(x: 0, y: 0, width: 3 * radius, height: 3 * radius), structure: light.structure) {
+            if let structureImage = StructureImage(
+                frame: CGRect(x: 0, y: 0, width: 3 * radius, height: 3 * radius),
+                structure: light.structure) {
                 images.append(structureImage)
             }
         }
         
         if light.isFogSignal {
-            if let fogSignalImage = FogSignalImage(frame: CGRect(x: 0, y: 0, width: 5 * radius, height: 5 * radius), arcWidth: min(3, radius / 3.0), drawArcs: zoomLevel > 8) {
+            if let fogSignalImage = FogSignalImage(
+                frame: CGRect(x: 0, y: 0, width: 5 * radius, height: 5 * radius),
+                arcWidth: min(3, radius / 3.0),
+                drawArcs: zoomLevel > 8) {
                 images.append(fogSignalImage)
             }
         }
@@ -47,7 +52,11 @@ class LightImage {
         }
         
         if light.isRacon {
-            if let raconImage = raconImage(light: light, scale: 1, sectors: light.azimuthCoverage, zoomLevel: zoomLevel) {
+            if let raconImage = raconImage(
+                light: light,
+                scale: 1,
+                sectors: light.azimuthCoverage,
+                zoomLevel: zoomLevel) {
                 images.append(raconImage)
             }
         }
@@ -58,18 +67,30 @@ class LightImage {
     static func sectorImage(light: LightModel, lightSectors: [ImageSector], scale: Int, zoomLevel: Int) -> UIImage? {
         let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale - ((CGFloat(light.characteristicNumber ?? 0) - 1.0) * 2)
         if zoomLevel > 7 {
-            return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: 40 * radius, height: 40 * radius), sectors: lightSectors, radius: 8 * radius, fill: false, arcWidth: radius * 0.75)
+            return CircleImage(
+                suggestedFrame: CGRect(x: 0, y: 0, width: 40 * radius, height: 40 * radius),
+                sectors: lightSectors,
+                radius: 8 * radius,
+                fill: false,
+                arcWidth: radius * 0.75)
         } else {
             var sectors: [ImageSector] = []
             if let lightColors = light.lightColors {
                 var count = 0
                 let degreesPerColor = 360.0 / CGFloat(lightColors.count)
                 for color in lightColors {
-                    sectors.append(ImageSector(startDegrees: degreesPerColor * CGFloat(count), endDegrees: degreesPerColor * (CGFloat(count) + 1.0), color: color))
+                    sectors.append(ImageSector(
+                        startDegrees: degreesPerColor * CGFloat(count),
+                        endDegrees: degreesPerColor * (CGFloat(count) + 1.0),
+                        color: color))
                     count += 1
                 }
             }
-            return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: radius, height: radius), sectors: sectors, fill: true, sectorSeparator: false)
+            return CircleImage(
+                suggestedFrame: CGRect(x: 0, y: 0, width: radius, height: radius),
+                sectors: sectors,
+                fill: true,
+                sectorSeparator: false)
         }
     }
     
@@ -78,16 +99,27 @@ class LightImage {
 
         // if zoom level greater than 12, draw the light more detailed, otherwise, draw a dot
         if zoomLevel > 12 {
-            return LightColorImage(frame: CGRect(x: 0, y: 0, width: 4 * radius, height: 4 * radius), colors: lightColors, arcWidth: 3.0, darkMode: false)
+            return LightColorImage(
+                frame: CGRect(x: 0, y: 0, width: 4 * radius, height: 4 * radius),
+                colors: lightColors,
+                arcWidth: 3.0,
+                darkMode: false)
         } else {
             var sectors: [ImageSector] = []
             var count = 0
             let degreesPerColor = 360.0 / CGFloat(lightColors.count)
             for color in lightColors {
-                sectors.append(ImageSector(startDegrees: degreesPerColor * CGFloat(count), endDegrees: degreesPerColor * (CGFloat(count) + 1.0), color: color))
+                sectors.append(ImageSector(
+                    startDegrees: degreesPerColor * CGFloat(count),
+                    endDegrees: degreesPerColor * (CGFloat(count) + 1.0),
+                    color: color))
                 count += 1
             }
-            return CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: radius, height: radius), sectors: sectors, fill: true, sectorSeparator: false)
+            return CircleImage(
+                suggestedFrame: CGRect(x: 0, y: 0, width: radius, height: radius),
+                sectors: sectors,
+                fill: true,
+                sectorSeparator: false)
         }
     }
     
@@ -95,7 +127,13 @@ class LightImage {
         let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale
 
         if zoomLevel > 10 {
-            return RaconImage(frame: CGRect(x: 0, y: 0, width: 3 * (radius + 3.0), height: 3 * (radius + 3.0)), sectors: sectors, arcWidth: 3.0, arcRadius: radius + 3.0, text: "Racon (\(light.morseLetter))\n\(light.remarks?.replacingOccurrences(of: "\n", with: "") ?? "")", darkMode: false)
+            return RaconImage(
+                frame: CGRect(x: 0, y: 0, width: 3 * (radius + 3.0), height: 3 * (radius + 3.0)),
+                sectors: sectors,
+                arcWidth: 3.0,
+                arcRadius: radius + 3.0,
+                text: "Racon (\(light.morseLetter))\n\(light.remarks?.replacingOccurrences(of: "\n", with: "") ?? "")",
+                darkMode: false)
         } else {
             return CircleImage(color: Light.raconColor, radius: radius, fill: false, arcWidth: min(3.0, radius / 2.0))
         }
@@ -104,7 +142,14 @@ class LightImage {
 
 class LightColorImage : UIImage {
     
-    convenience init?(frame: CGRect, colors: [UIColor], arcWidth: CGFloat? = nil, outerStroke: Bool = true, arcRadius: CGFloat? = nil, drawTower: Bool = true, darkMode: Bool = false) {
+    convenience init?(
+        frame: CGRect,
+        colors: [UIColor],
+        arcWidth: CGFloat? = nil,
+        outerStroke: Bool = true,
+        arcRadius: CGFloat? = nil,
+        drawTower: Bool = true,
+        darkMode: Bool = false) {
         let strokeWidth = 0.5
         let rect = frame
         let radius = arcRadius ?? min(rect.width / 2.0, rect.height / 2.0) - ((arcWidth ?? strokeWidth) / 2.0)
@@ -118,7 +163,8 @@ class LightColorImage : UIImage {
                 if outerStroke {
 
                     wholeColor.setStroke()
-                    let outerBoundary = UIBezierPath(ovalIn: CGRect(x: strokeWidth / 2.0, y: strokeWidth / 2.0, width: diameter, height: diameter ))
+                    let outerBoundary = UIBezierPath(
+                        ovalIn: CGRect(x: strokeWidth / 2.0, y: strokeWidth / 2.0, width: diameter, height: diameter ))
                     outerBoundary.lineWidth = strokeWidth
                     outerBoundary.stroke()
                 }
@@ -134,7 +180,6 @@ class LightColorImage : UIImage {
                 piePath.addArc(withCenter: center, radius: radius,
                                startAngle: startAngle, endAngle: endAngle,
                                clockwise: true)
-                
 
                 if let arcWidth = arcWidth {
                     piePath.lineWidth = arcWidth
@@ -164,7 +209,15 @@ class LightColorImage : UIImage {
         
     }
     
-    convenience init?(frame: CGRect, sectors: [LightSector], arcWidth: CGFloat? = nil, arcRadius: CGFloat? = nil, outerStroke: Bool = true, includeSectorDashes: Bool = false, includeLetters: Bool = true, darkMode: Bool = false) {
+    convenience init?(
+        frame: CGRect,
+        sectors: [LightSector],
+        arcWidth: CGFloat? = nil,
+        arcRadius: CGFloat? = nil,
+        outerStroke: Bool = true,
+        includeSectorDashes: Bool = false,
+        includeLetters: Bool = true,
+        darkMode: Bool = false) {
         let strokeWidth = 0.5
         let rect = frame
         let radius = arcRadius ?? min(rect.width / 2.0, rect.height / 2.0) - ((arcWidth ?? strokeWidth) / 2.0)
@@ -179,7 +232,8 @@ class LightColorImage : UIImage {
                 if outerStroke {
                     wholeColor.setStroke()
 
-                    let outerBoundary = UIBezierPath(ovalIn: CGRect(x: strokeWidth / 2.0, y: strokeWidth / 2.0, width: diameter, height: diameter ))
+                    let outerBoundary = UIBezierPath(
+                        ovalIn: CGRect(x: strokeWidth / 2.0, y: strokeWidth / 2.0, width: diameter, height: diameter ))
                     outerBoundary.lineWidth = strokeWidth
                     outerBoundary.stroke()
                 }
@@ -209,8 +263,11 @@ class LightColorImage : UIImage {
                 }
                 
                 if includeSectorDashes {
-                    let dashColor = UIColor.label.resolvedColor(with:UITraitCollection(traitsFrom: [.init(userInterfaceStyle: darkMode ? .dark : .light)])).withAlphaComponent(0.87)
-                    
+                    let dashColor = UIColor.label.resolvedColor(
+                        with: UITraitCollection(
+                            traitsFrom: [.init(userInterfaceStyle: darkMode ? .dark : .light)]))
+                        .withAlphaComponent(0.87)
+
                     let sectorDash = UIBezierPath()
                     sectorDash.move(to: center)
 
@@ -243,7 +300,9 @@ class LightColorImage : UIImage {
                 
                 if includeLetters {
                     // We want black letters when the circle is filled
-                    let color = UIColor.label.resolvedColor(with:UITraitCollection(traitsFrom: [.init(userInterfaceStyle: darkMode && arcWidth != nil ? .dark : .light)]))
+                    let color = UIColor.label.resolvedColor(
+                        with: UITraitCollection(
+                            traitsFrom: [.init(userInterfaceStyle: darkMode && arcWidth != nil ? .dark : .light)]))
                     // Color text
                     let attributes = [ NSAttributedString.Key.foregroundColor: color,
                                        NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: arcWidth ?? 3)]
@@ -258,7 +317,11 @@ class LightColorImage : UIImage {
                     } else {
                         textRadius -= size.height
                     }
-                    text.drawWithBasePoint(basePoint: center, radius: textRadius, andAngle: midPointAngle * .pi / 180, andAttributes: attributes)
+                    text.drawWithBasePoint(
+                        basePoint: center,
+                        radius: textRadius,
+                        andAngle: midPointAngle * .pi / 180,
+                        andAttributes: attributes)
                 }
             }
         }

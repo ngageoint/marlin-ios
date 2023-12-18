@@ -17,7 +17,28 @@ extension NoticeToMariners: DataSource {
         return []
     }
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Notice Number", key: #keyPath(NoticeToMariners.noticeNumber), type: .int), ascending: false, section: true), DataSourceSortParameter(property:DataSourceProperty(name: "Full Publication", key: #keyPath(NoticeToMariners.isFullPublication), type: .int), ascending: false, section: false), DataSourceSortParameter(property:DataSourceProperty(name: "Section Order", key: #keyPath(NoticeToMariners.sectionOrder), type: .int), ascending: true, section: false)]
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Notice Number", 
+                key: #keyPath(NoticeToMariners.noticeNumber),
+                type: .int),
+            ascending: false,
+            section: true),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Full Publication",
+                key: #keyPath(NoticeToMariners.isFullPublication),
+                type: .int),
+            ascending: false,
+            section: false),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Section Order",
+                key: #keyPath(NoticeToMariners.sectionOrder),
+                type: .int),
+            ascending: true,
+            section: false)]
     static var defaultFilter: [DataSourceFilterParameter] = []
     static var isMappable: Bool = false
     static var dataSourceName: String = "NTM"
@@ -25,7 +46,7 @@ extension NoticeToMariners: DataSource {
     static var key: String = "ntm"
     static var metricsKey: String = "ntms"
     static var color: UIColor = UIColor.red
-    static var imageName: String? = nil
+    static var imageName: String?
     static var systemImageName: String? = "speaker.badge.exclamationmark.fill"
     
     var color: UIColor {
@@ -77,14 +98,22 @@ extension NoticeToMariners: BatchImportable {
         let count = value.pubs.count
         NSLog("Received \(count) \(Self.key) records.")
         
-        return try await Self.importRecords(from: value.pubs, taskContext: PersistenceController.current.newTaskContext())
+        return try await Self.importRecords(
+            from: value.pubs,
+            taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
         let context = PersistenceController.current.newTaskContext()
         var noticeNumber: Int64?
         context.performAndWait {
-            let newestNotice = try? PersistenceController.current.fetchFirst(NoticeToMariners.self, sortBy: [NSSortDescriptor(keyPath: \NoticeToMariners.noticeNumber, ascending: false)], predicate: nil, context: context)
+            let newestNotice = try? PersistenceController.current.fetchFirst(
+                NoticeToMariners.self,
+                sortBy: [
+                    NSSortDescriptor(keyPath: \NoticeToMariners.noticeNumber, ascending: false)
+                ],
+                predicate: nil,
+                context: context)
             noticeNumber = newestNotice?.noticeNumber
         }
         return [MSIRouter.readNoticeToMariners(noticeNumber: noticeNumber)]
@@ -92,7 +121,9 @@ extension NoticeToMariners: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every day
-        return UserDefaults.standard.dataSourceEnabled(NoticeToMariners.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24)) > UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.definition)
+        return UserDefaults.standard.dataSourceEnabled(NoticeToMariners.definition)
+        && (Date().timeIntervalSince1970 - (60 * 60 * 24)) >
+        UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [NoticeToMarinersProperties]) -> NSBatchInsertRequest {
@@ -100,7 +131,9 @@ extension NoticeToMariners: BatchImportable {
         let total = propertyList.count
         
         // Provide one dictionary at a time when the closure is called.
-        let batchInsertRequest = NSBatchInsertRequest(entity: NoticeToMariners.entity(), dictionaryHandler: { dictionary in
+        let batchInsertRequest = NSBatchInsertRequest(
+            entity: NoticeToMariners.entity(),
+            dictionaryHandler: { dictionary in
             guard index < total else { return true }
             let propertyDictionary = propertyList[index].dictionaryValue
             dictionary.addEntries(from: propertyDictionary.mapValues({ value in
@@ -108,14 +141,16 @@ extension NoticeToMariners: BatchImportable {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             index += 1
             return false
         })
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [NoticeToMarinersProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(
+        from propertiesList: [NoticeToMarinersProperties],
+        taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

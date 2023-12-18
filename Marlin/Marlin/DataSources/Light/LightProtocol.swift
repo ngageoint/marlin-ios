@@ -13,6 +13,9 @@ import sf_ios
 import OSLog
 import mgrs_ios
 
+// this is being refactored soon so disable this check
+// swiftlint:disable type_body_length
+// swiftlint:disable file_length
 struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
     var canBookmark: Bool = false
     var id: String { self.itemKey }
@@ -53,35 +56,35 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
         case sectionHeader
     }
     
-    var aidType: String? = nil
-    var characteristic: String? = nil
-    var characteristicNumber: Int? = nil
-    var deleteFlag: String? = nil
-    var featureNumber: String? = nil
-    var geopoliticalHeading: String? = nil
-    var heightFeet: Float? = nil
-    var heightMeters: Float? = nil
-    var internationalFeature: String? = nil
-    var localHeading: String? = nil
+    var aidType: String?
+    var characteristic: String?
+    var characteristicNumber: Int?
+    var deleteFlag: String?
+    var featureNumber: String?
+    var geopoliticalHeading: String?
+    var heightFeet: Float?
+    var heightMeters: Float?
+    var internationalFeature: String?
+    var localHeading: String?
     var latitude: Double
     var longitude: Double
-    var mgrs10km: String? = nil
-    var name: String? = nil
-    var noticeNumber: Int? = nil
-    var noticeWeek: String? = nil
-    var noticeYear: String? = nil
-    var position: String? = nil
-    var postNote: String? = nil
-    var precedingNote: String? = nil
-    var range: String? = nil
-    var regionHeading: String? = nil
-    var remarks: String? = nil
-    var removeFromList: String? = nil
-    var sectionHeader: String? = nil
-    var structure: String? = nil
-    var subregionHeading: String? = nil
-    var volumeNumber: String? = nil
-    var requiresPostProcessing: Bool? = nil
+    var mgrs10km: String?
+    var name: String?
+    var noticeNumber: Int?
+    var noticeWeek: String?
+    var noticeYear: String?
+    var position: String?
+    var postNote: String?
+    var precedingNote: String?
+    var range: String?
+    var regionHeading: String?
+    var remarks: String?
+    var removeFromList: String?
+    var sectionHeader: String?
+    var structure: String?
+    var subregionHeading: String?
+    var volumeNumber: String?
+    var requiresPostProcessing: Bool?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -156,8 +159,8 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
             let decoder = JSONDecoder()
             print("json is \(string)")
             let jsonData = Data(string.utf8)
-            if let ds = try? decoder.decode(LightModel.self, from: jsonData) {
-                self = ds
+            if let model = try? decoder.decode(LightModel.self, from: jsonData) {
+                self = model
             } else {
                 return nil
             }
@@ -261,19 +264,22 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
         var latitude = 0.0
         var longitude = 0.0
         
-        let pattern = #"(?<latdeg>[0-9]*)°(?<latminutes>[0-9]*)'(?<latseconds>[0-9]*\.?[0-9]*)\"(?<latdirection>[NS]) \n(?<londeg>[0-9]*)°(?<lonminutes>[0-9]*)'(?<lonseconds>[0-9]*\.?[0-9]*)\"(?<londirection>[EW])"#
+        let pattern = #"""
+            (?<latdeg>[0-9]*)°(?<latminutes>[0-9]*)'(?<latseconds>[0-9]*\.?[0-9]*)\"\
+            (?<latdirection>[NS])\
+            \n(?<londeg>[0-9]*)°(?<lonminutes>[0-9]*)'(?<lonseconds>[0-9]*\.?[0-9]*)\"\
+            (?<londirection>[EW])
+        """#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(position.startIndex..<position.endIndex,
                               in: position)
         if let match = regex?.firstMatch(in: position,
                                          options: [],
-                                         range: nsrange)
-        {
+                                         range: nsrange) {
             for component in ["latdeg", "latminutes", "latseconds", "latdirection"] {
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: position)
-                {
+                   let range = Range(nsrange, in: position) {
                     if component == "latdeg" {
                         latitude = Double(position[range]) ?? 0.0
                     } else if component == "latminutes" {
@@ -288,8 +294,7 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
             for component in ["londeg", "lonminutes", "lonseconds", "londirection"] {
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: position)
-                {
+                   let range = Range(nsrange, in: position) {
                     if component == "londeg" {
                         longitude = Double(position[range]) ?? 0.0
                     } else if component == "lonminutes" {
@@ -339,7 +344,19 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
         ]
     }
     
-    init(characteristicNumber: Int64, structure: String? = nil, name: String? = nil, volumeNumber: String? = nil, featureNumber: String? = nil, noticeWeek: String? = nil, noticeYear: String? = nil, latitude: Double, longitude: Double, remarks: String? = nil, characteristic: String? = nil, range: String? = nil) {
+    init(
+        characteristicNumber: Int64,
+        structure: String? = nil,
+        name: String? = nil,
+        volumeNumber: String? = nil,
+        featureNumber: String? = nil,
+        noticeWeek: String? = nil,
+        noticeYear: String? = nil,
+        latitude: Double,
+        longitude: Double,
+        remarks: String? = nil,
+        characteristic: String? = nil,
+        range: String? = nil) {
         self.characteristicNumber = Int(characteristicNumber)
         self.structure = structure
         self.name = name
@@ -363,7 +380,10 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
     }
 
     var morseCode: String? {
-        guard !isLight, let characteristic = characteristic, let leftParen = characteristic.firstIndex(of: "("), let lastIndex = characteristic.lastIndex(of: ")") else {
+        guard !isLight, 
+                let characteristic = characteristic,
+                let leftParen = characteristic.firstIndex(of: "("),
+                let lastIndex = characteristic.lastIndex(of: ")") else {
             return nil
         }
         
@@ -387,7 +407,10 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
         }
         var sectors: [ImageSector] = []
         //        Azimuth coverage 270^-170^.
-        let pattern = #"(?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))\°)?(?<endminutes>[0-9]*)[\`']?\..*"#
+        let pattern = #"""
+            (?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\°)?\
+            ((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))\°)?(?<endminutes>[0-9]*)[\`']?\..*
+        """#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
                               in: remarks)
@@ -404,8 +427,7 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
                 
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: remarks)
-                {
+                   let range = Range(nsrange, in: remarks) {
                     if component == "startdeg" {
                         if start != nil {
                             start = start! + ((Double(remarks[range]) ?? 0.0) + 90)
@@ -485,7 +507,12 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
             lightColors.append(Light.redLight)
         }
         // why does green have so many variants without a .?
-        if characteristic.contains("G.") || characteristic.contains("Oc.G") || characteristic.contains("G\n") || characteristic.contains("F.G") || characteristic.contains("Fl.G") || characteristic.contains("(G)") {
+        if characteristic.contains("G.") 
+            || characteristic.contains("Oc.G")
+            || characteristic.contains("G\n")
+            || characteristic.contains("F.G")
+            || characteristic.contains("Fl.G")
+            || characteristic.contains("(G)") {
             lightColors.append(Light.greenLight)
         }
         if characteristic.contains("Y.") {
@@ -519,7 +546,12 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
         }
         var sectors: [ImageSector] = []
         
-        let pattern = #"(?<visible>(Visible)?)(?<fullLightObscured>(bscured)?)((?<color>[A-Z]+)?)\.?(?<unintensified>(\(unintensified\))?)(?<obscured>(\(bscured\))?)( (?<startdeg>(\d*))°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))°)(?<endminutes>[0-9]*)[\`']?"#
+        let pattern = #"""
+            (?<visible>(Visible)?)(?<fullLightObscured>(bscured)?)((?<color>[A-Z]+)?)\.?\
+            (?<unintensified>(\(unintensified\))?)(?<obscured>(\(bscured\))?)\
+            ( (?<startdeg>(\d*))°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))°)\
+            (?<endminutes>[0-9]*)[\`']?
+        """#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
                               in: remarks)
@@ -537,14 +569,22 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
             var visibleColor: UIColor?
             var obscured: Bool = false
             var fullLightObscured: Bool = false
-            for component in ["visible", "fullLightObscured", "color", "unintensified", "obscured", "startdeg", "startminutes", "enddeg", "endminutes"] {
-                
+            for component in [
+                "visible",
+                "fullLightObscured",
+                "color",
+                "unintensified",
+                "obscured",
+                "startdeg",
+                "startminutes",
+                "enddeg",
+                "endminutes"] {
+
                 
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
                    let range = Range(nsrange, in: remarks),
-                   !range.isEmpty
-                {
+                   !range.isEmpty {
                     if component == "visible" {
                         visibleSector = true
                         visibleColor = lightColors?[0]
@@ -588,23 +628,23 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
                 }
                 return visibleColor ?? (lightColors?[0] ?? UIColor.clear)
             }()
-            var sectorRange: Double? = nil
+            var sectorRange: Double?
             if let rangeString = range {
-                for split in rangeString.components(separatedBy: CharacterSet(charactersIn: ";\n")) {
-                    if split.trimmingCharacters(in: .whitespacesAndNewlines).starts(with: color) {
-                        let pattern = #"[0-9]+$"#
-                        let regex = try? NSRegularExpression(pattern: pattern, options: [])
-                        let rangePart = "\(split)".trimmingCharacters(in: .whitespacesAndNewlines)
-                        let match = regex?.firstMatch(in: rangePart, range: NSRange(rangePart.startIndex..<rangePart.endIndex, in: rangePart))
-                        
-                        if let nsrange = match?.range, nsrange.location != NSNotFound,
-                           let matchRange = Range(nsrange, in: rangePart),
-                           !matchRange.isEmpty
-                        {
-                            let colorRange = rangePart[matchRange]
-                            if !colorRange.isEmpty {
-                                sectorRange = Double(colorRange)
-                            }
+                for split in rangeString.components(separatedBy: CharacterSet(charactersIn: ";\n"))
+                where split.trimmingCharacters(in: .whitespacesAndNewlines).starts(with: color){
+                    let pattern = #"[0-9]+$"#
+                    let regex = try? NSRegularExpression(pattern: pattern, options: [])
+                    let rangePart = "\(split)".trimmingCharacters(in: .whitespacesAndNewlines)
+                    let match = regex?.firstMatch(
+                        in: rangePart,
+                        range: NSRange(rangePart.startIndex..<rangePart.endIndex, in: rangePart))
+
+                    if let nsrange = match?.range, nsrange.location != NSNotFound,
+                       let matchRange = Range(nsrange, in: rangePart),
+                       !matchRange.isEmpty {
+                        let colorRange = rangePart[matchRange]
+                        if !colorRange.isEmpty {
+                            sectorRange = Double(colorRange)
                         }
                     }
                 }
@@ -613,16 +653,35 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
                 if end < start {
                     end += 360
                 }
-                sectors.append(ImageSector(startDegrees: start, endDegrees: end, color: uicolor, text: color, obscured: obscured || fullLightObscured, range: sectorRange))
+                sectors.append(
+                    ImageSector(
+                        startDegrees: start,
+                        endDegrees: end,
+                        color: uicolor,
+                        text: color,
+                        obscured: obscured || fullLightObscured,
+                        range: sectorRange))
             } else {
                 if end <= previousEnd {
                     end += 360
                 }
-                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: uicolor, text: color, obscured: obscured || fullLightObscured, range: sectorRange))
+                sectors.append(
+                    ImageSector(
+                        startDegrees: previousEnd,
+                        endDegrees: end,
+                        color: uicolor,
+                        text: color,
+                        obscured: obscured || fullLightObscured,
+                        range: sectorRange))
             }
             if fullLightObscured && !visibleSector {
                 // add the sector for the part of the light which is not obscured
-                sectors.append(ImageSector(startDegrees: end, endDegrees: (start ?? 0) + 360, color: visibleColor ?? (lightColors?[0] ?? UIColor.clear), range: sectorRange))
+                sectors.append(
+                    ImageSector(
+                        startDegrees: end,
+                        endDegrees: (start ?? 0) + 360,
+                        color: visibleColor ?? (lightColors?[0] ?? UIColor.clear),
+                        range: sectorRange))
             }
             previousEnd = end
         })
@@ -700,12 +759,13 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
         "volumeNumber \(volumeNumber ?? "")"
     }
 }
+// swiftlint:enable type_body_length
 
 extension LightModel: DataSource, GeoJSONExportable {
     static var definition: any DataSourceDefinition = DataSourceDefinitions.light.definition
 
     func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
-        var geometryByColor: [UIColor:SFGeometry] = [:]
+        var geometryByColor: [UIColor: SFGeometry] = [:]
         if let lightSectors = lightSectors {
             let sectorsByColor = Dictionary(grouping: lightSectors, by: \.color)
             for (color, sectors) in sectorsByColor {
@@ -715,7 +775,9 @@ extension LightModel: DataSource, GeoJSONExportable {
                     if sector.obscured {
                         continue
                     }
-                    let nauticalMilesMeasurement = NSMeasurement(doubleValue: sector.range ?? 0.0, unit: UnitLength.nauticalMiles)
+                    let nauticalMilesMeasurement = NSMeasurement(
+                        doubleValue: sector.range ?? 0.0,
+                        unit: UnitLength.nauticalMiles)
                     let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
                     if sector.startDegrees >= sector.endDegrees {
                         // this could be an error in the data, or sometimes lights are defined as follows:
@@ -725,8 +787,11 @@ extension LightModel: DataSource, GeoJSONExportable {
                         // TODO: figure out what to do with multi colored lights over the same sector
                         continue
                     }
-                    let circleCoordinates = coordinate.circleCoordinates(radiusMeters: metersMeasurement.value, startDegrees: sector.startDegrees + 90.0, endDegrees: sector.endDegrees + 90.0)
-                    
+                    let circleCoordinates = coordinate.circleCoordinates(
+                        radiusMeters: metersMeasurement.value,
+                        startDegrees: sector.startDegrees + 90.0,
+                        endDegrees: sector.endDegrees + 90.0)
+
                     let ring = SFLineString()
                     ring?.addPoint(SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude))
                     for circleCoordinate in circleCoordinates {
@@ -793,12 +858,24 @@ extension LightModel: DataSource, GeoJSONExportable {
     static var fullDataSourceName: String = NSLocalizedString("Lights", comment: "Lights data source display name")
     static var key: String = "light"
     static var metricsKey: String = "lights"
-    static var imageName: String? = nil
+    static var imageName: String?
     static var systemImageName: String? = "lightbulb.fill"
     static var color: UIColor = UIColor(argbValue: 0xFFFFC500)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Region", key: #keyPath(Light.sectionHeader), type: .string), ascending: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .int), ascending: true)]
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Region",
+                key: #keyPath(Light.sectionHeader),
+                type: .string),
+            ascending: true),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Feature Number",
+                key: #keyPath(Light.featureNumber), type: .int),
+            ascending: true)
+    ]
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
@@ -806,12 +883,19 @@ extension LightModel: DataSource, GeoJSONExportable {
         DataSourceProperty(name: "Latitude", key: #keyPath(Light.latitude), type: .latitude),
         DataSourceProperty(name: "Longitude", key: #keyPath(Light.longitude), type: .longitude),
         DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .string),
-        DataSourceProperty(name: "International Feature Number", key: #keyPath(Light.internationalFeature), type: .string),
+        DataSourceProperty(
+            name: "International Feature Number",
+            key: #keyPath(Light.internationalFeature),
+            type: .string),
         DataSourceProperty(name: "Name", key: #keyPath(Light.name), type: .string),
         DataSourceProperty(name: "Structure", key: #keyPath(Light.structure), type: .string),
         DataSourceProperty(name: "Focal Plane Elevation (ft)", key: #keyPath(Light.heightFeet), type: .double),
         DataSourceProperty(name: "Focal Plane Elevation (m)", key: #keyPath(Light.heightMeters), type: .double),
-        DataSourceProperty(name: "Range (nm)", key: #keyPath(Light.lightRange), type: .double, subEntityKey: #keyPath(LightRange.range)),
+        DataSourceProperty(
+            name: "Range (nm)",
+            key: #keyPath(Light.lightRange),
+            type: .double,
+            subEntityKey: #keyPath(LightRange.range)),
         DataSourceProperty(name: "Remarks", key: #keyPath(Light.remarks), type: .string),
         DataSourceProperty(name: "Characteristic", key: #keyPath(Light.characteristic), type: .string),
         DataSourceProperty(name: "Signal", key: #keyPath(Light.characteristic), type: .string),
@@ -836,15 +920,25 @@ extension LightModel: DataSource, GeoJSONExportable {
 extension LightModel: MapImage {
     static var cacheTiles: Bool = true
     
-    func mapImage(marker: Bool = false, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil, context: CGContext? = nil) -> [UIImage] {
+    func mapImage(
+        marker: Bool = false,
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox? = nil,
+        context: CGContext? = nil) -> [UIImage] {
         var images: [UIImage] = []
         
-        if UserDefaults.standard.actualRangeSectorLights, let tileBounds3857 = tileBounds3857, let lightSectors = lightSectors {
+        if UserDefaults.standard.actualRangeSectorLights, 
+            let tileBounds3857 = tileBounds3857,
+            let lightSectors = lightSectors {
             // if any sectors have no range, just make a sector image
             if lightSectors.contains(where: { sector in
                 sector.range == nil
             }) {
-                images.append(contentsOf: LightImage.image(light: self, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857))
+                images.append(
+                    contentsOf: LightImage.image(
+                        light: self,
+                        zoomLevel: zoomLevel,
+                        tileBounds3857: tileBounds3857))
             } else {
                 
                 if context == nil {
@@ -852,32 +946,56 @@ extension LightModel: MapImage {
                     UIGraphicsBeginImageContext(size)
                 }
                 if let context: CGContext = context ?? UIGraphicsGetCurrentContext() {
-                    actualSizeSectorLight(lightSectors: lightSectors, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context)
+                    actualSizeSectorLight(
+                        lightSectors: lightSectors,
+                        zoomLevel: zoomLevel,
+                        tileBounds3857: tileBounds3857,
+                        context: context)
                 }
             }
-        } else if lightSectors == nil, UserDefaults.standard.actualRangeLights, let stringRange = range, let range = Double(stringRange), let tileBounds3857 = tileBounds3857, let lightColors = lightColors {
+        } else if lightSectors == nil, 
+                    UserDefaults.standard.actualRangeLights,
+                    let stringRange = range,
+                    let range = Double(stringRange),
+                    let tileBounds3857 = tileBounds3857,
+                    let lightColors = lightColors {
             if context == nil {
                 let size = CGSize(width: TILE_SIZE, height: TILE_SIZE)
                 UIGraphicsBeginImageContext(size)
             }
             if let context: CGContext = context ?? UIGraphicsGetCurrentContext() {
-                actualSizeNonSectorLight(lightColors: lightColors, range: range, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context)
+                actualSizeNonSectorLight(
+                    lightColors: lightColors,
+                    range: range,
+                    zoomLevel: zoomLevel,
+                    tileBounds3857: tileBounds3857,
+                    context: context)
             }
         } else {
-            images.append(contentsOf: LightImage.image(light: self, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857))
+            images.append(
+                contentsOf: LightImage.image(
+                    light: self,
+                    zoomLevel: zoomLevel,
+                    tileBounds3857: tileBounds3857))
         }
         
         return images
     }
     
-    func actualSizeSectorLight(lightSectors: [ImageSector], zoomLevel: Int, tileBounds3857: MapBoundingBox, context: CGContext) {
+    func actualSizeSectorLight(
+        lightSectors: [ImageSector],
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox,
+        context: CGContext) {
         for sector in lightSectors.sorted(by: { one, two in
             return one.range ?? 0.0 < two.range ?? 0.0
         }) {
             if sector.obscured {
                 continue
             }
-            let nauticalMilesMeasurement = NSMeasurement(doubleValue: sector.range ?? 0.0, unit: UnitLength.nauticalMiles)
+            let nauticalMilesMeasurement = NSMeasurement(
+                doubleValue: sector.range ?? 0.0,
+                unit: UnitLength.nauticalMiles)
             let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
             if sector.startDegrees >= sector.endDegrees {
                 // this could be an error in the data, or sometimes lights are defined as follows:
@@ -887,13 +1005,22 @@ extension LightModel: MapImage {
                 // TODO: figure out what to do with multi colored lights over the same sector
                 continue
             }
-            let circleCoordinates = coordinate.circleCoordinates(radiusMeters: metersMeasurement.value, startDegrees: sector.startDegrees + 90.0, endDegrees: sector.endDegrees + 90.0)
+            let circleCoordinates = coordinate.circleCoordinates(
+                radiusMeters: metersMeasurement.value,
+                startDegrees: sector.startDegrees + 90.0,
+                endDegrees: sector.endDegrees + 90.0)
             let path = UIBezierPath()
             
-            var pixel = self.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+            var pixel = self.coordinate.toPixel(
+                zoomLevel: zoomLevel,
+                tileBounds3857: tileBounds3857,
+                tileSize: TILE_SIZE)
             path.move(to: pixel)
             for circleCoordinate in circleCoordinates {
-                pixel = circleCoordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+                pixel = circleCoordinate.toPixel(
+                    zoomLevel: zoomLevel,
+                    tileBounds3857: tileBounds3857,
+                    tileSize: TILE_SIZE)
                 path.addLine(to: pixel)
             }
             path.close()
@@ -906,17 +1033,28 @@ extension LightModel: MapImage {
         }
     }
     
-    func actualSizeNonSectorLight(lightColors: [UIColor], range: Double, zoomLevel: Int, tileBounds3857: MapBoundingBox, context: CGContext) {
+    func actualSizeNonSectorLight(
+        lightColors: [UIColor],
+        range: Double,
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox,
+        context: CGContext) {
         let nauticalMilesMeasurement = NSMeasurement(doubleValue: range, unit: UnitLength.nauticalMiles)
         let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
         
         let circleCoordinates = coordinate.circleCoordinates(radiusMeters: metersMeasurement.value)
         let path = UIBezierPath()
         
-        var pixel = circleCoordinates[0].toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+        var pixel = circleCoordinates[0].toPixel(
+            zoomLevel: zoomLevel,
+            tileBounds3857: tileBounds3857,
+            tileSize: TILE_SIZE)
         path.move(to: pixel)
         for circleCoordinate in circleCoordinates {
-            pixel = circleCoordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+            pixel = circleCoordinate.toPixel(
+                zoomLevel: zoomLevel,
+                tileBounds3857: tileBounds3857,
+                tileSize: TILE_SIZE)
             path.addLine(to: pixel)
         }
         path.lineWidth = 4
@@ -929,7 +1067,12 @@ extension LightModel: MapImage {
         // put a dot in the middle
         pixel = self.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
         let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * 0.5
-        let centerDot = UIBezierPath(arcCenter: pixel, radius: radius, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: true)
+        let centerDot = UIBezierPath(
+            arcCenter: pixel,
+            radius: radius,
+            startAngle: 0,
+            endAngle: 2 * CGFloat.pi,
+            clockwise: true)
         centerDot.lineWidth = 0.5
         centerDot.stroke()
         lightColors[0].setFill()
@@ -965,7 +1108,10 @@ protocol LightProtocol {
 extension LightProtocol {
     
     var morseCode: String? {
-        guard !isLight, let characteristic = characteristic, let leftParen = characteristic.firstIndex(of: "("), let lastIndex = characteristic.lastIndex(of: ")") else {
+        guard !isLight, 
+                let characteristic = characteristic,
+                let leftParen = characteristic.firstIndex(of: "("),
+                let lastIndex = characteristic.lastIndex(of: ")") else {
             return nil
         }
         
@@ -989,7 +1135,11 @@ extension LightProtocol {
         }
         var sectors: [ImageSector] = []
         //        Azimuth coverage 270^-170^.
-        let pattern = #"(?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))\°)?(?<endminutes>[0-9]*)[\`']?\..*"#
+        let pattern = #"""
+            (?<azimuth>(Azimuth coverage)?).?\
+            ((?<startdeg>(\d*))\°)?((?<startminutes>[0-9]*)[\`'])?\
+            (-(?<enddeg>(\d*))\°)?(?<endminutes>[0-9]*)[\`']?\..*
+        """#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
                               in: remarks)
@@ -1003,11 +1153,9 @@ extension LightProtocol {
             var start: Double?
             for component in ["startdeg", "startminutes", "enddeg", "endminutes"] {
                 
-                
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: remarks)
-                {
+                   let range = Range(nsrange, in: remarks) {
                     if component == "startdeg" {
                         if start != nil {
                             start = start! + ((Double(remarks[range]) ?? 0.0) + 90)
@@ -1087,7 +1235,12 @@ extension LightProtocol {
             lightColors.append(Light.redLight)
         }
         // why does green have so many variants without a .?
-        if characteristic.contains("G.") || characteristic.contains("Oc.G") || characteristic.contains("G\n") || characteristic.contains("F.G") || characteristic.contains("Fl.G") || characteristic.contains("(G)") {
+        if characteristic.contains("G.") 
+            || characteristic.contains("Oc.G")
+            || characteristic.contains("G\n")
+            || characteristic.contains("F.G")
+            || characteristic.contains("Fl.G")
+            || characteristic.contains("(G)") {
             lightColors.append(Light.greenLight)
         }
         if characteristic.contains("Y.") {
@@ -1121,7 +1274,12 @@ extension LightProtocol {
         }
         var sectors: [ImageSector] = []
         
-        let pattern = #"(?<visible>(Visible)?)(?<fullLightObscured>(bscured)?)((?<color>[A-Z]+)?)\.?(?<unintensified>(\(unintensified\))?)(?<obscured>(\(bscured\))?)( (?<startdeg>(\d*))°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))°)(?<endminutes>[0-9]*)[\`']?"#
+        let pattern = #"""
+            (?<visible>(Visible)?)(?<fullLightObscured>(bscured)?)\
+            ((?<color>[A-Z]+)?)\.?(?<unintensified>(\(unintensified\))?)\
+            (?<obscured>(\(bscured\))?)( (?<startdeg>(\d*))°)?((?<startminutes>[0-9]*)[\`'])?\
+            (-(?<enddeg>(\d*))°)(?<endminutes>[0-9]*)[\`']?
+        """#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
                               in: remarks)
@@ -1139,14 +1297,21 @@ extension LightProtocol {
             var visibleColor: UIColor?
             var obscured: Bool = false
             var fullLightObscured: Bool = false
-            for component in ["visible", "fullLightObscured", "color", "unintensified", "obscured", "startdeg", "startminutes", "enddeg", "endminutes"] {
-                
+            for component in [
+                "visible",
+                "fullLightObscured",
+                "color",
+                "unintensified",
+                "obscured",
+                "startdeg",
+                "startminutes",
+                "enddeg",
+                "endminutes"] {
                 
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
                    let range = Range(nsrange, in: remarks),
-                   !range.isEmpty
-                {
+                   !range.isEmpty {
                     if component == "visible" {
                         visibleSector = true
                         visibleColor = lightColors?[0]
@@ -1190,23 +1355,23 @@ extension LightProtocol {
                 }
                 return visibleColor ?? (lightColors?[0] ?? UIColor.clear)
             }()
-            var sectorRange: Double? = nil
+            var sectorRange: Double?
             if let rangeString = range {
-                for split in rangeString.components(separatedBy: CharacterSet(charactersIn: ";\n")) {
-                    if split.trimmingCharacters(in: .whitespacesAndNewlines).starts(with: color) {
-                        let pattern = #"[0-9]+$"#
-                        let regex = try? NSRegularExpression(pattern: pattern, options: [])
-                        let rangePart = "\(split)".trimmingCharacters(in: .whitespacesAndNewlines)
-                        let match = regex?.firstMatch(in: rangePart, range: NSRange(rangePart.startIndex..<rangePart.endIndex, in: rangePart))
-                        
-                        if let nsrange = match?.range, nsrange.location != NSNotFound,
-                           let matchRange = Range(nsrange, in: rangePart),
-                           !matchRange.isEmpty
-                        {
-                            let colorRange = rangePart[matchRange]
-                            if !colorRange.isEmpty {
-                                sectorRange = Double(colorRange)
-                            }
+                for split in rangeString.components(separatedBy: CharacterSet(charactersIn: ";\n"))
+                where split.trimmingCharacters(in: .whitespacesAndNewlines).starts(with: color) {
+                    let pattern = #"[0-9]+$"#
+                    let regex = try? NSRegularExpression(pattern: pattern, options: [])
+                    let rangePart = "\(split)".trimmingCharacters(in: .whitespacesAndNewlines)
+                    let match = regex?.firstMatch(
+                        in: rangePart,
+                        range: NSRange(rangePart.startIndex..<rangePart.endIndex, in: rangePart))
+
+                    if let nsrange = match?.range, nsrange.location != NSNotFound,
+                       let matchRange = Range(nsrange, in: rangePart),
+                       !matchRange.isEmpty {
+                        let colorRange = rangePart[matchRange]
+                        if !colorRange.isEmpty {
+                            sectorRange = Double(colorRange)
                         }
                     }
                 }
@@ -1215,16 +1380,35 @@ extension LightProtocol {
                 if end < start {
                     end += 360
                 }
-                sectors.append(ImageSector(startDegrees: start, endDegrees: end, color: uicolor, text: color, obscured: obscured || fullLightObscured, range: sectorRange))
+                sectors.append(
+                    ImageSector(
+                        startDegrees: start,
+                        endDegrees: end,
+                        color: uicolor,
+                        text: color,
+                        obscured: obscured || fullLightObscured,
+                        range: sectorRange))
             } else {
                 if end <= previousEnd {
                     end += 360
                 }
-                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: uicolor, text: color, obscured: obscured || fullLightObscured, range: sectorRange))
+                sectors.append(
+                    ImageSector(
+                        startDegrees: previousEnd,
+                        endDegrees: end,
+                        color: uicolor,
+                        text: color,
+                        obscured: obscured || fullLightObscured,
+                        range: sectorRange))
             }
             if fullLightObscured && !visibleSector {
                 // add the sector for the part of the light which is not obscured
-                sectors.append(ImageSector(startDegrees: end, endDegrees: (start ?? 0) + 360, color: visibleColor ?? (lightColors?[0] ?? UIColor.clear), range: sectorRange))
+                sectors.append(
+                    ImageSector(
+                        startDegrees: end,
+                        endDegrees: (start ?? 0) + 360,
+                        color: visibleColor ?? (lightColors?[0] ?? UIColor.clear),
+                        range: sectorRange))
             }
             previousEnd = end
         })

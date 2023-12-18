@@ -14,32 +14,33 @@ extension UIBezierPath {
         let textPath = CGMutablePath()
         let line = CTLineCreateWithAttributedString(text)
         
-        let runs = CTLineGetGlyphRuns(line) as! [CTRun]
-        
-        for run in runs
-        {
-            let attributes: NSDictionary = CTRunGetAttributes(run)
-            let font = attributes[kCTFontAttributeName as String] as! CTFont
-            
-            let count = CTRunGetGlyphCount(run)
-            
-            for index in 0 ..< count
-            {
-                let range = CFRangeMake(index, 1)
-                
-                var glyph = CGGlyph()
-                CTRunGetGlyphs(run, range, &glyph)
-                
-                var position = CGPoint()
-                CTRunGetPositions(run, range, &position)
-                
-                if let letterPath = CTFontCreatePathForGlyph(font, glyph, nil) {
-                    let transform = CGAffineTransform(translationX: position.x, y: position.y).concatenating(CGAffineTransform(scaleX:1.0, y:-1.0))
-                    textPath.addPath(letterPath, transform: transform)
+        if let runs = CTLineGetGlyphRuns(line) as? [CTRun] {
+
+            for run in runs {
+                let attributes: NSDictionary = CTRunGetAttributes(run)
+                // swiftlint:disable force_cast
+                let font = attributes[kCTFontAttributeName as String] as! CTFont
+                // swiftlint:enable force_cast
+                let count = CTRunGetGlyphCount(run)
+
+                for index in 0 ..< count {
+                    let range = CFRangeMake(index, 1)
+
+                    var glyph = CGGlyph()
+                    CTRunGetGlyphs(run, range, &glyph)
+
+                    var position = CGPoint()
+                    CTRunGetPositions(run, range, &position)
+
+                    if let letterPath = CTFontCreatePathForGlyph(font, glyph, nil) {
+                        let transform = CGAffineTransform(translationX: position.x, y: position.y)
+                            .concatenating(CGAffineTransform(scaleX: 1.0, y: -1.0))
+                        textPath.addPath(letterPath, transform: transform)
+                    }
                 }
             }
         }
-        
+
         self.init(cgPath: textPath)
     }
 }

@@ -14,7 +14,7 @@ enum CoordinateDisplayType: Int, CustomStringConvertible {
     case latitudeLongitude, degreesMinutesSeconds, mgrs, gars
     
     var description: String {
-        switch(self) {
+        switch self {
         case .latitudeLongitude:
             return "Latitude, Longitude"
         case .degreesMinutesSeconds:
@@ -29,11 +29,17 @@ enum CoordinateDisplayType: Int, CustomStringConvertible {
     func format(coordinate: CLLocationCoordinate2D) -> String {
         switch UserDefaults.standard.coordinateDisplay {
         case .latitudeLongitude:
-            let nf = NumberFormatter()
-            nf.maximumFractionDigits = 4
-            return "\(nf.string(for: coordinate.latitude) ?? ""), \(nf.string(for: coordinate.longitude) ?? "")"
+            let formatter = NumberFormatter()
+            formatter.maximumFractionDigits = 4
+            return """
+                \(formatter.string(for: coordinate.latitude) ?? ""), \
+                \(formatter.string(for: coordinate.longitude) ?? "")
+            """
         case .degreesMinutesSeconds:
-            return "\(CLLocationCoordinate2D.latitudeDMSString(coordinate: coordinate.latitude)), \(CLLocationCoordinate2D.longitudeDMSString(coordinate: coordinate.longitude))"
+            return """
+                \(CLLocationCoordinate2D.latitudeDMSString(coordinate: coordinate.latitude)), \
+                \(CLLocationCoordinate2D.longitudeDMSString(coordinate: coordinate.longitude))
+            """
         case .gars:
             return GARS.from(coordinate).coordinate()
         case .mgrs:
@@ -54,11 +60,14 @@ extension CLLocationCoordinate2D {
     func format() -> String {
         switch UserDefaults.standard.coordinateDisplay {
         case .latitudeLongitude:
-            let nf = NumberFormatter()
-            nf.maximumFractionDigits = 4
-            return "\(nf.string(for: self.latitude) ?? "")°, \(nf.string(for: self.longitude) ?? "")°"
+            let formatter = NumberFormatter()
+            formatter.maximumFractionDigits = 4
+            return "\(formatter.string(for: self.latitude) ?? "")°, \(formatter.string(for: self.longitude) ?? "")°"
         case .degreesMinutesSeconds:
-            return "\(CLLocationCoordinate2D.latitudeDMSString(coordinate: self.latitude)), \(CLLocationCoordinate2D.longitudeDMSString(coordinate: self.longitude))"
+            return """
+                \(CLLocationCoordinate2D.latitudeDMSString(coordinate: self.latitude)), \
+                \(CLLocationCoordinate2D.longitudeDMSString(coordinate: self.longitude))
+            """
         case .gars:
             return GARS.from(self).coordinate()
         case .mgrs:
@@ -66,7 +75,11 @@ extension CLLocationCoordinate2D {
         }
     }
     
-    func circleCoordinates(radiusMeters: Double, startDegrees: Double = 0.0, endDegrees: Double = 360.0) -> [CLLocationCoordinate2D] {
+    func circleCoordinates(
+        radiusMeters: Double,
+        startDegrees: Double = 0.0,
+        endDegrees: Double = 360.0
+    ) -> [CLLocationCoordinate2D] {
         let center = self
         var coordinates: [CLLocationCoordinate2D] = []
         let centerLatRad = center.latitude.toRadians()
@@ -90,95 +103,123 @@ extension CLLocationCoordinate2D {
         for i in Int(startDegrees)...Int(endDegrees) {
             let radial = Double(i).toRadians()
             let latRad = asin(sin(centerLatRad) * cos(dRad) + cos(centerLatRad) * sin(dRad) * cos(radial))
-            let dlonRad = atan2(sin(radial) * sin(dRad) * cos(centerLatRad), cos(dRad) - sin(centerLatRad) * sin(latRad))
+            let dlonRad = atan2(
+                sin(radial) * sin(dRad) * cos(centerLatRad),
+                cos(dRad) - sin(centerLatRad) * sin(latRad)
+            )
             let lonRad = fmod((centerLonRad + dlonRad + .pi), 2.0 * .pi) - .pi
             coordinates.append(CLLocationCoordinate2D(latitude: latRad.toDegrees(), longitude: lonRad.toDegrees()))
         }
         
         let endRadial = Double(endDegrees).toRadians()
         let endLatRad = asin(sin(centerLatRad) * cos(dRad) + cos(centerLatRad) * sin(dRad) * cos(endRadial))
-        let endDlonRad = atan2(sin(endRadial) * sin(dRad) * cos(centerLatRad), cos(dRad) - sin(centerLatRad) * sin(endLatRad))
+        let endDlonRad = atan2(
+            sin(endRadial) * sin(dRad) * cos(centerLatRad),
+            cos(dRad) - sin(centerLatRad) * sin(endLatRad)
+        )
         let endLonRad = fmod((centerLonRad + endDlonRad + .pi), 2.0 * .pi) - .pi
         coordinates.append(CLLocationCoordinate2D(latitude: endLatRad.toDegrees(), longitude: endLonRad.toDegrees()))
         
         return coordinates
     }
     
-    func toPixel(zoomLevel: Int, tileBounds3857: MapBoundingBox, tileSize: Double, canCross180thMeridian: Bool = true) -> CGPoint {
+    func toPixel(
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox,
+        tileSize: Double,
+        canCross180thMeridian: Bool = true
+    ) -> CGPoint {
         var object3857Location = to3857()
         
         // TODO: this logic should be improved
         // just check on the edges of the world presuming that no light will span 90 degrees, which none will
         if canCross180thMeridian && (longitude < -90 || longitude > 90) {
             // if the x location has fallen off the left side and this tile is on the other side of the world
-            if object3857Location.x > tileBounds3857.swCorner.x && tileBounds3857.swCorner.x < 0 && object3857Location.x > 0 {
+            if object3857Location.x > tileBounds3857.swCorner.x
+                && tileBounds3857.swCorner.x < 0
+                && object3857Location.x > 0 {
                 let newCoordinate = CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude - 360.0)
                 object3857Location = newCoordinate.to3857()
             }
             
             // if the x value has fallen off the right side and this tile is on the other side of the world
-            if object3857Location.x < tileBounds3857.neCorner.x && tileBounds3857.neCorner.x > 0 && object3857Location.x < 0 {
+            if object3857Location.x < tileBounds3857.neCorner.x
+                && tileBounds3857.neCorner.x > 0
+                && object3857Location.x < 0 {
                 let newCoordinate = CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude + 360.0)
                 object3857Location = newCoordinate.to3857()
             }
         }
         
-        let xPosition = (((object3857Location.x - tileBounds3857.swCorner.x) / (tileBounds3857.neCorner.x - tileBounds3857.swCorner.x)) * tileSize)
-        let yPosition = tileSize - (((object3857Location.y - tileBounds3857.swCorner.y) / (tileBounds3857.neCorner.y - tileBounds3857.swCorner.y)) * tileSize)
-        return CGPoint(x:xPosition, y: yPosition)
+        let xPosition = (
+            (
+                (object3857Location.x - tileBounds3857.swCorner.x)
+                / (tileBounds3857.neCorner.x - tileBounds3857.swCorner.x)
+            )
+            * tileSize
+        )
+        let yPosition = tileSize - (
+            (
+                (object3857Location.y - tileBounds3857.swCorner.y)
+                / (tileBounds3857.neCorner.y - tileBounds3857.swCorner.y)
+            )
+            * tileSize
+        )
+        return CGPoint(x: xPosition, y: yPosition)
     }
     
     func to3857() -> (x: Double, y: Double) {
         let a = 6378137.0
-        let lambda = longitude / 180 * Double.pi;
-        let phi = latitude / 180 * Double.pi;
-        let x = a * lambda;
-        let y = a * log(tan(Double.pi / 4 + phi / 2));
+        let lambda = longitude / 180 * Double.pi
+        let phi = latitude / 180 * Double.pi
+        let x = a * lambda
+        let y = a * log(tan(Double.pi / 4 + phi / 2))
         
-        return (x:x, y:y);
+        return (x: x, y: y)
     }
     
     static func degreesToRadians(_ degrees: Double) -> Double { return degrees * Double.pi / 180.0 }
     static func radiansToDegrees(_ radians: Double) -> Double { return radians * 180.0 / Double.pi }
     
     func bearing(to point: CLLocationCoordinate2D) -> Double {
-        
-        
         let lat1 = CLLocationCoordinate2D.degreesToRadians(latitude)
         let lon1 = CLLocationCoordinate2D.degreesToRadians(longitude)
         
-        let lat2 = CLLocationCoordinate2D.degreesToRadians(point.latitude);
-        let lon2 = CLLocationCoordinate2D.degreesToRadians(point.longitude);
+        let lat2 = CLLocationCoordinate2D.degreesToRadians(point.latitude)
+        let lon2 = CLLocationCoordinate2D.degreesToRadians(point.longitude)
         
-        let dLon = lon2 - lon1;
+        let dLon = lon2 - lon1
         
-        let y = sin(dLon) * cos(lat2);
-        let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon);
-        let radiansBearing = atan2(y, x);
+        let y = sin(dLon) * cos(lat2)
+        let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon)
+        let radiansBearing = atan2(y, x)
         
         let degrees = CLLocationCoordinate2D.radiansToDegrees(radiansBearing)
-        if (degrees > 360) {
-            return degrees - 360;
+        if degrees > 360 {
+            return degrees - 360
         }
-        if (degrees < 0) {
-            return degrees + 360;
+        if degrees < 0 {
+            return degrees + 360
         }
         
-        return degrees;
+        return degrees
     }
     
     func generalDirection(to point: CLLocationCoordinate2D) -> String {
-        let directions = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW", "NW", "NNW"]
+        let directions = ["N", "NNE", "NE", "ENE",
+                          "E", "ESE", "SE", "SSE",
+                          "S", "SSW", "SW", "WSW",
+                          "W", "WNW", "NW", "NNW"]
         let bearingCorrection = 360.0 / Double(directions.count * 2)
         let indexDegrees = 360.0 / Double(directions.count)
 
         var bearing = self.bearing(to: point)
         bearing = Double(bearing) + (bearingCorrection)
         if bearing < 0 {
-            bearing = bearing + 360
+            bearing += 360
         }
         if bearing > 360 {
-            bearing = bearing - 360
+            bearing -= 360
         }
         let index = Int(Double(bearing / indexDegrees).rounded(.down)) % directions.count
         return directions[index]
@@ -238,8 +279,16 @@ extension CLLocationCoordinate2D {
                     // only one coordinate
                     split.append(coordinatesToParse)
                 } else if let firstDirectionIndex = firstDirectionIndex {
-                    split.append("\(coordinatesToParse.prefix(upTo: coordinatesToParse.index(firstDirectionIndex, offsetBy: 1)))")
-                    split.append("\(coordinatesToParse.suffix(from: coordinatesToParse.index(firstDirectionIndex, offsetBy: 1)))")
+                    let beforeDirection = coordinatesToParse.prefix(
+                        upTo: coordinatesToParse.index(
+                            firstDirectionIndex, offsetBy: 1)
+                    )
+                    let afterDirection = coordinatesToParse.suffix(
+                        from: coordinatesToParse.index(
+                            firstDirectionIndex, offsetBy: 1)
+                    )
+                    split.append("\(beforeDirection)")
+                    split.append("\(afterDirection)")
                 }
             }
         }
@@ -318,7 +367,11 @@ extension CLLocationCoordinate2D {
     // 2. N 11 ° 22'33 "- W 11 ° 22'33
     // 3. 11 ° 22'33 "N - 11 ° 22'33" W
     // 4. 11° 22'33 N 011° 22'33 W
-    static func parseDMS(coordinate: String, addDirection: Bool = false, latitude: Bool = false) -> DMSCoordinate {
+    static func parseDMS(
+        coordinate: String,
+        addDirection: Bool = false,
+        latitude: Bool = false
+    ) -> DMSCoordinate {
         var dmsCoordinate: DMSCoordinate = DMSCoordinate()
         
         var coordinateToParse = coordinate.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -339,18 +392,14 @@ extension CLLocationCoordinate2D {
         
         if let direction = coordinateToParse.last {
             // the last character might be a direction not a number
-            if let _ = direction.wholeNumberValue {
-                
-            } else {
+            if direction.wholeNumberValue != nil {
                 dmsCoordinate.direction = "\(direction)".uppercased()
                 coordinateToParse = "\(coordinateToParse.dropLast(1))"
             }
         }
         if let direction = coordinateToParse.first {
             // the first character might be a direction not a number
-            if let _ = direction.wholeNumberValue {
-                
-            } else {
+            if direction.wholeNumberValue != nil {
                 dmsCoordinate.direction = "\(direction)".uppercased()
                 coordinateToParse = "\(coordinateToParse.dropFirst(1))"
             }
@@ -391,7 +440,12 @@ extension CLLocationCoordinate2D {
             // this would be the case if a decimal degrees was passed in ie 11.123
             let decimal = Double(".\(decimalSeconds ?? 0)") ?? 0.0
             dmsCoordinate.minutes = Int(abs((decimal.truncatingRemainder(dividingBy: 1) * 60.0)))
-            let seconds = abs(((decimal.truncatingRemainder(dividingBy: 1) * 60.0).truncatingRemainder(dividingBy: 1) * 60.0))
+            let seconds = abs(
+                (
+                    (decimal.truncatingRemainder(dividingBy: 1) * 60.0)
+                        .truncatingRemainder(dividingBy: 1)
+                    * 60.0)
+            )
             dmsCoordinate.seconds = Int(seconds.rounded())
         } else if let decimalSeconds = decimalSeconds {
             // add the decimal seconds to seconds and round
@@ -439,7 +493,7 @@ extension CLLocationCoordinate2D {
         // There must be a direction as the last character
         if let direction = coordinateToParse.last {
             // the last character must be either N or S not a number
-            if let _ = direction.wholeNumberValue {
+            if direction.wholeNumberValue != nil {
                 return false
             } else {
                 if latitude && direction.uppercased() != "N" && direction.uppercased() != "S" {
@@ -456,7 +510,7 @@ extension CLLocationCoordinate2D {
         
         // split the numbers before the decimal seconds
         let split = coordinateToParse.split(separator: ".")
-        if split.isEmpty  {
+        if split.isEmpty {
             return false
         }
         
@@ -499,7 +553,9 @@ extension CLLocationCoordinate2D {
         }
         
         if let minutes = minutes, let degrees = degrees {
-            if (minutes < 0 || minutes > 59) || (latitude && degrees == 90 && minutes != 0) || (!latitude && degrees == 180 && minutes != 0) {
+            if (minutes < 0 || minutes > 59)
+                || (latitude && degrees == 90 && minutes != 0)
+                || (!latitude && degrees == 180 && minutes != 0) {
                 return false
             }
         } else {
@@ -507,7 +563,14 @@ extension CLLocationCoordinate2D {
         }
         
         if let seconds = seconds, let degrees = degrees {
-            if (seconds < 0 || seconds > 59) || (latitude && degrees == 90 && (seconds != 0 || decimalSeconds != 0)) || (!latitude && degrees == 180 && (seconds != 0 || decimalSeconds != 0)) {
+            if (seconds < 0 || seconds > 59) 
+                || (
+                    latitude && degrees == 90
+                    && (seconds != 0 || decimalSeconds != 0)
+                ) || (
+                    !latitude && degrees == 180
+                    && (seconds != 0 || decimalSeconds != 0)
+                ) {
                 return false
             }
         } else {
@@ -518,7 +581,11 @@ extension CLLocationCoordinate2D {
     }
     
     // attempts to parse what was passed in to DDD° MM' SS.sss" (NS) or returns "" if unparsable
-    public static func parseToDMSString(_ string: String?, addDirection: Bool = false, latitude: Bool = false) -> String? {
+    public static func parseToDMSString(
+        _ string: String?,
+        addDirection: Bool = false,
+        latitude: Bool = false
+    ) -> String? {
         guard let string = string else {
             return nil
         }
@@ -560,13 +627,17 @@ extension CLLocationCoordinate2D {
     }
     
     public static func latitudeDMSString(coordinate: CLLocationDegrees) -> String {
-        let nf = NumberFormatter()
-        nf.maximumFractionDigits = 0
-        nf.minimumIntegerDigits = 2
-        
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 0
+        formatter.minimumIntegerDigits = 2
+
         var latDegrees: Int = Int(coordinate)
         var latMinutes = Int(abs((coordinate.truncatingRemainder(dividingBy: 1) * 60.0)))
-        var latSeconds = abs(((coordinate.truncatingRemainder(dividingBy: 1) * 60.0).truncatingRemainder(dividingBy: 1) * 60.0)).rounded()
+        var latSeconds = abs(
+            (
+                (coordinate.truncatingRemainder(dividingBy: 1) * 60.0)
+                    .truncatingRemainder(dividingBy: 1) * 60.0
+            )).rounded()
         if latSeconds == 60 {
             latSeconds = 0
             latMinutes += 1
@@ -575,17 +646,24 @@ extension CLLocationCoordinate2D {
             latDegrees += 1
             latMinutes = 0
         }
-        return "\(abs(latDegrees))° \(nf.string(for: latMinutes) ?? "")\' \(nf.string(for: latSeconds) ?? "")\" \(latDegrees >= 0 ? "N" : "S")"
+        return """
+            \(abs(latDegrees))° \(formatter.string(for: latMinutes) ?? "")\' \
+            \(formatter.string(for: latSeconds) ?? "")\" \(latDegrees >= 0 ? "N" : "S")
+        """
     }
     
     public static func longitudeDMSString(coordinate: CLLocationDegrees) -> String {
-        let nf = NumberFormatter()
-        nf.maximumFractionDigits = 0
-        nf.minimumIntegerDigits = 2
-        
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 0
+        formatter.minimumIntegerDigits = 2
+
         var lonDegrees: Int = Int(coordinate)
         var lonMinutes = Int(abs((coordinate.truncatingRemainder(dividingBy: 1) * 60.0)))
-        var lonSeconds = abs(((coordinate.truncatingRemainder(dividingBy: 1) * 60.0).truncatingRemainder(dividingBy: 1) * 60.0)).rounded()
+        var lonSeconds = abs(
+            (
+                (coordinate.truncatingRemainder(dividingBy: 1) * 60.0)
+                    .truncatingRemainder(dividingBy: 1) * 60.0
+            )).rounded()
         if lonSeconds == 60 {
             lonSeconds = 0
             lonMinutes += 1
@@ -594,12 +672,21 @@ extension CLLocationCoordinate2D {
             lonDegrees += 1
             lonMinutes = 0
         }
-        return "\(abs(lonDegrees))° \(nf.string(for: lonMinutes) ?? "")\' \(nf.string(for: lonSeconds) ?? "")\" \(lonDegrees >= 0 ? "E" : "W")"
+        return """
+            \(abs(lonDegrees))° \(formatter.string(for: lonMinutes) ?? "")\' \
+            \(formatter.string(for: lonSeconds) ?? "")\" \(lonDegrees >= 0 ? "E" : "W")
+        """
     }
 
     init?(coordinateString: String) {
-        let initialSplit = coordinateString.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: CharacterSet(charactersIn: " ,"))
-        if initialSplit.count == 2, let latitude = Double(initialSplit[0]), let longitude = Double(initialSplit[1]) {
+        let initialSplit = coordinateString.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        ).components(
+            separatedBy: CharacterSet(charactersIn: " ,")
+        )
+        if initialSplit.count == 2,
+           let latitude = Double(initialSplit[0]),
+           let longitude = Double(initialSplit[1]) {
             self.init(latitude: latitude, longitude: longitude)
             return
         }
@@ -609,31 +696,50 @@ extension CLLocationCoordinate2D {
             return
         }
         
-        if initialSplit.count == 1, let _ = Double(initialSplit[0]) {
+        if initialSplit.count == 1,
+            Double(initialSplit[0]) != nil {
             // this is not a valid coordinate, just bail
             return nil
         }
         
-        let p = #"(?<latdeg>-?[0-9]*\.?\d+)[\s°-]*(?<latminutes>\d{1,2}\.?\d+)?[\s\`'-]*(?<latseconds>\d{1,2}\.?\d+)?[\s\" ]?(?<latdirection>([NOEWS])?)[\s,]*(?<londeg>-?[0-9]*\.?\d+)[\s°-]*(?<lonminutes>\d{1,2}\.?\d+)?[\s\`'-]*(?<lonseconds>\d{1,2}\.?\d+)?[\s\" ]*(?<londirection>([NOEWS])?)"#
-        
+        let pattern = #"""
+            (?<latdeg>-?[0-9]*\.?\d+)[\s°-]*(?<latminutes>\d{1,2}\.?\d+)?\
+            [\s\`'-]*(?<latseconds>\d{1,2}\.?\d+)?[\s\"\
+            ]?(?<latdirection>([NOEWS])?)[\s,]*(?<londeg>-?[0-9]*\.?\d+)\
+            [\s°-]*(?<lonminutes>\d{1,2}\.?\d+)?[\s\`'-]*\
+            (?<lonseconds>\d{1,2}\.?\d+)?[\s\" ]*(?<londirection>([NOEWS])?)
+        """#
+
         var foundLat: Bool = false
         var foundLon: Bool = false
         var latlon = [Double]()
         do {
-            let regex = try NSRegularExpression(pattern: p)
-            let matches = regex.matches(in: coordinateString, range: NSRange(coordinateString.startIndex..., in: coordinateString))
+            let regex = try NSRegularExpression(pattern: pattern)
+            let matches = regex.matches(
+                in: coordinateString,
+                range: NSRange(
+                    coordinateString.startIndex...,
+                    in: coordinateString)
+            )
             var latdegrees: Double = 0.0
             var latmultiplier: Double = 1.0
             var londegrees: Double = 0.0
             var lonmultiplier: Double = 1.0
 
             for match in matches {
-                for component in ["latdirection", "latdeg", "latminutes", "latseconds", "londirection", "londeg", "lonminutes", "lonseconds"] {
+                for component in [
+                    "latdirection",
+                    "latdeg",
+                    "latminutes",
+                    "latseconds",
+                    "londirection",
+                    "londeg",
+                    "lonminutes",
+                    "lonseconds"] {
                     let nsrange = match.range(withName: component)
                     if nsrange.location != NSNotFound,
                        let range = Range(nsrange, in: coordinateString),
-                       !range.isEmpty
-                    {
+                       !range.isEmpty {
                         if component == "latdirection" {
                             latmultiplier = "NEO".contains(coordinateString[range]) ? 1.0 : -1.0
                         } else if component == "latdeg" {
@@ -676,23 +782,27 @@ extension CLLocationCoordinate2D {
 extension Double {
     
     init?(coordinateString: String) {
-        let p = #"(?<deg>-?[0-9]*\.?\d+)[\s°-]*(?<minutes>\d{1,2}\.?\d+)?[\s\`'-]*(?<seconds>\d{1,2}\.?\d+)?[\s\" ]?(?<direction>([NOEWS])?)"#
-        
+        let pattern = #"(?<deg>-?[0-9]*\.?\d+)[\s°-]*(?<minutes>\d{1,2}\.?\d+)?[\s\`'-]*(?<seconds>\d{1,2}\.?\d+)?[\s\" ]?(?<direction>([NOEWS])?)"#
+
         var found: Bool = false
         var degrees: Double = 0.0
         var multiplier: Double = 1.0
 
         do {
-            let regex = try NSRegularExpression(pattern: p)
-            let matches = regex.matches(in: coordinateString, range: NSRange(coordinateString.startIndex..., in: coordinateString))
-            
+            let regex = try NSRegularExpression(pattern: pattern)
+            let matches = regex.matches(
+                in: coordinateString,
+                range: NSRange(
+                    coordinateString.startIndex...,
+                    in: coordinateString)
+            )
+
             for match in matches {
                 for component in ["direction", "deg", "minutes", "seconds"] {
                     let nsrange = match.range(withName: component)
                     if nsrange.location != NSNotFound,
                        let range = Range(nsrange, in: coordinateString),
-                       !range.isEmpty
-                    {
+                       !range.isEmpty {
                         if component == "direction" {
                             multiplier = "NEO".contains(coordinateString[range]) ? 1.0 : -1.0
                         } else if component == "deg" {

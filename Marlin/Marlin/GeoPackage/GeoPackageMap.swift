@@ -28,7 +28,13 @@ class GeoPackageMap: NSObject, MapMixin {
     var canReplaceMapContent: Bool = false
     var index: Int = 0
     
-    init(fileName: String, tableName: String, polygonColor: UIColor? = nil, fillColor: UIColor? = nil, canReplaceMapContent: Bool = false, index: Int = 0) {
+    init(
+        fileName: String,
+        tableName: String,
+        polygonColor: UIColor? = nil,
+        fillColor: UIColor? = nil,
+        canReplaceMapContent: Bool = false,
+        index: Int = 0) {
         self.fileName = fileName
         self.tableName = tableName
         self.fillColor = fillColor
@@ -38,7 +44,14 @@ class GeoPackageMap: NSObject, MapMixin {
     }
     
     func setupMixin(mapState: MapState, mapView: MKMapView) {
-        geoPackage = GeoPackageLayer(mapView: mapView, fileName: fileName, tableName: tableName, polygonColor: polygonColor, fillColor: fillColor, canReplaceMapContent: canReplaceMapContent, index: index)
+        geoPackage = GeoPackageLayer(
+            mapView: mapView,
+            fileName: fileName,
+            tableName: tableName,
+            polygonColor: polygonColor,
+            fillColor: fillColor,
+            canReplaceMapContent: canReplaceMapContent,
+            index: index)
     }
     
     func updateMixin(mapView: MKMapView, mapState: MapState) {

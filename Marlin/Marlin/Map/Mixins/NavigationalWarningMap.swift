@@ -233,7 +233,10 @@ class NavigationalWarningMap: NSObject, MapMixin {
     }
     
     func updateMixin(mapView: MKMapView, mapState: MapState) {
-        if warning == nil && (lastChange == nil || (lastChange != mapState.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] as? Date && mapState.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] != nil)) {
+        if warning == nil
+            && (lastChange == nil
+                || (lastChange != mapState.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] as? Date
+                    && mapState.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] != nil)) {
             lastChange = mapState.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] as? Date ?? Date()
             
             if mapState.mixinStates[NavigationalWarningMap.MIXIN_STATE_KEY] as? Date == nil {
@@ -290,8 +293,12 @@ class NavigationalWarningMap: NSObject, MapMixin {
     
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
         if annotation is NavigationalWarningAnnotation {
-            let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: NavigationalWarning.key, for: annotation)
-            if let systemImageName = NavigationalWarning.systemImageName, let annotation = annotation as? NavigationalWarningAnnotation, let warning = annotation.warning {
+            let annotationView = mapView.dequeueReusableAnnotationView(
+                withIdentifier: NavigationalWarning.key,
+                for: annotation)
+            if let systemImageName = NavigationalWarning.systemImageName, 
+                let annotation = annotation as? NavigationalWarningAnnotation,
+                let warning = annotation.warning {
                 let images = warning.mapImage(marker: false, zoomLevel: 2, tileBounds3857: nil)
                 var combinedImage: UIImage? = UIImage.combineCentered(image1: images.first, image2: nil)
                 if !images.isEmpty {
@@ -314,9 +321,11 @@ class NavigationalWarningMap: NSObject, MapMixin {
         
         for overlay in mapOverlays {
             if let overlay = overlay as? NavigationalWarningPolyline {
-                if lineHitTest(line: overlay, location: location, distanceTolerance: tolerance), let warning = overlay.warning {
+                if lineHitTest(line: overlay, location: location, distanceTolerance: tolerance),
+                   let warning = overlay.warning {
                     PersistenceController.current.viewContext.performAndWait {
-                        if let thing = PersistenceController.current.viewContext.object(with: warning.objectID) as? NavigationalWarning {
+                        if let thing = PersistenceController.current.viewContext.object(
+                            with: warning.objectID) as? NavigationalWarning {
                             items.insert(thing)
                         }
                     }
@@ -324,7 +333,8 @@ class NavigationalWarningMap: NSObject, MapMixin {
             } else if let overlay = overlay as? NavigationalWarningPolygon {
                 if polygonHitTest(polygon: overlay, location: location), let warning = overlay.warning {
                     PersistenceController.current.viewContext.performAndWait {
-                        if let thing = PersistenceController.current.viewContext.object(with: warning.objectID) as? NavigationalWarning {
+                        if let thing = PersistenceController.current.viewContext.object(
+                            with: warning.objectID) as? NavigationalWarning {
                             items.insert(thing)
                         }
                     }
@@ -332,7 +342,8 @@ class NavigationalWarningMap: NSObject, MapMixin {
             } else if let overlay = overlay as? NavigationalWarningCircle {
                 if circleHitTest(circle: overlay, location: location), let warning = overlay.warning {
                     PersistenceController.current.viewContext.performAndWait {
-                        if let thing = PersistenceController.current.viewContext.object(with: warning.objectID) as? NavigationalWarning {
+                        if let thing = PersistenceController.current.viewContext.object(
+                            with: warning.objectID) as? NavigationalWarning {
                             items.insert(thing)
                         }
                     }
@@ -369,7 +380,8 @@ class NavigationalWarningMap: NSObject, MapMixin {
     
     func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
         return NSPredicate(
-            format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
+            format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf",
+            minLat, maxLat, minLon, maxLon
         )
     }
     

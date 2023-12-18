@@ -123,7 +123,7 @@ class GeoPackageFeatureItem: NSObject, Locatable, DataSourceViewBuilder {
     var mediaRows: [GPKGMediaRow]?
     var attributeRows: [GeoPackageFeatureItem]?
     var featureRowData: GPKGFeatureRowData?
-    var featureDataTypes: [String : String]?
+    var featureDataTypes: [String: String]?
     var layerName: String?
     var geoPackageName: String?
     var tableName: String?
@@ -131,7 +131,12 @@ class GeoPackageFeatureItem: NSObject, Locatable, DataSourceViewBuilder {
     var maxFeaturesReached: Bool
     var featureCount: Int
     
-    init(maxFeaturesReached: Bool = false, featureCount: Int = 0, layerName: String? = nil, geoPackageName: String? = nil, tableName: String? = nil) {
+    init(
+        maxFeaturesReached: Bool = false,
+        featureCount: Int = 0,
+        layerName: String? = nil,
+        geoPackageName: String? = nil,
+        tableName: String? = nil) {
         self.maxFeaturesReached = maxFeaturesReached
         self.featureCount = featureCount
         self.layerName = layerName
@@ -141,8 +146,24 @@ class GeoPackageFeatureItem: NSObject, Locatable, DataSourceViewBuilder {
         self.coordinate = kCLLocationCoordinate2DInvalid
     }
     
-    convenience init(layerName: String? = nil, geoPackageName: String? = nil, tableName: String? = nil, featureId: Int = 0, featureRowData: GPKGFeatureRowData?, featureDataTypes: [String : String]? = nil, coordinate: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid, icon: UIImage? = nil, style: GPKGStyleRow? = nil, mediaRows: [GPKGMediaRow]? = nil, attributeRows: [GeoPackageFeatureItem]? = nil) {
-        self.init(maxFeaturesReached: false, featureCount: 1, layerName: layerName, geoPackageName: geoPackageName, tableName: tableName)
+    convenience init(
+        layerName: String? = nil,
+        geoPackageName: String? = nil,
+        tableName: String? = nil,
+        featureId: Int = 0,
+        featureRowData: GPKGFeatureRowData?,
+        featureDataTypes: [String : String]? = nil,
+        coordinate: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid,
+        icon: UIImage? = nil,
+        style: GPKGStyleRow? = nil,
+        mediaRows: [GPKGMediaRow]? = nil,
+        attributeRows: [GeoPackageFeatureItem]? = nil) {
+        self.init(
+            maxFeaturesReached: false,
+            featureCount: 1,
+            layerName: layerName,
+            geoPackageName: geoPackageName,
+            tableName: tableName)
         self.featureId = featureId
         self.featureRowData = featureRowData
         self.featureDataTypes = featureDataTypes
@@ -156,20 +177,20 @@ class GeoPackageFeatureItem: NSObject, Locatable, DataSourceViewBuilder {
     func valueString(key: String, value: Any) -> String {
         if let dataType = self.featureDataTypes?[key] {
             let gpkgDataType = GPKGDataTypes.fromName(dataType)
-            if (gpkgDataType == GPKG_DT_BOOLEAN) {
+            if gpkgDataType == GPKG_DT_BOOLEAN {
                 return "\((value as? Int) == 0 ? "true" : "false")"
-            } else if (gpkgDataType == GPKG_DT_DATE) {
-                let dateDisplayFormatter = DateFormatter();
-                dateDisplayFormatter.dateFormat = "yyyy-MM-dd";
-                dateDisplayFormatter.timeZone = TimeZone(secondsFromGMT: 0);
+            } else if gpkgDataType == GPKG_DT_DATE {
+                let dateDisplayFormatter = DateFormatter()
+                dateDisplayFormatter.dateFormat = "yyyy-MM-dd"
+                dateDisplayFormatter.timeZone = TimeZone(secondsFromGMT: 0)
                 
                 if let date = value as? Date {
                     return "\(dateDisplayFormatter.string(from: date))"
                 }
-            } else if (gpkgDataType == GPKG_DT_DATETIME) {
-                let dateDisplayFormatter = DateFormatter();
-                dateDisplayFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss";
-                dateDisplayFormatter.timeZone = TimeZone(secondsFromGMT: 0);
+            } else if gpkgDataType == GPKG_DT_DATETIME {
+                let dateDisplayFormatter = DateFormatter()
+                dateDisplayFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+                dateDisplayFormatter.timeZone = TimeZone(secondsFromGMT: 0)
                 if let date = value as? Date {
                     return "\(dateDisplayFormatter.string(from: date))"
                 }

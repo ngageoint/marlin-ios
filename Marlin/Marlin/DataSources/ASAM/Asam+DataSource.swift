@@ -46,19 +46,38 @@ extension Asam: DataSource, Locatable, GeoPackageExportable, GeoJSONExportable {
     static func postProcess() {}
     
     static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Anti-Shipping Activity Messages", comment: "ASAM data source full display name")
+    static var dataSourceName: String = 
+    NSLocalizedString("ASAM",
+                      comment: "ASAM data source display name")
+    static var fullDataSourceName: String =
+    NSLocalizedString("Anti-Shipping Activity Messages",
+                      comment: "ASAM data source full display name")
     static var key: String = DataSourceType.asam.rawValue
     static var metricsKey: String = "asams"
     static var imageName: String? = "asam"
-    static var systemImageName: String? = nil
+    static var systemImageName: String?
     
     static var color: UIColor = .black
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), ascending: false)]
-    static var defaultFilter: [DataSourceFilterParameter] = [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last365Days)]
-    
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Date",
+                key: #keyPath(Asam.date),
+                type: .date),
+            ascending: false)
+    ]
+    static var defaultFilter: [DataSourceFilterParameter] = [
+        DataSourceFilterParameter(
+            property: DataSourceProperty(
+                name: "Date",
+                key: #keyPath(Asam.date),
+                type: .date),
+            comparison: .window,
+            windowUnits: DataSourceWindowUnits.last365Days)
+    ]
+
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date),
         DataSourceProperty(name: "Location", key: #keyPath(Asam.mgrs10km), type: .location),
@@ -84,20 +103,29 @@ extension Asam: BatchImportable {
         let count = value.asam.count
         NSLog("Received \(count) \(Self.key) records.")
         
-        
         let crossReference = Dictionary(grouping: value.asam, by: \.reference)
         let duplicates = crossReference
             .filter { $1.count > 1 }
         
         print("Found Dupicate ASAMs \(duplicates.keys)")
-        return try await Self.importRecords(from: value.asam, taskContext: PersistenceController.current.newTaskContext())
+        return try await Self.importRecords(
+            from: value.asam,
+            taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
         let context = PersistenceController.current.newTaskContext()
-        var date: String? = nil
+        var date: String?
         context.performAndWait {
-            let newestAsam = try? PersistenceController.current.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)], predicate: nil, context: context)
+            let newestAsam = 
+            try? PersistenceController.current.fetchFirst(Asam.self,
+                                                          sortBy: [
+                                                            NSSortDescriptor(
+                                                                keyPath: \Asam.date,
+                                                                ascending: false)],
+                                                          predicate: nil,
+                                                          context: context
+            )
             date = newestAsam?.dateString
         }
         return [MSIRouter.readAsams(date: date)]
@@ -105,7 +133,9 @@ extension Asam: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every hour
-        return UserDefaults.standard.dataSourceEnabled(DataSourceDefinitions.asam.definition) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(DataSourceDefinitions.asam.definition)
+        return UserDefaults.standard.dataSourceEnabled(DataSourceDefinitions.asam.definition)
+        && (Date().timeIntervalSince1970 - (60 * 60)) >
+        UserDefaults.standard.lastSyncTimeSeconds(DataSourceDefinitions.asam.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [AsamModel]) -> NSBatchInsertRequest {
@@ -121,14 +151,16 @@ extension Asam: BatchImportable {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             index += 1
             return false
         })
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [AsamModel], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(
+        from propertiesList: [AsamModel],
+        taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

@@ -17,12 +17,18 @@ struct ImageSector: CustomStringConvertible {
     var range: Double?
     
     var description: String {
-        return "Sector starting at \(startDegrees - 90.0), going to \(endDegrees - 90.0) has color \(color) is \(obscured ? "obscured" : "visible") with range of \(range ?? -1)\n"
+        return """
+        Sector starting at \(startDegrees - 90.0)\
+        , going to \(endDegrees - 90.0) has color\
+         \(color) is \(obscured ? "obscured" : "visible")\
+         with range of \(range ?? -1)\n
+        """
     }
 }
 
 class CircleImage: UIImage {
-    // just have this draw the text at an offset fom the middle based on the passed in image or maybe just a passed in size
+    // just have this draw the text at an offset fom the middle
+    // based on the passed in image or maybe just a passed in size
     convenience init?(imageSize: CGSize, sideText: String, fontSize: CGFloat) {
         var rect = CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height)
         let labelColor = UIColor.label
@@ -39,7 +45,11 @@ class CircleImage: UIImage {
         let image = renderer.image { _ in
             let center = CGPoint(x: (rect.width / 2.0), y: rect.height / 2.0)
 
-            let textRect = CGRect(x: 4 + center.x + imageSize.width / 2, y: center.y - size.height / 2, width: rect.width, height: rect.height)
+            let textRect = CGRect(
+                x: 4 + center.x + imageSize.width / 2,
+                y: center.y - size.height / 2,
+                width: rect.width,
+                height: rect.height)
             sideText.draw(in: textRect, withAttributes: attributes)
         }
         guard  let cgImage = image.cgImage else {
@@ -48,10 +58,20 @@ class CircleImage: UIImage {
         self.init(cgImage: cgImage)
     }
     
-    convenience init?(color: UIColor, radius: CGFloat, fill: Bool = false, withoutScreenScale: Bool = false, arcWidth: CGFloat? = nil) {
+    convenience init?(
+        color: UIColor,
+        radius: CGFloat,
+        fill: Bool = false,
+        withoutScreenScale: Bool = false,
+        arcWidth: CGFloat? = nil)
+    {
         let strokeWidth = arcWidth ?? 0.5
-        let rect = CGRect(x: 0, y: 0, width: strokeWidth + radius * 2, height: strokeWidth + radius * 2)
-        
+        let rect = CGRect(
+            x: 0,
+            y: 0,
+            width: strokeWidth + radius * 2,
+            height: strokeWidth + radius * 2)
+
         let renderer = {
             if withoutScreenScale {
                 let format = UIGraphicsImageRendererFormat()
@@ -82,7 +102,15 @@ class CircleImage: UIImage {
     }
     
     // sector degrees start at 0 at 3 o'clock
-    convenience init?(suggestedFrame: CGRect, sectors: [ImageSector], outerStroke: UIColor? = nil, radius: CGFloat? = nil, fill: Bool = false, arcWidth: CGFloat? = nil, sectorSeparator: Bool = true) {
+    convenience init?(
+        suggestedFrame: CGRect,
+        sectors: [ImageSector],
+        outerStroke: UIColor? = nil,
+        radius: CGFloat? = nil,
+        fill: Bool = false,
+        arcWidth: CGFloat? = nil,
+        sectorSeparator: Bool = true)
+    {
         let strokeWidth = arcWidth ?? 2.0
         let outerStrokeWidth = strokeWidth / 4.0
         let rect = suggestedFrame
@@ -94,7 +122,13 @@ class CircleImage: UIImage {
         let image = renderer.image { _ in
             if let outerStroke = outerStroke {
                 outerStroke.setStroke()
-                let outerBoundary = UIBezierPath(ovalIn: CGRect(x: outerStrokeWidth / 2.0, y: outerStrokeWidth / 2.0, width: diameter + outerStrokeWidth, height: diameter + outerStrokeWidth ))
+                let outerBoundary = UIBezierPath(
+                    ovalIn: CGRect(
+                        x: outerStrokeWidth / 2.0,
+                        y: outerStrokeWidth / 2.0,
+                        width: diameter + outerStrokeWidth,
+                        height: diameter + outerStrokeWidth )
+                )
                 outerBoundary.lineWidth = outerStrokeWidth / 4.0
                 outerBoundary.stroke()
             }
@@ -211,17 +245,16 @@ extension String {
     func drawWithBasePoint(basePoint: CGPoint,
                            radius: CGFloat,
                            andAngle angle: CGFloat,
-                           andAttributes attributes: [NSAttributedString.Key : Any]) {
+                           andAttributes attributes: [NSAttributedString.Key: Any]) {
         let size: CGSize = self.size(withAttributes: attributes)
         let context: CGContext = UIGraphicsGetCurrentContext()!
-        let t: CGAffineTransform = CGAffineTransform(translationX: basePoint.x, y: basePoint.y)
-        let r: CGAffineTransform = CGAffineTransform(rotationAngle: angle)
-        context.concatenate(t)
-        context.concatenate(r)
+        let translation: CGAffineTransform = CGAffineTransform(translationX: basePoint.x, y: basePoint.y)
+        let rotation: CGAffineTransform = CGAffineTransform(rotationAngle: angle)
+        context.concatenate(translation)
+        context.concatenate(rotation)
         let rect = CGRect(x: -(size.width / 2), y: radius, width: size.width, height: size.height)
         self.draw(in: rect, withAttributes: attributes)
-        context.concatenate(r.inverted())
-        context.concatenate(t.inverted())
+        context.concatenate(rotation.inverted())
+        context.concatenate(translation.inverted())
     }
 }
-

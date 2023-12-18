@@ -18,7 +18,18 @@ extension MSIListView where SectionHeader == EmptyView, Content == EmptyView, Em
          sectionGroupNameBuilder: ((MSISection<T>) -> String)? = nil,
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil
     ) {
-        self.init(path: path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: { _ in EmptyView() }, content: { _ in EmptyView() }, emptyView: { EmptyView() })
+        self.init(
+            path: path, 
+            focusedItem: focusedItem,
+            watchFocusedItem: watchFocusedItem,
+            allowUserSort: allowUserSort,
+            allowUserFilter: allowUserFilter,
+            sectionHeaderIsSubList: sectionHeaderIsSubList,
+            sectionGroupNameBuilder: sectionGroupNameBuilder,
+            sectionNameBuilder: sectionNameBuilder,
+            sectionViewBuilder: { _ in EmptyView() },
+            content: { _ in EmptyView() },
+            emptyView: { EmptyView() })
     }
 }
 
@@ -32,15 +43,30 @@ extension MSIListView where Content == EmptyView, EmptyContent == EmptyView {
          sectionGroupNameBuilder: ((MSISection<T>) -> String)? = nil,
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
          @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader) {
-        self.init(path: path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem, allowUserSort: allowUserSort, allowUserFilter: allowUserFilter, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: { _ in EmptyView() }, emptyView: { EmptyView() })
+        self.init(
+            path: path, 
+            focusedItem: focusedItem,
+            watchFocusedItem: watchFocusedItem,
+            allowUserSort: allowUserSort,
+            allowUserFilter: allowUserFilter,
+            sectionHeaderIsSubList: sectionHeaderIsSubList,
+            sectionGroupNameBuilder: sectionGroupNameBuilder,
+            sectionNameBuilder: sectionNameBuilder,
+            sectionViewBuilder: sectionViewBuilder,
+            content: { _ in EmptyView() },
+            emptyView: { EmptyView() })
     }
 }
 
-struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: View, Content: View, EmptyContent: View>: View {
+struct MSIListView<
+    T: BatchImportable & DataSourceViewBuilder,
+        SectionHeader: View,
+        Content: View,
+        EmptyContent: View>: View {
     @State var sortOpen: Bool = false
     
     @ObservedObject var focusedItem: ItemWrapper
-    @State var selection: String? = nil
+    @State var selection: String?
     @State var filterOpen: Bool = false
     @Binding var path: NavigationPath
     
@@ -79,15 +105,24 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
         self.sectionNameBuilder = sectionNameBuilder
         self.sectionViewBuilder = sectionViewBuilder
         self.content = content
-        self.filterViewModel = PersistedFilterViewModel(dataSource: DataSourceDefinitions.filterableFromDefintion(T.definition))
+        self.filterViewModel = PersistedFilterViewModel(
+            dataSource: DataSourceDefinitions.filterableFromDefintion(T.definition))
         self.emptyView = emptyView
     }
     
     var body: some View {
         Self._printChanges()
         return ZStack(alignment: .bottomTrailing) {
-            GenericSectionedList<T, SectionHeader, Content, EmptyContent>(path: $path, sectionHeaderIsSubList: sectionHeaderIsSubList, sectionGroupNameBuilder: sectionGroupNameBuilder, sectionNameBuilder: sectionNameBuilder, sectionViewBuilder: sectionViewBuilder, content: content, emptyView: emptyView)
-            if let _ = T.self as? GeoPackageExportable.Type, let filterable = DataSourceDefinitions.filterableFromDefintion(T.definition) {
+            GenericSectionedList<T, SectionHeader, Content, EmptyContent>(
+                path: $path,
+                sectionHeaderIsSubList: sectionHeaderIsSubList,
+                sectionGroupNameBuilder: sectionGroupNameBuilder,
+                sectionNameBuilder: sectionNameBuilder,
+                sectionViewBuilder: sectionViewBuilder,
+                content: content,
+                emptyView: emptyView)
+            if let _ = T.self as? GeoPackageExportable.Type, 
+                let filterable = DataSourceDefinitions.filterableFromDefintion(T.definition) {
                 GeoPackageExportButton(filterable: filterable)
             }
         }
@@ -99,7 +134,7 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
             }
             Metrics.shared.dataSourceList(dataSource: T.definition)
         }
-        .onChange(of: focusedItem.date) { newValue in
+        .onChange(of: focusedItem.date) { _ in
             if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
                 path.append(MarlinRoute.dataSourceDetail(dataSourceKey: T.definition.key, itemKey: focusedItem.itemKey))
             }
@@ -110,7 +145,12 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
                     focusedItem.dataSource = nil
                 }
         }
-        .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, dataSources: Binding.constant([DataSourceItem(dataSource: T.self)]), allowSorting: allowUserSort, allowFiltering: allowUserFilter))
+        .modifier(FilterButton(
+            filterOpen: $filterOpen,
+            sortOpen: $sortOpen,
+            dataSources: Binding.constant([DataSourceItem(dataSource: T.self)]), 
+            allowSorting: allowUserSort,
+            allowFiltering: allowUserFilter))
         .background {
             DataSourceFilter(filterViewModel: filterViewModel, showBottomSheet: $filterOpen)
         }
@@ -152,7 +192,11 @@ struct MSIListView<T: BatchImportable & DataSourceViewBuilder, SectionHeader: Vi
     }
 }
 
-struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionHeader: View, Content: View, EmptyContent: View>: View {
+struct GenericSectionedList
+<T: BatchImportable & DataSourceViewBuilder,
+ SectionHeader: View,
+    Content: View,
+    EmptyContent: View>: View {
     @Binding var path: NavigationPath
     let sectionHeaderIsSubList: Bool
     var sectionGroupNameBuilder: ((MSISection<T>) -> String)?
@@ -313,7 +357,7 @@ struct GenericSectionedList<T: BatchImportable & DataSourceViewBuilder, SectionH
                             itemsViewModel.update(for: section.id + 1)
                         }
                     }
-                    .onChange(of: itemsViewModel.lastUpdateDate) { date in
+                    .onChange(of: itemsViewModel.lastUpdateDate) { _ in
                         if section.id == itemsViewModel.sections[itemsViewModel.sections.count - 1].id {
                             itemsViewModel.update(for: section.id + 1)
                         }

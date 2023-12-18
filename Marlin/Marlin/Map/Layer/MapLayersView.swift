@@ -48,7 +48,7 @@ struct MapLayerRow: View {
             .accessibilityElement()
             .accessibilityLabel("focus")
             Toggle("", isOn: $isVisible)
-                .toggleStyle(checkboxToggleStyle())
+                .toggleStyle(CheckboxToggleStyle())
                 .tint(Color.primaryColor)
                 .accessibilityElement()
                 .accessibilityLabel("\(isVisible ? "Hide" : "Show") \(layer.url ?? layer.filePath ?? "")")

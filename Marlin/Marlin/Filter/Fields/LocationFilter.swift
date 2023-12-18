@@ -138,12 +138,19 @@ struct LocationFilter: View {
                 VStack {
                     ZStack(alignment: .topLeading) {
                         VStack {
-                            MarlinMap(name: "Location Filter", mixins: mapMixins, mapState: mapState, allowMapTapsOnItems: false)
+                            MarlinMap(
+                                name: "Location Filter",
+                                mixins: mapMixins,
+                                mapState: mapState,
+                                allowMapTapsOnItems: false)
                                 .onAppear {
                                     if let boundsMixin = boundsMixin {
                                         mapMixins.mixins.append(boundsMixin)
                                     } else {
-                                        boundsMixin = LocationBoundsMixin(region: $viewModel.region, coordinateOne: $coordinateOne, coordinateTwo: $coordinateTwo)
+                                        boundsMixin = LocationBoundsMixin(
+                                            region: $viewModel.region,
+                                            coordinateOne: $coordinateOne,
+                                            coordinateTwo: $coordinateTwo)
                                         mapMixins.mixins.append(boundsMixin!)
                                     }
                                     mapMixins.mixins.append(UserLayersMap())
@@ -151,14 +158,27 @@ struct LocationFilter: View {
                                 }
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 250)
-                                .onChange(of: [viewModel.valueMinLatitudeString, viewModel.valueMinLongitudeString, viewModel.valueMaxLatitudeString, viewModel.valueMaxLongitudeString]) { newValue in
-                                    if let minLat = viewModel.valueMinLatitude, let minLon = viewModel.valueMinLongitude, let maxLat = viewModel.valueMaxLatitude, let maxLon = viewModel.valueMaxLongitude {
+                                .onChange(of: [
+                                    viewModel.valueMinLatitudeString,
+                                    viewModel.valueMinLongitudeString,
+                                    viewModel.valueMaxLatitudeString,
+                                    viewModel.valueMaxLongitudeString]) { newValue in
+                                    if let minLat = viewModel.valueMinLatitude, 
+                                        let minLon = viewModel.valueMinLongitude,
+                                        let maxLat = viewModel.valueMaxLatitude,
+                                        let maxLon = viewModel.valueMaxLongitude {
                                         coordinateOne.latitude = minLat
                                         coordinateOne.longitude = minLon
                                         coordinateTwo.latitude = maxLat
                                         coordinateTwo.longitude = maxLon
-                                        let center = CLLocationCoordinate2D(latitude: maxLat - ((maxLat - minLat) / 2.0), longitude: maxLon - ((maxLon - minLon) / 2.0))
-                                        mapState.center = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: maxLat - minLat, longitudeDelta: maxLon - minLon))
+                                        let center = CLLocationCoordinate2D(
+                                            latitude: maxLat - ((maxLat - minLat) / 2.0),
+                                            longitude: maxLon - ((maxLon - minLon) / 2.0))
+                                        mapState.center = MKCoordinateRegion(
+                                            center: center,
+                                            span: MKCoordinateSpan(
+                                                latitudeDelta: maxLat - minLat,
+                                                longitudeDelta: maxLon - minLon))
                                     }
                                 }
                         }

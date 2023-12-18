@@ -15,7 +15,10 @@ struct DFRSAreaPropertyContainer: Decodable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        areas = try container.decode([Throwable<DFRSAreaProperties>].self, forKey: .areas).compactMap { try? $0.result.get()}
+        areas = try container.decode(
+            [Throwable<DFRSAreaProperties>].self,
+            forKey: .areas)
+        .compactMap { try? $0.result.get()}
     }
 }
 
@@ -39,16 +42,6 @@ struct DFRSAreaProperties: Decodable {
     
     init(from decoder: Decoder) throws {
         var values = try decoder.unkeyedContainer()
-        /**
-         [
-         "CANADA",
-         30,
-         "The VHF direction finding stations of Canada are for emergency use only. All stations are remotely controlled by a Marine Communications and Traffic Services Center (MCTS). The following details of operation are common to all of these stations:",
-         1,
-         "A. Ch.16."
-         ]
-         */
-        
         areaName = try? values.decode(String.self)
         areaIndex = try? values.decode(Int.self)
         areaNote = try? values.decodeIfPresent(String.self)

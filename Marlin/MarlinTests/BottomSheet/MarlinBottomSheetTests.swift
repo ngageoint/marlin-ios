@@ -38,13 +38,13 @@ final class MarlinBottomSheetTests: XCTestCase {
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = nil
     }
-    
+
     private struct TestBottomSheet: View {
         @State var show: Bool = false
         @StateObject var bottomSheetItemList: BottomSheetItemList = BottomSheetItemList()
         var bottomSheetItems: [BottomSheetItem]
         let dismissBottomSheetPub = NotificationCenter.default.publisher(for: .DismissBottomSheet)
-        
+
         var body: some View {
             HStack {
                 Text("stack")
@@ -80,7 +80,8 @@ final class MarlinBottomSheetTests: XCTestCase {
         let bottomSheetItem = BottomSheetItem(item: newItem, zoom: false)
         
         let repository = AsamRepository(repository: AsamCoreDataDataSource(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: 
+                                                            BookmarkCoreDataRepository(context: persistentStore.viewContext))
         
         let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem])
             .environmentObject(repository)
@@ -143,8 +144,10 @@ final class MarlinBottomSheetTests: XCTestCase {
         let bottomSheetItem2 = BottomSheetItem(item: newItem2, zoom: false)
         
         let repository = AsamRepository(repository: AsamCoreDataDataSource(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        let moduRepository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: 
+                                                            BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        let moduRepository = ModuRepositoryManager(repository:
+                                                    ModuCoreDataRepository(context: persistentStore.viewContext))
         
         let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem, bottomSheetItem2])
             .environmentObject(repository)
@@ -201,11 +204,16 @@ final class MarlinBottomSheetTests: XCTestCase {
         
         expectation(forNotification: .ViewDataSource,
                     object: nil) { notification in
-            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let asam = try! XCTUnwrap(vds.dataSource as? AsamModel)
-            XCTAssertEqual(asam.hostility, "Boarding")
-            XCTAssertEqual(asam.victim, "Boat")
-            return true
+            do {
+                let vds = try XCTUnwrap(notification.object as? ViewDataSource)
+                let asam = try XCTUnwrap(vds.dataSource as? AsamModel)
+                XCTAssertEqual(asam.hostility, "Boarding")
+                XCTAssertEqual(asam.victim, "Boat")
+                return true
+            } catch {
+                XCTFail()
+                return true
+            }
         }
         tester().tapView(withAccessibilityLabel: "More Details")
         

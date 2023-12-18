@@ -21,10 +21,8 @@ public class MSI {
     var cancellable = Set<AnyCancellable>()
     
     var loading: Bool {
-        for importable in self.masterDataList {
-            if self.appState.loadingDataSource[importable.key] == true {
-                return true
-            }
+        for importable in self.masterDataList where self.appState.loadingDataSource[importable.key] == true {
+            return true
         }
         return false
     }
@@ -45,12 +43,24 @@ public class MSI {
     lazy var capabilitiesSession: Session = {
         configuration.httpMaximumConnectionsPerHost = 4
         configuration.timeoutIntervalForRequest = 120
-        let m = ServerTrustManager(allHostsMustBeEvaluated: false, evaluators: [:])
-        return Session(configuration: configuration, serverTrustManager: m)
+        let manager = ServerTrustManager(allHostsMustBeEvaluated: false, evaluators: [:])
+        return Session(configuration: configuration, serverTrustManager: manager)
     }()
     
-    let masterDataList: [any BatchImportable.Type] = [Asam.self, Modu.self, NavigationalWarning.self, Light.self, Port.self, RadioBeacon.self, DifferentialGPSStation.self, DFRS.self, DFRSArea.self, ElectronicPublication.self, NoticeToMariners.self]
-    
+    let masterDataList: [any BatchImportable.Type] = [
+        Asam.self,
+        Modu.self,
+        NavigationalWarning.self,
+        Light.self,
+        Port.self,
+        RadioBeacon.self,
+        DifferentialGPSStation.self,
+        DFRS.self,
+        DFRSArea.self,
+        ElectronicPublication.self,
+        NoticeToMariners.self
+    ]
+
     lazy var initialLoadQueue: OperationQueue = {
         var queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
@@ -131,7 +141,10 @@ public class MSI {
         
         for importable in allLoadList {
             NSLog("Fetching new data for \(importable.key)")
-            self.loadData(type: importable.decodableRoot, dataType: importable, operationQueue: self.backgroundFetchQueue)
+            self.loadData(
+                type: importable.decodableRoot,
+                dataType: importable,
+                operationQueue: self.backgroundFetchQueue)
         }
         
         var expired = false
@@ -190,7 +203,10 @@ public class MSI {
         
         let initialDataLoadList: [any BatchImportable.Type] = self.masterDataList.filter { importable in
             if let ds = importable as? any DataSource.Type {
-                return UserDefaults.standard.dataSourceEnabled(ds.definition) && !self.isLoaded(type: importable) && !(importable.seedDataFiles ?? []).isEmpty
+                return UserDefaults.standard
+                    .dataSourceEnabled(ds.definition) &&
+                !self.isLoaded(type: importable) &&
+                !(importable.seedDataFiles ?? []).isEmpty
             }
             return false
         }
@@ -198,8 +214,11 @@ public class MSI {
         if !initialDataLoadList.isEmpty {
             
             NSLog("Loading initial data from \(initialDataLoadList.count) data sources")
-            PersistenceController.current.addViewContextObserver(self, selector: #selector(self.managedObjectContextObjectChangedObserver(notification:)), name: .NSManagedObjectContextObjectsDidChange)
-            
+            PersistenceController.current.addViewContextObserver(
+                self,
+                selector: #selector(self.managedObjectContextObjectChangedObserver(notification:)),
+                name: .NSManagedObjectContextObjectsDidChange)
+
             for importable in initialDataLoadList {
                 self.loadInitialData(type: importable.decodableRoot, dataType: importable)
             }
@@ -232,7 +251,9 @@ public class MSI {
                     }
                 }
                 if allLoaded {
-                    PersistenceController.current.removeViewContextObserver(self, name: .NSManagedObjectContextObjectsDidChange)
+                    PersistenceController.current.removeViewContextObserver(
+                        self,
+                        name: .NSManagedObjectContextObjectsDidChange)
                 }
                 DispatchQueue.main.async {
                     self.appState.loadingDataSource[type(of: dataSourceItem).definition.key] = false
@@ -247,8 +268,13 @@ public class MSI {
         }
     }
         
-    func loadInitialData<T: Decodable, D: NSManagedObject & BatchImportable>(type: T.Type, dataType: D.Type, operationQueue: OperationQueue? = nil) {
-        let initialDataLoadOperation = DataLoadOperation(appState: appState, taskName: "Load Initial Data \(dataType.key)")
+    func loadInitialData<T: Decodable, D: NSManagedObject & BatchImportable>(
+        type: T.Type,
+        dataType: D.Type,
+        operationQueue: OperationQueue? = nil) {
+        let initialDataLoadOperation = DataLoadOperation(
+            appState: appState,
+            taskName: "Load Initial Data \(dataType.key)")
         initialDataLoadOperation.action = { [weak initialDataLoadOperation] in
             guard let initialDataLoadOperation = initialDataLoadOperation else {
                 return
@@ -261,7 +287,10 @@ public class MSI {
         (operationQueue ?? initialLoadQueue).addOperation(initialDataLoadOperation)
     }
     
-    func loadData<T: Decodable, D: NSManagedObject & BatchImportable>(type: T.Type, dataType: D.Type, operationQueue: OperationQueue? = nil) {
+    func loadData<T: Decodable, D: NSManagedObject & BatchImportable>(
+        type: T.Type,
+        dataType: D.Type,
+        operationQueue: OperationQueue? = nil) {
         let dataLoadOperation = DataLoadOperation(appState: appState, taskName: "Load Data \(dataType.key)")
         dataLoadOperation.action = { [weak dataLoadOperation] in
             guard let dataLoadOperation = dataLoadOperation else {

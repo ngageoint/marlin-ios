@@ -147,7 +147,17 @@ struct NavigationalWarningNavAreaListView: View {
                 }
             }
             .safeAreaInset(edge: .bottom, alignment: .trailing) {
-                NavigationLink(value: MarlinRoute.exportGeoPackageDataSource(dataSource: .navWarning, filters: [DataSourceFilterParameter(property: DataSourceProperty(name: "Nav Area", key: "navArea", type: DataSourcePropertyType.string), comparison: DataSourceFilterComparison.equals, valueString: navArea)])) {
+                NavigationLink(
+                    value: MarlinRoute.exportGeoPackageDataSource(
+                        dataSource: .navWarning,
+                        filters: [
+                            DataSourceFilterParameter(
+                                property: DataSourceProperty(
+                                    name: "Nav Area",
+                                    key: "navArea",
+                                    type: DataSourcePropertyType.string),
+                                comparison: DataSourceFilterComparison.equals,
+                                valueString: navArea)])) {
                     Label(
                         title: {},
                         icon: { Image(systemName: "square.and.arrow.down")
@@ -157,7 +167,12 @@ struct NavigationalWarningNavAreaListView: View {
                 }
                 .isDetailLink(false)
                 .fixedSize()
-                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.onPrimaryColor, backgroundColor: Color.primaryColor))
+                .buttonStyle(
+                    MaterialFloatingButtonStyle(
+                        type: .secondary,
+                        size: .mini,
+                        foregroundColor: Color.onPrimaryColor,
+                        backgroundColor: Color.primaryColor))
                 .accessibilityElement(children: .contain)
                 .accessibilityLabel("Export Button")
                 .padding(16)

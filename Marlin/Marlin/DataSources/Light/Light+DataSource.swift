@@ -25,15 +25,28 @@ extension Light: Bookmarkable {
     
     static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
         if let split = itemKey?.split(separator: "--"), split.count == 3 {
-            return getLight(context: context, featureNumber: "\(split[0])", volumeNumber: "\(split[1])", characteristicNumber: Int64(split[2]) ?? 0)
+            return getLight(
+                context: context,
+                featureNumber: "\(split[0])",
+                volumeNumber: "\(split[1])",
+                characteristicNumber: Int64(split[2]) ?? 0)
         }
         
         return nil
     }
     
-    static func getLight(context: NSManagedObjectContext, featureNumber: String?, volumeNumber: String?, characteristicNumber: Int64) -> Light? {
+    static func getLight(
+        context: NSManagedObjectContext,
+        featureNumber: String?,
+        volumeNumber: String?,
+        characteristicNumber: Int64
+    ) -> Light? {
         if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
-            return try? context.fetchFirst(Light.self, predicate: NSPredicate(format: "featureNumber = %@ AND volumeNumber = %@ AND characteristicNumber = %d", argumentArray: [featureNumber, volumeNumber, characteristicNumber]))
+            return try? context.fetchFirst(
+                Light.self,
+                predicate: NSPredicate(
+                    format: "featureNumber = %@ AND volumeNumber = %@ AND characteristicNumber = %d",
+                    argumentArray: [featureNumber, volumeNumber, characteristicNumber]))
         }
         return nil
     }
@@ -42,7 +55,7 @@ extension Light: Bookmarkable {
 extension Light: Locatable, GeoPackageExportable, GeoJSONExportable {
     static var definition: any DataSourceDefinition = DataSourceDefinitions.light.definition
     func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
-        var geometryByColor: [UIColor:SFGeometry] = [:]
+        var geometryByColor: [UIColor: SFGeometry] = [:]
         if let lightSectors = lightSectors {
             let sectorsByColor = Dictionary(grouping: lightSectors, by: \.color)
             for (color, sectors) in sectorsByColor {
@@ -52,7 +65,9 @@ extension Light: Locatable, GeoPackageExportable, GeoJSONExportable {
                     if sector.obscured {
                         continue
                     }
-                    let nauticalMilesMeasurement = NSMeasurement(doubleValue: sector.range ?? 0.0, unit: UnitLength.nauticalMiles)
+                    let nauticalMilesMeasurement = NSMeasurement(
+                        doubleValue: sector.range ?? 0.0,
+                        unit: UnitLength.nauticalMiles)
                     let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
                     if sector.startDegrees >= sector.endDegrees {
                         // this could be an error in the data, or sometimes lights are defined as follows:
@@ -62,8 +77,11 @@ extension Light: Locatable, GeoPackageExportable, GeoJSONExportable {
                         // TODO: figure out what to do with multi colored lights over the same sector
                         continue
                     }
-                    let circleCoordinates = coordinate.circleCoordinates(radiusMeters: metersMeasurement.value, startDegrees: sector.startDegrees + 90.0, endDegrees: sector.endDegrees + 90.0)
-                    
+                    let circleCoordinates = coordinate.circleCoordinates(
+                        radiusMeters: metersMeasurement.value,
+                        startDegrees: sector.startDegrees + 90.0,
+                        endDegrees: sector.endDegrees + 90.0)
+
                     let ring = SFLineString()
                     ring?.addPoint(SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude))
                     for circleCoordinate in circleCoordinates {
@@ -115,155 +133,266 @@ extension Light: Locatable, GeoPackageExportable, GeoJSONExportable {
     
     static func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
         return NSPredicate(
-            format: "characteristicNumber = 1 AND latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
+            format: """
+                    characteristicNumber = 1 AND \
+                    latitude >= %lf AND \
+                    latitude <= %lf AND \
+                    longitude >= %lf AND \
+                    longitude <= %lf
+                    """,
+            minLat, maxLat, minLon, maxLon
         )
     }
-    
-    static func createStyles(tableStyles: GPKGFeatureTableStyles) -> [GPKGStyleRow] {
-        var styleRows: [GPKGStyleRow] = []
-        
+
+    static func redStyleRow(tableStyles: GPKGFeatureTableStyles) -> GPKGStyleRow? {
         let red = tableStyles.styleDao().newRow()
         red?.setName("RedLightStyle")
-        red?.setColor(CLRColor(red: Int32(Light.redLight.redComponent * 255.0), andGreen: Int32(Light.redLight.greenComponent * 255.0), andBlue: Int32(Light.redLight.blueComponent * 255.0)))
-        red?.setFillColor(CLRColor(red: Int32(Light.redLight.redComponent * 255.0), andGreen: Int32(Light.redLight.greenComponent * 255.0), andBlue: Int32(Light.redLight.blueComponent * 255.0)))
+        red?.setColor(CLRColor(
+            red: Int32(Light.redLight.redComponent * 255.0),
+            andGreen: Int32(Light.redLight.greenComponent * 255.0),
+            andBlue: Int32(Light.redLight.blueComponent * 255.0)))
+        red?.setFillColor(CLRColor(
+            red: Int32(Light.redLight.redComponent * 255.0),
+            andGreen: Int32(Light.redLight.greenComponent * 255.0),
+            andBlue: Int32(Light.redLight.blueComponent * 255.0)))
         red?.setFillOpacity(0.3)
         red?.setWidth(2.0)
-        if let red = red {
-            styleRows.append(red)
-        }
+        return red
+    }
+
+    static func greenStyleRow(tableStyles: GPKGFeatureTableStyles) -> GPKGStyleRow? {
         let green = tableStyles.styleDao().newRow()
         green?.setName("GreenLightStyle")
-        green?.setColor(CLRColor(red: Int32(Light.greenLight.redComponent * 255.0), andGreen: Int32(Light.greenLight.greenComponent * 255.0), andBlue: Int32(Light.greenLight.blueComponent * 255.0)))
-        green?.setFillColor(CLRColor(red: Int32(Light.greenLight.redComponent * 255.0), andGreen: Int32(Light.greenLight.greenComponent * 255.0), andBlue: Int32(Light.greenLight.blueComponent * 255.0)))
+        green?.setColor(CLRColor(
+            red: Int32(Light.greenLight.redComponent * 255.0),
+            andGreen: Int32(Light.greenLight.greenComponent * 255.0),
+            andBlue: Int32(Light.greenLight.blueComponent * 255.0)))
+        green?.setFillColor(CLRColor(
+            red: Int32(Light.greenLight.redComponent * 255.0),
+            andGreen: Int32(Light.greenLight.greenComponent * 255.0),
+            andBlue: Int32(Light.greenLight.blueComponent * 255.0)))
         green?.setFillOpacity(0.3)
         green?.setWidth(2.0)
-        if let green = green {
-            styleRows.append(green)
-        }
+        return green
+    }
+
+    static func blueStyleRow(tableStyles: GPKGFeatureTableStyles) -> GPKGStyleRow? {
         let blue = tableStyles.styleDao().newRow()
         blue?.setName("BlueLightStyle")
-        blue?.setColor(CLRColor(red: Int32(Light.blueLight.redComponent * 255.0), andGreen: Int32(Light.blueLight.greenComponent * 255.0), andBlue: Int32(Light.blueLight.blueComponent * 255.0)))
-        blue?.setFillColor(CLRColor(red: Int32(Light.blueLight.redComponent * 255.0), andGreen: Int32(Light.blueLight.greenComponent * 255.0), andBlue: Int32(Light.blueLight.blueComponent * 255.0)))
+        blue?.setColor(CLRColor(
+            red: Int32(Light.blueLight.redComponent * 255.0),
+            andGreen: Int32(Light.blueLight.greenComponent * 255.0),
+            andBlue: Int32(Light.blueLight.blueComponent * 255.0)))
+        blue?.setFillColor(
+            CLRColor(red: Int32(Light.blueLight.redComponent * 255.0),
+                     andGreen: Int32(Light.blueLight.greenComponent * 255.0),
+                     andBlue: Int32(Light.blueLight.blueComponent * 255.0)))
         blue?.setFillOpacity(0.3)
         blue?.setWidth(2.0)
-        if let blue = blue {
-            styleRows.append(blue)
-        }
+        return blue
+    }
+
+    static func whiteStyleRow(tableStyles: GPKGFeatureTableStyles) -> GPKGStyleRow? {
         let white = tableStyles.styleDao().newRow()
         white?.setName("WhiteLightStyle")
-        white?.setColor(CLRColor(red: Int32(Light.whiteLight.redComponent * 255.0), andGreen: Int32(Light.whiteLight.greenComponent * 255.0), andBlue: Int32(Light.whiteLight.blueComponent * 255.0)))
-        white?.setFillColor(CLRColor(red: Int32(Light.whiteLight.redComponent * 255.0), andGreen: Int32(Light.whiteLight.greenComponent * 255.0), andBlue: Int32(Light.whiteLight.blueComponent * 255.0)))
+        white?.setColor(CLRColor(
+            red: Int32(Light.whiteLight.redComponent * 255.0),
+            andGreen: Int32(Light.whiteLight.greenComponent * 255.0),
+            andBlue: Int32(Light.whiteLight.blueComponent * 255.0)))
+        white?.setFillColor(CLRColor(
+            red: Int32(Light.whiteLight.redComponent * 255.0),
+            andGreen: Int32(Light.whiteLight.greenComponent * 255.0),
+            andBlue: Int32(Light.whiteLight.blueComponent * 255.0)))
         white?.setFillOpacity(0.3)
         white?.setWidth(2.0)
-        if let white = white {
-            styleRows.append(white)
-        }
+        return white
+    }
+
+    static func yellowStyleRow(tableStyles: GPKGFeatureTableStyles) -> GPKGStyleRow? {
         let yellow = tableStyles.styleDao().newRow()
         yellow?.setName("YellowLightStyle")
-        yellow?.setColor(CLRColor(red: Int32(Light.yellowLight.redComponent * 255.0), andGreen: Int32(Light.yellowLight.greenComponent * 255.0), andBlue: Int32(Light.yellowLight.blueComponent * 255.0)))
-        yellow?.setFillColor(CLRColor(red: Int32(Light.yellowLight.redComponent * 255.0), andGreen: Int32(Light.yellowLight.greenComponent * 255.0), andBlue: Int32(Light.yellowLight.blueComponent * 255.0)))
+        yellow?.setColor(CLRColor(
+            red: Int32(Light.yellowLight.redComponent * 255.0),
+            andGreen: Int32(Light.yellowLight.greenComponent * 255.0),
+            andBlue: Int32(Light.yellowLight.blueComponent * 255.0)))
+        yellow?.setFillColor(CLRColor(
+            red: Int32(Light.yellowLight.redComponent * 255.0),
+            andGreen: Int32(Light.yellowLight.greenComponent * 255.0),
+            andBlue: Int32(Light.yellowLight.blueComponent * 255.0)))
         yellow?.setFillOpacity(0.3)
         yellow?.setWidth(2.0)
-        if let yellow = yellow {
-            styleRows.append(yellow)
-        }
+        return yellow
+    }
+
+    static func violetStyleRow(tableStyles: GPKGFeatureTableStyles) -> GPKGStyleRow? {
         let violet = tableStyles.styleDao().newRow()
         violet?.setName("VioletLightStyle")
-        violet?.setColor(CLRColor(red: Int32(Light.violetLight.redComponent * 255.0), andGreen: Int32(Light.violetLight.greenComponent * 255.0), andBlue: Int32(Light.violetLight.blueComponent * 255.0)))
-        violet?.setFillColor(CLRColor(red: Int32(Light.violetLight.redComponent * 255.0), andGreen: Int32(Light.violetLight.greenComponent * 255.0), andBlue: Int32(Light.violetLight.blueComponent * 255.0)))
+        violet?.setColor(CLRColor(
+            red: Int32(Light.violetLight.redComponent * 255.0),
+            andGreen: Int32(Light.violetLight.greenComponent * 255.0),
+            andBlue: Int32(Light.violetLight.blueComponent * 255.0)))
+        violet?.setFillColor(CLRColor(
+            red: Int32(Light.violetLight.redComponent * 255.0),
+            andGreen: Int32(Light.violetLight.greenComponent * 255.0),
+            andBlue: Int32(Light.violetLight.blueComponent * 255.0)))
         violet?.setFillOpacity(0.3)
         violet?.setWidth(2.0)
-        if let violet = violet {
-            styleRows.append(violet)
-        }
+        return violet
+    }
+
+    static func orangeStyleRow(tableStyles: GPKGFeatureTableStyles) -> GPKGStyleRow? {
         let orange = tableStyles.styleDao().newRow()
         orange?.setName("OrangeLightStyle")
-        orange?.setColor(CLRColor(red: Int32(Light.orangeLight.redComponent * 255.0), andGreen: Int32(Light.orangeLight.greenComponent * 255.0), andBlue: Int32(Light.orangeLight.blueComponent * 255.0)))
-        orange?.setFillColor(CLRColor(red: Int32(Light.orangeLight.redComponent * 255.0), andGreen: Int32(Light.orangeLight.greenComponent * 255.0), andBlue: Int32(Light.orangeLight.blueComponent * 255.0)))
+        orange?.setColor(CLRColor(
+            red: Int32(Light.orangeLight.redComponent * 255.0),
+            andGreen: Int32(Light.orangeLight.greenComponent * 255.0),
+            andBlue: Int32(Light.orangeLight.blueComponent * 255.0)))
+        orange?.setFillColor(CLRColor(
+            red: Int32(Light.orangeLight.redComponent * 255.0),
+            andGreen: Int32(Light.orangeLight.greenComponent * 255.0),
+            andBlue: Int32(Light.orangeLight.blueComponent * 255.0)))
         orange?.setFillOpacity(0.3)
         orange?.setWidth(2.0)
-        if let orange = orange {
+        return orange
+    }
+
+    static func createStyles(tableStyles: GPKGFeatureTableStyles) -> [GPKGStyleRow] {
+        var styleRows: [GPKGStyleRow] = []
+
+        if let red = redStyleRow(tableStyles: tableStyles) {
+            styleRows.append(red)
+        }
+        if let green = greenStyleRow(tableStyles: tableStyles) {
+            styleRows.append(green)
+        }
+        if let blue = blueStyleRow(tableStyles: tableStyles) {
+            styleRows.append(blue)
+        }
+
+        if let white = whiteStyleRow(tableStyles: tableStyles) {
+            styleRows.append(white)
+        }
+
+        if let yellow = yellowStyleRow(tableStyles: tableStyles) {
+            styleRows.append(yellow)
+        }
+
+        if let violet = violetStyleRow(tableStyles: tableStyles) {
+            styleRows.append(violet)
+        }
+
+        if let orange = orangeStyleRow(tableStyles: tableStyles) {
             styleRows.append(orange)
         }
 
         return styleRows
     }
-    
+
+    func setStyleDefault(
+        color: UIColor,
+        rowId: Int64,
+        featureTableStyles: GPKGFeatureTableStyles,
+        styleRows: [GPKGStyleRow]
+    ) {
+        if color == Light.redLight {
+            featureTableStyles.setStyleDefault(styleRows[0], withId: Int32(rowId))
+        } else if color == Light.greenLight {
+            featureTableStyles.setStyleDefault(styleRows[1], withId: Int32(rowId))
+        } else if color == Light.blueLight {
+            featureTableStyles.setStyleDefault(styleRows[2], withId: Int32(rowId))
+        } else if color == Light.whiteLight {
+            featureTableStyles.setStyleDefault(styleRows[3], withId: Int32(rowId))
+        } else if color == Light.yellowLight {
+            featureTableStyles.setStyleDefault(styleRows[4], withId: Int32(rowId))
+        } else if color == Light.violetLight {
+            featureTableStyles.setStyleDefault(styleRows[5], withId: Int32(rowId))
+        } else if color == Light.orangeLight {
+            featureTableStyles.setStyleDefault(styleRows[6], withId: Int32(rowId))
+        }
+    }
+
+    func createStyledFeature(
+        featureTableStyles: GPKGFeatureTableStyles,
+        geometryColors: [UIColor: SFGeometry?],
+        featureDao: GPKGFeatureDao,
+        styleRows: [GPKGStyleRow]
+    ) {
+        featureTableStyles.createStyleRelationship()
+        for (color, geometry) in geometryColors {
+            if let geometry = geometry, let row = featureDao.newRow() {
+
+                let gpkgGeometry = GPKGGeometryData(geometry: geometry)
+                row.setValueWithColumnName("geometry", andValue: gpkgGeometry)
+
+                let propertiesByName = Dictionary(grouping: Self.properties, by: \.key)
+                for (_, properties) in propertiesByName {
+                    if let property = properties.filter({ property in
+                        property.subEntityKey == nil
+                    }).first {
+                        if let value = self.value(forKey: property.key) as? NSObject {
+                            row.setValueWithColumnName(property.key, andValue: value)
+                        }
+                    }
+                }
+                do {
+                    try ExceptionCatcher.catch {
+                        let rowId = featureDao.create(row)
+                        setStyleDefault(
+                            color: color,
+                            rowId: rowId,
+                            featureTableStyles: featureTableStyles,
+                            styleRows: styleRows)
+                    }
+                } catch {
+                    print("Excetion creating feature \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
+    func createUnstyledFeature(featureDao: GPKGFeatureDao) {
+        guard let row = featureDao.newRow() else {
+            return
+        }
+        if let sfGeometry = sfGeometry {
+            let gpkgGeometry = GPKGGeometryData(geometry: sfGeometry)
+            row.setValueWithColumnName("geometry", andValue: gpkgGeometry)
+        }
+
+        let propertiesByName = Dictionary(grouping: Self.properties, by: \.key)
+        for (_, properties) in propertiesByName {
+            if let property = properties.filter({ property in
+                property.subEntityKey == nil
+            }).first {
+                if let value = self.value(forKey: property.key) as? NSObject {
+                    row.setValueWithColumnName(property.key, andValue: value)
+                }
+            }
+        }
+        do {
+            try ExceptionCatcher.catch {
+                let rowId = featureDao.create(row)
+
+            }
+        } catch {
+            print("Excetion creating feature \(error.localizedDescription)")
+        }
+    }
+
     func createFeature(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, styleRows: [GPKGStyleRow]) {
         
-        guard let featureDao = geoPackage.featureDao(with: table), let featureTableStyles = GPKGFeatureTableStyles(geoPackage: geoPackage, andTable: table) else {
+        guard let featureDao = geoPackage.featureDao(with: table), 
+                let featureTableStyles = GPKGFeatureTableStyles(geoPackage: geoPackage, andTable: table) else {
             return
         }
         if let geometryColors = sfGeometryByColor() {
-            featureTableStyles.createStyleRelationship()
-            for (color, geometry) in geometryColors {
-                if let geometry = geometry, let row = featureDao.newRow() {
-                    
-                    let gpkgGeometry = GPKGGeometryData(geometry: geometry)
-                    row.setValueWithColumnName("geometry", andValue: gpkgGeometry)
-                    
-                    let propertiesByName = Dictionary(grouping: Self.properties, by: \.key)
-                    for (_, properties) in propertiesByName {
-                        if let property = properties.filter({ property in
-                            property.subEntityKey == nil
-                        }).first {
-                            if let value = self.value(forKey: property.key) as? NSObject {
-                                row.setValueWithColumnName(property.key, andValue: value)
-                            }
-                        }
-                    }
-                    do {
-                        try ExceptionCatcher.catch {
-                            let rowId = featureDao.create(row)
-                            if color == Light.redLight {
-                                featureTableStyles.setStyleDefault(styleRows[0], withId: Int32(rowId))
-                            } else if color == Light.greenLight {
-                                featureTableStyles.setStyleDefault(styleRows[1], withId: Int32(rowId))
-                            } else if color == Light.blueLight {
-                                featureTableStyles.setStyleDefault(styleRows[2], withId: Int32(rowId))
-                            }  else if color == Light.whiteLight {
-                                featureTableStyles.setStyleDefault(styleRows[3], withId: Int32(rowId))
-                            } else if color == Light.yellowLight {
-                                featureTableStyles.setStyleDefault(styleRows[4], withId: Int32(rowId))
-                            } else if color == Light.violetLight {
-                                featureTableStyles.setStyleDefault(styleRows[5], withId: Int32(rowId))
-                            } else if color == Light.orangeLight {
-                                featureTableStyles.setStyleDefault(styleRows[6], withId: Int32(rowId))
-                            }
-                        }
-                    } catch {
-                        print("Excetion creating feature \(error.localizedDescription)")
-                    }
-                }
-            }
-            
+            createStyledFeature(
+                featureTableStyles: featureTableStyles,
+                geometryColors: geometryColors,
+                featureDao: featureDao,
+                styleRows: styleRows)
         } else {
-            guard let row = featureDao.newRow() else {
-                return
-            }
-            if let sfGeometry = sfGeometry {
-                let gpkgGeometry = GPKGGeometryData(geometry: sfGeometry)
-                row.setValueWithColumnName("geometry", andValue: gpkgGeometry)
-            }
-            
-            let propertiesByName = Dictionary(grouping: Self.properties, by: \.key)
-            for (_, properties) in propertiesByName {
-                if let property = properties.filter({ property in
-                    property.subEntityKey == nil
-                }).first {
-                    if let value = self.value(forKey: property.key) as? NSObject {
-                        row.setValueWithColumnName(property.key, andValue: value)
-                    }
-                }
-            }
-            do {
-                try ExceptionCatcher.catch {
-                    let rowId = featureDao.create(row)
-                    
-                }
-            } catch {
-                print("Excetion creating feature \(error.localizedDescription)")
-            }
+            createUnstyledFeature(featureDao: featureDao)
         }
     }
     
@@ -278,25 +407,51 @@ extension Light: Locatable, GeoPackageExportable, GeoJSONExportable {
     static var fullDataSourceName: String = NSLocalizedString("Lights", comment: "Lights data source display name")
     static var key: String = "light"
     static var metricsKey: String = "lights"
-    static var imageName: String? = nil
+    static var imageName: String?
     static var systemImageName: String? = "lightbulb.fill"
     static var color: UIColor = UIColor(argbValue: 0xFFFFC500)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Region", key: #keyPath(Light.sectionHeader), type: .string), ascending: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .int), ascending: true)]
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Region",
+                key: #keyPath(Light.sectionHeader),
+                type: .string),
+            ascending: true),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Feature Number",
+                key: #keyPath(Light.featureNumber),
+                type: .int),
+            ascending: true)
+    ]
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Location", key: #keyPath(Light.mgrs10km), type: .location),
         DataSourceProperty(name: "Latitude", key: #keyPath(Light.latitude), type: .latitude),
         DataSourceProperty(name: "Longitude", key: #keyPath(Light.longitude), type: .longitude),
-        DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .string),
-        DataSourceProperty(name: "International Feature Number", key: #keyPath(Light.internationalFeature), type: .string),
+        DataSourceProperty(
+            name: "Feature Number",
+            key: #keyPath(Light.featureNumber),
+            type: .string),
+        DataSourceProperty(
+            name: "International Feature Number",
+            key: #keyPath(Light.internationalFeature),
+            type: .string),
         DataSourceProperty(name: "Name", key: #keyPath(Light.name), type: .string),
         DataSourceProperty(name: "Structure", key: #keyPath(Light.structure), type: .string),
         DataSourceProperty(name: "Focal Plane Elevation (ft)", key: #keyPath(Light.heightFeet), type: .double),
-        DataSourceProperty(name: "Focal Plane Elevation (m)", key: #keyPath(Light.heightMeters), type: .double),
-        DataSourceProperty(name: "Range (nm)", key: #keyPath(Light.lightRange), type: .double, subEntityKey: #keyPath(LightRange.range)),
+        DataSourceProperty(
+            name: "Focal Plane Elevation (m)",
+            key: #keyPath(Light.heightMeters),
+            type: .double),
+        DataSourceProperty(
+            name: "Range (nm)",
+            key: #keyPath(Light.lightRange),
+            type: .double,
+            subEntityKey: #keyPath(LightRange.range)),
         DataSourceProperty(name: "Remarks", key: #keyPath(Light.remarks), type: .string),
         DataSourceProperty(name: "Characteristic", key: #keyPath(Light.characteristic), type: .string),
         DataSourceProperty(name: "Signal", key: #keyPath(Light.characteristic), type: .string),
@@ -327,12 +482,10 @@ extension Light: BatchImportable {
             return nil
         }
         let components = URLComponents(string: url.absoluteString)
-        var volume: String? = nil
+        var volume: String?
         if let queryItems = components?.queryItems {
-            for queryItem in queryItems {
-                if queryItem.name == "volume" {
-                    volume = queryItem.value
-                }
+            for queryItem in queryItems where queryItem.name == "volume" {
+                volume = queryItem.value
             }
         }
         if let volume = volume {
@@ -351,7 +504,9 @@ extension Light: BatchImportable {
         if count != 0 && !initialLoad {
             return -1
         }
-        return try await Light.importRecords(from: value.ngalol, taskContext: PersistenceController.current.newTaskContext())
+        return try await Light.importRecords(
+            from: value.ngalol,
+            taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -360,13 +515,23 @@ extension Light: BatchImportable {
         for lightVolume in Light.lightVolumes {
             let context = PersistenceController.current.newTaskContext()
             context.performAndWait {
-                let newestLight = try? PersistenceController.current.fetchFirst(Light.self, sortBy: [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)], predicate: NSPredicate(format: "volumeNumber = %@", lightVolume.volumeNumber), context: context)
-                
+                let newestLight = try? PersistenceController.current.fetchFirst(
+                    Light.self,
+                    sortBy: [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)],
+                    predicate: NSPredicate(format: "volumeNumber = %@", lightVolume.volumeNumber),
+                    context: context)
+
                 let noticeWeek = Int(newestLight?.noticeWeek ?? "0") ?? 0
                 
-                print("Query for lights in volume \(lightVolume) after year:\(newestLight?.noticeYear ?? "") week:\(noticeWeek)")
-                
-                requests.append(MSIRouter.readLights(volume: lightVolume.volumeQuery, noticeYear: newestLight?.noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1)))
+                print("""
+                    Query for lights in volume \(lightVolume) after year:\
+                    \(newestLight?.noticeYear ?? "") week:\(noticeWeek)
+                """)
+
+                requests.append(MSIRouter.readLights(
+                    volume: lightVolume.volumeQuery,
+                    noticeYear: newestLight?.noticeYear,
+                    noticeWeek: String(format: "%02d", noticeWeek + 1)))
             }
         }
         
@@ -375,7 +540,10 @@ extension Light: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(Light.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(Light.definition)
+        return UserDefaults.standard
+            .dataSourceEnabled(Light.definition) &&
+        (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) >
+        UserDefaults.standard.lastSyncTimeSeconds(Light.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [LightModel]) -> NSBatchInsertRequest {
@@ -389,7 +557,7 @@ extension Light: BatchImportable {
             var previousLocalHeading: String?
         }
         
-        var previousHeadingPerVolume: [String : PreviousLocation] = [:]
+        var previousHeadingPerVolume: [String: PreviousLocation] = [:]
         // Provide one dictionary at a time when the closure is called.
         let batchInsertRequest = NSBatchInsertRequest(entity: Light.entity(), dictionaryHandler: { dictionary in
             guard index < total else { return true }
@@ -397,19 +565,26 @@ extension Light: BatchImportable {
             let volumeNumber = propertyDictionary["volumeNumber"] as? String ?? ""
             var previousLocation = previousHeadingPerVolume[volumeNumber]
             
-            let region = propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading
-            let subregion = propertyDictionary["subregionHeading"] as? String ?? previousLocation?.previousSubregionHeading
+            let region = propertyDictionary["regionHeading"] as? String
+            ?? previousLocation?.previousRegionHeading
+            let subregion = propertyDictionary["subregionHeading"] as? String
+            ?? previousLocation?.previousSubregionHeading
             let local = propertyDictionary["localHeading"] as? String ?? previousLocation?.previousLocalHeading
             
-            var correctedLocationDictionary: [String:String?] = [
-                "regionHeading": propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading,
-                "subregionHeading": propertyDictionary["subregionHeading"] as? String ?? previousLocation?.previousSubregionHeading,
-                "localHeading": propertyDictionary["localHeading"] as? String ?? previousLocation?.previousLocalHeading
+            var correctedLocationDictionary: [String: String?] = [
+                "regionHeading": propertyDictionary["regionHeading"] as? String
+                ?? previousLocation?.previousRegionHeading,
+                "subregionHeading": propertyDictionary["subregionHeading"] as? String
+                ?? previousLocation?.previousSubregionHeading,
+                "localHeading": propertyDictionary["localHeading"] as? String
+                ?? previousLocation?.previousLocalHeading
             ]
-            if let rh = correctedLocationDictionary["regionHeading"] as? String {
-                correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? ""): \(rh)"
+            if let regionHeading = correctedLocationDictionary["regionHeading"] as? String {
+                correctedLocationDictionary["sectionHeader"] =
+                "\(propertyDictionary["geopoliticalHeading"] as? String ?? ""): \(regionHeading)"
             } else {
-                correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? "")"
+                correctedLocationDictionary["sectionHeader"] =
+                "\(propertyDictionary["geopoliticalHeading"] as? String ?? "")"
             }
             
             if previousLocation?.previousRegionHeading != region {
@@ -422,27 +597,33 @@ extension Light: BatchImportable {
             } else if previousLocation?.previousLocalHeading != local {
                 previousLocation?.previousLocalHeading = local
             }
-            previousHeadingPerVolume[volumeNumber] = previousLocation ?? PreviousLocation(previousRegionHeading: region, previousSubregionHeading: subregion, previousLocalHeading: local)
-            
+            previousHeadingPerVolume[volumeNumber] = previousLocation ?? 
+            PreviousLocation(
+                previousRegionHeading: region,
+                previousSubregionHeading: subregion,
+                previousLocalHeading: local)
+
             dictionary.addEntries(from: propertyDictionary.mapValues({ value in
                 if let value = value {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             dictionary.addEntries(from: correctedLocationDictionary.mapValues({ value in
                 if let value = value {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             index += 1
             return false
         })
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [LightModel], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(
+        from propertiesList: [LightModel],
+        taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.
@@ -465,7 +646,9 @@ extension Light: BatchImportable {
                     } else {
                         NSLog("No new Light records")
                     }
-                    // if there were already lights in the db for this volume and this was an update and we got back a light we have to go redo the query due to regions not being populated on all returned objects
+                    // if there were already lights in the db for this volume and this was an update
+                    // and we got back a light we have to go redo the query due to regions not being
+                    // populated on all returned objects
                     return 0
                 }
             } catch {

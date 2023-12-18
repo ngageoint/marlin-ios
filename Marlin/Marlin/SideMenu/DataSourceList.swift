@@ -398,18 +398,20 @@ enum DataSourceType: String, CaseIterable {
     case port
     case differentialGPSStation
     case radioBeacon
+    // swiftlint:disable identifier_name
     case Common
+    // swiftlint:enable identifier_name
     case route
     case ntm
     case epub
     case navWarning
     
     static func fromKey(_ key: String) -> DataSourceType? {
-        return self.allCases.first{ "\($0)" == key }
+        return self.allCases.first { "\($0)" == key }
     }
     
     func toDataSource() -> DataSource.Type {
-        switch (self) {
+        switch self {
         case .asam:
             return Asam.self
         case .modu:
@@ -434,55 +436,100 @@ enum DataSourceType: String, CaseIterable {
             return NavigationalWarning.self
         }
     }
-    
-    func createModel(dataSource: DataSource?) -> DataSource? {
-        switch (self) {
-        case .asam:
-            if let asam = dataSource as? Asam {
-                return AsamModel(asam: asam)
-            }
-        case .modu:
-            if let modu = dataSource as? Modu {
-                return ModuModel(modu: modu)
-            }
-        case .light:
-            if let light = dataSource as? Light {
-                return LightModel(light: light)
-            }
-        case .port:
-            if let port = dataSource as? Port {
-                return PortModel(port: port)
-            }
-        case .differentialGPSStation:
-            if let differentialGPSStation = dataSource as? DifferentialGPSStation {
-                return DifferentialGPSStationModel(differentialGPSStation: differentialGPSStation)
-            }
-        case .radioBeacon:
-            if let radioBeacon = dataSource as? RadioBeacon {
-                return RadioBeaconModel(radioBeacon: radioBeacon)
-            }
-        case .Common:
-            if let common = dataSource as? CommonDataSource {
-                return common
-            }
-        case .route:
-            if let route = dataSource as? Route {
-                return route
-            }
-        case .ntm:
-            if let ntm = dataSource as? NoticeToMariners {
-                return ntm
-            }
-        case .epub:
-            if let epub = dataSource as? ElectronicPublication {
-                return epub
-            }
-        case .navWarning:
-            if let navWarning = dataSource as? NavigationalWarning {
-                return navWarning
-            }
+
+    func asamModel(dataSource: DataSource?) -> DataSource? {
+        if let asam = dataSource as? Asam {
+            return AsamModel(asam: asam)
         }
         return nil
+    }
+
+    func moduModel(dataSource: DataSource?) -> DataSource? {
+        if let modu = dataSource as? Modu {
+            return ModuModel(modu: modu)
+        }
+        return nil
+    }
+    func lightModel(dataSource: DataSource?) -> DataSource? {
+        if let light = dataSource as? Light {
+            return LightModel(light: light)
+        }
+        return nil
+    }
+    func portModel(dataSource: DataSource?) -> DataSource? {
+        if let port = dataSource as? Port {
+            return PortModel(port: port)
+        }
+        return nil
+    }
+    func differentialGPSStationModel(dataSource: DataSource?) -> DataSource? {
+        if let differentialGPSStation = dataSource as? DifferentialGPSStation {
+            return DifferentialGPSStationModel(differentialGPSStation: differentialGPSStation)
+        }
+        return nil
+    }
+    func radioBeaconModel(dataSource: DataSource?) -> DataSource? {
+        if let radioBeacon = dataSource as? RadioBeacon {
+            return RadioBeaconModel(radioBeacon: radioBeacon)
+        }
+        return nil
+    }
+    func commonModel(dataSource: DataSource?) -> DataSource? {
+        if let common = dataSource as? CommonDataSource {
+            return common
+        }
+        return nil
+    }
+    func routeModel(dataSource: DataSource?) -> DataSource? {
+        if let route = dataSource as? Route {
+            return route
+        }
+        return nil
+    }
+    func ntmModel(dataSource: DataSource?) -> DataSource? {
+        if let ntm = dataSource as? NoticeToMariners {
+            return ntm
+        }
+        return nil
+    }
+    func epubModel(dataSource: DataSource?) -> DataSource? {
+        if let epub = dataSource as? ElectronicPublication {
+            return epub
+        }
+        return nil
+    }
+    func navWarningModel(dataSource: DataSource?) -> DataSource? {
+        if let navWarning = dataSource as? NavigationalWarning {
+            return navWarning
+        }
+        return nil
+    }
+
+    func createModel(dataSource: DataSource?) -> DataSource? {
+        switch self {
+        case .asam:
+            return asamModel(dataSource: dataSource)
+        case .modu:
+            return moduModel(dataSource: dataSource)
+        case .light:
+            return lightModel(dataSource: dataSource)
+        case .port:
+            return portModel(dataSource: dataSource)
+        case .differentialGPSStation:
+            return differentialGPSStationModel(dataSource: dataSource)
+        case .radioBeacon:
+            return radioBeaconModel(dataSource: dataSource)
+        case .Common:
+            return commonModel(dataSource: dataSource)
+        case .route:
+            return routeModel(dataSource: dataSource)
+        case .ntm:
+            return ntmModel(dataSource: dataSource)
+        case .epub:
+            return epubModel(dataSource: dataSource)
+        case .navWarning:
+            return navWarningModel(dataSource: dataSource)
+        }
     }
 }
 
@@ -540,13 +587,19 @@ class DataSourceList: ObservableObject {
         })))
         _mappedDataSources = Published(initialValue: Array(allTabs.filter({ item in
             // no filtering Navigational Warnings for right now..
-            UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) && UserDefaults.standard.showOnMap(key: item.key)
+            UserDefaults.standard
+                .dataSourceEnabled(item.dataSource.definition)
+            && UserDefaults.standard
+                .showOnMap(key: item.key)
         })))
         
         _mappedFilterableDataSources = Published(initialValue: Array(
             allTabs.filter({ item in
                 // no filtering Navigational Warnings for right now..
-                UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) && UserDefaults.standard.showOnMap(key: item.key)
+                UserDefaults.standard
+                    .dataSourceEnabled(item.dataSource.definition)
+                && UserDefaults.standard
+                    .showOnMap(key: item.key)
             })
             .compactMap({ item in
                 return DataSourceDefinitions.filterableFromDefintion(item.dataSource.definition)
@@ -561,17 +614,32 @@ class DataSourceList: ObservableObject {
                 guard let allTabs = self?.allTabs else {
                     return
                 }
-                self?._mappedDataSources = Published(initialValue: Array(allTabs.filter({ item in
-                    UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) && UserDefaults.standard.showOnMap(key: item.key)
-                })))
-                self?._mappedFilterableDataSources = Published(initialValue: Array(allTabs.filter({ item in
-                    // no filtering Navigational Warnings for right now..
-                    UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) && UserDefaults.standard.showOnMap(key: item.key)
-                })
-                    .compactMap({ item in
-                        DataSourceDefinitions.filterableFromDefintion(item.dataSource.definition)
-                    })
-                                                                                  ))
+                self?._mappedDataSources = Published(
+                    initialValue: Array(
+                        allTabs.filter(
+                            { item in
+                                UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) &&
+                                UserDefaults.standard.showOnMap(key: item.key)
+                            }
+                        )
+                    )
+                )
+                self?._mappedFilterableDataSources = Published(
+                    initialValue: Array(
+                        allTabs.filter(
+                            { item in
+                                // no filtering Navigational Warnings for right now..
+                                UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) &&
+                                UserDefaults.standard.showOnMap(key: item.key)
+                            }
+                        )
+                        .compactMap(
+                            { item in
+                                DataSourceDefinitions.filterableFromDefintion(item.dataSource.definition)
+                            }
+                        )
+                    )
+                )
                 self?.objectWillChange.send()
             })
             .store(in: &cancellable)
@@ -592,7 +660,7 @@ class DataSourceList: ObservableObject {
         if let last = tabs.last {
             
             // if they are above max tabs move the last tab to the non tabs
-            if tabs.count > DataSourceList.MAX_TABS{
+            if tabs.count > DataSourceList.MAX_TABS {
                 tabs.removeLast()
                 nonTabs.insert(last, at: 0)
             }
@@ -664,11 +732,19 @@ class DataSourceItem: ObservableObject, Identifiable, Hashable, Equatable {
     
     init(dataSource: any DataSource.Type) {
         self.dataSource = dataSource
-        self._order = AppStorage(wrappedValue: 0, "\(dataSource.definition.key)Order")
-        self._showOnMap = AppStorage(wrappedValue: dataSource.definition.mappable, "showOnMap\(dataSource.definition.key)")
-        self._filterData = AppStorage(wrappedValue: Data(), "\(dataSource.definition.key)Filter")
-        self._enabled = AppStorage(wrappedValue: UserDefaults.standard.dataSourceEnabled(dataSource.definition), "\(dataSource.definition.key)DataSourceEnabled")
-        
+        self._order = AppStorage(
+            wrappedValue: 0,
+            "\(dataSource.definition.key)Order")
+        self._showOnMap = AppStorage(
+            wrappedValue: dataSource.definition.mappable,
+            "showOnMap\(dataSource.definition.key)")
+        self._filterData = AppStorage(
+            wrappedValue: Data(),
+            "\(dataSource.definition.key)Filter")
+        self._enabled = AppStorage(
+            wrappedValue: UserDefaults.standard.dataSourceEnabled(dataSource.definition),
+            "\(dataSource.definition.key)DataSourceEnabled")
+
     }
     
     var description: String {
