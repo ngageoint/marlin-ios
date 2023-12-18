@@ -2,3 +2,4 @@ disabled_rules:
   - trailing_whitespace
 excluded:
   - Marlin/Pods
+  - Marlin/MarlinTests
