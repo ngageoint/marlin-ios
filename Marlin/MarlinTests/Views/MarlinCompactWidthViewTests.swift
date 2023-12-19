@@ -22,13 +22,14 @@ final class MarlinCompactWidthViewTests: XCTestCase {
     var bookmarkRepository: BookmarkRepositoryManager {
         BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
     }
-    var asamRepository: AsamRepository { AsamRepository(repository: AsamCoreDataDataSource(context: persistentStore.viewContext)) }
+    var asamRepository: AsamRepository { AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext)) }
     var moduRepository: ModuRepositoryManager { ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext)) }
     var lightRepository: LightRepositoryManager { LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext)) }
     var portRepository: PortRepositoryManager { PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext)) }
     var dgpsRepository: DifferentialGPSStationRepositoryManager { DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext)) }
     var radioBeaconRepository: RadioBeaconRepositoryManager { RadioBeaconRepositoryManager(repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext)) }
     var routeRepository: RouteRepositoryManager { RouteRepositoryManager(repository: RouteCoreDataRepository(context: persistentStore.viewContext)) }
+    var routeWaypointRepository: RouteWaypointRepository { RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))}
 
     override func setUp(completion: @escaping (Error?) -> Void) {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
@@ -404,7 +405,8 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             .environmentObject(dgpsRepository)
             .environmentObject(radioBeaconRepository)
             .environmentObject(routeRepository)
-        
+            .environmentObject(routeWaypointRepository)
+
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
