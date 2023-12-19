@@ -224,7 +224,48 @@ extension CLLocationCoordinate2D {
         let index = Int(Double(bearing / indexDegrees).rounded(.down)) % directions.count
         return directions[index]
     }
-    
+
+    static func splitOnDirection(
+        split: inout [String],
+        coordinatesToParse: String,
+        firstDirectionIndex: String.Index?
+    ) {
+        let lastDirectionIndex = coordinatesToParse.lastIndex { character in
+            let uppercase = character.uppercased()
+            return uppercase == "N" || uppercase == "S" || uppercase == "E" || uppercase == "W"
+        }
+        // the direction will either be at the begining of the string, or the end
+        // if the direction is at the begining of the string, use the second index unless there is no second index
+        // in which case there is only one coordinate
+        if firstDirectionIndex == coordinatesToParse.startIndex {
+            if let lastDirectionIndex = lastDirectionIndex, lastDirectionIndex != firstDirectionIndex {
+                split.append("\(coordinatesToParse.prefix(upTo: lastDirectionIndex))")
+                split.append("\(coordinatesToParse.suffix(from: lastDirectionIndex))")
+            } else {
+                // only one coordinate
+                split.append(coordinatesToParse)
+            }
+        } else if lastDirectionIndex == coordinatesToParse.index(coordinatesToParse.endIndex, offsetBy: -1) {
+            // if the last direction index is the end of the string use the first index 
+            // unless the first and last index are the same
+            if lastDirectionIndex == firstDirectionIndex {
+                // only one coordinate
+                split.append(coordinatesToParse)
+            } else if let firstDirectionIndex = firstDirectionIndex {
+                let beforeDirection = coordinatesToParse.prefix(
+                    upTo: coordinatesToParse.index(
+                        firstDirectionIndex, offsetBy: 1)
+                )
+                let afterDirection = coordinatesToParse.suffix(
+                    from: coordinatesToParse.index(
+                        firstDirectionIndex, offsetBy: 1)
+                )
+                split.append("\(beforeDirection)")
+                split.append("\(afterDirection)")
+            }
+        }
+    }
+
     // splits the string into possibly two coordinates with all spaces removed
     // no further normalization takes place
     static func splitCoordinates(coordinates: String?) -> [String] {
@@ -258,39 +299,11 @@ extension CLLocationCoordinate2D {
             }
         } else if hasDirection {
             // if the string has a direction but no dash, split on the direction
-            let lastDirectionIndex = coordinatesToParse.lastIndex { character in
-                let uppercase = character.uppercased()
-                return uppercase == "N" || uppercase == "S" || uppercase == "E" || uppercase == "W"
-            }
-            // the direction will either be at the begining of the string, or the end
-            // if the direction is at the begining of the string, use the second index unless there is no second index
-            // in which case there is only one coordinate
-            if firstDirectionIndex == coordinatesToParse.startIndex {
-                if let lastDirectionIndex = lastDirectionIndex, lastDirectionIndex != firstDirectionIndex {
-                    split.append("\(coordinatesToParse.prefix(upTo: lastDirectionIndex))")
-                    split.append("\(coordinatesToParse.suffix(from: lastDirectionIndex))")
-                } else {
-                    // only one coordinate
-                    split.append(coordinatesToParse)
-                }
-            } else if lastDirectionIndex == coordinatesToParse.index(coordinatesToParse.endIndex, offsetBy: -1) {
-                // if the last direction index is the end of the string use the first index unless the first and last index are the same
-                if lastDirectionIndex == firstDirectionIndex {
-                    // only one coordinate
-                    split.append(coordinatesToParse)
-                } else if let firstDirectionIndex = firstDirectionIndex {
-                    let beforeDirection = coordinatesToParse.prefix(
-                        upTo: coordinatesToParse.index(
-                            firstDirectionIndex, offsetBy: 1)
-                    )
-                    let afterDirection = coordinatesToParse.suffix(
-                        from: coordinatesToParse.index(
-                            firstDirectionIndex, offsetBy: 1)
-                    )
-                    split.append("\(beforeDirection)")
-                    split.append("\(afterDirection)")
-                }
-            }
+            CLLocationCoordinate2D.splitOnDirection(
+                split: &split,
+                coordinatesToParse: coordinatesToParse,
+                firstDirectionIndex: firstDirectionIndex
+            )
         }
         
         // one last attempt to split.  if there is one white space character split on that
@@ -332,7 +345,8 @@ extension CLLocationCoordinate2D {
         
         let normalized = coordinate.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         // check if it is a number and that number could be a valid latitude or longitude
-        // could either be a decimal or a whole number representing lat/lng or a DDMMSS.sss number representing degree minutes seconds
+        // could either be a decimal or a whole number representing lat/lng or a DDMMSS.sss 
+        // number representing degree minutes seconds
         if let decimalDegrees = Double(normalized) {
             // if either of these are true, parse it as a regular latitude longitude
             if (!enforceLatitude && decimalDegrees >= -180 && decimalDegrees <= 180)
@@ -424,7 +438,13 @@ extension CLLocationCoordinate2D {
         
         dmsCoordinate.minutes = Int(coordinateToParse.suffix(2))
         dmsCoordinate.degrees = Int(coordinateToParse.dropLast(2))
-        
+
+        CLLocationCoordinate2D.correctMinutesAndSeconds(dmsCoordinate: &dmsCoordinate, decimalSeconds: decimalSeconds)
+
+        return dmsCoordinate
+    }
+
+    static func correctMinutesAndSeconds(dmsCoordinate: inout DMSCoordinate, decimalSeconds: Int?) {
         if dmsCoordinate.degrees == nil {
             if dmsCoordinate.minutes == nil {
                 dmsCoordinate.degrees = dmsCoordinate.seconds
@@ -435,7 +455,7 @@ extension CLLocationCoordinate2D {
                 dmsCoordinate.seconds = nil
             }
         }
-        
+
         if dmsCoordinate.minutes == nil && dmsCoordinate.seconds == nil && decimalSeconds != nil {
             // this would be the case if a decimal degrees was passed in ie 11.123
             let decimal = Double(".\(decimalSeconds ?? 0)") ?? 0.0
@@ -451,20 +471,18 @@ extension CLLocationCoordinate2D {
             // add the decimal seconds to seconds and round
             dmsCoordinate.seconds = Int(Double("\((dmsCoordinate.seconds ?? 0)).\(decimalSeconds)")?.rounded() ?? 0)
         }
-        
+
         if dmsCoordinate.seconds == 60 {
             dmsCoordinate.minutes = (dmsCoordinate.minutes ?? 0) + 1
             dmsCoordinate.seconds = 0
         }
-        
+
         if dmsCoordinate.minutes == 60 {
             dmsCoordinate.degrees = (dmsCoordinate.degrees ?? 0) + 1
             dmsCoordinate.minutes = 0
         }
-        
-        return dmsCoordinate
     }
-    
+
     public static func validateLatitudeFromDMS(latitude: String?) -> Bool {
         return validateCoordinateFromDMS(coordinate: latitude, latitude: true)
     }
@@ -473,6 +491,28 @@ extension CLLocationCoordinate2D {
         return validateCoordinateFromDMS(coordinate: longitude, latitude: false)
     }
     
+    static func validateDirectionAsLastCharacter(
+        coordinateToParse: String,
+        latitude: Bool
+    ) -> Bool {
+        if let direction = coordinateToParse.last {
+            // the last character must be either N or S not a number
+            if direction.wholeNumberValue != nil {
+                return false
+            } else {
+                if latitude && direction.uppercased() != "N" && direction.uppercased() != "S" {
+                    return false
+                }
+                if !latitude && direction.uppercased() != "E" && direction.uppercased() != "W" {
+                    return false
+                }
+            }
+        } else {
+            return false
+        }
+        return true
+    }
+
     public static func validateCoordinateFromDMS(coordinate: String?, latitude: Bool) -> Bool {
         guard let coordinate = coordinate else {
             return false
@@ -491,22 +531,11 @@ extension CLLocationCoordinate2D {
         var coordinateToParse = coordinate.components(separatedBy: charactersToKeep.inverted).joined()
         
         // There must be a direction as the last character
-        if let direction = coordinateToParse.last {
-            // the last character must be either N or S not a number
-            if direction.wholeNumberValue != nil {
-                return false
-            } else {
-                if latitude && direction.uppercased() != "N" && direction.uppercased() != "S" {
-                    return false
-                }
-                if !latitude && direction.uppercased() != "E" && direction.uppercased() != "W" {
-                    return false
-                }
-                coordinateToParse = "\(coordinateToParse.dropLast(1))"
-            }
-        } else {
+        if !validateDirectionAsLastCharacter(coordinateToParse: coordinateToParse, latitude: latitude) {
             return false
         }
+
+        coordinateToParse = "\(coordinateToParse.dropLast(1))"
         
         // split the numbers before the decimal seconds
         let split = coordinateToParse.split(separator: ".")
@@ -782,7 +811,10 @@ extension CLLocationCoordinate2D {
 extension Double {
     
     init?(coordinateString: String) {
-        let pattern = #"(?<deg>-?[0-9]*\.?\d+)[\s°-]*(?<minutes>\d{1,2}\.?\d+)?[\s\`'-]*(?<seconds>\d{1,2}\.?\d+)?[\s\" ]?(?<direction>([NOEWS])?)"#
+        let pattern = #"""
+            (?<deg>-?[0-9]*\.?\d+)[\s°-]*(?<minutes>\d{1,2}\.?\d+)?[\s\`'-]*\
+            (?<seconds>\d{1,2}\.?\d+)?[\s\" ]?(?<direction>([NOEWS])?)
+        """#
 
         var found: Bool = false
         var degrees: Double = 0.0

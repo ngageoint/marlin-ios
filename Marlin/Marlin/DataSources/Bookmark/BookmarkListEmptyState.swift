@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BookmarkListEmptyState: View {
     var body: some View {
-        GeometryReader { geo in
+        GeometryReader { _ in
             VStack(alignment: .center, spacing: 16) {
                 Spacer()
                 HStack(alignment: .center, spacing: 0) {

@@ -111,7 +111,7 @@ class CommonDataSource: NSObject, Locatable, DataSourceViewBuilder, ObservableOb
     @Published @objc var coordinate: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid
     @Published var name: String?
         
-    init(name: String? = nil, location: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid){
+    init(name: String? = nil, location: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid) {
         self.name = name
         self.coordinate = location
     }
@@ -120,8 +120,8 @@ class CommonDataSource: NSObject, Locatable, DataSourceViewBuilder, ObservableOb
         if let json = try? JSONEncoder().encode(feature.properties), let string = String(data: json, encoding: .utf8) {
             let decoder = JSONDecoder()
             let jsonData = Data(string.utf8)
-            if let ds = try? decoder.decode(CommonDataSource.self, from: jsonData) {
-                self.init(name: ds.name, location: ds.coordinate)
+            if let model = try? decoder.decode(CommonDataSource.self, from: jsonData) {
+                self.init(name: model.name, location: model.coordinate)
             } else {
                 return nil
             }

@@ -22,7 +22,7 @@ struct BookmarkSummary: DataSourceSummaryView {
         return VStack(alignment: .leading) {
             if let dataSource = dataSource as? (any DataSourceViewBuilder) {
                 HStack {
-                    DataSourceIcon(dataSource: type(of:dataSource).definition)
+                    DataSourceIcon(dataSource: type(of: dataSource).definition)
                     Spacer()
                 }
                 AnyView(
@@ -38,7 +38,8 @@ struct BookmarkSummary: DataSourceSummaryView {
         .task {
             let context = PersistenceController.current.viewContext
             context.perform {
-                dataSource = bookmark?.getDataSourceItem(context: PersistenceController.current.viewContext) as? (any DataSource)
+                dataSource = bookmark?.getDataSourceItem(
+                    context: PersistenceController.current.viewContext) as? (any DataSource)
             }
         }
     }

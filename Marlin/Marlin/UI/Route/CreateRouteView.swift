@@ -153,8 +153,8 @@ struct CreateRouteView: View {
                     .listRowSeparator(.hidden, edges: .top)
                     .listRowSeparator(.visible, edges: .bottom)
                 }
-                .onMove { from, to in
-                    routeViewModel.reorder(fromOffsets: from, toOffset: to)
+                .onMove { from, destination in
+                    routeViewModel.reorder(fromOffsets: from, toOffset: destination)
                 }
                 distance()
             }
@@ -182,7 +182,7 @@ struct CreateRouteView: View {
                         Color.clear.onAppear {
                             instructionsFrameSize = CGSize(width: .infinity, height: geo.size.height)
                         }
-                        .onChange(of: geo.size) { geoSize in
+                        .onChange(of: geo.size) { _ in
                             instructionsFrameSize = CGSize(width: .infinity, height: geo.size.height)
                         }
                     }
@@ -201,7 +201,7 @@ struct CreateRouteView: View {
                                         lastWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
                                     }
                                 }
-                                .onChange(of: geo.size) { geoSize in
+                                .onChange(of: geo.size) { _ in
                                     if i == routeViewModel.waypoints.indices.lowerBound {
                                         firstWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
                                     }
@@ -221,7 +221,7 @@ struct CreateRouteView: View {
                         Color.clear.onAppear {
                             distanceFrameSize = CGSize(width: .infinity, height: geo.size.height)
                         }
-                        .onChange(of: geo.size) { geoSize in
+                        .onChange(of: geo.size) { _ in
                             distanceFrameSize = CGSize(width: .infinity, height: geo.size.height)
                         }
                     }
@@ -235,7 +235,7 @@ struct CreateRouteView: View {
                 Color.clear.onAppear {
                     waypointsFrameSize = CGSize(width: .infinity, height: min(geo.size.height, maxFeatureAreaSize))
                 }
-                .onChange(of: geo.size) { geoSize in
+                .onChange(of: geo.size) { _ in
                     waypointsFrameSize = CGSize(width: .infinity, height: min(geo.size.height, maxFeatureAreaSize))
                 }
             }

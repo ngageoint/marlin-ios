@@ -38,7 +38,14 @@ struct ConditionalButtonStyle: ViewModifier {
         if hasText {
             content.buttonStyle(MaterialButtonStyle(type: .contained))
         } else {
-            content.buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.onPrimaryColor, backgroundColor: Color.primaryColor))
+            content.buttonStyle(
+                MaterialFloatingButtonStyle(
+                    type: .secondary,
+                    size: .mini,
+                    foregroundColor: Color.onPrimaryColor,
+                    backgroundColor: Color.primaryColor
+                )
+            )
         }
     }
 }

@@ -38,17 +38,15 @@ struct ChartCorrectionQuery: View {
             Metrics.shared.appRoute(["ntms", "query"])
             checkRequiredParameters()
         }
-        .onChange(of: chartCorrectionFilter) { newValue in
+        .onChange(of: chartCorrectionFilter) { _ in
             checkRequiredParameters()
         }
     }
     
     func checkRequiredParameters() {
-        for filter in UserDefaults.standard.filter(ChartCorrection.definition) {
-            if filter.property.key == "location" {
-                requiredParametersSet = true
-                return
-            }
+        if UserDefaults.standard.filter(ChartCorrection.definition).contains(where: { $0.property.key == "location" }) {
+            requiredParametersSet = true
+            return
         }
         requiredParametersSet = false
     }

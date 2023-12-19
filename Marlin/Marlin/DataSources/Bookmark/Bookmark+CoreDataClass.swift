@@ -21,7 +21,9 @@ protocol Bookmarkable {
 
 extension Bookmarkable {
     var bookmark: Bookmark? {
-        return try? PersistenceController.current.viewContext.fetchFirst(Bookmark.self, predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey, key))
+        return try? PersistenceController.current.viewContext.fetchFirst(
+            Bookmark.self,
+            predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey, key))
     }
     
     static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
@@ -54,9 +56,10 @@ class Bookmark: NSManagedObject, BatchImportable {
         
     }
     
+    // disable this check because we have this many data sources
+    // swiftlint:disable cyclomatic_complexity
     func getDataSourceItem(context: NSManagedObjectContext) -> (any Bookmarkable)? {
-        print("data source is \(dataSource)")
-        switch(dataSource) {
+        switch dataSource {
         case Asam.key:
             return Asam.getItem(context: context, itemKey: self.id)
         case Modu.key:
@@ -82,6 +85,7 @@ class Bookmark: NSManagedObject, BatchImportable {
         }
         return nil
     }
+    // swiftlint:enable cyclomatic_complexity
 }
 
 extension Bookmark: DataSource {
@@ -98,15 +102,23 @@ extension Bookmark: DataSource {
         DataSourceProperty(name: "Date", key: #keyPath(Bookmark.timestamp), type: .date)
     ]
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Timestamp", key: #keyPath(Bookmark.timestamp), type: .date), ascending: false)]
-    
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Timestamp",
+                key: #keyPath(Bookmark.timestamp),
+                type: .date
+            ),
+            ascending: false)
+    ]
+
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var isMappable: Bool = false
     static var dataSourceName: String = "Bookmarks"
     static var fullDataSourceName: String = "Bookmarks"
     static var color: UIColor = UIColor(argbValue: 0xFFFF9500)
-    static var imageName: String? = nil
+    static var imageName: String?
     static var systemImageName: String? = "bookmark.fill"
     static var imageScale: CGFloat = 1.0
     
@@ -125,7 +137,9 @@ extension Bookmark: DataSourceViewBuilder {
         return "Bookmark \(self.id ?? "")"
     }
     var detailView: AnyView {
-        if let viewBuilder = getDataSourceItem(context: PersistenceController.current.viewContext) as? (any DataSourceViewBuilder) {
+        if let viewBuilder = getDataSourceItem(
+            context: PersistenceController.current.viewContext
+        ) as? (any DataSourceViewBuilder) {
             return viewBuilder.detailView
         }
         return AnyView(Text("Bookmark detail \(self.dataSource ?? "") \(self.id ?? "")"))

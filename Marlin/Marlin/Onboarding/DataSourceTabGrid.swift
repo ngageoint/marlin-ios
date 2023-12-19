@@ -31,7 +31,7 @@ struct DataSourceTabGrid: View {
                 dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: dataSource), position: 0)
             }
         }
-        .overlay(CheckBadge(on: .constant(isTab(dataSource.definition.key)))
+        .overlay(CheckBadge(checked: .constant(isTab(dataSource.definition.key)))
             .accessibilityElement()
             .accessibilityLabel("\(dataSource.definition.fullName) Tab \(isTab(dataSource.definition.key) ? "On" : "Off")"))
         .padding(8)

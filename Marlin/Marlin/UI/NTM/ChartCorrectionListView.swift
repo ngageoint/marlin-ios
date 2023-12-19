@@ -31,9 +31,8 @@ struct ChartCorrectionList: View {
                                     NTMActionBar(ntm: ntm)
                                 }
                                 
-                            } label : {
+                            } label: {
                                 ntmHeader(ntm: group.first)
-                                
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.all, 16)
@@ -95,9 +94,13 @@ struct ChartCorrectionList: View {
                         Text("Current Notice: \(currNoticeNum)")
                             .secondary()
                         Spacer()
-                        if (ntm.noticeYear >= 99 && ntm.noticeWeek >= 29) || ntm.noticeYear <= Int(Calendar.current.component(.year, from: Date())) % 1000  {
+                        if (ntm.noticeYear >= 99 && ntm.noticeWeek >= 29)
+                            || ntm.noticeYear <= Int(Calendar.current.component(.year, from: Date())) % 1000 {
                             NavigationLink {
-                                NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumberString: ntm.currNoticeNum))
+                                NoticeToMarinersFullNoticeView(
+                                    viewModel: NoticeToMarinersFullNoticeViewViewModel(
+                                        noticeNumberString: ntm.currNoticeNum)
+                                )
                             } label: {
                                 Text("NTM \(ntm.currNoticeNum ?? "") Details")
                             }
@@ -124,7 +127,7 @@ struct ChartCorrectionList: View {
                             Text(result.action ?? "")
                             Spacer()
                         }
-                        HStack(alignment: .center, spacing: 0)  {
+                        HStack(alignment: .center, spacing: 0) {
                             Text(result.text ?? "")
                                 .multilineTextAlignment(.leading)
                             Spacer()

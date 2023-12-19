@@ -27,19 +27,19 @@ class BaseOverlaysMap: NSObject, MapMixin {
         self.mapState = mapState
         viewModel.$url
             .receive(on: RunLoop.main)
-            .sink() { [weak self] urlTemplate in
+            .sink { [weak self] _ in
                 self?.refreshOverlay(mapState: mapState)
             }
             .store(in: &cancellable)
         viewModel.$layerType
             .receive(on: RunLoop.main)
-            .sink() { [weak self] urlTemplate in
+            .sink { [weak self] _ in
                 self?.refreshOverlay(mapState: mapState)
             }
             .store(in: &cancellable)
         viewModel.$selectedLayers
             .receive(on: RunLoop.main)
-            .sink() { [weak self] urlTemplate in
+            .sink { [weak self] _ in
                 self?.refreshOverlay(mapState: mapState)
             }
             .store(in: &cancellable)
@@ -52,9 +52,11 @@ class BaseOverlaysMap: NSObject, MapMixin {
     }
     
     func updateMixin(mapView: MKMapView, mapState: MapState) {
-        if lastChange == nil || lastChange != mapState.mixinStates["\(String(describing: BaseOverlaysMap.self))DataUpdated"] as? Date {
-            lastChange = mapState.mixinStates["\(String(describing: BaseOverlaysMap.self))DataUpdated"] as? Date ?? Date()
-            
+        if lastChange == nil 
+            || lastChange != mapState.mixinStates["\(String(describing: BaseOverlaysMap.self))DataUpdated"] as? Date {
+            lastChange = 
+            mapState.mixinStates["\(String(describing: BaseOverlaysMap.self))DataUpdated"] as? Date ?? Date()
+
             if mapState.mixinStates["\(String(describing: BaseOverlaysMap.self))DataUpdated"] as? Date == nil {
                 DispatchQueue.main.async {
                     mapState.mixinStates["\(String(describing: BaseOverlaysMap.self))DataUpdated"] = self.lastChange
@@ -65,12 +67,12 @@ class BaseOverlaysMap: NSObject, MapMixin {
 
             var overlay: MKTileOverlay?
             if viewModel.layerType == .wms {
-                guard let _ = viewModel.urlTemplate else {
+                guard viewModel.urlTemplate != nil else {
                     return
                 }
                 overlay = WMSTileOverlay(layer: viewModel)
             } else if viewModel.layerType == .xyz || viewModel.layerType == .tms {
-                guard let _ = viewModel.urlTemplate else {
+                guard viewModel.urlTemplate != nil else {
                     return
                 }
                 overlay = XYZTileOverlay(layer: viewModel)

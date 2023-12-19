@@ -13,22 +13,25 @@ struct BookmarkButton: View {
     @ObservedObject var viewModel: BookmarkViewModel
     
     var body: some View {
-        Button(action: {
-            withAnimation {
-                if viewModel.isBookmarked {
-                    viewModel.removeBookmark()
-                } else {
-                    bookmarkBottomSheet = true
+        Button(
+            action: {
+                withAnimation {
+                    if viewModel.isBookmarked {
+                        viewModel.removeBookmark()
+                    } else {
+                        bookmarkBottomSheet = true
+                    }
                 }
+            },
+            label: {
+                Label(
+                    title: { },
+                    icon: { Image(systemName: viewModel.isBookmarked ? "bookmark.fill" : "bookmark")
+                            .renderingMode(.template)
+                            .foregroundColor(Color.primaryColorVariant)
+                    })
             }
-        }) {
-            Label(
-                title: { },
-                icon: { Image(systemName: viewModel.isBookmarked ? "bookmark.fill" : "bookmark")
-                        .renderingMode(.template)
-                        .foregroundColor(Color.primaryColorVariant)
-                })
-        }
+        )
         .accessibilityElement()
         .accessibilityLabel("\(viewModel.isBookmarked ? "remove bookmark \(viewModel.itemKey ?? "")" : "bookmark")")
         .animation(.easeOut, value: viewModel.isBookmarked)
@@ -43,7 +46,11 @@ struct BookmarkButton: View {
                 }
                 TextEditor(text: $notes)
                     .lineLimit(4...)
-                    .overlay(Rectangle().frame(height: 2).foregroundColor(Color.primaryColorVariant), alignment: .bottom)
+                    .overlay(
+                        Rectangle()
+                            .frame(height: 2)
+                            .foregroundColor(Color.primaryColorVariant), alignment: .bottom
+                    )
                     .scrollContentBackground(.hidden)
                     .background(Color.backgroundColor)
                     .tint(Color.primaryColorVariant)
@@ -57,7 +64,7 @@ struct BookmarkButton: View {
                         }
                         bookmarkBottomSheet = false
                     }
-                    .buttonStyle(MaterialButtonStyle(type:.text))
+                    .buttonStyle(MaterialButtonStyle(type: .text))
                     .accessibilityElement()
                     .accessibilityLabel("Bookmark")
                 }

@@ -31,7 +31,10 @@ struct CurrentLocation: View {
                 NotificationCenter.default.post(
                     name: .SnackbarNotification,
                     object: SnackbarNotification(
-                        snackbarModel: SnackbarModel(message: "Location \(currentLocation.coordinate.format()) copied to clipboard"))
+                        snackbarModel: SnackbarModel(
+                            message: "Location \(currentLocation.coordinate.format()) copied to clipboard"
+                        )
+                    )
                 )
             }
         }

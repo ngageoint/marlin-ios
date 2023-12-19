@@ -33,9 +33,9 @@ class DataLoadOperation: Operation {
     
     var backgroundTask: UIBackgroundTaskIdentifier = .invalid
 
-    var action: (() -> ())?
-    var cleanup: (() -> ())?
-    
+    var action: (() -> Void)?
+    var cleanup: (() -> Void)?
+
     let appState: AppState
     let taskName: String?
     
@@ -54,7 +54,7 @@ class DataLoadOperation: Operation {
         guard backgroundTask != .invalid else { return }
         action?()
     }
-    func doOnMainQueueAndBlockUntilFinished(_ function: @escaping ()->()) {
+    func doOnMainQueueAndBlockUntilFinished(_ function: @escaping () -> Void) {
         OperationQueue.main.addOperations([BlockOperation(block: function)], waitUntilFinished: true)
     }
     

@@ -50,8 +50,6 @@ struct AsyncImage<Placeholder: View>: View {
                 try? imageData.write(to: filename)
                 NotificationCenter.default.post(name: .DocumentPreview, object: filename)
             }
-            
-            
         }
     }
 }
