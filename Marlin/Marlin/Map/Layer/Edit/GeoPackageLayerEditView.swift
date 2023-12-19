@@ -8,9 +8,9 @@
 import SwiftUI
 import MapKit
 
-//struct GeoPackageLayerMapView: View {
+// struct GeoPackageLayerMapView: View {
 //    @ObservedObject var viewModel: MapLayerViewModel
-//}
+// }
 
 struct GeoPackageLayerEditView: View {
     @ObservedObject var viewModel: MapLayerViewModel
@@ -208,7 +208,7 @@ struct GeoPackageFeatureLayerRow: View {
         .tint(Color.primaryColor)
         .accessibilityElement()
         .accessibilityLabel("Feature Layer \(layer.name ?? "") Toggle")
-        .onChange(of: layer.selected, perform: { newValue in
+        .onChange(of: layer.selected, perform: { _ in
             viewModel.updateSelectedLayers(layer: layer)
         })
     }

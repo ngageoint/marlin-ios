@@ -24,7 +24,7 @@ class UserLayersMap: MapMixin {
         self.mapState = mapState
         viewModel.$layers
             .receive(on: RunLoop.main)
-            .sink() { [weak self] layers in
+            .sink { [weak self] _ in
                 self?.refresh()
             }
             .store(in: &cancellable)

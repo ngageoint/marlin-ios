@@ -12,7 +12,7 @@ import UniformTypeIdentifiers
 class SideMenuViewModel: ObservableObject {
     @Published var dataSourceList: DataSourceList
     
-    @Published var draggedItem : String?
+    @Published var draggedItem: String?
     @Published var validDropTarget: Bool = false
     @Published var lastTab: DataSourceItem?
     
@@ -204,7 +204,7 @@ class SideMenuViewModel: ObservableObject {
 
 struct SideMenuDrop: DropDelegate {
     
-    let item : DataSourceItem
+    let item: DataSourceItem
     @ObservedObject var model: SideMenuViewModel
     
     func validateDrop(info: DropInfo) -> Bool {
@@ -220,4 +220,3 @@ struct SideMenuDrop: DropDelegate {
     }
     
 }
-

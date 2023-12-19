@@ -8,7 +8,7 @@
 import Foundation
 
 // these should not conflict with MKMapType values
-public enum ExtraMapTypes : Int {
+public enum ExtraMapTypes: Int {
     case osm = 100
     case offline = 101
 }

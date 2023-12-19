@@ -369,7 +369,7 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
                               in: remarks)
         var previousEnd: Double = 0.0
         
-        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, flags, stop in
+        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, _, _ in
             guard let match = match else {
                 return
             }

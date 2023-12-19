@@ -269,7 +269,7 @@ struct OnboardingView: View {
                 VStack(spacing: 16) {
                     Button("Yes, Enable Notifications") {
                         userNotificationCenter.requestAuthorization(
-                            options: [.alert, .sound, .badge]) { granted, error in
+                            options: [.alert, .sound, .badge]) { _, _ in
                             nextTab(currentTab: NOTIFICATION_TAB)
                         }
                     }

@@ -99,7 +99,7 @@ struct ElectronicPublicationProperties: Decodable {
         self.sectionName = try? values.decode(String.self, forKey: .sectionName)
         self.sectionOrder = try? values.decode(Int.self, forKey: .sectionOrder)
         
-        var parsedPubsecLastModifiedDate: Date? = nil
+        var parsedPubsecLastModifiedDate: Date?
         if let dateString = try? values.decode(String.self, forKey: .pubsecLastModified) {
             if let date = ElectronicPublication.dateFormatter.date(from: dateString) {
                 parsedPubsecLastModifiedDate = date
@@ -107,7 +107,7 @@ struct ElectronicPublicationProperties: Decodable {
         }
         self.pubsecLastModified = parsedPubsecLastModifiedDate
         
-        var parsedSectionLastModifiedDate: Date? = nil
+        var parsedSectionLastModifiedDate: Date?
         if let dateString = try? values.decode(String.self, forKey: .sectionLastModified) {
             if let date = ElectronicPublication.dateFormatter.date(from: dateString) {
                 parsedSectionLastModifiedDate = date
@@ -115,7 +115,7 @@ struct ElectronicPublicationProperties: Decodable {
         }
         self.sectionLastModified = parsedSectionLastModifiedDate
         
-        var parsedUploadTime: Date? = nil
+        var parsedUploadTime: Date?
         if let dateString = try? values.decode(String.self, forKey: .uploadTime) {
             if let date = ElectronicPublication.dateFormatter.date(from: dateString) {
                 parsedUploadTime = date

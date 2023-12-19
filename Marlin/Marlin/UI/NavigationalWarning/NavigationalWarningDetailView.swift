@@ -41,7 +41,7 @@ struct NavigationalWarningDetailView: View {
                         Property(property: "Authority", value: navigationalWarning.authority)
                         Property(property: "Cancel Date", value: navigationalWarning.cancelDateString)
                         if let cancelNavArea = navigationalWarning.cancelNavArea, 
-                            let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea){
+                            let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea) {
                             Property(
                                 property: "Cancelled By",
                                 value: "\(navAreaEnum.display) \(navigationalWarning.cancelMsgNumber)/\(navigationalWarning.cancelMsgYear)")
@@ -62,7 +62,7 @@ struct NavigationalWarningDetailView: View {
             
             if let text = navigationalWarning.text {
                 Section("Warning") {
-                    UITextViewContainer(text:text)
+                    UITextViewContainer(text: text)
                         .padding(.all, 16)
                         .card()
                 }

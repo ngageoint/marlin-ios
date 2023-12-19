@@ -13,7 +13,6 @@ import Combine
 class LightMap<T: MapImage>: FetchRequestMap<T> {
     var userDefaultsShowLightRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
     var userDefaultsShowLightSectorRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
-
     
     override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
         super.init(fetchPredicate: fetchPredicate, objects: objects, showAsTiles: showAsTiles)
@@ -33,7 +32,7 @@ class LightMap<T: MapImage>: FetchRequestMap<T> {
             .handleEvents(receiveOutput: { showLightRanges in
                 print("Show light ranges: \(showLightRanges)")
             })
-            .sink() { [weak self] _ in
+            .sink { [weak self] _ in
                 self?.imageCache.clearCache(completion: {
                     self?.refreshOverlay(mapState: mapState)
                 })
@@ -46,7 +45,7 @@ class LightMap<T: MapImage>: FetchRequestMap<T> {
             .handleEvents(receiveOutput: { showLightSectorRanges in
                 print("Show light sector ranges: \(showLightSectorRanges)")
             })
-            .sink() { [weak self] _ in
+            .sink { [weak self] _ in
                 self?.imageCache.clearCache(completion: {
                     self?.refreshOverlay(mapState: mapState)
                 })

@@ -29,7 +29,7 @@ struct LocationWithType: CustomStringConvertible {
         if let distanceFromLocation = distanceFromLocation {
             let range = distanceFromLocation.ranges(of: "(MILE)|(METER)", options: .regularExpression)
             if let first = range.first, first.lowerBound != distanceFromLocation.startIndex {
-                let beginingText = distanceFromLocation[...distanceFromLocation.index(before:first.lowerBound)].trimmingCharacters(in: .whitespacesAndNewlines)
+                let beginingText = distanceFromLocation[...distanceFromLocation.index(before: first.lowerBound)].trimmingCharacters(in: .whitespacesAndNewlines)
                 // now split on word boundaries, try to parse each into a number start at the end, then go backwards until
                 // it fails to parse to find the extent of the number words
                 
@@ -41,7 +41,7 @@ struct LocationWithType: CustomStringConvertible {
                     // first see if it is a number anyway
                     if let parsed = Double(lastParts.joined(separator: " ")) {
                         tempParsedNumber = parsed
-                    } else if let parsed = nf.number(from:lastParts.joined(separator: " ")) {
+                    } else if let parsed = nf.number(from: lastParts.joined(separator: " ")) {
                         // see if it is a number in words
                         tempParsedNumber = parsed.doubleValue
                     }
@@ -331,7 +331,7 @@ struct MappedLocation: CustomStringConvertible {
         for location in locations {
             if let wkt = location.wkt {
                 if let distance = location.metersDistance {
-                    wkts.append(["wkt": wkt, "distance":"\(distance)"])
+                    wkts.append(["wkt": wkt, "distance": "\(distance)"])
                 } else {
                     wkts.append(["wkt": wkt])
                 }
@@ -601,7 +601,7 @@ class NAVTEXTextParser {
                 heading = String(text[...text.index(lowerBound, offsetBy: -1)])
                     .split(separator: "\n")
                     .compactMap {
-                        $0.trimmingCharacters(in:.whitespacesAndNewlines)
+                        $0.trimmingCharacters(in: .whitespacesAndNewlines)
                     }.joined(separator: " ")
             }
             letters = String(text[lowerBound...])
@@ -609,7 +609,7 @@ class NAVTEXTextParser {
             // the entire thing is the heading
             heading = text.split(separator: "\n")
                 .compactMap {
-                    $0.trimmingCharacters(in:.whitespacesAndNewlines)
+                    $0.trimmingCharacters(in: .whitespacesAndNewlines)
                 }.joined(separator: " ")
         }
         return (heading, letters)

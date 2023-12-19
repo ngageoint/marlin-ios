@@ -18,7 +18,7 @@ extension View {
         @ViewBuilder content: @escaping () -> Content) -> some View {
         background {
             Color.clear
-                .onChange(of: previewDate.wrappedValue) { show in
+                .onChange(of: previewDate.wrappedValue) { _ in
                     if let url = previewUrl.wrappedValue {
                         DocumentController.shared.presentDocument(url: url)
                     }
@@ -27,7 +27,7 @@ extension View {
     }
 }
 
-class DocumentController: NSObject, ObservableObject, UIDocumentInteractionControllerDelegate { //, QLPreviewControllerDataSource {
+class DocumentController: NSObject, ObservableObject, UIDocumentInteractionControllerDelegate { // , QLPreviewControllerDataSource {
 
     public static let shared = DocumentController()
     var controller: UIDocumentInteractionController?

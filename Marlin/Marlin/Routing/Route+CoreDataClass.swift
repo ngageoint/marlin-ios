@@ -28,7 +28,7 @@ class RouteWaypoint: NSManagedObject {
                 if !ds.features.isEmpty {
                     let feature = ds.features[0]
                     
-                    switch(dataSource) {
+                    switch dataSource {
                     case Asam.key:
                         let asamModel = AsamModel(feature: ds.features[0])
                         return asamModel

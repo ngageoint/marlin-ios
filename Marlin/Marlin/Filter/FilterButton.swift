@@ -12,7 +12,7 @@ struct FilterButton: ViewModifier {
     @Binding var sortOpen: Bool
     @Binding var dataSources: [DataSourceItem]
     @State var filterCount: Int = 0
-    @State var filterCounts: [String : Int] = [:]
+    @State var filterCounts: [String: Int] = [:]
     var allowSorting: Bool
     var allowFiltering: Bool
     let dataSourceUpdatedPub = NotificationCenter.default.publisher(for: .DataSourceUpdated)
@@ -35,7 +35,7 @@ struct FilterButton: ViewModifier {
     
     func body(content: Content) -> some View {
         content.toolbar {
-            ToolbarItem (placement: .navigationBarTrailing)  {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 
                 HStack(spacing: 0) {
                     if allowSorting {
@@ -75,14 +75,14 @@ struct FilterButton: ViewModifier {
             }
             filterCount = count
         }
-        .onReceive(dataSourceUpdatedPub) { output in
+        .onReceive(dataSourceUpdatedPub) { _ in
             var count = 0
             for dataSource in dataSources {
                 count += UserDefaults.standard.filter(dataSource.dataSource.definition).count
             }
             filterCount = count
         }
-        .onChange(of: dataSources) { newValue in
+        .onChange(of: dataSources) { _ in
             var count = 0
             for dataSource in dataSources {
                 count += UserDefaults.standard.filter(dataSource.dataSource.definition).count

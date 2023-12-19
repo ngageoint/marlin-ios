@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct OnboardingTabTemplate<M:View, T:View>: View {
+struct OnboardingTabTemplate<M: View, T: View>: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
 
     var title: String

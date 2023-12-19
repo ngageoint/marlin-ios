@@ -117,7 +117,7 @@ struct FilterBottomSheet: View {
                     }
                     .environmentObject(LocationManager.shared())
                 }
-                .onReceive(dismissBottomSheetPub) { output in
+                .onReceive(dismissBottomSheetPub) { _ in
                     showBottomSheet = false
                 }
                 .presentationDetents([.large])

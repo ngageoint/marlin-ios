@@ -25,7 +25,7 @@ extension MKPolygon {
     
     func getGeodesicClickAreas() -> [MKGeodesicPolyline] {
         var clickAreas: [MKGeodesicPolyline] = []
-        let points = Array<MKMapPoint>(UnsafeBufferPointer(start: points(), count: pointCount))
+        let points = [MKMapPoint](UnsafeBufferPointer(start: points(), count: pointCount))
         clickAreas.append(MKPolygon.buildGeodesicPolyline(points: points, pointCount: points.count))
         
         // check for meridian/antimeridian crossing
@@ -38,7 +38,7 @@ extension MKPolygon {
         }
         
         // if shape crosses a meridian, add another click area starting from the other side of the meridian
-        if(crossesAtIndex > -1){
+        if crossesAtIndex > -1 {
             let reorderedPoints: [MKMapPoint] = points.dropFirst(crossesAtIndex) + points.dropLast(points.count - crossesAtIndex)
             clickAreas.append(MKPolygon.buildGeodesicPolyline(points: reorderedPoints, pointCount: reorderedPoints.count))
         }

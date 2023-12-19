@@ -13,7 +13,7 @@ struct Hamburger: ViewModifier {
     func body(content: Content) -> some View {
         
         content.toolbar {
-            ToolbarItem (placement: .navigationBarLeading)  {
+            ToolbarItem(placement: .navigationBarLeading) {
                 HStack {
                     Button(action: {
                         Metrics.shared.sideNavigationView()

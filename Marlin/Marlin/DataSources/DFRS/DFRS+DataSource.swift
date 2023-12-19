@@ -35,20 +35,20 @@ extension DFRS: Locatable {
                       comment: "Radio Direction Finders and Radar station data source display name")
     static var key: String = "dfrs"
     static var metricsKey: String = "dfrs"
-    static var imageName: String? = nil
+    static var imageName: String?
     static var systemImageName: String? = "antenna.radiowaves.left.and.right.circle"
     static var color: UIColor = UIColor(argbValue: 0xFFFFB300)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
     static var defaultSort: [DataSourceSortParameter] = [
         DataSourceSortParameter(
-            property:DataSourceProperty(
+            property: DataSourceProperty(
                 name: "Area Name",
                 key: #keyPath(DFRS.areaName),
                 type: .string),
             ascending: true),
         DataSourceSortParameter(
-            property:DataSourceProperty(
+            property: DataSourceProperty(
                 name: "Station Number",
                 key: #keyPath(DFRS.stationNumber),
                 type: .double),
@@ -72,7 +72,7 @@ extension DFRS: Locatable {
         DataSourceProperty(name: "Rx Latitude", key: #keyPath(DFRS.rxLatitude), type: .latitude),
         DataSourceProperty(name: "Rx Longitude", key: #keyPath(DFRS.rxLongitude), type: .longitude),
         DataSourceProperty(name: "Tx Latitude", key: #keyPath(DFRS.txLatitude), type: .latitude),
-        DataSourceProperty(name: "Tx Longitude", key: #keyPath(DFRS.txLongitude), type: .longitude),
+        DataSourceProperty(name: "Tx Longitude", key: #keyPath(DFRS.txLongitude), type: .longitude)
     ]
     
     static var dateFormatter: DateFormatter {

@@ -60,4 +60,3 @@ struct FilterView: View {
         .padding(.trailing, 0)
     }
 }
-

@@ -181,14 +181,14 @@ class NavigationalWarningMap: NSObject, MapMixin {
             .handleEvents(receiveOutput: { show in
                 print("Show \(NavigationalWarning.self): \(show)")
             })
-            .sink() { [weak self] show in
+            .sink { [weak self] show in
                 self?.show = show
                 self?.refresh()
             }
             .store(in: &cancellable)
     }
     
-    func addWarning(warning: NavigationalWarning, location: [String : String]) {
+    func addWarning(warning: NavigationalWarning, location: [String: String]) {
         if let wkt = location["wkt"] {
             var distance: Double?
             if let distanceString = location["distance"] {

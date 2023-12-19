@@ -20,7 +20,7 @@ class Metrics {
     }
     
     func appRoute(_ route: [String]) {
-        MatomoTracker.shared?.track(view:route)
+        MatomoTracker.shared?.track(view: route)
     }
     
     func appLaunch() {

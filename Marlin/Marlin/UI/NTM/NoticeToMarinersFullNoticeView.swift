@@ -70,7 +70,7 @@ struct NoticeToMarinersFullNoticeView: View {
                         ForEach(items) { item in
                             VStack {
                                 AsyncImage(
-                                    url: URL(string:item.graphicUrl)!,
+                                    url: URL(string: item.graphicUrl)!,
                                     name: item.fileName ?? "image.png",
                                     placeholder: { Text("Loading ...").overline() },
                                     image: { Image(uiImage: $0).resizable() }

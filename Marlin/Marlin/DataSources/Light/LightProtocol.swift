@@ -416,14 +416,13 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
                               in: remarks)
         var previousEnd: Double = 0.0
         
-        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, flags, stop in
+        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, _, _ in
             guard let match = match else {
                 return
             }
             var end: Double = 0.0
             var start: Double?
             for component in ["startdeg", "startminutes", "enddeg", "endminutes"] {
-                
                 
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
@@ -559,7 +558,7 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
         
         var visibleSector: Bool = false
         
-        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, flags, stop in
+        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, _, _ in
             guard let match = match else {
                 return
             }
@@ -579,7 +578,6 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
                 "startminutes",
                 "enddeg",
                 "endminutes"] {
-
                 
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
@@ -631,7 +629,7 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
             var sectorRange: Double?
             if let rangeString = range {
                 for split in rangeString.components(separatedBy: CharacterSet(charactersIn: ";\n"))
-                where split.trimmingCharacters(in: .whitespacesAndNewlines).starts(with: color){
+                where split.trimmingCharacters(in: .whitespacesAndNewlines).starts(with: color) {
                     let pattern = #"[0-9]+$"#
                     let regex = try? NSRegularExpression(pattern: pattern, options: [])
                     let rangePart = "\(split)".trimmingCharacters(in: .whitespacesAndNewlines)
@@ -1145,7 +1143,7 @@ extension LightProtocol {
                               in: remarks)
         var previousEnd: Double = 0.0
         
-        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, flags, stop in
+        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, _, _ in
             guard let match = match else {
                 return
             }
@@ -1287,7 +1285,7 @@ extension LightProtocol {
         
         var visibleSector: Bool = false
         
-        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, flags, stop in
+        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, _, _ in
             guard let match = match else {
                 return
             }

@@ -75,7 +75,7 @@ class MapLayer: NSManagedObject {
     }
     
     var password: String? {
-        if self.username != "", let credentials = Keychain().getCredentials(server: self.url ?? "" , account: self.username ?? "") {
+        if self.username != "", let credentials = Keychain().getCredentials(server: self.url ?? "", account: self.username ?? "") {
             return credentials.password
         }
         return nil

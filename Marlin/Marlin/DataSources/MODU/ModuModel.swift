@@ -139,7 +139,7 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
         self.position = try? values.decode(String.self, forKey: .position)
         self.navArea = try? values.decode(String.self, forKey: .navArea)
         
-        var parsedDate: Date? = nil
+        var parsedDate: Date?
         if let dateString = try? values.decode(String.self, forKey: .date) {
             if let date = Modu.dateFormatter.date(from: dateString) {
                 parsedDate = date
@@ -212,11 +212,11 @@ extension ModuModel: DataSource {
     static var key: String = "modu"
     static var metricsKey: String = "modus"
     static var imageName: String? = "modu"
-    static var systemImageName: String? = nil
+    static var systemImageName: String?
     static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date), ascending: false)]
+    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property: DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date), ascending: false)]
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
@@ -230,7 +230,7 @@ extension ModuModel: DataSource {
         DataSourceProperty(name: "Rig Status", key: #keyPath(Modu.rigStatus), type: .string),
         DataSourceProperty(name: "Nav Area", key: #keyPath(Modu.navArea), type: .string),
         DataSourceProperty(name: "Name", key: #keyPath(Modu.name), type: .string),
-        DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date),
+        DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date)
     ]
     
     static var dateFormatter: DateFormatter {

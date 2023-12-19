@@ -38,7 +38,6 @@ class GeoPackageImportProgress: NSObject, ObservableObject, GPKGProgress {
         failure = error
     }
     
-    
 }
 
 class GeoPackageImporter {

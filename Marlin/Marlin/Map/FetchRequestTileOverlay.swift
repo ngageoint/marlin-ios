@@ -13,7 +13,7 @@ import sf_proj_ios
 import sf_ios
 
 protocol PredicateBasedTileOverlay {
-    associatedtype T where T : MapImage
+    associatedtype T where T: MapImage
     var predicate: NSPredicate? { get set }
     var key: String? { get set }
 }

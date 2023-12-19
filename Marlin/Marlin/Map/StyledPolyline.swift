@@ -9,7 +9,7 @@ import Foundation
 import MapKit
 import CoreLocation
 
-@objc class StyledPolyline : MKPolyline, OverlayRenderable {
+@objc class StyledPolyline: MKPolyline, OverlayRenderable {
     var renderer: MKOverlayRenderer {
         get {
             let renderer = MKPolylineRenderer(polyline: self)
@@ -22,7 +22,7 @@ import CoreLocation
     @objc public var lineColor: UIColor = .black
     @objc public var lineWidth: CGFloat = 1.0
     
-    @objc static func generate(path: [[NSNumber]])-> StyledPolyline {
+    @objc static func generate(path: [[NSNumber]]) -> StyledPolyline {
         var coordinates: [CLLocationCoordinate2D] = []
         for point in path {
             coordinates.append(CLLocationCoordinate2D(latitude: point[1].doubleValue, longitude: point[0].doubleValue))

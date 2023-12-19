@@ -48,25 +48,25 @@ class LocationBoundsMixin: NSObject, MapMixin, ObservableObject {
         self.mapState = mapState
         coordinateOne.$latitude
             .receive(on: RunLoop.main)
-            .sink() { [self] neCorner in
+            .sink { [self] _ in
                 self.triggerUpdate()
             }
             .store(in: &cancellable)
         coordinateOne.$longitude
             .receive(on: RunLoop.main)
-            .sink() { [self] neCorner in
+            .sink { [self] _ in
                 self.triggerUpdate()
             }
             .store(in: &cancellable)
         coordinateTwo.$latitude
             .receive(on: RunLoop.main)
-            .sink() { [self] neCorner in
+            .sink { [self] _ in
                 self.triggerUpdate()
             }
             .store(in: &cancellable)
         coordinateTwo.$longitude
             .receive(on: RunLoop.main)
-            .sink() { [self] neCorner in
+            .sink { [self] _ in
                 self.triggerUpdate()
             }
             .store(in: &cancellable)

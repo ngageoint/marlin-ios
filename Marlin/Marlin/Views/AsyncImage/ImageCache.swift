@@ -9,16 +9,16 @@ import Foundation
 import UIKit
 import SwiftUI
 
-//struct ImageCacheKey: EnvironmentKey {
+// struct ImageCacheKey: EnvironmentKey {
 //    static let defaultValue: ImageCache = TemporaryImageCache()
-//}
+// }
 //
-//extension EnvironmentValues {
+// extension EnvironmentValues {
 //    var imageCache: ImageCache {
 //        get { self[ImageCacheKey.self] }
 //        set { self[ImageCacheKey.self] = newValue }
 //    }
-//}
+// }
 
 protocol ImageCache {
     subscript(_ url: URL) -> UIImage? { get set }

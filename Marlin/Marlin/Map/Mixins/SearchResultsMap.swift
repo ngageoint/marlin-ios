@@ -83,7 +83,7 @@ class SearchResultsMap: NSObject, MapMixin {
                 annotationView.isEnabled = true
                 annotationView.markerTintColor = Color.primaryUIColor
                 if let category = mapItem.pointOfInterestCategory {
-                    switch (category) {
+                    switch category {
                     case .airport:
                         annotationView.glyphImage = UIImage(systemName: "airplane")
                     case .amusementPark:

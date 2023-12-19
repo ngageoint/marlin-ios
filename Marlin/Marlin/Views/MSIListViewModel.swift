@@ -16,13 +16,13 @@ struct MSISection<T: DataSource & BatchImportable>: Hashable {
 }
 
 class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResultsControllerDelegate, ObservableObject {
-    @Published var sections : [MSISection<T>] = []
+    @Published var sections: [MSISection<T>] = []
     @Published var lastUpdateDate: Date = Date()
     var sortDescriptors: [DataSourceSortParameter] = []
     var filters: [DataSourceFilterParameter] = []
     var fetchRequest = T.fetchRequest()
-    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? = nil
-    var sectionKey: String? = nil
+    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>?
+    var sectionKey: String?
     
     var cancellable = Set<AnyCancellable>()
     
@@ -33,14 +33,14 @@ class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResu
         
         UserDefaults.standard.filterPublisher(key: T.key)
             .removeDuplicates()
-            .sink { output in
+            .sink { _ in
                 self.setupFetchedResultsController()
             }
             .store(in: &cancellable)
         
         UserDefaults.standard.sortPublisher(key: T.key)
             .removeDuplicates()
-            .sink { output in
+            .sink { _ in
                 self.setupFetchedResultsController()
             }
             .store(in: &cancellable)

@@ -13,7 +13,6 @@ struct DataSourceNavView: View {
     var watchFocusedItem: Bool = false
     @State private var path: NavigationPath = NavigationPath()
     
-    
     var body: some View {
         Self._printChanges()
         return NavigationStack(path: $path) {

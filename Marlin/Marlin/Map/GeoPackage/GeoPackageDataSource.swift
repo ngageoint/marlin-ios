@@ -60,7 +60,7 @@ class GeoPackageFeatureItem: NSObject, Locatable, DataSourceViewBuilder {
     
     var secondaryTitle: String? {
         if let values = self.featureRowData?.values(), let titleKey = values.keys.first(where: { key in
-            return ["secondaryfield", "subtitle", "variantfield"].contains((key as? String)?.lowercased());
+            return ["secondaryfield", "subtitle", "variantfield"].contains((key as? String)?.lowercased())
         }) {
             return values[titleKey] as? String
         }
@@ -152,7 +152,7 @@ class GeoPackageFeatureItem: NSObject, Locatable, DataSourceViewBuilder {
         tableName: String? = nil,
         featureId: Int = 0,
         featureRowData: GPKGFeatureRowData?,
-        featureDataTypes: [String : String]? = nil,
+        featureDataTypes: [String: String]? = nil,
         coordinate: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid,
         icon: UIImage? = nil,
         style: GPKGStyleRow? = nil,

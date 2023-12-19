@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class FogSignalImage : UIImage {
+class FogSignalImage: UIImage {
     
     convenience init?(frame: CGRect, arcWidth: CGFloat? = nil, arcRadius: CGFloat? = nil, drawArcs: Bool = true, darkMode: Bool = false) {
         let strokeWidth = 0.5
@@ -17,7 +17,7 @@ class FogSignalImage : UIImage {
         let finalArcWidth = arcWidth ?? 2.0
         
         let circleColor = Light.raconColor
-        let labelColor = UIColor.label.resolvedColor(with:UITraitCollection(traitsFrom: [.init(userInterfaceStyle: darkMode ? .dark : .light)]))
+        let labelColor = UIColor.label.resolvedColor(with: UITraitCollection(traitsFrom: [.init(userInterfaceStyle: darkMode ? .dark : .light)]))
         
         let renderer = UIGraphicsImageRenderer(size: frame.size)
         let image = renderer.image { _ in

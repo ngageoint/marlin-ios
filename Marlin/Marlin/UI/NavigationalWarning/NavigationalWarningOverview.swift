@@ -13,7 +13,7 @@ struct NavigationalWarningsOverview {
     
     let MAP_NAME = "Navigational Warning List View Map"
     @State var expandMap: Bool = false
-    @State var selection: String? = nil
+    @State var selection: String?
     @Binding var path: NavigationPath
     
     @ObservedObject var focusedItem: ItemWrapper
@@ -51,7 +51,7 @@ extension NavigationalWarningsOverview: View {
             NavigationalWarningNavAreaListView(warnings: section.warnings, navArea: section.id, mapName: MAP_NAME, path: $path)
                 .accessibilityElement(children: .contain)
         }
-        .onChange(of: focusedItem.date) { newValue in
+        .onChange(of: focusedItem.date) { _ in
             if watchFocusedItem, let focusedItem = focusedItem.dataSource as? NavigationalWarning {
                 path.append(focusedItem)
             }
@@ -65,7 +65,7 @@ extension NavigationalWarningsOverview: View {
         }
         .onReceive(viewDataSourcePub) { output in
             if let dataSource = output.dataSource as? NavigationalWarning, output.mapName == MAP_NAME {
-                NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
+                NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
                 path.append(dataSource)
             }
         }

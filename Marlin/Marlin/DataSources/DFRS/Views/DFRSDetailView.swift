@@ -65,7 +65,7 @@ struct DFRSDetailView: View {
                     Text(areaNotes)
                         .secondary()
                         .lineLimit(8)
-                        .frame(maxWidth:.infinity)
+                        .frame(maxWidth: .infinity)
                         .padding(.all, 16)
                         .card()
                 }
@@ -76,7 +76,7 @@ struct DFRSDetailView: View {
                 .dataSourceSection()
         }
         .dataSourceDetailList()
-        .onChange(of: dfrs, perform: { newValue in
+        .onChange(of: dfrs, perform: { _ in
             predicate = NSPredicate(format: "stationNumber == %@", dfrs.stationNumber ?? "")
         })
         .onAppear {

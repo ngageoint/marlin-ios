@@ -18,7 +18,7 @@ struct RadioBeaconDetailView: View {
     
     var body: some View {
         Group {
-            switch(viewModel.radioBeacon) {
+            switch viewModel.radioBeacon {
             case nil:
                 Color.clear.onAppear {
                     viewModel.repository = radioBeaconRepository
@@ -57,7 +57,7 @@ struct RadioBeaconDetailView: View {
         }
         .navigationTitle("\(viewModel.radioBeacon?.name ?? RadioBeacon.dataSourceName)" )
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: featureNumber) { newValue in
+        .onChange(of: featureNumber) { _ in
             viewModel.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
         }
         .onAppear {
@@ -67,4 +67,3 @@ struct RadioBeaconDetailView: View {
         }
     }
 }
-

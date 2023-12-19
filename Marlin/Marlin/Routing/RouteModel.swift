@@ -127,7 +127,6 @@ extension RouteModel {
         }
         let line = MKGeodesicPolyline(coordinates: &coordinates, count: coordinates.count)
         
-        
         return line
     }
     

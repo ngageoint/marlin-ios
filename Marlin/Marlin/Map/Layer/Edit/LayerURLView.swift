@@ -31,7 +31,7 @@ struct LayerURLView: View {
                     }
                     .buttonStyle(MaterialButtonStyle(type: .contained))
                 }
-                .frame(maxWidth:.infinity)
+                .frame(maxWidth: .infinity)
                 .alert("Existing GeoPackage", isPresented: $viewModel.confirmFileOverwrite, actions: {
                     Button("Import As New", role: .destructive) {
                         if let geoPackageFileUrl = viewModel.fileUrl {
@@ -81,14 +81,14 @@ struct LayerURLView: View {
                         .accessibilityLabel("Layer URL input")
                 }
                 .padding(16)
-                .frame(maxWidth:.infinity)
+                .frame(maxWidth: .infinity)
                 .background(Color.surfaceColor)
                 
                 HStack {
-                    Button("Add Credentials")  {
+                    Button("Add Credentials") {
                         showCredentials = true
                     }
-                    .buttonStyle(MaterialButtonStyle(type:.text))
+                    .buttonStyle(MaterialButtonStyle(type: .text))
                     Spacer()
                 }
                 .background(Color.backgroundColor)
@@ -152,8 +152,7 @@ struct LayerURLView: View {
                     }
                     .background(Color.backgroundColor)
                     .padding(16)
-                }
-                else if viewModel.triedCapabilities && viewModel.triedXYZTile && viewModel.layerType == .unknown {
+                } else if viewModel.triedCapabilities && viewModel.triedXYZTile && viewModel.layerType == .unknown {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Unable to retrieve capabilities document or the 0/0/0 tile.  Please choose the correct type of tile server below.")
                             .primary()
@@ -233,7 +232,7 @@ struct LayerURLView: View {
                                     }
                                 }
                                 
-                            } label : {
+                            } label: {
                                 VStack(alignment: .leading, spacing: 8) {
                                     Text(capabilities.title ?? "WMS Server Information")
                                         .primary()

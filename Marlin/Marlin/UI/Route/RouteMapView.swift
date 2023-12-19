@@ -29,7 +29,7 @@ class RouteMixin: MapMixin {
         self.mapState = mapState
         viewModel.$routeMKLine
             .receive(on: RunLoop.main)
-            .sink() { [weak self] mkline in
+            .sink { [weak self] _ in
                 self?.refreshLine()
             }
             .store(in: &cancellable)
@@ -129,12 +129,12 @@ struct RouteMapView: View {
                         Button("Add To Route") {
                             print("add to route")
                             if let exportable = dataSourceViewBuilder as? any GeoJSONExportable {
-                                if let model = DataSourceType.fromKey(type(of:exportable).definition.key)?.createModel(dataSource: dataSourceViewBuilder) as? any GeoJSONExportable {
+                                if let model = DataSourceType.fromKey(type(of: exportable).definition.key)?.createModel(dataSource: dataSourceViewBuilder) as? any GeoJSONExportable {
                                     routeViewModel.addWaypoint(waypoint: model)
                                 }
                             }
                         }
-                        .buttonStyle(MaterialButtonStyle(type:.text))
+                        .buttonStyle(MaterialButtonStyle(type: .text))
                     }
                 }
             }

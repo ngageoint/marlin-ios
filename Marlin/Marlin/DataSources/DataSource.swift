@@ -43,7 +43,7 @@ extension BatchImportable {
 
 class DataSourceImageCache {
     static let shared = DataSourceImageCache()
-    var images: [String : UIImage] = [:]
+    var images: [String: UIImage] = [:]
     
     func getCachedImage(dataSourceKey: String, zoomLevel: Int) -> UIImage? {
         return images["\(dataSourceKey)\(zoomLevel)"]
@@ -67,7 +67,7 @@ enum DataSourcePropertyType: Codable {
     case longitude
     
     func defaultComparison() -> DataSourceFilterComparison {
-        switch (self) {
+        switch self {
             
         case .string, .enumeration, .int, .double, .float, .boolean, .latitude, .longitude:
             return .equals
@@ -79,7 +79,7 @@ enum DataSourcePropertyType: Codable {
     }
     
     func comparisons() -> [DataSourceFilterComparison] {
-        switch (self) {
+        switch self {
         case .date:
             return DataSourceFilterComparison.dateSubset()
         case .enumeration:
@@ -179,4 +179,3 @@ protocol DataSourceViewBuilder: DataSource {
     @ViewBuilder
     var summary: Summary { get }
 }
-

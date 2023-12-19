@@ -17,7 +17,7 @@ struct NavigationalWarningActionBar: View {
     var mapName: String?
 
     var body: some View {
-        HStack(spacing:0) {
+        HStack(spacing: 0) {
             if showMoreDetails {
                 Button(action: {
                     NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(mapName: mapName, dataSource: self.navigationalWarning))

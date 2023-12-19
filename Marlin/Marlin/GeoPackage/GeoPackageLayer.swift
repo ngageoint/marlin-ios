@@ -108,12 +108,12 @@ class GeoPackageLayer: NSObject {
         var featureRows: [GPKGFeatureRowData] = []
                 
         let featureIndexResults = featureTiles?.indexManager.query(with: SFGeometryEnvelope())
-        while ((featureIndexResults?.moveToNext()) == true) {
+        while (featureIndexResults?.moveToNext()) == true {
             if let featureRow = featureIndexResults?.featureRow() {
                 let geometryColumn = featureRow.geometryColumnIndex()
                 var geometryColumnName: String?
-                var featureDataTypes: [String : String] = [:]
-                var values: [String : Any] = [:]
+                var featureDataTypes: [String: String] = [:]
+                var values: [String: Any] = [:]
                 
 //                var coordinate = location
                 

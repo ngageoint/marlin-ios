@@ -44,7 +44,7 @@ final class DownloadManager: NSObject {
             }
         }
         if let destinationUrl = URL(string: downloadable.savePath) {
-            if (FileManager().fileExists(atPath: destinationUrl.path)) {
+            if FileManager().fileExists(atPath: destinationUrl.path) {
                 PersistenceController.current.perform {
                     downloadable.objectWillChange.send()
                     downloadable.isDownloading = false
@@ -148,7 +148,7 @@ extension DownloadManager: URLSessionDownloadDelegate {
         
         guard let httpResponse = downloadTask.response as? HTTPURLResponse,
               (200...299).contains(httpResponse.statusCode) else {
-            print ("server error code \(downloadTask.response.debugDescription)")
+            print("server error code \(downloadTask.response.debugDescription)")
             if let httpResponse = downloadTask.response as? HTTPURLResponse {
                 downloadable.managedObjectContext?.perform {
                     downloadable.objectWillChange.send()

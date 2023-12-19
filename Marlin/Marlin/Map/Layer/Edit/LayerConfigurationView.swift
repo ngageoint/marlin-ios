@@ -88,7 +88,7 @@ struct LayerConfiguration: View {
                         }
                     }
                 }
-                .frame(maxWidth:.infinity)
+                .frame(maxWidth: .infinity)
                 .padding(8)
             }
             .frame(minHeight: 0, maxHeight: .infinity)

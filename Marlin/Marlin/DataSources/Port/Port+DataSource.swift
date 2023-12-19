@@ -48,7 +48,7 @@ extension Port: Locatable, GeoPackageExportable, GeoJSONExportable {
     static var key: String = "port"
     static var metricsKey: String = "ports"
     static var imageName: String? = "port"
-    static var systemImageName: String? = nil
+    static var systemImageName: String?
     static var color: UIColor = UIColor(argbValue: 0xFF5856d6)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
@@ -120,7 +120,6 @@ extension Port: Locatable, GeoPackageExportable, GeoJSONExportable {
             name: "Offshore Maximum Vessel Draft (m)", 
             key: #keyPath(Port.offshoreMaxVesselDraft),
             type: .int),
-
         
         // Physical Environment
         DataSourceProperty(
@@ -566,7 +565,7 @@ extension Port: BatchImportable {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             
             index += 1
             return false

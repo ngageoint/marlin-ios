@@ -160,7 +160,7 @@ struct SearchView<T: MKLocalSearch>: View {
         }
         
         let search = T.init(request: searchRequest)
-        search.start { (response, error) in
+        search.start { (response, _) in
             guard let response = response else {
                 mapState.searchResults = []
                 // Handle the error.

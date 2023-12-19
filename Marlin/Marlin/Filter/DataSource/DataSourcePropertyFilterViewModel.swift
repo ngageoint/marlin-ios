@@ -19,7 +19,7 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
             selectedComparison = dataSourceProperty.type.defaultComparison()
             valueDate = Date()
             valueString = ""
-            valueDouble = nil //0.0
+            valueDouble = nil // 0.0
             valueInt = nil// 0
             valueLongitude = nil
             valueLatitude = nil
@@ -40,10 +40,10 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
     @Published var selectedComparison: DataSourceFilterComparison
     @Published var valueString: String = ""
     @Published var valueDate: Date = Date()
-    @Published var valueInt: Int? = nil// = 0
-    @Published var valueDouble: Double? = nil
-    var valueLatitude: Double? = nil// = 0.0
-    var valueLongitude: Double? = nil// = 0.0
+    @Published var valueInt: Int?// = 0
+    @Published var valueDouble: Double?
+    var valueLatitude: Double?// = 0.0
+    var valueLongitude: Double?// = 0.0
     @Published var valueLongitudeString: String = "" {
         didSet {
             if let parsed = Double(coordinateString: valueLongitudeString) {
@@ -58,10 +58,10 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
             }
         }
     }
-    var valueMinLatitude: Double? = nil
-    var valueMinLongitude: Double? = nil
-    var valueMaxLatitude: Double? = nil
-    var valueMaxLongitude: Double? = nil
+    var valueMinLatitude: Double?
+    var valueMinLongitude: Double?
+    var valueMaxLatitude: Double?
+    var valueMaxLongitude: Double?
     @Published var valueMinLongitudeString: String = "" {
         didSet {
             if let parsed = Double(coordinateString: valueMinLongitudeString) {

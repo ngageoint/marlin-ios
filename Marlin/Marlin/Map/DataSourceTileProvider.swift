@@ -25,7 +25,7 @@ extension DataTileError: CustomStringConvertible {
             return "There were no objects for this image."
         case .notFound:
             return "The specified item could not be found."
-        case .unexpected(_):
+        case .unexpected:
             return "An unexpected error occurred."
         }
     }
@@ -44,7 +44,7 @@ extension DataTileError: LocalizedError {
                 "The specified item could not be found.",
                 comment: "Resource Not Found"
             )
-        case .unexpected(_):
+        case .unexpected:
             return NSLocalizedString(
                 "An unexpected error occurred.",
                 comment: "Unexpected Error"
@@ -53,7 +53,7 @@ extension DataTileError: LocalizedError {
     }
 }
 
-struct DataSourceTileProvider<T : MapImage>: ImageDataProvider {
+struct DataSourceTileProvider<T: MapImage>: ImageDataProvider {
     var cacheKey: String {
         var key = "\(T.self.key)/\(path.z)/\(path.x)/\(path.y)"
         if let predicate = predicate {
@@ -113,7 +113,7 @@ struct DataSourceTileProvider<T : MapImage>: ImageDataProvider {
                 andY: maxTileY + tolerance),
                   let swCornerTolerance = SFGeometryUtils.metersToDegreesWith(
                     x: minTileX - tolerance,
-                    andY:minTileY - tolerance) else {
+                    andY: minTileY - tolerance) else {
                 return
             }
             

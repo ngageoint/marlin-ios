@@ -406,7 +406,7 @@ extension DifferentialGPSStationModel: DataSource {
         DataSourceProperty(name: "Preceding Note", key: #keyPath(DifferentialGPSStation.precedingNote), type: .string),
         DataSourceProperty(name: "Post Note", 
                            key: #keyPath(DifferentialGPSStation.postNote), 
-                           type: .string),
+                           type: .string)
 
     ]
     

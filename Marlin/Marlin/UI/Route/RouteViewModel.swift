@@ -119,7 +119,7 @@ class RouteViewModel: ObservableObject, Identifiable {
                 route.name = self.routeName
                 route.distanceMeters = self.routeDistance
                 var set: Set<RouteWaypoint> = Set<RouteWaypoint>()
-                for (i,waypoint) in self.waypoints.enumerated() {
+                for (i, waypoint) in self.waypoints.enumerated() {
                     let routeWaypoint = RouteWaypoint(context: context)
                     routeWaypoint.dataSource = waypoint.key
                     routeWaypoint.json = waypoint.geoJson

@@ -13,7 +13,7 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
     
     var noticeNumber: Int64?
     
-    @Published var graphics: [String? : [NTMGraphics]] = [:]
+    @Published var graphics: [String?: [NTMGraphics]] = [:]
     @Published var loadingGraphics = false
     
     var sortedGraphicKeys: [String] {
@@ -65,7 +65,7 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
     
     func createFetchRequest() -> FetchRequest<NoticeToMariners> {
         if let predicate = predicate {
-            //Intialize the FetchRequest property wrapper
+            // Intialize the FetchRequest property wrapper
             return FetchRequest(entity: NoticeToMariners.entity(), sortDescriptors: sortDescriptors, predicate: predicate)
         } else {
             return FetchRequest(entity: NoticeToMariners.entity(), sortDescriptors: sortDescriptors, predicate: NSPredicate(value: false))
@@ -80,7 +80,7 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
     }
     
     func loadGraphics() {
-        guard let url = URL(string:"\(MSIRouter.baseURLString)/publications/ntm/ntm-graphics?noticeNumber=\(noticeNumber ?? 0)&graphicType=All&output=json") else {
+        guard let url = URL(string: "\(MSIRouter.baseURLString)/publications/ntm/ntm-graphics?noticeNumber=\(noticeNumber ?? 0)&graphicType=All&output=json") else {
             print("Your API end point is Invalid")
             return
         }
@@ -89,7 +89,7 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
         
         MSI.shared.session.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: nil, interceptor: nil, requestModifier: .none)
             .responseDecodable(of: NTMGraphicsPropertyContainer.self, queue: queue) { response in
-                queue.async( execute:{
+                queue.async( execute: {
                     Task.detached {
                         DispatchQueue.main.async {
                             self.loadingGraphics = false

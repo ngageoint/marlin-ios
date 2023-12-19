@@ -209,14 +209,14 @@ struct MarlinMap: UIViewRepresentable, MarlinMapProtocol {
 
                 NSLayoutConstraint.activate([
                     scale.centerXAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.centerXAnchor),
-                    scale.bottomAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+                    scale.bottomAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.bottomAnchor, constant: -16)
                 ])
                 context.coordinator.mapScale = scale
             } else if let scale = scale {
                 mapView.addSubview(scale)
                 NSLayoutConstraint.activate([
                     scale.centerXAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.centerXAnchor),
-                    scale.bottomAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+                    scale.bottomAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.bottomAnchor, constant: -16)
                 ])
             }
         } else if let scale = scale {
@@ -345,7 +345,6 @@ protocol MapCoordinator: MKMapViewDelegate, UIGestureRecognizerDelegate {
     var marlinMap: MarlinMapProtocol { get set }
     
     var focusedAnnotation: EnlargedAnnotation? { get set }
-
     
     func setMapRegion(region: MKCoordinateRegion)
     func singleTapGesture(tapGestureRecognizer: UITapGestureRecognizer)
@@ -367,7 +366,7 @@ extension MapCoordinator {
         if let focusedAnnotation = focusedAnnotation {
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: {
                 focusedAnnotation.shrinkAnnotation()
-            }) { complete in
+            }) { _ in
                 self.mapView?.removeAnnotation(focusedAnnotation)
             }
             self.focusedAnnotation = nil

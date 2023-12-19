@@ -8,8 +8,7 @@
 import Foundation
 import Alamofire
 
-enum MSIRouter: URLRequestConvertible
-{
+enum MSIRouter: URLRequestConvertible {
     case readAsams(date: String? = nil)
     case readModus(date: String? = nil)
     case readNavigationalWarnings
@@ -25,8 +24,7 @@ enum MSIRouter: URLRequestConvertible
     static let baseURLString = "https://msi.nga.mil/api"
     static let ntmGraphicKeyBase = "16920957/SFH00000/UNTM"
     
-    var method: HTTPMethod
-    {
+    var method: HTTPMethod {
         switch self {
         case .readAsams:
             return .get
@@ -53,8 +51,7 @@ enum MSIRouter: URLRequestConvertible
         }
     }
     
-    var path: String
-    {
+    var path: String {
         switch self {
         case .readAsams:
             return "/publications/asam"
@@ -83,13 +80,13 @@ enum MSIRouter: URLRequestConvertible
     
     var parameters: Parameters? {
         switch self {
-        case .readAsams(date: _):
+        case .readAsams:
             // we cannot reliably query for asams that occured after the date we have because
             // records can be inserted with an occurance date in the past
             // we have to query for all records all the time
             let params = [
                 "sort": "date",
-                "output": "json",
+                "output": "json"
 //                "maxOccurDate": Asam.dateFormatter.string(from:Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date())
             ]
 //            if let date = date {
@@ -98,7 +95,7 @@ enum MSIRouter: URLRequestConvertible
             return params
         case .readModus(date: let date):
             var params = [
-                "maxSourceDate": Modu.dateFormatter.string(from:Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date()),
+                "maxSourceDate": Modu.dateFormatter.string(from: Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date()),
                 "output": "json"
             ]
             if let date = date {
@@ -114,8 +111,8 @@ enum MSIRouter: URLRequestConvertible
             var params = [
                 "output": "json",
                 "includeRemovals": false,
-                "volume":volume
-            ] as [String : Any]
+                "volume": volume
+            ] as [String: Any]
             if let noticeYear = noticeYear, let noticeWeek = noticeWeek {
                 let calendar = Calendar.current
                 let week = calendar.component(.weekOfYear, from: Date())
@@ -132,7 +129,7 @@ enum MSIRouter: URLRequestConvertible
             var params = [
                 "output": "json",
                 "includeRemovals": false
-            ] as [String : Any]
+            ] as [String: Any]
             if let noticeYear = noticeYear, let noticeWeek = noticeWeek {
                 let calendar = Calendar.current
                 let week = calendar.component(.weekOfYear, from: Date())
@@ -145,7 +142,7 @@ enum MSIRouter: URLRequestConvertible
             var params = [
                 "output": "json",
                 "includeRemovals": false
-            ] as [String : Any]
+            ] as [String: Any]
             if let volume = volume {
                 params["volume"] = volume
             }
@@ -182,8 +179,7 @@ enum MSIRouter: URLRequestConvertible
     
     // MARK: URLRequestConvertible
     
-    func asURLRequest() throws -> URLRequest
-    {
+    func asURLRequest() throws -> URLRequest {
         let url = try MSIRouter.baseURLString.asURL()
         
         var urlRequest = URLRequest(url: url.appendingPathComponent(path))

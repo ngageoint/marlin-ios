@@ -75,7 +75,7 @@ class GeoPackageExportViewModel: ObservableObject {
     var countChangeCancellable: AnyCancellable?
 
     var manager: GPKGGeoPackageManager = GPKGGeoPackageFactory.manager()
-    @Published var filterViewModels: [DataSourceDefinitions : FilterViewModel] = [:]
+    @Published var filterViewModels: [DataSourceDefinitions: FilterViewModel] = [:]
     @Published var commonViewModel: FilterViewModel = TemporaryFilterViewModel(dataSource: DataSourceDefinitions.common.filterable, filters: [])
     
     var geoPackage: GPKGGeoPackage?
@@ -83,14 +83,14 @@ class GeoPackageExportViewModel: ObservableObject {
     
     @Published var dataSources: [any DataSourceDefinition] = []
     
-    @Published var exportProgresses: [DataSourceDefinitions : DataSourceExportProgress] = [:]
+    @Published var exportProgresses: [DataSourceDefinitions: DataSourceExportProgress] = [:]
     
     @Published var complete: Bool = false
     @Published var exporting: Bool = false
     @Published var creationError: String?
     @Published var error: Bool = false
     
-    @Published var counts: [DataSourceDefinitions : Int] = [:]
+    @Published var counts: [DataSourceDefinitions: Int] = [:]
     
     init() {
         setupCombine()
@@ -130,7 +130,7 @@ class GeoPackageExportViewModel: ObservableObject {
         }
         countChangeCancellable = Publishers.CombineLatest3($dataSources, commonViewModel.$filters, publisher)
             .receive(on: RunLoop.main)
-            .sink { [weak self] commonFilters in
+            .sink { [weak self] _ in
                 guard let self = self else { return }
                 self.updateCounts()
             }

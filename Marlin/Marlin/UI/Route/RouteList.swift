@@ -44,7 +44,7 @@ struct RouteSummaryView: DataSourceSummaryView {
                                 if let dataSourceKey = last.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
                                     DataSourceCircleImage(dataSource: type, size: 15)
                                 }
-                                if let ds = last.decodeToDataSource() as? DataSource  {
+                                if let ds = last.decodeToDataSource() as? DataSource {
                                     Text(ds.itemTitle)
                                         .font(Font.overline)
                                         .foregroundColor(Color.onSurfaceColor)
@@ -80,7 +80,7 @@ struct RouteList: View {
                     path.append(MarlinRoute.editRoute(routeURI: route.routeURL))
                 }
                 .swipeActions(edge: .trailing) {
-                    Button(role: .destructive)  {
+                    Button(role: .destructive) {
                         print("delete")
                         viewModel.deleteRoute(route: route.routeURL)
                     } label: {

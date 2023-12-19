@@ -55,16 +55,16 @@ struct PortSummaryView: DataSourceSummaryView {
         }
         .onAppear {
             if let currentLocation = locationManager.lastLocation {
-                let metersMeasurement = NSMeasurement(doubleValue: port.distanceTo(currentLocation), unit: UnitLength.meters);
-                let convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles);
+                let metersMeasurement = NSMeasurement(doubleValue: port.distanceTo(currentLocation), unit: UnitLength.meters)
+                let convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles)
                 
                 distance = "\(measurementFormatter.string(from: convertedMeasurement)), \(currentLocation.coordinate.generalDirection(to: port.coordinate))"
             }
         }
         .onChange(of: locationManager.lastLocation) { lastLocation in
             if let currentLocation = lastLocation {
-                let metersMeasurement = NSMeasurement(doubleValue: port.distanceTo(currentLocation), unit: UnitLength.meters);
-                let convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles);
+                let metersMeasurement = NSMeasurement(doubleValue: port.distanceTo(currentLocation), unit: UnitLength.meters)
+                let convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles)
                 
                 distance = "\(measurementFormatter.string(from: convertedMeasurement)), \(currentLocation.coordinate.generalDirection(to: port.coordinate))"
             }

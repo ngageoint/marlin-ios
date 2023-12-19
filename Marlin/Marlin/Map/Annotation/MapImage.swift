@@ -41,7 +41,7 @@ extension MapImage {
                 let dataSourceImage = image.aspectResize(
                     to: CGSize(width: circleImage.size.width / 1.5, height: circleImage.size.height / 1.5))
                 .withRenderingMode(.alwaysTemplate)
-                .maskWithColor(color: UIColor.white){
+                .maskWithColor(color: UIColor.white) {
                 images.append(dataSourceImage)
             }
         }
@@ -84,7 +84,7 @@ extension MapImage {
                         circle.fill()
                         if let dataSourceImage = Self.definition.image?.aspectResize(
                             to: CGSize(width: radius * 2.0 / 1.5, height: radius * 2.0 / 1.5))
-                            .withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white){
+                            .withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white) {
                             dataSourceImage.draw(
                                 at: CGPoint(
                                     x: pixel.x - dataSourceImage.size.width / 2.0,
@@ -98,7 +98,7 @@ extension MapImage {
                             to: CGSize(
                                 width: image.size.width / 1.5,
                                 height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate)
-                            .maskWithColor(color: UIColor.white){
+                            .maskWithColor(color: UIColor.white) {
                             images.append(dataSourceImage)
                         }
                     }

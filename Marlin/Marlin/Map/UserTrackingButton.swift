@@ -45,7 +45,7 @@ struct UserTrackingButton: View {
             setButtonImage()
             mapState?.userTrackingMode = userTrackingMode
         }
-        .onChange(of: locationManager.locationStatus ?? .notDetermined) { newValue in
+        .onChange(of: locationManager.locationStatus ?? .notDetermined) { _ in
             setButtonImage()
         }
         .onChange(of: mapState?.userTrackingMode) { newValue in

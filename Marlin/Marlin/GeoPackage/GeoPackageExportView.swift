@@ -351,4 +351,3 @@ struct ExportProgressRow: View {
         }
     }
 }
-

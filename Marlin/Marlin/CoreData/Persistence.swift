@@ -14,7 +14,7 @@ protocol PersistentStore {
     func fetchFirst<T: NSManagedObject>(_ entityClass: T.Type,
                                         sortBy: [NSSortDescriptor]?,
                                         predicate: NSPredicate?,
-                                        context: NSManagedObjectContext?) throws-> T?
+                                        context: NSManagedObjectContext?) throws -> T?
     func fetch<ResultType: NSFetchRequestResult>(fetchRequest: NSFetchRequest<ResultType>) throws -> [ResultType]
     func perform(_ block: @escaping () -> Void)
     func save() throws
@@ -70,10 +70,10 @@ class MockPersistentStore: PersistentStore {
         return NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     }
     
-    func fetchFirst<T: NSManagedObject>(_ entityClass:T.Type,
+    func fetchFirst<T: NSManagedObject>(_ entityClass: T.Type,
                                         sortBy: [NSSortDescriptor]? = nil,
                                         predicate: NSPredicate? = nil,
-                                        context: NSManagedObjectContext? = nil) throws-> T? {
+                                        context: NSManagedObjectContext? = nil) throws -> T? {
         return nil
     }
     
@@ -128,7 +128,7 @@ class CoreDataPersistentStore: PersistentStore {
     func fetchFirst<T: NSManagedObject>(_ entityClass: T.Type,
                                          sortBy: [NSSortDescriptor]? = nil,
                                          predicate: NSPredicate? = nil,
-                                        context: NSManagedObjectContext? = nil) throws-> T? {
+                                        context: NSManagedObjectContext? = nil) throws -> T? {
         
         return try (context ?? container.viewContext).fetchFirst(entityClass, sortBy: sortBy, predicate: predicate)
     }
@@ -316,7 +316,7 @@ class CoreDataPersistentStore: PersistentStore {
         _container = initializeContainer()
         NotificationCenter.default
             .publisher(for: .NSPersistentStoreRemoteChange)
-            .sink { value in
+            .sink { _ in
                 self.fetchPersistentHistoryTransactionsAndChanges()
             }
             .store(in: &subscriptions)
@@ -332,8 +332,7 @@ class CoreDataPersistentStore: PersistentStore {
         if let forceReloadDate = forceReloadDate, lastLoadDate < forceReloadDate, !inMemory {
             NSLog("Delete and reload")
             if !inMemory {
-                do
-                {
+                do {
                     let storeURL: URL = NSPersistentContainer
                         .defaultDirectoryURL()
                         .appendingPathComponent("Marlin.sqlite")
@@ -346,9 +345,7 @@ class CoreDataPersistentStore: PersistentStore {
                         .defaultDirectoryURL()
                         .appendingPathComponent("Marlin.sqlite-shm")
                     try FileManager.default.removeItem(atPath: shmURL.path)
-                }
-                catch
-                {
+                } catch {
                     print(error.localizedDescription)
                 }
             }
@@ -455,7 +452,7 @@ class CoreDataPersistentStore: PersistentStore {
     
     private func mergePersistentHistoryChanges(from history: [NSPersistentHistoryTransaction]) {
         let entityMap: [String?: String] = 
-        MSI.shared.masterDataList.reduce([String?:String]()) { (partialResult, importable) -> [String?:String] in
+        MSI.shared.masterDataList.reduce([String?: String]()) { (partialResult, importable) -> [String?: String] in
             var partialResult = partialResult
             partialResult[importable.entity().name] = importable.key
             return partialResult
@@ -465,8 +462,8 @@ class CoreDataPersistentStore: PersistentStore {
         /// - Tag: mergeChanges
         let viewContext = container.viewContext
         viewContext.perform {
-            var updateCounts: [String? : Int] = [:]
-            var insertCounts: [String? : Int] = [:]
+            var updateCounts: [String?: Int] = [:]
+            var insertCounts: [String?: Int] = [:]
             for transaction in history {
                 let notif = transaction.objectIDNotification()
                 let inserts: Set<NSManagedObjectID> =

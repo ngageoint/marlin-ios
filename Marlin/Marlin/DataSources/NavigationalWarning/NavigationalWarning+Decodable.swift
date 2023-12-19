@@ -92,7 +92,7 @@ struct NavigationalWarningProperties: Decodable {
         self.subregion = try? values.decode(String.self, forKey: .subregion)
         self.text = try? values.decode(String.self, forKey: .text)
         
-        var parsedCancelDate: Date? = nil
+        var parsedCancelDate: Date?
         if let cancelDateString = try? values.decode(String.self, forKey: .cancelDate) {
             if let date = NavigationalWarningProperties.apiToDateFormatter.date(from: cancelDateString) {
                 parsedCancelDate = date
@@ -100,7 +100,7 @@ struct NavigationalWarningProperties: Decodable {
         }
         self.cancelDate = parsedCancelDate
         
-        var parsedDate: Date? = nil
+        var parsedDate: Date?
         if let dateString = try? values.decode(String.self, forKey: .issueDate) {
             if let date = NavigationalWarningProperties.apiToDateFormatter.date(from: dateString) {
                 parsedDate = date

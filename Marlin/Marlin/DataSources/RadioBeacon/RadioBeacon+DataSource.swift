@@ -206,13 +206,13 @@ extension RadioBeacon: BatchImportable {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             dictionary.addEntries(from: correctedLocationDictionary.mapValues({ value in
                 if let value = value {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             index += 1
             return false
         })

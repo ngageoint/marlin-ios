@@ -56,7 +56,7 @@ struct LightDetailView: View {
                                 }.padding([.leading, .trailing], 16)
                             }
                         }
-                        .frame(maxWidth:.infinity)
+                        .frame(maxWidth: .infinity)
                         .card()
                     } header: {
                         EmptyView().frame(width: 0, height: 0, alignment: .leading)
@@ -82,7 +82,7 @@ struct LightDetailView: View {
                 Text("Loading Light \(self.featureNumber) \(self.volumeNumber)")
             }
         }
-        .onChange(of: featureNumber + volumeNumber) { newValue in
+        .onChange(of: featureNumber + volumeNumber) { _ in
             viewModel.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
         }
         .onAppear {

@@ -204,7 +204,7 @@ struct LayerRow: View {
                     mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
                 }
             },
-            label:  {
+            label: {
                 Label(
                     title: {},
                     icon: { Image(systemName: "scope")

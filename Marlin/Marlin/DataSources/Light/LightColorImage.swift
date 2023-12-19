@@ -140,7 +140,7 @@ class LightImage {
     }
 }
 
-class LightColorImage : UIImage {
+class LightColorImage: UIImage {
     
     convenience init?(
         frame: CGRect,
@@ -312,7 +312,7 @@ class LightColorImage : UIImage {
                     let endDegrees = sector.endDegrees > sector.startDegrees ? sector.endDegrees : sector.endDegrees + 360.0
                     let midPointAngle = CGFloat(sector.startDegrees) + CGFloat(endDegrees - sector.startDegrees) / 2.0
                     var textRadius = radius
-                    if let arcWidth = arcWidth{
+                    if let arcWidth = arcWidth {
                         textRadius -= arcWidth * 1.75
                     } else {
                         textRadius -= size.height

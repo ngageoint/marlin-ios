@@ -225,8 +225,7 @@ struct LightsProperties: Codable {
             for component in ["latdeg", "latminutes", "latseconds", "latdirection"] {
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: position)
-                {
+                   let range = Range(nsrange, in: position) {
                     if component == "latdeg" {
                         latitude = Double(position[range]) ?? 0.0
                     } else if component == "latminutes" {

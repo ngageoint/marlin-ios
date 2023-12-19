@@ -167,16 +167,16 @@ class MarlinScheme: ObservableObject {
     init() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = Color.primaryUIColor;
+        appearance.backgroundColor = Color.primaryUIColor
         
         appearance.titleTextAttributes = [
             NSAttributedString.Key.foregroundColor: Color.onPrimaryUIColor,
             NSAttributedString.Key.backgroundColor: Color.primaryUIColor
-        ];
+        ]
         appearance.largeTitleTextAttributes = [
             NSAttributedString.Key.foregroundColor: Color.onPrimaryUIColor,
             NSAttributedString.Key.backgroundColor: Color.primaryUIColor
-        ];
+        ]
 
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
@@ -189,14 +189,14 @@ class MarlinScheme: ObservableObject {
         
         UITableView.appearance().backgroundColor = Color.backgroundUIColor
         
-        let tabBarAppearance = UITabBarAppearance();
+        let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.selectionIndicatorTintColor = Color.primaryUIColorVariant.withAlphaComponent(0.87)
         tabBarAppearance.backgroundColor = Color.surfaceUIColor
         setTabBarItemColors(tabBarAppearance.stackedLayoutAppearance)
         setTabBarItemColors(tabBarAppearance.inlineLayoutAppearance)
         setTabBarItemColors(tabBarAppearance.compactInlineLayoutAppearance)
 
-        UITabBar.appearance().standardAppearance = tabBarAppearance;
+        UITabBar.appearance().standardAppearance = tabBarAppearance
         UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
         
         // this is used when we preview a file
@@ -206,11 +206,11 @@ class MarlinScheme: ObservableObject {
         qlPreviewNavBarAppearance.titleTextAttributes = [
             NSAttributedString.Key.foregroundColor: UIColor.label,
             NSAttributedString.Key.backgroundColor: Color.primaryUIColor
-        ];
+        ]
         qlPreviewNavBarAppearance.largeTitleTextAttributes = [
             NSAttributedString.Key.foregroundColor: UIColor.label,
             NSAttributedString.Key.backgroundColor: Color.primaryUIColor
-        ];
+        ]
         
         // this is used when we save a file, even though we really use UIDocumentPickerViewController
         let documentBrowserNavBarAppearance = UINavigationBar.appearance(whenContainedInInstancesOf: [UIDocumentBrowserViewController.self])
@@ -221,11 +221,11 @@ class MarlinScheme: ObservableObject {
         documentBrowserNavBarAppearance.titleTextAttributes = [
             NSAttributedString.Key.foregroundColor: Color.onPrimaryUIColor,
             NSAttributedString.Key.backgroundColor: Color.primaryUIColor
-        ];
+        ]
         documentBrowserNavBarAppearance.largeTitleTextAttributes = [
             NSAttributedString.Key.foregroundColor: Color.onPrimaryUIColor,
             NSAttributedString.Key.backgroundColor: Color.primaryUIColor
-        ];
+        ]
         
         UITextField.appearance(whenContainedInInstancesOf: [UINavigationBar.self]).backgroundColor = Color.backgroundUIColor
         
@@ -234,7 +234,7 @@ class MarlinScheme: ObservableObject {
     }
     
     private func setTabBarItemColors(_ itemAppearance: UITabBarItemAppearance) {
-        itemAppearance.normal.iconColor = Color.onBackgroundUIColor.withAlphaComponent(0.6);
+        itemAppearance.normal.iconColor = Color.onBackgroundUIColor.withAlphaComponent(0.6)
         itemAppearance.normal.titleTextAttributes = [
             .foregroundColor: Color.onBackgroundUIColor.withAlphaComponent(0.6),
             .paragraphStyle: NSParagraphStyle.default

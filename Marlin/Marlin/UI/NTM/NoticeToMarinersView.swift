@@ -10,7 +10,7 @@ import SwiftUI
 struct NoticeToMarinersView: View {
     @Binding var path: NavigationPath
     
-    func getFirstDay(WeekNumber weekNumber:Int, CurrentYear currentYear: Int) -> Date? {
+    func getFirstDay(WeekNumber weekNumber: Int, CurrentYear currentYear: Int) -> Date? {
         let calendar = Calendar(identifier: .gregorian)
         var dayComponent = DateComponents()
         dayComponent.weekOfYear = weekNumber
@@ -39,7 +39,7 @@ struct NoticeToMarinersView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(section.name)
             if let sectionInt = Int(section.name) {
-                Text(dateRange(sectionInt:sectionInt))
+                Text(dateRange(sectionInt: sectionInt))
                     .secondary()
             }
         }

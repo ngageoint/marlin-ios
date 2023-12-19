@@ -677,7 +677,6 @@ struct PortModel: Locatable, Bookmarkable, DataSource, Codable, GeoJSONExportabl
             key: #keyPath(Port.offshoreMaxVesselDraft),
             type: .int),
 
-
         // Physical Environment
         DataSourceProperty(
             name: "Harbor Size",
@@ -1321,7 +1320,7 @@ struct PortModel: Locatable, Bookmarkable, DataSource, Codable, GeoJSONExportabl
             "qtSanitation": qtSanitation,
             "railway": railway,
             "regionName": regionName,
-            "regionNumber":regionNumber,
+            "regionNumber": regionNumber,
             "repairCode": repairCode,
             "s57Enc": s57Enc,
             "s101Enc": s101Enc,

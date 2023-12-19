@@ -50,7 +50,7 @@ extension GeoJSONExportable {
                     
                     for property in Self.properties {
                         if let gjObject = self as? NSObject, let value = gjObject.value(forKey: property.key) {
-                            switch (property.type) {
+                            switch property.type {
                             case .location:
                                 print("ignore")
                             default:
@@ -108,4 +108,3 @@ extension GeoJSONExportable {
         return nil
     }
 }
-

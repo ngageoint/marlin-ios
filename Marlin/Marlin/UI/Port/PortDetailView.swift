@@ -16,7 +16,7 @@ struct PortDetailView: View {
     @State var waypointURI: URL?
     
     var body: some View {
-        switch(viewModel.port) {
+        switch viewModel.port {
         case nil:
             Color.clear.onAppear {
                 viewModel.repository = portRepository
@@ -78,7 +78,7 @@ struct PortDetailView: View {
             .navigationTitle(port.portName ?? Port.dataSourceName)
             .navigationBarTitleDisplayMode(.inline)
             
-            .onChange(of: portNumber) { newValue in
+            .onChange(of: portNumber) { _ in
                 viewModel.getPort(portNumber: portNumber, waypointURI: waypointURI)
             }
             .onAppear {

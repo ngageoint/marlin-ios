@@ -41,11 +41,11 @@ extension Modu: Locatable, GeoPackageExportable, GeoJSONExportable {
     static var key: String = "modu"
     static var metricsKey: String = "modus"
     static var imageName: String? = "modu"
-    static var systemImageName: String? = nil
+    static var systemImageName: String?
     static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date), ascending: false)]
+    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property: DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date), ascending: false)]
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
@@ -59,7 +59,7 @@ extension Modu: Locatable, GeoPackageExportable, GeoJSONExportable {
         DataSourceProperty(name: "Rig Status", key: #keyPath(Modu.rigStatus), type: .string),
         DataSourceProperty(name: "Nav Area", key: #keyPath(Modu.navArea), type: .string),
         DataSourceProperty(name: "Name", key: #keyPath(Modu.name), type: .string),
-        DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date),
+        DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date)
     ]
     
     static var dateFormatter: DateFormatter {
@@ -86,7 +86,7 @@ extension Modu: BatchImportable {
     
     static func dataRequest() -> [MSIRouter] {
         let context = PersistenceController.current.newTaskContext()
-        var date: String? = nil
+        var date: String?
         context.performAndWait {
             let newestModu = try? PersistenceController.current.fetchFirst(Modu.self, sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)], predicate: nil, context: context)
             date = newestModu?.dateString
@@ -112,7 +112,7 @@ extension Modu: BatchImportable {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             
             index += 1
             return false

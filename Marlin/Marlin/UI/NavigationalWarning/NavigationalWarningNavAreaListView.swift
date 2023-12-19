@@ -36,7 +36,7 @@ struct NavigationalWarningNavAreaListView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                LazyVStack (alignment: .leading) {
+                LazyVStack(alignment: .leading) {
                     ForEach(dataSource.items) { navigationalWarning in
                         HStack {
                             navigationalWarning.summary
@@ -90,7 +90,7 @@ struct NavigationalWarningNavAreaListView: View {
                 .onAppear {
                     dataSource.setNavigationalWarnings(areaWarnings: warnings)
                 }
-                .onChange(of: dataSource.items.count) { newValue in
+                .onChange(of: dataSource.items.count) { _ in
                     let lastSeenNavWarning = dataSource.items.first { warning in
                         warning.primaryKey == lastSeen
                     }
@@ -206,13 +206,13 @@ extension Collection where Iterator.Element: Equatable {
     func item(after item: Element) -> Element? {
         return self.firstIndex(of: item)
             .flatMap(self.safeIndex(after:))
-            .map{ self[$0] }
+            .map { self[$0] }
     }
 
     func item(afterWithWrapAround item: Element) -> Element? {
         return self.firstIndex(of: item)
             .map(self.index(afterWithWrapAround:))
-            .map{ self[$0] }
+            .map { self[$0] }
     }
 }
 

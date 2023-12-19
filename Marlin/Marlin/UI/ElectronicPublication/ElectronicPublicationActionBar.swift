@@ -18,7 +18,7 @@ struct ElectronicPublicationActionBar: View {
     }
     
     var body: some View {
-        HStack(spacing:0) {
+        HStack(spacing: 0) {
             Spacer()
             BookmarkButton(viewModel: bookmarkViewModel)
             if electronicPublication.isDownloading {

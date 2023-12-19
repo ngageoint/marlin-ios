@@ -33,7 +33,7 @@ struct TestApp: App {
 }
 
 class AppState: ObservableObject {
-    @Published var loadingDataSource: [String : Bool] = [:]
+    @Published var loadingDataSource: [String: Bool] = [:]
     @Published var dataSourceBatchImportNotificationsPending: [String: [DataSourceUpdatedNotification]] = [:]
     @Published var lastNotificationRequestDate: Date = Date()
     @Published var consolidatedDataLoadedNotification: String?
@@ -56,8 +56,8 @@ struct PhaseWatcher: View {
             .onChange(of: phase) { newPhase in
                 MSI.shared.onChangeOfScenePhase(newPhase)
             }
-            .onReceive(appState.$lastNotificationRequestDate) { newValue in
-                var insertsPerDataSource: [String : Int] = [:]
+            .onReceive(appState.$lastNotificationRequestDate) { _ in
+                var insertsPerDataSource: [String: Int] = [:]
                 
                 for (_, importNotifications) in appState.dataSourceBatchImportNotificationsPending {
                     for notification in importNotifications {

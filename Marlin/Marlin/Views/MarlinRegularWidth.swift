@@ -14,7 +14,7 @@ struct MarlinRegularWidth: View {
     @AppStorage("selectedTab") var selectedTab: String = "map"
     @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = false
 
-    @State var activeRailItem: DataSourceItem? = nil
+    @State var activeRailItem: DataSourceItem?
     @State var menuOpen: Bool = false
     @Binding var filterOpen: Bool
     @State private var path: NavigationPath = NavigationPath()
@@ -30,7 +30,7 @@ struct MarlinRegularWidth: View {
     let mapFocus = NotificationCenter.default.publisher(for: .TabRequestFocus)
     
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-    @State var selection: String? = nil
+    @State var selection: String?
         
     @StateObject var mixins: MainMapMixins = MainMapMixins()
     
@@ -146,7 +146,7 @@ struct MarlinRegularWidth: View {
     
     func viewData(_ data: any DataSource) {
         NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
-        NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
+        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
         activeRailItem = dataSourceList.allTabs.first(where: { item in
             item.dataSource == type(of: data.self)
         })

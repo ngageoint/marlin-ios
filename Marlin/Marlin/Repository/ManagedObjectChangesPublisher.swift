@@ -11,8 +11,7 @@ import CoreData
 
 extension NSManagedObjectContext {
     func changesPublisher<Object: NSManagedObject, TransformedObject: Equatable>(for fetchRequest: NSFetchRequest<Object>, transformer: @escaping (Object) -> TransformedObject)
-    -> ManagedObjectChangesPublisher<Object, TransformedObject>
-    {
+    -> ManagedObjectChangesPublisher<Object, TransformedObject> {
         ManagedObjectChangesPublisher(fetchRequest: fetchRequest, context: self, transformer: transformer)
     }
 }

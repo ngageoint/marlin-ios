@@ -18,7 +18,7 @@ struct DifferentialGPSStationDetailView: View {
 
     var body: some View {
         Group {
-            switch(viewModel.differentialGPSStation) {
+            switch viewModel.differentialGPSStation {
             case nil:
                 Color.clear.onAppear {
                     viewModel.repository = dgpsRepository
@@ -64,7 +64,7 @@ struct DifferentialGPSStationDetailView: View {
         }
         .navigationTitle("\(viewModel.differentialGPSStation?.name ?? DifferentialGPSStation.dataSourceName)" )
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: featureNumber) { newValue in
+        .onChange(of: featureNumber) { _ in
             viewModel.getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
         }
         .onAppear {

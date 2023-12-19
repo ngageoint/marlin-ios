@@ -90,17 +90,17 @@ extension MapMixin {
             renderer.strokeColor = .black
             renderer.lineWidth = 1
             return renderer
-        } else if let polyline = overlay as? MKPolyline, type(of: polyline) == MKPolyline.self  {
+        } else if let polyline = overlay as? MKPolyline, type(of: polyline) == MKPolyline.self {
             let renderer = MKPolylineRenderer(polyline: polyline)
             renderer.strokeColor = .black
             renderer.lineWidth = 1
             return renderer
-        } else if let polyline = overlay as? MKPolyline, type(of: polyline) == MKGeodesicPolyline.self  {
+        } else if let polyline = overlay as? MKPolyline, type(of: polyline) == MKGeodesicPolyline.self {
             let renderer = MKPolylineRenderer(polyline: polyline)
             renderer.strokeColor = .black
             renderer.lineWidth = 1
             return renderer
-        } else if let circle = overlay as? MKCircle, type(of: circle) == MKCircle.self  {
+        } else if let circle = overlay as? MKCircle, type(of: circle) == MKCircle.self {
             let renderer = MKCircleRenderer(circle: circle)
             renderer.strokeColor = .black
             renderer.lineWidth = 1
@@ -109,7 +109,7 @@ extension MapMixin {
         return nil
     }
     
-    func traitCollectionUpdated(previous: UITraitCollection?){ }
+    func traitCollectionUpdated(previous: UITraitCollection?) { }
 
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
         return nil

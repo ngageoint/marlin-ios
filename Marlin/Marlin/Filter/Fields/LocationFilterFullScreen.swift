@@ -106,7 +106,7 @@ struct LocationFilterFullScreen: View {
                                 }
                             )
                         }
-                        .buttonStyle(MaterialButtonStyle(type:.contained))
+                        .buttonStyle(MaterialButtonStyle(type: .contained))
                         .accessibilityElement()
                         .accessibilityLabel("set first corner")
                     }

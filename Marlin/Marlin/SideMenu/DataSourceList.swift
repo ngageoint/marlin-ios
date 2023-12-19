@@ -256,7 +256,7 @@ enum DataSourceDefinitions: String, Identifiable {
     case geoPackage
     
     static func from(_ definition: (any DataSourceDefinition)? = nil) -> DataSourceDefinitions? {
-        switch(definition) {
+        switch definition {
         case is RouteDefinition:
             return DataSourceDefinitions.route
         case is AsamDefinition:
@@ -288,7 +288,7 @@ enum DataSourceDefinitions: String, Identifiable {
     }
     
     var definition: any DataSourceDefinition {
-        switch(self) {
+        switch self {
         case .route:
             return RouteDefinition()
         case .asam:
@@ -323,7 +323,7 @@ enum DataSourceDefinitions: String, Identifiable {
     }
     
     var filterable: Filterable? {
-        switch(self) {
+        switch self {
         case .route:
             return RouteFilterable()
         case .asam:
@@ -358,7 +358,7 @@ enum DataSourceDefinitions: String, Identifiable {
     }
     
     static func filterableFromDefintion(_ definition: any DataSourceDefinition) -> Filterable? {
-        switch(definition) {
+        switch definition {
         case is RouteDefinition:
             return DataSourceDefinitions.route.filterable
         case is AsamDefinition:
@@ -616,8 +616,7 @@ class DataSourceList: ObservableObject {
                 }
                 self?._mappedDataSources = Published(
                     initialValue: Array(
-                        allTabs.filter(
-                            { item in
+                        allTabs.filter({ item in
                                 UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) &&
                                 UserDefaults.standard.showOnMap(key: item.key)
                             }
@@ -626,15 +625,13 @@ class DataSourceList: ObservableObject {
                 )
                 self?._mappedFilterableDataSources = Published(
                     initialValue: Array(
-                        allTabs.filter(
-                            { item in
+                        allTabs.filter({ item in
                                 // no filtering Navigational Warnings for right now..
                                 UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) &&
                                 UserDefaults.standard.showOnMap(key: item.key)
                             }
                         )
-                        .compactMap(
-                            { item in
+                        .compactMap({ item in
                                 DataSourceDefinitions.filterableFromDefintion(item.dataSource.definition)
                             }
                         )

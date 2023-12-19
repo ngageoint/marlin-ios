@@ -23,9 +23,9 @@ extension UserDefaults {
     
     @objc func mkcoordinateregion(forKey key: String) -> MKCoordinateRegion {
         if let regionData = array(forKey: key) as? [Double] {
-            return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: regionData[0], longitude: regionData[1]), latitudinalMeters: regionData[2], longitudinalMeters: regionData[3]);
+            return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: regionData[0], longitude: regionData[1]), latitudinalMeters: regionData[2], longitudinalMeters: regionData[3])
         }
-        return MKCoordinateRegion(center: kCLLocationCoordinate2DInvalid, span: MKCoordinateSpan(latitudeDelta: -1, longitudeDelta: -1));
+        return MKCoordinateRegion(center: kCLLocationCoordinate2DInvalid, span: MKCoordinateSpan(latitudeDelta: -1, longitudeDelta: -1))
     }
     
     func setRegion(_ value: MKCoordinateRegion, forKey key: String) {
@@ -40,8 +40,8 @@ extension UserDefaults {
         let metersInLatitude = loc1.distance(from: loc2)
         let metersInLongitude = loc3.distance(from: loc4)
         
-        let regionData: [Double] = [value.center.latitude, value.center.longitude, metersInLatitude, metersInLongitude];
-        setValue(regionData, forKey: key);
+        let regionData: [Double] = [value.center.latitude, value.center.longitude, metersInLatitude, metersInLongitude]
+        setValue(regionData, forKey: key)
     }
     
     var coordinateDisplay: CoordinateDisplayType {

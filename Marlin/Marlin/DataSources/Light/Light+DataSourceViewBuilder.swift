@@ -21,7 +21,7 @@ extension Light: DataSourceViewBuilder {
     }
     
     var summary: some DataSourceSummaryView {
-        LightSummaryView(light: LightModel(light:self))
+        LightSummaryView(light: LightModel(light: self))
     }
 }
 

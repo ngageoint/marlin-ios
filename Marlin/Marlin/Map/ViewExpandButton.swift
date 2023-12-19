@@ -26,7 +26,7 @@ struct ViewExpandButton: View {
         .onAppear {
             setButtonImage()
         }
-        .onChange(of: expanded) { newValue in
+        .onChange(of: expanded) { _ in
             setButtonImage()
         }
         .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
