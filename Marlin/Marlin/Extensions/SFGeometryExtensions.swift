@@ -39,7 +39,9 @@ extension SFPolygon {
                 if let points = ring.points {
                     for point in points {
                         if let point = point as? SFPoint {
-                            positions.append(Position(longitude: point.x.doubleValue, latitude: point.y.doubleValue, altitude: nil))
+                            positions.append(
+                                Position(longitude: point.x.doubleValue, latitude: point.y.doubleValue, altitude: nil)
+                            )
                         }
                     }
                 }
@@ -66,7 +68,9 @@ extension SFLineString {
         if let points = self.points {
             for point in points {
                 if let point = point as? SFPoint {
-                    positions.append(Position(longitude: point.x.doubleValue, latitude: point.y.doubleValue, altitude: nil))
+                    positions.append(
+                        Position(longitude: point.x.doubleValue, latitude: point.y.doubleValue, altitude: nil)
+                    )
                 }
             }
         }

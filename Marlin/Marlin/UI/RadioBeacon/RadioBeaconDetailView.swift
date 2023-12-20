@@ -18,11 +18,15 @@ struct RadioBeaconDetailView: View {
     
     var body: some View {
         Group {
-            switch(viewModel.radioBeacon) {
+            switch viewModel.radioBeacon {
             case nil:
                 Color.clear.onAppear {
                     viewModel.repository = radioBeaconRepository
-                    viewModel.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+                    viewModel.getRadioBeacon(
+                        featureNumber: featureNumber,
+                        volumeNumber: volumeNumber,
+                        waypointURI: waypointURI
+                    )
                 }
             case .some(let radioBeacon):
                 List {
@@ -36,8 +40,12 @@ struct RadioBeaconDetailView: View {
                                 .foregroundColor(Color.white)
                                 .background(Color(uiColor: radioBeacon.color))
                                 .padding(.bottom, -8)
-                            DataSourceLocationMapView(dataSourceLocation: radioBeacon, mapName: "Radio Beacon Detail Map", mixins: [RadioBeaconMap<RadioBeaconModel>(objects: [radioBeacon])])
-                                .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                            DataSourceLocationMapView(
+                                dataSourceLocation: radioBeacon,
+                                mapName: "Radio Beacon Detail Map",
+                                mixins: [RadioBeaconMap<RadioBeaconModel>(objects: [radioBeacon])]
+                            )
+                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                             RadioBeaconSummaryView(radioBeacon: radioBeacon)
                                 .showBookmarkNotes(true)
                                 .setShowSectionHeader(true)
@@ -57,7 +65,7 @@ struct RadioBeaconDetailView: View {
         }
         .navigationTitle("\(viewModel.radioBeacon?.name ?? RadioBeacon.dataSourceName)" )
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: featureNumber) { newValue in
+        .onChange(of: featureNumber) { _ in
             viewModel.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
         }
         .onAppear {
@@ -67,4 +75,3 @@ struct RadioBeaconDetailView: View {
         }
     }
 }
-

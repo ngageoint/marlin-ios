@@ -15,16 +15,19 @@ struct SortButton: ViewModifier {
     
     func body(content: Content) -> some View {
         content.toolbar {
-            ToolbarItem (placement: .navigationBarTrailing)  {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 if sortEnabled {
                     HStack {
-                        Button(action: {
-                            sortOpen.toggle()
-                        }) {
-                            Image(systemName: "arrow.up.arrow.down")
-                                .imageScale(.large)
-                                .foregroundColor(Color.onPrimaryColor)
-                        }
+                        Button(
+                            action: {
+                                sortOpen.toggle()
+                            },
+                            label: {
+                                Image(systemName: "arrow.up.arrow.down")
+                                    .imageScale(.large)
+                                    .foregroundColor(Color.onPrimaryColor)
+                            }
+                        )
                         .padding(.all, 10)
                     }
                 }

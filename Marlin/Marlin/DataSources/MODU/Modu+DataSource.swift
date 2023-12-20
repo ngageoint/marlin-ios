@@ -37,15 +37,25 @@ extension Modu: Locatable, GeoPackageExportable, GeoJSONExportable {
     }
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("MODU", comment: "MODU data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Mobile Offshore Drilling Units", comment: "MODU data source display name")
+    static var fullDataSourceName: String = 
+    NSLocalizedString("Mobile Offshore Drilling Units", comment: "MODU data source display name")
     static var key: String = "modu"
     static var metricsKey: String = "modus"
     static var imageName: String? = "modu"
-    static var systemImageName: String? = nil
+    static var systemImageName: String?
     static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date), ascending: false)]
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Date",
+                key: #keyPath(Modu.date),
+                type: .date
+            ),
+            ascending: false
+        )
+    ]
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
@@ -59,7 +69,7 @@ extension Modu: Locatable, GeoPackageExportable, GeoJSONExportable {
         DataSourceProperty(name: "Rig Status", key: #keyPath(Modu.rigStatus), type: .string),
         DataSourceProperty(name: "Nav Area", key: #keyPath(Modu.navArea), type: .string),
         DataSourceProperty(name: "Name", key: #keyPath(Modu.name), type: .string),
-        DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date),
+        DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date)
     ]
     
     static var dateFormatter: DateFormatter {
@@ -81,14 +91,22 @@ extension Modu: BatchImportable {
         }
         let count = value.modu.count
         NSLog("Received \(count) \(Self.key) records.")
-        return try await Modu.importRecords(from: value.modu, taskContext: PersistenceController.current.newTaskContext())
+        return try await Modu.importRecords(
+            from: value.modu,
+            taskContext: PersistenceController.current.newTaskContext()
+        )
     }
     
     static func dataRequest() -> [MSIRouter] {
         let context = PersistenceController.current.newTaskContext()
-        var date: String? = nil
+        var date: String?
         context.performAndWait {
-            let newestModu = try? PersistenceController.current.fetchFirst(Modu.self, sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)], predicate: nil, context: context)
+            let newestModu = try? PersistenceController.current.fetchFirst(
+                Modu.self,
+                sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)],
+                predicate: nil,
+                context: context
+            )
             date = newestModu?.dateString
         }
         return [MSIRouter.readModus(date: date)]
@@ -96,7 +114,8 @@ extension Modu: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every hour
-        return UserDefaults.standard.dataSourceEnabled(Modu.definition) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(Modu.definition)
+        return UserDefaults.standard.dataSourceEnabled(Modu.definition) 
+        && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(Modu.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [ModuModel]) -> NSBatchInsertRequest {
@@ -112,7 +131,7 @@ extension Modu: BatchImportable {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             
             index += 1
             return false
@@ -120,7 +139,10 @@ extension Modu: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [ModuModel], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(
+        from propertiesList: [ModuModel],
+        taskContext: NSManagedObjectContext
+    ) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

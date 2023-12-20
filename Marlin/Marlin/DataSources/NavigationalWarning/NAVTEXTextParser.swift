@@ -17,22 +17,26 @@ struct LocationWithType: CustomStringConvertible {
     var distanceFromLocation: String?
 
     var description: String {
-        return "\(locationDescription ?? "")\n\tDistance:\(distanceFromLocation ?? "")\n\t\(locationType ?? "")\n\t\t [\(location.joined(separator: "; "))]\n"
+        return """
+            \(locationDescription ?? "")\n\tDistance:\(distanceFromLocation ?? "")\n\
+            \t\(locationType ?? "")\n\t\t [\(location.joined(separator: "; "))]\n
+        """
     }
     
     var metersDistance: Double? {
-        let nf = NumberFormatter()
-        nf.numberStyle = .spellOut
-        nf.isLenient = true
-        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .spellOut
+        formatter.isLenient = true
+
         var distance: Double?
         if let distanceFromLocation = distanceFromLocation {
             let range = distanceFromLocation.ranges(of: "(MILE)|(METER)", options: .regularExpression)
             if let first = range.first, first.lowerBound != distanceFromLocation.startIndex {
-                let beginingText = distanceFromLocation[...distanceFromLocation.index(before:first.lowerBound)].trimmingCharacters(in: .whitespacesAndNewlines)
-                // now split on word boundaries, try to parse each into a number start at the end, then go backwards until
-                // it fails to parse to find the extent of the number words
-                
+                let beginingText = distanceFromLocation[...distanceFromLocation.index(before: first.lowerBound)]
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                // now split on word boundaries, try to parse each into a number start at the end,
+                // then go backwards until it fails to parse to find the extent of the number words
+
                 let wordSplit = Array(beginingText.components(separatedBy: " ").reversed())
                 var lastParts: [String] = []
                 var tempParsedNumber: Double?
@@ -41,14 +45,17 @@ struct LocationWithType: CustomStringConvertible {
                     // first see if it is a number anyway
                     if let parsed = Double(lastParts.joined(separator: " ")) {
                         tempParsedNumber = parsed
-                    } else if let parsed = nf.number(from:lastParts.joined(separator: " ")) {
+                    } else if let parsed = formatter.number(from: lastParts.joined(separator: " ")) {
                         // see if it is a number in words
                         tempParsedNumber = parsed.doubleValue
                     }
                 }
                 if let parsedNumber = tempParsedNumber {
                     if distanceFromLocation.contains("MILE") {
-                        let milesMeasurement = NSMeasurement(doubleValue: Double(parsedNumber), unit: UnitLength.nauticalMiles)
+                        let milesMeasurement = NSMeasurement(
+                            doubleValue: Double(parsedNumber),
+                            unit: UnitLength.nauticalMiles
+                        )
                         let convertedMeasurement = milesMeasurement.converting(to: UnitLength.meters)
                         distance = convertedMeasurement.value
                     } else {
@@ -78,7 +85,8 @@ struct LocationWithType: CustomStringConvertible {
             }
             return MKPolyline(points: &points, count: points.count)
         } else if locationType == "Point" {
-            if let firstLocation = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: firstLocation) {
+            if let firstLocation = location.first, 
+                let coordinate = CLLocationCoordinate2D(coordinateString: firstLocation) {
                 if let metersDistance = metersDistance {
                     // this is really a circle
                     return MKCircle(center: coordinate, radius: metersDistance)
@@ -88,7 +96,8 @@ struct LocationWithType: CustomStringConvertible {
                 return point
             }
         } else if locationType == "Circle" {
-            if let locationPoint = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
+            if let locationPoint = location.first, 
+                let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
                 return MKCircle(center: coordinate, radius: metersDistance ?? 1000)
             }
         }
@@ -114,11 +123,13 @@ struct LocationWithType: CustomStringConvertible {
                 }
             }
         } else if locationType == "Point" {
-            if let firstLocation = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: firstLocation) {
+            if let firstLocation = location.first, 
+                let coordinate = CLLocationCoordinate2D(coordinateString: firstLocation) {
                 points.append(MKMapPoint(coordinate))
             }
         } else if locationType == "Circle" {
-            if let locationPoint = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
+            if let locationPoint = location.first, 
+                let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
                 points.append(MKMapPoint(coordinate))
             }
         }
@@ -128,20 +139,29 @@ struct LocationWithType: CustomStringConvertible {
         var southEast: CLLocationCoordinate2D?
         for point in points {
             if let currentNorthWest = northWest {
-                northWest = CLLocationCoordinate2D(latitude: max(currentNorthWest.latitude, point.coordinate.latitude), longitude: min(currentNorthWest.longitude, point.coordinate.longitude))
+                northWest = CLLocationCoordinate2D(
+                    latitude: max(currentNorthWest.latitude, point.coordinate.latitude),
+                    longitude: min(currentNorthWest.longitude, point.coordinate.longitude)
+                )
             } else {
                 northWest = point.coordinate
             }
             
             if let currentSouthEast = southEast {
-                southEast = CLLocationCoordinate2D(latitude: min(currentSouthEast.latitude, point.coordinate.latitude), longitude: max(currentSouthEast.longitude, point.coordinate.longitude))
+                southEast = CLLocationCoordinate2D(
+                    latitude: min(currentSouthEast.latitude, point.coordinate.latitude),
+                    longitude: max(currentSouthEast.longitude, point.coordinate.longitude)
+                )
             } else {
                 southEast = point.coordinate
             }
         }
         
         if let northWest = northWest, let southEast = southEast {
-            span = MKCoordinateSpan(latitudeDelta: northWest.latitude - southEast.latitude, longitudeDelta: southEast.longitude - northWest.longitude)
+            span = MKCoordinateSpan(
+                latitudeDelta: northWest.latitude - southEast.latitude,
+                longitudeDelta: southEast.longitude - northWest.longitude
+            )
         }
         
         return span
@@ -153,11 +173,13 @@ struct LocationWithType: CustomStringConvertible {
         } else if locationType == "LineString" {
             return SFLineString(locations: location)
         } else if locationType == "Point" {
-            if let firstLocation = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: firstLocation) {
+            if let firstLocation = location.first, 
+                let coordinate = CLLocationCoordinate2D(coordinateString: firstLocation) {
                 return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
             }
         } else if locationType == "Circle" {
-            if let locationPoint = location.first, let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
+            if let locationPoint = location.first, 
+                let coordinate = CLLocationCoordinate2D(coordinateString: locationPoint) {
                 return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
             }
         }
@@ -183,7 +205,17 @@ struct MappedLocation: CustomStringConvertible {
     var dnc: String?
     var chart: String?
     
-    init(seedData: MappedLocation? = nil, locationName: String? = nil, specificArea: String? = nil, subject: String? = nil, cancelTime: String? = nil, location: [LocationWithType]? = nil, when: String? = nil, extra: String? = nil, dnc: String? = nil, chart: String? = nil) {
+    init(
+        seedData: MappedLocation? = nil,
+        locationName: String? = nil,
+        specificArea: String? = nil,
+        subject: String? = nil,
+        cancelTime: String? = nil,
+        location: [LocationWithType]? = nil,
+        when: String? = nil,
+        extra: String? = nil,
+        dnc: String? = nil,
+        chart: String? = nil) {
         if let seedData = seedData {
             self.locationName = seedData.locationName
             self.specificArea = seedData.specificArea
@@ -225,7 +257,17 @@ struct MappedLocation: CustomStringConvertible {
     }
     
     var description: String {
-        return "Location Name: \(locationName ?? "")\nSpecific Area: \(specificArea ?? "")\nSubject: \(subject ?? "")\nCancelTime: \(cancelTime ?? "")\nLocation: \(locations)\nWhen: \(when ?? "")\nExtra: \(extra ?? "")\nDNC: \(dnc ?? "")\nChart: \(chart ?? "")\n"
+        return """
+            Location Name: \(locationName ?? "")\n\
+            Specific Area: \(specificArea ?? "")\n\
+            Subject: \(subject ?? "")\n\
+            CancelTime: \(cancelTime ?? "")\n\
+            Location: \(locations)\n\
+            When: \(when ?? "")\n\
+            Extra: \(extra ?? "")\n\
+            DNC: \(dnc ?? "")\n\
+            Chart: \(chart ?? "")\n
+        """
     }
     
     var center: CLLocationCoordinate2D? {
@@ -236,13 +278,17 @@ struct MappedLocation: CustomStringConvertible {
         for location in locations {
             if let locationCenter = location.center {
                 if let currentNorthWest = northWest {
-                    northWest = CLLocationCoordinate2D(latitude: max(currentNorthWest.latitude, locationCenter.latitude), longitude: min(currentNorthWest.longitude, locationCenter.longitude))
+                    northWest = CLLocationCoordinate2D(
+                        latitude: max(currentNorthWest.latitude, locationCenter.latitude),
+                        longitude: min(currentNorthWest.longitude, locationCenter.longitude))
                 } else {
                     northWest = locationCenter
                 }
                 
                 if let currentSouthEast = southEast {
-                    southEast = CLLocationCoordinate2D(latitude: min(currentSouthEast.latitude, locationCenter.latitude), longitude: max(currentSouthEast.longitude, locationCenter.longitude))
+                    southEast = CLLocationCoordinate2D(
+                        latitude: min(currentSouthEast.latitude, locationCenter.latitude),
+                        longitude: max(currentSouthEast.longitude, locationCenter.longitude))
                 } else {
                     southEast = locationCenter
                 }
@@ -250,7 +296,9 @@ struct MappedLocation: CustomStringConvertible {
         }
         
         if let northWest = northWest, let southEast = southEast {
-            center = CLLocationCoordinate2D(latitude: southEast.latitude + ((northWest.latitude - southEast.latitude) / 2.0), longitude: northWest.longitude + ((southEast.longitude - northWest.longitude) / 2.0))
+            center = CLLocationCoordinate2D(
+                latitude: southEast.latitude + ((northWest.latitude - southEast.latitude) / 2.0),
+                longitude: northWest.longitude + ((southEast.longitude - northWest.longitude) / 2.0))
         }
         
         return center
@@ -270,21 +318,44 @@ struct MappedLocation: CustomStringConvertible {
         for location in locations {
             if let locationCenter = location.center, let locationSpan = location.span {
                 if let currentNorthWest = northWest {
-                    northWest = CLLocationCoordinate2D(latitude: max(currentNorthWest.latitude, locationCenter.latitude + (locationSpan.latitudeDelta / 2.0)), longitude: min(currentNorthWest.longitude, locationCenter.longitude - (locationSpan.longitudeDelta / 2.0)))
+                    northWest = CLLocationCoordinate2D(
+                        latitude: max(
+                            currentNorthWest.latitude,
+                            locationCenter.latitude + (locationSpan.latitudeDelta / 2.0)
+                        ),
+                        longitude: min(
+                            currentNorthWest.longitude,
+                            locationCenter.longitude - (locationSpan.longitudeDelta / 2.0))
+                    )
                 } else {
-                    northWest = CLLocationCoordinate2D(latitude: locationCenter.latitude + (locationSpan.latitudeDelta / 2.0), longitude: locationCenter.longitude - (locationSpan.longitudeDelta / 2.0))
+                    northWest = CLLocationCoordinate2D(
+                        latitude: locationCenter.latitude + (locationSpan.latitudeDelta / 2.0),
+                        longitude: locationCenter.longitude - (locationSpan.longitudeDelta / 2.0))
                 }
                 
                 if let currentSouthEast = southEast {
-                    southEast = CLLocationCoordinate2D(latitude: min(currentSouthEast.latitude, locationCenter.latitude - (locationSpan.latitudeDelta / 2.0)), longitude: max(currentSouthEast.longitude, locationCenter.longitude + (locationSpan.longitudeDelta / 2.0)))
+                    southEast = CLLocationCoordinate2D(
+                        latitude: min(
+                            currentSouthEast.latitude,
+                            locationCenter.latitude - (locationSpan.latitudeDelta / 2.0)
+                        ),
+                        longitude: max(
+                            currentSouthEast.longitude,
+                            locationCenter.longitude + (locationSpan.longitudeDelta / 2.0)
+                        )
+                    )
                 } else {
-                    southEast = CLLocationCoordinate2D(latitude: locationCenter.latitude - (locationSpan.latitudeDelta / 2.0), longitude: locationCenter.longitude + (locationSpan.longitudeDelta / 2.0))
+                    southEast = CLLocationCoordinate2D(
+                        latitude: locationCenter.latitude - (locationSpan.latitudeDelta / 2.0),
+                        longitude: locationCenter.longitude + (locationSpan.longitudeDelta / 2.0))
                 }
             }
         }
         
         if let northWest = northWest, let southEast = southEast {
-            span = MKCoordinateSpan(latitudeDelta: northWest.latitude - southEast.latitude, longitudeDelta: southEast.longitude - northWest.longitude)
+            span = MKCoordinateSpan(
+                latitudeDelta: northWest.latitude - southEast.latitude,
+                longitudeDelta: southEast.longitude - northWest.longitude)
         }
         
         return span
@@ -295,9 +366,9 @@ struct MappedLocation: CustomStringConvertible {
         for location in locations {
             if let wkt = location.wkt {
                 if let distance = location.metersDistance {
-                    wkts.append(["wkt":wkt, "distance":"\(distance)"])
+                    wkts.append(["wkt": wkt, "distance": "\(distance)"])
                 } else {
-                    wkts.append(["wkt":wkt])
+                    wkts.append(["wkt": wkt])
                 }
             }
         }
@@ -411,12 +482,22 @@ class NAVTEXTextParser {
                 }
             }
             
-            let locationRanges = toParse.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]", options: .regularExpression)
+            let locationRanges = toParse.ranges(
+                of: """
+                    [0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} \
+                    {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]
+                """,
+                options: .regularExpression)
             stringLocations.append(contentsOf: locationRanges.map { String(toParse[$0]) })
         }
         
         if !stringLocations.isEmpty {
-            locations.append(LocationWithType(location: stringLocations, locationType: currentLocationType, locationDescription: subject, distanceFromLocation: firstDistance))
+            locations.append(
+                LocationWithType(
+                    location: stringLocations,
+                    locationType: currentLocationType,
+                    locationDescription: subject,
+                    distanceFromLocation: firstDistance))
         }
     }
     
@@ -434,7 +515,7 @@ class NAVTEXTextParser {
     }
 
     func parseNumber(numberSection: String) {
-        var headingAndLetters = splitLettersFromHeading(text: numberSection)
+        let headingAndLetters = splitLettersFromHeading(text: numberSection)
         if let heading = headingAndLetters.heading {
             numberDistance = parseDistance(line: heading)
             let distance = numberDistance ?? firstDistance
@@ -447,7 +528,13 @@ class NAVTEXTextParser {
                 }
             }
             if let parsedLocations = descriptionAndLocations.locations, !parsedLocations.isEmpty {
-                locations.append(LocationWithType(location: parsedLocations, locationType: currentLocationType, locationDescription: descriptionAndLocations.description != nil ? descriptionAndLocations.description : heading, distanceFromLocation: distance))
+                locations.append(
+                    LocationWithType(
+                        location: parsedLocations,
+                        locationType: currentLocationType,
+                        locationDescription: descriptionAndLocations.description != nil 
+                        ? descriptionAndLocations.description : heading,
+                        distanceFromLocation: distance))
             }
         }
         if let letters = headingAndLetters.letters {
@@ -470,7 +557,14 @@ class NAVTEXTextParser {
             // this will be the letter
             if !sentence.contains(" ") {
                 if !currentLocations.isEmpty {
-                    locations.append(LocationWithType(location: currentLocations, locationType: currentLocationType, locationDescription: currentLetterDescription.compactMap { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.joined(separator: " "), distanceFromLocation: distance))
+                    locations.append(
+                        LocationWithType(
+                            location: currentLocations,
+                            locationType: currentLocationType,
+                            locationDescription: currentLetterDescription.compactMap {
+                                $0.trimmingCharacters(in: .whitespacesAndNewlines)
+                            }.joined(separator: " "), 
+                            distanceFromLocation: distance))
                     currentLocations = []
                     currentLetterDescription = []
                 }
@@ -488,12 +582,24 @@ class NAVTEXTextParser {
         
         // add the final parsed locations
         if !currentLocations.isEmpty {
-            locations.append(LocationWithType(location: currentLocations, locationType: currentLocationType, locationDescription: currentLetterDescription.compactMap { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.joined(separator: " "), distanceFromLocation: distance))
+            locations.append(
+                LocationWithType(
+                    location: currentLocations,
+                    locationType: currentLocationType,
+                    locationDescription: currentLetterDescription.compactMap {
+                        $0.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }.joined(separator: " "),
+                    distanceFromLocation: distance))
         }
     }
     
     func splitDescriptionFromLocation(text: String) -> (description: String?, locations: [String]?) {
-        let locationRanges = text.ranges(of: "[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]", options: .regularExpression)
+        let locationRanges = text.ranges(
+            of: """
+                [0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} \
+                {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]
+            """,
+            options: .regularExpression)
         if locationRanges.isEmpty {
             return (text, nil)
         } else {
@@ -502,7 +608,8 @@ class NAVTEXTextParser {
             if let first = locationRanges.first {
                 if first.lowerBound != text.startIndex {
                     // go back one index from the start of the first match
-                    let finalIndex = first.lowerBound == text.endIndex ? first.lowerBound : text.index(before: first.lowerBound)
+                    let finalIndex = first.lowerBound == text.endIndex 
+                    ? first.lowerBound : text.index(before: first.lowerBound)
                     description = String(text[...finalIndex]).trimmingCharacters(in: .whitespaces)
                 }
             }
@@ -528,15 +635,25 @@ class NAVTEXTextParser {
         
         let regexOptions: NSRegularExpression.Options = [.anchorsMatchLines]
         let regex = try? NSRegularExpression(pattern: "\\bA\\. ", options: regexOptions)
-        if let lettersNSRange = regex?.rangeOfFirstMatch(in: text, range: NSRange(location: 0, length: text.utf8.count)), let lettersRange = Range(lettersNSRange) {
+        if let lettersNSRange = regex?.rangeOfFirstMatch(
+            in: text,
+            range: NSRange(location: 0, length: text.utf8.count)),
+            let lettersRange = Range(lettersNSRange) {
             let lowerBound = String.Index(utf16Offset: lettersRange.lowerBound, in: text)
             if lettersNSRange.lowerBound != 0 {
-                heading = String(text[...text.index(lowerBound, offsetBy: -1)]).split(separator: "\n").compactMap { $0.trimmingCharacters(in:.whitespacesAndNewlines) }.joined(separator: " ")
+                heading = String(text[...text.index(lowerBound, offsetBy: -1)])
+                    .split(separator: "\n")
+                    .compactMap {
+                        $0.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }.joined(separator: " ")
             }
             letters = String(text[lowerBound...])
         } else {
             // the entire thing is the heading
-            heading = text.split(separator: "\n").compactMap { $0.trimmingCharacters(in:.whitespacesAndNewlines) }.joined(separator: " ")
+            heading = text.split(separator: "\n")
+                .compactMap {
+                    $0.trimmingCharacters(in: .whitespacesAndNewlines)
+                }.joined(separator: " ")
         }
         return (heading, letters)
     }
@@ -547,10 +664,14 @@ class NAVTEXTextParser {
                 
         let regexOptions: NSRegularExpression.Options = [.anchorsMatchLines]
         let regex = try? NSRegularExpression(pattern: "\\b[1A]\\. ", options: regexOptions)
-        if let sectionNSRange = regex?.rangeOfFirstMatch(in: string, range: NSRange(location: 0, length: string.utf8.count)), let sectionRange = Range(sectionNSRange) {
+        if let sectionNSRange = regex?.rangeOfFirstMatch(
+            in: string,
+            range: NSRange(location: 0, length: string.utf8.count)),
+            let sectionRange = Range(sectionNSRange) {
             let lowerBound = String.Index(utf16Offset: sectionRange.lowerBound, in: string)
             if sectionNSRange.lowerBound != 0 {
-                heading = String(string[...string.index(lowerBound, offsetBy: -1)]).trimmingCharacters(in: .whitespacesAndNewlines)
+                heading = String(string[...string.index(lowerBound, offsetBy: -1)])
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
             }
             sections = String(string[lowerBound...]).trimmingCharacters(in: .whitespacesAndNewlines)
         } else {
@@ -576,14 +697,18 @@ class NAVTEXTextParser {
     
     func splitLetters(string: String) -> [String] {
         var letters: [String] = []
-        let ranges = string.ranges(of: "(?<letters>[\\w]+\\. (?<letterContent>[\\W\\w]*?)(?=([\\w]+\\. [\\w])|($)))", options: .regularExpression)
+        let ranges = string.ranges(
+            of: "(?<letters>[\\w]+\\. (?<letterContent>[\\W\\w]*?)(?=([\\w]+\\. [\\w])|($)))",
+            options: .regularExpression)
         letters = ranges.map { String(string[$0]).trimmingCharacters(in: .whitespacesAndNewlines) }
         return letters
     }
     
     func splitNumbers(string: String) -> [String] {
         var numbers: [String] = []
-        let ranges = string.ranges(of: "(?<numbers>[\\d]+\\. (?<numberContent>[\\W\\w]*?)(?=([\\d]+\\. [\\w])|($)))", options: .regularExpression)
+        let ranges = string.ranges(
+            of: "(?<numbers>[\\d]+\\. (?<numberContent>[\\W\\w]*?)(?=([\\d]+\\. [\\w])|($)))",
+            options: .regularExpression)
         numbers = ranges.map { String(string[$0]).trimmingCharacters(in: .whitespacesAndNewlines) }
         return numbers
     }
@@ -610,11 +735,20 @@ class NAVTEXTextParser {
                 }
             }
         }
-        return MappedLocation(locationName: areaName, specificArea: specificArea, subject: subject, cancelTime: nil, location: locations, when: nil, extra: extras.joined(separator: "\n"), dnc:dnc, chart: chart)
+        return MappedLocation(
+            locationName: areaName,
+            specificArea: specificArea,
+            subject: subject,
+            cancelTime: nil,
+            location: locations,
+            when: nil,
+            extra: extras.joined(separator: "\n"),
+            dnc: dnc,
+            chart: chart)
     }
     
     func parseToWKT() -> [[String: Any?]] {
-        var mappedLocation = parseToMappedLocation()
+        let mappedLocation = parseToMappedLocation()
         return mappedLocation?.wktDistance ?? []
     }
 }

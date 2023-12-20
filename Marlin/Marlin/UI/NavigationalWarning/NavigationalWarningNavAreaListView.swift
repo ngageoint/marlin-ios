@@ -36,7 +36,7 @@ struct NavigationalWarningNavAreaListView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                LazyVStack (alignment: .leading) {
+                LazyVStack(alignment: .leading) {
                     ForEach(dataSource.items) { navigationalWarning in
                         HStack {
                             navigationalWarning.summary
@@ -54,9 +54,10 @@ struct NavigationalWarningNavAreaListView: View {
                             }
                             // once this offset goes negative, they have seen the nav warning
                             if offset < 0 {
-                                // This checks if we are saving right now, because we could be still scrolling to the bottom
-                                // also checks if we have already saved a newer warning as the latest one
-                                if shouldSavePosition, let issueDate = navigationalWarning.issueDate, issueDate > lastSavedDate {
+                                // This checks if we are saving right now, because we could be still scrolling to the
+                                // bottom also checks if we have already saved a newer warning as the latest one
+                                if shouldSavePosition,
+                                    let issueDate = navigationalWarning.issueDate, issueDate > lastSavedDate {
                                     self.lastSavedDate = issueDate
                                     self.lastSeen = navigationalWarning.primaryKey
                                 }
@@ -79,7 +80,10 @@ struct NavigationalWarningNavAreaListView: View {
                     if $0 != 0 {
                         // find the one that is one older than the first unseen and save that, also turn on auto saving
                         shouldSavePosition = true
-                        if let firstUnseenNavigationalWarning = firstUnseenNavigationalWarning, let lastSeenNavigationalWarning = dataSource.items.item(after: firstUnseenNavigationalWarning) {
+                        if let firstUnseenNavigationalWarning = firstUnseenNavigationalWarning, 
+                            let lastSeenNavigationalWarning = dataSource.items.item(
+                                after: firstUnseenNavigationalWarning
+                        ) {
                             if let issueDate = lastSeenNavigationalWarning.issueDate, lastSavedDate < issueDate {
                                 self.lastSavedDate = issueDate
                                 self.lastSeen = lastSeenNavigationalWarning.primaryKey
@@ -90,7 +94,7 @@ struct NavigationalWarningNavAreaListView: View {
                 .onAppear {
                     dataSource.setNavigationalWarnings(areaWarnings: warnings)
                 }
-                .onChange(of: dataSource.items.count) { newValue in
+                .onChange(of: dataSource.items.count) { _ in
                     let lastSeenNavWarning = dataSource.items.first { warning in
                         warning.primaryKey == lastSeen
                     }
@@ -111,7 +115,10 @@ struct NavigationalWarningNavAreaListView: View {
                     if let lastSeenIndex = dataSource.items.firstIndex(where: { warning in
                         warning.primaryKey == lastSeen
                     }) {
-                        let unreadCount = dataSource.items.distance(from: dataSource.items.startIndex, to: lastSeenIndex)
+                        let unreadCount = dataSource.items.distance(
+                            from: dataSource.items.startIndex,
+                            to: lastSeenIndex
+                        )
                         if unreadCount != 0 {
                             Text("\(unreadCount) Unread Warnings")
                                 .modifier(UnreadModifier())
@@ -147,7 +154,17 @@ struct NavigationalWarningNavAreaListView: View {
                 }
             }
             .safeAreaInset(edge: .bottom, alignment: .trailing) {
-                NavigationLink(value: MarlinRoute.exportGeoPackageDataSource(dataSource: .navWarning, filters: [DataSourceFilterParameter(property: DataSourceProperty(name: "Nav Area", key: "navArea", type: DataSourcePropertyType.string), comparison: DataSourceFilterComparison.equals, valueString: navArea)])) {
+                NavigationLink(
+                    value: MarlinRoute.exportGeoPackageDataSource(
+                        dataSource: .navWarning,
+                        filters: [
+                            DataSourceFilterParameter(
+                                property: DataSourceProperty(
+                                    name: "Nav Area",
+                                    key: "navArea",
+                                    type: DataSourcePropertyType.string),
+                                comparison: DataSourceFilterComparison.equals,
+                                valueString: navArea)])) {
                     Label(
                         title: {},
                         icon: { Image(systemName: "square.and.arrow.down")
@@ -157,7 +174,12 @@ struct NavigationalWarningNavAreaListView: View {
                 }
                 .isDetailLink(false)
                 .fixedSize()
-                .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.onPrimaryColor, backgroundColor: Color.primaryColor))
+                .buttonStyle(
+                    MaterialFloatingButtonStyle(
+                        type: .secondary,
+                        size: .mini,
+                        foregroundColor: Color.onPrimaryColor,
+                        backgroundColor: Color.primaryColor))
                 .accessibilityElement(children: .contain)
                 .accessibilityLabel("Export Button")
                 .padding(16)
@@ -191,13 +213,13 @@ extension Collection where Iterator.Element: Equatable {
     func item(after item: Element) -> Element? {
         return self.firstIndex(of: item)
             .flatMap(self.safeIndex(after:))
-            .map{ self[$0] }
+            .map { self[$0] }
     }
 
     func item(afterWithWrapAround item: Element) -> Element? {
         return self.firstIndex(of: item)
             .map(self.index(afterWithWrapAround:))
-            .map{ self[$0] }
+            .map { self[$0] }
     }
 }
 

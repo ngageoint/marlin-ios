@@ -16,7 +16,7 @@ struct DataSourceActionBar: View {
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     
     var body: some View {
-        HStack(spacing:0) {
+        HStack(spacing: 0) {
             if showMoreDetailsButton {
                 MoreDetailsButton(data: data)
             } else if let data = data as? Locatable {

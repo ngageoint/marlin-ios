@@ -57,7 +57,7 @@ enum DataSourceFilterComparison: String, CaseIterable, Identifiable, Codable {
     }
     
     func coreDataComparison() -> String {
-        switch(self) {
+        switch self {
         case .equals:
             return "=="
         case .contains:

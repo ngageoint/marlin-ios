@@ -33,7 +33,9 @@ class StructureImage: UIImage {
         let renderer = UIGraphicsImageRenderer(size: frame.size)
         let image = renderer.image { _ in
             borderColor.setStroke()
-            let outerBoundary = UIBezierPath(ovalIn: CGRect(x: strokeWidth / 2.0, y: strokeWidth / 2.0, width: diameter, height: diameter ))
+            let outerBoundary = UIBezierPath(
+                ovalIn: CGRect(x: strokeWidth / 2.0, y: strokeWidth / 2.0, width: diameter, height: diameter )
+            )
             outerBoundary.lineWidth = strokeWidth
             outerBoundary.stroke()
             let fillColor = UIColor(rgbValue: StructureImage.unknownBouyColor)

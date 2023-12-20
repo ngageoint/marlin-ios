@@ -31,7 +31,11 @@ struct NavigationalWarningSummaryView: DataSourceSummaryView {
                 .lineLimit(8)
                 .secondary()
             bookmarkNotesView(navigationalWarning)
-            NavigationalWarningActionBar(navigationalWarning: navigationalWarning, showMoreDetails: showMoreDetails, mapName: mapName)
+            NavigationalWarningActionBar(
+                navigationalWarning: navigationalWarning,
+                showMoreDetails: showMoreDetails,
+                mapName: mapName
+            )
         }
     }
 }

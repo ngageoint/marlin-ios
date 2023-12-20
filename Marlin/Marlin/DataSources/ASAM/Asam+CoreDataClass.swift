@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 import MapKit
-import CoreData
 import GeoJSON
 
 class Asam: NSManagedObject {

@@ -22,7 +22,11 @@ class SortViewModel: ObservableObject {
     @Published var sections: Bool {
         didSet {
             if !sort.isEmpty {
-                sort[0] = DataSourceSortParameter(property: sort[0].property, ascending: sort[0].ascending, section: sections)
+                sort[0] = DataSourceSortParameter(
+                    property: sort[0].property,
+                    ascending: sort[0].ascending,
+                    section: sections
+                )
             }
         }
     }
@@ -79,10 +83,8 @@ class SortViewModel: ObservableObject {
             return []
         }
         return dataSourceProperties.filter({ property in
-            for sortProperty in sort {
-                if property.key == sortProperty.property.key {
-                    return false
-                }
+            for sortProperty in sort where  property.key == sortProperty.property.key {
+                return false
             }
             return true
         })
@@ -90,7 +92,11 @@ class SortViewModel: ObservableObject {
     
     func addSortProperty() {
         if let selectedProperty = selectedProperty {
-            sort.append(DataSourceSortParameter(property: selectedProperty, ascending: ascending, section: sections && sort.isEmpty))
+            sort.append(DataSourceSortParameter(
+                property: selectedProperty,
+                ascending: ascending,
+                section: sections && sort.isEmpty)
+            )
             if possibleSortProperties.isEmpty {
                 self.selectedProperty = nil
             } else {

@@ -28,11 +28,12 @@ struct RouteSummaryView: DataSourceSummaryView {
                         .overline()
                     HStack {
                         if let first = route.waypointArray.first {
-                            if let dataSourceKey = first.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
+                            if let dataSourceKey = first.dataSource, 
+                                let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
                                 DataSourceCircleImage(dataSource: type, size: 15)
                             }
-                            if let ds = first.decodeToDataSource() as? DataSource {
-                                Text(ds.itemTitle)
+                            if let dataSource = first.decodeToDataSource() {
+                                Text(dataSource.itemTitle)
                                     .font(Font.overline)
                                     .foregroundColor(Color.onSurfaceColor)
                                     .opacity(0.8)
@@ -41,11 +42,12 @@ struct RouteSummaryView: DataSourceSummaryView {
                         Image(systemName: "ellipsis")
                         if let last = route.waypointArray.last {
                             Group {
-                                if let dataSourceKey = last.dataSource, let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
+                                if let dataSourceKey = last.dataSource, 
+                                    let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
                                     DataSourceCircleImage(dataSource: type, size: 15)
                                 }
-                                if let ds = last.decodeToDataSource() as? DataSource  {
-                                    Text(ds.itemTitle)
+                                if let dataSource = last.decodeToDataSource() {
+                                    Text(dataSource.itemTitle)
                                         .font(Font.overline)
                                         .foregroundColor(Color.onSurfaceColor)
                                         .opacity(0.8)
@@ -80,7 +82,7 @@ struct RouteList: View {
                     path.append(MarlinRoute.editRoute(routeURI: route.routeURL))
                 }
                 .swipeActions(edge: .trailing) {
-                    Button(role: .destructive)  {
+                    Button(role: .destructive) {
                         print("delete")
                         viewModel.deleteRoute(route: route.routeURL)
                     } label: {

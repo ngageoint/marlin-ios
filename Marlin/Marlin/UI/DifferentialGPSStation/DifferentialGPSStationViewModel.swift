@@ -14,12 +14,24 @@ class DifferentialGPSStationViewModel: ObservableObject, Identifiable {
     var repository: (any DifferentialGPSStationRepository)?
     
     @discardableResult
-    func getDifferentialGPSStation(featureNumber: Int?, volumeNumber: String?, waypointURI: URL?) -> DifferentialGPSStationModel? {
+    func getDifferentialGPSStation(
+        featureNumber: Int?,
+        volumeNumber: String?,
+        waypointURI: URL?
+    ) -> DifferentialGPSStationModel? {
         if let waypointURI = waypointURI {
-            differentialGPSStation = repository?.getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+            differentialGPSStation = repository?.getDifferentialGPSStation(
+                featureNumber: featureNumber,
+                volumeNumber: volumeNumber,
+                waypointURI: waypointURI
+            )
         } else if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
             predicate = NSPredicate(format: "featureNumber == %i AND volumeNumber == %@", featureNumber, volumeNumber)
-            differentialGPSStation = repository?.getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+            differentialGPSStation = repository?.getDifferentialGPSStation(
+                featureNumber: featureNumber,
+                volumeNumber: volumeNumber,
+                waypointURI: waypointURI
+            )
         }
         return differentialGPSStation
     }

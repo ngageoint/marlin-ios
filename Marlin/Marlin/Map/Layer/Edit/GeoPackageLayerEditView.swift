@@ -8,9 +8,9 @@
 import SwiftUI
 import MapKit
 
-//struct GeoPackageLayerMapView: View {
+// struct GeoPackageLayerMapView: View {
 //    @ObservedObject var viewModel: MapLayerViewModel
-//}
+// }
 
 struct GeoPackageLayerEditView: View {
     @ObservedObject var viewModel: MapLayerViewModel
@@ -105,28 +105,39 @@ struct GeoPackageTileLayerRow: View {
                 }
                 .padding([.top, .bottom], 4)
                 Spacer()
-                Button(action: {
-                    if let maxLatitude = layer.boundingBox?.maxLatitude, let minLatitude = layer.boundingBox?.minLatitude, let maxLongitude = layer.boundingBox?.maxLongitude, let minLongitude = layer.boundingBox?.minLongitude {
-                        let latSpan = maxLatitude - minLatitude
-                        let lonSpan = maxLongitude - minLongitude
-                        let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: maxLatitude - (latSpan / 2.0), longitude: maxLongitude - (lonSpan / 2.0))
-                        let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latSpan, longitudeDelta: lonSpan)
-                        mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                Button(
+                    action: {
+                        if let maxLatitude = layer.boundingBox?.maxLatitude,
+                            let minLatitude = layer.boundingBox?.minLatitude,
+                            let maxLongitude = layer.boundingBox?.maxLongitude,
+                            let minLongitude = layer.boundingBox?.minLongitude {
+                            let latSpan = maxLatitude - minLatitude
+                            let lonSpan = maxLongitude - minLongitude
+                            let center: CLLocationCoordinate2D = CLLocationCoordinate2D(
+                                latitude: maxLatitude - (latSpan / 2.0),
+                                longitude: maxLongitude - (lonSpan / 2.0))
+                            let span: MKCoordinateSpan = MKCoordinateSpan(
+                                latitudeDelta: latSpan,
+                                longitudeDelta: lonSpan
+                            )
+                            mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                        }
+                    },
+                    label: {
+                        Label(
+                            title: {},
+                            icon: { Image(systemName: "scope")
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.primaryColorVariant)
+                            })
                     }
-                }) {
-                    Label(
-                        title: {},
-                        icon: { Image(systemName: "scope")
-                                .renderingMode(.template)
-                                .foregroundColor(Color.primaryColorVariant)
-                        })
-                }
+                )
                 .padding([.trailing, .leading], 16)
                 .accessibilityElement()
                 .accessibilityLabel("focus")
             }
         })
-        .toggleStyle(listCheckboxToggleStyle())
+        .toggleStyle(ListCheckboxToggleStyle())
         .contentShape(Rectangle())
         .onTapGesture {
             layer.selected.toggle()
@@ -134,7 +145,7 @@ struct GeoPackageTileLayerRow: View {
         .tint(Color.primaryColor)
         .accessibilityElement()
         .accessibilityLabel("Tile Layer \(layer.name ?? "") Toggle")
-        .onChange(of: layer.selected, perform: { newValue in
+        .onChange(of: layer.selected, perform: { _ in
             viewModel.updateSelectedLayers(layer: layer)
         })
     }
@@ -167,28 +178,38 @@ struct GeoPackageFeatureLayerRow: View {
                 }
                 .padding([.top, .bottom], 4)
                 Spacer()
-                Button(action: {
-                    if let maxLatitude = layer.boundingBox?.maxLatitude, let minLatitude = layer.boundingBox?.minLatitude, let maxLongitude = layer.boundingBox?.maxLongitude, let minLongitude = layer.boundingBox?.minLongitude {
-                        let latSpan = maxLatitude - minLatitude
-                        let lonSpan = maxLongitude - minLongitude
-                        let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: maxLatitude - (latSpan / 2.0), longitude: maxLongitude - (lonSpan / 2.0))
-                        let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latSpan, longitudeDelta: lonSpan)
-                        mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                Button(
+                    action: {
+                        if let maxLatitude = layer.boundingBox?.maxLatitude,
+                            let minLatitude = layer.boundingBox?.minLatitude,
+                            let maxLongitude = layer.boundingBox?.maxLongitude,
+                            let minLongitude = layer.boundingBox?.minLongitude {
+                            let latSpan = maxLatitude - minLatitude
+                            let lonSpan = maxLongitude - minLongitude
+                            let center: CLLocationCoordinate2D = CLLocationCoordinate2D(
+                                latitude: maxLatitude - (latSpan / 2.0),
+                                longitude: maxLongitude - (lonSpan / 2.0))
+                            let span: MKCoordinateSpan = MKCoordinateSpan(
+                                latitudeDelta: latSpan,
+                                longitudeDelta: lonSpan)
+                            mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                        }
+                    },
+                    label: {
+                        Label(
+                            title: {},
+                            icon: { Image(systemName: "scope")
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.primaryColorVariant)
+                            })
                     }
-                }) {
-                    Label(
-                        title: {},
-                        icon: { Image(systemName: "scope")
-                                .renderingMode(.template)
-                                .foregroundColor(Color.primaryColorVariant)
-                        })
-                }
+                )
                 .padding([.trailing, .leading], 16)
                 .accessibilityElement()
                 .accessibilityLabel("focus")
             }
         })
-        .toggleStyle(listCheckboxToggleStyle())
+        .toggleStyle(ListCheckboxToggleStyle())
         .contentShape(Rectangle())
         .onTapGesture {
             layer.selected.toggle()
@@ -196,7 +217,7 @@ struct GeoPackageFeatureLayerRow: View {
         .tint(Color.primaryColor)
         .accessibilityElement()
         .accessibilityLabel("Feature Layer \(layer.name ?? "") Toggle")
-        .onChange(of: layer.selected, perform: { newValue in
+        .onChange(of: layer.selected, perform: { _ in
             viewModel.updateSelectedLayers(layer: layer)
         })
     }

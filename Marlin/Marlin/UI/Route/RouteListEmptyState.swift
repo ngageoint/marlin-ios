@@ -19,7 +19,10 @@ struct MultiImageContainerView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .opacity(0.87)
-                        .offset(x: min(geo.size.width, geo.size.height) / 10.0, y: -(min(geo.size.width, geo.size.height) / 15.0))
+                        .offset(
+                            x: min(geo.size.width, geo.size.height) / 10.0,
+                            y: -(min(geo.size.width, geo.size.height) / 15.0)
+                        )
                         .foregroundColor(Color.onSurfaceColor)
                     Image(systemName: maskingImage)
                         .resizable()
@@ -33,7 +36,10 @@ struct MultiImageContainerView: View {
                         .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.87)
                 }
-                .offset(x: -(min(geo.size.width, geo.size.height) / 10.0) / 2.0, y: ((min(geo.size.width, geo.size.height) / 15.0)/2.0))
+                .offset(
+                    x: -(min(geo.size.width, geo.size.height) / 10.0) / 2.0,
+                    y: ((min(geo.size.width, geo.size.height) / 15.0)/2.0)
+                )
                 .frame(width: geo.size.width, height: geo.size.height)
             }
         }
@@ -45,9 +51,12 @@ struct RouteListEmptyState: View {
         VStack(alignment: .center, spacing: 16) {
             HStack(alignment: .center, spacing: 0) {
                 Spacer()
-                MultiImageContainerView(visibleImage: "arrow.triangle.turn.up.right.diamond", maskingImage: "diamond.fill")
-                    .frame(maxHeight: .infinity)
-                    .padding([.trailing, .leading], 24)
+                MultiImageContainerView(
+                    visibleImage: "arrow.triangle.turn.up.right.diamond",
+                    maskingImage: "diamond.fill"
+                )
+                .frame(maxHeight: .infinity)
+                .padding([.trailing, .leading], 24)
                 Spacer()
             }
             Text("No Routes")
@@ -74,9 +83,12 @@ struct RouteListLoadingState: View {
             Spacer()
             HStack(alignment: .center, spacing: 0) {
                 Spacer()
-                MultiImageContainerView(visibleImage: "arrow.triangle.turn.up.right.diamond", maskingImage: "diamond.fill")
-                    .frame(maxHeight: .infinity)
-                    .padding([.trailing, .leading], 24)
+                MultiImageContainerView(
+                    visibleImage: "arrow.triangle.turn.up.right.diamond",
+                    maskingImage: "diamond.fill"
+                )
+                .frame(maxHeight: .infinity)
+                .padding([.trailing, .leading], 24)
                 Spacer()
             }
             Text("Loading Routes...")

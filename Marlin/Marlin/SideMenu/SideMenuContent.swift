@@ -33,7 +33,10 @@ struct SideMenuContent: View {
                         DataSourceCell(dataSourceItem: dataSource)
                             .accessibilityElement()
                             .accessibilityLabel("\(dataSource.dataSource.definition.fullName) tab cell")
-                            .overlay(model.validDropTarget && model.draggedItem == dataSource.key ? Color.white.opacity(0.8) : Color.clear)
+                            .overlay(
+                                model.validDropTarget && model.draggedItem == dataSource.key 
+                                ? Color.white.opacity(0.8) : Color.clear
+                            )
                             .onDrag {
                                 model.onDrag(dataSource: dataSource)
                             }
@@ -55,9 +58,11 @@ struct SideMenuContent: View {
                         )
                 }
                 HStack {
-                    Text("Other Data Sources (Drag to add to \(horizontalSizeClass == .compact ? "tabs" : "rail items"))")
-                        .padding([.leading, .top, .bottom, .trailing], 8)
-                        .overline()
+                    Text("""
+                        Other Data Sources (Drag to add to \(horizontalSizeClass == .compact ? "tabs" : "rail items"))
+                    """)
+                    .padding([.leading, .top, .bottom, .trailing], 8)
+                    .overline()
                     Spacer()
                 }
                 .padding(.top, 16)
@@ -69,7 +74,10 @@ struct SideMenuContent: View {
                         DataSourceCell(dataSourceItem: dataSource)
                             .accessibilityElement()
                             .accessibilityLabel("\(dataSource.dataSource.definition.fullName) nontab cell")
-                            .overlay(model.validDropTarget && model.draggedItem == dataSource.key ? Color.white.opacity(0.8) : Color.clear)
+                            .overlay(
+                                model.validDropTarget && model.draggedItem == dataSource.key
+                                ? Color.white.opacity(0.8) : Color.clear
+                            )
                             .onDrag {
                                 model.onDrag(dataSource: dataSource)
                             }
@@ -130,7 +138,7 @@ struct SideMenuContent: View {
             .frame(maxHeight: .infinity)
             .background(Color.backgroundColor)
             .ignoresSafeArea(.all, edges: [.top, .bottom])
-            .onDrop(of: [.text], isTargeted: nil) { provider in
+            .onDrop(of: [.text], isTargeted: nil) { _ in
                 model.draggedItem = nil
                 model.validDropTarget = false
                 return true

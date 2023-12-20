@@ -17,13 +17,16 @@ struct CoordinateDisplaySettings: View {
                 Text(CoordinateDisplayType.latitudeLongitude.description).font(Font.body1)
                     .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                 Spacer()
-                Image(systemName: coordinateDisplay == CoordinateDisplayType.latitudeLongitude ? "circle.inset.filled": "circle")
-                    .foregroundColor(Color.primaryColor)
-                    .onTapGesture {
-                        coordinateDisplay = .latitudeLongitude
-                    }
-                    .accessibilityElement()
-                    .accessibilityLabel(CoordinateDisplayType.latitudeLongitude.description)
+                Image(
+                    systemName: coordinateDisplay == CoordinateDisplayType.latitudeLongitude
+                    ? "circle.inset.filled": "circle"
+                )
+                .foregroundColor(Color.primaryColor)
+                .onTapGesture {
+                    coordinateDisplay = .latitudeLongitude
+                }
+                .accessibilityElement()
+                .accessibilityLabel(CoordinateDisplayType.latitudeLongitude.description)
             }
             .padding(.top, 4)
             .padding(.bottom, 4)
@@ -31,13 +34,16 @@ struct CoordinateDisplaySettings: View {
                 Text(CoordinateDisplayType.degreesMinutesSeconds.description).font(Font.body1)
                     .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                 Spacer()
-                Image(systemName: coordinateDisplay == CoordinateDisplayType.degreesMinutesSeconds ? "circle.inset.filled": "circle")
-                    .foregroundColor(Color.primaryColor)
-                    .onTapGesture {
-                        coordinateDisplay = .degreesMinutesSeconds
-                    }
-                    .accessibilityElement()
-                    .accessibilityLabel(CoordinateDisplayType.degreesMinutesSeconds.description)
+                Image(
+                    systemName: coordinateDisplay == CoordinateDisplayType.degreesMinutesSeconds
+                    ? "circle.inset.filled": "circle"
+                )
+                .foregroundColor(Color.primaryColor)
+                .onTapGesture {
+                    coordinateDisplay = .degreesMinutesSeconds
+                }
+                .accessibilityElement()
+                .accessibilityLabel(CoordinateDisplayType.degreesMinutesSeconds.description)
             }
             .padding(.top, 4)
             .padding(.bottom, 4)

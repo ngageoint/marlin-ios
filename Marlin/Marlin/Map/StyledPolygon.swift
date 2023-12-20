@@ -10,27 +10,26 @@ import MapKit
 
 @objc class StyledPolygon: MKPolygon, OverlayRenderable {
     var renderer: MKOverlayRenderer {
-        get {
-            let renderer = MKPolygonRenderer(polygon: self)
-            renderer.fillColor = fillColor
-            renderer.strokeColor = lineColor
-            renderer.lineWidth = lineWidth
-            return renderer
-        }
+        let renderer = MKPolygonRenderer(polygon: self)
+        renderer.fillColor = fillColor
+        renderer.strokeColor = lineColor
+        renderer.lineWidth = lineWidth
+        return renderer
     }
     
     @objc public var lineColor: UIColor = .black
     @objc public var lineWidth: CGFloat = 1.0
     @objc public var fillColor: UIColor?
     
-    @objc static func generate(coordinates: [[[NSNumber]]])-> StyledPolygon {
+    @objc static func generate(coordinates: [[[NSNumber]]]) -> StyledPolygon {
         // exterior polygon
         let exteriorPolygonCoordinates = coordinates[0]
         var interiorPolygonCoordinates: [[[NSNumber]]] = []
         
         var exteriorMapCoordinates: [CLLocationCoordinate2D] = []
         for point in exteriorPolygonCoordinates {
-            exteriorMapCoordinates.append(CLLocationCoordinate2D(latitude: point[1].doubleValue, longitude: point[0].doubleValue))
+            exteriorMapCoordinates.append(
+                CLLocationCoordinate2D(latitude: point[1].doubleValue, longitude: point[0].doubleValue))
         }
         
         // interior polygons
@@ -42,8 +41,14 @@ import MapKit
             interiorPolygons.append(recursePolygon)
         }
         
-        let exteriorPolygon: StyledPolygon = !interiorPolygons.isEmpty ? StyledPolygon(coordinates: exteriorMapCoordinates, count: exteriorPolygonCoordinates.count, interiorPolygons: interiorPolygons) : StyledPolygon(coordinates: exteriorMapCoordinates, count: exteriorPolygonCoordinates.count)
-        
+        let exteriorPolygon: StyledPolygon = !interiorPolygons.isEmpty ? StyledPolygon(
+            coordinates: exteriorMapCoordinates,
+            count: exteriorPolygonCoordinates.count,
+            interiorPolygons: interiorPolygons) : 
+        StyledPolygon(
+            coordinates: exteriorMapCoordinates,
+            count: exteriorPolygonCoordinates.count)
+
         return exteriorPolygon
     }
     

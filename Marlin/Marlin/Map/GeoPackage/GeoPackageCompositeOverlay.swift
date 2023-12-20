@@ -59,12 +59,17 @@ class GeopackageCompositeOverlay: MKTileOverlay {
         for table in tableNames {
             if let type = geoPackage.type(ofTable: table) {
                 if GPKGContentsDataTypes.isTilesType(type) {
-                    if let tileDao = geoPackage.tileDao(withTableName: table), let overlay = GPKGOverlayFactory.boundedOverlay(tileDao) {
+                    if let tileDao = geoPackage.tileDao(withTableName: table), 
+                        let overlay = GPKGOverlayFactory.boundedOverlay(tileDao) {
                         tileTables.append(overlay)
                     }
                 } else if GPKGContentsDataTypes.isFeaturesType(type) {
-                    if let featureDao = geoPackage.featureDao(withTableName: table), let featureTiles = GPKGFeatureTiles(geoPackage: geoPackage, andFeatureDao: featureDao) {
-                        featureTiles.indexManager = GPKGFeatureIndexManager(geoPackage: geoPackage, andFeatureDao: featureDao)
+                    if let featureDao = geoPackage.featureDao(withTableName: table), 
+                        let featureTiles = GPKGFeatureTiles(geoPackage: geoPackage, andFeatureDao: featureDao) {
+                        featureTiles.indexManager = GPKGFeatureIndexManager(
+                            geoPackage: geoPackage,
+                            andFeatureDao: featureDao
+                        )
                         featureTables.append(featureTiles)
                     }
                 }
@@ -74,15 +79,17 @@ class GeopackageCompositeOverlay: MKTileOverlay {
     
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
         var images: [UIImage] = []
-        for tileTable in tileTables {
-            if tileTable.hasTileWith(x: path.x, andY: path.y, andZoom: path.z) {
-                if let data = tileTable.retrieveTileWith(x: path.x, andY: path.y, andZoom: path.z) {
-                    images.append(GPKGImageConverter.toImage(data, withScale: tileTable.tileSize.width / 512.0))
-                }
+        for tileTable in tileTables where tileTable.hasTileWith(x: path.x, andY: path.y, andZoom: path.z) {
+            if let data = tileTable.retrieveTileWith(x: path.x, andY: path.y, andZoom: path.z) {
+                images.append(GPKGImageConverter.toImage(data, withScale: tileTable.tileSize.width / 512.0))
             }
         }
         for featureTable in featureTables {
-            if let featureImage = featureTable.drawTileWith(x: Int32(path.x), andY: Int32(path.y), andZoom: Int32(path.z)) {
+            if let featureImage = featureTable.drawTileWith(
+                x: Int32(path.x),
+                andY: Int32(path.y),
+                andZoom: Int32(path.z)
+            ) {
                 images.append(featureImage)
             }
         }

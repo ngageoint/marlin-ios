@@ -16,7 +16,11 @@ extension RadioBeacon: MapImage {
     
     static var cacheTiles: Bool = true
     
-    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {
+    func mapImage(
+        marker: Bool,
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox?,
+        context: CGContext? = nil) -> [UIImage] {
         let scale = marker ? 1 : 2
         
         var images: [UIImage] = []
@@ -31,9 +35,19 @@ extension RadioBeacon: MapImage {
         let sectors = azimuthCoverage ?? [ImageSector(startDegrees: 0, endDegrees: 360, color: RadioBeacon.color)]
         
         if zoomLevel > 8 {
-            return RaconImage(frame: CGRect(x: 0, y: 0, width: 3 * (radius + 3.0), height: 3 * (radius + 3.0)), sectors: sectors, arcWidth: 3.0, arcRadius: radius + 3.0, text: "Racon (\(morseLetter))", darkMode: false)
+            return RaconImage(
+                frame: CGRect(x: 0, y: 0, width: 3 * (radius + 3.0), height: 3 * (radius + 3.0)),
+                sectors: sectors,
+                arcWidth: 3.0,
+                arcRadius: radius + 3.0,
+                text: "Racon (\(morseLetter))",
+                darkMode: false)
         } else {
-            return CircleImage(color: RadioBeacon.color, radius: radius, fill: false, arcWidth: min(3.0, radius / 2.0))
+            return CircleImage(
+                color: RadioBeacon.color,
+                radius: radius,
+                fill: false,
+                arcWidth: min(3.0, radius / 2.0))
         }
     }
 }

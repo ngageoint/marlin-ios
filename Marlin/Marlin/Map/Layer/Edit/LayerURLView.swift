@@ -15,7 +15,6 @@ struct LayerURLView: View {
 
     @FocusState var isInputActive: Bool
     @Binding var isPresented: Bool
-    @State var chooseFile: Bool = false
     @State var showCredentials: Bool = false
     
     var marlinMap: MarlinMap {
@@ -25,35 +24,7 @@ struct LayerURLView: View {
     var body: some View {
         VStack {
             ScrollView {
-                VStack(alignment: .leading) {
-                    Button("Import GeoPackage File") {
-                        chooseFile = true
-                    }
-                    .buttonStyle(MaterialButtonStyle(type: .contained))
-                }
-                .frame(maxWidth:.infinity)
-                .alert("Existing GeoPackage", isPresented: $viewModel.confirmFileOverwrite, actions: {
-                    Button("Import As New", role: .destructive) {
-                        if let geoPackageFileUrl = viewModel.fileUrl {
-                            viewModel.fileChosen(url: geoPackageFileUrl, forceImport: true)
-                        }
-                    }
-                    Button("Use Existing", role: .cancel) {
-                        if let fileUrl = viewModel.fileUrl {
-                            viewModel.useExistingFile(url: fileUrl)
-                        }
-                    }
-                    Button("Cancel") {
-                    }
-                }, message: {
-                    if let url = viewModel.fileUrl {
-                        Text("An existing GeoPackage with the name \"**\(viewModel.importer.fileName(url: url))**\" has already been imported.  What would you like to do?")
-                    } else {
-                        Text("An existing GeoPackage with the same name has been imported.  What would you like to do?")
-                    }
-                })
-                .background(Color.backgroundColor)
-                .padding(16)
+                ImportGeoPackageFile(viewModel: viewModel)
 
                 HStack(alignment: .center) {
                     Spacer()
@@ -63,10 +34,14 @@ struct LayerURLView: View {
                 }
                 .background(Color.backgroundColor)
 
-                Text("Enter a layer URL, Marlin will do it's best to auto detect the type of your layer.  **NOTE: if tiles appear misaligned, toggle between XYZ and TMS types.**")
-                    .padding(16)
-                    .secondary()
-                    .background(Color.backgroundColor)
+                Text(
+                """
+                    Enter a layer URL, Marlin will do it's best to auto detect the type of your layer. \
+                    **NOTE: if tiles appear misaligned, toggle between XYZ and TMS types.**
+                """)
+                .padding(16)
+                .secondary()
+                .background(Color.backgroundColor)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Layer URL")
@@ -81,14 +56,14 @@ struct LayerURLView: View {
                         .accessibilityLabel("Layer URL input")
                 }
                 .padding(16)
-                .frame(maxWidth:.infinity)
+                .frame(maxWidth: .infinity)
                 .background(Color.surfaceColor)
                 
                 HStack {
-                    Button("Add Credentials")  {
+                    Button("Add Credentials") {
                         showCredentials = true
                     }
-                    .buttonStyle(MaterialButtonStyle(type:.text))
+                    .buttonStyle(MaterialButtonStyle(type: .text))
                     Spacer()
                 }
                 .background(Color.backgroundColor)
@@ -152,11 +127,13 @@ struct LayerURLView: View {
                     }
                     .background(Color.backgroundColor)
                     .padding(16)
-                }
-                else if viewModel.triedCapabilities && viewModel.triedXYZTile && viewModel.layerType == .unknown {
+                } else if viewModel.triedCapabilities && viewModel.triedXYZTile && viewModel.layerType == .unknown {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Unable to retrieve capabilities document or the 0/0/0 tile.  Please choose the correct type of tile server below.")
-                            .primary()
+                        Text("""
+                            Unable to retrieve capabilities document or the 0/0/0 tile.  \
+                            Please choose the correct type of tile server below.
+                        """)
+                        .primary()
                         Text("-or-")
                             .overline()
                         Button("Try again") {
@@ -207,59 +184,7 @@ struct LayerURLView: View {
                 }
                 
                 if viewModel.layerType == .wms {
-                    if let capabilities = viewModel.capabilities {
-                        Group {
-                            Text("WMS Server Information")
-                                .overline()
-                            DisclosureGroup {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Property(property: "Layer Count", value: "\(capabilities.totalLayers)")
-                                    Property(property: "WMS Version", value: capabilities.version)
-                                    Property(property: "Contact Person", value: capabilities.contactPerson)
-                                    Property(property: "Contact Organization", value: capabilities.contactOrganization)
-                                    if let phone = capabilities.contactTelephone {
-                                        Property(property: "Contact Telephone", valueView: AnyView(
-                                            Link(phone, destination: URL(string: "tel:\(phone)")!)
-                                                .font(Font.subheadline)
-                                                .foregroundColor(Color.primaryColor)
-                                        ))
-                                    }
-                                    if let email = capabilities.contactEmail {
-                                        Property(property: "Contact Email", valueView: AnyView(
-                                            Link(email, destination: URL(string: "mailto:\(email)")!)
-                                                .font(Font.subheadline)
-                                                .foregroundColor(Color.primaryColor)
-                                        ))
-                                    }
-                                }
-                                
-                            } label : {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text(capabilities.title ?? "WMS Server Information")
-                                        .primary()
-                                    Text(capabilities.abstract ?? "")
-                                        .secondary()
-                                }
-                            }
-                            .tint(Color.primaryColor)
-                            .frame(maxWidth: .infinity)
-                            .accessibilityElement(children: .contain)
-                            .accessibilityLabel("More Server Information")
-                        }
-                        .background(Color.surfaceColor)
-                        .padding(16)
-                    } else {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Unable to retrieve capabilities document")
-                                .primary()
-                            Button("Try again") {
-                                viewModel.retrieveWMSCapabilitiesDocument()
-                            }
-                            .buttonStyle(MaterialButtonStyle())
-                        }
-                        .padding(16)
-                        .background(Color.surfaceColor)
-                    }
+                    WMSCapabilitiesView(viewModel: viewModel)
                 } else if viewModel.layerType == .xyz || viewModel.layerType == .tms {
                     marlinMap
                         .frame(minHeight: 300, maxHeight: .infinity)
@@ -322,8 +247,5 @@ struct LayerURLView: View {
         .onAppear {
             mixins.mixins.append(BaseOverlaysMap(viewModel: viewModel))
         }
-        .sheet(isPresented: $chooseFile, content: {
-            DocumentPicker(model: viewModel.documentPickerViewModel)
-        })
     }
 }

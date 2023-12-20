@@ -11,17 +11,20 @@ import Combine
 
 protocol PersistentStore {
     func newTaskContext() -> NSManagedObjectContext
-    func fetchFirst<T: NSManagedObject>(_ entityClass:T.Type,
-                                                     sortBy: [NSSortDescriptor]?,
+    func fetchFirst<T: NSManagedObject>(_ entityClass: T.Type,
+                                        sortBy: [NSSortDescriptor]?,
                                         predicate: NSPredicate?,
-                                        context: NSManagedObjectContext?) throws-> T?
+                                        context: NSManagedObjectContext?) throws -> T?
     func fetch<ResultType: NSFetchRequestResult>(fetchRequest: NSFetchRequest<ResultType>) throws -> [ResultType]
     func perform(_ block: @escaping () -> Void)
     func save() throws
-    func fetchedResultsController<ResultType: NSFetchRequestResult>(fetchRequest: NSFetchRequest<ResultType>, sectionNameKeyPath: String?, cacheName name: String?) -> NSFetchedResultsController<ResultType>
+    func fetchedResultsController<ResultType: NSFetchRequestResult>(
+        fetchRequest: NSFetchRequest<ResultType>,
+        sectionNameKeyPath: String?,
+        cacheName name: String?) -> NSFetchedResultsController<ResultType>
     func addViewContextObserver(_ observer: AnyObject, selector: Selector, name: Notification.Name)
     func removeViewContextObserver(_ observer: AnyObject, name: Notification.Name)
-    func countOfObjects<T: NSManagedObject>(_ entityClass:T.Type) throws -> Int?
+    func countOfObjects<T: NSManagedObject>(_ entityClass: T.Type) throws -> Int?
     func mainQueueContext() -> NSManagedObjectContext
     func reset()
     
@@ -67,10 +70,10 @@ class MockPersistentStore: PersistentStore {
         return NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     }
     
-    func fetchFirst<T: NSManagedObject>(_ entityClass:T.Type,
-                                                     sortBy: [NSSortDescriptor]? = nil,
+    func fetchFirst<T: NSManagedObject>(_ entityClass: T.Type,
+                                        sortBy: [NSSortDescriptor]? = nil,
                                         predicate: NSPredicate? = nil,
-                                        context: NSManagedObjectContext? = nil) throws-> T? {
+                                        context: NSManagedObjectContext? = nil) throws -> T? {
         return nil
     }
     
@@ -82,7 +85,10 @@ class MockPersistentStore: PersistentStore {
         
     }
     
-    func fetchedResultsController<ResultType: NSFetchRequestResult>(fetchRequest: NSFetchRequest<ResultType>, sectionNameKeyPath: String?, cacheName name: String?) -> NSFetchedResultsController<ResultType> {
+    func fetchedResultsController<ResultType: NSFetchRequestResult>(
+        fetchRequest: NSFetchRequest<ResultType>,
+        sectionNameKeyPath: String?,
+        cacheName name: String?) -> NSFetchedResultsController<ResultType> {
         return NSFetchedResultsController<ResultType>(fetchRequest: fetchRequest,
                                                       managedObjectContext: newTaskContext(),
                                                       sectionNameKeyPath: sectionNameKeyPath,
@@ -101,7 +107,7 @@ class MockPersistentStore: PersistentStore {
         
     }
     
-    func countOfObjects<T: NSManagedObject>(_ entityClass:T.Type) throws -> Int? {
+    func countOfObjects<T: NSManagedObject>(_ entityClass: T.Type) throws -> Int? {
         return nil
     }
     
@@ -119,11 +125,12 @@ class MockPersistentStore: PersistentStore {
 class CoreDataPersistentStore: PersistentStore {
     let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "persistence")
     
-    func fetchFirst<T: NSManagedObject>(_ entityClass:T.Type,
-                                                     sortBy: [NSSortDescriptor]? = nil,
-                                                     predicate: NSPredicate? = nil,
-                                        context: NSManagedObjectContext? = nil) throws-> T? {
-        
+    func fetchFirst<T: NSManagedObject>(
+        _ entityClass: T.Type,
+        sortBy: [NSSortDescriptor]? = nil,
+        predicate: NSPredicate? = nil,
+        context: NSManagedObjectContext? = nil
+    ) throws -> T? {
         return try (context ?? container.viewContext).fetchFirst(entityClass, sortBy: sortBy, predicate: predicate)
     }
     
@@ -139,11 +146,15 @@ class CoreDataPersistentStore: PersistentStore {
         try container.viewContext.save()
     }
     
-    func fetchedResultsController<ResultType: NSFetchRequestResult>(fetchRequest: NSFetchRequest<ResultType>, sectionNameKeyPath: String?, cacheName name: String?) -> NSFetchedResultsController<ResultType> {
-        return NSFetchedResultsController<ResultType>(fetchRequest: fetchRequest,
-                                                                managedObjectContext: container.viewContext,
-                                                                sectionNameKeyPath: sectionNameKeyPath,
-                                                                cacheName: nil)
+    func fetchedResultsController<ResultType: NSFetchRequestResult>(
+        fetchRequest: NSFetchRequest<ResultType>,
+        sectionNameKeyPath: String?,
+        cacheName name: String?) -> NSFetchedResultsController<ResultType> {
+        return NSFetchedResultsController<ResultType>(
+            fetchRequest: fetchRequest,
+            managedObjectContext: container.viewContext,
+            sectionNameKeyPath: sectionNameKeyPath,
+            cacheName: nil)
     }
     
     func addViewContextObserver(_ observer: AnyObject, selector: Selector, name: Notification.Name) {
@@ -154,7 +165,7 @@ class CoreDataPersistentStore: PersistentStore {
         NotificationCenter.default.removeObserver(observer, name: name, object: container.viewContext)
     }
     
-    func countOfObjects<T: NSManagedObject>(_ entityClass:T.Type) throws -> Int? {
+    func countOfObjects<T: NSManagedObject>(_ entityClass: T.Type) throws -> Int? {
         var count: Int?
         container.viewContext.performAndWait {
             count = try? container.viewContext.countOfObjects(entityClass)
@@ -199,8 +210,8 @@ class CoreDataPersistentStore: PersistentStore {
         return model
     }()
 
-    var container : NSPersistentContainer {
-        if(_container == nil) {
+    var container: NSPersistentContainer {
+        if _container == nil {
             _container = initializeContainer()
         }
         return _container!
@@ -208,7 +219,9 @@ class CoreDataPersistentStore: PersistentStore {
     
     func reset() {
         do {
-            let tokenURL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("MSICoreDataToken", isDirectory: true)
+            let tokenURL = NSPersistentContainer
+                .defaultDirectoryURL()
+                .appendingPathComponent("MSICoreDataToken", isDirectory: true)
             try FileManager.default.removeItem(atPath: tokenURL.path)
         } catch {
             print(error.localizedDescription)
@@ -230,7 +243,9 @@ class CoreDataPersistentStore: PersistentStore {
     }
     
     func initializeContainer() -> NSPersistentContainer {
-        let container = NSPersistentContainer(name: "Marlin", managedObjectModel: CoreDataPersistentStore.managedObjectModel)
+        let container = NSPersistentContainer(
+            name: "Marlin",
+            managedObjectModel: CoreDataPersistentStore.managedObjectModel)
         guard let description = container.persistentStoreDescriptions.first else {
             fatalError("Failed to retrieve a persistent store description.")
         }
@@ -250,15 +265,18 @@ class CoreDataPersistentStore: PersistentStore {
         description.setOption(true as NSNumber,
                               forKey: NSPersistentHistoryTrackingKey)
         
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+        container.loadPersistentStores(completionHandler: { (_, error) in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                
+                // fatalError() causes the application to generate a crash log and terminate. 
+                // You should not use this function in a shipping application, although it may be
+                // useful during development.
+
                 /*
                  Typical reasons for an error here include:
                  * The parent directory does not exist, cannot be created, or disallows writing.
-                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+                 * The persistent store is not accessible, due to permissions or data protection
+                 * when the device is locked.
                  * The device is out of space.
                  * The store could not be migrated to the current model version.
                  Check the error message to determine what the actual problem was.
@@ -299,7 +317,7 @@ class CoreDataPersistentStore: PersistentStore {
         _container = initializeContainer()
         NotificationCenter.default
             .publisher(for: .NSPersistentStoreRemoteChange)
-            .sink { value in
+            .sink { _ in
                 self.fetchPersistentHistoryTransactionsAndChanges()
             }
             .store(in: &subscriptions)
@@ -315,22 +333,27 @@ class CoreDataPersistentStore: PersistentStore {
         if let forceReloadDate = forceReloadDate, lastLoadDate < forceReloadDate, !inMemory {
             NSLog("Delete and reload")
             if !inMemory {
-                do
-                {
-                    let storeURL: URL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("Marlin.sqlite")
+                do {
+                    let storeURL: URL = NSPersistentContainer
+                        .defaultDirectoryURL()
+                        .appendingPathComponent("Marlin.sqlite")
                     try FileManager.default.removeItem(atPath: storeURL.path)
-                    let walURL: URL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("Marlin.sqlite-wal")
+                    let walURL: URL = NSPersistentContainer
+                        .defaultDirectoryURL()
+                        .appendingPathComponent("Marlin.sqlite-wal")
                     try FileManager.default.removeItem(atPath: walURL.path)
-                    let shmURL: URL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("Marlin.sqlite-shm")
+                    let shmURL: URL = NSPersistentContainer
+                        .defaultDirectoryURL()
+                        .appendingPathComponent("Marlin.sqlite-shm")
                     try FileManager.default.removeItem(atPath: shmURL.path)
-                }
-                catch
-                {
+                } catch {
                     print(error.localizedDescription)
                 }
             }
             do {
-                let tokenURL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("MSICoreDataToken", isDirectory: true)
+                let tokenURL = NSPersistentContainer
+                    .defaultDirectoryURL()
+                    .appendingPathComponent("MSICoreDataToken", isDirectory: true)
                 try FileManager.default.removeItem(atPath: tokenURL.path)
             } catch {
                 print(error.localizedDescription)
@@ -429,7 +452,8 @@ class CoreDataPersistentStore: PersistentStore {
     }
     
     private func mergePersistentHistoryChanges(from history: [NSPersistentHistoryTransaction]) {
-        let entityMap: [String?: String] = MSI.shared.masterDataList.reduce([String?:String]()) { (partialResult, importable) -> [String?:String] in
+        let entityMap: [String?: String] = 
+        MSI.shared.mainDataList.reduce([String?: String]()) { (partialResult, importable) -> [String?: String] in
             var partialResult = partialResult
             partialResult[importable.entity().name] = importable.key
             return partialResult
@@ -439,13 +463,15 @@ class CoreDataPersistentStore: PersistentStore {
         /// - Tag: mergeChanges
         let viewContext = container.viewContext
         viewContext.perform {
-            var updateCounts: [String? : Int] = [:]
-            var insertCounts: [String? : Int] = [:]
+            var updateCounts: [String?: Int] = [:]
+            var insertCounts: [String?: Int] = [:]
             for transaction in history {
                 let notif = transaction.objectIDNotification()
-                let inserts: Set<NSManagedObjectID> = notif.userInfo?["inserted_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
-                let updates: Set<NSManagedObjectID> = notif.userInfo?["updated_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
-                
+                let inserts: Set<NSManagedObjectID> =
+                notif.userInfo?["inserted_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
+                let updates: Set<NSManagedObjectID> =
+                notif.userInfo?["updated_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
+
                 for insert in inserts {
                     let entityKey = entityMap[insert.entity.name]
                     insertCounts[entityKey] = (insertCounts[entityKey] ?? 0) + 1
@@ -462,15 +488,23 @@ class CoreDataPersistentStore: PersistentStore {
                 self.storeHistoryToken(newToken)
             }
             var dataSourceUpdatedNotifications: [DataSourceUpdatedNotification] = []
-            for dataSource in MSI.shared.masterDataList {
+            for dataSource in MSI.shared.mainDataList {
                 let inserts = insertCounts[dataSource.key] ?? 0
                 let updates = updateCounts[dataSource.key] ?? 0
                 if inserts != 0 || updates != 0 {
-                    dataSourceUpdatedNotifications.append(DataSourceUpdatedNotification(key: dataSource.key, updates: updates, inserts: inserts))
+                    dataSourceUpdatedNotifications.append(
+                        DataSourceUpdatedNotification(
+                            key: dataSource.key,
+                            updates: updates,
+                            inserts: inserts))
                 }
             }
             
-            NotificationCenter.default.post(Notification(name: .BatchUpdateComplete, object: BatchUpdateComplete(dataSourceUpdates: dataSourceUpdatedNotifications)))
+            NotificationCenter.default.post(
+                Notification(
+                    name: .BatchUpdateComplete,
+                    object: BatchUpdateComplete(
+                        dataSourceUpdates: dataSourceUpdatedNotifications)))
         }
     }
     
@@ -516,7 +550,8 @@ class CoreDataPersistentStore: PersistentStore {
             try viewContext.save()
         } catch {
             // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+            // fatalError() causes the application to generate a crash log and terminate. You should not use 
+            // this function in a shipping application, although it may be useful during development.
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }

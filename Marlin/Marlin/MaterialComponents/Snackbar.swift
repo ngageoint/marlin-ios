@@ -81,7 +81,15 @@ struct Snackbar<Presenting, Content>: View where Presenting: View, Content: View
                     .opacity(self.isPresented ? 1 : 0)
 
                     .if(horizontalSizeClass == .regular) { view in
-                        view.frame(minWidth: 344.0, idealWidth: 344.0, maxWidth: 344.0, minHeight: 48.0, idealHeight: 48.0, maxHeight: 68.0, alignment: .leading)
+                        view.frame(
+                            minWidth: 344.0,
+                            idealWidth: 344.0,
+                            maxWidth: 344.0,
+                            minHeight: 48.0,
+                            idealHeight: 48.0,
+                            maxHeight: 68.0,
+                            alignment: .leading
+                        )
                     }
                     .if(horizontalSizeClass == .compact) { view in
                         view.frame(width: geometry.size.width - 16, height: 48.0)
@@ -93,7 +101,10 @@ struct Snackbar<Presenting, Content>: View where Presenting: View, Content: View
 }
 
 extension View {
-    func snackbar<Content>(isPresented: Binding<Bool>, content: @escaping () -> Content) -> some View where Content: View {
+    func snackbar<Content>(
+        isPresented: Binding<Bool>,
+        content: @escaping () -> Content
+    ) -> some View where Content: View {
         Snackbar(
             isPresented: isPresented,
             presenter: { self },

@@ -17,7 +17,11 @@ class LightViewModel: ObservableObject, Identifiable {
     func getLights(featureNumber: String?, volumeNumber: String?, waypointURI: URL?) -> [LightModel] {
         if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
             predicate = NSPredicate(format: "featureNumber == %@ AND volumeNumber == %@", featureNumber, volumeNumber)
-            lights = (repository?.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI) ?? [])
+            lights = (repository?.getLights(
+                featureNumber: featureNumber,
+                volumeNumber: volumeNumber,
+                waypointURI: waypointURI
+            ) ?? [])
                 .sorted(by: { one, two in
                     (one.characteristicNumber ?? -1) < (two.characteristicNumber ?? -1)
                 })

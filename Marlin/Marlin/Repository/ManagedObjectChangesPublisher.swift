@@ -10,9 +10,10 @@ import Combine
 import CoreData
 
 extension NSManagedObjectContext {
-    func changesPublisher<Object: NSManagedObject, TransformedObject: Equatable>(for fetchRequest: NSFetchRequest<Object>, transformer: @escaping (Object) -> TransformedObject)
-    -> ManagedObjectChangesPublisher<Object, TransformedObject>
-    {
+    func changesPublisher<Object: NSManagedObject, TransformedObject: Equatable>(
+        for fetchRequest: NSFetchRequest<Object>,
+        transformer: @escaping (Object) -> TransformedObject
+    ) -> ManagedObjectChangesPublisher<Object, TransformedObject> {
         ManagedObjectChangesPublisher(fetchRequest: fetchRequest, context: self, transformer: transformer)
     }
 }
@@ -25,14 +26,23 @@ struct ManagedObjectChangesPublisher<Object: NSManagedObject, TransformedObject:
     let context: NSManagedObjectContext
     let transformer: (Object) -> TransformedObject
     
-    init(fetchRequest: NSFetchRequest<Object>, context: NSManagedObjectContext, transformer: @escaping (Object) -> TransformedObject) {
+    init(
+        fetchRequest: NSFetchRequest<Object>,
+        context: NSManagedObjectContext,
+        transformer: @escaping (Object) -> TransformedObject
+    ) {
         self.fetchRequest = fetchRequest
         self.context = context
         self.transformer = transformer
     }
     
     func receive<S: Subscriber>(subscriber: S) where Failure == S.Failure, Output == S.Input {
-        let inner = Inner(downstream: subscriber, fetchRequest: fetchRequest, context: context, transformer: transformer)
+        let inner = Inner(
+            downstream: subscriber,
+            fetchRequest: fetchRequest,
+            context: context,
+            transformer: transformer
+        )
         subscriber.receive(subscription: inner)
     }
     

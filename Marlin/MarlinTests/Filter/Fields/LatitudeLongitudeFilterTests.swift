@@ -24,8 +24,10 @@
 //            @ObservedObject var passThrough: PassThrough
 //            
 //            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
-//            @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Latitude", key: "latitudeProperty", type: .latitude))
-//            
+//            @ObservedObject var dataSourcePropertyFilterViewModel = 
+// DataSourcePropertyFilterViewModel(dataSourceProperty:
+// DataSourceProperty(name: "Latitude", key: "latitudeProperty", type: .latitude))
+//
 //            init(passThrough: PassThrough) {
 //                self.passThrough = passThrough
 //                self.passThrough.viewModel = dataSourcePropertyFilterViewModel
@@ -69,8 +71,10 @@
 //            @ObservedObject var passThrough: PassThrough
 //            
 //            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
-//            @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Longitude", key: "longitudeProperty", type: .latitude))
-//            
+//            @ObservedObject var dataSourcePropertyFilterViewModel = 
+// DataSourcePropertyFilterViewModel(dataSourceProperty:
+// DataSourceProperty(name: "Longitude", key: "longitudeProperty", type: .latitude))
+//
 //            init(passThrough: PassThrough) {
 //                self.passThrough = passThrough
 //                self.passThrough.viewModel = dataSourcePropertyFilterViewModel
@@ -114,8 +118,10 @@
 //            @ObservedObject var passThrough: PassThrough
 //            
 //            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
-//            @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Latitude", key: "latitudeProperty", type: .latitude))
-//            
+//            @ObservedObject var dataSourcePropertyFilterViewModel = 
+// DataSourcePropertyFilterViewModel(dataSourceProperty:
+// DataSourceProperty(name: "Latitude", key: "latitudeProperty", type: .latitude))
+//
 //            init(passThrough: PassThrough) {
 //                self.passThrough = passThrough
 //                self.passThrough.viewModel = dataSourcePropertyFilterViewModel
@@ -160,8 +166,10 @@
 //            @ObservedObject var passThrough: PassThrough
 //            
 //            @ObservedObject var filterViewModel = PersistedFilterViewModel(dataSource: MockDataSource.self)
-//            @ObservedObject var dataSourcePropertyFilterViewModel = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Longitude", key: "longitudeProperty", type: .latitude))
-//            
+//            @ObservedObject var dataSourcePropertyFilterViewModel = 
+// DataSourcePropertyFilterViewModel(dataSourceProperty:
+// DataSourceProperty(name: "Longitude", key: "longitudeProperty", type: .latitude))
+//
 //            init(passThrough: PassThrough) {
 //                self.passThrough = passThrough
 //                self.passThrough.viewModel = dataSourcePropertyFilterViewModel

@@ -17,7 +17,10 @@ struct NoticeToMarinersPropertyContainer: Decodable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        pubs = try container.decode([Throwable<NoticeToMarinersProperties>].self, forKey: .pubs).compactMap { try? $0.result.get() }
+        pubs = try container.decode(
+            [Throwable<NoticeToMarinersProperties>].self, forKey: .pubs
+        )
+        .compactMap { try? $0.result.get() }
     }
 }
 
@@ -89,7 +92,7 @@ struct NoticeToMarinersProperties: Decodable {
         self.fileSize = try? values.decode(Int.self, forKey: .fileSize)
         self.isFullPublication = try? values.decode(Bool.self, forKey: .isFullPublication)
         
-        var parsedUploadTime: Date? = nil
+        var parsedUploadTime: Date?
         if let dateString = try? values.decode(String.self, forKey: .uploadTime) {
             if let date = NoticeToMariners.dateFormatter.date(from: dateString) {
                 parsedUploadTime = date
@@ -97,7 +100,7 @@ struct NoticeToMarinersProperties: Decodable {
         }
         self.uploadTime = parsedUploadTime
         
-        var parsedLastModified: Date? = nil
+        var parsedLastModified: Date?
         if let dateString = try? values.decode(String.self, forKey: .lastModified) {
             if let date = NoticeToMariners.dateFormatter.date(from: dateString) {
                 parsedLastModified = date
@@ -109,22 +112,21 @@ struct NoticeToMarinersProperties: Decodable {
     // The keys must have the same name as the attributes of the NoticeToMariners entity.
     var dictionaryValue: [String: Any?] {
         [
-            "publicationIdentifier":publicationIdentifier,
-            "noticeNumber":noticeNumber,
-            "title":title,
-            "odsKey":odsKey,
-            "sectionOrder":sectionOrder,
-            "limitedDist":limitedDist,
-            "odsEntryId":odsEntryId,
-            "odsContentId":odsContentId,
-            "internalPath":internalPath,
-            "filenameBase":filenameBase,
-            "fileExtension":fileExtension,
-            "fileSize":fileSize,
-            "isFullPublication":isFullPublication,
-            "uploadTime":uploadTime,
-            "lastModified":lastModified
+            "publicationIdentifier": publicationIdentifier,
+            "noticeNumber": noticeNumber,
+            "title": title,
+            "odsKey": odsKey,
+            "sectionOrder": sectionOrder,
+            "limitedDist": limitedDist,
+            "odsEntryId": odsEntryId,
+            "odsContentId": odsContentId,
+            "internalPath": internalPath,
+            "filenameBase": filenameBase,
+            "fileExtension": fileExtension,
+            "fileSize": fileSize,
+            "isFullPublication": isFullPublication,
+            "uploadTime": uploadTime,
+            "lastModified": lastModified
         ]
     }
 }
-

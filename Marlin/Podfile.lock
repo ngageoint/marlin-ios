@@ -17,7 +17,7 @@ PODS:
   - KIF (3.8.9):
     - KIF/Core (= 3.8.9)
   - KIF/Core (3.8.9)
-  - Kingfisher (7.10.0)
+  - Kingfisher (7.10.1)
   - MatomoTracker (7.5.2):
     - MatomoTracker/Core (= 7.5.2)
   - MatomoTracker/Core (7.5.2)
@@ -56,6 +56,7 @@ PODS:
     - sf-ios (~> 4.1.3)
   - sf-wkt-ios (2.1.3):
     - sf-ios (~> 4.1.3)
+  - SwiftLint (0.54.0)
   - SwiftUIIntrospect (1.1.1)
   - SWXMLHash (7.0.2)
   - tiff-ios (4.0.2)
@@ -70,6 +71,7 @@ DEPENDENCIES:
   - mgrs-ios
   - OHHTTPStubs
   - OHHTTPStubs/Swift
+  - SwiftLint
   - SwiftUIIntrospect
   - SWXMLHash (~> 7)
 
@@ -95,6 +97,7 @@ SPEC REPOS:
     - sf-proj-ios
     - sf-wkb-ios
     - sf-wkt-ios
+    - SwiftLint
     - SwiftUIIntrospect
     - SWXMLHash
     - tiff-ios
@@ -107,7 +110,7 @@ SPEC CHECKSUMS:
   geopackage-ios: f267cf4f09c0a24c7759f33ddb3d33b5a5ffe494
   grid-ios: a86f1d0e90c6ae2721ec3abcf1763a2d300ab19b
   KIF: 7660c626b0f2d4562533590960db70a36d640558
-  Kingfisher: a18f05d3b6d37d8650ee4a3e61d57a28fc6207f6
+  Kingfisher: bc5abe80a8e0144537ef1dd5a0b2621b04f7f439
   MatomoTracker: 1d98ddc58322fd9d65e1a6886b8e41363047bd13
   mgrs-ios: 969543c1fbcbd36c73a948e0f5d77cf769d1c326
   ogc-api-features-json-ios: c484e4d3aca15a2b3ff500fee2c40f9fe592a072
@@ -120,10 +123,11 @@ SPEC CHECKSUMS:
   sf-proj-ios: c7169e74aea4c25285e89cadbd1338f7c9fb8648
   sf-wkb-ios: 0407b2327f068d54b97ddc93b7d04fe6efdf6c42
   sf-wkt-ios: dd33f0c9905428834ff6d1ee6e55cfeaa7349985
+  SwiftLint: c1de071d9d08c8aba837545f6254315bc900e211
   SwiftUIIntrospect: db5290a3492424eb4afcab77cebcd4595de3bd71
   SWXMLHash: dd733a457e9c4fe93b1538654057aefae4acb382
   tiff-ios: 1ad6750cd8bb3db75bd2977e40145813389786b9
 
-PODFILE CHECKSUM: 42b1cb6ff1177748298b4c6795543ea46096bd23
+PODFILE CHECKSUM: c258bfe6455594c9eff77bff8bd44f9a27fd43cf
 
 COCOAPODS: 1.14.3

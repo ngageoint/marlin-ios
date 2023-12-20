@@ -19,26 +19,30 @@ struct IntFilter: View {
                 FilterComparison(dataSourcePropertyFilterViewModel: viewModel)
             }
             VStack(alignment: .leading, spacing: 0) {
-                TextField(viewModel.dataSourceProperty.name, value: $viewModel.valueInt, format: .number.grouping(.never))
-                    .keyboardType(.numberPad)
-                    .underlineTextField()
-                    .onTapGesture(perform: {
-                        viewModel.startValidating = true
-                    })
-                    .focused($isInputActive)
-                    .toolbar {
-                        ToolbarItem(placement: .keyboard) {
-                            Spacer()
-                        }
-                        ToolbarItem(placement: .keyboard) {
-                            Button("Done") {
-                                isInputActive = false
-                            }
-                            .tint(Color.primaryColorVariant)
-                        }
+                TextField(
+                    viewModel.dataSourceProperty.name,
+                    value: $viewModel.valueInt,
+                    format: .number.grouping(.never)
+                )
+                .keyboardType(.numberPad)
+                .underlineTextField()
+                .onTapGesture(perform: {
+                    viewModel.startValidating = true
+                })
+                .focused($isInputActive)
+                .toolbar {
+                    ToolbarItem(placement: .keyboard) {
+                        Spacer()
                     }
-                    .accessibilityElement()
-                    .accessibilityLabel("\(viewModel.dataSourceProperty.name) input")
+                    ToolbarItem(placement: .keyboard) {
+                        Button("Done") {
+                            isInputActive = false
+                        }
+                        .tint(Color.primaryColorVariant)
+                    }
+                }
+                .accessibilityElement()
+                .accessibilityLabel("\(viewModel.dataSourceProperty.name) input")
                 if let validationText = viewModel.validationText {
                     Text(validationText)
                         .overline()

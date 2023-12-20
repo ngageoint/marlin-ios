@@ -154,7 +154,16 @@ final class FilterButtonTests: XCTestCase {
     }
     
     func testFilterCount() {
-        UserDefaults.standard.setFilter(MockDataSource.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(MockDataSource.dateProperty), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last365Days)])
+        UserDefaults.standard.setFilter(MockDataSource.key, 
+                                        filter: [
+                                            DataSourceFilterParameter(
+                                                property: DataSourceProperty(
+                                                    name: "Date",
+                                                    key: #keyPath(MockDataSource.dateProperty), type: .date),
+                                                comparison: .window,
+                                                windowUnits: DataSourceWindowUnits.last365Days)
+                                        ]
+        )
         
         class PassThrough {
             var filterOpen: Bool = false
@@ -193,7 +202,17 @@ final class FilterButtonTests: XCTestCase {
     }
     
     func testFilterCountDataSourcesChange() {
-        UserDefaults.standard.setFilter(MockDataSource.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(MockDataSource.dateProperty), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last365Days)])
+        UserDefaults.standard.setFilter(MockDataSource.key, 
+                                        filter: [
+                                            DataSourceFilterParameter(
+                                                property: DataSourceProperty(
+                                                    name: "Date",
+                                                    key: #keyPath(MockDataSource.dateProperty),
+                                                    type: .date),
+                                                comparison: .window,
+                                                windowUnits: DataSourceWindowUnits.last365Days)
+                                        ]
+        )
         
         class PassThrough {
             var filterOpen: Bool = false

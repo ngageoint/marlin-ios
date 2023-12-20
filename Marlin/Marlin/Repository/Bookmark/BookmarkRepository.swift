@@ -32,7 +32,9 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
     }
     
     func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel? {
-        if let bookmark = try? context.fetchFirst(Bookmark.self, predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey, dataSource)) {
+        if let bookmark = try? context.fetchFirst(
+            Bookmark.self,
+            predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey, dataSource)) {
             return BookmarkModel(bookmark: bookmark)
         }
         return nil

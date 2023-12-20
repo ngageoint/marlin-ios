@@ -139,7 +139,7 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
         self.position = try? values.decode(String.self, forKey: .position)
         self.navArea = try? values.decode(String.self, forKey: .navArea)
         
-        var parsedDate: Date? = nil
+        var parsedDate: Date?
         if let dateString = try? values.decode(String.self, forKey: .date) {
             if let date = Modu.dateFormatter.date(from: dateString) {
                 parsedDate = date
@@ -158,8 +158,8 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
             let decoder = JSONDecoder()
             print("json is \(string)")
             let jsonData = Data(string.utf8)
-            if let ds = try? decoder.decode(ModuModel.self, from: jsonData) {
-                self = ds
+            if let model = try? decoder.decode(ModuModel.self, from: jsonData) {
+                self = model
             } else {
                 return nil
             }
@@ -208,15 +208,25 @@ extension ModuModel: DataSource {
     }
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("MODU", comment: "MODU data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Mobile Offshore Drilling Units", comment: "MODU data source display name")
+    static var fullDataSourceName: String = 
+    NSLocalizedString("Mobile Offshore Drilling Units", comment: "MODU data source display name")
     static var key: String = "modu"
     static var metricsKey: String = "modus"
     static var imageName: String? = "modu"
-    static var systemImageName: String? = nil
+    static var systemImageName: String?
     static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date), ascending: false)]
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Date",
+                key: #keyPath(Modu.date),
+                type: .date
+            ),
+            ascending: false
+        )
+    ]
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
@@ -230,7 +240,7 @@ extension ModuModel: DataSource {
         DataSourceProperty(name: "Rig Status", key: #keyPath(Modu.rigStatus), type: .string),
         DataSourceProperty(name: "Nav Area", key: #keyPath(Modu.navArea), type: .string),
         DataSourceProperty(name: "Name", key: #keyPath(Modu.name), type: .string),
-        DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date),
+        DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date)
     ]
     
     static var dateFormatter: DateFormatter {
@@ -247,15 +257,28 @@ extension ModuModel: DataSource {
 }
 
 extension ModuModel: MapImage {
-    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext?) -> [UIImage] {
+    func mapImage(
+        marker: Bool,
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox?,
+        context: CGContext?
+    ) -> [UIImage] {
         var images: [UIImage] = []
-        if let tileBounds3857 = tileBounds3857, var distance = distance, distance > 0 {
+        if let tileBounds3857 = tileBounds3857, let distance = distance, distance > 0 {
             let circleCoordinates = coordinate.circleCoordinates(radiusMeters: distance * 1852)
             let path = UIBezierPath()
-            var pixel = circleCoordinates[0].toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+            var pixel = circleCoordinates[0].toPixel(
+                zoomLevel: zoomLevel,
+                tileBounds3857: tileBounds3857,
+                tileSize: TILE_SIZE
+            )
             path.move(to: pixel)
             for circleCoordinate in circleCoordinates {
-                pixel = circleCoordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+                pixel = circleCoordinate.toPixel(
+                    zoomLevel: zoomLevel,
+                    tileBounds3857: tileBounds3857,
+                    tileSize: TILE_SIZE
+                )
                 path.addLine(to: pixel)
             }
             path.lineWidth = 4
@@ -265,7 +288,15 @@ extension ModuModel: MapImage {
             path.fill()
             path.stroke()
         }
-        images.append(contentsOf: defaultMapImage(marker: marker, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context, tileSize: 512.0))
+        images.append(
+            contentsOf: defaultMapImage(
+                marker: marker,
+                zoomLevel: zoomLevel,
+                tileBounds3857: tileBounds3857,
+                context: context,
+                tileSize: 512.0
+            )
+        )
         return images
     }
     

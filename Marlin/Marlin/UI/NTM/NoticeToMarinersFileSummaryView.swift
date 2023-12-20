@@ -25,8 +25,11 @@ struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("\(noticeToMariners.title ?? "")\(noticeToMariners.isFullPublication ? (" \(noticeToMariners.fileExtension ?? "")") : "")")
-                .primary()
+            Text("""
+                \(noticeToMariners.title ?? "")\
+                \(noticeToMariners.isFullPublication ? (" \(noticeToMariners.fileExtension ?? "")") : "")
+            """)
+            .primary()
             Text("File Size: \(bcf.string(fromByteCount: noticeToMariners.fileSize))")
                 .secondary()
             if let uploadTime = noticeToMariners.uploadTime {
@@ -39,56 +42,70 @@ struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
                     ProgressView(value: noticeToMariners.downloadProgress)
                         .tint(Color.primaryColorVariant)
                 }
-                if noticeToMariners.isDownloaded, noticeToMariners.checkFileExists(), let url = URL(string: noticeToMariners.savePath) {
-                    Button(action: {
-                        NotificationCenter.default.post(name: .DocumentPreview, object: url)
-                    }) {
-                        Label(
-                            title: {},
-                            icon: { Image("preview")
-                                    .renderingMode(.template)
-                                    .foregroundColor(Color.primaryColorVariant)
-                            })
-                    }
+                if noticeToMariners.isDownloaded, 
+                    noticeToMariners.checkFileExists(),
+                    let url = URL(string: noticeToMariners.savePath) {
+                    Button(
+                        action: {
+                            NotificationCenter.default.post(name: .DocumentPreview, object: url)
+                        },
+                        label: {
+                            Label(
+                                title: {},
+                                icon: { Image("preview")
+                                        .renderingMode(.template)
+                                        .foregroundColor(Color.primaryColorVariant)
+                                })
+                        }
+                    )
                     .accessibilityElement()
                     .accessibilityLabel("Open")
                     
-                    Button(action: {
-                        noticeToMariners.deleteFile()
-                    }) {
-                        Label(
-                            title: {},
-                            icon: { Image(systemName: "trash.fill")
-                                    .renderingMode(.template)
-                                    .foregroundColor(Color.primaryColorVariant)
-                            })
-                    }
+                    Button(
+                        action: {
+                            noticeToMariners.deleteFile()
+                        },
+                        label: {
+                            Label(
+                                title: {},
+                                icon: { Image(systemName: "trash.fill")
+                                        .renderingMode(.template)
+                                        .foregroundColor(Color.primaryColorVariant)
+                                })
+                        }
+                    )
                     .accessibilityElement()
                     .accessibilityLabel("Delete")
                 } else if !noticeToMariners.isDownloading {
-                    Button(action: {
-                        noticeToMariners.downloadFile()
-                    }) {
-                        Label(
-                            title: {},
-                            icon: { Image(systemName: "square.and.arrow.down")
-                                    .renderingMode(.template)
-                                    .foregroundColor(Color.primaryColorVariant)
-                            })
-                    }
+                    Button(
+                        action: {
+                            noticeToMariners.downloadFile()
+                        },
+                        label: {
+                            Label(
+                                title: {},
+                                icon: { Image(systemName: "square.and.arrow.down")
+                                        .renderingMode(.template)
+                                        .foregroundColor(Color.primaryColorVariant)
+                                })
+                        }
+                    )
                     .accessibilityElement()
                     .accessibilityLabel("Download")
                 } else {
-                    Button(action: {
-                        noticeToMariners.cancelDownload()
-                    }) {
-                        Label(
-                            title: {},
-                            icon: { Image(systemName: "xmark.circle.fill")
-                                    .renderingMode(.template)
-                                    .foregroundColor(Color.primaryColorVariant)
-                            })
-                    }
+                    Button(
+                        action: {
+                            noticeToMariners.cancelDownload()
+                        },
+                        label: {
+                            Label(
+                                title: {},
+                                icon: { Image(systemName: "xmark.circle.fill")
+                                        .renderingMode(.template)
+                                        .foregroundColor(Color.primaryColorVariant)
+                                })
+                        }
+                    )
                     .accessibilityElement()
                     .accessibilityLabel("Cancel")
                 }

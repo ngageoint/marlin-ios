@@ -22,11 +22,16 @@ struct DataSourcePropertyFilterView: View {
         }
         self.filterViewModel = filterViewModel
 
-        _viewModel = StateObject(wrappedValue:DataSourcePropertyFilterViewModel(dataSourceProperty: prop, isStaticProperty: dataSourceProperty != nil))
+        _viewModel = StateObject(
+            wrappedValue: DataSourcePropertyFilterViewModel(
+                dataSourceProperty: prop,
+                isStaticProperty: dataSourceProperty != nil
+            )
+        )
     }
     
     var body: some View {
-        HStack (alignment: viewModel.dataSourceProperty.type == .location ? .bottom : .center) {
+        HStack(alignment: viewModel.dataSourceProperty.type == .location ? .bottom : .center) {
             switch viewModel.dataSourceProperty.type {
             case .double, .float:
                 DoubleFilter(filterViewModel: filterViewModel, viewModel: viewModel)

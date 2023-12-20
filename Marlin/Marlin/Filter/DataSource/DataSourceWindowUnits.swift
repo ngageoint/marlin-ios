@@ -16,7 +16,7 @@ enum DataSourceWindowUnits: String, CaseIterable, Identifiable, Codable {
     var id: String { rawValue }
     
     func numberOfDays() -> Int {
-        switch (self) {
+        switch self {
         case .last7Days:
             return 7
         case .last30Days:

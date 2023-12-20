@@ -33,8 +33,8 @@ struct TestApp: App {
 }
 
 class AppState: ObservableObject {
-    @Published var loadingDataSource: [String : Bool] = [:]
-    @Published var dataSourceBatchImportNotificationsPending: [String: [DataSourceUpdatedNotification]] = [:]
+    @Published var loadingDataSource: [String: Bool] = [:]
+    @Published var dsBatchImportNotificationsPending: [String: [DataSourceUpdatedNotification]] = [:]
     @Published var lastNotificationRequestDate: Date = Date()
     @Published var consolidatedDataLoadedNotification: String?
 }
@@ -56,10 +56,10 @@ struct PhaseWatcher: View {
             .onChange(of: phase) { newPhase in
                 MSI.shared.onChangeOfScenePhase(newPhase)
             }
-            .onReceive(appState.$lastNotificationRequestDate) { newValue in
-                var insertsPerDataSource: [String : Int] = [:]
+            .onReceive(appState.$lastNotificationRequestDate) { _ in
+                var insertsPerDataSource: [String: Int] = [:]
                 
-                for (_, importNotifications) in appState.dataSourceBatchImportNotificationsPending {
+                for (_, importNotifications) in appState.dsBatchImportNotificationsPending {
                     for notification in importNotifications {
                         let inserts: Int = insertsPerDataSource[notification.key] ?? 0
                         insertsPerDataSource[notification.key] = inserts + (notification.inserts ?? 0)
@@ -73,7 +73,8 @@ struct PhaseWatcher: View {
                         item.key == dataSourceKey
                     }
                     if inserts != 0 {
-                        notificationStrings.append("\(inserts) new \(dataSourceItem?.dataSource.definition.fullName ?? "")")
+                        notificationStrings
+                            .append("\(inserts) new \(dataSourceItem?.dataSource.definition.fullName ?? "")")
                     }
                 }
                 if !notificationStrings.isEmpty {
@@ -82,18 +83,28 @@ struct PhaseWatcher: View {
                     appState.consolidatedDataLoadedNotification = nil
                 }
             }
-            .onReceive(appState.$consolidatedDataLoadedNotification.debounce(for: .seconds(2), scheduler: RunLoop.main)) { newValue in
+            .onReceive(appState.$consolidatedDataLoadedNotification.debounce(
+                for: .seconds(2),
+                scheduler: RunLoop.main)
+            ) { newValue in
                 if phase == .background {
                     if let newValue = newValue {
-                        appState.dataSourceBatchImportNotificationsPending = [:]
+                        appState.dsBatchImportNotificationsPending = [:]
                         let center = UNUserNotificationCenter.current()
                         let content = UNMutableNotificationContent()
-                        content.title = NSString.localizedUserNotificationString(forKey: "New Marlin Data", arguments: nil)
+                        content.title = NSString.localizedUserNotificationString(
+                            forKey: "New Marlin Data",
+                            arguments: nil
+                        )
                         content.body = NSString.localizedUserNotificationString(forKey: newValue, arguments: nil)
                         content.sound = UNNotificationSound.default
                         content.categoryIdentifier = "mil.nga.msi"
                         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2.0, repeats: false)
-                        let request = UNNotificationRequest.init(identifier: UUID().uuidString, content: content, trigger: trigger)
+                        let request = UNNotificationRequest.init(
+                            identifier: UUID().uuidString,
+                            content: content,
+                            trigger: trigger
+                        )
                         center.add(request)
                     }
                 }
@@ -102,10 +113,11 @@ struct PhaseWatcher: View {
                 let updates = batchUpdateComplete.dataSourceUpdates
                 for update in updates {
                     let dataSourceKey = update.key
-                    var pending: [DataSourceUpdatedNotification] = appState.dataSourceBatchImportNotificationsPending[dataSourceKey] ?? []
+                    var pending: [DataSourceUpdatedNotification] = 
+                    appState.dsBatchImportNotificationsPending[dataSourceKey] ?? []
                     pending.append(update)
-                    appState.dataSourceBatchImportNotificationsPending[dataSourceKey] = pending
-                    
+                    appState.dsBatchImportNotificationsPending[dataSourceKey] = pending
+
                 }
                 appState.lastNotificationRequestDate = Date()
             }
@@ -144,22 +156,32 @@ struct MarlinApp: App {
         UserDefaults.registerMarlinDefaults()
         shared = MSI.shared
         appState = MSI.shared.appState
-        persistentStoreLoadedPub.sink { notification in
+        persistentStoreLoadedPub.sink { _ in
             NSLog("Persistent store loaded, load all data")
             MSI.shared.loadAllData()
         }
         .store(in: &cancellable)
         persistentStore = PersistenceController.shared
-        bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        asamRepository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
-        moduRepository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
-        lightRepository = LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext))
-        portRepository = PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext))
-        dgpsRepository = DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
-        radioBeaconRepository = RadioBeaconRepositoryManager(repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
-        routeRepository = RouteRepositoryManager(repository: RouteCoreDataRepository(context: persistentStore.viewContext))
-        routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
-        navigationalWarningRepository = NavigationalWarningRepositoryManager(repository: NavigationalWarningCoreDataRepository(context: persistentStore.viewContext))
+        bookmarkRepository = BookmarkRepositoryManager(
+            repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        asamRepository = AsamRepository(
+            localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
+        moduRepository = ModuRepositoryManager(
+            repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        lightRepository = LightRepositoryManager(
+            repository: LightCoreDataRepository(context: persistentStore.viewContext))
+        portRepository = PortRepositoryManager(
+            repository: PortCoreDataRepository(context: persistentStore.viewContext))
+        dgpsRepository = DifferentialGPSStationRepositoryManager(
+            repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
+        radioBeaconRepository = RadioBeaconRepositoryManager(
+            repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
+        routeRepository = RouteRepositoryManager(
+            repository: RouteCoreDataRepository(context: persistentStore.viewContext))
+        routeWaypointRepository = RouteWaypointRepository(
+            localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
+        navigationalWarningRepository = NavigationalWarningRepositoryManager(
+            repository: NavigationalWarningCoreDataRepository(context: persistentStore.viewContext))
         UNUserNotificationCenter.current().delegate = appDelegate
     }
 
@@ -192,7 +214,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         Metrics.shared.dispatch()
     }
     
-    public var backgroundCompletionHandler: (() -> Void)? = nil
+    public var backgroundCompletionHandler: (() -> Void)?
     
     func application(_ application: UIApplication,
                      handleEventsForBackgroundURLSession identifier: String,
@@ -208,12 +230,17 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         backgroundCompletionHandler()
     }
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let presentationOption: UNNotificationPresentationOptions = [.sound, .banner, .list]
         completionHandler(presentationOption)
     }
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         MSI.shared.registerBackgroundHandler()
         return true
     }

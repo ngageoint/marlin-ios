@@ -38,7 +38,6 @@ class GeoPackageImportProgress: NSObject, ObservableObject, GPKGProgress {
         failure = error
     }
     
-    
 }
 
 class GeoPackageImporter {
@@ -69,7 +68,11 @@ class GeoPackageImporter {
         let name = nameOverride ?? url.deletingPathExtension().lastPathComponent
         do {
             try ExceptionCatcher.catch {
-                if let imported = manager?.importGeoPackage(fromPath: url.path, withName: name, andOverride: overwrite), imported {
+                if let imported = manager?.importGeoPackage(
+                    fromPath: url.path,
+                    withName: name,
+                    andOverride: overwrite
+                ), imported {
                     progress.completed()
                 } else {
                     progress.failureWithError("Failed to import GeoPackage")

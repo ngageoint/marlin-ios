@@ -19,7 +19,7 @@ class BookmarkHelper: XCTestCase {
         tester().enterText("Bookmark notes", intoViewWithAccessibilityLabel: "notes")
         tester().tapView(withAccessibilityLabel: "Bookmark")
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Bookmark")
-        
+
         viewContext.performAndWait {
             let bookmark = viewContext.fetchFirst(Bookmark.self, key: "id", value: bookmarkable.itemKey ?? "")
             XCTAssertNotNil(bookmark)
@@ -30,7 +30,7 @@ class BookmarkHelper: XCTestCase {
         }
         tester().waitForView(withAccessibilityLabel: "remove bookmark \(bookmarkable.itemKey ?? "")")
         tester().tapView(withAccessibilityLabel: "remove bookmark \(bookmarkable.itemKey ?? "")")
-        
+
         viewContext.performAndWait {
             let bookmark = viewContext.fetchFirst(Bookmark.self, key: "id", value: bookmarkable.itemKey ?? "")
             XCTAssertNil(bookmark)

@@ -45,22 +45,41 @@ extension ElectronicPublication: DataSource {
     }
     
     static var isMappable: Bool = false
-    static var dataSourceName: String = NSLocalizedString("EPUB", comment: "Electronic Publication data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Electronic Publications", comment: "Electronic Publication data source full display name")
+    static var dataSourceName: String = 
+    NSLocalizedString("EPUB",
+                      comment: "Electronic Publication data source display name")
+    static var fullDataSourceName: String = 
+    NSLocalizedString("Electronic Publications",
+                      comment: "Electronic Publication data source full display name")
     static var key: String = "epub"
     static var metricsKey: String = "epubs"
-    static var imageName: String? = nil
+    static var imageName: String?
     static var systemImageName: String? = "doc.text.fill"
     
     static var color: UIColor = UIColor(argbValue: 0xFF30B0C7)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Type", key: #keyPath(ElectronicPublication.pubTypeId), type: .int), ascending: true, section: true)]
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Type",
+                key: #keyPath(ElectronicPublication.pubTypeId),
+                type: .int),
+            ascending: true,
+            section: true)
+    ]
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
-        DataSourceProperty(name: "Type", key: #keyPath(ElectronicPublication.pubTypeId), type: .enumeration, enumerationValues: PublicationTypeEnum.keyValueMap),
-        DataSourceProperty(name: "Display Name", key: #keyPath(ElectronicPublication.pubDownloadDisplayName), type: .string)
+        DataSourceProperty(
+            name: "Type",
+            key: #keyPath(ElectronicPublication.pubTypeId),
+            type: .enumeration,
+            enumerationValues: PublicationTypeEnum.keyValueMap),
+        DataSourceProperty(
+            name: "Display Name",
+            key: #keyPath(ElectronicPublication.pubDownloadDisplayName),
+            type: .string)
     ]
     
     static func postProcess() {}
@@ -73,14 +92,19 @@ extension ElectronicPublication: BatchImportable {
         }
         let count = value.publications.count
         NSLog("Received \(count) Electronic Publication records.")
-        return try await Self.importRecords(from: value.publications, taskContext: PersistenceController.current.newTaskContext())
+        return try await Self.importRecords(
+            from: value.publications,
+            taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func newBatchInsertRequest(with propertyList: [ElectronicPublicationProperties]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
         // Provide one dictionary at a time when the closure is called.
-        let batchInsertRequest = NSBatchInsertRequest(entity: ElectronicPublication.entity(), dictionaryHandler: { dictionary in
+        let batchInsertRequest = 
+        NSBatchInsertRequest(
+            entity: ElectronicPublication.entity(),
+            dictionaryHandler: { dictionary in
             guard index < total else { return true }
             let propertyDictionary = propertyList[index].dictionaryValue
             dictionary.addEntries(from: propertyDictionary.mapValues({ value in
@@ -88,7 +112,7 @@ extension ElectronicPublication: BatchImportable {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             
             index += 1
             return false
@@ -96,7 +120,9 @@ extension ElectronicPublication: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [ElectronicPublicationProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(
+        from propertiesList: [ElectronicPublicationProperties],
+        taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.
@@ -148,6 +174,9 @@ extension ElectronicPublication: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every day
-        return UserDefaults.standard.dataSourceEnabled(ElectronicPublication.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 1)) > UserDefaults.standard.lastSyncTimeSeconds(ElectronicPublication.definition)
+        return UserDefaults.standard
+            .dataSourceEnabled(ElectronicPublication.definition)
+        && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 1)) >
+        UserDefaults.standard.lastSyncTimeSeconds(ElectronicPublication.definition)
     }
 }

@@ -5,11 +5,11 @@
 ////  Created by Daniel Barela on 12/6/22.
 ////
 //
-//import XCTest
+// import XCTest
 //
-//@testable import Marlin
+// @testable import Marlin
 //
-//final class FilterViewModelTests: XCTestCase {
+// final class FilterViewModelTests: XCTestCase {
 //
 //    override func setUp() {
 //        UserDefaults.standard.setFilter(MockDataSource.key, filter: [])
@@ -33,7 +33,8 @@
 //        let filterViewModel = PersistedFilterViewModel(dataSource: MockDataSourceDefaultSort.self)
 //        XCTAssertEqual(filterViewModel.filters, [])
 //        
-//        let model = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Date", key: #keyPath(MockDataSource.dateProperty), type: .date))
+//        let model = DataSourcePropertyFilterViewModel(dataSourceProperty: 
+//  DataSourceProperty(name: "Date", key: #keyPath(MockDataSource.dateProperty), type: .date))
 //        model.startValidating = true
 //        model.selectedComparison = .equals
 //        model.valueDate = Date(timeIntervalSince1970: 0)
@@ -43,10 +44,12 @@
 //    }
 //    
 //    func testFilterPropertiesUsingDefault() {
-//        let filterViewModel = PersistedFilterViewModel(dataSource: MockDataSourceDefaultSort.self, useDefaultForEmptyFilter: true)
+//        let filterViewModel = PersistedFilterViewModel(dataSource: 
+// MockDataSourceDefaultSort.self, useDefaultForEmptyFilter: true)
 //        XCTAssertEqual(filterViewModel.filters.count, MockDataSourceDefaultSort.defaultFilter.count)
 //        
-//        let model = DataSourcePropertyFilterViewModel(dataSourceProperty: DataSourceProperty(name: "Date", key: #keyPath(MockDataSource.dateProperty), type: .date))
+//        let model = DataSourcePropertyFilterViewModel(dataSourceProperty: 
+// DataSourceProperty(name: "Date", key: #keyPath(MockDataSource.dateProperty), type: .date))
 //        model.startValidating = true
 //        model.selectedComparison = .equals
 //        model.valueDate = Date(timeIntervalSince1970: 0)
@@ -56,7 +59,8 @@
 //    }
 //    
 //    func testChartCorrectionModel() {
-//        let filterViewModel = PersistedFilterViewModel(dataSource: ChartCorrection.self, useDefaultForEmptyFilter: true)
+//        let filterViewModel = PersistedFilterViewModel(dataSource: ChartCorrection.self, 
+// useDefaultForEmptyFilter: true)
 //        XCTAssertEqual(filterViewModel.requiredProperties.count, 1)
 //        XCTAssertEqual(filterViewModel.requiredNotSet.count, 0)
 //        
@@ -64,4 +68,4 @@
 //        XCTAssertEqual(filterViewModel.requiredProperties.count, 1)
 //        XCTAssertEqual(filterViewModel.requiredNotSet.count, 1)
 //    }
-//}
+// }

@@ -18,10 +18,13 @@ class BookmarkModel: NSObject {
         return self.id == otherShape.id
     }
     
-    static func == (lhs: BookmarkModel, rhs: BookmarkModel) -> Bool {
-        lhs.isEqualTo(rhs)
+    override func isEqual(_ object: Any?) -> Bool {
+        guard let object = object as? BookmarkModel else {
+            return false
+        }
+        return self.isEqualTo(object)
     }
-    
+
     init(bookmark: Bookmark) {
         self.dataSource = bookmark.dataSource
         self.id = bookmark.id

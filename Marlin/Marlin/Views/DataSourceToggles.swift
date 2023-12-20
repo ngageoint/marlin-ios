@@ -16,13 +16,24 @@ struct DataSourceToggles: View {
             .background(alignment: .bottomLeading) {
                 // two arcs
                 // outer arc
-                ForEach(Array(dataSourceList.mappableDataSources.prefix(5).enumerated()), id: \.element) { index, dataSourceItem in
+                ForEach(
+                    Array(
+                        dataSourceList
+                            .mappableDataSources
+                            .prefix(5)
+                            .enumerated()
+                    ), id: \.element) { index, dataSourceItem in
                     dataSourceButton(dataSourceItem: dataSourceItem)
                         .offset(expanded ? position(position: index, arcSize: 5, radius: 120.0) : .zero)
                         .opacity(expanded ? 1.0 : 0.0)
                 }
                 // inner arc
-                ForEach(Array(dataSourceList.mappableDataSources[5...7].enumerated()), id: \.element) { index, dataSourceItem in
+                ForEach(
+                    Array(
+                        dataSourceList
+                            .mappableDataSources[5...7]
+                            .enumerated()
+                    ), id: \.element) { index, dataSourceItem in
                     dataSourceButton(dataSourceItem: dataSourceItem)
                         .offset(expanded ? position(position: index, arcSize: 3, radius: 65.0) : .zero)
                         .opacity(expanded ? 1.0 : 0.0)
@@ -31,37 +42,47 @@ struct DataSourceToggles: View {
     }
     
     func position(position: Int, arcSize: Int, radius: CGFloat) -> CGSize {
-        let r: CGFloat = radius
         let range = -CGFloat.pi / 2 ... 0
         let angle = range.lowerBound + CGFloat(position) / CGFloat(arcSize - 1) * (range.upperBound - range.lowerBound)
-        return CGSize(width: r * cos(angle) + 8, height: r * sin(angle))
+        return CGSize(width: radius * cos(angle) + 8, height: radius * sin(angle))
     }
     
     @ViewBuilder
     func expandButton() -> some View {
-        Button(action: {
-            withAnimation {
-                expanded.toggle()
-            }
-        }) {
-            Label(title: {}) {
-                Group {
-                    if expanded {
-                        Image(systemName: "xmark")
-                            .renderingMode(.template)
-                            .tint(expanded ? Color.primaryColor : Color.onPrimaryColor)
-                    } else {
-                        Image("marlin_large")
-                            .resizable()
-                            .renderingMode(.template)
-                            .tint(expanded ? Color.primaryColor : Color.onPrimaryColor)
-                            .aspectRatio(contentMode: .fit)
-                    }
+        Button(
+            action: {
+                withAnimation {
+                    expanded.toggle()
                 }
-                    
+            },
+            label: {
+                Label(
+                    title: {},
+                    icon: {
+                        Group {
+                            if expanded {
+                                Image(systemName: "xmark")
+                                    .renderingMode(.template)
+                                    .tint(expanded ? Color.primaryColor : Color.onPrimaryColor)
+                            } else {
+                                Image("marlin_large")
+                                    .resizable()
+                                    .renderingMode(.template)
+                                    .tint(expanded ? Color.primaryColor : Color.onPrimaryColor)
+                                    .aspectRatio(contentMode: .fit)
+                            }
+                        }
+
+                    }
+                )
             }
-        }
-        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: expanded ? .mini : .regular, foregroundColor: expanded ? Color.primaryColor : Color.onPrimaryColor, backgroundColor: expanded ? Color.onPrimaryColor : Color.primaryColor))
+        )
+        .buttonStyle(
+            MaterialFloatingButtonStyle(
+                type: .custom,
+                size: expanded ? .mini : .regular,
+                foregroundColor: expanded ? Color.primaryColor : Color.onPrimaryColor,
+                backgroundColor: expanded ? Color.onPrimaryColor : Color.primaryColor))
         .overlay(Badge(count: dataSourceList.mappedDataSources.count, positionShift: 10))
         .accessibilityElement(children: .contain)
         .accessibilityLabel("\(expanded ? "Collapse" : "Expand") Map Toggle")
@@ -70,18 +91,29 @@ struct DataSourceToggles: View {
     
     @ViewBuilder
     func dataSourceButton(dataSourceItem: DataSourceItem) -> some View {
-        Button(action: {
-            dataSourceItem.showOnMap.toggle()
-        }) {
-            Label(title: {}) {
-                if let image = dataSourceItem.dataSource.image {
-                    Image(uiImage: image)
-                        .renderingMode(.template)
-                        .tint(Color.white)
-                }
+        Button(
+            action: {
+                dataSourceItem.showOnMap.toggle()
+            },
+            label: {
+                Label(
+                    title: {},
+                    icon: {
+                        if let image = dataSourceItem.dataSource.image {
+                            Image(uiImage: image)
+                                .renderingMode(.template)
+                                .tint(Color.white)
+                        }
+                    }
+                )
             }
-        }
-        .buttonStyle(MaterialFloatingButtonStyle(type: .custom, size: .mini, foregroundColor: dataSourceItem.showOnMap ? Color.white : Color.disabledColor, backgroundColor: dataSourceItem.showOnMap ? Color(uiColor: dataSourceItem.dataSource.definition.color) : Color.disabledBackground))
+        )
+        .buttonStyle(
+            MaterialFloatingButtonStyle(
+                type: .custom, size: .mini,
+                foregroundColor: dataSourceItem.showOnMap ? Color.white : Color.disabledColor,
+                backgroundColor: dataSourceItem.showOnMap ?
+                Color(uiColor: dataSourceItem.dataSource.definition.color) : Color.disabledBackground))
         .accessibilityElement(children: .contain)
         .accessibilityLabel("\(dataSourceItem.dataSource.definition.key) Map Toggle")
     }

@@ -15,7 +15,10 @@ extension View {
     ///   - transform: The transform to apply to the source `View`.
     /// - Returns: Either the original `View` or the modified `View` if the condition is `true`.
     @discardableResult
-    @ViewBuilder func `if`<Content: View>(_ condition: @autoclosure () -> Bool, transform: (Self) -> Content) -> some View {
+    @ViewBuilder func `if`<Content: View>(
+        _ condition: @autoclosure () -> Bool,
+        transform: (Self) -> Content
+    ) -> some View {
         if condition() {
             transform(self)
         } else {
@@ -79,7 +82,9 @@ struct EmptyPlaceholderModifier<Items: Collection>: ViewModifier {
 }
 
 extension View {
-    func emptyPlaceholder<Items: Collection, PlaceholderView: View>(_ items: Items, _ placeholder: @escaping () -> PlaceholderView) -> some View {
+    func emptyPlaceholder<Items: Collection, PlaceholderView: View>(
+        _ items: Items, _ placeholder: @escaping () -> PlaceholderView
+    ) -> some View {
         modifier(EmptyPlaceholderModifier(items: items, placeholder: AnyView(placeholder())))
     }
 }

@@ -20,7 +20,10 @@ extension DFRSArea: BatchImportable {
         }
         let count = value.areas.count
         NSLog("Received \(count) DFRS Area records.")
-        return try await Self.batchImport(from: value.areas, taskContext: PersistenceController.current.newTaskContext())
+        return try await Self.batchImport(
+            from: value.areas,
+            taskContext: PersistenceController.current.newTaskContext()
+        )
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -29,7 +32,10 @@ extension DFRSArea: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every week
-        return UserDefaults.standard.bool(forKey: "\(DFRSArea.key)DataSourceEnabled") && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.double(forKey: "\(DFRSArea.key)LastSyncTime")
+        return UserDefaults.standard
+            .bool(forKey: "\(DFRSArea.key)DataSourceEnabled")
+        && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7))
+        > UserDefaults.standard.double(forKey: "\(DFRSArea.key)LastSyncTime")
     }
     
     static func postProcess() {
@@ -46,14 +52,16 @@ class DFRSArea: NSManagedObject {
             guard index < total else { return true }
             dictionary.addEntries(from: propertyList[index].dictionaryValue.filter({
                 return $0.value != nil
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             index += 1
             return false
         })
         return batchInsertRequest
     }
     
-    static func batchImport(from propertiesList: [DFRSAreaProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func batchImport(
+        from propertiesList: [DFRSAreaProperties],
+        taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

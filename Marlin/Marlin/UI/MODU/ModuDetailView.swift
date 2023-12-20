@@ -28,8 +28,12 @@ struct ModuDetailView: View {
                         .background(Color(uiColor: Modu.color))
                         .padding(.bottom, -8)
                     if let modu = viewModel.modu {
-                        DataSourceLocationMapView(dataSourceLocation: modu, mapName: "Modu Detail Map", mixins: [ModuMap<ModuModel>(objects: [modu])])
-                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                        DataSourceLocationMapView(
+                            dataSourceLocation: modu,
+                            mapName: "Modu Detail Map",
+                            mixins: [ModuMap<ModuModel>(objects: [modu])]
+                        )
+                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     Group {
                         Text("\(viewModel.modu?.dateString ?? "")")
@@ -60,7 +64,7 @@ struct ModuDetailView: View {
                     }
                     Property(property: "Navigational Area", value: viewModel.modu?.navArea)
                     if let subregion = viewModel.modu?.subregion {
-                        Property(property: "Charting Subregion", value:subregion.zeroIsEmptyString)
+                        Property(property: "Charting Subregion", value: subregion.zeroIsEmptyString)
                     }
                 }
                 .padding(.all, 16)
@@ -71,7 +75,7 @@ struct ModuDetailView: View {
         .dataSourceDetailList()
         .navigationTitle(viewModel.modu?.name ?? Modu.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: name) { newValue in
+        .onChange(of: name) { _ in
             viewModel.getModu(name: name, waypointURI: waypointURI)
         }
         .onAppear {

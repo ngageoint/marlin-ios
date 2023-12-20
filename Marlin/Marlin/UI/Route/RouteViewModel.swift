@@ -16,7 +16,9 @@ class RouteViewModel: ObservableObject, Identifiable {
     var routeURI: URL? {
         didSet {
             let context = PersistenceController.current.viewContext
-            if let routeURI = routeURI, let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: routeURI), let route = try? context.existingObject(with: id) as? Route {
+            if let routeURI = routeURI, 
+                let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: routeURI),
+                let route = try? context.existingObject(with: id) as? Route {
                 self.route = route
                 routeName = route.name ?? ""
                 routeDistance = route.distanceMeters
@@ -119,7 +121,7 @@ class RouteViewModel: ObservableObject, Identifiable {
                 route.name = self.routeName
                 route.distanceMeters = self.routeDistance
                 var set: Set<RouteWaypoint> = Set<RouteWaypoint>()
-                for (i,waypoint) in self.waypoints.enumerated() {
+                for (i, waypoint) in self.waypoints.enumerated() {
                     let routeWaypoint = RouteWaypoint(context: context)
                     routeWaypoint.dataSource = waypoint.key
                     routeWaypoint.json = waypoint.geoJson
@@ -129,7 +131,12 @@ class RouteViewModel: ObservableObject, Identifiable {
                     set.insert(routeWaypoint)
                 }
                 route.waypoints = NSSet(set: set)
-                if let routeGeom = route.sfGeometry, let envelope = routeGeom.envelope(), let minLat = envelope.minY, let maxLat = envelope.maxY, let minLon = envelope.minX, let maxLon = envelope.maxX {
+                if let routeGeom = route.sfGeometry, 
+                    let envelope = routeGeom.envelope(),
+                    let minLat = envelope.minY,
+                    let maxLat = envelope.maxY,
+                    let minLon = envelope.minX,
+                    let maxLon = envelope.maxX {
                     route.minLatitude = minLat.doubleValue
                     route.maxLatitude = maxLat.doubleValue
                     route.minLongitude = minLon.doubleValue

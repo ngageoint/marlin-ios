@@ -61,7 +61,11 @@ struct SideMenu: View {
                     .background(Color.white // any non-transparent background
                         .shadow(color: Color(UIColor.label).opacity(0.3), radius: self.isOpen ? 8 : 0, x: 0, y: 0)
                     )
-                    .offset(x: self.isOpen ? -geometry.safeAreaInsets.leading : -self.width - (2 * geometry.safeAreaInsets.leading), y: 0)
+                    .offset(
+                        x: self.isOpen
+                        ? -geometry.safeAreaInsets.leading : -self.width - (2 * geometry.safeAreaInsets.leading),
+                        y: 0
+                    )
                     .animation(.default, value: self.isOpen)
                     
                     Spacer()

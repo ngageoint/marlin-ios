@@ -24,7 +24,8 @@ protocol MapMixin: AnyObject {
 
 extension MapMixin {
     func polygonHitTest(polygon: MKPolygon, location: CLLocationCoordinate2D) -> Bool {
-        guard let renderer = (renderer(overlay: polygon) as? MKPolygonRenderer ?? standardRenderer(overlay: polygon) as? MKPolygonRenderer) else {
+        guard let renderer = (renderer(overlay: polygon) as? MKPolygonRenderer 
+                              ?? standardRenderer(overlay: polygon) as? MKPolygonRenderer) else {
             return false
         }
         let mapPoint = MKMapPoint.init(location)
@@ -42,7 +43,8 @@ extension MapMixin {
     }
     
     func polygonHitTest(closedPolyline: MKGeodesicPolyline, location: CLLocationCoordinate2D) -> Bool {
-        guard let renderer = (renderer(overlay: closedPolyline) as? MKPolylineRenderer ?? standardRenderer(overlay: closedPolyline) as? MKPolylineRenderer) else {
+        guard let renderer = (renderer(overlay: closedPolyline) as? MKPolylineRenderer 
+                              ?? standardRenderer(overlay: closedPolyline) as? MKPolylineRenderer) else {
             return false
         }
         let mapPoint = MKMapPoint.init(location)
@@ -52,20 +54,27 @@ extension MapMixin {
     }
     
     func lineHitTest(line: MKPolyline, location: CLLocationCoordinate2D, distanceTolerance: Double) -> Bool {
-        guard let renderer = (renderer(overlay: line) as? MKPolylineRenderer ?? standardRenderer(overlay: line) as? MKPolylineRenderer) else {
+        guard let renderer = (renderer(overlay: line) as? MKPolylineRenderer 
+                              ?? standardRenderer(overlay: line) as? MKPolylineRenderer) else {
             return false
         }
         renderer.invalidatePath()
         
         let mapPoint = MKMapPoint(location)
         let point = renderer.point(for: mapPoint)
-        let bufferedPath = renderer.path.copy(strokingWithWidth: distanceTolerance * 2, lineCap: renderer.lineCap, lineJoin: renderer.lineJoin, miterLimit: renderer.miterLimit)
+        let bufferedPath = renderer.path.copy(
+            strokingWithWidth: distanceTolerance * 2,
+            lineCap: renderer.lineCap,
+            lineJoin: renderer.lineJoin,
+            miterLimit: renderer.miterLimit
+        )
         let onShape = bufferedPath.contains(point)
         return onShape
     }
     
     func circleHitTest(circle: MKCircle, location: CLLocationCoordinate2D) -> Bool {
-        guard let renderer = (renderer(overlay: circle) as? MKCircleRenderer ?? standardRenderer(overlay: circle) as? MKCircleRenderer) else {
+        guard let renderer = (renderer(overlay: circle) as? MKCircleRenderer 
+                              ?? standardRenderer(overlay: circle) as? MKCircleRenderer) else {
             return false
         }
         let mapPoint = MKMapPoint.init(location)
@@ -90,17 +99,17 @@ extension MapMixin {
             renderer.strokeColor = .black
             renderer.lineWidth = 1
             return renderer
-        } else if let polyline = overlay as? MKPolyline, type(of: polyline) == MKPolyline.self  {
+        } else if let polyline = overlay as? MKPolyline, type(of: polyline) == MKPolyline.self {
             let renderer = MKPolylineRenderer(polyline: polyline)
             renderer.strokeColor = .black
             renderer.lineWidth = 1
             return renderer
-        } else if let polyline = overlay as? MKPolyline, type(of: polyline) == MKGeodesicPolyline.self  {
+        } else if let polyline = overlay as? MKPolyline, type(of: polyline) == MKGeodesicPolyline.self {
             let renderer = MKPolylineRenderer(polyline: polyline)
             renderer.strokeColor = .black
             renderer.lineWidth = 1
             return renderer
-        } else if let circle = overlay as? MKCircle, type(of: circle) == MKCircle.self  {
+        } else if let circle = overlay as? MKCircle, type(of: circle) == MKCircle.self {
             let renderer = MKCircleRenderer(circle: circle)
             renderer.strokeColor = .black
             renderer.lineWidth = 1
@@ -109,7 +118,7 @@ extension MapMixin {
         return nil
     }
     
-    func traitCollectionUpdated(previous: UITraitCollection?){ }
+    func traitCollectionUpdated(previous: UITraitCollection?) { }
 
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
         return nil
