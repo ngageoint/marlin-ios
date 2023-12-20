@@ -46,7 +46,11 @@ struct RadioBeaconSummaryView: DataSourceSummaryView {
                     .secondary()
             }
             bookmarkNotesView(radioBeacon)
-            DataSourceActionBar(data: radioBeacon, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+            DataSourceActionBar(
+                data: radioBeacon,
+                showMoreDetailsButton: showMoreDetails,
+                showFocusButton: !showMoreDetails
+            )
         }
     }
 }

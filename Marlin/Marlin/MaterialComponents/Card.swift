@@ -147,8 +147,7 @@ struct DataSourceItemSummaryListModifier: ViewModifier {
             .complexModifier {
                 if #available(iOS 16, *) {
                     $0.scrollContentBackground(.hidden)
-                }
-                else {
+                } else {
                     $0
                 }
             }
@@ -160,7 +159,6 @@ extension View {
         modifier(DataSourceItemSummaryListModifier())
     }
 }
-
 
 struct DataSourceItemSectionModifier: ViewModifier {
     func body(content: Content) -> some View {
@@ -217,7 +215,12 @@ struct GradientViewModifier: ViewModifier {
             .tint(Color.onPrimaryColor)
             .foregroundColor(Color.onPrimaryColor)
             .background(
-                LinearGradient(gradient: Gradient(colors: [.secondaryColor, .primaryColor]), startPoint: .bottom, endPoint: UnitPoint(x: 0.5, y: 0.37))
+                LinearGradient(
+                    gradient: Gradient(
+                        colors: [.secondaryColor, .primaryColor]),
+                    startPoint: .bottom,
+                    endPoint: UnitPoint(x: 0.5, y: 0.37)
+                )
             )
     }
 }
@@ -234,7 +237,12 @@ struct InverseGradientViewModifier: ViewModifier {
             .tint(Color.onPrimaryColor)
             .foregroundColor(Color.onPrimaryColor)
             .background(
-                LinearGradient(gradient: Gradient(colors: [.primaryColor, .secondaryColor]), startPoint: .bottom, endPoint: UnitPoint(x: 0.5, y: -0.5))
+                LinearGradient(
+                    gradient: Gradient(
+                        colors: [.primaryColor, .secondaryColor]),
+                    startPoint: .bottom,
+                    endPoint: UnitPoint(x: 0.5, y: -0.5)
+                )
             )
     }
 }

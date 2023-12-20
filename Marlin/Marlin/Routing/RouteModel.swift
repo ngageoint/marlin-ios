@@ -116,10 +116,10 @@ extension RouteModel {
         var coordinates: [CLLocationCoordinate2D] = []
         if let waypoints = waypoints {
             for waypoint in waypoints {
-                if let ds = waypoint.decodeToDataSource() {
-                    for feature in ds.geoJsonFeatures {
-                        if let g: Geometry = feature.geometry {
-                            addGeometry(g: g, coordinates: &coordinates)
+                if let dataSource = waypoint.decodeToDataSource() {
+                    for feature in dataSource.geoJsonFeatures {
+                        if let geometry: Geometry = feature.geometry {
+                            addGeometry(geometry: geometry, coordinates: &coordinates)
                         }
                     }
                 }
@@ -127,12 +127,11 @@ extension RouteModel {
         }
         let line = MKGeodesicPolyline(coordinates: &coordinates, count: coordinates.count)
         
-        
         return line
     }
     
-    func addGeometry(g: Geometry, coordinates: inout [CLLocationCoordinate2D]) {
-        switch(g) {
+    func addGeometry(geometry: Geometry, coordinates: inout [CLLocationCoordinate2D]) {
+        switch geometry {
         case .point(let point):
             coordinates.append(point.coordinates.coordinate)
         case .multiPoint(let multiPoint):
@@ -165,7 +164,7 @@ extension RouteModel {
             })
         case .geometryCollection(let collection):
             for geometry in collection {
-                addGeometry(g: geometry, coordinates: &coordinates)
+                addGeometry(geometry: geometry, coordinates: &coordinates)
             }
         }
     }
@@ -271,36 +270,36 @@ struct RouteWaypointModel: Codable {
 }
 
 extension RouteWaypointModel {
+    // ignoring this error because this is how many data sources we have
+    // swiftlint:disable cyclomatic_complexity
     func decodeToDataSource() -> (any GeoJSONExportable)? {
         do {
             let decoder = JSONDecoder()
             if let json = json {
                 let jsonData = Data(json.utf8)
-                let ds = try decoder.decode(FeatureCollection.self, from: jsonData)
-                if !ds.features.isEmpty {
-                    let feature = ds.features[0]
-                    
-                    switch(dataSource) {
+                let featureCollection = try decoder.decode(FeatureCollection.self, from: jsonData)
+                if !featureCollection.features.isEmpty {
+                    switch dataSource {
                     case Asam.key:
-                        let asamModel = AsamModel(feature: ds.features[0])
+                        let asamModel = AsamModel(feature: featureCollection.features[0])
                         return asamModel
                     case Modu.key:
-                        let moduModel = ModuModel(feature: ds.features[0])
+                        let moduModel = ModuModel(feature: featureCollection.features[0])
                         return moduModel
                     case Light.key:
-                        let lightModel = LightModel(feature: ds.features[0])
+                        let lightModel = LightModel(feature: featureCollection.features[0])
                         return lightModel
                     case Port.key:
-                        let portModel = PortModel(feature: ds.features[0])
+                        let portModel = PortModel(feature: featureCollection.features[0])
                         return portModel
                     case DifferentialGPSStation.key:
-                        let dgpsModel = DifferentialGPSStationModel(feature: ds.features[0])
+                        let dgpsModel = DifferentialGPSStationModel(feature: featureCollection.features[0])
                         return dgpsModel
                     case RadioBeacon.key:
-                        let rbModel = RadioBeaconModel(feature: ds.features[0])
+                        let rbModel = RadioBeaconModel(feature: featureCollection.features[0])
                         return rbModel
                     case CommonDataSource.key:
-                        let commonModel = CommonDataSource(feature: ds.features[0])
+                        let commonModel = CommonDataSource(feature: featureCollection.features[0])
                         return commonModel
                     default:
                         print("no")
@@ -312,4 +311,5 @@ extension RouteWaypointModel {
         }
         return nil
     }
+    // swiftlint:enable cyclomatic_complexity
 }

@@ -12,8 +12,8 @@ import CoreData
 
 extension DataSourcePropertyType {
     var geoPackageType: GPKGDataType {
-        switch(self) {
-            
+        switch self {
+
         case .string:
             return GPKG_DT_TEXT
         case .date:
@@ -45,15 +45,24 @@ protocol GeoPackageExportable: NSObject {
     static var image: UIImage? { get }
     var sfGeometry: SFGeometry? { get }
     static func createTable(geoPackage: GPKGGeoPackage) throws -> GPKGFeatureTable?
-    static func createFeatures(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?, styleRows: [GPKGStyleRow], dataSourceProgress: DataSourceExportProgress) throws
+    static func createFeatures(
+        geoPackage: GPKGGeoPackage,
+        table: GPKGFeatureTable,
+        filters: [DataSourceFilterParameter]?,
+        commonFilters: [DataSourceFilterParameter]?,
+        styleRows: [GPKGStyleRow],
+        dataSourceProgress: DataSourceExportProgress) throws
     func createFeature(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, styleRows: [GPKGStyleRow])
     static func createStyles(tableStyles: GPKGFeatureTableStyles) -> [GPKGStyleRow]
 }
 
 extension GeoPackageExportable {
-    static func createTable(geoPackage: GPKGGeoPackage) throws -> GPKGFeatureTable? {
-        let srs = geoPackage.spatialReferenceSystemDao().srs(withOrganization: PROJ_AUTHORITY_EPSG, andCoordsysId: PROJ_EPSG_WORLD_GEODETIC_SYSTEM as NSNumber)
-        
+    static func createTable(
+        geoPackage: GPKGGeoPackage) throws -> GPKGFeatureTable? {
+        let srs = geoPackage.spatialReferenceSystemDao().srs(
+            withOrganization: PROJ_AUTHORITY_EPSG,
+            andCoordsysId: PROJ_EPSG_WORLD_GEODETIC_SYSTEM as NSNumber)
+
         let geometryColumns = GPKGGeometryColumns()
         geometryColumns.tableName = key
         geometryColumns.columnName = "geometry"
@@ -70,20 +79,31 @@ extension GeoPackageExportable {
             if let property = properties.filter({ property in
                 property.subEntityKey == nil
             }).first {
-                columns.append(GPKGFeatureColumn.createColumn(withName: property.key, andDataType: property.type.geoPackageType))
-                let dc = GPKGDataColumns()
-                dc.tableName = key
-                dc.columnName = property.key
-                dc.name = property.name
-                dc.title = property.name
-                dataColumns.append(dc)
+                columns.append(GPKGFeatureColumn.createColumn(
+                    withName: property.key,
+                    andDataType: property.type.geoPackageType))
+                let dataColumn = GPKGDataColumns()
+                dataColumn.tableName = key
+                dataColumn.columnName = property.key
+                dataColumn.name = property.name
+                dataColumn.title = property.name
+                dataColumns.append(dataColumn)
             }
         }
         
         // for now.  Calculate this properly at some point
-        let boundingBox = GPKGBoundingBox(minLongitude: -180.0, andMinLatitude: -90.0, andMaxLongitude: 180.0, andMaxLatitude: 90.0)
-        let featureTableMetadata = GPKGFeatureTableMetadata(geometryColumns: geometryColumns, andIdColumn: "object_id", andAutoincrement: true, andAdditionalColumns: columns, andBoundingBox: boundingBox)
-        
+        let boundingBox = GPKGBoundingBox(
+            minLongitude: -180.0,
+            andMinLatitude: -90.0,
+            andMaxLongitude: 180.0,
+            andMaxLatitude: 90.0)
+        let featureTableMetadata = GPKGFeatureTableMetadata(
+            geometryColumns: geometryColumns,
+            andIdColumn: "object_id",
+            andAutoincrement: true,
+            andAdditionalColumns: columns,
+            andBoundingBox: boundingBox)
+
         let table = try ExceptionCatcher.catch {
             return geoPackage.createFeatureTable(with: featureTableMetadata)
         }
@@ -110,8 +130,14 @@ extension GeoPackageExportable {
         let featureTableStyles = GPKGFeatureTableStyles(geoPackage: geoPackage, andTable: table)
         let tableStyleDefault = styleDao?.newRow()
         tableStyleDefault?.setName("\(key) Style")
-        tableStyleDefault?.setColor(CLRColor(red: Int32(color.redComponent * 255.0), andGreen: Int32(color.greenComponent * 255.0), andBlue: Int32(color.blueComponent * 255.0)))
-        tableStyleDefault?.setFillColor(CLRColor(red: Int32(color.redComponent * 255.0), andGreen: Int32(color.greenComponent * 255.0), andBlue: Int32(color.blueComponent * 255.0)))
+        tableStyleDefault?.setColor(CLRColor(
+            red: Int32(color.redComponent * 255.0),
+            andGreen: Int32(color.greenComponent * 255.0),
+            andBlue: Int32(color.blueComponent * 255.0)))
+        tableStyleDefault?.setFillColor(CLRColor(
+            red: Int32(color.redComponent * 255.0),
+            andGreen: Int32(color.greenComponent * 255.0),
+            andBlue: Int32(color.blueComponent * 255.0)))
         if let alpha = color.alphaComponent as? NSDecimalNumber {
             tableStyleDefault?.setOpacity(alpha)
         }
@@ -121,8 +147,15 @@ extension GeoPackageExportable {
         featureTableStyles?.setTableStyleDefault(tableStyleDefault)
         
         if let image = image {
-            let circle = CircleImage(color: color, radius: image.size.width / 2.0 + 10, fill: true, withoutScreenScale: true)
-            let combined = UIImage.combineCentered(image1: circle, image2: image.withRenderingMode(.alwaysTemplate).withTintColor(.white))?.aspectResize(to: CGSize(width: 30, height: 30))
+            let circle = CircleImage(
+                color: color,
+                radius: image.size.width / 2.0 + 10,
+                fill: true,
+                withoutScreenScale: true)
+            let combined = UIImage.combineCentered(
+                image1: circle,
+                image2: image.withRenderingMode(.alwaysTemplate)
+                    .withTintColor(.white))?.aspectResize(to: CGSize(width: 30, height: 30))
             let imageData = combined?.pngData() ?? image.pngData()
             if let imageData = imageData {
                 let iconStyleDefault = iconDao?.newRow()
@@ -146,8 +179,16 @@ extension GeoPackageExportable {
         return []
     }
     
-    static func createFeatures(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?, styleRows: [GPKGStyleRow], dataSourceProgress: DataSourceExportProgress) throws {
-        guard let fetchRequest = dataSourceProgress.filterable.fetchRequest(filters: filters, commonFilters: commonFilters) else {
+    static func createFeatures(
+        geoPackage: GPKGGeoPackage,
+        table: GPKGFeatureTable,
+        filters: [DataSourceFilterParameter]?,
+        commonFilters: [DataSourceFilterParameter]?,
+        styleRows: [GPKGStyleRow],
+        dataSourceProgress: DataSourceExportProgress) throws {
+        guard let fetchRequest = dataSourceProgress.filterable.fetchRequest(
+            filters: filters,
+            commonFilters: commonFilters) else {
             return
         }
         

@@ -60,7 +60,19 @@ class LightMapViewModel: NSObject {
         coordinate = light.coordinate
     }
     
-    init(characteristicNumber: Int64, structure: String? = nil, name: String? = nil, volumeNumber: String? = nil, featureNumber: String? = nil, noticeWeek: String? = nil, noticeYear: String? = nil, latitude: Double, longitude: Double, remarks: String? = nil, characteristic: String? = nil, range: String? = nil) {
+    init(
+        characteristicNumber: Int64,
+        structure: String? = nil,
+        name: String? = nil,
+        volumeNumber: String? = nil,
+        featureNumber: String? = nil,
+        noticeWeek: String? = nil,
+        noticeYear: String? = nil,
+        latitude: Double,
+        longitude: Double,
+        remarks: String? = nil,
+        characteristic: String? = nil,
+        range: String? = nil) {
         self.characteristicNumber = characteristicNumber
         self.structure = structure
         self.name = name
@@ -148,8 +160,15 @@ struct LightSettingsView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
-                    DataSourceLocationMapView(dataSourceLocation: lights[0], mapName: "Light Detail Map", mixins: [LightMap<LightModel>(objects: lights)])
-                    .frame(maxWidth: .infinity, minHeight: geometry.size.height * 0.3, maxHeight: geometry.size.height * 0.3)
+                    DataSourceLocationMapView(
+                        dataSourceLocation: lights[0],
+                        mapName: "Light Detail Map",
+                        mixins: [LightMap<LightModel>(objects: lights)])
+                    .frame(
+                        maxWidth: .infinity,
+                        minHeight: geometry.size.height * 0.3,
+                        maxHeight: geometry.size.height * 0.3
+                    )
                 List {
                     Section {
                         Toggle(isOn: $actualRangeSectorLights, label: {
@@ -202,7 +221,13 @@ struct LightSettingsView: View {
                     } header: {
                         Text("Map Options")
                     } footer: {
-                        Text("A lights range is the distance, expressed in nautical miles, that a light can be seen in clear weather. These ranges can be visualized on the map. Lights which have defined color sectors, or have visibility or obscured ranges are drawn as arcs of visibility.  All other lights are drawn as full circles.")
+                        Text("""
+                            A lights range is the distance, expressed in nautical miles, that a light \
+                            can be seen in clear weather. These ranges can be visualized on the map. \
+                            Lights which have defined color sectors, or have visibility or obscured \
+                            ranges are drawn as arcs of visibility.  All other lights are drawn as \
+                            full circles.
+                        """)
                     }
                 }
             }

@@ -13,16 +13,19 @@ struct Hamburger: ViewModifier {
     func body(content: Content) -> some View {
         
         content.toolbar {
-            ToolbarItem (placement: .navigationBarLeading)  {
+            ToolbarItem(placement: .navigationBarLeading) {
                 HStack {
-                    Button(action: {
-                        Metrics.shared.sideNavigationView()
-                        menuOpen.toggle()
-                    }) {
-                        Image(systemName: "line.3.horizontal")
-                            .imageScale(.large)
-                            .foregroundColor(Color.onPrimaryColor)
-                    }
+                    Button(
+                        action: {
+                            Metrics.shared.sideNavigationView()
+                            menuOpen.toggle()
+                        },
+                        label: {
+                            Image(systemName: "line.3.horizontal")
+                                .imageScale(.large)
+                                .foregroundColor(Color.onPrimaryColor)
+                        }
+                    )
                     .padding([.top, .bottom], 10)
                     .padding([.trailing, .leading], 5)
                     .accessibilityElement()

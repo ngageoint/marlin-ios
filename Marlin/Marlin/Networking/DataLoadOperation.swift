@@ -33,9 +33,9 @@ class DataLoadOperation: Operation {
     
     var backgroundTask: UIBackgroundTaskIdentifier = .invalid
 
-    var action : (() -> ())?
-    var cleanup : (() -> ())?
-    
+    var action: (() -> Void)?
+    var cleanup: (() -> Void)?
+
     let appState: AppState
     let taskName: String?
     
@@ -54,8 +54,8 @@ class DataLoadOperation: Operation {
         guard backgroundTask != .invalid else { return }
         action?()
     }
-    func doOnMainQueueAndBlockUntilFinished(_ f:@escaping ()->()) {
-        OperationQueue.main.addOperations([BlockOperation(block: f)], waitUntilFinished: true)
+    func doOnMainQueueAndBlockUntilFinished(_ function: @escaping () -> Void) {
+        OperationQueue.main.addOperations([BlockOperation(block: function)], waitUntilFinished: true)
     }
     
     func registerBackgroundTask() {
@@ -86,7 +86,9 @@ class DataLoadOperation: Operation {
         DispatchQueue.main.async {
             self.appState.loadingDataSource[D.key] = true
             if let dataSource = dataType as? any DataSource.Type {
-                NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: dataSource))
+                NotificationCenter.default.post(
+                    name: .DataSourceLoading,
+                    object: DataSourceItem(dataSource: dataSource))
             }
         }
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
@@ -95,21 +97,36 @@ class DataLoadOperation: Operation {
             NSLog("Loading initial data for \(D.key)")
             for seedDataFile in seedDataFiles {
                 if let localUrl = Bundle.main.url(forResource: seedDataFile, withExtension: "json") {
-                    _ = MSI.shared.session.request(localUrl, method: .get, parameters: nil, encoding: URLEncoding.default, headers: nil, interceptor: nil, requestModifier: .none)
+                    _ = MSI.shared.session.request(
+                        localUrl,
+                        method: .get,
+                        parameters: nil,
+                        encoding: URLEncoding.default,
+                        headers: nil,
+                        interceptor: nil,
+                        requestModifier: .none)
                         .responseDecodable(of: T.self, queue: queue) { response in
                             if self.isCancelled {
                                 return
                             }
-                            queue.async( execute:{
+                            queue.async(execute: {
                                 Task.detached {
                                     try await D.batchImport(value: response.value, initialLoad: true)
                                     self.doOnMainQueueAndBlockUntilFinished {
                                         self.appState.loadingDataSource[D.key] = false
                                         self.endBackgroundTaskIfActive()
                                         if let dataSource = dataType as? any DataSource.Type {
-                                            NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: dataSource))
-                                            NotificationCenter.default.post(name: .DataSourceNeedsProcessed, object: DataSourceUpdatedNotification(key: dataSource.definition.key))
-                                            NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: dataSource.definition.key))
+                                            NotificationCenter.default.post(
+                                                name: .DataSourceLoaded,
+                                                object: DataSourceItem(dataSource: dataSource))
+                                            NotificationCenter.default.post(
+                                                name: .DataSourceNeedsProcessed,
+                                                object: DataSourceUpdatedNotification(
+                                                    key: dataSource.definition.key))
+                                            NotificationCenter.default.post(
+                                                name: .DataSourceUpdated,
+                                                object: DataSourceUpdatedNotification(
+                                                    key: dataSource.definition.key))
                                         }
                                     }
                                 }
@@ -120,7 +137,9 @@ class DataLoadOperation: Operation {
             return
         }
     }
-    
+
+    // disabling this check for now as this is being refactored soon
+    // swiftlint:disable function_body_length cyclomatic_complexity
     func loadData<T: Decodable, D: NSManagedObject & BatchImportable>(type: T.Type, dataType: D.Type) {
         if self.isCancelled {
             return
@@ -128,7 +147,9 @@ class DataLoadOperation: Operation {
         DispatchQueue.main.async {
             self.appState.loadingDataSource[D.key] = true
             if let dataSource = dataType as? any DataSource.Type {
-                NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: dataSource))
+                NotificationCenter.default.post(
+                    name: .DataSourceLoading,
+                    object: DataSourceItem(dataSource: dataSource))
             }
         }
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
@@ -143,8 +164,8 @@ class DataLoadOperation: Operation {
                     if self.isCancelled {
                         return
                     }
-                    queue.async(execute:{
-                        
+                    queue.async(execute: {
+
                         Task.detached {
                             let count = try await D.batchImport(value: response.value, initialLoad: false)
                             
@@ -158,10 +179,18 @@ class DataLoadOperation: Operation {
                                         self.endBackgroundTaskIfActive()
                                         UserDefaults.standard.updateLastSyncTimeSeconds(D.definition)
                                         if let dataSource = dataType as? any DataSource.Type {
-                                            NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: dataSource))
+                                            NotificationCenter.default.post(
+                                                name: .DataSourceLoaded,
+                                                object: DataSourceItem(dataSource: dataSource))
                                             if totalCount != 0 {
-                                                NotificationCenter.default.post(name: .DataSourceNeedsProcessed, object: DataSourceUpdatedNotification(key: dataSource.definition.key))
-                                                NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: dataSource.definition.key))
+                                                NotificationCenter.default.post(
+                                                    name: .DataSourceNeedsProcessed,
+                                                    object: DataSourceUpdatedNotification(
+                                                        key: dataSource.definition.key))
+                                                NotificationCenter.default.post(
+                                                    name: .DataSourceUpdated,
+                                                    object: DataSourceUpdatedNotification(
+                                                        key: dataSource.definition.key))
                                             }
                                         }
                                     }
@@ -179,9 +208,11 @@ class DataLoadOperation: Operation {
                                             if self.isCancelled {
                                                 return
                                             }
-                                            queue.async(execute:{
+                                            queue.async(execute: {
                                                 Task.detached {
-                                                    let count = try await D.batchImport(value: response.value, initialLoad: true)
+                                                    let count = try await D.batchImport(
+                                                        value: response.value,
+                                                        initialLoad: true)
                                                     let sum = await queryCounter.increment()
                                                     let totalCount = await queryCounter.addToTotal(count: count)
                                                     NSLog("Queried for \(sum) of \(requests.count) for \(dataType.key)")
@@ -189,12 +220,21 @@ class DataLoadOperation: Operation {
                                                         self.doOnMainQueueAndBlockUntilFinished {
                                                             self.appState.loadingDataSource[D.key] = false
                                                             self.endBackgroundTaskIfActive()
-                                                            UserDefaults.standard.updateLastSyncTimeSeconds(D.definition)
+                                                            UserDefaults.standard
+                                                                .updateLastSyncTimeSeconds(D.definition)
                                                             if let dataSource = dataType as? any DataSource.Type {
-                                                                NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: dataSource))
+                                                                NotificationCenter.default.post(
+                                                                    name: .DataSourceLoaded,
+                                                                    object: DataSourceItem(dataSource: dataSource))
                                                                 if totalCount != 0 {
-                                                                    NotificationCenter.default.post(name: .DataSourceNeedsProcessed, object: DataSourceUpdatedNotification(key: dataSource.definition.key))
-                                                                    NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: dataSource.definition.key))
+                                                                    NotificationCenter.default.post(
+                                                                        name: .DataSourceNeedsProcessed,
+                                                                        object: DataSourceUpdatedNotification(
+                                                                            key: dataSource.definition.key))
+                                                                    NotificationCenter.default.post(
+                                                                        name: .DataSourceUpdated,
+                                                                        object: DataSourceUpdatedNotification(
+                                                                            key: dataSource.definition.key))
                                                                 }
                                                             }
                                                         }
@@ -209,4 +249,5 @@ class DataLoadOperation: Operation {
                 }
         }
     }
+    // swiftlint:enable function_body_length cyclomatic_complexity
 }

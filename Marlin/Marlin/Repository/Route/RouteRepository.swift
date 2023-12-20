@@ -36,7 +36,9 @@ class RouteCoreDataRepository: RouteRepository, ObservableObject {
     }
     
     func getRoute(routeURI: URL?) -> RouteModel? {
-        if let routeURI = routeURI, let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: routeURI), let route = try? self.context.existingObject(with: id) as? Route {
+        if let routeURI = routeURI, 
+            let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: routeURI),
+            let route = try? self.context.existingObject(with: id) as? Route {
             return RouteModel(route: route)
         }
         return nil
@@ -50,7 +52,8 @@ class RouteCoreDataRepository: RouteRepository, ObservableObject {
     
     func deleteRoute(route: URL) {
         context.perform {
-            if let id = self.context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: route), let route = try? self.context.existingObject(with: id) as? Route {
+            if let id = self.context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: route), 
+                let route = try? self.context.existingObject(with: id) as? Route {
                 self.context.delete(route)
                 try? self.context.save()
             }

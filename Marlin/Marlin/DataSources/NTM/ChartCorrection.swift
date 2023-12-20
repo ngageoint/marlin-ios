@@ -17,8 +17,7 @@ struct ChartCorrectionPropertyContainer: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         chartCorr = try container.decode([Throwable<ChartCorrection>].self, forKey: .chartCorr).compactMap {
-            let r = try? $0.result.get()
-            return r
+            return try? $0.result.get()
         }
     }
 }
@@ -37,11 +36,25 @@ struct ChartCorrection: Decodable, Hashable, Identifiable, DataSource, Bookmarka
     static var defaultFilter: [DataSourceFilterParameter] {
         if LocationManager.shared().lastLocation != nil {
             return [
-                DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .nearMe, valueInt: 2500)
+                DataSourceFilterParameter(
+                    property: DataSourceProperty(
+                        name: "Location",
+                        key: "location",
+                        type: .location),
+                    comparison: .nearMe,
+                    valueInt: 2500)
             ]
         } else {
             return [
-                DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 2500, valueLatitude: 0.0, valueLongitude: 0.0)
+                DataSourceFilterParameter(
+                    property: DataSourceProperty(
+                        name: "Location",
+                        key: "location",
+                        type: .location),
+                    comparison: .closeTo,
+                    valueInt: 2500,
+                    valueLatitude: 0.0,
+                    valueLongitude: 0.0)
             ]
         }
     }

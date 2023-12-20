@@ -8,15 +8,28 @@
 import Foundation
 import UIKit
 
-class RaconImage : UIImage {
+class RaconImage: UIImage {
 
-    convenience init?(frame: CGRect, sectors: [ImageSector]? = nil, arcWidth: Double = 2, arcRadius: Double = 8, text: String? = "Racon", darkMode: Bool = false) {
+    convenience init?(
+        frame: CGRect,
+        sectors: [ImageSector]? = nil,
+        arcWidth: Double = 2,
+        arcRadius: Double = 8,
+        text: String? = "Racon",
+        darkMode: Bool = false) {
         let rect = frame
         
         let centralDot = CircleImage(color: UIColor.label, radius: 0.5, fill: true)
         let innerPath = CircleImage(color: UIColor.label, radius: 1.5, arcWidth: 0.5)
-        let outerPath = CircleImage(suggestedFrame: rect, sectors: sectors ?? [ImageSector(startDegrees: 0, endDegrees: 360, color: Light.raconColor)], radius: arcRadius, fill: false, arcWidth: arcWidth)
-        
+        let outerPath = CircleImage(
+            suggestedFrame: rect,
+            sectors: sectors ?? [
+                ImageSector(startDegrees: 0, endDegrees: 360, color: Light.raconColor)
+            ],
+            radius: arcRadius,
+            fill: false,
+            arcWidth: arcWidth)
+
         guard let centralDot = centralDot, let innerPath = innerPath, let outerPath = outerPath else {
             return nil
         }
@@ -24,7 +37,10 @@ class RaconImage : UIImage {
         
         var textImage: UIImage?
         if let text = text {
-            textImage = CircleImage(imageSize: CGSize(width: arcRadius * 2, height: arcRadius * 2), sideText: text, fontSize: arcWidth * 2)
+            textImage = CircleImage(
+                imageSize: CGSize(width: arcRadius * 2, height: arcRadius * 2),
+                sideText: text,
+                fontSize: arcWidth * 2)
             size.width = max(textImage?.size.width ?? 0.0, size.width)
             size.height = max(textImage?.size.height ?? 0.0, size.height)
         }
@@ -42,7 +58,7 @@ class RaconImage : UIImage {
             textImage.draw(at: CGPoint(x: center.x - textImage.size.width / 2, y: center.y - textImage.size.height / 2))
         }
         
-        let raconCircle:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        let raconCircle: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         
         UIGraphicsEndImageContext()
 

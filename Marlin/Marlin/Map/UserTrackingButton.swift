@@ -30,22 +30,25 @@ struct UserTrackingButton: View {
     }
     
     var body: some View {
-        Button(action: {
-            buttonPressed()
-        }) {
-            Label(
-                title: {},
-                icon: { Image(systemName: imageName)
-                        .renderingMode(.template)
-                })
-        }
+        Button(
+            action: {
+                buttonPressed()
+            },
+            label: {
+                Label(
+                    title: {},
+                    icon: { Image(systemName: imageName)
+                            .renderingMode(.template)
+                    })
+            }
+        )
         .accessibilityElement()
         .accessibilityLabel("Tracking \(userTrackingModeDescription)\(authorized ? "" : " Unauthorized")")
         .onAppear {
             setButtonImage()
             mapState?.userTrackingMode = userTrackingMode
         }
-        .onChange(of: locationManager.locationStatus ?? .notDetermined) { newValue in
+        .onChange(of: locationManager.locationStatus ?? .notDetermined) { _ in
             setButtonImage()
         }
         .onChange(of: mapState?.userTrackingMode) { newValue in
@@ -54,16 +57,25 @@ struct UserTrackingButton: View {
                 setButtonImage()
             }
         }
-        .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: appearDisabled ? Color.disabledColor : Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
+        .buttonStyle(
+            MaterialFloatingButtonStyle(
+                type: .secondary,
+                size: .mini,
+                foregroundColor: appearDisabled ? Color.disabledColor : Color.primaryColorVariant,
+                backgroundColor: Color.mapButtonColor))
         .alert(isPresented: $showingAlert) {
             Alert(title: Text("Location Services Disabled"),
-                  message: Text("Marlin has been denied access to location services.  To show your location on the map, please go into your device settings and enable the Location permission."),
-                  primaryButton: .default(Text("Settings"),
-                                          action: {
-                                                if let url = NSURL(string: UIApplication.openSettingsURLString) as URL? {
-                                                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                                                }
-                                          }),
+                  message: Text("""
+                    Marlin has been denied access to location services.  To show your location on the map, \
+                    please go into your device settings and enable the Location permission.
+                  """),
+                  primaryButton: .default(
+                    Text("Settings"),
+                    action: {
+                        if let url = NSURL(string: UIApplication.openSettingsURLString) as URL? {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        }
+                  }),
                   secondaryButton: .cancel())
         }
     }

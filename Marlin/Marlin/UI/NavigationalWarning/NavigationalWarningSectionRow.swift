@@ -17,7 +17,7 @@ struct NavigationalWarningSection: Hashable {
     }
     
     var id: String
-    var warnings: Array<NavigationalWarning>
+    var warnings: [NavigationalWarning]
 }
 
 struct NavigationalWarningSectionRow: View {
@@ -26,7 +26,7 @@ struct NavigationalWarningSectionRow: View {
     @Binding var path: NavigationPath
     
     var body: some View {
-        NavigationLink(value: NavigationalWarningSection(id: section.id, warnings: Array<NavigationalWarning>(section))) {
+        NavigationLink(value: NavigationalWarningSection(id: section.id, warnings: [NavigationalWarning](section))) {
             HStack {
                 VStack(alignment: .leading) {
                     Text(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "")
@@ -39,7 +39,7 @@ struct NavigationalWarningSectionRow: View {
                         .opacity(0.6)
                 }
                 Spacer()
-                NavigationalWarningAreaUnreadBadge(navArea: section.id, warnings: Array<NavigationalWarning>(section))
+                NavigationalWarningAreaUnreadBadge(navArea: section.id, warnings: [NavigationalWarning](section))
             }
         }
         .isDetailLink(false)

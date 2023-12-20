@@ -28,7 +28,7 @@ class AllRoutesMixin: MapMixin {
         self.mapState = mapState
         viewModel.$routes
             .receive(on: RunLoop.main)
-            .sink() { [weak self] routes in
+            .sink { [weak self] _ in
                 self?.refreshLine()
             }
             .store(in: &cancellable)
@@ -66,10 +66,13 @@ class AllRoutesMixin: MapMixin {
         var matched: [RouteModel] = []
         let screenPercentage = 0.03
         let distanceTolerance = mapView.visibleMapRect.size.width * Double(screenPercentage)
-        let longitudeTolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
 
         for route in viewModel.routes {
-            if let line = route.mkLine, lineHitTest(line: line, location: location, distanceTolerance: distanceTolerance) {
+            if let line = route.mkLine, 
+                lineHitTest(
+                    line: line,
+                    location: location,
+                    distanceTolerance: distanceTolerance) {
                 matched.append(route)
             }
         }

@@ -16,8 +16,10 @@ final class DownloadManager: NSObject {
     static let shared: DownloadManager = DownloadManager()
     // since it is impossible to stub http requests on a background session, this is purely to be able
     // to override for testing
-    var sessionConfig: URLSessionConfiguration = URLSessionConfiguration.background(withIdentifier: ElectronicPublication.backgroundDownloadIdentifier)
-    
+    var sessionConfig: URLSessionConfiguration = URLSessionConfiguration.background(
+        withIdentifier: ElectronicPublication.backgroundDownloadIdentifier
+    )
+
     private lazy var urlSession: URLSession = {
         sessionConfig.isDiscretionary = false
         sessionConfig.sessionSendsLaunchEvents = true
@@ -44,7 +46,7 @@ final class DownloadManager: NSObject {
             }
         }
         if let destinationUrl = URL(string: downloadable.savePath) {
-            if (FileManager().fileExists(atPath: destinationUrl.path)) {
+            if FileManager().fileExists(atPath: destinationUrl.path) {
                 PersistenceController.current.perform {
                     downloadable.objectWillChange.send()
                     downloadable.isDownloading = false
@@ -97,7 +99,10 @@ extension DownloadManager: URLSessionDownloadDelegate {
         }
     }
     
-    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge) async -> (URLSession.AuthChallengeDisposition, URLCredential?) {
+    func urlSession(
+        _ session: URLSession,
+        didReceive challenge: URLAuthenticationChallenge
+    ) async -> (URLSession.AuthChallengeDisposition, URLCredential?) {
         let protectionSpace = challenge.protectionSpace
         guard protectionSpace.authenticationMethod ==
                 NSURLAuthenticationMethodServerTrust, let trust = protectionSpace.serverTrust else {
@@ -110,13 +115,22 @@ extension DownloadManager: URLSessionDownloadDelegate {
             
             try evaluator.evaluate(trust, forHost: protectionSpace.host)
             
-            return (URLSession.AuthChallengeDisposition.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
+            return (
+                URLSession.AuthChallengeDisposition.useCredential,
+                URLCredential(trust: challenge.protectionSpace.serverTrust!)
+            )
         } catch {
             return (.cancelAuthenticationChallenge, nil)
         }
     }
     
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+    func urlSession(
+        _ session: URLSession,
+        downloadTask: URLSessionDownloadTask,
+        didWriteData bytesWritten: Int64,
+        totalBytesWritten: Int64,
+        totalBytesExpectedToWrite: Int64
+    ) {
         guard let url = downloadTask.currentRequest?.url else {
             return
         }
@@ -127,7 +141,38 @@ extension DownloadManager: URLSessionDownloadDelegate {
             try? downloadable?.managedObjectContext?.save()
         }
     }
-    
+
+    func saveError(downloadable: Downloadable, response: URLResponse?) {
+        print("server error code \(response.debugDescription)")
+        if let httpResponse = response as? HTTPURLResponse {
+            downloadable.managedObjectContext?.perform {
+                downloadable.objectWillChange.send()
+                downloadable.error = "Error downloading (\(httpResponse.statusCode))"
+                try? downloadable.managedObjectContext?.save()
+            }
+        }
+    }
+
+    func prepareForSaving(destinationUrl: URL) {
+        // just delete before saving again if it already exists
+        if FileManager.default.fileExists(atPath: destinationUrl.path) {
+            do {
+                try FileManager.default.removeItem(atPath: destinationUrl.path)
+            } catch {
+                print("failed to delete file, it's fine")
+            }
+        }
+        // create the directory structure
+        do {
+            try FileManager.default.createDirectory(
+                atPath: destinationUrl.deletingLastPathComponent().path,
+                withIntermediateDirectories: true
+            )
+        } catch {
+            print("error making dir \(error) \(destinationUrl.deletingLastPathComponent().path)")
+        }
+    }
+
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         guard let url = downloadTask.currentRequest?.url, let downloadable = urlToDownloadableMap[url] else {
             return
@@ -148,32 +193,12 @@ extension DownloadManager: URLSessionDownloadDelegate {
         
         guard let httpResponse = downloadTask.response as? HTTPURLResponse,
               (200...299).contains(httpResponse.statusCode) else {
-            print ("server error code \(downloadTask.response.debugDescription)")
-            if let httpResponse = downloadTask.response as? HTTPURLResponse {
-                downloadable.managedObjectContext?.perform {
-                    downloadable.objectWillChange.send()
-                    downloadable.error = "Error downloading (\(httpResponse.statusCode))"
-                    try? downloadable.managedObjectContext?.save()
-                }
-            }
+            saveError(downloadable: downloadable, response: downloadTask.response)
             return
         }
         
-        // just delete before saving again if it already exists
-        if FileManager.default.fileExists(atPath: destinationUrl.path) {
-            do {
-                try FileManager.default.removeItem(atPath: destinationUrl.path)
-            } catch {
-                print("failed to delete file, it's fine")
-            }
-        }
-        // create the directory structure
-        do {
-            try FileManager.default.createDirectory(atPath: destinationUrl.deletingLastPathComponent().path, withIntermediateDirectories: true)
-        } catch {
-            print("error making dir \(error) \(destinationUrl.deletingLastPathComponent().path)")
-        }
-        
+        prepareForSaving(destinationUrl: destinationUrl)
+
         print("Does the file exist \(location.path)")
         if !FileManager.default.fileExists(atPath: location.path) {
             downloadable.managedObjectContext?.perform {
@@ -184,21 +209,35 @@ extension DownloadManager: URLSessionDownloadDelegate {
             return
         }
         
+        saveFile(location: location, destinationUrl: destinationUrl, downloadable: downloadable)
+    }
+
+    func saveFile(location: URL, destinationUrl: URL, downloadable: Downloadable) {
         do {
             try FileManager.default.moveItem(at: location, to: destinationUrl)
             downloadable.managedObjectContext?.perform {
                 let center = UNUserNotificationCenter.current()
                 let content = UNMutableNotificationContent()
-                content.title = NSString.localizedUserNotificationString(forKey: "Download Complete", arguments: nil)
-                content.body = NSString.localizedUserNotificationString(forKey: "Downloaded the file \(downloadable.title ?? "")", arguments: nil)
+                content.title = NSString.localizedUserNotificationString(
+                    forKey: "Download Complete",
+                    arguments: nil
+                )
+                content.body = NSString.localizedUserNotificationString(
+                    forKey: "Downloaded the file \(downloadable.title ?? "")",
+                    arguments: nil
+                )
                 content.sound = UNNotificationSound.default
                 content.categoryIdentifier = "mil.nga.msi"
                 let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2.0, repeats: false)
-                let request = UNNotificationRequest.init(identifier: "downloadCompleted", content: content, trigger: trigger)
-                
+                let request = UNNotificationRequest.init(
+                    identifier: "downloadCompleted",
+                    content: content,
+                    trigger: trigger
+                )
+
                 // Schedule the notification.
                 center.add(request)
-            
+
                 downloadable.objectWillChange.send()
                 downloadable.isDownloaded = true
                 downloadable.isDownloading = false

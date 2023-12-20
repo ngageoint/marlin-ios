@@ -178,9 +178,6 @@ struct LightsProperties: Codable {
             self.regionHeading = nil
         }
         self.remarks = try? values.decode(String.self, forKey: .remarks)
-        if self.featureNumber == "3808" {
-            NSLog("Remarks are in decodable \(remarks)")
-        }
         self.removeFromList = try? values.decode(String.self, forKey: .removeFromList)
         self.structure = try? values.decode(String.self, forKey: .structure)
         self.subregionHeading = try? values.decode(String.self, forKey: .subregionHeading)
@@ -210,19 +207,22 @@ struct LightsProperties: Codable {
         var latitude = 0.0
         var longitude = 0.0
         
-        let pattern = #"(?<latdeg>[0-9]*)°(?<latminutes>[0-9]*)'(?<latseconds>[0-9]*\.?[0-9]*)\"(?<latdirection>[NS]) \n(?<londeg>[0-9]*)°(?<lonminutes>[0-9]*)'(?<lonseconds>[0-9]*\.?[0-9]*)\"(?<londirection>[EW])"#
+        let pattern = #"""
+            (?<latdeg>[0-9]*)°(?<latminutes>[0-9]*)'(?<latseconds>[0-9]*\.?[0-9]*)\"\
+            (?<latdirection>[NS])\
+            \n(?<londeg>[0-9]*)°(?<lonminutes>[0-9]*)'(?<lonseconds>[0-9]*\.?[0-9]*)\"\
+            (?<londirection>[EW])
+        """#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(position.startIndex..<position.endIndex,
                               in: position)
         if let match = regex?.firstMatch(in: position,
                                          options: [],
-                                         range: nsrange)
-        {
+                                         range: nsrange) {
             for component in ["latdeg", "latminutes", "latseconds", "latdirection"] {
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: position)
-                {
+                   let range = Range(nsrange, in: position) {
                     if component == "latdeg" {
                         latitude = Double(position[range]) ?? 0.0
                     } else if component == "latminutes" {
@@ -237,8 +237,7 @@ struct LightsProperties: Codable {
             for component in ["londeg", "lonminutes", "lonseconds", "londirection"] {
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: position)
-                {
+                   let range = Range(nsrange, in: position) {
                     if component == "londeg" {
                         longitude = Double(position[range]) ?? 0.0
                     } else if component == "lonminutes" {

@@ -12,38 +12,66 @@ struct ElectronicPublicationsList: View {
     var electronicPublicationSections: SectionedFetchResults<Int64, ElectronicPublication>
     
     init() {
-        self._electronicPublicationSections = SectionedFetchRequest<Int64, ElectronicPublication>(entity: ElectronicPublication.entity(), sectionIdentifier: \ElectronicPublication.pubTypeId, sortDescriptors: [NSSortDescriptor(keyPath: \ElectronicPublication.pubTypeId, ascending: true)])
+        self._electronicPublicationSections = 
+        SectionedFetchRequest<Int64, ElectronicPublication>(
+            entity: ElectronicPublication.entity(),
+            sectionIdentifier: \ElectronicPublication.pubTypeId,
+            sortDescriptors: [
+                NSSortDescriptor(keyPath: \ElectronicPublication.pubTypeId, ascending: true)
+            ])
     }
     
     var body: some View {
         List {
             ForEach(electronicPublicationSections.sorted(by: { section1, section2 in
-                PublicationTypeEnum(rawValue: Int(section1.id))?.description ?? "" < PublicationTypeEnum(rawValue: Int(section2.id))?.description ?? ""
+                PublicationTypeEnum(
+                    rawValue: Int(section1.id))?
+                    .description ?? "" < PublicationTypeEnum(rawValue: Int(section2.id))?.description ?? ""
             })) { section in
                 NavigationLink {
                     Group {
-                        switch(PublicationTypeEnum(rawValue: Int(section.id))) {
+                        switch PublicationTypeEnum(rawValue: Int(section.id)) {
                         case .americanPracticalNavigator:
                             completeVolumes(section: section)
-                        case .atlasOfPilotCharts, .listOfLights, .sightReductionTablesForMarineNavigation:
+                        case .atlasOfPilotCharts, 
+                                .listOfLights,
+                                .sightReductionTablesForMarineNavigation:
                             nestedFolder(section: section)
-                        case .sailingDirectionsPlanningGuides, .chartNo1, .sailingDirectionsEnroute, .sightReductionTablesForAirNavigation, .uscgLightList:
+                        case .sailingDirectionsPlanningGuides, 
+                                .chartNo1,
+                                .sailingDirectionsEnroute,
+                                .sightReductionTablesForAirNavigation,
+                                .uscgLightList:
                             completeAndChapters(section: section)
-                        case .distanceBetweenPorts, .internationalCodeOfSignals, .radarNavigationAndManeuveringBoardManual, .radioNavigationAids:
-                            completeAndChapters(section: section, completeTitle: "Complete Volume")
+                        case .distanceBetweenPorts, 
+                                .internationalCodeOfSignals,
+                                .radarNavigationAndManeuveringBoardManual,
+                                .radioNavigationAids:
+                            completeAndChapters(
+                                section: section,
+                                completeTitle: "Complete Volume")
                         case .worldPortIndex:
-                            completeAndChapters(section: section, completeTitle: "Complete Volume", chapterTitle: "Additional Formats")
+                            completeAndChapters(
+                                section: section,
+                                completeTitle: "Complete Volume",
+                                chapterTitle: "Additional Formats")
                         default:
                             defaultPublications(section: section)
                         }
                     }
                     .onAppear {
-                        Metrics.shared.appRoute(["epubs", PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "pubType"])
+                        Metrics.shared.appRoute(
+                            ["epubs",
+                             PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "pubType"
+                            ])
                     }
                 } label: {
-                    folderLabel(name: "\(PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "")", count: section.count)
+                    folderLabel(
+                        name: "\(PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "")",
+                        count: section.count)
                         .accessibilityElement()
-                        .accessibilityLabel("\(PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "")")
+                        .accessibilityLabel(
+                            "\(PublicationTypeEnum(rawValue: Int(section.id))?.description ?? "")")
                 }
             }
         }
@@ -75,7 +103,9 @@ struct ElectronicPublicationsList: View {
     }
     
     @ViewBuilder
-    func completeVolumes(section: SectionedFetchResults<Int64, ElectronicPublication>.Element, completeTitle: String = "Complete Volume(s)") -> some View {
+    func completeVolumes(
+        section: SectionedFetchResults<Int64, ElectronicPublication>.Element,
+        completeTitle: String = "Complete Volume(s)") -> some View {
         List {
             let completeVolumes = section.filter({ epub in
                 epub.fullPubFlag
@@ -102,7 +132,10 @@ struct ElectronicPublicationsList: View {
     }
     
     @ViewBuilder
-    func completeAndChapters(section: SectionedFetchResults<Int64, ElectronicPublication>.Element, completeTitle: String  = "Complete Volume(s)", chapterTitle: String = "Single Chapters") -> some View {
+    func completeAndChapters(
+        section: SectionedFetchResults<Int64, ElectronicPublication>.Element,
+        completeTitle: String  = "Complete Volume(s)",
+        chapterTitle: String = "Single Chapters") -> some View {
         List {
             let completeVolumes = section.filter({ epub in
                 epub.fullPubFlag
@@ -149,9 +182,13 @@ struct ElectronicPublicationsList: View {
     }
     
     @ViewBuilder
-    func nestedFolder(section: SectionedFetchResults<Int64, ElectronicPublication>.Element) -> some View {
-        let dictionary: [String? : [SectionedFetchResults<Int64, ElectronicPublication>.Section.Element]] = Dictionary(grouping: section, by: { $0.pubDownloadDisplayName })
-        let sortedKeys: [Dictionary<String?, [SectionedFetchResults<Int64, ElectronicPublication>.Section.Element]>.Keys.Element] = dictionary.keys.sorted {
+    func nestedFolder(
+        section: SectionedFetchResults<Int64, ElectronicPublication>.Element) -> some View {
+        let dictionary: [String?: [SectionedFetchResults<Int64, ElectronicPublication>.Section.Element]] =
+            Dictionary(grouping: section, by: { $0.pubDownloadDisplayName })
+        let sortedKeys: [Dictionary<String?, [
+            SectionedFetchResults<Int64, ElectronicPublication>.Section.Element]>.Keys.Element] = 
+            dictionary.keys.sorted {
             return dictionary[$0]?[0].pubDownloadOrder ?? -1 < dictionary[$1]?[0].pubDownloadOrder ?? -1
         }
         List {

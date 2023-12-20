@@ -9,15 +9,15 @@ import Foundation
 import CoreData
 
 extension NSManagedObjectContext {
-    //Execute fetch request
+    // Execute fetch request
     func fetch<T: NSManagedObject>(request: NSFetchRequest<T>) -> [T]? {
         let fetchedResult = try? self.fetch(request)
         return fetchedResult
     }
-    func fetchObjects <T: NSManagedObject>(_ entityClass:T.Type,
+    func fetchObjects <T: NSManagedObject>(_ entityClass: T.Type,
                                            sortBy: [NSSortDescriptor]? = nil,
-                                           fetchLimit:Int? = nil,
-                                           predicate: NSPredicate? = nil) throws-> [T]? {
+                                           fetchLimit: Int? = nil,
+                                           predicate: NSPredicate? = nil) throws -> [T]? {
         guard let request: NSFetchRequest<T> = entityClass.fetchRequest() as? NSFetchRequest<T> else {
             return nil
         }
@@ -30,42 +30,43 @@ extension NSManagedObjectContext {
         return fetchedResult
     }
     
-    //Returns the count of objects for the given entity
-    func countOfObjects<T: NSManagedObject>(_ entityClass:T.Type) throws -> Int? {
+    // Returns the count of objects for the given entity
+    func countOfObjects<T: NSManagedObject>(_ entityClass: T.Type) throws -> Int? {
         guard let request: NSFetchRequest<T> = entityClass.fetchRequest() as? NSFetchRequest<T> else {
             return nil
         }
 //        let request: NSFetchRequest<T> = fetchRequest(for: entityClass)
         return try self.count(for: request)
     }
-    //Returns first object after executing fetchObjects method with given sort and predicates
-    func fetchFirst <T: NSManagedObject>(_ entityClass:T.Type,
+    // Returns first object after executing fetchObjects method with given sort and predicates
+    func fetchFirst <T: NSManagedObject>(_ entityClass: T.Type,
                                          sortBy: [NSSortDescriptor]? = nil,
-                                         predicate: NSPredicate? = nil) throws-> T? {
+                                         predicate: NSPredicate? = nil) throws -> T? {
         let result = try self.fetchObjects(entityClass, sortBy: sortBy, fetchLimit: 1, predicate: predicate)
         return result?.first
     }
-    //Helper method to fetch first object with given key value pair.
-    func fetchFirst<T: NSManagedObject>(_ entityClass:T.Type,
+    // Helper method to fetch first object with given key value pair.
+    func fetchFirst<T: NSManagedObject>(_ entityClass: T.Type,
                                         key:String,
                                         value:String) -> T? {
         let predicate = NSPredicate(format: "%K = %@", key,value)
         return try? self.fetchFirst(entityClass, sortBy: [NSSortDescriptor(key: key, ascending: true)], predicate: predicate)
     }
     
-    func fetchFirst<T: NSManagedObject>(_ entityClass:T.Type,
-                                        key:String,
-                                        value:Int64) -> T? {
-        let predicate = NSPredicate(format: "%K = %d", key,value)
+    func fetchFirst<T: NSManagedObject>(_ entityClass: T.Type,
+                                        key: String,
+                                        value: Int64) -> T? {
+        let predicate = NSPredicate(format: "%K = %d", key, value)
         return try? self.fetchFirst(entityClass, sortBy: nil, predicate: predicate)
     }
     
-    func fetchAll<T: NSManagedObject>(_ entityClass:T.Type) -> [T]? {
+    func fetchAll<T: NSManagedObject>(_ entityClass: T.Type) -> [T]? {
         return try? self.fetchObjects(entityClass)
     }
     
-    func truncateAll<T: NSManagedObject>(_ entityClass:T.Type) -> Bool {
-        let request: NSFetchRequest<NSFetchRequestResult> = entityClass.fetchRequest() as NSFetchRequest<NSFetchRequestResult>
+    func truncateAll<T: NSManagedObject>(_ entityClass: T.Type) -> Bool {
+        let request: NSFetchRequest<NSFetchRequestResult> = 
+        entityClass.fetchRequest() as NSFetchRequest<NSFetchRequestResult>
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
         
         do {

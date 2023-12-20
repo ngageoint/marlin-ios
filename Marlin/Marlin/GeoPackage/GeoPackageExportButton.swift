@@ -11,7 +11,11 @@ struct GeoPackageExportButton: View {
     var filterable: Filterable
     
     var body: some View {
-        NavigationLink(value: MarlinRoute.exportGeoPackageDataSource(dataSource: DataSourceDefinitions.from(filterable.definition))) {
+        NavigationLink(
+            value: MarlinRoute.exportGeoPackageDataSource(
+                dataSource: DataSourceDefinitions.from(filterable.definition)
+            )
+        ) {
             Label(
                 title: {},
                 icon: { Image(systemName: "square.and.arrow.down")
@@ -21,7 +25,14 @@ struct GeoPackageExportButton: View {
         }
         .isDetailLink(false)
         .fixedSize()
-        .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.onPrimaryColor, backgroundColor: Color.primaryColor))
+        .buttonStyle(
+            MaterialFloatingButtonStyle(
+                type: .secondary,
+                size: .mini,
+                foregroundColor: Color.onPrimaryColor,
+                backgroundColor: Color.primaryColor
+            )
+        )
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Export Button")
         .padding(16)

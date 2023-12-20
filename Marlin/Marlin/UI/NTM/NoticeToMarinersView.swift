@@ -10,14 +10,14 @@ import SwiftUI
 struct NoticeToMarinersView: View {
     @Binding var path: NavigationPath
     
-    func getFirstDay(WeekNumber weekNumber:Int, CurrentYear currentYear: Int)->Date?{
+    func getFirstDay(WeekNumber weekNumber: Int, CurrentYear currentYear: Int) -> Date? {
         let calendar = Calendar(identifier: .gregorian)
         var dayComponent = DateComponents()
         dayComponent.weekOfYear = weekNumber
         dayComponent.weekday = 7
         dayComponent.yearForWeekOfYear = currentYear
         var date = calendar.date(from: dayComponent)!
-        if(weekNumber == 1 && calendar.component(.month, from: date) != 1){
+        if weekNumber == 1 && calendar.component(.month, from: date) != 1 {
             dayComponent.year = currentYear - 1
             date = calendar.date(from: dayComponent)!
         }
@@ -39,7 +39,7 @@ struct NoticeToMarinersView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(section.name)
             if let sectionInt = Int(section.name) {
-                Text(dateRange(sectionInt:sectionInt))
+                Text(dateRange(sectionInt: sectionInt))
                     .secondary()
             }
         }
@@ -48,7 +48,13 @@ struct NoticeToMarinersView: View {
     var body: some View {
         List {
             NavigationLink {
-                MSIListView<NoticeToMariners,AnyView,NoticeToMarinersFullNoticeView, EmptyView>(path: $path, watchFocusedItem: false, allowUserSort: false, allowUserFilter: false, sectionHeaderIsSubList: true, sectionGroupNameBuilder: { section in
+                MSIListView<NoticeToMariners, AnyView, NoticeToMarinersFullNoticeView, EmptyView>(
+                    path: $path,
+                    watchFocusedItem: false,
+                    allowUserSort: false,
+                    allowUserFilter: false,
+                    sectionHeaderIsSubList: true,
+                    sectionGroupNameBuilder: { section in
                     if let sectionInt = Int(section.name) {
                         return "\(Int(sectionInt / 100))"
                     } else {
@@ -57,7 +63,8 @@ struct NoticeToMarinersView: View {
                 }, sectionViewBuilder: { section in
                     AnyView(sectionHeader(section: section))
                 }, content: { section in
-                    NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: Int64(section.name)))
+                    NoticeToMarinersFullNoticeView(
+                        viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: Int64(section.name)))
                 }, emptyView: {
                     EmptyView()
                 })

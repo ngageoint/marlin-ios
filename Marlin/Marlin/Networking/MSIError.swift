@@ -23,7 +23,10 @@ extension MSIError: LocalizedError {
         case .wrongDataFormat(let error):
             return NSLocalizedString("Could not digest the fetched data. \(error.localizedDescription)", comment: "")
         case .missingData:
-            return NSLocalizedString("Found and will discard an asam missing a valid reference, latitude, or longitude.", comment: "")
+            return NSLocalizedString(
+                "Found and will discard an asam missing a valid reference, latitude, or longitude.",
+                comment: ""
+            )
         case .creationError:
             return NSLocalizedString("Failed to create a new Asam object.", comment: "")
         case .batchInsertError:

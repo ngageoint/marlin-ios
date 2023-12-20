@@ -17,8 +17,7 @@ struct NTMGraphicsPropertyContainer: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         ntmGraphics = try container.decode([Throwable<NTMGraphics>].self, forKey: .ntmGraphics).compactMap {
-            let r = try? $0.result.get()
-            return r
+            return try? $0.result.get()
         }
     }
 }
@@ -77,14 +76,21 @@ struct NTMGraphics: Codable, Hashable, Identifiable {
     }
     
     var graphicUrl: String {
-        get {
-            var url = "\(MSIRouter.baseURLString)/publications/download?key=\(MSIRouter.ntmGraphicKeyBase)/\(noticeNumber ?? 0)/chartlets/\(fileName ?? "")&type=view"
-            if graphicType == "Depth Tab" {
-                url = "\(MSIRouter.baseURLString)/publications/download?key=\(MSIRouter.ntmGraphicKeyBase)/\(noticeNumber ?? 0)/depthtabs/\(fileName ?? "")&type=view"
-            } else if graphicType == "Note" {
-                url = "\(MSIRouter.baseURLString)/publications/download?key=\(MSIRouter.ntmGraphicKeyBase)/\(noticeNumber ?? 0)/notes/\(fileName ?? "")&type=view"
-            }
-            return url
+        var url = """
+            \(MSIRouter.baseURLString)/publications/download?key=\(MSIRouter.ntmGraphicKeyBase)/\
+            \(noticeNumber ?? 0)/chartlets/\(fileName ?? "")&type=view
+        """
+        if graphicType == "Depth Tab" {
+            url = """
+                \(MSIRouter.baseURLString)/publications/download?key=\(MSIRouter.ntmGraphicKeyBase)/\
+                \(noticeNumber ?? 0)/depthtabs/\(fileName ?? "")&type=view
+            """
+        } else if graphicType == "Note" {
+            url = """
+                \(MSIRouter.baseURLString)/publications/download?key=\(MSIRouter.ntmGraphicKeyBase)/\
+                \(noticeNumber ?? 0)/notes/\(fileName ?? "")&type=view
+            """
         }
+        return url
     }
 }

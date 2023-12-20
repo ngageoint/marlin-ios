@@ -26,8 +26,12 @@ struct NavigationalWarningDetailView: View {
                         .foregroundColor(Color.white)
                         .background(Color(uiColor: NavigationalWarning.color))
                         .padding(.bottom, -8)
-                    if let fetchPredicate = fetchPredicate, CLLocationCoordinate2DIsValid(navigationalWarning.coordinate) {
-                        DataSourceLocationMapView(dataSourceLocation: navigationalWarning, mapName: "Navigational Warning Detail Map", mixins: [NavigationalWarningFetchMap(fetchPredicate: fetchPredicate)])
+                    if let fetchPredicate = fetchPredicate, 
+                        CLLocationCoordinate2DIsValid(navigationalWarning.coordinate) {
+                        DataSourceLocationMapView(
+                            dataSourceLocation: navigationalWarning,
+                            mapName: "Navigational Warning Detail Map",
+                            mixins: [NavigationalWarningFetchMap(fetchPredicate: fetchPredicate)])
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     Group {
@@ -36,11 +40,20 @@ struct NavigationalWarningDetailView: View {
                             .padding(.top, 16)
                         Property(property: "Authority", value: navigationalWarning.authority)
                         Property(property: "Cancel Date", value: navigationalWarning.cancelDateString)
-                        if let cancelNavArea = navigationalWarning.cancelNavArea, let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea){
-                            Property(property: "Cancelled By", value: "\(navAreaEnum.display) \(navigationalWarning.cancelMsgNumber)/\(navigationalWarning.cancelMsgYear)")
+                        if let cancelNavArea = navigationalWarning.cancelNavArea, 
+                            let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea) {
+                            Property(
+                                property: "Cancelled By",
+                                value: """
+                                    \(navAreaEnum.display) \(navigationalWarning.cancelMsgNumber)/\
+                                    \(navigationalWarning.cancelMsgYear)
+                                """)
                         }
                         BookmarkNotes(notes: navigationalWarning.bookmark?.notes)
-                        NavigationalWarningActionBar(navigationalWarning: navigationalWarning, showMoreDetails: false, mapName: "Navigational Warning Detail Map")
+                        NavigationalWarningActionBar(
+                            navigationalWarning: navigationalWarning,
+                            showMoreDetails: false,
+                            mapName: "Navigational Warning Detail Map")
                             .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
                 }
@@ -52,7 +65,7 @@ struct NavigationalWarningDetailView: View {
             
             if let text = navigationalWarning.text {
                 Section("Warning") {
-                    UITextViewContainer(text:text)
+                    UITextViewContainer(text: text)
                         .padding(.all, 16)
                         .card()
                 }
@@ -60,9 +73,13 @@ struct NavigationalWarningDetailView: View {
             }
         }
         .dataSourceDetailList()
-        .navigationTitle("\(navigationalWarning.navAreaName) \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) (\(navigationalWarning.subregion ?? ""))")
+        .navigationTitle("""
+                \(navigationalWarning.navAreaName) \
+                \(String(navigationalWarning.msgNumber))/\(String(navigationalWarning.msgYear)) \
+                (\(navigationalWarning.subregion ?? ""))
+        """)
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: navigationalWarning, perform: { newValue in
+        .onChange(of: navigationalWarning, perform: { _ in
             self.mappedLocation = navigationalWarning.mappedLocation
             self.fetchPredicate = NSPredicate(format: "self == %@", navigationalWarning.objectID)
         })

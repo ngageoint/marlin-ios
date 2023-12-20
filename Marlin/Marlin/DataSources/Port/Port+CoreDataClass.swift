@@ -49,7 +49,9 @@ class Port: NSManagedObject {
             KeyValue(key: "Anchorage Depth (m)", value: "\(anchorageDepth.zeroIsEmptyString)"),
             KeyValue(key: "Cargo Pier Depth (m)", value: "\(cargoPierDepth.zeroIsEmptyString)"),
             KeyValue(key: "Oil Terminal Depth (m)", value: "\(oilTerminalDepth.zeroIsEmptyString)"),
-            KeyValue(key: "Liquified Natural Gas Terminal Depth (m)", value: "\(liquifiedNaturalGasTerminalDepth.zeroIsEmptyString)")
+            KeyValue(
+                key: "Liquified Natural Gas Terminal Depth (m)",
+                value: "\(liquifiedNaturalGasTerminalDepth.zeroIsEmptyString)")
         ]
     }
     
@@ -75,7 +77,9 @@ class Port: NSManagedObject {
             KeyValue(key: "Entrance Restriction - Ice", value: "\(DecisionEnum.fromValue(erIce))"),
             KeyValue(key: "Entrance Restriction - Other", value: "\(DecisionEnum.fromValue(erOther))"),
             KeyValue(key: "Overhead Limits", value: "\(DecisionEnum.fromValue(overheadLimits))"),
-            KeyValue(key: "Underkeel Clearance Management System", value: "\(UnderkeelClearanceEnum.fromValue(ukcMgmtSystem))"),
+            KeyValue(
+                key: "Underkeel Clearance Management System",
+                value: "\(UnderkeelClearanceEnum.fromValue(ukcMgmtSystem))"),
             KeyValue(key: "Good Holding Ground", value: "\(DecisionEnum.fromValue(goodHoldingGround))"),
             KeyValue(key: "Turning Area", value: "\(DecisionEnum.fromValue(turningArea))")
         ]
@@ -90,7 +94,7 @@ class Port: NSManagedObject {
             KeyValue(key: "Quarantine - Other", value: "\(DecisionEnum.fromValue(qtOther))"),
             KeyValue(key: "Traffic Separation Scheme", value: "\(DecisionEnum.fromValue(trafficSeparationScheme))"),
             KeyValue(key: "Vessel Traffic Service", value: "\(DecisionEnum.fromValue(vesselTrafficService))"),
-            KeyValue(key: "First Port Of Entry", value: "\(DecisionEnum.fromValue(firstPortOfEntry))"),
+            KeyValue(key: "First Port Of Entry", value: "\(DecisionEnum.fromValue(firstPortOfEntry))")
         ]
     }
     
@@ -109,7 +113,7 @@ class Port: NSManagedObject {
             KeyValue(key: "Communications - Airport", value: "\(DecisionEnum.fromValue(cmAir))"),
             KeyValue(key: "Communications - Rail", value: "\(DecisionEnum.fromValue(cmRail))"),
             KeyValue(key: "Search and Rescue", value: "\(DecisionEnum.fromValue(searchAndRescue))"),
-            KeyValue(key: "NAVAREA", value: navArea),
+            KeyValue(key: "NAVAREA", value: navArea)
         ]
     }
     
@@ -133,7 +137,7 @@ class Port: NSManagedObject {
             KeyValue(key: "Garbage Disposal", value: "\(DecisionEnum.fromValue(garbageDisposal))"),
             KeyValue(key: "Chemical Holding Tank Disposal", value: "\(DecisionEnum.fromValue(chemicalHoldingTank))"),
             KeyValue(key: "Degaussing", value: "\(DecisionEnum.fromValue(degauss))"),
-            KeyValue(key: "Dirty Ballast Disposal", value: "\(DecisionEnum.fromValue(dirtyBallast))"),
+            KeyValue(key: "Dirty Ballast Disposal", value: "\(DecisionEnum.fromValue(dirtyBallast))")
         ]
     }
     
@@ -146,7 +150,7 @@ class Port: NSManagedObject {
             KeyValue(key: "Lifts - 100+ Tons", value: "\(DecisionEnum.fromValue(lifts100))"),
             KeyValue(key: "Lifts - 50-100 Tons", value: "\(DecisionEnum.fromValue(lifts50))"),
             KeyValue(key: "Lifts - 25-49 Tons", value: "\(DecisionEnum.fromValue(lifts25))"),
-            KeyValue(key: "Lifts - 0-24 Tons", value: "\(DecisionEnum.fromValue(lifts0))"),
+            KeyValue(key: "Lifts - 0-24 Tons", value: "\(DecisionEnum.fromValue(lifts0))")
         ]
     }
     
@@ -155,7 +159,9 @@ class Port: NSManagedObject {
             KeyValue(key: "Services - Longshoremen", value: "\(DecisionEnum.fromValue(srLongshore))"),
             KeyValue(key: "Services - Electricity", value: "\(DecisionEnum.fromValue(srElectrical))"),
             KeyValue(key: "Services - Steam", value: "\(DecisionEnum.fromValue(srSteam))"),
-            KeyValue(key: "Services - Navigational Equipment", value: "\(DecisionEnum.fromValue(srNavigationalEquipment))"),
+            KeyValue(
+                key: "Services - Navigational Equipment",
+                value: "\(DecisionEnum.fromValue(srNavigationalEquipment))"),
             KeyValue(key: "Services - Electrical Repair", value: "\(DecisionEnum.fromValue(srElectricalRepair))"),
             KeyValue(key: "Services - Ice Breaking", value: "\(DecisionEnum.fromValue(srIceBreaking))"),
             KeyValue(key: "Services - Diving", value: "\(DecisionEnum.fromValue(srDiving))"),
@@ -168,7 +174,7 @@ class Port: NSManagedObject {
             KeyValue(key: "Supplies - Engine", value: "\(DecisionEnum.fromValue(suEngine))"),
             KeyValue(key: "Repair Code", value: "\(RepairCodeEnum.fromValue(repairCode))"),
             KeyValue(key: "Dry Dock", value: "\(DecisionEnum.fromValue(drydock))"),
-            KeyValue(key: "Railway", value: "\(SizeEnum.fromValue(railway))"),
+            KeyValue(key: "Railway", value: "\(SizeEnum.fromValue(railway))")
         ]
     }
     
@@ -178,6 +184,8 @@ class Port: NSManagedObject {
     }
 }
 
+// disable linting as these case names come from the MSI data
+// swiftlint:disable identifier_name
 enum SizeEnum: String, CaseIterable, CustomStringConvertible {
     case V
     case S
@@ -463,6 +471,7 @@ enum ConditionEnum: String, CaseIterable, CustomStringConvertible {
         }
     }
 }
+// swiftlint:enable identifier_name
 
 extension Int {
     var zeroIsEmptyString: String {

@@ -20,15 +20,25 @@ extension DifferentialGPSStation: Bookmarkable {
     
     static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
         if let split = itemKey?.split(separator: "--"), split.count == 2 {
-            return getDifferentialGPSStation(context: context, featureNumber: "\(split[0])", volumeNumber: "\(split[1])")
+            return getDifferentialGPSStation(
+                context: context,
+                featureNumber: "\(split[0])",
+                volumeNumber: "\(split[1])")
         }
         
         return nil
     }
     
-    static func getDifferentialGPSStation(context: NSManagedObjectContext, featureNumber: String?, volumeNumber: String?) -> DifferentialGPSStation? {
+    static func getDifferentialGPSStation(
+        context: NSManagedObjectContext,
+        featureNumber: String?,
+        volumeNumber: String?) -> DifferentialGPSStation? {
         if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
-            return try? context.fetchFirst(DifferentialGPSStation.self, predicate: NSPredicate(format: "featureNumber = %@ AND volumeNumber = %@", argumentArray: [featureNumber, volumeNumber]))
+            return try? context.fetchFirst(
+                DifferentialGPSStation.self,
+                predicate: NSPredicate(
+                    format: "featureNumber = %@ AND volumeNumber = %@",
+                    argumentArray: [featureNumber, volumeNumber]))
         }
         return nil
     }
@@ -44,17 +54,35 @@ extension DifferentialGPSStation: Locatable, GeoPackageExportable, GeoJSONExport
         return DifferentialGPSStation.color
     }
     static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("DGPS", comment: "Differential GPS Station data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Differential GPS Stations", comment: "Differential GPS Station data source display name")
-    
+    static var dataSourceName: String = 
+    NSLocalizedString("DGPS",
+                      comment: "Differential GPS Station data source display name")
+    static var fullDataSourceName: String = 
+    NSLocalizedString("Differential GPS Stations",
+                      comment: "Differential GPS Station data source display name")
+
     static var key: String = "differentialGPSStation"
     static var metricsKey: String = "dgpsStations"
     static var imageName: String? = "dgps"
-    static var systemImageName: String? = nil
+    static var systemImageName: String?
     static var color: UIColor = UIColor(argbValue: 0xFF00E676)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(DifferentialGPSStation.geopoliticalHeading), type: .string), ascending: true, section: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(DifferentialGPSStation.featureNumber), type: .int), ascending: true)]
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Geopolitical Heading",
+                key: #keyPath(DifferentialGPSStation.geopoliticalHeading),
+                type: .string),
+            ascending: true,
+            section: true),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Feature Number",
+                key: #keyPath(DifferentialGPSStation.featureNumber),
+                type: .int),
+            ascending: true)
+    ]
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
@@ -63,7 +91,8 @@ extension DifferentialGPSStation: Locatable, GeoPackageExportable, GeoJSONExport
         DataSourceProperty(name: "Longitude", key: #keyPath(DifferentialGPSStation.longitude), type: .longitude),
         DataSourceProperty(name: "Number", key: #keyPath(DifferentialGPSStation.featureNumber), type: .int),
         DataSourceProperty(name: "Name", key: #keyPath(DifferentialGPSStation.name), type: .string),
-        DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(DifferentialGPSStation.geopoliticalHeading), type: .string),
+        DataSourceProperty(name: "Geopolitical Heading", 
+                           key: #keyPath(DifferentialGPSStation.geopoliticalHeading), type: .string),
         DataSourceProperty(name: "Station ID", key: #keyPath(DifferentialGPSStation.stationID), type: .int),
         DataSourceProperty(name: "Range (nmi)", key: #keyPath(DifferentialGPSStation.range), type: .int),
         DataSourceProperty(name: "Frequency (kHz)", key: #keyPath(DifferentialGPSStation.frequency), type: .int),
@@ -73,8 +102,10 @@ extension DifferentialGPSStation: Locatable, GeoPackageExportable, GeoJSONExport
         DataSourceProperty(name: "Notice Week", key: #keyPath(DifferentialGPSStation.noticeWeek), type: .string),
         DataSourceProperty(name: "Notice Year", key: #keyPath(DifferentialGPSStation.noticeYear), type: .string),
         DataSourceProperty(name: "Volume Number", key: #keyPath(DifferentialGPSStation.volumeNumber), type: .string),
-        DataSourceProperty(name: "Preceding Note", key: #keyPath(DifferentialGPSStation.precedingNote), type: .string),
-        DataSourceProperty(name: "Post Note", key: #keyPath(DifferentialGPSStation.postNote), type: .string),
+        DataSourceProperty(name: "Preceding Note", 
+                           key: #keyPath(DifferentialGPSStation.precedingNote), type: .string),
+        DataSourceProperty(name: "Post Note", 
+                           key: #keyPath(DifferentialGPSStation.postNote), type: .string)
 
     ]
     
@@ -99,7 +130,9 @@ extension DifferentialGPSStation: BatchImportable {
         }
         let count = value.ngalol.count
         NSLog("Received \(count) \(Self.key) records.")
-        return try await Self.importRecords(from: value.ngalol, taskContext: PersistenceController.current.newTaskContext())
+        return try await Self.importRecords(
+            from: value.ngalol,
+            taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -108,19 +141,33 @@ extension DifferentialGPSStation: BatchImportable {
         var noticeYear: String?
         
         context.performAndWait {
-            let newestDifferentialGPSStation = try? PersistenceController.current.fetchFirst(DifferentialGPSStation.self, sortBy: [NSSortDescriptor(keyPath: \DifferentialGPSStation.noticeNumber, ascending: false)], predicate: nil, context: context)
+            let newestDifferentialGPSStation = 
+            try? PersistenceController.current.fetchFirst(
+                DifferentialGPSStation.self,
+                sortBy: [
+                    NSSortDescriptor(keyPath: \DifferentialGPSStation.noticeNumber, ascending: false)
+                ],
+                predicate: nil,
+                context: context)
             noticeWeek = Int(newestDifferentialGPSStation?.noticeWeek ?? "0") ?? 0
             noticeYear = newestDifferentialGPSStation?.noticeYear
         }
         
         print("Query for differential gps stations after year:\(noticeYear ?? "") week:\(noticeWeek)")
         
-        return [MSIRouter.readDifferentialGPSStations(noticeYear: noticeYear, noticeWeek: String(format: "%02d", noticeWeek + 1))]
+        return [
+            MSIRouter.readDifferentialGPSStations(
+                noticeYear: noticeYear,
+                noticeWeek: String(format: "%02d", noticeWeek + 1))
+        ]
     }
     
     static func shouldSync() -> Bool {
         // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(DifferentialGPSStation.definition)
+        return UserDefaults.standard
+            .dataSourceEnabled(DifferentialGPSStation.definition)
+        && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) >
+        UserDefaults.standard.lastSyncTimeSeconds(DifferentialGPSStation.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [DifferentialGPSStationModel]) -> NSBatchInsertRequest {
@@ -134,48 +181,59 @@ extension DifferentialGPSStation: BatchImportable {
             var previousLocalHeading: String?
         }
         
-        var previousHeadingPerVolume: [String : PreviousLocation] = [:]
+        var previousHeadingPerVolume: [String: PreviousLocation] = [:]
         // Provide one dictionary at a time when the closure is called.
-        let batchInsertRequest = NSBatchInsertRequest(entity: DifferentialGPSStation.entity(), dictionaryHandler: { dictionary in
+        let batchInsertRequest = NSBatchInsertRequest(
+            entity: DifferentialGPSStation.entity(),
+            dictionaryHandler: { dictionary in
             guard index < total else { return true }
             let propertyDictionary = propertyList[index].dictionaryValue
             let volumeNumber = propertyDictionary["volumeNumber"] as? String ?? ""
             var previousLocation = previousHeadingPerVolume[volumeNumber]
             let region = propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading
             
-            var correctedLocationDictionary: [String:String?] = [
-                "regionHeading": propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading
+            var correctedLocationDictionary: [String: String?] = [
+                "regionHeading": propertyDictionary["regionHeading"] as? String
+                ?? previousLocation?.previousRegionHeading
             ]
-            if let rh = correctedLocationDictionary["regionHeading"] as? String {
-                correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? ""): \(rh)"
+            if let regionHeading = correctedLocationDictionary["regionHeading"] as? String {
+                correctedLocationDictionary["sectionHeader"] =
+                "\(propertyDictionary["geopoliticalHeading"] as? String ?? ""): \(regionHeading)"
             } else {
-                correctedLocationDictionary["sectionHeader"] = "\(propertyDictionary["geopoliticalHeading"] as? String ?? "")"
+                correctedLocationDictionary["sectionHeader"] = 
+                "\(propertyDictionary["geopoliticalHeading"] as? String ?? "")"
             }
             
             if previousLocation?.previousRegionHeading != region {
                 previousLocation?.previousRegionHeading = region
             }
-            previousHeadingPerVolume[volumeNumber] = previousLocation ?? PreviousLocation(previousRegionHeading: region, previousSubregionHeading: nil, previousLocalHeading: nil)
-            
+            previousHeadingPerVolume[volumeNumber] = previousLocation ?? 
+            PreviousLocation(
+                previousRegionHeading: region,
+                previousSubregionHeading: nil,
+                previousLocalHeading: nil)
+
             dictionary.addEntries(from: propertyDictionary.mapValues({ value in
                 if let value = value {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             dictionary.addEntries(from: correctedLocationDictionary.mapValues({ value in
                 if let value = value {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             index += 1
             return false
         })
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [DifferentialGPSStationModel], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(
+        from propertiesList: [DifferentialGPSStationModel],
+        taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

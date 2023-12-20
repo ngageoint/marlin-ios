@@ -17,7 +17,7 @@ struct MorseCode: View {
     
     var body: some View {
         HStack(alignment: .top, spacing: 0) {
-            ForEach(Array(code.enumerated()), id: \.offset) { index, letter in
+            ForEach(Array(code.enumerated()), id: \.offset) { _, letter in
                 if letter == "-" {
                     Rectangle()
                         .frame(width: 24, height: 5, alignment: .center)

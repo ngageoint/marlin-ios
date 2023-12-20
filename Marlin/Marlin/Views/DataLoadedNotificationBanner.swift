@@ -28,7 +28,7 @@ struct DataLoadedNotificationBanner: View {
                         .lineLimit(notificationLineLimit)
                     Spacer()
                     Button {
-                        appState.dataSourceBatchImportNotificationsPending = [:]
+                        appState.dsBatchImportNotificationsPending = [:]
                         appState.lastNotificationRequestDate = Date()
                         
                     } label: {

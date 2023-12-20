@@ -73,7 +73,9 @@
 //    }
 //    
 //    func testLocationValueDisplay() {
-//        let p = DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "Location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)
+//        let p = DataSourceFilterParameter(property: 
+// DataSourceProperty(name: "Location", key: "Location", type: .location),
+// comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)
 //        let coordinate = CLLocationCoordinate2D(latitude: 2.0, longitude: 3.0)
 //        XCTAssertEqual(p.display(), "**Location** within **1nm** of **\(coordinate.format())**")
 //        
@@ -142,7 +144,10 @@
 //        let compare = NSPredicate(format: "Enumeration == %@", "Hi")
 //        XCTAssertEqual(predicate, compare)
 //        
-//        let p2 = DataSourceFilterParameter(property: DataSourceProperty(name: "Enumeration", key: "Enumeration", type: .enumeration, enumerationValues: ["Yes": ["Y"], "No": ["N"], "Unknown": ["U", "UNK", "unknown"]]), comparison: .equals, valueString: "Unknown")
+//        let p2 = DataSourceFilterParameter(property: 
+// DataSourceProperty(name: "Enumeration", key: "Enumeration", type: .enumeration,
+// enumerationValues: ["Yes": ["Y"], "No": ["N"], "Unknown": ["U", "UNK", "unknown"]]),
+//  comparison: .equals, valueString: "Unknown")
 //        print("\(DecisionEnum.keyValueMap)")
 //        let predicate2 = p2.toPredicate(dataSource: CommonDataSource.self)
 //        let compare2 = NSPredicate(format: "Enumeration == %@ OR Enumeration == %@ OR Enumeration == %@", "U", "UNK", "unknown")
@@ -176,7 +181,9 @@
 //    }
 //    
 //    func testLocationValuePredicate() {
-//        let p = DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "Location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)
+//        let p = DataSourceFilterParameter(property: 
+// DataSourceProperty(name: "Location", key: "Location", type: .location),
+ //comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)
 //        let predicate = p.toPredicate(dataSource: CommonDataSource.self)
 //        let compare = NSPredicate(format: "latitude <= %f AND latitude >= %f AND longitude <= %f AND longitude >= %f", 2.016627, 1.983373, 3.016637, 2.983363)
 //        XCTAssertEqual(predicate?.kifPredicateDescription, compare.kifPredicateDescription)

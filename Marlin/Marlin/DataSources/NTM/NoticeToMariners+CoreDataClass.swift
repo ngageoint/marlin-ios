@@ -67,7 +67,6 @@ class NoticeToMariners: NSManagedObject, Downloadable {
             }
         }
     }
-    
 
     var dateString: String? {
         if let date = uploadTime {
@@ -91,14 +90,14 @@ class NoticeToMariners: NSManagedObject, Downloadable {
         DownloadManager.shared.cancel(downloadable: self)
     }
     
-    func getFirstDay(WeekNumber weekNumber:Int, CurrentYear currentYear: Int) -> Date? {
+    func getFirstDay(WeekNumber weekNumber: Int, CurrentYear currentYear: Int) -> Date? {
         let calendar = Calendar(identifier: .gregorian)
         var dayComponent = DateComponents()
         dayComponent.weekOfYear = weekNumber
         dayComponent.weekday = 7
         dayComponent.yearForWeekOfYear = currentYear
         var date = calendar.date(from: dayComponent)!
-        if(weekNumber == 1 && calendar.component(.month, from: date) != 1){
+        if weekNumber == 1 && calendar.component(.month, from: date) != 1 {
             dayComponent.year = currentYear - 1
             date = calendar.date(from: dayComponent)!
         }

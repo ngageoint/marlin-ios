@@ -8,7 +8,7 @@
 import SwiftUI
 import MapKit
 
-class ItemWrapper : ObservableObject, Identifiable, Hashable {
+class ItemWrapper: ObservableObject, Identifiable, Hashable {
     static func == (lhs: ItemWrapper, rhs: ItemWrapper) -> Bool {
         return lhs.id == rhs.id
     }
@@ -31,7 +31,7 @@ struct MarlinView: View {
     @EnvironmentObject var dataSourceList: DataSourceList
     @EnvironmentObject var appState: AppState
 
-    @State var selection: String? = nil
+    @State var selection: String?
     @State var showBottomSheet: Bool = false
         
     @State var showSnackbar: Bool = false
@@ -42,7 +42,7 @@ struct MarlinView: View {
     @State private var previewDate: Date = Date()
     @State private var previewUrl: URL?
     @State var isMapLayersPresented: Bool = false
-    @State var mapLayerEditViewModel: MapLayerViewModel? = nil
+    @State var mapLayerEditViewModel: MapLayerViewModel?
         
     @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = true
     @AppStorage("disclaimerAccepted") var disclaimerAccepted: Bool = false
@@ -138,14 +138,18 @@ struct MarlinView: View {
                 }
             }
         })
-        .fullScreenCover(item: $mapLayerEditViewModel, onDismiss: {
-            isMapLayersPresented = false
-            mapLayerEditViewModel = nil
-        }) { viewModel in
-            NavigationView {
-                MapLayerView(viewModel: viewModel, isPresented: $isMapLayersPresented)
+        .fullScreenCover(
+            item: $mapLayerEditViewModel,
+            onDismiss: {
+                isMapLayersPresented = false
+                mapLayerEditViewModel = nil
+            },
+            content: { viewModel in
+                NavigationView {
+                    MapLayerView(viewModel: viewModel, isPresented: $isMapLayersPresented)
+                }
             }
-        }
+        )
         .onAppear {
             Metrics.shared.appLaunch()
         }

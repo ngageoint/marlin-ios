@@ -74,12 +74,16 @@ struct LayerConfiguration: View {
                                 .tint(Color.primaryColorVariant)
                                 
                                 if viewModel.refreshRateUnits != .none {
-                                    TextField("Refresh Rate", value: $viewModel.refreshRate, format: .number.grouping(.never))
-                                        .keyboardType(.numberPad)
-                                        .underlineTextFieldWithLabel()
-                                        .focused($isInputActive)
-                                        .accessibilityElement()
-                                        .accessibilityLabel("Refresh Rate input")
+                                    TextField(
+                                        "Refresh Rate",
+                                        value: $viewModel.refreshRate,
+                                        format: .number.grouping(.never)
+                                    )
+                                    .keyboardType(.numberPad)
+                                    .underlineTextFieldWithLabel()
+                                    .focused($isInputActive)
+                                    .accessibilityElement()
+                                    .accessibilityLabel("Refresh Rate input")
                                 } else {
                                     Spacer()
                                 }
@@ -88,7 +92,7 @@ struct LayerConfiguration: View {
                         }
                     }
                 }
-                .frame(maxWidth:.infinity)
+                .frame(maxWidth: .infinity)
                 .padding(8)
             }
             .frame(minHeight: 0, maxHeight: .infinity)

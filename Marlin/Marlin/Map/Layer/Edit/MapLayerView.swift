@@ -36,7 +36,7 @@ struct MapLayerView: View {
     }
 }
 
-struct listCheckboxToggleStyle: ToggleStyle {
+struct ListCheckboxToggleStyle: ToggleStyle {
     func makeBody(configuration: Configuration) -> some View {
         Button(action: {
             configuration.isOn.toggle()
@@ -52,7 +52,7 @@ struct listCheckboxToggleStyle: ToggleStyle {
     }
 }
 
-struct checkboxToggleStyle: ToggleStyle {
+struct CheckboxToggleStyle: ToggleStyle {
     func makeBody(configuration: Configuration) -> some View {
         Button(action: {
             configuration.isOn.toggle()

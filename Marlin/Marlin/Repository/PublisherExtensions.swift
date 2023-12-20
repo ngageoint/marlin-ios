@@ -16,8 +16,7 @@ extension Publisher {
     where Output: RangeReplaceableCollection,
           Output.Index == Int,
           Changes.Output == CollectionDifference<ChangeItem>,
-          Changes.Failure == Failure
-    {
+          Changes.Failure == Failure {
         zip(changes) { existing, changes -> Output in
             var objects = existing
             for change in changes {

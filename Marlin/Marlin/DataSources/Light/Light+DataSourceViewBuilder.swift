@@ -15,20 +15,31 @@ extension Light: DataSourceViewBuilder {
     
     var detailView: AnyView {
         if let featureNumber = self.featureNumber, let volumeNumber = self.volumeNumber {
-            return AnyView(LightDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber).navigationTitle("\(name ?? Light.dataSourceName)" ))
+            return AnyView(
+                LightDetailView(
+                    featureNumber: featureNumber,
+                    volumeNumber: volumeNumber
+                )
+                .navigationTitle("\(name ?? Light.dataSourceName)" )
+            )
         }
         return AnyView(EmptyView())
     }
     
     var summary: some DataSourceSummaryView {
-        LightSummaryView(light: LightModel(light:self))
+        LightSummaryView(light: LightModel(light: self))
     }
 }
 
 extension LightModel: DataSourceViewBuilder {
     var detailView: AnyView {
         if let featureNumber = self.featureNumber, let volumeNumber = self.volumeNumber {
-            return AnyView(LightDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber).navigationTitle("\(name ?? Light.dataSourceName)" ))
+            return AnyView(
+                LightDetailView(
+                    featureNumber: featureNumber,
+                    volumeNumber: volumeNumber
+                )
+                .navigationTitle("\(name ?? Light.dataSourceName)" ))
         }
         return AnyView(EmptyView())
     }

@@ -27,7 +27,11 @@ class LocationBoundsMixin: NSObject, MapMixin, ObservableObject {
     @Binding var coordinateOne: ObservableCoordinate
     @Binding var coordinateTwo: ObservableCoordinate
     
-    init(region: Binding<MKCoordinateRegion>, coordinateOne: Binding<ObservableCoordinate>, coordinateTwo: Binding<ObservableCoordinate>) {
+    init(
+        region: Binding<MKCoordinateRegion>,
+        coordinateOne: Binding<ObservableCoordinate>,
+        coordinateTwo: Binding<ObservableCoordinate>
+    ) {
         _region = region
         _coordinateOne = coordinateOne
         _coordinateTwo = coordinateTwo
@@ -48,25 +52,25 @@ class LocationBoundsMixin: NSObject, MapMixin, ObservableObject {
         self.mapState = mapState
         coordinateOne.$latitude
             .receive(on: RunLoop.main)
-            .sink() { [self] neCorner in
+            .sink { [self] _ in
                 self.triggerUpdate()
             }
             .store(in: &cancellable)
         coordinateOne.$longitude
             .receive(on: RunLoop.main)
-            .sink() { [self] neCorner in
+            .sink { [self] _ in
                 self.triggerUpdate()
             }
             .store(in: &cancellable)
         coordinateTwo.$latitude
             .receive(on: RunLoop.main)
-            .sink() { [self] neCorner in
+            .sink { [self] _ in
                 self.triggerUpdate()
             }
             .store(in: &cancellable)
         coordinateTwo.$longitude
             .receive(on: RunLoop.main)
-            .sink() { [self] neCorner in
+            .sink { [self] _ in
                 self.triggerUpdate()
             }
             .store(in: &cancellable)
@@ -80,9 +84,12 @@ class LocationBoundsMixin: NSObject, MapMixin, ObservableObject {
     }
     
     func updateMixin(mapView: MKMapView, mapState: MapState) {
-        if lastChange == nil || lastChange != mapState.mixinStates["\(String(describing: LocationBoundsMixin.self))DataUpdated"] as? Date {
-            lastChange = mapState.mixinStates["\(String(describing: LocationBoundsMixin.self))DataUpdated"] as? Date ?? Date()
-            
+        if lastChange == nil || 
+            lastChange != mapState.mixinStates["\(String(describing: LocationBoundsMixin.self))DataUpdated"] as? Date {
+            lastChange = mapState.mixinStates[
+                "\(String(describing: LocationBoundsMixin.self))DataUpdated"
+            ] as? Date ?? Date()
+
             if mapState.mixinStates["\(String(describing: LocationBoundsMixin.self))DataUpdated"] as? Date == nil {
                 DispatchQueue.main.async {
                     mapState.mixinStates["\(String(describing: LocationBoundsMixin.self))DataUpdated"] = self.lastChange
@@ -91,34 +98,56 @@ class LocationBoundsMixin: NSObject, MapMixin, ObservableObject {
             if let polygon = polygon {
                 mapView.removeOverlay(polygon)
             }
-            var points: [MKMapPoint] = []
-            
-            if let cornerOneLat = coordinateOne.latitude, let cornerOneLong = coordinateOne.longitude {
-                points.append(MKMapPoint(CLLocationCoordinate2D(latitude: cornerOneLat, longitude: cornerOneLong)))
-                if let cornerTwoLat = coordinateTwo.latitude, let cornerTwoLong = coordinateTwo.longitude {
-                    points.append(MKMapPoint(CLLocationCoordinate2D(latitude: cornerOneLat, longitude: cornerTwoLong)))
-                    points.append(MKMapPoint(CLLocationCoordinate2D(latitude: cornerTwoLat, longitude: cornerTwoLong)))
-                    points.append(MKMapPoint(CLLocationCoordinate2D(latitude: cornerTwoLat, longitude: cornerOneLong)))
-                } else {
-                    points.append(MKMapPoint(CLLocationCoordinate2D(latitude: mapView.region.center.latitude, longitude: cornerOneLong)))
-                    points.append(MKMapPoint(mapView.region.center))
-                    points.append(MKMapPoint(CLLocationCoordinate2D(latitude: cornerOneLat, longitude: mapView.region.center.longitude)))
-                }
-            } else if let cornerTwoLat = coordinateTwo.latitude, let cornerTwoLong = coordinateTwo.longitude {
-                points.append(MKMapPoint(CLLocationCoordinate2D(latitude: cornerTwoLat, longitude: cornerTwoLong)))
-                points.append(MKMapPoint(CLLocationCoordinate2D(latitude: mapView.region.center.latitude, longitude: cornerTwoLong)))
-                points.append(MKMapPoint(mapView.region.center))
-                points.append(MKMapPoint(CLLocationCoordinate2D(latitude: cornerTwoLat, longitude: mapView.region.center.longitude)))
-                
-            } else {
-                return
+
+            if let polygon = createBoundsPolygon(mapView: mapView) {
+                mapView.addOverlay(polygon)
+                self.polygon = polygon
             }
-            let polygon = BoundsPolygon(points: &points, count: points.count)
-            mapView.addOverlay(polygon)
-            self.polygon = polygon
         }
     }
-    
+
+    func createBoundsPolygon(mapView: MKMapView) -> BoundsPolygon? {
+        var points: [MKMapPoint] = []
+
+        if let cornerOneLat = coordinateOne.latitude, let cornerOneLong = coordinateOne.longitude {
+            points.append(MKMapPoint(CLLocationCoordinate2D(latitude: cornerOneLat, longitude: cornerOneLong)))
+            if let cornerTwoLat = coordinateTwo.latitude, let cornerTwoLong = coordinateTwo.longitude {
+                points.append(MKMapPoint(CLLocationCoordinate2D(latitude: cornerOneLat, longitude: cornerTwoLong)))
+                points.append(MKMapPoint(CLLocationCoordinate2D(latitude: cornerTwoLat, longitude: cornerTwoLong)))
+                points.append(MKMapPoint(CLLocationCoordinate2D(latitude: cornerTwoLat, longitude: cornerOneLong)))
+            } else {
+                points.append(
+                    MKMapPoint(
+                        CLLocationCoordinate2D(latitude: mapView.region.center.latitude, longitude: cornerOneLong)
+                    )
+                )
+                points.append(MKMapPoint(mapView.region.center))
+                points.append(
+                    MKMapPoint(
+                        CLLocationCoordinate2D(latitude: cornerOneLat, longitude: mapView.region.center.longitude)
+                    )
+                )
+            }
+        } else if let cornerTwoLat = coordinateTwo.latitude, let cornerTwoLong = coordinateTwo.longitude {
+            points.append(MKMapPoint(CLLocationCoordinate2D(latitude: cornerTwoLat, longitude: cornerTwoLong)))
+            points.append(
+                MKMapPoint(
+                    CLLocationCoordinate2D(latitude: mapView.region.center.latitude, longitude: cornerTwoLong)
+                )
+            )
+            points.append(MKMapPoint(mapView.region.center))
+            points.append(
+                MKMapPoint(
+                    CLLocationCoordinate2D(latitude: cornerTwoLat, longitude: mapView.region.center.longitude)
+                )
+            )
+
+        } else {
+            return nil
+        }
+        return BoundsPolygon(points: &points, count: points.count)
+    }
+
     func renderer(overlay: MKOverlay) -> MKOverlayRenderer? {
         if let polygon = overlay as? BoundsPolygon {
             let renderer = MKPolygonRenderer(polygon: polygon)

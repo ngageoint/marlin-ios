@@ -19,7 +19,15 @@ struct CurrentNavigationalWarningSection: View {
     init(navArea: String, mapName: String?, path: Binding<NavigationPath>) {
         self.navArea = navArea
         self.mapName = mapName
-        self._currentNavigationalWarningsSections = SectionedFetchRequest<String, NavigationalWarning>(entity: NavigationalWarning.entity(), sectionIdentifier: \NavigationalWarning.navArea!, sortDescriptors: [NSSortDescriptor(keyPath: \NavigationalWarning.navArea, ascending: false), NSSortDescriptor(keyPath: \NavigationalWarning.issueDate, ascending: false)], predicate: NSPredicate(format: "navArea = %@", navArea))
+        self._currentNavigationalWarningsSections = 
+        SectionedFetchRequest<String, NavigationalWarning>(
+            entity: NavigationalWarning.entity(),
+            sectionIdentifier: \NavigationalWarning.navArea!,
+            sortDescriptors: [
+                NSSortDescriptor(keyPath: \NavigationalWarning.navArea, ascending: false),
+                NSSortDescriptor(keyPath: \NavigationalWarning.issueDate, ascending: false)
+            ],
+            predicate: NSPredicate(format: "navArea = %@", navArea))
         _path = path
     }
     
@@ -27,7 +35,8 @@ struct CurrentNavigationalWarningSection: View {
         ForEach(currentNavigationalWarningsSections) { section in
             NavigationalWarningSectionRow(section: section, mapName: mapName, path: $path)
                 .accessibilityElement(children: .contain)
-                .accessibilityLabel("\(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area") (Current)")
+                .accessibilityLabel(
+                    "\(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area") (Current)")
         }
         .accessibilityElement(children: .contain)
         .listRowBackground(Color.surfaceColor)
@@ -69,7 +78,8 @@ struct NavigationalWarningAreasView: View {
                 ForEach(navigationalWarningsSections) { section in
                     NavigationalWarningSectionRow(section: section, mapName: mapName, path: $path)
                         .accessibilityElement(children: .contain)
-                        .accessibilityLabel("\(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area")")
+                        .accessibilityLabel(
+                            "\(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "Navigation Area")")
                 }
                 .accessibilityElement(children: .contain)
                 .listRowBackground(Color.surfaceColor)
@@ -77,7 +87,10 @@ struct NavigationalWarningAreasView: View {
                 .accessibilityElement(children: .contain)
                 
                 if showUnparsedNavigationalWarnings {
-                    NavigationLink(value: NavigationalWarningSection(id: "Unknown", warnings: Array<NavigationalWarning>(noParsedLocationNavigationalWarnings))) {
+                    NavigationLink(
+                        value: NavigationalWarningSection(
+                            id: "Unknown",
+                            warnings: [NavigationalWarning](noParsedLocationNavigationalWarnings))) {
                         HStack {
                             VStack(alignment: .leading) {
                                 Text("Unparsed Locations")
@@ -109,7 +122,8 @@ struct NavigationalWarningAreasView: View {
                 navigationalWarningsSections.nsPredicate = NSPredicate(format: "navArea != %@", newValue ?? "")
             })
             .onAppear {
-                navigationalWarningsSections.nsPredicate = NSPredicate(format: "navArea != %@", generalLocation.currentNavAreaName ?? "")
+                navigationalWarningsSections.nsPredicate = 
+                NSPredicate(format: "navArea != %@", generalLocation.currentNavAreaName ?? "")
             }
             .accessibilityElement(children: .contain)
             NavigationLink(value: MarlinRoute.exportGeoPackageDataSource( dataSource: .navWarning)) {
@@ -122,7 +136,12 @@ struct NavigationalWarningAreasView: View {
             }
             .isDetailLink(false)
             .fixedSize()
-            .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.onPrimaryColor, backgroundColor: Color.primaryColor))
+            .buttonStyle(
+                MaterialFloatingButtonStyle(
+                    type: .secondary,
+                    size: .mini,
+                    foregroundColor: Color.onPrimaryColor,
+                    backgroundColor: Color.primaryColor))
             .accessibilityElement(children: .contain)
             .accessibilityLabel("Export Button")
             .padding(16)

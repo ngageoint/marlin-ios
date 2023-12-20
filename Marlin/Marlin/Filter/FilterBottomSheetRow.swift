@@ -17,11 +17,10 @@ struct FilterBottomSheetRow: View {
     var body: some View {
         VStack(alignment: .leading) {
             DisclosureGroup {
-                let dataSourceType = filterable.definition
                 FilterView(viewModel: PersistedFilterViewModel(dataSource: filterable))
                     .accessibilityElement(children: .contain)
                     .accessibilityLabel("\(filterable.definition.fullName) filters")
-            } label : {
+            } label: {
                 HStack(alignment: .center, spacing: 8) {
                     
                     if let systemImageName = filterable.definition.systemImageName {
@@ -65,7 +64,7 @@ struct FilterBottomSheetRow: View {
             )
             .tint(Color.primaryColorVariant)
         }
-        .onReceive(dataSourceUpdatedPub) { output in
+        .onReceive(dataSourceUpdatedPub) { _ in
             filterCount = UserDefaults.standard.filter(filterable.definition).count
         }
         .onAppear {

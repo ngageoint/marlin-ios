@@ -18,7 +18,7 @@ struct RadioBeaconVolume {
 
 class RadioBeacon: NSManagedObject {
     
-    var clusteringIdentifier: String? = nil
+    var clusteringIdentifier: String?
     
     static let radioBeaconVolumes = [
         RadioBeaconVolume(volumeQuery: "110", volumeNumber: "PUB 110"),
@@ -40,7 +40,7 @@ class RadioBeacon: NSManagedObject {
             KeyValue(key: "Range (nmi)", value: "\(range)"),
             KeyValue(key: "Sequence", value: sequenceText),
             KeyValue(key: "Frequency (kHz)", value: frequency),
-            KeyValue(key: "Remarks", value: stationRemark),
+            KeyValue(key: "Remarks", value: stationRemark)
         ]
     }
     
@@ -67,7 +67,9 @@ class RadioBeacon: NSManagedObject {
     }
     
     var morseCode: String? {
-        guard let characteristic = characteristic, let leftParen = characteristic.firstIndex(of: "("), let lastIndex = characteristic.firstIndex(of: ")") else {
+        guard let characteristic = characteristic, 
+                let leftParen = characteristic.firstIndex(of: "("),
+                let lastIndex = characteristic.firstIndex(of: ")") else {
             return nil
         }
         
@@ -88,13 +90,16 @@ class RadioBeacon: NSManagedObject {
             return nil
         }
         var sectors: [ImageSector] = []
-        let pattern = #"(?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\^)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))\^)?(?<endminutes>[0-9]*)[\`']?\."#
+        let pattern = #"""
+            (?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\^)?((?<startminutes>[0-9]*)[\`'])?\
+            (-(?<enddeg>(\d*))\^)?(?<endminutes>[0-9]*)[\`']?\.
+        """#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
                               in: remarks)
         var previousEnd: Double = 0.0
         
-        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, flags, stop in
+        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, _, _ in
             guard let match = match else {
                 return
             }
@@ -102,11 +107,9 @@ class RadioBeacon: NSManagedObject {
             var start: Double?
             for component in ["startdeg", "startminutes", "enddeg", "endminutes"] {
                 
-                
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: remarks)
-                {
+                   let range = Range(nsrange, in: remarks) {
                     if component == "startdeg" {
                         if start != nil {
                             start = start! + ((Double(remarks[range]) ?? 0.0) - 90)

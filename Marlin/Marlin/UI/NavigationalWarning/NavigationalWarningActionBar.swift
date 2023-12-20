@@ -17,14 +17,20 @@ struct NavigationalWarningActionBar: View {
     var mapName: String?
 
     var body: some View {
-        HStack(spacing:0) {
+        HStack(spacing: 0) {
             if showMoreDetails {
-                Button(action: {
-                    NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(mapName: mapName, dataSource: self.navigationalWarning))
-                }) {
-                    Text("More Details")
-                        .foregroundColor(Color.primaryColorVariant)
-                }
+                Button(
+                    action: {
+                        NotificationCenter.default.post(
+                            name: .ViewDataSource,
+                            object: ViewDataSource(mapName: mapName, dataSource: self.navigationalWarning)
+                        )
+                    },
+                    label: {
+                        Text("More Details")
+                            .foregroundColor(Color.primaryColorVariant)
+                    }
+                )
             }
             Spacer()
             BookmarkButton(viewModel: bookmarkViewModel)
@@ -36,7 +42,10 @@ struct NavigationalWarningActionBar: View {
         .buttonStyle(MaterialButtonStyle())
         .onAppear {
             bookmarkViewModel.repository = bookmarkRepository
-            bookmarkViewModel.getBookmark(itemKey: navigationalWarning.itemKey, dataSource: NavigationalWarning.definition.key)
+            bookmarkViewModel.getBookmark(
+                itemKey: navigationalWarning.itemKey,
+                dataSource: NavigationalWarning.definition.key
+            )
         }
     }
 }

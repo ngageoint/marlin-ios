@@ -27,7 +27,7 @@ class Keychain {
             return nil
         }
         
-        guard let existingItem = item as? [String : Any],
+        guard let existingItem = item as? [String: Any],
               let passwordData = existingItem[kSecValueData as String] as? Data,
               let password = String(data: passwordData, encoding: String.Encoding.utf8),
               let account = existingItem[kSecAttrAccount as String] as? String
@@ -68,9 +68,9 @@ class Keychain {
                                     kSecValueData as String: password]
         
         let status = SecItemAdd(query as CFDictionary, nil)
-        switch (status) {
+        switch status {
         case errSecDuplicateItem:
-            if let _ = update(server: server, credentials: credentials) {
+            if update(server: server, credentials: credentials) != nil {
                 return true
             } else {
                 return false

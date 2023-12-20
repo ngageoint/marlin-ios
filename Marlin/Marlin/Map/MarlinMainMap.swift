@@ -63,7 +63,14 @@ struct MarlinMainMap: View {
                     }
                     .isDetailLink(false)
                     .fixedSize()
-                    .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
+                    .buttonStyle(
+                        MaterialFloatingButtonStyle(
+                            type: .secondary,
+                            size: .mini,
+                            foregroundColor: Color.primaryColorVariant,
+                            backgroundColor: Color.mapButtonColor
+                        )
+                    )
                     .accessibilityElement(children: .contain)
                     .accessibilityLabel("Map Settings Button")
                 }
@@ -96,7 +103,14 @@ struct MarlinMainMap: View {
                     }
                     .isDetailLink(false)
                     .fixedSize()
-                    .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
+                    .buttonStyle(
+                        MaterialFloatingButtonStyle(
+                            type: .secondary,
+                            size: .mini,
+                            foregroundColor: Color.primaryColorVariant,
+                            backgroundColor: Color.mapButtonColor
+                        )
+                    )
                     .accessibilityElement(children: .contain)
                     .accessibilityLabel("Export Button")
                 }

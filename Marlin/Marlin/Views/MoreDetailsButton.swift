@@ -11,12 +11,15 @@ struct MoreDetailsButton: View {
     var data: DataSource
 
     var body: some View {
-        Button(action: {
-            NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: data))
-        }) {
-            Text("More Details")
-                .foregroundColor(Color.primaryColorVariant)
-        }
+        Button(
+            action: {
+                NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: data))
+            },
+            label: {
+                Text("More Details")
+                    .foregroundColor(Color.primaryColorVariant)
+            }
+        )
         .accessibilityElement()
         .accessibilityLabel("More Details")
     }

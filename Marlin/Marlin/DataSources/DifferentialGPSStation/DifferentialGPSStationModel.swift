@@ -19,7 +19,10 @@ struct DifferentialGPSStationPropertyContainer: Decodable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        ngalol = try container.decode([Throwable<DifferentialGPSStationModel>].self, forKey: .ngalol).compactMap { try? $0.result.get() }
+        ngalol = try container.decode(
+            [Throwable<DifferentialGPSStationModel>].self, forKey: .ngalol
+        )
+        .compactMap { try? $0.result.get() }
     }
 }
 
@@ -145,8 +148,8 @@ struct DifferentialGPSStationModel: Locatable, Bookmarkable, Codable, GeoJSONExp
             let decoder = JSONDecoder()
             let jsonData = Data(string.utf8)
             
-            if let ds = try? decoder.decode(DifferentialGPSStationModel.self, from: jsonData) {
-                self = ds
+            if let model = try? decoder.decode(DifferentialGPSStationModel.self, from: jsonData) {
+                self = model
             } else {
                 return nil
             }
@@ -230,19 +233,22 @@ struct DifferentialGPSStationModel: Locatable, Bookmarkable, Codable, GeoJSONExp
         var latitude = 0.0
         var longitude = 0.0
         
-        let pattern = #"(?<latdeg>[0-9]*)°(?<latminutes>[0-9]*)'(?<latseconds>[0-9]*\.?[0-9]*)\"(?<latdirection>[NS]) \n(?<londeg>[0-9]*)°(?<lonminutes>[0-9]*)'(?<lonseconds>[0-9]*\.?[0-9]*)\"(?<londirection>[EW])"#
+        let pattern = #"""
+            (?<latdeg>[0-9]*)°(?<latminutes>[0-9]*)'(?<latseconds>[0-9]*\.?[0-9]*)\"\
+            (?<latdirection>[NS])\
+            \n(?<londeg>[0-9]*)°(?<lonminutes>[0-9]*)'(?<lonseconds>[0-9]*\.?[0-9]*)\"\
+            (?<londirection>[EW])
+        """#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(position.startIndex..<position.endIndex,
                               in: position)
         if let match = regex?.firstMatch(in: position,
                                          options: [],
-                                         range: nsrange)
-        {
+                                         range: nsrange) {
             for component in ["latdeg", "latminutes", "latseconds", "latdirection"] {
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: position)
-                {
+                   let range = Range(nsrange, in: position) {
                     if component == "latdeg" {
                         latitude = Double(position[range]) ?? 0.0
                     } else if component == "latminutes" {
@@ -257,8 +263,7 @@ struct DifferentialGPSStationModel: Locatable, Bookmarkable, Codable, GeoJSONExp
             for component in ["londeg", "lonminutes", "lonseconds", "londirection"] {
                 let nsrange = match.range(withName: component)
                 if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: position)
-                {
+                   let range = Range(nsrange, in: position) {
                     if component == "londeg" {
                         longitude = Double(position[range]) ?? 0.0
                     } else if component == "lonminutes" {
@@ -356,17 +361,33 @@ extension DifferentialGPSStationModel: DataSource {
         return Self.color
     }
     static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("DGPS", comment: "Differential GPS Station data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Differential GPS Stations", comment: "Differential GPS Station data source display name")
-    
+    static var dataSourceName: String =
+    NSLocalizedString("DGPS", comment: "Differential GPS Station data source display name")
+    static var fullDataSourceName: String =
+    NSLocalizedString("Differential GPS Stations", comment: "Differential GPS Station data source display name")
+
     static var key: String = "differentialGPSStation"
     static var metricsKey: String = "dgpsStations"
     static var imageName: String? = "dgps"
-    static var systemImageName: String? = nil
+    static var systemImageName: String?
     static var color: UIColor = UIColor(argbValue: 0xFF00E676)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(DifferentialGPSStation.geopoliticalHeading), type: .string), ascending: true, section: true), DataSourceSortParameter(property:DataSourceProperty(name: "Feature Number", key: #keyPath(DifferentialGPSStation.featureNumber), type: .int), ascending: true)]
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Geopolitical Heading",
+                key: #keyPath(DifferentialGPSStation.geopoliticalHeading),
+                type: .string),
+            ascending: true,
+            section: true),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Feature Number",
+                key: #keyPath(DifferentialGPSStation.featureNumber),
+                type: .int),
+            ascending: true)
+    ]
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
@@ -375,7 +396,9 @@ extension DifferentialGPSStationModel: DataSource {
         DataSourceProperty(name: "Longitude", key: #keyPath(DifferentialGPSStation.longitude), type: .longitude),
         DataSourceProperty(name: "Number", key: #keyPath(DifferentialGPSStation.featureNumber), type: .int),
         DataSourceProperty(name: "Name", key: #keyPath(DifferentialGPSStation.name), type: .string),
-        DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(DifferentialGPSStation.geopoliticalHeading), type: .string),
+        DataSourceProperty(name: "Geopolitical Heading", 
+                           key: #keyPath(DifferentialGPSStation.geopoliticalHeading), 
+                           type: .string),
         DataSourceProperty(name: "Station ID", key: #keyPath(DifferentialGPSStation.stationID), type: .int),
         DataSourceProperty(name: "Range (nmi)", key: #keyPath(DifferentialGPSStation.range), type: .int),
         DataSourceProperty(name: "Frequency (kHz)", key: #keyPath(DifferentialGPSStation.frequency), type: .int),
@@ -386,8 +409,10 @@ extension DifferentialGPSStationModel: DataSource {
         DataSourceProperty(name: "Notice Year", key: #keyPath(DifferentialGPSStation.noticeYear), type: .string),
         DataSourceProperty(name: "Volume Number", key: #keyPath(DifferentialGPSStation.volumeNumber), type: .string),
         DataSourceProperty(name: "Preceding Note", key: #keyPath(DifferentialGPSStation.precedingNote), type: .string),
-        DataSourceProperty(name: "Post Note", key: #keyPath(DifferentialGPSStation.postNote), type: .string),
-        
+        DataSourceProperty(name: "Post Note", 
+                           key: #keyPath(DifferentialGPSStation.postNote), 
+                           type: .string)
+
     ]
     
     static var dateFormatter: DateFormatter {
@@ -404,7 +429,18 @@ extension DifferentialGPSStationModel: DataSource {
 extension DifferentialGPSStationModel: MapImage {
     static var cacheTiles: Bool = true
     
-    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {
-        return defaultMapImage(marker: marker, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context, tileSize: 512.0)
+    func mapImage(
+        marker: Bool,
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox?,
+        context: CGContext? = nil
+    ) -> [UIImage] {
+        return defaultMapImage(
+            marker: marker,
+            zoomLevel: zoomLevel,
+            tileBounds3857: tileBounds3857,
+            context: context,
+            tileSize: 512.0
+        )
     }
 }

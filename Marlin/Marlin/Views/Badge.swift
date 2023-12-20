@@ -26,12 +26,12 @@ struct Badge: View {
 }
 
 struct CheckBadge: View {
-    @Binding var on: Bool
-    
+    @Binding var checked: Bool
+
     var body: some View {
         ZStack(alignment: .topTrailing) {
             Color.clear
-            if on {
+            if checked {
                 Image(systemName: "checkmark.circle.fill")
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(Color.white, Color.secondaryColor)

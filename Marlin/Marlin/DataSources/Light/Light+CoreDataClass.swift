@@ -55,8 +55,12 @@ class Light: NSManagedObject, LightProtocol {
                             var ranges: [LightRange] = []
                             light.requiresPostProcessing = false
                             if let rangeString = light.range {
-                                for rangeSplit in rangeString.components(separatedBy: CharacterSet(charactersIn: ";\n")) {
-                                    let colorSplit = rangeSplit.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: ". ")
+                                for rangeSplit in rangeString.components(
+                                    separatedBy: CharacterSet(charactersIn: ";\n")
+                                ) {
+                                    let colorSplit = rangeSplit
+                                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                                        .components(separatedBy: ". ")
                                     if colorSplit.count == 2, let doubleRange = Double(colorSplit[1]) {
                                         let lightRange = LightRange(context: context)
                                         lightRange.light = light
@@ -73,7 +77,9 @@ class Light: NSManagedObject, LightProtocol {
                 }
                 try? context.save()
             }
-            NotificationCenter.default.post(Notification(name: .DataSourceProcessed, object: DataSourceUpdatedNotification(key: Light.key)))
+            NotificationCenter.default.post(
+                Notification(name: .DataSourceProcessed, object: DataSourceUpdatedNotification(key: Light.key))
+            )
         }
     }
 

@@ -22,10 +22,22 @@ struct LightCard: View {
             var count = 0
             let degreesPerColor = 360.0 / CGFloat(lightColors.count)
             for color in lightColors {
-                sectors.append(ImageSector(startDegrees: degreesPerColor * CGFloat(count), endDegrees: degreesPerColor * (CGFloat(count) + 1.0), color: color))
+                sectors.append(
+                    ImageSector(
+                        startDegrees: degreesPerColor * CGFloat(count),
+                        endDegrees: degreesPerColor * (CGFloat(count) + 1.0),
+                        color: color
+                    )
+                )
                 count += 1
             }
-            let uiImage = CircleImage(suggestedFrame: CGRect(x: 0, y: 0, width: 25, height: 25), sectors: sectors, outerStroke: UIColor.lightGray, fill: true, sectorSeparator: false)
+            let uiImage = CircleImage(
+                suggestedFrame: CGRect(x: 0, y: 0, width: 25, height: 25),
+                sectors: sectors,
+                outerStroke: UIColor.lightGray,
+                fill: true,
+                sectorSeparator: false
+            )
             if let uiImage = uiImage {
                 image = Image(uiImage: uiImage)
             }

@@ -25,14 +25,21 @@ struct MarlinDataBottomSheet: View {
         Self._printChanges()
         return
             Color.clear
-            .sheet(isPresented: $showBottomSheet, onDismiss: {
-                NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
-            }) {
-                MarlinBottomSheet(itemList: itemList, focusNotification: .FocusMapOnItem)
-                    .environmentObject(LocationManager.shared())
-                    .presentationDetents([.medium])
-            }
-            
+            .sheet(
+                isPresented: $showBottomSheet,
+                onDismiss: {
+                    NotificationCenter.default.post(
+                        name: .FocusMapOnItem,
+                        object: FocusMapOnItemNotification(item: nil)
+                    )
+                },
+                content: {
+                    MarlinBottomSheet(itemList: itemList, focusNotification: .FocusMapOnItem)
+                        .environmentObject(LocationManager.shared())
+                        .presentationDetents([.medium])
+                }
+            )
+
             .onReceive(mapItemsTappedPub) { output in
                 guard let notification = output.object as? MapItemsTappedNotification else {
                     return
@@ -48,14 +55,18 @@ struct MarlinDataBottomSheet: View {
                     }
                 }
                 
-                bottomSheetItems += self.handleTappedItems(items: notification.items, mapName: notification.mapName, zoom: notification.zoom)
+                bottomSheetItems += self.handleTappedItems(
+                    items: notification.items,
+                    mapName: notification.mapName,
+                    zoom: notification.zoom
+                )
                 if bottomSheetItems.count == 0 {
                     return
                 }
                 itemList.bottomSheetItems = bottomSheetItems
                 showBottomSheet.toggle()
             }
-            .onReceive(dismissBottomSheetPub) { output in
+            .onReceive(dismissBottomSheetPub) { _ in
                 showBottomSheet = false
             }
     }
@@ -81,7 +92,11 @@ struct MarlinBottomSheet <Content: View>: View {
         
     let contentBuilder: (_ item: any DataSourceViewBuilder) -> Content
     
-    init(itemList: BottomSheetItemList, focusNotification: NSNotification.Name, @ViewBuilder contentBuilder: @escaping (_ item: any DataSourceViewBuilder) -> Content) {
+    init(
+        itemList: BottomSheetItemList,
+        focusNotification: NSNotification.Name,
+        @ViewBuilder contentBuilder: @escaping (_ item: any DataSourceViewBuilder) -> Content
+    ) {
         self.itemList = itemList
         self.contentBuilder = contentBuilder
         self.focusNotification = focusNotification
@@ -90,7 +105,8 @@ struct MarlinBottomSheet <Content: View>: View {
     init(itemList: BottomSheetItemList, focusNotification: NSNotification.Name) where Content == AnyView {
         self.init(itemList: itemList, focusNotification: focusNotification) { item in
             AnyView(
-                // TODO: need a way to specify views for the models, maybe just move the data source view builder stuff to the models
+                // TODO: need a way to specify views for the models, 
+                // maybe just move the data source view builder stuff to the models
                 item.summary
                     .setShowMoreDetails(true)
                     .setShowSectionHeader(true)
@@ -99,13 +115,11 @@ struct MarlinBottomSheet <Content: View>: View {
         }
     }
 
-    
-    //action: @escaping () -> Void
     @ViewBuilder
     private var rectangle: some View {
         if let item = itemList.bottomSheetItems?[selectedItem].item {
             Rectangle()
-                .fill(Color(type(of:item).definition.color))
+                .fill(Color(type(of: item).definition.color))
                 .frame(maxWidth: 8, maxHeight: .infinity)
         }
     }
@@ -126,18 +140,24 @@ struct MarlinBottomSheet <Content: View>: View {
                         
                         if bottomSheetItems.count > 1 {
                             HStack(spacing: 8) {
-                                Button(action: {
-                                    withAnimation {
-                                        selectedItem = max(0, selectedItem - 1)
-                                    }
-                                }) {
-                                    Label(
-                                        title: {},
-                                        icon: { Image(systemName: "chevron.left")
+                                Button(
+                                    action: {
+                                        withAnimation {
+                                            selectedItem = max(0, selectedItem - 1)
+                                        }
+                                    },
+                                    label: {
+                                        Label(
+                                            title: {},
+                                            icon: { 
+                                                Image(systemName: "chevron.left")
                                                 .renderingMode(.template)
-                                                .foregroundColor(selectedItem != 0 ? Color.primaryColorVariant : Color.disabledColor)
+                                                .foregroundColor(selectedItem != 0
+                                                                 ? Color.primaryColorVariant : Color.disabledColor
+                                                )
                                         })
-                                }
+                                    }
+                                )
                                 .buttonStyle(MaterialButtonStyle())
                                 .accessibilityElement()
                                 .accessibilityLabel("previous")
@@ -146,18 +166,23 @@ struct MarlinBottomSheet <Content: View>: View {
                                     .font(Font.caption)
                                     .foregroundColor(Color.onSurfaceColor.opacity(0.6))
                                 
-                                Button(action: {
-                                    withAnimation {
-                                        selectedItem = min(pages - 1, selectedItem + 1)
-                                    }
-                                }) {
-                                    Label(
-                                        title: {},
-                                        icon: { Image(systemName: "chevron.right")
+                                Button(
+                                    action: {
+                                        withAnimation {
+                                            selectedItem = min(pages - 1, selectedItem + 1)
+                                        }
+                                    },
+                                    label: {
+                                        Label(
+                                            title: {},
+                                            icon: { 
+                                                Image(systemName: "chevron.right")
                                                 .renderingMode(.template)
-                                                .foregroundColor(pages - 1 != selectedItem ? Color.primaryColorVariant : Color.disabledColor)
-                                        })
-                                }
+                                                .foregroundColor(pages - 1 != selectedItem
+                                                                 ? Color.primaryColorVariant : Color.disabledColor)
+                                            })
+                                    }
+                                )
                                 .buttonStyle(MaterialButtonStyle())
                                 .accessibilityElement()
                                 .accessibilityLabel("next")
@@ -166,7 +191,8 @@ struct MarlinBottomSheet <Content: View>: View {
                     }
                 }
                 
-                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1, let item = itemList.bottomSheetItems?[selectedItem] {
+                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1,
+                   let item = itemList.bottomSheetItems?[selectedItem] {
                     if let dataSource = item.item as? (any DataSourceViewBuilder) {
                         contentBuilder(dataSource)
                             .transition(.opacity)
@@ -193,16 +219,34 @@ struct MarlinBottomSheet <Content: View>: View {
                 .ignoresSafeArea()
             )
             .onChange(of: selectedItem) { item in
-                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1, let bottomSheetItem = itemList.bottomSheetItems?[selectedItem], let item = bottomSheetItem.item as? Locatable {
-                    NotificationCenter.default.post(name: focusNotification, object: FocusMapOnItemNotification(item: item, zoom: bottomSheetItem.zoom, mapName: bottomSheetItem.mapName))
+                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1,
+                   let bottomSheetItem = itemList.bottomSheetItems?[selectedItem],
+                    let item = bottomSheetItem.item as? Locatable {
+                    NotificationCenter.default.post(
+                        name: focusNotification,
+                        object: FocusMapOnItemNotification(
+                            item: item,
+                            zoom: bottomSheetItem.zoom,
+                            mapName: bottomSheetItem.mapName
+                        )
+                    )
                 }
                 // TODO: if itemKey and dataSourceKey focus properly
             }
             .onAppear {
-                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1, let bottomSheetItem = itemList.bottomSheetItems?[selectedItem], let item = bottomSheetItem.item as? Locatable {
-                    NotificationCenter.default.post(name: focusNotification, object: FocusMapOnItemNotification(item: item, zoom: bottomSheetItem.zoom, mapName: bottomSheetItem.mapName))
+                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1,
+                   let bottomSheetItem = itemList.bottomSheetItems?[selectedItem],
+                   let item = bottomSheetItem.item as? Locatable {
+                    NotificationCenter.default.post(
+                        name: focusNotification,
+                        object: FocusMapOnItemNotification(
+                            item: item,
+                            zoom: bottomSheetItem.zoom,
+                            mapName: bottomSheetItem.mapName
+                        )
+                    )
                     if let dataSource = item as? DataSource {
-                        Metrics.shared.dataSourceBottomSheet(dataSource: type(of:dataSource).definition)
+                        Metrics.shared.dataSourceBottomSheet(dataSource: type(of: dataSource).definition)
                     }
                 }
                 // TODO: if itemKey and dataSourceKey focus properly

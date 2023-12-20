@@ -29,7 +29,7 @@ class RouteMixin: MapMixin {
         self.mapState = mapState
         viewModel.$routeMKLine
             .receive(on: RunLoop.main)
-            .sink() { [weak self] mkline in
+            .sink { [weak self] _ in
                 self?.refreshLine()
             }
             .store(in: &cancellable)
@@ -81,8 +81,15 @@ struct RouteMapView: View {
     
     var body: some View {
         VStack {
-            MarlinMap(notificationOnTap: .RouteMapTapped, notificationOnLongPress: .RouteMapLongPress, focusNotification: .RouteFocus, name: "Marlin Map", mixins: mixins, mapState: mapState)
-                .ignoresSafeArea()
+            MarlinMap(
+                notificationOnTap: .RouteMapTapped,
+                notificationOnLongPress: .RouteMapLongPress,
+                focusNotification: .RouteFocus,
+                name: "Marlin Map",
+                mixins: mixins,
+                mapState: mapState
+            )
+            .ignoresSafeArea()
         }
         .onAppear {
             mixins.mixins.append(RouteMixin(viewModel: routeViewModel))
@@ -132,29 +139,38 @@ struct RouteMapView: View {
             }
 
         }
-        .sheet(isPresented: $showBottomSheet, onDismiss: {
-            NSLog("dismissed")
-            NotificationCenter.default.post(name: .RouteFocus, object: FocusMapOnItemNotification(item: nil))
-        }) {
-            MarlinBottomSheet(itemList: itemList, focusNotification: .RouteFocus) { dataSourceViewBuilder in
-                VStack {
-                    Text(dataSourceViewBuilder.itemTitle)
-                    HStack {
-                        Button("Add To Route") {
-                            print("add to route")
-                            if let exportable = dataSourceViewBuilder as? any GeoJSONExportable {
-                                if let model = DataSourceType.fromKey(type(of:exportable).definition.key)?.createModel(dataSource: dataSourceViewBuilder) as? any GeoJSONExportable {
-                                    routeViewModel.addWaypoint(waypoint: model)
+        .sheet(
+            isPresented: $showBottomSheet,
+            onDismiss: {
+                NSLog("dismissed")
+                NotificationCenter.default.post(
+                    name: .RouteFocus,
+                    object: FocusMapOnItemNotification(item: nil)
+                )
+            },
+            content: {
+                MarlinBottomSheet(itemList: itemList, focusNotification: .RouteFocus) { dataSourceViewBuilder in
+                    VStack {
+                        Text(dataSourceViewBuilder.itemTitle)
+                        HStack {
+                            Button("Add To Route") {
+                                print("add to route")
+                                if let exportable = dataSourceViewBuilder as? any GeoJSONExportable {
+                                    if let model = DataSourceType
+                                        .fromKey(type(of: exportable).definition.key)?
+                                        .createModel(dataSource: dataSourceViewBuilder) as? any GeoJSONExportable {
+                                        routeViewModel.addWaypoint(waypoint: model)
+                                    }
                                 }
                             }
+                            .buttonStyle(MaterialButtonStyle(type: .text))
                         }
-                        .buttonStyle(MaterialButtonStyle(type:.text))
                     }
                 }
+                .environmentObject(LocationManager.shared())
+                .presentationDetents([.height(150)])
             }
-            .environmentObject(LocationManager.shared())
-            .presentationDetents([.height(150)])
-        }
+        )
     }
     
     @ViewBuilder

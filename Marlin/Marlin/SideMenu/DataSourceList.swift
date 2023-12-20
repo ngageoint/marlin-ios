@@ -651,13 +651,19 @@ class DataSourceList: ObservableObject {
         })))
         _mappedDataSources = Published(initialValue: Array(allTabs.filter({ item in
             // no filtering Navigational Warnings for right now..
-            UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) && UserDefaults.standard.showOnMap(key: item.key)
+            UserDefaults.standard
+                .dataSourceEnabled(item.dataSource.definition)
+            && UserDefaults.standard
+                .showOnMap(key: item.key)
         })))
         
         _mappedFilterableDataSources = Published(initialValue: Array(
             allTabs.filter({ item in
                 // no filtering Navigational Warnings for right now..
-                UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) && UserDefaults.standard.showOnMap(key: item.key)
+                UserDefaults.standard
+                    .dataSourceEnabled(item.dataSource.definition)
+                && UserDefaults.standard
+                    .showOnMap(key: item.key)
             })
             .compactMap({ item in
                 return DataSourceDefinitions.filterableFromDefintion(item.dataSource.definition)
@@ -667,27 +673,43 @@ class DataSourceList: ObservableObject {
             })
         ))
         
+        setupMappedDataSourcesUpdatedNotification()
+    }
+
+    func setupMappedDataSourcesUpdatedNotification() {
         NotificationCenter.default.publisher(for: .MappedDataSourcesUpdated)
             .sink(receiveValue: { [weak self] _ in
                 guard let allTabs = self?.allTabs else {
                     return
                 }
-                self?._mappedDataSources = Published(initialValue: Array(allTabs.filter({ item in
-                    UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) && UserDefaults.standard.showOnMap(key: item.key)
-                })))
-                self?._mappedFilterableDataSources = Published(initialValue: Array(allTabs.filter({ item in
-                    // no filtering Navigational Warnings for right now..
-                    UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) && UserDefaults.standard.showOnMap(key: item.key)
-                })
-                    .compactMap({ item in
-                        DataSourceDefinitions.filterableFromDefintion(item.dataSource.definition)
-                    })
-                                                                                  ))
+                self?._mappedDataSources = Published(
+                    initialValue: Array(
+                        allTabs.filter({ item in
+                            UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) &&
+                            UserDefaults.standard.showOnMap(key: item.key)
+                        }
+                                      )
+                    )
+                )
+                self?._mappedFilterableDataSources = Published(
+                    initialValue: Array(
+                        allTabs.filter({ item in
+                            // no filtering Navigational Warnings for right now..
+                            UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) &&
+                            UserDefaults.standard.showOnMap(key: item.key)
+                        }
+                                      )
+                        .compactMap({ item in
+                            DataSourceDefinitions.filterableFromDefintion(item.dataSource.definition)
+                        }
+                                   )
+                    )
+                )
                 self?.objectWillChange.send()
             })
             .store(in: &cancellable)
     }
-    
+
     func addItemToTabs(dataSourceItem: DataSourceItem, position: Int) {
         nonTabs.removeAll { item in
             item == dataSourceItem
@@ -703,7 +725,7 @@ class DataSourceList: ObservableObject {
         if let last = tabs.last {
             
             // if they are above max tabs move the last tab to the non tabs
-            if tabs.count > DataSourceList.MAX_TABS{
+            if tabs.count > DataSourceList.MAX_TABS {
                 tabs.removeLast()
                 nonTabs.insert(last, at: 0)
             }
@@ -775,11 +797,19 @@ class DataSourceItem: ObservableObject, Identifiable, Hashable, Equatable {
     
     init(dataSource: any DataSource.Type) {
         self.dataSource = dataSource
-        self._order = AppStorage(wrappedValue: 0, "\(dataSource.definition.key)Order")
-        self._showOnMap = AppStorage(wrappedValue: dataSource.definition.mappable, "showOnMap\(dataSource.definition.key)")
-        self._filterData = AppStorage(wrappedValue: Data(), "\(dataSource.definition.key)Filter")
-        self._enabled = AppStorage(wrappedValue: UserDefaults.standard.dataSourceEnabled(dataSource.definition), "\(dataSource.definition.key)DataSourceEnabled")
-        
+        self._order = AppStorage(
+            wrappedValue: 0,
+            "\(dataSource.definition.key)Order")
+        self._showOnMap = AppStorage(
+            wrappedValue: dataSource.definition.mappable,
+            "showOnMap\(dataSource.definition.key)")
+        self._filterData = AppStorage(
+            wrappedValue: Data(),
+            "\(dataSource.definition.key)Filter")
+        self._enabled = AppStorage(
+            wrappedValue: UserDefaults.standard.dataSourceEnabled(dataSource.definition),
+            "\(dataSource.definition.key)DataSourceEnabled")
+
     }
     
     var description: String {

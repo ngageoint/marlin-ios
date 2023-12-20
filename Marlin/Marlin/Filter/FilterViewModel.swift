@@ -40,11 +40,25 @@ class FilterViewModel: ObservableObject, Identifiable {
     }
     
     func addFilterParameter(viewModel: DataSourcePropertyFilterViewModel) {
-        filters.append(DataSourceFilterParameter(property: viewModel.dataSourceProperty, comparison: viewModel.selectedComparison, valueString: viewModel.valueString, valueDate: viewModel.valueDate, valueInt: viewModel.valueInt, valueDouble: viewModel.valueDouble, valueLatitude: viewModel.valueLatitude, valueLongitude: viewModel.valueLongitude, valueMinLatitude: viewModel.valueMinLatitude, valueMinLongitude: viewModel.valueMinLongitude, valueMaxLatitude: viewModel.valueMaxLatitude, valueMaxLongitude: viewModel.valueMaxLongitude, windowUnits: viewModel.windowUnits))
+        filters.append(
+            DataSourceFilterParameter(
+                property: viewModel.dataSourceProperty,
+                comparison: viewModel.selectedComparison,
+                valueString: viewModel.valueString,
+                valueDate: viewModel.valueDate,
+                valueInt: viewModel.valueInt,
+                valueDouble: viewModel.valueDouble,
+                valueLatitude: viewModel.valueLatitude,
+                valueLongitude: viewModel.valueLongitude,
+                valueMinLatitude: viewModel.valueMinLatitude,
+                valueMinLongitude: viewModel.valueMinLongitude,
+                valueMaxLatitude: viewModel.valueMaxLatitude,
+                valueMaxLongitude: viewModel.valueMaxLongitude,
+                windowUnits: viewModel.windowUnits))
         viewModel.valueDate = Date()
         viewModel.valueString = ""
-        viewModel.valueDouble = nil //0.0
-        viewModel.valueInt = nil// 0
+        viewModel.valueDouble = nil // 0.0
+        viewModel.valueInt = nil // 0
         viewModel.valueLongitude = nil
         viewModel.valueLatitude = nil
         viewModel.valueLatitudeString = ""

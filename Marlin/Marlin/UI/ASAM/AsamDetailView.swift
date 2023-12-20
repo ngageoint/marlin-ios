@@ -30,8 +30,12 @@ struct AsamDetailView: View {
                         .padding(.bottom, -8)
                         .accessibilityElement(children: .contain)
                     if let asam = viewModel.asam {
-                        DataSourceLocationMapView(dataSourceLocation: asam, mapName: "Asam Detail Map", mixins: [AsamMap<AsamModel>(objects: [asam])])
-                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                        DataSourceLocationMapView(
+                            dataSourceLocation: asam,
+                            mapName: "Asam Detail Map",
+                            mixins: [AsamMap<AsamModel>(objects: [asam])]
+                        )
+                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     if let asam = viewModel.asam {
 //                        Group {
@@ -64,7 +68,7 @@ struct AsamDetailView: View {
         .dataSourceDetailList()
         .navigationTitle(viewModel.asam?.reference ?? Asam.dataSourceName)
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: reference) { newValue in
+        .onChange(of: reference) { _ in
             viewModel.getAsam(reference: reference, waypointURI: waypointURI)
         }
         .onAppear {

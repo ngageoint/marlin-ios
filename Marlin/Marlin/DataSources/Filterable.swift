@@ -15,7 +15,10 @@ protocol Filterable {
     var defaultSort: [DataSourceSortParameter] { get }
     var defaultFilter: [DataSourceFilterParameter] { get }
     var locatableClass: Locatable.Type? { get }
-    func fetchRequest(filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>?
+    func fetchRequest(
+        filters: [DataSourceFilterParameter]?,
+        commonFilters: [DataSourceFilterParameter]?
+    ) -> NSFetchRequest<NSFetchRequestResult>?
 }
 
 extension Filterable {
@@ -26,10 +29,15 @@ extension Filterable {
         nil
     }
     
-    func fetchRequest(filters: [DataSourceFilterParameter]?, commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<NSFetchRequestResult>? {
+    func fetchRequest(
+        filters: [DataSourceFilterParameter]?,
+        commonFilters: [DataSourceFilterParameter]?
+    ) -> NSFetchRequest<NSFetchRequestResult>? {
         // TODO: this should take a repostory
-        var dataSourceNSManaged: NSManagedObject.Type? = self as? NSManagedObject.Type ?? DataSourceType.fromKey(definition.key)?.toDataSource() as? NSManagedObject.Type
-        
+        let dataSourceNSManaged: NSManagedObject.Type? = 
+            self as? NSManagedObject.Type ??
+            DataSourceType.fromKey(definition.key)?.toDataSource() as? NSManagedObject.Type
+
         guard let dataSourceNSManaged = dataSourceNSManaged else {
             return nil
         }

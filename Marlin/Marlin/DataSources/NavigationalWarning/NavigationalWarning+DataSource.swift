@@ -23,14 +23,30 @@ extension NavigationalWarning: Bookmarkable {
     
     static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
         if let split = itemKey?.split(separator: "--"), split.count == 3 {
-            return getNavigationalWarning(context: context, msgYear: Int64(split[0]) ?? 0, msgNumber: Int64(split[1]) ?? 0, navArea: "\(split[2])")
+            return getNavigationalWarning(
+                context: context,
+                msgYear: Int64(split[0]) ?? 0,
+                msgNumber: Int64(split[1]) ?? 0,
+                navArea: "\(split[2])"
+            )
         }
         return nil
     }
     
-    static func getNavigationalWarning(context: NSManagedObjectContext, msgYear: Int64, msgNumber: Int64, navArea: String?) -> NavigationalWarning? {
+    static func getNavigationalWarning(
+        context: NSManagedObjectContext,
+        msgYear: Int64,
+        msgNumber: Int64,
+        navArea: String?
+    ) -> NavigationalWarning? {
         if let navArea = navArea {
-            return try? context.fetchFirst(NavigationalWarning.self, predicate: NSPredicate(format: "msgYear = %d AND msgNumber = %d AND navArea = %@", argumentArray: [msgYear, msgNumber, navArea]))
+            return try? context.fetchFirst(
+                NavigationalWarning.self,
+                predicate: NSPredicate(
+                    format: "msgYear = %d AND msgNumber = %d AND navArea = %@",
+                    argumentArray: [msgYear, msgNumber, navArea]
+                )
+            )
         }
         return nil
     }
@@ -51,8 +67,105 @@ extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportabl
                 
         return collection
     }
-    
-    func locationGeometry(location: [String : String]) -> SFGeometry? {
+
+    func geodesicLine(
+        firstPoint: CLLocationCoordinate2D?,
+        flipped: inout SFLineString?,
+        sfLineString: SFLineString,
+        previousPoint: CLLocationCoordinate2D,
+        currentPoint: CLLocationCoordinate2D
+    ) {
+        var coords: [CLLocationCoordinate2D] = [previousPoint, currentPoint]
+        let geodesicLine = MKGeodesicPolyline(coordinates: &coords, count: 2)
+
+        let glpoints = geodesicLine.points()
+
+        for glpoint in UnsafeBufferPointer(start: glpoints, count: geodesicLine.pointCount) {
+            let currentGlPoint = glpoint.coordinate
+            if let firstPoint = firstPoint,
+               abs(firstPoint.longitude - currentGlPoint.longitude) > 90 {
+                if flipped == nil {
+                    flipped = SFLineString()
+                }
+                flipped?.addPoint(
+                    SFPoint(
+                        xValue: currentGlPoint.longitude,
+                        andYValue: currentGlPoint.latitude
+                    )
+                )
+
+            } else {
+                sfLineString.addPoint(
+                    SFPoint(
+                        xValue: currentGlPoint.longitude,
+                        andYValue: currentGlPoint.latitude
+                    )
+                )
+
+            }
+        }
+    }
+
+    func locationPolygon(polygon: MKPolygon) -> SFGeometry? {
+        let sfPoly = SFPolygon()
+        var previousPoint: CLLocationCoordinate2D?
+        var firstPoint: CLLocationCoordinate2D?
+        var flipped: SFLineString?
+
+        if let sfLineString = SFLineString() {
+            for point in polygon.points().toArray(capacity: polygon.pointCount) {
+                if firstPoint == nil {
+                    firstPoint = point.coordinate
+                }
+                if let previous = previousPoint {
+                    let currentPoint = point.coordinate
+                    geodesicLine(
+                        firstPoint: firstPoint,
+                        flipped: &flipped,
+                        sfLineString: sfLineString,
+                        previousPoint: previous,
+                        currentPoint: currentPoint
+                    )
+                    previousPoint = currentPoint
+                } else {
+                    previousPoint = point.coordinate
+                }
+            }
+
+            // now draw the geodesic line between the last and the first
+            if let previousPoint = previousPoint, let firstPoint = firstPoint {
+                geodesicLine(
+                    firstPoint: firstPoint,
+                    flipped: &flipped,
+                    sfLineString: sfLineString,
+                    previousPoint: previousPoint,
+                    currentPoint: firstPoint
+                )
+            }
+
+            sfPoly?.addRing(sfLineString)
+        }
+        if let flipped = flipped, let sfPoly = sfPoly, let flippedPoly = SFPolygon(ring: flipped) {
+            return SFGeometryCollection(geometries: [flippedPoly, sfPoly])
+        }
+        return sfPoly
+    }
+
+    func locationLine(polyline: MKPolyline) -> SFGeometry? {
+        let sfLineString = SFLineString()
+
+        for point in polyline.points().toArray(capacity: polyline.pointCount) {
+            sfLineString?.addPoint(
+                SFPoint(
+                    xValue: point.coordinate.longitude,
+                    andYValue: point.coordinate.latitude
+                )
+            )
+        }
+        return sfLineString
+    }
+
+    func locationGeometry(location: [String: String]) -> SFGeometry? {
         guard let wkt = location["wkt"] else {
             return nil
         }
@@ -62,83 +175,11 @@ extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportabl
         }
         if let shape = MKShape.fromWKT(wkt: wkt, distance: distance) {
             if let polygon = shape as? MKPolygon {
-                let sfPoly = SFPolygon()
-                var previousPoint: CLLocationCoordinate2D?
-                var firstPoint: CLLocationCoordinate2D?
-                var flipped: SFLineString?
-
-                if let sfLineString = SFLineString() {
-                    for point in polygon.points().toArray(capacity: polygon.pointCount) {
-                        if firstPoint == nil {
-                            firstPoint = point.coordinate
-                        }
-                        if let previous = previousPoint {
-                            let currentPoint = point.coordinate
-                            var coords: [CLLocationCoordinate2D] = [previous, currentPoint]
-                            let gl = MKGeodesicPolyline(coordinates: &coords, count: 2)
-
-                            let glpoints = gl.points()
-
-                            for glpoint in UnsafeBufferPointer(start: glpoints, count: gl.pointCount) {
-                                let currentGlPoint = glpoint.coordinate
-                                if let firstPoint = firstPoint, abs(firstPoint.longitude - currentGlPoint.longitude) > 90 {
-                                    if flipped == nil {
-                                        flipped = SFLineString()
-                                    }
-                                    flipped?.addPoint(SFPoint(xValue: currentGlPoint.longitude, andYValue: currentGlPoint.latitude))
-
-                                } else {
-                                    sfLineString.addPoint(SFPoint(xValue: currentGlPoint.longitude, andYValue: currentGlPoint.latitude))
-
-                                }
-                            }
-                            previousPoint = currentPoint
-                        } else {
-                            previousPoint = point.coordinate
-                        }
-                    }
-                    
-                    // now draw the geodesic line between the last and the first
-                    if let previousPoint = previousPoint, let firstPoint = firstPoint {
-                        var coords: [CLLocationCoordinate2D] = [previousPoint, firstPoint]
-                        let gl = MKGeodesicPolyline(coordinates: &coords, count: 2)
-                        
-                        let glpoints = gl.points()
-                        
-                        for glpoint in UnsafeBufferPointer(start: glpoints, count: gl.pointCount) {
-                            let currentGlPoint = glpoint.coordinate
-                            if abs(firstPoint.longitude - currentGlPoint.longitude) > 90 {
-                                if flipped == nil {
-                                    flipped = SFLineString()
-                                }
-                                flipped?.addPoint(SFPoint(xValue: currentGlPoint.longitude, andYValue: currentGlPoint.latitude))
-                                
-                            } else {
-                                sfLineString.addPoint(SFPoint(xValue: currentGlPoint.longitude, andYValue: currentGlPoint.latitude))
-                            }
-                        }
-                    }
-                    
-                    sfPoly?.addRing(sfLineString)
-                }
-                if let flipped = flipped {
-                    let flippedPoly = SFPolygon(ring: flipped)
-                    return SFGeometryCollection(geometries: [flippedPoly, sfPoly])
-                }
-                return sfPoly
+                return locationPolygon(polygon: polygon)
             } else if let polyline = shape as? MKGeodesicPolyline {
-                let sfLineString = SFLineString()
-                for point in polyline.points().toArray(capacity: polyline.pointCount) {
-                    sfLineString?.addPoint(SFPoint(xValue: point.coordinate.longitude, andYValue: point.coordinate.latitude))
-                }
-                return sfLineString
+                return locationLine(polyline: polyline)
             } else if let polyline = shape as? MKPolyline {
-                let sfLineString = SFLineString()
-
-                for point in polyline.points().toArray(capacity: polyline.pointCount) {
-                    sfLineString?.addPoint(SFPoint(xValue: point.coordinate.longitude, andYValue: point.coordinate.latitude))
-                }
-                return sfLineString
+                return locationLine(polyline: polyline)
             } else if let point = shape as? MKPointAnnotation {
                 return SFPoint(xValue: point.coordinate.longitude, andYValue: point.coordinate.latitude)
             } else if let circle = shape as? MKCircle {
@@ -151,7 +192,10 @@ extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportabl
     
     static func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
         return NSPredicate(
-            format: "(maxLatitude >= %lf AND minLatitude <= %lf AND maxLongitude >= %lf AND minLongitude <= %lf) OR minLongitude < -180 OR maxLongitude > 180", minLat, maxLat, minLon, maxLon
+            format: """
+                (maxLatitude >= %lf AND minLatitude <= %lf AND maxLongitude >= %lf AND minLongitude <= %lf) \
+                OR minLongitude < -180 OR maxLongitude > 180
+            """, minLat, maxLat, minLon, maxLon
         )
     }
     
@@ -162,11 +206,13 @@ extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportabl
     }
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("Warnings", comment: "Warnings data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Navigational Warnings", comment: "Warnings data source display name")
+    static var fullDataSourceName: String = 
+    NSLocalizedString("Navigational Warnings",
+                      comment: "Warnings data source display name")
     static var key: String = "navWarning"
     static var metricsKey: String = "navigational_warnings"
     static var color: UIColor = UIColor(argbValue: 0xFFD32F2F)
-    static var imageName: String? = nil
+    static var imageName: String?
     static var systemImageName: String? = "exclamationmark.triangle.fill"
     static var imageScale: CGFloat = 1.0
     
@@ -200,7 +246,10 @@ extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportabl
                     }
                 }
                 
-                NotificationCenter.default.post(Notification(name: .DataSourceProcessed, object: DataSourceUpdatedNotification(key: NavigationalWarning.key)))
+                NotificationCenter.default.post(
+                    Notification(
+                        name: .DataSourceProcessed,
+                        object: DataSourceUpdatedNotification(key: NavigationalWarning.key)))
             }
         }
     }
@@ -209,8 +258,21 @@ extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportabl
         return NavigationalWarning.color
     }
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Navigational Area", key: "navArea", type: .string), ascending: false), DataSourceSortParameter(property:DataSourceProperty(name: "Issue Date", key: "issueDate", type: .date), ascending: false)]
-    
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Navigational Area",
+                key: "navArea",
+                type: .string),
+            ascending: false),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Issue Date",
+                key: "issueDate",
+                type: .date),
+            ascending: false)
+    ]
+
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
@@ -224,7 +286,7 @@ extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportabl
 
 extension NavigationalWarning: BatchImportable {
     
-    static var seedDataFiles: [String]? = nil
+    static var seedDataFiles: [String]?
     static var decodableRoot: Decodable.Type = NavigationalWarningPropertyContainer.self
     
     static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
@@ -233,7 +295,9 @@ extension NavigationalWarning: BatchImportable {
         }
         let count = value.broadcastWarn.count
         NSLog("Received \(count) \(Self.key) records.")
-        return try await Self.importRecords(from: value.broadcastWarn, taskContext: PersistenceController.current.newTaskContext())
+        return try await Self.importRecords(
+            from: value.broadcastWarn,
+            taskContext: PersistenceController.current.newTaskContext())
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -242,7 +306,10 @@ extension NavigationalWarning: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every hour
-        return UserDefaults.standard.dataSourceEnabled(NavigationalWarning.definition) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(NavigationalWarning.definition)
+        return UserDefaults.standard
+            .dataSourceEnabled(NavigationalWarning.definition)
+        && (Date().timeIntervalSince1970 - (60 * 60)) >
+        UserDefaults.standard.lastSyncTimeSeconds(NavigationalWarning.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [NavigationalWarningProperties]) -> NSBatchInsertRequest {
@@ -250,7 +317,9 @@ extension NavigationalWarning: BatchImportable {
         let total = propertyList.count
         
         // Provide one dictionary at a time when the closure is called.
-        let batchInsertRequest = NSBatchInsertRequest(entity: NavigationalWarning.entity(), dictionaryHandler: { dictionary in
+        let batchInsertRequest = NSBatchInsertRequest(
+            entity: NavigationalWarning.entity(),
+            dictionaryHandler: { dictionary in
             guard index < total else { return true }
             let propertyDictionary = propertyList[index].dictionaryValue
             dictionary.addEntries(from: propertyDictionary.mapValues({ value in
@@ -258,7 +327,7 @@ extension NavigationalWarning: BatchImportable {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             
             index += 1
             return false
@@ -267,7 +336,9 @@ extension NavigationalWarning: BatchImportable {
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [NavigationalWarningProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(
+        from propertiesList: [NavigationalWarningProperties],
+        taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

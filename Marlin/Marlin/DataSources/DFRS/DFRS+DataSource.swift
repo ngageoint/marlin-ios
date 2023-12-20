@@ -27,16 +27,33 @@ extension DFRS: Locatable {
     }
     
     static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("DFRS", comment: "Radio Direction Finders and Radar station data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Radio Direction Finders & Radar Stations", comment: "Radio Direction Finders and Radar station data source display name")
+    static var dataSourceName: String = 
+    NSLocalizedString("DFRS",
+                      comment: "Radio Direction Finders and Radar station data source display name")
+    static var fullDataSourceName: String = 
+    NSLocalizedString("Radio Direction Finders & Radar Stations",
+                      comment: "Radio Direction Finders and Radar station data source display name")
     static var key: String = "dfrs"
     static var metricsKey: String = "dfrs"
-    static var imageName: String? = nil
+    static var imageName: String?
     static var systemImageName: String? = "antenna.radiowaves.left.and.right.circle"
     static var color: UIColor = UIColor(argbValue: 0xFFFFB300)
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Area Name", key: #keyPath(DFRS.areaName), type: .string), ascending: true), DataSourceSortParameter(property:DataSourceProperty(name: "Station Number", key: #keyPath(DFRS.stationNumber), type: .double), ascending: true)]
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Area Name",
+                key: #keyPath(DFRS.areaName),
+                type: .string),
+            ascending: true),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Station Number",
+                key: #keyPath(DFRS.stationNumber),
+                type: .double),
+            ascending: true)
+    ]
     static var defaultFilter: [DataSourceFilterParameter] = []
     
     static var properties: [DataSourceProperty] = [
@@ -55,7 +72,7 @@ extension DFRS: Locatable {
         DataSourceProperty(name: "Rx Latitude", key: #keyPath(DFRS.rxLatitude), type: .latitude),
         DataSourceProperty(name: "Rx Longitude", key: #keyPath(DFRS.rxLongitude), type: .longitude),
         DataSourceProperty(name: "Tx Latitude", key: #keyPath(DFRS.txLatitude), type: .latitude),
-        DataSourceProperty(name: "Tx Longitude", key: #keyPath(DFRS.txLongitude), type: .longitude),
+        DataSourceProperty(name: "Tx Longitude", key: #keyPath(DFRS.txLongitude), type: .longitude)
     ]
     
     static var dateFormatter: DateFormatter {
@@ -68,7 +85,18 @@ extension DFRS: Locatable {
     
     static func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
         NSPredicate(
-            format: "(rxPosition != nil AND rxLatitude >= %lf AND rxLatitude <= %lf AND rxLongitude >= %lf AND rxLongitude <= %lf) OR (txPosition != nil AND txLatitude >= %lf AND txLatitude <= %lf AND txLongitude >= %lf AND txLongitude <= %lf)", minLat, maxLat, minLon, maxLon, minLat, maxLat, minLon, maxLon
+            format: """
+                (rxPosition != nil 
+                AND rxLatitude >= %lf
+                AND rxLatitude <= %lf
+                AND rxLongitude >= %lf
+                AND rxLongitude <= %lf)
+                OR (txPosition != nil
+                AND txLatitude >= %lf
+                AND txLatitude <= %lf
+                AND txLongitude >= %lf
+                AND txLongitude <= %lf)
+            """, minLat, maxLat, minLon, maxLon, minLat, maxLat, minLon, maxLon
         )
     }
 }
@@ -83,7 +111,10 @@ extension DFRS: BatchImportable {
         }
         let count = value.dfrs.count
         NSLog("Received \(count) \(Self.key) records.")
-        return try await Self.importRecords(from: value.dfrs, taskContext: PersistenceController.current.newTaskContext())
+        return try await Self.importRecords(
+            from: value.dfrs,
+            taskContext: PersistenceController.current.newTaskContext()
+        )
     }
     
     static func dataRequest() -> [MSIRouter] {
@@ -92,7 +123,10 @@ extension DFRS: BatchImportable {
     
     static func shouldSync() -> Bool {
         // sync once every week
-        return UserDefaults.standard.dataSourceEnabled(DFRS.definition) && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(DFRS.definition)
+        return UserDefaults.standard
+            .dataSourceEnabled(DFRS.definition)
+        && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) >
+            UserDefaults.standard.lastSyncTimeSeconds(DFRS.definition)
     }
     
     static func newBatchInsertRequest(with propertyList: [DFRSProperties]) -> NSBatchInsertRequest {
@@ -108,14 +142,17 @@ extension DFRS: BatchImportable {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             index += 1
             return false
         })
         return batchInsertRequest
     }
     
-    static func importRecords(from propertiesList: [DFRSProperties], taskContext: NSManagedObjectContext) async throws -> Int {
+    static func importRecords(
+        from propertiesList: [DFRSProperties],
+        taskContext: NSManagedObjectContext
+    ) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         
         // Add name and author to identify source of persistent history changes.

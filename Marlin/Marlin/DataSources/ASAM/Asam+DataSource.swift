@@ -48,19 +48,38 @@ extension Asam: DataSource, Locatable, GeoPackageExportable, GeoJSONExportable {
     }
     
     static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Anti-Shipping Activity Messages", comment: "ASAM data source full display name")
+    static var dataSourceName: String = 
+    NSLocalizedString("ASAM",
+                      comment: "ASAM data source display name")
+    static var fullDataSourceName: String =
+    NSLocalizedString("Anti-Shipping Activity Messages",
+                      comment: "ASAM data source full display name")
     static var key: String = DataSourceType.asam.rawValue
     static var metricsKey: String = "asams"
     static var imageName: String? = "asam"
-    static var systemImageName: String? = nil
+    static var systemImageName: String?
     
     static var color: UIColor = .black
     static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
     
-    static var defaultSort: [DataSourceSortParameter] = [DataSourceSortParameter(property:DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), ascending: false)]
-    static var defaultFilter: [DataSourceFilterParameter] = [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last365Days)]
-    
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Date",
+                key: #keyPath(Asam.date),
+                type: .date),
+            ascending: false)
+    ]
+    static var defaultFilter: [DataSourceFilterParameter] = [
+        DataSourceFilterParameter(
+            property: DataSourceProperty(
+                name: "Date",
+                key: #keyPath(Asam.date),
+                type: .date),
+            comparison: .window,
+            windowUnits: DataSourceWindowUnits.last365Days)
+    ]
+
     static var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date),
         DataSourceProperty(name: "Location", key: #keyPath(Asam.mgrs10km), type: .location),
@@ -76,7 +95,9 @@ extension Asam: DataSource, Locatable, GeoPackageExportable, GeoJSONExportable {
     
     static func shouldSync() -> Bool {
         // sync once every hour
-        return UserDefaults.standard.dataSourceEnabled(DataSourceDefinitions.asam.definition) && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(DataSourceDefinitions.asam.definition)
+        return UserDefaults.standard.dataSourceEnabled(DataSourceDefinitions.asam.definition)
+        && (Date().timeIntervalSince1970 - (60 * 60)) >
+        UserDefaults.standard.lastSyncTimeSeconds(DataSourceDefinitions.asam.definition)
     }
 }
 

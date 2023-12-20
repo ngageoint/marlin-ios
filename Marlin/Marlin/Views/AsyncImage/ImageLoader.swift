@@ -39,7 +39,7 @@ class ImageLoader: ObservableObject {
         
         cancellable = MSI.shared.session.request(url,
                    method: .get)
-        .onURLRequestCreation(perform: { request in
+        .onURLRequestCreation(perform: { _ in
             self.onStart()
         })
         .validate()

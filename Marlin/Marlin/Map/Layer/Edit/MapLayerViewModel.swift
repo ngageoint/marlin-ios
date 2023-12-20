@@ -27,7 +27,7 @@ enum RefreshRateUnit: Int, Equatable, CaseIterable {
     case days = 1440
     
     var name: String {
-        switch(self) {
+        switch self {
         case .none:
             return "No Auto Refresh"
         case .minutes:
@@ -50,14 +50,15 @@ extension LayerInfo {
     var id: String { name ?? "" }
     
     var boundingBoxDisplay: String {
-        return "(\((boundingBox?.minLatitude ?? 0).latitudeDisplay), \((boundingBox?.minLongitude ?? 0).longitudeDisplay)) - (\((boundingBox?.maxLatitude ?? 0).latitudeDisplay), \((boundingBox?.maxLongitude ?? 0).longitudeDisplay))"
+        return """
+            (\((boundingBox?.minLatitude ?? 0).latitudeDisplay), \((boundingBox?.minLongitude ?? 0).longitudeDisplay)) \
+            - (\((boundingBox?.maxLatitude ?? 0).latitudeDisplay), \((boundingBox?.maxLongitude ?? 0).longitudeDisplay))
+        """
     }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
-
 }
 
 class TileLayerInfo: LayerInfo, ObservableObject {
@@ -83,7 +84,15 @@ class TileLayerInfo: LayerInfo, ObservableObject {
 
 extension TileLayerInfo {
     convenience init(name: String, minZoom: Int, maxZoom: Int, boundingBox: GPKGBoundingBox) {
-        self.init(name: name, minZoom: minZoom, maxZoom: maxZoom, boundingBox: BoundingBox(minLongitude: boundingBox.minLongitude.doubleValue, maxLongitude: boundingBox.maxLongitude.doubleValue, minLatitude: boundingBox.minLatitude.doubleValue, maxLatitude: boundingBox.maxLatitude.doubleValue))
+        self.init(
+            name: name,
+            minZoom: minZoom,
+            maxZoom: maxZoom,
+            boundingBox: BoundingBox(
+                minLongitude: boundingBox.minLongitude.doubleValue,
+                maxLongitude: boundingBox.maxLongitude.doubleValue,
+                minLatitude: boundingBox.minLatitude.doubleValue,
+                maxLatitude: boundingBox.maxLatitude.doubleValue))
     }
 }
 
@@ -106,7 +115,14 @@ class FeatureLayerInfo: LayerInfo, ObservableObject {
 
 extension FeatureLayerInfo {
     convenience init(name: String, count: Int, boundingBox: GPKGBoundingBox) {
-        self.init(name: name, count: count, boundingBox: BoundingBox(minLongitude: boundingBox.minLongitude.doubleValue, maxLongitude: boundingBox.maxLongitude.doubleValue, minLatitude: boundingBox.minLatitude.doubleValue, maxLatitude: boundingBox.maxLatitude.doubleValue))
+        self.init(
+            name: name,
+            count: count,
+            boundingBox: BoundingBox(
+                minLongitude: boundingBox.minLongitude.doubleValue,
+                maxLongitude: boundingBox.maxLongitude.doubleValue,
+                minLatitude: boundingBox.minLatitude.doubleValue,
+                maxLatitude: boundingBox.maxLatitude.doubleValue))
     }
 }
 
@@ -120,8 +136,8 @@ private extension URL {
         }
     }
     
-    var queryParameters: [String : String] {
-        var queryParameters: [String : String] = [:]
+    var queryParameters: [String: String] {
+        var queryParameters: [String: String] = [:]
         if let components = URLComponents(string: absoluteString) {
             if let queries = components.query?.components(separatedBy: "&") {
                 for query in queries {
@@ -137,6 +153,8 @@ private extension URL {
     }
 }
 
+// TODO: refactor to remove linting error
+// swiftlint:disable type_body_length
 class MapLayerViewModel: ObservableObject, Identifiable {
     var id: String {
         displayName
@@ -207,7 +225,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
         }
     }
     
-    var userUrlParameters: [String : String] {
+    var userUrlParameters: [String: String] {
         var userUrlParameters: [String: String] = [:]
         if let validUrl = URL(string: url) {
             userUrlParameters = validUrl.queryParameters.filter({ element in
@@ -224,7 +242,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
             return nil
         }
         
-        guard let url = URL(string:plainUrl) else {
+        guard let url = URL(string: plainUrl) else {
             return nil
         }
         if layerType == .wms {
@@ -259,7 +277,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
     @Published var visible: Bool = true
     var mapLayer: MapLayer?
     
-    var geoPackage: GPKGGeoPackage?  {
+    var geoPackage: GPKGGeoPackage? {
         didSet {
             populateFileLayers()
         }
@@ -297,9 +315,17 @@ class MapLayerViewModel: ObservableObject, Identifiable {
             for tileTable in geoPackage.tileTables() {
                 if let tileDao = geoPackage.tileDao(withTableName: tileTable) {
                     let transform = SFPGeometryTransform(from: tileDao.projection, andToEpsg: 4326)
-                    let bb: GPKGBoundingBox = tileDao.contents().boundingBox().transform(transform) ?? GPKGBoundingBox.worldWGS84()
+                    let boundingBox: GPKGBoundingBox = tileDao
+                        .contents()
+                        .boundingBox()
+                        .transform(transform) ?? GPKGBoundingBox.worldWGS84()
                     transform?.destroy()
-                    tileLayers.append(TileLayerInfo(name: tileDao.tableName, minZoom: Int(tileDao.mapMinZoom()), maxZoom: Int(tileDao.mapMaxZoom()), boundingBox: bb))
+                    tileLayers.append(
+                        TileLayerInfo(
+                            name: tileDao.tableName,
+                            minZoom: Int(tileDao.mapMinZoom()),
+                            maxZoom: Int(tileDao.mapMaxZoom()),
+                            boundingBox: boundingBox))
                 }
             }
         }
@@ -312,9 +338,16 @@ class MapLayerViewModel: ObservableObject, Identifiable {
             for featureTable in geoPackage.featureTables() {
                 if let featureDao = geoPackage.featureDao(withTableName: featureTable) {
                     let transform = SFPGeometryTransform(from: featureDao.projection, andToEpsg: 4326)
-                    let bb: GPKGBoundingBox = featureDao.contents().boundingBox().transform(transform) ?? GPKGBoundingBox.worldWGS84()
+                    let boundingBox: GPKGBoundingBox = featureDao
+                        .contents()
+                        .boundingBox()
+                        .transform(transform) ?? GPKGBoundingBox.worldWGS84()
                     transform?.destroy()
-                    featureLayers.append(FeatureLayerInfo(name: featureDao.tableName, count: Int(featureDao.count()), boundingBox: bb))
+                    featureLayers.append(
+                        FeatureLayerInfo(
+                            name: featureDao.tableName,
+                            count: Int(featureDao.count()),
+                            boundingBox: boundingBox))
                 }
             }
         }
@@ -373,7 +406,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
                 mapLayer.update(viewModel: self, context: PersistenceController.current.viewContext)
             } else {
             
-                let _ = MapLayer.createFrom(viewModel: self, context: PersistenceController.current.viewContext)
+                _ = MapLayer.createFrom(viewModel: self, context: PersistenceController.current.viewContext)
                 do {
                     try PersistenceController.current.viewContext.save()
                 } catch {
@@ -383,9 +416,21 @@ class MapLayerViewModel: ObservableObject, Identifiable {
         }
     }
     
-    let wmsParameters: [String] = ["SERVICE", "VERSION", "REQUEST", "FORMAT", "TILED", "WIDTH", "HEIGHT", "TRANSPARENT", "LAYERS", "CRS", "STYLES"]
-    
-    var urlParameters: [String : String] {
+    let wmsParameters: [String] = [
+        "SERVICE",
+        "VERSION",
+        "REQUEST",
+        "FORMAT",
+        "TILED",
+        "WIDTH",
+        "HEIGHT",
+        "TRANSPARENT",
+        "LAYERS",
+        "CRS",
+        "STYLES"
+    ]
+
+    var urlParameters: [String: String] {
         if layerType == .wms {
             guard !url.isEmpty, let version = capabilities?.version else {
                 return [:]
@@ -409,7 +454,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
                 }
             }
             let layerNames = layerNameArray.joined(separator: ",")
-            var urlParameters: [String : String] = [:]
+            var urlParameters: [String: String] = [:]
             urlParameters["SERVICE"] = "WMS"
             urlParameters["VERSION"] = version
             urlParameters["REQUEST"] = "GetMap"
@@ -486,7 +531,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
             self.geoPackageImported()
         }
         
-        if self.username != "", let credentials = Keychain().getCredentials(server: self.url , account: self.username) {
+        if self.username != "", let credentials = Keychain().getCredentials(server: self.url, account: self.username) {
             self.password = credentials.password
         }
     }
@@ -563,7 +608,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
         }
         
         MSI.shared.capabilitiesSession.request(url, method: .get, headers: headers)
-            .onURLRequestCreation(perform: { request in
+            .onURLRequestCreation(perform: { _ in
                 self.retrievingXYZTile = true
                 self.triedXYZTile = false
             })
@@ -577,7 +622,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
                     print("Error retrieving capabilities \(error)")
                     return
                 }
-                if let _ = try? response.result.get() {
+                if (try? response.result.get()) != nil {
                     if self.layerType != .tms && self.layerType != .xyz {
                         self.layerType = .xyz
                     }
@@ -598,7 +643,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
             var urlRequest: URLRequest = URLRequest(url: url)
             urlRequest.httpMethod = "GET"
             let parameters: Parameters = [
-                "SERVICE":"WMS",
+                "SERVICE": "WMS",
                 "REQUEST": "GetCapabilities"
             ]
             // merge the paramters but let the non user parameters override
@@ -615,7 +660,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
                 headers.add(.authorization(username: username, password: password))
             }
             MSI.shared.capabilitiesSession.request(url, method: .get, parameters: allUrlParameters, headers: headers)
-                .onURLRequestCreation(perform: { request in
+                .onURLRequestCreation(perform: { _ in
                     self.retrievingWMSCapabilities = true
                     self.triedCapabilities = false
                 })
@@ -662,7 +707,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
                 updateSelectedLayers(layer: layer)
             }
             for var subLayer: any LayerInfo in (layer as? WMSLayer)?.layers ?? [] {
-                setSelectedLayers(layerNames: layerNames, layer:&subLayer)
+                setSelectedLayers(layerNames: layerNames, layer: &subLayer)
             }
         }
     }
@@ -671,19 +716,16 @@ class MapLayerViewModel: ObservableObject, Identifiable {
         let xml = XMLHash.config { config in
             config.caseInsensitive = true
         }.parse(string)
-        do {
-            var capabilities: WMSCapabilities? = try? xml["WMS_Capabilities"].value()
-            if capabilities == nil {
-                capabilities = try? xml["WMT_MS_Capabilities"].value()
-            }
-            capabilities?.correctBounds()
-            return capabilities
-        } catch {
-            print("Error parsing capabilities \(error)")
+
+        var capabilities: WMSCapabilities? = try? xml["WMS_Capabilities"].value()
+        if capabilities == nil {
+            capabilities = try? xml["WMT_MS_Capabilities"].value()
         }
-        return nil
+        capabilities?.correctBounds()
+        return capabilities
     }
 }
+// swiftlint:enable type_body_length
 
 struct GetMap: XMLObjectDeserialization {
     let formats: [String]
@@ -735,7 +777,8 @@ struct WMSCapabilities: XMLObjectDeserialization {
             abstract: node["Service"]["Abstract"].value(),
             version: node.value(ofAttribute: "version"),
             contactPerson: node["Service"]["ContactInformation"]["ContactPersonPrimary"]["ContactPerson"].value(),
-            contactOrganization: node["Service"]["ContactInformation"]["ContactPersonPrimary"]["ContactOrganization"].value(),
+            contactOrganization: 
+                node["Service"]["ContactInformation"]["ContactPersonPrimary"]["ContactOrganization"].value(),
             contactTelephone: node["Service"]["ContactInformation"]["ContactVoiceTelephone"].value(),
             contactEmail: node["Service"]["ContactInformation"]["ContactElectronicMailAddress"].value(),
             layers: node["Capability"]["Layer"].value(),
@@ -793,8 +836,15 @@ final class WMSLayer: XMLObjectDeserialization, Identifiable, ObservableObject, 
     }
     
     var boundingBoxDisplay: String {
-        if let boundingBox = boundingBox, let minLatitude = boundingBox.minLatitude, let maxLatitude = boundingBox.maxLatitude, let minLongitude = boundingBox.minLongitude, let maxLongitude = boundingBox.maxLongitude {
-            return "(\(minLatitude.latitudeDisplay), \(minLongitude.longitudeDisplay)) - (\(maxLatitude.latitudeDisplay), \(maxLongitude.longitudeDisplay))"
+        if let boundingBox = boundingBox, 
+            let minLatitude = boundingBox.minLatitude,
+            let maxLatitude = boundingBox.maxLatitude,
+            let minLongitude = boundingBox.minLongitude,
+            let maxLongitude = boundingBox.maxLongitude {
+            return """
+                (\(minLatitude.latitudeDisplay), \(minLongitude.longitudeDisplay)) \
+                - (\(maxLatitude.latitudeDisplay), \(maxLongitude.longitudeDisplay))
+            """
         }
         return ""
     }
@@ -843,7 +893,14 @@ final class WMSLayer: XMLObjectDeserialization, Identifiable, ObservableObject, 
                 return partialResult
             }) ?? []
         }
-        return WMSLayer(title: title, abstract: abstract, name: name, crs: crs, layers: sublayers, boundingBox: boundingBox, transparent: transparent)
+        return WMSLayer(
+            title: title,
+            abstract: abstract,
+            name: name,
+            crs: crs,
+            layers: sublayers,
+            boundingBox: boundingBox,
+            transparent: transparent)
     }
     
     var selectedLayers: [WMSLayer] {
@@ -872,7 +929,14 @@ final class WMSLayer: XMLObjectDeserialization, Identifiable, ObservableObject, 
         }) ?? 0
     }
     
-    init(title: String?, abstract: String?, name: String?, crs: [String]?, layers: [WMSLayer]?, boundingBox: BoundingBox?, transparent: Bool) {
+    init(
+        title: String?,
+        abstract: String?,
+        name: String?,
+        crs: [String]?,
+        layers: [WMSLayer]?,
+        boundingBox: BoundingBox?,
+        transparent: Bool) {
         self.title = title
         self.abstract = abstract
         self.name = name

@@ -20,8 +20,12 @@ struct GeoPackageFeatureItemDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    DataSourceLocationMapView(dataSourceLocation: featureItem, mapName: "GeoPackage Feature Item Detail Map", mixins: [])
-                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                    DataSourceLocationMapView(
+                        dataSourceLocation: featureItem,
+                        mapName: "GeoPackage Feature Item Detail Map",
+                        mixins: []
+                    )
+                    .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     Group {
                         if let date = featureItem.dateString {
                             Text(date)

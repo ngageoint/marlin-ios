@@ -13,7 +13,7 @@ struct NavigationalWarningsOverview {
     
     let MAP_NAME = "Navigational Warning List View Map"
     @State var expandMap: Bool = false
-    @State var selection: String? = nil
+    @State var selection: String?
     @Binding var path: NavigationPath
     
     @ObservedObject var focusedItem: ItemWrapper
@@ -31,7 +31,10 @@ extension NavigationalWarningsOverview: View {
                 NavigationalWarningMapView(bottomButtons: {
                     ViewExpandButton(expanded: $expandMap)
                 })
-                .frame(minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3, maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5)
+                .frame(
+                    minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3,
+                    maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5
+                )
                 .edgesIgnoringSafeArea([.leading, .trailing])
                 
                 NavigationalWarningAreasView(mapName: MAP_NAME, path: $path)
@@ -48,10 +51,14 @@ extension NavigationalWarningsOverview: View {
                 }
         }
         .navigationDestination(for: NavigationalWarningSection.self) { section in
-            NavigationalWarningNavAreaListView(warnings: section.warnings, navArea: section.id, mapName: MAP_NAME, path: $path)
-                .accessibilityElement(children: .contain)
+            NavigationalWarningNavAreaListView(
+                warnings: section.warnings,
+                navArea: section.id,
+                mapName: MAP_NAME, path: $path
+            )
+            .accessibilityElement(children: .contain)
         }
-        .onChange(of: focusedItem.date) { newValue in
+        .onChange(of: focusedItem.date) { _ in
             if watchFocusedItem, let focusedItem = focusedItem.dataSource as? NavigationalWarning {
                 path.append(focusedItem)
             }
@@ -65,7 +72,7 @@ extension NavigationalWarningsOverview: View {
         }
         .onReceive(viewDataSourcePub) { output in
             if let dataSource = output.dataSource as? NavigationalWarning, output.mapName == MAP_NAME {
-                NotificationCenter.default.post(name:.DismissBottomSheet, object: nil)
+                NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
                 path.append(dataSource)
             }
         }

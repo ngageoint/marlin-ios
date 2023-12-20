@@ -15,16 +15,24 @@ struct CoordinateButton: View {
     
     var body: some View {
         if let coordinate = coordinate {
-            Button(action: {
-                UIPasteboard.general.string = coordinateDisplay.format(coordinate: coordinate)
-                NotificationCenter.default.post(name: .SnackbarNotification,
-                                                object: SnackbarNotification(snackbarModel:
-                                                                                SnackbarModel(message: "Location \(coordinateDisplay.format(coordinate: coordinate)) copied to clipboard"))
-                )
-            }) {
-                Text(coordinateDisplay.format(coordinate: coordinate))
-                    .foregroundColor(Color.primaryColorVariant)
-            }
+            Button(
+                action: {
+                    UIPasteboard.general.string = coordinateDisplay.format(coordinate: coordinate)
+                    NotificationCenter.default.post(
+                        name: .SnackbarNotification,
+                        object: SnackbarNotification(
+                            snackbarModel: SnackbarModel(
+                                message:
+                                    "Location \(coordinateDisplay.format(coordinate: coordinate)) copied to clipboard"
+                            )
+                        )
+                    )
+                },
+                label: {
+                    Text(coordinateDisplay.format(coordinate: coordinate))
+                        .foregroundColor(Color.primaryColorVariant)
+                }
+            )
             .accessibilityElement()
             .accessibilityLabel("Location")
         } else {

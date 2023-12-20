@@ -1,0 +1,15 @@
+disabled_rules:
+  - trailing_whitespace
+  - todo
+excluded:
+  - Pods
+  - MarlinTests
+identifier_name:
+  excluded: 
+    - id
+    - a
+    - x
+    - y
+    - i
+  allowed_symbols:
+    - _

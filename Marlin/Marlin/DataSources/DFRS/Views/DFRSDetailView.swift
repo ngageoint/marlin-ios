@@ -11,7 +11,16 @@ import CoreData
 
 struct DFRSDetailView: View {
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \DFRSArea.areaName, ascending: true), NSSortDescriptor(keyPath: \DFRSArea.index, ascending: true)],
+        sortDescriptors: [
+            NSSortDescriptor(
+                keyPath: \DFRSArea.areaName,
+                ascending: true
+            ),
+            NSSortDescriptor(
+                keyPath: \DFRSArea.index,
+                ascending: true
+            )
+        ],
         predicate: NSPredicate(format: "areaNote != nil || indexNote != nil"),
         animation: .default)
     private var areas: FetchedResults<DFRSArea>
@@ -32,8 +41,12 @@ struct DFRSDetailView: View {
                         .background(Color(uiColor: dfrs.color))
                         .padding(.bottom, -8)
                     if let predicate = predicate, CLLocationCoordinate2DIsValid(dfrs.coordinate) {
-                        DataSourceLocationMapView(dataSourceLocation: dfrs, mapName: "DFRS Detail Map", mixins: [DFRSMap(fetchPredicate: predicate)])
-                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                        DataSourceLocationMapView(
+                            dataSourceLocation: dfrs,
+                            mapName: "DFRS Detail Map",
+                            mixins: [DFRSMap(fetchPredicate: predicate)]
+                        )
+                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     dfrs.summary
                         .setShowTitle(false)
@@ -65,7 +78,7 @@ struct DFRSDetailView: View {
                     Text(areaNotes)
                         .secondary()
                         .lineLimit(8)
-                        .frame(maxWidth:.infinity)
+                        .frame(maxWidth: .infinity)
                         .padding(.all, 16)
                         .card()
                 }
@@ -76,7 +89,7 @@ struct DFRSDetailView: View {
                 .dataSourceSection()
         }
         .dataSourceDetailList()
-        .onChange(of: dfrs, perform: { newValue in
+        .onChange(of: dfrs, perform: { _ in
             predicate = NSPredicate(format: "stationNumber == %@", dfrs.stationNumber ?? "")
         })
         .onAppear {
