@@ -17,7 +17,10 @@ struct NavigationalWarningPropertyContainer: Decodable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        broadcastWarn = try container.decode([Throwable<NavigationalWarningProperties>].self, forKey: .broadcastWarn).compactMap { try? $0.result.get() }
+        broadcastWarn = try container.decode(
+            [Throwable<NavigationalWarningProperties>].self,
+            forKey: .broadcastWarn
+        ).compactMap { try? $0.result.get() }
     }
 }
 

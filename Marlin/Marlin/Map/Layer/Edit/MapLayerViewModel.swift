@@ -315,7 +315,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
             for tileTable in geoPackage.tileTables() {
                 if let tileDao = geoPackage.tileDao(withTableName: tileTable) {
                     let transform = SFPGeometryTransform(from: tileDao.projection, andToEpsg: 4326)
-                    let bb: GPKGBoundingBox = tileDao
+                    let boundingBox: GPKGBoundingBox = tileDao
                         .contents()
                         .boundingBox()
                         .transform(transform) ?? GPKGBoundingBox.worldWGS84()
@@ -325,7 +325,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
                             name: tileDao.tableName,
                             minZoom: Int(tileDao.mapMinZoom()),
                             maxZoom: Int(tileDao.mapMaxZoom()),
-                            boundingBox: bb))
+                            boundingBox: boundingBox))
                 }
             }
         }
@@ -338,7 +338,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
             for featureTable in geoPackage.featureTables() {
                 if let featureDao = geoPackage.featureDao(withTableName: featureTable) {
                     let transform = SFPGeometryTransform(from: featureDao.projection, andToEpsg: 4326)
-                    let bb: GPKGBoundingBox = featureDao
+                    let boundingBox: GPKGBoundingBox = featureDao
                         .contents()
                         .boundingBox()
                         .transform(transform) ?? GPKGBoundingBox.worldWGS84()
@@ -347,7 +347,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
                         FeatureLayerInfo(
                             name: featureDao.tableName,
                             count: Int(featureDao.count()),
-                            boundingBox: bb))
+                            boundingBox: boundingBox))
                 }
             }
         }
@@ -622,7 +622,7 @@ class MapLayerViewModel: ObservableObject, Identifiable {
                     print("Error retrieving capabilities \(error)")
                     return
                 }
-                if let _ = try? response.result.get() {
+                if (try? response.result.get()) != nil {
                     if self.layerType != .tms && self.layerType != .xyz {
                         self.layerType = .xyz
                     }

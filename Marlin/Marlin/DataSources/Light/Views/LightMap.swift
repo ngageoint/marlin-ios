@@ -11,22 +11,22 @@ import CoreData
 import Combine
 
 class LightMap<T: MapImage>: FetchRequestMap<T> {
-    var userDefaultsShowLightRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
-    var userDefaultsShowLightSectorRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
-    
+    var defaultsShowLightRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
+    var defaultsShowLightSectorRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
+
     override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
         super.init(fetchPredicate: fetchPredicate, objects: objects, showAsTiles: showAsTiles)
         self.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
         self.focusNotificationName = .FocusLight
         self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMaplight)
-        self.userDefaultsShowLightRangesPublisher = UserDefaults.standard.publisher(for: \.actualRangeLights)
-        self.userDefaultsShowLightSectorRangesPublisher = UserDefaults.standard.publisher(for: \.actualRangeSectorLights)
+        self.defaultsShowLightRangesPublisher = UserDefaults.standard.publisher(for: \.actualRangeLights)
+        self.defaultsShowLightSectorRangesPublisher = UserDefaults.standard.publisher(for: \.actualRangeSectorLights)
     }
     
     override func setupMixin(mapState: MapState, mapView: MKMapView) {
         super.setupMixin(mapState: mapState, mapView: mapView)
         
-        userDefaultsShowLightRangesPublisher?
+        defaultsShowLightRangesPublisher?
             .dropFirst()
             .removeDuplicates()
             .handleEvents(receiveOutput: { showLightRanges in
@@ -39,7 +39,7 @@ class LightMap<T: MapImage>: FetchRequestMap<T> {
             }
             .store(in: &cancellable)
         
-        userDefaultsShowLightSectorRangesPublisher?
+        defaultsShowLightSectorRangesPublisher?
             .removeDuplicates()
             .dropFirst()
             .handleEvents(receiveOutput: { showLightSectorRanges in

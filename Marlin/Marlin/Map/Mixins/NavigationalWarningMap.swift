@@ -48,11 +48,19 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
     
     override func focus(item: T) {
         DispatchQueue.main.async {
-            self.mapState?.center = MKCoordinateRegion(center: item.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+            self.mapState?.center = MKCoordinateRegion(
+                center: item.coordinate,
+                latitudinalMeters: 1000,
+                longitudinalMeters: 1000
+            )
         }
     }
     
-    override func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [any DataSource]? {
+    override func items(
+        at location: CLLocationCoordinate2D,
+        mapView: MKMapView,
+        touchPoint: CGPoint
+    ) -> [any DataSource]? {
         if mapView.zoomLevel < minZoom {
             return nil
         }
@@ -79,19 +87,28 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
         fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         
         var matched: [NavigationalWarning] = []
-        if let navWarnings = try? PersistenceController.current.fetch(fetchRequest: fetchRequest) as? [NavigationalWarning] {
+        if let navWarnings = try? PersistenceController.current.fetch(
+            fetchRequest: fetchRequest) as? [NavigationalWarning] {
             // verify the actual shapes match and not just the bounding box
-            for warning in navWarnings {
-                if verifyMatch(warning: warning, location: location, longitudeTolerance: longitudeTolerance, distanceTolerance: distanceTolerance) {
+            for warning in navWarnings where verifyMatch(
+                    warning: warning,
+                    location: location,
+                    longitudeTolerance: longitudeTolerance,
+                    distanceTolerance: distanceTolerance
+                ) {
                     matched.append(warning)
-                }
             }
         }
         
         return matched
     }
     
-    func verifyMatch(warning: NavigationalWarning, location: CLLocationCoordinate2D, longitudeTolerance: Double, distanceTolerance: Double) -> Bool {
+    func verifyMatch(
+        warning: NavigationalWarning,
+        location: CLLocationCoordinate2D,
+        longitudeTolerance: Double,
+        distanceTolerance: Double
+    ) -> Bool {
         if let locations = warning.locations {
             for wktLocation in locations {
                 if let wkt = wktLocation["wkt"] {
@@ -101,10 +118,9 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
                     }
                     if let shape = MKShape.fromWKT(wkt: wkt, distance: distance) {
                         if let polygon = shape as? MKPolygon {
-                            for polyline in polygon.getGeodesicClickAreas() {
-                                if polygonHitTest(closedPolyline: polyline, location: location) {
-                                    return true
-                                }
+                            for polyline in polygon.getGeodesicClickAreas() 
+                            where polygonHitTest(closedPolyline: polyline, location: location) {
+                                return true
                             }
                         } else if let polyline = shape as? MKPolyline {
                             if lineHitTest(line: polyline, location: location, distanceTolerance: distanceTolerance) {
@@ -115,7 +131,10 @@ class NavigationalWarningFetchMap<T: NavigationalWarning & MapImage>: FetchReque
                             let maxLon = location.longitude + longitudeTolerance
                             let minLat = location.latitude - longitudeTolerance
                             let maxLat = location.latitude + longitudeTolerance
-                            if minLon <= point.coordinate.longitude && maxLon >= point.coordinate.longitude && minLat <= point.coordinate.latitude && maxLat >= point.coordinate.latitude {
+                            if minLon <= point.coordinate.longitude 
+                                && maxLon >= point.coordinate.longitude
+                                && minLat <= point.coordinate.latitude
+                                && maxLat >= point.coordinate.latitude {
                                 return true
                             }
                         } else if let circle = shape as? MKCircle {
@@ -200,7 +219,10 @@ class NavigationalWarningMap: NSObject, MapMixin {
                     navPoly.warning = warning
                     mapOverlays.append(navPoly)
                 } else if let polyline = shape as? MKGeodesicPolyline {
-                    let navline = NavigationalWarningGeodesicPolyline(points: polyline.points(), count: polyline.pointCount)
+                    let navline = NavigationalWarningGeodesicPolyline(
+                        points: polyline.points(),
+                        count: polyline.pointCount
+                    )
                     navline.warning = warning
                     mapOverlays.append(navline)
                 } else if let polyline = shape as? MKPolyline {

@@ -36,7 +36,8 @@ class LightCoreDataRepository: LightRepository, ObservableObject {
     
     func getLights(featureNumber: String?, volumeNumber: String?, waypointURI: URL?) -> [LightModel] {
         if let waypointURI = waypointURI {
-            if let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: waypointURI), let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
+            if let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: waypointURI),
+               let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
                 let dataSource = waypoint.decodeToDataSource()
                 if let dataSource = dataSource as? LightModel {
                     return [dataSource]
@@ -44,7 +45,13 @@ class LightCoreDataRepository: LightRepository, ObservableObject {
             }
         }
         if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
-            if let lights = try? context.fetchObjects(Light.self, predicate: NSPredicate(format: "featureNumber = %@ AND volumeNumber = %@", argumentArray: [featureNumber, volumeNumber])) {
+            if let lights = try? context.fetchObjects(
+                Light.self,
+                predicate: NSPredicate(
+                    format: "featureNumber = %@ AND volumeNumber = %@",
+                    argumentArray: [featureNumber, volumeNumber]
+                )
+            ) {
                 var models: [LightModel] = []
                 for light in lights {
                     models.append(LightModel(light: light))

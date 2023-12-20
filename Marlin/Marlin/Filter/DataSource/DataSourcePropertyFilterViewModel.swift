@@ -99,9 +99,18 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
         get {
             let coordinate = CLLocationCoordinate2D(latitude: valueLatitude ?? 0.0, longitude: valueLongitude ?? 0.0)
             if CLLocationCoordinate2DIsValid(coordinate) {
-                return MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+                return MKCoordinateRegion(
+                    center: coordinate,
+                    span: MKCoordinateSpan(
+                        latitudeDelta: latitudeDelta,
+                        longitudeDelta: longitudeDelta
+                    )
+                )
             }
-            return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+            return MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0),
+                span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta)
+            )
         }
         set {
             DispatchQueue.main.async {
@@ -281,17 +290,9 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
     var isValid: Bool {
         switch dataSourceProperty.type {
         case .double, .float:
-            if valueDouble != nil {
-                return true
-            } else {
-                return false
-            }
+            return valueDouble != nil
         case .int:
-            if valueInt != nil {
-                return true
-            } else {
-                return false
-            }
+            return valueInt != nil
         case .string:
             return !valueString.isEmpty
         case .location:

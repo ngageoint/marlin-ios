@@ -96,11 +96,19 @@ struct SearchView<T: MKLocalSearch>: View {
                                         if let coordinate = searchResult.placemark.location?.coordinate {
                                             Text(coordinateDisplay.format(coordinate: coordinate))
                                                 .onTapGesture {
-                                                    UIPasteboard.general.string = coordinateDisplay.format(coordinate: coordinate)
+                                                    UIPasteboard.general.string = 
+                                                    coordinateDisplay.format(coordinate: coordinate)
                                                     NotificationCenter.default.post(
                                                         name: .SnackbarNotification,
                                                         object: SnackbarNotification(
-                                                            snackbarModel: SnackbarModel(message: "Location \(coordinateDisplay.format(coordinate: coordinate)) copied to clipboard"))
+                                                            snackbarModel: SnackbarModel(
+                                                                message: """
+                                                                Location \
+                                                                \(coordinateDisplay.format(coordinate: coordinate)) \
+                                                                copied to clipboard
+                                                                """
+                                                            )
+                                                        )
                                                     )
                                                 }
                                                 .accessibilityElement()
@@ -108,16 +116,23 @@ struct SearchView<T: MKLocalSearch>: View {
                                         }
                                     }
                                     Spacer()
-                                    Button(action: {
-                                        mapState.center = MKCoordinateRegion(center: searchResult.placemark.coordinate, latitudinalMeters: 10000, longitudinalMeters: 10000)
-                                    }) {
-                                        Label(
-                                            title: {},
-                                            icon: { Image(systemName: "scope")
-                                                    .renderingMode(.template)
-                                                    .foregroundColor(Color.primaryColorVariant)
-                                            })
-                                    }
+                                    Button(
+                                        action: {
+                                            mapState.center = MKCoordinateRegion(
+                                                center: searchResult.placemark.coordinate,
+                                                latitudinalMeters: 10000,
+                                                longitudinalMeters: 10000
+                                            )
+                                        },
+                                        label: {
+                                            Label(
+                                                title: {},
+                                                icon: { Image(systemName: "scope")
+                                                        .renderingMode(.template)
+                                                        .foregroundColor(Color.primaryColorVariant)
+                                                })
+                                        }
+                                    )
                                     .accessibilityElement()
                                     .accessibilityLabel("focus")
                                 }
@@ -137,7 +152,9 @@ struct SearchView<T: MKLocalSearch>: View {
         .font(Font.body2)
         .foregroundColor(Color.primaryColorVariant)
         .background(
-            RoundedRectangle(cornerRadius: 20).fill(Color.mapButtonColor).shadow(color: Color(.sRGB, white: 0, opacity: 0.4), radius: 3, x: 0, y: 4)
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color.mapButtonColor)
+                .shadow(color: Color(.sRGB, white: 0, opacity: 0.4), radius: 3, x: 0, y: 4)
                 .animation(.default, value: searchExpanded)
         )
     }

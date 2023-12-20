@@ -32,7 +32,10 @@ struct DataSourceMapGrid: View {
             .accessibilityLabel("\(dataSourceItem.dataSource.definition.fullName) Map")
             .overlay(CheckBadge(checked: .constant(isMapped(dataSourceItem.dataSource.definition.key)))
                 .accessibilityElement()
-                .accessibilityLabel("\(dataSourceItem.dataSource.definition.fullName) Map \(dataSourceItem.showOnMap ? "On" : "Off")"))
+                .accessibilityLabel(
+                    "\(dataSourceItem.dataSource.definition.fullName) Map \(dataSourceItem.showOnMap ? "On" : "Off")"
+                )
+            )
             .padding(8)
     }
     

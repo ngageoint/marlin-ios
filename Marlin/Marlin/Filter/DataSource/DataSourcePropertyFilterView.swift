@@ -22,7 +22,12 @@ struct DataSourcePropertyFilterView: View {
         }
         self.filterViewModel = filterViewModel
 
-        _viewModel = StateObject(wrappedValue: DataSourcePropertyFilterViewModel(dataSourceProperty: prop, isStaticProperty: dataSourceProperty != nil))
+        _viewModel = StateObject(
+            wrappedValue: DataSourcePropertyFilterViewModel(
+                dataSourceProperty: prop,
+                isStaticProperty: dataSourceProperty != nil
+            )
+        )
     }
     
     var body: some View {

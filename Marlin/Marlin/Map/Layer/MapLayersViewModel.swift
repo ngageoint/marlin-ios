@@ -34,12 +34,15 @@ class MapLayersViewModel: NSObject, ObservableObject {
     }
     
     func toggleVisibility(of layer: MapLayer) -> Binding<Bool> {
-        let binding = Binding<Bool>(get: { () -> Bool in
-            return layer.visible
-            
-        }) { (newValue) in
-            layer.showOnMap = newValue
-        }
+        let binding = Binding<Bool>(
+            get: { () -> Bool in
+                return layer.visible
+
+            },
+            set: { (newValue) in
+                layer.showOnMap = newValue
+            }
+        )
         return binding
     }
     

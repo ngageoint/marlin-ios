@@ -30,15 +30,18 @@ struct UserTrackingButton: View {
     }
     
     var body: some View {
-        Button(action: {
-            buttonPressed()
-        }) {
-            Label(
-                title: {},
-                icon: { Image(systemName: imageName)
-                        .renderingMode(.template)
-                })
-        }
+        Button(
+            action: {
+                buttonPressed()
+            },
+            label: {
+                Label(
+                    title: {},
+                    icon: { Image(systemName: imageName)
+                            .renderingMode(.template)
+                    })
+            }
+        )
         .accessibilityElement()
         .accessibilityLabel("Tracking \(userTrackingModeDescription)\(authorized ? "" : " Unauthorized")")
         .onAppear {
@@ -66,12 +69,13 @@ struct UserTrackingButton: View {
                     Marlin has been denied access to location services.  To show your location on the map, \
                     please go into your device settings and enable the Location permission.
                   """),
-                  primaryButton: .default(Text("Settings"),
-                                          action: {
-                                                if let url = NSURL(string: UIApplication.openSettingsURLString) as URL? {
-                                                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                                                }
-                                          }),
+                  primaryButton: .default(
+                    Text("Settings"),
+                    action: {
+                        if let url = NSURL(string: UIApplication.openSettingsURLString) as URL? {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        }
+                  }),
                   secondaryButton: .cancel())
         }
     }

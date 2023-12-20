@@ -13,7 +13,11 @@ extension NoticeToMariners: DataSourceViewBuilder {
         return "\(self.title ?? "") \(self.isFullPublication ? (self.fileExtension ?? "") : "")"
     }
     var detailView: AnyView {
-        AnyView(NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: self.noticeNumber)))
+        AnyView(
+            NoticeToMarinersFullNoticeView(
+                viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: self.noticeNumber)
+            )
+        )
     }
     
     var summary: some DataSourceSummaryView {

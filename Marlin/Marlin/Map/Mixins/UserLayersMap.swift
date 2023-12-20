@@ -37,7 +37,8 @@ class UserLayersMap: MapMixin {
     }
     
     func updateMixin(mapView: MKMapView, mapState: MapState) {
-        if lastChange == nil || lastChange != mapState.mixinStates["\(String(describing: UserLayersMap.self))DataUpdated"] as? Date {
+        if lastChange == nil || 
+            lastChange != mapState.mixinStates["\(String(describing: UserLayersMap.self))DataUpdated"] as? Date {
             lastChange = mapState.mixinStates["\(String(describing: UserLayersMap.self))DataUpdated"] as? Date ?? Date()
             
             if mapState.mixinStates["\(String(describing: UserLayersMap.self))DataUpdated"] as? Date == nil {

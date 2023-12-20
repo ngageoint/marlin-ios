@@ -175,16 +175,17 @@ extension RadioBeacon: BatchImportable {
             let region = propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading
             
             var correctedLocationDictionary: [String: String?] = [
-                "regionHeading": propertyDictionary["regionHeading"] as? String ?? previousLocation?.previousRegionHeading
+                "regionHeading": propertyDictionary["regionHeading"] as? String
+                ?? previousLocation?.previousRegionHeading
             ]
             correctedLocationDictionary["sectionHeader"] = """
                 \(propertyDictionary["geopoliticalHeading"] as? String ?? "")\
                 \(correctedLocationDictionary["regionHeading"] != nil ?
                 ": \(correctedLocationDictionary["regionHeading"] as? String ?? "")" : "")
             """
-            if let rh = correctedLocationDictionary["regionHeading"] as? String {
-                correctedLocationDictionary["sectionHeader"] = 
-                "\(propertyDictionary["geopoliticalHeading"] as? String ?? ""): \(rh)"
+            if let regionHeading = correctedLocationDictionary["regionHeading"] as? String {
+                correctedLocationDictionary["sectionHeader"] =
+                "\(propertyDictionary["geopoliticalHeading"] as? String ?? ""): \(regionHeading)"
             } else {
                 correctedLocationDictionary["sectionHeader"] = 
                 "\(propertyDictionary["geopoliticalHeading"] as? String ?? "")"

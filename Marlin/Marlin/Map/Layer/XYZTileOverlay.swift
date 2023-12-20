@@ -52,7 +52,14 @@ class XYZTileOverlay: MKTileOverlay {
     override func url(forTilePath path: MKTileOverlayPath) -> URL {
         if tms {
             let flippedY: NSDecimalNumber = NSDecimalNumber(decimal: pow(2.0, path.z) - 1.0 - (1.0 * Decimal(path.y)))
-            return super.url(forTilePath: MKTileOverlayPath(x: path.x, y: flippedY.intValue, z: path.z, contentScaleFactor: path.contentScaleFactor))
+            return super.url(
+                forTilePath: MKTileOverlayPath(
+                    x: path.x,
+                    y: flippedY.intValue,
+                    z: path.z,
+                    contentScaleFactor: path.contentScaleFactor
+                )
+            )
         }
         return super.url(forTilePath: path)
     }

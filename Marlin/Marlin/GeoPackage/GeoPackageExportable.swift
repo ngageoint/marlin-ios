@@ -82,12 +82,12 @@ extension GeoPackageExportable {
                 columns.append(GPKGFeatureColumn.createColumn(
                     withName: property.key,
                     andDataType: property.type.geoPackageType))
-                let dc = GPKGDataColumns()
-                dc.tableName = key
-                dc.columnName = property.key
-                dc.name = property.name
-                dc.title = property.name
-                dataColumns.append(dc)
+                let dataColumn = GPKGDataColumns()
+                dataColumn.tableName = key
+                dataColumn.columnName = property.key
+                dataColumn.name = property.name
+                dataColumn.title = property.name
+                dataColumns.append(dataColumn)
             }
         }
         

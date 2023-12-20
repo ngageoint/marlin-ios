@@ -34,13 +34,16 @@ struct DataSourceFilter: View {
                     .background(Color.backgroundColor)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(action: {
-                                showBottomSheet.toggle()
-                            }) {
-                                Image(systemName: "xmark.circle.fill")
-                                    .imageScale(.large)
-                                    .foregroundColor(Color.onPrimaryColor.opacity(0.87))
-                            }
+                            Button(
+                                action: {
+                                    showBottomSheet.toggle()
+                                },
+                                label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .imageScale(.large)
+                                        .foregroundColor(Color.onPrimaryColor.opacity(0.87))
+                                }
+                            )
                             .accessibilityElement()
                             .accessibilityLabel("Close Filter")
                         }
@@ -101,13 +104,16 @@ struct FilterBottomSheet: View {
                     .background(Color.backgroundColor)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(action: {
-                                showBottomSheet.toggle()
-                            }) {
-                                Image(systemName: "xmark.circle.fill")
-                                    .imageScale(.large)
-                                    .foregroundColor(Color.onPrimaryColor.opacity(0.87))
-                            }
+                            Button(
+                                action: {
+                                    showBottomSheet.toggle()
+                                },
+                                label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .imageScale(.large)
+                                        .foregroundColor(Color.onPrimaryColor.opacity(0.87))
+                                }
+                            )
                             .accessibilityElement(children: .contain)
                             .accessibilityLabel("Close Filter")
                         }

@@ -100,6 +100,19 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
                 .store(in: &cancellable)
         }
         
+        setupDataSourceUpdatedPublisher(mapState: mapState)
+        setupUserDefaultsShowPublisher(mapState: mapState)
+        setupOrderPublisher(mapState: mapState)
+
+        LocationManager.shared().$current10kmMGRS
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.refreshOverlay(mapState: mapState)
+            }
+            .store(in: &cancellable)
+    }
+
+    func setupDataSourceUpdatedPublisher(mapState: MapState) {
         NotificationCenter.default.publisher(for: .DataSourceUpdated)
             .receive(on: RunLoop.main)
             .compactMap {
@@ -119,7 +132,9 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
                 }
             }
             .store(in: &cancellable)
-        
+    }
+
+    func setupUserDefaultsShowPublisher(mapState: MapState) {
         userDefaultsShowPublisher?
             .removeDuplicates()
             .handleEvents(receiveOutput: { show in
@@ -130,7 +145,9 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
                 self?.refreshOverlay(mapState: mapState)
             }
             .store(in: &cancellable)
-        
+    }
+
+    func setupOrderPublisher(mapState: MapState) {
         orderPublisher?
             .removeDuplicates()
             .handleEvents(receiveOutput: { order in
@@ -140,15 +157,8 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
                 self?.refreshOverlay(mapState: mapState)
             }
             .store(in: &cancellable)
-        
-        LocationManager.shared().$current10kmMGRS
-            .receive(on: RunLoop.main)
-            .sink { [weak self] _ in
-                self?.refreshOverlay(mapState: mapState)
-            }
-            .store(in: &cancellable)
     }
-    
+
     func updateMixin(mapView: MKMapView, mapState: MapState) {
         if lastChange == nil || lastChange != mapState.mixinStates["FetchRequestMixin\(T.key)DateUpdated"] as? Date {
             lastChange = mapState.mixinStates["FetchRequestMixin\(T.key)DataUpdated"] as? Date ?? Date()
@@ -216,15 +226,6 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
                 latitudinalMeters: 1000,
                 longitudinalMeters: 1000)
         }
-    }
-    
-    func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
-        guard let annotation = annotation as? (any DataSource), let annotationView = annotation.view(on: mapView) else {
-            return nil
-        }
-        annotationView.canShowCallout = false
-        annotationView.isEnabled = false
-        return annotationView
     }
     
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [any DataSource]? {

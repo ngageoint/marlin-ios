@@ -28,8 +28,12 @@ struct ModuDetailView: View {
                         .background(Color(uiColor: Modu.color))
                         .padding(.bottom, -8)
                     if let modu = viewModel.modu {
-                        DataSourceLocationMapView(dataSourceLocation: modu, mapName: "Modu Detail Map", mixins: [ModuMap<ModuModel>(objects: [modu])])
-                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                        DataSourceLocationMapView(
+                            dataSourceLocation: modu,
+                            mapName: "Modu Detail Map",
+                            mixins: [ModuMap<ModuModel>(objects: [modu])]
+                        )
+                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     Group {
                         Text("\(viewModel.modu?.dateString ?? "")")

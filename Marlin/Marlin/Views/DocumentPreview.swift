@@ -27,7 +27,7 @@ extension View {
     }
 }
 
-class DocumentController: NSObject, ObservableObject, UIDocumentInteractionControllerDelegate { // , QLPreviewControllerDataSource {
+class DocumentController: NSObject, ObservableObject, UIDocumentInteractionControllerDelegate {
 
     public static let shared = DocumentController()
     var controller: UIDocumentInteractionController?

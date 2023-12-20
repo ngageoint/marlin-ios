@@ -40,11 +40,9 @@ struct MarlinRegularWidth: View {
             DataSourceRail(activeRailItem: $activeRailItem)
                 .onAppear {
                     var found = false
-                    for item in dataSourceList.allTabs {
-                        if "\(item.key)List" == selectedTab {
-                            activeRailItem = item
-                            found = true
-                        }
+                    for item in dataSourceList.allTabs where "\(item.key)List" == selectedTab {
+                        activeRailItem = item
+                        found = true
                     }
                     if !found {
                         activeRailItem = dataSourceList.tabs[0]

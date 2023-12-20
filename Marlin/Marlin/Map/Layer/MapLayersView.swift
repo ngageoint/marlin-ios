@@ -27,22 +27,31 @@ struct MapLayerRow: View {
             }
             .padding([.top, .bottom], 4)
             Spacer()
-            Button(action: {
-                let latSpan = layer.maxLatitude - layer.minLatitude
-                let lonSpan = layer.maxLongitude - layer.minLongitude
-                let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: layer.maxLatitude - (latSpan / 2.0), longitude: layer.maxLongitude - (lonSpan / 2.0))
-                let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latSpan, longitudeDelta: lonSpan)
-                NotificationCenter.default.post(name: .FocusMapAtLocation, object: MKCoordinateRegion(center: center, span: span))
-                
-                NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
-            }) {
-                Label(
-                    title: {},
-                    icon: { Image(systemName: "scope")
-                            .renderingMode(.template)                            
-                            .foregroundColor(Color.primaryColorVariant)
-                    })
-            }
+            Button(
+                action: {
+                    let latSpan = layer.maxLatitude - layer.minLatitude
+                    let lonSpan = layer.maxLongitude - layer.minLongitude
+                    let center: CLLocationCoordinate2D = CLLocationCoordinate2D(
+                        latitude: layer.maxLatitude - (latSpan / 2.0),
+                        longitude: layer.maxLongitude - (lonSpan / 2.0)
+                    )
+                    let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latSpan, longitudeDelta: lonSpan)
+                    NotificationCenter.default.post(
+                        name: .FocusMapAtLocation,
+                        object: MKCoordinateRegion(center: center, span: span)
+                    )
+
+                    NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
+                },
+                label: {
+                    Label(
+                        title: {},
+                        icon: { Image(systemName: "scope")
+                                .renderingMode(.template)
+                                .foregroundColor(Color.primaryColorVariant)
+                        })
+                }
+            )
             .buttonStyle(BorderlessButtonStyle())
             .padding([.trailing, .leading], 16)
             .accessibilityElement()
@@ -74,8 +83,8 @@ struct MapLayersView: View {
                                     editLayerViewModel = MapLayerViewModel(mapLayer: layer)
                                 }
                         }
-                        .onMove { from, to in
-                            model.reorderLayers(fromOffsets: from, toOffset: to)
+                        .onMove { from, destination in
+                            model.reorderLayers(fromOffsets: from, toOffset: destination)
                         }
                         .onDelete { offsets in
                             model.deleteLayers(offsets: offsets)
@@ -152,14 +161,17 @@ struct MapLayersView: View {
                 MapLayerView(isPresented: $isMapLayersPresented)
             }
         }
-        .fullScreenCover(item: $editLayerViewModel, onDismiss: {
-            editLayerViewModel = nil
-        }) { viewModel in
-            NavigationView {
-                MapLayerView(viewModel: viewModel, isPresented: $editPresented)
+        .fullScreenCover(
+            item: $editLayerViewModel,
+            onDismiss: {
+                editLayerViewModel = nil
+            },
+            content: { viewModel in
+                NavigationView {
+                    MapLayerView(viewModel: viewModel, isPresented: $editPresented)
+                }
             }
-        }
-
+        )
         .onAppear {
             Metrics.shared.mapLayersView()
         }

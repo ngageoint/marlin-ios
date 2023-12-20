@@ -105,27 +105,33 @@ struct GeoPackageTileLayerRow: View {
                 }
                 .padding([.top, .bottom], 4)
                 Spacer()
-                Button(action: {
-                    if let maxLatitude = layer.boundingBox?.maxLatitude, 
-                        let minLatitude = layer.boundingBox?.minLatitude,
-                        let maxLongitude = layer.boundingBox?.maxLongitude,
-                        let minLongitude = layer.boundingBox?.minLongitude {
-                        let latSpan = maxLatitude - minLatitude
-                        let lonSpan = maxLongitude - minLongitude
-                        let center: CLLocationCoordinate2D = CLLocationCoordinate2D(
-                            latitude: maxLatitude - (latSpan / 2.0),
-                            longitude: maxLongitude - (lonSpan / 2.0))
-                        let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latSpan, longitudeDelta: lonSpan)
-                        mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                Button(
+                    action: {
+                        if let maxLatitude = layer.boundingBox?.maxLatitude,
+                            let minLatitude = layer.boundingBox?.minLatitude,
+                            let maxLongitude = layer.boundingBox?.maxLongitude,
+                            let minLongitude = layer.boundingBox?.minLongitude {
+                            let latSpan = maxLatitude - minLatitude
+                            let lonSpan = maxLongitude - minLongitude
+                            let center: CLLocationCoordinate2D = CLLocationCoordinate2D(
+                                latitude: maxLatitude - (latSpan / 2.0),
+                                longitude: maxLongitude - (lonSpan / 2.0))
+                            let span: MKCoordinateSpan = MKCoordinateSpan(
+                                latitudeDelta: latSpan,
+                                longitudeDelta: lonSpan
+                            )
+                            mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                        }
+                    },
+                    label: {
+                        Label(
+                            title: {},
+                            icon: { Image(systemName: "scope")
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.primaryColorVariant)
+                            })
                     }
-                }) {
-                    Label(
-                        title: {},
-                        icon: { Image(systemName: "scope")
-                                .renderingMode(.template)
-                                .foregroundColor(Color.primaryColorVariant)
-                        })
-                }
+                )
                 .padding([.trailing, .leading], 16)
                 .accessibilityElement()
                 .accessibilityLabel("focus")
@@ -172,29 +178,32 @@ struct GeoPackageFeatureLayerRow: View {
                 }
                 .padding([.top, .bottom], 4)
                 Spacer()
-                Button(action: {
-                    if let maxLatitude = layer.boundingBox?.maxLatitude, 
-                        let minLatitude = layer.boundingBox?.minLatitude,
-                        let maxLongitude = layer.boundingBox?.maxLongitude,
-                        let minLongitude = layer.boundingBox?.minLongitude {
-                        let latSpan = maxLatitude - minLatitude
-                        let lonSpan = maxLongitude - minLongitude
-                        let center: CLLocationCoordinate2D = CLLocationCoordinate2D(
-                            latitude: maxLatitude - (latSpan / 2.0),
-                            longitude: maxLongitude - (lonSpan / 2.0))
-                        let span: MKCoordinateSpan = MKCoordinateSpan(
-                            latitudeDelta: latSpan,
-                            longitudeDelta: lonSpan)
-                        mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                Button(
+                    action: {
+                        if let maxLatitude = layer.boundingBox?.maxLatitude,
+                            let minLatitude = layer.boundingBox?.minLatitude,
+                            let maxLongitude = layer.boundingBox?.maxLongitude,
+                            let minLongitude = layer.boundingBox?.minLongitude {
+                            let latSpan = maxLatitude - minLatitude
+                            let lonSpan = maxLongitude - minLongitude
+                            let center: CLLocationCoordinate2D = CLLocationCoordinate2D(
+                                latitude: maxLatitude - (latSpan / 2.0),
+                                longitude: maxLongitude - (lonSpan / 2.0))
+                            let span: MKCoordinateSpan = MKCoordinateSpan(
+                                latitudeDelta: latSpan,
+                                longitudeDelta: lonSpan)
+                            mapState.forceCenter = MKCoordinateRegion(center: center, span: span)
+                        }
+                    },
+                    label: {
+                        Label(
+                            title: {},
+                            icon: { Image(systemName: "scope")
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.primaryColorVariant)
+                            })
                     }
-                }) {
-                    Label(
-                        title: {},
-                        icon: { Image(systemName: "scope")
-                                .renderingMode(.template)
-                                .foregroundColor(Color.primaryColorVariant)
-                        })
-                }
+                )
                 .padding([.trailing, .leading], 16)
                 .accessibilityElement()
                 .accessibilityLabel("focus")

@@ -733,16 +733,16 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
         return "LIGHT\n\n" +
         "aidType \(aidType ?? "")\n" +
         "characteristic \(characteristic ?? "")\n" +
-        "characteristicNumber \(characteristicNumber)\n" +
+        "characteristicNumber \(characteristicNumber ?? 0)\n" +
         "deleteFlag \(deleteFlag ?? "")\n" +
         "featureNumber \(featureNumber ?? "")\n" +
         "geopoliticalHeading \(geopoliticalHeading ?? "")\n" +
-        "heightFeet \(heightFeet)\n" +
-        "heightMeters \(heightMeters)\n" +
+        "heightFeet \(heightFeet ?? 0)\n" +
+        "heightMeters \(heightMeters ?? 0)\n" +
         "internationalFeature \(internationalFeature ?? "")\n" +
         "localHeading \(localHeading ?? "")\n" +
         "name \(name ?? "")\n" +
-        "noticeNumber \(noticeNumber)\n" +
+        "noticeNumber \(noticeNumber ?? 0)\n" +
         "noticeWeek \(noticeWeek ?? "")\n" +
         "noticeYear \(noticeYear ?? "")\n" +
         "position \(position ?? "")\n" +

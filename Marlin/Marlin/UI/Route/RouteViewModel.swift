@@ -16,7 +16,9 @@ class RouteViewModel: ObservableObject, Identifiable {
     var routeURI: URL? {
         didSet {
             let context = PersistenceController.current.viewContext
-            if let routeURI = routeURI, let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: routeURI), let route = try? context.existingObject(with: id) as? Route {
+            if let routeURI = routeURI, 
+                let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: routeURI),
+                let route = try? context.existingObject(with: id) as? Route {
                 self.route = route
                 routeName = route.name ?? ""
                 routeDistance = route.distanceMeters

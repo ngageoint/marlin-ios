@@ -33,7 +33,10 @@ struct DataSourceTabGrid: View {
         }
         .overlay(CheckBadge(checked: .constant(isTab(dataSource.definition.key)))
             .accessibilityElement()
-            .accessibilityLabel("\(dataSource.definition.fullName) Tab \(isTab(dataSource.definition.key) ? "On" : "Off")"))
+            .accessibilityLabel(
+                "\(dataSource.definition.fullName) Tab \(isTab(dataSource.definition.key) ? "On" : "Off")"
+            )
+        )
         .padding(8)
         .accessibilityElement(children: .contain)
         .accessibilityLabel("\(dataSource.definition.fullName) Tab")

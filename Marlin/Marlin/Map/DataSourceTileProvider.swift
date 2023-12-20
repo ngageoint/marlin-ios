@@ -129,20 +129,14 @@ struct DataSourceTileProvider<T: MapImage>: ImageDataProvider {
                 handler: handler)
         }
     }
-    
-    func drawTile(
-        tileBounds3857: MapBoundingBox,
-        queryBounds: MapBoundingBox,
-        zoomLevel: Int,
-        cacheKey: String,
-        handler: @escaping (Result<Data, Error>) -> Void) {
 
+    func createBoundsPredicate(queryBounds: MapBoundingBox) -> NSPredicate? {
         guard let boundingPredicate = boundingPredicate else {
-            return
+            return nil
         }
-        
+
         var boundsPredicate: NSPredicate?
-        
+
         if queryBounds.swCorner.x < -180 {
             boundsPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
                 boundingPredicate(queryBounds.swCorner.y, queryBounds.neCorner.y, -180.0, queryBounds.neCorner.x),
@@ -168,7 +162,45 @@ struct DataSourceTileProvider<T: MapImage>: ImageDataProvider {
                 queryBounds.swCorner.x,
                 queryBounds.neCorner.x)
         }
-        
+
+        return boundsPredicate
+    }
+
+    func drawImageIntoTile(
+        mapImage: UIImage,
+        object: T,
+        tileBounds3857: MapBoundingBox
+    ) {
+        let object3857Location =
+        coord4326To3857(
+            longitude: object.longitude,
+            latitude: object.latitude)
+        let xPosition = (
+            ((object3857Location.x - tileBounds3857.swCorner.x) /
+             (tileBounds3857.neCorner.x - tileBounds3857.swCorner.x)
+            )  * self.tileSize.width)
+        let yPosition = self.tileSize.height - (
+            ((object3857Location.y - tileBounds3857.swCorner.y)
+             / (tileBounds3857.neCorner.y - tileBounds3857.swCorner.y)
+            ) * self.tileSize.height)
+        mapImage.draw(
+            in: CGRect(
+                x: (xPosition - (mapImage.size.width / 2)),
+                y: (yPosition - (mapImage.size.height / 2)),
+                width: mapImage.size.width,
+                height: mapImage.size.height
+            )
+        )
+    }
+
+    func drawTile(
+        tileBounds3857: MapBoundingBox,
+        queryBounds: MapBoundingBox,
+        zoomLevel: Int,
+        cacheKey: String,
+        handler: @escaping (Result<Data, Error>) -> Void) {
+        let boundsPredicate: NSPredicate? = createBoundsPredicate(queryBounds: queryBounds)
+
         guard let boundsPredicate = boundsPredicate else {
             return
         }
@@ -197,19 +229,7 @@ struct DataSourceTileProvider<T: MapImage>: ImageDataProvider {
                         tileBounds3857: tileBounds3857,
                         context: UIGraphicsGetCurrentContext())
                     for mapImage in mapImages {
-                        let object3857Location = 
-                        coord4326To3857(
-                            longitude: object.longitude,
-                            latitude: object.latitude)
-                        let xPosition = (
-                            ((object3857Location.x - tileBounds3857.swCorner.x) /
-                            (tileBounds3857.neCorner.x - tileBounds3857.swCorner.x)
-                            )  * self.tileSize.width)
-                        let yPosition = self.tileSize.height - (
-                            ((object3857Location.y - tileBounds3857.swCorner.y)
-                             / (tileBounds3857.neCorner.y - tileBounds3857.swCorner.y)
-                            ) * self.tileSize.height)
-                        mapImage.draw(in: CGRect(x: (xPosition - (mapImage.size.width / 2)), y: (yPosition - (mapImage.size.height / 2)), width: mapImage.size.width, height: mapImage.size.height))
+                        drawImageIntoTile(mapImage: mapImage, object: object, tileBounds3857: tileBounds3857)
                     }
                 }
             }

@@ -111,7 +111,10 @@ struct GeoPackageExportView: View {
         }
         .onChange(of: viewModel.complete) { _ in
             guard let path = viewModel.geoPackage?.path else { return }
-            let activityVC = UIActivityViewController(activityItems: [URL(fileURLWithPath: path)], applicationActivities: nil)
+            let activityVC = UIActivityViewController(
+                activityItems: [URL(fileURLWithPath: path)],
+                applicationActivities: nil
+            )
             UIApplication.shared.windows.first?.rootViewController?.present(activityVC, animated: true, completion: nil)
         }
         .alert("Export Error", isPresented: $viewModel.error) {
@@ -129,17 +132,23 @@ struct GeoPackageExportView: View {
         definition: any DataSourceDefinition,
         enabled: Bool
     ) -> some View {
-        Button(action: {
-            viewModel.toggleDataSource(definition: definition)
-        }) {
-            Label(title: {}) {
-                if let image = definition.image {
-                    Image(uiImage: image)
-                        .renderingMode(.template)
-                        .tint(Color.white)
-                }
+        Button(
+            action: {
+                viewModel.toggleDataSource(definition: definition)
+            },
+            label: {
+                Label(
+                    title: {},
+                    icon: {
+                        if let image = definition.image {
+                            Image(uiImage: image)
+                                .renderingMode(.template)
+                                .tint(Color.white)
+                        }
+                    }
+                )
             }
-        }
+        )
         .buttonStyle(
             MaterialFloatingButtonStyle(
                 type: .custom,
@@ -210,8 +219,8 @@ struct GeoPackageExportView: View {
             Spacer()
         }
         VStack(spacing: 0) {
-            ForEach(dataSources.sorted(by: { d1, d2 in
-                d1.definition.order < d2.definition.order
+            ForEach(dataSources.sorted(by: { ds1, ds2 in
+                ds1.definition.order < ds2.definition.order
             })) { dataSourceDefinition in
                 if let progress = exportProgresses[dataSourceDefinition], 
                     let viewModel = filterViewModels[dataSourceDefinition] {

@@ -31,7 +31,10 @@ extension NavigationalWarningsOverview: View {
                 NavigationalWarningMapView(bottomButtons: {
                     ViewExpandButton(expanded: $expandMap)
                 })
-                .frame(minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3, maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5)
+                .frame(
+                    minHeight: expandMap ? geometry.size.height : geometry.size.height * 0.3,
+                    maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5
+                )
                 .edgesIgnoringSafeArea([.leading, .trailing])
                 
                 NavigationalWarningAreasView(mapName: MAP_NAME, path: $path)
@@ -48,8 +51,12 @@ extension NavigationalWarningsOverview: View {
                 }
         }
         .navigationDestination(for: NavigationalWarningSection.self) { section in
-            NavigationalWarningNavAreaListView(warnings: section.warnings, navArea: section.id, mapName: MAP_NAME, path: $path)
-                .accessibilityElement(children: .contain)
+            NavigationalWarningNavAreaListView(
+                warnings: section.warnings,
+                navArea: section.id,
+                mapName: MAP_NAME, path: $path
+            )
+            .accessibilityElement(children: .contain)
         }
         .onChange(of: focusedItem.date) { _ in
             if watchFocusedItem, let focusedItem = focusedItem.dataSource as? NavigationalWarning {

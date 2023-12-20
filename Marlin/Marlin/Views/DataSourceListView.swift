@@ -30,19 +30,47 @@ struct DataSourceListView: View {
     
     var body: some View {
         if dataSource.key == Asam.key {
-            MSIListView<Asam, EmptyView, EmptyView, EmptyView>(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
+            MSIListView<Asam, EmptyView, EmptyView, EmptyView>(
+                path: $path,
+                focusedItem: focusedItem, 
+                watchFocusedItem: watchFocusedItem
+            )
         } else if dataSource.key == Modu.key {
-            MSIListView<Modu, EmptyView, EmptyView, EmptyView>(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
+            MSIListView<Modu, EmptyView, EmptyView, EmptyView>(
+                path: $path,
+                focusedItem: focusedItem,
+                watchFocusedItem: watchFocusedItem
+            )
         } else if dataSource.key == Light.key {
-            MSIListView<Light, EmptyView, EmptyView, EmptyView>(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
+            MSIListView<Light, EmptyView, EmptyView, EmptyView>(
+                path: $path,
+                focusedItem: focusedItem,
+                watchFocusedItem: watchFocusedItem
+            )
         } else if dataSource.key == NavigationalWarning.key {
-            NavigationalWarningsOverview(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
+            NavigationalWarningsOverview(
+                path: $path,
+                focusedItem: focusedItem,
+                watchFocusedItem: watchFocusedItem
+            )
         } else if dataSource.key == Port.key {
-            MSIListView<Port, EmptyView, EmptyView, EmptyView>(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
+            MSIListView<Port, EmptyView, EmptyView, EmptyView>(
+                path: $path,
+                focusedItem: focusedItem,
+                watchFocusedItem: watchFocusedItem
+            )
         } else if dataSource.key == RadioBeacon.key {
-            MSIListView<RadioBeacon, EmptyView, EmptyView, EmptyView>(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
+            MSIListView<RadioBeacon, EmptyView, EmptyView, EmptyView>(
+                path: $path,
+                focusedItem: focusedItem,
+                watchFocusedItem: watchFocusedItem
+            )
         } else if dataSource.key == DifferentialGPSStation.key {
-            MSIListView<DifferentialGPSStation, EmptyView, EmptyView, EmptyView>(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
+            MSIListView<DifferentialGPSStation, EmptyView, EmptyView, EmptyView>(
+                path: $path,
+                focusedItem: focusedItem,
+                watchFocusedItem: watchFocusedItem
+            )
         } else if dataSource.key == DFRS.key {
             MSIListView<DFRS, EmptyView, EmptyView, EmptyView>(path: $path)
         } else if dataSource.key == ElectronicPublication.key {
@@ -50,7 +78,11 @@ struct DataSourceListView: View {
         } else if dataSource.key == NoticeToMariners.key {
             NoticeToMarinersView(path: $path)
         } else if dataSource.key == Bookmark.key {
-            BookmarkListView(path: $path, focusedItem: focusedItem, watchFocusedItem: watchFocusedItem)
+            BookmarkListView(
+                path: $path,
+                focusedItem: focusedItem, 
+                watchFocusedItem: watchFocusedItem
+            )
         } else if dataSource.key == Route.key {
             RouteList(path: $path)
         }

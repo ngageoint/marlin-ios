@@ -145,8 +145,7 @@ extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportabl
 
             sfPoly?.addRing(sfLineString)
         }
-        if let flipped = flipped {
-            let flippedPoly = SFPolygon(ring: flipped)
+        if let flipped = flipped, let sfPoly = sfPoly, let flippedPoly = SFPolygon(ring: flipped) {
             return SFGeometryCollection(geometries: [flippedPoly, sfPoly])
         }
         return sfPoly

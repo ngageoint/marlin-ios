@@ -22,7 +22,11 @@ struct RadioBeaconDetailView: View {
             case nil:
                 Color.clear.onAppear {
                     viewModel.repository = radioBeaconRepository
-                    viewModel.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+                    viewModel.getRadioBeacon(
+                        featureNumber: featureNumber,
+                        volumeNumber: volumeNumber,
+                        waypointURI: waypointURI
+                    )
                 }
             case .some(let radioBeacon):
                 List {
@@ -36,8 +40,12 @@ struct RadioBeaconDetailView: View {
                                 .foregroundColor(Color.white)
                                 .background(Color(uiColor: radioBeacon.color))
                                 .padding(.bottom, -8)
-                            DataSourceLocationMapView(dataSourceLocation: radioBeacon, mapName: "Radio Beacon Detail Map", mixins: [RadioBeaconMap<RadioBeaconModel>(objects: [radioBeacon])])
-                                .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                            DataSourceLocationMapView(
+                                dataSourceLocation: radioBeacon,
+                                mapName: "Radio Beacon Detail Map",
+                                mixins: [RadioBeaconMap<RadioBeaconModel>(objects: [radioBeacon])]
+                            )
+                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                             RadioBeaconSummaryView(radioBeacon: radioBeacon)
                                 .showBookmarkNotes(true)
                                 .setShowSectionHeader(true)

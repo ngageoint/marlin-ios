@@ -21,7 +21,7 @@ public class MSI {
     var cancellable = Set<AnyCancellable>()
     
     var loading: Bool {
-        for importable in self.masterDataList where self.appState.loadingDataSource[importable.key] == true {
+        for importable in self.mainDataList where self.appState.loadingDataSource[importable.key] == true {
             return true
         }
         return false
@@ -47,7 +47,7 @@ public class MSI {
         return Session(configuration: configuration, serverTrustManager: manager)
     }()
     
-    let masterDataList: [any BatchImportable.Type] = [
+    let mainDataList: [any BatchImportable.Type] = [
         Asam.self,
         Modu.self,
         NavigationalWarning.self,
@@ -89,7 +89,7 @@ public class MSI {
                 $0.object as? DataSourceUpdatedNotification
             }
             .sink { item in
-                let dataSource = self.masterDataList.first { type in
+                let dataSource = self.mainDataList.first { type in
                     item.key == type.key
                 }
                 if let mapImageDataSource = dataSource as? (any MapImage) {
@@ -105,7 +105,7 @@ public class MSI {
                 $0.object as? DataSourceUpdatedNotification
             }
             .sink { item in
-                let dataSource = self.masterDataList.first { type in
+                let dataSource = self.mainDataList.first { type in
                     item.key == type.key
                 }
                 switch dataSource {
@@ -128,7 +128,7 @@ public class MSI {
         print("background handler")
         MSI.shared.scheduleAppRefresh()
         
-        let allLoadList: [any BatchImportable.Type] = self.masterDataList.filter { importable in
+        let allLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
             let sync = importable.shouldSync()
             return sync
         }
@@ -164,7 +164,7 @@ public class MSI {
         switch newPhase {
         case .background:
             // this will ensure these notifications are not sent since the user should have seen them
-            appState.dataSourceBatchImportNotificationsPending = [:]
+            appState.dsBatchImportNotificationsPending = [:]
             scheduleAppRefresh()
         case .active:
             MSI.shared.loadAllData()
@@ -201,10 +201,10 @@ public class MSI {
         loadAllDataTime = Date()
         NSLog("Load all data")
         
-        let initialDataLoadList: [any BatchImportable.Type] = self.masterDataList.filter { importable in
-            if let ds = importable as? any DataSource.Type {
+        let initialDataLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
+            if let dataSourceType = importable as? any DataSource.Type {
                 return UserDefaults.standard
-                    .dataSourceEnabled(ds.definition) &&
+                    .dataSourceEnabled(dataSourceType.definition) &&
                 !self.isLoaded(type: importable) &&
                 !(importable.seedDataFiles ?? []).isEmpty
             }
@@ -226,7 +226,7 @@ public class MSI {
         } else {
             UserDefaults.standard.initialDataLoaded = true
             
-            let allLoadList: [any BatchImportable.Type] = self.masterDataList.filter { importable in
+            let allLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
                 let sync = importable.shouldSync()
                 return sync
             }

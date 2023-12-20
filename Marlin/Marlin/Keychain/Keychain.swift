@@ -70,7 +70,7 @@ class Keychain {
         let status = SecItemAdd(query as CFDictionary, nil)
         switch status {
         case errSecDuplicateItem:
-            if let _ = update(server: server, credentials: credentials) {
+            if update(server: server, credentials: credentials) != nil {
                 return true
             } else {
                 return false

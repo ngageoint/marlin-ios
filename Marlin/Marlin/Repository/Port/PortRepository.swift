@@ -37,7 +37,9 @@ class PortCoreDataRepository: PortRepository, ObservableObject {
     
     func getPort(portNumber: Int64?, waypointURI: URL?) -> PortModel? {
         if let waypointURI = waypointURI {
-            if let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: waypointURI), let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
+            if let id = context.persistentStoreCoordinator?.managedObjectID(
+                forURIRepresentation: waypointURI
+            ), let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
                 let dataSource = waypoint.decodeToDataSource()
                 if let dataSource = dataSource as? PortModel {
                     return dataSource

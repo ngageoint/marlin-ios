@@ -63,7 +63,11 @@ class SearchResultsMap: NSObject, MapMixin {
             }
         } else {
             DispatchQueue.main.async {
-                mapState.center = MKCoordinateRegion(center: mapView.centerCoordinate, zoom: 4, bounds: UIScreen.main.bounds)
+                mapState.center = MKCoordinateRegion(
+                    center: mapView.centerCoordinate,
+                    zoom: 4,
+                    bounds: UIScreen.main.bounds
+                )
             }
         }
     }
@@ -79,7 +83,9 @@ class SearchResultsMap: NSObject, MapMixin {
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
         if let annotation = annotation as? SearchResultAnnotation {
             let mapItem = annotation.mapItem
-            if let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "placemark", for: annotation) as? MKMarkerAnnotationView {
+            if let annotationView = mapView.dequeueReusableAnnotationView(
+                withIdentifier: "placemark", for: annotation
+            ) as? MKMarkerAnnotationView {
                 annotationView.isEnabled = true
                 annotationView.markerTintColor = Color.primaryUIColor
                 if let category = mapItem.pointOfInterestCategory {

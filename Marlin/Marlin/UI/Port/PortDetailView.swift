@@ -34,8 +34,12 @@ struct PortDetailView: View {
                             .foregroundColor(Color.white)
                             .background(Color(uiColor: port.color))
                             .padding(.bottom, -8)
-                        DataSourceLocationMapView(dataSourceLocation: port, mapName: "Port Detail Map", mixins: [PortMap<PortModel>(objects: [port])])
-                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                        DataSourceLocationMapView(
+                            dataSourceLocation: port,
+                            mapName: "Port Detail Map",
+                            mixins: [PortMap<PortModel>(objects: [port])]
+                        )
+                        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                         PortSummaryView(port: port)
                             .showBookmarkNotes(true)
                             .setShowTitle(false)
@@ -62,8 +66,11 @@ struct PortDetailView: View {
                 KeyValueSection(sectionName: "Approach", properties: port.approachKeyValues)
                     .dataSourceSection()
                 
-                KeyValueSection(sectionName: "Pilots, Tugs, Communications", properties: port.pilotsTugsCommunicationsKeyValues)
-                    .dataSourceSection()
+                KeyValueSection(
+                    sectionName: "Pilots, Tugs, Communications",
+                    properties: port.pilotsTugsCommunicationsKeyValues
+                )
+                .dataSourceSection()
                 
                 KeyValueSection(sectionName: "Facilities", properties: port.facilitiesKeyValues)
                     .dataSourceSection()

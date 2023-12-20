@@ -111,7 +111,10 @@ extension DFRS: BatchImportable {
         }
         let count = value.dfrs.count
         NSLog("Received \(count) \(Self.key) records.")
-        return try await Self.importRecords(from: value.dfrs, taskContext: PersistenceController.current.newTaskContext())
+        return try await Self.importRecords(
+            from: value.dfrs,
+            taskContext: PersistenceController.current.newTaskContext()
+        )
     }
     
     static func dataRequest() -> [MSIRouter] {

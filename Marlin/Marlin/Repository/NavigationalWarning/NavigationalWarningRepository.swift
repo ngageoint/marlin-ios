@@ -38,13 +38,20 @@ class NavigationalWarningCoreDataRepository: NavigationalWarningRepository, Obse
     
     func getNavigationalWarning(msgYear: Int64, msgNumber: Int64, navArea: String?) -> NavigationalWarning? {
         if let navArea = navArea {
-            return try? context.fetchFirst(NavigationalWarning.self, predicate: NSPredicate(format: "msgYear = %d AND msgNumber = %d AND navArea = %@", argumentArray: [msgYear, msgNumber, navArea]))
+            return try? context.fetchFirst(
+                NavigationalWarning.self,
+                predicate: NSPredicate(
+                    format: "msgYear = %d AND msgNumber = %d AND navArea = %@",
+                    argumentArray: [msgYear, msgNumber, navArea]
+                )
+            )
         }
         return nil
     }
     
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
-        guard let fetchRequest = NavigationalWarningFilterable().fetchRequest(filters: filters, commonFilters: nil) else {
+        guard let fetchRequest = NavigationalWarningFilterable()
+            .fetchRequest(filters: filters, commonFilters: nil) else {
             return 0
         }
         return (try? context.count(for: fetchRequest)) ?? 0

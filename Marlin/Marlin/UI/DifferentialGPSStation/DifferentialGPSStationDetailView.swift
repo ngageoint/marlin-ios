@@ -22,7 +22,11 @@ struct DifferentialGPSStationDetailView: View {
             case nil:
                 Color.clear.onAppear {
                     viewModel.repository = dgpsRepository
-                    viewModel.getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+                    viewModel.getDifferentialGPSStation(
+                        featureNumber: featureNumber,
+                        volumeNumber: volumeNumber,
+                        waypointURI: waypointURI
+                    )
                 }
             case .some(let differentialGPSStation):
                 List {
@@ -40,7 +44,9 @@ struct DifferentialGPSStationDetailView: View {
                                 dataSourceLocation: differentialGPSStation,
                                 mapName: "DifferentialGPSStation Detail Map",
                                 mixins: [
-                                    DifferentialGPSStationMap<DifferentialGPSStationModel>(objects: [differentialGPSStation])
+                                    DifferentialGPSStationMap<DifferentialGPSStationModel>(
+                                        objects: [differentialGPSStation]
+                                    )
                                 ]
                             )
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
@@ -56,8 +62,11 @@ struct DifferentialGPSStationDetailView: View {
                     }
                     .dataSourceSection()
                     
-                    KeyValueSection(sectionName: "Additional Information", properties: differentialGPSStation.additionalKeyValues)
-                        .dataSourceSection()
+                    KeyValueSection(
+                        sectionName: "Additional Information",
+                        properties: differentialGPSStation.additionalKeyValues
+                    )
+                    .dataSourceSection()
                 }
                 .dataSourceDetailList()
             }
@@ -65,11 +74,19 @@ struct DifferentialGPSStationDetailView: View {
         .navigationTitle("\(viewModel.differentialGPSStation?.name ?? DifferentialGPSStation.dataSourceName)" )
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: featureNumber) { _ in
-            viewModel.getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+            viewModel.getDifferentialGPSStation(
+                featureNumber: featureNumber,
+                volumeNumber: volumeNumber,
+                waypointURI: waypointURI
+            )
         }
         .onAppear {
             viewModel.repository = dgpsRepository
-            viewModel.getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+            viewModel.getDifferentialGPSStation(
+                featureNumber: featureNumber,
+                volumeNumber: volumeNumber,
+                waypointURI: waypointURI
+            )
             Metrics.shared.dataSourceDetail(dataSource: DifferentialGPSStation.definition)
         }
     }

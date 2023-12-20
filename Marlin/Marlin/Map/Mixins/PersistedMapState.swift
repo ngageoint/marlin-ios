@@ -21,7 +21,11 @@ class PersistedMapState: NSObject, MapMixin {
             }
         } else {
             DispatchQueue.main.async {
-                mapState.center = MKCoordinateRegion(center: mapView.centerCoordinate, zoom: 4, bounds: UIScreen.main.bounds)
+                mapState.center = MKCoordinateRegion(
+                    center: mapView.centerCoordinate,
+                    zoom: 4,
+                    bounds: UIScreen.main.bounds
+                )
             }
         }
     }

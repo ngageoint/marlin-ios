@@ -65,7 +65,8 @@ class LightImage {
     }
     
     static func sectorImage(light: LightModel, lightSectors: [ImageSector], scale: Int, zoomLevel: Int) -> UIImage? {
-        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale - ((CGFloat(light.characteristicNumber ?? 0) - 1.0) * 2)
+        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale 
+        - ((CGFloat(light.characteristicNumber ?? 0) - 1.0) * 2)
         if zoomLevel > 7 {
             return CircleImage(
                 suggestedFrame: CGRect(x: 0, y: 0, width: 40 * radius, height: 40 * radius),
@@ -209,6 +210,7 @@ class LightColorImage: UIImage {
         
     }
     
+    // TODO: is this different than CircleImage?
     convenience init?(
         frame: CGRect,
         sectors: [LightSector],
@@ -217,7 +219,8 @@ class LightColorImage: UIImage {
         outerStroke: Bool = true,
         includeSectorDashes: Bool = false,
         includeLetters: Bool = true,
-        darkMode: Bool = false) {
+        darkMode: Bool = false
+    ) {
         let strokeWidth = 0.5
         let rect = frame
         let radius = arcRadius ?? min(rect.width / 2.0, rect.height / 2.0) - ((arcWidth ?? strokeWidth) / 2.0)
@@ -309,7 +312,8 @@ class LightColorImage: UIImage {
                     let text = sector.text
                     let size = text.size(withAttributes: attributes)
                     
-                    let endDegrees = sector.endDegrees > sector.startDegrees ? sector.endDegrees : sector.endDegrees + 360.0
+                    let endDegrees = sector.endDegrees > sector.startDegrees 
+                    ? sector.endDegrees : sector.endDegrees + 360.0
                     let midPointAngle = CGFloat(sector.startDegrees) + CGFloat(endDegrees - sector.startDegrees) / 2.0
                     var textRadius = radius
                     if let arcWidth = arcWidth {

@@ -12,15 +12,18 @@ struct ViewExpandButton: View {
     @Binding var expanded: Bool
     
     var body: some View {
-        Button(action: {
-            buttonPressed()
-        }) {
-            Label(
-                title: {},
-                icon: { Image(imageName)
-                        .renderingMode(.template)
-                })
-        }
+        Button(
+            action: {
+                buttonPressed()
+            },
+            label: {
+                Label(
+                    title: {},
+                    icon: { Image(imageName)
+                            .renderingMode(.template)
+                    })
+            }
+        )
         .accessibilityElement()
         .accessibilityLabel("\(expanded ? "Expanded" : "Collapsed")")
         .onAppear {
@@ -29,7 +32,14 @@ struct ViewExpandButton: View {
         .onChange(of: expanded) { _ in
             setButtonImage()
         }
-        .buttonStyle(MaterialFloatingButtonStyle(type: .secondary, size: .mini, foregroundColor: Color.primaryColorVariant, backgroundColor: Color.mapButtonColor))
+        .buttonStyle(
+            MaterialFloatingButtonStyle(
+                type: .secondary,
+                size: .mini,
+                foregroundColor: Color.primaryColorVariant,
+                backgroundColor: Color.mapButtonColor
+            )
+        )
     }
     
     func buttonPressed() {

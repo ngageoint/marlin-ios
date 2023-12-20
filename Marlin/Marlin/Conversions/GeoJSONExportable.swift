@@ -31,47 +31,42 @@ extension GeoJSONExportable {
     }
     var geoJsonFeatures: [Feature] {
         var geoJsonProperties: [String: AnyCodable] = [:]
-        
-//        if let exportable = self as? AnyGeoJSONExportable {
-//            return exportable.base.geoJsonFeatures
-//        } else {
-            
-            if let dataSource = self as? DataSource {
-                geoJsonProperties["marlin_data_source"] = AnyCodable(Self.definition.key)
-                
-                let encoder = JSONEncoder()
-                encoder.outputFormatting = .prettyPrinted
-                
-                if let encodable = dataSource as? Encodable, let data = encodable.dictionary {
-                    for (key, value) in data {
-                        geoJsonProperties[key] = AnyCodable(value)
+
+        geoJsonProperties["marlin_data_source"] = AnyCodable(Self.definition.key)
+
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+
+        if let encodable = self as? Encodable, let data = encodable.dictionary {
+            for (key, value) in data {
+                geoJsonProperties[key] = AnyCodable(value)
+            }
+        } else {
+
+            for property in Self.properties {
+                if let gjObject = self as? NSObject, let value = gjObject.value(forKey: property.key) {
+                    switch property.type {
+                    case .location:
+                        print("ignore")
+                    default:
+                        let codable = AnyCodable(value)
+                        geoJsonProperties[property.key] = codable
                     }
-                } else {
-                    
-                    for property in Self.properties {
-                        if let gjObject = self as? NSObject, let value = gjObject.value(forKey: property.key) {
-                            switch property.type {
-                            case .location:
-                                print("ignore")
-                            default:
-                                let codable = AnyCodable(value)
-                                geoJsonProperties[property.key] = codable
-                            }
-                            
-                        }
-                    }
+
                 }
-//            }
+            }
         }
-        return getFeature(sf: sfGeometry, geoJsonProperties: geoJsonProperties)
+        return getFeature(simpleFeature: sfGeometry, geoJsonProperties: geoJsonProperties)
     }
     
-    func getFeature(sf: SFGeometry?, geoJsonProperties: [String: AnyCodable]) -> [Feature] {
+    func getFeature(simpleFeature: SFGeometry?, geoJsonProperties: [String: AnyCodable]) -> [Feature] {
         var features: [Feature] = []
-        switch sf {
+        switch simpleFeature {
         case let point as SFPoint:
             if let x = point.x as? Double, let y = point.y as? Double {
-                features.append(Feature(geometry: .point(Point(longitude: x, latitude: y)), properties: geoJsonProperties))
+                features.append(
+                    Feature(geometry: .point(Point(longitude: x, latitude: y)), properties: geoJsonProperties)
+                )
             }
         case let line as SFLineString:
             if let lineString = line.toGeoJSON() {
@@ -84,7 +79,9 @@ extension GeoJSONExportable {
         case let collection as SFGeometryCollection:
             for geometry in collection.geometries {
                 if let geometry = geometry as? SFGeometry {
-                    features.append(contentsOf: getFeature(sf: geometry, geoJsonProperties: geoJsonProperties))
+                    features.append(
+                        contentsOf: getFeature(simpleFeature: geometry, geoJsonProperties: geoJsonProperties)
+                    )
                 }
             }
         default:

@@ -17,12 +17,21 @@ struct LightFilterable: Filterable {
         DataSourceProperty(name: "Latitude", key: #keyPath(Light.latitude), type: .latitude),
         DataSourceProperty(name: "Longitude", key: #keyPath(Light.longitude), type: .longitude),
         DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .string),
-        DataSourceProperty(name: "International Feature Number", key: #keyPath(Light.internationalFeature), type: .string),
+        DataSourceProperty(
+            name: "International Feature Number",
+            key: #keyPath(Light.internationalFeature),
+            type: .string
+        ),
         DataSourceProperty(name: "Name", key: #keyPath(Light.name), type: .string),
         DataSourceProperty(name: "Structure", key: #keyPath(Light.structure), type: .string),
         DataSourceProperty(name: "Focal Plane Elevation (ft)", key: #keyPath(Light.heightFeet), type: .double),
         DataSourceProperty(name: "Focal Plane Elevation (m)", key: #keyPath(Light.heightMeters), type: .double),
-        DataSourceProperty(name: "Range (nm)", key: #keyPath(Light.lightRange), type: .double, subEntityKey: #keyPath(LightRange.range)),
+        DataSourceProperty(
+            name: "Range (nm)",
+            key: #keyPath(Light.lightRange),
+            type: .double,
+            subEntityKey: #keyPath(LightRange.range)
+        ),
         DataSourceProperty(name: "Remarks", key: #keyPath(Light.remarks), type: .string),
         DataSourceProperty(name: "Characteristic", key: #keyPath(Light.characteristic), type: .string),
         DataSourceProperty(name: "Signal", key: #keyPath(Light.characteristic), type: .string),

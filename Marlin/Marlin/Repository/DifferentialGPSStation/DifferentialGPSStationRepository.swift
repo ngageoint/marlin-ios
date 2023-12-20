@@ -27,7 +27,11 @@ class DifferentialGPSStationRepositoryManager: DifferentialGPSStationRepository,
         featureNumber: Int?,
         volumeNumber: String?,
         waypointURI: URL?) -> DifferentialGPSStationModel? {
-        repository.getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+        repository.getDifferentialGPSStation(
+            featureNumber: featureNumber,
+            volumeNumber: volumeNumber,
+            waypointURI: waypointURI
+        )
     }
     
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {

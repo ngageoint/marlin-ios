@@ -371,7 +371,7 @@ extension Light: Locatable, GeoPackageExportable, GeoJSONExportable {
         }
         do {
             try ExceptionCatcher.catch {
-                let rowId = featureDao.create(row)
+                _ = featureDao.create(row)
 
             }
         } catch {

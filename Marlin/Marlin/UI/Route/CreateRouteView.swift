@@ -99,7 +99,33 @@ struct CreateRouteView: View {
             Spacer()
         })
     }
-    
+
+    @ViewBuilder
+    func sizingWaypointRow(waypointViewBuilder: any DataSource, i: Range<Int>.Element) -> some View {
+        waypointRow(waypointViewBuilder: waypointViewBuilder)
+            .opacity(0)
+            .overlay(
+                GeometryReader { geo in
+                    Color.clear.onAppear {
+                        if i == routeViewModel.waypoints.indices.lowerBound {
+                            firstWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
+                        }
+                        if i == routeViewModel.waypoints.indices.upperBound.advanced(by: -1) {
+                            lastWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
+                        }
+                    }
+                    .onChange(of: geo.size) { _ in
+                        if i == routeViewModel.waypoints.indices.lowerBound {
+                            firstWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
+                        }
+                        if i == routeViewModel.waypoints.indices.upperBound.advanced(by: -1) {
+                            lastWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
+                        }
+                    }
+                }
+            )
+    }
+
     @ViewBuilder
     func distance() -> some View {
         if let nauticalMilesDistance = routeViewModel.nauticalMilesDistance {
@@ -114,7 +140,24 @@ struct CreateRouteView: View {
             EmptyView()
         }
     }
-    
+
+    @ViewBuilder
+    func sizingDistanceFor() -> some View {
+        distance()
+            .padding(.top, 16)
+            .opacity(0)
+            .overlay(
+                GeometryReader { geo in
+                    Color.clear.onAppear {
+                        distanceFrameSize = CGSize(width: .infinity, height: geo.size.height)
+                    }
+                    .onChange(of: geo.size) { _ in
+                        distanceFrameSize = CGSize(width: .infinity, height: geo.size.height)
+                    }
+                }
+            )
+    }
+
     @ViewBuilder
     func instructions() -> some View {
         Text("Select a feature to add to the route, long press to add custom point, drag to reorder")
@@ -127,7 +170,25 @@ struct CreateRouteView: View {
             .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
             .listRowSeparator(.hidden, edges: .bottom)
     }
-    
+
+    @ViewBuilder
+    func sizingInstructions() -> some View {
+        instructions()
+            .padding(.top, 1)
+            .padding(.bottom, 7)
+            .opacity(0)
+            .overlay(
+                GeometryReader { geo in
+                    Color.clear.onAppear {
+                        instructionsFrameSize = CGSize(width: .infinity, height: geo.size.height)
+                    }
+                    .onChange(of: geo.size) { _ in
+                        instructionsFrameSize = CGSize(width: .infinity, height: geo.size.height)
+                    }
+                }
+            )
+    }
+
     @ViewBuilder
     func routeList() -> some View {
         VStack {
@@ -173,60 +234,13 @@ struct CreateRouteView: View {
     @ViewBuilder
     func sizingOnlyStack() -> some View {
         VStack(spacing: 0) {
-            instructions()
-                .padding(.top, 1)
-                .padding(.bottom, 7)
-                .opacity(0)
-                .overlay(
-                    GeometryReader { geo in
-                        Color.clear.onAppear {
-                            instructionsFrameSize = CGSize(width: .infinity, height: geo.size.height)
-                        }
-                        .onChange(of: geo.size) { _ in
-                            instructionsFrameSize = CGSize(width: .infinity, height: geo.size.height)
-                        }
-                    }
-                )
+            sizingInstructions()
             ForEach($routeViewModel.waypoints.indices, id: \.self) { i in
                 let waypointViewBuilder = routeViewModel.waypoints[i]
-                    waypointRow(waypointViewBuilder: waypointViewBuilder)
-                        .opacity(0)
-                        .overlay(
-                            GeometryReader { geo in
-                                Color.clear.onAppear {
-                                    if i == routeViewModel.waypoints.indices.lowerBound {
-                                        firstWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
-                                    }
-                                    if i == routeViewModel.waypoints.indices.upperBound.advanced(by: -1) {
-                                        lastWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
-                                    }
-                                }
-                                .onChange(of: geo.size) { _ in
-                                    if i == routeViewModel.waypoints.indices.lowerBound {
-                                        firstWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
-                                    }
-                                    if i == routeViewModel.waypoints.indices.upperBound.advanced(by: -1) {
-                                        lastWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
-                                    }
-                                }
-                            }
-                        )
-                
+                sizingWaypointRow(waypointViewBuilder: waypointViewBuilder, i: i)
             }
-            distance()
-                .padding(.top, 16)
-                .opacity(0)
-                .overlay(
-                    GeometryReader { geo in
-                        Color.clear.onAppear {
-                            distanceFrameSize = CGSize(width: .infinity, height: geo.size.height)
-                        }
-                        .onChange(of: geo.size) { _ in
-                            distanceFrameSize = CGSize(width: .infinity, height: geo.size.height)
-                        }
-                    }
-                )
-            
+            sizingDistanceFor()
+
         }
         .padding(16)
         

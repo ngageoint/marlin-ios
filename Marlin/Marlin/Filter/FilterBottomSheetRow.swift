@@ -17,7 +17,6 @@ struct FilterBottomSheetRow: View {
     var body: some View {
         VStack(alignment: .leading) {
             DisclosureGroup {
-                let dataSourceType = filterable.definition
                 FilterView(viewModel: PersistedFilterViewModel(dataSource: filterable))
                     .accessibilityElement(children: .contain)
                     .accessibilityLabel("\(filterable.definition.fullName) filters")

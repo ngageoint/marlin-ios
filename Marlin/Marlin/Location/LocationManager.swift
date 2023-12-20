@@ -156,12 +156,17 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func updateCurrentNavArea() {
-        guard let navAreaFeatureDao = navAreaFeatureDao, let navAreaGeoPackage = navAreaGeoPackage, let lastLocation = lastLocation else {
+        guard let navAreaFeatureDao = navAreaFeatureDao,
+              let navAreaGeoPackage = navAreaGeoPackage,
+              let lastLocation = lastLocation else {
             return
         }
         let rtree = GPKGRTreeIndexExtension(geoPackage: navAreaGeoPackage)
         let rtreeDao = rtree?.tableDao(with: navAreaFeatureDao)
-        guard let point = SFPoint(xValue: lastLocation.coordinate.longitude, andYValue: lastLocation.coordinate.latitude), let resultSet = rtreeDao?.queryFeatures(with: point.envelope()) else {
+        guard let point = SFPoint(
+            xValue: lastLocation.coordinate.longitude,
+            andYValue: lastLocation.coordinate.latitude),
+                let resultSet = rtreeDao?.queryFeatures(with: point.envelope()) else {
             return
         }
         if resultSet.moveToNext() {

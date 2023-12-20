@@ -164,7 +164,11 @@ struct LightSettingsView: View {
                         dataSourceLocation: lights[0],
                         mapName: "Light Detail Map",
                         mixins: [LightMap<LightModel>(objects: lights)])
-                    .frame(maxWidth: .infinity, minHeight: geometry.size.height * 0.3, maxHeight: geometry.size.height * 0.3)
+                    .frame(
+                        maxWidth: .infinity,
+                        minHeight: geometry.size.height * 0.3,
+                        maxHeight: geometry.size.height * 0.3
+                    )
                 List {
                     Section {
                         Toggle(isOn: $actualRangeSectorLights, label: {

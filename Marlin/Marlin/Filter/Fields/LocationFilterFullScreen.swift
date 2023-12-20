@@ -60,26 +60,40 @@ struct LocationFilterFullScreen: View {
                         .background(Color.surfaceColor)
                         .padding(.all, 4)
                         ZStack {
-                            MarlinMap(name: "Location Filter", mixins: mapMixins, mapState: mapState, allowMapTapsOnItems: false)
-                                .onAppear {
-                                    if let boundsMixin = boundsMixin {
-                                        mapMixins.mixins.append(boundsMixin)
-                                    } else {
-                                        boundsMixin = LocationBoundsMixin(region: $viewModel.region, coordinateOne: $coordinateOne, coordinateTwo: $coordinateTwo)
-                                        mapMixins.mixins.append(boundsMixin!)
-                                    }
-                                    mapMixins.mixins.append(UserLayersMap())
-                                    region = viewModel.region
-                                    mapState.center = viewModel.region
+                            MarlinMap(
+                                name: "Location Filter",
+                                mixins: mapMixins,
+                                mapState: mapState,
+                                allowMapTapsOnItems: false
+                            )
+                            .onAppear {
+                                if let boundsMixin = boundsMixin {
+                                    mapMixins.mixins.append(boundsMixin)
+                                } else {
+                                    boundsMixin = LocationBoundsMixin(
+                                        region: $viewModel.region,
+                                        coordinateOne: $coordinateOne,
+                                        coordinateTwo: $coordinateTwo
+                                    )
+                                    mapMixins.mixins.append(boundsMixin!)
                                 }
+                                mapMixins.mixins.append(UserLayersMap())
+                                region = viewModel.region
+                                mapState.center = viewModel.region
+                            }
                             Image(systemName: "scope")
                         }
                         .ignoresSafeArea()
                         
                     if let valueMinLatitude = coordinateOne.latitude, let valueMinLongitude = coordinateOne.longitude {
                         HStack {
-                            Text("\(viewModel.dataSourceProperty.name) First Corner **\(CLLocationCoordinate2D(latitude: valueMinLatitude, longitude: valueMinLongitude).format())**")
-                                .padding(.all, 8)
+                            Text("""
+                                \(viewModel.dataSourceProperty.name) First Corner \
+                                **\(CLLocationCoordinate2D(
+                                    latitude: valueMinLatitude,
+                                    longitude: valueMinLongitude).format())**
+                            """)
+                            .padding(.all, 8)
                             Spacer()
                             Button {
                                 coordinateOne.latitude = nil
@@ -112,8 +126,13 @@ struct LocationFilterFullScreen: View {
                     }
                     if let valueMaxLatitude = coordinateTwo.latitude, let valueMaxLongitude = coordinateTwo.longitude {
                         HStack {
-                            Text("\(viewModel.dataSourceProperty.name) Second Corner **\(CLLocationCoordinate2D(latitude: valueMaxLatitude, longitude: valueMaxLongitude).format())**")
-                                .padding(.all, 8)
+                            Text("""
+                                \(viewModel.dataSourceProperty.name) Second Corner \
+                                **\(CLLocationCoordinate2D(
+                                    latitude: valueMaxLatitude,
+                                    longitude: valueMaxLongitude).format())**
+                            """)
+                            .padding(.all, 8)
                             Spacer()
                             Button {
                                 coordinateTwo.latitude = nil
@@ -149,22 +168,25 @@ struct LocationFilterFullScreen: View {
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    if let valueLatitudeOne = coordinateOne.latitude, 
-                        let valueLongitudeOne = coordinateOne.longitude,
-                        let valueLatitudeTwo = coordinateTwo.latitude,
-                        let valueLongitudeTwo = coordinateTwo.longitude {
-                        viewModel.valueMinLatitudeString = "\(min(valueLatitudeOne, valueLatitudeTwo))"
-                        viewModel.valueMinLongitudeString = "\(min(valueLongitudeOne, valueLongitudeTwo))"
-                        viewModel.valueMaxLatitudeString = "\(max(valueLatitudeTwo, valueLatitudeOne))"
-                        viewModel.valueMaxLongitudeString = "\(max(valueLongitudeTwo, valueLongitudeTwo))"
-                    }
+                Button(
+                    action: {
+                        if let valueLatitudeOne = coordinateOne.latitude,
+                            let valueLongitudeOne = coordinateOne.longitude,
+                            let valueLatitudeTwo = coordinateTwo.latitude,
+                            let valueLongitudeTwo = coordinateTwo.longitude {
+                            viewModel.valueMinLatitudeString = "\(min(valueLatitudeOne, valueLatitudeTwo))"
+                            viewModel.valueMinLongitudeString = "\(min(valueLongitudeOne, valueLongitudeTwo))"
+                            viewModel.valueMaxLatitudeString = "\(max(valueLatitudeTwo, valueLatitudeOne))"
+                            viewModel.valueMaxLongitudeString = "\(max(valueLongitudeTwo, valueLongitudeTwo))"
+                        }
 
-                    expanded.toggle()
-                }) {
-                    Text("OK")
-                        .foregroundColor(Color.onPrimaryColor.opacity(0.87))
-                }
+                        expanded.toggle()
+                    },
+                    label: {
+                        Text("OK")
+                            .foregroundColor(Color.onPrimaryColor.opacity(0.87))
+                    }
+                )
                 .accessibilityElement()
                 .accessibilityLabel("Close Location Filter")
             }

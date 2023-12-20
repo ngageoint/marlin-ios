@@ -13,7 +13,10 @@ class MapLayer: NSManagedObject {
     
     @discardableResult
     static func safeDeleteGeoPackage(name: String) -> Bool {
-        if let mapLayers = try? PersistenceController.shared.viewContext.fetchObjects(MapLayer.self, predicate: NSPredicate(format: "name = %@ AND type = %@", name, LayerType.geopackage.rawValue)) {
+        if let mapLayers = try? PersistenceController.shared.viewContext.fetchObjects(
+            MapLayer.self,
+            predicate: NSPredicate(format: "name = %@ AND type = %@", name, LayerType.geopackage.rawValue)
+        ) {
             if mapLayers.isEmpty {
                 // safe to delete the geopackage
                 return GeoPackage.shared.deleteGeoPackage(name: name)
@@ -42,7 +45,10 @@ class MapLayer: NSManagedObject {
         layer.urlParameters = viewModel.urlParameters
         
         if viewModel.password != "" {
-            Keychain().addOrUpdate(server: layer.url ?? "", credentials: Credentials(username: viewModel.username, password: viewModel.password))
+            Keychain().addOrUpdate(
+                server: layer.url ?? "",
+                credentials: Credentials(username: viewModel.username, password: viewModel.password)
+            )
         }
         return layer
     }
@@ -65,7 +71,10 @@ class MapLayer: NSManagedObject {
         self.urlParameters = viewModel.urlParameters
         
         if viewModel.password != "" {
-            Keychain().addOrUpdate(server: url ?? "", credentials: Credentials(username: viewModel.username, password: viewModel.password))
+            Keychain().addOrUpdate(
+                server: url ?? "",
+                credentials: Credentials(username: viewModel.username, password: viewModel.password)
+            )
         }
     }
     
@@ -75,7 +84,9 @@ class MapLayer: NSManagedObject {
     }
     
     var password: String? {
-        if self.username != "", let credentials = Keychain().getCredentials(server: self.url ?? "", account: self.username ?? "") {
+        if self.username != "", 
+            let credentials = Keychain().getCredentials(server: self.url ?? "", account: self.username ?? ""
+        ) {
             return credentials.password
         }
         return nil
@@ -141,7 +152,10 @@ class MapLayer: NSManagedObject {
     }
     
     var boundingBoxDisplay: String {
-        return "(\(minLatitude.latitudeDisplay), \(minLongitude.longitudeDisplay)) - (\(maxLatitude.latitudeDisplay), \(maxLongitude.longitudeDisplay))"
+        return """
+            (\(minLatitude.latitudeDisplay), \(minLongitude.longitudeDisplay)) \
+            - (\(maxLatitude.latitudeDisplay), \(maxLongitude.longitudeDisplay))
+        """
     }
     
 }

@@ -30,7 +30,13 @@ extension Light: MapImage {
             if lightSectors.contains(where: { sector in
                 sector.range == nil
             }) {
-                images.append(contentsOf: LightImage.image(light: LightModel(light: self), zoomLevel: zoomLevel, tileBounds3857: tileBounds3857))
+                images.append(
+                    contentsOf: LightImage.image(
+                        light: LightModel(light: self),
+                        zoomLevel: zoomLevel,
+                        tileBounds3857: tileBounds3857
+                    )
+                )
             } else {
                 
                 if context == nil {
@@ -73,7 +79,12 @@ extension Light: MapImage {
         return images
     }
     
-    func actualSizeSectorLight(lightSectors: [ImageSector], zoomLevel: Int, tileBounds3857: MapBoundingBox, context: CGContext) {
+    func actualSizeSectorLight(
+        lightSectors: [ImageSector],
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox,
+        context: CGContext
+    ) {
         for sector in lightSectors.sorted(by: { one, two in
             return one.range ?? 0.0 < two.range ?? 0.0
         }) {

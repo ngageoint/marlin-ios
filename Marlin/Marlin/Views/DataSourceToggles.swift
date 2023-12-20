@@ -16,13 +16,24 @@ struct DataSourceToggles: View {
             .background(alignment: .bottomLeading) {
                 // two arcs
                 // outer arc
-                ForEach(Array(dataSourceList.mappableDataSources.prefix(5).enumerated()), id: \.element) { index, dataSourceItem in
+                ForEach(
+                    Array(
+                        dataSourceList
+                            .mappableDataSources
+                            .prefix(5)
+                            .enumerated()
+                    ), id: \.element) { index, dataSourceItem in
                     dataSourceButton(dataSourceItem: dataSourceItem)
                         .offset(expanded ? position(position: index, arcSize: 5, radius: 120.0) : .zero)
                         .opacity(expanded ? 1.0 : 0.0)
                 }
                 // inner arc
-                ForEach(Array(dataSourceList.mappableDataSources[5...7].enumerated()), id: \.element) { index, dataSourceItem in
+                ForEach(
+                    Array(
+                        dataSourceList
+                            .mappableDataSources[5...7]
+                            .enumerated()
+                    ), id: \.element) { index, dataSourceItem in
                     dataSourceButton(dataSourceItem: dataSourceItem)
                         .offset(expanded ? position(position: index, arcSize: 3, radius: 65.0) : .zero)
                         .opacity(expanded ? 1.0 : 0.0)
@@ -38,28 +49,34 @@ struct DataSourceToggles: View {
     
     @ViewBuilder
     func expandButton() -> some View {
-        Button(action: {
-            withAnimation {
-                expanded.toggle()
-            }
-        }) {
-            Label(title: {}) {
-                Group {
-                    if expanded {
-                        Image(systemName: "xmark")
-                            .renderingMode(.template)
-                            .tint(expanded ? Color.primaryColor : Color.onPrimaryColor)
-                    } else {
-                        Image("marlin_large")
-                            .resizable()
-                            .renderingMode(.template)
-                            .tint(expanded ? Color.primaryColor : Color.onPrimaryColor)
-                            .aspectRatio(contentMode: .fit)
-                    }
+        Button(
+            action: {
+                withAnimation {
+                    expanded.toggle()
                 }
-                    
+            },
+            label: {
+                Label(
+                    title: {},
+                    icon: {
+                        Group {
+                            if expanded {
+                                Image(systemName: "xmark")
+                                    .renderingMode(.template)
+                                    .tint(expanded ? Color.primaryColor : Color.onPrimaryColor)
+                            } else {
+                                Image("marlin_large")
+                                    .resizable()
+                                    .renderingMode(.template)
+                                    .tint(expanded ? Color.primaryColor : Color.onPrimaryColor)
+                                    .aspectRatio(contentMode: .fit)
+                            }
+                        }
+
+                    }
+                )
             }
-        }
+        )
         .buttonStyle(
             MaterialFloatingButtonStyle(
                 type: .custom,
@@ -74,17 +91,23 @@ struct DataSourceToggles: View {
     
     @ViewBuilder
     func dataSourceButton(dataSourceItem: DataSourceItem) -> some View {
-        Button(action: {
-            dataSourceItem.showOnMap.toggle()
-        }) {
-            Label(title: {}) {
-                if let image = dataSourceItem.dataSource.image {
-                    Image(uiImage: image)
-                        .renderingMode(.template)
-                        .tint(Color.white)
-                }
+        Button(
+            action: {
+                dataSourceItem.showOnMap.toggle()
+            },
+            label: {
+                Label(
+                    title: {},
+                    icon: {
+                        if let image = dataSourceItem.dataSource.image {
+                            Image(uiImage: image)
+                                .renderingMode(.template)
+                                .tint(Color.white)
+                        }
+                    }
+                )
             }
-        }
+        )
         .buttonStyle(
             MaterialFloatingButtonStyle(
                 type: .custom, size: .mini,

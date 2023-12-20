@@ -38,8 +38,10 @@ class ModuCoreDataRepository: ModuRepository, ObservableObject {
     }
     
     func getModu(name: String?, waypointURI: URL?) -> ModuModel? {
-        if let waypointURI = waypointURI, let name = name {
-            if let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: waypointURI), let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
+        if let waypointURI = waypointURI {
+            if let id = context.persistentStoreCoordinator?.managedObjectID(
+                forURIRepresentation: waypointURI
+            ), let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
                 let dataSource = waypoint.decodeToDataSource()
                 if let dataSource = dataSource as? ModuModel {
                     return dataSource

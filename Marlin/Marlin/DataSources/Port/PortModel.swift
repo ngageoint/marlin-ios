@@ -1220,7 +1220,10 @@ struct PortModel: Locatable, Bookmarkable, DataSource, Codable, GeoJSONExportabl
             KeyValue(key: "Services - Longshoremen", value: "\(DecisionEnum.fromValue(srLongshore))"),
             KeyValue(key: "Services - Electricity", value: "\(DecisionEnum.fromValue(srElectrical))"),
             KeyValue(key: "Services - Steam", value: "\(DecisionEnum.fromValue(srSteam))"),
-            KeyValue(key: "Services - Navigational Equipment", value: "\(DecisionEnum.fromValue(srNavigationalEquipment))"),
+            KeyValue(
+                key: "Services - Navigational Equipment",
+                value: "\(DecisionEnum.fromValue(srNavigationalEquipment))"
+            ),
             KeyValue(key: "Services - Electrical Repair", value: "\(DecisionEnum.fromValue(srElectricalRepair))"),
             KeyValue(key: "Services - Ice Breaking", value: "\(DecisionEnum.fromValue(srIceBreaking))"),
             KeyValue(key: "Services - Diving", value: "\(DecisionEnum.fromValue(srDiving))"),

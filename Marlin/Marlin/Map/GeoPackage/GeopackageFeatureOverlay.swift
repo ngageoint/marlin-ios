@@ -11,9 +11,7 @@ import geopackage_ios
 
 class GeopackageFeatureOverlay: GPKGFeatureOverlay, OverlayRenderable {
     var renderer: MKOverlayRenderer {
-        get {
-            return MKTileOverlayRenderer(overlay: self)
-        }
+        return MKTileOverlayRenderer(overlay: self)
     }
     @objc public var fillColor: UIColor = UIColor.clear
     

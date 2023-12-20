@@ -135,8 +135,17 @@ class NavigationalMapMixins: MapMixins {
     
     override init() {
         super.init()
-        let navareaMap = GeoPackageMap(fileName: "navigation_areas", tableName: "navigation_areas", index: 0)
-        let backgroundMap = GeoPackageMap(fileName: "natural_earth_1_100", tableName: "Natural Earth", polygonColor: Color.dynamicLandColor, index: 1)
+        let navareaMap = GeoPackageMap(
+            fileName: "navigation_areas",
+            tableName: "navigation_areas",
+            index: 0
+        )
+        let backgroundMap = GeoPackageMap(
+            fileName: "natural_earth_1_100",
+            tableName: "Natural Earth",
+            polygonColor: Color.dynamicLandColor,
+            index: 1
+        )
         self.mixins = [NavigationalWarningFetchMap(), navareaMap, backgroundMap]
     }
 }
@@ -183,7 +192,10 @@ struct MarlinMap: UIViewRepresentable, MarlinMapProtocol {
             context.coordinator.setMapRegion(region: region)
         }
     
-        mapView.register(EnlargedAnnotationView.self, forAnnotationViewWithReuseIdentifier: EnlargedAnnotationView.ReuseID)
+        mapView.register(
+            EnlargedAnnotationView.self,
+            forAnnotationViewWithReuseIdentifier: EnlargedAnnotationView.ReuseID
+        )
 
         for mixin in mixins.mixins {
             mixin.setupMixin(mapState: mapState, mapView: mapView)
@@ -241,7 +253,8 @@ struct MarlinMap: UIViewRepresentable, MarlinMapProtocol {
     func setMapType(mapView: MKMapView, context: Context) {
         if mapState.mapType == ExtraMapTypes.osm.rawValue {
             if context.coordinator.osmOverlay == nil {
-                context.coordinator.osmOverlay = MKTileOverlay(urlTemplate: "https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png")
+                context.coordinator.osmOverlay 
+                = MKTileOverlay(urlTemplate: "https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png")
                 context.coordinator.osmOverlay?.tileSize = CGSize(width: 512, height: 512)
                 context.coordinator.osmOverlay?.canReplaceMapContent = true
             }
@@ -297,13 +310,12 @@ struct MarlinMap: UIViewRepresentable, MarlinMapProtocol {
         setGrids(mapView: mapView, context: context)
 
         // remove any mixins that were removed
-        for mixin in context.coordinator.mixins {
-            if !mixins.mixins.contains(where: { mixinFromMixins in
-                mixinFromMixins.uuid == mixin.uuid
-            }) {
-                // this means it was removed
-                mixin.removeMixin(mapView: mapView, mapState: mapState)
-            }
+        for mixin in context.coordinator.mixins
+        where !mixins.mixins.contains(where: { mixinFromMixins in
+            mixinFromMixins.uuid == mixin.uuid
+        }) {
+            // this means it was removed
+            mixin.removeMixin(mapView: mapView, mapState: mapState)
         }
         
         for mixin in mixins.mixins {
@@ -364,11 +376,17 @@ extension MapCoordinator {
     
     func focusItem(notification: FocusMapOnItemNotification) {
         if let focusedAnnotation = focusedAnnotation {
-            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: {
-                focusedAnnotation.shrinkAnnotation()
-            }) { _ in
-                self.mapView?.removeAnnotation(focusedAnnotation)
-            }
+            UIView.animate(
+                withDuration: 0.5,
+                delay: 0.0,
+                options: .curveEaseInOut,
+                animations: {
+                    focusedAnnotation.shrinkAnnotation()
+                },
+                completion: { _ in
+                    self.mapView?.removeAnnotation(focusedAnnotation)
+                }
+            )
             self.focusedAnnotation = nil
         }
         if let dataSource = notification.item {

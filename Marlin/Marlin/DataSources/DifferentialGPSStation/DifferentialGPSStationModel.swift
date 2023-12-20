@@ -19,7 +19,10 @@ struct DifferentialGPSStationPropertyContainer: Decodable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        ngalol = try container.decode([Throwable<DifferentialGPSStationModel>].self, forKey: .ngalol).compactMap { try? $0.result.get() }
+        ngalol = try container.decode(
+            [Throwable<DifferentialGPSStationModel>].self, forKey: .ngalol
+        )
+        .compactMap { try? $0.result.get() }
     }
 }
 
@@ -145,8 +148,8 @@ struct DifferentialGPSStationModel: Locatable, Bookmarkable, Codable, GeoJSONExp
             let decoder = JSONDecoder()
             let jsonData = Data(string.utf8)
             
-            if let ds = try? decoder.decode(DifferentialGPSStationModel.self, from: jsonData) {
-                self = ds
+            if let model = try? decoder.decode(DifferentialGPSStationModel.self, from: jsonData) {
+                self = model
             } else {
                 return nil
             }
@@ -358,9 +361,11 @@ extension DifferentialGPSStationModel: DataSource {
         return Self.color
     }
     static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("DGPS", comment: "Differential GPS Station data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Differential GPS Stations", comment: "Differential GPS Station data source display name")
-    
+    static var dataSourceName: String =
+    NSLocalizedString("DGPS", comment: "Differential GPS Station data source display name")
+    static var fullDataSourceName: String =
+    NSLocalizedString("Differential GPS Stations", comment: "Differential GPS Station data source display name")
+
     static var key: String = "differentialGPSStation"
     static var metricsKey: String = "dgpsStations"
     static var imageName: String? = "dgps"
@@ -422,7 +427,18 @@ extension DifferentialGPSStationModel: DataSource {
 extension DifferentialGPSStationModel: MapImage {
     static var cacheTiles: Bool = true
     
-    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext? = nil) -> [UIImage] {
-        return defaultMapImage(marker: marker, zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, context: context, tileSize: 512.0)
+    func mapImage(
+        marker: Bool,
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox?,
+        context: CGContext? = nil
+    ) -> [UIImage] {
+        return defaultMapImage(
+            marker: marker,
+            zoomLevel: zoomLevel,
+            tileBounds3857: tileBounds3857,
+            context: context,
+            tileSize: 512.0
+        )
     }
 }

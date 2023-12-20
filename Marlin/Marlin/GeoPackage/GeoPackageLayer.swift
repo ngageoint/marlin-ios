@@ -25,7 +25,15 @@ class GeoPackageLayer: NSObject {
     var canReplaceMapContent: Bool = false
     var index: Int = 0
 
-    init(mapView: MKMapView, fileName: String, tableName: String, polygonColor: UIColor? = nil, fillColor: UIColor? = nil, canReplaceMapContent: Bool = false, index: Int = 0) {
+    init(
+        mapView: MKMapView,
+        fileName: String,
+        tableName: String,
+        polygonColor: UIColor? = nil,
+        fillColor: UIColor? = nil,
+        canReplaceMapContent: Bool = false,
+        index: Int = 0
+    ) {
         self.mapView = mapView
         self.fileName = fileName
         self.tableName = tableName
@@ -95,8 +103,16 @@ class GeoPackageLayer: NSObject {
         return overlay
     }
     
-    func columnName(dataColumnsDao: GPKGDataColumnsDao?, featureRow: GPKGFeatureRow, columnName: String) -> String {
-        guard let dataColumnsDao = dataColumnsDao, let dataColumn = dataColumnsDao.dataColumn(byTableName: featureRow.table.tableName, andColumnName: columnName) else {
+    func columnName(
+        dataColumnsDao: GPKGDataColumnsDao?,
+        featureRow: GPKGFeatureRow,
+        columnName: String
+    ) -> String {
+        guard let dataColumnsDao = dataColumnsDao, 
+                let dataColumn = dataColumnsDao.dataColumn(
+                    byTableName: featureRow.table.tableName,
+                    andColumnName: columnName
+                ) else {
             return columnName
         }
         return dataColumn.name
@@ -114,20 +130,21 @@ class GeoPackageLayer: NSObject {
                 var geometryColumnName: String?
                 var featureDataTypes: [String: String] = [:]
                 var values: [String: Any] = [:]
-                
-//                var coordinate = location
-                
+                                
                 for i in 0...featureRow.columnCount() {
                     let value = featureRow.value(with: i)
-                    let columnName = columnName(dataColumnsDao: dataColumnsDao, featureRow: featureRow, columnName: featureRow.columnName(with: i))
+                    let columnName = columnName(
+                        dataColumnsDao: dataColumnsDao,
+                        featureRow: featureRow,
+                        columnName: featureRow.columnName(with: i)
+                    )
                     if i == geometryColumn {
                         geometryColumnName = columnName
-//                        if let geometry = value as? GPKGGeometryData, let centroid = geometry.geometry.centroid() {
-//                            coordinate = CLLocationCoordinate2D(latitude: centroid.y.doubleValue, longitude: centroid.x.doubleValue)
-//                        }
                     }
                     
-                    featureDataTypes[columnName] = GPKGDataTypes.name(featureRow.featureColumns.column(with: i).dataType)
+                    featureDataTypes[columnName] = GPKGDataTypes.name(
+                        featureRow.featureColumns.column(with: i).dataType
+                    )
                     if value != nil {
                         values[columnName] = value
                     }

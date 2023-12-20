@@ -29,7 +29,14 @@ extension MKShape {
                 if let points = lineString.points {
                     for point in points {
                         if let point = point as? SFPoint {
-                            mapPoints.append(MKMapPoint(CLLocationCoordinate2D(latitude: point.y.doubleValue, longitude: point.x.doubleValue)))
+                            mapPoints.append(
+                                MKMapPoint(
+                                    CLLocationCoordinate2D(
+                                        latitude: point.y.doubleValue,
+                                        longitude: point.x.doubleValue
+                                    )
+                                )
+                            )
                         }
                     }
                 }
@@ -39,7 +46,14 @@ extension MKShape {
             if let points = line.points {
                 for point in points {
                     if let point = point as? SFPoint {
-                        mapPoints.append(MKMapPoint(CLLocationCoordinate2D(latitude: point.y.doubleValue, longitude: point.x.doubleValue)))
+                        mapPoints.append(
+                            MKMapPoint(
+                                CLLocationCoordinate2D(
+                                    latitude: point.y.doubleValue,
+                                    longitude: point.x.doubleValue
+                                )
+                            )
+                        )
                     }
                 }
             }
@@ -52,7 +66,6 @@ extension MKShape {
         var mapPoints: [MKMapPoint] = []
         
         for feature in featureCollection.features {
-            let geom = feature.geometry
             switch feature.geometry {
             case .point(let point):
                 let coordinates = point.coordinates

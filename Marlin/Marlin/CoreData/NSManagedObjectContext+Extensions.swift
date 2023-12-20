@@ -65,7 +65,8 @@ extension NSManagedObjectContext {
     }
     
     func truncateAll<T: NSManagedObject>(_ entityClass: T.Type) -> Bool {
-        let request: NSFetchRequest<NSFetchRequestResult> = entityClass.fetchRequest() as NSFetchRequest<NSFetchRequestResult>
+        let request: NSFetchRequest<NSFetchRequestResult> = 
+        entityClass.fetchRequest() as NSFetchRequest<NSFetchRequestResult>
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
         
         do {

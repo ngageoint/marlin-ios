@@ -15,7 +15,8 @@ struct MSISection<T: DataSource & BatchImportable>: Hashable {
     let items: [T]
 }
 
-class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResultsControllerDelegate, ObservableObject {
+class MSIListViewModel<T: DataSource & BatchImportable>: 
+    NSObject, NSFetchedResultsControllerDelegate, ObservableObject {
     @Published var sections: [MSISection<T>] = []
     @Published var lastUpdateDate: Date = Date()
     var sortDescriptors: [DataSourceSortParameter] = []
@@ -64,7 +65,9 @@ class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResu
         var predicates: [NSPredicate] = []
         
         for filter in filters {
-            if let predicate = filter.toPredicate(dataSource: DataSourceDefinitions.filterableFromDefintion(T.definition)) {
+            if let predicate = filter.toPredicate(
+                dataSource: DataSourceDefinitions.filterableFromDefintion(T.definition)
+            ) {
                 predicates.append(predicate)
             }
         }
@@ -77,9 +80,10 @@ class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResu
         
         fetchRequest.sortDescriptors = sort
         fetchRequest.predicate = predicate
-        self.fetchedResultsController = PersistenceController.current.fetchedResultsController(fetchRequest: fetchRequest,
-                                                                                         sectionNameKeyPath: sectionKey,
-                                                                                         cacheName: nil)
+        self.fetchedResultsController = 
+        PersistenceController.current.fetchedResultsController(fetchRequest: fetchRequest,
+                                                               sectionNameKeyPath: sectionKey,
+                                                               cacheName: nil)
         self.fetchedResultsController?.delegate = self
         DispatchQueue.main.async { [self] in
             sections = []
@@ -99,7 +103,8 @@ class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResu
         if sections.count - 1 > sectionIndex {
             return nil
         }
-        if fetchedResultsController?.sectionNameKeyPath != nil, let sections = fetchedResultsController?.sections, sections.count > sectionIndex {
+        if fetchedResultsController?.sectionNameKeyPath != nil,
+           let sections = fetchedResultsController?.sections, sections.count > sectionIndex {
             let section = sections[sectionIndex]
             if let sectionItems = section.objects as? [T] {
                 return MSISection(id: sectionIndex, name: section.name, items: sectionItems)
@@ -120,7 +125,7 @@ class MSIListViewModel<T: DataSource & BatchImportable>: NSObject, NSFetchedResu
                 sections.insert(sectionLights, at: 0)
             }
         } else {
-            for (index, _) in sections.enumerated() {
+            for index in sections.indices {
                 if let sectionLights = get(for: index) {
                     sections[index] = sectionLights
                 }

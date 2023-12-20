@@ -54,9 +54,10 @@ struct NavigationalWarningNavAreaListView: View {
                             }
                             // once this offset goes negative, they have seen the nav warning
                             if offset < 0 {
-                                // This checks if we are saving right now, because we could be still scrolling to the bottom
-                                // also checks if we have already saved a newer warning as the latest one
-                                if shouldSavePosition, let issueDate = navigationalWarning.issueDate, issueDate > lastSavedDate {
+                                // This checks if we are saving right now, because we could be still scrolling to the
+                                // bottom also checks if we have already saved a newer warning as the latest one
+                                if shouldSavePosition,
+                                    let issueDate = navigationalWarning.issueDate, issueDate > lastSavedDate {
                                     self.lastSavedDate = issueDate
                                     self.lastSeen = navigationalWarning.primaryKey
                                 }
@@ -79,7 +80,10 @@ struct NavigationalWarningNavAreaListView: View {
                     if $0 != 0 {
                         // find the one that is one older than the first unseen and save that, also turn on auto saving
                         shouldSavePosition = true
-                        if let firstUnseenNavigationalWarning = firstUnseenNavigationalWarning, let lastSeenNavigationalWarning = dataSource.items.item(after: firstUnseenNavigationalWarning) {
+                        if let firstUnseenNavigationalWarning = firstUnseenNavigationalWarning, 
+                            let lastSeenNavigationalWarning = dataSource.items.item(
+                                after: firstUnseenNavigationalWarning
+                        ) {
                             if let issueDate = lastSeenNavigationalWarning.issueDate, lastSavedDate < issueDate {
                                 self.lastSavedDate = issueDate
                                 self.lastSeen = lastSeenNavigationalWarning.primaryKey
@@ -111,7 +115,10 @@ struct NavigationalWarningNavAreaListView: View {
                     if let lastSeenIndex = dataSource.items.firstIndex(where: { warning in
                         warning.primaryKey == lastSeen
                     }) {
-                        let unreadCount = dataSource.items.distance(from: dataSource.items.startIndex, to: lastSeenIndex)
+                        let unreadCount = dataSource.items.distance(
+                            from: dataSource.items.startIndex,
+                            to: lastSeenIndex
+                        )
                         if unreadCount != 0 {
                             Text("\(unreadCount) Unread Warnings")
                                 .modifier(UnreadModifier())

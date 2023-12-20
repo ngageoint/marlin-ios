@@ -13,7 +13,7 @@ import sf_proj_ios
 import sf_ios
 
 protocol PredicateBasedTileOverlay {
-    associatedtype T where T: MapImage
+    associatedtype MapImageType where MapImageType: MapImage
     var predicate: NSPredicate? { get set }
     var key: String? { get set }
 }
@@ -70,10 +70,10 @@ class MapBoundingBox: Codable, ObservableObject {
     }
 }
 
-class PredicateTileOverlay<T: MapImage>: MKTileOverlay, PredicateBasedTileOverlay {
+class PredicateTileOverlay<MapImageType: MapImage>: MKTileOverlay, PredicateBasedTileOverlay {
     var predicate: NSPredicate?
     var sortDescriptors: [NSSortDescriptor]?
-    var objects: [T]?
+    var objects: [MapImageType]?
     var zoomLevel: Int = 0
     var imageCache: Kingfisher.ImageCache?
     var key: String?
@@ -97,20 +97,20 @@ class PredicateTileOverlay<T: MapImage>: MKTileOverlay, PredicateBasedTileOverla
         predicate: NSPredicate?,
         sortDescriptors: [NSSortDescriptor]? = nil,
         boundingPredicate: @escaping (Double, Double, Double, Double) -> NSPredicate,
-        objects: [T]? = nil,
+        objects: [MapImageType]? = nil,
         imageCache: Kingfisher.ImageCache? = nil) {
         self.init()
         self.predicate = predicate
         self.sortDescriptors = sortDescriptors
         self.objects = objects
         self.imageCache = imageCache
-        self.key = T.key
+        self.key = MapImageType.key
         self.boundingPredicate = boundingPredicate
     }
     
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
         
-        let options: KingfisherOptionsInfo? = T.cacheTiles ?
+        let options: KingfisherOptionsInfo? = MapImageType.cacheTiles ?
         (imageCache != nil ?
          [.targetCache(imageCache!)] : nil) : [.forceRefresh]
 
@@ -118,7 +118,7 @@ class PredicateTileOverlay<T: MapImage>: MKTileOverlay, PredicateBasedTileOverla
             return
         }
         KingfisherManager.shared.retrieveImage(
-            with: .provider(DataSourceTileProvider<T>(
+            with: .provider(DataSourceTileProvider<MapImageType>(
                 path: path,
                 predicate: predicate,
                 sortDescriptors: sortDescriptors,

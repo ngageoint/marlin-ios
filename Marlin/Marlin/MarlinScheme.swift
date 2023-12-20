@@ -165,10 +165,74 @@ extension Color {
 class MarlinScheme: ObservableObject {
 
     init() {
+        setNavigationBarAppearance()
+        setTabBarAppearance()
+        setPreviewAppearance()
+        setDocumentBrowserAppearance()
+
+        UITableView.appearance().backgroundColor = Color.backgroundUIColor
+
+        UITextField.appearance(
+            whenContainedInInstancesOf: [UINavigationBar.self]
+        ).backgroundColor = Color.backgroundUIColor
+
+        let toolbarAppearance = UIToolbar.appearance(whenContainedInInstancesOf: [QLPreviewController.self])
+        toolbarAppearance.tintColor = UIColor.label
+    }
+
+    private func setPreviewAppearance() {
+        // this is used when we preview a file
+        let qlPreviewNavBarAppearance = UINavigationBar.appearance(
+            whenContainedInInstancesOf: [QLPreviewController.self]
+        )
+        qlPreviewNavBarAppearance.isTranslucent = true
+        qlPreviewNavBarAppearance.tintColor = UIColor.label
+        qlPreviewNavBarAppearance.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.label,
+            NSAttributedString.Key.backgroundColor: Color.primaryUIColor
+        ]
+        qlPreviewNavBarAppearance.largeTitleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.label,
+            NSAttributedString.Key.backgroundColor: Color.primaryUIColor
+        ]
+    }
+
+    private func setDocumentBrowserAppearance() {
+        // this is used when we save a file, even though we really use UIDocumentPickerViewController
+        let documentBrowserNavBarAppearance = UINavigationBar.appearance(
+            whenContainedInInstancesOf: [UIDocumentBrowserViewController.self]
+        )
+        documentBrowserNavBarAppearance.isTranslucent = false
+        documentBrowserNavBarAppearance.tintColor = Color.onPrimaryUIColor
+        documentBrowserNavBarAppearance.barTintColor = Color.primaryUIColor
+        documentBrowserNavBarAppearance.backgroundColor = Color.primaryUIColor
+        documentBrowserNavBarAppearance.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: Color.onPrimaryUIColor,
+            NSAttributedString.Key.backgroundColor: Color.primaryUIColor
+        ]
+        documentBrowserNavBarAppearance.largeTitleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: Color.onPrimaryUIColor,
+            NSAttributedString.Key.backgroundColor: Color.primaryUIColor
+        ]
+    }
+
+    private func setTabBarAppearance() {
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.selectionIndicatorTintColor = Color.primaryUIColorVariant.withAlphaComponent(0.87)
+        tabBarAppearance.backgroundColor = Color.surfaceUIColor
+        setTabBarItemColors(tabBarAppearance.stackedLayoutAppearance)
+        setTabBarItemColors(tabBarAppearance.inlineLayoutAppearance)
+        setTabBarItemColors(tabBarAppearance.compactInlineLayoutAppearance)
+
+        UITabBar.appearance().standardAppearance = tabBarAppearance
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+    }
+
+    private func setNavigationBarAppearance() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = Color.primaryUIColor
-        
+
         appearance.titleTextAttributes = [
             NSAttributedString.Key.foregroundColor: Color.onPrimaryUIColor,
             NSAttributedString.Key.backgroundColor: Color.primaryUIColor
@@ -186,53 +250,8 @@ class MarlinScheme: ObservableObject {
         UINavigationBar.appearance().barTintColor = Color.onPrimaryUIColor
         UINavigationBar.appearance().tintColor = Color.onPrimaryUIColor
         UINavigationBar.appearance().prefersLargeTitles = false
-        
-        UITableView.appearance().backgroundColor = Color.backgroundUIColor
-        
-        let tabBarAppearance = UITabBarAppearance()
-        tabBarAppearance.selectionIndicatorTintColor = Color.primaryUIColorVariant.withAlphaComponent(0.87)
-        tabBarAppearance.backgroundColor = Color.surfaceUIColor
-        setTabBarItemColors(tabBarAppearance.stackedLayoutAppearance)
-        setTabBarItemColors(tabBarAppearance.inlineLayoutAppearance)
-        setTabBarItemColors(tabBarAppearance.compactInlineLayoutAppearance)
-
-        UITabBar.appearance().standardAppearance = tabBarAppearance
-        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
-        
-        // this is used when we preview a file
-        let qlPreviewNavBarAppearance = UINavigationBar.appearance(whenContainedInInstancesOf: [QLPreviewController.self])
-        qlPreviewNavBarAppearance.isTranslucent = true
-        qlPreviewNavBarAppearance.tintColor = UIColor.label
-        qlPreviewNavBarAppearance.titleTextAttributes = [
-            NSAttributedString.Key.foregroundColor: UIColor.label,
-            NSAttributedString.Key.backgroundColor: Color.primaryUIColor
-        ]
-        qlPreviewNavBarAppearance.largeTitleTextAttributes = [
-            NSAttributedString.Key.foregroundColor: UIColor.label,
-            NSAttributedString.Key.backgroundColor: Color.primaryUIColor
-        ]
-        
-        // this is used when we save a file, even though we really use UIDocumentPickerViewController
-        let documentBrowserNavBarAppearance = UINavigationBar.appearance(whenContainedInInstancesOf: [UIDocumentBrowserViewController.self])
-        documentBrowserNavBarAppearance.isTranslucent = false
-        documentBrowserNavBarAppearance.tintColor = Color.onPrimaryUIColor
-        documentBrowserNavBarAppearance.barTintColor = Color.primaryUIColor
-        documentBrowserNavBarAppearance.backgroundColor = Color.primaryUIColor
-        documentBrowserNavBarAppearance.titleTextAttributes = [
-            NSAttributedString.Key.foregroundColor: Color.onPrimaryUIColor,
-            NSAttributedString.Key.backgroundColor: Color.primaryUIColor
-        ]
-        documentBrowserNavBarAppearance.largeTitleTextAttributes = [
-            NSAttributedString.Key.foregroundColor: Color.onPrimaryUIColor,
-            NSAttributedString.Key.backgroundColor: Color.primaryUIColor
-        ]
-        
-        UITextField.appearance(whenContainedInInstancesOf: [UINavigationBar.self]).backgroundColor = Color.backgroundUIColor
-        
-        let toolbarAppearance = UIToolbar.appearance(whenContainedInInstancesOf: [QLPreviewController.self])
-        toolbarAppearance.tintColor = UIColor.label
     }
-    
+
     private func setTabBarItemColors(_ itemAppearance: UITabBarItemAppearance) {
         itemAppearance.normal.iconColor = Color.onBackgroundUIColor.withAlphaComponent(0.6)
         itemAppearance.normal.titleTextAttributes = [

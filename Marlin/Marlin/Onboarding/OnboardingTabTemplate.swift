@@ -17,7 +17,14 @@ struct OnboardingTabTemplate<M: View, T: View>: View {
     var imageAreaContent: M?
     var buttons: T
     
-    init(title: String, explanation: String? = nil, imageName: String? = nil, systemImageName: String? = nil, imageAreaContent: M? = EmptyView(), buttons: T) {
+    init(
+        title: String,
+        explanation: String? = nil,
+        imageName: String? = nil,
+        systemImageName: String? = nil,
+        imageAreaContent: M? = EmptyView(),
+        buttons: T
+    ) {
         self.title = title
         self.explanation = explanation
         self.imageName = imageName

@@ -145,40 +145,11 @@ struct OnboardingView: View {
     func nextTab(currentTab: Int) {
         switch currentTab {
         case WELCOME_TAB:
-            if !disclaimerAccepted {
-                tabSelection = DISCLAIMER_TAB
-            } else if locationAuthorizationStatus != .authorizedWhenInUse 
-                        && locationAuthorizationStatus != .authorizedAlways {
-                tabSelection = LOCATION_TAB
-            } else {
-                userNotificationCenter.getNotificationSettings { settings in
-                    if settings.authorizationStatus == .authorized {
-                        tabSelection = DATA_TABS_TAB
-                    } else {
-                        tabSelection = NOTIFICATION_TAB
-                    }
-                }
-            }
+            wecomeTabNavigation()
         case DISCLAIMER_TAB:
-            if locationAuthorizationStatus != .authorizedWhenInUse && locationAuthorizationStatus != .authorizedAlways {
-                tabSelection = LOCATION_TAB
-            } else {
-                userNotificationCenter.getNotificationSettings { settings in
-                    if settings.authorizationStatus == .authorized {
-                        tabSelection = DATA_TABS_TAB
-                    } else {
-                        tabSelection = NOTIFICATION_TAB
-                    }
-                }
-            }
+            disclaimerTabNavigation()
         case LOCATION_TAB:
-            userNotificationCenter.getNotificationSettings { settings in
-                if settings.authorizationStatus == .authorized {
-                    tabSelection = DATA_TABS_TAB
-                } else {
-                    tabSelection = NOTIFICATION_TAB
-                }
-            }
+            locationTabNavigation()
         case NOTIFICATION_TAB:
             tabSelection = DATA_TABS_TAB
         case DATA_TABS_TAB:
@@ -187,7 +158,48 @@ struct OnboardingView: View {
             tabSelection = WELCOME_TAB
         }
     }
-    
+
+    func wecomeTabNavigation() {
+        if !disclaimerAccepted {
+            tabSelection = DISCLAIMER_TAB
+        } else if locationAuthorizationStatus != .authorizedWhenInUse
+                    && locationAuthorizationStatus != .authorizedAlways {
+            tabSelection = LOCATION_TAB
+        } else {
+            userNotificationCenter.getNotificationSettings { settings in
+                if settings.authorizationStatus == .authorized {
+                    tabSelection = DATA_TABS_TAB
+                } else {
+                    tabSelection = NOTIFICATION_TAB
+                }
+            }
+        }
+    }
+
+    func disclaimerTabNavigation() {
+        if locationAuthorizationStatus != .authorizedWhenInUse && locationAuthorizationStatus != .authorizedAlways {
+            tabSelection = LOCATION_TAB
+        } else {
+            userNotificationCenter.getNotificationSettings { settings in
+                if settings.authorizationStatus == .authorized {
+                    tabSelection = DATA_TABS_TAB
+                } else {
+                    tabSelection = NOTIFICATION_TAB
+                }
+            }
+        }
+    }
+
+    func locationTabNavigation() {
+        userNotificationCenter.getNotificationSettings { settings in
+            if settings.authorizationStatus == .authorized {
+                tabSelection = DATA_TABS_TAB
+            } else {
+                tabSelection = NOTIFICATION_TAB
+            }
+        }
+    }
+
     @ViewBuilder
     func welcomeTab() -> some View {
         OnboardingTabTemplate(

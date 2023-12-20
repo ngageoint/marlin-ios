@@ -125,11 +125,12 @@ class MockPersistentStore: PersistentStore {
 class CoreDataPersistentStore: PersistentStore {
     let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "persistence")
     
-    func fetchFirst<T: NSManagedObject>(_ entityClass: T.Type,
-                                         sortBy: [NSSortDescriptor]? = nil,
-                                         predicate: NSPredicate? = nil,
-                                        context: NSManagedObjectContext? = nil) throws -> T? {
-        
+    func fetchFirst<T: NSManagedObject>(
+        _ entityClass: T.Type,
+        sortBy: [NSSortDescriptor]? = nil,
+        predicate: NSPredicate? = nil,
+        context: NSManagedObjectContext? = nil
+    ) throws -> T? {
         return try (context ?? container.viewContext).fetchFirst(entityClass, sortBy: sortBy, predicate: predicate)
     }
     
@@ -452,7 +453,7 @@ class CoreDataPersistentStore: PersistentStore {
     
     private func mergePersistentHistoryChanges(from history: [NSPersistentHistoryTransaction]) {
         let entityMap: [String?: String] = 
-        MSI.shared.masterDataList.reduce([String?: String]()) { (partialResult, importable) -> [String?: String] in
+        MSI.shared.mainDataList.reduce([String?: String]()) { (partialResult, importable) -> [String?: String] in
             var partialResult = partialResult
             partialResult[importable.entity().name] = importable.key
             return partialResult
@@ -487,7 +488,7 @@ class CoreDataPersistentStore: PersistentStore {
                 self.storeHistoryToken(newToken)
             }
             var dataSourceUpdatedNotifications: [DataSourceUpdatedNotification] = []
-            for dataSource in MSI.shared.masterDataList {
+            for dataSource in MSI.shared.mainDataList {
                 let inserts = insertCounts[dataSource.key] ?? 0
                 let updates = updateCounts[dataSource.key] ?? 0
                 if inserts != 0 || updates != 0 {

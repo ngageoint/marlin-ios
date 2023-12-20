@@ -17,7 +17,10 @@ struct NoticeToMarinersPropertyContainer: Decodable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        pubs = try container.decode([Throwable<NoticeToMarinersProperties>].self, forKey: .pubs).compactMap { try? $0.result.get() }
+        pubs = try container.decode(
+            [Throwable<NoticeToMarinersProperties>].self, forKey: .pubs
+        )
+        .compactMap { try? $0.result.get() }
     }
 }
 

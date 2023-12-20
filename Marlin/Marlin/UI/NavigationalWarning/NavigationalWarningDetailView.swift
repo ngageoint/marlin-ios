@@ -44,7 +44,10 @@ struct NavigationalWarningDetailView: View {
                             let navAreaEnum = NavigationalWarningNavArea.fromId(id: cancelNavArea) {
                             Property(
                                 property: "Cancelled By",
-                                value: "\(navAreaEnum.display) \(navigationalWarning.cancelMsgNumber)/\(navigationalWarning.cancelMsgYear)")
+                                value: """
+                                    \(navAreaEnum.display) \(navigationalWarning.cancelMsgNumber)/\
+                                    \(navigationalWarning.cancelMsgYear)
+                                """)
                         }
                         BookmarkNotes(notes: navigationalWarning.bookmark?.notes)
                         NavigationalWarningActionBar(

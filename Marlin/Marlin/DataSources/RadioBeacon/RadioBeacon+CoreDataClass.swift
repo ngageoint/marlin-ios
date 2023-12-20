@@ -67,7 +67,9 @@ class RadioBeacon: NSManagedObject {
     }
     
     var morseCode: String? {
-        guard let characteristic = characteristic, let leftParen = characteristic.firstIndex(of: "("), let lastIndex = characteristic.firstIndex(of: ")") else {
+        guard let characteristic = characteristic, 
+                let leftParen = characteristic.firstIndex(of: "("),
+                let lastIndex = characteristic.firstIndex(of: ")") else {
             return nil
         }
         
@@ -88,7 +90,10 @@ class RadioBeacon: NSManagedObject {
             return nil
         }
         var sectors: [ImageSector] = []
-        let pattern = #"(?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\^)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))\^)?(?<endminutes>[0-9]*)[\`']?\."#
+        let pattern = #"""
+            (?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\^)?((?<startminutes>[0-9]*)[\`'])?\
+            (-(?<enddeg>(\d*))\^)?(?<endminutes>[0-9]*)[\`']?\.
+        """#
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
                               in: remarks)

@@ -105,7 +105,14 @@ struct DataSourceProperty: Hashable, Identifiable, Codable {
     let requiredInFilter: Bool
     let subEntityKey: String?
     
-    init(name: String, key: String, type: DataSourcePropertyType, subEntityKey: String? = nil, enumerationValues: [String: [String]]? = nil, requiredInFilter: Bool = false) {
+    init(
+        name: String,
+        key: String,
+        type: DataSourcePropertyType,
+        subEntityKey: String? = nil,
+        enumerationValues: [String: [String]]? = nil,
+        requiredInFilter: Bool = false
+    ) {
         self.name = name
         self.key = key
         self.type = type
@@ -128,7 +135,11 @@ extension Locatable {
     
     static func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
         return NSPredicate(
-            format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", minLat, maxLat, minLon, maxLon
+            format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf", 
+            minLat,
+            maxLat,
+            minLon,
+            maxLon
         )
     }
 }
@@ -139,7 +150,6 @@ protocol DataSource {
     static var defaultSort: [DataSourceSortParameter] { get }
     static var defaultFilter: [DataSourceFilterParameter] { get }
     static var imageScale: CGFloat { get }
-    func view(on: MKMapView) -> MKAnnotationView?
     static func cachedImage(zoomLevel: Int) -> UIImage?
     static func cacheImage(zoomLevel: Int, image: UIImage)
     static var dateFormatter: DateFormatter { get }
@@ -163,10 +173,6 @@ extension DataSource {
         } else if let systemImageName = definition.systemImageName {
             return UIImage(systemName: systemImageName)
         }
-        return nil
-    }
-    
-    func view(on: MKMapView) -> MKAnnotationView? {
         return nil
     }
 }

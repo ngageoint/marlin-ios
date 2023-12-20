@@ -76,8 +76,11 @@ class GeoPackageExportViewModel: ObservableObject {
 
     var manager: GPKGGeoPackageManager = GPKGGeoPackageFactory.manager()
     @Published var filterViewModels: [DataSourceDefinitions: FilterViewModel] = [:]
-    @Published var commonViewModel: FilterViewModel = TemporaryFilterViewModel(dataSource: DataSourceDefinitions.common.filterable, filters: [])
-    
+    @Published var commonViewModel: FilterViewModel = TemporaryFilterViewModel(
+        dataSource: DataSourceDefinitions.common.filterable,
+        filters: []
+    )
+
     var geoPackage: GPKGGeoPackage?
     var filename: String?
     
@@ -304,10 +307,12 @@ class GeoPackageExportViewModel: ObservableObject {
                 }
                 do {
                     guard let table = try exportable.createTable(geoPackage: geoPackage), 
-                            let featureTableStyles = GPKGFeatureTableStyles(geoPackage: geoPackage, andTable: table) else {
+                            let featureTableStyles = GPKGFeatureTableStyles(
+                                geoPackage: geoPackage,
+                                andTable: table
+                            ) else {
                         continue
                     }
-                    let filterable = exportProgress.filterable
                     let styles = exportable.createStyles(tableStyles: featureTableStyles)
 
                     DispatchQueue.main.async {

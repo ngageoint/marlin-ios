@@ -68,13 +68,16 @@ struct MapSettings: View {
                         Text("Satellite 3D").font(Font.body1)
                             .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                         Spacer()
-                        Image(systemName: mapType == MKMapType.satelliteFlyover.rawValue ? "circle.inset.filled": "circle")
-                            .foregroundColor(Color.primaryColor)
-                            .onTapGesture {
-                                mapType = Int(MKMapType.satelliteFlyover.rawValue)
-                            }
-                            .accessibilityElement()
-                            .accessibilityLabel("Satellite Flyover Map")
+                        Image(
+                            systemName: mapType
+                            == MKMapType.satelliteFlyover.rawValue ? "circle.inset.filled": "circle"
+                        )
+                        .foregroundColor(Color.primaryColor)
+                        .onTapGesture {
+                            mapType = Int(MKMapType.satelliteFlyover.rawValue)
+                        }
+                        .accessibilityElement()
+                        .accessibilityLabel("Satellite Flyover Map")
                     }
                     .padding(.top, 4)
                     .padding(.bottom, 4)
@@ -82,13 +85,15 @@ struct MapSettings: View {
                         Text("Hybrid 3D").font(Font.body1)
                             .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                         Spacer()
-                        Image(systemName: mapType == MKMapType.hybridFlyover.rawValue ? "circle.inset.filled": "circle")
-                            .foregroundColor(Color.primaryColor)
-                            .onTapGesture {
-                                mapType = Int(MKMapType.hybridFlyover.rawValue)
-                            }
-                            .accessibilityElement()
-                            .accessibilityLabel("Hybrid Flyover Map")
+                        Image(
+                            systemName: mapType == MKMapType.hybridFlyover.rawValue ? "circle.inset.filled": "circle"
+                        )
+                        .foregroundColor(Color.primaryColor)
+                        .onTapGesture {
+                            mapType = Int(MKMapType.hybridFlyover.rawValue)
+                        }
+                        .accessibilityElement()
+                        .accessibilityLabel("Hybrid Flyover Map")
                     }
                     .padding(.top, 4)
                     .padding(.bottom, 4)

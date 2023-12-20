@@ -24,7 +24,9 @@ struct ElectronicPublicationsList: View {
     var body: some View {
         List {
             ForEach(electronicPublicationSections.sorted(by: { section1, section2 in
-                PublicationTypeEnum(rawValue: Int(section1.id))?.description ?? "" < PublicationTypeEnum(rawValue: Int(section2.id))?.description ?? ""
+                PublicationTypeEnum(
+                    rawValue: Int(section1.id))?
+                    .description ?? "" < PublicationTypeEnum(rawValue: Int(section2.id))?.description ?? ""
             })) { section in
                 NavigationLink {
                     Group {
@@ -184,7 +186,8 @@ struct ElectronicPublicationsList: View {
         section: SectionedFetchResults<Int64, ElectronicPublication>.Element) -> some View {
         let dictionary: [String?: [SectionedFetchResults<Int64, ElectronicPublication>.Section.Element]] =
             Dictionary(grouping: section, by: { $0.pubDownloadDisplayName })
-        let sortedKeys: [Dictionary<String?, [SectionedFetchResults<Int64, ElectronicPublication>.Section.Element]>.Keys.Element] = 
+        let sortedKeys: [Dictionary<String?, [
+            SectionedFetchResults<Int64, ElectronicPublication>.Section.Element]>.Keys.Element] = 
             dictionary.keys.sorted {
             return dictionary[$0]?[0].pubDownloadOrder ?? -1 < dictionary[$1]?[0].pubDownloadOrder ?? -1
         }

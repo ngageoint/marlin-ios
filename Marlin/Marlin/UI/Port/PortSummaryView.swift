@@ -20,7 +20,7 @@ struct PortSummaryView: DataSourceSummaryView {
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
     var measurementFormatter: MeasurementFormatter {
-        var measurementFormatter = MeasurementFormatter()
+        let measurementFormatter = MeasurementFormatter()
         measurementFormatter.unitOptions = .providedUnit
         measurementFormatter.unitStyle = .short
         measurementFormatter.numberFormatter.maximumFractionDigits = 2
@@ -55,18 +55,30 @@ struct PortSummaryView: DataSourceSummaryView {
         }
         .onAppear {
             if let currentLocation = locationManager.lastLocation {
-                let metersMeasurement = NSMeasurement(doubleValue: port.distanceTo(currentLocation), unit: UnitLength.meters)
+                let metersMeasurement = NSMeasurement(
+                    doubleValue: port.distanceTo(currentLocation),
+                    unit: UnitLength.meters
+                )
                 let convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles)
                 
-                distance = "\(measurementFormatter.string(from: convertedMeasurement)), \(currentLocation.coordinate.generalDirection(to: port.coordinate))"
+                distance = """
+                    \(measurementFormatter.string(from: convertedMeasurement)), \
+                    \(currentLocation.coordinate.generalDirection(to: port.coordinate))
+                """
             }
         }
         .onChange(of: locationManager.lastLocation) { lastLocation in
             if let currentLocation = lastLocation {
-                let metersMeasurement = NSMeasurement(doubleValue: port.distanceTo(currentLocation), unit: UnitLength.meters)
+                let metersMeasurement = NSMeasurement(
+                    doubleValue: port.distanceTo(currentLocation),
+                    unit: UnitLength.meters
+                )
                 let convertedMeasurement = metersMeasurement.converting(to: UnitLength.nauticalMiles)
                 
-                distance = "\(measurementFormatter.string(from: convertedMeasurement)), \(currentLocation.coordinate.generalDirection(to: port.coordinate))"
+                distance = """
+                    \(measurementFormatter.string(from: convertedMeasurement)), \
+                    \(currentLocation.coordinate.generalDirection(to: port.coordinate))
+                """
             }
         }
     }

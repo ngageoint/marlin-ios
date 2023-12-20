@@ -87,7 +87,8 @@ enum MSIRouter: URLRequestConvertible {
             let params = [
                 "sort": "date",
                 "output": "json"
-//                "maxOccurDate": Asam.dateFormatter.string(from:Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date())
+//                "maxOccurDate": Asam.dateFormatter.string(
+//                    from:Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date())
             ]
 //            if let date = date {
 //                params["minOccurDate"] = date
@@ -95,7 +96,8 @@ enum MSIRouter: URLRequestConvertible {
             return params
         case .readModus(date: let date):
             var params = [
-                "maxSourceDate": Modu.dateFormatter.string(from: Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date()),
+                "maxSourceDate": Modu.dateFormatter.string(
+                    from: Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date()),
                 "output": "json"
             ]
             if let date = date {

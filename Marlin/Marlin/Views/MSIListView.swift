@@ -121,7 +121,7 @@ struct MSIListView<
                 sectionViewBuilder: sectionViewBuilder,
                 content: content,
                 emptyView: emptyView)
-            if let _ = T.self as? GeoPackageExportable.Type, 
+            if T.self as? GeoPackageExportable.Type != nil, 
                 let filterable = DataSourceDefinitions.filterableFromDefintion(T.definition) {
                 GeoPackageExportButton(filterable: filterable)
             }
@@ -170,13 +170,16 @@ struct MSIListView<
                 .background(Color.backgroundColor)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            sortOpen.toggle()
-                        }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .imageScale(.large)
-                                .foregroundColor(Color.onPrimaryColor.opacity(0.87))
-                        }
+                        Button(
+                            action: {
+                                sortOpen.toggle()
+                            },
+                            label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .imageScale(.large)
+                                    .foregroundColor(Color.onPrimaryColor.opacity(0.87))
+                            }
+                        )
                         .accessibilityElement()
                         .accessibilityLabel("Close Sort")
                     }

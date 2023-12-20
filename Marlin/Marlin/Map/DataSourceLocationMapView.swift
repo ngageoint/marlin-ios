@@ -24,7 +24,11 @@ struct DataSourceLocationMapView: View {
                 if let region = dataSourceLocation.coordinateRegion {
                     mapState.center = region.padded(percent: 0.1, maxDelta: 45)
                 } else {
-                    mapState.center = MKCoordinateRegion(center: dataSourceLocation.coordinate, zoomLevel: 17.0, pixelWidth: 300.0)
+                    mapState.center = MKCoordinateRegion(
+                        center: dataSourceLocation.coordinate,
+                        zoomLevel: 17.0,
+                        pixelWidth: 300.0
+                    )
                 }
             }
     }

@@ -30,17 +30,18 @@ extension MKPolygon {
         
         // check for meridian/antimeridian crossing
         var crossesAtIndex = -1
-        for i in 0..<points.count {
-            if points[i].coordinate.longitude.sign != points[0].coordinate.longitude.sign {
-                crossesAtIndex = i
-                break
-            }
+        for i in 0..<points.count where points[i].coordinate.longitude.sign != points[0].coordinate.longitude.sign {
+            crossesAtIndex = i
+            break
         }
         
         // if shape crosses a meridian, add another click area starting from the other side of the meridian
         if crossesAtIndex > -1 {
-            let reorderedPoints: [MKMapPoint] = points.dropFirst(crossesAtIndex) + points.dropLast(points.count - crossesAtIndex)
-            clickAreas.append(MKPolygon.buildGeodesicPolyline(points: reorderedPoints, pointCount: reorderedPoints.count))
+            let reorderedPoints: [MKMapPoint] = 
+            points.dropFirst(crossesAtIndex) + points.dropLast(points.count - crossesAtIndex)
+            clickAreas.append(
+                MKPolygon.buildGeodesicPolyline(points: reorderedPoints, pointCount: reorderedPoints.count)
+            )
         }
         
         return clickAreas

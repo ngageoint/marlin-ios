@@ -119,14 +119,18 @@ struct MarlinView: View {
                 }
             }
         })
-        .fullScreenCover(item: $mapLayerEditViewModel, onDismiss: {
-            isMapLayersPresented = false
-            mapLayerEditViewModel = nil
-        }) { viewModel in
-            NavigationView {
-                MapLayerView(viewModel: viewModel, isPresented: $isMapLayersPresented)
+        .fullScreenCover(
+            item: $mapLayerEditViewModel,
+            onDismiss: {
+                isMapLayersPresented = false
+                mapLayerEditViewModel = nil
+            },
+            content: { viewModel in
+                NavigationView {
+                    MapLayerView(viewModel: viewModel, isPresented: $isMapLayersPresented)
+                }
             }
-        }
+        )
         .onAppear {
             Metrics.shared.appLaunch()
         }
