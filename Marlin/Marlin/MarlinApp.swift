@@ -165,7 +165,9 @@ struct MarlinApp: App {
         bookmarkRepository = BookmarkRepositoryManager(
             repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         asamRepository = AsamRepository(
-            localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
+            localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext),
+            remoteDataSource: AsamRemoteDataSource()
+        )
         moduRepository = ModuRepositoryManager(
             repository: ModuCoreDataRepository(context: persistentStore.viewContext))
         lightRepository = LightRepositoryManager(

@@ -16,7 +16,7 @@ enum AsamDataFetchOperationState: String {
 class AsamDataFetchOperation: Operation {
     
     var asams: [AsamModel] = []
-    var dateString: String? = nil
+    var dateString: String?
     
     init(dateString: String? = nil) {
         self.dateString = dateString
@@ -62,7 +62,6 @@ class AsamDataFetchOperation: Operation {
         
         let request = AsamService.getAsams(date: dateString)
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
-        
         
         return await withCheckedContinuation { continuation in
             MSI.shared.session.request(request)

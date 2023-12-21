@@ -32,7 +32,7 @@ struct AsamModelPage {
 
 class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
     private var context: NSManagedObjectContext
-    var cleanup : (() -> ())?
+    var cleanup: (() -> Void)?
     var operation: AsamDataLoadOperation?
     
     required init(context: NSManagedObjectContext) {
@@ -41,7 +41,7 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
     
     func getNewestAsam() -> AsamModel? {
         let context = PersistenceController.current.newTaskContext()
-        var asam: AsamModel? = nil
+        var asam: AsamModel?
         context.performAndWait {
             if let newestAsam = try? PersistenceController.current.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)], predicate: nil, context: context) {
                 asam = AsamModel(asam: newestAsam)
@@ -157,14 +157,20 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
                         
                     }
                     
-                    if let p = previousHeader, let currentValueString = currentValueString {
-                        if p != currentValueString {
+                    if let previous = previousHeader, let currentValueString = currentValueString {
+                        if previous != currentValueString {
                             previousHeader = currentValueString
-                            return [AsamItem.sectionHeader(header: currentValueString),  AsamItem.listItem(AsamListModel(asam: asam))]
+                            return [
+                                AsamItem.sectionHeader(header: currentValueString),
+                                AsamItem.listItem(AsamListModel(asam: asam))
+                            ]
                         }
                     } else if previousHeader == nil, let currentValueString = currentValueString {
                         previousHeader = currentValueString
-                        return [AsamItem.sectionHeader(header: currentValueString),  AsamItem.listItem(AsamListModel(asam: asam))]
+                        return [
+                            AsamItem.sectionHeader(header: currentValueString),
+                            AsamItem.listItem(AsamListModel(asam: asam))
+                        ]
                     }
                     
                     return [AsamItem.listItem(AsamListModel(asam: asam))]
@@ -172,8 +178,11 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
             }
         }
         
-        let asamPage: AsamModelPage = AsamModelPage(asamList: asams, next: (page ?? 0) + 1, currentHeader: previousHeader)
-        
+        let asamPage: AsamModelPage = AsamModelPage(
+            asamList: asams, next: (page ?? 0) + 1,
+            currentHeader: previousHeader
+        )
+
         return Just(asamPage)
             .setFailureType(to: Error.self)
             .receive(on: DispatchQueue.main)
@@ -184,13 +193,17 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
         return asams(filters: filters, at: page, currentHeader: currentHeader)
             .map { result -> AnyPublisher<AsamModelPage, Error> in
                 if let paginator = paginator, let next = result.next {
-                    return self.asams(filters: filters, at: next, currentHeader: result.currentHeader, paginatedBy: paginator)
-                        .wait(untilOutputFrom: paginator)
-                        .retry(.max)
-                        .prepend(result)
-                        .eraseToAnyPublisher()
-                }
-                else {
+                    return self.asams(
+                        filters: filters,
+                        at: next,
+                        currentHeader: result.currentHeader,
+                        paginatedBy: paginator
+                    )
+                    .wait(untilOutputFrom: paginator)
+                    .retry(.max)
+                    .prepend(result)
+                    .eraseToAnyPublisher()
+                } else {
                     return Just(result)
                         .setFailureType(to: Error.self)
                         .eraseToAnyPublisher()
@@ -200,7 +213,8 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
             .eraseToAnyPublisher()
     }
     
-    func observeAsamListItems(filters: [DataSourceFilterParameter]?) -> AnyPublisher<CollectionDifference<AsamModel>, Never> {
+    func observeAsamListItems(filters: [DataSourceFilterParameter]?
+    ) -> AnyPublisher<CollectionDifference<AsamModel>, Never> {
         let request: NSFetchRequest<Asam> = AsamFilterable().fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
 //        request.fetchLimit = 100
         request.sortDescriptors = UserDefaults.standard.sort(Asam.key).map({ sortParameter in
@@ -294,7 +308,7 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
                     return value
                 }
                 return NSNull()
-            }) as [AnyHashable : Any])
+            }) as [AnyHashable: Any])
             index += 1
             return false
         })

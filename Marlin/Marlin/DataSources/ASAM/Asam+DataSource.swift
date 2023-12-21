@@ -102,7 +102,7 @@ extension Asam: DataSource, Locatable, GeoPackageExportable, GeoJSONExportable {
 }
 
 // TODO: This is only for the MSI masterDataList depending on BatchImportable
-extension Asam : BatchImportable {
+extension Asam: BatchImportable {
     static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
         return 0
     }
@@ -118,6 +118,5 @@ extension Asam : BatchImportable {
     static var decodableRoot: Decodable.Type {
         AsamPropertyContainer.self
     }
-    
     
 }

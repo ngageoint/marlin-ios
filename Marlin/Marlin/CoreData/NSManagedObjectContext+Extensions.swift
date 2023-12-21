@@ -47,9 +47,9 @@ extension NSManagedObjectContext {
     }
     // Helper method to fetch first object with given key value pair.
     func fetchFirst<T: NSManagedObject>(_ entityClass: T.Type,
-                                        key:String,
-                                        value:String) -> T? {
-        let predicate = NSPredicate(format: "%K = %@", key,value)
+                                        key: String,
+                                        value: String) -> T? {
+        let predicate = NSPredicate(format: "%K = %@", key, value)
         return try? self.fetchFirst(entityClass, sortBy: [NSSortDescriptor(key: key, ascending: true)], predicate: predicate)
     }
     

@@ -230,7 +230,6 @@ class CoreDataPersistentStore: PersistentStore {
         do {
             let currentStore = _container?.persistentStoreCoordinator.persistentStores.last!
             if let currentStoreURL = currentStore?.url {
-                print("Current store url \(currentStoreURL)")
                 try _container?.persistentStoreCoordinator.destroyPersistentStore(at: currentStoreURL, type: .sqlite)
 
             }
@@ -252,7 +251,6 @@ class CoreDataPersistentStore: PersistentStore {
         print("Peristent store URL \(String(describing: description.url))")
         if inMemory {
             description.url = URL(fileURLWithPath: "/dev/null")
-            print("in memory")
         }
         
         // Enable persistent store remote change notifications
@@ -284,8 +282,7 @@ class CoreDataPersistentStore: PersistentStore {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
             self.isLoaded = true
-            print("Persistent store was loaded sending notification")
-            
+
             NotificationCenter.default.post(name: .PersistentStoreLoaded, object: nil)
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
@@ -331,7 +328,6 @@ class CoreDataPersistentStore: PersistentStore {
         let lastLoadDate = UserDefaults.standard.lastLoadDate
         
         if let forceReloadDate = forceReloadDate, lastLoadDate < forceReloadDate, !inMemory {
-            NSLog("Delete and reload")
             if !inMemory {
                 do {
                     let storeURL: URL = NSPersistentContainer

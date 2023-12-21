@@ -60,7 +60,9 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         } else if show == true {
             let filters = UserDefaults.standard.filter(dataSourceType.definition)
             for filter in filters {
-                if let predicate = filter.toPredicate(dataSource: DataSources.filterableFromDefintion(D.definition)) {
+                if let predicate = filter.toPredicate(
+                    dataSource: DataSources.filterableFromDefintion(dataSourceType.definition)
+                ) {
                     filterPredicates.append(predicate)
                 }
             }

@@ -14,7 +14,7 @@ struct DataSourceActions: View {
     var bookmark: AsamActions.Bookmark?
     
     var body: some View {
-        HStack(spacing:0) {
+        HStack(spacing: 0) {
             if let moreDetails = moreDetails {
                 MoreDetailsButton2(action: moreDetails)
                     .buttonStyle(MaterialButtonStyle())

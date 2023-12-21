@@ -8,20 +8,17 @@
 import Foundation
 import Alamofire
 
-enum AsamService: URLRequestConvertible
-{
+enum AsamService: URLRequestConvertible {
     case getAsams(date: String? = nil)
         
-    var method: HTTPMethod
-    {
+    var method: HTTPMethod {
         switch self {
         case .getAsams:
             return .get
         }
     }
     
-    var path: String
-    {
+    var path: String {
         switch self {
         case .getAsams:
             return "/publications/asam"
@@ -30,13 +27,13 @@ enum AsamService: URLRequestConvertible
     
     var parameters: Parameters? {
         switch self {
-        case .getAsams(date: _):
+        case .getAsams:
             // we cannot reliably query for asams that occured after the date we have because
             // records can be inserted with an occurance date in the past
             // we have to query for all records all the time
             let params = [
                 "sort": "date",
-                "output": "json",
+                "output": "json"
             ]
             return params
         }
@@ -44,8 +41,7 @@ enum AsamService: URLRequestConvertible
     
     // MARK: URLRequestConvertible
     
-    func asURLRequest() throws -> URLRequest
-    {
+    func asURLRequest() throws -> URLRequest {
         let url = try MSIRouter.baseURLString.asURL()
         
         var urlRequest = URLRequest(url: url.appendingPathComponent(path))

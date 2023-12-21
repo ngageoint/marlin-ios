@@ -28,17 +28,18 @@ struct Trigger {
 }
 
 extension Trigger {
-    func signal<T>(activatedBy t: T) -> Signal where T: Hashable {
-        return signal(activatedBy: t.hashValue)
+    func signal<T>(activatedBy trigger: T) -> Signal where T: Hashable {
+        return signal(activatedBy: trigger.hashValue)
     }
     
-    func activate<T>(for t: T) where T: Hashable {
-        activate(for: t.hashValue)
+    func activate<T>(for trigger: T) where T: Hashable {
+        activate(for: trigger.hashValue)
     }
 }
 
 extension Publisher {
-    func wait<S>(untilOutputFrom signal: S) -> AnyPublisher<Self.Output, Self.Failure> where S: Publisher, S.Failure == Never {
+    func wait<S>(untilOutputFrom signal: S
+    ) -> AnyPublisher<Self.Output, Self.Failure> where S: Publisher, S.Failure == Never {
         return prepend(
             Empty(completeImmediately: false)
                 .prefix(untilOutputFrom: signal)
@@ -47,6 +48,8 @@ extension Publisher {
     }
 }
 
+// This is the naming convention of publishers even though these are not structs
+// swiftlint:disable identifier_name
 extension Publishers {
     static func Publish<S, P>(onOutputFrom signal: S, _ publisher: @escaping () -> P) -> AnyPublisher<P.Output, P.Failure> where S: Publisher, P: Publisher, S.Failure == Never {
         return signal
@@ -69,6 +72,7 @@ extension Publishers {
             .eraseToAnyPublisher()
     }
 }
+// swiftlint:enable identifier_name
 
 extension NSManagedObjectContext {
     func changesPublisher<Object: NSManagedObject, TransformedObject: Equatable>(

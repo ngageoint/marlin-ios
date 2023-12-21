@@ -56,7 +56,7 @@ struct MapItemsTappedNotification {
     var items: [any DataSource]?
     var mapName: String?
     var zoom: Bool = false
-    var itemKeys: [String : [String]]? = nil
+    var itemKeys: [String: [String]]?
         
     @available(*, deprecated)
     init(annotations: [Any]? = nil, items: [any DataSource]?, mapName: String? = nil, zoom: Bool = false) {
@@ -66,7 +66,7 @@ struct MapItemsTappedNotification {
         self.zoom = zoom
     }
     
-    init(annotations: [Any]? = nil, itemKeys: [String : [String]]?, mapName: String? = nil, zoom: Bool = false) {
+    init(annotations: [Any]? = nil, itemKeys: [String: [String]]?, mapName: String? = nil, zoom: Bool = false) {
         self.annotations = annotations
         self.itemKeys = itemKeys
         self.mapName = mapName

@@ -508,4 +508,3 @@ extension Float {
         return "\(self)"
     }
 }
-

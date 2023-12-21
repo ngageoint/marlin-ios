@@ -119,7 +119,7 @@ struct BookmarkButton2: View {
                         }
                         action.bookmarkViewModel.bookmarkBottomSheet = false
                     }
-                    .buttonStyle(MaterialButtonStyle(type:.text))
+                    .buttonStyle(MaterialButtonStyle(type: .text))
                     .accessibilityElement()
                     .accessibilityLabel("Bookmark")
                 }

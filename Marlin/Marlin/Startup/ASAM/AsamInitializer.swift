@@ -59,7 +59,6 @@ class AsamInitializer {
             operation.cancel()
         }
         
-        
         // Inform the system that the background task is complete
         // when the operation completes.
         operation.completionBlock = {

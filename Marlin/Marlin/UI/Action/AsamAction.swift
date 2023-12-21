@@ -41,7 +41,7 @@ enum AsamActions {
         }
         func action() {
             NotificationCenter.default.post(name: .TabRequestFocus, object: nil)
-            let notification = MapItemsTappedNotification(itemKeys: [DataSources.asam.key : [itemKey]])
+            let notification = MapItemsTappedNotification(itemKeys: [DataSources.asam.key: [itemKey]])
             NotificationCenter.default.post(name: .MapItemsTapped, object: notification)
         }
     }

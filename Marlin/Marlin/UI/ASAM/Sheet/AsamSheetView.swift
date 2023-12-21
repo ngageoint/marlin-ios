@@ -20,7 +20,7 @@ struct AsamSheetView: View {
                 
             }
         }
-        .onChange(of: reference) { newValue in
+        .onChange(of: reference) { _ in
             viewModel.getAsam(reference: reference)
         }
         .onAppear {

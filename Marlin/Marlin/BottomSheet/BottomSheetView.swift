@@ -197,7 +197,7 @@ struct MarlinBottomSheet <Content: View>: View {
                         contentBuilder(dataSource)
                             .transition(.opacity)
                     } else if let itemKey = item.itemKey, let dataSourceKey = item.dataSourceKey {
-                        switch (dataSourceKey) {
+                        switch dataSourceKey {
                         case DataSources.asam.key:
                             AsamSheetView(reference: itemKey)
                                 .transition(.opacity)

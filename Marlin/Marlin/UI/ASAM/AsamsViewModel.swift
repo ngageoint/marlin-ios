@@ -25,11 +25,10 @@ class AsamsViewModel: ObservableObject {
             .filter { notification in
                 notification.key == Asam.key
             }
-            .sink { notification in
+            .sink { _ in
                 self.reload()
             }
     }
-
     
     var repository: AsamRepository? {
         get {
@@ -55,8 +54,7 @@ class AsamsViewModel: ObservableObject {
         fileprivate var rows: [AsamItem] {
             if case let .loaded(rows: rows) = self {
                 return rows
-            }
-            else {
+            } else {
                 return []
             }
         }

@@ -40,7 +40,7 @@ class AsamRemoteDataSource {
         }
     }
     
-    var cleanup : (() -> ())?
+    var cleanup: (() -> Void)?
     var operation: AsamDataFetchOperation?
 
     @discardableResult

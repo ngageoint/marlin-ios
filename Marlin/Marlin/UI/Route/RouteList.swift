@@ -30,7 +30,7 @@ struct RouteSummaryView: DataSourceSummaryView {
                         if let first = route.waypointArray.first {
                             if let dataSourceKey = first.dataSource, 
                                 let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
-                                DataSourceCircleImage(dataSource: type.definition, size: 15)
+                                DataSourceCircleImage(definition: type.definition, size: 15)
                             }
                             if let dataSource = first.decodeToDataSource() {
                                 Text(dataSource.itemTitle)
@@ -44,7 +44,7 @@ struct RouteSummaryView: DataSourceSummaryView {
                             Group {
                                 if let dataSourceKey = last.dataSource, 
                                     let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
-                                    DataSourceCircleImage(dataSource: type.definition, size: 15)
+                                    DataSourceCircleImage(definition: type.definition, size: 15)
                                 }
                                 if let dataSource = last.decodeToDataSource() {
                                     Text(dataSource.itemTitle)

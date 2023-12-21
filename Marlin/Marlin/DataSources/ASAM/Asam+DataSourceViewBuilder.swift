@@ -25,7 +25,7 @@ extension Asam: DataSourceViewBuilder {
     }
 }
 
-//extension AsamModel: DataSourceViewBuilder {
+// extension AsamModel: DataSourceViewBuilder {
 //    var detailView: AnyView {
 //        if let reference = self.reference {
 //            return AnyView(AsamDetailView(reference: reference))
@@ -37,4 +37,4 @@ extension Asam: DataSourceViewBuilder {
 //    var summary: some DataSourceSummaryView {
 //        AsamSummaryView(asam: self)
 //    }
-//}
+// }
