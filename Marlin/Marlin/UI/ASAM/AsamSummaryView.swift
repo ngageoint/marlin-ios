@@ -40,7 +40,10 @@ struct AsamSummaryView: DataSourceSummaryView {
                 moreDetails: showMoreDetails ? AsamActions.Tap(reference: asam.reference) : nil,
                 location: !showMoreDetails ? Actions.Location(latLng: asam.coordinate) : nil,
                 zoom: !showMoreDetails ? AsamActions.Zoom(latLng: asam.coordinate, itemKey: asam.id) : nil,
-                bookmark: asam.canBookmark ? AsamActions.Bookmark(itemKey: asam.id, bookmarkViewModel: bookmarkViewModel) : nil
+                bookmark: asam.canBookmark ? AsamActions.Bookmark(
+                    itemKey: asam.id,
+                    bookmarkViewModel: bookmarkViewModel
+                ) : nil
             )
 //            DataSourceActionBar(data: asam, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }

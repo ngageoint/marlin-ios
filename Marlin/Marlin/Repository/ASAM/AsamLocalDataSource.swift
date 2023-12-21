@@ -17,11 +17,16 @@ protocol AsamLocalDataSource {
     func getAsam(reference: String?) -> AsamModel?
     func getAsams(filters: [DataSourceFilterParameter]?) -> [AsamModel]
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
-    func observeAsamListItems(filters: [DataSourceFilterParameter]?) -> AnyPublisher<CollectionDifference<AsamModel>, Never>
+    func observeAsamListItems(
+        filters: [DataSourceFilterParameter]?
+    ) -> AnyPublisher<CollectionDifference<AsamModel>, Never>
     func insert(task: BGTask?, asams: [AsamModel]) async -> Int
     func batchImport(from propertiesList: [AsamModel]) async throws -> Int
     
-    func asams(filters: [DataSourceFilterParameter]?, paginatedBy paginator: Trigger.Signal?) -> AnyPublisher<[AsamItem], Error>
+    func asams(
+        filters: [DataSourceFilterParameter]?,
+        paginatedBy paginator: Trigger.Signal?
+    ) -> AnyPublisher<[AsamItem], Error>
 }
 
 struct AsamModelPage {
@@ -43,7 +48,14 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
         let context = PersistenceController.current.newTaskContext()
         var asam: AsamModel?
         context.performAndWait {
-            if let newestAsam = try? PersistenceController.current.fetchFirst(Asam.self, sortBy: [NSSortDescriptor(keyPath: \Asam.date, ascending: false)], predicate: nil, context: context) {
+            if let newestAsam = try? PersistenceController.current.fetchFirst(
+                Asam.self,
+                sortBy: [
+                    NSSortDescriptor(keyPath: \Asam.date, ascending: false)
+                ],
+                predicate: nil,
+                context: context
+            ) {
                 asam = AsamModel(asam: newestAsam)
             }
         }
@@ -65,7 +77,8 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
     func getAsams(filters: [DataSourceFilterParameter]?) -> [AsamModel] {
         var asams: [AsamModel] = []
         context.performAndWait {
-            let request: NSFetchRequest<Asam> = AsamFilterable().fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
+            let request: NSFetchRequest<Asam> = AsamFilterable()
+                .fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
             request.sortDescriptors = UserDefaults.standard.sort(Asam.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
@@ -90,7 +103,10 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
     
     typealias Page = Int
     
-    func asams(filters: [DataSourceFilterParameter]?, paginatedBy paginator: Trigger.Signal? = nil) -> AnyPublisher<[AsamItem], Error> {
+    func asams(
+        filters: [DataSourceFilterParameter]?,
+        paginatedBy paginator: Trigger.Signal? = nil
+    ) -> AnyPublisher<[AsamItem], Error> {
         return asams(filters: filters, at: nil, currentHeader: nil, paginatedBy: paginator)
             .map(\.asamList)
             .eraseToAnyPublisher()
@@ -98,7 +114,8 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
     
     func asams(filters: [DataSourceFilterParameter]?, at page: Page?, currentHeader: String?) -> AnyPublisher<AsamModelPage, Error> {
         
-        let request: NSFetchRequest<Asam> = AsamFilterable().fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
+        let request: NSFetchRequest<Asam> = AsamFilterable()
+            .fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
         request.fetchLimit = 5
         request.fetchOffset = (page ?? 0) * 5
         //        request.fetchLimit = 100
@@ -189,7 +206,12 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
             .eraseToAnyPublisher()
     }
     
-    func asams(filters: [DataSourceFilterParameter]?, at page: Page?, currentHeader: String?, paginatedBy paginator: Trigger.Signal?) -> AnyPublisher<AsamModelPage, Error> {
+    func asams(
+        filters: [DataSourceFilterParameter]?,
+        at page: Page?,
+        currentHeader: String?,
+        paginatedBy paginator: Trigger.Signal?
+    ) -> AnyPublisher<AsamModelPage, Error> {
         return asams(filters: filters, at: page, currentHeader: currentHeader)
             .map { result -> AnyPublisher<AsamModelPage, Error> in
                 if let paginator = paginator, let next = result.next {
@@ -213,9 +235,11 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
             .eraseToAnyPublisher()
     }
     
-    func observeAsamListItems(filters: [DataSourceFilterParameter]?
+    func observeAsamListItems(
+        filters: [DataSourceFilterParameter]?
     ) -> AnyPublisher<CollectionDifference<AsamModel>, Never> {
-        let request: NSFetchRequest<Asam> = AsamFilterable().fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
+        let request: NSFetchRequest<Asam> = AsamFilterable()
+            .fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
 //        request.fetchLimit = 100
         request.sortDescriptors = UserDefaults.standard.sort(Asam.key).map({ sortParameter in
             sortParameter.toNSSortDescriptor()

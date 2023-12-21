@@ -51,7 +51,10 @@ extension Publisher {
 // This is the naming convention of publishers even though these are not structs
 // swiftlint:disable identifier_name
 extension Publishers {
-    static func Publish<S, P>(onOutputFrom signal: S, _ publisher: @escaping () -> P) -> AnyPublisher<P.Output, P.Failure> where S: Publisher, P: Publisher, S.Failure == Never {
+    static func Publish<S, P>(
+        onOutputFrom signal: S,
+        _ publisher: @escaping () -> P
+    ) -> AnyPublisher<P.Output, P.Failure> where S: Publisher, P: Publisher, S.Failure == Never {
         return signal
             .map { _ in }
             .map { _ in
@@ -61,7 +64,10 @@ extension Publishers {
             .eraseToAnyPublisher()
     }
     
-    static func PublishAndRepeat<S, P>(onOutputFrom signal: S, _ publisher: @escaping () -> P) -> AnyPublisher<P.Output, P.Failure> where S: Publisher, P: Publisher, S.Failure == Never {
+    static func PublishAndRepeat<S, P>(
+        onOutputFrom signal: S,
+        _ publisher: @escaping () -> P
+    ) -> AnyPublisher<P.Output, P.Failure> where S: Publisher, P: Publisher, S.Failure == Never {
         return signal
             .map { _ in }
             .prepend(())

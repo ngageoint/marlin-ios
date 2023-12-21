@@ -25,14 +25,19 @@ class AsamInitializer {
     
     func registerBackgroundHandler() {
         NSLog("Register ASAM Background Refresh")
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: "mil.nga.msi.asam.refresh", using: nil) { [weak self] task in
+        BGTaskScheduler.shared.register(
+            forTaskWithIdentifier: "mil.nga.msi.asam.refresh",
+            using: nil
+        ) { [weak self] task in
             self?.fetchAsamsPeriodically(task: task)
         }
     }
     
     func fetchAsams() {
         if repository.getCount(filters: nil) == 0 {
-            let asamInitialDataLoadOperation = AsamInitialDataLoadOperation(localDataSource: self.repository.localDataSource)
+            let asamInitialDataLoadOperation = AsamInitialDataLoadOperation(
+                localDataSource: self.repository.localDataSource
+            )
             asamInitialDataLoadOperation.completionBlock = {
                 Task {
                     await self.repository.fetchAsams(refresh: true)

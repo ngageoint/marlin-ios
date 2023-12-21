@@ -16,7 +16,13 @@ class BottomSheetItem: NSObject, Identifiable {
     var itemKey: String?
     var dataSourceKey: String?
     
-    init(item: (any DataSource)? = nil, mapName: String? = nil, zoom: Bool, itemKey: String? = nil, dataSourceKey: String? = nil) {
+    init(
+        item: (any DataSource)? = nil,
+        mapName: String? = nil,
+        zoom: Bool,
+        itemKey: String? = nil,
+        dataSourceKey: String? = nil
+    ) {
         self.item = item
         self.mapName = mapName
         self.zoom = zoom

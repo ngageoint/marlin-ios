@@ -60,9 +60,18 @@ class AsamInitialDataLoadOperation: Operation {
     @MainActor func finishLoad() {
         self.state = .isFinished
         MSI.shared.appState.loadingDataSource[Asam.key] = false
-        NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: Asam.self))
-        NotificationCenter.default.post(name: .DataSourceNeedsProcessed, object: DataSourceUpdatedNotification(key: Asam.key))
-        NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: Asam.key))
+        NotificationCenter.default.post(
+            name: .DataSourceLoaded,
+            object: DataSourceItem(dataSource: Asam.self)
+        )
+        NotificationCenter.default.post(
+            name: .DataSourceNeedsProcessed,
+            object: DataSourceUpdatedNotification(key: Asam.key)
+        )
+        NotificationCenter.default.post(
+            name: .DataSourceUpdated,
+            object: DataSourceUpdatedNotification(key: Asam.key)
+        )
     }
     
     func loadData() async {

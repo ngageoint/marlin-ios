@@ -125,7 +125,8 @@ extension DataSources {
         func shouldSync() -> Bool {
             // sync once every hour
             return UserDefaults.standard.dataSourceEnabled(DataSourceDefinitions.asam.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(DataSourceDefinitions.asam.definition)
+            && (Date().timeIntervalSince1970 - (60 * 60)) > 
+            UserDefaults.standard.lastSyncTimeSeconds(DataSourceDefinitions.asam.definition)
         }
     }
 
@@ -184,7 +185,8 @@ extension DataSources {
         func shouldSync() -> Bool {
             // sync once every day
             return UserDefaults.standard.dataSourceEnabled(NoticeToMariners.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60 * 24)) > UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.definition)
+            && (Date().timeIntervalSince1970 - (60 * 60 * 24)) > 
+            UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.definition)
         }
     }
 
@@ -207,7 +209,8 @@ extension DataSources {
         func shouldSync() -> Bool {
             // sync once every week
             return UserDefaults.standard.dataSourceEnabled(DFRS.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(DFRS.definition)
+            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
+            UserDefaults.standard.lastSyncTimeSeconds(DFRS.definition)
         }
     }
 
@@ -229,7 +232,8 @@ extension DataSources {
         func shouldSync() -> Bool {
             // sync once every week
             return UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(DifferentialGPSStation.definition)
+            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
+            UserDefaults.standard.lastSyncTimeSeconds(DifferentialGPSStation.definition)
         }
     }
 
@@ -247,7 +251,8 @@ extension DataSources {
         func shouldSync() -> Bool {
             // sync once every day
             return UserDefaults.standard.dataSourceEnabled(ElectronicPublication.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 1)) > UserDefaults.standard.lastSyncTimeSeconds(ElectronicPublication.definition)
+            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 1)) > 
+            UserDefaults.standard.lastSyncTimeSeconds(ElectronicPublication.definition)
         }
     }
 
@@ -264,7 +269,8 @@ extension DataSources {
         func shouldSync() -> Bool {
             // sync once every week
             return UserDefaults.standard.dataSourceEnabled(Port.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(Port.definition)
+            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
+            UserDefaults.standard.lastSyncTimeSeconds(Port.definition)
         }
     }
 
@@ -282,7 +288,8 @@ extension DataSources {
         func shouldSync() -> Bool {
             // sync once every hour
             return UserDefaults.standard.dataSourceEnabled(NavigationalWarning.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(NavigationalWarning.definition)
+            && (Date().timeIntervalSince1970 - (60 * 60)) > 
+            UserDefaults.standard.lastSyncTimeSeconds(NavigationalWarning.definition)
         }
     }
 
@@ -302,7 +309,8 @@ extension DataSources {
         func shouldSync() -> Bool {
             // sync once every week
             return UserDefaults.standard.dataSourceEnabled(Light.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(Light.definition)
+            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
+            UserDefaults.standard.lastSyncTimeSeconds(Light.definition)
         }
     }
 
@@ -323,7 +331,8 @@ extension DataSources {
         func shouldSync() -> Bool {
             // sync once every week
             return UserDefaults.standard.dataSourceEnabled(RadioBeacon.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > UserDefaults.standard.lastSyncTimeSeconds(RadioBeacon.definition)
+            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
+            UserDefaults.standard.lastSyncTimeSeconds(RadioBeacon.definition)
         }
     }
 

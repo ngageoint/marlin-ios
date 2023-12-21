@@ -23,9 +23,12 @@ enum Actions {
         func action() {
             let coordinateDisplay = UserDefaults.standard.coordinateDisplay
             UIPasteboard.general.string = coordinateDisplay.format(coordinate: latLng)
-            NotificationCenter.default.post(name: .SnackbarNotification,
-                                            object: SnackbarNotification(snackbarModel:
-                                                                            SnackbarModel(message: "Location \(coordinateDisplay.format(coordinate: latLng)) copied to clipboard"))
+            NotificationCenter.default.post(
+                name: .SnackbarNotification,
+                object: SnackbarNotification(
+                    snackbarModel: SnackbarModel(
+                        message: "Location \(coordinateDisplay.format(coordinate: latLng)) copied to clipboard")
+                )
             )
         }
     }
@@ -53,7 +56,10 @@ enum AsamActions {
         }
         func action() {
             guard let reference = reference else { return }
-            NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(definition: DataSources.asam, itemKey: reference))
+            NotificationCenter.default.post(
+                name: .ViewDataSource,
+                object: ViewDataSource(definition: DataSources.asam, itemKey: reference)
+            )
         }
     }
     

@@ -116,7 +116,12 @@ struct RouteMapView: View {
             if let itemKeys = notification.itemKeys {
                 for (dataSourceKey, itemKeys) in itemKeys {
                     for itemKey in itemKeys {
-                        let bottomSheetItem = BottomSheetItem(mapName: "Route Map", zoom: false, itemKey: itemKey, dataSourceKey: dataSourceKey)
+                        let bottomSheetItem = BottomSheetItem(
+                            mapName: "Route Map",
+                            zoom: false,
+                            itemKey: itemKey,
+                            dataSourceKey: dataSourceKey
+                        )
                         bottomSheetItems.append(bottomSheetItem)
                     }
                     

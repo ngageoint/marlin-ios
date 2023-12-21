@@ -66,8 +66,14 @@ class AsamDataLoadOperation: Operation {
         count = (try? await localDataSource.batchImport(from: asams)) ?? 0
         if count != 0 {
             DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .DataSourceNeedsProcessed, object: DataSourceUpdatedNotification(key: Asam.key))
-                NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: Asam.key))
+                NotificationCenter.default.post(
+                    name: .DataSourceNeedsProcessed,
+                    object: DataSourceUpdatedNotification(key: Asam.key)
+                )
+                NotificationCenter.default.post(
+                    name: .DataSourceUpdated,
+                    object: DataSourceUpdatedNotification(key: Asam.key)
+                )
             }
         }
     }

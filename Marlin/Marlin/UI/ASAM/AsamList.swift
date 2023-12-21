@@ -16,8 +16,10 @@ struct AsamList: View {
     
     @State var sortOpen: Bool = false
     @State var filterOpen: Bool = false
-    @State var filterViewModel: FilterViewModel = PersistedFilterViewModel(dataSource: DataSources.filterableFromDefintion(DataSources.asam))
-        
+    @State var filterViewModel: FilterViewModel = PersistedFilterViewModel(
+        dataSource: DataSources.filterableFromDefintion(DataSources.asam)
+    )
+
     var body: some View {
         Group {
             switch viewModel.state {
@@ -58,7 +60,9 @@ struct AsamList: View {
                                     }
                                 }
                                 .onTapGesture {
-                                    path.append(MarlinRoute.dataSourceDetail(dataSourceKey: Asam.definition.key, itemKey: asam.itemKey))
+                                    path.append(MarlinRoute.dataSourceDetail(
+                                        dataSourceKey: Asam.definition.key, itemKey: asam.itemKey)
+                                    )
                                 }
                                 .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
                                 .listRowSeparator(.hidden)
@@ -124,7 +128,16 @@ struct AsamList: View {
             viewModel.repository = asamRepository
             Metrics.shared.dataSourceList(dataSource: DataSources.asam)
         }
-        .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, dataSources: Binding.constant([DataSourceItem(dataSource: Asam.self)]), allowSorting: true, allowFiltering: true))
+        .modifier(
+            FilterButton(
+                filterOpen: $filterOpen,
+                sortOpen: $sortOpen,
+                dataSources: Binding.constant([
+                    DataSourceItem(dataSource: Asam.self)
+                ]),
+                allowSorting: true,
+                allowFiltering: true)
+        )
         .background {
             DataSourceFilter(filterViewModel: filterViewModel, showBottomSheet: $filterOpen)
         }
@@ -144,13 +157,16 @@ struct AsamList: View {
                 .background(Color.backgroundColor)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            sortOpen.toggle()
-                        }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .imageScale(.large)
-                                .foregroundColor(Color.onPrimaryColor.opacity(0.87))
-                        }
+                        Button(
+                            action: {
+                                sortOpen.toggle()
+                            },
+                            label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .imageScale(.large)
+                                    .foregroundColor(Color.onPrimaryColor.opacity(0.87))
+                            }
+                        )
                         .accessibilityElement()
                         .accessibilityLabel("Close Sort")
                     }

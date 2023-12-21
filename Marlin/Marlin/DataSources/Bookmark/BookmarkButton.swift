@@ -92,7 +92,12 @@ struct BookmarkButton2: View {
                 })
         }
         .accessibilityElement()
-        .accessibilityLabel("\(action.bookmarkViewModel.isBookmarked ? "remove bookmark \(action.bookmarkViewModel.itemKey ?? "")" : "bookmark")")
+        .accessibilityLabel(
+            """
+            \(action.bookmarkViewModel.isBookmarked ? "remove bookmark \(action.bookmarkViewModel.itemKey ?? "")"
+            : "bookmark")
+            """
+        )
         .animation(.easeOut, value: action.bookmarkViewModel.isBookmarked)
         .sheet(isPresented: action.$bookmarkViewModel.bookmarkBottomSheet) {
             VStack(alignment: .leading) {
@@ -105,7 +110,12 @@ struct BookmarkButton2: View {
                 }
                 TextEditor(text: action.$bookmarkViewModel.bnotes)
                     .lineLimit(4...)
-                    .overlay(Rectangle().frame(height: 2).foregroundColor(Color.primaryColorVariant), alignment: .bottom)
+                    .overlay(
+                        Rectangle()
+                            .frame(height: 2)
+                            .foregroundColor(Color.primaryColorVariant),
+                        alignment: .bottom
+                    )
                     .scrollContentBackground(.hidden)
                     .background(Color.backgroundColor)
                     .tint(Color.primaryColorVariant)

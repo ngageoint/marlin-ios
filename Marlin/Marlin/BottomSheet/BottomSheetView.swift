@@ -49,7 +49,12 @@ struct MarlinDataBottomSheet: View {
                 if let itemKeys = notification.itemKeys {
                     for (dataSourceKey, itemKeys) in itemKeys {
                         for itemKey in itemKeys {
-                            let bottomSheetItem = BottomSheetItem(mapName: notification.mapName, zoom: notification.zoom, itemKey: itemKey, dataSourceKey: dataSourceKey)
+                            let bottomSheetItem = BottomSheetItem(
+                                mapName: notification.mapName,
+                                zoom: notification.zoom,
+                                itemKey: itemKey,
+                                dataSourceKey: dataSourceKey
+                            )
                             bottomSheetItems.append(bottomSheetItem)
                         }
                     }

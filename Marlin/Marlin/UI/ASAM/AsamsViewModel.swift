@@ -78,13 +78,18 @@ class AsamsViewModel: ObservableObject {
             return
         }
         guard let repository = _repository else { return }
-        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [trigger, repository] in
-            repository.asams(filters: UserDefaults.standard.filter(DataSources.asam), paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore))
-                .scan([]) { $0 + $1 }
-                .map { State.loaded(rows: $0) }
-                .catch { error in
-                    return Just(State.failure(error: error))
-                }
+        Publishers.PublishAndRepeat(
+            onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
+        ) { [trigger, repository] in
+            repository.asams(
+                filters: UserDefaults.standard.filter(DataSources.asam),
+                paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
+            )
+            .scan([]) { $0 + $1 }
+            .map { State.loaded(rows: $0) }
+            .catch { error in
+                return Just(State.failure(error: error))
+            }
         }
         .receive(on: DispatchQueue.main)
         .sink { [weak self] recieve in

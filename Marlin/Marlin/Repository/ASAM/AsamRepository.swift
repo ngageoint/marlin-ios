@@ -38,11 +38,17 @@ class AsamRepository: ObservableObject {
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
         localDataSource.getCount(filters: filters)
     }
-    func asams(filters: [DataSourceFilterParameter]?, paginatedBy paginator: Trigger.Signal? = nil) -> AnyPublisher<[AsamItem], Error> {
+    func asams(
+        filters: [DataSourceFilterParameter]?,
+        paginatedBy paginator: Trigger.Signal? = nil
+    ) -> AnyPublisher<[AsamItem], Error> {
         localDataSource.asams(filters: filters, paginatedBy: paginator)
     }
     
-    func observeAsamListItems(filters: [DataSourceFilterParameter]?, limit: Int = 100) -> AnyPublisher<CollectionDifference<AsamModel>, Never> {
+    func observeAsamListItems(
+        filters: [DataSourceFilterParameter]?,
+        limit: Int = 100
+    ) -> AnyPublisher<CollectionDifference<AsamModel>, Never> {
         localDataSource.observeAsamListItems(filters: filters)
     }
     func fetchAsams(refresh: Bool = false) async -> [AsamModel] {
@@ -63,8 +69,14 @@ class AsamRepository: ObservableObject {
                 UserDefaults.standard.updateLastSyncTimeSeconds(Asam.definition)
                 NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: Asam.self))
                     if inserted != 0 {
-                        NotificationCenter.default.post(name: .DataSourceNeedsProcessed, object: DataSourceUpdatedNotification(key: Asam.definition.key))
-                        NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: Asam.definition.key))
+                        NotificationCenter.default.post(
+                            name: .DataSourceNeedsProcessed,
+                            object: DataSourceUpdatedNotification(key: Asam.definition.key)
+                        )
+                        NotificationCenter.default.post(
+                            name: .DataSourceUpdated,
+                            object: DataSourceUpdatedNotification(key: Asam.definition.key)
+                        )
                     }
             }
             
@@ -73,7 +85,9 @@ class AsamRepository: ObservableObject {
         return localDataSource.getAsams(filters: nil)
     }
     
-    func observeAsamListItemsSectioned(filters: [DataSourceFilterParameter]?) -> AnyPublisher<CollectionDifference<AsamModel>, Never>? {
+    func observeAsamListItemsSectioned(
+        filters: [DataSourceFilterParameter]?
+    ) -> AnyPublisher<CollectionDifference<AsamModel>, Never>? {
         return nil
     }
     
