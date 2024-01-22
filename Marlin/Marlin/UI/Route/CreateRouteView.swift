@@ -10,13 +10,13 @@ import CoreLocation
 import GeoJSON
 
 struct CreateRouteView: View {
+    @EnvironmentObject var router: MarlinRouter
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var locationManager: LocationManager
     
     let maxFeatureAreaSize: CGFloat = 300
-    @Binding var path: NavigationPath
     @State var routeURI: URL?
-    
+
     @State private var waypointsFrameSize: CGSize = .zero
     @State private var firstWaypointFrameSize: CGSize = .zero
     @State private var lastWaypointFrameSize: CGSize = .zero
@@ -43,7 +43,7 @@ struct CreateRouteView: View {
                 .overlay {
                     routeList()
                 }
-            RouteMapView(path: $path, routeViewModel: routeViewModel)
+            RouteMapView(routeViewModel: routeViewModel)
                 .edgesIgnoringSafeArea([.leading, .trailing])
         }
         .toolbar {
@@ -51,7 +51,7 @@ struct CreateRouteView: View {
                 if routeViewModel.waypoints.count > 1 {
                     Button("Save") {
                         routeViewModel.createRoute(context: managedObjectContext)
-                        path.removeLast()
+                        router.path.removeLast()
                     }
                 }
             }
@@ -69,7 +69,7 @@ struct CreateRouteView: View {
     func waypointRow(waypointViewBuilder: any DataSource, first: Bool = false, last: Bool = false) -> some View {
         HStack {
             Group {
-                DataSourceCircleImage(dataSource: type(of: waypointViewBuilder), size: 12)
+                DataSourceCircleImage(definition: waypointViewBuilder.definition, size: 12)
                 HStack {
                     VStack(alignment: .leading) {
                         Text(waypointViewBuilder.itemTitle)

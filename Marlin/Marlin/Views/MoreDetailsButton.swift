@@ -24,3 +24,15 @@ struct MoreDetailsButton: View {
         .accessibilityLabel("More Details")
     }
 }
+
+struct MoreDetailsButton2: View {
+    var action: Action
+    var body: some View {
+        Button(action: action.action) {
+            Text("More Details")
+                .foregroundColor(Color.primaryColorVariant)
+        }
+        .accessibilityElement()
+        .accessibilityLabel("More Details")
+    }
+}

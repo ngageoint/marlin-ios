@@ -9,9 +9,21 @@ import Foundation
 
 class AsamViewModel: ObservableObject, Identifiable {
     @Published var asam: AsamModel?
+
     @Published var predicate: NSPredicate?
-    
-    var repository: AsamRepository?
+    var reference: String?
+
+    init(reference: String? = nil) {
+        self.reference = reference
+    }
+
+    var repository: AsamRepository? {
+        didSet {
+            if let reference = reference {
+                getAsam(reference: reference)
+            }
+        }
+    }
     var routeWaypointRepository: RouteWaypointRepository?
     
     @discardableResult

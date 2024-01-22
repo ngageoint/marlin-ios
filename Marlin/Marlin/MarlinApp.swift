@@ -147,7 +147,9 @@ struct MarlinApp: App {
     var routeRepository: RouteRepositoryManager
     var routeWaypointRepository: RouteWaypointRepository
     var navigationalWarningRepository: NavigationalWarningRepositoryManager
-    
+
+    private var router: MarlinRouter = MarlinRouter()
+
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
 
@@ -165,7 +167,9 @@ struct MarlinApp: App {
         bookmarkRepository = BookmarkRepositoryManager(
             repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         asamRepository = AsamRepository(
-            localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
+            localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext),
+            remoteDataSource: AsamRemoteDataSource()
+        )
         moduRepository = ModuRepositoryManager(
             repository: ModuCoreDataRepository(context: persistentStore.viewContext))
         lightRepository = LightRepositoryManager(
@@ -182,6 +186,8 @@ struct MarlinApp: App {
             localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
         navigationalWarningRepository = NavigationalWarningRepositoryManager(
             repository: NavigationalWarningCoreDataRepository(context: persistentStore.viewContext))
+
+        MSI.shared.addRepositories(asamRepository: asamRepository)
         UNUserNotificationCenter.current().delegate = appDelegate
     }
 
@@ -203,6 +209,7 @@ struct MarlinApp: App {
                 .environmentObject(routeWaypointRepository)
                 .environmentObject(navigationalWarningRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
+                .environmentObject(router)
                 .background(Color.surfaceColor)
         }
     }

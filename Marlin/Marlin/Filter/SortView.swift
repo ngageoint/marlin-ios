@@ -10,8 +10,8 @@ import SwiftUI
 struct SortView: View {
     @ObservedObject var viewModel: SortViewModel
 
-    init(dataSource: any DataSource.Type) {
-        viewModel = SortViewModel(dataSource: dataSource)
+    init(definition: any DataSourceDefinition) {
+        viewModel = SortViewModel(definition: definition)
     }
     
     var body: some View {
@@ -34,7 +34,7 @@ struct SortView: View {
             HStack {
                 Spacer()
                 Button {
-                    viewModel.sort = viewModel.dataSource.defaultSort
+                    viewModel.sort = viewModel.filterable?.defaultSort ?? []
                 } label: {
                     Text("Reset to Default")
                 }

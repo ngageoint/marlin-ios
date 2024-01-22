@@ -53,13 +53,14 @@ final class MarlinFullFlowTest: XCTestCase {
     // TODO: this is failing when trying to tap the second tab
     func xtestNavigateToTabFocusOnMap() {
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        let asamRepository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
+        let asamRepository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let moduRepository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
         let lightRepository = LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext))
         let portRepository = PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext))
         let dgpsRepository = DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
         let radioBeaconRepository = RadioBeaconRepositoryManager(repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
         let routeRepository = RouteRepositoryManager(repository: RouteCoreDataRepository(context: persistentStore.viewContext))
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
         
         guard let objects = TestHelpers.createOneOfEachType(persistentStore.viewContext) else {
             XCTFail()
@@ -105,6 +106,7 @@ final class MarlinFullFlowTest: XCTestCase {
             .environmentObject(dgpsRepository)
             .environmentObject(radioBeaconRepository)
             .environmentObject(routeRepository)
+            .environmentObject(routeWaypointRepository)
         
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
@@ -265,15 +267,15 @@ final class MarlinFullFlowTest: XCTestCase {
         let dataSourceList: DataSourceList = DataSourceList()
         
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        let asamRepository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
+        let asamRepository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let moduRepository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
         let lightRepository = LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext))
         let portRepository = PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext))
         let dgpsRepository = DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
         let radioBeaconRepository = RadioBeaconRepositoryManager(repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
         let routeRepository = RouteRepositoryManager(repository: RouteCoreDataRepository(context: persistentStore.viewContext))
-        let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
-
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
+        
         let view = MarlinView()
             .environment(\.managedObjectContext, PersistenceController.shared.viewContext)
             .environmentObject(LocationManager.shared())
@@ -288,7 +290,7 @@ final class MarlinFullFlowTest: XCTestCase {
             .environmentObject(radioBeaconRepository)
             .environmentObject(routeRepository)
             .environmentObject(routeWaypointRepository)
-
+        
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller

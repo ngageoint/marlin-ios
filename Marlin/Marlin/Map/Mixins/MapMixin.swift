@@ -19,6 +19,7 @@ protocol MapMixin: AnyObject {
     func regionDidChange(mapView: MKMapView, animated: Bool)
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView?
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [any DataSource]?
+    func itemKeys(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [String: [String]]
     func removeMixin(mapView: MKMapView, mapState: MapState)
 }
 
@@ -128,6 +129,10 @@ extension MapMixin {
         return nil
     }
     
+    func itemKeys(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [String: [String]] {
+        [:]
+    }
+
     func regionDidChange(mapView: MKMapView, animated: Bool) {
     }
 }
