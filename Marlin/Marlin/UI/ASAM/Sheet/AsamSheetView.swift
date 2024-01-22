@@ -10,18 +10,24 @@ import SwiftUI
 
 struct AsamSheetView: View {
     @EnvironmentObject var asamRepository: AsamRepository
-    @State var reference: String
+    var reference: String
+
     @StateObject var viewModel: AsamViewModel = AsamViewModel()
 
     var body: some View {
-        VStack {
-            if let asamListModel = viewModel.asamListModel {
-                AsamSummaryView(asam: asamListModel)
-                
+        Self._printChanges()
+
+        return VStack {
+            if let asam = viewModel.asam {
+                AsamSummaryView(asam: AsamListModel(asamModel: asam))
+                    .setShowMoreDetails(true)
+                    .setShowSectionHeader(true)
+                    .setShowTitle(true)
+
             }
         }
-        .onChange(of: reference) { _ in
-            viewModel.getAsam(reference: reference)
+        .onChange(of: reference) { newReference in
+            viewModel.getAsam(reference: newReference)
         }
         .onAppear {
             viewModel.repository = asamRepository

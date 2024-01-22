@@ -49,6 +49,7 @@ struct MarlinDataBottomSheet: View {
                 if let itemKeys = notification.itemKeys {
                     for (dataSourceKey, itemKeys) in itemKeys {
                         for itemKey in itemKeys {
+                            print("item key \(itemKey)")
                             let bottomSheetItem = BottomSheetItem(
                                 mapName: notification.mapName,
                                 zoom: notification.zoom,
@@ -89,6 +90,8 @@ struct MarlinDataBottomSheet: View {
 }
 
 struct MarlinBottomSheet <Content: View>: View {
+    @EnvironmentObject var router: MarlinRouter
+
     @ObservedObject var itemList: BottomSheetItemList
     @State var selectedItem: Int = 0
 
@@ -107,7 +110,10 @@ struct MarlinBottomSheet <Content: View>: View {
         self.focusNotification = focusNotification
     }
     
-    init(itemList: BottomSheetItemList, focusNotification: NSNotification.Name) where Content == AnyView {
+    init(
+        itemList: BottomSheetItemList,
+        focusNotification: NSNotification.Name
+    ) where Content == AnyView {
         self.init(itemList: itemList, focusNotification: focusNotification) { item in
             AnyView(
                 // TODO: need a way to specify views for the models, 
@@ -126,6 +132,11 @@ struct MarlinBottomSheet <Content: View>: View {
             Rectangle()
                 .fill(Color(type(of: item).definition.color))
                 .frame(maxWidth: 8, maxHeight: .infinity)
+        } else if let dataSourceKey = itemList.bottomSheetItems?[selectedItem].dataSourceKey,
+                    let definition = DataSourceDefinitions(rawValue: dataSourceKey) {
+            Rectangle()
+                .fill(Color(definition.definition.color))
+                .frame(maxWidth: 8, maxHeight: .infinity)
         }
     }
     
@@ -141,8 +152,14 @@ struct MarlinBottomSheet <Content: View>: View {
                                 DataSourceCircleImage(definition: item.definition, size: 30)
                                 Spacer()
                             }
+                        } else if let dataSourceKey = bottomSheetItems[selectedItem].dataSourceKey, 
+                                    let definition = DataSourceDefinitions(rawValue: dataSourceKey) {
+                            HStack {
+                                DataSourceCircleImage(definition: definition.definition, size: 30)
+                                Spacer()
+                            }
                         }
-                        
+
                         if bottomSheetItems.count > 1 {
                             HStack(spacing: 8) {
                                 Button(

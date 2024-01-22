@@ -11,9 +11,9 @@ import SwiftUI
 struct AsamList: View {
     @EnvironmentObject var asamRepository: AsamRepository
     @StateObject var viewModel: AsamsViewModel = AsamsViewModel()
-    
-    @Binding var path: NavigationPath
-    
+
+    @EnvironmentObject var router: MarlinRouter
+
     @State var sortOpen: Bool = false
     @State var filterOpen: Bool = false
     @State var filterViewModel: FilterViewModel = PersistedFilterViewModel(
@@ -51,7 +51,6 @@ struct AsamList: View {
                     List(rows) { asamItem in
                         switch asamItem {
                         case .listItem(let asam):
-                            
                             AsamSummaryView(asam: asam)
                                 .paddedCard()
                                 .onAppear {
@@ -60,7 +59,7 @@ struct AsamList: View {
                                     }
                                 }
                                 .onTapGesture {
-                                    path.append(MarlinRoute.dataSourceDetail(
+                                    router.path.append(MarlinRoute.dataSourceDetail(
                                         dataSourceKey: Asam.definition.key, itemKey: asam.itemKey)
                                     )
                                 }

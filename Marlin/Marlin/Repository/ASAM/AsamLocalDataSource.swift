@@ -35,10 +35,8 @@ struct AsamModelPage {
     var currentHeader: String?
 }
 
-class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
+class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, ObservableObject {
     private var context: NSManagedObjectContext
-    var cleanup: (() -> Void)?
-    var operation: AsamDataLoadOperation?
     
     required init(context: NSManagedObjectContext) {
         self.context = context
@@ -112,20 +110,17 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
             .eraseToAnyPublisher()
     }
     
-    func asams(filters: [DataSourceFilterParameter]?, at page: Page?, currentHeader: String?) -> AnyPublisher<AsamModelPage, Error> {
-        
+    func asams(
+        filters: [DataSourceFilterParameter]?,
+        at page: Page?, currentHeader: String?
+    ) -> AnyPublisher<AsamModelPage, Error> {
+
         let request: NSFetchRequest<Asam> = AsamFilterable()
             .fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
-        request.fetchLimit = 5
-        request.fetchOffset = (page ?? 0) * 5
-        //        request.fetchLimit = 100
+        request.fetchLimit = 100
+        request.fetchOffset = (page ?? 0) * request.fetchLimit
         let userSort = UserDefaults.standard.sort(Asam.key)
-        var sortDescriptors: [DataSourceSortParameter] = []
-        if userSort.isEmpty {
-            sortDescriptors = Asam.defaultSort
-        } else {
-            sortDescriptors = userSort
-        }
+        let sortDescriptors: [DataSourceSortParameter] = userSort.isEmpty ? Asam.defaultSort : userSort
         
         request.sortDescriptors = sortDescriptors.map({ sortParameter in
             sortParameter.toNSSortDescriptor()
@@ -136,61 +131,19 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
             if let fetched = context.fetch(request: request) {
                 
                 asams = fetched.flatMap { asam in
-                    if sortDescriptors.isEmpty {
+                    guard let sortDescriptor = sortDescriptors.first else {
                         return [AsamItem.listItem(AsamListModel(asam: asam))]
                     }
 
-                    let sortDescriptor = sortDescriptors[0]
-                    
                     if !sortDescriptor.section {
                         return [AsamItem.listItem(AsamListModel(asam: asam))]
                     }
-                    
-                    let currentValue = asam.value(forKey: sortDescriptor.property.key)
-                    var currentValueString: String?
-                    switch sortDescriptor.property.type {
-                    case .string:
-                        currentValueString = currentValue as? String
-                    case .date:
-                        if let currentValue = currentValue as? Date {
-                            currentValueString = asam.dateString
-                        }
-                    case .int:
-                        currentValueString = (currentValue as? Int)?.zeroIsEmptyString
-                    case .float:
-                        currentValueString = (currentValue as? Float)?.zeroIsEmptyString
-                    case .double:
-                        currentValueString = (currentValue as? Double)?.zeroIsEmptyString
-                    case .boolean:
-                        currentValueString = ((currentValue as? Bool) ?? false) ? "True" : "False"
-                    case .enumeration:
-                        currentValueString = currentValue as? String
-                    case .latitude:
-                        currentValueString = (currentValue as? Double)?.latitudeDisplay
-                    case .longitude:
-                        currentValueString = (currentValue as? Double)?.longitudeDisplay
-                    default:
-                        return [AsamItem.listItem(AsamListModel(asam: asam))]
-                        
-                    }
-                    
-                    if let previous = previousHeader, let currentValueString = currentValueString {
-                        if previous != currentValueString {
-                            previousHeader = currentValueString
-                            return [
-                                AsamItem.sectionHeader(header: currentValueString),
-                                AsamItem.listItem(AsamListModel(asam: asam))
-                            ]
-                        }
-                    } else if previousHeader == nil, let currentValueString = currentValueString {
-                        previousHeader = currentValueString
-                        return [
-                            AsamItem.sectionHeader(header: currentValueString),
-                            AsamItem.listItem(AsamListModel(asam: asam))
-                        ]
-                    }
-                    
-                    return [AsamItem.listItem(AsamListModel(asam: asam))]
+
+                    return createSectionHeaderAndListItem(
+                        asam: asam,
+                        sortDescriptor: sortDescriptor,
+                        previousHeader: &previousHeader
+                    )
                 }
             }
         }
@@ -205,7 +158,66 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
-    
+
+    func createSectionHeaderAndListItem(
+        asam: Asam,
+        sortDescriptor: DataSourceSortParameter,
+        previousHeader: inout String?
+    ) -> [AsamItem] {
+        let currentValue = asam.value(forKey: sortDescriptor.property.key)
+        let sortValueString: String? = getCurrentSortValue(sortDescriptor: sortDescriptor, sortValue: currentValue)
+
+        if let previous = previousHeader, let sortValueString = sortValueString {
+            if previous != sortValueString {
+                previousHeader = sortValueString
+                return [
+                    AsamItem.sectionHeader(header: sortValueString),
+                    AsamItem.listItem(AsamListModel(asam: asam))
+                ]
+            }
+        } else if previousHeader == nil, let sortValueString = sortValueString {
+            previousHeader = sortValueString
+            return [
+                AsamItem.sectionHeader(header: sortValueString),
+                AsamItem.listItem(AsamListModel(asam: asam))
+            ]
+        }
+
+        return [AsamItem.listItem(AsamListModel(asam: asam))]
+    }
+
+    // ignore due to the amount of data types
+    // swiftlint:disable cyclomatic_complexity
+    func getCurrentSortValue(sortDescriptor: DataSourceSortParameter, sortValue: Any?) -> String? {
+        var sortValueString: String?
+        switch sortDescriptor.property.type {
+        case .string:
+            sortValueString = sortValue as? String
+        case .date:
+            if let currentValue = sortValue as? Date {
+                sortValueString = Asam.dateFormatter.string(from: currentValue)
+            }
+        case .int:
+            sortValueString = (sortValue as? Int)?.zeroIsEmptyString
+        case .float:
+            sortValueString = (sortValue as? Float)?.zeroIsEmptyString
+        case .double:
+            sortValueString = (sortValue as? Double)?.zeroIsEmptyString
+        case .boolean:
+            sortValueString = ((sortValue as? Bool) ?? false) ? "True" : "False"
+        case .enumeration:
+            sortValueString = sortValue as? String
+        case .latitude:
+            sortValueString = (sortValue as? Double)?.latitudeDisplay
+        case .longitude:
+            sortValueString = (sortValue as? Double)?.longitudeDisplay
+        default:
+            return nil
+        }
+        return sortValueString
+    }
+    // swiftlint:enable cyclomatic_complexity
+
     func asams(
         filters: [DataSourceFilterParameter]?,
         at page: Page?,
@@ -255,39 +267,11 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
     func insert(task: BGTask? = nil, asams: [AsamModel]) async -> Int {
         let count = asams.count
         NSLog("Received \(count) \(Asam.key) records.")
-        
-        let crossReference = Dictionary(grouping: asams, by: \.reference)
-        let duplicates = crossReference
-            .filter { $1.count > 1 }
-        
-        print("Found Dupicate ASAMs \(duplicates.keys)")
-        
-        if let task = task {
-            registerBackgroundTask(name: task.identifier)
-            guard backgroundTask != .invalid else { return 0 }
-        }
-        
+
         // Create an operation that performs the main part of the background task.
         operation = AsamDataLoadOperation(asams: asams, localDataSource: self)
-        
-        // Provide the background task with an expiration handler that cancels the operation.
-        task?.expirationHandler = {
-            self.operation?.cancel()
-        }
-        
-        // Start the operation.
-        if let operation = operation {
-            self.asamBackgroundLoadQueue.addOperation(operation)
-        }
-        
-        return await withCheckedContinuation { continuation in
-            // Inform the system that the background task is complete
-            // when the operation completes.
-            operation?.completionBlock = {
-                task?.setTaskCompleted(success: !(self.operation?.isCancelled ?? false))
-                continuation.resume(returning: self.operation?.count ?? 0)
-            }
-        }
+
+        return await executeOperationInBackground(task: task)
     }
     
     func batchImport(from propertiesList: [AsamModel]) async throws -> Int {
@@ -337,35 +321,5 @@ class AsamCoreDataDataSource: AsamLocalDataSource, ObservableObject {
             return false
         })
         return batchInsertRequest
-    }
-    
-    var backgroundTask: UIBackgroundTaskIdentifier = .invalid
-    
-    lazy var asamBackgroundLoadQueue: OperationQueue = {
-        var queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        queue.name = "Asam load queue"
-        return queue
-    }()
-    
-    func registerBackgroundTask(name: String) {
-        NSLog("Register the background task \(name)")
-        backgroundTask = UIApplication.shared.beginBackgroundTask(withName: name) { [weak self] in
-            NSLog("iOS has signaled time has expired \(name)")
-            self?.cleanup?()
-            print("canceling \(name)")
-            self?.operation?.cancel()
-            print("calling endBackgroundTask \(name)")
-            self?.endBackgroundTaskIfActive()
-        }
-    }
-    
-    func endBackgroundTaskIfActive() {
-        let isBackgroundTaskActive = backgroundTask != .invalid
-        if isBackgroundTaskActive {
-            NSLog("Background task ended. Asam Load")
-            UIApplication.shared.endBackgroundTask(backgroundTask)
-            backgroundTask = .invalid
-        }
     }
 }

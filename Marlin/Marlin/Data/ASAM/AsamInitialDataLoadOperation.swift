@@ -13,7 +13,7 @@ enum AsamInitialDataLoadOperationState: String {
     case isFinished
 }
 
-class AsamInitialDataLoadOperation: Operation {
+class AsamInitialDataLoadOperation: Operation, CountingDataLoadOperation {
     var count: Int = 0
     var localDataSource: AsamLocalDataSource
     var bundle: Bundle

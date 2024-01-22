@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AsamSummaryView: DataSourceSummaryView {
     @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var router: MarlinRouter
 
     var showSectionHeader: Bool = false
     
@@ -37,7 +38,7 @@ struct AsamSummaryView: DataSourceSummaryView {
                 
             }
             DataSourceActions(
-                moreDetails: showMoreDetails ? AsamActions.Tap(reference: asam.reference) : nil,
+                moreDetails: showMoreDetails ? AsamActions.Tap(reference: asam.reference, path: $router.path) : nil,
                 location: !showMoreDetails ? Actions.Location(latLng: asam.coordinate) : nil,
                 zoom: !showMoreDetails ? AsamActions.Zoom(latLng: asam.coordinate, itemKey: asam.id) : nil,
                 bookmark: asam.canBookmark ? AsamActions.Bookmark(
@@ -45,7 +46,6 @@ struct AsamSummaryView: DataSourceSummaryView {
                     bookmarkViewModel: bookmarkViewModel
                 ) : nil
             )
-//            DataSourceActionBar(data: asam, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
         }
         .onAppear {
             bookmarkViewModel.repository = bookmarkRepository

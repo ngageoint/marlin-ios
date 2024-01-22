@@ -14,8 +14,8 @@ enum AsamDataLoadOperationState: String {
     case isFinished
 }
 
-class AsamDataLoadOperation: Operation {
-    
+class AsamDataLoadOperation: Operation, CountingDataLoadOperation {
+
     var asams: [AsamModel] = []
     var localDataSource: AsamLocalDataSource
     var count: Int = 0

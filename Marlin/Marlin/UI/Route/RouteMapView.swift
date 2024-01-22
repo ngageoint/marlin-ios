@@ -67,8 +67,8 @@ struct RouteMapView: View {
     @State var showBottomSheet: Bool = false
     @StateObject var itemList: BottomSheetItemList = BottomSheetItemList()
     
-    @Binding var path: NavigationPath
-    
+    @EnvironmentObject var router: MarlinRouter
+
     @ObservedObject var routeViewModel: RouteViewModel
 
     let focusMapAtLocation = NotificationCenter.default.publisher(for: .FocusMapAtLocation)
@@ -154,7 +154,10 @@ struct RouteMapView: View {
                 )
             },
             content: {
-                MarlinBottomSheet(itemList: itemList, focusNotification: .RouteFocus) { dataSourceViewBuilder in
+                MarlinBottomSheet(
+                    itemList: itemList,
+                    focusNotification: .RouteFocus
+                ) { dataSourceViewBuilder in
                     VStack {
                         Text(dataSourceViewBuilder.itemTitle)
                         HStack {
@@ -173,6 +176,7 @@ struct RouteMapView: View {
                     }
                 }
                 .environmentObject(LocationManager.shared())
+                .environmentObject(router)
                 .presentationDetents([.height(150)])
             }
         )

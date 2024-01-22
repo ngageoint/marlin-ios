@@ -147,7 +147,9 @@ struct MarlinApp: App {
     var routeRepository: RouteRepositoryManager
     var routeWaypointRepository: RouteWaypointRepository
     var navigationalWarningRepository: NavigationalWarningRepositoryManager
-    
+
+    private var router: MarlinRouter = MarlinRouter()
+
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
 
@@ -207,6 +209,7 @@ struct MarlinApp: App {
                 .environmentObject(routeWaypointRepository)
                 .environmentObject(navigationalWarningRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
+                .environmentObject(router)
                 .background(Color.surfaceColor)
         }
     }

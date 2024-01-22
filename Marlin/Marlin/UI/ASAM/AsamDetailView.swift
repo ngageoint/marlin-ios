@@ -14,7 +14,7 @@ struct AsamDetailView: View {
     @StateObject var viewModel: AsamViewModel = AsamViewModel()
     @State var reference: String
     @State var waypointURI: URL?
-    
+
     var body: some View {
         Self._printChanges()
         return List {
@@ -38,10 +38,14 @@ struct AsamDetailView: View {
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     if let asam = viewModel.asam {
-//                        Group {
-//                            AsamSummaryView(asam: asam, showTitle: false, showBookmarkNotes: true)
-//                                .padding(.bottom, 16)
-//                        }.padding([.leading, .trailing], 16)
+                        Group {
+                            AsamSummaryView(
+                                asam: AsamListModel(asamModel: asam),
+                                showTitle: false,
+                                showBookmarkNotes: true
+                            )
+                            .padding(.bottom, 16)
+                        }.padding([.leading, .trailing], 16)
                     }
                 }
                 .card()

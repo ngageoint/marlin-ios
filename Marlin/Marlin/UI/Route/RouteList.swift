@@ -72,14 +72,14 @@ struct RouteList: View {
     @EnvironmentObject var routeRepository: RouteRepositoryManager
     @StateObject var viewModel: RoutesViewModel = RoutesViewModel()
     
-    @Binding var path: NavigationPath
+    @EnvironmentObject var router: MarlinRouter
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             List(viewModel.routes) { route in
                 RouteSummaryView(route: route)
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    path.append(MarlinRoute.editRoute(routeURI: route.routeURL))
+                    router.path.append(MarlinRoute.editRoute(routeURI: route.routeURL))
                 }
                 .swipeActions(edge: .trailing) {
                     Button(role: .destructive) {

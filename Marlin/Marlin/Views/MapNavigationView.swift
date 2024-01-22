@@ -14,8 +14,8 @@ struct MapNavigationView: View {
     
     @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
     
-    @Binding var path: NavigationPath
-    
+    @EnvironmentObject var router: MarlinRouter
+
     let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
         notification.object as? ViewDataSource
     }
@@ -25,12 +25,12 @@ struct MapNavigationView: View {
 
     var body: some View {
         Self._printChanges()
-        return NavigationStack(path: $path) {
+        return NavigationStack(path: $router.path) {
             VStack(spacing: 0) {
                 DataLoadedNotificationBanner()
                 CurrentLocation()
                 ZStack(alignment: .topLeading) {
-                    MarlinMainMap(path: $path)
+                    MarlinMainMap()
                         .navigationTitle("Marlin")
                         .navigationBarTitleDisplayMode(.inline)
                         .navigationBarBackButtonHidden(true)
@@ -46,9 +46,9 @@ struct MapNavigationView: View {
                 }
             }
             .navigationDestination(for: DataSourceItem.self) { item in
-                DataSourceListView(dataSource: item, focusedItem: itemWrapper, path: $path)
+                DataSourceListView(dataSource: item, focusedItem: itemWrapper)
             }
-            .marlinRoutes(path: $path)
+            .marlinRoutes()
             .onReceive(viewDataSourcePub) { output in
                 if let dataSource = output.dataSource {
                     if output.mapName == nil || output.mapName == "Marlin Map" {
@@ -61,9 +61,9 @@ struct MapNavigationView: View {
             .onReceive(switchTabPub) { output in
                 if let output = output as? String {
                     if output == "settings" {
-                        path.append(MarlinRoute.about)
+                        router.path.append(MarlinRoute.about)
                     } else if output == "submitReport" {
-                        path.append(MarlinRoute.submitReport)
+                        router.path.append(MarlinRoute.submitReport)
                     } else {
                         let tab = dataSourceList.tabs.contains(where: { item in
                             item.key == output
@@ -72,7 +72,7 @@ struct MapNavigationView: View {
                             item.key == output
                         }) {
                             print("append \(dataSourceItem) to path")
-                            path.append(dataSourceItem)
+                            router.path.append(dataSourceItem)
                         }
                     }
                 }
@@ -83,12 +83,12 @@ struct MapNavigationView: View {
     func viewData(definition: any DataSourceDefinition, itemKey: String) {
         NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
         NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-        path.append(MarlinRoute.dataSourceDetail(dataSourceKey: definition.key, itemKey: itemKey))
+        router.path.append(MarlinRoute.dataSourceDetail(dataSourceKey: definition.key, itemKey: itemKey))
     }
     
     func viewData(_ data: any DataSource) {
         NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
         NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-        path.append(MarlinRoute.dataSourceDetail(dataSourceKey: type(of: data).definition.key, itemKey: data.itemKey))
+        router.path.append(MarlinRoute.dataSourceDetail(dataSourceKey: type(of: data).definition.key, itemKey: data.itemKey))
     }
 }

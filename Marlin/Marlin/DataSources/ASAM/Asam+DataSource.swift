@@ -32,6 +32,10 @@ extension Asam: Bookmarkable {
 }
 
 extension Asam: DataSource, Locatable, GeoPackageExportable, GeoJSONExportable {
+    var itemTitle: String {
+        return "\(self.hostility ?? "")\(self.hostility != nil && self.victim != nil ? ": " : "")\(self.victim ?? "")"
+    }
+
     static var definition: any DataSourceDefinition = DataSourceDefinitions.asam.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)

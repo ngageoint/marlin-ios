@@ -51,15 +51,19 @@ enum AsamActions {
     
     class Tap: Action {
         var reference: String?
-        init(reference: String?) {
+        @Binding var path: NavigationPath
+        init(reference: String?, path: Binding<NavigationPath>) {
             self.reference = reference
+            self._path = path
         }
         func action() {
             guard let reference = reference else { return }
-            NotificationCenter.default.post(
-                name: .ViewDataSource,
-                object: ViewDataSource(definition: DataSources.asam, itemKey: reference)
-            )
+
+            path.append(AsamRoute.detail(reference))
+//            NotificationCenter.default.post(
+//                name: .ViewDataSource,
+//                object: ViewDataSource(definition: DataSources.asam, itemKey: reference)
+//            )
         }
     }
     

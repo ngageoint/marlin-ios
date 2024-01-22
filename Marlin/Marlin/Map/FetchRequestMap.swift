@@ -257,7 +257,11 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         
         return try? PersistenceController.current.fetch(fetchRequest: fetchRequest) as? [any DataSource]
     }
-    
+
+    func itemKeys(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [String: [String]] {
+        return [:]
+    }
+
 }
 
 class ImageAnnotationView: MKAnnotationView {
