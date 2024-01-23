@@ -33,10 +33,7 @@ struct DataSourceListView: View {
         if dataSource.key == Asam.key {
             AsamList()
         } else if dataSource.key == Modu.key {
-            MSIListView<Modu, EmptyView, EmptyView, EmptyView>(
-                focusedItem: focusedItem,
-                watchFocusedItem: watchFocusedItem
-            )
+            ModuList()
         } else if dataSource.key == Light.key {
             MSIListView<Light, EmptyView, EmptyView, EmptyView>(
                 focusedItem: focusedItem,

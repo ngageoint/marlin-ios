@@ -22,4 +22,55 @@ class ModuMap<T: MapImage>: FetchRequestMap<T> {
         super.setupMixin(mapState: mapState, mapView: mapView)
         mapView.register(ImageAnnotationView.self, forAnnotationViewWithReuseIdentifier: Modu.key)
     }
+
+    override func items(
+        at location: CLLocationCoordinate2D,
+        mapView: MKMapView,
+        touchPoint: CGPoint
+    ) -> [any DataSource]? {
+        return nil
+    }
+
+    override func itemKeys(
+        at location: CLLocationCoordinate2D,
+        mapView: MKMapView,
+        touchPoint: CGPoint
+    ) -> [String: [String]] {
+        if mapView.zoomLevel < minZoom {
+            return [:]
+        }
+        guard show == true else {
+            return [:]
+        }
+        let screenPercentage = 0.03
+        let tolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
+        let minLon = location.longitude - tolerance
+        let maxLon = location.longitude + tolerance
+        let minLat = location.latitude - tolerance
+        let maxLat = location.latitude + tolerance
+
+        guard let fetchRequest = self.getFetchRequest(show: self.show) else {
+            return [:]
+        }
+        var predicates: [NSPredicate] = []
+        if let predicate = fetchRequest.predicate {
+            predicates.append(predicate)
+        }
+
+        predicates.append(getBoundingPredicate(minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon))
+
+        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+
+        if let modus = try? PersistenceController.current.fetch(fetchRequest: fetchRequest) as? [any DataSource] {
+            let moduKeys: [String] = modus.compactMap { modu in
+                if let modu = modu as? Modu {
+                    return modu.name
+                }
+                return nil
+            }
+            return [DataSources.modu.key: moduKeys]
+        }
+
+        return [:]
+    }
 }

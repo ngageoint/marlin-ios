@@ -15,4 +15,7 @@ class RouteWaypointRepository: ObservableObject {
     func getAsam(waypointURI: URL?) -> AsamModel? {
         localDataSource.getAsam(waypointURI: waypointURI)
     }
+    func getModu(waypointURI: URL?) -> ModuModel? {
+        localDataSource.getModu(waypointURI: waypointURI)
+    }
 }

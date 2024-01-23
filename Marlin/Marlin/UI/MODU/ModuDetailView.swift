@@ -10,7 +10,8 @@ import MapKit
 import CoreData
 
 struct ModuDetailView: View {
-    @EnvironmentObject var moduRepository: ModuRepositoryManager
+    @EnvironmentObject var moduRepository: ModuRepository
+    @EnvironmentObject var routeWaypointRepository: RouteWaypointRepository
     @StateObject var viewModel: ModuViewModel = ModuViewModel()
     @State var name: String
     @State var waypointURI: URL?
@@ -80,6 +81,7 @@ struct ModuDetailView: View {
         }
         .onAppear {
             viewModel.repository = moduRepository
+            viewModel.routeWaypointRepository = routeWaypointRepository
             viewModel.getModu(name: name, waypointURI: waypointURI)
             Metrics.shared.dataSourceDetail(dataSource: Modu.definition)
         }

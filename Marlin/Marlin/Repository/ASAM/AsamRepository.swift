@@ -44,13 +44,7 @@ class AsamRepository: ObservableObject {
     ) -> AnyPublisher<[AsamItem], Error> {
         localDataSource.asams(filters: filters, paginatedBy: paginator)
     }
-    
-    func observeAsamListItems(
-        filters: [DataSourceFilterParameter]?,
-        limit: Int = 100
-    ) -> AnyPublisher<CollectionDifference<AsamModel>, Never> {
-        localDataSource.observeAsamListItems(filters: filters)
-    }
+
     func fetchAsams(refresh: Bool = false) async -> [AsamModel] {
         NSLog("Fetching ASAMS with refresh? \(refresh)")
         if refresh {
@@ -83,12 +77,6 @@ class AsamRepository: ObservableObject {
             return asams
         }
         return localDataSource.getAsams(filters: nil)
-    }
-    
-    func observeAsamListItemsSectioned(
-        filters: [DataSourceFilterParameter]?
-    ) -> AnyPublisher<CollectionDifference<AsamModel>, Never>? {
-        return nil
     }
     
 }

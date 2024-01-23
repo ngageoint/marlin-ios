@@ -12,6 +12,74 @@ import UIKit
 import OSLog
 import mgrs_ios
 
+struct ModuListModel: Hashable, Identifiable {
+    var id: String {
+        name ?? ""
+    }
+
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+
+    var date: Date?
+    var latitude: Double
+    var longitude: Double
+    var name: String?
+    var navArea: String?
+    var rigStatus: String?
+    var specialStatus: String?
+
+    var dateString: String? {
+        if let date = date {
+            return Modu.dateFormatter.string(from: date)
+        }
+        return nil
+    }
+
+    var itemTitle: String {
+        return name ?? ""
+    }
+
+    var canBookmark: Bool = false
+
+    init(modu: Modu) {
+        self.canBookmark = true
+        self.date = modu.date
+        self.latitude = modu.latitude
+        self.longitude = modu.longitude
+        self.name = modu.name
+        self.navArea = modu.navArea
+        self.rigStatus = modu.rigStatus
+        self.specialStatus = modu.specialStatus
+    }
+}
+
+extension ModuListModel: Bookmarkable {
+    static var definition: any DataSourceDefinition {
+        DataSources.modu
+    }
+
+    var itemKey: String {
+        name ?? ""
+    }
+
+    var key: String {
+        DataSources.modu.key
+    }
+}
+
+extension ModuListModel {
+    init(moduModel: ModuModel) {
+        self.date = moduModel.date
+        self.latitude = moduModel.latitude
+        self.longitude = moduModel.longitude
+        self.name = moduModel.name
+        self.navArea = moduModel.navArea
+        self.rigStatus = moduModel.rigStatus
+        self.specialStatus = moduModel.specialStatus
+    }
+}
+
 struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStringConvertible {
     var canBookmark: Bool = false
     

@@ -1,48 +1,48 @@
 //
-//  AsamSheetView.swift
+//  ModuSheetView.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 11/28/23.
+//  Created by Daniel Barela on 1/23/24.
 //
 
 import Foundation
 import SwiftUI
 
-struct AsamSheetView: View {
-    @EnvironmentObject var asamRepository: AsamRepository
-    var reference: String
+struct ModuSheetView: View {
+    @EnvironmentObject var moduRepository: ModuRepository
+    var name: String
     var focusNotification: NSNotification.Name
 
-    @StateObject var viewModel: AsamViewModel = AsamViewModel()
+    @StateObject var viewModel: ModuViewModel = ModuViewModel()
 
     var body: some View {
         Self._printChanges()
 
         return VStack {
-            if let asam = viewModel.asam {
-                AsamSummaryView(asam: AsamListModel(asamModel: asam))
+            if let modu = viewModel.modu {
+                ModuSummaryView(modu: ModuListModel(moduModel: modu))
                     .setShowMoreDetails(true)
                     .setShowSectionHeader(true)
                     .setShowTitle(true)
 
             }
         }
-        .onChange(of: reference) { newReference in
-            viewModel.getAsam(reference: newReference)
+        .onChange(of: name) { newName in
+            viewModel.getModu(name: newName)
             NotificationCenter.default.post(
                 name: focusNotification,
                 object: FocusMapOnItemNotification(
-                    item: viewModel.asam
+                    item: viewModel.modu
                 )
             )
         }
         .onAppear {
-            viewModel.repository = asamRepository
-            viewModel.getAsam(reference: reference)
+            viewModel.repository = moduRepository
+            viewModel.getModu(name: name)
             NotificationCenter.default.post(
                 name: focusNotification,
                 object: FocusMapOnItemNotification(
-                    item: viewModel.asam
+                    item: viewModel.modu
                 )
             )
         }

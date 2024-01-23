@@ -139,7 +139,7 @@ struct MarlinApp: App {
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     var bookmarkRepository: BookmarkRepositoryManager
     var asamRepository: AsamRepository
-    var moduRepository: ModuRepositoryManager
+    var moduRepository: ModuRepository
     var lightRepository: LightRepositoryManager
     var portRepository: PortRepositoryManager
     var dgpsRepository: DifferentialGPSStationRepositoryManager
@@ -170,8 +170,10 @@ struct MarlinApp: App {
             localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext),
             remoteDataSource: AsamRemoteDataSource()
         )
-        moduRepository = ModuRepositoryManager(
-            repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        moduRepository = ModuRepository(
+            localDataSource: ModuCoreDataDataSource(context: persistentStore.viewContext),
+            remoteDataSource: ModuRemoteDataSource()
+        )
         lightRepository = LightRepositoryManager(
             repository: LightCoreDataRepository(context: persistentStore.viewContext))
         portRepository = PortRepositoryManager(
@@ -187,7 +189,10 @@ struct MarlinApp: App {
         navigationalWarningRepository = NavigationalWarningRepositoryManager(
             repository: NavigationalWarningCoreDataRepository(context: persistentStore.viewContext))
 
-        MSI.shared.addRepositories(asamRepository: asamRepository)
+        MSI.shared.addRepositories(
+            asamRepository: asamRepository,
+            moduRepository: moduRepository
+        )
         UNUserNotificationCenter.current().delegate = appDelegate
     }
 

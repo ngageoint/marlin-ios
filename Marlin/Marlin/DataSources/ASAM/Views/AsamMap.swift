@@ -23,11 +23,19 @@ class AsamMap<T: MapImage>: FetchRequestMap<T> {
         mapView.register(ImageAnnotationView.self, forAnnotationViewWithReuseIdentifier: Asam.key)
     }
 
-    override func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [any DataSource]? {
+    override func items(
+        at location: CLLocationCoordinate2D,
+        mapView: MKMapView,
+        touchPoint: CGPoint
+    ) -> [any DataSource]? {
         return nil
     }
 
-    override func itemKeys(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [String: [String]] {
+    override func itemKeys(
+        at location: CLLocationCoordinate2D,
+        mapView: MKMapView,
+        touchPoint: CGPoint
+    ) -> [String: [String]] {
         if mapView.zoomLevel < minZoom {
             return [:]
         }

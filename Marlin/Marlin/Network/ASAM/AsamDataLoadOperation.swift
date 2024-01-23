@@ -14,49 +14,17 @@ enum AsamDataLoadOperationState: String {
     case isFinished
 }
 
-class AsamDataLoadOperation: Operation, CountingDataLoadOperation {
+class AsamDataLoadOperation: CountingDataLoadOperation {
 
     var asams: [AsamModel] = []
     var localDataSource: AsamLocalDataSource
-    var count: Int = 0
-    
+
     init(asams: [AsamModel], localDataSource: AsamLocalDataSource) {
         self.asams = asams
         self.localDataSource = localDataSource
     }
-    
-    var state: AsamDataLoadOperationState = .isReady {
-        willSet(newValue) {
-            willChangeValue(forKey: state.rawValue)
-            willChangeValue(forKey: newValue.rawValue)
-        }
-        didSet {
-            didChangeValue(forKey: oldValue.rawValue)
-            didChangeValue(forKey: state.rawValue)
-        }
-    }
-    
-    override var isExecuting: Bool { state == .isExecuting }
-    override var isFinished: Bool {
-        if isCancelled && state != .isExecuting { return true }
-        return state == .isFinished
-    }
-    override var isAsynchronous: Bool { true }
-    
-    override func start() {
-        guard !isCancelled else { return }
-        state = .isExecuting
-        Task {
-            await loadData()
-            await self.finishLoad()
-        }
-    }
-    
-    @MainActor func finishLoad() {
-        self.state = .isFinished
-    }
-    
-    func loadData() async {
+
+    override func loadData() async {
         if self.isCancelled {
             return
         }

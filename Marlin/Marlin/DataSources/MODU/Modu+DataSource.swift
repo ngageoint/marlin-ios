@@ -31,6 +31,10 @@ extension Modu: Bookmarkable {
 }
 
 extension Modu: Locatable, GeoPackageExportable, GeoJSONExportable {
+    var itemTitle: String {
+        return "\(self.name ?? "")"
+    }
+    
     static var definition: any DataSourceDefinition = DataSourceDefinitions.modu.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
@@ -81,94 +85,31 @@ extension Modu: Locatable, GeoPackageExportable, GeoJSONExportable {
     static func postProcess() {
         imageCache.clearCache()
     }
-}
 
-extension Modu: BatchImportable {
-    static var seedDataFiles: [String]? = ["modu"]
-    static var decodableRoot: Decodable.Type = ModuPropertyContainer.self
-    
-    static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
-        guard let value = value as? ModuPropertyContainer else {
-            return 0
-        }
-        let count = value.modu.count
-        NSLog("Received \(count) \(Self.key) records.")
-        return try await Modu.importRecords(
-            from: value.modu,
-            taskContext: PersistenceController.current.newTaskContext()
-        )
-    }
-    
-    static func dataRequest() -> [MSIRouter] {
-        let context = PersistenceController.current.newTaskContext()
-        var date: String?
-        context.performAndWait {
-            let newestModu = try? PersistenceController.current.fetchFirst(
-                Modu.self,
-                sortBy: [NSSortDescriptor(keyPath: \Modu.date, ascending: false)],
-                predicate: nil,
-                context: context
-            )
-            date = newestModu?.dateString
-        }
-        return [MSIRouter.readModus(date: date)]
-    }
-    
     static func shouldSync() -> Bool {
         // sync once every hour
-        return UserDefaults.standard.dataSourceEnabled(Modu.definition) 
+        return UserDefaults.standard.dataSourceEnabled(Modu.definition)
         && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(Modu.definition)
     }
-    
-    static func newBatchInsertRequest(with propertyList: [ModuModel]) -> NSBatchInsertRequest {
-        var index = 0
-        let total = propertyList.count
-        
-        // Provide one dictionary at a time when the closure is called.
-        let batchInsertRequest = NSBatchInsertRequest(entity: Modu.entity(), dictionaryHandler: { dictionary in
-            guard index < total else { return true }
-            let propertyDictionary = propertyList[index].dictionaryValue
-            dictionary.addEntries(from: propertyDictionary.mapValues({ value in
-                if let value = value {
-                    return value
-                }
-                return NSNull()
-            }) as [AnyHashable: Any])
-            
-            index += 1
-            return false
-        })
-        return batchInsertRequest
+}
+
+// TODO: This is only for the MSI masterDataList depending on BatchImportable
+extension Modu: BatchImportable {
+
+    static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
+        return 0
     }
-    
-    static func importRecords(
-        from propertiesList: [ModuModel],
-        taskContext: NSManagedObjectContext
-    ) async throws -> Int {
-        guard !propertiesList.isEmpty else { return 0 }
-        
-        // Add name and author to identify source of persistent history changes.
-        taskContext.name = "importContext"
-        taskContext.transactionAuthor = "importModus"
-        
-        /// - Tag: performAndWait
-        return try await taskContext.perform {
-            // Execute the batch insert.
-            /// - Tag: batchInsertRequest
-            let batchInsertRequest = Modu.newBatchInsertRequest(with: propertiesList)
-            batchInsertRequest.resultType = .count
-            if let fetchResult = try? taskContext.execute(batchInsertRequest),
-               let batchInsertResult = fetchResult as? NSBatchInsertResult {
-                try? taskContext.save()
-                if let count = batchInsertResult.result as? Int, count > 0 {
-                    NSLog("Inserted \(count) MODU records")
-                    return count
-                } else {
-                    NSLog("No new MODU records")
-                }
-                return 0
-            }
-            throw MSIError.batchInsertError
-        }
+
+    static func dataRequest() -> [MSIRouter] {
+        return []
     }
+
+    static var seedDataFiles: [String]? {
+        return []
+    }
+
+    static var decodableRoot: Decodable.Type {
+        ModuPropertyContainer.self
+    }
+
 }

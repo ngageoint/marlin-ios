@@ -16,10 +16,16 @@ import BackgroundTasks
 public class MSI {
     
     var asamInitializer: AsamInitializer?
-    func addRepositories(asamRepository: AsamRepository) {
+    var moduInitializer: ModuInitializer?
+
+    func addRepositories(
+        asamRepository: AsamRepository,
+        moduRepository: ModuRepository
+    ) {
         asamInitializer = AsamInitializer(repository: asamRepository)
+        moduInitializer = ModuInitializer(repository: moduRepository)
     }
-    
+
     var backgroundTask: UIBackgroundTaskIdentifier = .invalid
     
     let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "persistence")
@@ -127,6 +133,7 @@ public class MSI {
         }
         
         asamInitializer?.registerBackgroundHandler()
+        moduInitializer?.registerBackgroundHandler()
     }
     
     func backgroundFetch(task: BGTask) {
@@ -145,8 +152,8 @@ public class MSI {
         }
         
         for importable in allLoadList {
-            if importable.key == Asam.key {
-                NSLog("Skipping ASAM in MSI.shared")
+            if importable.key == Asam.key || importable.key == Modu.key {
+                NSLog("Skipping ASAM, MODU in MSI.shared")
             } else {
                 NSLog("Fetching new data for \(importable.key)")
             self.loadData(
@@ -211,6 +218,7 @@ public class MSI {
         NSLog("Load all data")
         
         asamInitializer?.fetchAsams()
+        moduInitializer?.fetchModus()
 
         let initialDataLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
             if let dataSourceType = importable as? any DataSource.Type {
@@ -237,7 +245,7 @@ public class MSI {
             UserDefaults.standard.initialDataLoaded = true
             
             let allLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
-                let sync = importable.shouldSync() && importable.key != Asam.key
+                let sync = importable.shouldSync() && importable.key != Asam.key && importable.key != Modu.key
                 return sync
             }
             
@@ -283,7 +291,7 @@ public class MSI {
         dataType: D.Type,
         operationQueue: OperationQueue? = nil
     ) {
-        if dataType.key == Asam.key {
+        if dataType.key == Asam.key || dataType.key == Modu.key {
             return
         }
 
@@ -307,7 +315,7 @@ public class MSI {
         dataType: D.Type,
         operationQueue: OperationQueue? = nil
     ) {
-        if dataType.key == Asam.key {
+        if dataType.key == Asam.key || dataType.key == Modu.key {
             return
         }
         

@@ -59,7 +59,13 @@ struct MapItemsTappedNotification {
     var itemKeys: [String: [String]]?
         
     @available(*, deprecated)
-    init(annotations: [Any]? = nil, items: [any DataSource]?, itemKeys: [String: [String]]? = nil, mapName: String? = nil, zoom: Bool = false) {
+    init(
+        annotations: [Any]? = nil,
+        items: [any DataSource]?,
+        itemKeys: [String: [String]]? = nil,
+        mapName: String? = nil,
+        zoom: Bool = false
+    ) {
         self.annotations = annotations
         self.items = items
         self.mapName = mapName
@@ -67,7 +73,12 @@ struct MapItemsTappedNotification {
         self.itemKeys = itemKeys
     }
     
-    init(annotations: [Any]? = nil, itemKeys: [String: [String]]?, mapName: String? = nil, zoom: Bool = false) {
+    init(
+        annotations: [Any]? = nil,
+        itemKeys: [String: [String]]?,
+        mapName: String? = nil,
+        zoom: Bool = false
+    ) {
         self.annotations = annotations
         self.itemKeys = itemKeys
         self.mapName = mapName

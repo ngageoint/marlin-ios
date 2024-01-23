@@ -32,6 +32,26 @@ enum Actions {
             )
         }
     }
+
+    class Bookmark: Action {
+        var itemKey: String
+        @ObservedObject var bookmarkViewModel: BookmarkViewModel
+
+        init(itemKey: String, bookmarkViewModel: BookmarkViewModel) {
+            self.itemKey = itemKey
+            self.bookmarkViewModel = bookmarkViewModel
+        }
+
+        func action() {
+            withAnimation {
+                if bookmarkViewModel.isBookmarked {
+                    bookmarkViewModel.removeBookmark()
+                } else {
+                    bookmarkViewModel.bookmarkBottomSheet = true
+                }
+            }
+        }
+    }
 }
 
 enum AsamActions {
@@ -60,30 +80,6 @@ enum AsamActions {
             guard let reference = reference else { return }
 
             path.append(AsamRoute.detail(reference))
-//            NotificationCenter.default.post(
-//                name: .ViewDataSource,
-//                object: ViewDataSource(definition: DataSources.asam, itemKey: reference)
-//            )
-        }
-    }
-    
-    class Bookmark: Action {
-        var itemKey: String
-        @ObservedObject var bookmarkViewModel: BookmarkViewModel
-        
-        init(itemKey: String, bookmarkViewModel: BookmarkViewModel) {
-            self.itemKey = itemKey
-            self.bookmarkViewModel = bookmarkViewModel
-        }
-        
-        func action() {
-            withAnimation {
-                if bookmarkViewModel.isBookmarked {
-                    bookmarkViewModel.removeBookmark()
-                } else {
-                    bookmarkViewModel.bookmarkBottomSheet = true
-                }
-            }
         }
     }
 }

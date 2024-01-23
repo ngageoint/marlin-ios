@@ -34,6 +34,10 @@ enum AsamRoute: Hashable {
     case detail(String)
 }
 
+enum ModuRoute: Hashable {
+    case detail(String)
+}
+
 enum DataSourceRoute: Hashable {
     case detail(dataSourceKey: String, itemKey: String)
 }
@@ -195,6 +199,21 @@ struct MarlinRouteModifier: ViewModifier {
                     // swiftlint:enable redundant_discardable_let
 
                     AsamDetailView(reference: reference)
+                }
+            }
+            .navigationDestination(for: ModuRoute.self) { item in
+                switch item {
+                case .detail(let name):
+                    // disable this rule in order to execute a statement prior to returning a view
+                    // swiftlint:disable redundant_discardable_let
+                    let _ = NotificationCenter.default.post(
+                        name: .DismissBottomSheet,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    // swiftlint:enable redundant_discardable_let
+
+                    ModuDetailView(name: name)
                 }
             }
             .navigationDestination(for: ItemWrapper.self) { item in

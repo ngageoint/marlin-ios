@@ -6,15 +6,17 @@
 //
 
 import Foundation
-import OSLog
-import mgrs_ios
 
 struct ModuPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
         case modu
     }
     let modu: [ModuModel]
-    
+
+    init(modus: [ModuModel]) {
+        modu = modus
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         modu = try container.decode([Throwable<ModuModel>].self, forKey: .modu).compactMap { try? $0.result.get() }

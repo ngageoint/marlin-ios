@@ -7,14 +7,7 @@
 
 import Foundation
 
-enum AsamInitialDataLoadOperationState: String {
-    case isReady
-    case isExecuting
-    case isFinished
-}
-
-class AsamInitialDataLoadOperation: Operation, CountingDataLoadOperation {
-    var count: Int = 0
+class AsamInitialDataLoadOperation: CountingDataLoadOperation {
     var localDataSource: AsamLocalDataSource
     var bundle: Bundle
     
@@ -23,41 +16,13 @@ class AsamInitialDataLoadOperation: Operation, CountingDataLoadOperation {
         self.bundle = bundle
     }
     
-    var state: AsamInitialDataLoadOperationState = .isReady {
-        willSet(newValue) {
-            willChangeValue(forKey: state.rawValue)
-            willChangeValue(forKey: newValue.rawValue)
-        }
-        didSet {
-            didChangeValue(forKey: oldValue.rawValue)
-            didChangeValue(forKey: state.rawValue)
-        }
-    }
-    
-    override var isExecuting: Bool { state == .isExecuting }
-    override var isFinished: Bool {
-        if isCancelled && state != .isExecuting { return true }
-        return state == .isFinished
-    }
-    override var isAsynchronous: Bool { true }
-    
-    override func start() {
-        guard !isCancelled else { return }
-        state = .isExecuting
-        Task {
-            await self.startLoad()
-            await loadData()
-            await self.finishLoad()
-        }
-    }
-    
-    @MainActor func startLoad() {
+    @MainActor override func startLoad() {
         MSI.shared.appState.loadingDataSource[Asam.key] = true
 
         NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: Asam.self))
     }
     
-    @MainActor func finishLoad() {
+    @MainActor override func finishLoad() {
         self.state = .isFinished
         MSI.shared.appState.loadingDataSource[Asam.key] = false
         NotificationCenter.default.post(
@@ -74,7 +39,7 @@ class AsamInitialDataLoadOperation: Operation, CountingDataLoadOperation {
         )
     }
     
-    func loadData() async {
+    override func loadData() async {
         NSLog("ASAM Initial Data Load")
         if self.isCancelled {
             return

@@ -1,57 +1,28 @@
 //
-//  AsamsViewModel.swift
+//  ModusViewModel.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 11/10/23.
+//  Created by Daniel Barela on 1/23/24.
 //
 
 import Foundation
 import Combine
 import SwiftUI
 
-class AsamsViewModel: ObservableObject {
-    @Published private(set) var state: State = .loading
-    @Published var asams: [AsamModel] = []
-    @Published var loaded: Bool = false
-    private var disposables = Set<AnyCancellable>()
-    
-    private var _repository: AsamRepository?
-    
-    var dataSourceUpdatedPub: AnyCancellable {
-        return NotificationCenter.default.publisher(for: .DataSourceUpdated)
-            .compactMap { notification in
-                notification.object as? DataSourceUpdatedNotification
-            }
-            .filter { notification in
-                notification.key == Asam.key
-            }
-            .sink { _ in
-                self.reload()
-            }
-    }
-    
-    var repository: AsamRepository? {
-        get {
-            return _repository
-        }
-        set {
-            if _repository == nil {
-                _repository = newValue
-                fetchAsams()
-            }
-        }
-    }
-    
-    var publisher: AnyPublisher<CollectionDifference<AsamModel>, Never>?
-    
+class ModusViewModel: ObservableObject {
     private let trigger = Trigger()
-    
+
+    private enum TriggerId: Hashable {
+        case reload
+        case loadMore
+    }
+
     enum State {
         case loading
-        case loaded(rows: [AsamItem])
+        case loaded(rows: [ModuItem])
         case failure(error: Error)
-        
-        fileprivate var rows: [AsamItem] {
+
+        fileprivate var rows: [ModuItem] {
             if case let .loaded(rows: rows) = self {
                 return rows
             } else {
@@ -59,21 +30,49 @@ class AsamsViewModel: ObservableObject {
             }
         }
     }
-    
-    private enum TriggerId: Hashable {
-        case reload
-        case loadMore
+
+    @Published private(set) var state: State = .loading
+    @Published var modus: [ModuModel] = []
+    @Published var loaded: Bool = false
+    private var disposables = Set<AnyCancellable>()
+
+    private var _repository: ModuRepository?
+    var publisher: AnyPublisher<CollectionDifference<ModuModel>, Never>?
+
+    var dataSourceUpdatedPub: AnyCancellable {
+        return NotificationCenter.default.publisher(for: .DataSourceUpdated)
+            .compactMap { notification in
+                notification.object as? DataSourceUpdatedNotification
+            }
+            .filter { notification in
+                notification.key == Modu.key
+            }
+            .sink { _ in
+                self.reload()
+            }
     }
-    
+
+    var repository: ModuRepository? {
+        get {
+            return _repository
+        }
+        set {
+            if _repository == nil {
+                _repository = newValue
+                fetchModus()
+            }
+        }
+    }
+
     func reload() {
         trigger.activate(for: TriggerId.reload)
     }
-    
+
     func loadMore() {
         trigger.activate(for: TriggerId.loadMore)
     }
-    
-    func fetchAsams(limit: Int = 100) {
+
+    func fetchModus(limit: Int = 100) {
         if publisher != nil {
             return
         }
@@ -81,8 +80,8 @@ class AsamsViewModel: ObservableObject {
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in
-            repository.asams(
-                filters: UserDefaults.standard.filter(DataSources.asam),
+            repository.modus(
+                filters: UserDefaults.standard.filter(DataSources.modu),
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .scan([]) { $0 + $1 }

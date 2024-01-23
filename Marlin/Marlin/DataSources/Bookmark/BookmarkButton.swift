@@ -76,7 +76,7 @@ struct BookmarkButton: View {
 }
 
 struct BookmarkButton2: View {
-    var action: AsamActions.Bookmark
+    var action: Actions.Bookmark
     
 //    @State var bookmarkBottomSheet: Bool = false
     @State var notes: String = ""

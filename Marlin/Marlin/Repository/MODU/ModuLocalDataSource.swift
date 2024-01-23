@@ -1,8 +1,8 @@
 //
-//  AsamLocalDataSource.swift
+//  ModuLocalDataSource.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 9/15/23.
+//  Created by Daniel Barela on 1/22/24.
 //
 
 import Foundation
@@ -11,176 +11,194 @@ import Combine
 import UIKit
 import BackgroundTasks
 
-protocol AsamLocalDataSource {
-    func getNewestAsam() -> AsamModel?
-    @discardableResult
-    func getAsam(reference: String?) -> AsamModel?
-    func getAsams(filters: [DataSourceFilterParameter]?) -> [AsamModel]
+protocol ModuLocalDataSource {
+    func insert(task: BGTask?, modus: [ModuModel]) async -> Int
+    func batchImport(from propertiesList: [ModuModel]) async throws -> Int
+    func getNewestModu() -> ModuModel?
+    func getModus(filters: [DataSourceFilterParameter]?) -> [ModuModel]
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
-    func insert(task: BGTask?, asams: [AsamModel]) async -> Int
-    func batchImport(from propertiesList: [AsamModel]) async throws -> Int
-    
-    func asams(
+    func getModu(name: String?) -> ModuModel?
+    func modus(
         filters: [DataSourceFilterParameter]?,
         paginatedBy paginator: Trigger.Signal?
-    ) -> AnyPublisher<[AsamItem], Error>
+    ) -> AnyPublisher<[ModuItem], Error>
 }
 
-struct AsamModelPage {
-    var asamList: [AsamItem]
+struct ModuModelPage {
+    var moduList: [ModuItem]
     var next: Int?
     var currentHeader: String?
 }
 
-class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, ObservableObject {
+class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, ObservableObject {
     private var context: NSManagedObjectContext
-    
+
     required init(context: NSManagedObjectContext) {
         self.context = context
     }
-    
-    func getNewestAsam() -> AsamModel? {
+
+    func getNewestModu() -> ModuModel? {
         let context = PersistenceController.current.newTaskContext()
-        var asam: AsamModel?
+        var modu: ModuModel?
         context.performAndWait {
-            if let newestAsam = try? PersistenceController.current.fetchFirst(
-                Asam.self,
+            if let newestModu = try? PersistenceController.current.fetchFirst(
+                Modu.self,
                 sortBy: [
-                    NSSortDescriptor(keyPath: \Asam.date, ascending: false)
+                    NSSortDescriptor(keyPath: \Modu.date, ascending: false)
                 ],
                 predicate: nil,
                 context: context
             ) {
-                asam = AsamModel(asam: newestAsam)
+                modu = ModuModel(modu: newestModu)
             }
         }
-        return asam
+        return modu
     }
-    
-    func getAsam(reference: String?) -> AsamModel? {
-        var model: AsamModel?
+
+    func getModus(filters: [DataSourceFilterParameter]?) -> [ModuModel] {
+        var modus: [ModuModel] = []
         context.performAndWait {
-            if let reference = reference {
-                if let asam = context.fetchFirst(Asam.self, key: "reference", value: reference) {
-                    model = AsamModel(asam: asam)
-                }
-            }
-        }
-        return model
-    }
-    
-    func getAsams(filters: [DataSourceFilterParameter]?) -> [AsamModel] {
-        var asams: [AsamModel] = []
-        context.performAndWait {
-            let request: NSFetchRequest<Asam> = AsamFilterable()
-                .fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
-            request.sortDescriptors = UserDefaults.standard.sort(Asam.key).map({ sortParameter in
+            let request: NSFetchRequest<Modu> = ModuFilterable()
+                .fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Modu> ?? Modu.fetchRequest()
+            request.sortDescriptors = UserDefaults.standard.sort(Modu.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
-            asams = (context.fetch(request: request)?.map { asam in
-                AsamModel(asam: asam)
+            modus = (context.fetch(request: request)?.map { modu in
+                ModuModel(modu: modu)
             }) ?? []
         }
-        
-        return asams
+
+        return modus
     }
-    
+
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
-        guard let fetchRequest = AsamFilterable().fetchRequest(filters: filters, commonFilters: nil) else {
+        guard let fetchRequest = ModuFilterable().fetchRequest(filters: filters, commonFilters: nil) else {
             return 0
         }
-        var count = 0
-        context.performAndWait {
-            count = (try? context.count(for: fetchRequest)) ?? 0
-        }
-        return count
+        return (try? context.count(for: fetchRequest)) ?? 0
     }
-    
+
+    func getModu(name: String?) -> ModuModel? {
+        if let name = name, let modu = context.fetchFirst(Modu.self, key: "name", value: name) {
+            return ModuModel(modu: modu)
+        }
+        return nil
+    }
+
     typealias Page = Int
-    
-    func asams(
+
+    func modus(
         filters: [DataSourceFilterParameter]?,
         paginatedBy paginator: Trigger.Signal? = nil
-    ) -> AnyPublisher<[AsamItem], Error> {
-        return asams(filters: filters, at: nil, currentHeader: nil, paginatedBy: paginator)
-            .map(\.asamList)
+    ) -> AnyPublisher<[ModuItem], Error> {
+        return modus(filters: filters, at: nil, currentHeader: nil, paginatedBy: paginator)
+            .map(\.moduList)
             .eraseToAnyPublisher()
     }
-    
-    func asams(
+
+    func modus(
+        filters: [DataSourceFilterParameter]?,
+        at page: Page?,
+        currentHeader: String?,
+        paginatedBy paginator: Trigger.Signal?
+    ) -> AnyPublisher<ModuModelPage, Error> {
+        return modus(filters: filters, at: page, currentHeader: currentHeader)
+            .map { result -> AnyPublisher<ModuModelPage, Error> in
+                if let paginator = paginator, let next = result.next {
+                    return self.modus(
+                        filters: filters,
+                        at: next,
+                        currentHeader: result.currentHeader,
+                        paginatedBy: paginator
+                    )
+                    .wait(untilOutputFrom: paginator)
+                    .retry(.max)
+                    .prepend(result)
+                    .eraseToAnyPublisher()
+                } else {
+                    return Just(result)
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
+                }
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+
+    func modus(
         filters: [DataSourceFilterParameter]?,
         at page: Page?, currentHeader: String?
-    ) -> AnyPublisher<AsamModelPage, Error> {
+    ) -> AnyPublisher<ModuModelPage, Error> {
 
-        let request: NSFetchRequest<Asam> = AsamFilterable()
-            .fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
+        let request: NSFetchRequest<Modu> = ModuFilterable()
+            .fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Modu> ?? Modu.fetchRequest()
         request.fetchLimit = 100
         request.fetchOffset = (page ?? 0) * request.fetchLimit
-        let userSort = UserDefaults.standard.sort(Asam.key)
-        let sortDescriptors: [DataSourceSortParameter] = userSort.isEmpty ? Asam.defaultSort : userSort
-        
+        let userSort = UserDefaults.standard.sort(Modu.key)
+        let sortDescriptors: [DataSourceSortParameter] = userSort.isEmpty ? Modu.defaultSort : userSort
+
         request.sortDescriptors = sortDescriptors.map({ sortParameter in
             sortParameter.toNSSortDescriptor()
         })
         var previousHeader: String? = currentHeader
-        var asams: [AsamItem] = []
+        var modus: [ModuItem] = []
         context.performAndWait {
             if let fetched = context.fetch(request: request) {
-                
-                asams = fetched.flatMap { asam in
+
+                modus = fetched.flatMap { modu in
                     guard let sortDescriptor = sortDescriptors.first else {
-                        return [AsamItem.listItem(AsamListModel(asam: asam))]
+                        return [ModuItem.listItem(ModuListModel(modu: modu))]
                     }
 
                     if !sortDescriptor.section {
-                        return [AsamItem.listItem(AsamListModel(asam: asam))]
+                        return [ModuItem.listItem(ModuListModel(modu: modu))]
                     }
 
                     return createSectionHeaderAndListItem(
-                        asam: asam,
+                        modu: modu,
                         sortDescriptor: sortDescriptor,
                         previousHeader: &previousHeader
                     )
                 }
             }
         }
-        
-        let asamPage: AsamModelPage = AsamModelPage(
-            asamList: asams, next: (page ?? 0) + 1,
+
+        let moduPage: ModuModelPage = ModuModelPage(
+            moduList: modus, next: (page ?? 0) + 1,
             currentHeader: previousHeader
         )
 
-        return Just(asamPage)
+        return Just(moduPage)
             .setFailureType(to: Error.self)
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
     func createSectionHeaderAndListItem(
-        asam: Asam,
+        modu: Modu,
         sortDescriptor: DataSourceSortParameter,
         previousHeader: inout String?
-    ) -> [AsamItem] {
-        let currentValue = asam.value(forKey: sortDescriptor.property.key)
+    ) -> [ModuItem] {
+        let currentValue = modu.value(forKey: sortDescriptor.property.key)
         let sortValueString: String? = getCurrentSortValue(sortDescriptor: sortDescriptor, sortValue: currentValue)
 
         if let previous = previousHeader, let sortValueString = sortValueString {
             if previous != sortValueString {
                 previousHeader = sortValueString
                 return [
-                    AsamItem.sectionHeader(header: sortValueString),
-                    AsamItem.listItem(AsamListModel(asam: asam))
+                    ModuItem.sectionHeader(header: sortValueString),
+                    ModuItem.listItem(ModuListModel(modu: modu))
                 ]
             }
         } else if previousHeader == nil, let sortValueString = sortValueString {
             previousHeader = sortValueString
             return [
-                AsamItem.sectionHeader(header: sortValueString),
-                AsamItem.listItem(AsamListModel(asam: asam))
+                ModuItem.sectionHeader(header: sortValueString),
+                ModuItem.listItem(ModuListModel(modu: modu))
             ]
         }
 
-        return [AsamItem.listItem(AsamListModel(asam: asam))]
+        return [ModuItem.listItem(ModuListModel(modu: modu))]
     }
 
     // ignore due to the amount of data types
@@ -192,7 +210,7 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
             sortValueString = sortValue as? String
         case .date:
             if let currentValue = sortValue as? Date {
-                sortValueString = Asam.dateFormatter.string(from: currentValue)
+                sortValueString = Modu.dateFormatter.string(from: currentValue)
             }
         case .int:
             sortValueString = (sortValue as? Int)?.zeroIsEmptyString
@@ -215,52 +233,23 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
     }
     // swiftlint:enable cyclomatic_complexity
 
-    func asams(
-        filters: [DataSourceFilterParameter]?,
-        at page: Page?,
-        currentHeader: String?,
-        paginatedBy paginator: Trigger.Signal?
-    ) -> AnyPublisher<AsamModelPage, Error> {
-        return asams(filters: filters, at: page, currentHeader: currentHeader)
-            .map { result -> AnyPublisher<AsamModelPage, Error> in
-                if let paginator = paginator, let next = result.next {
-                    return self.asams(
-                        filters: filters,
-                        at: next,
-                        currentHeader: result.currentHeader,
-                        paginatedBy: paginator
-                    )
-                    .wait(untilOutputFrom: paginator)
-                    .retry(.max)
-                    .prepend(result)
-                    .eraseToAnyPublisher()
-                } else {
-                    return Just(result)
-                        .setFailureType(to: Error.self)
-                        .eraseToAnyPublisher()
-                }
-            }
-            .switchToLatest()
-            .eraseToAnyPublisher()
-    }
-
-    func insert(task: BGTask? = nil, asams: [AsamModel]) async -> Int {
-        let count = asams.count
-        NSLog("Received \(count) \(Asam.key) records.")
+    func insert(task: BGTask? = nil, modus: [ModuModel]) async -> Int {
+        let count = modus.count
+        NSLog("Received \(count) \(Modu.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = AsamDataLoadOperation(asams: asams, localDataSource: self)
+        operation = ModuDataLoadOperation(modus: modus, localDataSource: self)
 
         return await executeOperationInBackground(task: task)
     }
-    
-    func batchImport(from propertiesList: [AsamModel]) async throws -> Int {
+
+    func batchImport(from propertiesList: [ModuModel]) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         let taskContext = PersistenceController.current.newTaskContext()
         // Add name and author to identify source of persistent history changes.
         taskContext.name = "importContext"
-        taskContext.transactionAuthor = "importAsams"
-        
+        taskContext.transactionAuthor = "importModus"
+
         /// - Tag: performAndWait
         let count = try await taskContext.perform {
             // Execute the batch insert.
@@ -271,10 +260,10 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
                 try? taskContext.save()
                 if let count = batchInsertResult.result as? Int, count > 0 {
-                    NSLog("Inserted \(count) ASAM records")
+                    NSLog("Inserted \(count) MODU records")
                     return count
                 } else {
-                    NSLog("No new ASAM records")
+                    NSLog("No new MODU records")
                 }
                 return 0
             }
@@ -282,13 +271,13 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
         }
         return count
     }
-    
-    func newBatchInsertRequest(with propertyList: [AsamModel]) -> NSBatchInsertRequest {
+
+    func newBatchInsertRequest(with propertyList: [ModuModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
-        
+
         // Provide one dictionary at a time when the closure is called.
-        let batchInsertRequest = NSBatchInsertRequest(entity: Asam.entity(), dictionaryHandler: { dictionary in
+        let batchInsertRequest = NSBatchInsertRequest(entity: Modu.entity(), dictionaryHandler: { dictionary in
             guard index < total else { return true }
             let propertyDictionary = propertyList[index].dictionaryValue
             dictionary.addEntries(from: propertyDictionary.mapValues({ value in

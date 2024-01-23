@@ -11,7 +11,7 @@ struct DataSourceActions: View {
     var moreDetails: Action?
     var location: Actions.Location?
     var zoom: Action?
-    var bookmark: AsamActions.Bookmark?
+    var bookmark: Actions.Bookmark?
     
     var body: some View {
         HStack(spacing: 0) {

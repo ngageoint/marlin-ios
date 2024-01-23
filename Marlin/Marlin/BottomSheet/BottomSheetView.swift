@@ -221,7 +221,10 @@ struct MarlinBottomSheet <Content: View>: View {
                     } else if let itemKey = item.itemKey, let dataSourceKey = item.dataSourceKey {
                         switch dataSourceKey {
                         case DataSources.asam.key:
-                            AsamSheetView(reference: itemKey)
+                            AsamSheetView(reference: itemKey, focusNotification: focusNotification)
+                                .transition(.opacity)
+                        case DataSources.modu.key:
+                            ModuSheetView(name: itemKey, focusNotification: focusNotification)
                                 .transition(.opacity)
                         default:
                             EmptyView()
@@ -241,6 +244,7 @@ struct MarlinBottomSheet <Content: View>: View {
                 .ignoresSafeArea()
             )
             .onChange(of: selectedItem) { item in
+                // This can all be removed once all bottom sheet items focus properly
                 if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1,
                    let bottomSheetItem = itemList.bottomSheetItems?[selectedItem],
                     let item = bottomSheetItem.item as? Locatable {
@@ -253,9 +257,9 @@ struct MarlinBottomSheet <Content: View>: View {
                         )
                     )
                 }
-                // TODO: if itemKey and dataSourceKey focus properly
             }
             .onAppear {
+                // This can all be removed once all bottom sheet items focus properly
                 if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1,
                    let bottomSheetItem = itemList.bottomSheetItems?[selectedItem],
                    let item = bottomSheetItem.item as? Locatable {
@@ -271,7 +275,6 @@ struct MarlinBottomSheet <Content: View>: View {
                         Metrics.shared.dataSourceBottomSheet(dataSource: type(of: dataSource).definition)
                     }
                 }
-                // TODO: if itemKey and dataSourceKey focus properly
             }
     }
 }

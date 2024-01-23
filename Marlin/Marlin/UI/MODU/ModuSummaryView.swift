@@ -8,11 +8,16 @@
 import SwiftUI
 
 struct ModuSummaryView: DataSourceSummaryView {
+    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var router: MarlinRouter
+
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+
     var showSectionHeader: Bool = false
     
     var showBookmarkNotes: Bool = false
 
-    var modu: ModuModel
+    var modu: ModuListModel
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
     
@@ -30,9 +35,23 @@ struct ModuSummaryView: DataSourceSummaryView {
             Text("\(modu.specialStatus ?? "")")
                 .lineLimit(1)
                 .secondary()
-            bookmarkNotesView(modu)
+            if modu.canBookmark {
+                bookmarkNotesView(modu)
+            }
 
-            DataSourceActionBar(data: modu, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+            DataSourceActions(
+                moreDetails: showMoreDetails ? ModuActions.Tap(name: modu.name, path: $router.path) : nil,
+                location: !showMoreDetails ? Actions.Location(latLng: modu.coordinate) : nil,
+                zoom: !showMoreDetails ? ModuActions.Zoom(latLng: modu.coordinate, itemKey: modu.id) : nil,
+                bookmark: modu.canBookmark ? Actions.Bookmark(
+                    itemKey: modu.id,
+                    bookmarkViewModel: bookmarkViewModel
+                ) : nil
+            )
+        }
+        .onAppear {
+            bookmarkViewModel.repository = bookmarkRepository
+            bookmarkViewModel.getBookmark(itemKey: modu.id, dataSource: DataSources.modu.key)
         }
     }
 }
