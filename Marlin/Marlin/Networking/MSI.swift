@@ -48,17 +48,17 @@ public class MSI {
     }()
     
     let mainDataList: [any BatchImportable.Type] = [
-        Asam.self,
-        Modu.self,
-        NavigationalWarning.self,
-        Light.self,
-        Port.self,
-        RadioBeacon.self,
-        DifferentialGPSStation.self,
-        DFRS.self,
-        DFRSArea.self,
-        ElectronicPublication.self,
-        NoticeToMariners.self
+//        Asam.self,
+//        Modu.self,
+//        NavigationalWarning.self,
+//        Light.self,
+//        Port.self,
+//        RadioBeacon.self,
+//        DifferentialGPSStation.self,
+//        DFRS.self,
+//        DFRSArea.self,
+//        ElectronicPublication.self,
+//        NoticeToMariners.self
     ]
 
     lazy var initialLoadQueue: OperationQueue = {

@@ -35,7 +35,7 @@ final class MarlinFullFlowTest: XCTestCase {
             .removeDuplicates()
             .sink { output in
                 TestHelpers.clearData()
-                for dataSource in MSI.shared.masterDataList {
+                for dataSource in MSI.shared.mainDataList {
                     switch dataSource {
                     case let mapImage as MapImage.Type:
                         mapImage.imageCache.clearCache()
@@ -66,7 +66,7 @@ final class MarlinFullFlowTest: XCTestCase {
             return
         }
         
-        for dataSource in MSI.shared.masterDataList {
+        for dataSource in MSI.shared.mainDataList {
             switch dataSource {
             case let mapImage as MapImage.Type:
                 mapImage.imageCache.clearCache()
@@ -250,7 +250,7 @@ final class MarlinFullFlowTest: XCTestCase {
             return
         }
         
-        for dataSource in MSI.shared.masterDataList {
+        for dataSource in MSI.shared.mainDataList {
             switch dataSource {
             case let mapImage as MapImage.Type:
                 mapImage.imageCache.clearCache()

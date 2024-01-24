@@ -9,6 +9,20 @@ import SwiftUI
 import MapKit
 import Combine
 
+enum SearchType: Int, CustomStringConvertible {
+    case native, nominatim
+    
+    var description: String {
+        switch self {
+        case .native:
+            return "Native"
+        case .nominatim:
+            return "OSM Nominatim"
+        }
+    }
+    
+}
+
 struct SearchView<T: MKLocalSearch>: View {
     @AppStorage("coordinateDisplay") var coordinateDisplay: CoordinateDisplayType = .latitudeLongitude
 
