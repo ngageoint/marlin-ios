@@ -15,6 +15,7 @@
 #import "SFGeometry.h"
 #import "SFPoint.h"
 #import "SFGeometryCollection.h"
+#import "SFGeometryUtils.h"
 
 //#import "sf-ios-umbrella.h"
 
