@@ -21,7 +21,7 @@ final class BadgeTests: XCTestCase {
     }
     
     func testCheckBadge() {
-        let badge = CheckBadge(on: Binding.constant(true))
+        let badge = CheckBadge(checked: Binding.constant(true))
         let controller = UIHostingController(rootView: badge)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
