@@ -90,10 +90,9 @@ class RadioBeacon: NSManagedObject {
             return nil
         }
         var sectors: [ImageSector] = []
-        let pattern = #"""
-            (?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\^)?((?<startminutes>[0-9]*)[\`'])?\
-            (-(?<enddeg>(\d*))\^)?(?<endminutes>[0-9]*)[\`']?\.
-        """#
+        // swiftlint:disable line_length
+        let pattern = #"(?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\^)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))\^)?(?<endminutes>[0-9]*)[\`']?\."#
+        // swiftlint:enable line_length
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
                               in: remarks)

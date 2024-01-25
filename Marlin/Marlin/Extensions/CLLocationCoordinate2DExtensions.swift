@@ -731,13 +731,9 @@ extension CLLocationCoordinate2D {
             return nil
         }
         
-        let pattern = #"""
-            (?<latdeg>-?[0-9]*\.?\d+)[\s°-]*(?<latminutes>\d{1,2}\.?\d+)?\
-            [\s\`'-]*(?<latseconds>\d{1,2}\.?\d+)?[\s\"\
-            ]?(?<latdirection>([NOEWS])?)[\s,]*(?<londeg>-?[0-9]*\.?\d+)\
-            [\s°-]*(?<lonminutes>\d{1,2}\.?\d+)?[\s\`'-]*\
-            (?<lonseconds>\d{1,2}\.?\d+)?[\s\" ]*(?<londirection>([NOEWS])?)
-        """#
+        // swiftlint:disable line_length
+        let pattern = #"(?<latdeg>-?[0-9]*\.?\d+)[\s°-]*(?<latminutes>\d{1,2}\.?\d+)?[\s\`'-]*(?<latseconds>\d{1,2}\.?\d+)?[\s\" ]?(?<latdirection>([NOEWS])?)[\s,]*(?<londeg>-?[0-9]*\.?\d+)[\s°-]*(?<lonminutes>\d{1,2}\.?\d+)?[\s\`'-]*(?<lonseconds>\d{1,2}\.?\d+)?[\s\" ]*(?<londirection>([NOEWS])?)"#
+        // swiftlint:enable line_length
 
         var foundLat: Bool = false
         var foundLon: Bool = false
@@ -811,10 +807,9 @@ extension CLLocationCoordinate2D {
 extension Double {
     
     init?(coordinateString: String) {
-        let pattern = #"""
-            (?<deg>-?[0-9]*\.?\d+)[\s°-]*(?<minutes>\d{1,2}\.?\d+)?[\s\`'-]*\
-            (?<seconds>\d{1,2}\.?\d+)?[\s\" ]?(?<direction>([NOEWS])?)
-        """#
+        // swiftlint:disable line_length
+        let pattern = #"(?<deg>-?[0-9]*\.?\d+)[\s°-]*(?<minutes>\d{1,2}\.?\d+)?[\s\`'-]*(?<seconds>\d{1,2}\.?\d+)?[\s\" ]?(?<direction>([NOEWS])?)"#
+        // swiftlint:enable line_length
 
         var found: Bool = false
         var degrees: Double = 0.0
