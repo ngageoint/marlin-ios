@@ -91,6 +91,7 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         
         let appState = AppState()
         let passThrough = PassThrough()
+        let router = MarlinRouter()
         UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
@@ -105,6 +106,7 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             .environmentObject(radioBeaconRepository)
             .environmentObject(routeRepository)
             .environmentObject(routeWaypointRepository)
+            .environmentObject(router)
 
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -170,6 +172,7 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         
         let appState = AppState()
         let passThrough = PassThrough()
+        let router = MarlinRouter()
         UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
@@ -184,7 +187,8 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             .environmentObject(radioBeaconRepository)
             .environmentObject(routeRepository)
             .environmentObject(routeWaypointRepository)
-        
+            .environmentObject(router)
+
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -242,6 +246,7 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         
         let appState = AppState()
         let passThrough = PassThrough()
+        let router = MarlinRouter()
         UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
@@ -256,7 +261,8 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             .environmentObject(radioBeaconRepository)
             .environmentObject(routeRepository)
             .environmentObject(routeWaypointRepository)
-        
+            .environmentObject(router)
+
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -317,6 +323,7 @@ final class MarlinCompactWidthViewTests: XCTestCase {
         
         let appState = AppState()
         let passThrough = PassThrough()
+        let router = MarlinRouter()
         UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
@@ -331,7 +338,8 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             .environmentObject(radioBeaconRepository)
             .environmentObject(routeRepository)
             .environmentObject(routeWaypointRepository)
-        
+            .environmentObject(router)
+
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -396,6 +404,7 @@ final class MarlinCompactWidthViewTests: XCTestCase {
 
         let appState = AppState()
         let passThrough = PassThrough()
+        let router = MarlinRouter()
         UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
@@ -410,7 +419,8 @@ final class MarlinCompactWidthViewTests: XCTestCase {
             .environmentObject(radioBeaconRepository)
             .environmentObject(routeRepository)
             .environmentObject(routeWaypointRepository)
-        
+            .environmentObject(router)
+
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller

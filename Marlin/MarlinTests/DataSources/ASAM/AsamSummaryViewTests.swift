@@ -62,10 +62,11 @@ final class AsamSummaryViewTests: XCTestCase {
         let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         
-        let summary = AsamSummaryView(asam: AsamModel(asam:newItem))
+        let summary = AsamSummaryView(asam: AsamListModel(asam:newItem))
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
+            .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -100,9 +101,10 @@ final class AsamSummaryViewTests: XCTestCase {
         let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         
-        let summary = AsamSummaryView(asam: AsamModel(asam: newItem))
+        let summary = AsamSummaryView(asam: AsamListModel(asam: newItem))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
+            .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -135,9 +137,10 @@ final class AsamSummaryViewTests: XCTestCase {
         let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         
-        let summary = AsamSummaryView(asam: AsamModel(asam: newItem))
+        let summary = AsamSummaryView(asam: AsamListModel(asam: newItem))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
+            .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -169,27 +172,32 @@ final class AsamSummaryViewTests: XCTestCase {
         
         let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = AsamSummaryView(asam: AsamModel(asam: newItem), showMoreDetails: true)
+
+        let router = MarlinRouter()
+
+        let summary = AsamSummaryView(asam: AsamListModel(asam: newItem), showMoreDetails: true)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
+            .environmentObject(router)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
         TestHelpers.printAllAccessibilityLabelsInWindows()
         
-        expectation(forNotification: .ViewDataSource,
-                    object: nil) { notification in
-            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let asam = try! XCTUnwrap(vds.dataSource as? AsamModel)
-            XCTAssertEqual(asam.hostility, "Boarding")
-            XCTAssertEqual(asam.victim, "Boat")
-            return true
-        }
+//        expectation(forNotification: .ViewDataSource,
+//                    object: nil) { notification in
+//            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
+//            let asam = try! XCTUnwrap(vds.dataSource as? AsamModel)
+//            XCTAssertEqual(asam.hostility, "Boarding")
+//            XCTAssertEqual(asam.victim, "Boat")
+//            return true
+//        }
+        XCTAssertEqual(router.path.count, 0)
         tester().tapView(withAccessibilityLabel: "More Details")
-        
-        waitForExpectations(timeout: 10, handler: nil)
+        XCTAssertEqual(router.path.count, 1)
+
+//        waitForExpectations(timeout: 10, handler: nil)
         tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
     }
     
@@ -209,8 +217,9 @@ final class AsamSummaryViewTests: XCTestCase {
         let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         
-        let summary = AsamSummaryView(asam: AsamModel(asam: newItem), showMoreDetails: false)
+        let summary = AsamSummaryView(asam: AsamListModel(asam: newItem), showMoreDetails: false)
             .environmentObject(repository)
+            .environmentObject(MarlinRouter())
             .environmentObject(bookmarkRepository)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -226,10 +235,9 @@ final class AsamSummaryViewTests: XCTestCase {
         expectation(forNotification: .MapItemsTapped, object: nil) { notification in
             
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let asams = tapNotification.items as! [AsamModel]
+            let asams = tapNotification.itemKeys![Asam.key] as! [String]
             XCTAssertEqual(asams.count, 1)
-            XCTAssertEqual(asams[0].hostility, "Boarding")
-            XCTAssertEqual(asams[0].victim, "Boat")
+            XCTAssertEqual(asams[0], "2022-100")
             return true
         }
         tester().tapView(withAccessibilityLabel: "focus")

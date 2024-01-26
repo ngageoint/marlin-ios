@@ -12,6 +12,7 @@ struct DataSourceActions: View {
     var location: Actions.Location?
     var zoom: Action?
     var bookmark: Actions.Bookmark?
+    var share: String?
     
     var body: some View {
         HStack(spacing: 0) {
@@ -30,6 +31,10 @@ struct DataSourceActions: View {
             if let bookmark = bookmark {
                 BookmarkButton2(action: bookmark)
                     .buttonStyle(MaterialButtonStyle())
+            }
+
+            if let share = share {
+                ShareButton(shareText: share, dataSource: Asam.self as? (any DataSource))
             }
 
             if let zoom = zoom {
