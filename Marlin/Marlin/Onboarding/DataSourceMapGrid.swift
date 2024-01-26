@@ -29,11 +29,11 @@ struct DataSourceMapGrid: View {
                 dataSourceItem.showOnMap.toggle()
             }
             .accessibilityElement(children: .contain)
-            .accessibilityLabel("\(dataSourceItem.dataSource.definition.fullName) Map")
-            .overlay(CheckBadge(checked: .constant(isMapped(dataSourceItem.dataSource.definition.key)))
+            .accessibilityLabel("\(dataSourceItem.dataSource.fullName) Map")
+            .overlay(CheckBadge(checked: .constant(isMapped(dataSourceItem.dataSource.key)))
                 .accessibilityElement()
                 .accessibilityLabel(
-                    "\(dataSourceItem.dataSource.definition.fullName) Map \(dataSourceItem.showOnMap ? "On" : "Off")"
+                    "\(dataSourceItem.dataSource.fullName) Map \(dataSourceItem.showOnMap ? "On" : "Off")"
                 )
             )
             .padding(8)

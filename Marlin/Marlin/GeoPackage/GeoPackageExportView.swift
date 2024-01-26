@@ -42,7 +42,7 @@ struct GeoPackageExportView: View {
                         let included = viewModel.dataSources.contains { definition in
                             definition.key == dataSourceItem.key
                         }
-                        dataSourceButton(definition: dataSourceItem.dataSource.definition, enabled: included)
+                        dataSourceButton(definition: dataSourceItem.dataSource, enabled: included)
                     }
                 }
                 if !viewModel.exporting && !viewModel.complete {

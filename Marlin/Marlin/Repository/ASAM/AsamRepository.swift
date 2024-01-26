@@ -49,8 +49,8 @@ class AsamRepository: ObservableObject {
         NSLog("Fetching ASAMS with refresh? \(refresh)")
         if refresh {
             DispatchQueue.main.async {
-                MSI.shared.appState.loadingDataSource[Asam.key] = true
-                NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: Asam.self))
+                MSI.shared.appState.loadingDataSource[DataSources.asam.key] = true
+                NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.asam))
             }
             
             let newestAsam = localDataSource.getNewestAsam()
@@ -59,17 +59,17 @@ class AsamRepository: ObservableObject {
             let inserted = await localDataSource.insert(task: nil, asams: asams)
             
             DispatchQueue.main.async {
-                MSI.shared.appState.loadingDataSource[Asam.key] = false
-                UserDefaults.standard.updateLastSyncTimeSeconds(Asam.definition)
-                NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: Asam.self))
+                MSI.shared.appState.loadingDataSource[DataSources.asam.key] = false
+                UserDefaults.standard.updateLastSyncTimeSeconds(DataSources.asam)
+                NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: DataSources.asam))
                     if inserted != 0 {
                         NotificationCenter.default.post(
                             name: .DataSourceNeedsProcessed,
-                            object: DataSourceUpdatedNotification(key: Asam.definition.key)
+                            object: DataSourceUpdatedNotification(key: DataSources.asam.key)
                         )
                         NotificationCenter.default.post(
                             name: .DataSourceUpdated,
-                            object: DataSourceUpdatedNotification(key: Asam.definition.key)
+                            object: DataSourceUpdatedNotification(key: DataSources.asam.key)
                         )
                     }
             }

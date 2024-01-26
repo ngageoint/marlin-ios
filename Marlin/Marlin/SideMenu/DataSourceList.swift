@@ -12,18 +12,18 @@ import CoreData
 
 class DataSourceList: ObservableObject {
     let tabItems: [DataSourceItem] = [
-        DataSourceItem(dataSource: Asam.self),
-        DataSourceItem(dataSource: Modu.self),
-        DataSourceItem(dataSource: Light.self),
-        DataSourceItem(dataSource: NavigationalWarning.self),
-        DataSourceItem(dataSource: Port.self),
-        DataSourceItem(dataSource: RadioBeacon.self),
-        DataSourceItem(dataSource: DifferentialGPSStation.self),
-        DataSourceItem(dataSource: DFRS.self),
-        DataSourceItem(dataSource: ElectronicPublication.self),
-        DataSourceItem(dataSource: NoticeToMariners.self),
-        DataSourceItem(dataSource: Bookmark.self),
-        DataSourceItem(dataSource: Route.self)
+        DataSourceItem(dataSource: DataSources.asam),
+        DataSourceItem(dataSource: DataSources.modu),
+        DataSourceItem(dataSource: DataSources.light),
+        DataSourceItem(dataSource: DataSources.navWarning),
+        DataSourceItem(dataSource: DataSources.port),
+        DataSourceItem(dataSource: DataSources.radioBeacon),
+        DataSourceItem(dataSource: DataSources.dgps),
+        DataSourceItem(dataSource: DataSources.dfrs),
+        DataSourceItem(dataSource: DataSources.epub),
+        DataSourceItem(dataSource: DataSources.noticeToMariners),
+        DataSourceItem(dataSource: DataSources.bookmark),
+        DataSourceItem(dataSource: DataSources.route)
     ]
     
     var enabledTabs: [DataSourceItem] {
@@ -34,7 +34,7 @@ class DataSourceList: ObservableObject {
     
     var mappableDataSources: [DataSourceItem] {
         return enabledTabs.filter { item in
-            item.dataSource.definition.mappable
+            item.dataSource.mappable
         }.sorted(by: { one, two in
             return one.order < two.order
         })
@@ -57,15 +57,15 @@ class DataSourceList: ObservableObject {
     
     init() {
         _tabs = Published(initialValue: Array(allTabs.prefix(userTabs).filter({ item in
-            UserDefaults.standard.dataSourceEnabled(item.dataSource.definition)
+            UserDefaults.standard.dataSourceEnabled(item.dataSource)
         })))
         _nonTabs = Published(initialValue: Array(allTabs.dropFirst(userTabs).filter({ item in
-            UserDefaults.standard.dataSourceEnabled(item.dataSource.definition)
+            UserDefaults.standard.dataSourceEnabled(item.dataSource)
         })))
         _mappedDataSources = Published(initialValue: Array(allTabs.filter({ item in
             // no filtering Navigational Warnings for right now..
             UserDefaults.standard
-                .dataSourceEnabled(item.dataSource.definition)
+                .dataSourceEnabled(item.dataSource)
             && UserDefaults.standard
                 .showOnMap(key: item.key)
         })))
@@ -74,12 +74,12 @@ class DataSourceList: ObservableObject {
             allTabs.filter({ item in
                 // no filtering Navigational Warnings for right now..
                 UserDefaults.standard
-                    .dataSourceEnabled(item.dataSource.definition)
+                    .dataSourceEnabled(item.dataSource)
                 && UserDefaults.standard
                     .showOnMap(key: item.key)
             })
             .compactMap({ item in
-                return DataSourceDefinitions.filterableFromDefintion(item.dataSource.definition)
+                return item.dataSource.filterable
             })
             .sorted(by: { filterable1, filterable2 in
                 filterable1.definition.order < filterable2.definition.order
@@ -98,7 +98,7 @@ class DataSourceList: ObservableObject {
                 self?._mappedDataSources = Published(
                     initialValue: Array(
                         allTabs.filter({ item in
-                            UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) &&
+                            UserDefaults.standard.dataSourceEnabled(item.dataSource) &&
                             UserDefaults.standard.showOnMap(key: item.key)
                         }
                                       )
@@ -108,12 +108,12 @@ class DataSourceList: ObservableObject {
                     initialValue: Array(
                         allTabs.filter({ item in
                             // no filtering Navigational Warnings for right now..
-                            UserDefaults.standard.dataSourceEnabled(item.dataSource.definition) &&
+                            UserDefaults.standard.dataSourceEnabled(item.dataSource) &&
                             UserDefaults.standard.showOnMap(key: item.key)
                         }
                                       )
                         .compactMap({ item in
-                            DataSourceDefinitions.filterableFromDefintion(item.dataSource.definition)
+                            DataSourceDefinitions.filterableFromDefintion(item.dataSource)
                         }
                                    )
                     )
@@ -190,9 +190,9 @@ class DataSourceItem: ObservableObject, Identifiable, Hashable, Equatable {
     }
     
     var id: String { key }
-    var key: String { dataSource.definition.key }
-    var dataSource: any DataSource.Type
-    
+    var key: String { dataSource.key }
+    var dataSource: any DataSourceDefinition
+
     @AppStorage<Int> var order: Int
     @AppStorage<Bool> var showOnMap: Bool {
         didSet {
@@ -208,20 +208,20 @@ class DataSourceItem: ObservableObject, Identifiable, Hashable, Equatable {
     }
     @AppStorage<Bool> var enabled: Bool
     
-    init(dataSource: any DataSource.Type) {
+    init(dataSource: any DataSourceDefinition) {
         self.dataSource = dataSource
         self._order = AppStorage(
             wrappedValue: 0,
-            "\(dataSource.definition.key)Order")
+            "\(dataSource.key)Order")
         self._showOnMap = AppStorage(
-            wrappedValue: dataSource.definition.mappable,
-            "showOnMap\(dataSource.definition.key)")
+            wrappedValue: dataSource.mappable,
+            "showOnMap\(dataSource.key)")
         self._filterData = AppStorage(
             wrappedValue: Data(),
-            "\(dataSource.definition.key)Filter")
+            "\(dataSource.key)Filter")
         self._enabled = AppStorage(
-            wrappedValue: UserDefaults.standard.dataSourceEnabled(dataSource.definition),
-            "\(dataSource.definition.key)DataSourceEnabled")
+            wrappedValue: UserDefaults.standard.dataSourceEnabled(dataSource),
+            "\(dataSource.key)DataSourceEnabled")
 
     }
     

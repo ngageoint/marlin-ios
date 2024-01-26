@@ -42,10 +42,10 @@ struct AsamSummaryView: DataSourceSummaryView {
                 location: !showMoreDetails ? Actions.Location(latLng: asam.coordinate) : nil,
                 zoom: !showMoreDetails ? AsamActions.Zoom(latLng: asam.coordinate, itemKey: asam.id) : nil,
                 bookmark: asam.canBookmark ? Actions.Bookmark(
-                share: asam.itemTitle,
                     itemKey: asam.id,
                     bookmarkViewModel: bookmarkViewModel
-                ) : nil
+                ) : nil,
+                share: asam.itemTitle
             )
         }
         .onAppear {

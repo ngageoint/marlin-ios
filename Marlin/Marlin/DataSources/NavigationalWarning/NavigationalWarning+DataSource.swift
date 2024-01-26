@@ -53,7 +53,7 @@ extension NavigationalWarning: Bookmarkable {
 }
 
 extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportable {
-    static var definition: any DataSourceDefinition = DataSourceDefinitions.navWarning.definition
+    static var definition: any DataSourceDefinition = DataSources.navWarning
 
     var sfGeometry: SFGeometry? {
         let collection = SFGeometryCollection()

@@ -117,15 +117,21 @@ class MainMapMixins: MapMixins {
         if UserDefaults.standard.dataSourceEnabled(Modu.definition) {
             mixins.append(ModuMap<Modu>(showAsTiles: true))
         }
-        if UserDefaults.standard.dataSourceEnabled(Asam.definition) {
-            mixins.append(AsamMap<Asam>(showAsTiles: true))
-        }
+//        if UserDefaults.standard.dataSourceEnabled(Asam.definition) {
+//            mixins.append(AsamMap<Asam>(showAsTiles: true))
+//        }
         mixins.append(NavigationalWarningFetchMap())
         self.mixins = mixins
     }
     
     func addRouteMixin(routeRepository: (any RouteRepository)) {
         self.mixins.append(AllRoutesMixin(repository: routeRepository))
+    }
+
+    func addAsamTileRepository(tileRepository: TileRepository) {
+        if UserDefaults.standard.dataSourceEnabled(DataSources.asam) {
+            mixins.append(AsamMap(repository: tileRepository))
+        }
     }
 }
 

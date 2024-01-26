@@ -36,11 +36,11 @@ class AsamDataLoadOperation: CountingDataLoadOperation {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(
                     name: .DataSourceNeedsProcessed,
-                    object: DataSourceUpdatedNotification(key: Asam.key)
+                    object: DataSourceUpdatedNotification(key: DataSources.asam.key)
                 )
                 NotificationCenter.default.post(
                     name: .DataSourceUpdated,
-                    object: DataSourceUpdatedNotification(key: Asam.key)
+                    object: DataSourceUpdatedNotification(key: DataSources.asam.key)
                 )
             }
         }

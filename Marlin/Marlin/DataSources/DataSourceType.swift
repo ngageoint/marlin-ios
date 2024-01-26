@@ -32,7 +32,7 @@ enum DataSourceType: String, CaseIterable {
     func toDataSource() -> DataSource.Type {
         switch self {
         case .asam:
-            return Asam.self
+            return AsamModel.self
         case .modu:
             return Modu.self
         case .light:

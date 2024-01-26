@@ -11,6 +11,194 @@ import CoreData
 import Combine
 import Kingfisher
 
+class DataSourceMap: MapMixin {
+    var uuid: UUID = UUID()
+    var cancellable = Set<AnyCancellable>()
+    var minZoom = 2
+
+    var repository: TileRepository
+
+    var mapState: MapState?
+    var lastChange: Date?
+    var overlay: DataSourceTileOverlay?
+
+    var focusNotificationName: Notification.Name?
+
+    var userDefaultsShowPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
+    var orderPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Int>?
+
+    var show = false
+
+    init(repository: TileRepository) {
+        self.repository = repository
+    }
+
+    func setupMixin(mapState: MapState, mapView: MKMapView) {
+        self.mapState = mapState
+
+//        if let focusNotificationName = focusNotificationName {
+//            NotificationCenter.default.publisher(for: focusNotificationName)
+//                .compactMap {
+//                    $0.object as? T
+//                }
+//                .sink(receiveValue: { [weak self] in
+//                    self?.focus(item: $0)
+//                })
+//                .store(in: &cancellable)
+//        }
+
+        setupDataSourceUpdatedPublisher(mapState: mapState)
+        setupUserDefaultsShowPublisher(mapState: mapState)
+        setupOrderPublisher(mapState: mapState)
+
+        LocationManager.shared().$current10kmMGRS
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.refreshOverlay(mapState: mapState)
+            }
+            .store(in: &cancellable)
+    }
+
+    func updateMixin(mapView: MKMapView, mapState: MapState) {
+        var stateKey = "FetchRequestMixin\(repository.dataSource?.key ?? uuid.uuidString)DateUpdated"
+        if lastChange == nil
+            || lastChange != mapState.mixinStates[stateKey] as? Date {
+            lastChange = mapState.mixinStates[stateKey] as? Date ?? Date()
+
+            if mapState.mixinStates[stateKey] as? Date == nil {
+                DispatchQueue.main.async {
+                    mapState.mixinStates[stateKey] = self.lastChange
+                }
+            }
+
+            if let selfOverlay = self.overlay {
+                mapView.removeOverlay(selfOverlay)
+            }
+
+            if !show {
+                return
+            }
+            let newOverlay = DataSourceTileOverlay(tileRepository: repository)
+            newOverlay.tileSize = CGSize(width: 512, height: 512)
+            newOverlay.minimumZ = self.minZoom
+
+            self.overlay = newOverlay
+            // find the right place
+            var mapOrder = 0
+            if let key = self.repository.dataSource?.key {
+                mapOrder = UserDefaults.standard.dataSourceMapOrder(key)
+            }
+            if mapView.overlays(in: .aboveLabels).isEmpty {
+                mapView.insertOverlay(newOverlay, at: 0, level: .aboveLabels)
+            } else {
+                for added in mapView.overlays(in: .aboveLabels) {
+                    if let added = added as? any PredicateBasedTileOverlay,
+                        let key = added.key,
+                       let addedOverlay = added as? MKTileOverlay {
+                        let addedOrder = UserDefaults.standard.dataSourceMapOrder(key)
+                        if addedOrder < mapOrder {
+                            mapView.insertOverlay(newOverlay, below: addedOverlay)
+                            return
+                        }
+                    }
+                }
+            }
+
+            mapView.insertOverlay(newOverlay, at: mapView.overlays(in: .aboveLabels).count, level: .aboveLabels)
+        }
+    }
+
+    func removeMixin(mapView: MKMapView, mapState: MapState) {
+        if let overlay = self.overlay {
+            mapView.removeOverlay(overlay)
+        }
+    }
+
+    func refreshOverlay(mapState: MapState) {
+        DispatchQueue.main.async {
+            self.mapState?.mixinStates[
+                "FetchRequestMixin\(self.repository.dataSource?.key ?? self.uuid.uuidString)DateUpdated"
+            ] = Date()
+        }
+    }
+
+    func setupDataSourceUpdatedPublisher(mapState: MapState) {
+        NotificationCenter.default.publisher(for: .DataSourceUpdated)
+            .receive(on: RunLoop.main)
+            .compactMap {
+                $0.object as? DataSourceUpdatedNotification
+            }
+            .sink { item in
+                if let key = self.repository.dataSource?.key, item.key == key {
+                    NSLog("New data for \(key), refresh overlay, clear the cache")
+                    self.repository.clearCache(completion: {
+                        self.refreshOverlay(mapState: mapState)
+                    })
+                }
+            }
+            .store(in: &cancellable)
+    }
+
+    func setupUserDefaultsShowPublisher(mapState: MapState) {
+        userDefaultsShowPublisher?
+            .removeDuplicates()
+            .sink { [weak self] show in
+                self?.show = show
+                NSLog("Show \(self?.repository.dataSource?.key ?? ""): \(show)")
+                self?.refreshOverlay(mapState: mapState)
+            }
+            .store(in: &cancellable)
+    }
+
+    func setupOrderPublisher(mapState: MapState) {
+        orderPublisher?
+            .removeDuplicates()
+            .sink { [weak self] order in
+                NSLog("Order update \(self?.repository.dataSource?.key ?? ""): \(order)")
+
+                self?.refreshOverlay(mapState: mapState)
+            }
+            .store(in: &cancellable)
+    }
+
+    func items(
+        at location: CLLocationCoordinate2D,
+        mapView: MKMapView,
+        touchPoint: CGPoint
+    ) -> [any DataSource]? {
+        return nil
+    }
+
+    func itemKeys(
+        at location: CLLocationCoordinate2D,
+        mapView: MKMapView,
+        touchPoint: CGPoint
+    ) -> [String: [String]] {
+        if mapView.zoomLevel < minZoom {
+            return [:]
+        }
+        guard show == true, let key = repository.dataSource?.key else {
+            return [:]
+        }
+        let screenPercentage = 0.03
+        let tolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
+        let minLon = location.longitude - tolerance
+        let maxLon = location.longitude + tolerance
+        let minLat = location.latitude - tolerance
+        let maxLat = location.latitude + tolerance
+
+        return [
+            key: repository.getItemKeys(
+                minLatitude: minLat,
+                maxLatitude: maxLat,
+                minLongitude: minLon,
+                maxLongitude: maxLon
+            )
+        ]
+    }
+
+}
+
 class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
     var uuid: UUID = UUID()
     
@@ -39,7 +227,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         self.fetchPredicate = fetchPredicate
         self.objects = objects
         imageCache = T.imageCache
-        orderPublisher = UserDefaults.standard.orderPublisher(key: T.key)
+        orderPublisher = UserDefaults.standard.orderPublisher(key: T.definition.key)
     }
     
     func getFetchRequest(show: Bool) -> NSFetchRequest<NSManagedObject>? {

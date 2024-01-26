@@ -23,7 +23,7 @@ class AsamsViewModel: ObservableObject {
                 notification.object as? DataSourceUpdatedNotification
             }
             .filter { notification in
-                notification.key == Asam.key
+                notification.key == DataSources.asam.key
             }
             .sink { _ in
                 self.reload()

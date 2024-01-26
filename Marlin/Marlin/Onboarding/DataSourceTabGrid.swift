@@ -22,24 +22,24 @@ struct DataSourceTabGrid: View {
     }
     
     @ViewBuilder
-    func dataSourceTabSquare(dataSource: any DataSource.Type) -> some View {
+    func dataSourceTabSquare(dataSource: any DataSourceDefinition) -> some View {
         DataSourceGridSquare(dataSource: dataSource)
-        .onTapGesture {
-            if isTab(dataSource.definition.key) {
-                dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: dataSource), position: 0)
-            } else {
-                dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: dataSource), position: 0)
+            .onTapGesture {
+                if isTab(dataSource.key) {
+                    dataSourceList.addItemToNonTabs(dataSourceItem: DataSourceItem(dataSource: dataSource), position: 0)
+                } else {
+                    dataSourceList.addItemToTabs(dataSourceItem: DataSourceItem(dataSource: dataSource), position: 0)
+                }
             }
-        }
-        .overlay(CheckBadge(checked: .constant(isTab(dataSource.definition.key)))
-            .accessibilityElement()
-            .accessibilityLabel(
-                "\(dataSource.definition.fullName) Tab \(isTab(dataSource.definition.key) ? "On" : "Off")"
+            .overlay(CheckBadge(checked: .constant(isTab(dataSource.key)))
+                .accessibilityElement()
+                .accessibilityLabel(
+                    "\(dataSource.fullName) Tab \(isTab(dataSource.key) ? "On" : "Off")"
+                )
             )
-        )
-        .padding(8)
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel("\(dataSource.definition.fullName) Tab")
+            .padding(8)
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("\(dataSource.fullName) Tab")
     }
 
     var body: some View {

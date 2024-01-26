@@ -113,8 +113,8 @@ struct DataSourceToggles: View {
                 type: .custom, size: .mini,
                 foregroundColor: dataSourceItem.showOnMap ? Color.white : Color.disabledColor,
                 backgroundColor: dataSourceItem.showOnMap ?
-                Color(uiColor: dataSourceItem.dataSource.definition.color) : Color.disabledBackground))
+                Color(uiColor: dataSourceItem.dataSource.color) : Color.disabledBackground))
         .accessibilityElement(children: .contain)
-        .accessibilityLabel("\(dataSourceItem.dataSource.definition.key) Map Toggle")
+        .accessibilityLabel("\(dataSourceItem.dataSource.key) Map Toggle")
     }
 }

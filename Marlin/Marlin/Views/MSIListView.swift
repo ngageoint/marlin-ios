@@ -124,14 +124,16 @@ struct MSIListView<
         .navigationTitle(T.definition.fullName)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
-                router.path.append(MarlinRoute.dataSourceDetail(dataSourceKey: T.definition.key, itemKey: focusedItem.itemKey))
+            if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T,
+            let def = DataSources.fromDataSourceType(T.self) {
+                router.path.append(MarlinRoute.dataSourceDetail(dataSourceKey: def.key, itemKey: focusedItem.itemKey))
             }
             Metrics.shared.dataSourceList(dataSource: T.definition)
         }
         .onChange(of: focusedItem.date) { _ in
-            if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
-                router.path.append(MarlinRoute.dataSourceDetail(dataSourceKey: T.definition.key, itemKey: focusedItem.itemKey))
+            if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T,
+            let def = DataSources.fromDataSourceType(T.self) {
+                router.path.append(MarlinRoute.dataSourceDetail(dataSourceKey: def.key, itemKey: focusedItem.itemKey))
             }
         }
         .navigationDestination(for: T.self) { item in
@@ -143,7 +145,7 @@ struct MSIListView<
         .modifier(FilterButton(
             filterOpen: $filterOpen,
             sortOpen: $sortOpen,
-            dataSources: Binding.constant([DataSourceItem(dataSource: T.self)]), 
+            dataSources: DataSources.fromDataSourceType(T.self) != nil ? Binding.constant([DataSourceItem(dataSource: DataSources.fromDataSourceType(T.self)!)]) : Binding.constant([]),
             allowSorting: allowUserSort,
             allowFiltering: allowUserFilter))
         .background {

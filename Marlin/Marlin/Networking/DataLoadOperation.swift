@@ -85,10 +85,10 @@ class DataLoadOperation: Operation {
         }
         DispatchQueue.main.async {
             self.appState.loadingDataSource[D.key] = true
-            if let dataSource = dataType as? any DataSource.Type {
+            if let dataSource = dataType as? any DataSource.Type, let def =  DataSources.fromDataSourceType(dataSource) {
                 NotificationCenter.default.post(
                     name: .DataSourceLoading,
-                    object: DataSourceItem(dataSource: dataSource))
+                    object: DataSourceItem(dataSource: def))
             }
         }
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
@@ -115,18 +115,19 @@ class DataLoadOperation: Operation {
                                     self.doOnMainQueueAndBlockUntilFinished {
                                         self.appState.loadingDataSource[D.key] = false
                                         self.endBackgroundTaskIfActive()
-                                        if let dataSource = dataType as? any DataSource.Type {
+                                        if let dataSource = dataType as? any DataSource.Type,
+                                        let def = DataSources.fromDataSourceType(dataSource) {
                                             NotificationCenter.default.post(
                                                 name: .DataSourceLoaded,
-                                                object: DataSourceItem(dataSource: dataSource))
+                                                object: DataSourceItem(dataSource: def))
                                             NotificationCenter.default.post(
                                                 name: .DataSourceNeedsProcessed,
                                                 object: DataSourceUpdatedNotification(
-                                                    key: dataSource.definition.key))
+                                                    key: def.key))
                                             NotificationCenter.default.post(
                                                 name: .DataSourceUpdated,
                                                 object: DataSourceUpdatedNotification(
-                                                    key: dataSource.definition.key))
+                                                    key: def.key))
                                         }
                                     }
                                 }
@@ -146,10 +147,11 @@ class DataLoadOperation: Operation {
         }
         DispatchQueue.main.async {
             self.appState.loadingDataSource[D.key] = true
-            if let dataSource = dataType as? any DataSource.Type {
+            if let dataSource = dataType as? any DataSource.Type,
+               let def = DataSources.fromDataSourceType(dataSource) {
                 NotificationCenter.default.post(
                     name: .DataSourceLoading,
-                    object: DataSourceItem(dataSource: dataSource))
+                    object: DataSourceItem(dataSource: def))
             }
         }
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
@@ -178,10 +180,11 @@ class DataLoadOperation: Operation {
                                         self.appState.loadingDataSource[D.key] = false
                                         self.endBackgroundTaskIfActive()
                                         UserDefaults.standard.updateLastSyncTimeSeconds(D.definition)
-                                        if let dataSource = dataType as? any DataSource.Type {
+                                        if let dataSource = dataType as? any DataSource.Type,
+                                        let def = DataSources.fromDataSourceType(dataSource) {
                                             NotificationCenter.default.post(
                                                 name: .DataSourceLoaded,
-                                                object: DataSourceItem(dataSource: dataSource))
+                                                object: DataSourceItem(dataSource: def))
                                             if totalCount != 0 {
                                                 NotificationCenter.default.post(
                                                     name: .DataSourceNeedsProcessed,
@@ -222,10 +225,11 @@ class DataLoadOperation: Operation {
                                                             self.endBackgroundTaskIfActive()
                                                             UserDefaults.standard
                                                                 .updateLastSyncTimeSeconds(D.definition)
-                                                            if let dataSource = dataType as? any DataSource.Type {
+                                                            if let dataSource = dataType as? any DataSource.Type,
+                                                            let def = DataSources.fromDataSourceType(dataSource) {
                                                                 NotificationCenter.default.post(
                                                                     name: .DataSourceLoaded,
-                                                                    object: DataSourceItem(dataSource: dataSource))
+                                                                    object: DataSourceItem(dataSource: def))
                                                                 if totalCount != 0 {
                                                                     NotificationCenter.default.post(
                                                                         name: .DataSourceNeedsProcessed,

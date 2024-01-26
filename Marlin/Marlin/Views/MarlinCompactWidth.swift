@@ -49,21 +49,21 @@ struct MarlinCompactWidth: View {
                         // This is deprecated, but in iOS16 this is the only way to set the back button color
                         .accentColor(Color.onPrimaryColor)
                         .tabItem {
-                            if let imageName = item.dataSource.definition.imageName {
-                                Label(item.dataSource.definition.name, image: imageName)
+                            if let imageName = item.dataSource.imageName {
+                                Label(item.dataSource.name, image: imageName)
                                     .accessibilityElement(children: .contain)
-                                    .accessibilityLabel("\(item.dataSource.definition.key)List")
-                            } else if let imageName = item.dataSource.definition.systemImageName {
-                                Label(item.dataSource.definition.name, systemImage: imageName)
+                                    .accessibilityLabel("\(item.dataSource.key)List")
+                            } else if let imageName = item.dataSource.systemImageName {
+                                Label(item.dataSource.name, systemImage: imageName)
                                     .accessibilityElement(children: .contain)
-                                    .accessibilityLabel("\(item.dataSource.definition.key)List")
+                                    .accessibilityLabel("\(item.dataSource.key)List")
                             } else {
-                                Label(item.dataSource.definition.name, systemImage: "list.bullet.rectangle.fill")
+                                Label(item.dataSource.name, systemImage: "list.bullet.rectangle.fill")
                                     .accessibilityElement(children: .contain)
-                                    .accessibilityLabel("\(item.dataSource.definition.key)List")
+                                    .accessibilityLabel("\(item.dataSource.key)List")
                             }
                         }
-                        .tag("\(item.dataSource.definition.key)List")
+                        .tag("\(item.dataSource.key)List")
                 }
             }
             .onReceive(mapFocus) { output in

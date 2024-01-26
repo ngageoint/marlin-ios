@@ -60,8 +60,8 @@ class Bookmark: NSManagedObject, BatchImportable {
     // swiftlint:disable cyclomatic_complexity
     func getDataSourceItem(context: NSManagedObjectContext) -> (any Bookmarkable)? {
         switch dataSource {
-        case Asam.key:
-            return Asam.getItem(context: context, itemKey: self.id)
+        case DataSources.asam.key:
+            return MSI.shared.asamRepository?.getAsam(reference: self.id)
         case Modu.key:
             return Modu.getItem(context: context, itemKey: self.id)
         case Port.key:

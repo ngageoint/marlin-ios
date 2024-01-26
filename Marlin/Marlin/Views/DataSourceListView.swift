@@ -30,7 +30,7 @@ struct DataSourceListView: View {
     @EnvironmentObject var router: MarlinRouter
 
     var body: some View {
-        if dataSource.key == Asam.key {
+        if dataSource.key == DataSources.asam.key {
             AsamList()
         } else if dataSource.key == Modu.key {
             ModuList()

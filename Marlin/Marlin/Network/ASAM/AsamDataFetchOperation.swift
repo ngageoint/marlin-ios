@@ -56,7 +56,7 @@ class AsamDataFetchOperation: Operation {
     }
     
     func fetchData() async -> [AsamModel] {
-        if self.isCancelled || !Asam.shouldSync() {
+        if self.isCancelled || !DataSources.asam.shouldSync() {
             return []
         }
         

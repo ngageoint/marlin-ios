@@ -17,9 +17,9 @@ class ModuInitialDataLoadOperation: CountingDataLoadOperation {
     }
 
     @MainActor override func startLoad() {
-        MSI.shared.appState.loadingDataSource[Modu.key] = true
+        MSI.shared.appState.loadingDataSource[DataSources.modu.key] = true
 
-        NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: Modu.self))
+        NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.modu))
     }
 
     @MainActor override func finishLoad() {
@@ -27,15 +27,15 @@ class ModuInitialDataLoadOperation: CountingDataLoadOperation {
         MSI.shared.appState.loadingDataSource[Modu.key] = false
         NotificationCenter.default.post(
             name: .DataSourceLoaded,
-            object: DataSourceItem(dataSource: Modu.self)
+            object: DataSourceItem(dataSource: DataSources.modu)
         )
         NotificationCenter.default.post(
             name: .DataSourceNeedsProcessed,
-            object: DataSourceUpdatedNotification(key: Modu.key)
+            object: DataSourceUpdatedNotification(key: DataSources.modu.key)
         )
         NotificationCenter.default.post(
             name: .DataSourceUpdated,
-            object: DataSourceUpdatedNotification(key: Modu.key)
+            object: DataSourceUpdatedNotification(key: DataSources.modu.key)
         )
     }
 

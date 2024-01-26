@@ -12,8 +12,8 @@ class DataSourcePredicateBuilder {
 
     var property: DataSourceProperty
     var comparison: DataSourceFilterComparison
-    var filterable: Filterable
-
+    var filterable: Filterable?
+    var boundsPredicateBuilder: ((MapBoundingBox) -> NSPredicate)?
     var valueString: String?
     var valueDate: Date?
     var valueInt: Int?
@@ -26,7 +26,8 @@ class DataSourcePredicateBuilder {
     init(
         property: DataSourceProperty,
         comparison: DataSourceFilterComparison,
-        filterable: Filterable,
+        filterable: Filterable? = nil,
+        boundsPredicateBuilder: ((MapBoundingBox) -> NSPredicate)? = nil,
         valueString: String? = nil,
         valueDate: Date? = nil,
         valueInt: Int? = nil,
@@ -39,6 +40,7 @@ class DataSourcePredicateBuilder {
         self.property = property
         self.comparison = comparison
         self.filterable = filterable
+        self.boundsPredicateBuilder = boundsPredicateBuilder
         self.valueString = valueString
         self.valueDate = valueDate
         self.valueInt = valueInt
@@ -75,7 +77,7 @@ class DataSourcePredicateBuilder {
         } else if property.type == .enumeration {
             return enumPredicate(propertyAndComparison: propertyAndComparison())
         } else if property.type == .location {
-            return locationPredicate(dataSource: filterable)
+            return locationPredicate(dataSource: filterable, boundsPredicateBuilder: boundsPredicateBuilder)
         }
         return nil
     }
@@ -172,9 +174,17 @@ class DataSourcePredicateBuilder {
         return nil
     }
 
-    func locationPredicate(dataSource: Filterable) -> NSPredicate? {
+    func locationPredicate(
+        dataSource: Filterable?,
+        boundsPredicateBuilder: ((MapBoundingBox) -> NSPredicate)?
+    ) -> NSPredicate? {
         if comparison == .bounds {
-            return boundsPredicate(dataSource: dataSource)
+            if let dataSource = dataSource {
+                return boundsPredicate(dataSource: dataSource)
+            } else if let boundsPredicateBuilder = boundsPredicateBuilder, let valueBounds = valueBounds {
+                return boundsPredicateBuilder(valueBounds)
+            }
+            return nil
         }
         var centralLongitude: Double?
         var centralLatitude: Double?
@@ -215,6 +225,9 @@ class DataSourcePredicateBuilder {
                         maxLat: maxy.doubleValue,
                         minLon: minx.doubleValue,
                         maxLon: maxx.doubleValue)
+                } else if let boundsPredicateBuilder = boundsPredicateBuilder {
+                    let bounds = MapBoundingBox(swCorner: (x: minx.doubleValue, y: miny.doubleValue), neCorner: (x: maxx.doubleValue, y: maxy.doubleValue))
+                    return boundsPredicateBuilder(bounds)
                 }
                 return nil
             }

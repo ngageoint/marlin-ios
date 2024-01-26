@@ -351,6 +351,8 @@
 		F7CB01052B60040200034B9C /* ModuList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CB01042B60040200034B9C /* ModuList.swift */; };
 		F7CB01072B6005F700034B9C /* ModusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CB01062B6005F700034B9C /* ModusViewModel.swift */; };
 		F7CB010A2B605C3500034B9C /* ModuSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CB01092B605C3500034B9C /* ModuSheetView.swift */; };
+		F7CB01132B61591600034B9C /* TileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CB01122B61591600034B9C /* TileRepository.swift */; };
+		F7CB01152B61766800034B9C /* AsamTileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CB01142B61766800034B9C /* AsamTileRepository.swift */; };
 		F7CCDC7E2AF0555100BF41F9 /* AsamRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC7D2AF0555100BF41F9 /* AsamRepository.swift */; };
 		F7CCDC802AF0583E00BF41F9 /* RouteWaypointRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC7F2AF0583E00BF41F9 /* RouteWaypointRepository.swift */; };
 		F7CCDC822AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC812AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift */; };
@@ -483,7 +485,6 @@
 		F7FFB30028D6376100C31AA3 /* NavigationalWarning+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2FF28D6376100C31AA3 /* NavigationalWarning+Decodable.swift */; };
 		F7FFB30228D6383900C31AA3 /* Asam+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB30128D6383900C31AA3 /* Asam+DataSource.swift */; };
 		F7FFB30428D6389700C31AA3 /* AsamPropertyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB30328D6389700C31AA3 /* AsamPropertyContainer.swift */; };
-		F7FFB30828D63A9F00C31AA3 /* Asam+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB30728D63A9F00C31AA3 /* Asam+MapImage.swift */; };
 		F7FFB30C28D63BA300C31AA3 /* Modu+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB30B28D63BA300C31AA3 /* Modu+DataSource.swift */; };
 		F7FFB30E28D63C2700C31AA3 /* ModuPropertyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB30D28D63C2700C31AA3 /* ModuPropertyContainer.swift */; };
 		F7FFB31028D63C4700C31AA3 /* Modu+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB30F28D63C4700C31AA3 /* Modu+MapImage.swift */; };
@@ -880,6 +881,8 @@
 		F7CB01042B60040200034B9C /* ModuList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuList.swift; sourceTree = "<group>"; };
 		F7CB01062B6005F700034B9C /* ModusViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModusViewModel.swift; sourceTree = "<group>"; };
 		F7CB01092B605C3500034B9C /* ModuSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuSheetView.swift; sourceTree = "<group>"; };
+		F7CB01122B61591600034B9C /* TileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileRepository.swift; sourceTree = "<group>"; };
+		F7CB01142B61766800034B9C /* AsamTileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamTileRepository.swift; sourceTree = "<group>"; };
 		F7CCDC7D2AF0555100BF41F9 /* AsamRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRepository.swift; sourceTree = "<group>"; };
 		F7CCDC7F2AF0583E00BF41F9 /* RouteWaypointRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteWaypointRepository.swift; sourceTree = "<group>"; };
 		F7CCDC812AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteWaypointLocalDataSource.swift; sourceTree = "<group>"; };
@@ -1013,7 +1016,6 @@
 		F7FFB2FF28D6376100C31AA3 /* NavigationalWarning+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+Decodable.swift"; sourceTree = "<group>"; };
 		F7FFB30128D6383900C31AA3 /* Asam+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+DataSource.swift"; sourceTree = "<group>"; };
 		F7FFB30328D6389700C31AA3 /* AsamPropertyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamPropertyContainer.swift; sourceTree = "<group>"; };
-		F7FFB30728D63A9F00C31AA3 /* Asam+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asam+MapImage.swift"; sourceTree = "<group>"; };
 		F7FFB30B28D63BA300C31AA3 /* Modu+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Modu+DataSource.swift"; sourceTree = "<group>"; };
 		F7FFB30D28D63C2700C31AA3 /* ModuPropertyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuPropertyContainer.swift; sourceTree = "<group>"; };
 		F7FFB30F28D63C4700C31AA3 /* Modu+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Modu+MapImage.swift"; sourceTree = "<group>"; };
@@ -1303,6 +1305,7 @@
 		F71F2B1E2ACF3CAB00DFB5BA /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				F7CB01112B6158F000034B9C /* Map */,
 				F7C5F1FD2AEC5DF90091BC01 /* Route */,
 				F7C5F1E92AEC4AC70091BC01 /* ASAM */,
 				F7C5F1EA2AEC4AF40091BC01 /* Bookmark */,
@@ -1935,6 +1938,7 @@
 				F7FDF2AB2AB49C95009A5E8F /* AsamLocalDataSource.swift */,
 				F7CCDC7D2AF0555100BF41F9 /* AsamRepository.swift */,
 				F7CCDC872AF2C22B00BF41F9 /* AsamRemoteDataSource.swift */,
+				F7CB01142B61766800034B9C /* AsamTileRepository.swift */,
 			);
 			path = ASAM;
 			sourceTree = "<group>";
@@ -2179,6 +2183,14 @@
 			path = Sheet;
 			sourceTree = "<group>";
 		};
+		F7CB01112B6158F000034B9C /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				F7CB01122B61591600034B9C /* TileRepository.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
 		F7CCDC832AF147FE00BF41F9 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
@@ -2373,7 +2385,6 @@
 				F7B349112849212B00E10ABF /* Asam.swift */,
 				F7FFB30128D6383900C31AA3 /* Asam+DataSource.swift */,
 				F7FFB30328D6389700C31AA3 /* AsamPropertyContainer.swift */,
-				F7FFB30728D63A9F00C31AA3 /* Asam+MapImage.swift */,
 				F7FDF2AD2AB49DEA009A5E8F /* AsamModel.swift */,
 				F73356FC2B308E4B00BEE26F /* AsamFilterable.swift */,
 			);
@@ -3115,6 +3126,7 @@
 				F7EFFEBF2A7C0F300097E5EF /* DataSourceSummaryView.swift in Sources */,
 				F73356FD2B308E4B00BEE26F /* AsamFilterable.swift in Sources */,
 				F71DF4862857954A00686951 /* Modu.swift in Sources */,
+				F7CB01132B61591600034B9C /* TileRepository.swift in Sources */,
 				F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */,
 				F7D671E72871D46000758F1C /* SideMenuContent.swift in Sources */,
 				F7391CAB2ABB98440002ABDD /* PortRepository.swift in Sources */,
@@ -3139,6 +3151,7 @@
 				F75E32BF29C4BC00006F2394 /* LayerURLView.swift in Sources */,
 				D67E5C9A2A9E4AA5002FCE03 /* MKPolygonExtensions.swift in Sources */,
 				F7364E362A1D53970098F243 /* MapNavigationView.swift in Sources */,
+				F7CB01152B61766800034B9C /* AsamTileRepository.swift in Sources */,
 				F7FFB2EA28D623B000C31AA3 /* DifferentialGPSStation+DataSource.swift in Sources */,
 				F7194E102AFC3E7D0018E4B4 /* AsamInitializer.swift in Sources */,
 				F75E32BD29C4BB13006F2394 /* MapLayerViewModel.swift in Sources */,
@@ -3191,7 +3204,6 @@
 				F7CCDC7E2AF0555100BF41F9 /* AsamRepository.swift in Sources */,
 				F714DD8D2B33944D003D7996 /* MapPreferences.swift in Sources */,
 				F7C23E04290831EA0002A7DF /* ElectronicPublication+DataSource.swift in Sources */,
-				F7FFB30828D63A9F00C31AA3 /* Asam+MapImage.swift in Sources */,
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
 				F714DD8F2B3394BA003D7996 /* DataSourcePreferences.swift in Sources */,
 				F7364E3C2A1E45B80098F243 /* NavigationalWarningMapView.swift in Sources */,

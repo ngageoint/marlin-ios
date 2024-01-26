@@ -55,7 +55,7 @@ class ModuRepository: ObservableObject {
         if refresh {
             DispatchQueue.main.async {
                 MSI.shared.appState.loadingDataSource[Modu.key] = true
-                NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: Modu.self))
+                NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.modu))
             }
 
             let newestModu = localDataSource.getNewestModu()
@@ -66,7 +66,7 @@ class ModuRepository: ObservableObject {
             DispatchQueue.main.async {
                 MSI.shared.appState.loadingDataSource[Modu.key] = false
                 UserDefaults.standard.updateLastSyncTimeSeconds(Modu.definition)
-                NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: Modu.self))
+                NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: DataSources.modu))
                 if inserted != 0 {
                     NotificationCenter.default.post(
                         name: .DataSourceNeedsProcessed,

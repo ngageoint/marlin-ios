@@ -9,6 +9,7 @@ import Foundation
 import geopackage_ios
 import ExceptionCatcher
 import CoreData
+import sf_ios
 
 extension DataSourcePropertyType {
     var geoPackageType: GPKGDataType {

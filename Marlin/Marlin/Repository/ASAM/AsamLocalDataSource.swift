@@ -16,6 +16,13 @@ protocol AsamLocalDataSource {
     @discardableResult
     func getAsam(reference: String?) -> AsamModel?
     func getAsams(filters: [DataSourceFilterParameter]?) -> [AsamModel]
+    func getAsamsInBounds(
+        filters: [DataSourceFilterParameter]?,
+        minLatitude: Double?,
+        maxLatitude: Double?,
+        minLongitude: Double?,
+        maxLongitude: Double?
+    ) -> [AsamModel]
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
     func insert(task: BGTask?, asams: [AsamModel]) async -> Int
     func batchImport(from propertiesList: [AsamModel]) async throws -> Int
@@ -74,7 +81,7 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
         context.performAndWait {
             let request: NSFetchRequest<Asam> = AsamFilterable()
                 .fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
-            request.sortDescriptors = UserDefaults.standard.sort(Asam.key).map({ sortParameter in
+            request.sortDescriptors = UserDefaults.standard.sort(DataSources.asam.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
             asams = (context.fetch(request: request)?.map { asam in
@@ -84,7 +91,64 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
         
         return asams
     }
-    
+
+    func getAsamsInBounds(
+        filters: [DataSourceFilterParameter]?,
+        minLatitude: Double?,
+        maxLatitude: Double?,
+        minLongitude: Double?,
+        maxLongitude: Double?
+    ) -> [AsamModel] {
+        var asams: [AsamModel] = []
+        context.performAndWait {
+            let fetchRequest = Asam.fetchRequest()
+            var predicates: [NSPredicate] = []
+
+            if let filters = filters {
+                for filter in filters {
+                    let predicate = filter.toPredicate(
+                        boundsPredicateBuilder: { bounds in
+                            return NSPredicate(
+                                format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf",
+                                bounds.swCorner.y,
+                                bounds.neCorner.y,
+                                bounds.swCorner.x,
+                                bounds.swCorner.y
+                            )
+                        })
+                    if let predicate = predicate {
+                        predicates.append(predicate)
+                    }
+                }
+            }
+
+            if let minLatitude = minLatitude,
+                let maxLatitude = maxLatitude,
+                let minLongitude = minLongitude,
+                let maxLongitude = maxLongitude {
+                predicates.append(NSPredicate(
+                    format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf",
+                    minLatitude,
+                    maxLatitude,
+                    minLongitude,
+                    maxLongitude
+                ))
+            }
+
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            fetchRequest.predicate = predicate
+
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.asam.key).map({ sortParameter in
+                sortParameter.toNSSortDescriptor()
+            })
+            asams = (context.fetch(request: fetchRequest)?.map { asam in
+                AsamModel(asam: asam)
+            }) ?? []
+        }
+
+        return asams
+    }
+
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
         guard let fetchRequest = AsamFilterable().fetchRequest(filters: filters, commonFilters: nil) else {
             return 0
@@ -116,8 +180,8 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
             .fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Asam> ?? Asam.fetchRequest()
         request.fetchLimit = 100
         request.fetchOffset = (page ?? 0) * request.fetchLimit
-        let userSort = UserDefaults.standard.sort(Asam.key)
-        let sortDescriptors: [DataSourceSortParameter] = userSort.isEmpty ? Asam.defaultSort : userSort
+        let userSort = UserDefaults.standard.sort(DataSources.asam.key)
+        let sortDescriptors: [DataSourceSortParameter] = userSort.isEmpty ? DataSources.asam.filterable.defaultSort : userSort
         
         request.sortDescriptors = sortDescriptors.map({ sortParameter in
             sortParameter.toNSSortDescriptor()
@@ -192,7 +256,7 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
             sortValueString = sortValue as? String
         case .date:
             if let currentValue = sortValue as? Date {
-                sortValueString = Asam.dateFormatter.string(from: currentValue)
+                sortValueString = DataSources.asam.dateFormatter.string(from: currentValue)
             }
         case .int:
             sortValueString = (sortValue as? Int)?.zeroIsEmptyString
@@ -246,7 +310,7 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
 
     func insert(task: BGTask? = nil, asams: [AsamModel]) async -> Int {
         let count = asams.count
-        NSLog("Received \(count) \(Asam.key) records.")
+        NSLog("Received \(count) \(DataSources.asam.key) records.")
 
         // Create an operation that performs the main part of the background task.
         operation = AsamDataLoadOperation(asams: asams, localDataSource: self)

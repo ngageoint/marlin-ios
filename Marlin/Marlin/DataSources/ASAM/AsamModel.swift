@@ -45,7 +45,7 @@ struct AsamListModel: Hashable, Identifiable {
 extension AsamListModel {
     var dateString: String? {
         if let date = date {
-            return Asam.dateFormatter.string(from: date)
+            return DataSources.asam.dateFormatter.string(from: date)
         }
         return nil
     }
@@ -207,7 +207,7 @@ struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hashable,
         }
         var parsedDate: Date?
         if let dateString = try? values.decode(String.self, forKey: .date) {
-            if let date = Asam.dateFormatter.date(from: dateString) {
+            if let date = DataSources.asam.dateFormatter.date(from: dateString) {
                 parsedDate = date
             }
         }
@@ -229,7 +229,7 @@ struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hashable,
         try? container.encode(victim, forKey: .victim)
         try? container.encode(asamDescription, forKey: .asamDescription)
         if let date = date {
-            try? container.encode(Asam.dateFormatter.string(from: date), forKey: .date)
+            try? container.encode(DataSources.asam.dateFormatter.string(from: date), forKey: .date)
         }
     }
     
@@ -253,7 +253,7 @@ struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hashable,
 extension AsamModel {
     var dateString: String? {
         if let date = date {
-            return Asam.dateFormatter.string(from: date)
+            return DataSources.asam.dateFormatter.string(from: date)
         }
         return nil
     }

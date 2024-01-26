@@ -74,7 +74,7 @@ struct PhaseWatcher: View {
                     }
                     if inserts != 0 {
                         notificationStrings
-                            .append("\(inserts) new \(dataSourceItem?.dataSource.definition.fullName ?? "")")
+                            .append("\(inserts) new \(dataSourceItem?.dataSource.fullName ?? "")")
                     }
                 }
                 if !notificationStrings.isEmpty {
@@ -147,6 +147,7 @@ struct MarlinApp: App {
     var routeRepository: RouteRepositoryManager
     var routeWaypointRepository: RouteWaypointRepository
     var navigationalWarningRepository: NavigationalWarningRepositoryManager
+    var asamsTileRepository: AsamsTileRepository
 
     private var router: MarlinRouter = MarlinRouter()
 
@@ -189,6 +190,8 @@ struct MarlinApp: App {
         navigationalWarningRepository = NavigationalWarningRepositoryManager(
             repository: NavigationalWarningCoreDataRepository(context: persistentStore.viewContext))
 
+        asamsTileRepository = AsamsTileRepository(localDataSource: asamRepository.localDataSource)
+
         MSI.shared.addRepositories(
             asamRepository: asamRepository,
             moduRepository: moduRepository
@@ -213,6 +216,7 @@ struct MarlinApp: App {
                 .environmentObject(routeRepository)
                 .environmentObject(routeWaypointRepository)
                 .environmentObject(navigationalWarningRepository)
+                .environmentObject(asamsTileRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
                 .environmentObject(router)
                 .background(Color.surfaceColor)

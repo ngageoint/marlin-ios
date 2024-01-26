@@ -60,7 +60,7 @@ struct AsamList: View {
                                 }
                                 .onTapGesture {
                                     router.path.append(MarlinRoute.dataSourceDetail(
-                                        dataSourceKey: Asam.definition.key, itemKey: asam.itemKey)
+                                        dataSourceKey: DataSources.asam.key, itemKey: asam.itemKey)
                                     )
                                 }
                                 .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
@@ -132,7 +132,7 @@ struct AsamList: View {
                 filterOpen: $filterOpen,
                 sortOpen: $sortOpen,
                 dataSources: Binding.constant([
-                    DataSourceItem(dataSource: Asam.self)
+                    DataSourceItem(dataSource: DataSources.asam)
                 ]),
                 allowSorting: true,
                 allowFiltering: true)

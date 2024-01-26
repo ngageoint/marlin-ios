@@ -55,7 +55,7 @@ struct MarlinRouteModifier: ViewModifier {
         var dataSources: [DataSourceDefinitions] = []
         
         for dataSource in dataSourceList.mappedDataSources {
-            if let def = DataSourceDefinitions.from(dataSource.dataSource.definition) {
+            if let def = DataSourceDefinitions.from(dataSource.dataSource) {
                 dataSources.append(def)
             }
         }
@@ -99,7 +99,7 @@ struct MarlinRouteModifier: ViewModifier {
                     CreateRouteView(routeURI: routeURI)
                 case .dataSourceDetail(let dataSourceKey, let itemKey):
                     switch dataSourceKey {
-                    case Asam.key:
+                    case DataSources.asam.key:
                         AsamDetailView(reference: itemKey)
                     case Modu.key:
                         ModuDetailView(name: itemKey)
@@ -151,7 +151,7 @@ struct MarlinRouteModifier: ViewModifier {
                     }
                 case .dataSourceRouteDetail(let dataSourceKey, let itemKey, let waypointURI):
                     switch dataSourceKey {
-                    case Asam.key:
+                    case DataSources.asam.key:
                         AsamDetailView(reference: itemKey, waypointURI: waypointURI)
                     case Modu.key:
                         ModuDetailView(name: itemKey, waypointURI: waypointURI)

@@ -11,7 +11,7 @@ extension UserDefaults {
 
     func sortPublisher(key: String) -> NSObject.KeyValueObservingPublisher<UserDefaults, Data?> {
         switch key {
-        case Asam.key:
+        case DataSources.asam.key:
             return publisher(for: \.asamSort)
         case Modu.key:
             return publisher(for: \.moduSort)

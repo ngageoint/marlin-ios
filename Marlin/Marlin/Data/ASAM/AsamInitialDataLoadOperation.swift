@@ -17,25 +17,25 @@ class AsamInitialDataLoadOperation: CountingDataLoadOperation {
     }
     
     @MainActor override func startLoad() {
-        MSI.shared.appState.loadingDataSource[Asam.key] = true
+        MSI.shared.appState.loadingDataSource[DataSources.asam.key] = true
 
-        NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: Asam.self))
+        NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.asam))
     }
     
     @MainActor override func finishLoad() {
         self.state = .isFinished
-        MSI.shared.appState.loadingDataSource[Asam.key] = false
+        MSI.shared.appState.loadingDataSource[DataSources.asam.key] = false
         NotificationCenter.default.post(
             name: .DataSourceLoaded,
-            object: DataSourceItem(dataSource: Asam.self)
+            object: DataSourceItem(dataSource: DataSources.asam)
         )
         NotificationCenter.default.post(
             name: .DataSourceNeedsProcessed,
-            object: DataSourceUpdatedNotification(key: Asam.key)
+            object: DataSourceUpdatedNotification(key: DataSources.asam.key)
         )
         NotificationCenter.default.post(
             name: .DataSourceUpdated,
-            object: DataSourceUpdatedNotification(key: Asam.key)
+            object: DataSourceUpdatedNotification(key: DataSources.asam.key)
         )
     }
     

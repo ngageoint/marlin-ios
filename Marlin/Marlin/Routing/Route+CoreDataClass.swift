@@ -29,7 +29,7 @@ class RouteWaypoint: NSManagedObject {
                 let featureCollection = try decoder.decode(FeatureCollection.self, from: jsonData)
                 if !featureCollection.features.isEmpty {
                     switch dataSource {
-                    case Asam.key:
+                    case DataSources.asam.key:
                         let asamModel = AsamModel(feature: featureCollection.features[0])
                         return asamModel
                     case Modu.key:

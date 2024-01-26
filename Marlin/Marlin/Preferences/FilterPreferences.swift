@@ -10,7 +10,7 @@ import Foundation
 extension UserDefaults {
     func filterPublisher(key: String) -> NSObject.KeyValueObservingPublisher<UserDefaults, Data?> {
         switch key {
-        case Asam.key:
+        case DataSources.asam.key:
             return publisher(for: \.asamFilter)
         case Modu.key:
             return publisher(for: \.moduFilter)

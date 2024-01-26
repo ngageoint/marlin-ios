@@ -23,14 +23,14 @@ class Asam: NSManagedObject {
     var clusteringIdentifier: String? = "msi"
     
     var color: UIColor {
-        return Asam.color
+        return DataSources.asam.color
     }
     
     var annotationView: MKAnnotationView?
     
     var dateString: String? {
         if let date = date {
-            return Asam.dateFormatter.string(from: date)
+            return DataSources.asam.dateFormatter.string(from: date)
         }
         return nil
     }

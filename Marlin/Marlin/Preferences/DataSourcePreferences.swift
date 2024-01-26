@@ -10,7 +10,7 @@ import Foundation
 extension UserDefaults {
     func orderPublisher(key: String) -> NSObject.KeyValueObservingPublisher<UserDefaults, Int> {
         switch key {
-        case Asam.key:
+        case DataSources.asam.key:
             return publisher(for: \.asamOrder)
         case Modu.key:
             return publisher(for: \.moduOrder)

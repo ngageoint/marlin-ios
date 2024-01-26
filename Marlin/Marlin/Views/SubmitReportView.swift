@@ -13,7 +13,7 @@ struct SubmitReportView: View {
             Section("Submit reports to NGA via these external links") {
                 Link(destination: URL(string: "https://msi.nga.mil/submit-report/ASAM-Report")!, label: {
                     HStack {
-                        if let image = Asam.image {
+                        if let image = DataSources.asam.image {
                             Image(uiImage: image)
                                 .tint(Color.onSurfaceColor)
                                 .opacity(0.60)

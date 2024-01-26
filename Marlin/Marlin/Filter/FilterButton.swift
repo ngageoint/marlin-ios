@@ -61,21 +61,21 @@ struct FilterButton: ViewModifier {
         .onAppear {
             var count = 0
             for dataSource in dataSources {
-                count += UserDefaults.standard.filter(dataSource.dataSource.definition).count
+                count += UserDefaults.standard.filter(dataSource.dataSource).count
             }
             filterCount = count
         }
         .onReceive(dataSourceUpdatedPub) { _ in
             var count = 0
             for dataSource in dataSources {
-                count += UserDefaults.standard.filter(dataSource.dataSource.definition).count
+                count += UserDefaults.standard.filter(dataSource.dataSource).count
             }
             filterCount = count
         }
         .onChange(of: dataSources) { _ in
             var count = 0
             for dataSource in dataSources {
-                count += UserDefaults.standard.filter(dataSource.dataSource.definition).count
+                count += UserDefaults.standard.filter(dataSource.dataSource).count
             }
             filterCount = count
         }

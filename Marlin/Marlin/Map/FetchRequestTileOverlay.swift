@@ -136,3 +136,36 @@ class PredicateTileOverlay<MapImageType: MapImage>: MKTileOverlay, PredicateBase
         }
     }
 }
+
+class DataSourceTileOverlay: MKTileOverlay {
+    let tileRepository: TileRepository
+
+    init(tileRepository: TileRepository) {
+        self.tileRepository = tileRepository
+        super.init(urlTemplate: nil)
+    }
+
+    override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
+        let options: KingfisherOptionsInfo? = 
+        (tileRepository.cacheSourceKey != nil && tileRepository.imageCache != nil) ?
+         [.targetCache(tileRepository.imageCache!)] : [.forceRefresh]
+
+        KingfisherManager.shared.retrieveImage(
+            with: .provider(
+                DataSourceTileProvider2(
+                    tileRepository: tileRepository,
+                    path: path
+                )
+            ),
+            options: options
+        ) { imageResult in
+            switch imageResult {
+            case .success(let value):
+                result(value.image.pngData(), nil)
+
+            case .failure:
+                break
+            }
+        }
+    }
+}

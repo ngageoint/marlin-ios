@@ -67,7 +67,7 @@ struct MarlinRegularWidth: View {
             DataSourceNavView(dataSource: activeRailItem, focusedItem: itemWrapper, watchFocusedItem: true)
                 .background(Color.backgroundColor)
                 .accessibilityElement(children: .contain)
-                .accessibilityLabel("\(activeRailItem.dataSource.definition.fullName) List")
+                .accessibilityLabel("\(activeRailItem.dataSource.fullName) List")
         }
     }
     
@@ -146,7 +146,7 @@ struct MarlinRegularWidth: View {
         NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
         NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
         activeRailItem = dataSourceList.allTabs.first(where: { item in
-            item.dataSource == type(of: data.self)
+            item.dataSource.key == data.definition.key
         })
         itemWrapper.dataSource = data
         itemWrapper.date = Date()

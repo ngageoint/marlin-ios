@@ -15,6 +15,9 @@ import BackgroundTasks
 
 public class MSI {
     
+    var asamRepository: AsamRepository?
+    var moduRepository: ModuRepository?
+
     var asamInitializer: AsamInitializer?
     var moduInitializer: ModuInitializer?
 
@@ -22,6 +25,9 @@ public class MSI {
         asamRepository: AsamRepository,
         moduRepository: ModuRepository
     ) {
+        self.asamRepository = asamRepository
+        self.moduRepository = moduRepository
+        
         asamInitializer = AsamInitializer(repository: asamRepository)
         moduInitializer = ModuInitializer(repository: moduRepository)
     }
@@ -60,7 +66,7 @@ public class MSI {
     }()
     
     let mainDataList: [any BatchImportable.Type] = [
-        Asam.self,
+//        Asam.self,
         Modu.self,
         NavigationalWarning.self,
         Light.self,
@@ -152,7 +158,7 @@ public class MSI {
         }
         
         for importable in allLoadList {
-            if importable.key == Asam.key || importable.key == Modu.key {
+            if importable.key == DataSources.asam.key || importable.key == Modu.key {
                 NSLog("Skipping ASAM, MODU in MSI.shared")
             } else {
                 NSLog("Fetching new data for \(importable.key)")
@@ -245,7 +251,7 @@ public class MSI {
             UserDefaults.standard.initialDataLoaded = true
             
             let allLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
-                let sync = importable.shouldSync() && importable.key != Asam.key && importable.key != Modu.key
+                let sync = importable.shouldSync() && importable.key != DataSources.asam.key && importable.key != Modu.key
                 return sync
             }
             
@@ -291,7 +297,7 @@ public class MSI {
         dataType: D.Type,
         operationQueue: OperationQueue? = nil
     ) {
-        if dataType.key == Asam.key || dataType.key == Modu.key {
+        if dataType.key == DataSources.asam.key || dataType.key == Modu.key {
             return
         }
 
@@ -315,7 +321,7 @@ public class MSI {
         dataType: D.Type,
         operationQueue: OperationQueue? = nil
     ) {
-        if dataType.key == Asam.key || dataType.key == Modu.key {
+        if dataType.key == DataSources.asam.key || dataType.key == Modu.key {
             return
         }
         

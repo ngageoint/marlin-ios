@@ -57,7 +57,7 @@ extension UserDefaults {
     }
 
     @objc var showOnMapasam: Bool {
-        bool(forKey: "showOnMap\(Asam.key)")
+        bool(forKey: "showOnMap\(DataSources.asam.key)")
     }
 
     @objc var showOnMaplight: Bool {

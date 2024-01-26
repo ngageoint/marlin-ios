@@ -26,14 +26,21 @@ struct AsamDetailView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .itemTitle()
                         .foregroundColor(Color.white)
-                        .background(Color(uiColor: Asam.color))
+                        .background(Color(uiColor: DataSources.asam.color))
                         .padding(.bottom, -8)
                         .accessibilityElement(children: .contain)
                     if let asam = viewModel.asam {
                         DataSourceLocationMapView(
                             dataSourceLocation: asam,
                             mapName: "Asam Detail Map",
-                            mixins: [AsamMap<AsamModel>(objects: [asam])]
+                            mixins: [
+                                AsamMap(
+                                    repository: AsamTileRepository(
+                                        reference: asam.reference ?? "",
+                                        localDataSource: asamRepository.localDataSource
+                                    )
+                                )
+                            ]
                         )
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
@@ -70,7 +77,7 @@ struct AsamDetailView: View {
             .dataSourceSection()
         }
         .dataSourceDetailList()
-        .navigationTitle(viewModel.asam?.reference ?? Asam.dataSourceName)
+        .navigationTitle(viewModel.asam?.reference ?? DataSources.asam.fullName)
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: reference) { _ in
             viewModel.getAsam(reference: reference, waypointURI: waypointURI)
@@ -79,7 +86,7 @@ struct AsamDetailView: View {
             viewModel.repository = asamRepository
             viewModel.routeWaypointRepository = routeWaypointRepository
             viewModel.getAsam(reference: reference, waypointURI: waypointURI)
-            Metrics.shared.dataSourceDetail(dataSource: Asam.definition)
+            Metrics.shared.dataSourceDetail(dataSource: DataSources.asam)
         }
     }
 }

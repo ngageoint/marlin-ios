@@ -133,7 +133,7 @@ struct ModuList: View {
                 filterOpen: $filterOpen,
                 sortOpen: $sortOpen,
                 dataSources: Binding.constant([
-                    DataSourceItem(dataSource: Modu.self)
+                    DataSourceItem(dataSource: DataSources.modu)
                 ]),
                 allowSorting: true,
                 allowFiltering: true)
