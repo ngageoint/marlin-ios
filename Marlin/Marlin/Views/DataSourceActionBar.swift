@@ -11,6 +11,7 @@ struct DataSourceActions: View {
     var moreDetails: Action?
     var location: Actions.Location?
     var zoom: Action?
+    var share: String?
     var bookmark: AsamActions.Bookmark?
     
     var body: some View {
@@ -30,6 +31,10 @@ struct DataSourceActions: View {
             if let bookmark = bookmark {
                 BookmarkButton2(action: bookmark)
                     .buttonStyle(MaterialButtonStyle())
+            }
+
+            if let share = share {
+                ShareButton(shareText: share, dataSource: Asam.self as? (any DataSource))
             }
 
             if let zoom = zoom {

@@ -27,13 +27,13 @@ final class AboutViewTests: XCTestCase {
     func testTapDisclaimer() {
         
         struct Container: View {
-            @State var path: NavigationPath = NavigationPath()
+            @State var router: MarlinRouter = MarlinRouter()
             var body: some View {
-                NavigationStack(path: $path) {
+                NavigationStack(path: $router.path) {
                     AboutView()
-                        .marlinRoutes(path: $path)
+                        .marlinRoutes()
                 }
-                
+                .environmentObject(router)
             }
         }
         let container = Container()
@@ -53,13 +53,13 @@ final class AboutViewTests: XCTestCase {
     
     func testTapContactUs() {
         struct Container: View {
-            @State var path: NavigationPath = NavigationPath()
+            @State var router: MarlinRouter = MarlinRouter()
             var body: some View {
-                NavigationStack(path: $path) {
+                NavigationStack(path: $router.path) {
                     AboutView()
-                        .marlinRoutes(path: $path)
+                        .marlinRoutes()
                 }
-                
+                .environmentObject(router)
             }
         }
         let container = Container()

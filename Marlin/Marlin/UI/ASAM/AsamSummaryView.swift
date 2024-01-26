@@ -41,6 +41,7 @@ struct AsamSummaryView: DataSourceSummaryView {
                 moreDetails: showMoreDetails ? AsamActions.Tap(reference: asam.reference, path: $router.path) : nil,
                 location: !showMoreDetails ? Actions.Location(latLng: asam.coordinate) : nil,
                 zoom: !showMoreDetails ? AsamActions.Zoom(latLng: asam.coordinate, itemKey: asam.id) : nil,
+                share: asam.itemTitle,
                 bookmark: asam.canBookmark ? AsamActions.Bookmark(
                     itemKey: asam.id,
                     bookmarkViewModel: bookmarkViewModel
