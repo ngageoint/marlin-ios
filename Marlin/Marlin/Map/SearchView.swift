@@ -9,18 +9,17 @@ import SwiftUI
 import MapKit
 import Combine
 
-enum SearchType: Int, CustomStringConvertible {
-    case native, nominatim
+enum SearchEngine: Int, CustomStringConvertible {
+    case native, openStreetMap
     
     var description: String {
         switch self {
         case .native:
-            return "Native"
-        case .nominatim:
-            return "OSM Nominatim"
+            return "Apple Maps"
+        case .openStreetMap:
+            return "Open Street Map"
         }
     }
-    
 }
 
 struct SearchView<T: MKLocalSearch>: View {

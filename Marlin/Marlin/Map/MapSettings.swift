@@ -16,7 +16,7 @@ struct MapSettings: View {
     @AppStorage("showCurrentLocation") var showCurrentLocation: Bool = false
     @AppStorage("showMapScale") var showMapScale = false
     @AppStorage("coordinateDisplay") var coordinateDisplay: CoordinateDisplayType = .latitudeLongitude
-    @AppStorage("searchType") var searchType: SearchType = .native
+    @AppStorage("searchEngine") var searchEngine: SearchEngine = .native
 
     var body: some View {
         Self._printChanges()
@@ -200,30 +200,30 @@ struct MapSettings: View {
             
             Section("Search Engine") {
                 HStack(spacing: 4) {
-                    Text("Native").font(Font.body1)
+                    Text("Apple Maps").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
-                    Image(systemName: searchType == .native ? "circle.inset.filled": "circle")
+                    Image(systemName: searchEngine == .native ? "circle.inset.filled": "circle")
                         .foregroundColor(Color.primaryColor)
                         .onTapGesture {
-                            searchType = .native
+                            searchEngine = .native
                         }
                         .accessibilityElement()
-                        .accessibilityLabel("Native Search")
+                        .accessibilityLabel("Apple Maps Search")
                 }
                 .padding(.top, 4)
                 .padding(.bottom, 4)
                 HStack(spacing: 4) {
-                    Text("OSM Nominatim").font(Font.body1)
+                    Text("Open Street Map").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
-                    Image(systemName: searchType == .nominatim ? "circle.inset.filled": "circle")
+                    Image(systemName: searchEngine == .openStreetMap ? "circle.inset.filled": "circle")
                         .foregroundColor(Color.primaryColor)
                         .onTapGesture {
-                            searchType = .nominatim
+                            searchEngine = .openStreetMap
                         }
                         .accessibilityElement()
-                        .accessibilityLabel("OSM Nominatim Search")
+                        .accessibilityLabel("Open Street Map Search")
                 }
                 .padding(.top, 4)
                 .padding(.bottom, 4)
