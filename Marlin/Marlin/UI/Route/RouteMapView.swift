@@ -146,6 +146,7 @@ struct RouteMapView: View {
                                         .fromKey(type(of: exportable).definition.key)?
                                         .createModel(dataSource: dataSourceViewBuilder) as? any GeoJSONExportable {
                                         routeViewModel.addWaypoint(waypoint: model)
+                                        showBottomSheet.toggle()
                                     }
                                 }
                             }
