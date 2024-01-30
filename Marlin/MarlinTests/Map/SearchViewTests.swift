@@ -87,7 +87,7 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView(mapState: mapState)
+                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
                 }
             }
         }
@@ -124,7 +124,7 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView<MKLocalSearchMock>(mapState: mapState)
+                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
                 }
                 .onAppear {
                     self.passThrough.mapState = mapState
@@ -193,7 +193,7 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView<MKLocalSearchMock>(mapState: mapState)
+                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
                 }
                 .onAppear {
                     self.passThrough.mapState = mapState
@@ -242,7 +242,7 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView<MKLocalSearchMock>(mapState: mapState)
+                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
                 }
                 .onAppear {
                     self.passThrough.mapState = mapState

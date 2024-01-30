@@ -45,7 +45,7 @@ struct MarlinMainMap: View {
         HStack(alignment: .top, spacing: 8) {
             // top left button stack
             VStack(alignment: .leading, spacing: 8) {
-                SearchView(mapState: mapState)
+                SearchView<NativeSearchProvider>(mapState: mapState)
             }
             .padding(.leading, 8)
             .padding(.top, 16)
