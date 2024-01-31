@@ -12,6 +12,8 @@ struct MarlinMainMap: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     @EnvironmentObject var routeRepository: RouteRepositoryManager
     @EnvironmentObject var asamsTileRepository: AsamsTileRepository
+    @EnvironmentObject var modusTileRepository: ModusTileRepository
+    @EnvironmentObject var portsTileRepository: PortsTileRepository
 
     @StateObject var mixins: MainMapMixins = MainMapMixins()
     @StateObject var mapState: MapState = MapState()
@@ -37,6 +39,8 @@ struct MarlinMainMap: View {
         .onAppear {
             mixins.addRouteMixin(routeRepository: routeRepository)
             mixins.addAsamTileRepository(tileRepository: asamsTileRepository)
+            mixins.addModuTileRepository(tileRepository: modusTileRepository)
+            mixins.addPortTileRepository(tileRepository: portsTileRepository)
         }
     }
     

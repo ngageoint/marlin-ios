@@ -49,7 +49,7 @@ struct SubmitReportView: View {
                 
                 Link(destination: URL(string: "https://msi.nga.mil/submit-report/MODU-Report")!, label: {
                     HStack {
-                        if let image = Modu.image {
+                        if let image = DataSources.modu.image {
                             Image(uiImage: image)
                                 .tint(Color.onSurfaceColor)
                                 .opacity(0.60)
@@ -68,7 +68,7 @@ struct SubmitReportView: View {
                 
                 Link(destination: URL(string: "https://msi.nga.mil/submit-report/Visit-Report")!, label: {
                     HStack {
-                        if let image = Port.image {
+                        if let image = DataSources.port.image {
                             Image(uiImage: image)
                                 .tint(Color.onSurfaceColor)
                                 .opacity(0.60)

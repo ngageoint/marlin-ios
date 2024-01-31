@@ -38,6 +38,10 @@ enum ModuRoute: Hashable {
     case detail(String)
 }
 
+enum PortRoute: Hashable {
+    case detail(Int64)
+}
+
 enum DataSourceRoute: Hashable {
     case detail(dataSourceKey: String, itemKey: String)
 }
@@ -101,9 +105,9 @@ struct MarlinRouteModifier: ViewModifier {
                     switch dataSourceKey {
                     case DataSources.asam.key:
                         AsamDetailView(reference: itemKey)
-                    case Modu.key:
+                    case DataSources.modu.key:
                         ModuDetailView(name: itemKey)
-                    case Port.key:
+                    case DataSources.port.key:
                         PortDetailView(portNumber: Int64(itemKey))
                     case NavigationalWarning.key:
 
@@ -153,7 +157,7 @@ struct MarlinRouteModifier: ViewModifier {
                     switch dataSourceKey {
                     case DataSources.asam.key:
                         AsamDetailView(reference: itemKey, waypointURI: waypointURI)
-                    case Modu.key:
+                    case DataSources.modu.key:
                         ModuDetailView(name: itemKey, waypointURI: waypointURI)
                     case Light.key:
                         let split = itemKey.split(separator: "--")
@@ -163,7 +167,7 @@ struct MarlinRouteModifier: ViewModifier {
                                 volumeNumber: "\(split[1])",
                                 waypointURI: waypointURI)
                         }
-                    case Port.key:
+                    case DataSources.port.key:
                         PortDetailView(portNumber: Int64(itemKey), waypointURI: waypointURI)
                     case DifferentialGPSStation.key:
                         let split = itemKey.split(separator: "--")
@@ -214,6 +218,21 @@ struct MarlinRouteModifier: ViewModifier {
                     // swiftlint:enable redundant_discardable_let
 
                     ModuDetailView(name: name)
+                }
+            }
+            .navigationDestination(for: PortRoute.self) { item in
+                switch item {
+                case .detail(let portNumber):
+                    // disable this rule in order to execute a statement prior to returning a view
+                    // swiftlint:disable redundant_discardable_let
+                    let _ = NotificationCenter.default.post(
+                        name: .DismissBottomSheet,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    // swiftlint:enable redundant_discardable_let
+
+                    PortDetailView(portNumber: portNumber)
                 }
             }
             .navigationDestination(for: ItemWrapper.self) { item in

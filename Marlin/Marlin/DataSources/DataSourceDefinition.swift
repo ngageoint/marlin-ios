@@ -195,11 +195,20 @@ extension DataSources {
         @AppStorage("asamOrder") var order: Int = 0
         func shouldSync() -> Bool {
             // sync once every hour
-            return UserDefaults.standard.dataSourceEnabled(DataSourceDefinitions.asam.definition) 
+            return UserDefaults.standard.dataSourceEnabled(DataSources.asam)
             && (Date().timeIntervalSince1970 - (60 * 60)) > 
-            UserDefaults.standard.lastSyncTimeSeconds(DataSourceDefinitions.asam.definition)
+            UserDefaults.standard.lastSyncTimeSeconds(DataSources.asam)
         }
-        var filterable = AsamFilterable()
+        var defaultSort: [DataSourceSortParameter] = [
+            DataSourceSortParameter(
+                property: DataSourceProperty(
+                    name: "Date",
+                    key: #keyPath(Asam.date),
+                    type: .date),
+                ascending: false)
+        ]
+
+        fileprivate init() { }
     }
 
     class RouteDefinition: DataSourceDefinition {
@@ -212,6 +221,8 @@ extension DataSources {
         var name: String = NSLocalizedString("Routes", comment: "Route data source display name")
         var fullName: String = NSLocalizedString("Routes", comment: "Route data source full display name")
         @AppStorage("routeOrder") var order: Int = 0
+
+        fileprivate init() { }
     }
 
     class ModuDefinition: DataSourceDefinition {
@@ -219,7 +230,7 @@ extension DataSources {
         var color: UIColor = UIColor(argbValue: 0xFF0042A4)
         var imageName: String? = "modu"
         var systemImageName: String?
-        var key: String = "modu"
+        let key: String = "modu"
         var metricsKey: String = "modus"
         var name: String = NSLocalizedString("MODU", comment: "MODU data source display name")
         var fullName: String = 
@@ -227,9 +238,21 @@ extension DataSources {
         @AppStorage("moduOrder") var order: Int = 0
         func shouldSync() -> Bool {
             // sync once every hour
-            return UserDefaults.standard.dataSourceEnabled(Modu.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(Modu.definition)
+            return UserDefaults.standard.dataSourceEnabled(DataSources.modu)
+            && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(DataSources.modu)
         }
+        var defaultSort: [DataSourceSortParameter] = [
+            DataSourceSortParameter(
+                property: DataSourceProperty(
+                    name: "Date",
+                    key: #keyPath(Modu.date),
+                    type: .date
+                ),
+                ascending: false
+            )
+        ]
+
+        fileprivate init() { }
     }
 
     class CommonDefinition: DataSourceDefinition {
@@ -242,6 +265,8 @@ extension DataSources {
         var name: String = "Common"
         var fullName: String = "Common"
         @AppStorage("CommonOrder") var order: Int = 0
+
+        fileprivate init() { }
     }
 
     class NoticeToMarinersDefinition: DataSourceDefinition {
@@ -260,6 +285,8 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60 * 24)) > 
             UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.definition)
         }
+
+        fileprivate init() { }
     }
 
     class DFRSDefinition: DataSourceDefinition {
@@ -284,6 +311,8 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
             UserDefaults.standard.lastSyncTimeSeconds(DFRS.definition)
         }
+
+        fileprivate init() { }
     }
 
     class DifferentialGPSStationDefinition: DataSourceDefinition {
@@ -307,6 +336,8 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
             UserDefaults.standard.lastSyncTimeSeconds(DifferentialGPSStation.definition)
         }
+
+        fileprivate init() { }
     }
 
     class ElectronicPublicationDefinition: DataSourceDefinition {
@@ -326,6 +357,8 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 1)) > 
             UserDefaults.standard.lastSyncTimeSeconds(ElectronicPublication.definition)
         }
+
+        fileprivate init() { }
     }
 
     class PortDefinition: DataSourceDefinition {
@@ -340,10 +373,26 @@ extension DataSources {
         @AppStorage("portOrder") var order: Int = 0
         func shouldSync() -> Bool {
             // sync once every week
-            return UserDefaults.standard.dataSourceEnabled(Port.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
-            UserDefaults.standard.lastSyncTimeSeconds(Port.definition)
+            return UserDefaults.standard.dataSourceEnabled(DataSources.port)
+            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) >
+            UserDefaults.standard.lastSyncTimeSeconds(DataSources.port)
         }
+
+        var defaultSort: [DataSourceSortParameter] = [
+            DataSourceSortParameter(
+                property: DataSourceProperty(
+                    name: "World Port Index Number",
+                    key: #keyPath(Port.portNumber),
+                    type: .int),
+                ascending: false)]
+
+        var dateFormatter: DateFormatter {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+            return dateFormatter
+        }
+
+        fileprivate init() { }
     }
 
     class NavigationalWarningDefinition: DataSourceDefinition {
@@ -363,6 +412,8 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60)) > 
             UserDefaults.standard.lastSyncTimeSeconds(NavigationalWarning.definition)
         }
+
+        fileprivate init() { }
     }
 
     class LightDefinition: DataSourceDefinition {
@@ -384,6 +435,8 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
             UserDefaults.standard.lastSyncTimeSeconds(Light.definition)
         }
+
+        fileprivate init() { }
     }
 
     class RadioBeaconDefinition: DataSourceDefinition {
@@ -406,6 +459,8 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
             UserDefaults.standard.lastSyncTimeSeconds(RadioBeacon.definition)
         }
+
+        fileprivate init() { }
     }
 
     class BookmarkDefinition: DataSourceDefinition {
@@ -418,6 +473,8 @@ extension DataSources {
         var name: String = NSLocalizedString("Bookmarks", comment: "Bookmarks data source display name")
         var fullName: String = NSLocalizedString("Bookmarks", comment: "Bookmarks data source full display name")
         @AppStorage("bookmarkOrder") var order: Int = 0
+
+        fileprivate init() { }
     }
 
     class ChartCorrectionDefinition: DataSourceDefinition {
@@ -431,6 +488,8 @@ extension DataSources {
         var fullName: String = 
         NSLocalizedString("Chart Corrections", comment: "Chart Corrections data source full display name")
         @AppStorage("chartCorrectionOrder") var order: Int = 0
+
+        fileprivate init() { }
     }
 
     class GeoPackageDefinition: DataSourceDefinition {
@@ -445,5 +504,7 @@ extension DataSources {
         var fullName: String = 
         NSLocalizedString("GeoPackage Feature", comment: "GeoPackage Feature data source full display name")
         @AppStorage("gpfeatureOrder") var order: Int = 0
+
+        fileprivate init() { }
     }
 }

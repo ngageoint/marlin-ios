@@ -1,26 +1,27 @@
 //
-//  AsamTileRepository.swift
+//  ModuTileRepository.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 1/24/24.
+//  Created by Daniel Barela on 1/26/24.
 //
 
 import Foundation
 import UIKit
+import sf_geojson_ios
 import Kingfisher
 
-class AsamTileRepository: TileRepository, ObservableObject {
-    var dataSource: any DataSourceDefinition = DataSources.asam
+class ModuTileRepository: TileRepository, ObservableObject {
+    var dataSource: any DataSourceDefinition = DataSources.modu
     var cacheSourceKey: String?
     var imageCache: Kingfisher.ImageCache?
     var filterCacheKey: String {
         ""
     }
-    let reference: String
-    let localDataSource: AsamLocalDataSource
+    let name: String
+    let localDataSource: ModuLocalDataSource
 
-    init(reference: String, localDataSource: AsamLocalDataSource) {
-        self.reference = reference
+    init(name: String, localDataSource: ModuLocalDataSource) {
+        self.name = name
         self.localDataSource = localDataSource
     }
 
@@ -32,9 +33,9 @@ class AsamTileRepository: TileRepository, ObservableObject {
     ) -> [DataSourceImage] {
         var images: [DataSourceImage] = []
 
-        if let asam = localDataSource.getAsam(reference: reference) {
-            if minLatitude...maxLatitude ~= asam.latitude && minLongitude...maxLongitude ~= asam.longitude {
-                images.append(AsamImage(asam: asam))
+        if let modu = localDataSource.getModu(name: name) {
+            if minLatitude...maxLatitude ~= modu.latitude && minLongitude...maxLongitude ~= modu.longitude {
+                images.append(ModuImage(modu: modu))
             }
         }
 
@@ -47,8 +48,8 @@ class AsamTileRepository: TileRepository, ObservableObject {
         minLongitude: Double,
         maxLongitude: Double
     ) -> [String] {
-        return localDataSource.getAsamsInBounds(
-            filters: UserDefaults.standard.filter(DataSources.asam),
+        return localDataSource.getModusInBounds(
+            filters: UserDefaults.standard.filter(DataSources.modu),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
             minLongitude: minLongitude,
@@ -59,21 +60,21 @@ class AsamTileRepository: TileRepository, ObservableObject {
     }
 }
 
-class AsamsTileRepository: TileRepository, ObservableObject {
-    var dataSource: any DataSourceDefinition = DataSources.asam
+class ModusTileRepository: TileRepository, ObservableObject {
+    var dataSource: any DataSourceDefinition = DataSources.modu
     var cacheSourceKey: String? { dataSource.key }
-    var imageCache: Kingfisher.ImageCache? {
+    lazy var imageCache: Kingfisher.ImageCache? = {
         if let cacheSourceKey = cacheSourceKey {
             return Kingfisher.ImageCache(name: cacheSourceKey)
         }
         return nil
-    }
+    }()
     var filterCacheKey: String {
-        UserDefaults.standard.filter(DataSources.asam).getCacheKey()
+        UserDefaults.standard.filter(dataSource).getCacheKey()
     }
-    let localDataSource: AsamLocalDataSource
+    let localDataSource: ModuLocalDataSource
 
-    init(localDataSource: AsamLocalDataSource) {
+    init(localDataSource: ModuLocalDataSource) {
         self.localDataSource = localDataSource
     }
 
@@ -83,17 +84,17 @@ class AsamsTileRepository: TileRepository, ObservableObject {
         minLongitude: Double,
         maxLongitude: Double
     ) -> [DataSourceImage] {
-        if !UserDefaults.standard.showOnMapasam {
+        if !UserDefaults.standard.showOnMapmodu {
             return []
         }
-        return localDataSource.getAsamsInBounds(
-            filters: UserDefaults.standard.filter(DataSources.asam),
+        return localDataSource.getModusInBounds(
+            filters: UserDefaults.standard.filter(DataSources.modu),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
             minLongitude: minLongitude,
             maxLongitude: maxLongitude)
         .map { model in
-            AsamImage(asam: model)
+            ModuImage(modu: model)
         }
     }
 
@@ -103,11 +104,11 @@ class AsamsTileRepository: TileRepository, ObservableObject {
         minLongitude: Double,
         maxLongitude: Double
     ) -> [String] {
-        if !UserDefaults.standard.showOnMapasam {
+        if !UserDefaults.standard.showOnMapmodu {
             return []
         }
-        return localDataSource.getAsamsInBounds(
-            filters: UserDefaults.standard.filter(DataSources.asam),
+        return localDataSource.getModusInBounds(
+            filters: UserDefaults.standard.filter(DataSources.modu),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
             minLongitude: minLongitude,
@@ -118,13 +119,13 @@ class AsamsTileRepository: TileRepository, ObservableObject {
     }
 }
 
-class AsamImage: DataSourceImage {
+class ModuImage: DataSourceImage {
     var feature: SFGeometry?
-    
-    static var dataSource: any DataSourceDefinition = DataSources.asam
 
-    init(asam: AsamModel) {
-        feature = asam.sfGeometry
+    static var dataSource: any DataSourceDefinition = DataSources.modu
+
+    init(modu: ModuModel) {
+        feature = modu.sfGeometry
     }
 
     func image(
@@ -134,12 +135,12 @@ class AsamImage: DataSourceImage {
         tileSize: Double
     ) -> [UIImage] {
         let images: [UIImage] = defaultMapImage(
-                marker: false,
-                zoomLevel: zoom,
-                tileBounds3857: tileBounds,
-                context: context,
-                tileSize: tileSize
-            )
+            marker: false,
+            zoomLevel: zoom,
+            tileBounds3857: tileBounds,
+            context: context,
+            tileSize: tileSize
+        )
 
         return images
     }

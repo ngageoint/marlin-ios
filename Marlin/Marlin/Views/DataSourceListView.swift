@@ -32,7 +32,7 @@ struct DataSourceListView: View {
     var body: some View {
         if dataSource.key == DataSources.asam.key {
             AsamList()
-        } else if dataSource.key == Modu.key {
+        } else if dataSource.key == DataSources.modu.key {
             ModuList()
         } else if dataSource.key == Light.key {
             MSIListView<Light, EmptyView, EmptyView, EmptyView>(
@@ -44,11 +44,8 @@ struct DataSourceListView: View {
                 focusedItem: focusedItem,
                 watchFocusedItem: watchFocusedItem
             )
-        } else if dataSource.key == Port.key {
-            MSIListView<Port, EmptyView, EmptyView, EmptyView>(
-                focusedItem: focusedItem,
-                watchFocusedItem: watchFocusedItem
-            )
+        } else if dataSource.key == DataSources.port.key {
+            PortList()
         } else if dataSource.key == RadioBeacon.key {
             MSIListView<RadioBeacon, EmptyView, EmptyView, EmptyView>(
                 focusedItem: focusedItem,

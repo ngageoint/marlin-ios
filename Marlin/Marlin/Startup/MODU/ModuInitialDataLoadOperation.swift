@@ -24,7 +24,7 @@ class ModuInitialDataLoadOperation: CountingDataLoadOperation {
 
     @MainActor override func finishLoad() {
         self.state = .isFinished
-        MSI.shared.appState.loadingDataSource[Modu.key] = false
+        MSI.shared.appState.loadingDataSource[DataSources.modu.key] = false
         NotificationCenter.default.post(
             name: .DataSourceLoaded,
             object: DataSourceItem(dataSource: DataSources.modu)

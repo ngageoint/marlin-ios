@@ -1,84 +1,84 @@
 //
-//  AsamInitializer.swift
+//  PortInitializer.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 11/8/23.
+//  Created by Daniel Barela on 1/30/24.
 //
 
 import Foundation
 import BackgroundTasks
 
-class AsamInitializer {
-    
-    let repository: AsamRepository
-    
-    init(repository: AsamRepository) {
+class PortInitializer {
+
+    let repository: PortRepository
+
+    init(repository: PortRepository) {
         self.repository = repository
     }
-    
-    lazy var asamBackgroundFetchQueue: OperationQueue = {
+
+    lazy var backgroundFetchQueue: OperationQueue = {
         var queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
-        queue.name = "Asam fetch queue"
+        queue.name = "PortFetchQueue"
         return queue
     }()
-    
+
     func registerBackgroundHandler() {
-        NSLog("Register ASAM Background Refresh")
+        NSLog("Register Port Background Refresh")
         BGTaskScheduler.shared.register(
-            forTaskWithIdentifier: "mil.nga.msi.asam.refresh",
+            forTaskWithIdentifier: "mil.nga.msi.port.refresh",
             using: nil
         ) { [weak self] task in
-            self?.fetchAsamsPeriodically(task: task)
+            self?.fetchPortsPeriodically(task: task)
         }
     }
-    
-    func fetchAsams() {
+
+    func fetchPorts() {
         if repository.getCount(filters: nil) == 0 {
-            let asamInitialDataLoadOperation = AsamInitialDataLoadOperation(
+            let initialDataLoadOperation = PortInitialDataLoadOperation(
                 localDataSource: self.repository.localDataSource
             )
-            asamInitialDataLoadOperation.completionBlock = {
+            initialDataLoadOperation.completionBlock = {
                 Task {
-                    await self.repository.fetchAsams()
+                    await self.repository.fetchPorts()
                 }
             }
-            
-            asamBackgroundFetchQueue.addOperation(asamInitialDataLoadOperation)
+
+            backgroundFetchQueue.addOperation(initialDataLoadOperation)
         } else {
             Task {
-                await self.repository.fetchAsams()
+                await self.repository.fetchPorts()
             }
         }
     }
-    
-    func fetchAsamsPeriodically(task: BGTask) {
-        print("asam background fetch")
-        scheduleAsamRefresh()
-        
+
+    func fetchPortsPeriodically(task: BGTask) {
+        print("port background fetch")
+        schedulePortRefresh()
+
         // Create an operation that performs the main part of the background task.
-        let operation = AsamDataFetchOperation()
-        
+        let operation = PortDataFetchOperation()
+
         // Provide the background task with an expiration handler that cancels the operation.
         task.expirationHandler = {
             operation.cancel()
         }
-        
+
         // Inform the system that the background task is complete
         // when the operation completes.
         operation.completionBlock = {
             task.setTaskCompleted(success: !operation.isCancelled)
         }
-        
+
         // Start the operation.
-        self.asamBackgroundFetchQueue.addOperation(operation)
+        self.backgroundFetchQueue.addOperation(operation)
     }
-    
-    private func scheduleAsamRefresh() {
-        let request = BGAppRefreshTaskRequest(identifier: "mil.nga.msi.asam.refresh")
+
+    private func schedulePortRefresh() {
+        let request = BGAppRefreshTaskRequest(identifier: "mil.nga.msi.port.refresh")
         // Fetch no earlier than 1 hour from now
         request.earliestBeginDate = Calendar.current.date(byAdding: .minute, value: 1, to: Date())
-        
+
         do {
             try BGTaskScheduler.shared.submit(request)
         } catch BGTaskScheduler.Error.notPermitted {

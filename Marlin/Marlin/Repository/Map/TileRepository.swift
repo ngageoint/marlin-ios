@@ -116,7 +116,7 @@ extension DataSourceImage {
 }
 
 protocol TileRepository {
-    var dataSource: (any DataSourceDefinition)? { get }
+    var dataSource: any DataSourceDefinition { get }
     var cacheSourceKey: String? { get }
 
     var imageCache: Kingfisher.ImageCache? { get }

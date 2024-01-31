@@ -32,9 +32,6 @@ class AsamRepository: ObservableObject {
     func getAsam(reference: String?) -> AsamModel? {
         localDataSource.getAsam(reference: reference)
     }
-    func getAsams(filters: [DataSourceFilterParameter]?) -> [AsamModel] {
-        localDataSource.getAsams(filters: filters)
-    }
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
         localDataSource.getCount(filters: filters)
     }
@@ -45,38 +42,35 @@ class AsamRepository: ObservableObject {
         localDataSource.asams(filters: filters, paginatedBy: paginator)
     }
 
-    func fetchAsams(refresh: Bool = false) async -> [AsamModel] {
-        NSLog("Fetching ASAMS with refresh? \(refresh)")
-        if refresh {
-            DispatchQueue.main.async {
-                MSI.shared.appState.loadingDataSource[DataSources.asam.key] = true
-                NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.asam))
-            }
-            
-            let newestAsam = localDataSource.getNewestAsam()
-            
-            let asams = await remoteDataSource.fetchAsams(dateString: newestAsam?.dateString)
-            let inserted = await localDataSource.insert(task: nil, asams: asams)
-            
-            DispatchQueue.main.async {
-                MSI.shared.appState.loadingDataSource[DataSources.asam.key] = false
-                UserDefaults.standard.updateLastSyncTimeSeconds(DataSources.asam)
-                NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: DataSources.asam))
-                    if inserted != 0 {
-                        NotificationCenter.default.post(
-                            name: .DataSourceNeedsProcessed,
-                            object: DataSourceUpdatedNotification(key: DataSources.asam.key)
-                        )
-                        NotificationCenter.default.post(
-                            name: .DataSourceUpdated,
-                            object: DataSourceUpdatedNotification(key: DataSources.asam.key)
-                        )
-                    }
-            }
-            
-            return asams
+    func fetchAsams() async -> [AsamModel] {
+        NSLog("Fetching ASAMS")
+        DispatchQueue.main.async {
+            MSI.shared.appState.loadingDataSource[DataSources.asam.key] = true
+            NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.asam))
         }
-        return localDataSource.getAsams(filters: nil)
+
+        let newestAsam = localDataSource.getNewestAsam()
+
+        let asams = await remoteDataSource.fetchAsams(dateString: newestAsam?.dateString)
+        let inserted = await localDataSource.insert(task: nil, asams: asams)
+
+        DispatchQueue.main.async {
+            MSI.shared.appState.loadingDataSource[DataSources.asam.key] = false
+            UserDefaults.standard.updateLastSyncTimeSeconds(DataSources.asam)
+            NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: DataSources.asam))
+                if inserted != 0 {
+                    NotificationCenter.default.post(
+                        name: .DataSourceNeedsProcessed,
+                        object: DataSourceUpdatedNotification(key: DataSources.asam.key)
+                    )
+                    NotificationCenter.default.post(
+                        name: .DataSourceUpdated,
+                        object: DataSourceUpdatedNotification(key: DataSources.asam.key)
+                    )
+                }
+        }
+
+        return asams
     }
     
 }

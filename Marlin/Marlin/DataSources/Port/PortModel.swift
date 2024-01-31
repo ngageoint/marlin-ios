@@ -12,9 +12,76 @@ import UIKit
 import mgrs_ios
 import OSLog
 
+struct PortListModel: Hashable, Identifiable {
+    var id: String {
+        "\(portNumber)"
+    }
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+
+    var portName: String?
+    var portNumber: Int64
+    var alternateName: String?
+    var regionName: String?
+    var latitude: Double
+    var longitude: Double
+
+    var canBookmark: Bool = false
+
+    init(port: Port) {
+        self.canBookmark = true
+        self.portName = port.portName
+        self.portNumber = port.portNumber
+        self.alternateName = port.alternateName
+        self.regionName = port.regionName
+        self.latitude = port.latitude
+        self.longitude = port.longitude
+    }
+
+    func distanceTo(_ location: CLLocation) -> Double {
+        location.distance(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
+    }
+}
+
+extension PortListModel {
+    var itemTitle: String {
+        return "\(self.portName ?? "")"
+    }
+}
+
+extension PortListModel: Bookmarkable {
+    static var definition: any DataSourceDefinition {
+        DataSources.port
+    }
+
+    var itemKey: String {
+        return "\(portNumber)"
+    }
+
+    var key: String {
+        DataSources.port.key
+    }
+}
+
+extension PortListModel {
+    init(portModel: PortModel) {
+        self.canBookmark = portModel.canBookmark
+        self.portName = portModel.portName
+        self.portNumber = Int64(portModel.portNumber)
+        self.alternateName = portModel.alternateName
+        self.regionName = portModel.regionName
+        self.latitude = portModel.latitude
+        self.longitude = portModel.longitude
+    }
+}
+
 // disable these checks, this data type has a lot of properties
 // swiftlint:disable type_body_length file_length
-struct PortModel: Locatable, Bookmarkable, DataSource, Codable, GeoJSONExportable, CustomStringConvertible {
+struct PortModel: Locatable, Bookmarkable, DataSource, Codable, GeoJSONExportable, CustomStringConvertible, Hashable, Identifiable {
+    var id: String {
+        "\(portNumber)"
+    }
     static var definition: any DataSourceDefinition = DataSourceDefinitions.port.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
@@ -593,7 +660,7 @@ struct PortModel: Locatable, Bookmarkable, DataSource, Codable, GeoJSONExportabl
     }
     
     var color: UIColor {
-        return Port.color
+        return DataSources.port.color
     }
     
     static func postProcess() {

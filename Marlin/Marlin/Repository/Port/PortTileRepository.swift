@@ -1,26 +1,26 @@
 //
-//  AsamTileRepository.swift
+//  PortTileRepository.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 1/24/24.
+//  Created by Daniel Barela on 1/30/24.
 //
 
 import Foundation
 import UIKit
 import Kingfisher
 
-class AsamTileRepository: TileRepository, ObservableObject {
-    var dataSource: any DataSourceDefinition = DataSources.asam
+class PortTileRepository: TileRepository, ObservableObject {
+    var dataSource: any DataSourceDefinition = DataSources.port
     var cacheSourceKey: String?
     var imageCache: Kingfisher.ImageCache?
     var filterCacheKey: String {
         ""
     }
-    let reference: String
-    let localDataSource: AsamLocalDataSource
+    let portNumber: Int64
+    let localDataSource: PortLocalDataSource
 
-    init(reference: String, localDataSource: AsamLocalDataSource) {
-        self.reference = reference
+    init(portNumber: Int64, localDataSource: PortLocalDataSource) {
+        self.portNumber = portNumber
         self.localDataSource = localDataSource
     }
 
@@ -32,9 +32,9 @@ class AsamTileRepository: TileRepository, ObservableObject {
     ) -> [DataSourceImage] {
         var images: [DataSourceImage] = []
 
-        if let asam = localDataSource.getAsam(reference: reference) {
-            if minLatitude...maxLatitude ~= asam.latitude && minLongitude...maxLongitude ~= asam.longitude {
-                images.append(AsamImage(asam: asam))
+        if let port = localDataSource.getPort(portNumber: portNumber) {
+            if minLatitude...maxLatitude ~= port.latitude && minLongitude...maxLongitude ~= port.longitude {
+                images.append(PortImage(port: port))
             }
         }
 
@@ -47,8 +47,8 @@ class AsamTileRepository: TileRepository, ObservableObject {
         minLongitude: Double,
         maxLongitude: Double
     ) -> [String] {
-        return localDataSource.getAsamsInBounds(
-            filters: UserDefaults.standard.filter(DataSources.asam),
+        return localDataSource.getPortsInBounds(
+            filters: UserDefaults.standard.filter(DataSources.port),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
             minLongitude: minLongitude,
@@ -59,8 +59,8 @@ class AsamTileRepository: TileRepository, ObservableObject {
     }
 }
 
-class AsamsTileRepository: TileRepository, ObservableObject {
-    var dataSource: any DataSourceDefinition = DataSources.asam
+class PortsTileRepository: TileRepository, ObservableObject {
+    var dataSource: any DataSourceDefinition = DataSources.port
     var cacheSourceKey: String? { dataSource.key }
     var imageCache: Kingfisher.ImageCache? {
         if let cacheSourceKey = cacheSourceKey {
@@ -69,11 +69,11 @@ class AsamsTileRepository: TileRepository, ObservableObject {
         return nil
     }
     var filterCacheKey: String {
-        UserDefaults.standard.filter(DataSources.asam).getCacheKey()
+        UserDefaults.standard.filter(DataSources.port).getCacheKey()
     }
-    let localDataSource: AsamLocalDataSource
+    let localDataSource: PortLocalDataSource
 
-    init(localDataSource: AsamLocalDataSource) {
+    init(localDataSource: PortLocalDataSource) {
         self.localDataSource = localDataSource
     }
 
@@ -83,17 +83,17 @@ class AsamsTileRepository: TileRepository, ObservableObject {
         minLongitude: Double,
         maxLongitude: Double
     ) -> [DataSourceImage] {
-        if !UserDefaults.standard.showOnMapasam {
+        if !UserDefaults.standard.showOnMapport {
             return []
         }
-        return localDataSource.getAsamsInBounds(
-            filters: UserDefaults.standard.filter(DataSources.asam),
+        return localDataSource.getPortsInBounds(
+            filters: UserDefaults.standard.filter(DataSources.port),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
             minLongitude: minLongitude,
             maxLongitude: maxLongitude)
         .map { model in
-            AsamImage(asam: model)
+            PortImage(port: model)
         }
     }
 
@@ -106,8 +106,8 @@ class AsamsTileRepository: TileRepository, ObservableObject {
         if !UserDefaults.standard.showOnMapasam {
             return []
         }
-        return localDataSource.getAsamsInBounds(
-            filters: UserDefaults.standard.filter(DataSources.asam),
+        return localDataSource.getPortsInBounds(
+            filters: UserDefaults.standard.filter(DataSources.port),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
             minLongitude: minLongitude,
@@ -118,13 +118,13 @@ class AsamsTileRepository: TileRepository, ObservableObject {
     }
 }
 
-class AsamImage: DataSourceImage {
+class PortImage: DataSourceImage {
     var feature: SFGeometry?
-    
-    static var dataSource: any DataSourceDefinition = DataSources.asam
 
-    init(asam: AsamModel) {
-        feature = asam.sfGeometry
+    static var dataSource: any DataSourceDefinition = DataSources.port
+
+    init(port: PortModel) {
+        feature = port.sfGeometry
     }
 
     func image(
@@ -134,12 +134,12 @@ class AsamImage: DataSourceImage {
         tileSize: Double
     ) -> [UIImage] {
         let images: [UIImage] = defaultMapImage(
-                marker: false,
-                zoomLevel: zoom,
-                tileBounds3857: tileBounds,
-                context: context,
-                tileSize: tileSize
-            )
+            marker: false,
+            zoomLevel: zoom,
+            tileBounds3857: tileBounds,
+            context: context,
+            tileSize: tileSize
+        )
 
         return images
     }

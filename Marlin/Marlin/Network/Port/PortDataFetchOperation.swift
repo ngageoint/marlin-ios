@@ -1,28 +1,23 @@
 //
-//  ModuDataFetchOperation.swift
+//  PortDataFetchOperation.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 1/22/24.
+//  Created by Daniel Barela on 1/30/24.
 //
 
 import Foundation
 
-enum ModuDataFetchOperationState: String {
+enum PortDataFetchOperationState: String {
     case isReady
     case isExecuting
     case isFinished
 }
 
-class ModuDataFetchOperation: Operation {
+class PortDataFetchOperation: Operation {
 
-    var modus: [ModuModel] = []
-    var dateString: String?
+    var ports: [PortModel] = []
 
-    init(dateString: String? = nil) {
-        self.dateString = dateString
-    }
-
-    var state: ModuDataFetchOperationState = .isReady {
+    var state: PortDataFetchOperationState = .isReady {
         willSet(newValue) {
             willChangeValue(forKey: state.rawValue)
             willChangeValue(forKey: newValue.rawValue)
@@ -44,31 +39,31 @@ class ModuDataFetchOperation: Operation {
         guard !isCancelled else { return }
         state = .isExecuting
         Task {
-            let modus = await fetchData()
-            await self.finishFetch(modus: modus)
+            let asams = await fetchData()
+            await self.finishFetch(ports: ports)
         }
     }
 
-    @MainActor func finishFetch(modus: [ModuModel]) {
-        self.modus = modus
-        NSLog("Finished fetch with \(modus.count) modus")
+    @MainActor func finishFetch(ports: [PortModel]) {
+        self.ports = ports
+        NSLog("Finished fetch with \(ports.count) ports")
         self.state = .isFinished
     }
 
-    func fetchData() async -> [ModuModel] {
-        if self.isCancelled || !DataSources.modu.shouldSync() {
+    func fetchData() async -> [PortModel] {
+        if self.isCancelled || !DataSources.port.shouldSync() {
             return []
         }
 
-        let request = ModuService.getModus(date: dateString)
+        let request = PortService.getPorts
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
 
         return await withCheckedContinuation { continuation in
             MSI.shared.session.request(request)
                 .validate()
-                .responseDecodable(of: ModuPropertyContainer.self, queue: queue) { response in
-                    NSLog("Response asam count \(response.value?.modu.count ?? 0)")
-                    continuation.resume(returning: response.value?.modu ?? [])
+                .responseDecodable(of: PortPropertyContainer.self, queue: queue) { response in
+                    NSLog("Response port count \(response.value?.ports.count ?? 0)")
+                    continuation.resume(returning: response.value?.ports ?? [])
                 }
         }
     }

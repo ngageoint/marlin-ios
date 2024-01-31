@@ -34,11 +34,11 @@ enum DataSourceType: String, CaseIterable {
         case .asam:
             return AsamModel.self
         case .modu:
-            return Modu.self
+            return ModuModel.self
         case .light:
             return Light.self
         case .port:
-            return Port.self
+            return PortModel.self
         case .differentialGPSStation:
             return DifferentialGPSStation.self
         case .radioBeacon:

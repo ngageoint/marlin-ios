@@ -12,7 +12,7 @@ extension UserDefaults {
         switch key {
         case DataSources.asam.key:
             return publisher(for: \.asamOrder)
-        case Modu.key:
+        case DataSources.modu.key:
             return publisher(for: \.moduOrder)
         case Light.key:
             return publisher(for: \.lightOrder)
@@ -24,10 +24,12 @@ extension UserDefaults {
             return publisher(for: \.differentialGPSStationOrder)
         case ElectronicPublication.key:
             return publisher(for: \.epubOrder)
-        case Port.key:
+        case DataSources.port.key:
             return publisher(for: \.portOrder)
         case RadioBeacon.key:
             return publisher(for: \.radioBeaconOrder)
+        case NavigationalWarning.key:
+            return publisher(for: \.navWarningOrder)
         default:
             return publisher(for: \.asamOrder)
         }
@@ -65,6 +67,10 @@ extension UserDefaults {
     }
 
     @objc var ntmOrder: Int {
+        integer(forKey: #function)
+    }
+
+    @objc var navWarningOrder: Int {
         integer(forKey: #function)
     }
 

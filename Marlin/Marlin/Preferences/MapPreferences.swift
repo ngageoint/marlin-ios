@@ -53,7 +53,7 @@ extension UserDefaults {
     }
 
     @objc var showOnMapmodu: Bool {
-        bool(forKey: "showOnMap\(Modu.key)")
+        bool(forKey: "showOnMap\(DataSources.modu.key)")
     }
 
     @objc var showOnMapasam: Bool {
@@ -65,7 +65,7 @@ extension UserDefaults {
     }
 
     @objc var showOnMapport: Bool {
-        bool(forKey: "showOnMap\(Port.key)")
+        bool(forKey: "showOnMap\(DataSources.port.key)")
     }
 
     @objc var showOnMapradioBeacon: Bool {

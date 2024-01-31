@@ -26,13 +26,20 @@ struct ModuDetailView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .itemTitle()
                         .foregroundColor(Color.white)
-                        .background(Color(uiColor: Modu.color))
+                        .background(Color(uiColor: DataSources.modu.color))
                         .padding(.bottom, -8)
                     if let modu = viewModel.modu {
                         DataSourceLocationMapView(
                             dataSourceLocation: modu,
                             mapName: "Modu Detail Map",
-                            mixins: [ModuMap<ModuModel>(objects: [modu])]
+                            mixins: [
+                                ModuMap(
+                                    repository: ModuTileRepository(
+                                        name: modu.name ?? "",
+                                        localDataSource: moduRepository.localDataSource
+                                    )
+                                )
+                            ]
                         )
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
@@ -74,7 +81,7 @@ struct ModuDetailView: View {
             .dataSourceSection()
         }
         .dataSourceDetailList()
-        .navigationTitle(viewModel.modu?.name ?? Modu.dataSourceName)
+        .navigationTitle(viewModel.modu?.name ?? DataSources.modu.fullName)
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: name) { _ in
             viewModel.getModu(name: name, waypointURI: waypointURI)
@@ -83,7 +90,7 @@ struct ModuDetailView: View {
             viewModel.repository = moduRepository
             viewModel.routeWaypointRepository = routeWaypointRepository
             viewModel.getModu(name: name, waypointURI: waypointURI)
-            Metrics.shared.dataSourceDetail(dataSource: Modu.definition)
+            Metrics.shared.dataSourceDetail(dataSource: DataSources.modu)
         }
     }
 }

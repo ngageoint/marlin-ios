@@ -31,7 +31,7 @@ struct ModuListModel: Hashable, Identifiable {
 
     var dateString: String? {
         if let date = date {
-            return Modu.dateFormatter.string(from: date)
+            return DataSources.modu.dateFormatter.string(from: date)
         }
         return nil
     }
@@ -70,6 +70,7 @@ extension ModuListModel: Bookmarkable {
 
 extension ModuListModel {
     init(moduModel: ModuModel) {
+        self.canBookmark = moduModel.canBookmark
         self.date = moduModel.date
         self.latitude = moduModel.latitude
         self.longitude = moduModel.longitude
@@ -110,7 +111,7 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
         try? container.encode(navArea, forKey: .navArea)
         try? container.encode(name, forKey: .name)
         if let date = date {
-            try? container.encode(Modu.dateFormatter.string(from: date), forKey: .date)
+            try? container.encode(DataSources.modu.dateFormatter.string(from: date), forKey: .date)
         }
     }
     
@@ -209,7 +210,7 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
         
         var parsedDate: Date?
         if let dateString = try? values.decode(String.self, forKey: .date) {
-            if let date = Modu.dateFormatter.date(from: dateString) {
+            if let date = DataSources.modu.dateFormatter.date(from: dateString) {
                 parsedDate = date
             }
         }
@@ -255,7 +256,7 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
 extension ModuModel {
     var dateString: String? {
         if let date = date {
-            return Modu.dateFormatter.string(from: date)
+            return DataSources.modu.dateFormatter.string(from: date)
         }
         return nil
     }
@@ -353,8 +354,8 @@ extension ModuModel: MapImage {
             }
             path.lineWidth = 4
             path.close()
-            Modu.color.withAlphaComponent(0.3).setFill()
-            Modu.color.setStroke()
+            DataSources.modu.color.withAlphaComponent(0.3).setFill()
+            DataSources.modu.color.setStroke()
             path.fill()
             path.stroke()
         }

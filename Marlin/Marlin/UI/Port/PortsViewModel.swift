@@ -1,28 +1,57 @@
 //
-//  ModusViewModel.swift
+//  PortsViewModel.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 1/23/24.
+//  Created by Daniel Barela on 1/31/24.
 //
 
 import Foundation
 import Combine
 import SwiftUI
 
-class ModusViewModel: ObservableObject {
-    private let trigger = Trigger()
+class PortsViewModel: ObservableObject {
+    @Published private(set) var state: State = .loading
+    @Published var ports: [PortModel] = []
+    @Published var loaded: Bool = false
+    private var disposables = Set<AnyCancellable>()
 
-    private enum TriggerId: Hashable {
-        case reload
-        case loadMore
+    private var _repository: PortRepository?
+
+    var dataSourceUpdatedPub: AnyCancellable {
+        return NotificationCenter.default.publisher(for: .DataSourceUpdated)
+            .compactMap { notification in
+                notification.object as? DataSourceUpdatedNotification
+            }
+            .filter { notification in
+                notification.key == DataSources.port.key
+            }
+            .sink { _ in
+                self.reload()
+            }
     }
+
+    var repository: PortRepository? {
+        get {
+            return _repository
+        }
+        set {
+            if _repository == nil {
+                _repository = newValue
+                fetchPorts()
+            }
+        }
+    }
+
+    var publisher: AnyPublisher<CollectionDifference<AsamModel>, Never>?
+
+    private let trigger = Trigger()
 
     enum State {
         case loading
-        case loaded(rows: [ModuItem])
+        case loaded(rows: [PortItem])
         case failure(error: Error)
 
-        fileprivate var rows: [ModuItem] {
+        fileprivate var rows: [PortItem] {
             if case let .loaded(rows: rows) = self {
                 return rows
             } else {
@@ -31,37 +60,9 @@ class ModusViewModel: ObservableObject {
         }
     }
 
-    @Published private(set) var state: State = .loading
-    @Published var modus: [ModuModel] = []
-    @Published var loaded: Bool = false
-    private var disposables = Set<AnyCancellable>()
-
-    private var _repository: ModuRepository?
-    var publisher: AnyPublisher<CollectionDifference<ModuModel>, Never>?
-
-    var dataSourceUpdatedPub: AnyCancellable {
-        return NotificationCenter.default.publisher(for: .DataSourceUpdated)
-            .compactMap { notification in
-                notification.object as? DataSourceUpdatedNotification
-            }
-            .filter { notification in
-                notification.key == DataSources.modu.key
-            }
-            .sink { _ in
-                self.reload()
-            }
-    }
-
-    var repository: ModuRepository? {
-        get {
-            return _repository
-        }
-        set {
-            if _repository == nil {
-                _repository = newValue
-                fetchModus()
-            }
-        }
+    private enum TriggerId: Hashable {
+        case reload
+        case loadMore
     }
 
     func reload() {
@@ -72,7 +73,7 @@ class ModusViewModel: ObservableObject {
         trigger.activate(for: TriggerId.loadMore)
     }
 
-    func fetchModus(limit: Int = 100) {
+    func fetchPorts(limit: Int = 100) {
         if publisher != nil {
             return
         }
@@ -80,8 +81,8 @@ class ModusViewModel: ObservableObject {
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in
-            repository.modus(
-                filters: UserDefaults.standard.filter(DataSources.modu),
+            repository.ports(
+                filters: UserDefaults.standard.filter(DataSources.port),
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .scan([]) { $0 + $1 }

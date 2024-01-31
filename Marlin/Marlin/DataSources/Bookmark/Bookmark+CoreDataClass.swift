@@ -62,10 +62,10 @@ class Bookmark: NSManagedObject, BatchImportable {
         switch dataSource {
         case DataSources.asam.key:
             return MSI.shared.asamRepository?.getAsam(reference: self.id)
-        case Modu.key:
-            return Modu.getItem(context: context, itemKey: self.id)
-        case Port.key:
-            return Port.getItem(context: context, itemKey: self.id)
+        case DataSources.modu.key:
+            return MSI.shared.moduRepository?.getModu(name: self.id)
+        case DataSources.port.key:
+            return MSI.shared.portRepository?.getPort(portNumber: Int64(self.id ?? ""))
         case NavigationalWarning.key:
             return NavigationalWarning.getItem(context: context, itemKey: self.id)
         case NoticeToMariners.key:

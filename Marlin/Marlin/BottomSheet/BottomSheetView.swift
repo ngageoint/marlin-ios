@@ -226,6 +226,9 @@ struct MarlinBottomSheet <Content: View>: View {
                         case DataSources.modu.key:
                             ModuSheetView(name: itemKey, focusNotification: focusNotification)
                                 .transition(.opacity)
+                        case DataSources.port.key:
+                            PortSheetView(portNumber: Int64(itemKey) ?? -1, focusNotification: focusNotification)
+                                .transition(.opacity)
                         default:
                             EmptyView()
                         }

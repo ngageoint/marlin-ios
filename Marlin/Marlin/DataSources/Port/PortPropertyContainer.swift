@@ -15,7 +15,11 @@ struct PortPropertyContainer: Decodable {
         case ports
     }
     let ports: [PortModel]
-    
+
+    init(ports: [PortModel]) {
+        self.ports = ports
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         ports = try container.decode([Throwable<PortModel>].self, forKey: .ports).compactMap { try? $0.result.get() }

@@ -28,11 +28,11 @@ class ModuDataLoadOperation: CountingDataLoadOperation {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(
                     name: .DataSourceNeedsProcessed,
-                    object: DataSourceUpdatedNotification(key: Modu.key)
+                    object: DataSourceUpdatedNotification(key: DataSources.modu.key)
                 )
                 NotificationCenter.default.post(
                     name: .DataSourceUpdated,
-                    object: DataSourceUpdatedNotification(key: Modu.key)
+                    object: DataSourceUpdatedNotification(key: DataSources.modu.key)
                 )
             }
         }

@@ -10,7 +10,6 @@ import Foundation
 class AsamViewModel: ObservableObject, Identifiable {
     @Published var asam: AsamModel?
 
-    @Published var predicate: NSPredicate?
     var reference: String?
 
     init(reference: String? = nil) {
@@ -28,7 +27,6 @@ class AsamViewModel: ObservableObject, Identifiable {
     
     @discardableResult
     func getAsam(reference: String, waypointURI: URL? = nil) -> AsamModel? {
-        predicate = NSPredicate(format: "reference == %@", reference)
         if let waypointURI = waypointURI {
             asam = routeWaypointRepository?.getAsam(waypointURI: waypointURI)
             return asam

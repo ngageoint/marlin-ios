@@ -16,6 +16,13 @@ protocol ModuLocalDataSource {
     func batchImport(from propertiesList: [ModuModel]) async throws -> Int
     func getNewestModu() -> ModuModel?
     func getModus(filters: [DataSourceFilterParameter]?) -> [ModuModel]
+    func getModusInBounds(
+        filters: [DataSourceFilterParameter]?,
+        minLatitude: Double?,
+        maxLatitude: Double?,
+        minLongitude: Double?,
+        maxLongitude: Double?
+    ) -> [ModuModel]
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
     func getModu(name: String?) -> ModuModel?
     func modus(
@@ -31,14 +38,10 @@ struct ModuModelPage {
 }
 
 class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, ObservableObject {
-    private var context: NSManagedObjectContext
-
-    required init(context: NSManagedObjectContext) {
-        self.context = context
-    }
+    private let context: NSManagedObjectContext = PersistenceController.current.newTaskContext()
 
     func getNewestModu() -> ModuModel? {
-        let context = PersistenceController.current.newTaskContext()
+//        let context = PersistenceController.current.newTaskContext()
         var modu: ModuModel?
         context.performAndWait {
             if let newestModu = try? PersistenceController.current.fetchFirst(
@@ -60,7 +63,7 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
         context.performAndWait {
             let request: NSFetchRequest<Modu> = ModuFilterable()
                 .fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Modu> ?? Modu.fetchRequest()
-            request.sortDescriptors = UserDefaults.standard.sort(Modu.key).map({ sortParameter in
+            request.sortDescriptors = UserDefaults.standard.sort(DataSources.modu.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
             modus = (context.fetch(request: request)?.map { modu in
@@ -72,17 +75,25 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
     }
 
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        var count = 0
         guard let fetchRequest = ModuFilterable().fetchRequest(filters: filters, commonFilters: nil) else {
             return 0
         }
-        return (try? context.count(for: fetchRequest)) ?? 0
+        context.performAndWait {
+
+            count = (try? context.count(for: fetchRequest)) ?? 0
+        }
+        return count
     }
 
     func getModu(name: String?) -> ModuModel? {
-        if let name = name, let modu = context.fetchFirst(Modu.self, key: "name", value: name) {
-            return ModuModel(modu: modu)
+        var model: ModuModel?
+        context.performAndWait {
+            if let name = name, let modu = context.fetchFirst(Modu.self, key: "name", value: name) {
+                model = ModuModel(modu: modu)
+            }
         }
-        return nil
+        return model
     }
 
     typealias Page = Int
@@ -134,8 +145,8 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
             .fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Modu> ?? Modu.fetchRequest()
         request.fetchLimit = 100
         request.fetchOffset = (page ?? 0) * request.fetchLimit
-        let userSort = UserDefaults.standard.sort(Modu.key)
-        let sortDescriptors: [DataSourceSortParameter] = userSort.isEmpty ? Modu.defaultSort : userSort
+        let userSort = UserDefaults.standard.sort(DataSources.modu.key)
+        let sortDescriptors: [DataSourceSortParameter] = userSort.isEmpty ? DataSources.modu.defaultSort : userSort
 
         request.sortDescriptors = sortDescriptors.map({ sortParameter in
             sortParameter.toNSSortDescriptor()
@@ -174,6 +185,64 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
             .eraseToAnyPublisher()
     }
 
+    func getModusInBounds(
+        filters: [DataSourceFilterParameter]?,
+        minLatitude: Double?,
+        maxLatitude: Double?,
+        minLongitude: Double?,
+        maxLongitude: Double?
+    ) -> [ModuModel] {
+        var modus: [ModuModel] = []
+        // TODO: this should probably execute on a different context and be a perform
+        context.performAndWait {
+            let fetchRequest = Modu.fetchRequest()
+            var predicates: [NSPredicate] = []
+
+            if let filters = filters {
+                for filter in filters {
+                    let predicate = filter.toPredicate(
+                        boundsPredicateBuilder: { bounds in
+                            return NSPredicate(
+                                format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf",
+                                bounds.swCorner.y,
+                                bounds.neCorner.y,
+                                bounds.swCorner.x,
+                                bounds.swCorner.y
+                            )
+                        })
+                    if let predicate = predicate {
+                        predicates.append(predicate)
+                    }
+                }
+            }
+
+            if let minLatitude = minLatitude,
+               let maxLatitude = maxLatitude,
+               let minLongitude = minLongitude,
+               let maxLongitude = maxLongitude {
+                predicates.append(NSPredicate(
+                    format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf",
+                    minLatitude,
+                    maxLatitude,
+                    minLongitude,
+                    maxLongitude
+                ))
+            }
+
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            fetchRequest.predicate = predicate
+
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.modu.key).map({ sortParameter in
+                sortParameter.toNSSortDescriptor()
+            })
+            modus = (context.fetch(request: fetchRequest)?.map { modu in
+                ModuModel(modu: modu)
+            }) ?? []
+        }
+
+        return modus
+    }
+
     func createSectionHeaderAndListItem(
         modu: Modu,
         sortDescriptor: DataSourceSortParameter,
@@ -210,7 +279,7 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
             sortValueString = sortValue as? String
         case .date:
             if let currentValue = sortValue as? Date {
-                sortValueString = Modu.dateFormatter.string(from: currentValue)
+                sortValueString = DataSources.modu.dateFormatter.string(from: currentValue)
             }
         case .int:
             sortValueString = (sortValue as? Int)?.zeroIsEmptyString
@@ -235,7 +304,7 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
 
     func insert(task: BGTask? = nil, modus: [ModuModel]) async -> Int {
         let count = modus.count
-        NSLog("Received \(count) \(Modu.key) records.")
+        NSLog("Received \(count) \(DataSources.modu.key) records.")
 
         // Create an operation that performs the main part of the background task.
         operation = ModuDataLoadOperation(modus: modus, localDataSource: self)

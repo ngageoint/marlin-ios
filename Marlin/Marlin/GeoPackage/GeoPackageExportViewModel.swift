@@ -63,9 +63,9 @@ class DataSourceExportProgress: Identifiable, Hashable, Equatable, ObservableObj
 
 class GeoPackageExportViewModel: ObservableObject {
     var asamRepository: AsamRepository?
-    var moduRepository: ModuRepositoryManager?
+    var moduRepository: ModuRepository?
     var lightRepository: LightRepositoryManager?
-    var portRepository: PortRepositoryManager?
+    var portRepository: PortRepository?
     var dgpsRepository: DifferentialGPSStationRepositoryManager?
     var radioBeaconRepository: RadioBeaconRepositoryManager?
     var routeRepository: RouteRepositoryManager?

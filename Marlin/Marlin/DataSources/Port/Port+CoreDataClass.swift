@@ -20,9 +20,9 @@ class Port: NSManagedObject {
     
     var shouldShrink: Bool = false
     
-    func distanceTo(_ location: CLLocation) -> Double {
-        location.distance(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
-    }
+//    func distanceTo(_ location: CLLocation) -> Double {
+//        location.distance(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
+//    }
     
     var nameAndLocationKeyValues: [KeyValue] {
         return [

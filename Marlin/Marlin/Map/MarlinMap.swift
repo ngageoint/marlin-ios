@@ -108,18 +108,9 @@ class MainMapMixins: MapMixins {
         if UserDefaults.standard.dataSourceEnabled(Light.definition) {
             mixins.append(LightMap<Light>(showAsTiles: true))
         }
-        if UserDefaults.standard.dataSourceEnabled(Port.definition) {
-            mixins.append(PortMap<Port>(showAsTiles: true))
-        }
         if UserDefaults.standard.dataSourceEnabled(RadioBeacon.definition) {
             mixins.append(RadioBeaconMap<RadioBeacon>(showAsTiles: true))
         }
-        if UserDefaults.standard.dataSourceEnabled(Modu.definition) {
-            mixins.append(ModuMap<Modu>(showAsTiles: true))
-        }
-//        if UserDefaults.standard.dataSourceEnabled(Asam.definition) {
-//            mixins.append(AsamMap<Asam>(showAsTiles: true))
-//        }
         mixins.append(NavigationalWarningFetchMap())
         self.mixins = mixins
     }
@@ -131,6 +122,18 @@ class MainMapMixins: MapMixins {
     func addAsamTileRepository(tileRepository: TileRepository) {
         if UserDefaults.standard.dataSourceEnabled(DataSources.asam) {
             mixins.append(AsamMap(repository: tileRepository))
+        }
+    }
+
+    func addModuTileRepository(tileRepository: TileRepository) {
+        if UserDefaults.standard.dataSourceEnabled(DataSources.modu) {
+            mixins.append(ModuMap(repository: tileRepository))
+        }
+    }
+
+    func addPortTileRepository(tileRepository: TileRepository) {
+        if UserDefaults.standard.dataSourceEnabled(DataSources.port) {
+            mixins.append(PortMap(repository: tileRepository))
         }
     }
 }

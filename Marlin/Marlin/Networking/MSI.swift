@@ -17,19 +17,24 @@ public class MSI {
     
     var asamRepository: AsamRepository?
     var moduRepository: ModuRepository?
+    var portRepository: PortRepository?
 
     var asamInitializer: AsamInitializer?
     var moduInitializer: ModuInitializer?
+    var portInitializer: PortInitializer?
 
     func addRepositories(
         asamRepository: AsamRepository,
-        moduRepository: ModuRepository
+        moduRepository: ModuRepository,
+        portRepository: PortRepository
     ) {
         self.asamRepository = asamRepository
         self.moduRepository = moduRepository
-        
+        self.portRepository = portRepository
+
         asamInitializer = AsamInitializer(repository: asamRepository)
         moduInitializer = ModuInitializer(repository: moduRepository)
+        portInitializer = PortInitializer(repository: portRepository)
     }
 
     var backgroundTask: UIBackgroundTaskIdentifier = .invalid
@@ -67,10 +72,10 @@ public class MSI {
     
     let mainDataList: [any BatchImportable.Type] = [
 //        Asam.self,
-        Modu.self,
+//        Modu.self,
         NavigationalWarning.self,
         Light.self,
-        Port.self,
+//        Port.self,
         RadioBeacon.self,
         DifferentialGPSStation.self,
         DFRS.self,
@@ -140,6 +145,7 @@ public class MSI {
         
         asamInitializer?.registerBackgroundHandler()
         moduInitializer?.registerBackgroundHandler()
+        portInitializer?.registerBackgroundHandler()
     }
     
     func backgroundFetch(task: BGTask) {
@@ -158,15 +164,11 @@ public class MSI {
         }
         
         for importable in allLoadList {
-            if importable.key == DataSources.asam.key || importable.key == Modu.key {
-                NSLog("Skipping ASAM, MODU in MSI.shared")
-            } else {
-                NSLog("Fetching new data for \(importable.key)")
+            NSLog("Fetching new data for \(importable.key)")
             self.loadData(
                 type: importable.decodableRoot,
                 dataType: importable,
                 operationQueue: self.backgroundFetchQueue)
-            }
         }
         
         var expired = false
@@ -225,6 +227,7 @@ public class MSI {
         
         asamInitializer?.fetchAsams()
         moduInitializer?.fetchModus()
+        portInitializer?.fetchPorts()
 
         let initialDataLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
             if let dataSourceType = importable as? any DataSource.Type {
@@ -251,7 +254,7 @@ public class MSI {
             UserDefaults.standard.initialDataLoaded = true
             
             let allLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
-                let sync = importable.shouldSync() && importable.key != DataSources.asam.key && importable.key != Modu.key
+                let sync = importable.shouldSync()
                 return sync
             }
             
@@ -297,10 +300,6 @@ public class MSI {
         dataType: D.Type,
         operationQueue: OperationQueue? = nil
     ) {
-        if dataType.key == DataSources.asam.key || dataType.key == Modu.key {
-            return
-        }
-
         let initialDataLoadOperation = DataLoadOperation(
             appState: appState,
             taskName: "Load Initial Data \(dataType.key)")
@@ -321,7 +320,7 @@ public class MSI {
         dataType: D.Type,
         operationQueue: OperationQueue? = nil
     ) {
-        if dataType.key == DataSources.asam.key || dataType.key == Modu.key {
+        if dataType.key == DataSources.asam.key || dataType.key == DataSources.modu.key {
             return
         }
         

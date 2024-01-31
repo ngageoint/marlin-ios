@@ -9,6 +9,8 @@ import SwiftUI
 import MapKit
 
 struct PortSummaryView: DataSourceSummaryView {
+    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var router: MarlinRouter
     var showSectionHeader: Bool = false
     
     var showBookmarkNotes: Bool = false
@@ -16,7 +18,9 @@ struct PortSummaryView: DataSourceSummaryView {
     @EnvironmentObject var locationManager: LocationManager
     @State var distance: String?
 
-    var port: PortModel
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+
+    var port: PortListModel
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
     var measurementFormatter: MeasurementFormatter {
@@ -51,9 +55,21 @@ struct PortSummaryView: DataSourceSummaryView {
                 }
             }
             bookmarkNotesView(port)
-            DataSourceActionBar(data: port, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+            DataSourceActions(
+                moreDetails: showMoreDetails ? PortActions.Tap(portNumber: port.portNumber, path: $router.path) : nil,
+                location: !showMoreDetails ? Actions.Location(latLng: port.coordinate) : nil,
+                zoom: !showMoreDetails ? PortActions.Zoom(latLng: port.coordinate, itemKey: port.id) : nil,
+                bookmark: port.canBookmark ? Actions.Bookmark(
+                    itemKey: port.id,
+                    bookmarkViewModel: bookmarkViewModel
+                ) : nil,
+                share: port.itemTitle
+            )
         }
         .onAppear {
+            bookmarkViewModel.repository = bookmarkRepository
+            bookmarkViewModel.getBookmark(itemKey: port.id, dataSource: DataSources.port.key)
+
             if let currentLocation = locationManager.lastLocation {
                 let metersMeasurement = NSMeasurement(
                     doubleValue: port.distanceTo(currentLocation),

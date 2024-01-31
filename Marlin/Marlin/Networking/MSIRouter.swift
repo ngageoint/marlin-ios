@@ -77,7 +77,7 @@ enum MSIRouter: URLRequestConvertible {
         switch self {
         case .readModus(date: let date):
             var params = [
-                "maxSourceDate": Modu.dateFormatter.string(
+                "maxSourceDate": DataSources.modu.dateFormatter.string(
                     from: Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date()),
                 "output": "json"
             ]

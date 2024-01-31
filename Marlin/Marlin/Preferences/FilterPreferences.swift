@@ -12,7 +12,7 @@ extension UserDefaults {
         switch key {
         case DataSources.asam.key:
             return publisher(for: \.asamFilter)
-        case Modu.key:
+        case DataSources.modu.key:
             return publisher(for: \.moduFilter)
         case Light.key:
             return publisher(for: \.lightFilter)
@@ -24,7 +24,7 @@ extension UserDefaults {
             return publisher(for: \.differentialGPSStationFilter)
         case ElectronicPublication.key:
             return publisher(for: \.epubFilter)
-        case Port.key:
+        case DataSources.port.key:
             return publisher(for: \.portFilter)
         case RadioBeacon.key:
             return publisher(for: \.radioBeaconFilter)

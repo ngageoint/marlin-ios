@@ -1,42 +1,36 @@
 //
-//  ModuService.swift
+//  PortService.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 1/22/24.
+//  Created by Daniel Barela on 1/30/24.
 //
 
 import Foundation
 import Alamofire
 
-enum ModuService: URLRequestConvertible {
-    case getModus(date: String? = nil)
+enum PortService: URLRequestConvertible {
+    case getPorts
 
     var method: HTTPMethod {
         switch self {
-        case .getModus:
+        case .getPorts:
             return .get
         }
     }
 
     var path: String {
         switch self {
-        case .getModus:
-            return "/publications/modu"
+        case .getPorts:
+            return "/publications/world-port-index"
         }
     }
 
     var parameters: Parameters? {
         switch self {
-        case .getModus(date: let date):
-            var params = [
-                "maxSourceDate": DataSources.modu.dateFormatter.string(
-                    from: Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date()),
+        case .getPorts:
+            return [
                 "output": "json"
             ]
-            if let date = date {
-                params["minSourceDate"] = date
-            }
-            return params
         }
     }
 

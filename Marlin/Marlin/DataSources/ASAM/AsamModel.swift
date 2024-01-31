@@ -71,6 +71,7 @@ extension AsamListModel: Bookmarkable {
 
 extension AsamListModel {
     init(asamModel: AsamModel) {
+        self.canBookmark = asamModel.canBookmark
         self.asamDescription = asamModel.asamDescription
         self.date = asamModel.date
         self.hostility = asamModel.hostility

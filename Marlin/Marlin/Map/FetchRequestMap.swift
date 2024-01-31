@@ -47,9 +47,11 @@ class DataSourceMap: MapMixin {
 //                .store(in: &cancellable)
 //        }
 
-        setupDataSourceUpdatedPublisher(mapState: mapState)
-        setupUserDefaultsShowPublisher(mapState: mapState)
-        setupOrderPublisher(mapState: mapState)
+        DispatchQueue.main.async {
+            self.setupDataSourceUpdatedPublisher(mapState: mapState)
+            self.setupUserDefaultsShowPublisher(mapState: mapState)
+            self.setupOrderPublisher(mapState: mapState)
+        }
 
         LocationManager.shared().$current10kmMGRS
             .receive(on: RunLoop.main)
@@ -60,7 +62,7 @@ class DataSourceMap: MapMixin {
     }
 
     func updateMixin(mapView: MKMapView, mapState: MapState) {
-        var stateKey = "FetchRequestMixin\(repository.dataSource?.key ?? uuid.uuidString)DateUpdated"
+        var stateKey = "FetchRequestMixin\(repository.dataSource.key)DateUpdated"
         if lastChange == nil
             || lastChange != mapState.mixinStates[stateKey] as? Date {
             lastChange = mapState.mixinStates[stateKey] as? Date ?? Date()
@@ -84,10 +86,7 @@ class DataSourceMap: MapMixin {
 
             self.overlay = newOverlay
             // find the right place
-            var mapOrder = 0
-            if let key = self.repository.dataSource?.key {
-                mapOrder = UserDefaults.standard.dataSourceMapOrder(key)
-            }
+            var mapOrder = UserDefaults.standard.dataSourceMapOrder(self.repository.dataSource.key)
             if mapView.overlays(in: .aboveLabels).isEmpty {
                 mapView.insertOverlay(newOverlay, at: 0, level: .aboveLabels)
             } else {
@@ -117,7 +116,7 @@ class DataSourceMap: MapMixin {
     func refreshOverlay(mapState: MapState) {
         DispatchQueue.main.async {
             self.mapState?.mixinStates[
-                "FetchRequestMixin\(self.repository.dataSource?.key ?? self.uuid.uuidString)DateUpdated"
+                "FetchRequestMixin\(self.repository.dataSource.key)DateUpdated"
             ] = Date()
         }
     }
@@ -129,7 +128,8 @@ class DataSourceMap: MapMixin {
                 $0.object as? DataSourceUpdatedNotification
             }
             .sink { item in
-                if let key = self.repository.dataSource?.key, item.key == key {
+                let key = self.repository.dataSource.key
+                if item.key == key {
                     NSLog("New data for \(key), refresh overlay, clear the cache")
                     self.repository.clearCache(completion: {
                         self.refreshOverlay(mapState: mapState)
@@ -142,9 +142,10 @@ class DataSourceMap: MapMixin {
     func setupUserDefaultsShowPublisher(mapState: MapState) {
         userDefaultsShowPublisher?
             .removeDuplicates()
+            .receive(on: RunLoop.main)
             .sink { [weak self] show in
                 self?.show = show
-                NSLog("Show \(self?.repository.dataSource?.key ?? ""): \(show)")
+                NSLog("Show \(self?.repository.dataSource.key ?? ""): \(show)")
                 self?.refreshOverlay(mapState: mapState)
             }
             .store(in: &cancellable)
@@ -154,7 +155,7 @@ class DataSourceMap: MapMixin {
         orderPublisher?
             .removeDuplicates()
             .sink { [weak self] order in
-                NSLog("Order update \(self?.repository.dataSource?.key ?? ""): \(order)")
+                NSLog("Order update \(self?.repository.dataSource.key ?? ""): \(order)")
 
                 self?.refreshOverlay(mapState: mapState)
             }
@@ -177,7 +178,7 @@ class DataSourceMap: MapMixin {
         if mapView.zoomLevel < minZoom {
             return [:]
         }
-        guard show == true, let key = repository.dataSource?.key else {
+        guard show == true else {
             return [:]
         }
         let screenPercentage = 0.03
@@ -188,7 +189,7 @@ class DataSourceMap: MapMixin {
         let maxLat = location.latitude + tolerance
 
         return [
-            key: repository.getItemKeys(
+            repository.dataSource.key: repository.getItemKeys(
                 minLatitude: minLat,
                 maxLatitude: maxLat,
                 minLongitude: minLon,
@@ -227,6 +228,7 @@ class FetchRequestMap<T: MapImage>: NSObject, MapMixin {
         self.fetchPredicate = fetchPredicate
         self.objects = objects
         imageCache = T.imageCache
+        NSLog("def key \(T.definition.key)")
         orderPublisher = UserDefaults.standard.orderPublisher(key: T.definition.key)
     }
     

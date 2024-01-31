@@ -475,6 +475,6 @@ struct PortFilterable: Filterable {
 
     var defaultFilter: [DataSourceFilterParameter] = []
 
-    var locatableClass: Locatable.Type? = Port.self
+//    var locatableClass: Locatable.Type? = Port.self
 }
 // swiftlint:enable type_body_length file_length

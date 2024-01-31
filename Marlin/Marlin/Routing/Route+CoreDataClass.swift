@@ -32,13 +32,13 @@ class RouteWaypoint: NSManagedObject {
                     case DataSources.asam.key:
                         let asamModel = AsamModel(feature: featureCollection.features[0])
                         return asamModel
-                    case Modu.key:
+                    case DataSources.modu.key:
                         let moduModel = ModuModel(feature: featureCollection.features[0])
                         return moduModel
                     case Light.key:
                         let lightModel = LightModel(feature: featureCollection.features[0])
                         return lightModel
-                    case Port.key:
+                    case DataSources.port.key:
                         let portModel = PortModel(feature: featureCollection.features[0])
                         return portModel
                     case DifferentialGPSStation.key:

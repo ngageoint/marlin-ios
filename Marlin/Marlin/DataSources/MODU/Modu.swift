@@ -22,14 +22,14 @@ class Modu: NSManagedObject {
     var clusteringIdentifier: String? = "msi"
     
     var color: UIColor {
-        return Modu.color
+        return DataSources.modu.color
     }
     
     var annotationView: MKAnnotationView?
     
     var dateString: String? {
         if let date = date {
-            return Modu.dateFormatter.string(from: date)
+            return DataSources.modu.dateFormatter.string(from: date)
         }
         return nil
     }

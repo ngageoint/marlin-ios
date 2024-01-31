@@ -1,24 +1,23 @@
 //
-//  ModuList.swift
+//  PortList.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 1/23/24.
+//  Created by Daniel Barela on 1/31/24.
 //
 
 import Foundation
 import SwiftUI
 
-struct ModuList: View {
-
-    @EnvironmentObject var moduRepository: ModuRepository
-    @StateObject var viewModel: ModusViewModel = ModusViewModel()
+struct PortList: View {
+    @EnvironmentObject var portRepository: PortRepository
+    @StateObject var viewModel: PortsViewModel = PortsViewModel()
 
     @EnvironmentObject var router: MarlinRouter
 
     @State var sortOpen: Bool = false
     @State var filterOpen: Bool = false
     @State var filterViewModel: FilterViewModel = PersistedFilterViewModel(
-        dataSource: DataSources.filterableFromDefintion(DataSources.modu)
+        dataSource: DataSources.filterableFromDefintion(DataSources.port)
     )
 
     var body: some View {
@@ -28,7 +27,7 @@ struct ModuList: View {
                 VStack(alignment: .center, spacing: 16) {
                     HStack(alignment: .center, spacing: 0) {
                         Spacer()
-                        Image("modu")
+                        Image("port")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(maxWidth: .infinity)
@@ -36,7 +35,7 @@ struct ModuList: View {
                             .foregroundColor(Color.onSurfaceColor)
                         Spacer()
                     }
-                    Text("Loading MODUs")
+                    Text("Loading Ports")
                         .font(.headline)
                         .fixedSize(horizontal: false, vertical: true)
                         .multilineTextAlignment(.center)
@@ -49,19 +48,19 @@ struct ModuList: View {
                 .transition(AnyTransition.opacity)
             case let .loaded(rows: rows):
                 ZStack(alignment: .bottomTrailing) {
-                    List(rows) { moduItem in
-                        switch moduItem {
-                        case .listItem(let modu):
-                            ModuSummaryView(modu: modu)
+                    List(rows) { portItem in
+                        switch portItem {
+                        case .listItem(let port):
+                            PortSummaryView(port: port)
                                 .paddedCard()
                                 .onAppear {
-                                    if rows.last == moduItem {
+                                    if rows.last == portItem {
                                         viewModel.loadMore()
                                     }
                                 }
                                 .onTapGesture {
                                     router.path.append(MarlinRoute.dataSourceDetail(
-                                        dataSourceKey: DataSources.modu.key, itemKey: modu.itemKey)
+                                        dataSourceKey: DataSources.port.key, itemKey: port.itemKey)
                                     )
                                 }
                                 .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
@@ -70,7 +69,7 @@ struct ModuList: View {
                         case .sectionHeader(let header):
                             Text(header)
                                 .onAppear {
-                                    if rows.last == moduItem {
+                                    if rows.last == portItem {
                                         viewModel.loadMore()
                                     }
                                 }
@@ -88,7 +87,7 @@ struct ModuList: View {
                     VStack(alignment: .center, spacing: 16) {
                         HStack(alignment: .center, spacing: 0) {
                             Spacer()
-                            Image("modu")
+                            Image("port")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(maxWidth: .infinity)
@@ -96,7 +95,7 @@ struct ModuList: View {
                                 .foregroundColor(Color.onSurfaceColor)
                             Spacer()
                         }
-                        Text("No MODUs match this filter")
+                        Text("No ports match this filter")
                             .font(.headline)
                             .fixedSize(horizontal: false, vertical: true)
                             .multilineTextAlignment(.center)
@@ -110,7 +109,7 @@ struct ModuList: View {
                 Text(error.localizedDescription)
             }
         }
-        .navigationTitle(DataSources.modu.fullName)
+        .navigationTitle(DataSources.port.fullName)
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.backgroundColor)
         .foregroundColor(Color.onSurfaceColor)
@@ -125,15 +124,15 @@ struct ModuList: View {
             }
         }
         .onAppear {
-            viewModel.repository = moduRepository
-            Metrics.shared.dataSourceList(dataSource: DataSources.modu)
+            viewModel.repository = portRepository
+            Metrics.shared.dataSourceList(dataSource: DataSources.port)
         }
         .modifier(
             FilterButton(
                 filterOpen: $filterOpen,
                 sortOpen: $sortOpen,
                 dataSources: Binding.constant([
-                    DataSourceItem(dataSource: DataSources.modu)
+                    DataSourceItem(dataSource: DataSources.port)
                 ]),
                 allowSorting: true,
                 allowFiltering: true)
@@ -145,14 +144,14 @@ struct ModuList: View {
             NavigationStack {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
-                        SortView(definition: DataSources.modu)
+                        SortView(definition: DataSources.port)
                             .background(Color.surfaceColor)
 
                         Spacer()
                     }
 
                 }
-                .navigationTitle("\(DataSources.modu.name) Sort")
+                .navigationTitle("\(DataSources.port.name) Sort")
                 .navigationBarTitleDisplayMode(.inline)
                 .background(Color.backgroundColor)
                 .toolbar {
@@ -175,7 +174,7 @@ struct ModuList: View {
             }
 
             .onAppear {
-                Metrics.shared.dataSourceSort(dataSource: DataSources.modu)
+                Metrics.shared.dataSourceSort(dataSource: DataSources.port)
             }
         }
     }
