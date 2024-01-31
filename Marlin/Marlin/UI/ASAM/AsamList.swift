@@ -52,6 +52,7 @@ struct AsamList: View {
                         switch asamItem {
                         case .listItem(let asam):
                             AsamSummaryView(asam: asam)
+                                .showBookmarkNotes(true)
                                 .paddedCard()
                                 .onAppear {
                                     if rows.last == asamItem {

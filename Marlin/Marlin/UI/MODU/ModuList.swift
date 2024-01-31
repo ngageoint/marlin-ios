@@ -53,6 +53,7 @@ struct ModuList: View {
                         switch moduItem {
                         case .listItem(let modu):
                             ModuSummaryView(modu: modu)
+                                .showBookmarkNotes(true)
                                 .paddedCard()
                                 .onAppear {
                                     if rows.last == moduItem {
