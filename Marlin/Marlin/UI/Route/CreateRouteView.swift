@@ -30,6 +30,10 @@ struct CreateRouteView: View {
     }
     @FocusState private var focusedField: Field?
 
+    private var tapGesture: some Gesture {
+        (focusedField != nil) ? (TapGesture().onEnded { focusedField = nil }) : nil
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 2) {
@@ -52,9 +56,7 @@ struct CreateRouteView: View {
             RouteMapView(routeViewModel: routeViewModel)
                 .edgesIgnoringSafeArea([.leading, .trailing])
         }
-        .onTapGesture {
-            focusedField = nil
-        }
+        .gesture(tapGesture)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if routeViewModel.waypoints.count > 1 {

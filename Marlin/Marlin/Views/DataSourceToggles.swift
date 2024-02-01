@@ -110,7 +110,7 @@ struct DataSourceToggles: View {
         .buttonStyle(
             MaterialFloatingButtonStyle(
                 type: .custom, size: .mini,
-                foregroundColor: dataSourceItem.showOnMap ? Color.white : Color.disabledColor,
+                foregroundColor: Color.white,
                 backgroundColor: dataSourceItem.showOnMap ?
                 Color(uiColor: dataSourceItem.dataSource.color) : Color.disabledBackground))
         .accessibilityElement(children: .contain)
