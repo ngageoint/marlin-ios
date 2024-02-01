@@ -13,19 +13,19 @@ struct NavigationalWarningPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
         case broadcastWarn = "broadcast-warn"
     }
-    let broadcastWarn: [NavigationalWarningProperties]
+    let broadcastWarn: [NavigationalWarningModel]
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         broadcastWarn = try container.decode(
-            [Throwable<NavigationalWarningProperties>].self,
+            [Throwable<NavigationalWarningModel>].self,
             forKey: .broadcastWarn
         ).compactMap { try? $0.result.get() }
     }
 }
 
-struct NavigationalWarningProperties: Decodable {
-    
+struct NavigationalWarningModel: Decodable {
+
     static let apiToDateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "ddHHmm'Z' MMM yyyy"
@@ -97,7 +97,7 @@ struct NavigationalWarningProperties: Decodable {
         
         var parsedCancelDate: Date?
         if let cancelDateString = try? values.decode(String.self, forKey: .cancelDate) {
-            if let date = NavigationalWarningProperties.apiToDateFormatter.date(from: cancelDateString) {
+            if let date = NavigationalWarningModel.apiToDateFormatter.date(from: cancelDateString) {
                 parsedCancelDate = date
             }
         }
@@ -105,7 +105,7 @@ struct NavigationalWarningProperties: Decodable {
         
         var parsedDate: Date?
         if let dateString = try? values.decode(String.self, forKey: .issueDate) {
-            if let date = NavigationalWarningProperties.apiToDateFormatter.date(from: dateString) {
+            if let date = NavigationalWarningModel.apiToDateFormatter.date(from: dateString) {
                 parsedDate = date
             }
         }

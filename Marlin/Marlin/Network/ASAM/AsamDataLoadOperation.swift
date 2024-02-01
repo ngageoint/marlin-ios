@@ -8,12 +8,6 @@
 import Foundation
 import CoreData
 
-enum AsamDataLoadOperationState: String {
-    case isReady
-    case isExecuting
-    case isFinished
-}
-
 class AsamDataLoadOperation: CountingDataLoadOperation {
 
     var asams: [AsamModel] = []
@@ -28,9 +22,7 @@ class AsamDataLoadOperation: CountingDataLoadOperation {
         if self.isCancelled {
             return
         }
-                
-        let asamPropertyContainer = AsamPropertyContainer(asams: asams)
-        NSLog("Loading asams \(asamPropertyContainer.asam.count)")
+
         count = (try? await localDataSource.batchImport(from: asams)) ?? 0
         if count != 0 {
             DispatchQueue.main.async {

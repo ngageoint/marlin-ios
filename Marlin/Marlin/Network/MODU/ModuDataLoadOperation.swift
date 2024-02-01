@@ -21,8 +21,7 @@ class ModuDataLoadOperation: CountingDataLoadOperation {
         if self.isCancelled {
             return
         }
-        let moduPropertyContainer = ModuPropertyContainer(modus: modus)
-        NSLog("Loading modus \(moduPropertyContainer.modu.count)")
+
         count = (try? await localDataSource.batchImport(from: modus)) ?? 0
         if count != 0 {
             DispatchQueue.main.async {

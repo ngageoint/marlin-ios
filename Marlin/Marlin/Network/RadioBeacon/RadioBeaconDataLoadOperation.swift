@@ -8,12 +8,6 @@
 import Foundation
 import CoreData
 
-enum RadioBeaconDataLoadOperationState: String {
-    case isReady
-    case isExecuting
-    case isFinished
-}
-
 class RadioBeaconDataLoadOperation: CountingDataLoadOperation {
 
     var radioBeacons: [RadioBeaconModel] = []
@@ -29,8 +23,6 @@ class RadioBeaconDataLoadOperation: CountingDataLoadOperation {
             return
         }
 
-        let propertyContainer = RadioBeaconPropertyContainer(radioBeacons: radioBeacons)
-        NSLog("Loading radio beacons \(propertyContainer.ngalol.count)")
         count = (try? await localDataSource.batchImport(from: radioBeacons)) ?? 0
         if count != 0 {
             DispatchQueue.main.async {

@@ -312,7 +312,7 @@ extension NavigationalWarning: BatchImportable {
         UserDefaults.standard.lastSyncTimeSeconds(NavigationalWarning.definition)
     }
     
-    static func newBatchInsertRequest(with propertyList: [NavigationalWarningProperties]) -> NSBatchInsertRequest {
+    static func newBatchInsertRequest(with propertyList: [NavigationalWarningModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
         
@@ -337,7 +337,7 @@ extension NavigationalWarning: BatchImportable {
     }
     
     static func importRecords(
-        from propertiesList: [NavigationalWarningProperties],
+        from propertiesList: [NavigationalWarningModel],
         taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         

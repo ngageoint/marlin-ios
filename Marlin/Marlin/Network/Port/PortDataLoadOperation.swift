@@ -7,12 +7,6 @@
 
 import Foundation
 
-enum PortDataLoadOperationState: String {
-    case isReady
-    case isExecuting
-    case isFinished
-}
-
 class PortDataLoadOperation: CountingDataLoadOperation {
 
     var ports: [PortModel] = []
@@ -28,8 +22,6 @@ class PortDataLoadOperation: CountingDataLoadOperation {
             return
         }
 
-        let portPropertyContainer = PortPropertyContainer(ports: ports)
-        NSLog("Loading ports \(portPropertyContainer.ports.count)")
         count = (try? await localDataSource.batchImport(from: ports)) ?? 0
         if count != 0 {
             DispatchQueue.main.async {

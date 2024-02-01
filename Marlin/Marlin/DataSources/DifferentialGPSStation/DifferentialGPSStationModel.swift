@@ -16,7 +16,11 @@ struct DifferentialGPSStationPropertyContainer: Decodable {
         case ngalol
     }
     let ngalol: [DifferentialGPSStationModel]
-    
+
+    init(dgpss: [DifferentialGPSStationModel]) {
+        ngalol = dgpss
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         ngalol = try container.decode(

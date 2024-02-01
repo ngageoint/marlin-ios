@@ -13,6 +13,10 @@ struct ElectronicPublicationPropertyContainer: Decodable {
     }
     let publications: [ElectronicPublicationModel]
 
+    init(publications: [ElectronicPublicationModel]) {
+        self.publications = publications
+    }
+
     init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         var pubs: [ElectronicPublicationModel] = []
