@@ -30,7 +30,19 @@ struct DifferentialGPSStationPropertyContainer: Decodable {
     }
 }
 
-struct DifferentialGPSStationModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStringConvertible {    
+struct DifferentialGPSStationModel: 
+    Locatable,
+    Bookmarkable,
+    Codable,
+    GeoJSONExportable,
+    CustomStringConvertible,
+    Hashable,
+    Identifiable {
+
+    var id: String {
+        "\(featureNumber ?? 0)--\(volumeNumber ?? "")"
+    }
+
     static var definition: any DataSourceDefinition = DataSourceDefinitions.dgps.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)

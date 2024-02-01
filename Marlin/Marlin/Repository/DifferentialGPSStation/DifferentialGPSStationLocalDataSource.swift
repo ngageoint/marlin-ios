@@ -22,6 +22,11 @@ protocol DifferentialGPSStationLocalDataSource {
         maxLongitude: Double?
     ) -> [DifferentialGPSStationModel]
 
+    func dgps(
+        filters: [DataSourceFilterParameter]?,
+        paginatedBy paginator: Trigger.Signal?
+    ) -> AnyPublisher<[DifferentialGPSStationItem], Error>
+
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
     func insert(task: BGTask?, dgpss: [DifferentialGPSStationModel]) async -> Int
     func batchImport(from propertiesList: [DifferentialGPSStationModel]) async throws -> Int
@@ -39,13 +44,13 @@ class DifferentialGPSStationCoreDataDataSource:
         var model: DifferentialGPSStationModel?
         context.performAndWait {
             if let newestDifferentialGPSStation =
-            try? PersistenceController.current.fetchFirst(
-                DifferentialGPSStation.self,
-                sortBy: [
-                    NSSortDescriptor(keyPath: \DifferentialGPSStation.noticeNumber, ascending: false)
-                ],
-                predicate: nil,
-                context: context) {
+                try? PersistenceController.current.fetchFirst(
+                    DifferentialGPSStation.self,
+                    sortBy: [
+                        NSSortDescriptor(keyPath: \DifferentialGPSStation.noticeNumber, ascending: false)
+                    ],
+                    predicate: nil,
+                    context: context) {
                 model = DifferentialGPSStationModel(differentialGPSStation: newestDifferentialGPSStation)
             }
         }
@@ -123,6 +128,175 @@ class DifferentialGPSStationCoreDataDataSource:
         return count
     }
 
+}
+
+// MARK: Data Publisher methods
+extension DifferentialGPSStationCoreDataDataSource {
+
+    typealias DataType = DifferentialGPSStation
+    typealias ModelType = DifferentialGPSStationModel
+    typealias Item = DifferentialGPSStationItem
+
+    struct ModelPage {
+        var list: [Item]
+        var next: Int?
+        var currentHeader: String?
+    }
+
+    func dgps(
+        filters: [DataSourceFilterParameter]?,
+        paginatedBy paginator: Trigger.Signal?
+    ) -> AnyPublisher<[Item], Error> {
+        return models(filters: filters, at: nil, currentHeader: nil, paginatedBy: paginator)
+            .map(\.list)
+            .eraseToAnyPublisher()
+    }
+
+    func models(
+        filters: [DataSourceFilterParameter]?,
+        at page: Page?, currentHeader: String?
+    ) -> AnyPublisher<ModelPage, Error> {
+
+        let request = DataType.fetchRequest()
+        let predicates: [NSPredicate] = buildPredicates(filters: filters)
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        request.predicate = predicate
+
+        request.fetchLimit = 100
+        request.fetchOffset = (page ?? 0) * request.fetchLimit
+        let userSort = UserDefaults.standard.sort(DataSources.dgps.key)
+        let sortDescriptors: [DataSourceSortParameter] =
+        userSort.isEmpty ? DataSources.dgps.defaultSort : userSort
+
+        request.sortDescriptors = sortDescriptors.map({ sortParameter in
+            sortParameter.toNSSortDescriptor()
+        })
+        var previousHeader: String? = currentHeader
+        var dgpss: [Item] = []
+        context.performAndWait {
+            if let fetched = context.fetch(request: request) {
+
+                dgpss = fetched.flatMap { dgps in
+                    guard let sortDescriptor = sortDescriptors.first else {
+                        return [Item.listItem(ModelType(differentialGPSStation: dgps))]
+                    }
+
+                    if !sortDescriptor.section {
+                        return [Item.listItem(ModelType(differentialGPSStation: dgps))]
+                    }
+
+                    return createSectionHeaderAndListItem(
+                        dgps: dgps,
+                        sortDescriptor: sortDescriptor,
+                        previousHeader: &previousHeader
+                    )
+                }
+            }
+        }
+
+        let dgpsPage: ModelPage = ModelPage(
+            list: dgpss, next: (page ?? 0) + 1,
+            currentHeader: previousHeader
+        )
+
+        return Just(dgpsPage)
+            .setFailureType(to: Error.self)
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+
+    func createSectionHeaderAndListItem(
+        dgps: DataType,
+        sortDescriptor: DataSourceSortParameter,
+        previousHeader: inout String?
+    ) -> [DifferentialGPSStationItem] {
+        let currentValue = dgps.value(forKey: sortDescriptor.property.key)
+        let sortValueString: String? = getCurrentSortValue(sortDescriptor: sortDescriptor, sortValue: currentValue)
+
+        if let previous = previousHeader, let sortValueString = sortValueString {
+            if previous != sortValueString {
+                previousHeader = sortValueString
+                return [
+                    Item.sectionHeader(header: sortValueString),
+                    Item.listItem(ModelType(differentialGPSStation: dgps))
+                ]
+            }
+        } else if previousHeader == nil, let sortValueString = sortValueString {
+            previousHeader = sortValueString
+            return [
+                Item.sectionHeader(header: sortValueString),
+                Item.listItem(ModelType(differentialGPSStation: dgps))
+            ]
+        }
+
+        return [Item.listItem(ModelType(differentialGPSStation: dgps))]
+    }
+
+    // ignore due to the amount of data types
+    // swiftlint:disable cyclomatic_complexity
+    func getCurrentSortValue(sortDescriptor: DataSourceSortParameter, sortValue: Any?) -> String? {
+        var sortValueString: String?
+        switch sortDescriptor.property.type {
+        case .string:
+            sortValueString = sortValue as? String
+        case .date:
+            if let currentValue = sortValue as? Date {
+                sortValueString = DataSources.dgps.dateFormatter.string(from: currentValue)
+            }
+        case .int:
+            sortValueString = (sortValue as? Int)?.zeroIsEmptyString
+        case .float:
+            sortValueString = (sortValue as? Float)?.zeroIsEmptyString
+        case .double:
+            sortValueString = (sortValue as? Double)?.zeroIsEmptyString
+        case .boolean:
+            sortValueString = ((sortValue as? Bool) ?? false) ? "True" : "False"
+        case .enumeration:
+            sortValueString = sortValue as? String
+        case .latitude:
+            sortValueString = (sortValue as? Double)?.latitudeDisplay
+        case .longitude:
+            sortValueString = (sortValue as? Double)?.longitudeDisplay
+        default:
+            return nil
+        }
+        return sortValueString
+    }
+    // swiftlint:enable cyclomatic_complexity
+
+    func models(
+        filters: [DataSourceFilterParameter]?,
+        at page: Page?,
+        currentHeader: String?,
+        paginatedBy paginator: Trigger.Signal?
+    ) -> AnyPublisher<ModelPage, Error> {
+        return models(filters: filters, at: page, currentHeader: currentHeader)
+            .map { result -> AnyPublisher<ModelPage, Error> in
+                if let paginator = paginator, let next = result.next {
+                    return self.models(
+                        filters: filters,
+                        at: next,
+                        currentHeader: result.currentHeader,
+                        paginatedBy: paginator
+                    )
+                    .wait(untilOutputFrom: paginator)
+                    .retry(.max)
+                    .prepend(result)
+                    .eraseToAnyPublisher()
+                } else {
+                    return Just(result)
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
+                }
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+}
+
+// MARK: Import methods
+extension DifferentialGPSStationCoreDataDataSource {
+
     func insert(task: BGTask? = nil, dgpss: [DifferentialGPSStationModel]) async -> Int {
         let count = dgpss.count
         NSLog("Received \(count) \(DataSources.dgps.key) records.")
@@ -166,18 +340,21 @@ class DifferentialGPSStationCoreDataDataSource:
         let total = propertyList.count
 
         // Provide one dictionary at a time when the closure is called.
-        let batchInsertRequest = NSBatchInsertRequest(entity: DifferentialGPSStation.entity(), dictionaryHandler: { dictionary in
-            guard index < total else { return true }
-            let propertyDictionary = propertyList[index].dictionaryValue
-            dictionary.addEntries(from: propertyDictionary.mapValues({ value in
-                if let value = value {
-                    return value
-                }
-                return NSNull()
-            }) as [AnyHashable: Any])
-            index += 1
-            return false
-        })
+        let batchInsertRequest = NSBatchInsertRequest(
+            entity: DifferentialGPSStation.entity(),
+            dictionaryHandler: { dictionary in
+                guard index < total else { return true }
+                let propertyDictionary = propertyList[index].dictionaryValue
+                dictionary.addEntries(from: propertyDictionary.mapValues({ value in
+                    if let value = value {
+                        return value
+                    }
+                    return NSNull()
+                }) as [AnyHashable: Any])
+                index += 1
+                return false
+            }
+        )
         return batchInsertRequest
     }
 }

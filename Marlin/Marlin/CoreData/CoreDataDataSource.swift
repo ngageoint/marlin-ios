@@ -10,6 +10,8 @@ import UIKit
 import BackgroundTasks
 
 class CoreDataDataSource {
+    typealias Page = Int
+    
     var backgroundTask: UIBackgroundTaskIdentifier = .invalid
     var cleanup: (() -> Void)?
     var operation: CountingDataLoadOperation?

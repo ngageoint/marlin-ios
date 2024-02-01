@@ -59,7 +59,7 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
         }
         return asam
     }
-    
+
     func getAsam(reference: String?) -> AsamModel? {
         var model: AsamModel?
         context.performAndWait {
@@ -86,9 +86,9 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
             var predicates: [NSPredicate] = buildPredicates(filters: filters)
 
             if let minLatitude = minLatitude,
-                let maxLatitude = maxLatitude,
-                let minLongitude = minLongitude,
-                let maxLongitude = maxLongitude {
+               let maxLatitude = maxLatitude,
+               let minLongitude = minLongitude,
+               let maxLongitude = maxLongitude {
                 predicates.append(NSPredicate(
                     format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf",
                     minLatitude,
@@ -129,9 +129,11 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
         }
         return count
     }
-    
-    typealias Page = Int
-    
+}
+
+// MARK: Data Publisher methods
+extension AsamCoreDataDataSource {
+
     func asams(
         filters: [DataSourceFilterParameter]?,
         paginatedBy paginator: Trigger.Signal? = nil
@@ -140,7 +142,7 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
             .map(\.asamList)
             .eraseToAnyPublisher()
     }
-    
+
     func asams(
         filters: [DataSourceFilterParameter]?,
         at page: Page?, currentHeader: String?
@@ -155,7 +157,7 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
         request.fetchOffset = (page ?? 0) * request.fetchLimit
         let userSort = UserDefaults.standard.sort(DataSources.asam.key)
         let sortDescriptors: [DataSourceSortParameter] =
-            userSort.isEmpty ? DataSources.asam.defaultSort : userSort
+        userSort.isEmpty ? DataSources.asam.defaultSort : userSort
 
         request.sortDescriptors = sortDescriptors.map({ sortParameter in
             sortParameter.toNSSortDescriptor()
@@ -164,7 +166,7 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
         var asams: [AsamItem] = []
         context.performAndWait {
             if let fetched = context.fetch(request: request) {
-                
+
                 asams = fetched.flatMap { asam in
                     guard let sortDescriptor = sortDescriptors.first else {
                         return [AsamItem.listItem(AsamListModel(asam: asam))]
@@ -182,7 +184,7 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
                 }
             }
         }
-        
+
         let asamPage: AsamModelPage = AsamModelPage(
             asamList: asams, next: (page ?? 0) + 1,
             currentHeader: previousHeader
@@ -281,7 +283,10 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
             .switchToLatest()
             .eraseToAnyPublisher()
     }
+}
 
+// MARK: Import methods
+extension AsamCoreDataDataSource {
     func insert(task: BGTask? = nil, asams: [AsamModel]) async -> Int {
         let count = asams.count
         NSLog("Received \(count) \(DataSources.asam.key) records.")

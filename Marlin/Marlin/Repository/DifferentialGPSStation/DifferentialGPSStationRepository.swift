@@ -8,6 +8,20 @@
 import Foundation
 import CoreData
 
+enum DifferentialGPSStationItem: Hashable, Identifiable {
+    var id: String {
+        switch self {
+        case .listItem(let dgps):
+            return dgps.id
+        case .sectionHeader(let header):
+            return header
+        }
+    }
+
+    case listItem(_ dgps: DifferentialGPSStationModel)
+    case sectionHeader(header: String)
+}
+
 protocol DifferentialGPSStationRepository {
     @discardableResult
     func getDifferentialGPSStation(

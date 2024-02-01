@@ -120,6 +120,30 @@ struct ElectronicPublicationModel: Bookmarkable, Codable, Hashable, Identifiable
         self.uploadTime = parsedUploadTime
     }
 
+    init(epub: ElectronicPublication) {
+        self.canBookmark = true
+        self.contentId = Int(epub.contentId)
+        self.fileExtension = epub.fileExtension
+        self.filenameBase = epub.filenameBase
+        self.fileSize = Int(epub.fileSize)
+        self.fullFilename = epub.fullFilename
+        self.fullPubFlag = epub.fullPubFlag
+        self.internalPath = epub.internalPath
+        self.odsEntryId = Int(epub.odsEntryId)
+        self.pubDownloadDisplayName = epub.pubDownloadDisplayName
+        self.pubDownloadId = Int(epub.pubDownloadId)
+        self.pubDownloadOrder = Int(epub.pubDownloadOrder)
+        self.pubsecId = Int(epub.pubsecId)
+        self.pubsecLastModified = epub.pubsecLastModified
+        self.pubTypeId = Int(epub.pubTypeId)
+        self.s3Key = epub.s3Key
+        self.sectionDisplayName = epub.sectionDisplayName
+        self.sectionLastModified = epub.sectionLastModified
+        self.sectionName = epub.sectionName
+        self.sectionOrder = Int(epub.sectionOrder)
+        self.uploadTime = epub.uploadTime
+    }
+
     // The keys must have the same name as the attributes of the Asam entity.
     var dictionaryValue: [String: Any?] {
         [

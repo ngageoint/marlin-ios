@@ -336,7 +336,22 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
             UserDefaults.standard.lastSyncTimeSeconds(DifferentialGPSStation.definition)
         }
-
+        var defaultSort: [DataSourceSortParameter] = [
+            DataSourceSortParameter(
+                property: DataSourceProperty(
+                    name: "Geopolitical Heading",
+                    key: #keyPath(DifferentialGPSStation.geopoliticalHeading),
+                    type: .string),
+                ascending: true,
+                section: true),
+            DataSourceSortParameter(
+                property: DataSourceProperty(
+                    name: "Feature Number",
+                    key: #keyPath(DifferentialGPSStation.featureNumber),
+                    type: .int),
+                ascending: true)
+        ]
+        
         fileprivate init() { }
     }
 
