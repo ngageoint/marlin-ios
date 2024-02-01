@@ -191,7 +191,7 @@ struct LightSettingsView: View {
                         .onTapGesture {
                             actualRangeSectorLights.toggle()
                         }
-                        .tint(Color.primaryColor)
+                        .tint(Color.primaryColorVariant)
                         .accessibilityElement()
                         .accessibilityLabel("Show Sector Range Toggle")
 
@@ -215,7 +215,7 @@ struct LightSettingsView: View {
                         .onTapGesture {
                             actualRangeLights.toggle()
                         }
-                        .tint(Color.primaryColor)
+                        .tint(Color.primaryColorVariant)
                         .accessibilityElement()
                         .accessibilityLabel("Show Light Range Toggle")
                     } header: {
