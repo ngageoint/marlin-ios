@@ -29,6 +29,7 @@ struct SideMenu: View {
                         self.menuClose()
                     }
                 }
+                .ignoresSafeArea(.all, edges: [.top, .bottom])
                 .accessibilityElement()
                 .accessibilityLabel("Backdrop \(self.isOpen ? "Open" : "Closed")")
                 
@@ -70,6 +71,7 @@ struct SideMenu: View {
                     
                     Spacer()
                 }
+                .ignoresSafeArea(.all, edges: [.bottom])
             }
         }
     }
