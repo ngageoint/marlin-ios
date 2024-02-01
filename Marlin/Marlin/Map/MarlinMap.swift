@@ -43,10 +43,17 @@ class MapLongPress: UILongPressGestureRecognizer {
         self.coordinator = coordinator
         super.init(target: nil, action: nil)
         self.addTarget(self, action: #selector(execute))
+        self.delegate = self
     }
     
     @objc private func execute() {
         coordinator.longPressGesture(longPressGestureRecognizer: self)
+    }
+}
+
+extension MapLongPress: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
 
