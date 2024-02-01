@@ -22,7 +22,7 @@ extension RadioBeacon: DataSourceViewBuilder {
     }
     
     var summary: some DataSourceSummaryView {
-        RadioBeaconSummaryView(radioBeacon: RadioBeaconModel(radioBeacon: self))
+        RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeacon: self))
     }
 }
 
@@ -36,6 +36,6 @@ extension RadioBeaconModel: DataSourceViewBuilder {
     }
     
     var summary: some DataSourceSummaryView {
-        RadioBeaconSummaryView(radioBeacon: self)
+        RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel: self))
     }
 }

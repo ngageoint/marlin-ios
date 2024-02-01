@@ -7,50 +7,9 @@
 
 import Foundation
 
-enum PortDataFetchOperationState: String {
-    case isReady
-    case isExecuting
-    case isFinished
-}
+class PortDataFetchOperation: DataFetchOperation<PortModel> {
 
-class PortDataFetchOperation: Operation {
-
-    var ports: [PortModel] = []
-
-    var state: PortDataFetchOperationState = .isReady {
-        willSet(newValue) {
-            willChangeValue(forKey: state.rawValue)
-            willChangeValue(forKey: newValue.rawValue)
-        }
-        didSet {
-            didChangeValue(forKey: oldValue.rawValue)
-            didChangeValue(forKey: state.rawValue)
-        }
-    }
-
-    override var isExecuting: Bool { state == .isExecuting }
-    override var isFinished: Bool {
-        if isCancelled && state != .isExecuting { return true }
-        return state == .isFinished
-    }
-    override var isAsynchronous: Bool { true }
-
-    override func start() {
-        guard !isCancelled else { return }
-        state = .isExecuting
-        Task {
-            let asams = await fetchData()
-            await self.finishFetch(ports: ports)
-        }
-    }
-
-    @MainActor func finishFetch(ports: [PortModel]) {
-        self.ports = ports
-        NSLog("Finished fetch with \(ports.count) ports")
-        self.state = .isFinished
-    }
-
-    func fetchData() async -> [PortModel] {
+    override func fetchData() async -> [PortModel] {
         if self.isCancelled || !DataSources.port.shouldSync() {
             return []
         }

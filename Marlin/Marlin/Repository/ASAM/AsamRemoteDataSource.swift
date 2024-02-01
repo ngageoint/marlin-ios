@@ -70,8 +70,8 @@ class AsamRemoteDataSource {
             // when the operation completes.
             operation?.completionBlock = {
                 task?.setTaskCompleted(success: !(self.operation?.isCancelled ?? false))
-                NSLog("Asam Remote Data Source asams count \(self.operation?.asams.count ?? 0)")
-                continuation.resume(returning: self.operation?.asams ?? [])
+                NSLog("Asam Remote Data Source asams count \(self.operation?.data.count ?? 0)")
+                continuation.resume(returning: self.operation?.data ?? [])
             }
         }
     }

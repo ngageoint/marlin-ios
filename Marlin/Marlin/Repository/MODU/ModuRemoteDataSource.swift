@@ -70,8 +70,8 @@ class ModuRemoteDataSource {
             // when the operation completes.
             operation?.completionBlock = {
                 task?.setTaskCompleted(success: !(self.operation?.isCancelled ?? false))
-                NSLog("Modu Remote Data Source modus count \(self.operation?.modus.count ?? 0)")
-                continuation.resume(returning: self.operation?.modus ?? [])
+                NSLog("Modu Remote Data Source modus count \(self.operation?.data.count ?? 0)")
+                continuation.resume(returning: self.operation?.data ?? [])
             }
         }
     }

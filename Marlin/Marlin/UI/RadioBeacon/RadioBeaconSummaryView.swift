@@ -12,11 +12,11 @@ struct RadioBeaconSummaryView: DataSourceSummaryView {
     
     var showBookmarkNotes: Bool = false
 
-    var radioBeacon: RadioBeaconModel
+    var radioBeacon: RadioBeaconListModel
     var showMoreDetails: Bool = false
     var showSectionHeader: Bool = false
     
-    init(radioBeacon: RadioBeaconModel, showMoreDetails: Bool = false, showSectionHeader: Bool = false) {
+    init(radioBeacon: RadioBeaconListModel, showMoreDetails: Bool = false, showSectionHeader: Bool = false) {
         self.radioBeacon = radioBeacon
         self.showMoreDetails = showMoreDetails
         self.showSectionHeader = showSectionHeader
@@ -46,11 +46,11 @@ struct RadioBeaconSummaryView: DataSourceSummaryView {
                     .secondary()
             }
             bookmarkNotesView(radioBeacon)
-            DataSourceActionBar(
-                data: radioBeacon,
-                showMoreDetailsButton: showMoreDetails,
-                showFocusButton: !showMoreDetails
-            )
+//            DataSourceActionBar(
+//                data: radioBeacon,
+//                showMoreDetailsButton: showMoreDetails,
+//                showFocusButton: !showMoreDetails
+//            )
         }
     }
 }

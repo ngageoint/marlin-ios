@@ -70,8 +70,8 @@ class PortRemoteDataSource {
             // when the operation completes.
             operation?.completionBlock = {
                 task?.setTaskCompleted(success: !(self.operation?.isCancelled ?? false))
-                NSLog("Port Remote Data Source asams count \(self.operation?.ports.count ?? 0)")
-                continuation.resume(returning: self.operation?.ports ?? [])
+                NSLog("Port Remote Data Source asams count \(self.operation?.data.count ?? 0)")
+                continuation.resume(returning: self.operation?.data ?? [])
             }
         }
     }

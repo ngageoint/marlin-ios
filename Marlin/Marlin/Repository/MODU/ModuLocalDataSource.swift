@@ -38,7 +38,9 @@ struct ModuModelPage {
 }
 
 class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, ObservableObject {
-    private let context: NSManagedObjectContext = PersistenceController.current.newTaskContext()
+    private lazy var context: NSManagedObjectContext = {
+        PersistenceController.current.newTaskContext()
+    }()
 
     func getNewestModu() -> ModuModel? {
 //        let context = PersistenceController.current.newTaskContext()

@@ -37,8 +37,10 @@ struct PortModelPage {
 }
 
 class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, ObservableObject {
-    private let context: NSManagedObjectContext = PersistenceController.current.newTaskContext()
-
+    private lazy var context: NSManagedObjectContext = {
+        PersistenceController.current.newTaskContext()
+    }()
+    
     func getPort(portNumber: Int64?) -> PortModel? {
         var model: PortModel?
         context.performAndWait {
@@ -83,30 +85,6 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
         }
 
         return ports
-    }
-
-    func buildPredicates(filters: [DataSourceFilterParameter]?) -> [NSPredicate] {
-        var predicates: [NSPredicate] = []
-
-        if let filters = filters {
-            for filter in filters {
-                let predicate = filter.toPredicate(
-                    boundsPredicateBuilder: { bounds in
-                        return NSPredicate(
-                            format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf",
-                            bounds.swCorner.y,
-                            bounds.neCorner.y,
-                            bounds.swCorner.x,
-                            bounds.swCorner.y
-                        )
-                    })
-                if let predicate = predicate {
-                    predicates.append(predicate)
-                }
-            }
-        }
-
-        return predicates
     }
 
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {

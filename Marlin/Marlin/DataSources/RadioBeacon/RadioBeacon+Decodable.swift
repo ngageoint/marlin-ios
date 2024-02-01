@@ -12,7 +12,11 @@ struct RadioBeaconPropertyContainer: Decodable {
         case ngalol
     }
     let ngalol: [RadioBeaconModel]
-    
+
+    init(radioBeacons: [RadioBeaconModel]) {
+        ngalol = radioBeacons
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         ngalol = try container.decode(

@@ -8,6 +8,20 @@
 import Foundation
 import CoreData
 
+enum RadioBeaconItem: Hashable, Identifiable {
+    var id: String {
+        switch self {
+        case .listItem(let radioBeacon):
+            return radioBeacon.id
+        case .sectionHeader(let header):
+            return header
+        }
+    }
+
+    case listItem(_ radioBeacon: RadioBeaconListModel)
+    case sectionHeader(header: String)
+}
+
 protocol RadioBeaconRepository {
     @discardableResult
     func getRadioBeacon(featureNumber: Int?, volumeNumber: String?, waypointURI: URL?) -> RadioBeaconModel?

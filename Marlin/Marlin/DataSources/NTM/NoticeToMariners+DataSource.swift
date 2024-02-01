@@ -126,7 +126,7 @@ extension NoticeToMariners: BatchImportable {
         UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.definition)
     }
     
-    static func newBatchInsertRequest(with propertyList: [NoticeToMarinersProperties]) -> NSBatchInsertRequest {
+    static func newBatchInsertRequest(with propertyList: [NoticeToMarinersModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
         
@@ -149,7 +149,7 @@ extension NoticeToMariners: BatchImportable {
     }
     
     static func importRecords(
-        from propertiesList: [NoticeToMarinersProperties],
+        from propertiesList: [NoticeToMarinersModel],
         taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         

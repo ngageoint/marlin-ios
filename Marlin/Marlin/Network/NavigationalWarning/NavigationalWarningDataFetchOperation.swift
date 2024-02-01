@@ -1,13 +1,13 @@
 //
-//  ModuDataFetchOperation.swift
+//  NavigationalWarningDataFetchOperation.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 1/22/24.
+//  Created by Daniel Barela on 2/1/24.
 //
 
 import Foundation
 
-class ModuDataFetchOperation: DataFetchOperation<ModuModel> {
+class NavigationalWarningDataFetchOperation: DataFetchOperation<ModuModel> {
 
     var dateString: String?
 
@@ -27,7 +27,7 @@ class ModuDataFetchOperation: DataFetchOperation<ModuModel> {
             MSI.shared.session.request(request)
                 .validate()
                 .responseDecodable(of: ModuPropertyContainer.self, queue: queue) { response in
-                    NSLog("Response modu count \(response.value?.modu.count ?? 0)")
+                    NSLog("Response asam count \(response.value?.modu.count ?? 0)")
                     continuation.resume(returning: response.value?.modu ?? [])
                 }
         }

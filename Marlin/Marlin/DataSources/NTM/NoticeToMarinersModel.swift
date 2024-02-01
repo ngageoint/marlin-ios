@@ -1,33 +1,36 @@
 //
-//  NoticeToMariners+Decodable.swift
+//  NoticeToMarinersModel.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 11/14/22.
+//  Created by Daniel Barela on 2/1/24.
 //
 
 import Foundation
 import CoreLocation
+import GeoJSON
+import UIKit
 import OSLog
 
-struct NoticeToMarinersPropertyContainer: Decodable {
-    private enum CodingKeys: String, CodingKey {
-        case pubs
-    }
-    let pubs: [NoticeToMarinersProperties]
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        pubs = try container.decode(
-            [Throwable<NoticeToMarinersProperties>].self, forKey: .pubs
-        )
-        .compactMap { try? $0.result.get() }
-    }
-}
+struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable {
 
-struct NoticeToMarinersProperties: Decodable {
-    
+    var id: String {
+        "\(noticeNumber ?? -1)"
+    }
+
+    var itemKey: String {
+        return "\(noticeNumber ?? -1)"
+    }
+
+    var canBookmark: Bool = false
+
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.noticeToMariners.definition
+
+    var itemTitle: String {
+        return "\(self.title ?? "") \(self.isFullPublication ?? false ? (self.fileExtension ?? "") : "")"
+    }
+
     // MARK: Codable
-    
+
     private enum CodingKeys: String, CodingKey {
         case publicationIdentifier
         case noticeNumber
@@ -45,7 +48,7 @@ struct NoticeToMarinersProperties: Decodable {
         case uploadTime
         case lastModified
     }
-    
+
     let publicationIdentifier: Int?
     let noticeNumber: Int?
     let title: String?
@@ -61,21 +64,21 @@ struct NoticeToMarinersProperties: Decodable {
     let isFullPublication: Bool?
     let uploadTime: Date?
     let lastModified: Date?
-    
+
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let rawOdsEntryId = try? values.decode(Int.self, forKey: .odsEntryId)
         let rawOdsKey = try? values.decode(String.self, forKey: .odsKey)
-        
+
         guard let odsEntryId = rawOdsEntryId,
               let odsKey = rawOdsKey
         else {
             let values = "odsEntryId = \(rawOdsEntryId?.description ?? "nil"), "
             + "odsKey = \(rawOdsKey?.description ?? "nil")"
-            
+
             let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "parsing")
             logger.info("Ignored: \(values)")
-            
+
             throw MSIError.missingData
         }
         self.odsKey = odsKey
@@ -91,7 +94,7 @@ struct NoticeToMarinersProperties: Decodable {
         self.fileExtension = try? values.decode(String.self, forKey: .fileExtension)
         self.fileSize = try? values.decode(Int.self, forKey: .fileSize)
         self.isFullPublication = try? values.decode(Bool.self, forKey: .isFullPublication)
-        
+
         var parsedUploadTime: Date?
         if let dateString = try? values.decode(String.self, forKey: .uploadTime) {
             if let date = NoticeToMariners.dateFormatter.date(from: dateString) {
@@ -99,7 +102,7 @@ struct NoticeToMarinersProperties: Decodable {
             }
         }
         self.uploadTime = parsedUploadTime
-        
+
         var parsedLastModified: Date?
         if let dateString = try? values.decode(String.self, forKey: .lastModified) {
             if let date = NoticeToMariners.dateFormatter.date(from: dateString) {
@@ -108,7 +111,7 @@ struct NoticeToMarinersProperties: Decodable {
         }
         self.lastModified = parsedLastModified
     }
-    
+
     // The keys must have the same name as the attributes of the NoticeToMariners entity.
     var dictionaryValue: [String: Any?] {
         [
@@ -128,5 +131,55 @@ struct NoticeToMarinersProperties: Decodable {
             "uploadTime": uploadTime,
             "lastModified": lastModified
         ]
+    }
+}
+
+extension NoticeToMarinersModel: DataSource {
+    static var properties: [DataSourceProperty] {
+        return []
+    }
+
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Notice Number",
+                key: #keyPath(NoticeToMariners.noticeNumber),
+                type: .int),
+            ascending: false,
+            section: true),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Full Publication",
+                key: #keyPath(NoticeToMariners.isFullPublication),
+                type: .int),
+            ascending: false,
+            section: false),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Section Order",
+                key: #keyPath(NoticeToMariners.sectionOrder),
+                type: .int),
+            ascending: true,
+            section: false)]
+    static var defaultFilter: [DataSourceFilterParameter] = []
+    static var isMappable: Bool = false
+    static var dataSourceName: String = "NTM"
+    static var fullDataSourceName: String = "Notice To Mariners"
+    static var key: String = "ntm"
+    static var metricsKey: String = "ntms"
+    static var color: UIColor = UIColor.red
+    static var imageName: String?
+    static var systemImageName: String? = "speaker.badge.exclamationmark.fill"
+
+    var color: UIColor {
+        NoticeToMariners.color
+    }
+
+    static var imageScale: CGFloat = 1.0
+
+    static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        return dateFormatter
     }
 }

@@ -97,7 +97,7 @@ extension ElectronicPublication: BatchImportable {
             taskContext: PersistenceController.current.newTaskContext())
     }
     
-    static func newBatchInsertRequest(with propertyList: [ElectronicPublicationProperties]) -> NSBatchInsertRequest {
+    static func newBatchInsertRequest(with propertyList: [ElectronicPublicationModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
         // Provide one dictionary at a time when the closure is called.
@@ -121,7 +121,7 @@ extension ElectronicPublication: BatchImportable {
     }
     
     static func importRecords(
-        from propertiesList: [ElectronicPublicationProperties],
+        from propertiesList: [ElectronicPublicationModel],
         taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         

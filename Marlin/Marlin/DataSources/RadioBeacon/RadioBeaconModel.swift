@@ -11,6 +11,100 @@ import CoreLocation
 import mgrs_ios
 import GeoJSON
 
+struct RadioBeaconListModel: Hashable, Identifiable {
+    var id: String {
+        return "\(featureNumber ?? 0)--\(volumeNumber ?? "")"
+    }
+
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+
+    var morseCode: String? {
+        guard let characteristic = characteristic,
+              let leftParen = characteristic.firstIndex(of: "("),
+              let lastIndex = characteristic.firstIndex(of: ")") else {
+            return nil
+        }
+
+        let firstIndex = characteristic.index(after: leftParen)
+        return "\(String(characteristic[firstIndex..<lastIndex]))"
+    }
+
+    var morseLetter: String {
+        guard let characteristic = characteristic, let newline = characteristic.firstIndex(of: "\n") else {
+            return ""
+        }
+
+        return "\(String(characteristic[characteristic.startIndex..<newline]))"
+    }
+
+    var expandedCharacteristicWithoutCode: String? {
+        guard let characteristic = characteristic, let range = characteristic.range(of: ").\\n") else {
+            return nil
+        }
+
+        let lastIndex = range.upperBound
+
+        var withoutCode = "\(String(characteristic[lastIndex..<characteristic.endIndex]))"
+        withoutCode = withoutCode.replacingOccurrences(of: "aero", with: "aeronautical")
+        withoutCode = withoutCode.replacingOccurrences(of: "si", with: "silence")
+        withoutCode = withoutCode.replacingOccurrences(of: "tr", with: "transmission")
+        return withoutCode
+    }
+
+    let name: String?
+    let sectionHeader: String?
+    let characteristic: String?
+    let stationRemark: String?
+    let volumeNumber: String?
+    let featureNumber: Int?
+    var canBookmark: Bool = false
+    let latitude: Double
+    let longitude: Double
+
+    init(radioBeacon: RadioBeacon) {
+        self.canBookmark = true
+        self.name = radioBeacon.name
+        self.sectionHeader = radioBeacon.sectionHeader
+        self.characteristic = radioBeacon.characteristic
+        self.stationRemark = radioBeacon.stationRemark
+        self.volumeNumber = radioBeacon.volumeNumber
+        self.featureNumber = Int(radioBeacon.featureNumber)
+        self.latitude = radioBeacon.latitude
+        self.longitude = radioBeacon.longitude
+    }
+
+}
+
+extension RadioBeaconListModel {
+    init(radioBeaconModel: RadioBeaconModel) {
+        self.canBookmark = radioBeaconModel.canBookmark
+        self.name = radioBeaconModel.name
+        self.sectionHeader = radioBeaconModel.sectionHeader
+        self.characteristic = radioBeaconModel.characteristic
+        self.stationRemark = radioBeaconModel.stationRemark
+        self.volumeNumber = radioBeaconModel.volumeNumber
+        self.featureNumber = radioBeaconModel.featureNumber
+        self.latitude = radioBeaconModel.latitude
+        self.longitude = radioBeaconModel.longitude
+    }
+}
+
+extension RadioBeaconListModel: Bookmarkable {
+    static var definition: any DataSourceDefinition {
+        DataSources.radioBeacon
+    }
+
+    var itemKey: String {
+        return "\(featureNumber ?? 0)--\(volumeNumber ?? "")"
+    }
+
+    var key: String {
+        DataSources.radioBeacon.key
+    }
+}
+
 // this will be refactored
 // swiftlint:disable type_body_length
 struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, CustomStringConvertible {

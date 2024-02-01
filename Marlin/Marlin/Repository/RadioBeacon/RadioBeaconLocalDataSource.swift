@@ -1,8 +1,8 @@
 //
-//  AsamLocalDataSource.swift
+//  RadioBeaconLocalDataSource.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 9/15/23.
+//  Created by Daniel Barela on 1/31/24.
 //
 
 import Foundation
@@ -11,84 +11,89 @@ import Combine
 import UIKit
 import BackgroundTasks
 
-protocol AsamLocalDataSource {
-    func getNewestAsam() -> AsamModel?
-    @discardableResult
-    func getAsam(reference: String?) -> AsamModel?
-    func getAsamsInBounds(
+protocol RadioBeaconLocalDataSource {
+    func getNewestRadioBeacon() -> RadioBeaconModel?
+
+    func getRadioBeacon(featureNumber: Int?, volumeNumber: String?) -> RadioBeaconModel?
+    func getRadioBeaconsInBounds(
         filters: [DataSourceFilterParameter]?,
         minLatitude: Double?,
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [AsamModel]
-    func asams(
+    ) -> [RadioBeaconModel]
+    func radioBeacons(
         filters: [DataSourceFilterParameter]?,
         paginatedBy paginator: Trigger.Signal?
-    ) -> AnyPublisher<[AsamItem], Error>
-
+    ) -> AnyPublisher<[RadioBeaconItem], Error>
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
-    func insert(task: BGTask?, asams: [AsamModel]) async -> Int
-    func batchImport(from propertiesList: [AsamModel]) async throws -> Int
+    func insert(task: BGTask?, radioBeacons: [RadioBeaconModel]) async -> Int
+    func batchImport(from propertiesList: [RadioBeaconModel]) async throws -> Int
 }
 
-struct AsamModelPage {
-    var asamList: [AsamItem]
+struct RadioBeaconModelPage {
+    var list: [RadioBeaconItem]
     var next: Int?
     var currentHeader: String?
 }
 
-class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, ObservableObject {
+class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSource, ObservableObject {
     private lazy var context: NSManagedObjectContext = {
         PersistenceController.current.newTaskContext()
     }()
 
-    func getNewestAsam() -> AsamModel? {
-        var asam: AsamModel?
+    func getNewestRadioBeacon() -> RadioBeaconModel? {
+        var model: RadioBeaconModel?
+
+        var noticeWeek = 0
+        var noticeYear: String?
+
         context.performAndWait {
-            if let newestAsam = try? PersistenceController.current.fetchFirst(
-                Asam.self,
-                sortBy: [
-                    NSSortDescriptor(keyPath: \Asam.date, ascending: false)
-                ],
-                predicate: nil,
-                context: context
-            ) {
-                asam = AsamModel(asam: newestAsam)
+            if let newestRadioBeacon = try? context.fetchFirst(
+                RadioBeacon.self,
+                sortBy: [NSSortDescriptor(keyPath: \RadioBeacon.noticeNumber, ascending: false)],
+                predicate: nil) {
+                model = RadioBeaconModel(radioBeacon: newestRadioBeacon)
             }
+//            noticeWeek = Int(newestRadioBeacon?.noticeWeek ?? "0") ?? 0
+//            noticeYear = newestRadioBeacon?.noticeYear
         }
-        return asam
-    }
-    
-    func getAsam(reference: String?) -> AsamModel? {
-        var model: AsamModel?
-        context.performAndWait {
-            if let reference = reference {
-                if let asam = context.fetchFirst(Asam.self, key: "reference", value: reference) {
-                    model = AsamModel(asam: asam)
-                }
-            }
-        }
+
         return model
     }
 
-    func getAsamsInBounds(
+    func getRadioBeacon(featureNumber: Int?, volumeNumber: String?) -> RadioBeaconModel? {
+
+        if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
+            if let radioBeacon = try? context.fetchFirst(
+                RadioBeacon.self,
+                predicate: NSPredicate(
+                    format: "featureNumber = %ld AND volumeNumber = %@",
+                    argumentArray: [featureNumber, volumeNumber])
+            ) {
+                return RadioBeaconModel(radioBeacon: radioBeacon)
+            }
+        }
+        return nil
+    }
+
+    func getRadioBeaconsInBounds(
         filters: [DataSourceFilterParameter]?,
         minLatitude: Double?,
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [AsamModel] {
-        var asams: [AsamModel] = []
+    ) -> [RadioBeaconModel] {
+        var radioBeacons: [RadioBeaconModel] = []
         // TODO: this should probably execute on a different context and be a perform
         context.performAndWait {
-            let fetchRequest = Asam.fetchRequest()
+            let fetchRequest = RadioBeacon.fetchRequest()
             var predicates: [NSPredicate] = buildPredicates(filters: filters)
 
             if let minLatitude = minLatitude,
-                let maxLatitude = maxLatitude,
-                let minLongitude = minLongitude,
-                let maxLongitude = maxLongitude {
+               let maxLatitude = maxLatitude,
+               let minLongitude = minLongitude,
+               let maxLongitude = maxLongitude {
                 predicates.append(NSPredicate(
                     format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf",
                     minLatitude,
@@ -101,124 +106,106 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
             fetchRequest.predicate = predicate
 
-            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.asam.key).map({ sortParameter in
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.radioBeacon.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
-            asams = (context.fetch(request: fetchRequest)?.map { asam in
-                AsamModel(asam: asam)
+            radioBeacons = (context.fetch(request: fetchRequest)?.map { radioBeacon in
+                RadioBeaconModel(radioBeacon: radioBeacon)
             }) ?? []
         }
 
-        return asams
+        return radioBeacons
     }
 
-    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
-        let fetchRequest = Asam.fetchRequest()
-        let predicates: [NSPredicate] = buildPredicates(filters: filters)
-
-        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-        fetchRequest.predicate = predicate
-
-        fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.asam.key).map({ sortParameter in
-            sortParameter.toNSSortDescriptor()
-        })
-
-        var count = 0
-        context.performAndWait {
-            count = (try? context.count(for: fetchRequest)) ?? 0
-        }
-        return count
-    }
-    
     typealias Page = Int
-    
-    func asams(
+
+    func radioBeacons(
         filters: [DataSourceFilterParameter]?,
-        paginatedBy paginator: Trigger.Signal? = nil
-    ) -> AnyPublisher<[AsamItem], Error> {
-        return asams(filters: filters, at: nil, currentHeader: nil, paginatedBy: paginator)
-            .map(\.asamList)
+        paginatedBy paginator: Trigger.Signal?
+    ) -> AnyPublisher<[RadioBeaconItem], Error> {
+        return radioBeacons(filters: filters, at: nil, currentHeader: nil, paginatedBy: paginator)
+            .map(\.list)
             .eraseToAnyPublisher()
     }
-    
-    func asams(
+
+    func radioBeacons(
         filters: [DataSourceFilterParameter]?,
         at page: Page?, currentHeader: String?
-    ) -> AnyPublisher<AsamModelPage, Error> {
+    ) -> AnyPublisher<RadioBeaconModelPage, Error> {
 
-        let request = Asam.fetchRequest()
+        let request = RadioBeacon.fetchRequest()
         let predicates: [NSPredicate] = buildPredicates(filters: filters)
         let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         request.predicate = predicate
 
         request.fetchLimit = 100
         request.fetchOffset = (page ?? 0) * request.fetchLimit
-        let userSort = UserDefaults.standard.sort(DataSources.asam.key)
+        let userSort = UserDefaults.standard.sort(DataSources.radioBeacon.key)
         let sortDescriptors: [DataSourceSortParameter] =
-            userSort.isEmpty ? DataSources.asam.defaultSort : userSort
+        userSort.isEmpty ? DataSources.radioBeacon.defaultSort : userSort
 
         request.sortDescriptors = sortDescriptors.map({ sortParameter in
             sortParameter.toNSSortDescriptor()
         })
         var previousHeader: String? = currentHeader
-        var asams: [AsamItem] = []
+        var radioBeacons: [RadioBeaconItem] = []
         context.performAndWait {
             if let fetched = context.fetch(request: request) {
-                
-                asams = fetched.flatMap { asam in
+
+                radioBeacons = fetched.flatMap { radioBeacon in
                     guard let sortDescriptor = sortDescriptors.first else {
-                        return [AsamItem.listItem(AsamListModel(asam: asam))]
+                        return [RadioBeaconItem.listItem(RadioBeaconListModel(radioBeacon: radioBeacon))]
                     }
 
                     if !sortDescriptor.section {
-                        return [AsamItem.listItem(AsamListModel(asam: asam))]
+                        return [RadioBeaconItem.listItem(RadioBeaconListModel(radioBeacon: radioBeacon))]
                     }
 
                     return createSectionHeaderAndListItem(
-                        asam: asam,
+                        radioBeacon: radioBeacon,
                         sortDescriptor: sortDescriptor,
                         previousHeader: &previousHeader
                     )
                 }
             }
         }
-        
-        let asamPage: AsamModelPage = AsamModelPage(
-            asamList: asams, next: (page ?? 0) + 1,
+
+        let radioBeaconPage: RadioBeaconModelPage = RadioBeaconModelPage(
+            list: radioBeacons, next: (page ?? 0) + 1,
             currentHeader: previousHeader
         )
 
-        return Just(asamPage)
+        return Just(radioBeaconPage)
             .setFailureType(to: Error.self)
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
     func createSectionHeaderAndListItem(
-        asam: Asam,
+        radioBeacon: RadioBeacon,
         sortDescriptor: DataSourceSortParameter,
         previousHeader: inout String?
-    ) -> [AsamItem] {
-        let currentValue = asam.value(forKey: sortDescriptor.property.key)
+    ) -> [RadioBeaconItem] {
+        let currentValue = radioBeacon.value(forKey: sortDescriptor.property.key)
         let sortValueString: String? = getCurrentSortValue(sortDescriptor: sortDescriptor, sortValue: currentValue)
 
         if let previous = previousHeader, let sortValueString = sortValueString {
             if previous != sortValueString {
                 previousHeader = sortValueString
                 return [
-                    AsamItem.sectionHeader(header: sortValueString),
-                    AsamItem.listItem(AsamListModel(asam: asam))
+                    RadioBeaconItem.sectionHeader(header: sortValueString),
+                    RadioBeaconItem.listItem(RadioBeaconListModel(radioBeacon: radioBeacon))
                 ]
             }
         } else if previousHeader == nil, let sortValueString = sortValueString {
             previousHeader = sortValueString
             return [
-                AsamItem.sectionHeader(header: sortValueString),
-                AsamItem.listItem(AsamListModel(asam: asam))
+                RadioBeaconItem.sectionHeader(header: sortValueString),
+                RadioBeaconItem.listItem(RadioBeaconListModel(radioBeacon: radioBeacon))
             ]
         }
 
-        return [AsamItem.listItem(AsamListModel(asam: asam))]
+        return [RadioBeaconItem.listItem(RadioBeaconListModel(radioBeacon: radioBeacon))]
     }
 
     // ignore due to the amount of data types
@@ -230,7 +217,7 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
             sortValueString = sortValue as? String
         case .date:
             if let currentValue = sortValue as? Date {
-                sortValueString = DataSources.asam.dateFormatter.string(from: currentValue)
+                sortValueString = DataSources.radioBeacon.dateFormatter.string(from: currentValue)
             }
         case .int:
             sortValueString = (sortValue as? Int)?.zeroIsEmptyString
@@ -253,16 +240,16 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
     }
     // swiftlint:enable cyclomatic_complexity
 
-    func asams(
+    func radioBeacons(
         filters: [DataSourceFilterParameter]?,
         at page: Page?,
         currentHeader: String?,
         paginatedBy paginator: Trigger.Signal?
-    ) -> AnyPublisher<AsamModelPage, Error> {
-        return asams(filters: filters, at: page, currentHeader: currentHeader)
-            .map { result -> AnyPublisher<AsamModelPage, Error> in
+    ) -> AnyPublisher<RadioBeaconModelPage, Error> {
+        return radioBeacons(filters: filters, at: page, currentHeader: currentHeader)
+            .map { result -> AnyPublisher<RadioBeaconModelPage, Error> in
                 if let paginator = paginator, let next = result.next {
-                    return self.asams(
+                    return self.radioBeacons(
                         filters: filters,
                         at: next,
                         currentHeader: result.currentHeader,
@@ -282,23 +269,41 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
             .eraseToAnyPublisher()
     }
 
-    func insert(task: BGTask? = nil, asams: [AsamModel]) async -> Int {
-        let count = asams.count
-        NSLog("Received \(count) \(DataSources.asam.key) records.")
+    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
+        let fetchRequest = RadioBeacon.fetchRequest()
+        let predicates: [NSPredicate] = buildPredicates(filters: filters)
+
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        fetchRequest.predicate = predicate
+
+        fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.radioBeacon.key).map({ sortParameter in
+            sortParameter.toNSSortDescriptor()
+        })
+
+        var count = 0
+        context.performAndWait {
+            count = (try? context.count(for: fetchRequest)) ?? 0
+        }
+        return count
+    }
+
+    func insert(task: BGTask?, radioBeacons: [RadioBeaconModel]) async -> Int {
+        let count = radioBeacons.count
+        NSLog("Received \(count) \(DataSources.radioBeacon.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = AsamDataLoadOperation(asams: asams, localDataSource: self)
+        operation = RadioBeaconDataLoadOperation(radioBeacons: radioBeacons, localDataSource: self)
 
         return await executeOperationInBackground(task: task)
     }
-    
-    func batchImport(from propertiesList: [AsamModel]) async throws -> Int {
+
+    func batchImport(from propertiesList: [RadioBeaconModel]) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         let taskContext = PersistenceController.current.newTaskContext()
         // Add name and author to identify source of persistent history changes.
         taskContext.name = "importContext"
-        taskContext.transactionAuthor = "importAsams"
-        
+        taskContext.transactionAuthor = "importRadioBeacons"
+
         let count = try await taskContext.perform {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
@@ -308,10 +313,10 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
                let batchInsertResult = fetchResult as? NSBatchInsertResult {
                 try? taskContext.save()
                 if let count = batchInsertResult.result as? Int, count > 0 {
-                    NSLog("Inserted \(count) ASAM records")
+                    NSLog("Inserted \(count) Radio Beacon records")
                     return count
                 } else {
-                    NSLog("No new ASAM records")
+                    NSLog("No new radio beacon records")
                 }
                 return 0
             }
@@ -319,13 +324,13 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
         }
         return count
     }
-    
-    func newBatchInsertRequest(with propertyList: [AsamModel]) -> NSBatchInsertRequest {
+
+    func newBatchInsertRequest(with propertyList: [RadioBeaconModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
-        
+
         // Provide one dictionary at a time when the closure is called.
-        let batchInsertRequest = NSBatchInsertRequest(entity: Asam.entity(), dictionaryHandler: { dictionary in
+        let batchInsertRequest = NSBatchInsertRequest(entity: RadioBeacon.entity(), dictionaryHandler: { dictionary in
             guard index < total else { return true }
             let propertyDictionary = propertyList[index].dictionaryValue
             dictionary.addEntries(from: propertyDictionary.mapValues({ value in

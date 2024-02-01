@@ -7,55 +7,15 @@
 
 import Foundation
 
-enum AsamDataFetchOperationState: String {
-    case isReady
-    case isExecuting
-    case isFinished
-}
+class AsamDataFetchOperation: DataFetchOperation<AsamModel> {
 
-class AsamDataFetchOperation: Operation {
-    
-    var asams: [AsamModel] = []
     var dateString: String?
     
     init(dateString: String? = nil) {
         self.dateString = dateString
     }
-    
-    var state: AsamDataFetchOperationState = .isReady {
-        willSet(newValue) {
-            willChangeValue(forKey: state.rawValue)
-            willChangeValue(forKey: newValue.rawValue)
-        }
-        didSet {
-            didChangeValue(forKey: oldValue.rawValue)
-            didChangeValue(forKey: state.rawValue)
-        }
-    }
-    
-    override var isExecuting: Bool { state == .isExecuting }
-    override var isFinished: Bool {
-        if isCancelled && state != .isExecuting { return true }
-        return state == .isFinished
-    }
-    override var isAsynchronous: Bool { true }
-    
-    override func start() {
-        guard !isCancelled else { return }
-        state = .isExecuting
-        Task {
-            let asams = await fetchData()
-            await self.finishFetch(asams: asams)
-        }
-    }
-    
-    @MainActor func finishFetch(asams: [AsamModel]) {
-        self.asams = asams
-        NSLog("Finished fetch with \(asams.count) asams")
-        self.state = .isFinished
-    }
-    
-    func fetchData() async -> [AsamModel] {
+
+    override func fetchData() async -> [AsamModel] {
         if self.isCancelled || !DataSources.asam.shouldSync() {
             return []
         }
