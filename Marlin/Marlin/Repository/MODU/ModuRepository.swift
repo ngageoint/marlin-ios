@@ -60,7 +60,7 @@ class ModuRepository: ObservableObject {
 
             let newestModu = localDataSource.getNewestModu()
 
-            let modus = await remoteDataSource.fetchModus(dateString: newestModu?.dateString)
+            let modus = await remoteDataSource.fetch(dateString: newestModu?.dateString)
             let inserted = await localDataSource.insert(task: nil, modus: modus)
 
             DispatchQueue.main.async {

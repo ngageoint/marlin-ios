@@ -7,7 +7,7 @@
 
 import Foundation
 
-class NavigationalWarningDataFetchOperation: DataFetchOperation<ModuModel> {
+class NavigationalWarningDataFetchOperation: DataFetchOperation<NavigationalWarningModel> {
 
     var dateString: String?
 
@@ -15,20 +15,20 @@ class NavigationalWarningDataFetchOperation: DataFetchOperation<ModuModel> {
         self.dateString = dateString
     }
 
-    override func fetchData() async -> [ModuModel] {
-        if self.isCancelled || !DataSources.modu.shouldSync() {
+    override func fetchData() async -> [NavigationalWarningModel] {
+        if self.isCancelled || !DataSources.navWarning.shouldSync() {
             return []
         }
 
-        let request = ModuService.getModus(date: dateString)
+        let request = NavigationalWarningService.getNavigationalWarnings
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
 
         return await withCheckedContinuation { continuation in
             MSI.shared.session.request(request)
                 .validate()
-                .responseDecodable(of: ModuPropertyContainer.self, queue: queue) { response in
-                    NSLog("Response asam count \(response.value?.modu.count ?? 0)")
-                    continuation.resume(returning: response.value?.modu ?? [])
+                .responseDecodable(of: NavigationalWarningPropertyContainer.self, queue: queue) { response in
+                    NSLog("Response nav warning count \(response.value?.broadcastWarn.count ?? 0)")
+                    continuation.resume(returning: response.value?.broadcastWarn ?? [])
                 }
         }
     }

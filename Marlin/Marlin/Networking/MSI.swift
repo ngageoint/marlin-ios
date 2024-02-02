@@ -225,9 +225,9 @@ public class MSI {
         loadAllDataTime = Date()
         NSLog("Load all data")
         
-        asamInitializer?.fetchAsams()
-        moduInitializer?.fetchModus()
-        portInitializer?.fetchPorts()
+        asamInitializer?.fetch()
+        moduInitializer?.fetch()
+        portInitializer?.fetch()
 
         let initialDataLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
             if let dataSourceType = importable as? any DataSource.Type {

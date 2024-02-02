@@ -51,7 +51,7 @@ class AsamRepository: ObservableObject {
 
         let newestAsam = localDataSource.getNewestAsam()
 
-        let asams = await remoteDataSource.fetchAsams(dateString: newestAsam?.dateString)
+        let asams = await remoteDataSource.fetch(dateString: newestAsam?.dateString)
         let inserted = await localDataSource.insert(task: nil, asams: asams)
 
         DispatchQueue.main.async {
