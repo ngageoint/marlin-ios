@@ -9,11 +9,11 @@ import Foundation
 
 class NoticeToMarinersDataLoadOperation: CountingDataLoadOperation {
 
-    var notices: [NoticeToMarinersModel] = []
+    var noticeToMariners: [NoticeToMarinersModel] = []
     var localDataSource: NoticeToMarinersLocalDataSource
 
-    init(notices: [NoticeToMarinersModel], localDataSource: NoticeToMarinersLocalDataSource) {
-        self.notices = notices
+    init(noticeToMariners: [NoticeToMarinersModel], localDataSource: NoticeToMarinersLocalDataSource) {
+        self.noticeToMariners = noticeToMariners
         self.localDataSource = localDataSource
     }
 
@@ -22,7 +22,7 @@ class NoticeToMarinersDataLoadOperation: CountingDataLoadOperation {
             return
         }
 
-        count = (try? await localDataSource.batchImport(from: notices)) ?? 0
+        count = (try? await localDataSource.batchImport(from: noticeToMariners)) ?? 0
         if count != 0 {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(

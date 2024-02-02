@@ -286,6 +286,30 @@ extension DataSources {
             UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.definition)
         }
 
+        var defaultSort: [DataSourceSortParameter] = [
+            DataSourceSortParameter(
+                property: DataSourceProperty(
+                    name: "Notice Number",
+                    key: #keyPath(NoticeToMariners.noticeNumber),
+                    type: .int),
+                ascending: false,
+                section: true),
+            DataSourceSortParameter(
+                property: DataSourceProperty(
+                    name: "Full Publication",
+                    key: #keyPath(NoticeToMariners.isFullPublication),
+                    type: .int),
+                ascending: false,
+                section: false),
+            DataSourceSortParameter(
+                property: DataSourceProperty(
+                    name: "Section Order",
+                    key: #keyPath(NoticeToMariners.sectionOrder),
+                    type: .int),
+                ascending: true,
+                section: false)
+        ]
+
         fileprivate init() { }
     }
 
@@ -427,7 +451,20 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60)) > 
             UserDefaults.standard.lastSyncTimeSeconds(NavigationalWarning.definition)
         }
-
+        var defaultSort: [DataSourceSortParameter] = [
+            DataSourceSortParameter(
+                property: DataSourceProperty(
+                    name: "Navigational Area",
+                    key: "navArea",
+                    type: .string),
+                ascending: false),
+            DataSourceSortParameter(
+                property: DataSourceProperty(
+                    name: "Issue Date",
+                    key: "issueDate",
+                    type: .date),
+                ascending: false)
+        ]
         fileprivate init() { }
     }
 
@@ -450,7 +487,21 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
             UserDefaults.standard.lastSyncTimeSeconds(Light.definition)
         }
-
+        var defaultSort: [DataSourceSortParameter] = [
+            DataSourceSortParameter(
+                property: DataSourceProperty(
+                    name: "Region",
+                    key: #keyPath(Light.sectionHeader),
+                    type: .string),
+                ascending: true),
+            DataSourceSortParameter(
+                property: DataSourceProperty(
+                    name: "Feature Number",
+                    key: #keyPath(Light.featureNumber),
+                    type: .int),
+                ascending: true)
+        ]
+        
         fileprivate init() { }
     }
 

@@ -9,11 +9,11 @@ import Foundation
 
 class NavigationalWarningDataLoadOperation: CountingDataLoadOperation {
 
-    var warnings: [NavigationalWarningModel] = []
+    var navigationalWarnings: [NavigationalWarningModel] = []
     var localDataSource: NavigationalWarningLocalDataSource
 
-    init(warnings: [NavigationalWarningModel], localDataSource: NavigationalWarningLocalDataSource) {
-        self.warnings = warnings
+    init(navigationalWarnings: [NavigationalWarningModel], localDataSource: NavigationalWarningLocalDataSource) {
+        self.navigationalWarnings = navigationalWarnings
         self.localDataSource = localDataSource
     }
 
@@ -22,7 +22,7 @@ class NavigationalWarningDataLoadOperation: CountingDataLoadOperation {
             return
         }
 
-        count = (try? await localDataSource.batchImport(from: warnings)) ?? 0
+        count = (try? await localDataSource.batchImport(from: navigationalWarnings)) ?? 0
         if count != 0 {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(

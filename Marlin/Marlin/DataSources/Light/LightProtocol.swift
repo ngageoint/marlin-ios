@@ -16,7 +16,7 @@ import mgrs_ios
 // this is being refactored soon so disable this check
 // swiftlint:disable type_body_length
 // swiftlint:disable file_length
-struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible {
+struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible, Hashable, Identifiable {
     var canBookmark: Bool = false
     var id: String { self.itemKey }
     var itemTitle: String {

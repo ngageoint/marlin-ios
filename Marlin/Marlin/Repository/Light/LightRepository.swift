@@ -8,6 +8,20 @@
 import Foundation
 import CoreData
 
+enum LightItem: Hashable, Identifiable {
+    var id: String {
+        switch self {
+        case .listItem(let light):
+            return light.id
+        case .sectionHeader(let header):
+            return header
+        }
+    }
+
+    case listItem(_ light: LightModel)
+    case sectionHeader(header: String)
+}
+
 protocol LightRepository {
     @discardableResult
     func getLights(featureNumber: String?, volumeNumber: String?, waypointURI: URL?) -> [LightModel]

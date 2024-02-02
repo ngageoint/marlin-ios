@@ -24,7 +24,22 @@ struct NavigationalWarningPropertyContainer: Decodable {
     }
 }
 
-struct NavigationalWarningModel: Decodable {
+struct NavigationalWarningModel: Decodable, Hashable, Identifiable {
+    var canBookmark: Bool = false
+    var id: String { self.itemKey }
+    var itemTitle: String {
+        return "\(self.navAreaName) \(String(self.msgNumber ?? 0))/\(String(self.msgYear ?? 0)) (\(self.subregion ?? ""))"
+    }
+    var itemKey: String {
+        return "\(msgYear ?? 0)--\(msgNumber ?? 0)--\(navArea)"
+    }
+
+    var navAreaName: String {
+        if let navAreaEnum = NavigationalWarningNavArea.fromId(id: navArea) {
+            return navAreaEnum.display
+        }
+        return ""
+    }
 
     static let apiToDateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -62,7 +77,22 @@ struct NavigationalWarningModel: Decodable {
     let status: String?
     let subregion: String?
     let text: String?
-    
+
+    init(navigationalWarning: NavigationalWarning) {
+        self.cancelMsgNumber = Int(navigationalWarning.cancelMsgNumber)
+        self.authority = navigationalWarning.authority
+        self.cancelDate = navigationalWarning.cancelDate
+        self.cancelMsgYear = Int(navigationalWarning.cancelMsgYear)
+        self.cancelNavArea = navigationalWarning.cancelNavArea
+        self.issueDate = navigationalWarning.issueDate
+        self.msgNumber = Int(navigationalWarning.msgNumber)
+        self.msgYear = Int(navigationalWarning.msgYear)
+        self.navArea = navigationalWarning.navArea ?? ""
+        self.status = navigationalWarning.status
+        self.subregion = navigationalWarning.subregion
+        self.text = navigationalWarning.text
+    }
+
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let rawMsgYear = try? values.decode(Int.self, forKey: .msgYear)

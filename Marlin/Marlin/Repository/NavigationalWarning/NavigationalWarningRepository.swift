@@ -8,6 +8,20 @@
 import Foundation
 import CoreData
 
+enum NavigationalWarningItem: Hashable, Identifiable {
+    var id: String {
+        switch self {
+        case .listItem(let navigationalWarning):
+            return navigationalWarning.id
+        case .sectionHeader(let header):
+            return header
+        }
+    }
+
+    case listItem(_ navigationalWarning: NavigationalWarningModel)
+    case sectionHeader(header: String)
+}
+
 protocol NavigationalWarningRepository {
     @discardableResult
     func getNavigationalWarning(msgYear: Int64, msgNumber: Int64, navArea: String?) -> NavigationalWarning?

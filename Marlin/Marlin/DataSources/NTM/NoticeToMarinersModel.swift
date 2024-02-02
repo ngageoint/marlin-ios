@@ -65,6 +65,24 @@ struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable {
     let uploadTime: Date?
     let lastModified: Date?
 
+    init(noticeToMariners: NoticeToMariners) {
+        self.publicationIdentifier = Int(noticeToMariners.publicationIdentifier)
+        self.noticeNumber = Int(noticeToMariners.noticeNumber)
+        self.title = noticeToMariners.title
+        self.odsKey = noticeToMariners.odsKey
+        self.sectionOrder = Int(noticeToMariners.sectionOrder)
+        self.limitedDist = noticeToMariners.limitedDist
+        self.odsEntryId = Int(noticeToMariners.odsEntryId)
+        self.odsContentId = Int(noticeToMariners.odsContentId)
+        self.internalPath = noticeToMariners.internalPath
+        self.filenameBase = noticeToMariners.filenameBase
+        self.fileExtension = noticeToMariners.fileExtension
+        self.fileSize = Int(noticeToMariners.fileSize)
+        self.isFullPublication = noticeToMariners.isFullPublication
+        self.uploadTime = noticeToMariners.uploadTime
+        self.lastModified = noticeToMariners.lastModified
+    }
+
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let rawOdsEntryId = try? values.decode(Int.self, forKey: .odsEntryId)

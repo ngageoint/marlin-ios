@@ -77,12 +77,11 @@ class CoreDataDataSource {
             for filter in filters {
                 let predicate = filter.toPredicate(
                     boundsPredicateBuilder: { bounds in
-                        return NSPredicate(
-                            format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf",
-                            bounds.swCorner.y,
-                            bounds.neCorner.y,
-                            bounds.swCorner.x,
-                            bounds.swCorner.y
+                        return self.boundsPredicate(
+                            minLatitude: bounds.swCorner.y,
+                            maxLatitude: bounds.neCorner.y,
+                            minLongitude: bounds.swCorner.x,
+                            maxLongitude: bounds.swCorner.y
                         )
                     })
                 if let predicate = predicate {
@@ -92,5 +91,19 @@ class CoreDataDataSource {
         }
 
         return predicates
+    }
+
+    func boundsPredicate(
+        minLatitude: Double,
+        maxLatitude: Double,
+        minLongitude: Double,
+        maxLongitude: Double
+    ) -> NSPredicate {
+        return NSPredicate(
+            format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf",
+            minLatitude,
+            maxLatitude,
+            minLongitude,
+            maxLongitude)
     }
 }

@@ -44,10 +44,6 @@ class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSou
 
     func getNewestRadioBeacon() -> RadioBeaconModel? {
         var model: RadioBeaconModel?
-
-        var noticeWeek = 0
-        var noticeYear: String?
-
         context.performAndWait {
             if let newestRadioBeacon = try? context.fetchFirst(
                 RadioBeacon.self,
@@ -55,8 +51,6 @@ class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSou
                 predicate: nil) {
                 model = RadioBeaconModel(radioBeacon: newestRadioBeacon)
             }
-//            noticeWeek = Int(newestRadioBeacon?.noticeWeek ?? "0") ?? 0
-//            noticeYear = newestRadioBeacon?.noticeYear
         }
 
         return model
