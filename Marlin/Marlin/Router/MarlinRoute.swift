@@ -9,6 +9,10 @@ import Foundation
 import SwiftUI
 import CoreData
 
+class MarlinRouter: ObservableObject {
+    @Published var path: NavigationPath = NavigationPath()
+}
+
 enum MarlinRoute: Hashable {
     case exportGeoPackage(useMapRegion: Bool)
     case exportGeoPackageDataSource(dataSource: DataSourceDefinitions?, filters: [DataSourceFilterParameter]? = nil)
@@ -35,13 +39,12 @@ enum DataSourceRoute: Hashable {
 }
 
 extension View {
-    func marlinRoutes(path: Binding<NavigationPath>) -> some View {
-        modifier(MarlinRouteModifier(path: path))
+    func marlinRoutes() -> some View {
+        modifier(MarlinRouteModifier())
     }
 }
 
 struct MarlinRouteModifier: ViewModifier {
-    @Binding var path: NavigationPath
     @EnvironmentObject var dataSourceList: DataSourceList
     
     func createExportDataSources() -> [DataSourceDefinitions] {
@@ -87,9 +90,9 @@ struct MarlinRouteModifier: ViewModifier {
                 case .acknowledgements:
                     AcknowledgementsView()
                 case .createRoute:
-                    CreateRouteView(path: $path)
+                    CreateRouteView()
                 case .editRoute(let routeURI):
-                    CreateRouteView(path: $path, routeURI: routeURI)
+                    CreateRouteView(routeURI: routeURI)
                 case .dataSourceDetail(let dataSourceKey, let itemKey):
                     switch dataSourceKey {
                     case Asam.key:
@@ -138,7 +141,7 @@ struct MarlinRouteModifier: ViewModifier {
                             GeoPackageFeatureItemDetailView(featureItem: gpFeature)
                         }
                     case Route.key:
-                        CreateRouteView(path: $path, routeURI: URL(string: itemKey))
+                        CreateRouteView(routeURI: URL(string: itemKey))
                     default:
                         EmptyView()
                     }
@@ -182,6 +185,15 @@ struct MarlinRouteModifier: ViewModifier {
             .navigationDestination(for: AsamRoute.self) { item in
                 switch item {
                 case .detail(let reference):
+                    // disable this rule in order to execute a statement prior to returning a view
+                    // swiftlint:disable redundant_discardable_let
+                    let _ = NotificationCenter.default.post(
+                        name: .DismissBottomSheet,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    // swiftlint:enable redundant_discardable_let
+
                     AsamDetailView(reference: reference)
                 }
             }

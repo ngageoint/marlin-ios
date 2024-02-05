@@ -43,10 +43,17 @@ class MapLongPress: UILongPressGestureRecognizer {
         self.coordinator = coordinator
         super.init(target: nil, action: nil)
         self.addTarget(self, action: #selector(execute))
+        self.delegate = self
     }
     
     @objc private func execute() {
         coordinator.longPressGesture(longPressGestureRecognizer: self)
+    }
+}
+
+extension MapLongPress: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
 
@@ -361,7 +368,7 @@ protocol MapCoordinator: MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     func setMapRegion(region: MKCoordinateRegion)
     func singleTapGesture(tapGestureRecognizer: UITapGestureRecognizer)
-    func handleTappedItems(annotations: [MKAnnotation], items: [any DataSource], mapName: String)
+    func handleTappedItems(annotations: [MKAnnotation], items: [any DataSource], itemKeys: [String: [String]], mapName: String)
     func longPressGesture(longPressGestureRecognizer: UILongPressGestureRecognizer)
 }
 
@@ -462,12 +469,17 @@ extension MapCoordinator {
         }
         
         var items: [any DataSource] = []
+        var itemKeys: [String: [String]] = [:]
         for mixin in marlinMap.mixins.mixins.reversed() {
             if let matchedItems = mixin.items(at: tapCoord, mapView: mapView, touchPoint: tapPoint) {
                 items.append(contentsOf: matchedItems)
             }
+            let matchedItemKeys = mixin.itemKeys(at: tapCoord, mapView: mapView, touchPoint: tapPoint)
+            itemKeys.merge(matchedItemKeys) { current, new in
+                current + new
+            }
         }
-        handleTappedItems(annotations: annotationsTapped, items: items, mapName: marlinMap.name)
+        handleTappedItems(annotations: annotationsTapped, items: items, itemKeys: itemKeys, mapName: marlinMap.name)
     }
 }
 
@@ -516,8 +528,8 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
             })
     }
     
-    func handleTappedItems(annotations: [MKAnnotation], items: [DataSource], mapName: String) {
-        let notification = MapItemsTappedNotification(annotations: annotations, items: items, mapName: mapName)
+    func handleTappedItems(annotations: [MKAnnotation], items: [DataSource], itemKeys: [String: [String]], mapName: String) {
+        let notification = MapItemsTappedNotification(annotations: annotations, items: items, itemKeys: itemKeys, mapName: mapName)
         NotificationCenter.default.post(name: marlinMap.notificationOnTap, object: notification)
     }
     

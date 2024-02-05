@@ -27,7 +27,7 @@ struct MapSettings: View {
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
                     Image(systemName: mapType == MKMapType.standard.rawValue ? "circle.inset.filled": "circle")
-                        .foregroundColor(Color.primaryColor)
+                        .foregroundColor(Color.primaryColorVariant)
                         .onTapGesture {
                             mapType = Int(MKMapType.standard.rawValue)
                         }
@@ -41,7 +41,7 @@ struct MapSettings: View {
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
                     Image(systemName: mapType == MKMapType.satellite.rawValue ? "circle.inset.filled": "circle")
-                        .foregroundColor(Color.primaryColor)
+                        .foregroundColor(Color.primaryColorVariant)
                         .onTapGesture {
                             mapType = Int(MKMapType.satellite.rawValue)
                         }
@@ -55,7 +55,7 @@ struct MapSettings: View {
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
                     Image(systemName: mapType == MKMapType.hybrid.rawValue ? "circle.inset.filled": "circle")
-                        .foregroundColor(Color.primaryColor)
+                        .foregroundColor(Color.primaryColorVariant)
                         .onTapGesture {
                             mapType = Int(MKMapType.hybrid.rawValue)
                         }
@@ -73,7 +73,7 @@ struct MapSettings: View {
                             systemName: mapType
                             == MKMapType.satelliteFlyover.rawValue ? "circle.inset.filled": "circle"
                         )
-                        .foregroundColor(Color.primaryColor)
+                        .foregroundColor(Color.primaryColorVariant)
                         .onTapGesture {
                             mapType = Int(MKMapType.satelliteFlyover.rawValue)
                         }
@@ -89,7 +89,7 @@ struct MapSettings: View {
                         Image(
                             systemName: mapType == MKMapType.hybridFlyover.rawValue ? "circle.inset.filled": "circle"
                         )
-                        .foregroundColor(Color.primaryColor)
+                        .foregroundColor(Color.primaryColorVariant)
                         .onTapGesture {
                             mapType = Int(MKMapType.hybridFlyover.rawValue)
                         }
@@ -104,7 +104,7 @@ struct MapSettings: View {
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
                     Image(systemName: mapType == MKMapType.mutedStandard.rawValue ? "circle.inset.filled": "circle")
-                            .foregroundColor(Color.primaryColor)
+                            .foregroundColor(Color.primaryColorVariant)
                         .onTapGesture {
                             mapType = Int(MKMapType.mutedStandard.rawValue)
                         }
@@ -118,7 +118,7 @@ struct MapSettings: View {
                                 .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
                     Image(systemName: mapType == ExtraMapTypes.osm.rawValue ? "circle.inset.filled": "circle")
-                                .foregroundColor(Color.primaryColor)
+                                .foregroundColor(Color.primaryColorVariant)
                         .onTapGesture {
                             mapType = ExtraMapTypes.osm.rawValue
                         }
@@ -144,7 +144,7 @@ struct MapSettings: View {
                 .onTapGesture {
                     showMGRS.toggle()
                 }
-                .tint(Color.primaryColor)
+                .tint(Color.primaryColorVariant)
                 .accessibilityElement()
                 .accessibilityLabel("Toggle MGRS Grid")
 
@@ -163,7 +163,7 @@ struct MapSettings: View {
                 .onTapGesture {
                     showGARS.toggle()
                 }
-                .tint(Color.primaryColor)
+                .tint(Color.primaryColorVariant)
                 .accessibilityElement()
                 .accessibilityLabel("Toggle GARS Grid")
 
@@ -241,7 +241,7 @@ struct MapSettings: View {
                     .padding(.top, 4)
                     .padding(.bottom, 4)
                 }
-                .tint(Color.primaryColor)
+                .tint(Color.primaryColorVariant)
                 Toggle(isOn: $showMapScale, label: {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Show Map Scale").font(Font.body1)
@@ -253,7 +253,7 @@ struct MapSettings: View {
                     .padding(.top, 4)
                     .padding(.bottom, 4)
                 })
-                .tint(Color.primaryColor)
+                .tint(Color.primaryColorVariant)
                 .padding([.top, .bottom], 8)
                 
                 NavigationLink(value: MarlinRoute.coordinateDisplaySettings) {

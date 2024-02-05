@@ -214,12 +214,9 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
         var latitude = 0.0
         var longitude = 0.0
         
-        let pattern = #"""
-            (?<latdeg>[0-9]*)°(?<latminutes>[0-9]*)'(?<latseconds>[0-9]*\.?[0-9]*)\"\
-            (?<latdirection>[NS])\
-            \n(?<londeg>[0-9]*)°(?<lonminutes>[0-9]*)'(?<lonseconds>[0-9]*\.?[0-9]*)\"\
-            (?<londirection>[EW])
-        """#
+        // swiftlint:disable line_length
+        let pattern = #"(?<latdeg>[0-9]*)°(?<latminutes>[0-9]*)'(?<latseconds>[0-9]*\.?[0-9]*)\"(?<latdirection>[NS]) \n(?<londeg>[0-9]*)°(?<lonminutes>[0-9]*)'(?<lonseconds>[0-9]*\.?[0-9]*)\"(?<londirection>[EW])"#
+        // swiftlint:enable line_length
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(position.startIndex..<position.endIndex,
                               in: position)
@@ -359,11 +356,9 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
             return nil
         }
         var sectors: [ImageSector] = []
-        let pattern = #"""
-            (?<azimuth>(Azimuth coverage)?).?\
-            ((?<startdeg>(\d*))\^)?((?<startminutes>[0-9]*)[\`'])?\
-            (-(?<enddeg>(\d*))\^)?(?<endminutes>[0-9]*)[\`']?\.
-        """#
+        // swiftlint:disable line_length
+        let pattern = #"(?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\^)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))\^)?(?<endminutes>[0-9]*)[\`']?\."#
+        // swiftlint:enable line_length
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
         let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
                               in: remarks)
@@ -506,7 +501,9 @@ extension RadioBeaconModel: DataSource {
         DataSourceProperty(name: "Delete Flag", key: #keyPath(RadioBeacon.deleteFlag), type: .string)
     ]
     
-    static func postProcess() {}
+    static func postProcess() {
+        imageCache.clearCache()
+    }
 }
 
 extension RadioBeaconModel: MapImage {

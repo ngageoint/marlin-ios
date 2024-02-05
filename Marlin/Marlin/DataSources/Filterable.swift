@@ -12,6 +12,7 @@ protocol Filterable {
     var id: String { get }
     var definition: any DataSourceDefinition { get }
     var properties: [DataSourceProperty] { get }
+    var defaultSort: [DataSourceSortParameter] { get }
     var defaultFilter: [DataSourceFilterParameter] { get }
     var locatableClass: Locatable.Type? { get }
     func fetchRequest(
@@ -63,4 +64,6 @@ extension Filterable {
         fetchRequest.predicate = predicate
         return fetchRequest
     }
+    
+    var defaultSort: [DataSourceSortParameter] { [] }
 }

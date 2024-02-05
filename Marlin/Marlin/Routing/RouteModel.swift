@@ -39,7 +39,8 @@ struct RouteModel: Codable, GeoJSONExportable {
     var updatedTime: Date?
     var routeURL: URL?
     var waypoints: [RouteWaypointModel]?
-    
+    var objectID: NSManagedObjectID?
+
     func isEqualTo(_ other: RouteModel) -> Bool {
         return self.routeURL == other.routeURL
     }
@@ -55,6 +56,7 @@ struct RouteModel: Codable, GeoJSONExportable {
         self.createdTime = route.createdTime
         self.routeId = Int(route.routeId)
         self.updatedTime = route.updatedTime
+        self.objectID = route.objectID
         routeURL = route.objectID.uriRepresentation()
         self.waypoints = route.waypoints?.allObjects.compactMap({ waypoint in
             if let waypoint = waypoint as? RouteWaypoint {
@@ -114,13 +116,11 @@ extension RouteModel {
     
     var mkLine: MKGeodesicPolyline? {
         var coordinates: [CLLocationCoordinate2D] = []
-        if let waypoints = waypoints {
-            for waypoint in waypoints {
-                if let dataSource = waypoint.decodeToDataSource() {
-                    for feature in dataSource.geoJsonFeatures {
-                        if let geometry: Geometry = feature.geometry {
-                            addGeometry(geometry: geometry, coordinates: &coordinates)
-                        }
+        for waypoint in waypointArray {
+            if let dataSource = waypoint.decodeToDataSource() {
+                for feature in dataSource.geoJsonFeatures {
+                    if let geometry: Geometry = feature.geometry {
+                        addGeometry(geometry: geometry, coordinates: &coordinates)
                     }
                 }
             }

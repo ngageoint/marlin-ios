@@ -4,6 +4,10 @@ Changelog
 All notable changes to this project will be documented in this file.
 
 ---
+## 1.4.0
+ ### Features
+    * Create routes between points on the map.
+    * MODU berths are now displayed
 ## 1.3.0
  ### Features
     * You can now bookmark your favorite pieces of Maritime Safety Information

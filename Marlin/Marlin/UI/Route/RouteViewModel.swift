@@ -154,7 +154,9 @@ class RouteViewModel: ObservableObject, Identifiable {
                         print("error is \(error)")
                     }
                 }
-                
+
+                try? context.obtainPermanentIDs(for: [route])
+
                 try? context.save()
             }
         }

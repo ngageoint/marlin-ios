@@ -63,9 +63,9 @@ final class AsamDetailViewTests: XCTestCase {
             return
         }
         
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
         let view = AsamDetailView(reference: newItem.reference!)
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
@@ -118,16 +118,14 @@ final class AsamDetailViewTests: XCTestCase {
             XCTFail()
             return
         }
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
-
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
         let summary = AsamDetailView(reference: newItem.reference!)
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
-
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -172,16 +170,14 @@ final class AsamDetailViewTests: XCTestCase {
             XCTFail()
             return
         }
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
-
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
         let summary = AsamDetailView(reference: newItem.reference!)
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
-
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller

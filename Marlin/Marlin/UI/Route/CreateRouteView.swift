@@ -8,15 +8,16 @@
 import SwiftUI
 import CoreLocation
 import GeoJSON
+import Combine
 
 struct CreateRouteView: View {
+    @EnvironmentObject var router: MarlinRouter
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var locationManager: LocationManager
     
     let maxFeatureAreaSize: CGFloat = 300
-    @Binding var path: NavigationPath
     @State var routeURI: URL?
-    
+
     @State private var waypointsFrameSize: CGSize = .zero
     @State private var firstWaypointFrameSize: CGSize = .zero
     @State private var lastWaypointFrameSize: CGSize = .zero
@@ -24,13 +25,22 @@ struct CreateRouteView: View {
     @State private var distanceFrameSize: CGSize = .zero
     
     @StateObject var routeViewModel: RouteViewModel = RouteViewModel()
-    
+    enum Field: Hashable {
+        case name
+    }
+    @FocusState private var focusedField: Field?
+
+    private var tapGesture: some Gesture {
+        (focusedField != nil) ? (TapGesture().onEnded { focusedField = nil }) : nil
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Route Name")
                     .overline()
                 TextField("Route Name", text: $routeViewModel.routeName)
+                    .focused($focusedField, equals: .name)
                     .keyboardType(.default)
                     .underlineTextFieldWithLabel()
                     .accessibilityElement()
@@ -43,15 +53,16 @@ struct CreateRouteView: View {
                 .overlay {
                     routeList()
                 }
-            RouteMapView(path: $path, routeViewModel: routeViewModel)
+            RouteMapView(routeViewModel: routeViewModel)
                 .edgesIgnoringSafeArea([.leading, .trailing])
         }
+        .gesture(tapGesture)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if routeViewModel.waypoints.count > 1 {
                     Button("Save") {
                         routeViewModel.createRoute(context: managedObjectContext)
-                        path.removeLast()
+                        router.path.removeLast()
                     }
                 }
             }
@@ -69,7 +80,7 @@ struct CreateRouteView: View {
     func waypointRow(waypointViewBuilder: any DataSource, first: Bool = false, last: Bool = false) -> some View {
         HStack {
             Group {
-                DataSourceCircleImage(dataSource: type(of: waypointViewBuilder), size: 12)
+                DataSourceCircleImage(definition: waypointViewBuilder.definition, size: 12)
                 HStack {
                     VStack(alignment: .leading) {
                         Text(waypointViewBuilder.itemTitle)
@@ -192,36 +203,42 @@ struct CreateRouteView: View {
     @ViewBuilder
     func routeList() -> some View {
         VStack {
-            List {
-                instructions()
-                ForEach(routeViewModel.waypoints.indices, id: \.self) { index in
-                    let waypoint = routeViewModel.waypoints[index]
-                    waypointRow(
-                        waypointViewBuilder: waypoint,
-                        first: index == 0,
-                        last: index == (routeViewModel.waypoints.count - 1))
-                    .swipeActions(edge: .trailing) {
-                        Button(role: .destructive) {
-                            routeViewModel.removeWaypoint(waypoint: waypoint)
-                        } label: {
-                            Label("Delete", systemImage: "trash")
+            ScrollViewReader { (proxy: ScrollViewProxy) in
+                List {
+                    instructions()
+                    ForEach(routeViewModel.waypoints.indices, id: \.self) { index in
+                        let waypoint = routeViewModel.waypoints[index]
+                        waypointRow(
+                            waypointViewBuilder: waypoint,
+                            first: index == 0,
+                            last: index == (routeViewModel.waypoints.count - 1))
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                routeViewModel.removeWaypoint(waypoint: waypoint)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                            .accessibilityElement()
+                            .accessibilityLabel("remove waypoint \(waypoint.uniqueId)")
+                            .tint(Color.red)
                         }
-                        .accessibilityElement()
-                        .accessibilityLabel("remove waypoint \(waypoint.uniqueId)")
-                        .tint(Color.red)
+                        .listRowInsets(.init(top: 0, leading: 20, bottom: 0, trailing: 0))
+                        .listRowSeparator(.hidden, edges: .top)
+                        .listRowSeparator(.visible, edges: .bottom)
                     }
-                    .listRowInsets(.init(top: 0, leading: 20, bottom: 0, trailing: 0))
-                    .listRowSeparator(.hidden, edges: .top)
-                    .listRowSeparator(.visible, edges: .bottom)
+                    .onMove { from, destination in
+                        routeViewModel.reorder(fromOffsets: from, toOffset: destination)
+                    }
+                    distance()
+                        .id("distance")
                 }
-                .onMove { from, destination in
-                    routeViewModel.reorder(fromOffsets: from, toOffset: destination)
+                .onReceive(Just(routeViewModel.waypoints.count)) { _ in
+                    proxy.scrollTo("distance", anchor: .bottom)
                 }
-                distance()
+                .listStyle(.plain)
+                .padding(.top, 10)
+                .padding(.leading, -4)
             }
-            .listStyle(.plain)
-            .padding(.top, 10)
-            .padding(.leading, -4)
         }
     }
     

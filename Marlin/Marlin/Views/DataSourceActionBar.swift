@@ -7,6 +7,44 @@
 
 import SwiftUI
 
+struct DataSourceActions: View {
+    var moreDetails: Action?
+    var location: Actions.Location?
+    var zoom: Action?
+    var share: String?
+    var bookmark: AsamActions.Bookmark?
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            if let moreDetails = moreDetails {
+                MoreDetailsButton2(action: moreDetails)
+                    .buttonStyle(MaterialButtonStyle())
+            }
+            
+            if let location = location {
+                CoordinateButton2(action: location)
+                    .buttonStyle(MaterialButtonStyle())
+            }
+            
+            Spacer()
+            
+            if let bookmark = bookmark {
+                BookmarkButton2(action: bookmark)
+                    .buttonStyle(MaterialButtonStyle())
+            }
+
+            if let share = share {
+                ShareButton(shareText: share, dataSource: Asam.self as? (any DataSource))
+            }
+
+            if let zoom = zoom {
+                FocusButton2(action: zoom)
+                    .buttonStyle(MaterialButtonStyle())
+            }
+        }
+    }
+}
+
 struct DataSourceActionBar: View {
     @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
 

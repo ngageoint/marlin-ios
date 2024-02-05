@@ -83,7 +83,6 @@ struct DataSourceToggles: View {
                 size: expanded ? .mini : .regular,
                 foregroundColor: expanded ? Color.primaryColor : Color.onPrimaryColor,
                 backgroundColor: expanded ? Color.onPrimaryColor : Color.primaryColor))
-        .overlay(Badge(count: dataSourceList.mappedDataSources.count, positionShift: 10))
         .accessibilityElement(children: .contain)
         .accessibilityLabel("\(expanded ? "Collapse" : "Expand") Map Toggle")
         .offset(x: expanded ? 8 : 0, y: 0)
@@ -111,7 +110,7 @@ struct DataSourceToggles: View {
         .buttonStyle(
             MaterialFloatingButtonStyle(
                 type: .custom, size: .mini,
-                foregroundColor: dataSourceItem.showOnMap ? Color.white : Color.disabledColor,
+                foregroundColor: Color.white,
                 backgroundColor: dataSourceItem.showOnMap ?
                 Color(uiColor: dataSourceItem.dataSource.definition.color) : Color.disabledBackground))
         .accessibilityElement(children: .contain)

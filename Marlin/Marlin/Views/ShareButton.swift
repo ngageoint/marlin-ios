@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ShareButton: View {
     var shareText: String
-    var dataSource: (any DataSourceViewBuilder)?
+    var dataSource: (any DataSource)?
     var body: some View {
         
         if let dataSource = dataSource {

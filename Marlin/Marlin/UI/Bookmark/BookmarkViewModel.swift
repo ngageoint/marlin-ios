@@ -12,6 +12,8 @@ class BookmarkViewModel: ObservableObject {
     var dataSource: String?
     @Published var isBookmarked: Bool = false
     @Published var bookmark: BookmarkModel?
+    @Published var bookmarkBottomSheet: Bool = false
+    @Published var bnotes: String = ""
     
     var repository: (any BookmarkRepository)?
     
@@ -28,7 +30,7 @@ class BookmarkViewModel: ObservableObject {
         let viewContext = PersistenceController.current.viewContext
         viewContext.perform {
             let bookmark = Bookmark(context: viewContext)
-            bookmark.notes = notes
+            bookmark.notes = self.bnotes
             bookmark.dataSource = self.dataSource
             bookmark.id = self.itemKey
             bookmark.timestamp = Date()
