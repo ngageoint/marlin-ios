@@ -87,6 +87,7 @@ class MapState: ObservableObject, Hashable {
     @AppStorage("showGARS") var showGARS: Bool = false
     @AppStorage("showMGRS") var showMGRS: Bool = false
     @AppStorage("showMapScale") var showMapScale = false
+    @AppStorage("searchEngine") var searchEngine: SearchEngine = .native
     
     @Published var mixinStates: [String: Any] = [:]
 }

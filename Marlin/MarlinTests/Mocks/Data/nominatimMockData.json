@@ -1,0 +1,86 @@
+[
+    {
+        "place_id": 4238259,
+        "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+        "osm_type": "relation",
+        "osm_id": 5396194,
+        "lat": "38.8950368",
+        "lon": "-77.0365427",
+        "class": "boundary",
+        "type": "administrative",
+        "place_rank": 12,
+        "importance": 0.7492888986115819,
+        "addresstype": "city",
+        "name": "Washington",
+        "display_name": "Washington, District of Columbia, United States",
+        "boundingbox": [
+            "38.7916303",
+            "38.9959680",
+            "-77.1197949",
+            "-76.9093660"
+        ]
+    },
+    {
+        "place_id": 313430381,
+        "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+        "osm_type": "relation",
+        "osm_id": 165479,
+        "lat": "47.2868352",
+        "lon": "-120.212613",
+        "class": "boundary",
+        "type": "administrative",
+        "place_rank": 8,
+        "importance": 0.7129297923155674,
+        "addresstype": "state",
+        "name": "Washington",
+        "display_name": "Washington, United States",
+        "boundingbox": [
+            "45.5437314",
+            "49.0024392",
+            "-124.8360916",
+            "-116.9159938"
+        ]
+    },
+    {
+        "place_id": 305162708,
+        "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+        "osm_type": "relation",
+        "osm_id": 1837751,
+        "lat": "30.2226352",
+        "lon": "-96.3936114",
+        "class": "boundary",
+        "type": "administrative",
+        "place_rank": 12,
+        "importance": 0.5557840918473904,
+        "addresstype": "county",
+        "name": "Washington County",
+        "display_name": "Washington County, Texas, United States",
+        "boundingbox": [
+            "30.0443749",
+            "30.4003511",
+            "-96.7944459",
+            "-96.0813721"
+        ]
+    },
+    {
+        "place_id": 323480058,
+        "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+        "osm_type": "relation",
+        "osm_id": 1800901,
+        "lat": "38.3662806",
+        "lon": "-89.4201902",
+        "class": "boundary",
+        "type": "administrative",
+        "place_rank": 12,
+        "importance": 0.5386583341239373,
+        "addresstype": "county",
+        "name": "Washington County",
+        "display_name": "Washington County, Illinois, United States",
+        "boundingbox": [
+            "38.2135390",
+            "38.5189860",
+            "-89.7056730",
+            "-89.1443020"
+        ]
+    }
+]

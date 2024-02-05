@@ -129,9 +129,9 @@ final class MapSettingsTests: XCTestCase {
         
         XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchEngine"), SearchEngine.native.rawValue)
         
-        tester().waitForView(withAccessibilityLabel: "Open Street Map Search")
-        tester().tapView(withAccessibilityLabel: "Open Street Map Search")
-        XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchEngine"), SearchEngine.openStreetMap.rawValue)
+        tester().waitForView(withAccessibilityLabel: "Nominatim Search")
+        tester().tapView(withAccessibilityLabel: "Nominatim Search")
+        XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchEngine"), SearchEngine.nominatim.rawValue)
         
         tester().waitForView(withAccessibilityLabel: "Apple Maps Search")
         tester().tapView(withAccessibilityLabel: "Apple Maps Search")

@@ -214,16 +214,16 @@ struct MapSettings: View {
                 .padding(.top, 4)
                 .padding(.bottom, 4)
                 HStack(spacing: 4) {
-                    Text("Open Street Map").font(Font.body1)
+                    Text("Nominatim").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
-                    Image(systemName: searchEngine == .openStreetMap ? "circle.inset.filled": "circle")
+                    Image(systemName: searchEngine == .nominatim ? "circle.inset.filled": "circle")
                         .foregroundColor(Color.primaryColor)
                         .onTapGesture {
-                            searchEngine = .openStreetMap
+                            searchEngine = .nominatim
                         }
                         .accessibilityElement()
-                        .accessibilityLabel("Open Street Map Search")
+                        .accessibilityLabel("Nominatim Search")
                 }
                 .padding(.top, 4)
                 .padding(.bottom, 4)

@@ -9,19 +9,6 @@ import SwiftUI
 import MapKit
 import Combine
 
-enum SearchEngine: Int, CustomStringConvertible {
-    case native, openStreetMap
-    
-    var description: String {
-        switch self {
-        case .native:
-            return "Apple Maps"
-        case .openStreetMap:
-            return "Open Street Map"
-        }
-    }
-}
-
 struct SearchView<T: SearchProvider>: View {
     @AppStorage("coordinateDisplay") var coordinateDisplay: CoordinateDisplayType = .latitudeLongitude
 
@@ -56,10 +43,13 @@ struct SearchView<T: SearchProvider>: View {
                         .submitLabel(SubmitLabel.done)
                         .onSubmit {
                             searchFocused.toggle()
+                            searchPublisher.send(search)
                         }
                         .frame(maxWidth: searchExpanded ? .infinity : 0)
                         .onChange(of: search) { search in
-                            searchPublisher.send(search)
+                            if mapState.searchEngine == .native {
+                                searchPublisher.send(search)
+                            }
                         }
                         .onReceive(
                             searchPublisher
@@ -173,6 +163,10 @@ struct SearchView<T: SearchProvider>: View {
     }
     
     func performSearch(searchText: String) {
-        T.performSearch(searchText: searchText, region: mapState.center) { mapState.searchResults = $0 }
+        T.performSearch(searchText: searchText, region: mapState.center) { result in
+            DispatchQueue.main.async {
+                mapState.searchResults = result
+            }
+        }
     }
 }
