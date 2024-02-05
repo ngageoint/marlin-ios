@@ -12,8 +12,8 @@ import Alamofire
 struct NominatimResponseItem: Decodable {
     let name: String
     let displayName: String
-    let lat: String // TODO: decode these as doubles
-    let lon: String // TODO: decode these as doubles
+    let lat: String
+    let lon: String
 }
 
 class NominatimSearchProvider: SearchProvider {
