@@ -12,7 +12,7 @@ class NativeSearchProvider<T: MKLocalSearch>: SearchProvider {
     static func performSearch(
         searchText: String,
         region: MKCoordinateRegion?,
-        callback: @escaping ([MKMapItem]) -> Void) {
+        onCompletion: @escaping ([MKMapItem]) -> Void) {
             var realSearch = searchText
             // check if they maybe entered coordinates
             if let location = CLLocationCoordinate2D(coordinateString: searchText) {
@@ -34,11 +34,11 @@ class NativeSearchProvider<T: MKLocalSearch>: SearchProvider {
             search.start { (response, _) in
                 guard let response = response else {
                     // Handle the error.
-                    callback([])
+                    onCompletion([])
                     return
                 }
                 
-                callback(response.mapItems)
+                onCompletion(response.mapItems)
                 Metrics.shared.search(query: realSearch, resultCount: response.mapItems.count)
             }
         }

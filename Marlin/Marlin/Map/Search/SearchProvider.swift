@@ -12,5 +12,5 @@ protocol SearchProvider {
     static func performSearch(
         searchText: String,
         region: MKCoordinateRegion?,
-        callback: @escaping ([MKMapItem]) -> Void)
+        onCompletion: @escaping ([MKMapItem]) -> Void)
 }

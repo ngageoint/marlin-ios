@@ -20,7 +20,7 @@ class NominatimSearchProvider: SearchProvider {
     static func performSearch(
         searchText: String,
         region: MKCoordinateRegion?,
-        callback: @escaping ([MKMapItem]) -> Void) {
+        onCompletion: @escaping ([MKMapItem]) -> Void) {
             do {
                 let url = try "https://nominatim.openstreetmap.org".asURL()
                 var urlRequest = URLRequest(url: url.appendingPathComponent("/search"))
@@ -29,14 +29,14 @@ class NominatimSearchProvider: SearchProvider {
                 
                 URLSession.shared.dataTask(with: urlRequest) { data, _, _ in
                     guard let data = data else {
-                        callback([])
+                        onCompletion([])
                         return
                     }
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
                     let nominatimResponse = try? decoder.decode([NominatimResponseItem].self, from: data)
                     guard let nominatimResponse = nominatimResponse else {
-                        callback([])
+                        onCompletion([])
                         return
                     }
                     
@@ -49,11 +49,11 @@ class NominatimSearchProvider: SearchProvider {
                         mapItem.name = item.displayName
                         return mapItem
                     }
-                    callback(mapItems)
+                    onCompletion(mapItems)
                     return
                 }.resume()
             } catch {
-                callback([])
+                onCompletion([])
                 return
             }
         }
