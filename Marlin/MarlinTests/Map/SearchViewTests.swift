@@ -382,15 +382,15 @@ class MockSearchProvider: SearchProvider {
     static func performSearch(
         searchText: String,
         region: MKCoordinateRegion?,
-        callback: @escaping ([MKMapItem]) -> Void) {
+        onCompletion: @escaping ([MKMapItem]) -> Void) {
             if(searchText == "search"){
                 let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 1.0, longitude: 1.0))
                 let mapItem = MKMapItem(placemark: placemark)
                 mapItem.name = "Test item"
                 mapItem.pointOfInterestCategory = .airport
-                callback([mapItem])
+                onCompletion([mapItem])
             } else {
-                callback([])
+                onCompletion([])
             }
         }
 }

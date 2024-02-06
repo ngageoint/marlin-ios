@@ -1,11 +1,11 @@
 //
-//  SearchEngine.swift
+//  SearchType.swift
 //  Marlin
 //
 //  Created by Joshua Nelson on 2/5/24.
 //
 
-enum SearchEngine: Int, CustomStringConvertible {
+enum SearchType: Int, CustomStringConvertible {
     case native, nominatim
     
     var description: String {

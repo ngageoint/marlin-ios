@@ -47,7 +47,7 @@ struct SearchView<T: SearchProvider>: View {
                         }
                         .frame(maxWidth: searchExpanded ? .infinity : 0)
                         .onChange(of: search) { search in
-                            if mapState.searchEngine == .native {
+                            if mapState.searchType == .native {
                                 searchPublisher.send(search)
                             }
                         }

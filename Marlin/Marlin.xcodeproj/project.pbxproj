@@ -13,7 +13,7 @@
 		D6353EAA2B6955E200444D24 /* SearchProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EA92B6955E200444D24 /* SearchProviderTests.swift */; };
 		D6353EAC2B695E1E00444D24 /* nominatimMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = D6353EAB2B695E1E00444D24 /* nominatimMockData.json */; };
 		D6353EAE2B695F4C00444D24 /* NominatimSearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EAD2B695F4C00444D24 /* NominatimSearchProvider.swift */; };
-		D6353EB02B71449C00444D24 /* SearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EAF2B71449C00444D24 /* SearchEngine.swift */; };
+		D6353EB02B71449C00444D24 /* SearchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EAF2B71449C00444D24 /* SearchType.swift */; };
 		D67E5C9A2A9E4AA5002FCE03 /* MKPolygonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D67E5C992A9E4AA5002FCE03 /* MKPolygonExtensions.swift */; };
 		D7A569C784B0F2D5720432C4 /* libPods-MarlinTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */; };
 		F7066DA92A45D8C10058122E /* GeoPackageExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DA82A45D8C10058122E /* GeoPackageExportViewModel.swift */; };
@@ -530,7 +530,7 @@
 		D6353EA92B6955E200444D24 /* SearchProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchProviderTests.swift; sourceTree = "<group>"; };
 		D6353EAB2B695E1E00444D24 /* nominatimMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = nominatimMockData.json; sourceTree = "<group>"; };
 		D6353EAD2B695F4C00444D24 /* NominatimSearchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NominatimSearchProvider.swift; sourceTree = "<group>"; };
-		D6353EAF2B71449C00444D24 /* SearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEngine.swift; sourceTree = "<group>"; };
+		D6353EAF2B71449C00444D24 /* SearchType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchType.swift; sourceTree = "<group>"; };
 		D67E5C992A9E4AA5002FCE03 /* MKPolygonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKPolygonExtensions.swift; sourceTree = "<group>"; };
 		F32BF352638699CBFE1A8D52 /* Pods-Marlin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Marlin.release.xcconfig"; path = "Target Support Files/Pods-Marlin/Pods-Marlin.release.xcconfig"; sourceTree = "<group>"; };
 		F7066DA82A45D8C10058122E /* GeoPackageExportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExportViewModel.swift; sourceTree = "<group>"; };
@@ -1084,7 +1084,7 @@
 				D6353EA22B68376100444D24 /* SearchProvider.swift */,
 				D6353EA42B683B9300444D24 /* NativeSearchProvider.swift */,
 				D6353EAD2B695F4C00444D24 /* NominatimSearchProvider.swift */,
-				D6353EAF2B71449C00444D24 /* SearchEngine.swift */,
+				D6353EAF2B71449C00444D24 /* SearchType.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -3288,7 +3288,7 @@
 				F7830C0D2A96623C008376F7 /* DataSourceCircleImage.swift in Sources */,
 				F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */,
 				F7EFFEC52A7C113A0097E5EF /* DataSourceIcon.swift in Sources */,
-				D6353EB02B71449C00444D24 /* SearchEngine.swift in Sources */,
+				D6353EB02B71449C00444D24 /* SearchType.swift in Sources */,
 				F7D8FA4F293A960E00E7D0A1 /* StringFilter.swift in Sources */,
 				F7C23E0A29084F280002A7DF /* ElectronicPublicationSummaryView.swift in Sources */,
 				F7CCDC822AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift in Sources */,

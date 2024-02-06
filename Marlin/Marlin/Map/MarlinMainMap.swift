@@ -43,7 +43,7 @@ struct MarlinMainMap: View {
         HStack(alignment: .top, spacing: 8) {
             // top left button stack
             VStack(alignment: .leading, spacing: 8) {
-                switch mapState.searchEngine {
+                switch mapState.searchType {
                 case .native:
                     SearchView<NativeSearchProvider>(mapState: mapState)
                 case .nominatim:

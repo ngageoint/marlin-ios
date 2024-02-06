@@ -16,7 +16,7 @@ struct MapSettings: View {
     @AppStorage("showCurrentLocation") var showCurrentLocation: Bool = false
     @AppStorage("showMapScale") var showMapScale = false
     @AppStorage("coordinateDisplay") var coordinateDisplay: CoordinateDisplayType = .latitudeLongitude
-    @AppStorage("searchEngine") var searchEngine: SearchEngine = .native
+    @AppStorage("searchType") var searchType: SearchType = .native
 
     var body: some View {
         Self._printChanges()
@@ -198,15 +198,15 @@ struct MapSettings: View {
                 .accessibilityLabel("Light Settings")
             }
             
-            Section("Search Engine") {
+            Section("Location Search") {
                 HStack(spacing: 4) {
                     Text("Apple Maps").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
-                    Image(systemName: searchEngine == .native ? "circle.inset.filled": "circle")
+                    Image(systemName: searchType == .native ? "circle.inset.filled": "circle")
                         .foregroundColor(Color.primaryColor)
                         .onTapGesture {
-                            searchEngine = .native
+                            searchType = .native
                         }
                         .accessibilityElement()
                         .accessibilityLabel("Apple Maps Search")
@@ -217,10 +217,10 @@ struct MapSettings: View {
                     Text("Nominatim").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                     Spacer()
-                    Image(systemName: searchEngine == .nominatim ? "circle.inset.filled": "circle")
+                    Image(systemName: searchType == .nominatim ? "circle.inset.filled": "circle")
                         .foregroundColor(Color.primaryColor)
                         .onTapGesture {
-                            searchEngine = .nominatim
+                            searchType = .nominatim
                         }
                         .accessibilityElement()
                         .accessibilityLabel("Nominatim Search")

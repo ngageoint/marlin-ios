@@ -118,7 +118,7 @@ final class MapSettingsTests: XCTestCase {
         XCTAssertEqual(false, UserDefaults.standard.bool(forKey: "showGARS"))
     }
     
-    func testSearchEngine() {
+    func testSearchType() {
         let view = MapSettings()
         let nav = NavigationView {
             view
@@ -128,14 +128,14 @@ final class MapSettingsTests: XCTestCase {
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         
-        XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchEngine"), SearchEngine.native.rawValue)
+        XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchType"), SearchType.native.rawValue)
         
         tester().waitForView(withAccessibilityLabel: "Nominatim Search")
         tester().tapView(withAccessibilityLabel: "Nominatim Search")
-        XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchEngine"), SearchEngine.nominatim.rawValue)
+        XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchType"), SearchType.nominatim.rawValue)
         
         tester().waitForView(withAccessibilityLabel: "Apple Maps Search")
         tester().tapView(withAccessibilityLabel: "Apple Maps Search")
-        XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchEngine"), SearchEngine.native.rawValue)
+        XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchType"), SearchType.native.rawValue)
     }
 }
