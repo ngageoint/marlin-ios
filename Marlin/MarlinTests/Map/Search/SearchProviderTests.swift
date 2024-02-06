@@ -33,6 +33,7 @@ final class SearchProviderTests: XCTestCase {
             && isPath("/search")
             && containsQueryParams(["q":"test search"])
         ) { request in
+            XCTAssertEqual(request.headers["User-Agent"], "marlin-ios")
             return HTTPStubsResponse(
                 fileAtPath: OHPathForFile("nominatimMockData.json", type(of: self))!,
                 statusCode: 200,

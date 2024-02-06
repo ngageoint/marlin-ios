@@ -25,6 +25,7 @@ class NominatimSearchProvider: SearchProvider {
                 let url = try "https://nominatim.openstreetmap.org".asURL()
                 var urlRequest = URLRequest(url: url.appendingPathComponent("/search"))
                 urlRequest.httpMethod = HTTPMethod.get.rawValue
+                urlRequest.setValue("marlin-ios", forHTTPHeaderField: "User-Agent")
                 urlRequest = try URLEncoding.default.encode(urlRequest, with: ["q": searchText, "format": "json"])
                 
                 URLSession.shared.dataTask(with: urlRequest) { data, _, _ in

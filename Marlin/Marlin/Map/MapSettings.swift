@@ -198,7 +198,7 @@ struct MapSettings: View {
                 .accessibilityLabel("Light Settings")
             }
             
-            Section("Location Search") {
+            Section {
                 HStack(spacing: 4) {
                     Text("Apple Maps").font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
@@ -227,6 +227,11 @@ struct MapSettings: View {
                 }
                 .padding(.top, 4)
                 .padding(.bottom, 4)
+            } header: {
+                Text("Location Search")
+            } footer: {
+                Text("Nominatim is provided by [OpenStreetMap](https://www.openstreetmap.org/copyright).")
+                    .tint(Color.blue)
             }
             
             Section("Display") {
