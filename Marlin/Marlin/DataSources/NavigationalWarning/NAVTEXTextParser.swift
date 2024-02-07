@@ -18,8 +18,8 @@ struct LocationWithType: CustomStringConvertible {
 
     var description: String {
         return """
-            \(locationDescription ?? "")\n\tDistance:\(distanceFromLocation ?? "")\n\
-            \t\(locationType ?? "")\n\t\t [\(location.joined(separator: "; "))]\n
+        \(locationDescription ?? "")\n\tDistance:\(distanceFromLocation ?? "")\n\t\
+        \(locationType ?? "")\n\t\t [\(location.joined(separator: "; "))]\n
         """
     }
     
@@ -258,15 +258,15 @@ struct MappedLocation: CustomStringConvertible {
     
     var description: String {
         return """
-            Location Name: \(locationName ?? "")\n\
-            Specific Area: \(specificArea ?? "")\n\
-            Subject: \(subject ?? "")\n\
-            CancelTime: \(cancelTime ?? "")\n\
-            Location: \(locations)\n\
-            When: \(when ?? "")\n\
-            Extra: \(extra ?? "")\n\
-            DNC: \(dnc ?? "")\n\
-            Chart: \(chart ?? "")\n
+        Location Name: \(locationName ?? "")\n\
+        Specific Area: \(specificArea ?? "")\n\
+        Subject: \(subject ?? "")\n\
+        CancelTime: \(cancelTime ?? "")\n\
+        Location: \(locations)\n\
+        When: \(when ?? "")\n\
+        Extra: \(extra ?? "")\n\
+        DNC: \(dnc ?? "")\n\
+        Chart: \(chart ?? "")\n
         """
     }
     
@@ -484,8 +484,8 @@ class NAVTEXTextParser {
             
             let locationRanges = toParse.ranges(
                 of: """
-                    [0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} \
-                    {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]
+                [0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} \
+                {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]
                 """,
                 options: .regularExpression)
             stringLocations.append(contentsOf: locationRanges.map { String(toParse[$0]) })
@@ -596,8 +596,8 @@ class NAVTEXTextParser {
     func splitDescriptionFromLocation(text: String) -> (description: String?, locations: [String]?) {
         let locationRanges = text.ranges(
             of: """
-                [0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} \
-                {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]
+            [0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[NS]{1} \
+            {1}[0-9]{1,3}-{1}[0-9]{2}(-[0-9]{2})?(\\.{1}[0-9]+)?[EW]
             """,
             options: .regularExpression)
         if locationRanges.isEmpty {
