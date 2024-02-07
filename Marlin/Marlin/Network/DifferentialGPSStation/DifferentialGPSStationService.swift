@@ -9,7 +9,7 @@ import Foundation
 import Alamofire
 
 enum DifferentialGPSStationService: URLRequestConvertible {
-    case getDifferentialGPSStations(volume: String? = nil, noticeYear: String? = nil, noticeWeek: String? = nil)
+    case getDifferentialGPSStations(noticeYear: String? = nil, noticeWeek: String? = nil)
 
     var method: HTTPMethod {
         switch self {
@@ -27,14 +27,11 @@ enum DifferentialGPSStationService: URLRequestConvertible {
 
     var parameters: Parameters? {
         switch self {
-        case .getDifferentialGPSStations(volume: let volume, noticeYear: let noticeYear, noticeWeek: let noticeWeek):
+        case .getDifferentialGPSStations(noticeYear: let noticeYear, noticeWeek: let noticeWeek):
             var params = [
                 "output": "json",
                 "includeRemovals": false
             ] as [String: Any]
-            if let volume = volume {
-                params["volume"] = volume
-            }
             if let noticeYear = noticeYear, let noticeWeek = noticeWeek {
                 let calendar = Calendar.current
                 let week = calendar.component(.weekOfYear, from: Date())

@@ -229,6 +229,15 @@ struct MarlinBottomSheet <Content: View>: View {
                         case DataSources.port.key:
                             PortSheetView(portNumber: Int64(itemKey) ?? -1, focusNotification: focusNotification)
                                 .transition(.opacity)
+                        case DataSources.light.key:
+                            let split = itemKey.split(separator: "--")
+                            if split.count == 3 {
+                                LightSheetView(
+                                    featureNumber: "\(split[0])",
+                                    volumeNumber: "\(split[1])",
+                                    focusNotification: focusNotification
+                                )
+                            }
                         default:
                             EmptyView()
                         }

@@ -18,7 +18,7 @@ class AsamInitializer: Initializer {
     }
 
     override func createOperation() -> Operation {
-        AsamDataFetchOperation()
+        repository.createOperation()
     }
 
     override func fetch() {

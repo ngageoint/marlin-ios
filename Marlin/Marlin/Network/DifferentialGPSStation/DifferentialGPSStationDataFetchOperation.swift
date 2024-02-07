@@ -9,12 +9,10 @@ import Foundation
 
 class DifferentialGPSStationFetchOperation: DataFetchOperation<DifferentialGPSStationModel> {
 
-    var volume: String?
     var noticeYear: String?
     var noticeWeek: String?
 
-    init(volume: String? = nil, noticeYear: String? = nil, noticeWeek: String? = nil) {
-        self.volume = volume
+    init(noticeYear: String? = nil, noticeWeek: String? = nil) {
         self.noticeYear = noticeYear
         self.noticeWeek = noticeWeek
     }
@@ -25,7 +23,6 @@ class DifferentialGPSStationFetchOperation: DataFetchOperation<DifferentialGPSSt
         }
 
         let request = DifferentialGPSStationService.getDifferentialGPSStations(
-            volume: volume,
             noticeYear: noticeYear,
             noticeWeek: noticeWeek
         )

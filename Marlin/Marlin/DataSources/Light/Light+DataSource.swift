@@ -53,6 +53,10 @@ extension Light: Bookmarkable {
 }
 
 extension Light: Locatable, GeoPackageExportable, GeoJSONExportable {
+    var itemTitle: String {
+        "title"
+    }
+    
     static var definition: any DataSourceDefinition = DataSourceDefinitions.light.definition
     func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
         var geometryByColor: [UIColor: SFGeometry] = [:]
@@ -130,7 +134,7 @@ extension Light: Locatable, GeoPackageExportable, GeoJSONExportable {
             return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
         }
     }
-    
+
     static func getBoundingPredicate(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) -> NSPredicate {
         return NSPredicate(
             format: """

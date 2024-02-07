@@ -15,7 +15,37 @@ struct LightSector {
     var text: String
 }
 
-class LightImage {
+class LightImage: DataSourceImage {
+    var feature: SFGeometry?
+    var light: LightModel
+
+    static var dataSource: any DataSourceDefinition = DataSources.light
+
+    init(light: LightModel) {
+        self.light = light
+        feature = light.sfGeometry
+    }
+
+    func image(
+        context: CGContext?,
+        zoom: Int,
+        tileBounds: MapBoundingBox,
+        tileSize: Double
+    ) -> [UIImage] {
+        let images = light.mapImage(zoomLevel: zoom, tileBounds3857: tileBounds, context: context)
+        for image in images {
+            drawImageIntoTile(
+                mapImage: image,
+                latitude: light.latitude,
+                longitude: light.longitude,
+                tileBounds3857: tileBounds,
+                tileSize: tileSize
+            )
+        }
+
+        return images
+    }
+
     static func image(light: LightModel, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil) -> [UIImage] {
         var images: [UIImage] = []
         

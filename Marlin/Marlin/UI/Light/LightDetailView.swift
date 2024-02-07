@@ -10,7 +10,7 @@ import MapKit
 import CoreData
 
 struct LightDetailView: View {
-    @EnvironmentObject var lightRepository: LightRepositoryManager
+    @EnvironmentObject var lightRepository: LightRepository
     @StateObject var viewModel: LightViewModel = LightViewModel()
     @State var featureNumber: String
     @State var volumeNumber: String
@@ -35,7 +35,15 @@ struct LightDetailView: View {
                                 DataSourceLocationMapView(
                                     dataSourceLocation: firstLight,
                                     mapName: "Light Detail Map",
-                                    mixins: [LightMap<LightModel>(objects: [firstLight])]
+                                    mixins: [
+                                        LightMap(
+                                            repository: LightTileRepository(
+                                                featureNumber: featureNumber,
+                                                volumeNumber: volumeNumber,
+                                                localDataSource: lightRepository.localDataSource
+                                            )
+                                        )
+                                    ]
                                 )
                                 .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                                 

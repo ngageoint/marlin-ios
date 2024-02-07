@@ -13,6 +13,69 @@ import sf_ios
 import OSLog
 import mgrs_ios
 
+struct LightListModel: Hashable, Identifiable {
+    var canBookmark: Bool = false
+    var id: String { self.itemKey }
+
+    var featureNumber: String?
+    var volumeNumber: String?
+    var characteristicNumber: Int?
+    var internationalFeature: String?
+    var name: String?
+    var sectionHeader: String?
+    var structure: String?
+    var latitude: Double
+    var longitude: Double
+
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+
+    init(light: Light) {
+        canBookmark = true
+        featureNumber = light.featureNumber
+        volumeNumber = light.volumeNumber
+        characteristicNumber = Int(light.characteristicNumber)
+        internationalFeature = light.internationalFeature
+        name = light.name
+        sectionHeader = light.sectionHeader
+        structure = light.structure
+        latitude = light.latitude
+        longitude = light.longitude
+    }
+
+    init(lightModel: LightModel) {
+        canBookmark = lightModel.canBookmark
+        featureNumber = lightModel.featureNumber
+        volumeNumber = lightModel.volumeNumber
+        characteristicNumber = lightModel.characteristicNumber
+        internationalFeature = lightModel.internationalFeature
+        name = lightModel.name
+        sectionHeader = lightModel.sectionHeader
+        structure = lightModel.structure
+        latitude = lightModel.latitude
+        longitude = lightModel.longitude
+    }
+
+    var itemTitle: String {
+        return "\(self.name ?? "")"
+    }
+}
+
+extension LightListModel: Bookmarkable {
+    static var definition: any DataSourceDefinition {
+        DataSources.light
+    }
+
+    var itemKey: String {
+        return "\(featureNumber ?? "")--\(volumeNumber ?? "")--\(characteristicNumber ?? 0)"
+    }
+
+    var key: String {
+        DataSources.light.key
+    }
+}
+
 // this is being refactored soon so disable this check
 // swiftlint:disable type_body_length
 // swiftlint:disable file_length

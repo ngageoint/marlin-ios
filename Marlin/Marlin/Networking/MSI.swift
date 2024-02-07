@@ -18,23 +18,28 @@ public class MSI {
     var asamRepository: AsamRepository?
     var moduRepository: ModuRepository?
     var portRepository: PortRepository?
+    var lightRepository: LightRepository?
 
     var asamInitializer: AsamInitializer?
     var moduInitializer: ModuInitializer?
     var portInitializer: PortInitializer?
+    var lightInitializer: LightInitializer?
 
     func addRepositories(
         asamRepository: AsamRepository,
         moduRepository: ModuRepository,
-        portRepository: PortRepository
+        portRepository: PortRepository,
+        lightRepository: LightRepository
     ) {
         self.asamRepository = asamRepository
         self.moduRepository = moduRepository
         self.portRepository = portRepository
+        self.lightRepository = lightRepository
 
         asamInitializer = AsamInitializer(repository: asamRepository)
         moduInitializer = ModuInitializer(repository: moduRepository)
         portInitializer = PortInitializer(repository: portRepository)
+        lightInitializer = LightInitializer(repository: lightRepository)
     }
 
     var backgroundTask: UIBackgroundTaskIdentifier = .invalid
@@ -74,7 +79,7 @@ public class MSI {
 //        Asam.self,
 //        Modu.self,
         NavigationalWarning.self,
-        Light.self,
+//        Light.self,
 //        Port.self,
         RadioBeacon.self,
         DifferentialGPSStation.self,
@@ -146,6 +151,7 @@ public class MSI {
         asamInitializer?.registerBackgroundHandler()
         moduInitializer?.registerBackgroundHandler()
         portInitializer?.registerBackgroundHandler()
+        lightInitializer?.registerBackgroundHandler()
     }
     
     func backgroundFetch(task: BGTask) {
@@ -228,6 +234,7 @@ public class MSI {
         asamInitializer?.fetch()
         moduInitializer?.fetch()
         portInitializer?.fetch()
+        lightInitializer?.fetch()
 
         let initialDataLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
             if let dataSourceType = importable as? any DataSource.Type {

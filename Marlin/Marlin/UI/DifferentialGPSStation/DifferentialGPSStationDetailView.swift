@@ -10,7 +10,7 @@ import MapKit
 import CoreData
 
 struct DifferentialGPSStationDetailView: View {
-    @EnvironmentObject var dgpsRepository: DifferentialGPSStationRepositoryManager
+    @EnvironmentObject var dgpsRepository: DifferentialGPSStationRepository
     @StateObject var viewModel: DifferentialGPSStationViewModel = DifferentialGPSStationViewModel()
     @State var featureNumber: Int?
     @State var volumeNumber: String?

@@ -12,9 +12,7 @@ struct AsamSummaryView: DataSourceSummaryView {
     @EnvironmentObject var router: MarlinRouter
 
     var showSectionHeader: Bool = false
-    
-    var bookmark: Bookmark?
-        
+
     var asam: AsamListModel
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
@@ -35,7 +33,6 @@ struct AsamSummaryView: DataSourceSummaryView {
                 .secondary()
             if asam.canBookmark {
                 bookmarkNotesView(asam)
-                
             }
             DataSourceActions(
                 moreDetails: showMoreDetails ? AsamActions.Tap(reference: asam.reference, path: $router.path) : nil,

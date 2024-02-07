@@ -15,11 +15,10 @@ class DifferentialGPSStationRemoteDataSource: RemoteDataSource<DifferentialGPSSt
 
     func fetch(
         task: BGTask? = nil,
-        volume: String? = nil,
         noticeYear: String? = nil,
         noticeWeek: String? = nil
     ) async -> [DifferentialGPSStationModel] {
-        let operation = DifferentialGPSStationFetchOperation(volume: volume, noticeYear: noticeYear, noticeWeek: noticeWeek)
+        let operation = DifferentialGPSStationFetchOperation(noticeYear: noticeYear, noticeWeek: noticeWeek)
         return await fetch(task: task, operation: operation)
     }
 }

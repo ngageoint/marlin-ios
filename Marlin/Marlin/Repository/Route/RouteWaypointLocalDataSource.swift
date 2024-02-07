@@ -13,6 +13,8 @@ protocol RouteWaypointLocalDataSource {
     func getAsam(waypointURI: URL?) -> AsamModel?
     func getModu(waypointURI: URL?) -> ModuModel?
     func getPort(waypointURI: URL?) -> PortModel?
+    func getDifferentialGPSStation(waypointURI: URL?) -> DifferentialGPSStationModel?
+    func getLight(waypointURI: URL?) -> [LightModel]?
 }
 
 class RouteWaypointCoreDataDataSource: RouteWaypointLocalDataSource, ObservableObject {
@@ -61,6 +63,37 @@ class RouteWaypointCoreDataDataSource: RouteWaypointLocalDataSource, ObservableO
                 let dataSource = waypoint.decodeToDataSource()
                 if let dataSource = dataSource as? PortModel {
                     return dataSource
+                }
+            }
+        }
+        return nil
+    }
+
+    func getDifferentialGPSStation(waypointURI: URL?) -> DifferentialGPSStationModel? {
+        if let waypointURI = waypointURI {
+            if let id = context.persistentStoreCoordinator?.managedObjectID(
+                forURIRepresentation: waypointURI
+            ),
+               let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
+                let dataSource = waypoint.decodeToDataSource()
+                if let dataSource = dataSource as? DifferentialGPSStationModel {
+                    return dataSource
+                }
+            }
+        }
+        return nil
+    }
+
+    func getLight(waypointURI: URL?) -> [LightModel]? {
+        if let waypointURI = waypointURI {
+            if let id = context.persistentStoreCoordinator?.managedObjectID(
+                forURIRepresentation: waypointURI
+            ),
+               let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
+                let dataSource = waypoint.decodeToDataSource()
+                if let dataSource = dataSource as? LightModel {
+                    // TODO: should lookup the rest of the lights with the featureNumber
+                    return [dataSource]
                 }
             }
         }

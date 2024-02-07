@@ -1,23 +1,23 @@
 //
-//  AsamList.swift
+//  LightList.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 11/16/23.
+//  Created by Daniel Barela on 2/2/24.
 //
 
 import Foundation
 import SwiftUI
 
-struct AsamList: View {
-    @EnvironmentObject var asamRepository: AsamRepository
-    @StateObject var viewModel: AsamsViewModel = AsamsViewModel()
+struct LightList: View {
+    @EnvironmentObject var lightRepository: LightRepository
+    @StateObject var viewModel: LightsViewModel = LightsViewModel()
 
     @EnvironmentObject var router: MarlinRouter
 
     @State var sortOpen: Bool = false
     @State var filterOpen: Bool = false
     @State var filterViewModel: FilterViewModel = PersistedFilterViewModel(
-        dataSource: DataSources.filterableFromDefintion(DataSources.asam)
+        dataSource: DataSources.filterableFromDefintion(DataSources.light)
     )
 
     var body: some View {
@@ -27,7 +27,7 @@ struct AsamList: View {
                 VStack(alignment: .center, spacing: 16) {
                     HStack(alignment: .center, spacing: 0) {
                         Spacer()
-                        Image("asam_large")
+                        Image(systemName: "lightbulb.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(maxWidth: .infinity)
@@ -35,7 +35,7 @@ struct AsamList: View {
                             .foregroundColor(Color.onSurfaceColor)
                         Spacer()
                     }
-                    Text("Loading ASAMs")
+                    Text("Loading Lights")
                         .font(.headline)
                         .fixedSize(horizontal: false, vertical: true)
                         .multilineTextAlignment(.center)
@@ -48,20 +48,20 @@ struct AsamList: View {
                 .transition(AnyTransition.opacity)
             case let .loaded(rows: rows):
                 ZStack(alignment: .bottomTrailing) {
-                    List(rows) { asamItem in
-                        switch asamItem {
-                        case .listItem(let asam):
-                            AsamSummaryView(asam: asam)
+                    List(rows) { item in
+                        switch item {
+                        case .listItem(let light):
+                            LightSummaryView(light: light)
                                 .showBookmarkNotes(true)
                                 .paddedCard()
                                 .onAppear {
-                                    if rows.last == asamItem {
+                                    if rows.last == item {
                                         viewModel.loadMore()
                                     }
                                 }
                                 .onTapGesture {
-                                    if let reference = asam.reference {
-                                        router.path.append(AsamRoute.detail(reference))
+                                    if let volumeNumber = light.volumeNumber, let featureNumber = light.featureNumber {
+                                        router.path.append(LightRoute.detail(volumeNumber, featureNumber))
                                     }
                                 }
                                 .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
@@ -70,13 +70,13 @@ struct AsamList: View {
                         case .sectionHeader(let header):
                             Text(header)
                                 .onAppear {
-                                    if rows.last == asamItem {
+                                    if rows.last == item {
                                         viewModel.loadMore()
                                     }
                                 }
                                 .sectionHeader()
                         }
-                        
+
                     }
                     .listStyle(.plain)
                     .listSectionSeparator(.hidden)
@@ -88,7 +88,7 @@ struct AsamList: View {
                     VStack(alignment: .center, spacing: 16) {
                         HStack(alignment: .center, spacing: 0) {
                             Spacer()
-                            Image("asam_large")
+                            Image(systemName: "lightbulb.fill")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(maxWidth: .infinity)
@@ -96,7 +96,7 @@ struct AsamList: View {
                                 .foregroundColor(Color.onSurfaceColor)
                             Spacer()
                         }
-                        Text("No ASAMs match this filter")
+                        Text("No lights match this filter")
                             .font(.headline)
                             .fixedSize(horizontal: false, vertical: true)
                             .multilineTextAlignment(.center)
@@ -110,7 +110,7 @@ struct AsamList: View {
                 Text(error.localizedDescription)
             }
         }
-        .navigationTitle(DataSources.asam.fullName)
+        .navigationTitle(DataSources.light.fullName)
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.backgroundColor)
         .foregroundColor(Color.onSurfaceColor)
@@ -125,15 +125,15 @@ struct AsamList: View {
             }
         }
         .onAppear {
-            viewModel.repository = asamRepository
-            Metrics.shared.dataSourceList(dataSource: DataSources.asam)
+            viewModel.repository = lightRepository
+            Metrics.shared.dataSourceList(dataSource: DataSources.light)
         }
         .modifier(
             FilterButton(
                 filterOpen: $filterOpen,
                 sortOpen: $sortOpen,
                 dataSources: Binding.constant([
-                    DataSourceItem(dataSource: DataSources.asam)
+                    DataSourceItem(dataSource: DataSources.light)
                 ]),
                 allowSorting: true,
                 allowFiltering: true)
@@ -145,14 +145,14 @@ struct AsamList: View {
             NavigationStack {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
-                        SortView(definition: DataSources.asam)
+                        SortView(definition: DataSources.light)
                             .background(Color.surfaceColor)
-                        
+
                         Spacer()
                     }
-                    
+
                 }
-                .navigationTitle("\(DataSources.asam.name) Sort")
+                .navigationTitle("\(DataSources.light.name) Sort")
                 .navigationBarTitleDisplayMode(.inline)
                 .background(Color.backgroundColor)
                 .toolbar {
@@ -173,9 +173,9 @@ struct AsamList: View {
                 }
                 .presentationDetents([.large])
             }
-            
+
             .onAppear {
-                Metrics.shared.dataSourceSort(dataSource: DataSources.asam)
+                Metrics.shared.dataSourceSort(dataSource: DataSources.light)
             }
         }
     }

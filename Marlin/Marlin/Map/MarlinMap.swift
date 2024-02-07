@@ -112,9 +112,6 @@ class MainMapMixins: MapMixins {
         if UserDefaults.standard.dataSourceEnabled(DFRS.definition) {
             mixins.append(DFRSMap<DFRS>(showAsTiles: true))
         }
-        if UserDefaults.standard.dataSourceEnabled(Light.definition) {
-            mixins.append(LightMap<Light>(showAsTiles: true))
-        }
         if UserDefaults.standard.dataSourceEnabled(RadioBeacon.definition) {
             mixins.append(RadioBeaconMap<RadioBeacon>(showAsTiles: true))
         }
@@ -141,6 +138,12 @@ class MainMapMixins: MapMixins {
     func addPortTileRepository(tileRepository: TileRepository) {
         if UserDefaults.standard.dataSourceEnabled(DataSources.port) {
             mixins.append(PortMap(repository: tileRepository))
+        }
+    }
+
+    func addLightTileRepository(tileRepository: TileRepository) {
+        if UserDefaults.standard.dataSourceEnabled(DataSources.light) {
+            mixins.append(LightMap(repository: tileRepository))
         }
     }
 }

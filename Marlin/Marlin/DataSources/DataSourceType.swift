@@ -36,7 +36,7 @@ enum DataSourceType: String, CaseIterable {
         case .modu:
             return ModuModel.self
         case .light:
-            return Light.self
+            return LightModel.self
         case .port:
             return PortModel.self
         case .differentialGPSStation:

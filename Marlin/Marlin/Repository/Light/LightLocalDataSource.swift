@@ -13,10 +13,19 @@ import BackgroundTasks
 
 protocol LightLocalDataSource {
 
-    func getLight(
+    func getCharacteristic(
         featureNumber: String?,
         volumeNumber: String?,
         characteristicNumber: Int64
+    ) -> LightModel?
+
+    func getLight(
+        featureNumber: String?,
+        volumeNumber: String?
+    ) -> [LightModel]?
+
+    func getNewestLight(
+        volumeNumber: String
     ) -> LightModel?
 
     func getLightsInBounds(
@@ -32,7 +41,9 @@ protocol LightLocalDataSource {
         paginatedBy paginator: Trigger.Signal?
     ) -> AnyPublisher<[LightItem], Error>
 
+    func volumeCount(volumeNumber: String) -> Int
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
+    @discardableResult
     func insert(task: BGTask?, lights: [LightModel]) async -> Int
     func batchImport(from propertiesList: [LightModel]) async throws -> Int
 }
@@ -44,26 +55,66 @@ class LightCoreDataDataSource:
     typealias DataType = Light
     typealias ModelType = LightModel
     typealias Item = LightItem
+    typealias ListModelType = LightListModel
 
     private lazy var context: NSManagedObjectContext = {
         PersistenceController.current.newTaskContext()
     }()
 
-    func getLight(
+    func getCharacteristic(
         featureNumber: String?,
         volumeNumber: String?,
         characteristicNumber: Int64
     ) -> ModelType? {
+        var model: ModelType?
         if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
-            if let light = try? context.fetchFirst(
-                DataType.self,
-                predicate: NSPredicate(
-                    format: "featureNumber = %@ AND volumeNumber = %@ AND characteristicNumber = %d",
-                    argumentArray: [featureNumber, volumeNumber, characteristicNumber])) {
-                return ModelType(light: light)
+            model = context.performAndWait {
+                if let light = try? context.fetchFirst(
+                    DataType.self,
+                    predicate: NSPredicate(
+                        format: "featureNumber = %@ AND volumeNumber = %@ AND characteristicNumber = %d",
+                        argumentArray: [featureNumber, volumeNumber, characteristicNumber])) {
+                    return ModelType(light: light)
+                }
+                return nil
             }
         }
-        return nil
+        return model
+    }
+
+    func getLight(
+        featureNumber: String?,
+        volumeNumber: String?
+    ) -> [ModelType]? {
+        var models: [ModelType] = []
+        if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
+            models = context.performAndWait {
+                if let lights = try? context.fetchObjects(
+                    DataType.self,
+                    sortBy: [NSSortDescriptor(key: "characteristicNumber", ascending: false)],
+                    predicate: NSPredicate(
+                        format: "featureNumber = %@ AND volumeNumber = %@",
+                        argumentArray: [featureNumber, volumeNumber])) {
+                    return lights.map { light in
+                        ModelType(light: light)
+                    }
+                }
+                return []
+            }
+        }
+        return models
+    }
+
+    func getNewestLight(volumeNumber: String) -> ModelType? {
+        return context.performAndWait {
+            return try? context.fetchFirst(
+                Light.self,
+                sortBy: [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)],
+                predicate: NSPredicate(format: "volumeNumber = %@", volumeNumber))
+            .map({ light in
+                LightModel(light: light)
+            })
+        }
     }
 
     func getLightsInBounds(
@@ -73,9 +124,8 @@ class LightCoreDataDataSource:
         minLongitude: Double?,
         maxLongitude: Double?
     ) -> [ModelType] {
-        var models: [ModelType] = []
         // TODO: this should probably execute on a different context and be a perform
-        context.performAndWait {
+        return context.performAndWait {
             let fetchRequest = DataType.fetchRequest()
             var predicates: [NSPredicate] = buildPredicates(filters: filters)
 
@@ -99,11 +149,10 @@ class LightCoreDataDataSource:
             fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.light.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
-            models = (context.fetch(request: fetchRequest)?.map { model in
+            return (context.fetch(request: fetchRequest)?.map { model in
                 ModelType(light: model)
             }) ?? []
         }
-        return models
     }
 
     override func boundsPredicate(
@@ -122,6 +171,17 @@ class LightCoreDataDataSource:
                     """,
             minLatitude, maxLatitude, minLongitude, maxLongitude
         )
+    }
+
+    func volumeCount(volumeNumber: String) -> Int {
+        let fetchRequest = DataType.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "volumeNumber = %@", volumeNumber)
+
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)]
+
+        return context.performAndWait {
+            return (try? context.count(for: fetchRequest)) ?? 0
+        }
     }
 
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
@@ -189,11 +249,11 @@ extension LightCoreDataDataSource {
 
                 list = fetched.flatMap { item in
                     guard let sortDescriptor = sortDescriptors.first else {
-                        return [Item.listItem(ModelType(light: item))]
+                        return [Item.listItem(ListModelType(light: item))]
                     }
 
                     if !sortDescriptor.section {
-                        return [Item.listItem(ModelType(light: item))]
+                        return [Item.listItem(ListModelType(light: item))]
                     }
 
                     return createSectionHeaderAndListItem(
@@ -230,18 +290,18 @@ extension LightCoreDataDataSource {
                 previousHeader = sortValueString
                 return [
                     Item.sectionHeader(header: sortValueString),
-                    Item.listItem(ModelType(light: item))
+                    Item.listItem(ListModelType(light: item))
                 ]
             }
         } else if previousHeader == nil, let sortValueString = sortValueString {
             previousHeader = sortValueString
             return [
                 Item.sectionHeader(header: sortValueString),
-                Item.listItem(ModelType(light: item))
+                Item.listItem(ListModelType(light: item))
             ]
         }
 
-        return [Item.listItem(ModelType(light: item))]
+        return [Item.listItem(ListModelType(light: item))]
     }
 
     // ignore due to the amount of data types

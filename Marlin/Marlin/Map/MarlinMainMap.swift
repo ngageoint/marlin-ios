@@ -14,6 +14,7 @@ struct MarlinMainMap: View {
     @EnvironmentObject var asamsTileRepository: AsamsTileRepository
     @EnvironmentObject var modusTileRepository: ModusTileRepository
     @EnvironmentObject var portsTileRepository: PortsTileRepository
+    @EnvironmentObject var lightsTileRepository: LightsTileRepository
 
     @StateObject var mixins: MainMapMixins = MainMapMixins()
     @StateObject var mapState: MapState = MapState()
@@ -41,6 +42,7 @@ struct MarlinMainMap: View {
             mixins.addAsamTileRepository(tileRepository: asamsTileRepository)
             mixins.addModuTileRepository(tileRepository: modusTileRepository)
             mixins.addPortTileRepository(tileRepository: portsTileRepository)
+            mixins.addLightTileRepository(tileRepository: lightsTileRepository)
         }
     }
     

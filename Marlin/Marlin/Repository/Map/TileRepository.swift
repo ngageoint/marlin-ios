@@ -113,6 +113,56 @@ extension DataSourceImage {
         }
         return images
     }
+
+    func drawImageIntoTile(
+        mapImage: UIImage,
+        latitude: Double,
+        longitude: Double,
+        tileBounds3857: MapBoundingBox,
+        tileSize: Double
+    ) {
+        let object3857Location =
+        coord4326To3857(
+            longitude: longitude,
+            latitude: latitude)
+        let xPosition = (
+            ((object3857Location.x - tileBounds3857.swCorner.x) /
+             (tileBounds3857.neCorner.x - tileBounds3857.swCorner.x)
+            )  * tileSize)
+        let yPosition = tileSize - (
+            ((object3857Location.y - tileBounds3857.swCorner.y)
+             / (tileBounds3857.neCorner.y - tileBounds3857.swCorner.y)
+            ) * tileSize)
+        mapImage.draw(
+            in: CGRect(
+                x: (xPosition - (mapImage.size.width / 2)),
+                y: (yPosition - (mapImage.size.height / 2)),
+                width: mapImage.size.width,
+                height: mapImage.size.height
+            )
+        )
+    }
+
+    func coord4326To3857(longitude: Double, latitude: Double) -> (x: Double, y: Double) {
+        let a = 6378137.0
+        let lambda = longitude / 180 * Double.pi
+        let phi = latitude / 180 * Double.pi
+        let x = a * lambda
+        let y = a * log(tan(Double.pi / 4 + phi / 2))
+
+        return (x: x, y: y)
+    }
+
+    func coord3857To4326(y: Double, x: Double) -> (lat: Double, lon: Double) {
+        let a = 6378137.0
+        let distance = -y / a
+        let phi = Double.pi / 2 - 2 * atan(exp(distance))
+        let lambda = x / a
+        let lat = phi / Double.pi * 180
+        let lon = lambda / Double.pi * 180
+
+        return (lat: lat, lon: lon)
+    }
 }
 
 protocol TileRepository {

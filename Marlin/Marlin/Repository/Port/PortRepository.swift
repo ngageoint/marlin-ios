@@ -52,7 +52,7 @@ class PortRepository: ObservableObject {
             NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.port))
         }
 
-        let ports = await remoteDataSource.fetchPorts()
+        let ports = await remoteDataSource.fetch()
         let inserted = await localDataSource.insert(task: nil, ports: ports)
 
         DispatchQueue.main.async {

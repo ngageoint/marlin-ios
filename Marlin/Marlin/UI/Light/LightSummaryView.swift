@@ -8,14 +8,18 @@
 import SwiftUI
 
 struct LightSummaryView: DataSourceSummaryView {
+    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var router: MarlinRouter
+
     var showSectionHeader: Bool = false
     
     var showBookmarkNotes: Bool = false
 
-    var light: LightModel
+    var light: LightListModel
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
-    
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("\(light.featureNumber ?? "") \(light.internationalFeature ?? "") \(light.volumeNumber ?? "")")
@@ -32,9 +36,24 @@ struct LightSummaryView: DataSourceSummaryView {
                 Text(structure)
                     .secondary()
             }
-            bookmarkNotesView(light)
+            if light.canBookmark {
+                bookmarkNotesView(light)
+            }
 
-            DataSourceActionBar(data: light, showMoreDetailsButton: showMoreDetails, showFocusButton: !showMoreDetails)
+            DataSourceActions(
+                moreDetails: showMoreDetails ? LightActions.Tap(volume: light.volumeNumber, featureNumber: light.featureNumber, path: $router.path) : nil,
+                location: !showMoreDetails ? Actions.Location(latLng: light.coordinate) : nil,
+                zoom: !showMoreDetails ? LightActions.Zoom(latLng: light.coordinate, itemKey: light.id) : nil,
+                bookmark: light.canBookmark ? Actions.Bookmark(
+                    itemKey: light.id,
+                    bookmarkViewModel: bookmarkViewModel
+                ) : nil,
+                share: light.itemTitle
+            )
+        }
+        .onAppear {
+            bookmarkViewModel.repository = bookmarkRepository
+            bookmarkViewModel.getBookmark(itemKey: light.id, dataSource: DataSources.light.key)
         }
     }
 }

@@ -72,8 +72,15 @@ class Bookmark: NSManagedObject, BatchImportable {
             return NoticeToMariners.getItem(context: context, itemKey: self.id)
         case DifferentialGPSStation.key:
             return DifferentialGPSStation.getItem(context: context, itemKey: self.id)
-        case Light.key:
-            return Light.getItem(context: context, itemKey: self.id)
+        case DataSources.light.key:
+            let split = itemKey.split(separator: "--")
+            if split.count == 3 {
+                return MSI.shared.lightRepository?.getCharacteristic(
+                    featureNumber: "\(split[0])",
+                    volumeNumber: "\(split[1])",
+                    characteristicNumber: 1
+                )
+            }
         case RadioBeacon.key:
             return RadioBeacon.getItem(context: context, itemKey: self.id)
         case ElectronicPublication.key:

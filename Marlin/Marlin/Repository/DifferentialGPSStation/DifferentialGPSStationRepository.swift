@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import CoreData
+import Combine
 
 enum DifferentialGPSStationItem: Hashable, Identifiable {
     var id: String {
@@ -22,75 +22,75 @@ enum DifferentialGPSStationItem: Hashable, Identifiable {
     case sectionHeader(header: String)
 }
 
-protocol DifferentialGPSStationRepository {
-    @discardableResult
-    func getDifferentialGPSStation(
-        featureNumber: Int?,
-        volumeNumber: String?,
-        waypointURI: URL?) -> DifferentialGPSStationModel?
-    func getCount(filters: [DataSourceFilterParameter]?) -> Int
-}
-
-class DifferentialGPSStationRepositoryManager: DifferentialGPSStationRepository, ObservableObject {
-    private var repository: DifferentialGPSStationRepository
-    init(repository: DifferentialGPSStationRepository) {
-        self.repository = repository
+class DifferentialGPSStationRepository: ObservableObject {
+    var localDataSource: DifferentialGPSStationLocalDataSource
+    private var remoteDataSource: DifferentialGPSStationRemoteDataSource
+    init(
+        localDataSource: DifferentialGPSStationLocalDataSource,
+        remoteDataSource: DifferentialGPSStationRemoteDataSource
+    ) {
+        self.localDataSource = localDataSource
+        self.remoteDataSource = remoteDataSource
     }
-    
+
     func getDifferentialGPSStation(
         featureNumber: Int?,
-        volumeNumber: String?,
-        waypointURI: URL?) -> DifferentialGPSStationModel? {
-        repository.getDifferentialGPSStation(
+        volumeNumber: String?
+    ) -> DifferentialGPSStationModel? {
+        localDataSource.getDifferentialGPSStation(
             featureNumber: featureNumber,
-            volumeNumber: volumeNumber,
-            waypointURI: waypointURI
+            volumeNumber: volumeNumber
         )
     }
-    
-    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
-        repository.getCount(filters: filters)
-    }
-}
 
-class DifferentialGPSStationCoreDataRepository: DifferentialGPSStationRepository, ObservableObject {
-    private var context: NSManagedObjectContext
-    required init(context: NSManagedObjectContext) {
-        self.context = context
-    }
-    
-    func getDifferentialGPSStation(
-        featureNumber: Int?,
-        volumeNumber: String?,
-        waypointURI: URL?) -> DifferentialGPSStationModel? {
-        if let waypointURI = waypointURI {
-            if let id = context.persistentStoreCoordinator?.managedObjectID(
-                forURIRepresentation: waypointURI),
-                let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
-                let dataSource = waypoint.decodeToDataSource()
-                if let dataSource = dataSource as? DifferentialGPSStationModel {
-                    return dataSource
-                }
-            }
-        }
-        if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
-            if let dgps = try? context.fetchFirst(
-                DifferentialGPSStation.self,
-                predicate: NSPredicate(
-                    format: "featureNumber = %ld AND volumeNumber = %@",
-                    argumentArray: [featureNumber, volumeNumber])) {
-                return DifferentialGPSStationModel(differentialGPSStation: dgps)
-            }
-        }
-        return nil
-    }
-    
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
-        guard let fetchRequest = DifferentialGPSStationFilterable().fetchRequest(
-            filters: filters,
-            commonFilters: nil) else {
-            return 0
+        localDataSource.getCount(filters: filters)
+    }
+
+    func dgps(
+        filters: [DataSourceFilterParameter]?,
+        paginatedBy paginator: Trigger.Signal? = nil
+    ) -> AnyPublisher<[DifferentialGPSStationItem], Error> {
+        localDataSource.dgps(filters: filters, paginatedBy: paginator)
+    }
+
+    func fetch() async -> [DifferentialGPSStationModel] {
+        NSLog("Fetching DGPS")
+        DispatchQueue.main.async {
+            MSI.shared.appState.loadingDataSource[DataSources.dgps.key] = true
+            NotificationCenter.default.post(
+                name: .DataSourceLoading,
+                object: DataSourceItem(dataSource: DataSources.dgps)
+            )
         }
-        return (try? context.count(for: fetchRequest)) ?? 0
+
+        let newest = localDataSource.getNewestDifferentialGPSStation()
+
+        var noticeWeek = newest?.noticeWeek
+        var noticeYear = newest?.noticeYear
+
+        let dgpss = await remoteDataSource.fetch(noticeYear: noticeYear, noticeWeek: noticeWeek)
+        let inserted = await localDataSource.insert(task: nil, dgpss: dgpss)
+
+        DispatchQueue.main.async {
+            MSI.shared.appState.loadingDataSource[DataSources.dgps.key] = false
+            UserDefaults.standard.updateLastSyncTimeSeconds(DataSources.dgps)
+            NotificationCenter.default.post(
+                name: .DataSourceLoaded,
+                object: DataSourceItem(dataSource: DataSources.dgps)
+            )
+            if inserted != 0 {
+                NotificationCenter.default.post(
+                    name: .DataSourceNeedsProcessed,
+                    object: DataSourceUpdatedNotification(key: DataSources.dgps.key)
+                )
+                NotificationCenter.default.post(
+                    name: .DataSourceUpdated,
+                    object: DataSourceUpdatedNotification(key: DataSources.dgps.key)
+                )
+            }
+        }
+
+        return dgpss
     }
 }

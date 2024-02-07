@@ -29,6 +29,12 @@ class AsamRepository: ObservableObject {
         self.localDataSource = localDataSource
         self.remoteDataSource = remoteDataSource
     }
+
+    func createOperation() -> AsamDataFetchOperation {
+        let newestAsam = localDataSource.getNewestAsam()
+        return AsamDataFetchOperation(dateString: newestAsam?.dateString)
+    }
+
     func getAsam(reference: String?) -> AsamModel? {
         localDataSource.getAsam(reference: reference)
     }
@@ -46,7 +52,10 @@ class AsamRepository: ObservableObject {
         NSLog("Fetching ASAMS")
         DispatchQueue.main.async {
             MSI.shared.appState.loadingDataSource[DataSources.asam.key] = true
-            NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.asam))
+            NotificationCenter.default.post(
+                name: .DataSourceLoading,
+                object: DataSourceItem(dataSource: DataSources.asam)
+            )
         }
 
         let newestAsam = localDataSource.getNewestAsam()
@@ -57,17 +66,20 @@ class AsamRepository: ObservableObject {
         DispatchQueue.main.async {
             MSI.shared.appState.loadingDataSource[DataSources.asam.key] = false
             UserDefaults.standard.updateLastSyncTimeSeconds(DataSources.asam)
-            NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: DataSources.asam))
-                if inserted != 0 {
-                    NotificationCenter.default.post(
-                        name: .DataSourceNeedsProcessed,
-                        object: DataSourceUpdatedNotification(key: DataSources.asam.key)
-                    )
-                    NotificationCenter.default.post(
-                        name: .DataSourceUpdated,
-                        object: DataSourceUpdatedNotification(key: DataSources.asam.key)
-                    )
-                }
+            NotificationCenter.default.post(
+                name: .DataSourceLoaded,
+                object: DataSourceItem(dataSource: DataSources.asam)
+            )
+            if inserted != 0 {
+                NotificationCenter.default.post(
+                    name: .DataSourceNeedsProcessed,
+                    object: DataSourceUpdatedNotification(key: DataSources.asam.key)
+                )
+                NotificationCenter.default.post(
+                    name: .DataSourceUpdated,
+                    object: DataSourceUpdatedNotification(key: DataSources.asam.key)
+                )
+            }
         }
 
         return asams

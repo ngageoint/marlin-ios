@@ -141,9 +141,9 @@ struct MarlinApp: App {
     var asamRepository: AsamRepository
     var moduRepository: ModuRepository
     var portRepository: PortRepository
+    var dgpsRepository: DifferentialGPSStationRepository
+    var lightRepository: LightRepository
 
-    var lightRepository: LightRepositoryManager
-    var dgpsRepository: DifferentialGPSStationRepositoryManager
     var radioBeaconRepository: RadioBeaconRepositoryManager
     var routeRepository: RouteRepositoryManager
     var routeWaypointRepository: RouteWaypointRepository
@@ -152,6 +152,7 @@ struct MarlinApp: App {
     var asamsTileRepository: AsamsTileRepository
     var modusTileRepository: ModusTileRepository
     var portsTileRepository: PortsTileRepository
+    var lightsTileRepository: LightsTileRepository
 
     private var router: MarlinRouter = MarlinRouter()
 
@@ -183,11 +184,15 @@ struct MarlinApp: App {
             localDataSource: PortCoreDataDataSource(),
             remoteDataSource: PortRemoteDataSource()
         )
+        dgpsRepository = DifferentialGPSStationRepository(
+            localDataSource: DifferentialGPSStationCoreDataDataSource(),
+            remoteDataSource: DifferentialGPSStationRemoteDataSource()
+        )
+        lightRepository = LightRepository(
+            localDataSource: LightCoreDataDataSource(),
+            remoteDataSource: LightRemoteDataSource()
+        )
 
-        lightRepository = LightRepositoryManager(
-            repository: LightCoreDataRepository(context: persistentStore.viewContext))
-        dgpsRepository = DifferentialGPSStationRepositoryManager(
-            repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
         radioBeaconRepository = RadioBeaconRepositoryManager(
             repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
         routeRepository = RouteRepositoryManager(
@@ -200,11 +205,13 @@ struct MarlinApp: App {
         asamsTileRepository = AsamsTileRepository(localDataSource: asamRepository.localDataSource)
         modusTileRepository = ModusTileRepository(localDataSource: moduRepository.localDataSource)
         portsTileRepository = PortsTileRepository(localDataSource: portRepository.localDataSource)
+        lightsTileRepository = LightsTileRepository(localDataSource: lightRepository.localDataSource)
 
         MSI.shared.addRepositories(
             asamRepository: asamRepository,
             moduRepository: moduRepository,
-            portRepository: portRepository
+            portRepository: portRepository,
+            lightRepository: lightRepository
         )
         UNUserNotificationCenter.current().delegate = appDelegate
     }
@@ -229,6 +236,7 @@ struct MarlinApp: App {
                 .environmentObject(asamsTileRepository)
                 .environmentObject(modusTileRepository)
                 .environmentObject(portsTileRepository)
+                .environmentObject(lightsTileRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
                 .environmentObject(router)
                 .background(Color.surfaceColor)

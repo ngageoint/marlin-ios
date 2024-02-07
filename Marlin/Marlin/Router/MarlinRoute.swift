@@ -42,6 +42,10 @@ enum PortRoute: Hashable {
     case detail(Int64)
 }
 
+enum LightRoute: Hashable {
+    case detail(String, String)
+}
+
 enum DataSourceRoute: Hashable {
     case detail(dataSourceKey: String, itemKey: String)
 }
@@ -233,6 +237,21 @@ struct MarlinRouteModifier: ViewModifier {
                     // swiftlint:enable redundant_discardable_let
 
                     PortDetailView(portNumber: portNumber)
+                }
+            }
+            .navigationDestination(for: LightRoute.self) { item in
+                switch item {
+                case .detail(let volumeNumber, let featureNumber):
+                    // disable this rule in order to execute a statement prior to returning a view
+                    // swiftlint:disable redundant_discardable_let
+                    let _ = NotificationCenter.default.post(
+                        name: .DismissBottomSheet,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    // swiftlint:enable redundant_discardable_let
+
+                    LightDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
                 }
             }
             .navigationDestination(for: ItemWrapper.self) { item in

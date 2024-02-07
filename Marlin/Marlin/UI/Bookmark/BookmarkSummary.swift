@@ -37,6 +37,9 @@ struct BookmarkSummary: DataSourceSummaryView {
             case let dataSource as PortModel:
                 PortSummaryView(port: PortListModel(portModel: dataSource))
                     .showBookmarkNotes(true)
+            case let dataSource as LightModel:
+                LightSummaryView(light: LightListModel(lightModel: dataSource))
+                    .showBookmarkNotes(true)
             case let dataSource as any DataSourceViewBuilder:
                 AnyView(
                     dataSource.summary

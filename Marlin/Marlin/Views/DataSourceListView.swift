@@ -11,7 +11,7 @@ struct DataSourceNavView: View {
     var dataSource: DataSourceItem
     @ObservedObject var focusedItem: ItemWrapper
     var watchFocusedItem: Bool = false
-    @ObservedObject private var router: MarlinRouter = MarlinRouter()
+    @StateObject private var router: MarlinRouter = MarlinRouter()
 
     var body: some View {
         Self._printChanges()
@@ -35,10 +35,11 @@ struct DataSourceListView: View {
         } else if dataSource.key == DataSources.modu.key {
             ModuList()
         } else if dataSource.key == Light.key {
-            MSIListView<Light, EmptyView, EmptyView, EmptyView>(
-                focusedItem: focusedItem,
-                watchFocusedItem: watchFocusedItem
-            )
+            LightList()
+//            MSIListView<Light, EmptyView, EmptyView, EmptyView>(
+//                focusedItem: focusedItem,
+//                watchFocusedItem: watchFocusedItem
+//            )
         } else if dataSource.key == NavigationalWarning.key {
             NavigationalWarningsOverview(
                 focusedItem: focusedItem,

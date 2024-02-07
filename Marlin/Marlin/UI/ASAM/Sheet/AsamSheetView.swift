@@ -24,7 +24,6 @@ struct AsamSheetView: View {
                     .setShowMoreDetails(true)
                     .setShowSectionHeader(true)
                     .setShowTitle(true)
-
             }
         }
         .onChange(of: reference) { newReference in
