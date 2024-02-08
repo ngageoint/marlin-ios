@@ -143,8 +143,8 @@ struct MarlinApp: App {
     var portRepository: PortRepository
     var dgpsRepository: DifferentialGPSStationRepository
     var lightRepository: LightRepository
+    var radioBeaconRepository: RadioBeaconRepository
 
-    var radioBeaconRepository: RadioBeaconRepositoryManager
     var routeRepository: RouteRepositoryManager
     var routeWaypointRepository: RouteWaypointRepository
     var navigationalWarningRepository: NavigationalWarningRepositoryManager
@@ -153,6 +153,7 @@ struct MarlinApp: App {
     var modusTileRepository: ModusTileRepository
     var portsTileRepository: PortsTileRepository
     var lightsTileRepository: LightsTileRepository
+    var radioBeaconsTileRepository: RadioBeaconsTileRepository
 
     private var router: MarlinRouter = MarlinRouter()
 
@@ -192,9 +193,11 @@ struct MarlinApp: App {
             localDataSource: LightCoreDataDataSource(),
             remoteDataSource: LightRemoteDataSource()
         )
+        radioBeaconRepository = RadioBeaconRepository(
+            localDataSource: RadioBeaconCoreDataDataSource(),
+            remoteDataSource: RadioBeaconRemoteDataSource()
+        )
 
-        radioBeaconRepository = RadioBeaconRepositoryManager(
-            repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
         routeRepository = RouteRepositoryManager(
             repository: RouteCoreDataRepository(context: persistentStore.viewContext))
         routeWaypointRepository = RouteWaypointRepository(
@@ -206,12 +209,14 @@ struct MarlinApp: App {
         modusTileRepository = ModusTileRepository(localDataSource: moduRepository.localDataSource)
         portsTileRepository = PortsTileRepository(localDataSource: portRepository.localDataSource)
         lightsTileRepository = LightsTileRepository(localDataSource: lightRepository.localDataSource)
+        radioBeaconsTileRepository = RadioBeaconsTileRepository(localDataSource: radioBeaconRepository.localDataSource)
 
         MSI.shared.addRepositories(
             asamRepository: asamRepository,
             moduRepository: moduRepository,
             portRepository: portRepository,
-            lightRepository: lightRepository
+            lightRepository: lightRepository,
+            radioBeaconRepository: radioBeaconRepository
         )
         UNUserNotificationCenter.current().delegate = appDelegate
     }
@@ -237,6 +242,7 @@ struct MarlinApp: App {
                 .environmentObject(modusTileRepository)
                 .environmentObject(portsTileRepository)
                 .environmentObject(lightsTileRepository)
+                .environmentObject(radioBeaconsTileRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
                 .environmentObject(router)
                 .background(Color.surfaceColor)

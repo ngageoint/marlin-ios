@@ -57,18 +57,19 @@ class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSou
     }
 
     func getRadioBeacon(featureNumber: Int?, volumeNumber: String?) -> RadioBeaconModel? {
-
-        if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
-            if let radioBeacon = try? context.fetchFirst(
-                RadioBeacon.self,
-                predicate: NSPredicate(
-                    format: "featureNumber = %ld AND volumeNumber = %@",
-                    argumentArray: [featureNumber, volumeNumber])
-            ) {
-                return RadioBeaconModel(radioBeacon: radioBeacon)
+        return context.performAndWait {
+            if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
+                if let radioBeacon = try? context.fetchFirst(
+                    RadioBeacon.self,
+                    predicate: NSPredicate(
+                        format: "featureNumber = %ld AND volumeNumber = %@",
+                        argumentArray: [featureNumber, volumeNumber])
+                ) {
+                    return RadioBeaconModel(radioBeacon: radioBeacon)
+                }
             }
+            return nil
         }
-        return nil
     }
 
     func getRadioBeaconsInBounds(

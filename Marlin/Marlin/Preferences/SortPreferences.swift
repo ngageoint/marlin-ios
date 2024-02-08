@@ -27,7 +27,7 @@ extension UserDefaults {
             return publisher(for: \.epubSort)
         case DataSources.port.key:
             return publisher(for: \.portSort)
-        case RadioBeacon.key:
+        case DataSources.radioBeacon.key:
             return publisher(for: \.radioBeaconSort)
         default:
             return publisher(for: \.asamSort)

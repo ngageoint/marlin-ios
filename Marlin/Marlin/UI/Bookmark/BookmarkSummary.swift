@@ -40,6 +40,9 @@ struct BookmarkSummary: DataSourceSummaryView {
             case let dataSource as LightModel:
                 LightSummaryView(light: LightListModel(lightModel: dataSource))
                     .showBookmarkNotes(true)
+            case let dataSource as RadioBeaconModel:
+                RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel: dataSource))
+                    .showBookmarkNotes(true)
             case let dataSource as any DataSourceViewBuilder:
                 AnyView(
                     dataSource.summary

@@ -26,7 +26,7 @@ extension UserDefaults {
             return publisher(for: \.epubOrder)
         case DataSources.port.key:
             return publisher(for: \.portOrder)
-        case RadioBeacon.key:
+        case DataSources.radioBeacon.key:
             return publisher(for: \.radioBeaconOrder)
         case NavigationalWarning.key:
             return publisher(for: \.navWarningOrder)

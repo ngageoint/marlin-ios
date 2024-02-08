@@ -20,6 +20,10 @@ struct RadioBeaconListModel: Hashable, Identifiable {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 
+    var itemTitle: String {
+        return "\(self.name ?? "\(self.featureNumber ?? 0)")"
+    }
+
     var morseCode: String? {
         guard let characteristic = characteristic,
               let leftParen = characteristic.firstIndex(of: "("),
@@ -489,12 +493,12 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
                 }
             }
             if let start = start {
-                sectors.append(ImageSector(startDegrees: start, endDegrees: end, color: RadioBeacon.color))
+                sectors.append(ImageSector(startDegrees: start, endDegrees: end, color: DataSources.radioBeacon.color))
             } else {
                 if end <= previousEnd {
                     end += 360
                 }
-                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: RadioBeacon.color))
+                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: DataSources.radioBeacon.color))
             }
             previousEnd = end
         })
@@ -540,7 +544,7 @@ extension RadioBeaconModel: DataSource {
     }
     
     var color: UIColor {
-        return RadioBeacon.color
+        return DataSources.radioBeacon.color
     }
     static var isMappable: Bool = true
     static var dataSourceName: String = 
@@ -620,9 +624,9 @@ extension RadioBeaconModel: MapImage {
     }
     
     func raconImage(scale: Int, azimuthCoverage: [ImageSector]? = nil, zoomLevel: Int) -> UIImage? {
-        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * RadioBeacon.imageScale
-        let sectors = azimuthCoverage ?? [ImageSector(startDegrees: 0, endDegrees: 360, color: RadioBeacon.color)]
-        
+        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * DataSources.radioBeacon.imageScale
+        let sectors = azimuthCoverage ?? [ImageSector(startDegrees: 0, endDegrees: 360, color: DataSources.radioBeacon.color)]
+
         if zoomLevel > 8 {
             return RaconImage(
                 frame: CGRect(x: 0, y: 0, width: 3 * (radius + 3.0), height: 3 * (radius + 3.0)),
@@ -633,7 +637,7 @@ extension RadioBeaconModel: MapImage {
                 darkMode: false)
         } else {
             return CircleImage(
-                color: RadioBeacon.color,
+                color: DataSources.radioBeacon.color,
                 radius: radius,
                 fill: false,
                 arcWidth: min(3.0, radius / 2.0))

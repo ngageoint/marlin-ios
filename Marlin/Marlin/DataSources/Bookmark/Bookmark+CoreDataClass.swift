@@ -81,8 +81,14 @@ class Bookmark: NSManagedObject, BatchImportable {
                     characteristicNumber: 1
                 )
             }
-        case RadioBeacon.key:
-            return RadioBeacon.getItem(context: context, itemKey: self.id)
+        case DataSources.radioBeacon.key:
+            let split = itemKey.split(separator: "--")
+            if split.count == 2 {
+                return MSI.shared.radioBeaconRepository?.getRadioBeacon(
+                    featureNumber: Int(split[0]) ?? -1,
+                    volumeNumber: "\(split[1])"
+                )
+            }
         case ElectronicPublication.key:
             return ElectronicPublication.getItem(context: context, itemKey: self.id)
         case GeoPackageFeatureItem.key:

@@ -56,6 +56,12 @@
 		F714DD8B2B33941C003D7996 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD8A2B33941C003D7996 /* UserDefaults.swift */; };
 		F714DD8D2B33944D003D7996 /* MapPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD8C2B33944D003D7996 /* MapPreferences.swift */; };
 		F714DD8F2B3394BA003D7996 /* DataSourcePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD8E2B3394BA003D7996 /* DataSourcePreferences.swift */; };
+		F715E2E72B7412B300752688 /* RadioBeaconInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E2E62B7412B200752688 /* RadioBeaconInitializer.swift */; };
+		F715E2E92B741CC100752688 /* RadioBeaconActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E2E82B741CC100752688 /* RadioBeaconActions.swift */; };
+		F715E2EB2B741F5900752688 /* RadioBeaconList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E2EA2B741F5900752688 /* RadioBeaconList.swift */; };
+		F715E2ED2B7422DF00752688 /* RadioBeaconTileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E2EC2B7422DF00752688 /* RadioBeaconTileRepository.swift */; };
+		F715E2EF2B74279A00752688 /* RadioBeaconsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E2EE2B74279A00752688 /* RadioBeaconsViewModel.swift */; };
+		F715E2F12B751A9A00752688 /* RadioBeaconSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E2F02B751A9A00752688 /* RadioBeaconSheetView.swift */; };
 		F7194E102AFC3E7D0018E4B4 /* AsamInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7194E0F2AFC3E7D0018E4B4 /* AsamInitializer.swift */; };
 		F7194E122AFD9C0B0018E4B4 /* MockBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7194E112AFD9C0B0018E4B4 /* MockBundle.swift */; };
 		F71CC6EA28AC178F000A326C /* Port+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6E928AC178F000A326C /* Port+CoreDataClass.swift */; };
@@ -546,10 +552,7 @@
 		F7FFB31828D63EBC00C31AA3 /* Light+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31728D63EBC00C31AA3 /* Light+Decodable.swift */; };
 		F7FFB31C28D63F5500C31AA3 /* Light+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31B28D63F5500C31AA3 /* Light+MapImage.swift */; };
 		F7FFB31E28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31D28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift */; };
-		F7FFB32028D640FA00C31AA3 /* RadioBeacon+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31F28D640FA00C31AA3 /* RadioBeacon+DataSource.swift */; };
-		F7FFB32228D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB32128D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift */; };
-		F7FFB32628D6422F00C31AA3 /* RadioBeacon+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB32528D6422F00C31AA3 /* RadioBeacon+MapImage.swift */; };
-		F7FFB32828D6427200C31AA3 /* RadioBeacon+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB32728D6427200C31AA3 /* RadioBeacon+Decodable.swift */; };
+		F7FFB32828D6427200C31AA3 /* RadioBeaconPropertyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB32728D6427200C31AA3 /* RadioBeaconPropertyContainer.swift */; };
 		F7FFB33428D8A58D00C31AA3 /* ExceptionCatcher in Frameworks */ = {isa = PBXBuildFile; productRef = F7FFB33328D8A58D00C31AA3 /* ExceptionCatcher */; };
 		F7FFB33628D8F5A300C31AA3 /* LightSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB33528D8F5A300C31AA3 /* LightSettingsView.swift */; };
 		F7FFB33828D9EB6900C31AA3 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = F7FFB33728D9EB6800C31AA3 /* CHANGELOG.md */; };
@@ -632,6 +635,12 @@
 		F714DD8A2B33941C003D7996 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		F714DD8C2B33944D003D7996 /* MapPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPreferences.swift; sourceTree = "<group>"; };
 		F714DD8E2B3394BA003D7996 /* DataSourcePreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourcePreferences.swift; sourceTree = "<group>"; };
+		F715E2E62B7412B200752688 /* RadioBeaconInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconInitializer.swift; sourceTree = "<group>"; };
+		F715E2E82B741CC100752688 /* RadioBeaconActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconActions.swift; sourceTree = "<group>"; };
+		F715E2EA2B741F5900752688 /* RadioBeaconList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconList.swift; sourceTree = "<group>"; };
+		F715E2EC2B7422DF00752688 /* RadioBeaconTileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconTileRepository.swift; sourceTree = "<group>"; };
+		F715E2EE2B74279A00752688 /* RadioBeaconsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconsViewModel.swift; sourceTree = "<group>"; };
+		F715E2F02B751A9A00752688 /* RadioBeaconSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconSheetView.swift; sourceTree = "<group>"; };
 		F7194E0F2AFC3E7D0018E4B4 /* AsamInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamInitializer.swift; sourceTree = "<group>"; };
 		F7194E112AFD9C0B0018E4B4 /* MockBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBundle.swift; sourceTree = "<group>"; };
 		F71CC6E928AC178F000A326C /* Port+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -1131,10 +1140,7 @@
 		F7FFB31728D63EBC00C31AA3 /* Light+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+Decodable.swift"; sourceTree = "<group>"; };
 		F7FFB31B28D63F5500C31AA3 /* Light+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+MapImage.swift"; sourceTree = "<group>"; };
 		F7FFB31D28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
-		F7FFB31F28D640FA00C31AA3 /* RadioBeacon+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+DataSource.swift"; sourceTree = "<group>"; };
-		F7FFB32128D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
-		F7FFB32528D6422F00C31AA3 /* RadioBeacon+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+MapImage.swift"; sourceTree = "<group>"; };
-		F7FFB32728D6427200C31AA3 /* RadioBeacon+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioBeacon+Decodable.swift"; sourceTree = "<group>"; };
+		F7FFB32728D6427200C31AA3 /* RadioBeaconPropertyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconPropertyContainer.swift; sourceTree = "<group>"; };
 		F7FFB33528D8F5A300C31AA3 /* LightSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightSettingsView.swift; sourceTree = "<group>"; };
 		F7FFB33728D9EB6800C31AA3 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		F7FFB33928D9EFDB00C31AA3 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
@@ -1253,6 +1259,14 @@
 				F714DD8E2B3394BA003D7996 /* DataSourcePreferences.swift */,
 			);
 			path = Preferences;
+			sourceTree = "<group>";
+		};
+		F715E2F22B751A9F00752688 /* Sheet */ = {
+			isa = PBXGroup;
+			children = (
+				F715E2F02B751A9A00752688 /* RadioBeaconSheetView.swift */,
+			);
+			path = Sheet;
 			sourceTree = "<group>";
 		};
 		F71CC6E828AC177A000A326C /* Port */ = {
@@ -1485,6 +1499,7 @@
 			isa = PBXGroup;
 			children = (
 				F7222FA52B6D501D00C3E4F1 /* RadioBeaconInitialDataLoadOperation.swift */,
+				F715E2E62B7412B200752688 /* RadioBeaconInitializer.swift */,
 			);
 			path = RadioBeacon;
 			sourceTree = "<group>";
@@ -1714,10 +1729,7 @@
 			children = (
 				F7FFB32928D642F800C31AA3 /* Views */,
 				F74B9B0628B7CF650097D448 /* RadioBeacon+CoreDataClass.swift */,
-				F7FFB31F28D640FA00C31AA3 /* RadioBeacon+DataSource.swift */,
-				F7FFB32128D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift */,
-				F7FFB32528D6422F00C31AA3 /* RadioBeacon+MapImage.swift */,
-				F7FFB32728D6427200C31AA3 /* RadioBeacon+Decodable.swift */,
+				F7FFB32728D6427200C31AA3 /* RadioBeaconPropertyContainer.swift */,
 				F7391CB22AC4982C0002ABDD /* RadioBeaconModel.swift */,
 				F73357062B308FDE00BEE26F /* RadioBeaconFilterable.swift */,
 			);
@@ -1731,6 +1743,7 @@
 				F7CB01022B5F252A00034B9C /* ModuActions.swift */,
 				F72E4DA02B6A8B39006ED371 /* PortActions.swift */,
 				F7222FBF2B6DA46000C3E4F1 /* LightActions.swift */,
+				F715E2E82B741CC100752688 /* RadioBeaconActions.swift */,
 			);
 			path = Action;
 			sourceTree = "<group>";
@@ -2199,6 +2212,7 @@
 				F7391CB42AC49A440002ABDD /* RadioBeaconRepository.swift */,
 				F7DEA1D52B6AD18E00EB801A /* RadioBeaconLocalDataSource.swift */,
 				F7222FB32B6D73C300C3E4F1 /* RadioBeaconRemoteDataSource.swift */,
+				F715E2EC2B7422DF00752688 /* RadioBeaconTileRepository.swift */,
 			);
 			path = RadioBeacon;
 			sourceTree = "<group>";
@@ -2344,9 +2358,12 @@
 		F7C5F1FB2AEC57A70091BC01 /* RadioBeacon */ = {
 			isa = PBXGroup;
 			children = (
+				F715E2F22B751A9F00752688 /* Sheet */,
 				F74B9B0C28B7DA210097D448 /* RadioBeaconSummaryView.swift */,
 				F74B9B1028B7DACB0097D448 /* RadioBeaconDetailView.swift */,
 				F7391CB62AC4C3E40002ABDD /* RadioBeaconViewModel.swift */,
+				F715E2EA2B741F5900752688 /* RadioBeaconList.swift */,
+				F715E2EE2B74279A00752688 /* RadioBeaconsViewModel.swift */,
 			);
 			path = RadioBeacon;
 			sourceTree = "<group>";
@@ -3335,6 +3352,7 @@
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
 				F7DEA1F42B6BEEA600EB801A /* NoticeToMarinersModel.swift in Sources */,
 				F7364E342A1D4BD10098F243 /* MarlinMainMap.swift in Sources */,
+				F715E2F12B751A9A00752688 /* RadioBeaconSheetView.swift in Sources */,
 				F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */,
 				F7CB01052B60040200034B9C /* ModuList.swift in Sources */,
 				F72EAADA291D915000AC6026 /* ChartCorrection.swift in Sources */,
@@ -3402,6 +3420,7 @@
 				F75CB88F2B5EF7A5008979ED /* ModuDataLoadOperation.swift in Sources */,
 				F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */,
 				F7DEA1EA2B6BEC0C00EB801A /* DifferentialGPSStationService.swift in Sources */,
+				F715E2E92B741CC100752688 /* RadioBeaconActions.swift in Sources */,
 				F71D288128C29F0200F1775C /* BundleExtensions.swift in Sources */,
 				F71FC0DB2A3BBC7E00911BAC /* DataSourceMapGrid.swift in Sources */,
 				F7648ED42AABC8D2007E9A54 /* AsamViewModel.swift in Sources */,
@@ -3428,9 +3447,9 @@
 				F7222F8B2B6C09E100C3E4F1 /* NoticeToMarinersDataLoadOperation.swift in Sources */,
 				F7DEA1F62B6BF3CA00EB801A /* ElectronicPublicationDataFetchOperation.swift in Sources */,
 				F7517D452B16805100A9DC72 /* AsamSheetView.swift in Sources */,
+				F715E2EB2B741F5900752688 /* RadioBeaconList.swift in Sources */,
 				F730DFC72A9950B20051775C /* GeoJSONExportable.swift in Sources */,
 				F7222FAE2B6D71A000C3E4F1 /* DifferentialGPSStationRemoteDataSource.swift in Sources */,
-				F7FFB32228D641BF00C31AA3 /* RadioBeacon+DataSourceViewBuilder.swift in Sources */,
 				F73357032B308F9900BEE26F /* PortFilterable.swift in Sources */,
 				F7D8FA5E293AA17C00E7D0A1 /* DataSourceFilterParameter.swift in Sources */,
 				F71D287728BE976300F1775C /* DFRSSummaryView.swift in Sources */,
@@ -3478,6 +3497,7 @@
 				F7275FDF28FA252800ED8D9A /* LightProtocol.swift in Sources */,
 				F7AFF9432AD46C6B00555960 /* RouteViewModel.swift in Sources */,
 				F7DEA1DF2B6BE2C700EB801A /* DataFetchOperation.swift in Sources */,
+				F715E2E72B7412B300752688 /* RadioBeaconInitializer.swift in Sources */,
 				F714DD872B339395003D7996 /* FilterPreferences.swift in Sources */,
 				F7D8FA4B293A958900E7D0A1 /* LocationFilter.swift in Sources */,
 				F7391CB32AC4982C0002ABDD /* RadioBeaconModel.swift in Sources */,
@@ -3510,10 +3530,8 @@
 				F7F5979F285D185000F9B32E /* ModuMap.swift in Sources */,
 				F714DD8F2B3394BA003D7996 /* DataSourcePreferences.swift in Sources */,
 				F7364E3C2A1E45B80098F243 /* NavigationalWarningMapView.swift in Sources */,
-				F7FFB32028D640FA00C31AA3 /* RadioBeacon+DataSource.swift in Sources */,
 				F7222F942B6C0B6100C3E4F1 /* ElectronicPublicationLocalDataSource.swift in Sources */,
 				F7CCDC802AF0583E00BF41F9 /* RouteWaypointRepository.swift in Sources */,
-				F7FFB32628D6422F00C31AA3 /* RadioBeacon+MapImage.swift in Sources */,
 				F7D8FA42293A923400E7D0A1 /* FilterPropertyAndComparison.swift in Sources */,
 				F70BCEA129D48ED800AEF73D /* GeoPackageImporter.swift in Sources */,
 				F72E4D942B69A615006ED371 /* PortService.swift in Sources */,
@@ -3621,12 +3639,14 @@
 				F7D8FA47293A950F00E7D0A1 /* DateFilter.swift in Sources */,
 				F71FC0D52A3BAC3200911BAC /* OnboardingTabTemplate.swift in Sources */,
 				F71E3E3C28F99626002F2019 /* CurrentLocation.swift in Sources */,
+				F715E2EF2B74279A00752688 /* RadioBeaconsViewModel.swift in Sources */,
+				F715E2ED2B7422DF00752688 /* RadioBeaconTileRepository.swift in Sources */,
 				F72E4D962B69A6B7006ED371 /* PortDataFetchOperation.swift in Sources */,
 				F707BA89287C68E7006A94C4 /* RaconCard.swift in Sources */,
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
 				F7FFB2EE28D624FE00C31AA3 /* DifferentialGPSStation+MapImage.swift in Sources */,
 				F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */,
-				F7FFB32828D6427200C31AA3 /* RadioBeacon+Decodable.swift in Sources */,
+				F7FFB32828D6427200C31AA3 /* RadioBeaconPropertyContainer.swift in Sources */,
 				F71D287B28C1401500F1775C /* FetchRequestMap.swift in Sources */,
 				F73908E32B0D08BA0043D045 /* AsamProperties.swift in Sources */,
 				F70BCE9B29D1F61C00AEF73D /* GeoPackageCompositeOverlay.swift in Sources */,

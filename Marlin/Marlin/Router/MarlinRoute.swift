@@ -46,6 +46,10 @@ enum LightRoute: Hashable {
     case detail(String, String)
 }
 
+enum RadioBeaconRoute: Hashable {
+    case detail(featureNumber: Int, volumeNumber: String)
+}
+
 enum DataSourceRoute: Hashable {
     case detail(dataSourceKey: String, itemKey: String)
 }
@@ -135,7 +139,7 @@ struct MarlinRouteModifier: ViewModifier {
                         if split.count == 3 {
                             LightDetailView(featureNumber: "\(split[0])", volumeNumber: "\(split[1])")
                         }
-                    case RadioBeacon.key:
+                    case DataSources.radioBeacon.key:
                         let split = itemKey.split(separator: "--")
                         if split.count == 2 {
                             RadioBeaconDetailView(featureNumber: Int(split[0]), volumeNumber: "\(split[1])")
@@ -181,7 +185,7 @@ struct MarlinRouteModifier: ViewModifier {
                                 volumeNumber: "\(split[1])",
                                 waypointURI: waypointURI)
                         }
-                    case RadioBeacon.key:
+                    case DataSources.radioBeacon.key:
                         let split = itemKey.split(separator: "--")
                         if split.count == 2 {
                             RadioBeaconDetailView(
@@ -252,6 +256,21 @@ struct MarlinRouteModifier: ViewModifier {
                     // swiftlint:enable redundant_discardable_let
 
                     LightDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
+                }
+            }
+            .navigationDestination(for: RadioBeaconRoute.self) { item in
+                switch item {
+                case .detail(let featureNumber, let volumeNumber):
+                    // disable this rule in order to execute a statement prior to returning a view
+                    // swiftlint:disable redundant_discardable_let
+                    let _ = NotificationCenter.default.post(
+                        name: .DismissBottomSheet,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    // swiftlint:enable redundant_discardable_let
+
+                    RadioBeaconDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
                 }
             }
             .navigationDestination(for: ItemWrapper.self) { item in

@@ -44,7 +44,7 @@ class RouteWaypoint: NSManagedObject {
                     case DifferentialGPSStation.key:
                         let dgpsModel = DifferentialGPSStationModel(feature: featureCollection.features[0])
                         return dgpsModel
-                    case RadioBeacon.key:
+                    case DataSources.radioBeacon.key:
                         let rbModel = RadioBeaconModel(feature: featureCollection.features[0])
                         return rbModel
                     case CommonDataSource.key:

@@ -15,7 +15,7 @@ struct GeoPackageExportView: View {
     @EnvironmentObject var lightRepository: LightRepository
     @EnvironmentObject var portRepository: PortRepository
     @EnvironmentObject var dgpsRepository: DifferentialGPSStationRepository
-    @EnvironmentObject var radioBeaconRepository: RadioBeaconRepositoryManager
+    @EnvironmentObject var radioBeaconRepository: RadioBeaconRepository
     @EnvironmentObject var routeRepository: RouteRepositoryManager
     @EnvironmentObject var navigationalWarningRepository: NavigationalWarningRepositoryManager
 

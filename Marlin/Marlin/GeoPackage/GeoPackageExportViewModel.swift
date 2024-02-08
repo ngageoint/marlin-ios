@@ -67,7 +67,7 @@ class GeoPackageExportViewModel: ObservableObject {
     var lightRepository: LightRepository?
     var portRepository: PortRepository?
     var dgpsRepository: DifferentialGPSStationRepository?
-    var radioBeaconRepository: RadioBeaconRepositoryManager?
+    var radioBeaconRepository: RadioBeaconRepository?
     var routeRepository: RouteRepositoryManager?
     var navigationalWarningRepository: NavigationalWarningRepositoryManager?
     

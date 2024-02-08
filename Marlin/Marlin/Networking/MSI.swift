@@ -19,27 +19,32 @@ public class MSI {
     var moduRepository: ModuRepository?
     var portRepository: PortRepository?
     var lightRepository: LightRepository?
+    var radioBeaconRepository: RadioBeaconRepository?
 
     var asamInitializer: AsamInitializer?
     var moduInitializer: ModuInitializer?
     var portInitializer: PortInitializer?
     var lightInitializer: LightInitializer?
+    var radioBeaconInitializer: RadioBeaconInitializer?
 
     func addRepositories(
         asamRepository: AsamRepository,
         moduRepository: ModuRepository,
         portRepository: PortRepository,
-        lightRepository: LightRepository
+        lightRepository: LightRepository,
+        radioBeaconRepository: RadioBeaconRepository
     ) {
         self.asamRepository = asamRepository
         self.moduRepository = moduRepository
         self.portRepository = portRepository
         self.lightRepository = lightRepository
+        self.radioBeaconRepository = radioBeaconRepository
 
         asamInitializer = AsamInitializer(repository: asamRepository)
         moduInitializer = ModuInitializer(repository: moduRepository)
         portInitializer = PortInitializer(repository: portRepository)
         lightInitializer = LightInitializer(repository: lightRepository)
+        radioBeaconInitializer = RadioBeaconInitializer(repository: radioBeaconRepository)
     }
 
     var backgroundTask: UIBackgroundTaskIdentifier = .invalid
@@ -81,7 +86,7 @@ public class MSI {
         NavigationalWarning.self,
 //        Light.self,
 //        Port.self,
-        RadioBeacon.self,
+//        RadioBeacon.self,
         DifferentialGPSStation.self,
         DFRS.self,
         DFRSArea.self,
@@ -152,6 +157,7 @@ public class MSI {
         moduInitializer?.registerBackgroundHandler()
         portInitializer?.registerBackgroundHandler()
         lightInitializer?.registerBackgroundHandler()
+        radioBeaconInitializer?.registerBackgroundHandler()
     }
     
     func backgroundFetch(task: BGTask) {
@@ -235,6 +241,7 @@ public class MSI {
         moduInitializer?.fetch()
         portInitializer?.fetch()
         lightInitializer?.fetch()
+        radioBeaconInitializer?.fetch()
 
         let initialDataLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
             if let dataSourceType = importable as? any DataSource.Type {

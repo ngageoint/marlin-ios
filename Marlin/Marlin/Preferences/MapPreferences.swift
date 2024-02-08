@@ -69,7 +69,7 @@ extension UserDefaults {
     }
 
     @objc var showOnMapradioBeacon: Bool {
-        bool(forKey: "showOnMap\(RadioBeacon.key)")
+        bool(forKey: "showOnMap\(DataSources.radioBeacon.key)")
     }
 
     @objc var showOnMapdifferentialGPSStation: Bool {

@@ -9,7 +9,7 @@ import Foundation
 
 struct AsamFilterable: Filterable {
     var definition: any DataSourceDefinition {
-        DataSourceDefinitions.asam.definition
+        DataSources.asam
     }
 
     var properties: [DataSourceProperty] = [

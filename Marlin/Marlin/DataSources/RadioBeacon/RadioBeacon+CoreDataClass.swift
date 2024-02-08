@@ -129,12 +129,12 @@ class RadioBeacon: NSManagedObject {
                 }
             }
             if let start = start {
-                sectors.append(ImageSector(startDegrees: start, endDegrees: end, color: RadioBeacon.color))
+                sectors.append(ImageSector(startDegrees: start, endDegrees: end, color: DataSources.radioBeacon.color))
             } else {
                 if end <= previousEnd {
                     end += 360
                 }
-                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: RadioBeacon.color))
+                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: DataSources.radioBeacon.color))
             }
             previousEnd = end
         })

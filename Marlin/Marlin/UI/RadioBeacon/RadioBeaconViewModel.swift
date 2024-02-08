@@ -9,23 +9,26 @@ import Foundation
 
 class RadioBeaconViewModel: ObservableObject, Identifiable {
     @Published var radioBeacon: RadioBeaconModel?
-    @Published var predicate: NSPredicate?
-    
-    var repository: (any RadioBeaconRepository)?
-    
-    @discardableResult
-    func getRadioBeacon(featureNumber: Int?, volumeNumber: String?, waypointURI: URL?) -> RadioBeaconModel? {
-        if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
-            predicate = NSPredicate(
-                format: "featureNumber = %ld AND volumeNumber = %@",
-                argumentArray: [featureNumber, volumeNumber]
-            )
+
+    var featureNumber: Int?
+    var volumeNumber: String?
+
+    var repository: RadioBeaconRepository? {
+        didSet {
+            if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
+                getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber)
+            }
         }
-        radioBeacon = repository?.getRadioBeacon(
-            featureNumber: featureNumber,
-            volumeNumber: volumeNumber,
-            waypointURI: waypointURI
-        )
+    }
+    var routeWaypointRepository: RouteWaypointRepository?
+
+    @discardableResult
+    func getRadioBeacon(featureNumber: Int?, volumeNumber: String?, waypointURI: URL? = nil) -> RadioBeaconModel? {
+        if let waypointURI = waypointURI {
+            radioBeacon = routeWaypointRepository?.getRadioBeacon(waypointURI: waypointURI)
+        } else {
+            radioBeacon = repository?.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber)
+        }
         return radioBeacon
     }
 }

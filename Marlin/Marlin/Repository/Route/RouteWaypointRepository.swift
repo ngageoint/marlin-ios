@@ -27,4 +27,7 @@ class RouteWaypointRepository: ObservableObject {
     func getLight(waypointURI: URL?) -> [LightModel]? {
         localDataSource.getLight(waypointURI: waypointURI)
     }
+    func getRadioBeacon(waypointURI: URL?) -> RadioBeaconModel? {
+        localDataSource.getRadioBeacon(waypointURI: waypointURI)
+    }
 }

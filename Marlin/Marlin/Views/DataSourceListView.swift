@@ -47,11 +47,12 @@ struct DataSourceListView: View {
             )
         } else if dataSource.key == DataSources.port.key {
             PortList()
-        } else if dataSource.key == RadioBeacon.key {
-            MSIListView<RadioBeacon, EmptyView, EmptyView, EmptyView>(
-                focusedItem: focusedItem,
-                watchFocusedItem: watchFocusedItem
-            )
+        } else if dataSource.key == DataSources.radioBeacon.key {
+            RadioBeaconList()
+//            MSIListView<RadioBeacon, EmptyView, EmptyView, EmptyView>(
+//                focusedItem: focusedItem,
+//                watchFocusedItem: watchFocusedItem
+//            )
         } else if dataSource.key == DifferentialGPSStation.key {
             MSIListView<DifferentialGPSStation, EmptyView, EmptyView, EmptyView>(
                 focusedItem: focusedItem,
