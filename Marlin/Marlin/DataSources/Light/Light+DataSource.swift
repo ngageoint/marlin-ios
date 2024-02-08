@@ -57,7 +57,7 @@ extension Light: Locatable, GeoPackageExportable, GeoJSONExportable {
         "title"
     }
     
-    static var definition: any DataSourceDefinition = DataSourceDefinitions.light.definition
+    static var definition: any DataSourceDefinition = DataSources.light
     func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
         var geometryByColor: [UIColor: SFGeometry] = [:]
         if let lightSectors = lightSectors {

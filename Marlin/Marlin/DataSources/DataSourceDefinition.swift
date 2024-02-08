@@ -90,7 +90,7 @@ enum DataSources {
         case is DataSources.NoticeToMarinersDefinition:
             return DataSourceDefinitions.noticeToMariners.filterable
         case is DataSources.DifferentialGPSStationDefinition:
-            return DataSourceDefinitions.dgps.filterable
+            return DataSourceDefinitions.differentialGPSStation.filterable
         case is DataSources.ElectronicPublicationDefinition:
             return DataSourceDefinitions.epub.filterable
         case is DataSources.PortDefinition:
@@ -356,9 +356,9 @@ extension DataSources {
         @AppStorage("differentialGPSStationOrder") var order: Int = 0
         func shouldSync() -> Bool {
             // sync once every week
-            return UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
-            UserDefaults.standard.lastSyncTimeSeconds(DifferentialGPSStation.definition)
+            return UserDefaults.standard.dataSourceEnabled(DataSources.dgps)
+            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) >
+            UserDefaults.standard.lastSyncTimeSeconds(DataSources.dgps)
         }
         var defaultSort: [DataSourceSortParameter] = [
             DataSourceSortParameter(

@@ -163,7 +163,7 @@ class GeoPackageExportViewModel: ObservableObject {
                 case .route: $0[definition] = self.routeRepository?.getCount(filters: filters)
                 case .asam: $0[definition] = self.asamRepository?.getCount(filters: filters)
                 case .modu: $0[definition] = self.moduRepository?.getCount(filters: filters)
-                case .dgps: $0[definition] = self.dgpsRepository?.getCount(filters: filters)
+                case .differentialGPSStation: $0[definition] = self.dgpsRepository?.getCount(filters: filters)
                 case .port: $0[definition] = self.portRepository?.getCount(filters: filters)
                 case .navWarning: $0[definition] = self.navigationalWarningRepository?.getCount(filters: filters)
                 case .light: $0[definition] = self.lightRepository?.getCount(filters: filters)

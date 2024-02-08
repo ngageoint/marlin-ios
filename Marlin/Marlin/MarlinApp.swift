@@ -141,7 +141,7 @@ struct MarlinApp: App {
     var asamRepository: AsamRepository
     var moduRepository: ModuRepository
     var portRepository: PortRepository
-    var dgpsRepository: DifferentialGPSStationRepository
+    var differentialGPSStationRepository: DifferentialGPSStationRepository
     var lightRepository: LightRepository
     var radioBeaconRepository: RadioBeaconRepository
 
@@ -154,6 +154,7 @@ struct MarlinApp: App {
     var portsTileRepository: PortsTileRepository
     var lightsTileRepository: LightsTileRepository
     var radioBeaconsTileRepository: RadioBeaconsTileRepository
+    var differentialGPSStationsTileRepository: DifferentialGPSStationsTileRepository
 
     private var router: MarlinRouter = MarlinRouter()
 
@@ -185,7 +186,7 @@ struct MarlinApp: App {
             localDataSource: PortCoreDataDataSource(),
             remoteDataSource: PortRemoteDataSource()
         )
-        dgpsRepository = DifferentialGPSStationRepository(
+        differentialGPSStationRepository = DifferentialGPSStationRepository(
             localDataSource: DifferentialGPSStationCoreDataDataSource(),
             remoteDataSource: DifferentialGPSStationRemoteDataSource()
         )
@@ -210,13 +211,17 @@ struct MarlinApp: App {
         portsTileRepository = PortsTileRepository(localDataSource: portRepository.localDataSource)
         lightsTileRepository = LightsTileRepository(localDataSource: lightRepository.localDataSource)
         radioBeaconsTileRepository = RadioBeaconsTileRepository(localDataSource: radioBeaconRepository.localDataSource)
+        differentialGPSStationsTileRepository = DifferentialGPSStationsTileRepository(
+            localDataSource: differentialGPSStationRepository.localDataSource
+        )
 
         MSI.shared.addRepositories(
             asamRepository: asamRepository,
             moduRepository: moduRepository,
             portRepository: portRepository,
             lightRepository: lightRepository,
-            radioBeaconRepository: radioBeaconRepository
+            radioBeaconRepository: radioBeaconRepository,
+            differentialGPSStationRepository: differentialGPSStationRepository
         )
         UNUserNotificationCenter.current().delegate = appDelegate
     }
@@ -233,7 +238,7 @@ struct MarlinApp: App {
                 .environmentObject(moduRepository)
                 .environmentObject(lightRepository)
                 .environmentObject(portRepository)
-                .environmentObject(dgpsRepository)
+                .environmentObject(differentialGPSStationRepository)
                 .environmentObject(radioBeaconRepository)
                 .environmentObject(routeRepository)
                 .environmentObject(routeWaypointRepository)
@@ -243,6 +248,7 @@ struct MarlinApp: App {
                 .environmentObject(portsTileRepository)
                 .environmentObject(lightsTileRepository)
                 .environmentObject(radioBeaconsTileRepository)
+                .environmentObject(differentialGPSStationsTileRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
                 .environmentObject(router)
                 .background(Color.surfaceColor)

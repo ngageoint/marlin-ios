@@ -10,6 +10,7 @@ import UIKit
 import Kingfisher
 
 class RadioBeaconTileRepository: TileRepository, ObservableObject {
+    var alwaysShow: Bool = true
     var dataSource: any DataSourceDefinition = DataSources.radioBeacon
     var cacheSourceKey: String?
     var imageCache: Kingfisher.ImageCache?
@@ -62,6 +63,7 @@ class RadioBeaconTileRepository: TileRepository, ObservableObject {
 }
 
 class RadioBeaconsTileRepository: TileRepository, ObservableObject {
+    var alwaysShow: Bool = false
     var dataSource: any DataSourceDefinition = DataSources.radioBeacon
     var cacheSourceKey: String? { dataSource.key }
     var imageCache: Kingfisher.ImageCache? {

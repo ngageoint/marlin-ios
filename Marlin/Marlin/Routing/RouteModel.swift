@@ -292,7 +292,7 @@ extension RouteWaypointModel {
                     case DataSources.port.key:
                         let portModel = PortModel(feature: featureCollection.features[0])
                         return portModel
-                    case DifferentialGPSStation.key:
+                    case DataSources.dgps.key:
                         let dgpsModel = DifferentialGPSStationModel(feature: featureCollection.features[0])
                         return dgpsModel
                     case DataSources.radioBeacon.key:

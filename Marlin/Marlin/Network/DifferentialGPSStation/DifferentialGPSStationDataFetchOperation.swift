@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationFetchOperation.swift
+//  DifferentialGPSStationDataFetchOperation.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 2/1/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class DifferentialGPSStationFetchOperation: DataFetchOperation<DifferentialGPSStationModel> {
+class DifferentialGPSStationDataFetchOperation: DataFetchOperation<DifferentialGPSStationModel> {
 
     var noticeYear: String?
     var noticeWeek: String?

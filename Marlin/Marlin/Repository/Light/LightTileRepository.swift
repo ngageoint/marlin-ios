@@ -10,6 +10,7 @@ import UIKit
 import Kingfisher
 
 class LightTileRepository: TileRepository, ObservableObject {
+    var alwaysShow: Bool = true
     var dataSource: any DataSourceDefinition = DataSources.light
 
     var cacheSourceKey: String?
@@ -66,6 +67,7 @@ class LightTileRepository: TileRepository, ObservableObject {
 }
 
 class LightsTileRepository: TileRepository, ObservableObject {
+    var alwaysShow: Bool = false
     var dataSource: any DataSourceDefinition = DataSources.light
 
     var cacheSourceKey: String? { dataSource.key }

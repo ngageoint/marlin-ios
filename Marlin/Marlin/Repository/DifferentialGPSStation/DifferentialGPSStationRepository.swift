@@ -33,6 +33,15 @@ class DifferentialGPSStationRepository: ObservableObject {
         self.remoteDataSource = remoteDataSource
     }
 
+    func createOperation() -> DifferentialGPSStationDataFetchOperation {
+        let newestRadioBeacon = localDataSource.getNewestDifferentialGPSStation()
+        let noticeWeek = Int(newestRadioBeacon?.noticeWeek ?? "0") ?? 0
+        return DifferentialGPSStationDataFetchOperation(
+            noticeYear: newestRadioBeacon?.noticeYear,
+            noticeWeek: String(format: "%02d", noticeWeek + 1)
+        )
+    }
+
     func getDifferentialGPSStation(
         featureNumber: Int?,
         volumeNumber: String?
@@ -66,8 +75,8 @@ class DifferentialGPSStationRepository: ObservableObject {
 
         let newest = localDataSource.getNewestDifferentialGPSStation()
 
-        var noticeWeek = newest?.noticeWeek
-        var noticeYear = newest?.noticeYear
+        let noticeWeek = newest?.noticeWeek
+        let noticeYear = newest?.noticeYear
 
         let dgpss = await remoteDataSource.fetch(noticeYear: noticeYear, noticeWeek: noticeWeek)
         let inserted = await localDataSource.insert(task: nil, dgpss: dgpss)

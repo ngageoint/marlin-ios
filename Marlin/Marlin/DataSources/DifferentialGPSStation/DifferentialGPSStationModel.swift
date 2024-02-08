@@ -11,22 +11,72 @@ import CoreLocation
 import mgrs_ios
 import GeoJSON
 
-struct DifferentialGPSStationPropertyContainer: Decodable {
-    private enum CodingKeys: String, CodingKey {
-        case ngalol
+struct DifferentialGPSStationListModel: Hashable, Identifiable {
+    var id: String {
+        "\(featureNumber ?? 0)--\(volumeNumber ?? "")"
     }
-    let ngalol: [DifferentialGPSStationModel]
-
-    init(dgpss: [DifferentialGPSStationModel]) {
-        ngalol = dgpss
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        ngalol = try container.decode(
-            [Throwable<DifferentialGPSStationModel>].self, forKey: .ngalol
-        )
-        .compactMap { try? $0.result.get() }
+    let featureNumber: Int?
+    let volumeNumber: String?
+    let name: String?
+    let geopoliticalHeading: String?
+    let sectionHeader: String?
+    let stationID: String?
+    let remarks: String?
+    let latitude: Double
+    let longitude: Double
+
+    var canBookmark: Bool = false
+
+    init(differentialGPSStation: DifferentialGPSStation) {
+        self.canBookmark = true
+        self.featureNumber = Int(differentialGPSStation.featureNumber)
+        self.volumeNumber = differentialGPSStation.volumeNumber
+        self.name = differentialGPSStation.name
+        self.geopoliticalHeading = differentialGPSStation.geopoliticalHeading
+        self.sectionHeader = differentialGPSStation.sectionHeader
+        self.stationID = differentialGPSStation.stationID
+        self.remarks = differentialGPSStation.remarks
+        self.latitude = differentialGPSStation.latitude
+        self.longitude = differentialGPSStation.longitude
+    }
+}
+
+extension DifferentialGPSStationListModel {
+    var itemTitle: String {
+        return "\(self.name ?? "\(self.featureNumber ?? 0)")"
+    }
+}
+
+extension DifferentialGPSStationListModel: Bookmarkable {
+    static var definition: any DataSourceDefinition {
+        DataSources.dgps
+    }
+
+    var itemKey: String {
+        return "\(featureNumber ?? 0)--\(volumeNumber ?? "")"
+    }
+
+    var key: String {
+        DataSources.dgps.key
+    }
+}
+
+extension DifferentialGPSStationListModel {
+    init(differentialGPSStationModel: DifferentialGPSStationModel) {
+        self.canBookmark = differentialGPSStationModel.canBookmark
+        self.featureNumber = differentialGPSStationModel.featureNumber
+        self.volumeNumber = differentialGPSStationModel.volumeNumber
+        self.name = differentialGPSStationModel.name
+        self.geopoliticalHeading = differentialGPSStationModel.geopoliticalHeading
+        self.sectionHeader = differentialGPSStationModel.sectionHeader
+        self.stationID = differentialGPSStationModel.stationID
+        self.remarks = differentialGPSStationModel.remarks
+        self.latitude = differentialGPSStationModel.latitude
+        self.longitude = differentialGPSStationModel.longitude
     }
 }
 
@@ -43,7 +93,7 @@ struct DifferentialGPSStationModel:
         "\(featureNumber ?? 0)--\(volumeNumber ?? "")"
     }
 
-    static var definition: any DataSourceDefinition = DataSourceDefinitions.dgps.definition
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.differentialGPSStation.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }

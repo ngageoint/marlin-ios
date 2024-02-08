@@ -20,7 +20,7 @@ extension UserDefaults {
             return publisher(for: \.ntmOrder)
         case DFRS.key:
             return publisher(for: \.dfrsOrder)
-        case DifferentialGPSStation.key:
+        case DataSources.dgps.key:
             return publisher(for: \.differentialGPSStationOrder)
         case ElectronicPublication.key:
             return publisher(for: \.epubOrder)

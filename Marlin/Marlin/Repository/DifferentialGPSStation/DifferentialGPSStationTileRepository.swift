@@ -1,28 +1,29 @@
 //
-//  ModuTileRepository.swift
+//  DifferentialGPSStationTileRepository.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 1/26/24.
+//  Created by Daniel Barela on 2/8/24.
 //
 
 import Foundation
 import UIKit
-import sf_geojson_ios
 import Kingfisher
 
-class ModuTileRepository: TileRepository, ObservableObject {
-    var alwaysShow: Bool = true
-    var dataSource: any DataSourceDefinition = DataSources.modu
+class DifferentialGPSStationTileRepository: TileRepository, ObservableObject {
+    var dataSource: any DataSourceDefinition = DataSources.dgps
     var cacheSourceKey: String?
     var imageCache: Kingfisher.ImageCache?
     var filterCacheKey: String {
         ""
     }
-    let name: String
-    let localDataSource: ModuLocalDataSource
+    let featureNumber: Int
+    let volumeNumber: String
+    let localDataSource: DifferentialGPSStationLocalDataSource
+    var alwaysShow: Bool = true
 
-    init(name: String, localDataSource: ModuLocalDataSource) {
-        self.name = name
+    init(featureNumber: Int, volumeNumber: String, localDataSource: DifferentialGPSStationLocalDataSource) {
+        self.featureNumber = featureNumber
+        self.volumeNumber = volumeNumber
         self.localDataSource = localDataSource
     }
 
@@ -34,9 +35,9 @@ class ModuTileRepository: TileRepository, ObservableObject {
     ) -> [DataSourceImage] {
         var images: [DataSourceImage] = []
 
-        if let modu = localDataSource.getModu(name: name) {
-            if minLatitude...maxLatitude ~= modu.latitude && minLongitude...maxLongitude ~= modu.longitude {
-                images.append(ModuImage(modu: modu))
+        if let dgps = localDataSource.getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber) {
+            if minLatitude...maxLatitude ~= dgps.latitude && minLongitude...maxLongitude ~= dgps.longitude {
+                images.append(DifferentialGPSStationImage(differentialGPSStation: dgps))
             }
         }
 
@@ -49,8 +50,8 @@ class ModuTileRepository: TileRepository, ObservableObject {
         minLongitude: Double,
         maxLongitude: Double
     ) -> [String] {
-        return localDataSource.getModusInBounds(
-            filters: UserDefaults.standard.filter(DataSources.modu),
+        return localDataSource.getDifferentialGPSStationsInBounds(
+            filters: UserDefaults.standard.filter(DataSources.dgps),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
             minLongitude: minLongitude,
@@ -61,22 +62,22 @@ class ModuTileRepository: TileRepository, ObservableObject {
     }
 }
 
-class ModusTileRepository: TileRepository, ObservableObject {
+class DifferentialGPSStationsTileRepository: TileRepository, ObservableObject {
     var alwaysShow: Bool = false
-    var dataSource: any DataSourceDefinition = DataSources.modu
+    var dataSource: any DataSourceDefinition = DataSources.dgps
     var cacheSourceKey: String? { dataSource.key }
-    lazy var imageCache: Kingfisher.ImageCache? = {
+    var imageCache: Kingfisher.ImageCache? {
         if let cacheSourceKey = cacheSourceKey {
             return Kingfisher.ImageCache(name: cacheSourceKey)
         }
         return nil
-    }()
-    var filterCacheKey: String {
-        UserDefaults.standard.filter(dataSource).getCacheKey()
     }
-    let localDataSource: ModuLocalDataSource
+    var filterCacheKey: String {
+        UserDefaults.standard.filter(DataSources.dgps).getCacheKey()
+    }
+    let localDataSource: DifferentialGPSStationLocalDataSource
 
-    init(localDataSource: ModuLocalDataSource) {
+    init(localDataSource: DifferentialGPSStationLocalDataSource) {
         self.localDataSource = localDataSource
     }
 
@@ -86,17 +87,17 @@ class ModusTileRepository: TileRepository, ObservableObject {
         minLongitude: Double,
         maxLongitude: Double
     ) -> [DataSourceImage] {
-        if !UserDefaults.standard.showOnMapmodu {
+        if !UserDefaults.standard.showOnMapdifferentialGPSStation {
             return []
         }
-        return localDataSource.getModusInBounds(
-            filters: UserDefaults.standard.filter(DataSources.modu),
+        return localDataSource.getDifferentialGPSStationsInBounds(
+            filters: UserDefaults.standard.filter(DataSources.dgps),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
             minLongitude: minLongitude,
             maxLongitude: maxLongitude)
         .map { model in
-            ModuImage(modu: model)
+            DifferentialGPSStationImage(differentialGPSStation: model)
         }
     }
 
@@ -106,11 +107,11 @@ class ModusTileRepository: TileRepository, ObservableObject {
         minLongitude: Double,
         maxLongitude: Double
     ) -> [String] {
-        if !UserDefaults.standard.showOnMapmodu {
+        if !UserDefaults.standard.showOnMapdifferentialGPSStation {
             return []
         }
-        return localDataSource.getModusInBounds(
-            filters: UserDefaults.standard.filter(DataSources.modu),
+        return localDataSource.getDifferentialGPSStationsInBounds(
+            filters: UserDefaults.standard.filter(DataSources.dgps),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
             minLongitude: minLongitude,
@@ -121,13 +122,13 @@ class ModusTileRepository: TileRepository, ObservableObject {
     }
 }
 
-class ModuImage: DataSourceImage {
+class DifferentialGPSStationImage: DataSourceImage {
     var feature: SFGeometry?
 
-    static var dataSource: any DataSourceDefinition = DataSources.modu
+    static var dataSource: any DataSourceDefinition = DataSources.dgps
 
-    init(modu: ModuModel) {
-        feature = modu.sfGeometry
+    init(differentialGPSStation: DifferentialGPSStationModel) {
+        feature = differentialGPSStation.sfGeometry
     }
 
     func image(

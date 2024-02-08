@@ -40,7 +40,7 @@ enum DataSourceType: String, CaseIterable {
         case .port:
             return PortModel.self
         case .differentialGPSStation:
-            return DifferentialGPSStation.self
+            return DifferentialGPSStationModel.self
         case .radioBeacon:
             return RadioBeaconModel.self
         case .Common:

@@ -28,9 +28,11 @@ class DataSourceMap: MapMixin {
     var orderPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Int>?
 
     var show = false
+    var repositoryAlwaysShow = false
 
     init(repository: TileRepository) {
         self.repository = repository
+        self.repositoryAlwaysShow = repository.alwaysShow
     }
 
     func setupMixin(mapState: MapState, mapView: MKMapView) {
@@ -77,7 +79,7 @@ class DataSourceMap: MapMixin {
                 mapView.removeOverlay(selfOverlay)
             }
 
-            if !show {
+            if !show && !repositoryAlwaysShow {
                 return
             }
             let newOverlay = DataSourceTileOverlay(tileRepository: repository)

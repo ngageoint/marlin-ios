@@ -73,7 +73,7 @@ extension UserDefaults {
     }
 
     @objc var showOnMapdifferentialGPSStation: Bool {
-        bool(forKey: "showOnMap\(DifferentialGPSStation.key)")
+        bool(forKey: "showOnMap\(DataSources.dgps.key)")
     }
 
     @objc var showOnMapdfrs: Bool {

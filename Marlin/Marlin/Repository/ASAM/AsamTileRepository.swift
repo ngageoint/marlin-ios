@@ -10,6 +10,7 @@ import UIKit
 import Kingfisher
 
 class AsamTileRepository: TileRepository, ObservableObject {
+    var alwaysShow: Bool = true
     var dataSource: any DataSourceDefinition = DataSources.asam
     var cacheSourceKey: String?
     var imageCache: Kingfisher.ImageCache?
@@ -60,6 +61,7 @@ class AsamTileRepository: TileRepository, ObservableObject {
 }
 
 class AsamsTileRepository: TileRepository, ObservableObject {
+    var alwaysShow: Bool = false
     var dataSource: any DataSourceDefinition = DataSources.asam
     var cacheSourceKey: String? { dataSource.key }
     var imageCache: Kingfisher.ImageCache? {

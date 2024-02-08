@@ -53,11 +53,12 @@ struct DataSourceListView: View {
 //                focusedItem: focusedItem,
 //                watchFocusedItem: watchFocusedItem
 //            )
-        } else if dataSource.key == DifferentialGPSStation.key {
-            MSIListView<DifferentialGPSStation, EmptyView, EmptyView, EmptyView>(
-                focusedItem: focusedItem,
-                watchFocusedItem: watchFocusedItem
-            )
+        } else if dataSource.key == DataSources.dgps.key {
+            DifferentialGPSStationList()
+//            MSIListView<DifferentialGPSStation, EmptyView, EmptyView, EmptyView>(
+//                focusedItem: focusedItem,
+//                watchFocusedItem: watchFocusedItem
+//            )
         } else if dataSource.key == DFRS.key {
             MSIListView<DFRS, EmptyView, EmptyView, EmptyView>()
         } else if dataSource.key == ElectronicPublication.key {

@@ -18,7 +18,7 @@ class DifferentialGPSStationRemoteDataSource: RemoteDataSource<DifferentialGPSSt
         noticeYear: String? = nil,
         noticeWeek: String? = nil
     ) async -> [DifferentialGPSStationModel] {
-        let operation = DifferentialGPSStationFetchOperation(noticeYear: noticeYear, noticeWeek: noticeWeek)
+        let operation = DifferentialGPSStationDataFetchOperation(noticeYear: noticeYear, noticeWeek: noticeWeek)
         return await fetch(task: task, operation: operation)
     }
 }

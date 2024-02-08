@@ -106,9 +106,6 @@ class MainMapMixins: MapMixins {
         super.init()
         var mixins: [any MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
         
-        if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.definition) {
-            mixins.append(DifferentialGPSStationMap<DifferentialGPSStation>(showAsTiles: true))
-        }
         if UserDefaults.standard.dataSourceEnabled(DFRS.definition) {
             mixins.append(DFRSMap<DFRS>(showAsTiles: true))
         }
@@ -147,6 +144,12 @@ class MainMapMixins: MapMixins {
     func addRadioBeaconTileRepository(tileRepository: TileRepository) {
         if UserDefaults.standard.dataSourceEnabled(DataSources.radioBeacon) {
             mixins.append(RadioBeaconMap(repository: tileRepository))
+        }
+    }
+
+    func addDifferentialGPSStationTileRepository(tileRepository: TileRepository) {
+        if UserDefaults.standard.dataSourceEnabled(DataSources.dgps) {
+            mixins.append(DifferentialGPSStationMap(repository: tileRepository))
         }
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 
 struct DifferentialGPSStationFilterable: Filterable {
     var definition: any DataSourceDefinition {
-        DataSourceDefinitions.dgps.definition
+        DataSourceDefinitions.differentialGPSStation.definition
     }
 
     var properties: [DataSourceProperty] = [
@@ -40,5 +40,5 @@ struct DifferentialGPSStationFilterable: Filterable {
 
     var defaultFilter: [DataSourceFilterParameter] = []
 
-    var locatableClass: Locatable.Type? = DifferentialGPSStation.self
+//    var locatableClass: Locatable.Type? = DifferentialGPSStation.self
 }

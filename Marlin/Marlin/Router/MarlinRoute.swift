@@ -50,6 +50,10 @@ enum RadioBeaconRoute: Hashable {
     case detail(featureNumber: Int, volumeNumber: String)
 }
 
+enum DifferentialGPSStationRoute: Hashable {
+    case detail(featureNumber: Int, volumeNumber: String)
+}
+
 enum DataSourceRoute: Hashable {
     case detail(dataSourceKey: String, itemKey: String)
 }
@@ -129,7 +133,7 @@ struct MarlinRouteModifier: ViewModifier {
                             NoticeToMarinersFullNoticeView(
                                 viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: noticeNumber))
                         }
-                    case DifferentialGPSStation.key:
+                    case DataSources.dgps.key:
                         let split = itemKey.split(separator: "--")
                         if split.count == 2 {
                             DifferentialGPSStationDetailView(featureNumber: Int(split[0]), volumeNumber: "\(split[1])")
@@ -177,7 +181,7 @@ struct MarlinRouteModifier: ViewModifier {
                         }
                     case DataSources.port.key:
                         PortDetailView(portNumber: Int64(itemKey), waypointURI: waypointURI)
-                    case DifferentialGPSStation.key:
+                    case DataSources.dgps.key:
                         let split = itemKey.split(separator: "--")
                         if split.count == 2 {
                             DifferentialGPSStationDetailView(
@@ -271,6 +275,21 @@ struct MarlinRouteModifier: ViewModifier {
                     // swiftlint:enable redundant_discardable_let
 
                     RadioBeaconDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
+                }
+            }
+            .navigationDestination(for: DifferentialGPSStationRoute.self) { item in
+                switch item {
+                case .detail(let featureNumber, let volumeNumber):
+                    // disable this rule in order to execute a statement prior to returning a view
+                    // swiftlint:disable redundant_discardable_let
+                    let _ = NotificationCenter.default.post(
+                        name: .DismissBottomSheet,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    // swiftlint:enable redundant_discardable_let
+
+                    DifferentialGPSStationDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
                 }
             }
             .navigationDestination(for: ItemWrapper.self) { item in

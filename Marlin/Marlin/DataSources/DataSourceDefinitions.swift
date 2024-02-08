@@ -15,7 +15,7 @@ enum DataSourceDefinitions: String, Identifiable {
     case common
     case chartCorrection
     case dfrs
-    case dgps
+    case differentialGPSStation
     case epub
     case geoPackage
     case light
@@ -41,7 +41,7 @@ enum DataSourceDefinitions: String, Identifiable {
         case is DataSources.NoticeToMarinersDefinition:
             return DataSourceDefinitions.noticeToMariners
         case is DataSources.DifferentialGPSStationDefinition:
-            return DataSourceDefinitions.dgps
+            return DataSourceDefinitions.differentialGPSStation
         case is DataSources.ElectronicPublicationDefinition:
             return DataSourceDefinitions.epub
         case is DataSources.PortDefinition:
@@ -75,7 +75,7 @@ enum DataSourceDefinitions: String, Identifiable {
             return DataSources.noticeToMariners
         case .dfrs:
             return DataSources.dfrs
-        case .dgps:
+        case .differentialGPSStation:
             return DataSources.dgps
         case .epub:
             return DataSources.epub
@@ -108,7 +108,7 @@ enum DataSourceDefinitions: String, Identifiable {
             return CommonFilterable()
         case .noticeToMariners:
             return NoticeToMarinersFilterable()
-        case .dgps:
+        case .differentialGPSStation:
             return DifferentialGPSStationFilterable()
         case .epub:
             return ElectronicPublicationFilterable()
@@ -146,7 +146,7 @@ enum DataSourceDefinitions: String, Identifiable {
         case is DataSources.NoticeToMarinersDefinition:
             return DataSourceDefinitions.noticeToMariners.filterable
         case is DataSources.DifferentialGPSStationDefinition:
-            return DataSourceDefinitions.dgps.filterable
+            return DataSourceDefinitions.differentialGPSStation.filterable
         case is DataSources.ElectronicPublicationDefinition:
             return DataSourceDefinitions.epub.filterable
         case is DataSources.PortDefinition:

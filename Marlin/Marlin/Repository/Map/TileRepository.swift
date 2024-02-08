@@ -172,6 +172,7 @@ protocol TileRepository {
     var imageCache: Kingfisher.ImageCache? { get }
 
     var filterCacheKey: String { get }
+    var alwaysShow: Bool { get }
 
     func getTileableItems(
         minLatitude: Double,

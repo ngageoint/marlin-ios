@@ -20,31 +20,38 @@ public class MSI {
     var portRepository: PortRepository?
     var lightRepository: LightRepository?
     var radioBeaconRepository: RadioBeaconRepository?
+    var differentialGPSStationRepository: DifferentialGPSStationRepository?
 
     var asamInitializer: AsamInitializer?
     var moduInitializer: ModuInitializer?
     var portInitializer: PortInitializer?
     var lightInitializer: LightInitializer?
     var radioBeaconInitializer: RadioBeaconInitializer?
+    var differentialGPSStationInitializer: DifferentialGPSStationInitializer?
 
     func addRepositories(
         asamRepository: AsamRepository,
         moduRepository: ModuRepository,
         portRepository: PortRepository,
         lightRepository: LightRepository,
-        radioBeaconRepository: RadioBeaconRepository
+        radioBeaconRepository: RadioBeaconRepository,
+        differentialGPSStationRepository: DifferentialGPSStationRepository
     ) {
         self.asamRepository = asamRepository
         self.moduRepository = moduRepository
         self.portRepository = portRepository
         self.lightRepository = lightRepository
         self.radioBeaconRepository = radioBeaconRepository
+        self.differentialGPSStationRepository = differentialGPSStationRepository
 
         asamInitializer = AsamInitializer(repository: asamRepository)
         moduInitializer = ModuInitializer(repository: moduRepository)
         portInitializer = PortInitializer(repository: portRepository)
         lightInitializer = LightInitializer(repository: lightRepository)
         radioBeaconInitializer = RadioBeaconInitializer(repository: radioBeaconRepository)
+        differentialGPSStationInitializer = DifferentialGPSStationInitializer(
+            repository: differentialGPSStationRepository
+        )
     }
 
     var backgroundTask: UIBackgroundTaskIdentifier = .invalid
@@ -87,9 +94,9 @@ public class MSI {
 //        Light.self,
 //        Port.self,
 //        RadioBeacon.self,
-        DifferentialGPSStation.self,
-        DFRS.self,
-        DFRSArea.self,
+//        DifferentialGPSStation.self,
+//        DFRS.self,
+//        DFRSArea.self,
         ElectronicPublication.self,
         NoticeToMariners.self
     ]
@@ -158,6 +165,7 @@ public class MSI {
         portInitializer?.registerBackgroundHandler()
         lightInitializer?.registerBackgroundHandler()
         radioBeaconInitializer?.registerBackgroundHandler()
+        differentialGPSStationInitializer?.registerBackgroundHandler()
     }
     
     func backgroundFetch(task: BGTask) {
@@ -242,6 +250,7 @@ public class MSI {
         portInitializer?.fetch()
         lightInitializer?.fetch()
         radioBeaconInitializer?.fetch()
+        differentialGPSStationInitializer?.fetch()
 
         let initialDataLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
             if let dataSourceType = importable as? any DataSource.Type {

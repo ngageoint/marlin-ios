@@ -61,14 +61,16 @@ class DifferentialGPSStationCoreDataDataSource:
         guard let featureNumber = featureNumber, let volumeNumber = volumeNumber else {
             return nil
         }
-        if let dgps = try? context.fetchFirst(
-            DifferentialGPSStation.self,
-            predicate: NSPredicate(
-                format: "featureNumber = %ld AND volumeNumber = %@",
-                argumentArray: [featureNumber, volumeNumber])) {
-            return DifferentialGPSStationModel(differentialGPSStation: dgps)
+        return context.performAndWait {
+            if let dgps = try? context.fetchFirst(
+                DifferentialGPSStation.self,
+                predicate: NSPredicate(
+                    format: "featureNumber = %ld AND volumeNumber = %@",
+                    argumentArray: [featureNumber, volumeNumber])) {
+                return DifferentialGPSStationModel(differentialGPSStation: dgps)
+            }
+            return nil
         }
-        return nil
     }
 
     func getDifferentialGPSStationsInBounds(

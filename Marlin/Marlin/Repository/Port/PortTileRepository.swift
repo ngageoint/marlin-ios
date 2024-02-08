@@ -10,6 +10,7 @@ import UIKit
 import Kingfisher
 
 class PortTileRepository: TileRepository, ObservableObject {
+    var alwaysShow: Bool = true
     var dataSource: any DataSourceDefinition = DataSources.port
     var cacheSourceKey: String?
     var imageCache: Kingfisher.ImageCache?
@@ -60,6 +61,7 @@ class PortTileRepository: TileRepository, ObservableObject {
 }
 
 class PortsTileRepository: TileRepository, ObservableObject {
+    var alwaysShow: Bool = false
     var dataSource: any DataSourceDefinition = DataSources.port
     var cacheSourceKey: String? { dataSource.key }
     var imageCache: Kingfisher.ImageCache? {

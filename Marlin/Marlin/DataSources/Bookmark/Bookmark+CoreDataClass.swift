@@ -70,8 +70,14 @@ class Bookmark: NSManagedObject, BatchImportable {
             return NavigationalWarning.getItem(context: context, itemKey: self.id)
         case NoticeToMariners.key:
             return NoticeToMariners.getItem(context: context, itemKey: self.id)
-        case DifferentialGPSStation.key:
-            return DifferentialGPSStation.getItem(context: context, itemKey: self.id)
+        case DataSources.dgps.key:
+            let split = itemKey.split(separator: "--")
+            if split.count == 2 {
+                return MSI.shared.differentialGPSStationRepository?.getDifferentialGPSStation(
+                    featureNumber: Int(split[0]) ?? -1,
+                    volumeNumber: "\(split[1])"
+                )
+            }
         case DataSources.light.key:
             let split = itemKey.split(separator: "--")
             if split.count == 3 {

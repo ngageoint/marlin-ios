@@ -21,7 +21,7 @@ extension UserDefaults {
             return publisher(for: \.ntmSort)
         case DFRS.key:
             return publisher(for: \.dfrsSort)
-        case DifferentialGPSStation.key:
+        case DataSources.dgps.key:
             return publisher(for: \.differentialGPSStationSort)
         case ElectronicPublication.key:
             return publisher(for: \.epubSort)

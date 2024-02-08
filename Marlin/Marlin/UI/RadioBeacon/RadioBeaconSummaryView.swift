@@ -58,13 +58,20 @@ struct RadioBeaconSummaryView: DataSourceSummaryView {
                     path: $router.path
                 ) : nil,
                 location: !showMoreDetails ? Actions.Location(latLng: radioBeacon.coordinate) : nil,
-                zoom: !showMoreDetails ? RadioBeaconActions.Zoom(latLng: radioBeacon.coordinate, itemKey: radioBeacon.id) : nil,
+                zoom: !showMoreDetails ? RadioBeaconActions.Zoom(
+                    latLng: radioBeacon.coordinate,
+                    itemKey: radioBeacon.id
+                ) : nil,
                 bookmark: radioBeacon.canBookmark ? Actions.Bookmark(
                     itemKey: radioBeacon.id,
                     bookmarkViewModel: bookmarkViewModel
                 ) : nil,
                 share: radioBeacon.itemTitle
             )
+        }
+        .onAppear {
+            bookmarkViewModel.repository = bookmarkRepository
+            bookmarkViewModel.getBookmark(itemKey: radioBeacon.id, dataSource: DataSources.radioBeacon.key)
         }
     }
 }
