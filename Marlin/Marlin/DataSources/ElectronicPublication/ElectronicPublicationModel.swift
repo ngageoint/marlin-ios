@@ -7,6 +7,36 @@
 
 import Foundation
 
+struct ElectronicPublicationListModel: Hashable, Identifiable, Bookmarkable {
+    var id: String {
+        s3Key ?? ""
+    }
+
+    var itemKey: String {
+        return s3Key ?? ""
+    }
+
+    var itemTitle: String {
+        return "\(self.sectionDisplayName ?? "")"
+    }
+    static var definition: any DataSourceDefinition = DataSourceDefinitions.epub.definition
+
+    let sectionDisplayName: String?
+    let fileSize: Int?
+    let uploadTime: Date?
+    let s3Key: String?
+
+    var canBookmark: Bool = false
+
+    init(epub: ElectronicPublication) {
+        self.canBookmark = true
+        self.sectionDisplayName = epub.sectionDisplayName
+        self.fileSize = Int(epub.fileSize)
+        self.uploadTime = epub.uploadTime
+        self.s3Key = epub.s3Key
+    }
+}
+
 struct ElectronicPublicationModel: Bookmarkable, Codable, Hashable, Identifiable {
 
     static var definition: any DataSourceDefinition = DataSourceDefinitions.epub.definition

@@ -21,6 +21,7 @@ public class MSI {
     var lightRepository: LightRepository?
     var radioBeaconRepository: RadioBeaconRepository?
     var differentialGPSStationRepository: DifferentialGPSStationRepository?
+    var electronicPublicationRepository: ElectronicPublicationRepository?
 
     var asamInitializer: AsamInitializer?
     var moduInitializer: ModuInitializer?
@@ -28,6 +29,7 @@ public class MSI {
     var lightInitializer: LightInitializer?
     var radioBeaconInitializer: RadioBeaconInitializer?
     var differentialGPSStationInitializer: DifferentialGPSStationInitializer?
+    var electronicPublicationInitializer: ElectronicPublicationInitializer?
 
     func addRepositories(
         asamRepository: AsamRepository,
@@ -35,7 +37,8 @@ public class MSI {
         portRepository: PortRepository,
         lightRepository: LightRepository,
         radioBeaconRepository: RadioBeaconRepository,
-        differentialGPSStationRepository: DifferentialGPSStationRepository
+        differentialGPSStationRepository: DifferentialGPSStationRepository,
+        electronicPublicationRepository: ElectronicPublicationRepository
     ) {
         self.asamRepository = asamRepository
         self.moduRepository = moduRepository
@@ -43,6 +46,7 @@ public class MSI {
         self.lightRepository = lightRepository
         self.radioBeaconRepository = radioBeaconRepository
         self.differentialGPSStationRepository = differentialGPSStationRepository
+        self.electronicPublicationRepository = electronicPublicationRepository
 
         asamInitializer = AsamInitializer(repository: asamRepository)
         moduInitializer = ModuInitializer(repository: moduRepository)
@@ -51,6 +55,9 @@ public class MSI {
         radioBeaconInitializer = RadioBeaconInitializer(repository: radioBeaconRepository)
         differentialGPSStationInitializer = DifferentialGPSStationInitializer(
             repository: differentialGPSStationRepository
+        )
+        electronicPublicationInitializer = ElectronicPublicationInitializer(
+            repository: electronicPublicationRepository
         )
     }
 
@@ -97,7 +104,7 @@ public class MSI {
 //        DifferentialGPSStation.self,
 //        DFRS.self,
 //        DFRSArea.self,
-        ElectronicPublication.self,
+//        ElectronicPublication.self,
         NoticeToMariners.self
     ]
 
@@ -166,6 +173,7 @@ public class MSI {
         lightInitializer?.registerBackgroundHandler()
         radioBeaconInitializer?.registerBackgroundHandler()
         differentialGPSStationInitializer?.registerBackgroundHandler()
+        electronicPublicationInitializer?.registerBackgroundHandler()
     }
     
     func backgroundFetch(task: BGTask) {
@@ -251,6 +259,7 @@ public class MSI {
         lightInitializer?.fetch()
         radioBeaconInitializer?.fetch()
         differentialGPSStationInitializer?.fetch()
+        electronicPublicationInitializer?.fetch()
 
         let initialDataLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
             if let dataSourceType = importable as? any DataSource.Type {

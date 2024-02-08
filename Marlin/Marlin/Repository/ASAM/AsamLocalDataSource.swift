@@ -145,7 +145,8 @@ extension AsamCoreDataDataSource {
 
     func asams(
         filters: [DataSourceFilterParameter]?,
-        at page: Page?, currentHeader: String?
+        at page: Page?, 
+        currentHeader: String?
     ) -> AnyPublisher<AsamModelPage, Error> {
 
         let request = Asam.fetchRequest()

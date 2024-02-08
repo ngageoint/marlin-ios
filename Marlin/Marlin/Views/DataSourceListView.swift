@@ -36,10 +36,6 @@ struct DataSourceListView: View {
             ModuList()
         } else if dataSource.key == Light.key {
             LightList()
-//            MSIListView<Light, EmptyView, EmptyView, EmptyView>(
-//                focusedItem: focusedItem,
-//                watchFocusedItem: watchFocusedItem
-//            )
         } else if dataSource.key == NavigationalWarning.key {
             NavigationalWarningsOverview(
                 focusedItem: focusedItem,
@@ -49,18 +45,8 @@ struct DataSourceListView: View {
             PortList()
         } else if dataSource.key == DataSources.radioBeacon.key {
             RadioBeaconList()
-//            MSIListView<RadioBeacon, EmptyView, EmptyView, EmptyView>(
-//                focusedItem: focusedItem,
-//                watchFocusedItem: watchFocusedItem
-//            )
         } else if dataSource.key == DataSources.dgps.key {
             DifferentialGPSStationList()
-//            MSIListView<DifferentialGPSStation, EmptyView, EmptyView, EmptyView>(
-//                focusedItem: focusedItem,
-//                watchFocusedItem: watchFocusedItem
-//            )
-        } else if dataSource.key == DFRS.key {
-            MSIListView<DFRS, EmptyView, EmptyView, EmptyView>()
         } else if dataSource.key == ElectronicPublication.key {
             ElectronicPublicationsList()
         } else if dataSource.key == NoticeToMariners.key {

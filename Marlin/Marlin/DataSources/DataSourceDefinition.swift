@@ -396,6 +396,15 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 1)) > 
             UserDefaults.standard.lastSyncTimeSeconds(ElectronicPublication.definition)
         }
+        var defaultSort: [DataSourceSortParameter] = [
+            DataSourceSortParameter(
+                property: DataSourceProperty(
+                    name: "Type",
+                    key: #keyPath(ElectronicPublication.pubTypeId),
+                    type: .int),
+                ascending: true,
+                section: true)
+        ]
 
         fileprivate init() { }
     }

@@ -14,8 +14,18 @@ import BackgroundTasks
 protocol ElectronicPublicationLocalDataSource {
     func getElectronicPublication(s3Key: String?) -> ElectronicPublicationModel?
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
+    func sectionHeaders(
+        filters: [DataSourceFilterParameter]?,
+        paginatedBy paginator: Trigger.Signal?
+    ) -> AnyPublisher<[ElectronicPublicationItem], Error>
     func insert(task: BGTask?, epubs: [ElectronicPublicationModel]) async -> Int
     func batchImport(from propertiesList: [ElectronicPublicationModel]) async throws -> Int
+}
+
+struct ElectronicPublicationModelPage {
+    var epubList: [ElectronicPublicationItem]
+    var next: Int?
+    var currentHeader: String?
 }
 
 class ElectronicPublicationCoreDataDataSource: 
@@ -50,6 +60,91 @@ class ElectronicPublicationCoreDataDataSource:
             count = (try? context.count(for: fetchRequest)) ?? 0
         }
         return count
+    }
+
+    func sectionHeaders(
+        filters: [DataSourceFilterParameter]?,
+        paginatedBy paginator: Trigger.Signal?
+    ) -> AnyPublisher<[ElectronicPublicationItem], Error> {
+        return sectionHeaders(filters: filters, at: nil, currentHeader: nil, paginatedBy: paginator)
+            .map(\.epubList)
+            .eraseToAnyPublisher()
+    }
+
+    func sectionHeaders(
+        filters: [DataSourceFilterParameter]?,
+        at page: Page?,
+        currentHeader: String?,
+        paginatedBy paginator: Trigger.Signal?
+    ) -> AnyPublisher<ElectronicPublicationModelPage, Error> {
+        return sectionHeaders(filters: filters, at: page, currentHeader: currentHeader)
+            .map { result -> AnyPublisher<ElectronicPublicationModelPage, Error> in
+                if let paginator = paginator, let next = result.next {
+                    return self.sectionHeaders(
+                        filters: filters,
+                        at: next,
+                        currentHeader: result.currentHeader,
+                        paginatedBy: paginator
+                    )
+                    .wait(untilOutputFrom: paginator)
+                    .retry(.max)
+                    .prepend(result)
+                    .eraseToAnyPublisher()
+                } else {
+                    return Just(result)
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
+                }
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+
+    func sectionHeaders(
+        filters: [DataSourceFilterParameter]?,
+        at page: Page?,
+        currentHeader: String?
+    ) -> AnyPublisher<ElectronicPublicationModelPage, Error> {
+
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ElectronicPublication")
+        let predicates: [NSPredicate] = buildPredicates(filters: filters)
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        request.predicate = predicate
+        // 4. Use the only result type allowed for getting distinct values
+        request.resultType = .dictionaryResultType
+        request.fetchLimit = 100
+        request.fetchOffset = (page ?? 0) * request.fetchLimit
+        // 5. Set that you want distinct results
+        request.returnsDistinctResults = true
+
+        // 6. Set the column you want to fetch
+        let userSort = UserDefaults.standard.sort(DataSources.epub.key)
+        let sortDescriptors: [DataSourceSortParameter] =
+        userSort.isEmpty ? DataSources.epub.defaultSort : userSort
+
+        request.propertiesToFetch = [sortDescriptors[0].property.key]
+
+        request.sortDescriptors = [sortDescriptors[0].toNSSortDescriptor()]
+        var epubs: [ElectronicPublicationItem] = []
+        context.performAndWait {
+            if let res = try? context.fetch(request) as? [[String: Any]] {
+                print("res: \(res)")
+
+                epubs = res.compactMap {
+                    ElectronicPublicationItem.sectionHeader(header: "\($0[sortDescriptors[0].property.key] ?? "")")
+                }
+            }
+        }
+
+        let epubPage: ElectronicPublicationModelPage = ElectronicPublicationModelPage(
+            epubList: epubs, next: (page ?? 0) + 1,
+            currentHeader: ""
+        )
+
+        return Just(epubPage)
+            .setFailureType(to: Error.self)
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 }
 
