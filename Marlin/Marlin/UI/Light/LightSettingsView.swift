@@ -241,11 +241,11 @@ struct LightSettingsView: View {
                         Text("Map Options")
                     } footer: {
                         Text("""
-                            A lights range is the distance, expressed in nautical miles, that a light \
-                            can be seen in clear weather. These ranges can be visualized on the map. \
-                            Lights which have defined color sectors, or have visibility or obscured \
-                            ranges are drawn as arcs of visibility.  All other lights are drawn as \
-                            full circles.
+                        A lights range is the distance, expressed in nautical miles, that a light \
+                        can be seen in clear weather. These ranges can be visualized on the map. \
+                        Lights which have defined color sectors, or have visibility or obscured \
+                        ranges are drawn as arcs of visibility.  All other lights are drawn as \
+                        full circles.
                         """)
                     }
                 }
