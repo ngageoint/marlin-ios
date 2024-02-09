@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Kingfisher
 
 class PortInitialDataLoadOperation: CountingDataLoadOperation {
 
@@ -24,6 +25,7 @@ class PortInitialDataLoadOperation: CountingDataLoadOperation {
     }
 
     @MainActor override func finishLoad() {
+        Kingfisher.ImageCache(name: DataSources.port.key).clearCache()
         self.state = .isFinished
         MSI.shared.appState.loadingDataSource[DataSources.port.key] = false
         NotificationCenter.default.post(

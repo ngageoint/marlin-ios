@@ -23,20 +23,20 @@ class LightInitialDataLoadOperation: CountingDataLoadOperation {
     }
 
     @MainActor override func finishLoad() {
+        Task {
+            await localDataSource.postProcess()
+
+            NotificationCenter.default.post(
+                name: .DataSourceLoaded,
+                object: DataSourceItem(dataSource: DataSources.light)
+            )
+            NotificationCenter.default.post(
+                name: .DataSourceUpdated,
+                object: DataSourceUpdatedNotification(key: DataSources.light.key)
+            )
+        }
         self.state = .isFinished
         MSI.shared.appState.loadingDataSource[DataSources.light.key] = false
-        NotificationCenter.default.post(
-            name: .DataSourceLoaded,
-            object: DataSourceItem(dataSource: DataSources.light)
-        )
-        NotificationCenter.default.post(
-            name: .DataSourceNeedsProcessed,
-            object: DataSourceUpdatedNotification(key: DataSources.light.key)
-        )
-        NotificationCenter.default.post(
-            name: .DataSourceUpdated,
-            object: DataSourceUpdatedNotification(key: DataSources.light.key)
-        )
     }
 
     override func loadData() async {

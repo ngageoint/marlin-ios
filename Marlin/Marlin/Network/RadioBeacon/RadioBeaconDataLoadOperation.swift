@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import CoreData
+import Kingfisher
 
 class RadioBeaconDataLoadOperation: CountingDataLoadOperation {
 
@@ -18,23 +18,26 @@ class RadioBeaconDataLoadOperation: CountingDataLoadOperation {
         self.localDataSource = localDataSource
     }
 
-    override func loadData() async {
-        if self.isCancelled {
-            return
-        }
+    @MainActor override func finishLoad() {
+        Kingfisher.ImageCache(name: DataSources.radioBeacon.key).clearCache()
+        self.state = .isFinished
 
-        count = (try? await localDataSource.batchImport(from: radioBeacons)) ?? 0
+        MSI.shared.appState.loadingDataSource[DataSources.radioBeacon.key] = false
         if count != 0 {
             DispatchQueue.main.async {
-                NotificationCenter.default.post(
-                    name: .DataSourceNeedsProcessed,
-                    object: DataSourceUpdatedNotification(key: DataSources.radioBeacon.key)
-                )
                 NotificationCenter.default.post(
                     name: .DataSourceUpdated,
                     object: DataSourceUpdatedNotification(key: DataSources.radioBeacon.key)
                 )
             }
         }
+    }
+
+    override func loadData() async {
+        if self.isCancelled {
+            return
+        }
+
+        count = (try? await localDataSource.batchImport(from: radioBeacons)) ?? 0
     }
 }

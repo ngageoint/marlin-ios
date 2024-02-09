@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import CoreData
+import Kingfisher
 
 class AsamDataLoadOperation: CountingDataLoadOperation {
 
@@ -18,23 +18,26 @@ class AsamDataLoadOperation: CountingDataLoadOperation {
         self.localDataSource = localDataSource
     }
 
-    override func loadData() async {
-        if self.isCancelled {
-            return
-        }
+    @MainActor override func finishLoad() {
+        Kingfisher.ImageCache(name: DataSources.asam.key).clearCache()
+        self.state = .isFinished
 
-        count = (try? await localDataSource.batchImport(from: asams)) ?? 0
+        MSI.shared.appState.loadingDataSource[DataSources.asam.key] = false
         if count != 0 {
             DispatchQueue.main.async {
-                NotificationCenter.default.post(
-                    name: .DataSourceNeedsProcessed,
-                    object: DataSourceUpdatedNotification(key: DataSources.asam.key)
-                )
                 NotificationCenter.default.post(
                     name: .DataSourceUpdated,
                     object: DataSourceUpdatedNotification(key: DataSources.asam.key)
                 )
             }
         }
+    }
+
+    override func loadData() async {
+        if self.isCancelled {
+            return
+        }
+
+        count = (try? await localDataSource.batchImport(from: asams)) ?? 0
     }
 }

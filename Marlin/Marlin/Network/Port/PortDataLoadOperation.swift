@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Kingfisher
 
 class PortDataLoadOperation: CountingDataLoadOperation {
 
@@ -17,23 +18,26 @@ class PortDataLoadOperation: CountingDataLoadOperation {
         self.localDataSource = localDataSource
     }
 
-    override func loadData() async {
-        if self.isCancelled {
-            return
-        }
+    @MainActor override func finishLoad() {
+        Kingfisher.ImageCache(name: DataSources.port.key).clearCache()
+        self.state = .isFinished
 
-        count = (try? await localDataSource.batchImport(from: ports)) ?? 0
+        MSI.shared.appState.loadingDataSource[DataSources.port.key] = false
         if count != 0 {
             DispatchQueue.main.async {
-                NotificationCenter.default.post(
-                    name: .DataSourceNeedsProcessed,
-                    object: DataSourceUpdatedNotification(key: DataSources.port.key)
-                )
                 NotificationCenter.default.post(
                     name: .DataSourceUpdated,
                     object: DataSourceUpdatedNotification(key: DataSources.port.key)
                 )
             }
         }
+    }
+
+    override func loadData() async {
+        if self.isCancelled {
+            return
+        }
+
+        count = (try? await localDataSource.batchImport(from: ports)) ?? 0
     }
 }

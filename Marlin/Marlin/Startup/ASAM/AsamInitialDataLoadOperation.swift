@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Kingfisher
 
 class AsamInitialDataLoadOperation: CountingDataLoadOperation {
     var localDataSource: AsamLocalDataSource
@@ -23,15 +24,13 @@ class AsamInitialDataLoadOperation: CountingDataLoadOperation {
     }
     
     @MainActor override func finishLoad() {
+        Kingfisher.ImageCache(name: DataSources.asam.key).clearCache()
         self.state = .isFinished
+        
         MSI.shared.appState.loadingDataSource[DataSources.asam.key] = false
         NotificationCenter.default.post(
             name: .DataSourceLoaded,
             object: DataSourceItem(dataSource: DataSources.asam)
-        )
-        NotificationCenter.default.post(
-            name: .DataSourceNeedsProcessed,
-            object: DataSourceUpdatedNotification(key: DataSources.asam.key)
         )
         NotificationCenter.default.post(
             name: .DataSourceUpdated,

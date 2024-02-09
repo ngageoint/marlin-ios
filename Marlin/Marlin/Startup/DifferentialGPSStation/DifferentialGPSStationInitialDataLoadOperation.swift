@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Kingfisher
 
 class DifferentialGPSStationInitialDataLoadOperation: CountingDataLoadOperation {
     var localDataSource: DifferentialGPSStationLocalDataSource
@@ -23,15 +24,13 @@ class DifferentialGPSStationInitialDataLoadOperation: CountingDataLoadOperation 
     }
 
     @MainActor override func finishLoad() {
+        Kingfisher.ImageCache(name: DataSources.dgps.key).clearCache()
+
         self.state = .isFinished
         MSI.shared.appState.loadingDataSource[DataSources.dgps.key] = false
         NotificationCenter.default.post(
             name: .DataSourceLoaded,
             object: DataSourceItem(dataSource: DataSources.dgps)
-        )
-        NotificationCenter.default.post(
-            name: .DataSourceNeedsProcessed,
-            object: DataSourceUpdatedNotification(key: DataSources.dgps.key)
         )
         NotificationCenter.default.post(
             name: .DataSourceUpdated,

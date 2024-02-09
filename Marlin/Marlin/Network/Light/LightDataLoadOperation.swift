@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import CoreData
+import Kingfisher
 
 class LightDataLoadOperation: CountingDataLoadOperation {
 
@@ -18,23 +18,26 @@ class LightDataLoadOperation: CountingDataLoadOperation {
         self.localDataSource = localDataSource
     }
 
-    override func loadData() async {
-        if self.isCancelled {
-            return
-        }
-
-        count = (try? await localDataSource.batchImport(from: lights)) ?? 0
+    @MainActor override func finishLoad() {
         if count != 0 {
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(
-                    name: .DataSourceNeedsProcessed,
-                    object: DataSourceUpdatedNotification(key: DataSources.light.key)
-                )
+            Task {
+                await localDataSource.postProcess()
+
                 NotificationCenter.default.post(
                     name: .DataSourceUpdated,
                     object: DataSourceUpdatedNotification(key: DataSources.light.key)
                 )
             }
         }
+        self.state = .isFinished
+        MSI.shared.appState.loadingDataSource[DataSources.light.key] = false
+    }
+
+    override func loadData() async {
+        if self.isCancelled {
+            return
+        }
+
+        count = (try? await localDataSource.batchImport(from: lights)) ?? 0
     }
 }

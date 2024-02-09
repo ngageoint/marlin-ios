@@ -10,6 +10,7 @@ import CoreData
 import Combine
 import UIKit
 import BackgroundTasks
+import Kingfisher
 
 protocol LightLocalDataSource {
 
@@ -50,6 +51,7 @@ protocol LightLocalDataSource {
     @discardableResult
     func insert(task: BGTask?, lights: [LightModel]) async -> Int
     func batchImport(from propertiesList: [LightModel]) async throws -> Int
+    func postProcess() async
 }
 
 class LightCoreDataDataSource:
@@ -452,4 +454,45 @@ extension LightCoreDataDataSource {
         )
         return batchInsertRequest
     }
+
+    func postProcess() async {
+        Kingfisher.ImageCache(name: DataSources.light.key).clearCache()
+        //        imageCache.clearCache()
+        let fetchRequest = NSFetchRequest<Light>(entityName: "Light")
+        fetchRequest.predicate = NSPredicate(format: "requiresPostProcessing == true")
+        await context.perform {
+            if let objects = try? self.context.fetch(fetchRequest) {
+                if !objects.isEmpty {
+                    for light in objects {
+                        var ranges: [LightRange] = []
+                        light.requiresPostProcessing = false
+                        if let rangeString = light.range {
+                            for rangeSplit in rangeString.components(
+                                separatedBy: CharacterSet(charactersIn: ";\n")
+                            ) {
+                                let colorSplit = rangeSplit
+                                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                                    .components(separatedBy: ". ")
+                                if colorSplit.count == 2, let doubleRange = Double(colorSplit[1]) {
+                                    let lightRange = LightRange(context: self.context)
+                                    lightRange.light = light
+                                    lightRange.color = colorSplit[0]
+                                    lightRange.range = doubleRange
+                                    ranges.append(lightRange)
+
+                                }
+                            }
+                        }
+                        light.lightRange = NSSet(array: ranges)
+                    }
+                }
+            }
+            try? self.context.save()
+        }
+        NotificationCenter.default.post(
+            Notification(name: .DataSourceProcessed, object: DataSourceUpdatedNotification(key: Light.key))
+        )
+
+    }
+
 }

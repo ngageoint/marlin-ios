@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Kingfisher
 
 class NavigationalWarningDataLoadOperation: CountingDataLoadOperation {
 
@@ -17,23 +18,24 @@ class NavigationalWarningDataLoadOperation: CountingDataLoadOperation {
         self.localDataSource = localDataSource
     }
 
+    @MainActor override func finishLoad() {
+        Kingfisher.ImageCache(name: DataSources.navWarning.key).clearCache()
+        self.state = .isFinished
+
+        MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] = false
+        if count != 0 {
+            NotificationCenter.default.post(
+                name: .DataSourceUpdated,
+                object: DataSourceUpdatedNotification(key: DataSources.navWarning.key)
+            )
+        }
+    }
+
     override func loadData() async {
         if self.isCancelled {
             return
         }
 
         count = (try? await localDataSource.batchImport(from: navigationalWarnings)) ?? 0
-        if count != 0 {
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(
-                    name: .DataSourceNeedsProcessed,
-                    object: DataSourceUpdatedNotification(key: DataSources.navWarning.key)
-                )
-                NotificationCenter.default.post(
-                    name: .DataSourceUpdated,
-                    object: DataSourceUpdatedNotification(key: DataSources.navWarning.key)
-                )
-            }
-        }
     }
 }
