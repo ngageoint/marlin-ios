@@ -1,5 +1,5 @@
 //
-//  LightProtocol.swift
+//  LightModel.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 10/14/22.
@@ -91,8 +91,7 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible, Ha
     }
     
     var light: Light?
-//    var lightProperties: LightsProperties?
-    
+
     private enum CodingKeys: String, CodingKey {
         case volumeNumber
         case aidType
@@ -303,7 +302,7 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible, Ha
         self.subregionHeading = try? values.decode(String.self, forKey: .subregionHeading)
         
         if let position = self.position {
-            let coordinate = LightsProperties.parsePosition(position: position)
+            let coordinate = LightModel.parsePosition(position: position)
             self.longitude = coordinate.longitude
             self.latitude = coordinate.latitude
         } else {
@@ -322,11 +321,10 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible, Ha
         self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
         self.sectionHeader = nil
     }
-    
+
     static func parsePosition(position: String) -> CLLocationCoordinate2D {
         var latitude = 0.0
         var longitude = 0.0
-        
         // swiftlint:disable line_length
         let pattern = #"(?<latdeg>[0-9]*)°(?<latminutes>[0-9]*)'(?<latseconds>[0-9]*\.?[0-9]*)\"(?<latdirection>[NS]) \n(?<londeg>[0-9]*)°(?<lonminutes>[0-9]*)'(?<lonseconds>[0-9]*\.?[0-9]*)\"(?<londirection>[EW])"#
         // swiftlint:enable line_length
@@ -367,7 +365,7 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible, Ha
                 }
             }
         }
-        
+
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
@@ -815,7 +813,11 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible, Ha
 }
 // swiftlint:enable type_body_length
 
-extension LightModel: DataSource, GeoJSONExportable {
+extension LightModel: GeoJSONExportable {
+    var itemKey: String {
+        return "\(featureNumber ?? "")--\(volumeNumber ?? "")--\(characteristicNumber ?? 0)"
+    }
+
     static var definition: any DataSourceDefinition = DataSourceDefinitions.light.definition
 
     func sfGeometryByColor() -> [UIColor: SFGeometry?]? {
@@ -894,91 +896,21 @@ extension LightModel: DataSource, GeoJSONExportable {
             return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
         }
     }
-    
-    var color: UIColor {
-        Self.color
-    }
-    var itemKey: String {
-        return "\(featureNumber ?? "")--\(volumeNumber ?? "")--\(characteristicNumber ?? 0)"
-    }
-    static var dateFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter
-    }
-    
-    static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("Lights", comment: "Lights data source display name")
-    static var fullDataSourceName: String = NSLocalizedString("Lights", comment: "Lights data source display name")
-    static var key: String = "light"
-    static var metricsKey: String = "lights"
-    static var imageName: String?
-    static var systemImageName: String? = "lightbulb.fill"
-    static var color: UIColor = UIColor(argbValue: 0xFFFFC500)
-    static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
-    
-    static var defaultSort: [DataSourceSortParameter] = [
-        DataSourceSortParameter(
-            property: DataSourceProperty(
-                name: "Region",
-                key: #keyPath(Light.sectionHeader),
-                type: .string),
-            ascending: true),
-        DataSourceSortParameter(
-            property: DataSourceProperty(
-                name: "Feature Number",
-                key: #keyPath(Light.featureNumber), type: .int),
-            ascending: true)
-    ]
-    static var defaultFilter: [DataSourceFilterParameter] = []
-    
-    static var properties: [DataSourceProperty] = [
-        DataSourceProperty(name: "Location", key: #keyPath(Light.mgrs10km), type: .location),
-        DataSourceProperty(name: "Latitude", key: #keyPath(Light.latitude), type: .latitude),
-        DataSourceProperty(name: "Longitude", key: #keyPath(Light.longitude), type: .longitude),
-        DataSourceProperty(name: "Feature Number", key: #keyPath(Light.featureNumber), type: .string),
-        DataSourceProperty(
-            name: "International Feature Number",
-            key: #keyPath(Light.internationalFeature),
-            type: .string),
-        DataSourceProperty(name: "Name", key: #keyPath(Light.name), type: .string),
-        DataSourceProperty(name: "Structure", key: #keyPath(Light.structure), type: .string),
-        DataSourceProperty(name: "Focal Plane Elevation (ft)", key: #keyPath(Light.heightFeet), type: .double),
-        DataSourceProperty(name: "Focal Plane Elevation (m)", key: #keyPath(Light.heightMeters), type: .double),
-        DataSourceProperty(
-            name: "Range (nm)",
-            key: #keyPath(Light.lightRange),
-            type: .double,
-            subEntityKey: #keyPath(LightRange.range)),
-        DataSourceProperty(name: "Remarks", key: #keyPath(Light.remarks), type: .string),
-        DataSourceProperty(name: "Characteristic", key: #keyPath(Light.characteristic), type: .string),
-        DataSourceProperty(name: "Signal", key: #keyPath(Light.characteristic), type: .string),
-        DataSourceProperty(name: "Notice Number", key: #keyPath(Light.noticeNumber), type: .int),
-        DataSourceProperty(name: "Notice Week", key: #keyPath(Light.noticeWeek), type: .string),
-        DataSourceProperty(name: "Notice Year", key: #keyPath(Light.noticeYear), type: .string),
-        DataSourceProperty(name: "Volume Number", key: #keyPath(Light.volumeNumber), type: .string),
-        DataSourceProperty(name: "Preceding Note", key: #keyPath(Light.precedingNote), type: .string),
-        DataSourceProperty(name: "Post Note", key: #keyPath(Light.postNote), type: .string),
-        DataSourceProperty(name: "Region", key: #keyPath(Light.sectionHeader), type: .string),
-        DataSourceProperty(name: "Geopolitical Heading", key: #keyPath(Light.geopoliticalHeading), type: .string),
-        DataSourceProperty(name: "Region Heading", key: #keyPath(Light.regionHeading), type: .string),
-        DataSourceProperty(name: "Subregion Heading", key: #keyPath(Light.subregionHeading), type: .string),
-        DataSourceProperty(name: "Local Heading", key: #keyPath(Light.localHeading), type: .string)
-    ]
-    
+
     var coordinateRegion: MKCoordinateRegion? {
         MKCoordinateRegion(center: self.coordinate, zoom: 11.5, bounds: CGRect(x: 0, y: 0, width: 600, height: 600))
     }
 }
 
-extension LightModel: MapImage {
-    static var cacheTiles: Bool = true
-    
+extension LightModel {
+
     func mapImage(
         marker: Bool = false,
         zoomLevel: Int,
         tileBounds3857: MapBoundingBox? = nil,
-        context: CGContext? = nil) -> [UIImage] {
+        context: CGContext? = nil
+    ) -> [UIImage] {
+        let TILE_SIZE = 512.0
         var images: [UIImage] = []
         
         if UserDefaults.standard.actualRangeSectorLights, 
@@ -1040,7 +972,9 @@ extension LightModel: MapImage {
         lightSectors: [ImageSector],
         zoomLevel: Int,
         tileBounds3857: MapBoundingBox,
-        context: CGContext) {
+        context: CGContext
+    ) {
+        let TILE_SIZE = 512.0
         for sector in lightSectors.sorted(by: { one, two in
             return one.range ?? 0.0 < two.range ?? 0.0
         }) {
@@ -1092,7 +1026,9 @@ extension LightModel: MapImage {
         range: Double,
         zoomLevel: Int,
         tileBounds3857: MapBoundingBox,
-        context: CGContext) {
+        context: CGContext
+    ) {
+        let TILE_SIZE = 512.0
         let nauticalMilesMeasurement = NSMeasurement(doubleValue: range, unit: UnitLength.nauticalMiles)
         let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
         
@@ -1131,339 +1067,5 @@ extension LightModel: MapImage {
         centerDot.stroke()
         lightColors[0].setFill()
         centerDot.fill()
-    }
-}
-
-protocol LightProtocol {
-    var volumeNumber: String? { get set }
-    var featureNumber: String? { get set }
-    var characteristicNumber: Int64 { get set }
-    var noticeWeek: String? { get set }
-    var noticeYear: String? { get set }
-    var latitude: Double { get set }
-    var longitude: Double { get set }
-    var remarks: String? { get set }
-    var characteristic: String? { get set }
-    var range: String? { get set }
-    var structure: String? { get set }
-    var name: String? { get set }
-    
-    var lightColors: [UIColor]? { get }
-    var isBuoy: Bool { get }
-    var isLight: Bool { get }
-    var isRacon: Bool { get }
-    var isFogSignal: Bool { get }
-    
-    var azimuthCoverage: [ImageSector]? { get }
-    var morseCode: String? { get }
-    var morseLetter: String { get }
-}
-
-extension LightProtocol {
-    
-    var morseCode: String? {
-        guard !isLight, 
-                let characteristic = characteristic,
-                let leftParen = characteristic.firstIndex(of: "("),
-                let lastIndex = characteristic.lastIndex(of: ")") else {
-            return nil
-        }
-        
-        let firstIndex = characteristic.index(after: leftParen)
-        return "\(String(characteristic[firstIndex..<lastIndex]))"
-    }
-    
-    var morseLetter: String {
-        if isLight {
-            return ""
-        }
-        if let first = characteristic?.first {
-            return String(first)
-        }
-        return ""
-    }
-    
-    var azimuthCoverage: [ImageSector]? {
-        guard let remarks = remarks else {
-            return nil
-        }
-        var sectors: [ImageSector] = []
-        //        Azimuth coverage 270^-170^.
-        // swiftlint:disable line_length
-        let pattern = #"(?<azimuth>(Azimuth coverage)?).?((?<startdeg>(\d*))\°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))\°)?(?<endminutes>[0-9]*)[\`']?\..*"#
-        // swiftlint:enable line_length
-        let regex = try? NSRegularExpression(pattern: pattern, options: [])
-        let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
-                              in: remarks)
-        var previousEnd: Double = 0.0
-        
-        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, _, _ in
-            guard let match = match else {
-                return
-            }
-            var end: Double = 0.0
-            var start: Double?
-            for component in ["startdeg", "startminutes", "enddeg", "endminutes"] {
-                
-                let nsrange = match.range(withName: component)
-                if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: remarks) {
-                    if component == "startdeg" {
-                        if start != nil {
-                            start = start! + ((Double(remarks[range]) ?? 0.0) + 90)
-                        } else {
-                            start = (Double(remarks[range]) ?? 0.0) + 90
-                        }
-                    } else if component == "startminutes" {
-                        if start != nil {
-                            start = start! + (Double(remarks[range]) ?? 0.0) / 60
-                        } else {
-                            start = (Double(remarks[range]) ?? 0.0) / 60
-                        }
-                    } else if component == "enddeg" {
-                        end = (Double(remarks[range]) ?? 0.0) + 90
-                    } else if component == "endminutes" {
-                        end += (Double(remarks[range]) ?? 0.0) / 60
-                    }
-                }
-            }
-            if let start = start {
-                sectors.append(ImageSector(startDegrees: start, endDegrees: end, color: Light.raconColor))
-            } else {
-                if end <= previousEnd {
-                    end += 360
-                }
-                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: Light.raconColor))
-            }
-            previousEnd = end
-        })
-        if sectors.isEmpty {
-            return nil
-        }
-        return sectors
-    }
-    
-    var isFogSignal: Bool {
-        guard let remarks = remarks else {
-            return false
-        }
-        return remarks.lowercased().contains("bl.")
-    }
-    
-    var isLight: Bool {
-        guard let name = self.name else {
-            return false
-        }
-        let remarks = remarks ?? ""
-        return !name.contains("RACON") && !remarks.contains("(3 & 10cm)")
-    }
-    
-    var isRacon: Bool {
-        guard let name = self.name else {
-            return false
-        }
-        let remarks = remarks ?? ""
-        return name.contains("RACON") || remarks.contains("(3 & 10cm)")
-    }
-    
-    var isBuoy: Bool {
-        let structure = structure ?? ""
-        return structure.lowercased().contains("pillar") ||
-        structure.lowercased().contains("spar") ||
-        structure.lowercased().contains("conical") ||
-        structure.lowercased().contains("can")
-    }
-    
-    var lightColors: [UIColor]? {
-        var lightColors: [UIColor] = []
-        guard let characteristic = characteristic else {
-            return nil
-        }
-        
-        if characteristic.contains("W.") {
-            lightColors.append(Light.whiteLight)
-        }
-        if characteristic.contains("R.") {
-            lightColors.append(Light.redLight)
-        }
-        // why does green have so many variants without a .?
-        if characteristic.contains("G.") 
-            || characteristic.contains("Oc.G")
-            || characteristic.contains("G\n")
-            || characteristic.contains("F.G")
-            || characteristic.contains("Fl.G")
-            || characteristic.contains("(G)") {
-            lightColors.append(Light.greenLight)
-        }
-        if characteristic.contains("Y.") {
-            lightColors.append(Light.yellowLight)
-        }
-        if characteristic.contains("Bu.") {
-            lightColors.append(Light.blueLight)
-        }
-        if characteristic.contains("Vi.") {
-            lightColors.append(Light.violetLight)
-        }
-        if characteristic.contains("Or.") {
-            lightColors.append(Light.orangeLight)
-        }
-        
-        if lightColors.isEmpty {
-            if characteristic.lowercased().contains("lit") {
-                lightColors.append(Light.whiteLight)
-            }
-        }
-        
-        if lightColors.isEmpty {
-            return nil
-        }
-        return lightColors
-    }
-    
-    var lightSectors: [ImageSector]? {
-        guard let remarks = remarks else {
-            return nil
-        }
-        var sectors: [ImageSector] = []
-        
-        // swiftlint:disable line_length
-        let pattern = #"(?<visible>(Visible)?)(?<fullLightObscured>(bscured)?)((?<color>[A-Z]+)?)\.?(?<unintensified>(\(unintensified\))?)(?<obscured>(\(bscured\))?)( (?<startdeg>(\d*))°)?((?<startminutes>[0-9]*)[\`'])?(-(?<enddeg>(\d*))°)(?<endminutes>[0-9]*)[\`']?"#
-        // swiftlint:enable line_length
-        let regex = try? NSRegularExpression(pattern: pattern, options: [])
-        let nsrange = NSRange(remarks.startIndex..<remarks.endIndex,
-                              in: remarks)
-        var previousEnd: Double = 0.0
-        
-        var visibleSector: Bool = false
-        
-        regex?.enumerateMatches(in: remarks, range: nsrange, using: { match, _, _ in
-            guard let match = match else {
-                return
-            }
-            var color: String = ""
-            var end: Double = 0.0
-            var start: Double?
-            var visibleColor: UIColor?
-            var obscured: Bool = false
-            var fullLightObscured: Bool = false
-            for component in [
-                "visible",
-                "fullLightObscured",
-                "color",
-                "unintensified",
-                "obscured",
-                "startdeg",
-                "startminutes",
-                "enddeg",
-                "endminutes"] {
-                
-                let nsrange = match.range(withName: component)
-                if nsrange.location != NSNotFound,
-                   let range = Range(nsrange, in: remarks),
-                   !range.isEmpty {
-                    if component == "visible" {
-                        visibleSector = true
-                        visibleColor = lightColors?[0]
-                    } else if component == "fullLightObscured" {
-                        visibleColor = lightColors?[0]
-                        fullLightObscured = true
-                    } else if component == "color" {
-                        color = "\(remarks[range])"
-                    } else if component == "obscured" {
-                        obscured = true
-                    } else if component == "startdeg" {
-                        if start != nil {
-                            start = start! + (Double(remarks[range]) ?? 0.0) + 90.0
-                        } else {
-                            start = (Double(remarks[range]) ?? 0.0) + 90.0
-                        }
-                    } else if component == "startminutes" {
-                        if start != nil {
-                            start = start! + (Double(remarks[range]) ?? 0.0) / 60
-                        } else {
-                            start = (Double(remarks[range]) ?? 0.0) / 60
-                        }
-                    } else if component == "enddeg" {
-                        end = (Double(remarks[range]) ?? 0.0) + 90.0
-                    } else if component == "endminutes" {
-                        end += (Double(remarks[range]) ?? 0.0) / 60
-                    }
-                }
-            }
-            let uicolor: UIColor = {
-                if obscured || fullLightObscured {
-                    return visibleColor ?? (lightColors?[0] ?? .black)
-                } else if color == "W" {
-                    return Light.whiteLight
-                } else if color == "R" {
-                    return Light.redLight
-                } else if color == "G" {
-                    return Light.greenLight
-                } else if color == "Y" {
-                    return Light.yellowLight
-                }
-                return visibleColor ?? (lightColors?[0] ?? UIColor.clear)
-            }()
-            var sectorRange: Double?
-            if let rangeString = range {
-                for split in rangeString.components(separatedBy: CharacterSet(charactersIn: ";\n"))
-                where split.trimmingCharacters(in: .whitespacesAndNewlines).starts(with: color) {
-                    let pattern = #"[0-9]+$"#
-                    let regex = try? NSRegularExpression(pattern: pattern, options: [])
-                    let rangePart = "\(split)".trimmingCharacters(in: .whitespacesAndNewlines)
-                    let match = regex?.firstMatch(
-                        in: rangePart,
-                        range: NSRange(rangePart.startIndex..<rangePart.endIndex, in: rangePart))
-
-                    if let nsrange = match?.range, nsrange.location != NSNotFound,
-                       let matchRange = Range(nsrange, in: rangePart),
-                       !matchRange.isEmpty {
-                        let colorRange = rangePart[matchRange]
-                        if !colorRange.isEmpty {
-                            sectorRange = Double(colorRange)
-                        }
-                    }
-                }
-            }
-            if let start = start {
-                if end < start {
-                    end += 360
-                }
-                sectors.append(
-                    ImageSector(
-                        startDegrees: start,
-                        endDegrees: end,
-                        color: uicolor,
-                        text: color,
-                        obscured: obscured || fullLightObscured,
-                        range: sectorRange))
-            } else {
-                if end <= previousEnd {
-                    end += 360
-                }
-                sectors.append(
-                    ImageSector(
-                        startDegrees: previousEnd,
-                        endDegrees: end,
-                        color: uicolor,
-                        text: color,
-                        obscured: obscured || fullLightObscured,
-                        range: sectorRange))
-            }
-            if fullLightObscured && !visibleSector {
-                // add the sector for the part of the light which is not obscured
-                sectors.append(
-                    ImageSector(
-                        startDegrees: end,
-                        endDegrees: (start ?? 0) + 360,
-                        color: visibleColor ?? (lightColors?[0] ?? UIColor.clear),
-                        range: sectorRange))
-            }
-            previousEnd = end
-        })
-        if sectors.isEmpty {
-            return nil
-        }
-        return sectors
     }
 }

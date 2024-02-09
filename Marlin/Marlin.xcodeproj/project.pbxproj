@@ -173,7 +173,7 @@
 		F72281DF296F644600218FC0 /* DataSourceRailTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72281DE296F644600218FC0 /* DataSourceRailTests.swift */; };
 		F7249AEB2AF4321A00961E65 /* AsamService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7249AEA2AF4321A00961E65 /* AsamService.swift */; };
 		F7249AED2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */; };
-		F7275FDF28FA252800ED8D9A /* LightProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7275FDE28FA252800ED8D9A /* LightProtocol.swift */; };
+		F7275FDF28FA252800ED8D9A /* LightModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7275FDE28FA252800ED8D9A /* LightModel.swift */; };
 		F727A684284E351800BD728A /* MSIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A683284E351800BD728A /* MSIError.swift */; };
 		F727A691284E605800BD728A /* MarlinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A690284E605800BD728A /* MarlinTests.swift */; };
 		F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A687284E485500BD728A /* KIF+extensions.swift */; };
@@ -562,7 +562,7 @@
 		F7FFB30028D6376100C31AA3 /* NavigationalWarning+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB2FF28D6376100C31AA3 /* NavigationalWarning+Decodable.swift */; };
 		F7FFB30428D6389700C31AA3 /* AsamPropertyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB30328D6389700C31AA3 /* AsamPropertyContainer.swift */; };
 		F7FFB30E28D63C2700C31AA3 /* ModuPropertyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB30D28D63C2700C31AA3 /* ModuPropertyContainer.swift */; };
-		F7FFB31828D63EBC00C31AA3 /* Light+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31728D63EBC00C31AA3 /* Light+Decodable.swift */; };
+		F7FFB31828D63EBC00C31AA3 /* LightPropertyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31728D63EBC00C31AA3 /* LightPropertyContainer.swift */; };
 		F7FFB31C28D63F5500C31AA3 /* Light+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31B28D63F5500C31AA3 /* Light+MapImage.swift */; };
 		F7FFB31E28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31D28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift */; };
 		F7FFB32828D6427200C31AA3 /* RadioBeaconPropertyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB32728D6427200C31AA3 /* RadioBeaconPropertyContainer.swift */; };
@@ -764,7 +764,7 @@
 		F72281DE296F644600218FC0 /* DataSourceRailTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceRailTests.swift; sourceTree = "<group>"; };
 		F7249AEA2AF4321A00961E65 /* AsamService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamService.swift; sourceTree = "<group>"; };
 		F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRemoteDataSourceTests.swift; sourceTree = "<group>"; };
-		F7275FDE28FA252800ED8D9A /* LightProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightProtocol.swift; sourceTree = "<group>"; };
+		F7275FDE28FA252800ED8D9A /* LightModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightModel.swift; sourceTree = "<group>"; };
 		F727A682284E29AE00BD728A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F727A683284E351800BD728A /* MSIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIError.swift; sourceTree = "<group>"; };
 		F727A687284E485500BD728A /* KIF+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KIF+extensions.swift"; sourceTree = "<group>"; };
@@ -1163,7 +1163,7 @@
 		F7FFB2FF28D6376100C31AA3 /* NavigationalWarning+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+Decodable.swift"; sourceTree = "<group>"; };
 		F7FFB30328D6389700C31AA3 /* AsamPropertyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamPropertyContainer.swift; sourceTree = "<group>"; };
 		F7FFB30D28D63C2700C31AA3 /* ModuPropertyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuPropertyContainer.swift; sourceTree = "<group>"; };
-		F7FFB31728D63EBC00C31AA3 /* Light+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+Decodable.swift"; sourceTree = "<group>"; };
+		F7FFB31728D63EBC00C31AA3 /* LightPropertyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightPropertyContainer.swift; sourceTree = "<group>"; };
 		F7FFB31B28D63F5500C31AA3 /* Light+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+MapImage.swift"; sourceTree = "<group>"; };
 		F7FFB31D28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Light+DataSourceViewBuilder.swift"; sourceTree = "<group>"; };
 		F7FFB32728D6427200C31AA3 /* RadioBeaconPropertyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconPropertyContainer.swift; sourceTree = "<group>"; };
@@ -1254,10 +1254,10 @@
 				F707BA90287F1767006A94C4 /* RaconImage.swift */,
 				F707BA96288590E2006A94C4 /* FogSignalImage.swift */,
 				F7D5C05A28A6B458000C2C29 /* StructureImage.swift */,
-				F7FFB31728D63EBC00C31AA3 /* Light+Decodable.swift */,
+				F7FFB31728D63EBC00C31AA3 /* LightPropertyContainer.swift */,
 				F7FFB31B28D63F5500C31AA3 /* Light+MapImage.swift */,
 				F7FFB31D28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift */,
-				F7275FDE28FA252800ED8D9A /* LightProtocol.swift */,
+				F7275FDE28FA252800ED8D9A /* LightModel.swift */,
 				F73ABC7F294D2E240085EDC5 /* LightRange.swift */,
 				F73357042B308FC100BEE26F /* LightFilterable.swift */,
 			);
@@ -3367,7 +3367,7 @@
 				F7222F872B6C089000C3E4F1 /* LightDataLoadOperation.swift in Sources */,
 				F7222F912B6C0B1000C3E4F1 /* NavigationalWarningLocalDataSource.swift in Sources */,
 				F7222F9D2B6D4E6C00C3E4F1 /* ElectronicPublicationInitialDataLoadOperation.swift in Sources */,
-				F7FFB31828D63EBC00C31AA3 /* Light+Decodable.swift in Sources */,
+				F7FFB31828D63EBC00C31AA3 /* LightPropertyContainer.swift in Sources */,
 				F73ABC84295245BB0085EDC5 /* OnboardingView.swift in Sources */,
 				F70BCEA929DEFDA900AEF73D /* DoubleExtensions.swift in Sources */,
 				F70F50192992DAFF0062E555 /* DataLoadedNotificationBanner.swift in Sources */,
@@ -3543,7 +3543,7 @@
 				F7222F972B6C0BAF00C3E4F1 /* NoticeToMarinersLocalDataSource.swift in Sources */,
 				F7BAECB12AFC0F9F00DE9BE7 /* AsamInitialDataLoadOperation.swift in Sources */,
 				F71DF4992858DA4700686951 /* AsamMap.swift in Sources */,
-				F7275FDF28FA252800ED8D9A /* LightProtocol.swift in Sources */,
+				F7275FDF28FA252800ED8D9A /* LightModel.swift in Sources */,
 				F7AFF9432AD46C6B00555960 /* RouteViewModel.swift in Sources */,
 				F7DEA1DF2B6BE2C700EB801A /* DataFetchOperation.swift in Sources */,
 				F715E2E72B7412B300752688 /* RadioBeaconInitializer.swift in Sources */,

@@ -17,7 +17,7 @@ struct LightVolume {
     var volumeNumber: String
 }
 
-class Light: NSManagedObject, LightProtocol {
+class Light: NSManagedObject {
     var enlarged: Bool = false
     
     var shouldEnlarge: Bool = false

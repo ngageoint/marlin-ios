@@ -10,11 +10,14 @@ import MapKit
 import CoreData
 
 struct LightDetailView: View {
+    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var router: MarlinRouter
     @EnvironmentObject var lightRepository: LightRepository
     @StateObject var viewModel: LightViewModel = LightViewModel()
     @State var featureNumber: String
     @State var volumeNumber: String
     @State var waypointURI: URL?
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
 
     var body: some View {
         Group {
@@ -64,18 +67,24 @@ struct LightDetailView: View {
                                         Text(structure)
                                             .secondary()
                                     }
-                                    if let heightFeet = firstLight.heightFeet, 
+                                    if let heightFeet = firstLight.heightFeet,
                                         let heightMeters = firstLight.heightMeters, heightFeet != 0 {
                                         Text("Focal Plane Elevation: \(Int(heightFeet))ft (\(Int(heightMeters))m)")
                                             .secondary()
                                     }
-                                    DataSourceActionBar(
-                                        data: firstLight,
-                                        showMoreDetailsButton: false,
-                                        showFocusButton: true
+
+                                    DataSourceActions(
+                                        location: Actions.Location(latLng: firstLight.coordinate),
+                                        zoom: LightActions.Zoom(latLng: firstLight.coordinate, itemKey: firstLight.id),
+                                        bookmark: firstLight.canBookmark ? Actions.Bookmark(
+                                            itemKey: firstLight.id,
+                                            bookmarkViewModel: bookmarkViewModel
+                                        ) : nil,
+                                        share: firstLight.itemTitle
                                     )
                                     .padding(.bottom, 16)
-                                }.padding([.leading, .trailing], 16)
+                                }
+                                .padding([.leading, .trailing], 16)
                             }
                         }
                         .frame(maxWidth: .infinity)
