@@ -101,10 +101,19 @@ struct DifferentialGPSStationModel:
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
-        
+
+    var itemTitle: String {
+        return "\(self.name ?? "\(self.featureNumber ?? 0)")"
+    }
+
     var itemKey: String {
         return "\(featureNumber ?? 0)--\(volumeNumber ?? "")"
     }
+
+    var key: String {
+        DataSources.dgps.key
+    }
+
     var canBookmark: Bool = false
         
     private enum CodingKeys: String, CodingKey {
@@ -411,98 +420,5 @@ struct DifferentialGPSStationModel:
         "stationID \(stationID ?? "")\n" +
         "transferRate \(transferRate ?? 0)\n" +
         "volumeNumber \(volumeNumber ?? "")"
-    }
-}
-
-extension DifferentialGPSStationModel: DataSource {
-    var itemTitle: String {
-        return "\(self.name ?? "\(self.featureNumber ?? 0)")"
-    }
-    
-    var color: UIColor {
-        return Self.color
-    }
-    static var isMappable: Bool = true
-    static var dataSourceName: String =
-    NSLocalizedString("DGPS", comment: "Differential GPS Station data source display name")
-    static var fullDataSourceName: String =
-    NSLocalizedString("Differential GPS Stations", comment: "Differential GPS Station data source display name")
-
-    static var key: String = "differentialGPSStation"
-    static var metricsKey: String = "dgpsStations"
-    static var imageName: String? = "dgps"
-    static var systemImageName: String?
-    static var color: UIColor = UIColor(argbValue: 0xFF00E676)
-    static var imageScale = UserDefaults.standard.imageScale(key) ?? 0.66
-    
-    static var defaultSort: [DataSourceSortParameter] = [
-        DataSourceSortParameter(
-            property: DataSourceProperty(
-                name: "Geopolitical Heading",
-                key: #keyPath(DifferentialGPSStation.geopoliticalHeading),
-                type: .string),
-            ascending: true,
-            section: true),
-        DataSourceSortParameter(
-            property: DataSourceProperty(
-                name: "Feature Number",
-                key: #keyPath(DifferentialGPSStation.featureNumber),
-                type: .int),
-            ascending: true)
-    ]
-    static var defaultFilter: [DataSourceFilterParameter] = []
-    
-    static var properties: [DataSourceProperty] = [
-        DataSourceProperty(name: "Location", key: #keyPath(DifferentialGPSStation.mgrs10km), type: .location),
-        DataSourceProperty(name: "Latitude", key: #keyPath(DifferentialGPSStation.latitude), type: .latitude),
-        DataSourceProperty(name: "Longitude", key: #keyPath(DifferentialGPSStation.longitude), type: .longitude),
-        DataSourceProperty(name: "Number", key: #keyPath(DifferentialGPSStation.featureNumber), type: .int),
-        DataSourceProperty(name: "Name", key: #keyPath(DifferentialGPSStation.name), type: .string),
-        DataSourceProperty(name: "Geopolitical Heading", 
-                           key: #keyPath(DifferentialGPSStation.geopoliticalHeading), 
-                           type: .string),
-        DataSourceProperty(name: "Station ID", key: #keyPath(DifferentialGPSStation.stationID), type: .int),
-        DataSourceProperty(name: "Range (nmi)", key: #keyPath(DifferentialGPSStation.range), type: .int),
-        DataSourceProperty(name: "Frequency (kHz)", key: #keyPath(DifferentialGPSStation.frequency), type: .int),
-        DataSourceProperty(name: "Transfer Rate", key: #keyPath(DifferentialGPSStation.transferRate), type: .int),
-        DataSourceProperty(name: "Remarks", key: #keyPath(DifferentialGPSStation.remarks), type: .string),
-        DataSourceProperty(name: "Notice Number", key: #keyPath(DifferentialGPSStation.noticeNumber), type: .int),
-        DataSourceProperty(name: "Notice Week", key: #keyPath(DifferentialGPSStation.noticeWeek), type: .string),
-        DataSourceProperty(name: "Notice Year", key: #keyPath(DifferentialGPSStation.noticeYear), type: .string),
-        DataSourceProperty(name: "Volume Number", key: #keyPath(DifferentialGPSStation.volumeNumber), type: .string),
-        DataSourceProperty(name: "Preceding Note", key: #keyPath(DifferentialGPSStation.precedingNote), type: .string),
-        DataSourceProperty(name: "Post Note", 
-                           key: #keyPath(DifferentialGPSStation.postNote), 
-                           type: .string)
-
-    ]
-    
-    static var dateFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter
-    }
-    
-    static func postProcess() {
-        imageCache.clearCache()
-    }
-}
-
-extension DifferentialGPSStationModel: MapImage {
-    static var cacheTiles: Bool = true
-    
-    func mapImage(
-        marker: Bool,
-        zoomLevel: Int,
-        tileBounds3857: MapBoundingBox?,
-        context: CGContext? = nil
-    ) -> [UIImage] {
-        return defaultMapImage(
-            marker: marker,
-            zoomLevel: zoomLevel,
-            tileBounds3857: tileBounds3857,
-            context: context,
-            tileSize: 512.0
-        )
     }
 }

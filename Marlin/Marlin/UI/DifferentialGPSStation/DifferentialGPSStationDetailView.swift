@@ -40,7 +40,7 @@ struct DifferentialGPSStationDetailView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .itemTitle()
                                 .foregroundColor(Color.white)
-                                .background(Color(uiColor: differentialGPSStation.color))
+                                .background(Color(uiColor: DataSources.dgps.color))
                                 .padding(.bottom, -8)
                             DataSourceLocationMapView(
                                 dataSourceLocation: differentialGPSStation,
