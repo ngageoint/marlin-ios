@@ -15,7 +15,7 @@ extension UserDefaults {
             return publisher(for: \.asamSort)
         case DataSources.modu.key:
             return publisher(for: \.moduSort)
-        case Light.key:
+        case DataSources.light.key:
             return publisher(for: \.lightSort)
         case NoticeToMariners.key:
             return publisher(for: \.ntmSort)

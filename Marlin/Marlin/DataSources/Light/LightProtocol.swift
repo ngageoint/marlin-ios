@@ -967,7 +967,7 @@ extension LightModel: DataSource, GeoJSONExportable {
     ]
     
     var coordinateRegion: MKCoordinateRegion? {
-        MKCoordinateRegion(center: self.coordinate, zoom: 14.5, bounds: CGRect(x: 0, y: 0, width: 600, height: 600))
+        MKCoordinateRegion(center: self.coordinate, zoom: 11.5, bounds: CGRect(x: 0, y: 0, width: 600, height: 600))
     }
 }
 

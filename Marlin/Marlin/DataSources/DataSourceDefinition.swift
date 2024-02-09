@@ -456,9 +456,9 @@ extension DataSources {
         @AppStorage("lightOrder") var order: Int = 0
         func shouldSync() -> Bool {
             // sync once every week
-            return UserDefaults.standard.dataSourceEnabled(Light.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
-            UserDefaults.standard.lastSyncTimeSeconds(Light.definition)
+            return UserDefaults.standard.dataSourceEnabled(DataSources.light)
+            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) >
+            UserDefaults.standard.lastSyncTimeSeconds(DataSources.light)
         }
 
         var filterable: LightFilterable = LightFilterable()

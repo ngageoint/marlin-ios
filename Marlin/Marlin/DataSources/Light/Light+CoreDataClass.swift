@@ -23,7 +23,11 @@ class Light: NSManagedObject, LightProtocol {
     var shouldEnlarge: Bool = false
     
     var shouldShrink: Bool = false
-    
+
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+
     static let lightVolumes = [
         LightVolume(volumeQuery: "110", volumeNumber: "PUB 110"),
         LightVolume(volumeQuery: "111", volumeNumber: "PUB 111"),
@@ -42,52 +46,6 @@ class Light: NSManagedObject, LightProtocol {
     static let violetLight = UIColor(argbValue: 0xffaf52de)
     static let orangeLight = UIColor(argbValue: 0xffff9500)
     static let raconColor = UIColor(argbValue: 0xffb52bb5)
-    
-    static func postProcess() {
-        Kingfisher.ImageCache(name: DataSources.light.key).clearCache()
-//        imageCache.clearCache()
-        DispatchQueue.global(qos: .utility).async {
-            let fetchRequest = NSFetchRequest<Light>(entityName: "Light")
-            fetchRequest.predicate = NSPredicate(format: "requiresPostProcessing == true")
-            let context = PersistenceController.current.newTaskContext()
-            context.performAndWait {
-                if let objects = try? context.fetch(fetchRequest) {
-                    if !objects.isEmpty {
-                        for light in objects {
-                            var ranges: [LightRange] = []
-                            light.requiresPostProcessing = false
-                            if let rangeString = light.range {
-                                for rangeSplit in rangeString.components(
-                                    separatedBy: CharacterSet(charactersIn: ";\n")
-                                ) {
-                                    let colorSplit = rangeSplit
-                                        .trimmingCharacters(in: .whitespacesAndNewlines)
-                                        .components(separatedBy: ". ")
-                                    if colorSplit.count == 2, let doubleRange = Double(colorSplit[1]) {
-                                        let lightRange = LightRange(context: context)
-                                        lightRange.light = light
-                                        lightRange.color = colorSplit[0]
-                                        lightRange.range = doubleRange
-                                        ranges.append(lightRange)
-                                        
-                                    }
-                                }
-                            }
-                            light.lightRange = NSSet(array: ranges)
-                        }
-                    }
-                }
-                try? context.save()
-            }
-            NotificationCenter.default.post(
-                Notification(name: .DataSourceProcessed, object: DataSourceUpdatedNotification(key: Light.key))
-            )
-        }
-    }
-
-    var color: UIColor {
-        return Light.color
-    }
     
     var expandedCharacteristic: String? {
         var expanded = characteristic

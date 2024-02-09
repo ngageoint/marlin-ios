@@ -490,7 +490,7 @@ extension LightCoreDataDataSource {
             try? self.context.save()
         }
         NotificationCenter.default.post(
-            Notification(name: .DataSourceProcessed, object: DataSourceUpdatedNotification(key: Light.key))
+            Notification(name: .DataSourceProcessed, object: DataSourceUpdatedNotification(key: DataSources.light.key))
         )
 
     }

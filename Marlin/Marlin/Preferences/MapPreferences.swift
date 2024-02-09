@@ -61,7 +61,7 @@ extension UserDefaults {
     }
 
     @objc var showOnMaplight: Bool {
-        bool(forKey: "showOnMap\(Light.key)")
+        bool(forKey: "showOnMap\(DataSources.light.key)")
     }
 
     @objc var showOnMapport: Bool {

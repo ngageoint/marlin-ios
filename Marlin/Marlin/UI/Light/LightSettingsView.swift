@@ -6,40 +6,85 @@
 //
 
 import SwiftUI
-import CoreData
 import MapKit
+import Kingfisher
+
+class LightSettingsLocatable: Locatable {
+    var coordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: 16.473, longitude: -61.507)
+    }
+
+    var coordinateRegion: MKCoordinateRegion? {
+        MKCoordinateRegion(center: self.coordinate, zoom: 9.5, bounds: CGRect(x: 0, y: 0, width: 600, height: 600))
+    }
+}
+
+class LightSettingsTileRepository: TileRepository, ObservableObject {
+    var alwaysShow: Bool = true
+    var dataSource: any DataSourceDefinition = DataSources.light
+
+    var cacheSourceKey: String?
+
+    var imageCache: Kingfisher.ImageCache?
+
+    var filterCacheKey: String {
+        ""
+    }
+
+    let light1: LightModel = LightModel(
+        characteristicNumber: 1,
+        volumeNumber: "PUB 110",
+        featureNumber: "14840",
+        noticeWeek: "06",
+        noticeYear: "2015",
+        latitude: 16.473,
+        longitude: -61.507,
+        remarks: "R. 120°-163°, W.-170°, G.-200°.\n",
+        characteristic: "Fl.(2)W.R.G.\nperiod 6s \nfl. 1.0s, ec. 1.0s \nfl. 1.0s, ec. 3.0s \n",
+        range: "W. 12 ; R. 9 ; G. 9")
+    let light2: LightModel = LightModel(
+        characteristicNumber: 1,
+        volumeNumber: "PUB 110",
+        featureNumber: "14836",
+        noticeWeek: "24",
+        noticeYear: "2019",
+        latitude: 16.41861,
+        longitude: -61.5338,
+        characteristic: "Fl.(3)W.\nperiod 12s \n",
+        range: "10")
+
+    init() {}
+
+    func getTileableItems(
+        minLatitude: Double,
+        maxLatitude: Double,
+        minLongitude: Double,
+        maxLongitude: Double
+    ) -> [DataSourceImage] {
+        var images: [DataSourceImage] = []
+
+        if minLatitude...maxLatitude ~= light1.latitude && minLongitude...maxLongitude ~= light1.longitude {
+            images.append(LightImage(light: light1))
+        }
+
+        if minLatitude...maxLatitude ~= light2.latitude && minLongitude...maxLongitude ~= light2.longitude {
+            images.append(LightImage(light: light2))
+        }
+
+        return images
+    }
+
+    func getItemKeys(minLatitude: Double, maxLatitude: Double, minLongitude: Double, maxLongitude: Double) -> [String] {
+        return []
+    }
+}
 
 class LightMapViewModel: NSObject {
    
     var itemKey: String {
         return "\(featureNumber ?? "")--\(volumeNumber ?? "")--\(characteristicNumber)"
     }
-    static var metricsKey: String = Light.metricsKey
-    
-    static var properties: [DataSourceProperty] = Light.properties
-    
-    static var defaultSort: [DataSourceSortParameter] = Light.defaultSort
-    
-    static var defaultFilter: [DataSourceFilterParameter] = Light.defaultFilter
-    
-    static var isMappable: Bool = Light.isMappable
-    
-    static var dataSourceName: String = Light.dataSourceName
-    
-    static var fullDataSourceName: String = Light.fullDataSourceName
-    
-    static var color: UIColor = Light.color
-    
-    static var imageName: String? = Light.imageName
-    
-    static var systemImageName: String? = Light.systemImageName
-    
-    var color: UIColor = LightMapViewModel.color
-    
-    static var imageScale: CGFloat = Light.imageScale
-    
-    static var dateFormatter: DateFormatter = Light.dateFormatter
-    
+
     var itemTitle: String {
         return "\(name ?? "")"
     }
@@ -126,49 +171,23 @@ class LightMapViewModel: NSObject {
 struct LightSettingsView: View {
     @AppStorage("actualRangeLights") var actualRangeLights = false
     @AppStorage("actualRangeSectorLights") var actualRangeSectorLights = false
-    
-    var lights: [LightModel] = []
-    
-    init() {
-        // need to allow passing these to the light model
-        let light1: LightModel = LightModel(
-            characteristicNumber: 1,
-            volumeNumber: "PUB 110",
-            featureNumber: "14840",
-            noticeWeek: "06",
-            noticeYear: "2015",
-            latitude: 16.473,
-            longitude: -61.507,
-            remarks: "R. 120°-163°, W.-170°, G.-200°.\n",
-            characteristic: "Fl.(2)W.R.G.\nperiod 6s \nfl. 1.0s, ec. 1.0s \nfl. 1.0s, ec. 3.0s \n",
-            range: "W. 12 ; R. 9 ; G. 9")
-        let light2: LightModel = LightModel(
-            characteristicNumber: 1,
-            volumeNumber: "PUB 110",
-            featureNumber: "14836",
-            noticeWeek: "24",
-            noticeYear: "2019",
-            latitude: 16.41861,
-            longitude: -61.5338,
-            characteristic: "Fl.(3)W.\nperiod 12s \n",
-            range: "10")
 
-        lights.append(light1)
-        lights.append(light2)
-    }
-    
+    @StateObject var tileRepository = LightSettingsTileRepository()
+
     var body: some View {
-        GeometryReader { _ in
+        GeometryReader { geometry in
             VStack(spacing: 0) {
-//                    DataSourceLocationMapView(
-//                        dataSourceLocation: lights[0],
-//                        mapName: "Light Detail Map",
-//                        mixins: [LightMap<LightModel>(objects: lights)])
-//                    .frame(
-//                        maxWidth: .infinity,
-//                        minHeight: geometry.size.height * 0.3,
-//                        maxHeight: geometry.size.height * 0.3
-//                    )
+                    DataSourceLocationMapView(
+                        dataSourceLocation: LightSettingsLocatable(),
+                        mapName: "Light Detail Map",
+                        mixins: [
+                            LightMap(repository: tileRepository)
+                        ])
+                    .frame(
+                        maxWidth: .infinity,
+                        minHeight: geometry.size.height * 0.3,
+                        maxHeight: geometry.size.height * 0.3
+                    )
                 List {
                     Section {
                         Toggle(isOn: $actualRangeSectorLights, label: {

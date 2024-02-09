@@ -34,7 +34,7 @@ struct DataSourceListView: View {
             AsamList()
         } else if dataSource.key == DataSources.modu.key {
             ModuList()
-        } else if dataSource.key == Light.key {
+        } else if dataSource.key == DataSources.light.key {
             LightList()
         } else if dataSource.key == NavigationalWarning.key {
             NavigationalWarningsOverview(

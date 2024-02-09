@@ -14,7 +14,7 @@ extension UserDefaults {
             return publisher(for: \.asamOrder)
         case DataSources.modu.key:
             return publisher(for: \.moduOrder)
-        case Light.key:
+        case DataSources.light.key:
             return publisher(for: \.lightOrder)
         case NoticeToMariners.key:
             return publisher(for: \.ntmOrder)

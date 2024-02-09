@@ -29,7 +29,7 @@ struct LightDetailView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .itemTitle()
                                     .foregroundColor(Color.white)
-                                    .background(Color(uiColor: Light.color))
+                                    .background(Color(uiColor: DataSources.light.color))
                                     .padding(.bottom, -8)
                                 
                                 DataSourceLocationMapView(
@@ -110,7 +110,7 @@ struct LightDetailView: View {
         .onAppear {
             viewModel.repository = lightRepository
             viewModel.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
-            Metrics.shared.dataSourceDetail(dataSource: Light.definition)
+            Metrics.shared.dataSourceDetail(dataSource: DataSources.light)
         }
     }
 }

@@ -138,7 +138,7 @@ struct MarlinRouteModifier: ViewModifier {
                         if split.count == 2 {
                             DifferentialGPSStationDetailView(featureNumber: Int(split[0]), volumeNumber: "\(split[1])")
                         }
-                    case Light.key:
+                    case DataSources.light.key:
                         let split = itemKey.split(separator: "--")
                         if split.count == 3 {
                             LightDetailView(featureNumber: "\(split[0])", volumeNumber: "\(split[1])")
@@ -171,7 +171,7 @@ struct MarlinRouteModifier: ViewModifier {
                         AsamDetailView(reference: itemKey, waypointURI: waypointURI)
                     case DataSources.modu.key:
                         ModuDetailView(name: itemKey, waypointURI: waypointURI)
-                    case Light.key:
+                    case DataSources.light.key:
                         let split = itemKey.split(separator: "--")
                         if split.count == 3 {
                             LightDetailView(

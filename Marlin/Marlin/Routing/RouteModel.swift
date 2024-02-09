@@ -292,7 +292,7 @@ extension RouteWaypointModel {
                     case DataSources.modu.key:
                         let moduModel = ModuModel(feature: featureCollection.features[0])
                         return moduModel
-                    case Light.key:
+                    case DataSources.light.key:
                         let lightModel = LightModel(feature: featureCollection.features[0])
                         return lightModel
                     case DataSources.port.key:
