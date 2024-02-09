@@ -29,8 +29,8 @@ struct RouteSummaryView: DataSourceSummaryView {
                     HStack {
                         if let first = route.waypointArray.first {
                             if let dataSourceKey = first.dataSource, 
-                                let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
-                                DataSourceCircleImage(definition: type.definition, size: 15)
+                                let type = DataSources.fromKey(key: dataSourceKey) {
+                                DataSourceCircleImage(definition: type, size: 15)
                             }
                             if let dataSource = first.decodeToDataSource() {
                                 Text(dataSource.itemTitle)
@@ -43,8 +43,8 @@ struct RouteSummaryView: DataSourceSummaryView {
                         if let last = route.waypointArray.last {
                             Group {
                                 if let dataSourceKey = last.dataSource, 
-                                    let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
-                                    DataSourceCircleImage(definition: type.definition, size: 15)
+                                    let type = DataSources.fromKey(key: dataSourceKey) {
+                                    DataSourceCircleImage(definition: type, size: 15)
                                 }
                                 if let dataSource = last.decodeToDataSource() {
                                     Text(dataSource.itemTitle)
@@ -69,7 +69,7 @@ struct RouteSummaryView: DataSourceSummaryView {
 }
 
 struct RouteList: View {
-    @EnvironmentObject var routeRepository: RouteRepositoryManager
+    @EnvironmentObject var routeRepository: RouteRepository
     @StateObject var viewModel: RoutesViewModel = RoutesViewModel()
     
     @EnvironmentObject var router: MarlinRouter

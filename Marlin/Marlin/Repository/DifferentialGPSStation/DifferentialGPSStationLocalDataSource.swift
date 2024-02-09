@@ -26,6 +26,9 @@ protocol DifferentialGPSStationLocalDataSource {
         filters: [DataSourceFilterParameter]?,
         paginatedBy paginator: Trigger.Signal?
     ) -> AnyPublisher<[DifferentialGPSStationItem], Error>
+    func getDifferentialGPSStations(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [DifferentialGPSStationModel]
 
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
     func insert(task: BGTask?, dgpss: [DifferentialGPSStationModel]) async -> Int
@@ -128,6 +131,25 @@ class DifferentialGPSStationCoreDataDataSource:
             count = (try? context.count(for: fetchRequest)) ?? 0
         }
         return count
+    }
+
+    func getDifferentialGPSStations(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [DifferentialGPSStationModel] {
+        return await context.perform {
+            let fetchRequest = DifferentialGPSStation.fetchRequest()
+            let predicates: [NSPredicate] = self.buildPredicates(filters: filters)
+
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            fetchRequest.predicate = predicate
+
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.dgps.key).map({ sortParameter in
+                sortParameter.toNSSortDescriptor()
+            })
+            return (self.context.fetch(request: fetchRequest)?.map { dgps in
+                DifferentialGPSStationModel(differentialGPSStation: dgps)
+            }) ?? []
+        }
     }
 
 }

@@ -26,6 +26,9 @@ protocol AsamLocalDataSource {
         filters: [DataSourceFilterParameter]?,
         paginatedBy paginator: Trigger.Signal?
     ) -> AnyPublisher<[AsamItem], Error>
+    func getAsams(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [AsamModel]
 
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
     func insert(task: BGTask?, asams: [AsamModel]) async -> Int
@@ -110,6 +113,25 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
         }
 
         return asams
+    }
+
+    func getAsams(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [AsamModel] {
+        return await context.perform {
+            let fetchRequest = Asam.fetchRequest()
+            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
+
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            fetchRequest.predicate = predicate
+
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.asam.key).map({ sortParameter in
+                sortParameter.toNSSortDescriptor()
+            })
+            return (self.context.fetch(request: fetchRequest)?.map { asam in
+                AsamModel(asam: asam)
+            }) ?? []
+        }
     }
 
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {

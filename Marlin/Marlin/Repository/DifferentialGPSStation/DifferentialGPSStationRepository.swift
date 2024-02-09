@@ -63,6 +63,12 @@ class DifferentialGPSStationRepository: ObservableObject {
         localDataSource.dgps(filters: filters, paginatedBy: paginator)
     }
 
+    func getDifferentialGPSStations(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [DifferentialGPSStationModel] {
+        await localDataSource.getDifferentialGPSStations(filters: filters)
+    }
+
     func fetch() async -> [DifferentialGPSStationModel] {
         NSLog("Fetching DGPS")
         DispatchQueue.main.async {

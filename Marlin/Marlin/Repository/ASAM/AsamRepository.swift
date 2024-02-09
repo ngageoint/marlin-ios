@@ -48,6 +48,12 @@ class AsamRepository: ObservableObject {
         localDataSource.asams(filters: filters, paginatedBy: paginator)
     }
 
+    func getAsams(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [AsamModel] {
+        await localDataSource.getAsams(filters: filters)
+    }
+
     func fetchAsams() async -> [AsamModel] {
         NSLog("Fetching ASAMS")
         DispatchQueue.main.async {

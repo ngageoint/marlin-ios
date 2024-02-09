@@ -86,6 +86,9 @@ struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hashable,
     var id: String {
         reference ?? ""
     }
+    var itemKey: String {
+        return reference ?? ""
+    }
     static var definition: any DataSourceDefinition = DataSourceDefinitions.asam.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
@@ -262,83 +265,6 @@ extension AsamModel {
     var itemTitle: String {
         return "\(self.hostility ?? "")\(self.hostility != nil && self.victim != nil ? ": " : "")\(self.victim ?? "")"
     }
-}
-
-extension AsamModel: DataSource {
-    var color: UIColor {
-        Self.color
-    }
-    
-    static var dateFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter
-    }
-    
-    static func postProcess() {
-        imageCache.clearCache()
-    }
-    
-    static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")
-    static var fullDataSourceName: String = 
-    NSLocalizedString("Anti-Shipping Activity Messages", comment: "ASAM data source full display name")
-    static var key: String = "asam"
-    static var metricsKey: String = "asams"
-    static var imageName: String? = "asam"
-    static var systemImageName: String?
-    
-    static var color: UIColor = .black
-    static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
-    
-    static var defaultSort: [DataSourceSortParameter] = [
-        DataSourceSortParameter(
-            property: DataSourceProperty(
-                name: "Date",
-                key: #keyPath(Asam.date),
-                type: .date),
-            ascending: false)
-    ]
-    static var defaultFilter: [DataSourceFilterParameter] = [
-        DataSourceFilterParameter(
-            property: DataSourceProperty(
-                name: "Date",
-                key: #keyPath(Asam.date),
-                type: .date),
-            comparison: .window,
-            windowUnits: DataSourceWindowUnits.last365Days)
-    ]
-
-    static var properties: [DataSourceProperty] = [
-        DataSourceProperty(name: "Date", key: #keyPath(Asam.date), type: .date),
-        DataSourceProperty(name: "Location", key: #keyPath(Asam.mgrs10km), type: .location),
-        DataSourceProperty(name: "Reference", key: #keyPath(Asam.reference), type: .string),
-        DataSourceProperty(name: "Latitude", key: #keyPath(Asam.latitude), type: .latitude),
-        DataSourceProperty(name: "Longitude", key: #keyPath(Asam.longitude), type: .longitude),
-        DataSourceProperty(name: "Navigation Area", key: #keyPath(Asam.navArea), type: .string),
-        DataSourceProperty(name: "Subregion", key: #keyPath(Asam.subreg), type: .string),
-        DataSourceProperty(name: "Description", key: #keyPath(Asam.asamDescription), type: .string),
-        DataSourceProperty(name: "Hostility", key: #keyPath(Asam.hostility), type: .string),
-        DataSourceProperty(name: "Victim", key: #keyPath(Asam.victim), type: .string)
-    ]
-    
-    var itemKey: String {
-        return reference ?? ""
-    }
-}
-
-extension AsamModel: MapImage {
-    func mapImage(marker: Bool, zoomLevel: Int, tileBounds3857: MapBoundingBox?, context: CGContext?) -> [UIImage] {
-        return defaultMapImage(
-            marker: marker,
-            zoomLevel: zoomLevel,
-            tileBounds3857: tileBounds3857,
-            context: context,
-            tileSize: 512.0
-        )
-    }
-    
-    static var cacheTiles: Bool = true
 }
 
 extension AsamModel: CustomStringConvertible {

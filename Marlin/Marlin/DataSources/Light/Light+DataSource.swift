@@ -52,7 +52,15 @@ extension Light: Bookmarkable {
     }
 }
 
-extension Light: Locatable, GeoPackageExportable, GeoJSONExportable {
+extension Light: Locatable, GeoJSONExportable {
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+
+    static var image: UIImage? {
+        DataSources.light.image
+    }
+    
     var itemTitle: String {
         "title"
     }

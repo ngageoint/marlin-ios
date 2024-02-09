@@ -18,7 +18,7 @@ class AllRoutesMixin: MapMixin {
     
     var viewModel: RoutesViewModel
     
-    init(repository: (any RouteRepository)) {
+    init(repository: RouteRepository) {
         self.viewModel = RoutesViewModel()
         self.viewModel.repository = repository
         self.viewModel.fetchRoutes()

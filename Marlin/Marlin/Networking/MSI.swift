@@ -22,6 +22,8 @@ public class MSI {
     var radioBeaconRepository: RadioBeaconRepository?
     var differentialGPSStationRepository: DifferentialGPSStationRepository?
     var electronicPublicationRepository: ElectronicPublicationRepository?
+    var navigationalWarningRepository: NavigationalWarningRepository?
+    var routeRepository: RouteRepository?
 
     var asamInitializer: AsamInitializer?
     var moduInitializer: ModuInitializer?
@@ -31,6 +33,7 @@ public class MSI {
     var differentialGPSStationInitializer: DifferentialGPSStationInitializer?
     var electronicPublicationInitializer: ElectronicPublicationInitializer?
 
+    // swiftlint:disable function_parameter_count
     func addRepositories(
         asamRepository: AsamRepository,
         moduRepository: ModuRepository,
@@ -38,7 +41,9 @@ public class MSI {
         lightRepository: LightRepository,
         radioBeaconRepository: RadioBeaconRepository,
         differentialGPSStationRepository: DifferentialGPSStationRepository,
-        electronicPublicationRepository: ElectronicPublicationRepository
+        electronicPublicationRepository: ElectronicPublicationRepository,
+        navigationalWarningRepository: NavigationalWarningRepository,
+        routeRepository: RouteRepository
     ) {
         self.asamRepository = asamRepository
         self.moduRepository = moduRepository
@@ -47,6 +52,8 @@ public class MSI {
         self.radioBeaconRepository = radioBeaconRepository
         self.differentialGPSStationRepository = differentialGPSStationRepository
         self.electronicPublicationRepository = electronicPublicationRepository
+        self.navigationalWarningRepository = navigationalWarningRepository
+        self.routeRepository = routeRepository
 
         asamInitializer = AsamInitializer(repository: asamRepository)
         moduInitializer = ModuInitializer(repository: moduRepository)
@@ -60,6 +67,7 @@ public class MSI {
             repository: electronicPublicationRepository
         )
     }
+    // swiftlint:enable function_parameter_count
 
     var backgroundTask: UIBackgroundTaskIdentifier = .invalid
     

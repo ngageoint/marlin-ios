@@ -22,6 +22,9 @@ protocol RadioBeaconLocalDataSource {
         minLongitude: Double?,
         maxLongitude: Double?
     ) -> [RadioBeaconModel]
+    func getRadioBeacons(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [RadioBeaconModel]
     func radioBeacons(
         filters: [DataSourceFilterParameter]?,
         paginatedBy paginator: Trigger.Signal?
@@ -110,6 +113,25 @@ class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSou
         }
 
         return radioBeacons
+    }
+
+    func getRadioBeacons(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [RadioBeaconModel] {
+        return await context.perform {
+            let fetchRequest = RadioBeacon.fetchRequest()
+            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
+
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            fetchRequest.predicate = predicate
+
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.radioBeacon.key).map({ sortParameter in
+                sortParameter.toNSSortDescriptor()
+            })
+            return (self.context.fetch(request: fetchRequest)?.map { radioBeacon in
+                RadioBeaconModel(radioBeacon: radioBeacon)
+            }) ?? []
+        }
     }
 
     typealias Page = Int

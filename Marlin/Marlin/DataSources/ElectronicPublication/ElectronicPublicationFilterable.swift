@@ -24,6 +24,16 @@ struct ElectronicPublicationFilterable: Filterable {
             type: .string)
     ]
 
+    var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Type",
+                key: #keyPath(ElectronicPublication.pubTypeId),
+                type: .int),
+            ascending: true,
+            section: true)
+    ]
+
     var defaultFilter: [DataSourceFilterParameter] = []
 
 }

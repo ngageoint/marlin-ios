@@ -10,6 +10,7 @@ import CoreData
 import MapKit
 import OSLog
 import SwiftUI
+import Kingfisher
 
 struct LightVolume {
     var volumeQuery: String
@@ -43,7 +44,8 @@ class Light: NSManagedObject, LightProtocol {
     static let raconColor = UIColor(argbValue: 0xffb52bb5)
     
     static func postProcess() {
-        imageCache.clearCache()
+        Kingfisher.ImageCache(name: DataSources.light.key).clearCache()
+//        imageCache.clearCache()
         DispatchQueue.global(qos: .utility).async {
             let fetchRequest = NSFetchRequest<Light>(entityName: "Light")
             fetchRequest.predicate = NSPredicate(format: "requiresPostProcessing == true")

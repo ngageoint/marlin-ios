@@ -105,7 +105,7 @@ class MainMapMixins: MapMixins {
     override init() {
         super.init()
         var mixins: [any MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
-        
+
         if UserDefaults.standard.dataSourceEnabled(DFRS.definition) {
             mixins.append(DFRSMap<DFRS>(showAsTiles: true))
         }
@@ -113,7 +113,7 @@ class MainMapMixins: MapMixins {
         self.mixins = mixins
     }
     
-    func addRouteMixin(routeRepository: (any RouteRepository)) {
+    func addRouteMixin(routeRepository: RouteRepository) {
         self.mixins.append(AllRoutesMixin(repository: routeRepository))
     }
 

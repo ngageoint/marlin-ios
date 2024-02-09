@@ -10,7 +10,10 @@ import CoreData
 import MapKit
 import GeoJSON
 
-struct RouteModel: Codable, GeoJSONExportable {
+struct RouteModel: Codable, GeoJSONExportable, Hashable, Identifiable {
+    var id: String {
+        routeURL?.absoluteString ?? ""
+    }
     var itemKey: String {
         routeURL?.absoluteString ?? ""
     }
@@ -214,7 +217,10 @@ extension RouteModel: DataSourceViewBuilder {
     }
 }
 
-struct RouteWaypointModel: Codable {
+struct RouteWaypointModel: Codable, Hashable, Identifiable {
+    var id: String {
+        "\(dataSource ?? "")--\(itemKey ?? "")--\(routeId ?? 0)--\(order ?? 0)"
+    }
     private enum CodingKeys: String, CodingKey {
         case dataSource
         case itemKey

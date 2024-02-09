@@ -16,8 +16,8 @@ struct GeoPackageExportView: View {
     @EnvironmentObject var portRepository: PortRepository
     @EnvironmentObject var dgpsRepository: DifferentialGPSStationRepository
     @EnvironmentObject var radioBeaconRepository: RadioBeaconRepository
-    @EnvironmentObject var routeRepository: RouteRepositoryManager
-    @EnvironmentObject var navigationalWarningRepository: NavigationalWarningRepositoryManager
+    @EnvironmentObject var routeRepository: RouteRepository
+    @EnvironmentObject var navigationalWarningRepository: NavigationalWarningRepository
 
     @StateObject var viewModel: GeoPackageExportViewModel = GeoPackageExportViewModel()
     
@@ -79,7 +79,9 @@ struct GeoPackageExportView: View {
                     }
                 } else if !viewModel.exporting {
                     Button {
-                        viewModel.export()
+                        Task {
+                            await viewModel.export()
+                        }
                     } label: {
                         Label(
                             title: {

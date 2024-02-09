@@ -13,7 +13,7 @@ class RoutesViewModel: ObservableObject {
     @Published var loaded: Bool = false
     private var disposables = Set<AnyCancellable>()
     
-    var repository: (any RouteRepository)?
+    var repository: RouteRepository?
     
     var publisher: AnyPublisher<CollectionDifference<RouteModel>, Never>?
     

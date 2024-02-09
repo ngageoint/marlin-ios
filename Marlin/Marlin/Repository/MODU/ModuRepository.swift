@@ -50,37 +50,40 @@ class ModuRepository: ObservableObject {
         localDataSource.modus(filters: filters, paginatedBy: paginator)
     }
 
-    func fetchModus(refresh: Bool = false) async -> [ModuModel] {
-        NSLog("Fetching MODUs with refresh? \(refresh)")
-        if refresh {
-            DispatchQueue.main.async {
-                MSI.shared.appState.loadingDataSource[DataSources.modu.key] = true
-                NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.modu))
-            }
+    func getModus(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [ModuModel] {
+        await localDataSource.getModus(filters: filters)
+    }
 
-            let newestModu = localDataSource.getNewestModu()
-
-            let modus = await remoteDataSource.fetch(dateString: newestModu?.dateString)
-            let inserted = await localDataSource.insert(task: nil, modus: modus)
-
-            DispatchQueue.main.async {
-                MSI.shared.appState.loadingDataSource[DataSources.modu.key] = false
-                UserDefaults.standard.updateLastSyncTimeSeconds(DataSources.modu)
-                NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: DataSources.modu))
-                if inserted != 0 {
-                    NotificationCenter.default.post(
-                        name: .DataSourceNeedsProcessed,
-                        object: DataSourceUpdatedNotification(key: DataSources.modu.key)
-                    )
-                    NotificationCenter.default.post(
-                        name: .DataSourceUpdated,
-                        object: DataSourceUpdatedNotification(key: DataSources.modu.key)
-                    )
-                }
-            }
-
-            return modus
+    func fetchModus() async -> [ModuModel] {
+        NSLog("Fetching MODUs")
+        DispatchQueue.main.async {
+            MSI.shared.appState.loadingDataSource[DataSources.modu.key] = true
+            NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.modu))
         }
-        return localDataSource.getModus(filters: nil)
+
+        let newestModu = localDataSource.getNewestModu()
+
+        let modus = await remoteDataSource.fetch(dateString: newestModu?.dateString)
+        let inserted = await localDataSource.insert(task: nil, modus: modus)
+
+        DispatchQueue.main.async {
+            MSI.shared.appState.loadingDataSource[DataSources.modu.key] = false
+            UserDefaults.standard.updateLastSyncTimeSeconds(DataSources.modu)
+            NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: DataSources.modu))
+            if inserted != 0 {
+                NotificationCenter.default.post(
+                    name: .DataSourceNeedsProcessed,
+                    object: DataSourceUpdatedNotification(key: DataSources.modu.key)
+                )
+                NotificationCenter.default.post(
+                    name: .DataSourceUpdated,
+                    object: DataSourceUpdatedNotification(key: DataSources.modu.key)
+                )
+            }
+        }
+
+        return modus
     }
 }

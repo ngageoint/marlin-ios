@@ -144,10 +144,11 @@ struct MarlinApp: App {
     var differentialGPSStationRepository: DifferentialGPSStationRepository
     var lightRepository: LightRepository
     var radioBeaconRepository: RadioBeaconRepository
+    var electronicPublicationRepository: ElectronicPublicationRepository
+    var navigationalWarningRepository: NavigationalWarningRepository
 
-    var routeRepository: RouteRepositoryManager
+    var routeRepository: RouteRepository
     var routeWaypointRepository: RouteWaypointRepository
-    var navigationalWarningRepository: NavigationalWarningRepositoryManager
 
     var asamsTileRepository: AsamsTileRepository
     var modusTileRepository: ModusTileRepository
@@ -198,13 +199,18 @@ struct MarlinApp: App {
             localDataSource: RadioBeaconCoreDataDataSource(),
             remoteDataSource: RadioBeaconRemoteDataSource()
         )
+        electronicPublicationRepository = ElectronicPublicationRepository(
+            localDataSource: ElectronicPublicationCoreDataDataSource(),
+            remoteDataSource: ElectronicPublicationRemoteDataSource()
+        )
+        navigationalWarningRepository = NavigationalWarningRepository(
+            localDataSource: NavigationalWarningCoreDataDataSource(),
+            remoteDataSource: NavigationalWarningRemoteDataSource()
+        )
 
-        routeRepository = RouteRepositoryManager(
-            repository: RouteCoreDataRepository(context: persistentStore.viewContext))
+        routeRepository = RouteRepository(localDataSource: RouteCoreDataDataSource())
         routeWaypointRepository = RouteWaypointRepository(
             localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
-        navigationalWarningRepository = NavigationalWarningRepositoryManager(
-            repository: NavigationalWarningCoreDataRepository(context: persistentStore.viewContext))
 
         asamsTileRepository = AsamsTileRepository(localDataSource: asamRepository.localDataSource)
         modusTileRepository = ModusTileRepository(localDataSource: moduRepository.localDataSource)
@@ -221,7 +227,10 @@ struct MarlinApp: App {
             portRepository: portRepository,
             lightRepository: lightRepository,
             radioBeaconRepository: radioBeaconRepository,
-            differentialGPSStationRepository: differentialGPSStationRepository
+            differentialGPSStationRepository: differentialGPSStationRepository,
+            electronicPublicationRepository: electronicPublicationRepository,
+            navigationalWarningRepository: navigationalWarningRepository,
+            routeRepository: routeRepository
         )
         UNUserNotificationCenter.current().delegate = appDelegate
     }
@@ -243,6 +252,7 @@ struct MarlinApp: App {
                 .environmentObject(routeRepository)
                 .environmentObject(routeWaypointRepository)
                 .environmentObject(navigationalWarningRepository)
+                .environmentObject(electronicPublicationRepository)
                 .environmentObject(asamsTileRepository)
                 .environmentObject(modusTileRepository)
                 .environmentObject(portsTileRepository)

@@ -77,10 +77,10 @@ struct CreateRouteView: View {
     }
     
     @ViewBuilder
-    func waypointRow(waypointViewBuilder: any DataSource, first: Bool = false, last: Bool = false) -> some View {
+    func waypointRow(waypointViewBuilder: any GeoJSONExportable, first: Bool = false, last: Bool = false) -> some View {
         HStack {
             Group {
-                DataSourceCircleImage(definition: waypointViewBuilder.definition, size: 12)
+                DataSourceCircleImage(definition: type(of: waypointViewBuilder).definition, size: 12)
                 HStack {
                     VStack(alignment: .leading) {
                         Text(waypointViewBuilder.itemTitle)
@@ -112,7 +112,7 @@ struct CreateRouteView: View {
     }
 
     @ViewBuilder
-    func sizingWaypointRow(waypointViewBuilder: any DataSource, i: Range<Int>.Element) -> some View {
+    func sizingWaypointRow(waypointViewBuilder: any GeoJSONExportable, i: Range<Int>.Element) -> some View {
         waypointRow(waypointViewBuilder: waypointViewBuilder)
             .opacity(0)
             .overlay(

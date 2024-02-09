@@ -38,5 +38,21 @@ struct RadioBeaconFilterable: Filterable {
 
     var defaultFilter: [DataSourceFilterParameter] = []
 
+    var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Geopolitical Heading",
+                key: #keyPath(RadioBeacon.geopoliticalHeading),
+                type: .string),
+            ascending: true,
+            section: true),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Feature Number",
+                key: #keyPath(RadioBeacon.featureNumber),
+                type: .int),
+            ascending: true)
+    ]
+
 //    var locatableClass: Locatable.Type? = RadioBeacon.self
 }

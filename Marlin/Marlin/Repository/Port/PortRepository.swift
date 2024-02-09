@@ -45,6 +45,12 @@ class PortRepository: ObservableObject {
         localDataSource.ports(filters: filters, paginatedBy: paginator)
     }
 
+    func getPorts(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [PortModel] {
+        await localDataSource.getPorts(filters: filters)
+    }
+
     func fetchPorts() async -> [PortModel] {
         NSLog("Fetching Ports")
         DispatchQueue.main.async {

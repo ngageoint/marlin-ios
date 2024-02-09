@@ -21,6 +21,9 @@ protocol PortLocalDataSource {
         maxLongitude: Double?
     ) -> [PortModel]
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
+    func getPorts(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [PortModel]
     func insert(task: BGTask?, ports: [PortModel]) async -> Int
     func batchImport(from propertiesList: [PortModel]) async throws -> Int
 
@@ -53,7 +56,13 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
         return model
     }
     
-    func getPortsInBounds(filters: [DataSourceFilterParameter]?, minLatitude: Double?, maxLatitude: Double?, minLongitude: Double?, maxLongitude: Double?) -> [PortModel] {
+    func getPortsInBounds(
+        filters: [DataSourceFilterParameter]?,
+        minLatitude: Double?,
+        maxLatitude: Double?,
+        minLongitude: Double?,
+        maxLongitude: Double?
+    ) -> [PortModel] {
         var ports: [PortModel] = []
         // TODO: this should probably execute on a different context and be a perform
         context.performAndWait {
@@ -85,6 +94,25 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
         }
 
         return ports
+    }
+
+    func getPorts(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [PortModel] {
+        return await context.perform {
+            let fetchRequest = Port.fetchRequest()
+            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
+
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            fetchRequest.predicate = predicate
+
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.port.key).map({ sortParameter in
+                sortParameter.toNSSortDescriptor()
+            })
+            return (self.context.fetch(request: fetchRequest)?.map { port in
+                PortModel(port: port)
+            }) ?? []
+        }
     }
 
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {

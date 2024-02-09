@@ -58,6 +58,10 @@ extension DataSourceDefinition {
     var filterable: Filterable? {
         nil
     }
+
+    var defaultSort: [DataSourceSortParameter] {
+        filterable?.defaultSort ?? []
+    }
 }
 enum DataSources {
     static let asam: AsamDefinition = AsamDefinition()
@@ -144,6 +148,41 @@ enum DataSources {
         }
     }
 
+    static func fromKey(key: String) -> (any DataSourceDefinition)? {
+        switch key {
+        case DataSources.asam.key:
+            return DataSources.asam
+        case DataSources.bookmark.key:
+            return DataSources.bookmark
+        case DataSources.chartCorrection.key:
+            return DataSources.chartCorrection
+        case DataSources.dfrs.key:
+            return DataSources.dfrs
+        case DataSources.dgps.key:
+            return DataSources.dgps
+        case DataSources.epub.key:
+            return DataSources.epub
+        case DataSources.geoPackage.key:
+            return DataSources.geoPackage
+        case DataSources.light.key:
+            return DataSources.light
+        case DataSources.modu.key:
+            return DataSources.modu
+        case DataSources.navWarning.key:
+            return DataSources.navWarning
+        case DataSources.noticeToMariners.key:
+            return DataSources.noticeToMariners
+        case DataSources.port.key:
+            return DataSources.port
+        case DataSources.radioBeacon.key:
+            return DataSources.radioBeacon
+        case DataSources.route.key:
+            return DataSources.route
+        default:
+            return nil
+        }
+    }
+
     static func fromDataSourceType(_ type: any DataSource.Type) -> (any DataSourceDefinition)? {
         switch type {
         case is AsamModel.Type, is Asam.Type:
@@ -199,14 +238,8 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60)) > 
             UserDefaults.standard.lastSyncTimeSeconds(DataSources.asam)
         }
-        var defaultSort: [DataSourceSortParameter] = [
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "Date",
-                    key: #keyPath(Asam.date),
-                    type: .date),
-                ascending: false)
-        ]
+
+        var filterable: AsamFilterable = AsamFilterable()
 
         fileprivate init() { }
     }
@@ -241,16 +274,8 @@ extension DataSources {
             return UserDefaults.standard.dataSourceEnabled(DataSources.modu)
             && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(DataSources.modu)
         }
-        var defaultSort: [DataSourceSortParameter] = [
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "Date",
-                    key: #keyPath(Modu.date),
-                    type: .date
-                ),
-                ascending: false
-            )
-        ]
+
+        var filterable: ModuFilterable = ModuFilterable()
 
         fileprivate init() { }
     }
@@ -286,29 +311,7 @@ extension DataSources {
             UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.definition)
         }
 
-        var defaultSort: [DataSourceSortParameter] = [
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "Notice Number",
-                    key: #keyPath(NoticeToMariners.noticeNumber),
-                    type: .int),
-                ascending: false,
-                section: true),
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "Full Publication",
-                    key: #keyPath(NoticeToMariners.isFullPublication),
-                    type: .int),
-                ascending: false,
-                section: false),
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "Section Order",
-                    key: #keyPath(NoticeToMariners.sectionOrder),
-                    type: .int),
-                ascending: true,
-                section: false)
-        ]
+        var filterable: NoticeToMarinersFilterable = NoticeToMarinersFilterable()
 
         fileprivate init() { }
     }
@@ -360,22 +363,9 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) >
             UserDefaults.standard.lastSyncTimeSeconds(DataSources.dgps)
         }
-        var defaultSort: [DataSourceSortParameter] = [
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "Geopolitical Heading",
-                    key: #keyPath(DifferentialGPSStation.geopoliticalHeading),
-                    type: .string),
-                ascending: true,
-                section: true),
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "Feature Number",
-                    key: #keyPath(DifferentialGPSStation.featureNumber),
-                    type: .int),
-                ascending: true)
-        ]
-        
+
+        var filterable: DifferentialGPSStationFilterable = DifferentialGPSStationFilterable()
+
         fileprivate init() { }
     }
 
@@ -396,16 +386,8 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 1)) > 
             UserDefaults.standard.lastSyncTimeSeconds(ElectronicPublication.definition)
         }
-        var defaultSort: [DataSourceSortParameter] = [
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "Type",
-                    key: #keyPath(ElectronicPublication.pubTypeId),
-                    type: .int),
-                ascending: true,
-                section: true)
-        ]
 
+        var filterable: ElectronicPublicationFilterable = ElectronicPublicationFilterable()
         fileprivate init() { }
     }
 
@@ -426,19 +408,13 @@ extension DataSources {
             UserDefaults.standard.lastSyncTimeSeconds(DataSources.port)
         }
 
-        var defaultSort: [DataSourceSortParameter] = [
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "World Port Index Number",
-                    key: #keyPath(Port.portNumber),
-                    type: .int),
-                ascending: false)]
-
         var dateFormatter: DateFormatter {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
             return dateFormatter
         }
+
+        var filterable: PortFilterable = PortFilterable()
 
         fileprivate init() { }
     }
@@ -460,20 +436,8 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60)) > 
             UserDefaults.standard.lastSyncTimeSeconds(NavigationalWarning.definition)
         }
-        var defaultSort: [DataSourceSortParameter] = [
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "Navigational Area",
-                    key: "navArea",
-                    type: .string),
-                ascending: false),
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "Issue Date",
-                    key: "issueDate",
-                    type: .date),
-                ascending: false)
-        ]
+
+        var filterable: NavigationalWarningFilterable = NavigationalWarningFilterable()
         fileprivate init() { }
     }
 
@@ -496,21 +460,9 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
             UserDefaults.standard.lastSyncTimeSeconds(Light.definition)
         }
-        var defaultSort: [DataSourceSortParameter] = [
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "Region",
-                    key: #keyPath(Light.sectionHeader),
-                    type: .string),
-                ascending: true),
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "Feature Number",
-                    key: #keyPath(Light.featureNumber),
-                    type: .int),
-                ascending: true)
-        ]
-        
+
+        var filterable: LightFilterable = LightFilterable()
+
         fileprivate init() { }
     }
 
@@ -534,21 +486,8 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) >
             UserDefaults.standard.lastSyncTimeSeconds(DataSources.radioBeacon)
         }
-        var defaultSort: [DataSourceSortParameter] = [
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "Geopolitical Heading",
-                    key: #keyPath(RadioBeacon.geopoliticalHeading),
-                    type: .string),
-                ascending: true,
-                section: true),
-            DataSourceSortParameter(
-                property: DataSourceProperty(
-                    name: "Feature Number",
-                    key: #keyPath(RadioBeacon.featureNumber),
-                    type: .int),
-                ascending: true)
-        ]
+
+        var filterable: RadioBeaconFilterable = RadioBeaconFilterable()
 
         fileprivate init() { }
     }

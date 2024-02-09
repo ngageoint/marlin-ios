@@ -163,14 +163,14 @@ struct RouteMapView: View {
                         HStack {
                             Button("Add To Route") {
                                 print("add to route")
-                                if let exportable = dataSourceViewBuilder as? any GeoJSONExportable {
-                                    if let model = DataSourceType
-                                        .fromKey(type(of: exportable).definition.key)?
-                                        .createModel(dataSource: dataSourceViewBuilder) as? any GeoJSONExportable {
+                                if let model = dataSourceViewBuilder as? any GeoJSONExportable {
+//                                    if let model = DataSourceType
+//                                        .fromKey(type(of: exportable).definition.key)?
+//                                        .createModel(dataSource: dataSourceViewBuilder) as? any GeoJSONExportable {
                                         routeViewModel.addWaypoint(waypoint: model)
                                         showBottomSheet.toggle()
                                     }
-                                }
+//                                }
                             }
                             .buttonStyle(MaterialButtonStyle(type: .text))
                         }

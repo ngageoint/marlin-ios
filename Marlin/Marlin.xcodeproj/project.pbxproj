@@ -71,6 +71,15 @@
 		F715E3012B7557AD00752688 /* DifferentialGPSStationPropertyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E3002B7557AD00752688 /* DifferentialGPSStationPropertyContainer.swift */; };
 		F715E3032B75583A00752688 /* ElectronicPublicationInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E3022B75583A00752688 /* ElectronicPublicationInitializer.swift */; };
 		F715E3052B75588500752688 /* ElectronicPublicationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E3042B75588500752688 /* ElectronicPublicationRepository.swift */; };
+		F715E30B2B7583B000752688 /* AsamGeoPackageExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E30A2B7583B000752688 /* AsamGeoPackageExportable.swift */; };
+		F715E30D2B76679600752688 /* ModuGeoPackageExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E30C2B76679600752688 /* ModuGeoPackageExportable.swift */; };
+		F715E30F2B766BF400752688 /* DifferentialGPSStationGeoPackageExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E30E2B766BF400752688 /* DifferentialGPSStationGeoPackageExportable.swift */; };
+		F715E3112B766DBA00752688 /* LightGeoPackageExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E3102B766DBA00752688 /* LightGeoPackageExportable.swift */; };
+		F715E3132B768A6200752688 /* NavigationalWarningGeoPackageExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E3122B768A6200752688 /* NavigationalWarningGeoPackageExportable.swift */; };
+		F715E3152B768A8900752688 /* PortGeoPackageExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E3142B768A8900752688 /* PortGeoPackageExportable.swift */; };
+		F715E3172B768BBC00752688 /* RadioBeaconGeoPackageExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E3162B768BBC00752688 /* RadioBeaconGeoPackageExportable.swift */; };
+		F715E3192B76BA3400752688 /* RouteLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E3182B76BA3400752688 /* RouteLocalDataSource.swift */; };
+		F715E31B2B76C0A400752688 /* RouteGeoPackageExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E31A2B76C0A400752688 /* RouteGeoPackageExportable.swift */; };
 		F7194E102AFC3E7D0018E4B4 /* AsamInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7194E0F2AFC3E7D0018E4B4 /* AsamInitializer.swift */; };
 		F7194E122AFD9C0B0018E4B4 /* MockBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7194E112AFD9C0B0018E4B4 /* MockBundle.swift */; };
 		F71CC6EA28AC178F000A326C /* Port+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CC6E928AC178F000A326C /* Port+CoreDataClass.swift */; };
@@ -656,6 +665,15 @@
 		F715E3002B7557AD00752688 /* DifferentialGPSStationPropertyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationPropertyContainer.swift; sourceTree = "<group>"; };
 		F715E3022B75583A00752688 /* ElectronicPublicationInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationInitializer.swift; sourceTree = "<group>"; };
 		F715E3042B75588500752688 /* ElectronicPublicationRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationRepository.swift; sourceTree = "<group>"; };
+		F715E30A2B7583B000752688 /* AsamGeoPackageExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamGeoPackageExportable.swift; sourceTree = "<group>"; };
+		F715E30C2B76679600752688 /* ModuGeoPackageExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuGeoPackageExportable.swift; sourceTree = "<group>"; };
+		F715E30E2B766BF400752688 /* DifferentialGPSStationGeoPackageExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationGeoPackageExportable.swift; sourceTree = "<group>"; };
+		F715E3102B766DBA00752688 /* LightGeoPackageExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightGeoPackageExportable.swift; sourceTree = "<group>"; };
+		F715E3122B768A6200752688 /* NavigationalWarningGeoPackageExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningGeoPackageExportable.swift; sourceTree = "<group>"; };
+		F715E3142B768A8900752688 /* PortGeoPackageExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortGeoPackageExportable.swift; sourceTree = "<group>"; };
+		F715E3162B768BBC00752688 /* RadioBeaconGeoPackageExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconGeoPackageExportable.swift; sourceTree = "<group>"; };
+		F715E3182B76BA3400752688 /* RouteLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteLocalDataSource.swift; sourceTree = "<group>"; };
+		F715E31A2B76C0A400752688 /* RouteGeoPackageExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteGeoPackageExportable.swift; sourceTree = "<group>"; };
 		F7194E0F2AFC3E7D0018E4B4 /* AsamInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamInitializer.swift; sourceTree = "<group>"; };
 		F7194E112AFD9C0B0018E4B4 /* MockBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBundle.swift; sourceTree = "<group>"; };
 		F71CC6E928AC178F000A326C /* Port+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Port+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -2414,6 +2432,7 @@
 				F7AFF93C2AD4603000555960 /* RouteRepository.swift */,
 				F7CCDC7F2AF0583E00BF41F9 /* RouteWaypointRepository.swift */,
 				F7CCDC812AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift */,
+				F715E3182B76BA3400752688 /* RouteLocalDataSource.swift */,
 			);
 			path = Route;
 			sourceTree = "<group>";
@@ -2471,6 +2490,14 @@
 				F7066DA82A45D8C10058122E /* GeoPackageExportViewModel.swift */,
 				F7066DAA2A462A740058122E /* GeoPackageExportable.swift */,
 				F7830BFE2A8BC9F8008376F7 /* GeoPackageExportButton.swift */,
+				F715E30A2B7583B000752688 /* AsamGeoPackageExportable.swift */,
+				F715E30C2B76679600752688 /* ModuGeoPackageExportable.swift */,
+				F715E30E2B766BF400752688 /* DifferentialGPSStationGeoPackageExportable.swift */,
+				F715E3102B766DBA00752688 /* LightGeoPackageExportable.swift */,
+				F715E3122B768A6200752688 /* NavigationalWarningGeoPackageExportable.swift */,
+				F715E3142B768A8900752688 /* PortGeoPackageExportable.swift */,
+				F715E3162B768BBC00752688 /* RadioBeaconGeoPackageExportable.swift */,
+				F715E31A2B76C0A400752688 /* RouteGeoPackageExportable.swift */,
 			);
 			path = GeoPackage;
 			sourceTree = "<group>";
@@ -3327,6 +3354,7 @@
 				F7DF1BBF29E9EBF800F92E14 /* AcknowledgementsView.swift in Sources */,
 				F7D8FA3629391C6400E7D0A1 /* DataSourcePropertyFilterView.swift in Sources */,
 				F7ADDCEE28902D5300137D95 /* AnnotationWithView.swift in Sources */,
+				F715E30B2B7583B000752688 /* AsamGeoPackageExportable.swift in Sources */,
 				F7FFB2DE28D61BE300C31AA3 /* DFRS+MapImage.swift in Sources */,
 				F707BA7728760EE7006A94C4 /* Light+CoreDataClass.swift in Sources */,
 				F749E43E29B63D9D00B2FF8B /* WMSLayerEditView.swift in Sources */,
@@ -3422,6 +3450,7 @@
 				F7D671EB2871D73200758F1C /* Hamburger.swift in Sources */,
 				F79C994229955262004D9E82 /* DataLoadOperation.swift in Sources */,
 				F7E8C89E28946C8900E7CCE2 /* RailItem.swift in Sources */,
+				F715E3112B766DBA00752688 /* LightGeoPackageExportable.swift in Sources */,
 				F7FFB33628D8F5A300C31AA3 /* LightSettingsView.swift in Sources */,
 				F7D5C05D28AA7A1F000C2C29 /* Snackbar.swift in Sources */,
 				F71FC0D32A3B9DDA00911BAC /* DataSourceActionBar.swift in Sources */,
@@ -3526,6 +3555,8 @@
 				F7AFF9432AD46C6B00555960 /* RouteViewModel.swift in Sources */,
 				F7DEA1DF2B6BE2C700EB801A /* DataFetchOperation.swift in Sources */,
 				F715E2E72B7412B300752688 /* RadioBeaconInitializer.swift in Sources */,
+				F715E3192B76BA3400752688 /* RouteLocalDataSource.swift in Sources */,
+				F715E30D2B76679600752688 /* ModuGeoPackageExportable.swift in Sources */,
 				F714DD872B339395003D7996 /* FilterPreferences.swift in Sources */,
 				F7D8FA4B293A958900E7D0A1 /* LocationFilter.swift in Sources */,
 				F7391CB32AC4982C0002ABDD /* RadioBeaconModel.swift in Sources */,
@@ -3612,6 +3643,7 @@
 				F72E4D982B69A842006ED371 /* PortRemoteDataSource.swift in Sources */,
 				F7ADDCE22887026500137D95 /* LocationManager.swift in Sources */,
 				F715E3012B7557AD00752688 /* DifferentialGPSStationPropertyContainer.swift in Sources */,
+				F715E3152B768A8900752688 /* PortGeoPackageExportable.swift in Sources */,
 				F7B7064328BAADD50026DE88 /* CircleImage.swift in Sources */,
 				F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */,
 				F7FFB31E28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift in Sources */,
@@ -3631,6 +3663,7 @@
 				F707BA9328805476006A94C4 /* PersistedMapState.swift in Sources */,
 				F715E2F82B7533E800752688 /* Actions.swift in Sources */,
 				F7FB156F284AB09C004ACAC5 /* MSI.swift in Sources */,
+				F715E3132B768A6200752688 /* NavigationalWarningGeoPackageExportable.swift in Sources */,
 				F7D5C05728A68E56000C2C29 /* ViewExtensions.swift in Sources */,
 				F7D8FA40293A920800E7D0A1 /* DoubleFilter.swift in Sources */,
 				F74B9B0928B7D1640097D448 /* RadioBeaconMap.swift in Sources */,
@@ -3643,6 +3676,7 @@
 				F77671CD2B34D75A0026DD50 /* CountingDataLoadOperation.swift in Sources */,
 				F7222F7D2B6BF6A500C3E4F1 /* DifferentialGPSStationDataFetchOperation.swift in Sources */,
 				F7222FA82B6D510100C3E4F1 /* Initializer.swift in Sources */,
+				F715E30F2B766BF400752688 /* DifferentialGPSStationGeoPackageExportable.swift in Sources */,
 				F71F2B202ACF3CC700DFB5BA /* PublisherExtensions.swift in Sources */,
 				F71E3E3A28F49ABE002F2019 /* SearchResultsMap.swift in Sources */,
 				F7C23E0E2908609E0002A7DF /* ElectronicPublicationsList.swift in Sources */,
@@ -3673,6 +3707,7 @@
 				F715E2EF2B74279A00752688 /* RadioBeaconsViewModel.swift in Sources */,
 				F715E2ED2B7422DF00752688 /* RadioBeaconTileRepository.swift in Sources */,
 				F72E4D962B69A6B7006ED371 /* PortDataFetchOperation.swift in Sources */,
+				F715E31B2B76C0A400752688 /* RouteGeoPackageExportable.swift in Sources */,
 				F707BA89287C68E7006A94C4 /* RaconCard.swift in Sources */,
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
 				F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */,
@@ -3704,6 +3739,7 @@
 				F7C255CD2AC76431003A5B7E /* EncodableExtensions.swift in Sources */,
 				F7FFB30E28D63C2700C31AA3 /* ModuPropertyContainer.swift in Sources */,
 				F7F597A62862721B00F9B32E /* NavigationalWarning+CoreDataClass.swift in Sources */,
+				F715E3172B768BBC00752688 /* RadioBeaconGeoPackageExportable.swift in Sources */,
 				F71CC6EE28AD163D000A326C /* PortSummaryView.swift in Sources */,
 				F7D8FA212923F99C00E7D0A1 /* NoticeToMarinersFullNoticeView.swift in Sources */,
 				F79168FE28B56031004FFEBA /* PortMap.swift in Sources */,

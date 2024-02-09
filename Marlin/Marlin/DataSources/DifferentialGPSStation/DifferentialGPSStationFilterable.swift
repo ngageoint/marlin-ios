@@ -40,5 +40,21 @@ struct DifferentialGPSStationFilterable: Filterable {
 
     var defaultFilter: [DataSourceFilterParameter] = []
 
+    var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Geopolitical Heading",
+                key: #keyPath(DifferentialGPSStation.geopoliticalHeading),
+                type: .string),
+            ascending: true,
+            section: true),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Feature Number",
+                key: #keyPath(DifferentialGPSStation.featureNumber),
+                type: .int),
+            ascending: true)
+    ]
+
 //    var locatableClass: Locatable.Type? = DifferentialGPSStation.self
 }

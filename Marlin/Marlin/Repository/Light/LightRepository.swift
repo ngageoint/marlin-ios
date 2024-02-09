@@ -74,6 +74,12 @@ class LightRepository: ObservableObject {
         localDataSource.lights(filters: filters, paginatedBy: paginator)
     }
 
+    func getLights(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [LightModel] {
+        await localDataSource.getLights(filters: filters)
+    }
+
     func fetchLights() async -> [LightModel] {
         NSLog("Fetching Lights")
         DispatchQueue.main.async {

@@ -63,7 +63,7 @@ class RouteWaypoint: NSManagedObject {
     // swiftlint:enable cyclomatic_complexity
 }
 
-extension Route: Locatable, GeoPackageExportable {
+extension Route: Locatable {
     var sfGeometry: SFGeometry? {
         let collection = SFGeometryCollection()
         if let waypoints = waypoints {

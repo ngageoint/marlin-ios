@@ -27,6 +27,10 @@ protocol NavigationalWarningLocalDataSource {
         maxLongitude: Double?
     ) -> [NavigationalWarningModel]
 
+    func getNavigationalWarnings(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [NavigationalWarningModel]
+
     func navigationalWarnings(
         filters: [DataSourceFilterParameter]?,
         paginatedBy paginator: Trigger.Signal?
@@ -54,17 +58,19 @@ class NavigationalWarningCoreDataDataSource:
         msgNumber: Int64,
         navArea: String?
     ) -> ModelType? {
-        if let navArea = navArea {
-            if let navigationalWarning = try? context.fetchFirst(
-                DataType.self,
-                predicate: NSPredicate(
-                    format: "msgYear = %d AND msgNumber = %d AND navArea = %@",
-                    argumentArray: [msgYear, msgNumber, navArea]
-                )) {
-                return ModelType(navigationalWarning: navigationalWarning)
+        return context.performAndWait {
+            if let navArea = navArea {
+                if let navigationalWarning = try? context.fetchFirst(
+                    DataType.self,
+                    predicate: NSPredicate(
+                        format: "msgYear = %d AND msgNumber = %d AND navArea = %@",
+                        argumentArray: [msgYear, msgNumber, navArea]
+                    )) {
+                    return ModelType(navigationalWarning: navigationalWarning)
+                }
             }
+            return nil
         }
-        return nil
     }
 
     func getNavigationalWarningsInBounds(
@@ -137,6 +143,25 @@ class NavigationalWarningCoreDataDataSource:
             count = (try? context.count(for: fetchRequest)) ?? 0
         }
         return count
+    }
+
+    func getNavigationalWarnings(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [NavigationalWarningModel] {
+        return await context.perform {
+            let fetchRequest = DataType.fetchRequest()
+            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
+
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            fetchRequest.predicate = predicate
+
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.asam.key).map({ sortParameter in
+                sortParameter.toNSSortDescriptor()
+            })
+            return (self.context.fetch(request: fetchRequest)?.map { navigationalWarning in
+                NavigationalWarningModel(navigationalWarning: navigationalWarning)
+            }) ?? []
+        }
     }
 
 }

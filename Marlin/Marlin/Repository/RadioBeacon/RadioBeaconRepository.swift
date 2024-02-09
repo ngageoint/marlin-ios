@@ -47,6 +47,12 @@ class RadioBeaconRepository: ObservableObject {
         localDataSource.getCount(filters: filters)
     }
 
+    func getRadioBeacons(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [RadioBeaconModel] {
+        await localDataSource.getRadioBeacons(filters: filters)
+    }
+
     func radioBeacons(
         filters: [DataSourceFilterParameter]?,
         paginatedBy paginator: Trigger.Signal? = nil

@@ -15,7 +15,7 @@ protocol ModuLocalDataSource {
     func insert(task: BGTask?, modus: [ModuModel]) async -> Int
     func batchImport(from propertiesList: [ModuModel]) async throws -> Int
     func getNewestModu() -> ModuModel?
-    func getModus(filters: [DataSourceFilterParameter]?) -> [ModuModel]
+    func getModus(filters: [DataSourceFilterParameter]?) async -> [ModuModel]
     func getModusInBounds(
         filters: [DataSourceFilterParameter]?,
         minLatitude: Double?,
@@ -60,29 +60,38 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
         return modu
     }
 
-    func getModus(filters: [DataSourceFilterParameter]?) -> [ModuModel] {
-        var modus: [ModuModel] = []
-        context.performAndWait {
-            let request: NSFetchRequest<Modu> = ModuFilterable()
-                .fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Modu> ?? Modu.fetchRequest()
-            request.sortDescriptors = UserDefaults.standard.sort(DataSources.modu.key).map({ sortParameter in
+    func getModus(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [ModuModel] {
+        return await context.perform {
+            let fetchRequest = Modu.fetchRequest()
+            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
+
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            fetchRequest.predicate = predicate
+
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.modu.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
-            modus = (context.fetch(request: request)?.map { modu in
+            return (self.context.fetch(request: fetchRequest)?.map { modu in
                 ModuModel(modu: modu)
             }) ?? []
         }
-
-        return modus
     }
 
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
-        var count = 0
-        guard let fetchRequest = ModuFilterable().fetchRequest(filters: filters, commonFilters: nil) else {
-            return 0
-        }
-        context.performAndWait {
+        let fetchRequest = Modu.fetchRequest()
+        let predicates: [NSPredicate] = buildPredicates(filters: filters)
 
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        fetchRequest.predicate = predicate
+
+        fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.modu.key).map({ sortParameter in
+            sortParameter.toNSSortDescriptor()
+        })
+
+        var count = 0
+        context.performAndWait {
             count = (try? context.count(for: fetchRequest)) ?? 0
         }
         return count
@@ -143,8 +152,10 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
         at page: Page?, currentHeader: String?
     ) -> AnyPublisher<ModuModelPage, Error> {
 
-        let request: NSFetchRequest<Modu> = ModuFilterable()
-            .fetchRequest(filters: filters, commonFilters: nil) as? NSFetchRequest<Modu> ?? Modu.fetchRequest()
+        let request = Modu.fetchRequest()
+        let predicates: [NSPredicate] = buildPredicates(filters: filters)
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        request.predicate = predicate
         request.fetchLimit = 100
         request.fetchOffset = (page ?? 0) * request.fetchLimit
         let userSort = UserDefaults.standard.sort(DataSources.modu.key)

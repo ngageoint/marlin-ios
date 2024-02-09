@@ -10,14 +10,16 @@ import GeoJSON
 import AnyCodable
 import sf_ios
 
-protocol GeoJSONExportable: Identifiable, Equatable, DataSource {
+protocol GeoJSONExportable: Identifiable, Equatable {
     static var definition: any DataSourceDefinition { get }
     var itemKey: String { get }
+    var itemTitle: String { get }
 //    var key: String { get }
     var geoJson: String? { get }
-    static var properties: [DataSourceProperty] { get }
+//    static var properties: [DataSourceProperty] { get }
     var sfGeometry: SFGeometry? { get }
     var uniqueId: String { get }
+//    static var filterable: (any Filterable)? { get }
 }
 extension GeoJSONExportable {
     var key: String {
@@ -43,16 +45,18 @@ extension GeoJSONExportable {
             }
         } else {
 
-            for property in Self.properties {
-                if let gjObject = self as? NSObject, let value = gjObject.value(forKey: property.key) {
-                    switch property.type {
-                    case .location:
-                        print("ignore")
-                    default:
-                        let codable = AnyCodable(value)
-                        geoJsonProperties[property.key] = codable
-                    }
+            if let filterable = Self.definition.filterable {
+                for property in filterable.properties {
+                    if let gjObject = self as? NSObject, let value = gjObject.value(forKey: property.key) {
+                        switch property.type {
+                        case .location:
+                            print("ignore")
+                        default:
+                            let codable = AnyCodable(value)
+                            geoJsonProperties[property.key] = codable
+                        }
 
+                    }
                 }
             }
         }

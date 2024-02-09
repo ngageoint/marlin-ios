@@ -8,6 +8,7 @@
 import Foundation
 import CoreLocation
 import OSLog
+import MapKit
 
 struct NavigationalWarningPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
@@ -24,7 +25,7 @@ struct NavigationalWarningPropertyContainer: Decodable {
     }
 }
 
-struct NavigationalWarningModel: Decodable, Hashable, Identifiable {
+struct NavigationalWarningModel: Codable, Hashable, Identifiable {
     var canBookmark: Bool = false
     var id: String { self.itemKey }
     var itemTitle: String {
@@ -77,6 +78,7 @@ struct NavigationalWarningModel: Decodable, Hashable, Identifiable {
     let status: String?
     let subregion: String?
     let text: String?
+    let locations: [[String: String]]?
 
     init(navigationalWarning: NavigationalWarning) {
         self.cancelMsgNumber = Int(navigationalWarning.cancelMsgNumber)
@@ -91,6 +93,7 @@ struct NavigationalWarningModel: Decodable, Hashable, Identifiable {
         self.status = navigationalWarning.status
         self.subregion = navigationalWarning.subregion
         self.text = navigationalWarning.text
+        self.locations = navigationalWarning.locations
     }
 
     init(from decoder: Decoder) throws {
@@ -140,6 +143,7 @@ struct NavigationalWarningModel: Decodable, Hashable, Identifiable {
             }
         }
         self.issueDate = parsedDate
+        self.locations = nil
     }
     
     // The keys must have the same name as the attributes of the NavigationalWarning entity.
@@ -159,4 +163,140 @@ struct NavigationalWarningModel: Decodable, Hashable, Identifiable {
             "text": text
         ]
     }
+
+    var sfGeometry: SFGeometry? {
+        let collection = SFGeometryCollection()
+        if let locations = locations {
+            for location in locations {
+                if let geometry = locationGeometry(location: location) {
+                    collection?.addGeometry(geometry)
+                }
+            }
+        }
+
+        return collection
+    }
+
+    func geodesicLine(
+        firstPoint: CLLocationCoordinate2D?,
+        flipped: inout SFLineString?,
+        sfLineString: SFLineString,
+        previousPoint: CLLocationCoordinate2D,
+        currentPoint: CLLocationCoordinate2D
+    ) {
+        var coords: [CLLocationCoordinate2D] = [previousPoint, currentPoint]
+        let geodesicLine = MKGeodesicPolyline(coordinates: &coords, count: 2)
+
+        let glpoints = geodesicLine.points()
+
+        for glpoint in UnsafeBufferPointer(start: glpoints, count: geodesicLine.pointCount) {
+            let currentGlPoint = glpoint.coordinate
+            if let firstPoint = firstPoint,
+               abs(firstPoint.longitude - currentGlPoint.longitude) > 90 {
+                if flipped == nil {
+                    flipped = SFLineString()
+                }
+                flipped?.addPoint(
+                    SFPoint(
+                        xValue: currentGlPoint.longitude,
+                        andYValue: currentGlPoint.latitude
+                    )
+                )
+
+            } else {
+                sfLineString.addPoint(
+                    SFPoint(
+                        xValue: currentGlPoint.longitude,
+                        andYValue: currentGlPoint.latitude
+                    )
+                )
+
+            }
+        }
+    }
+
+    func locationPolygon(polygon: MKPolygon) -> SFGeometry? {
+        let sfPoly = SFPolygon()
+        var previousPoint: CLLocationCoordinate2D?
+        var firstPoint: CLLocationCoordinate2D?
+        var flipped: SFLineString?
+
+        if let sfLineString = SFLineString() {
+            for point in polygon.points().toArray(capacity: polygon.pointCount) {
+                if firstPoint == nil {
+                    firstPoint = point.coordinate
+                }
+                if let previous = previousPoint {
+                    let currentPoint = point.coordinate
+                    geodesicLine(
+                        firstPoint: firstPoint,
+                        flipped: &flipped,
+                        sfLineString: sfLineString,
+                        previousPoint: previous,
+                        currentPoint: currentPoint
+                    )
+                    previousPoint = currentPoint
+                } else {
+                    previousPoint = point.coordinate
+                }
+            }
+
+            // now draw the geodesic line between the last and the first
+            if let previousPoint = previousPoint, let firstPoint = firstPoint {
+                geodesicLine(
+                    firstPoint: firstPoint,
+                    flipped: &flipped,
+                    sfLineString: sfLineString,
+                    previousPoint: previousPoint,
+                    currentPoint: firstPoint
+                )
+            }
+
+            sfPoly?.addRing(sfLineString)
+        }
+        if let flipped = flipped, let sfPoly = sfPoly, let flippedPoly = SFPolygon(ring: flipped) {
+            return SFGeometryCollection(geometries: [flippedPoly, sfPoly])
+        }
+        return sfPoly
+    }
+
+    func locationLine(polyline: MKPolyline) -> SFGeometry? {
+        let sfLineString = SFLineString()
+
+        for point in polyline.points().toArray(capacity: polyline.pointCount) {
+            sfLineString?.addPoint(
+                SFPoint(
+                    xValue: point.coordinate.longitude,
+                    andYValue: point.coordinate.latitude
+                )
+            )
+        }
+        return sfLineString
+    }
+
+    func locationGeometry(location: [String: String]) -> SFGeometry? {
+        guard let wkt = location["wkt"] else {
+            return nil
+        }
+        var distance: Double?
+        if let distanceString = location["distance"] {
+            distance = Double(distanceString)
+        }
+        if let shape = MKShape.fromWKT(wkt: wkt, distance: distance) {
+            if let polygon = shape as? MKPolygon {
+                return locationPolygon(polygon: polygon)
+            } else if let polyline = shape as? MKGeodesicPolyline {
+                return locationLine(polyline: polyline)
+            } else if let polyline = shape as? MKPolyline {
+                return locationLine(polyline: polyline)
+            } else if let point = shape as? MKPointAnnotation {
+                return SFPoint(xValue: point.coordinate.longitude, andYValue: point.coordinate.latitude)
+            } else if let circle = shape as? MKCircle {
+                return SFPoint(xValue: circle.coordinate.longitude, andYValue: circle.coordinate.latitude)
+            }
+        }
+
+        return nil
+    }
+
 }

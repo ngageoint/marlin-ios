@@ -16,5 +16,20 @@ struct NavigationalWarningFilterable: Filterable {
 
     var properties: [DataSourceProperty] = []
 
+    var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Navigational Area",
+                key: "navArea",
+                type: .string),
+            ascending: false),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Issue Date",
+                key: "issueDate",
+                type: .date),
+            ascending: false)
+    ]
+
     var locatableClass: Locatable.Type? = NavigationalWarning.self
 }

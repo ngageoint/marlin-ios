@@ -52,7 +52,7 @@ extension NavigationalWarning: Bookmarkable {
     }
 }
 
-extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportable {
+extension NavigationalWarning: Locatable, GeoJSONExportable {
     static var definition: any DataSourceDefinition = DataSources.navWarning
 
     var sfGeometry: SFGeometry? {

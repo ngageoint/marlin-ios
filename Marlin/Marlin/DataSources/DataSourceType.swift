@@ -29,40 +29,42 @@ enum DataSourceType: String, CaseIterable {
 
     // this cannot be fixed since we have this many data sources
     // swiftlint:disable cyclomatic_complexity
-    func toDataSource() -> DataSource.Type {
+    func toDataSource() -> GeoPackageExportable.Type? {
         switch self {
-        case .asam:
-            return AsamModel.self
-        case .modu:
-            return ModuModel.self
-        case .light:
-            return LightModel.self
-        case .port:
-            return PortModel.self
-        case .differentialGPSStation:
-            return DifferentialGPSStationModel.self
-        case .radioBeacon:
-            return RadioBeaconModel.self
-        case .Common:
-            return CommonDataSource.self
-        case .route:
-            return Route.self
-        case .ntm:
-            return NoticeToMariners.self
-        case .epub:
-            return ElectronicPublication.self
-        case .navWarning:
-            return NavigationalWarning.self
+//        case .asam:
+//            return Asam.self
+//        case .modu:
+//            return ModuModel.self
+//        case .light:
+//            return LightModel.self
+//        case .port:
+//            return PortModel.self
+//        case .differentialGPSStation:
+//            return DifferentialGPSStationModel.self
+//        case .radioBeacon:
+//            return RadioBeaconModel.self
+//        case .Common:
+//            return CommonDataSource.self
+//        case .route:
+//            return Route.self
+//        case .ntm:
+//            return NoticeToMariners.self
+//        case .epub:
+//            return ElectronicPublication.self
+//        case .navWarning:
+//            return NavigationalWarning.self
+        default:
+            return nil
         }
     }
     // swiftlint:enable cyclomatic_complexity
 
-    func asamModel(dataSource: DataSource?) -> DataSource? {
-        if let asam = dataSource as? Asam {
-            return AsamModel(asam: asam)
-        }
-        return nil
-    }
+//    func asamModel(dataSource: DataSource?) -> DataSource? {
+//        if let asam = dataSource as? Asam {
+//            return AsamModel(asam: asam)
+//        }
+//        return nil
+//    }
 
     func moduModel(dataSource: DataSource?) -> DataSource? {
         if let modu = dataSource as? Modu {
@@ -127,31 +129,31 @@ enum DataSourceType: String, CaseIterable {
 
     // this cannot be fixed since we have this many data sources
     // swiftlint:disable cyclomatic_complexity
-    func createModel(dataSource: DataSource?) -> DataSource? {
-        switch self {
-        case .asam:
-            return asamModel(dataSource: dataSource)
-        case .modu:
-            return moduModel(dataSource: dataSource)
-        case .light:
-            return lightModel(dataSource: dataSource)
-        case .port:
-            return portModel(dataSource: dataSource)
-        case .differentialGPSStation:
-            return differentialGPSStationModel(dataSource: dataSource)
-        case .radioBeacon:
-            return radioBeaconModel(dataSource: dataSource)
-        case .Common:
-            return commonModel(dataSource: dataSource)
-        case .route:
-            return routeModel(dataSource: dataSource)
-        case .ntm:
-            return ntmModel(dataSource: dataSource)
-        case .epub:
-            return epubModel(dataSource: dataSource)
-        case .navWarning:
-            return navWarningModel(dataSource: dataSource)
-        }
-    }
+//    func createModel(dataSource: DataSource?) -> DataSource? {
+//        switch self {
+//        case .asam:
+//            return asamModel(dataSource: dataSource)
+//        case .modu:
+//            return moduModel(dataSource: dataSource)
+//        case .light:
+//            return lightModel(dataSource: dataSource)
+//        case .port:
+//            return portModel(dataSource: dataSource)
+//        case .differentialGPSStation:
+//            return differentialGPSStationModel(dataSource: dataSource)
+//        case .radioBeacon:
+//            return radioBeaconModel(dataSource: dataSource)
+//        case .Common:
+//            return commonModel(dataSource: dataSource)
+//        case .route:
+//            return routeModel(dataSource: dataSource)
+//        case .ntm:
+//            return ntmModel(dataSource: dataSource)
+//        case .epub:
+//            return epubModel(dataSource: dataSource)
+//        case .navWarning:
+//            return navWarningModel(dataSource: dataSource)
+//        }
+//    }
     // swiftlint:enable cyclomatic_complexity
 }

@@ -35,9 +35,9 @@ class DataSourceExportRequest: Identifiable, Hashable, Equatable, ObservableObje
         self.filters = filters
     }
     
-    func fetchRequest(commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<any NSFetchRequestResult>? {
-        return filterable?.fetchRequest(filters: filters, commonFilters: commonFilters)
-    }
+//    func fetchRequest(commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<any NSFetchRequestResult>? {
+//        return filterable?.fetchRequest(filters: filters, commonFilters: commonFilters)
+//    }
 }
 
 class DataSourceExportProgress: Identifiable, Hashable, Equatable, ObservableObject {
@@ -68,8 +68,8 @@ class GeoPackageExportViewModel: ObservableObject {
     var portRepository: PortRepository?
     var dgpsRepository: DifferentialGPSStationRepository?
     var radioBeaconRepository: RadioBeaconRepository?
-    var routeRepository: RouteRepositoryManager?
-    var navigationalWarningRepository: NavigationalWarningRepositoryManager?
+    var routeRepository: RouteRepository?
+    var navigationalWarningRepository: NavigationalWarningRepository?
     
     var cancellable = Set<AnyCancellable>()
     var countChangeCancellable: AnyCancellable?
@@ -263,26 +263,26 @@ class GeoPackageExportViewModel: ObservableObject {
         return false
     }
     
-    func export() {
+    func export() async {
         exporting = true
         complete = false
         error = false
         exportProgresses.removeAll()
-        backgroundExport()
+        await backgroundExport()
         Metrics.shared.geoPackageExport(dataSources: filterViewModels.values.compactMap(\.dataSource))
     }
     
-    private func backgroundExport() {
-        DispatchQueue.global(qos: .userInitiated).async { [self] in
+    private func backgroundExport() async {
+//        DispatchQueue.global(qos: .userInitiated).async { [self] in
             if !createGeoPackage() {
-                DispatchQueue.main.async {
+                await MainActor.run {
                     self.exporting = false
                     self.complete = false
                 }
                 return
             }
             guard let geoPackage = geoPackage else {
-                DispatchQueue.main.async {
+                await MainActor.run {
                     self.exporting = false
                     self.complete = false
                     self.error = true
@@ -297,29 +297,51 @@ class GeoPackageExportViewModel: ObservableObject {
                 (viewModel1.dataSource?.definition.order ?? -1) <
                     (viewModel2.dataSource?.definition.order ?? -1)
             }) {
-                guard let dataSource = viewModel.dataSource, 
-                        let exportable = DataSourceType.fromKey(dataSource.definition.key)?
-                    .toDataSource() as? GeoPackageExportable.Type else { continue }
-                guard let dataSource = viewModel.dataSource, 
-                        let definitions = DataSourceDefinitions.from(dataSource.definition),
+                guard let dataSource = viewModel.dataSource else { continue }
+                var exportable: GeoPackageExportable?
+
+                switch dataSource.definition.key {
+                case DataSources.asam.key:
+                    exportable = AsamGeoPackageExportable()
+                case DataSources.modu.key:
+                    exportable = ModuGeoPackageExportable()
+                case DataSources.dgps.key:
+                    exportable = DifferentialGPSStationGeoPackageExportable()
+                case DataSources.light.key:
+                    exportable = LightGeoPackageExportable()
+                case DataSources.port.key:
+                    exportable = PortGeoPackageExportable()
+                case DataSources.radioBeacon.key:
+                    exportable = RadioBeaconGeoPackageExportable()
+                case DataSources.navWarning.key:
+                    exportable = NavigationalWarningGeoPackageExportable()
+                case DataSources.route.key:
+                    exportable = RouteGeoPackageExportable()
+                default:
+                    exportable = nil
+                }
+
+                guard let exportable = exportable,
+                      let dataSource = viewModel.dataSource,
+                      let definitions = DataSourceDefinitions.from(dataSource.definition),
                       let exportProgress = exportProgresses[definitions] else {
                     continue
                 }
                 do {
-                    guard let table = try exportable.createTable(geoPackage: geoPackage), 
-                            let featureTableStyles = GPKGFeatureTableStyles(
-                                geoPackage: geoPackage,
-                                andTable: table
-                            ) else {
+                    guard let table = try exportable.createTable(geoPackage: geoPackage),
+                          let featureTableStyles = GPKGFeatureTableStyles(
+                            geoPackage: geoPackage,
+                            andTable: table
+                          ) else {
                         continue
                     }
                     let styles = exportable.createStyles(tableStyles: featureTableStyles)
 
-                    DispatchQueue.main.async {
+                    await MainActor.run {
                         exportProgress.totalCount = Float(self.counts[definitions] ?? 0)
                         exportProgress.exporting = true
                     }
-                    try exportable.createFeatures(
+                    try await exportable.createFeatures(
                         geoPackage: geoPackage,
                         table: table,
                         filters: viewModel.filters,
@@ -332,7 +354,7 @@ class GeoPackageExportViewModel: ObservableObject {
                         exportProgress.complete = true
                     }
                 } catch {
-                    DispatchQueue.main.async { [self] in
+                    await MainActor.run {
                         complete = false
                         exporting = false
                         self.error = true
@@ -343,10 +365,10 @@ class GeoPackageExportViewModel: ObservableObject {
             }
             print("GeoPackage created \(geoPackage.path ?? "who knows")")
 
-            DispatchQueue.main.async {
-                self.exporting = false
-                self.complete = true
-            }
+        await MainActor.run {
+            self.exporting = false
+            self.complete = true
         }
+//        }
     }
 }
