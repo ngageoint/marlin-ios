@@ -82,6 +82,8 @@ extension ModuListModel {
 }
 
 struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStringConvertible {
+    static var definition: any DataSourceDefinition = DataSources.modu
+
     var canBookmark: Bool = false
     
     private enum CodingKeys: String, CodingKey {
@@ -130,7 +132,19 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
             "date": date
         ]
     }
-    
+
+    var sfGeometry: SFGeometry? {
+        return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+    }
+
+    var itemKey: String {
+        return name ?? ""
+    }
+
+    var key: String {
+        DataSources.modu.key
+    }
+
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
@@ -264,112 +278,4 @@ extension ModuModel {
     var itemTitle: String {
         return name ?? ""
     }
-}
-
-extension ModuModel: DataSource {
-    static var definition: any DataSourceDefinition = DataSourceDefinitions.modu.definition
-    var color: UIColor {
-        Self.color
-    }
-    
-    var sfGeometry: SFGeometry? {
-        return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
-    }
-    static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("MODU", comment: "MODU data source display name")
-    static var fullDataSourceName: String = 
-    NSLocalizedString("Mobile Offshore Drilling Units", comment: "MODU data source display name")
-    static var key: String = "modu"
-    static var metricsKey: String = "modus"
-    static var imageName: String? = "modu"
-    static var systemImageName: String?
-    static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
-    static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
-    
-    static var defaultSort: [DataSourceSortParameter] = [
-        DataSourceSortParameter(
-            property: DataSourceProperty(
-                name: "Date",
-                key: #keyPath(Modu.date),
-                type: .date
-            ),
-            ascending: false
-        )
-    ]
-    static var defaultFilter: [DataSourceFilterParameter] = []
-    
-    static var properties: [DataSourceProperty] = [
-        DataSourceProperty(name: "Location", key: #keyPath(Modu.mgrs10km), type: .location),
-        DataSourceProperty(name: "Subregion", key: #keyPath(Modu.subregion), type: .int),
-        DataSourceProperty(name: "Region", key: #keyPath(Modu.region), type: .int),
-        DataSourceProperty(name: "Longitude", key: #keyPath(Modu.longitude), type: .longitude),
-        DataSourceProperty(name: "Latitude", key: #keyPath(Modu.latitude), type: .latitude),
-        DataSourceProperty(name: "Distance", key: #keyPath(Modu.distance), type: .double),
-        DataSourceProperty(name: "Special Status", key: #keyPath(Modu.specialStatus), type: .string),
-        DataSourceProperty(name: "Rig Status", key: #keyPath(Modu.rigStatus), type: .string),
-        DataSourceProperty(name: "Nav Area", key: #keyPath(Modu.navArea), type: .string),
-        DataSourceProperty(name: "Name", key: #keyPath(Modu.name), type: .string),
-        DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date)
-    ]
-    
-    static var dateFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter
-    }
-    
-    static func postProcess() {
-        imageCache.clearCache()
-    }
-    
-    var itemKey: String {
-        return name ?? ""
-    }
-}
-
-extension ModuModel: MapImage {
-    func mapImage(
-        marker: Bool,
-        zoomLevel: Int,
-        tileBounds3857: MapBoundingBox?,
-        context: CGContext?
-    ) -> [UIImage] {
-        var images: [UIImage] = []
-        if let tileBounds3857 = tileBounds3857, let distance = distance, distance > 0 {
-            let circleCoordinates = coordinate.circleCoordinates(radiusMeters: distance * 1852)
-            let path = UIBezierPath()
-            var pixel = circleCoordinates[0].toPixel(
-                zoomLevel: zoomLevel,
-                tileBounds3857: tileBounds3857,
-                tileSize: TILE_SIZE
-            )
-            path.move(to: pixel)
-            for circleCoordinate in circleCoordinates {
-                pixel = circleCoordinate.toPixel(
-                    zoomLevel: zoomLevel,
-                    tileBounds3857: tileBounds3857,
-                    tileSize: TILE_SIZE
-                )
-                path.addLine(to: pixel)
-            }
-            path.lineWidth = 4
-            path.close()
-            DataSources.modu.color.withAlphaComponent(0.3).setFill()
-            DataSources.modu.color.setStroke()
-            path.fill()
-            path.stroke()
-        }
-        images.append(
-            contentsOf: defaultMapImage(
-                marker: marker,
-                zoomLevel: zoomLevel,
-                tileBounds3857: tileBounds3857,
-                context: context,
-                tileSize: 512.0
-            )
-        )
-        return images
-    }
-    
-    static var cacheTiles: Bool = true
 }

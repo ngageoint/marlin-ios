@@ -48,7 +48,6 @@
 		F714DD7A2B3352D6003D7996 /* DataSourcePredicateBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD792B3352D6003D7996 /* DataSourcePredicateBuilder.swift */; };
 		F714DD7C2B335B28003D7996 /* DataSourceDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD7B2B335B28003D7996 /* DataSourceDefinition.swift */; };
 		F714DD7E2B335B74003D7996 /* DataSourceDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD7D2B335B74003D7996 /* DataSourceDefinitions.swift */; };
-		F714DD802B335B9F003D7996 /* DataSourceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD7F2B335B9F003D7996 /* DataSourceType.swift */; };
 		F714DD822B337376003D7996 /* ImportGeoPackageFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD812B337376003D7996 /* ImportGeoPackageFile.swift */; };
 		F714DD842B337449003D7996 /* WMSCapabilitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD832B337449003D7996 /* WMSCapabilitiesView.swift */; };
 		F714DD872B339395003D7996 /* FilterPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD862B339395003D7996 /* FilterPreferences.swift */; };
@@ -642,7 +641,6 @@
 		F714DD792B3352D6003D7996 /* DataSourcePredicateBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourcePredicateBuilder.swift; sourceTree = "<group>"; };
 		F714DD7B2B335B28003D7996 /* DataSourceDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceDefinition.swift; sourceTree = "<group>"; };
 		F714DD7D2B335B74003D7996 /* DataSourceDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceDefinitions.swift; sourceTree = "<group>"; };
-		F714DD7F2B335B9F003D7996 /* DataSourceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceType.swift; sourceTree = "<group>"; };
 		F714DD812B337376003D7996 /* ImportGeoPackageFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportGeoPackageFile.swift; sourceTree = "<group>"; };
 		F714DD832B337449003D7996 /* WMSCapabilitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WMSCapabilitiesView.swift; sourceTree = "<group>"; };
 		F714DD862B339395003D7996 /* FilterPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPreferences.swift; sourceTree = "<group>"; };
@@ -1330,7 +1328,6 @@
 				F714DD7D2B335B74003D7996 /* DataSourceDefinitions.swift */,
 				F7EFFEC42A7C113A0097E5EF /* DataSourceIcon.swift */,
 				F7EFFEBE2A7C0F300097E5EF /* DataSourceSummaryView.swift */,
-				F714DD7F2B335B9F003D7996 /* DataSourceType.swift */,
 				F71D286F28BE958F00F1775C /* DFRS */,
 				F71D286028BE38CC00F1775C /* DifferentialGPSStation */,
 				F7C23DFF29082AF70002A7DF /* ElectronicPublication */,
@@ -3341,7 +3338,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F714DD802B335B9F003D7996 /* DataSourceType.swift in Sources */,
 				F7D2225228E4F83000F527F2 /* SortButton.swift in Sources */,
 				F7D671E42871C5F900758F1C /* NavigationalWarningActionBar.swift in Sources */,
 				F7D671ED2874737F00758F1C /* DataSourceCell.swift in Sources */,

@@ -123,10 +123,12 @@ class ModusTileRepository: TileRepository, ObservableObject {
 
 class ModuImage: DataSourceImage {
     var feature: SFGeometry?
+    var modu: ModuModel
 
     static var dataSource: any DataSourceDefinition = DataSources.modu
 
     init(modu: ModuModel) {
+        self.modu = modu
         feature = modu.sfGeometry
     }
 
@@ -136,14 +138,41 @@ class ModuImage: DataSourceImage {
         tileBounds: MapBoundingBox,
         tileSize: Double
     ) -> [UIImage] {
-        let images: [UIImage] = defaultMapImage(
-            marker: false,
-            zoomLevel: zoom,
-            tileBounds3857: tileBounds,
-            context: context,
-            tileSize: tileSize
-        )
 
+        var images: [UIImage] = []
+        if let distance = modu.distance, distance > 0 {
+            let circleCoordinates = modu.coordinate.circleCoordinates(radiusMeters: distance * 1852)
+            let path = UIBezierPath()
+            var pixel = circleCoordinates[0].toPixel(
+                zoomLevel: zoom,
+                tileBounds3857: tileBounds,
+                tileSize: TILE_SIZE
+            )
+            path.move(to: pixel)
+            for circleCoordinate in circleCoordinates {
+                pixel = circleCoordinate.toPixel(
+                    zoomLevel: zoom,
+                    tileBounds3857: tileBounds,
+                    tileSize: TILE_SIZE
+                )
+                path.addLine(to: pixel)
+            }
+            path.lineWidth = 4
+            path.close()
+            DataSources.modu.color.withAlphaComponent(0.3).setFill()
+            DataSources.modu.color.setStroke()
+            path.fill()
+            path.stroke()
+        }
+        images.append(
+            contentsOf: defaultMapImage(
+                marker: false,
+                zoomLevel: zoom,
+                tileBounds3857: tileBounds,
+                context: context,
+                tileSize: 512.0
+            )
+        )
         return images
     }
 }
