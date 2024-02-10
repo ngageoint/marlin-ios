@@ -249,7 +249,6 @@
 		F7364E3E2A1E46860098F243 /* NavigationalWarningAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E3D2A1E46860098F243 /* NavigationalWarningAreasView.swift */; };
 		F7364E402A1E495C0098F243 /* NavigationalWarningSectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E3F2A1E495C0098F243 /* NavigationalWarningSectionRow.swift */; };
 		F7364E422A26A1740098F243 /* MarlinTestInitialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7364E412A26A1740098F243 /* MarlinTestInitialization.swift */; };
-		F73908E32B0D08BA0043D045 /* AsamProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73908E22B0D08BA0043D045 /* AsamProperties.swift */; };
 		F7391CA52ABA28590002ABDD /* BookmarkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CA42ABA28590002ABDD /* BookmarkModel.swift */; };
 		F7391CA72ABA348F0002ABDD /* BookmarkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CA62ABA348F0002ABDD /* BookmarkRepository.swift */; };
 		F7391CA92ABB690D0002ABDD /* PortModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CA82ABB690D0002ABDD /* PortModel.swift */; };
@@ -842,7 +841,6 @@
 		F7364E3D2A1E46860098F243 /* NavigationalWarningAreasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningAreasView.swift; sourceTree = "<group>"; };
 		F7364E3F2A1E495C0098F243 /* NavigationalWarningSectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningSectionRow.swift; sourceTree = "<group>"; };
 		F7364E412A26A1740098F243 /* MarlinTestInitialization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarlinTestInitialization.swift; sourceTree = "<group>"; };
-		F73908E22B0D08BA0043D045 /* AsamProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamProperties.swift; sourceTree = "<group>"; };
 		F7391CA42ABA28590002ABDD /* BookmarkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkModel.swift; sourceTree = "<group>"; };
 		F7391CA62ABA348F0002ABDD /* BookmarkRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkRepository.swift; sourceTree = "<group>"; };
 		F7391CA82ABB690D0002ABDD /* PortModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortModel.swift; sourceTree = "<group>"; };
@@ -1334,7 +1332,6 @@
 				F7F597A4286271E100F9B32E /* NavigationalWarning */,
 				F72EAAD8291D913D00AC6026 /* NTM */,
 				F71CC6E828AC177A000A326C /* Port */,
-				F73908E12B0D08AC0043D045 /* Properties */,
 				F74B9B0528B7CDC20097D448 /* RadioBeacon */,
 			);
 			path = DataSources;
@@ -1746,14 +1743,6 @@
 				F730DFC62A9950B20051775C /* GeoJSONExportable.swift */,
 			);
 			path = Conversions;
-			sourceTree = "<group>";
-		};
-		F73908E12B0D08AC0043D045 /* Properties */ = {
-			isa = PBXGroup;
-			children = (
-				F73908E22B0D08BA0043D045 /* AsamProperties.swift */,
-			);
-			path = Properties;
 			sourceTree = "<group>";
 		};
 		F74B9B0528B7CDC20097D448 /* RadioBeacon */ = {
@@ -3705,7 +3694,6 @@
 				F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */,
 				F7FFB32828D6427200C31AA3 /* RadioBeaconPropertyContainer.swift in Sources */,
 				F71D287B28C1401500F1775C /* FetchRequestMap.swift in Sources */,
-				F73908E32B0D08BA0043D045 /* AsamProperties.swift in Sources */,
 				F70BCE9B29D1F61C00AEF73D /* GeoPackageCompositeOverlay.swift in Sources */,
 				F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */,
 				F71D287D28C2926500F1775C /* AboutCell.swift in Sources */,

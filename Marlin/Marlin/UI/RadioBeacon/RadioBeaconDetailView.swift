@@ -40,7 +40,7 @@ struct RadioBeaconDetailView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .itemTitle()
                                 .foregroundColor(Color.white)
-                                .background(Color(uiColor: radioBeacon.color))
+                                .background(Color(uiColor: DataSources.radioBeacon.color))
                                 .padding(.bottom, -8)
                             DataSourceLocationMapView(
                                 dataSourceLocation: radioBeacon,

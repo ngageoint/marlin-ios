@@ -54,5 +54,4 @@ struct RadioBeaconFilterable: Filterable {
             ascending: true)
     ]
 
-//    var locatableClass: Locatable.Type? = RadioBeacon.self
 }

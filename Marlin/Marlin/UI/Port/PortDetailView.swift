@@ -32,7 +32,7 @@ struct PortDetailView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .itemTitle()
                             .foregroundColor(Color.white)
-                            .background(Color(uiColor: port.color))
+                            .background(Color(uiColor: DataSources.port.color))
                             .padding(.bottom, -8)
                         DataSourceLocationMapView(
                             dataSourceLocation: port,

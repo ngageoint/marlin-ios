@@ -142,6 +142,7 @@ class RadioBeaconImage: DataSourceImage {
 
         var images: [UIImage] = []
         if let raconImage = raconImage(scale: 2, azimuthCoverage: radioBeacon.azimuthCoverage, zoomLevel: zoom) {
+            images.append(raconImage)
             drawImageIntoTile(
                 mapImage: raconImage,
                 latitude: radioBeacon.latitude,
