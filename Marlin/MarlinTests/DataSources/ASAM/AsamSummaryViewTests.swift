@@ -6,64 +6,45 @@
 //
 
 import XCTest
-import Combine
 import SwiftUI
 
 @testable import Marlin
 
 final class AsamSummaryViewTests: XCTestCase {
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-
-    override func setUp(completion: @escaping (Error?) -> Void) {
-        for item in DataSourceList().allTabs {
+    override func setUp() {
+        for dataSource in DataSourceDefinitions.allCases {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
+            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
     }
     
     override func tearDown() {
     }
 
     func testLoading() {
-        var asam: Asam?
-        persistentStore.viewContext.performAndWait {
-            let newItem = Asam(context: persistentStore.viewContext)
-            newItem.asamDescription = "description"
-            newItem.longitude = 1.0
-            newItem.latitude = 1.0
-            newItem.date = Date()
-            newItem.navArea = "XI"
-            newItem.reference = "2022-100"
-            newItem.subreg = "71"
-            newItem.position = "1°00'00\"N \n1°00'00\"E"
-            newItem.hostility = "Boarding"
-            newItem.victim = "Boat"
-            asam = newItem
-            try? persistentStore.viewContext.save()
-        }
-        guard let newItem = asam else {
-            XCTFail()
-            return
-        }
+        var asam = AsamModel()
+        asam.asamDescription = "description"
+        asam.longitude = 1.0
+        asam.latitude = 1.0
+        asam.date = Date()
+        asam.navArea = "XI"
+        asam.reference = "2022-100"
+        asam.subreg = "71"
+        asam.position = "1°00'00\"N \n1°00'00\"E"
+        asam.hostility = "Boarding"
+        asam.victim = "Boat"
+        asam.canBookmark = true
+
+        let localDataSource = AsamStaticLocalDataSource()
+        localDataSource.asamList = [asam]
+        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
+        let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
+        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
         
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = AsamSummaryView(asam: AsamListModel(asam:newItem))
-            .environment(\.managedObjectContext, persistentStore.viewContext)
+        let summary = AsamSummaryView(asam: AsamListModel(asamModel:asam))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
@@ -82,11 +63,11 @@ final class AsamSummaryViewTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkStaticRepository, bookmarkable: asam)
     }
     
     func testLoadingNoHostility() {
-        let newItem = Asam(context: persistentStore.viewContext)
+        var newItem = AsamModel()
         newItem.asamDescription = "description"
         newItem.longitude = 1.0
         newItem.latitude = 1.0
@@ -98,10 +79,13 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = nil
         newItem.victim = "Boat"
         
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = AsamSummaryView(asam: AsamListModel(asam: newItem))
+        let localDataSource = AsamStaticLocalDataSource()
+        localDataSource.asamList = [newItem]
+        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
+        let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
+        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+
+        let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
@@ -122,7 +106,7 @@ final class AsamSummaryViewTests: XCTestCase {
     }
     
     func testLoadingNoVictim() {
-        let newItem = Asam(context: persistentStore.viewContext)
+        var newItem = AsamModel()
         newItem.asamDescription = "description"
         newItem.longitude = 1.0
         newItem.latitude = 1.0
@@ -134,10 +118,13 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = nil
         
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = AsamSummaryView(asam: AsamListModel(asam: newItem))
+        let localDataSource = AsamStaticLocalDataSource()
+        localDataSource.asamList = [newItem]
+        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
+        let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
+        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+
+        let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
@@ -158,7 +145,7 @@ final class AsamSummaryViewTests: XCTestCase {
     }
     
     func testLoadingShowMoreDetails() {
-        let newItem = Asam(context: persistentStore.viewContext)
+        var newItem = AsamModel()
         newItem.asamDescription = "description"
         newItem.longitude = 1.0
         newItem.latitude = 1.0
@@ -170,12 +157,14 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = "Boat"
         
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-
         let router = MarlinRouter()
+        let localDataSource = AsamStaticLocalDataSource()
+        localDataSource.asamList = [newItem]
+        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
+        let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
+        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
 
-        let summary = AsamSummaryView(asam: AsamListModel(asam: newItem), showMoreDetails: true)
+        let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem), showMoreDetails: true)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(router)
@@ -184,25 +173,16 @@ final class AsamSummaryViewTests: XCTestCase {
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
         TestHelpers.printAllAccessibilityLabelsInWindows()
-        
-//        expectation(forNotification: .ViewDataSource,
-//                    object: nil) { notification in
-//            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-//            let asam = try! XCTUnwrap(vds.dataSource as? AsamModel)
-//            XCTAssertEqual(asam.hostility, "Boarding")
-//            XCTAssertEqual(asam.victim, "Boat")
-//            return true
-//        }
+
         XCTAssertEqual(router.path.count, 0)
         tester().tapView(withAccessibilityLabel: "More Details")
         XCTAssertEqual(router.path.count, 1)
 
-//        waitForExpectations(timeout: 10, handler: nil)
         tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
     }
     
     func testLoadingShowMoreDetailsFalse() {
-        let newItem = Asam(context: persistentStore.viewContext)
+        var newItem = AsamModel()
         newItem.asamDescription = "description"
         newItem.longitude = 1.0
         newItem.latitude = 1.0
@@ -214,10 +194,15 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.hostility = "Boarding"
         newItem.victim = "Boat"
         
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = AsamSummaryView(asam: AsamListModel(asam: newItem), showMoreDetails: false)
+        let router = MarlinRouter()
+        let localDataSource = AsamStaticLocalDataSource()
+        localDataSource.asamList = [newItem]
+        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
+        let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
+        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+
+        let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem), showMoreDetails: false)
+//        let summary = AsamSummaryView(asam: AsamListModel(asam: newItem), showMoreDetails: false)
             .environmentObject(repository)
             .environmentObject(MarlinRouter())
             .environmentObject(bookmarkRepository)
@@ -235,7 +220,7 @@ final class AsamSummaryViewTests: XCTestCase {
         expectation(forNotification: .MapItemsTapped, object: nil) { notification in
             
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let asams = tapNotification.itemKeys![Asam.key] as! [String]
+            let asams = tapNotification.itemKeys![DataSources.asam.key] as! [String]
             XCTAssertEqual(asams.count, 1)
             XCTAssertEqual(asams[0], "2022-100")
             return true

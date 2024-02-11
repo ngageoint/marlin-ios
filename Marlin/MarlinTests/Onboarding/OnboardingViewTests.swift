@@ -27,13 +27,13 @@ final class OnboardingViewTests: XCTestCase {
     func testFlow() throws {
         UserDefaults.standard.set(false, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Asam.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Modu.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Light.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Port.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(RadioBeacon.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(DifferentialGPSStation.key)")
-        
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.modu.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.light.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.port.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.radioBeacon.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.dgps.key)")
+
         let initialTabs = 2
         UserDefaults.standard.set(initialTabs, forKey: "userTabs")
         
@@ -94,36 +94,36 @@ final class OnboardingViewTests: XCTestCase {
         
         tester().waitForView(withAccessibilityLabel: "Marlin Tabs")
         for tab in dataSourceList.allTabs {
-            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.definition.fullName) Tab")
+            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullName) Tab")
         }
         
         XCTAssertEqual(dataSourceList.tabs.count, initialTabs)
         for tab in dataSourceList.tabs {
             // verify they are checked
-            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.definition.fullName) Tab On")
+            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullName) Tab On")
         }
         
         for nontab in dataSourceList.nonTabs {
             // verify they are not checked
-            tester().waitForView(withAccessibilityLabel: "\(nontab.dataSource.definition.fullName) Tab Off")
+            tester().waitForView(withAccessibilityLabel: "\(nontab.dataSource.fullName) Tab Off")
         }
         
-        let firstNonTab = dataSourceList.nonTabs[0].dataSource.definition.fullName
+        let firstNonTab = dataSourceList.nonTabs[0].dataSource.fullName
         tester().tapView(withAccessibilityLabel: "\(firstNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(firstNonTab) Tab On")
         XCTAssertEqual(dataSourceList.tabs.count, initialTabs + 1)
         
-        let secondNonTab = dataSourceList.nonTabs[0].dataSource.definition.fullName
+        let secondNonTab = dataSourceList.nonTabs[0].dataSource.fullName
         tester().tapView(withAccessibilityLabel: "\(secondNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(secondNonTab) Tab On")
         XCTAssertEqual(dataSourceList.tabs.count, initialTabs + 2)
         
-        let thirdNonTab = dataSourceList.nonTabs[0].dataSource.definition.fullName
+        let thirdNonTab = dataSourceList.nonTabs[0].dataSource.fullName
         tester().tapView(withAccessibilityLabel: "\(thirdNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(thirdNonTab) Tab On")
         XCTAssertEqual(dataSourceList.tabs.count, DataSourceList.MAX_TABS)
         
-        let fourthNonTab = dataSourceList.nonTabs[0].dataSource.definition.fullName
+        let fourthNonTab = dataSourceList.nonTabs[0].dataSource.fullName
         tester().tapView(withAccessibilityLabel: "\(fourthNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(fourthNonTab) Tab On")
         XCTAssertEqual(dataSourceList.tabs.count, DataSourceList.MAX_TABS)
@@ -132,41 +132,41 @@ final class OnboardingViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Next")
         
         // order should match the order the user chose
-        XCTAssertEqual(dataSourceList.tabs[0].dataSource.definition.fullName, firstNonTab)
-        XCTAssertEqual(dataSourceList.tabs[1].dataSource.definition.fullName, secondNonTab)
-        XCTAssertEqual(dataSourceList.tabs[2].dataSource.definition.fullName, thirdNonTab)
-        XCTAssertEqual(dataSourceList.tabs[3].dataSource.definition.fullName, fourthNonTab)
+        XCTAssertEqual(dataSourceList.tabs[0].dataSource.fullName, firstNonTab)
+        XCTAssertEqual(dataSourceList.tabs[1].dataSource.fullName, secondNonTab)
+        XCTAssertEqual(dataSourceList.tabs[2].dataSource.fullName, thirdNonTab)
+        XCTAssertEqual(dataSourceList.tabs[3].dataSource.fullName, fourthNonTab)
         
         
         tester().waitForView(withAccessibilityLabel: "Marlin Map")
         for tab in dataSourceList.allTabs.filter({ item in
-            item.dataSource.definition.mappable
+            item.dataSource.mappable
         }) {
-            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.definition.fullName) Map")
+            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullName) Map")
         }
         
         for mapped in dataSourceList.mappedDataSources {
             // verify they are checked
-            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map On")
+            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.fullName) Map On")
             // flip em
-            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map On")
-            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map Off")
+            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.fullName) Map On")
+            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.fullName) Map Off")
             // flip it back
-            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map Off")
-            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map On")
+            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.fullName) Map Off")
+            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.fullName) Map On")
         }
         
         for nonmapped in dataSourceList.allTabs.filter({ item in
-            !item.showOnMap && item.dataSource.definition.mappable
+            !item.showOnMap && item.dataSource.mappable
         }) {
             // verify they are not checked
-            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map Off")
+            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.fullName) Map Off")
             // flip it
-            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map Off")
-            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map On")
+            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.fullName) Map Off")
+            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.fullName) Map On")
             // flip it back
-            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map On")
-            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map Off")
+            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.fullName) Map On")
+            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.fullName) Map Off")
         }
         
         tester().waitForView(withAccessibilityLabel: "Take Me To Marlin")
@@ -178,13 +178,13 @@ final class OnboardingViewTests: XCTestCase {
     func testNotNowFlow() throws {
         UserDefaults.standard.set(false, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Asam.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Modu.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Light.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Port.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(RadioBeacon.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(DifferentialGPSStation.key)")
-        
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.modu.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.light.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.port.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.radioBeacon.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.dgps.key)")
+
         let initialTabs = 2
         UserDefaults.standard.set(initialTabs, forKey: "userTabs")
         
@@ -261,36 +261,36 @@ final class OnboardingViewTests: XCTestCase {
         
         tester().waitForView(withAccessibilityLabel: "Marlin Tabs")
         for tab in passThrough.dataSourceListAll! {
-            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.definition.fullName) Tab")
+            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullName) Tab")
         }
         
         XCTAssertEqual(passThrough.dataSourceListTabs!.count, initialTabs)
         for tab in passThrough.dataSourceListTabs! {
             // verify they are checked
-            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.definition.fullName) Tab On")
+            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullName) Tab On")
         }
         
         for nontab in passThrough.dataSourceListNonTabs! {
             // verify they are not checked
-            tester().waitForView(withAccessibilityLabel: "\(nontab.dataSource.definition.fullName) Tab Off")
+            tester().waitForView(withAccessibilityLabel: "\(nontab.dataSource.fullName) Tab Off")
         }
         
-        let firstNonTab = passThrough.dataSourceListNonTabs![0].dataSource.definition.fullName
+        let firstNonTab = passThrough.dataSourceListNonTabs![0].dataSource.fullName
         tester().tapView(withAccessibilityLabel: "\(firstNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(firstNonTab) Tab On")
         XCTAssertEqual(passThrough.dataSourceListTabs!.count, initialTabs + 1)
         
-        let secondNonTab = passThrough.dataSourceListNonTabs![0].dataSource.definition.fullName
+        let secondNonTab = passThrough.dataSourceListNonTabs![0].dataSource.fullName
         tester().tapView(withAccessibilityLabel: "\(secondNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(secondNonTab) Tab On")
         XCTAssertEqual(passThrough.dataSourceListTabs!.count, initialTabs + 2)
         
-        let thirdNonTab = passThrough.dataSourceListNonTabs![0].dataSource.definition.fullName
+        let thirdNonTab = passThrough.dataSourceListNonTabs![0].dataSource.fullName
         tester().tapView(withAccessibilityLabel: "\(thirdNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(thirdNonTab) Tab On")
         XCTAssertEqual(passThrough.dataSourceListTabs!.count, DataSourceList.MAX_TABS)
         
-        let fourthNonTab = passThrough.dataSourceListNonTabs![0].dataSource.definition.fullName
+        let fourthNonTab = passThrough.dataSourceListNonTabs![0].dataSource.fullName
         tester().tapView(withAccessibilityLabel: "\(fourthNonTab) Tab Off")
         tester().waitForView(withAccessibilityLabel: "\(fourthNonTab) Tab On")
         XCTAssertEqual(passThrough.dataSourceListTabs!.count, DataSourceList.MAX_TABS)
@@ -299,41 +299,41 @@ final class OnboardingViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Next")
         
         // order should match the order the user chose
-        XCTAssertEqual(passThrough.dataSourceListTabs![0].dataSource.definition.fullName, firstNonTab)
-        XCTAssertEqual(passThrough.dataSourceListTabs![1].dataSource.definition.fullName, secondNonTab)
-        XCTAssertEqual(passThrough.dataSourceListTabs![2].dataSource.definition.fullName, thirdNonTab)
-        XCTAssertEqual(passThrough.dataSourceListTabs![3].dataSource.definition.fullName, fourthNonTab)
+        XCTAssertEqual(passThrough.dataSourceListTabs![0].dataSource.fullName, firstNonTab)
+        XCTAssertEqual(passThrough.dataSourceListTabs![1].dataSource.fullName, secondNonTab)
+        XCTAssertEqual(passThrough.dataSourceListTabs![2].dataSource.fullName, thirdNonTab)
+        XCTAssertEqual(passThrough.dataSourceListTabs![3].dataSource.fullName, fourthNonTab)
         
         
         tester().waitForView(withAccessibilityLabel: "Marlin Map")
         for tab in passThrough.dataSourceListAll!.filter({ item in
-            item.dataSource.definition.mappable
+            item.dataSource.mappable
         }) {
-            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.definition.fullName) Map")
+            tester().waitForView(withAccessibilityLabel: "\(tab.dataSource.fullName) Map")
         }
         
         for mapped in passThrough.dataSourceMapped! {
             // verify they are checked
-            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map On")
+            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.fullName) Map On")
             // flip em
-            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map On")
-            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map Off")
+            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.fullName) Map On")
+            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.fullName) Map Off")
             // flip it back
-            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map Off")
-            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.definition.fullName) Map On")
+            tester().tapView(withAccessibilityLabel: "\(mapped.dataSource.fullName) Map Off")
+            tester().waitForView(withAccessibilityLabel: "\(mapped.dataSource.fullName) Map On")
         }
         
         for nonmapped in passThrough.dataSourceListAll!.filter({ item in
-            !item.showOnMap && item.dataSource.definition.mappable
+            !item.showOnMap && item.dataSource.mappable
         }) {
             // verify they are not checked
-            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map Off")
+            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.fullName) Map Off")
             // flip it
-            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map Off")
-            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map On")
+            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.fullName) Map Off")
+            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.fullName) Map On")
             // flip it back
-            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map On")
-            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.definition.fullName) Map Off")
+            tester().tapView(withAccessibilityLabel: "\(nonmapped.dataSource.fullName) Map On")
+            tester().waitForView(withAccessibilityLabel: "\(nonmapped.dataSource.fullName) Map Off")
         }
         
         tester().waitForView(withAccessibilityLabel: "Take Me To Marlin")
@@ -345,13 +345,13 @@ final class OnboardingViewTests: XCTestCase {
     func testFlowNotificationAccessGranted() throws {
         UserDefaults.standard.set(false, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Asam.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Modu.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Light.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Port.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(RadioBeacon.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(DifferentialGPSStation.key)")
-        
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.modu.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.light.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.port.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.radioBeacon.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.dgps.key)")
+
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)
         (locationManager.locationManager as? MockCLLocationManager)?.overriddenAuthStatus = .notDetermined
@@ -397,13 +397,13 @@ final class OnboardingViewTests: XCTestCase {
     func testFlowDisclaimerAccepted() throws {
         UserDefaults.standard.set(true, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Asam.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Modu.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Light.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Port.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(RadioBeacon.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(DifferentialGPSStation.key)")
-        
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.modu.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.light.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.port.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.radioBeacon.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.dgps.key)")
+
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)
         (locationManager.locationManager as? MockCLLocationManager)?.overriddenAuthStatus = .notDetermined
@@ -442,13 +442,13 @@ final class OnboardingViewTests: XCTestCase {
     func testFlowDisclaimerAndLocationAccessGranted() throws {
         UserDefaults.standard.set(true, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Asam.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Modu.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Light.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Port.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(RadioBeacon.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(DifferentialGPSStation.key)")
-        
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.modu.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.light.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.port.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.radioBeacon.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.dgps.key)")
+
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)
         (locationManager.locationManager as? MockCLLocationManager)?.overriddenAuthStatus = .authorizedAlways
@@ -488,13 +488,13 @@ final class OnboardingViewTests: XCTestCase {
     func testFlowDisclaimerAndLocationAccessGrantedAndNotificationAccessGranted() throws {
         UserDefaults.standard.set(true, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Asam.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Modu.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Light.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Port.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(RadioBeacon.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(DifferentialGPSStation.key)")
-        
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.modu.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.light.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.port.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.radioBeacon.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.dgps.key)")
+
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)
         (locationManager.locationManager as? MockCLLocationManager)?.overriddenAuthStatus = .authorizedAlways
@@ -534,13 +534,13 @@ final class OnboardingViewTests: XCTestCase {
     func testFlowLocationAccessGranted() throws {
         UserDefaults.standard.set(false, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Asam.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Modu.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Light.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Port.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(RadioBeacon.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(DifferentialGPSStation.key)")
-        
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.modu.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.light.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.port.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.radioBeacon.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.dgps.key)")
+
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)
         (locationManager.locationManager as? MockCLLocationManager)?.overriddenAuthStatus = .authorizedAlways
@@ -582,12 +582,12 @@ final class OnboardingViewTests: XCTestCase {
     func testFlowLocationAccessGrantedAndNotificationAccessGranted() throws {
         UserDefaults.standard.set(false, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Asam.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Modu.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Light.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(Port.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(RadioBeacon.key)")
-        UserDefaults.standard.set(true, forKey: "showOnMap\(DifferentialGPSStation.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.modu.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.light.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.port.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.radioBeacon.key)")
+        UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.dgps.key)")
         
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)

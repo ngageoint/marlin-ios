@@ -21,9 +21,9 @@ final class AsamDetailViewTests: XCTestCase {
         Task.init {
             await TestHelpers.asyncGetKeyWindowVisible()
         }
-        for item in DataSourceList().allTabs {
+        for dataSource in DataSourceDefinitions.allCases {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
+            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -63,7 +63,7 @@ final class AsamDetailViewTests: XCTestCase {
             return
         }
         
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
         let view = AsamDetailView(reference: newItem.reference!)
@@ -93,7 +93,7 @@ final class AsamDetailViewTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
+        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: AsamModel(asam:newItem))
     }
     
     func testLoadingNoHostility() {
@@ -118,7 +118,7 @@ final class AsamDetailViewTests: XCTestCase {
             XCTFail()
             return
         }
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
         let summary = AsamDetailView(reference: newItem.reference!)
@@ -170,7 +170,7 @@ final class AsamDetailViewTests: XCTestCase {
             XCTFail()
             return
         }
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(), remoteDataSource: AsamRemoteDataSource())
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
         let summary = AsamDetailView(reference: newItem.reference!)

@@ -26,9 +26,9 @@ final class AsamRepositoryTests: XCTestCase {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
         UserDefaults.registerMarlinDefaults()
         
-        for item in DataSourceList().allTabs {
+        for dataSource in DataSourceDefinitions.allCases {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
+            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -93,7 +93,7 @@ final class AsamRepositoryTests: XCTestCase {
         
         let loadingExpectation = expectation(forNotification: .DataSourceLoading,
                                              object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -103,7 +103,7 @@ final class AsamRepositoryTests: XCTestCase {
         
         let loadedExpectation = expectation(forNotification: .DataSourceLoaded,
                                             object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -128,18 +128,18 @@ final class AsamRepositoryTests: XCTestCase {
             return true
         }
         
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(), remoteDataSource: AsamRemoteDataSource())
         
-        let asams = await repository.fetchAsams(refresh: true)
+        let asams = await repository.fetchAsams()
         XCTAssertEqual(3, asams.count)
         let asam = asams[0]
         
-        let retrieved = repository.getAsams(filters: [DataSourceFilterParameter(property: DataSourceProperty(name: "reference", key: "reference", type: .string), comparison: DataSourceFilterComparison.equals, valueString: asam.reference)])
+        let retrieved = await repository.getAsams(filters: [DataSourceFilterParameter(property: DataSourceProperty(name: "reference", key: "reference", type: .string), comparison: DataSourceFilterComparison.equals, valueString: asam.reference)])
         XCTAssertEqual(1, retrieved.count)
         XCTAssertEqual(retrieved[0].reference, asam.reference)
         XCTAssertEqual(retrieved[0].victim, asam.victim)
         
-        let retrievedNone = repository.getAsams(filters: [DataSourceFilterParameter(property: DataSourceProperty(name: "reference", key: "reference", type: .string), comparison: DataSourceFilterComparison.equals, valueString: "no")])
+        let retrievedNone = await repository.getAsams(filters: [DataSourceFilterParameter(property: DataSourceProperty(name: "reference", key: "reference", type: .string), comparison: DataSourceFilterComparison.equals, valueString: "no")])
         XCTAssertEqual(0, retrievedNone.count)
         
         await fulfillment(of: [loadingExpectation, loadedExpectation, batchUpdateComplete])

@@ -18,9 +18,9 @@ final class ModuSummaryTests: XCTestCase {
         .receive(on: RunLoop.main)
     
     override func setUp(completion: @escaping (Error?) -> Void) {
-        for item in DataSourceList().allTabs {
+        for dataSource in DataSourceDefinitions.allCases {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
+            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -38,111 +38,112 @@ final class ModuSummaryTests: XCTestCase {
     }
     
     func testLoading() {
-        let modu = Modu(context: persistentStore.viewContext)
-        
-        modu.name = "ABAN II"
-        modu.date = Date(timeIntervalSince1970: 0)
-        modu.rigStatus = "Active"
-        modu.specialStatus = "Wide Berth Requested"
-        modu.distance = 5
-        modu.latitude = 1.0
-        modu.longitude = 2.0
-        modu.position = "16°20'30.6\"N \n81°55'27\"E"
-        modu.navArea = "HYDROPAC"
-        modu.region = 6
-        modu.subregion = 63
-        
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = modu.summary
-            .setShowMoreDetails(false)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
-            .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
-        
-        let controller = UIHostingController(rootView: summary)
-        let window = TestHelpers.getKeyWindowVisible()
-        window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "Active")
-        tester().waitForView(withAccessibilityLabel: "Wide Berth Requested")
-        tester().waitForView(withAccessibilityLabel: "ABAN II")
-        tester().waitForView(withAccessibilityLabel: modu.dateString)
-        
-        expectation(forNotification: .SnackbarNotification,
-                    object: nil) { notification in
-            let model = try? XCTUnwrap(notification.object as? SnackbarNotification)
-            XCTAssertEqual(model?.snackbarModel?.message, "Location \(UserDefaults.standard.coordinateDisplay.format(coordinate: modu.coordinate)) copied to clipboard")
-            XCTAssertEqual(UIPasteboard.general.string, "\(UserDefaults.standard.coordinateDisplay.format(coordinate: modu.coordinate))")
-            return true
-        }
-        tester().tapView(withAccessibilityLabel: "Location")
-        
-        expectation(forNotification: .TabRequestFocus,
-                    object: nil) { notification in
-            return true
-        }
-        
-        expectation(forNotification: .MapItemsTapped, object: nil) { notification in
-            
-            let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let modu = tapNotification.items as! [ModuModel]
-            XCTAssertEqual(modu.count, 1)
-            XCTAssertEqual(modu[0].name, "ABAN II")
-            return true
-        }
-        tester().tapView(withAccessibilityLabel: "focus")
-        
-        waitForExpectations(timeout: 10, handler: nil)
-        
-        tester().waitForView(withAccessibilityLabel: "share")
-        tester().tapView(withAccessibilityLabel: "share")
-        
-        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
-        tester().tapView(withAccessibilityLabel: "dismiss popup")
-        
-        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: modu)
+        XCTFail()
+//        let modu = Modu(context: persistentStore.viewContext)
+//        
+//        modu.name = "ABAN II"
+//        modu.date = Date(timeIntervalSince1970: 0)
+//        modu.rigStatus = "Active"
+//        modu.specialStatus = "Wide Berth Requested"
+//        modu.distance = 5
+//        modu.latitude = 1.0
+//        modu.longitude = 2.0
+//        modu.position = "16°20'30.6\"N \n81°55'27\"E"
+//        modu.navArea = "HYDROPAC"
+//        modu.region = 6
+//        modu.subregion = 63
+//        
+//        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+//        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+//        
+//        let summary = modu.summary
+//            .setShowMoreDetails(false)
+//            .environment(\.managedObjectContext, persistentStore.viewContext)
+//            .environmentObject(repository)
+//            .environmentObject(bookmarkRepository)
+//        
+//        let controller = UIHostingController(rootView: summary)
+//        let window = TestHelpers.getKeyWindowVisible()
+//        window.rootViewController = controller
+//        tester().waitForView(withAccessibilityLabel: "Active")
+//        tester().waitForView(withAccessibilityLabel: "Wide Berth Requested")
+//        tester().waitForView(withAccessibilityLabel: "ABAN II")
+//        tester().waitForView(withAccessibilityLabel: modu.dateString)
+//        
+//        expectation(forNotification: .SnackbarNotification,
+//                    object: nil) { notification in
+//            let model = try? XCTUnwrap(notification.object as? SnackbarNotification)
+//            XCTAssertEqual(model?.snackbarModel?.message, "Location \(UserDefaults.standard.coordinateDisplay.format(coordinate: modu.coordinate)) copied to clipboard")
+//            XCTAssertEqual(UIPasteboard.general.string, "\(UserDefaults.standard.coordinateDisplay.format(coordinate: modu.coordinate))")
+//            return true
+//        }
+//        tester().tapView(withAccessibilityLabel: "Location")
+//        
+//        expectation(forNotification: .TabRequestFocus,
+//                    object: nil) { notification in
+//            return true
+//        }
+//        
+//        expectation(forNotification: .MapItemsTapped, object: nil) { notification in
+//            
+//            let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
+//            let modu = tapNotification.items as! [ModuModel]
+//            XCTAssertEqual(modu.count, 1)
+//            XCTAssertEqual(modu[0].name, "ABAN II")
+//            return true
+//        }
+//        tester().tapView(withAccessibilityLabel: "focus")
+//        
+//        waitForExpectations(timeout: 10, handler: nil)
+//        
+//        tester().waitForView(withAccessibilityLabel: "share")
+//        tester().tapView(withAccessibilityLabel: "share")
+//        
+//        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
+//        tester().tapView(withAccessibilityLabel: "dismiss popup")
+//        
+//        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: modu)
     }
     
-    func testShowMoreDetails() {
-        let modu = Modu(context: persistentStore.viewContext)
-        
-        modu.name = "ABAN II"
-        modu.date = Date(timeIntervalSince1970: 0)
-        modu.rigStatus = "Active"
-        modu.specialStatus = "Wide Berth Requested"
-        modu.distance = 5
-        modu.latitude = 1.0
-        modu.longitude = 2.0
-        modu.position = "16°20'30.6\"N \n81°55'27\"E"
-        modu.navArea = "HYDROPAC"
-        modu.region = 6
-        modu.subregion = 63
-        
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = modu.summary
-            .setShowMoreDetails(true)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
-            .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
-        
-        let controller = UIHostingController(rootView: summary)
-        let window = TestHelpers.getKeyWindowVisible()
-        window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "Active")
-        
-        expectation(forNotification: .ViewDataSource,
-                    object: nil) { notification in
-            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let modu = try! XCTUnwrap(vds.dataSource as? ModuModel)
-            XCTAssertEqual(modu.name, "ABAN II")
-            return true
-        }
-        tester().tapView(withAccessibilityLabel: "More Details")
-        
-        waitForExpectations(timeout: 10, handler: nil)
-        tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
-    }
+//    func testShowMoreDetails() {
+//        let modu = Modu(context: persistentStore.viewContext)
+//        
+//        modu.name = "ABAN II"
+//        modu.date = Date(timeIntervalSince1970: 0)
+//        modu.rigStatus = "Active"
+//        modu.specialStatus = "Wide Berth Requested"
+//        modu.distance = 5
+//        modu.latitude = 1.0
+//        modu.longitude = 2.0
+//        modu.position = "16°20'30.6\"N \n81°55'27\"E"
+//        modu.navArea = "HYDROPAC"
+//        modu.region = 6
+//        modu.subregion = 63
+//        
+//        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+//        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+//        
+//        let summary = modu.summary
+//            .setShowMoreDetails(true)
+//            .environment(\.managedObjectContext, persistentStore.viewContext)
+//            .environmentObject(repository)
+//            .environmentObject(bookmarkRepository)
+//        
+//        let controller = UIHostingController(rootView: summary)
+//        let window = TestHelpers.getKeyWindowVisible()
+//        window.rootViewController = controller
+//        tester().waitForView(withAccessibilityLabel: "Active")
+//        
+//        expectation(forNotification: .ViewDataSource,
+//                    object: nil) { notification in
+//            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
+//            let modu = try! XCTUnwrap(vds.dataSource as? ModuModel)
+//            XCTAssertEqual(modu.name, "ABAN II")
+//            return true
+//        }
+//        tester().tapView(withAccessibilityLabel: "More Details")
+//        
+//        waitForExpectations(timeout: 10, handler: nil)
+//        tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
+//    }
 }

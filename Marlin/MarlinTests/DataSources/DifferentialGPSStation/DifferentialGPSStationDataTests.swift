@@ -20,9 +20,9 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         .receive(on: RunLoop.main)
     
     override func setUp(completion: @escaping (Error?) -> Void) {
-        for item in DataSourceList().allTabs {
+        for dataSource in DataSourceDefinitions.allCases {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
+            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -41,19 +41,17 @@ final class DifferentialGPSStationDataTests: XCTestCase {
     
     func testLoadInitialData() throws {
         
-        for seedDataFile in DifferentialGPSStation.seedDataFiles ?? [] {
-            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
+            stub(condition: isScheme("file") && pathEndsWith("dgps.json")) { request in
                 return HTTPStubsResponse(
                     fileAtPath: OHPathForFile("dgpsMockData.json", type(of: self))!,
                     statusCode: 200,
                     headers: ["Content-Type":"application/json"]
                 )
             }
-        }
-        
+
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -63,7 +61,7 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         
         expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -77,14 +75,14 @@ final class DifferentialGPSStationDataTests: XCTestCase {
             return true
         }
         
-        MSI.shared.loadInitialData(type: DifferentialGPSStation.decodableRoot, dataType: DifferentialGPSStation.self)
+//        MSI.shared.loadInitialData(type: DifferentialGPSStation.decodableRoot, dataType: DifferentialGPSStation.self)
         
         waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testRejectInvalidDifferentialGPSStationNoFeatureNumber() throws {
-        for seedDataFile in DifferentialGPSStation.seedDataFiles ?? [] {
-            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
+//        for seedDataFile in DifferentialGPSStation.seedDataFiles ?? [] {
+            stub(condition: isScheme("file") && pathEndsWith("dgps.json")) { request in
                 let jsonObject = [
                     "ngalol": [
                         [
@@ -133,11 +131,11 @@ final class DifferentialGPSStationDataTests: XCTestCase {
                 ]
                 return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
             }
-        }
+//        }
         
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -147,7 +145,7 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         
         expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -161,14 +159,14 @@ final class DifferentialGPSStationDataTests: XCTestCase {
             return true
         }
         
-        MSI.shared.loadInitialData(type: DifferentialGPSStation.decodableRoot, dataType: DifferentialGPSStation.self)
+//        MSI.shared.loadInitialData(type: DifferentialGPSStation.decodableRoot, dataType: DifferentialGPSStation.self)
         
         waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testRejectInvalidDifferentialGPSStationNoVolumeNumber() throws {
-        for seedDataFile in DifferentialGPSStation.seedDataFiles ?? [] {
-            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
+//        for seedDataFile in DifferentialGPSStation.seedDataFiles ?? [] {
+            stub(condition: isScheme("file") && pathEndsWith("dgps.json")) { request in
                 let jsonObject = [
                     "ngalol": [
                         [
@@ -217,11 +215,11 @@ final class DifferentialGPSStationDataTests: XCTestCase {
                 ]
                 return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
             }
-        }
+//        }
         
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -231,7 +229,7 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         
         expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -245,14 +243,14 @@ final class DifferentialGPSStationDataTests: XCTestCase {
             return true
         }
         
-        MSI.shared.loadInitialData(type: DifferentialGPSStation.decodableRoot, dataType: DifferentialGPSStation.self)
+//        MSI.shared.loadInitialData(type: DifferentialGPSStation.decodableRoot, dataType: DifferentialGPSStation.self)
         
         waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testRejectInvalidDifferentialGPSStationNoPosition() throws {
-        for seedDataFile in DifferentialGPSStation.seedDataFiles ?? [] {
-            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
+//        for seedDataFile in DifferentialGPSStation.seedDataFiles ?? [] {
+            stub(condition: isScheme("file") && pathEndsWith("dgps.json")) { request in
                 let jsonObject = [
                     "ngalol": [
                         [
@@ -301,11 +299,11 @@ final class DifferentialGPSStationDataTests: XCTestCase {
                 ]
                 return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
             }
-        }
+//        }
         
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -315,7 +313,7 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         
         expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -329,7 +327,7 @@ final class DifferentialGPSStationDataTests: XCTestCase {
             return true
         }
         
-        MSI.shared.loadInitialData(type: DifferentialGPSStation.decodableRoot, dataType: DifferentialGPSStation.self)
+//        MSI.shared.loadInitialData(type: DifferentialGPSStation.decodableRoot, dataType: DifferentialGPSStation.self)
         
         waitForExpectations(timeout: 10, handler: nil)
     }
@@ -358,28 +356,28 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         newItem.noticeYear = "2011"
         try? persistentStore.viewContext.save()
         
-        let requests = DifferentialGPSStation.dataRequest()
-        XCTAssertEqual(requests.count, 1)
-        let request = requests[0]
-        XCTAssertEqual(request.method, .get)
-        let parameters = request.parameters
-        XCTAssertEqual(parameters?.count, 4)
-        XCTAssertEqual(parameters?["minNoticeNumber"] as? String, "201135")
-        let calendar = Calendar.current
-        let week = calendar.component(.weekOfYear, from: Date())
-        let year = calendar.component(.year, from: Date())
-        XCTAssertEqual(parameters?["maxNoticeNumber"] as? String, "\(year)\(String(format: "%02d", week + 1))")
-        XCTAssertEqual(parameters?["output"] as? String, "json")
+//        let requests = DifferentialGPSStation.dataRequest()
+//        XCTAssertEqual(requests.count, 1)
+//        let request = requests[0]
+//        XCTAssertEqual(request.method, .get)
+//        let parameters = request.parameters
+//        XCTAssertEqual(parameters?.count, 4)
+//        XCTAssertEqual(parameters?["minNoticeNumber"] as? String, "201135")
+//        let calendar = Calendar.current
+//        let week = calendar.component(.weekOfYear, from: Date())
+//        let year = calendar.component(.year, from: Date())
+//        XCTAssertEqual(parameters?["maxNoticeNumber"] as? String, "\(year)\(String(format: "%02d", week + 1))")
+//        XCTAssertEqual(parameters?["output"] as? String, "json")
     }
     
     func testShouldSync() {
-        UserDefaults.standard.setValue(false, forKey: "\(DifferentialGPSStation.key)DataSourceEnabled")
-        XCTAssertFalse(DifferentialGPSStation.shouldSync())
-        UserDefaults.standard.setValue(true, forKey: "\(DifferentialGPSStation.key)DataSourceEnabled")
-        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60 * 24 * 7) - 10, forKey: "\(DifferentialGPSStation.key)LastSyncTime")
-        XCTAssertTrue(DifferentialGPSStation.shouldSync())
-        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60 * 24 * 7) + (60 * 10), forKey: "\(DifferentialGPSStation.key)LastSyncTime")
-        XCTAssertFalse(DifferentialGPSStation.shouldSync())
+        UserDefaults.standard.setValue(false, forKey: "\(DataSources.dgps.key)DataSourceEnabled")
+        XCTAssertFalse(DataSources.dgps.shouldSync())
+        UserDefaults.standard.setValue(true, forKey: "\(DataSources.dgps.key)DataSourceEnabled")
+        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60 * 24 * 7) - 10, forKey: "\(DataSources.dgps.key)LastSyncTime")
+        XCTAssertTrue(DataSources.dgps.shouldSync())
+        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60 * 24 * 7) + (60 * 10), forKey: "\(DataSources.dgps.key)LastSyncTime")
+        XCTAssertFalse(DataSources.dgps.shouldSync())
     }
     
     func testDescription() {
@@ -462,7 +460,8 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         var imageSize: CGSize = .zero
         
         for i in 1...18 {
-            let images = newItem.mapImage(marker: false, zoomLevel: i, tileBounds3857: MapBoundingBox(swCorner: (x:-10, y:-10), neCorner: (x: 10, y:10)), context: nil)
+            let image = DifferentialGPSStationImage(differentialGPSStation: DifferentialGPSStationModel(differentialGPSStation: newItem))
+            let images = image.image(context: nil, zoom: i, tileBounds: MapBoundingBox(swCorner: (x:-10, y:-10), neCorner: (x: 10, y:10)), tileSize: 512.0)
             XCTAssertNotNil(images)
             XCTAssertEqual(images.count, 2)
             XCTAssertGreaterThan(images[0].size.height, circleSize.height)

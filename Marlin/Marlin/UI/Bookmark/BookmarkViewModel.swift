@@ -27,42 +27,52 @@ class BookmarkViewModel: ObservableObject {
     }
     
     func createBookmark(notes: String) {
-        let viewContext = PersistenceController.current.viewContext
-        viewContext.perform {
-            let bookmark = Bookmark(context: viewContext)
-            bookmark.notes = self.bnotes
-            bookmark.dataSource = self.dataSource
-            bookmark.id = self.itemKey
-            bookmark.timestamp = Date()
-            do {
-                try viewContext.save()
-            } catch {
-                print("Error saving bookmark \(error)")
-            }
-            self.itemKey = self.itemKey
-            self.dataSource = self.dataSource
-            self.isBookmarked = true
+        Task {
+            await repository?.createBookmark(notes: notes, itemKey: self.itemKey ?? "", dataSource: self.dataSource ?? "")
+            await updateBookmarked()
         }
+//        let viewContext = PersistenceController.current.viewContext
+//        viewContext.perform {
+//            let bookmark = Bookmark(context: viewContext)
+//            bookmark.notes = self.bnotes
+//            bookmark.dataSource = self.dataSource
+//            bookmark.id = self.itemKey
+//            bookmark.timestamp = Date()
+//            do {
+//                try viewContext.save()
+//            } catch {
+//                print("Error saving bookmark \(error)")
+//            }
+//            self.itemKey = self.itemKey
+//            self.dataSource = self.dataSource
+//            self.isBookmarked = true
+//        }
     }
-    
+
+    @MainActor
+    func updateBookmarked() {
+        self.isBookmarked = true
+    }
+
     func removeBookmark() {
-        guard let itemKey = itemKey, let dataSource = dataSource else {
+        guard let itemKey = itemKey, let dataSource = dataSource, let repository = repository else {
             return
         }
-        let viewContext = PersistenceController.current.viewContext
-        viewContext.perform {
-            let request = Bookmark.fetchRequest()
-            request.predicate = NSPredicate(format: "id = %@ AND dataSource = %@", itemKey, dataSource)
-            for bookmark in viewContext.fetch(request: request) ?? [] {
-                viewContext.delete(bookmark)
-            }
-            do {
-                try viewContext.save()
-                self.isBookmarked = false
-            } catch {
-                print("Error removing bookmark")
-            }
-            
-        }
+        self.isBookmarked = repository.removeBookmark(itemKey: itemKey, dataSource: dataSource)
+//        let viewContext = PersistenceController.current.viewContext
+//        viewContext.perform {
+//            let request = Bookmark.fetchRequest()
+//            request.predicate = NSPredicate(format: "id = %@ AND dataSource = %@", itemKey, dataSource)
+//            for bookmark in viewContext.fetch(request: request) ?? [] {
+//                viewContext.delete(bookmark)
+//            }
+//            do {
+//                try viewContext.save()
+//                self.isBookmarked = false
+//            } catch {
+//                print("Error removing bookmark")
+//            }
+//            
+//        }
     }
 }

@@ -21,9 +21,9 @@ final class ASAMDataTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
         UserDefaults.registerMarlinDefaults()
-        for item in DataSourceList().allTabs {
+        for dataSource in DataSourceDefinitions.allCases {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
+            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -52,7 +52,7 @@ final class ASAMDataTests: XCTestCase {
         
         expectation(forNotification: .DataSourceLoading,
                                                   object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -62,7 +62,7 @@ final class ASAMDataTests: XCTestCase {
         
         expectation(forNotification: .DataSourceLoaded,
                                                   object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -96,7 +96,7 @@ final class ASAMDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.mockPath = "asamMockData.json"
         
-        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(context: PersistenceController.current.viewContext), bundle: bundle)
+        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(), bundle: bundle)
         operation.start()
 //        MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
         
@@ -117,7 +117,7 @@ final class ASAMDataTests: XCTestCase {
         
         let loadingNotification = expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -127,7 +127,7 @@ final class ASAMDataTests: XCTestCase {
         
         let loadedNotification = expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -161,8 +161,8 @@ final class ASAMDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.mockPath = "asamMockData.json"
         
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: PersistenceController.current.viewContext), remoteDataSource: AsamRemoteDataSource())
-        
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(), remoteDataSource: AsamRemoteDataSource())
+
         let operation = AsamInitialDataLoadOperation(localDataSource: repository.localDataSource, bundle: bundle)
         operation.start()
         
@@ -218,7 +218,7 @@ final class ASAMDataTests: XCTestCase {
         
         let loadingNotification2 = expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -228,7 +228,7 @@ final class ASAMDataTests: XCTestCase {
         
         let loadedNotification2 = expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -253,7 +253,7 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
-        await repository.fetchAsams(refresh: true)
+        await repository.fetchAsams()
         
         await fulfillment(of: [loadingNotification2, loadedNotification2, batchUpdateCompleteNotification2], timeout: 10)
 
@@ -261,13 +261,13 @@ final class ASAMDataTests: XCTestCase {
             let count = try? self.persistentStore.countOfObjects(Asam.self)
             XCTAssertEqual(3, count)
             
-            let updatedAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [Asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-216"), context: nil))
-            
+            let updatedAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [DataSources.asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-216"), context: nil))
+
             XCTAssertEqual(updatedAsam.reference, "2022-216")
             XCTAssertEqual(updatedAsam.asamDescription, "UPDATED")
             
-            let newAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [Asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-218"), context: nil))
-            
+            let newAsam = try! XCTUnwrap(self.persistentStore.fetchFirst(Asam.self, sortBy: [DataSources.asam.defaultSort[0].toNSSortDescriptor()], predicate: NSPredicate(format: "reference = %@", "2022-218"), context: nil))
+
             XCTAssertEqual(newAsam.reference, "2022-218")
             XCTAssertEqual(newAsam.asamDescription, "THIS ONE IS NEW")
         }
@@ -308,7 +308,7 @@ final class ASAMDataTests: XCTestCase {
 
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -318,7 +318,7 @@ final class ASAMDataTests: XCTestCase {
 
         expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -335,7 +335,7 @@ final class ASAMDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
 
-        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(context: PersistenceController.current.viewContext), bundle: bundle)
+        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(), bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -374,7 +374,7 @@ final class ASAMDataTests: XCTestCase {
 
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -384,7 +384,7 @@ final class ASAMDataTests: XCTestCase {
 
         expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -401,7 +401,7 @@ final class ASAMDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
         
-        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(context: PersistenceController.current.viewContext), bundle: bundle)
+        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(), bundle: bundle)
         operation.start()
 
 //        MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
@@ -441,7 +441,7 @@ final class ASAMDataTests: XCTestCase {
 
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -451,7 +451,7 @@ final class ASAMDataTests: XCTestCase {
 
         expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[Asam.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -468,7 +468,7 @@ final class ASAMDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
         
-        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(context: PersistenceController.current.viewContext), bundle: bundle)
+        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(), bundle: bundle)
         operation.start()
 
 //        MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
@@ -491,13 +491,13 @@ final class ASAMDataTests: XCTestCase {
     }
     
     func testShouldSync() {
-        UserDefaults.standard.setValue(false, forKey: "\(Asam.key)DataSourceEnabled")
-        XCTAssertFalse(Asam.shouldSync())
-        UserDefaults.standard.setValue(true, forKey: "\(Asam.key)DataSourceEnabled")
-        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60) - 10, forKey: "\(Asam.key)LastSyncTime")
-        XCTAssertTrue(Asam.shouldSync())
-        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60) + (60 * 10), forKey: "\(Asam.key)LastSyncTime")
-        XCTAssertFalse(Asam.shouldSync())
+        UserDefaults.standard.setValue(false, forKey: "\(DataSources.asam.key)DataSourceEnabled")
+        XCTAssertFalse(DataSources.asam.shouldSync())
+        UserDefaults.standard.setValue(true, forKey: "\(DataSources.asam.key)DataSourceEnabled")
+        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60) - 10, forKey: "\(DataSources.asam.key)LastSyncTime")
+        XCTAssertTrue(DataSources.asam.shouldSync())
+        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60) + (60 * 10), forKey: "\(DataSources.asam.key)LastSyncTime")
+        XCTAssertFalse(DataSources.asam.shouldSync())
     }
     
     func testDescription() {
@@ -544,7 +544,9 @@ final class ASAMDataTests: XCTestCase {
         var imageSize: CGSize = .zero
         
         for i in 1...18 {
-            let images = newItem.mapImage(marker: false, zoomLevel: i, tileBounds3857: MapBoundingBox(swCorner: (x:-10, y:-10), neCorner: (x: 10, y:10)), context: nil)
+            let image = AsamImage(asam: AsamModel(asam: newItem))
+            let images = image.image(context: nil, zoom: i, tileBounds: MapBoundingBox(swCorner: (x:-10, y:-10), neCorner: (x: 10, y:10)), tileSize: 512.0)
+//            newItem.mapImage(marker: false, zoomLevel: i, tileBounds3857: MapBoundingBox(swCorner: (x:-10, y:-10), neCorner: (x: 10, y:10)), context: nil)
             XCTAssertNotNil(images)
             XCTAssertEqual(images.count, 2)
             XCTAssertGreaterThan(images[0].size.height, circleSize.height)

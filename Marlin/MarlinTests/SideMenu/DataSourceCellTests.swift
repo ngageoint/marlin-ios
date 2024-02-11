@@ -13,77 +13,80 @@ import SwiftUI
 final class DataSourceCellTests: XCTestCase {
     
     func testNonLoadingNonMappableDataSource() {
-        let item = DataSourceItem(dataSource: MockDataSourceNonMappable.self)
-        
-        expectation(forNotification: .SwitchTabs, object: nil) { notification in
-            let dataSourceKey = try? XCTUnwrap(notification.object as? String)
-            XCTAssertEqual(dataSourceKey, MockDataSourceNonMappable.key)
-            return true
-        }
-        let appState = AppState()
-        appState.loadingDataSource[MockDataSourceNonMappable.key] = false
-        let cell = DataSourceCell(dataSourceItem: item).environmentObject(appState)
-        
-        let controller = UIHostingController(rootView: cell)
-        let window = TestHelpers.getKeyWindowVisible()
-        window.rootViewController = controller
-        
-        tester().waitForView(withAccessibilityLabel: "\(MockDataSourceNonMappable.fullDataSourceName)")
-        tester().waitForView(withAccessibilityLabel: "\(MockDataSourceNonMappable.key) cell")
-        tester().tapView(withAccessibilityLabel: "\(MockDataSourceNonMappable.key) cell")
-        
-        waitForExpectations(timeout: 10)
+        XCTFail()
+//        let item = DataSourceItem(dataSource: MockDataSourceNonMappable.self)
+//        
+//        expectation(forNotification: .SwitchTabs, object: nil) { notification in
+//            let dataSourceKey = try? XCTUnwrap(notification.object as? String)
+//            XCTAssertEqual(dataSourceKey, MockDataSourceNonMappable.key)
+//            return true
+//        }
+//        let appState = AppState()
+//        appState.loadingDataSource[MockDataSourceNonMappable.key] = false
+//        let cell = DataSourceCell(dataSourceItem: item).environmentObject(appState)
+//        
+//        let controller = UIHostingController(rootView: cell)
+//        let window = TestHelpers.getKeyWindowVisible()
+//        window.rootViewController = controller
+//        
+//        tester().waitForView(withAccessibilityLabel: "\(MockDataSourceNonMappable.fullDataSourceName)")
+//        tester().waitForView(withAccessibilityLabel: "\(MockDataSourceNonMappable.key) cell")
+//        tester().tapView(withAccessibilityLabel: "\(MockDataSourceNonMappable.key) cell")
+//        
+//        waitForExpectations(timeout: 10)
     }
     
     func testNonLoadingMappableDataSource() {
-        UserDefaults.standard.setValue(true, forKey: "showOnMap\(MockDataSource.key)")
-        let item = DataSourceItem(dataSource: MockDataSource.self)
-        
-        expectation(forNotification: .SwitchTabs, object: nil) { notification in
-            let dataSourceKey = try? XCTUnwrap(notification.object as? String)
-            XCTAssertEqual(dataSourceKey, MockDataSource.key)
-            return true
-        }
-
-        let appState = AppState()
-        appState.loadingDataSource[MockDataSource.key] = false
-        let cell = DataSourceCell(dataSourceItem: item).environmentObject(appState)
-        
-        let controller = UIHostingController(rootView: cell)
-        let window = TestHelpers.getKeyWindowVisible()
-        window.rootViewController = controller
-        
-        tester().waitForView(withAccessibilityLabel: "\(MockDataSource.fullDataSourceName)")
-        tester().waitForView(withAccessibilityLabel: "\(MockDataSource.key) cell")
-        tester().tapView(withAccessibilityLabel: "\(MockDataSource.key) cell")
-        
-        waitForExpectations(timeout: 10)
+        XCTFail()
+//        UserDefaults.standard.setValue(true, forKey: "showOnMap\(MockDataSource.key)")
+//        let item = DataSourceItem(dataSource: MockDataSource.self)
+//        
+//        expectation(forNotification: .SwitchTabs, object: nil) { notification in
+//            let dataSourceKey = try? XCTUnwrap(notification.object as? String)
+//            XCTAssertEqual(dataSourceKey, MockDataSource.key)
+//            return true
+//        }
+//
+//        let appState = AppState()
+//        appState.loadingDataSource[MockDataSource.key] = false
+//        let cell = DataSourceCell(dataSourceItem: item).environmentObject(appState)
+//        
+//        let controller = UIHostingController(rootView: cell)
+//        let window = TestHelpers.getKeyWindowVisible()
+//        window.rootViewController = controller
+//        
+//        tester().waitForView(withAccessibilityLabel: "\(MockDataSource.fullDataSourceName)")
+//        tester().waitForView(withAccessibilityLabel: "\(MockDataSource.key) cell")
+//        tester().tapView(withAccessibilityLabel: "\(MockDataSource.key) cell")
+//        
+//        waitForExpectations(timeout: 10)
     }
     
     func testLoadingDataSource() {
-        UserDefaults.standard.setValue(true, forKey: "showOnMap\(MockDataSource.key)")
-        let item = DataSourceItem(dataSource: MockDataSource.self)
-        
-        expectation(forNotification: .SwitchTabs, object: nil) { notification in
-            let dataSourceKey = try? XCTUnwrap(notification.object as? String)
-            XCTAssertEqual(dataSourceKey, MockDataSource.key)
-            return true
-        }
-
-        let appState = AppState()
-        appState.loadingDataSource[MockDataSource.key] = true
-        let cell = DataSourceCell(dataSourceItem: item).environmentObject(appState)
-        
-        let controller = UIHostingController(rootView: cell)
-        let window = TestHelpers.getKeyWindowVisible()
-        window.rootViewController = controller
-        
-        tester().waitForView(withAccessibilityLabel: "\(MockDataSource.fullDataSourceName)")
-        tester().waitForView(withAccessibilityLabel: "\(MockDataSource.key) cell")
-        tester().tapView(withAccessibilityLabel: "\(MockDataSource.key) cell")
-        
-        tester().waitForView(withAccessibilityLabel: "Loading \(MockDataSource.key)")
-        
-        waitForExpectations(timeout: 10)
+        XCTFail()
+//        UserDefaults.standard.setValue(true, forKey: "showOnMap\(MockDataSource.key)")
+//        let item = DataSourceItem(dataSource: MockDataSource.self)
+//        
+//        expectation(forNotification: .SwitchTabs, object: nil) { notification in
+//            let dataSourceKey = try? XCTUnwrap(notification.object as? String)
+//            XCTAssertEqual(dataSourceKey, MockDataSource.key)
+//            return true
+//        }
+//
+//        let appState = AppState()
+//        appState.loadingDataSource[MockDataSource.key] = true
+//        let cell = DataSourceCell(dataSourceItem: item).environmentObject(appState)
+//        
+//        let controller = UIHostingController(rootView: cell)
+//        let window = TestHelpers.getKeyWindowVisible()
+//        window.rootViewController = controller
+//        
+//        tester().waitForView(withAccessibilityLabel: "\(MockDataSource.fullDataSourceName)")
+//        tester().waitForView(withAccessibilityLabel: "\(MockDataSource.key) cell")
+//        tester().tapView(withAccessibilityLabel: "\(MockDataSource.key) cell")
+//        
+//        tester().waitForView(withAccessibilityLabel: "Loading \(MockDataSource.key)")
+//        
+//        waitForExpectations(timeout: 10)
     }
 }

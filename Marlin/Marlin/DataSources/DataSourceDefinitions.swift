@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum DataSourceDefinitions: String, Identifiable {
+enum DataSourceDefinitions: String, Identifiable, CaseIterable {
     var id: String { rawValue }
 
     case asam

@@ -66,7 +66,7 @@ final class AsamRemoteDataSourceTests: XCTestCase {
             return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
         }
         
-        let asams = await dataSource.fetchAsams()
+        let asams = await dataSource.fetch()
         
         XCTAssertEqual(asams.count, 3)
         let newAsam = asams[0]

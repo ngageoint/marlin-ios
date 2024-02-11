@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct BookmarkSummary: DataSourceSummaryView {
+    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+
     var showMoreDetails: Bool = false
     var showTitle: Bool = false
     var showSectionHeader: Bool = false
@@ -60,10 +62,8 @@ struct BookmarkSummary: DataSourceSummaryView {
 
         }
         .task {
-            let context = PersistenceController.current.viewContext
-            context.perform {
-                dataSource = bookmark?.getDataSourceItem(
-                    context: PersistenceController.current.viewContext) as? (any Bookmarkable)
+            if let itemKey = bookmark?.itemKey, let bookmarkDataSource = bookmark?.dataSource {
+                dataSource = bookmarkRepository.getDataSourceItem(itemKey: itemKey, dataSource: bookmarkDataSource) as? (any Bookmarkable)
             }
         }
     }

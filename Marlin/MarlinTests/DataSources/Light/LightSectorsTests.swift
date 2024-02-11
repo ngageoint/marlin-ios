@@ -18,9 +18,9 @@ final class LightSectorsTests: XCTestCase {
         .receive(on: RunLoop.main)
     
     override func setUp(completion: @escaping (Error?) -> Void) {
-        for item in DataSourceList().allTabs {
+        for dataSource in DataSourceDefinitions.allCases {
             UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
+            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
         }
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
@@ -84,7 +84,8 @@ final class LightSectorsTests: XCTestCase {
         light.longitude = 2.0
         light.sectionHeader = "Section"
         
-        let sectors = light.lightSectors!
+        let model = LightModel(light: light)
+        let sectors = model.lightSectors!
         XCTAssertEqual(sectors.count, 3)
         XCTAssertFalse(sectors[0].obscured)
         XCTAssertFalse(sectors[1].obscured)

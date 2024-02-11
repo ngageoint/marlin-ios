@@ -20,11 +20,11 @@ protocol Bookmarkable {
 }
 
 extension Bookmarkable {
-    var bookmark: Bookmark? {
-        return try? PersistenceController.current.viewContext.fetchFirst(
-            Bookmark.self,
-            predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey, key))
-    }
+//    var bookmark: Bookmark? {
+//        return try? PersistenceController.current.viewContext.fetchFirst(
+//            Bookmark.self,
+//            predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey, key))
+//    }
     
     static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
         return nil
@@ -58,7 +58,7 @@ class Bookmark: NSManagedObject, BatchImportable {
     
     // disable this check because we have this many data sources
     // swiftlint:disable cyclomatic_complexity
-    func getDataSourceItem(context: NSManagedObjectContext) -> (any Bookmarkable)? {
+    func getDataSourceItem(context: NSManagedObjectContext?) -> (any Bookmarkable)? {
         switch dataSource {
         case DataSources.asam.key:
             return MSI.shared.asamRepository?.getAsam(reference: self.id)
@@ -67,9 +67,13 @@ class Bookmark: NSManagedObject, BatchImportable {
         case DataSources.port.key:
             return MSI.shared.portRepository?.getPort(portNumber: Int64(self.id ?? ""))
         case NavigationalWarning.key:
-            return NavigationalWarning.getItem(context: context, itemKey: self.id)
+            if let context = context {
+                return NavigationalWarning.getItem(context: context, itemKey: self.id)
+            }
         case NoticeToMariners.key:
-            return NoticeToMariners.getItem(context: context, itemKey: self.id)
+            if let context = context {
+                return NoticeToMariners.getItem(context: context, itemKey: self.id)
+            }
         case DataSources.dgps.key:
             let split = itemKey.split(separator: "--")
             if split.count == 2 {
@@ -96,9 +100,13 @@ class Bookmark: NSManagedObject, BatchImportable {
                 )
             }
         case ElectronicPublication.key:
-            return ElectronicPublication.getItem(context: context, itemKey: self.id)
+            if let context = context {
+                return ElectronicPublication.getItem(context: context, itemKey: self.id)
+            }
         case GeoPackageFeatureItem.key:
-            return GeoPackageFeatureItem.getItem(context: context, itemKey: self.id)
+            if let context = context {
+                return GeoPackageFeatureItem.getItem(context: context, itemKey: self.id)
+            }
         default:
             print("default")
         }

@@ -506,7 +506,7 @@ class TestHelpers {
             let nw = NavigationalWarning(context: context)
             
             nw.authority = "EASTERN RANGE 0/23 141502Z APR 23."
-            nw.issueDate = NavigationalWarningProperties.apiToDateFormatter.date(from: "150429Z APR 2023")
+            nw.issueDate = NavigationalWarningModel.apiToDateFormatter.date(from: "150429Z APR 2023")
             nw.msgNumber = 418
             nw.msgYear = 2023
             nw.navArea = "4"
@@ -537,7 +537,7 @@ class TestHelpers {
             let nw = NavigationalWarning(context: context)
             
             nw.authority = "NAVAREA II 360/22 261001Z DEC 22."
-            nw.issueDate = NavigationalWarningProperties.apiToDateFormatter.date(from: "261430Z DEC 2022")
+            nw.issueDate = NavigationalWarningModel.apiToDateFormatter.date(from: "261430Z DEC 2022")
             nw.msgNumber = 1396
             nw.msgYear = 2022
             nw.navArea = "4"
@@ -569,7 +569,7 @@ class TestHelpers {
             let nw = NavigationalWarning(context: context)
             
             nw.authority = "COGARD COMMUNICATIONS COMMAND 0/23 141801Z APR 23."
-            nw.issueDate = NavigationalWarningProperties.apiToDateFormatter.date(from: "142132Z APR 2023")
+            nw.issueDate = NavigationalWarningModel.apiToDateFormatter.date(from: "142132Z APR 2023")
             nw.msgNumber = 417
             nw.msgYear = 2023
             nw.navArea = "4"
@@ -601,7 +601,7 @@ class TestHelpers {
             let nw = NavigationalWarning(context: context)
             
             nw.authority = "NAVAREA II 0/23 070918Z APR 23."
-            nw.issueDate = NavigationalWarningProperties.apiToDateFormatter.date(from: "090315Z APR 2023")
+            nw.issueDate = NavigationalWarningModel.apiToDateFormatter.date(from: "090315Z APR 2023")
             nw.msgNumber = 396
             nw.msgYear = 2023
             nw.navArea = "4"
@@ -633,7 +633,7 @@ class TestHelpers {
             let nw = NavigationalWarning(context: context)
             
             nw.authority = "COLOMBIA 89/23 272234Z MAR 23."
-            nw.issueDate = NavigationalWarningProperties.apiToDateFormatter.date(from: "272241Z MAR 2023")
+            nw.issueDate = NavigationalWarningModel.apiToDateFormatter.date(from: "272241Z MAR 2023")
             nw.msgNumber = 358
             nw.msgYear = 2023
             nw.navArea = "4"

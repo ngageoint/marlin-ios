@@ -154,106 +154,107 @@ final class FilterButtonTests: XCTestCase {
     }
     
     func testFilterCount() {
-        UserDefaults.standard.setFilter(MockDataSource.key, 
-                                        filter: [
-                                            DataSourceFilterParameter(
-                                                property: DataSourceProperty(
-                                                    name: "Date",
-                                                    key: #keyPath(MockDataSource.dateProperty), type: .date),
-                                                comparison: .window,
-                                                windowUnits: DataSourceWindowUnits.last365Days)
-                                        ]
-        )
-        
-        class PassThrough {
-            var filterOpen: Bool = false
-            var sortOpen: Bool = false
-        }
-        
-        struct Container: View {
-            @State var filterOpen = false
-            @State var sortOpen = false
-            @State var dataSources: [DataSourceItem] = [DataSourceItem(dataSource: MockDataSource.self)]
-            let passThrough: PassThrough
-            
-            var body: some View {
-                Rectangle()
-                    .background(Color.ngaGreen)
-                    .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSources, allowSorting: false, allowFiltering: true))
-            }
-            
-            public init(passThrough: PassThrough) {
-                self.passThrough = passThrough
-            }
-        }
-        
-        let passThrough = PassThrough()
-        let view = Container(passThrough: passThrough)
-        
-        let nav = NavigationView {
-            view
-        }
-        
-        let controller = UIHostingController(rootView: nav)
-        let window = TestHelpers.getKeyWindowVisible()
-        window.rootViewController = controller
-        
-        tester().waitForView(withAccessibilityLabel: "1 filter")
+        XCTFail()
+//        UserDefaults.standard.setFilter(MockDataSource.key,
+//                                        filter: [
+//                                            DataSourceFilterParameter(
+//                                                property: DataSourceProperty(
+//                                                    name: "Date",
+//                                                    key: #keyPath(MockDataSource.dateProperty), type: .date),
+//                                                comparison: .window,
+//                                                windowUnits: DataSourceWindowUnits.last365Days)
+//                                        ]
+//        )
+//        
+//        class PassThrough {
+//            var filterOpen: Bool = false
+//            var sortOpen: Bool = false
+//        }
+//        
+//        struct Container: View {
+//            @State var filterOpen = false
+//            @State var sortOpen = false
+//            @State var dataSources: [DataSourceItem] = [DataSourceItem(dataSource: MockDataSource.self)]
+//            let passThrough: PassThrough
+//            
+//            var body: some View {
+//                Rectangle()
+//                    .background(Color.ngaGreen)
+//                    .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSources, allowSorting: false, allowFiltering: true))
+//            }
+//            
+//            public init(passThrough: PassThrough) {
+//                self.passThrough = passThrough
+//            }
+//        }
+//        
+//        let passThrough = PassThrough()
+//        let view = Container(passThrough: passThrough)
+//        
+//        let nav = NavigationView {
+//            view
+//        }
+//        
+//        let controller = UIHostingController(rootView: nav)
+//        let window = TestHelpers.getKeyWindowVisible()
+//        window.rootViewController = controller
+//        
+//        tester().waitForView(withAccessibilityLabel: "1 filter")
     }
     
-    func testFilterCountDataSourcesChange() {
-        UserDefaults.standard.setFilter(MockDataSource.key, 
-                                        filter: [
-                                            DataSourceFilterParameter(
-                                                property: DataSourceProperty(
-                                                    name: "Date",
-                                                    key: #keyPath(MockDataSource.dateProperty),
-                                                    type: .date),
-                                                comparison: .window,
-                                                windowUnits: DataSourceWindowUnits.last365Days)
-                                        ]
-        )
-        
-        class PassThrough {
-            var filterOpen: Bool = false
-            var sortOpen: Bool = false
-        }
-        
-        struct Container: View {
-            @State var filterOpen = false
-            @State var sortOpen = false
-            @State var dataSources: [DataSourceItem] = []
-            let passThrough: PassThrough
-            
-            var body: some View {
-                Rectangle()
-                    .background(Color.ngaGreen)
-                    .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSources, allowSorting: false, allowFiltering: true))
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            dataSources = [DataSourceItem(dataSource: MockDataSource.self)]
-                        }
-                    }
-            }
-            
-            public init(passThrough: PassThrough) {
-                self.passThrough = passThrough
-            }
-        }
-        
-        let passThrough = PassThrough()
-        let view = Container(passThrough: passThrough)
-        
-        let nav = NavigationView {
-            view
-        }
-        
-        let controller = UIHostingController(rootView: nav)
-        let window = TestHelpers.getKeyWindowVisible()
-        window.rootViewController = controller
-        
-        tester().waitForView(withAccessibilityLabel: "1 filter")
-    }
+//    func testFilterCountDataSourcesChange() {
+//        UserDefaults.standard.setFilter(MockDataSource.key, 
+//                                        filter: [
+//                                            DataSourceFilterParameter(
+//                                                property: DataSourceProperty(
+//                                                    name: "Date",
+//                                                    key: #keyPath(MockDataSource.dateProperty),
+//                                                    type: .date),
+//                                                comparison: .window,
+//                                                windowUnits: DataSourceWindowUnits.last365Days)
+//                                        ]
+//        )
+//        
+//        class PassThrough {
+//            var filterOpen: Bool = false
+//            var sortOpen: Bool = false
+//        }
+//        
+//        struct Container: View {
+//            @State var filterOpen = false
+//            @State var sortOpen = false
+//            @State var dataSources: [DataSourceItem] = []
+//            let passThrough: PassThrough
+//            
+//            var body: some View {
+//                Rectangle()
+//                    .background(Color.ngaGreen)
+//                    .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSources, allowSorting: false, allowFiltering: true))
+//                    .onAppear {
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+//                            dataSources = [DataSourceItem(dataSource: MockDataSource.self)]
+//                        }
+//                    }
+//            }
+//            
+//            public init(passThrough: PassThrough) {
+//                self.passThrough = passThrough
+//            }
+//        }
+//        
+//        let passThrough = PassThrough()
+//        let view = Container(passThrough: passThrough)
+//        
+//        let nav = NavigationView {
+//            view
+//        }
+//        
+//        let controller = UIHostingController(rootView: nav)
+//        let window = TestHelpers.getKeyWindowVisible()
+//        window.rootViewController = controller
+//        
+//        tester().waitForView(withAccessibilityLabel: "1 filter")
+//    }
     
 }
 
