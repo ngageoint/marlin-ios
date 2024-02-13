@@ -30,10 +30,6 @@ class ElectronicPublicationInitialDataLoadOperation: CountingDataLoadOperation {
             object: DataSourceItem(dataSource: DataSources.epub)
         )
         NotificationCenter.default.post(
-            name: .DataSourceNeedsProcessed,
-            object: DataSourceUpdatedNotification(key: DataSources.epub.key)
-        )
-        NotificationCenter.default.post(
             name: .DataSourceUpdated,
             object: DataSourceUpdatedNotification(key: DataSources.epub.key)
         )

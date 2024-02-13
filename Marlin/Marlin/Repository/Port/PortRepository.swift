@@ -67,10 +67,6 @@ class PortRepository: ObservableObject {
             NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: DataSources.port))
             if inserted != 0 {
                 NotificationCenter.default.post(
-                    name: .DataSourceNeedsProcessed,
-                    object: DataSourceUpdatedNotification(key: DataSources.port.key)
-                )
-                NotificationCenter.default.post(
                     name: .DataSourceUpdated,
                     object: DataSourceUpdatedNotification(key: DataSources.port.key)
                 )

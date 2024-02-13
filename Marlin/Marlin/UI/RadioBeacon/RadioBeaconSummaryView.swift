@@ -50,7 +50,7 @@ struct RadioBeaconSummaryView: DataSourceSummaryView {
                 Text(stationRemark)
                     .secondary()
             }
-            bookmarkNotesView(radioBeacon)
+            bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
             DataSourceActions(
                 moreDetails: showMoreDetails ? RadioBeaconActions.Tap(
                     featureNumber: radioBeacon.featureNumber,

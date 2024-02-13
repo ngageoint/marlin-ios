@@ -52,6 +52,7 @@ struct AsamDetailView: View {
                                 showBookmarkNotes: true
                             )
                             .padding(.bottom, 16)
+                            .accessibilityElement(children: .contain)
                         }.padding([.leading, .trailing], 16)
                     }
                 }

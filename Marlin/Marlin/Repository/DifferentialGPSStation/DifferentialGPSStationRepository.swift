@@ -96,10 +96,6 @@ class DifferentialGPSStationRepository: ObservableObject {
             )
             if inserted != 0 {
                 NotificationCenter.default.post(
-                    name: .DataSourceNeedsProcessed,
-                    object: DataSourceUpdatedNotification(key: DataSources.dgps.key)
-                )
-                NotificationCenter.default.post(
                     name: .DataSourceUpdated,
                     object: DataSourceUpdatedNotification(key: DataSources.dgps.key)
                 )

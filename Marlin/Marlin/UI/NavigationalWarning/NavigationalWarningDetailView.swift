@@ -49,7 +49,7 @@ struct NavigationalWarningDetailView: View {
                                     \(navigationalWarning.cancelMsgYear)
                                 """)
                         }
-                        BookmarkNotes(itemKey: navigationalWarning.itemKey, dataSource: DataSources.navWarning.key)
+//                        BookmarkNotes(itemKey: navigationalWarning.itemKey, dataSource: DataSources.navWarning.key)
 
                         NavigationalWarningActionBar(
                             navigationalWarning: navigationalWarning,

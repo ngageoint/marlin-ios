@@ -30,10 +30,6 @@ class NoticeToMarinersInitialDataLoadOperation: CountingDataLoadOperation {
             object: DataSourceItem(dataSource: DataSources.noticeToMariners)
         )
         NotificationCenter.default.post(
-            name: .DataSourceNeedsProcessed,
-            object: DataSourceUpdatedNotification(key: DataSources.noticeToMariners.key)
-        )
-        NotificationCenter.default.post(
             name: .DataSourceUpdated,
             object: DataSourceUpdatedNotification(key: DataSources.noticeToMariners.key)
         )

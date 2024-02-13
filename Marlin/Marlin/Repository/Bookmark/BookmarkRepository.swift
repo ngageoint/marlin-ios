@@ -47,12 +47,14 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
     }
     
     func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel? {
-        if let bookmark = try? context.fetchFirst(
-            Bookmark.self,
-            predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey, dataSource)) {
-            return BookmarkModel(bookmark: bookmark)
+        return context.performAndWait {
+            if let bookmark = try? context.fetchFirst(
+                Bookmark.self,
+                predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey, dataSource)) {
+                return BookmarkModel(bookmark: bookmark)
+            }
+            return nil
         }
-        return nil
     }
 
     func createBookmark(notes: String?, itemKey: String, dataSource: String) async {
@@ -71,15 +73,15 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
     }
 
     func removeBookmark(itemKey: String, dataSource: String) -> Bool {
-        let viewContext = PersistenceController.current.viewContext
-        return viewContext.performAndWait {
+//        let viewContext = PersistenceController.current.viewContext
+        return context.performAndWait {
             let request = Bookmark.fetchRequest()
             request.predicate = NSPredicate(format: "id = %@ AND dataSource = %@", itemKey, dataSource)
-            for bookmark in viewContext.fetch(request: request) ?? [] {
-                viewContext.delete(bookmark)
+            for bookmark in context.fetch(request: request) ?? [] {
+                context.delete(bookmark)
             }
             do {
-                try viewContext.save()
+                try context.save()
                 return true
 //                self.isBookmarked = false
             } catch {

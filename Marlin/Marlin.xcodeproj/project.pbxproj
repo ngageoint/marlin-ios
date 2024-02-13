@@ -175,6 +175,12 @@
 		F72281DF296F644600218FC0 /* DataSourceRailTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72281DE296F644600218FC0 /* DataSourceRailTests.swift */; };
 		F7249AEB2AF4321A00961E65 /* AsamService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7249AEA2AF4321A00961E65 /* AsamService.swift */; };
 		F7249AED2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */; };
+		F726247E2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F726247D2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift */; };
+		F72624802B7ACA8500C727D5 /* DifferentialGPSStationStaticLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F726247F2B7ACA8500C727D5 /* DifferentialGPSStationStaticLocalDataSource.swift */; };
+		F72624832B7AD13A00C727D5 /* DifferentialGPSStationCoreDataDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72624822B7AD13A00C727D5 /* DifferentialGPSStationCoreDataDataSourceTests.swift */; };
+		F72624852B7BB31100C727D5 /* DifferentialGPSStationRemoteDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72624842B7BB31100C727D5 /* DifferentialGPSStationRemoteDataSourceTests.swift */; };
+		F72624872B7BB44C00C727D5 /* DifferentialGPSStationRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72624862B7BB44C00C727D5 /* DifferentialGPSStationRepositoryTests.swift */; };
+		F72624892B7BB50D00C727D5 /* DifferentialGPSStationStaticRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72624882B7BB50D00C727D5 /* DifferentialGPSStationStaticRemoteDataSource.swift */; };
 		F7275FDF28FA252800ED8D9A /* LightModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7275FDE28FA252800ED8D9A /* LightModel.swift */; };
 		F727A684284E351800BD728A /* MSIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A683284E351800BD728A /* MSIError.swift */; };
 		F727A691284E605800BD728A /* MarlinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F727A690284E605800BD728A /* MarlinTests.swift */; };
@@ -294,6 +300,7 @@
 		F74B9B1128B7DACB0097D448 /* RadioBeaconDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B1028B7DACB0097D448 /* RadioBeaconDetailView.swift */; };
 		F7517D3F2B16524F00A9DC72 /* AsamActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7517D3E2B16524F00A9DC72 /* AsamActions.swift */; };
 		F7517D452B16805100A9DC72 /* AsamSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7517D442B16805100A9DC72 /* AsamSheetView.swift */; };
+		F75185E72B7937290069E5AE /* RouteWaypointStaticLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75185E62B7937290069E5AE /* RouteWaypointStaticLocalDataSource.swift */; };
 		F75324B429805E5C005C509F /* DFRSSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324B329805E5C005C509F /* DFRSSummaryViewTests.swift */; };
 		F75324B629806329005C509F /* DFRSDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324B529806329005C509F /* DFRSDetailViewTests.swift */; };
 		F75324B829807F04005C509F /* SubmitReportViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324B729807F04005C509F /* SubmitReportViewTests.swift */; };
@@ -767,6 +774,12 @@
 		F72281DE296F644600218FC0 /* DataSourceRailTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceRailTests.swift; sourceTree = "<group>"; };
 		F7249AEA2AF4321A00961E65 /* AsamService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamService.swift; sourceTree = "<group>"; };
 		F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRemoteDataSourceTests.swift; sourceTree = "<group>"; };
+		F726247D2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamStaticRemoteDataSource.swift; sourceTree = "<group>"; };
+		F726247F2B7ACA8500C727D5 /* DifferentialGPSStationStaticLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationStaticLocalDataSource.swift; sourceTree = "<group>"; };
+		F72624822B7AD13A00C727D5 /* DifferentialGPSStationCoreDataDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationCoreDataDataSourceTests.swift; sourceTree = "<group>"; };
+		F72624842B7BB31100C727D5 /* DifferentialGPSStationRemoteDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationRemoteDataSourceTests.swift; sourceTree = "<group>"; };
+		F72624862B7BB44C00C727D5 /* DifferentialGPSStationRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationRepositoryTests.swift; sourceTree = "<group>"; };
+		F72624882B7BB50D00C727D5 /* DifferentialGPSStationStaticRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentialGPSStationStaticRemoteDataSource.swift; sourceTree = "<group>"; };
 		F7275FDE28FA252800ED8D9A /* LightModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightModel.swift; sourceTree = "<group>"; };
 		F727A682284E29AE00BD728A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F727A683284E351800BD728A /* MSIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSIError.swift; sourceTree = "<group>"; };
@@ -887,6 +900,7 @@
 		F74B9B1028B7DACB0097D448 /* RadioBeaconDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconDetailView.swift; sourceTree = "<group>"; };
 		F7517D3E2B16524F00A9DC72 /* AsamActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamActions.swift; sourceTree = "<group>"; };
 		F7517D442B16805100A9DC72 /* AsamSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamSheetView.swift; sourceTree = "<group>"; };
+		F75185E62B7937290069E5AE /* RouteWaypointStaticLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteWaypointStaticLocalDataSource.swift; sourceTree = "<group>"; };
 		F75324B329805E5C005C509F /* DFRSSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSSummaryViewTests.swift; sourceTree = "<group>"; };
 		F75324B529806329005C509F /* DFRSDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSDetailViewTests.swift; sourceTree = "<group>"; };
 		F75324B729807F04005C509F /* SubmitReportViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitReportViewTests.swift; sourceTree = "<group>"; };
@@ -1573,6 +1587,16 @@
 			path = ASAM;
 			sourceTree = "<group>";
 		};
+		F72624812B7AD12700C727D5 /* DifferentialGPSStation */ = {
+			isa = PBXGroup;
+			children = (
+				F72624822B7AD13A00C727D5 /* DifferentialGPSStationCoreDataDataSourceTests.swift */,
+				F72624842B7BB31100C727D5 /* DifferentialGPSStationRemoteDataSourceTests.swift */,
+				F72624862B7BB44C00C727D5 /* DifferentialGPSStationRepositoryTests.swift */,
+			);
+			path = DifferentialGPSStation;
+			sourceTree = "<group>";
+		};
 		F7275FE028FEF8A000ED8D9A /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
@@ -2125,6 +2149,10 @@
 				F7194E112AFD9C0B0018E4B4 /* MockBundle.swift */,
 				F715E31C2B782AD200752688 /* AsamStaticLocalDataSource.swift */,
 				F715E31E2B78307C00752688 /* BookmarkStaticRepository.swift */,
+				F75185E62B7937290069E5AE /* RouteWaypointStaticLocalDataSource.swift */,
+				F726247D2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift */,
+				F726247F2B7ACA8500C727D5 /* DifferentialGPSStationStaticLocalDataSource.swift */,
+				F72624882B7BB50D00C727D5 /* DifferentialGPSStationStaticRemoteDataSource.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -2454,6 +2482,7 @@
 		F7CCDC832AF147FE00BF41F9 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				F72624812B7AD12700C727D5 /* DifferentialGPSStation */,
 				F7CCDC842AF1480800BF41F9 /* ASAM */,
 			);
 			path = Repository;
@@ -3249,6 +3278,7 @@
 				F73ABC8C295250C70085EDC5 /* DataSourceFilterParameterTests.swift in Sources */,
 				F7ABB612299ECE6500BAD868 /* LatitudeLongitudeFilterTests.swift in Sources */,
 				F72281DD296F3FDE00218FC0 /* DataSourceCellTests.swift in Sources */,
+				F75185E72B7937290069E5AE /* RouteWaypointStaticLocalDataSource.swift in Sources */,
 				F72D88FE29787AEE00D022FB /* LightDetailViewTests.swift in Sources */,
 				F7ABB60A299D777B00BAD868 /* DoubleFilterTests.swift in Sources */,
 				F72D89062979D56500D022FB /* PortDetailViewTests.swift in Sources */,
@@ -3261,6 +3291,7 @@
 				F75F81E2295F70A50062A708 /* BooleanFilterTests.swift in Sources */,
 				F72D89022979BCA300D022FB /* ModuDetailViewTests.swift in Sources */,
 				F72D891B297F449C00D022FB /* DFRSDataTests.swift in Sources */,
+				F72624832B7AD13A00C727D5 /* DifferentialGPSStationCoreDataDataSourceTests.swift in Sources */,
 				F75324C72989854F005C509F /* UserTrackingButtonTests.swift in Sources */,
 				F727A697284E606F00BD728A /* KIF+extensions.swift in Sources */,
 				F727A691284E605800BD728A /* MarlinTests.swift in Sources */,
@@ -3270,20 +3301,24 @@
 				F7EFFECC2A82DED70097E5EF /* BookmarkHelper.swift in Sources */,
 				F72D89002979B87800D022FB /* ModuSummaryTests.swift in Sources */,
 				F73ABC86295250A90085EDC5 /* LocationManagerTests.swift in Sources */,
+				F72624802B7ACA8500C727D5 /* DifferentialGPSStationStaticLocalDataSource.swift in Sources */,
 				F73D9E252970E54C008AF40D /* MapSettingsTests.swift in Sources */,
 				F75324CB298BFFED005C509F /* MSIListViewTests.swift in Sources */,
 				F7EFFED32A85196F0097E5EF /* BookmarkSummaryViewTests.swift in Sources */,
 				F75F81E42960B4D90062A708 /* StringFilterTests.swift in Sources */,
 				F7ABB604299C1ECE00BAD868 /* NavigationalWarningNavAreaListViewTests.swift in Sources */,
 				F76052BD29A96F5A00F13260 /* NoticeToMarinersFullNoticeViewTests.swift in Sources */,
+				F72624872B7BB44C00C727D5 /* DifferentialGPSStationRepositoryTests.swift in Sources */,
 				F70F501D2993EA470062E555 /* DataLoadedNotificationBannerTests.swift in Sources */,
 				F7364E422A26A1740098F243 /* MarlinTestInitialization.swift in Sources */,
+				F72624852B7BB31100C727D5 /* DifferentialGPSStationRemoteDataSourceTests.swift in Sources */,
 				F72D88F82971FF8000D022FB /* HamburgerTests.swift in Sources */,
 				F7D8FA64293AB5B000E7D0A1 /* MockDataSource.swift in Sources */,
 				F7CCDC862AF1482900BF41F9 /* AsamCoreDataDataSourceTests.swift in Sources */,
 				F72D890A2979E7FC00D022FB /* RadioBeaconDetailViewTests.swift in Sources */,
 				F76052BB29A94FA800F13260 /* MarlinRegularWidthTests.swift in Sources */,
 				F7D8FA342936C08200E7D0A1 /* MapImageTests.swift in Sources */,
+				F72624892B7BB50D00C727D5 /* DifferentialGPSStationStaticRemoteDataSource.swift in Sources */,
 				F7ABB610299D8C2100BAD868 /* LocationFilterTests.swift in Sources */,
 				F7ABB606299D1EE900BAD868 /* NavigationalWarningsOverviewTests.swift in Sources */,
 				F72D88F42971B84D00D022FB /* FilterBottomSheetTests.swift in Sources */,
@@ -3316,6 +3351,7 @@
 				F75324B429805E5C005C509F /* DFRSSummaryViewTests.swift in Sources */,
 				F72EAAD0291C669D00AC6026 /* LightDataTests.swift in Sources */,
 				F72EAACB291C635100AC6026 /* NavigationalWarningDataTests.swift in Sources */,
+				F726247E2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift in Sources */,
 				F75F81E729623AAA0062A708 /* MarlinBottomSheetTests.swift in Sources */,
 				F7D8FA7F294240B400E7D0A1 /* NoticeToMarinersFullNoticeViewModelTests.swift in Sources */,
 				F75324C02983272A005C509F /* MarlinCompactWidthViewTests.swift in Sources */,

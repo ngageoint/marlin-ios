@@ -31,12 +31,13 @@ struct AsamSummaryView: DataSourceSummaryView {
             Text(asam.asamDescription ?? "")
                 .lineLimit(8)
                 .secondary()
+            Text("Asam can bookmark? \(asam.canBookmark ? "yes" : "no")")
             if asam.canBookmark {
-                bookmarkNotesView(asam)
+                bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
             }
             DataSourceActions(
                 moreDetails: showMoreDetails ? AsamActions.Tap(reference: asam.reference, path: $router.path) : nil,
-                location: !showMoreDetails ? Actions.Location(latLng: asam.coordinate) : nil,
+                location: Actions.Location(latLng: asam.coordinate),
                 zoom: !showMoreDetails ? AsamActions.Zoom(latLng: asam.coordinate, itemKey: asam.id) : nil,
                 bookmark: asam.canBookmark ? Actions.Bookmark(
                     itemKey: asam.id,

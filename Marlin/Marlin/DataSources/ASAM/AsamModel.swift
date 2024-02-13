@@ -93,7 +93,11 @@ struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hashable,
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
     }
-    
+
+    var key: String {
+        DataSources.asam.key
+    }
+
     var canBookmark: Bool = false
     
     private enum CodingKeys: String, CodingKey {

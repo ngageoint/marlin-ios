@@ -33,10 +33,6 @@ class PortInitialDataLoadOperation: CountingDataLoadOperation {
             object: DataSourceItem(dataSource: DataSources.port)
         )
         NotificationCenter.default.post(
-            name: .DataSourceNeedsProcessed,
-            object: DataSourceUpdatedNotification(key: DataSources.port.key)
-        )
-        NotificationCenter.default.post(
             name: .DataSourceUpdated,
             object: DataSourceUpdatedNotification(key: DataSources.port.key)
         )

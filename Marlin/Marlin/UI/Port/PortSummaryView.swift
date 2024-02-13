@@ -54,7 +54,7 @@ struct PortSummaryView: DataSourceSummaryView {
                         .secondary()
                 }
             }
-            bookmarkNotesView(port)
+            bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
             DataSourceActions(
                 moreDetails: showMoreDetails ? PortActions.Tap(portNumber: port.portNumber, path: $router.path) : nil,
                 location: !showMoreDetails ? Actions.Location(latLng: port.coordinate) : nil,

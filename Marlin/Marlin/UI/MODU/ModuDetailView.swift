@@ -59,7 +59,7 @@ struct ModuDetailView: View {
                             Text("\(modu.specialStatus ?? "")")
                                 .lineLimit(1)
                                 .secondary()
-                            BookmarkNotes(itemKey: modu.itemKey, dataSource: modu.key)
+                            BookmarkNotes(bookmarkViewModel: bookmarkViewModel)
                             DataSourceActions(
                                 location: Actions.Location(latLng: modu.coordinate),
                                 zoom: ModuActions.Zoom(latLng: modu.coordinate, itemKey: modu.id),

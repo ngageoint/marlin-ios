@@ -36,7 +36,7 @@ struct ModuSummaryView: DataSourceSummaryView {
                 .lineLimit(1)
                 .secondary()
             if modu.canBookmark {
-                bookmarkNotesView(modu)
+                bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
             }
 
             DataSourceActions(
@@ -51,7 +51,7 @@ struct ModuSummaryView: DataSourceSummaryView {
         }
         .onAppear {
             bookmarkViewModel.repository = bookmarkRepository
-            bookmarkViewModel.getBookmark(itemKey: modu.id, dataSource: DataSources.modu.key)
+            bookmarkViewModel.getBookmark(itemKey: modu.itemKey, dataSource: DataSources.modu.key)
         }
     }
 }

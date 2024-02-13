@@ -37,7 +37,7 @@ struct LightSummaryView: DataSourceSummaryView {
                     .secondary()
             }
             if light.canBookmark {
-                bookmarkNotesView(light)
+                bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
             }
 
             DataSourceActions(
@@ -53,7 +53,7 @@ struct LightSummaryView: DataSourceSummaryView {
         }
         .onAppear {
             bookmarkViewModel.repository = bookmarkRepository
-            bookmarkViewModel.getBookmark(itemKey: light.id, dataSource: DataSources.light.key)
+            bookmarkViewModel.getBookmark(itemKey: light.itemKey, dataSource: DataSources.light.key)
         }
     }
 }

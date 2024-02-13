@@ -31,7 +31,7 @@ struct NoticeToMarinersSummaryView: DataSourceSummaryView {
                 Spacer()
                 BookmarkButton(viewModel: bookmarkViewModel)
             }
-            bookmarkNotesView(noticeToMariners)
+            bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
         }
         .onAppear {
             bookmarkViewModel.repository = bookmarkRepository

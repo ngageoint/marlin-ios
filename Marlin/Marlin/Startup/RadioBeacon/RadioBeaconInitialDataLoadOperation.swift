@@ -32,10 +32,6 @@ class RadioBeaconInitialDataLoadOperation: CountingDataLoadOperation {
             object: DataSourceItem(dataSource: DataSources.radioBeacon)
         )
         NotificationCenter.default.post(
-            name: .DataSourceNeedsProcessed,
-            object: DataSourceUpdatedNotification(key: DataSources.radioBeacon.key)
-        )
-        NotificationCenter.default.post(
             name: .DataSourceUpdated,
             object: DataSourceUpdatedNotification(key: DataSources.radioBeacon.key)
         )

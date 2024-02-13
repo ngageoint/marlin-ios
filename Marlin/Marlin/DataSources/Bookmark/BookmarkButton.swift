@@ -125,7 +125,7 @@ struct BookmarkButton2: View {
                     Spacer()
                     Button("Bookmark") {
                         withAnimation {
-                            action.bookmarkViewModel.createBookmark(notes: notes)
+                            action.bookmarkViewModel.createBookmark(notes: action.bookmarkViewModel.bnotes)
                         }
                         action.bookmarkViewModel.bookmarkBottomSheet = false
                     }

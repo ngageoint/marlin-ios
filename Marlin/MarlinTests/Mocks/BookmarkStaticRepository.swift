@@ -11,13 +11,15 @@ import Foundation
 
 class BookmarkStaticRepository: BookmarkRepository {
     var bookmarks: [String: BookmarkModel] = [:]
-    let asamRepository: AsamRepository
+    let asamRepository: AsamRepository?
+    let dgpsRepository: DifferentialGPSStationRepository?
 
-    init(asamRepository: AsamRepository) {
+    init(asamRepository: AsamRepository? = nil, dgpsRepository: DifferentialGPSStationRepository? = nil) {
         self.asamRepository = asamRepository
+        self.dgpsRepository = dgpsRepository
     }
     func createBookmark(notes: String?, itemKey: String, dataSource: String) async {
-        var model = BookmarkModel(dataSource: dataSource, id: itemKey, itemKey: itemKey, notes: notes, timestamp: Date())
+        let model = BookmarkModel(dataSource: dataSource, id: itemKey, itemKey: itemKey, notes: notes, timestamp: Date())
         bookmarks["\(dataSource)--\(itemKey)"] = model
     }
     
@@ -33,7 +35,7 @@ class BookmarkStaticRepository: BookmarkRepository {
     func getDataSourceItem(itemKey: String, dataSource: String) -> (any Bookmarkable)? {
         switch dataSource {
         case DataSources.asam.key:
-            return asamRepository.getAsam(reference: itemKey)
+            return asamRepository?.getAsam(reference: itemKey)
 //        case DataSources.modu.key:
 //            return MSI.shared.moduRepository?.getModu(name: self.id)
 //        case DataSources.port.key:
@@ -46,13 +48,14 @@ class BookmarkStaticRepository: BookmarkRepository {
 //            if let context = context {
 //                return NoticeToMariners.getItem(context: context, itemKey: self.id)
 //            }
-//        case DataSources.dgps.key:
-//            if let split = itemKey?.split(separator: "--"), split.count == 2 {
-//                return MSI.shared.differentialGPSStationRepository?.getDifferentialGPSStation(
-//                    featureNumber: Int(split[0]) ?? -1,
-//                    volumeNumber: "\(split[1])"
-//                )
-//            }
+        case DataSources.dgps.key:
+            let split = itemKey.split(separator: "--")
+            if split.count == 2 {
+                return dgpsRepository?.getDifferentialGPSStation(
+                    featureNumber: Int(split[0]) ?? -1,
+                    volumeNumber: "\(split[1])"
+                )
+            }
 //        case DataSources.light.key:
 //            if let split = itemKey?.split(separator: "--"), split.count == 3 {
 //                return MSI.shared.lightRepository?.getCharacteristic(

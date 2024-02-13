@@ -13,14 +13,14 @@ import BackgroundTasks
 
 class AsamStaticLocalDataSource: AsamLocalDataSource {
 
-    var asamList: [AsamModel] = []
+    var list: [AsamModel] = []
 
     func getNewestAsam() -> Marlin.AsamModel? {
-        asamList.isEmpty ? nil : asamList[0]
+        list.isEmpty ? nil : list[0]
     }
     
     func getAsam(reference: String?) -> Marlin.AsamModel? {
-        asamList.first { model in
+        list.first { model in
             model.reference == reference
         }
     }
@@ -29,7 +29,7 @@ class AsamStaticLocalDataSource: AsamLocalDataSource {
         guard let minLatitude = minLatitude, let maxLatitude = maxLatitude, let minLongitude = minLongitude, let maxLongitude = maxLongitude else {
             return []
         }
-        return asamList.filter { asam in
+        return list.filter { asam in
              minLatitude...maxLatitude ~= asam.latitude && minLongitude...maxLongitude ~= asam.longitude
         }
     }
@@ -40,15 +40,17 @@ class AsamStaticLocalDataSource: AsamLocalDataSource {
     }
     
     func getAsams(filters: [Marlin.DataSourceFilterParameter]?) async -> [Marlin.AsamModel] {
-        asamList
+        list
     }
     
     func getCount(filters: [Marlin.DataSourceFilterParameter]?) -> Int {
-        asamList.count
+        list.count
     }
     
     func insert(task: BGTask?, asams: [Marlin.AsamModel]) async -> Int {
-        0
+        NSLog("Insert asams \(asams.count)")
+        list.append(contentsOf: asams)
+        return asams.count
     }
     
     func batchImport(from propertiesList: [Marlin.AsamModel]) async throws -> Int {

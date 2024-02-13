@@ -19,17 +19,23 @@ struct DifferentialGPSStationListModel: Hashable, Identifiable {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 
-    let featureNumber: Int?
-    let volumeNumber: String?
-    let name: String?
-    let geopoliticalHeading: String?
-    let sectionHeader: String?
-    let stationID: String?
-    let remarks: String?
-    let latitude: Double
-    let longitude: Double
+    var featureNumber: Int?
+    var volumeNumber: String?
+    var name: String?
+    var geopoliticalHeading: String?
+    var sectionHeader: String?
+    var stationID: String?
+    var remarks: String?
+    var latitude: Double
+    var longitude: Double
 
     var canBookmark: Bool = false
+
+    init() {
+        self.canBookmark = false
+        self.latitude = kCLLocationCoordinate2DInvalid.latitude
+        self.longitude = kCLLocationCoordinate2DInvalid.longitude
+    }
 
     init(differentialGPSStation: DifferentialGPSStation) {
         self.canBookmark = true
@@ -165,30 +171,36 @@ struct DifferentialGPSStationModel:
     
     var differentialGPSStation: DifferentialGPSStation?
     
-    let aidType: String?
-    let deleteFlag: String?
-    let featureNumber: Int?
-    let frequency: Int?
-    let geopoliticalHeading: String?
-    let latitude: Double
-    let longitude: Double
-    let name: String?
-    let noticeNumber: Int?
-    let noticeWeek: String?
-    let noticeYear: String?
-    let position: String?
-    let postNote: String?
-    let precedingNote: String?
-    let range: Int?
-    let regionHeading: String?
-    let remarks: String?
-    let removeFromList: String?
-    let sectionHeader: String?
-    let stationID: String?
-    let transferRate: Int?
-    let volumeNumber: String?
-    let mgrs10km: String?
+    var aidType: String?
+    var deleteFlag: String?
+    var featureNumber: Int?
+    var frequency: Int?
+    var geopoliticalHeading: String?
+    var latitude: Double
+    var longitude: Double
+    var name: String?
+    var noticeNumber: Int?
+    var noticeWeek: String?
+    var noticeYear: String?
+    var position: String?
+    var postNote: String?
+    var precedingNote: String?
+    var range: Int?
+    var regionHeading: String?
+    var remarks: String?
+    var removeFromList: String?
+    var sectionHeader: String?
+    var stationID: String?
+    var transferRate: Int?
+    var volumeNumber: String?
+    var mgrs10km: String?
     
+    init() {
+        self.canBookmark = false
+        self.latitude = kCLLocationCoordinate2DInvalid.latitude
+        self.longitude = kCLLocationCoordinate2DInvalid.longitude
+    }
+
     init(differentialGPSStation: DifferentialGPSStation) {
         self.canBookmark = true
         self.differentialGPSStation = differentialGPSStation

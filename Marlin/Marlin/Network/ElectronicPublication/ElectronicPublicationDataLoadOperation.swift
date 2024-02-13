@@ -27,10 +27,6 @@ class ElectronicPublicationDataLoadOperation: CountingDataLoadOperation {
         if count != 0 {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(
-                    name: .DataSourceNeedsProcessed,
-                    object: DataSourceUpdatedNotification(key: DataSources.dgps.key)
-                )
-                NotificationCenter.default.post(
                     name: .DataSourceUpdated,
                     object: DataSourceUpdatedNotification(key: DataSources.dgps.key)
                 )

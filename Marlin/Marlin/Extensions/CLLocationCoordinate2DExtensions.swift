@@ -32,13 +32,13 @@ enum CoordinateDisplayType: Int, CustomStringConvertible {
             let formatter = NumberFormatter()
             formatter.maximumFractionDigits = 4
             return """
-                \(formatter.string(for: coordinate.latitude) ?? ""), \
-                \(formatter.string(for: coordinate.longitude) ?? "")
+            \(formatter.string(for: coordinate.latitude) ?? ""), \
+            \(formatter.string(for: coordinate.longitude) ?? "")
             """
         case .degreesMinutesSeconds:
             return """
-                \(CLLocationCoordinate2D.latitudeDMSString(coordinate: coordinate.latitude)), \
-                \(CLLocationCoordinate2D.longitudeDMSString(coordinate: coordinate.longitude))
+            \(CLLocationCoordinate2D.latitudeDMSString(coordinate: coordinate.latitude)), \
+            \(CLLocationCoordinate2D.longitudeDMSString(coordinate: coordinate.longitude))
             """
         case .gars:
             return GARS.from(coordinate).coordinate()
@@ -65,8 +65,8 @@ extension CLLocationCoordinate2D {
             return "\(formatter.string(for: self.latitude) ?? "")°, \(formatter.string(for: self.longitude) ?? "")°"
         case .degreesMinutesSeconds:
             return """
-                \(CLLocationCoordinate2D.latitudeDMSString(coordinate: self.latitude)), \
-                \(CLLocationCoordinate2D.longitudeDMSString(coordinate: self.longitude))
+            \(CLLocationCoordinate2D.latitudeDMSString(coordinate: self.latitude)), \
+            \(CLLocationCoordinate2D.longitudeDMSString(coordinate: self.longitude))
             """
         case .gars:
             return GARS.from(self).coordinate()

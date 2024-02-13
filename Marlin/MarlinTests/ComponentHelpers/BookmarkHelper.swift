@@ -20,17 +20,17 @@ class BookmarkHelper: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Bookmark")
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Bookmark")
 
-        let bookmark = repository?.getBookmark(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key ?? "")
+        let bookmark = repository?.getBookmark(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key )
 //        viewContext.performAndWait {
 //            let bookmark = viewContext.fetchFirst(Bookmark.self, key: "id", value: bookmarkable.itemKey ?? "")
             XCTAssertNotNil(bookmark)
-        let foundItem = repository?.getDataSourceItem(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key ?? "")
+        let foundItem = repository?.getDataSourceItem(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key )
             XCTAssertNotNil(foundItem)
 //            XCTAssertNotNil(foundItem?.bookmark)
 //            XCTAssertEqual(foundItem?.bookmark?.notes, "Bookmark notes")
 //        }
-        tester().waitForView(withAccessibilityLabel: "remove bookmark \(bookmarkable.itemKey ?? "")")
-        tester().tapView(withAccessibilityLabel: "remove bookmark \(bookmarkable.itemKey ?? "")")
+        tester().waitForView(withAccessibilityLabel: "remove bookmark \(bookmarkable.itemKey )")
+        tester().tapView(withAccessibilityLabel: "remove bookmark \(bookmarkable.itemKey )")
 
 //        viewContext.performAndWait {
         let removed = repository?.getBookmark(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key)

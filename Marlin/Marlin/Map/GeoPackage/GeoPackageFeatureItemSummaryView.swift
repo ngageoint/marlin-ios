@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct GeoPackageFeatureItemSummaryView: DataSourceSummaryView {
+    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+    
     var showMoreDetails: Bool = true
     
     var showTitle: Bool = false
@@ -32,9 +35,13 @@ struct GeoPackageFeatureItemSummaryView: DataSourceSummaryView {
             }
             Text(featureItem.layerName ?? "")
                 .overline()
-            bookmarkNotesView(featureItem)
+            bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
             DataSourceActionBar(data: featureItem, showMoreDetailsButton: true, showFocusButton: false)
         }
-        
+        .onAppear {
+            bookmarkViewModel.repository = bookmarkRepository
+            bookmarkViewModel.getBookmark(itemKey: featureItem.itemKey, dataSource: DataSources.geoPackage.key)
+        }
+
     }
 }

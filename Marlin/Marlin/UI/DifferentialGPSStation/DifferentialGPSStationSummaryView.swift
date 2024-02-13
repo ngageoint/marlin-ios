@@ -44,7 +44,7 @@ struct DifferentialGPSStationSummaryView: DataSourceSummaryView {
                     .secondary()
             }
             if differentialGPSStation.canBookmark {
-                bookmarkNotesView(differentialGPSStation)
+                bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
             }
 
             DataSourceActions(

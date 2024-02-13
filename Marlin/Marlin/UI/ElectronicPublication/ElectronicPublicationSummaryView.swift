@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ElectronicPublicationSummaryView: DataSourceSummaryView {
+    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+
     var showTitle: Bool = false
     
     var showSectionHeader: Bool = false
@@ -16,7 +19,7 @@ struct ElectronicPublicationSummaryView: DataSourceSummaryView {
 
     var electronicPublication: ElectronicPublication
     var showMoreDetails: Bool = false
-    
+
     var bcf: ByteCountFormatter {
         let bcf = ByteCountFormatter()
         bcf.allowedUnits = [.useAll]
@@ -34,8 +37,12 @@ struct ElectronicPublicationSummaryView: DataSourceSummaryView {
                 Text("Upload Time: \(uploadTime.formatted())")
                     .overline()
             }
-            bookmarkNotesView(electronicPublication)
+            bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
             ElectronicPublicationActionBar(electronicPublication: electronicPublication)
+        }
+        .onAppear {
+            bookmarkViewModel.repository = bookmarkRepository
+            bookmarkViewModel.getBookmark(itemKey: electronicPublication.itemKey, dataSource: DataSources.epub.key)
         }
     }
 }

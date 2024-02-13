@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Kingfisher
 
 class ModuInitialDataLoadOperation: CountingDataLoadOperation {
     var localDataSource: ModuLocalDataSource
@@ -23,15 +24,12 @@ class ModuInitialDataLoadOperation: CountingDataLoadOperation {
     }
 
     @MainActor override func finishLoad() {
+        Kingfisher.ImageCache(name: DataSources.modu.key).clearCache()
         self.state = .isFinished
         MSI.shared.appState.loadingDataSource[DataSources.modu.key] = false
         NotificationCenter.default.post(
             name: .DataSourceLoaded,
             object: DataSourceItem(dataSource: DataSources.modu)
-        )
-        NotificationCenter.default.post(
-            name: .DataSourceNeedsProcessed,
-            object: DataSourceUpdatedNotification(key: DataSources.modu.key)
         )
         NotificationCenter.default.post(
             name: .DataSourceUpdated,

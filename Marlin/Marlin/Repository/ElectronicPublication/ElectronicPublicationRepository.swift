@@ -80,10 +80,6 @@ class ElectronicPublicationRepository: ObservableObject {
             )
             if inserted != 0 {
                 NotificationCenter.default.post(
-                    name: .DataSourceNeedsProcessed,
-                    object: DataSourceUpdatedNotification(key: DataSources.epub.key)
-                )
-                NotificationCenter.default.post(
                     name: .DataSourceUpdated,
                     object: DataSourceUpdatedNotification(key: DataSources.epub.key)
                 )

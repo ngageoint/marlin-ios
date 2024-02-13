@@ -222,6 +222,7 @@ enum DataSources {
 
 extension DataSources {
     class AsamDefinition: DataSourceDefinition {
+        var filterable: Filterable? = AsamFilterable()
         var mappable: Bool = true
         var color: UIColor = .black
         var imageName: String? = "asam"
@@ -239,12 +240,11 @@ extension DataSources {
             UserDefaults.standard.lastSyncTimeSeconds(DataSources.asam)
         }
 
-        var filterable: AsamFilterable = AsamFilterable()
-
         fileprivate init() { }
     }
 
     class RouteDefinition: DataSourceDefinition {
+        var filterable: Filterable? = RouteFilterable()
         var mappable: Bool = true
         var color: UIColor = .black
         var imageName: String?
@@ -259,6 +259,7 @@ extension DataSources {
     }
 
     class ModuDefinition: DataSourceDefinition {
+        var filterable: Filterable? = ModuFilterable()
         var mappable: Bool = true
         var color: UIColor = UIColor(argbValue: 0xFF0042A4)
         var imageName: String? = "modu"
@@ -275,12 +276,11 @@ extension DataSources {
             && (Date().timeIntervalSince1970 - (60 * 60)) > UserDefaults.standard.lastSyncTimeSeconds(DataSources.modu)
         }
 
-        var filterable: ModuFilterable = ModuFilterable()
-
         fileprivate init() { }
     }
 
     class CommonDefinition: DataSourceDefinition {
+        var filterable: Filterable? = CommonFilterable()
         var mappable: Bool = false
         var color: UIColor = Color.primaryUIColor
         var imageName: String?
@@ -295,6 +295,7 @@ extension DataSources {
     }
 
     class NoticeToMarinersDefinition: DataSourceDefinition {
+        var filterable: Filterable? = NoticeToMarinersFilterable()
         var mappable: Bool = false
         var color: UIColor = UIColor.red
         var imageName: String?
@@ -311,12 +312,11 @@ extension DataSources {
             UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.definition)
         }
 
-        var filterable: NoticeToMarinersFilterable = NoticeToMarinersFilterable()
-
         fileprivate init() { }
     }
 
     class DFRSDefinition: DataSourceDefinition {
+        var filterable: Filterable?
         var mappable: Bool = true
         var color: UIColor = UIColor(argbValue: 0xFFFFB300)
         var imageName: String?
@@ -343,6 +343,7 @@ extension DataSources {
     }
 
     class DifferentialGPSStationDefinition: DataSourceDefinition {
+        var filterable: Filterable? = DifferentialGPSStationFilterable()
         var mappable: Bool = true
         var color: UIColor = UIColor(argbValue: 0xFF00E676)
         var imageName: String? = "dgps"
@@ -364,12 +365,11 @@ extension DataSources {
             UserDefaults.standard.lastSyncTimeSeconds(DataSources.dgps)
         }
 
-        var filterable: DifferentialGPSStationFilterable = DifferentialGPSStationFilterable()
-
         fileprivate init() { }
     }
 
     class ElectronicPublicationDefinition: DataSourceDefinition {
+        var filterable: Filterable? = ElectronicPublicationFilterable()
         var mappable: Bool = false
         var color: UIColor = UIColor(argbValue: 0xFF30B0C7)
         var imageName: String?
@@ -387,11 +387,11 @@ extension DataSources {
             UserDefaults.standard.lastSyncTimeSeconds(ElectronicPublication.definition)
         }
 
-        var filterable: ElectronicPublicationFilterable = ElectronicPublicationFilterable()
         fileprivate init() { }
     }
 
     class PortDefinition: DataSourceDefinition {
+        var filterable: Filterable? = PortFilterable()
         var mappable: Bool = true
         var color: UIColor = UIColor(argbValue: 0xFF5856d6)
         var imageName: String? = "port"
@@ -414,12 +414,11 @@ extension DataSources {
             return dateFormatter
         }
 
-        var filterable: PortFilterable = PortFilterable()
-
         fileprivate init() { }
     }
 
     class NavigationalWarningDefinition: DataSourceDefinition {
+        var filterable: Filterable? = NavigationalWarningFilterable()
         var mappable: Bool = true
         var color: UIColor = UIColor(argbValue: 0xFFD32F2F)
         var imageName: String?
@@ -437,11 +436,11 @@ extension DataSources {
             UserDefaults.standard.lastSyncTimeSeconds(NavigationalWarning.definition)
         }
 
-        var filterable: NavigationalWarningFilterable = NavigationalWarningFilterable()
         fileprivate init() { }
     }
 
     class LightDefinition: DataSourceDefinition {
+        var filterable: Filterable? = LightFilterable()
         var mappable: Bool = true
         var color: UIColor = UIColor(argbValue: 0xFFFFC500)
         var imageName: String?
@@ -461,12 +460,11 @@ extension DataSources {
             UserDefaults.standard.lastSyncTimeSeconds(DataSources.light)
         }
 
-        var filterable: LightFilterable = LightFilterable()
-
         fileprivate init() { }
     }
 
     class RadioBeaconDefinition: DataSourceDefinition {
+        var filterable: Filterable? = RadioBeaconFilterable()
         var mappable: Bool = true
         var color: UIColor = UIColor(argbValue: 0xFF007BFF)
         var imageName: String? = "settings_input_antenna"
@@ -487,12 +485,11 @@ extension DataSources {
             UserDefaults.standard.lastSyncTimeSeconds(DataSources.radioBeacon)
         }
 
-        var filterable: RadioBeaconFilterable = RadioBeaconFilterable()
-
         fileprivate init() { }
     }
 
     class BookmarkDefinition: DataSourceDefinition {
+        var filterable: Filterable?
         var mappable: Bool = false
         var color: UIColor = UIColor(argbValue: 0xFFFF9500)
         var imageName: String?
@@ -507,6 +504,7 @@ extension DataSources {
     }
 
     class ChartCorrectionDefinition: DataSourceDefinition {
+        var filterable: Filterable? = ChartCorrectionFilterable()
         var mappable: Bool = false
         var color: UIColor = UIColor.red
         var imageName: String?
@@ -522,6 +520,7 @@ extension DataSources {
     }
 
     class GeoPackageDefinition: DataSourceDefinition {
+        var filterable: Filterable?
         var mappable: Bool = true
         var color: UIColor = UIColor.brown
         var imageName: String?

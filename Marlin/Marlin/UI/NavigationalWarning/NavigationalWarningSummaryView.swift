@@ -9,6 +9,9 @@ import SwiftUI
 import MapKit
 
 struct NavigationalWarningSummaryView: DataSourceSummaryView {
+    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+    
     var showSectionHeader: Bool = false
     
     var showBookmarkNotes: Bool = false
@@ -30,12 +33,16 @@ struct NavigationalWarningSummaryView: DataSourceSummaryView {
                 .multilineTextAlignment(.leading)
                 .lineLimit(8)
                 .secondary()
-            bookmarkNotesView(navigationalWarning)
+            bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
             NavigationalWarningActionBar(
                 navigationalWarning: navigationalWarning,
                 showMoreDetails: showMoreDetails,
                 mapName: mapName
             )
+        }
+        .onAppear {
+            bookmarkViewModel.repository = bookmarkRepository
+            bookmarkViewModel.getBookmark(itemKey: navigationalWarning.itemKey, dataSource: DataSources.navWarning.key)
         }
     }
 }

@@ -479,7 +479,8 @@ class CoreDataPersistentStore: PersistentStore {
                 notif.userInfo?["inserted_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
                 let updates: Set<NSManagedObjectID> =
                 notif.userInfo?["updated_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
-
+                NSLog("Inserts: \(inserts)")
+                NSLog("Updates: \(updates)")
                 for insert in inserts {
                     let entityKey = entityMap[insert.entity.name]
                     insertCounts[entityKey] = (insertCounts[entityKey] ?? 0) + 1
@@ -492,13 +493,13 @@ class CoreDataPersistentStore: PersistentStore {
             }
             
             var dataSourceUpdatedNotifications: [DataSourceUpdatedNotification] = []
-            for dataSource in MSI.shared.mainDataList {
-                let inserts = insertCounts[dataSource.key] ?? 0
-                let updates = updateCounts[dataSource.key] ?? 0
+            for dataSource in DataSourceDefinitions.allCases {
+                let inserts = insertCounts[dataSource.definition.key] ?? 0
+                let updates = updateCounts[dataSource.definition.key] ?? 0
                 if inserts != 0 || updates != 0 {
                     dataSourceUpdatedNotifications.append(
                         DataSourceUpdatedNotification(
-                            key: dataSource.key,
+                            key: dataSource.definition.key,
                             updates: updates,
                             inserts: inserts))
                 }

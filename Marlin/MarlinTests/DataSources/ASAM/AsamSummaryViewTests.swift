@@ -11,18 +11,6 @@ import SwiftUI
 @testable import Marlin
 
 final class AsamSummaryViewTests: XCTestCase {
-    override func setUp() {
-        for dataSource in DataSourceDefinitions.allCases {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-    }
-    
-    override func tearDown() {
-    }
 
     func testLoading() {
         var asam = AsamModel()
@@ -39,7 +27,7 @@ final class AsamSummaryViewTests: XCTestCase {
         asam.canBookmark = true
 
         let localDataSource = AsamStaticLocalDataSource()
-        localDataSource.asamList = [asam]
+        localDataSource.list = [asam]
         let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
         let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
@@ -80,7 +68,7 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.victim = "Boat"
         
         let localDataSource = AsamStaticLocalDataSource()
-        localDataSource.asamList = [newItem]
+        localDataSource.list = [newItem]
         let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
         let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
@@ -119,7 +107,7 @@ final class AsamSummaryViewTests: XCTestCase {
         newItem.victim = nil
         
         let localDataSource = AsamStaticLocalDataSource()
-        localDataSource.asamList = [newItem]
+        localDataSource.list = [newItem]
         let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
         let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
@@ -159,7 +147,7 @@ final class AsamSummaryViewTests: XCTestCase {
         
         let router = MarlinRouter()
         let localDataSource = AsamStaticLocalDataSource()
-        localDataSource.asamList = [newItem]
+        localDataSource.list = [newItem]
         let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
         let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
@@ -196,7 +184,7 @@ final class AsamSummaryViewTests: XCTestCase {
         
         let router = MarlinRouter()
         let localDataSource = AsamStaticLocalDataSource()
-        localDataSource.asamList = [newItem]
+        localDataSource.list = [newItem]
         let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
         let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)

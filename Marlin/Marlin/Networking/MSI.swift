@@ -138,19 +138,6 @@ public class MSI {
     }()
     
     init() {
-        NotificationCenter.default.publisher(for: .DataSourceNeedsProcessed)
-            .receive(on: RunLoop.main)
-            .compactMap {
-                $0.object as? DataSourceUpdatedNotification
-            }
-            .sink { item in
-                let dataSource = self.mainDataList.first { type in
-                    item.key == type.key
-                }
-                dataSource?.postProcess()
-            }
-            .store(in: &cancellable)
-        
         NotificationCenter.default.publisher(for: .DataSourceProcessed)
             .receive(on: RunLoop.main)
             .compactMap {

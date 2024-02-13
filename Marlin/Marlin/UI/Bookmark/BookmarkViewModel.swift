@@ -51,14 +51,19 @@ class BookmarkViewModel: ObservableObject {
 
     @MainActor
     func updateBookmarked() {
-        self.isBookmarked = true
+        bookmark = repository?.getBookmark(itemKey: self.itemKey ?? "", dataSource: self.dataSource ?? "")
+        self.isBookmarked = bookmark != nil
+        self.bnotes = bookmark?.notes ?? ""
     }
 
     func removeBookmark() {
         guard let itemKey = itemKey, let dataSource = dataSource, let repository = repository else {
             return
         }
-        self.isBookmarked = repository.removeBookmark(itemKey: itemKey, dataSource: dataSource)
+        repository.removeBookmark(itemKey: itemKey, dataSource: dataSource)
+        Task {
+            await updateBookmarked()
+        }
 //        let viewContext = PersistenceController.current.viewContext
 //        viewContext.perform {
 //            let request = Bookmark.fetchRequest()
