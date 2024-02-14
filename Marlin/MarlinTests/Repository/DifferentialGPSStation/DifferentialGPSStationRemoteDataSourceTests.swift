@@ -18,7 +18,7 @@ final class DifferentialGPSStationRemoteDataSourceTests: XCTestCase {
         UserDefaults.registerMarlinDefaults()
     }
 
-    func testFetchAsamsWithoutTask() async {
+    func testFetchDifferentialGPSStationsWithoutTask() async {
         let dataSource = DifferentialGPSStationRemoteDataSource()
 
         stub(condition: isScheme("https") && pathEndsWith("/publications/ngalol/dgpsstations")) { request in

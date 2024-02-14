@@ -304,7 +304,7 @@ class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSou
         return count
     }
 
-    func insert(task: BGTask?, radioBeacons: [RadioBeaconModel]) async -> Int {
+    func insert(task: BGTask? = nil, radioBeacons: [RadioBeaconModel]) async -> Int {
         let count = radioBeacons.count
         NSLog("Received \(count) \(DataSources.radioBeacon.key) records.")
 

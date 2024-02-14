@@ -16,19 +16,22 @@ class BookmarkStaticRepository: BookmarkRepository {
     let lightRepository: LightRepository?
     let moduRepository: ModuRepository?
     let portRepository: PortRepository?
+    let radioBeaconRepository: RadioBeaconRepository?
 
     init(
         asamRepository: AsamRepository? = nil,
         dgpsRepository: DifferentialGPSStationRepository? = nil,
         lightRepository: LightRepository? = nil,
         moduRepository: ModuRepository? = nil,
-        portRepository: PortRepository? = nil
+        portRepository: PortRepository? = nil,
+        radioBeaconRepository: RadioBeaconRepository? = nil
     ) {
         self.asamRepository = asamRepository
         self.dgpsRepository = dgpsRepository
         self.lightRepository = lightRepository
         self.moduRepository = moduRepository
         self.portRepository = portRepository
+        self.radioBeaconRepository = radioBeaconRepository
     }
     func createBookmark(notes: String?, itemKey: String, dataSource: String) async {
         let model = BookmarkModel(dataSource: dataSource, id: itemKey, itemKey: itemKey, notes: notes, timestamp: Date())
@@ -82,13 +85,14 @@ class BookmarkStaticRepository: BookmarkRepository {
                     characteristicNumber: 1
                 )
             }
-//        case DataSources.radioBeacon.key:
-//            if let split = itemKey?.split(separator: "--"), split.count == 2 {
-//                return MSI.shared.radioBeaconRepository?.getRadioBeacon(
-//                    featureNumber: Int(split[0]) ?? -1,
-//                    volumeNumber: "\(split[1])"
-//                )
-//            }
+        case DataSources.radioBeacon.key:
+            let split = itemKey.split(separator: "--")
+            if split.count == 2 {
+                return radioBeaconRepository?.getRadioBeacon(
+                    featureNumber: Int(split[0]) ?? -1,
+                    volumeNumber: "\(split[1])"
+                )
+            }
 //        case ElectronicPublication.key:
 //            if let context = context {
 //                return ElectronicPublication.getItem(context: context, itemKey: self.id)

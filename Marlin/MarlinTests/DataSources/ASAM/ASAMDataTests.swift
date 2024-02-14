@@ -444,7 +444,6 @@ final class ASAMDataTests: XCTestCase {
     }
     
     func testDataRequest() {
-
         let request = AsamService.getAsams(date: nil)
         XCTAssertEqual(request.method, .get)
         let parameters = request.parameters

@@ -76,10 +76,18 @@ struct RadioBeaconDetailView: View {
         .navigationTitle("\(viewModel.radioBeacon?.name ?? DataSources.radioBeacon.fullName)" )
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: featureNumber) { newFeatureNumber in
-            viewModel.getRadioBeacon(featureNumber: newFeatureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+            viewModel.getRadioBeacon(
+                featureNumber: newFeatureNumber,
+                volumeNumber: volumeNumber,
+                waypointURI: waypointURI
+            )
         }
         .onChange(of: volumeNumber) { newVolumeNumber in
-            viewModel.getRadioBeacon(featureNumber: featureNumber, volumeNumber: newVolumeNumber, waypointURI: waypointURI)
+            viewModel.getRadioBeacon(
+                featureNumber: featureNumber,
+                volumeNumber: newVolumeNumber,
+                waypointURI: waypointURI
+            )
         }
         .onAppear {
             Metrics.shared.dataSourceDetail(dataSource: DataSources.radioBeacon)

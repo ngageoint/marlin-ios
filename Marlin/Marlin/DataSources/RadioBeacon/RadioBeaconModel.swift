@@ -183,30 +183,36 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
         try? container.encode(volumeNumber, forKey: .volumeNumber)
     }
     
-    let aidType: String?
-    let characteristic: String?
-    let deleteFlag: String?
-    let featureNumber: Int?
-    let frequency: String?
-    let geopoliticalHeading: String?
-    let latitude: Double
-    let longitude: Double
-    let name: String?
-    let noticeNumber: Int?
-    let noticeWeek: String?
-    let noticeYear: String?
-    let position: String?
-    let postNote: String?
-    let precedingNote: String?
-    let range: Int?
-    let regionHeading: String?
-    let removeFromList: String?
-    let sectionHeader: String?
-    let sequenceText: String?
-    let stationRemark: String?
-    let volumeNumber: String?
-    let mgrs10km: String?
-    
+    var aidType: String?
+    var characteristic: String?
+    var deleteFlag: String?
+    var featureNumber: Int?
+    var frequency: String?
+    var geopoliticalHeading: String?
+    var latitude: Double
+    var longitude: Double
+    var name: String?
+    var noticeNumber: Int?
+    var noticeWeek: String?
+    var noticeYear: String?
+    var position: String?
+    var postNote: String?
+    var precedingNote: String?
+    var range: Int?
+    var regionHeading: String?
+    var removeFromList: String?
+    var sectionHeader: String?
+    var sequenceText: String?
+    var stationRemark: String?
+    var volumeNumber: String?
+    var mgrs10km: String?
+
+    init() {
+        self.canBookmark = false
+        self.latitude = kCLLocationCoordinate2DInvalid.latitude
+        self.longitude = kCLLocationCoordinate2DInvalid.longitude
+    }
+
     init(radioBeacon: RadioBeacon) {
         canBookmark = true
         self.aidType = radioBeacon.aidType

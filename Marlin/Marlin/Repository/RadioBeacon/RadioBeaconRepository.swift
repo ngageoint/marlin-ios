@@ -62,7 +62,7 @@ class RadioBeaconRepository: ObservableObject {
 
     func fetchRadioBeacons() async -> [RadioBeaconModel] {
         NSLog("Fetching Radio Beacons")
-        DispatchQueue.main.async {
+        await MainActor.run {
             MSI.shared.appState.loadingDataSource[DataSources.radioBeacon.key] = true
             NotificationCenter.default.post(
                 name: .DataSourceLoading,
@@ -79,7 +79,7 @@ class RadioBeaconRepository: ObservableObject {
         )
         let inserted = await localDataSource.insert(task: nil, radioBeacons: radioBeacons)
 
-        DispatchQueue.main.async {
+        await MainActor.run {
             MSI.shared.appState.loadingDataSource[DataSources.radioBeacon.key] = false
             UserDefaults.standard.updateLastSyncTimeSeconds(DataSources.radioBeacon)
             NotificationCenter.default.post(
@@ -89,7 +89,7 @@ class RadioBeaconRepository: ObservableObject {
             if inserted != 0 {
                 NotificationCenter.default.post(
                     name: .DataSourceUpdated,
-                    object: DataSourceUpdatedNotification(key: DataSources.radioBeacon.key)
+                    object: DataSourceUpdatedNotification(key: DataSources.radioBeacon.key, inserts: inserted)
                 )
             }
         }

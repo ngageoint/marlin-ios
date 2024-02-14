@@ -351,7 +351,6 @@ final class DifferentialGPSStationDataTests: XCTestCase {
     }
     
     func testDataRequest() {
-
         let request = DifferentialGPSStationService.getDifferentialGPSStations(noticeYear: nil, noticeWeek: nil)
         XCTAssertEqual(request.method, .get)
         let parameters = request.parameters
@@ -437,7 +436,7 @@ final class DifferentialGPSStationDataTests: XCTestCase {
     }
     
     func testMapImage() {
-        let newItem = DifferentialGPSStation(context: persistentStore.viewContext)
+        var newItem = DifferentialGPSStationModel()
         newItem.volumeNumber = "PUB 112"
         newItem.aidType = "Differential GPS Stations"
         newItem.geopoliticalHeading = "KOREA"
@@ -462,7 +461,7 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         var imageSize: CGSize = .zero
         
         for i in 1...18 {
-            let image = DifferentialGPSStationImage(differentialGPSStation: DifferentialGPSStationModel(differentialGPSStation: newItem))
+            let image = DifferentialGPSStationImage(differentialGPSStation: newItem)
             let images = image.image(context: nil, zoom: i, tileBounds: MapBoundingBox(swCorner: (x:-10, y:-10), neCorner: (x: 10, y:10)), tileSize: 512.0)
             XCTAssertNotNil(images)
             XCTAssertEqual(images.count, 2)

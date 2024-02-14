@@ -188,6 +188,11 @@
 		F72478742B7D4F3B003D4118 /* PortRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478732B7D4F3B003D4118 /* PortRepositoryTests.swift */; };
 		F72478762B7D51CE003D4118 /* PortStaticLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478752B7D51CE003D4118 /* PortStaticLocalDataSource.swift */; };
 		F72478782B7D5392003D4118 /* PortStaticRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478772B7D5392003D4118 /* PortStaticRemoteDataSource.swift */; };
+		F724787C2B7D6610003D4118 /* RadioBeaconCoreDataDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F724787B2B7D6610003D4118 /* RadioBeaconCoreDataDataSourceTests.swift */; };
+		F724787E2B7D6D6A003D4118 /* RadioBeaconRemoteDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F724787D2B7D6D6A003D4118 /* RadioBeaconRemoteDataSourceTests.swift */; };
+		F72478802B7D70B2003D4118 /* RadioBeaconRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F724787F2B7D70B2003D4118 /* RadioBeaconRepositoryTests.swift */; };
+		F72478822B7D72A6003D4118 /* RadioBeaconStaticLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478812B7D72A6003D4118 /* RadioBeaconStaticLocalDataSource.swift */; };
+		F72478842B7D7522003D4118 /* RadioBeaconStaticRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478832B7D7522003D4118 /* RadioBeaconStaticRemoteDataSource.swift */; };
 		F7249AEB2AF4321A00961E65 /* AsamService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7249AEA2AF4321A00961E65 /* AsamService.swift */; };
 		F7249AED2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */; };
 		F726247E2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F726247D2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift */; };
@@ -802,6 +807,11 @@
 		F72478732B7D4F3B003D4118 /* PortRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortRepositoryTests.swift; sourceTree = "<group>"; };
 		F72478752B7D51CE003D4118 /* PortStaticLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortStaticLocalDataSource.swift; sourceTree = "<group>"; };
 		F72478772B7D5392003D4118 /* PortStaticRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortStaticRemoteDataSource.swift; sourceTree = "<group>"; };
+		F724787B2B7D6610003D4118 /* RadioBeaconCoreDataDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconCoreDataDataSourceTests.swift; sourceTree = "<group>"; };
+		F724787D2B7D6D6A003D4118 /* RadioBeaconRemoteDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconRemoteDataSourceTests.swift; sourceTree = "<group>"; };
+		F724787F2B7D70B2003D4118 /* RadioBeaconRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconRepositoryTests.swift; sourceTree = "<group>"; };
+		F72478812B7D72A6003D4118 /* RadioBeaconStaticLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconStaticLocalDataSource.swift; sourceTree = "<group>"; };
+		F72478832B7D7522003D4118 /* RadioBeaconStaticRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconStaticRemoteDataSource.swift; sourceTree = "<group>"; };
 		F7249AEA2AF4321A00961E65 /* AsamService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamService.swift; sourceTree = "<group>"; };
 		F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRemoteDataSourceTests.swift; sourceTree = "<group>"; };
 		F726247D2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamStaticRemoteDataSource.swift; sourceTree = "<group>"; };
@@ -1621,6 +1631,16 @@
 			path = Port;
 			sourceTree = "<group>";
 		};
+		F72478792B7D5F4E003D4118 /* RadioBeacon */ = {
+			isa = PBXGroup;
+			children = (
+				F724787B2B7D6610003D4118 /* RadioBeaconCoreDataDataSourceTests.swift */,
+				F724787D2B7D6D6A003D4118 /* RadioBeaconRemoteDataSourceTests.swift */,
+				F724787F2B7D70B2003D4118 /* RadioBeaconRepositoryTests.swift */,
+			);
+			path = RadioBeacon;
+			sourceTree = "<group>";
+		};
 		F7249AE62AF41D7D00961E65 /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -2219,6 +2239,8 @@
 				F724786C2B7D2C56003D4118 /* ModuStaticRemoteDataSource.swift */,
 				F72478752B7D51CE003D4118 /* PortStaticLocalDataSource.swift */,
 				F72478772B7D5392003D4118 /* PortStaticRemoteDataSource.swift */,
+				F72478812B7D72A6003D4118 /* RadioBeaconStaticLocalDataSource.swift */,
+				F72478832B7D7522003D4118 /* RadioBeaconStaticRemoteDataSource.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -2548,6 +2570,7 @@
 		F7CCDC832AF147FE00BF41F9 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				F72478792B7D5F4E003D4118 /* RadioBeacon */,
 				F724786E2B7D425B003D4118 /* Port */,
 				F72478632B7D0780003D4118 /* Modu */,
 				F72478582B7C0C66003D4118 /* Light */,
@@ -3332,12 +3355,14 @@
 				F715E31F2B78307C00752688 /* BookmarkStaticRepository.swift in Sources */,
 				F724785C2B7C1DBB003D4118 /* LightRemoteDataSourceTests.swift in Sources */,
 				F73ABC91295250D50085EDC5 /* SortViewModelTests.swift in Sources */,
+				F72478842B7D7522003D4118 /* RadioBeaconStaticRemoteDataSource.swift in Sources */,
 				F72478622B7C261D003D4118 /* LightStaticRemoteDataSource.swift in Sources */,
 				F75324B829807F04005C509F /* SubmitReportViewTests.swift in Sources */,
 				F76052BF29AD16AB00F13260 /* NoticeToMarinersSummaryViewTests.swift in Sources */,
 				F715E31D2B782AD200752688 /* AsamStaticLocalDataSource.swift in Sources */,
 				F7ABB60E299D883400BAD868 /* DateFilterTests.swift in Sources */,
 				F72478672B7D270F003D4118 /* ModuRemoteDataSourceTests.swift in Sources */,
+				F72478822B7D72A6003D4118 /* RadioBeaconStaticLocalDataSource.swift in Sources */,
 				F72281DA296F27D000218FC0 /* CurrentLocationTests.swift in Sources */,
 				F7C23E182911C7D50002A7DF /* ASAMDataTests.swift in Sources */,
 				F724785A2B7C0C78003D4118 /* LightCoreDataDataSourceTests.swift in Sources */,
@@ -3345,6 +3370,7 @@
 				F724785E2B7C20CE003D4118 /* LightRepositoryTests.swift in Sources */,
 				F7ABB608299D532800BAD868 /* NavigationalWarningAreaUnreadBadgeTests.swift in Sources */,
 				F73D9E1F29709A69008AF40D /* DifferentialGPSStationSummaryViewTests.swift in Sources */,
+				F724787C2B7D6610003D4118 /* RadioBeaconCoreDataDataSourceTests.swift in Sources */,
 				F75F81D529526E9C0062A708 /* AsamSummaryViewTests.swift in Sources */,
 				F7EFFECF2A8419CD0097E5EF /* BookmarkListTests.swift in Sources */,
 				F72E0F6C2A28D5160099BFFD /* LightSectorsTests.swift in Sources */,
@@ -3385,6 +3411,7 @@
 				F75324CB298BFFED005C509F /* MSIListViewTests.swift in Sources */,
 				F72478702B7D4274003D4118 /* PortCoreDataDataSourceTests.swift in Sources */,
 				F7EFFED32A85196F0097E5EF /* BookmarkSummaryViewTests.swift in Sources */,
+				F724787E2B7D6D6A003D4118 /* RadioBeaconRemoteDataSourceTests.swift in Sources */,
 				F75F81E42960B4D90062A708 /* StringFilterTests.swift in Sources */,
 				F7ABB604299C1ECE00BAD868 /* NavigationalWarningNavAreaListViewTests.swift in Sources */,
 				F76052BD29A96F5A00F13260 /* NoticeToMarinersFullNoticeViewTests.swift in Sources */,
@@ -3444,6 +3471,7 @@
 				F72EAAC6291C334200AC6026 /* ElectronicPublicationDataTests.swift in Sources */,
 				F7249AED2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift in Sources */,
 				F72281DF296F644600218FC0 /* DataSourceRailTests.swift in Sources */,
+				F72478802B7D70B2003D4118 /* RadioBeaconRepositoryTests.swift in Sources */,
 				F75F81D8295DE0EF0062A708 /* AboutCellTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
