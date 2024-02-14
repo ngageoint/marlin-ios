@@ -60,7 +60,7 @@ struct PortSummaryView: DataSourceSummaryView {
                 location: !showMoreDetails ? Actions.Location(latLng: port.coordinate) : nil,
                 zoom: !showMoreDetails ? PortActions.Zoom(latLng: port.coordinate, itemKey: port.id) : nil,
                 bookmark: port.canBookmark ? Actions.Bookmark(
-                    itemKey: port.id,
+                    itemKey: port.itemKey,
                     bookmarkViewModel: bookmarkViewModel
                 ) : nil,
                 share: port.itemTitle

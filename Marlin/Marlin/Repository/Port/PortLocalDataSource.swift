@@ -286,7 +286,7 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
     }
     // swiftlint:enable cyclomatic_complexity
 
-    func insert(task: BGTask?, ports: [PortModel]) async -> Int {
+    func insert(task: BGTask? = nil, ports: [PortModel]) async -> Int {
         let count = ports.count
         NSLog("Received \(count) \(DataSources.port.key) records.")
 

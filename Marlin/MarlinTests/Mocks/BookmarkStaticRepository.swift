@@ -13,33 +13,50 @@ class BookmarkStaticRepository: BookmarkRepository {
     var bookmarks: [String: BookmarkModel] = [:]
     let asamRepository: AsamRepository?
     let dgpsRepository: DifferentialGPSStationRepository?
+    let lightRepository: LightRepository?
+    let moduRepository: ModuRepository?
+    let portRepository: PortRepository?
 
-    init(asamRepository: AsamRepository? = nil, dgpsRepository: DifferentialGPSStationRepository? = nil) {
+    init(
+        asamRepository: AsamRepository? = nil,
+        dgpsRepository: DifferentialGPSStationRepository? = nil,
+        lightRepository: LightRepository? = nil,
+        moduRepository: ModuRepository? = nil,
+        portRepository: PortRepository? = nil
+    ) {
         self.asamRepository = asamRepository
         self.dgpsRepository = dgpsRepository
+        self.lightRepository = lightRepository
+        self.moduRepository = moduRepository
+        self.portRepository = portRepository
     }
     func createBookmark(notes: String?, itemKey: String, dataSource: String) async {
         let model = BookmarkModel(dataSource: dataSource, id: itemKey, itemKey: itemKey, notes: notes, timestamp: Date())
         bookmarks["\(dataSource)--\(itemKey)"] = model
+        NSLog("Create: Bookmarks is \(bookmarks)")
     }
     
     func getBookmark(itemKey: String, dataSource: String) -> Marlin.BookmarkModel? {
+        NSLog("Get: Bookmarks is \(bookmarks)")
+        NSLog("get the bookmark for \(dataSource)--\(itemKey)")
         return bookmarks["\(dataSource)--\(itemKey)"]
     }
 
     func removeBookmark(itemKey: String, dataSource: String) -> Bool {
+        NSLog("Remove: Bookmarks is \(bookmarks)")
         bookmarks["\(dataSource)--\(itemKey)"] = nil
         return true
     }
 
     func getDataSourceItem(itemKey: String, dataSource: String) -> (any Bookmarkable)? {
+        NSLog("GetDataSource Item: Bookmarks is \(bookmarks)")
         switch dataSource {
         case DataSources.asam.key:
             return asamRepository?.getAsam(reference: itemKey)
-//        case DataSources.modu.key:
-//            return MSI.shared.moduRepository?.getModu(name: self.id)
-//        case DataSources.port.key:
-//            return MSI.shared.portRepository?.getPort(portNumber: Int64(self.id ?? ""))
+        case DataSources.modu.key:
+            return moduRepository?.getModu(name: itemKey)
+        case DataSources.port.key:
+            return portRepository?.getPort(portNumber: Int64(itemKey))
 //        case NavigationalWarning.key:
 //            if let context = context {
 //                return NavigationalWarning.getItem(context: context, itemKey: self.id)
@@ -56,14 +73,15 @@ class BookmarkStaticRepository: BookmarkRepository {
                     volumeNumber: "\(split[1])"
                 )
             }
-//        case DataSources.light.key:
-//            if let split = itemKey?.split(separator: "--"), split.count == 3 {
-//                return MSI.shared.lightRepository?.getCharacteristic(
-//                    featureNumber: "\(split[0])",
-//                    volumeNumber: "\(split[1])",
-//                    characteristicNumber: 1
-//                )
-//            }
+        case DataSources.light.key:
+            let split = itemKey.split(separator: "--")
+            if split.count == 3 {
+                return lightRepository?.getCharacteristic(
+                    featureNumber: "\(split[0])",
+                    volumeNumber: "\(split[1])",
+                    characteristicNumber: 1
+                )
+            }
 //        case DataSources.radioBeacon.key:
 //            if let split = itemKey?.split(separator: "--"), split.count == 2 {
 //                return MSI.shared.radioBeaconRepository?.getRadioBeacon(

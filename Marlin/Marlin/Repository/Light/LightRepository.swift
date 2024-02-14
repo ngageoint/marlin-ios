@@ -33,11 +33,14 @@ class LightRepository: ObservableObject {
     func createOperations() -> [LightDataFetchOperation] {
         return Light.lightVolumes.map { lightVolume in
             let newestLight = localDataSource.getNewestLight(volumeNumber: lightVolume.volumeNumber)
-            let noticeWeek = Int(newestLight?.noticeWeek ?? "0") ?? 0
+            var noticeWeek: Int?
+            if let lightWeek = newestLight?.noticeWeek {
+                noticeWeek = Int(lightWeek)
+            }
             return LightDataFetchOperation(
                 volume: lightVolume.volumeQuery,
                 noticeYear: newestLight?.noticeYear,
-                noticeWeek: String(format: "%02d", noticeWeek + 1)
+                noticeWeek: noticeWeek != nil ? String(format: "%02d", noticeWeek! + 1) : nil
             )
         }
     }
@@ -82,7 +85,7 @@ class LightRepository: ObservableObject {
 
     func fetchLights() async -> [LightModel] {
         NSLog("Fetching Lights")
-        DispatchQueue.main.async {
+        await MainActor.run {
             MSI.shared.appState.loadingDataSource[DataSources.light.key] = true
             NotificationCenter.default.post(
                 name: .DataSourceLoading,
@@ -114,19 +117,18 @@ class LightRepository: ObservableObject {
             insertedLights.append(contentsOf: lights)
         }
 
-        DispatchQueue.main.async {
+        let inserted = insertedLights.count
+        await MainActor.run { [inserted] in
             MSI.shared.appState.loadingDataSource[DataSources.light.key] = false
             UserDefaults.standard.updateLastSyncTimeSeconds(DataSources.light)
             NotificationCenter.default.post(
                 name: .DataSourceLoaded,
                 object: DataSourceItem(dataSource: DataSources.light)
             )
-        }
-        if insertedLights.count != 0 {
-            DispatchQueue.main.async {
+            if inserted != 0 {
                 NotificationCenter.default.post(
                     name: .DataSourceUpdated,
-                    object: DataSourceUpdatedNotification(key: DataSources.asam.key)
+                    object: DataSourceUpdatedNotification(key: DataSources.light.key, inserts: inserted)
                 )
             }
         }
@@ -135,65 +137,3 @@ class LightRepository: ObservableObject {
     }
 
 }
-
-// protocol LightRepository {
-//    @discardableResult
-//    func getLights(featureNumber: String?, volumeNumber: String?, waypointURI: URL?) -> [LightModel]
-//    func getCount(filters: [DataSourceFilterParameter]?) -> Int
-// }
-//
-// class LightRepositoryManager: LightRepository, ObservableObject {
-//    private var repository: LightRepository
-//    init(repository: LightRepository) {
-//        self.repository = repository
-//    }
-//    func getLights(featureNumber: String?, volumeNumber: String?, waypointURI: URL?) -> [LightModel] {
-//        repository.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
-//    }
-//    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
-//        repository.getCount(filters: filters)
-//    }
-// }
-//
-// class LightCoreDataRepository: LightRepository, ObservableObject {
-//    private var context: NSManagedObjectContext
-//    
-//    required init(context: NSManagedObjectContext) {
-//        self.context = context
-//    }
-//    
-//    func getLights(featureNumber: String?, volumeNumber: String?, waypointURI: URL?) -> [LightModel] {
-//        if let waypointURI = waypointURI {
-//            if let id = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: waypointURI),
-//               let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
-//                let dataSource = waypoint.decodeToDataSource()
-//                if let dataSource = dataSource as? LightModel {
-//                    return [dataSource]
-//                }
-//            }
-//        }
-//        if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
-//            if let lights = try? context.fetchObjects(
-//                Light.self,
-//                predicate: NSPredicate(
-//                    format: "featureNumber = %@ AND volumeNumber = %@",
-//                    argumentArray: [featureNumber, volumeNumber]
-//                )
-//            ) {
-//                var models: [LightModel] = []
-//                for light in lights {
-//                    models.append(LightModel(light: light))
-//                }
-//                return models
-//            }
-//        }
-//        return []
-//    }
-//    
-//    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
-//        guard let fetchRequest = LightFilterable().fetchRequest(filters: filters, commonFilters: nil) else {
-//            return 0
-//        }
-//        return (try? context.count(for: fetchRequest)) ?? 0
-//    }
-// }

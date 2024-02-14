@@ -29,13 +29,14 @@ class LightDataFetchOperation: DataFetchOperation<LightModel> {
             noticeYear: noticeYear,
             noticeWeek: noticeWeek
         )
+        NSLog("Request for lights \(request.parameters)")
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
 
         return await withCheckedContinuation { continuation in
             MSI.shared.session.request(request)
                 .validate()
                 .responseDecodable(of: LightsPropertyContainer.self, queue: queue) { response in
-                    NSLog("Response differential GPS station count \(response.value?.ngalol.count ?? 0)")
+                    NSLog("Response light station count \(response.value?.ngalol.count ?? 0)")
                     continuation.resume(returning: response.value?.ngalol ?? [])
                 }
         }

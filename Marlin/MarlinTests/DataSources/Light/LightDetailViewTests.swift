@@ -12,129 +12,122 @@ import SwiftUI
 @testable import Marlin
 
 final class LightDetailViewTests: XCTestCase {
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    override func setUp(completion: @escaping (Error?) -> Void) {
-        for dataSource in DataSourceDefinitions.allCases {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        persistentStore.viewContext.performAndWait {
-            if let lights = persistentStore.viewContext.fetchAll(Light.self) {
-                for light in lights {
-                    persistentStore.viewContext.delete(light)
-                }
-            }
-        }
-        
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
-        
-    }
-    override func tearDown(completion: @escaping (Error?) -> Void) {
-        persistentStore.viewContext.performAndWait {
-            if let lights = persistentStore.viewContext.fetchAll(Light.self) {
-                for light in lights {
-                    persistentStore.viewContext.delete(light)
-                }
-            }
-        }
-        completion(nil)
-    }
-    
+
     func testLoading() {
-        XCTFail()
-//        var newItem: Light?
-//        persistentStore.viewContext.performAndWait {
-//            let light = Light(context: persistentStore.viewContext)
-//            
-//            light.characteristicNumber = 1
-//            light.volumeNumber = "PUB 110"
-//            light.featureNumber = "14840"
-//            light.noticeWeek = "06"
-//            light.noticeYear = "2015"
-//            light.latitude = 1.0
-//            light.longitude = 2.0
-//            light.remarks = "R. 120°-163°, W.-170°, G.-200°.\n"
-//            light.characteristic = "Fl.(2)W.R.G.\nperiod 6s \nfl. 1.0s, ec. 1.0s \nfl. 1.0s, ec. 3.0s \n"
-//            light.range = "W. 12 ; R. 9 ; G. 9"
-//            light.sectionHeader = "Section"
-//            light.structure = "Yellow pedestal, red band; 7.\n"
-//            light.name = "-Outer."
-//            
-//            newItem = light
-//            try? persistentStore.viewContext.save()
-//        }
-//        guard let newItem = newItem else {
-//            XCTFail()
-//            return
-//        }
-//        
-//        let repository = LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext))
-//        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-//        
-//        let detailView = newItem.detailView.environment(\.managedObjectContext, persistentStore.viewContext)
-//            .environmentObject(repository)
-//            .environmentObject(bookmarkRepository)
-//        
-//        let controller = UIHostingController(rootView: detailView)
-//        let window = TestHelpers.getKeyWindowVisible()
-//        window.rootViewController = controller
-//        tester().waitForView(withAccessibilityLabel: "14840  PUB 110")
-//        tester().waitForView(withAccessibilityLabel: "-Outer.")
-//        tester().waitForView(withAccessibilityLabel: "Section")
-//        tester().waitForView(withAccessibilityLabel: "Yellow pedestal, red band; 7.")
-//        tester().waitForView(withAccessibilityLabel: newItem.range)
-//        tester().waitForView(withAccessibilityLabel: newItem.remarks)
-//        tester().waitForView(withAccessibilityLabel: newItem.expandedCharacteristic)
-//        tester().waitForView(withAccessibilityLabel: "Light image")
-//        
-//        expectation(forNotification: .SnackbarNotification,
-//                    object: nil) { notification in
-//            let model = try? XCTUnwrap(notification.object as? SnackbarNotification)
-//            XCTAssertEqual(model?.snackbarModel?.message, "Location \(UserDefaults.standard.coordinateDisplay.format(coordinate: newItem.coordinate)) copied to clipboard")
-//            XCTAssertEqual(UIPasteboard.general.string, "\(UserDefaults.standard.coordinateDisplay.format(coordinate: newItem.coordinate))")
-//            return true
-//        }
-//        tester().tapView(withAccessibilityLabel: "Location")
-//        
-//        expectation(forNotification: .TabRequestFocus,
-//                    object: nil) { notification in
-//            return true
-//        }
-//        
-//        expectation(forNotification: .MapItemsTapped, object: nil) { notification in
-//            
-//            let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-//            let light = tapNotification.items as! [LightModel]
-//            XCTAssertEqual(light.count, 1)
-//            XCTAssertEqual(light[0].featureNumber, "14840")
-//            return true
-//        }
-//        tester().tapView(withAccessibilityLabel: "focus")
-//        
-//        waitForExpectations(timeout: 10, handler: nil)
-//        
-//        tester().waitForView(withAccessibilityLabel: "share")
-//        tester().tapView(withAccessibilityLabel: "share")
-//        
-//        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
-//        tester().tapView(withAccessibilityLabel: "dismiss popup")
-//        
-//        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
+        var light = LightModel()
+
+        light.characteristicNumber = 1
+        light.volumeNumber = "PUB 110"
+        light.featureNumber = "14840"
+        light.noticeWeek = "06"
+        light.noticeYear = "2015"
+        light.latitude = 1.0
+        light.longitude = 2.0
+        light.remarks = "R. 120°-163°, W.-170°, G.-200°.\n"
+        light.characteristic = "Fl.(2)W.R.G.\nperiod 6s \nfl. 1.0s, ec. 1.0s \nfl. 1.0s, ec. 3.0s \n"
+        light.range = "W. 12 ; R. 9 ; G. 9"
+        light.sectionHeader = "Section"
+        light.structure = "Yellow pedestal, red band; 7.\n"
+        light.name = "-Outer."
+
+        let localDataSource = LightStaticLocalDataSource()
+        localDataSource.list = [light]
+        let repository = LightRepository(localDataSource: localDataSource, remoteDataSource: LightRemoteDataSource())
+        let bookmarkStaticRepository = BookmarkStaticRepository(lightRepository: repository)
+        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+
+        let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
+
+        let detailView = LightDetailView(featureNumber: light.featureNumber!, volumeNumber: light.volumeNumber!)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
+            .environmentObject(routeWaypointRepository)
+
+        let controller = UIHostingController(rootView: detailView)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        tester().waitForView(withAccessibilityLabel: "14840  PUB 110")
+        tester().waitForView(withAccessibilityLabel: "-Outer.")
+        tester().waitForView(withAccessibilityLabel: "Section")
+        tester().waitForView(withAccessibilityLabel: "Yellow pedestal, red band; 7.")
+        tester().waitForView(withAccessibilityLabel: light.range)
+        tester().waitForView(withAccessibilityLabel: light.remarks)
+        tester().waitForView(withAccessibilityLabel: light.expandedCharacteristic)
+        tester().waitForView(withAccessibilityLabel: "Light image")
+
     }
-    
+
+    func xtestTapButtons() {
+        var light = LightModel()
+
+        light.characteristicNumber = 1
+        light.volumeNumber = "PUB 110"
+        light.featureNumber = "14840"
+        light.noticeWeek = "06"
+        light.noticeYear = "2015"
+        light.latitude = 1.0
+        light.longitude = 2.0
+        light.remarks = "R. 120°-163°, W.-170°, G.-200°.\n"
+        light.characteristic = "Fl.(2)W.R.G.\nperiod 6s \nfl. 1.0s, ec. 1.0s \nfl. 1.0s, ec. 3.0s \n"
+        light.range = "W. 12 ; R. 9 ; G. 9"
+        light.sectionHeader = "Section"
+        light.structure = "Yellow pedestal, red band; 7.\n"
+        light.name = "-Outer."
+
+        let localDataSource = LightStaticLocalDataSource()
+        localDataSource.list = [light]
+        let repository = LightRepository(localDataSource: localDataSource, remoteDataSource: LightRemoteDataSource())
+        let bookmarkStaticRepository = BookmarkStaticRepository(lightRepository: repository)
+        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+
+        let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
+
+        let detailView = LightDetailView(featureNumber: light.featureNumber!, volumeNumber: light.volumeNumber!)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
+            .environmentObject(routeWaypointRepository)
+
+        let controller = UIHostingController(rootView: detailView)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        // TODO: this is untestable b/c KIF thinks the button can become first responder so it fails to tap
+        expectation(forNotification: .SnackbarNotification,
+                    object: nil) { notification in
+            print("Notification \(notification)")
+            return true
+        }
+
+        tester().tapView(withAccessibilityLabel: "Location")
+        waitForExpectations(timeout: 10, handler: nil)
+
+        expectation(forNotification: .TabRequestFocus,
+                    object: nil) { notification in
+            return true
+        }
+        
+        expectation(forNotification: .MapItemsTapped, object: nil) { notification in
+            let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
+            let lightKeys = tapNotification.itemKeys!
+
+            let lights = lightKeys[DataSources.light.key]!
+
+            XCTAssertEqual(lights.count, 1)
+            XCTAssertEqual(lights[0], light.itemKey)
+            return true
+        }
+        tester().tapView(withAccessibilityLabel: "focus")
+        
+        waitForExpectations(timeout: 10, handler: nil)
+        
+        tester().waitForView(withAccessibilityLabel: "share")
+        tester().tapView(withAccessibilityLabel: "share")
+        
+        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
+        tester().tapView(withAccessibilityLabel: "dismiss popup")
+        
+        BookmarkHelper().verifyBookmarkButton(bookmarkable: light)
+    }
+
 //    func testLoadingWithColors() {
 //        var newItem: Light?
 //        persistentStore.viewContext.performAndWait {

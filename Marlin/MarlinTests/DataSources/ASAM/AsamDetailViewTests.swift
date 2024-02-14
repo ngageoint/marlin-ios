@@ -16,10 +16,9 @@ final class AsamDetailViewTests: XCTestCase {
         Task.init {
             await TestHelpers.asyncGetKeyWindowVisible()
         }
-        for dataSource in DataSourceDefinitions.allCases {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
-        }
+        UserDefaults.standard.initialDataLoaded = false
+        UserDefaults.standard.clearLastSyncTimeSeconds(DataSources.asam)
+
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")

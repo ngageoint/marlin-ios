@@ -62,7 +62,7 @@ class RemoteDataSource<T> {
             self.operation?.cancel()
         }
 
-        NSLog("Start the operation to fetch Asams")
+        NSLog("Start the operation to fetch new data \(operation)")
         // Start the operation.
         self.backgroundFetchQueue.addOperation(operation)
 

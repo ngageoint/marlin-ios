@@ -35,6 +35,11 @@ class ModuRepository: ObservableObject {
         self.remoteDataSource = remoteDataSource
     }
 
+    func createOperation() -> ModuDataFetchOperation {
+        let newestModu = localDataSource.getNewestModu()
+        return ModuDataFetchOperation(dateString: newestModu?.dateString)
+    }
+
     func getModu(name: String?) -> ModuModel? {
         localDataSource.getModu(name: name)
     }
@@ -60,7 +65,10 @@ class ModuRepository: ObservableObject {
         NSLog("Fetching MODUs")
         DispatchQueue.main.async {
             MSI.shared.appState.loadingDataSource[DataSources.modu.key] = true
-            NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.modu))
+            NotificationCenter.default.post(
+                name: .DataSourceLoading,
+                object: DataSourceItem(dataSource: DataSources.modu)
+            )
         }
 
         let newestModu = localDataSource.getNewestModu()
@@ -71,7 +79,10 @@ class ModuRepository: ObservableObject {
         DispatchQueue.main.async {
             MSI.shared.appState.loadingDataSource[DataSources.modu.key] = false
             UserDefaults.standard.updateLastSyncTimeSeconds(DataSources.modu)
-            NotificationCenter.default.post(name: .DataSourceLoaded, object: DataSourceItem(dataSource: DataSources.modu))
+            NotificationCenter.default.post(
+                name: .DataSourceLoaded,
+                object: DataSourceItem(dataSource: DataSources.modu)
+            )
             if inserted != 0 {
                 NotificationCenter.default.post(
                     name: .DataSourceUpdated,

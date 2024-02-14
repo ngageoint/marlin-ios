@@ -460,10 +460,13 @@ extension LightCoreDataDataSource {
         //        imageCache.clearCache()
         let fetchRequest = NSFetchRequest<Light>(entityName: "Light")
         fetchRequest.predicate = NSPredicate(format: "requiresPostProcessing == true")
+        let context = PersistenceController.current.newTaskContext()
         await context.perform {
-            if let objects = try? self.context.fetch(fetchRequest) {
+            if let objects = try? context.fetch(fetchRequest) {
                 if !objects.isEmpty {
+                    NSLog("there are \(objects.count) lights to process")
                     for light in objects {
+                        NSLog("light \(light)")
                         var ranges: [LightRange] = []
                         light.requiresPostProcessing = false
                         if let rangeString = light.range {
@@ -474,7 +477,7 @@ extension LightCoreDataDataSource {
                                     .trimmingCharacters(in: .whitespacesAndNewlines)
                                     .components(separatedBy: ". ")
                                 if colorSplit.count == 2, let doubleRange = Double(colorSplit[1]) {
-                                    let lightRange = LightRange(context: self.context)
+                                    let lightRange = LightRange(context: context)
                                     lightRange.light = light
                                     lightRange.color = colorSplit[0]
                                     lightRange.range = doubleRange
@@ -483,11 +486,13 @@ extension LightCoreDataDataSource {
                                 }
                             }
                         }
+                        NSLog("appending ranges \(ranges)")
                         light.lightRange = NSSet(array: ranges)
+                        NSLog("Light range is \(light.lightRange)")
                     }
                 }
             }
-            try? self.context.save()
+            try? context.save()
         }
         NotificationCenter.default.post(
             Notification(name: .DataSourceProcessed, object: DataSourceUpdatedNotification(key: DataSources.light.key))

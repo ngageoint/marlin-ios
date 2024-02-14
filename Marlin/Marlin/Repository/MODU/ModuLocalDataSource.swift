@@ -209,25 +209,7 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
         // TODO: this should probably execute on a different context and be a perform
         context.performAndWait {
             let fetchRequest = Modu.fetchRequest()
-            var predicates: [NSPredicate] = []
-
-            if let filters = filters {
-                for filter in filters {
-                    let predicate = filter.toPredicate(
-                        boundsPredicateBuilder: { bounds in
-                            return NSPredicate(
-                                format: "latitude >= %lf AND latitude <= %lf AND longitude >= %lf AND longitude <= %lf",
-                                bounds.swCorner.y,
-                                bounds.neCorner.y,
-                                bounds.swCorner.x,
-                                bounds.swCorner.y
-                            )
-                        })
-                    if let predicate = predicate {
-                        predicates.append(predicate)
-                    }
-                }
-            }
+            var predicates: [NSPredicate] = buildPredicates(filters: filters)
 
             if let minLatitude = minLatitude,
                let maxLatitude = maxLatitude,

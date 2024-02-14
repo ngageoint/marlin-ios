@@ -35,8 +35,9 @@ class AsamStaticLocalDataSource: AsamLocalDataSource {
     }
     
     func asams(filters: [Marlin.DataSourceFilterParameter]?, paginatedBy paginator: Marlin.Trigger.Signal?) -> AnyPublisher<[Marlin.AsamItem], Error> {
-        AnyPublisher(Just([]).setFailureType(to: Error.self))
-
+        AnyPublisher(Just(list.map({ model in
+            AsamItem.listItem(AsamListModel(asamModel:model))
+        })).setFailureType(to: Error.self))
     }
     
     func getAsams(filters: [Marlin.DataSourceFilterParameter]?) async -> [Marlin.AsamModel] {
@@ -54,7 +55,8 @@ class AsamStaticLocalDataSource: AsamLocalDataSource {
     }
     
     func batchImport(from propertiesList: [Marlin.AsamModel]) async throws -> Int {
-        0
+        list.append(contentsOf: propertiesList)
+        return propertiesList.count
     }
     
 

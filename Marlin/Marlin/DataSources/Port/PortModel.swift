@@ -207,7 +207,8 @@ struct PortModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
     var unloCode: String?
     var usRep: String?
     var vesselTrafficService: String?
-    
+    var globalId: String?
+
     func isEqualTo(_ other: PortModel) -> Bool {
         return self.port == other.port
     }
@@ -347,6 +348,7 @@ struct PortModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
         try? container.encode(unloCode, forKey: .unloCode)
         try? container.encode(usRep, forKey: .usRep)
         try? container.encode(vesselTrafficService, forKey: .vesselTrafficService)
+        try? container.encode(globalId, forKey: .globalId)
     }
     // swiftlint:enable function_body_length
 
@@ -511,11 +513,19 @@ struct PortModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
         self.unloCode = try? values.decode(String.self, forKey: .unloCode)
         self.usRep = try? values.decode(String.self, forKey: .usRep)
         self.vesselTrafficService = try? values.decode(String.self, forKey: .vesselTrafficService)
-        
+        self.globalId = try? values.decode(String.self, forKey: .globalId)
+
         let mgrsPosition = MGRS.from(longitude, latitude)
         self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
     }
     // swiftlint:enable function_body_length
+
+    init(portNumber: Int) {
+        self.portNumber = portNumber
+        self.canBookmark = false
+        self.latitude = kCLLocationCoordinate2DInvalid.latitude
+        self.longitude = kCLLocationCoordinate2DInvalid.longitude
+    }
 
     // disable this data model has a lot of properties
     // swiftlint:disable function_body_length
@@ -633,6 +643,7 @@ struct PortModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
         self.unloCode = port.unloCode
         self.usRep = port.usRep
         self.vesselTrafficService = port.vesselTrafficService
+        self.globalId = port.globalId
     }
     // swiftlint:enable function_body_length
 
@@ -931,7 +942,8 @@ struct PortModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
             "ukcMgmtSystem": ukcMgmtSystem,
             "unloCode": unloCode,
             "usRep": usRep,
-            "vesselTrafficService": vesselTrafficService
+            "vesselTrafficService": vesselTrafficService,
+            "globalId": globalId
         ]
     }
     
@@ -967,6 +979,7 @@ struct PortModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
         case etaMessage
         case firstPortOfEntry
         case garbageDisposal
+        case globalId
         case goodHoldingGround
         case harborSize
         case harborType

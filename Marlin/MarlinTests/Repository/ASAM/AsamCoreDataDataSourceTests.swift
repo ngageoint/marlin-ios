@@ -25,10 +25,8 @@ final class AsamCoreDataDataSourceTests: XCTestCase {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
         UserDefaults.registerMarlinDefaults()
         UserDefaults.standard.setSort(DataSources.asam.key, sort: DataSources.asam.filterable!.defaultSort)
-        for dataSource in DataSourceDefinitions.allCases {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
-        }
+        UserDefaults.standard.initialDataLoaded = false
+        UserDefaults.standard.clearLastSyncTimeSeconds(DataSources.asam)
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
@@ -306,7 +304,7 @@ final class AsamCoreDataDataSourceTests: XCTestCase {
 
         let expecation1 = expectation(for: state.rows.count == 1)
 
-        await fulfillment(of: [expecation1])
+        await fulfillment(of: [expecation1], timeout: 5)
 
         NSLog("Insert a new one")
         var newItem2: Asam?
@@ -329,7 +327,7 @@ final class AsamCoreDataDataSourceTests: XCTestCase {
         trigger.activate(for: TriggerId.reload)
         let expecation2 = expectation(for: state.rows.count == 2)
 
-        await fulfillment(of: [expecation2])
+        await fulfillment(of: [expecation2], timeout: 5)
     }
 
     func testPublisherWithSectionHeader() async {
@@ -411,7 +409,7 @@ final class AsamCoreDataDataSourceTests: XCTestCase {
 
         let expecation1 = expectation(for: state.rows.count == 2)
 
-        await fulfillment(of: [expecation1])
+        await fulfillment(of: [expecation1], timeout: 5)
 
         let item = state.rows[0]
         switch item {
@@ -449,7 +447,7 @@ final class AsamCoreDataDataSourceTests: XCTestCase {
         trigger.activate(for: TriggerId.reload)
         let expecation2 = expectation(for: state.rows.count == 4)
 
-        await fulfillment(of: [expecation2])
+        await fulfillment(of: [expecation2], timeout: 5)
 
         let itema = state.rows[0]
         switch itema {

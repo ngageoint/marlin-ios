@@ -173,7 +173,13 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
     static func == (lhs: ModuModel, rhs: ModuModel) -> Bool {
         lhs.isEqualTo(rhs)
     }
-    
+
+    init() {
+        self.canBookmark = false
+        self.latitude = kCLLocationCoordinate2DInvalid.latitude
+        self.longitude = kCLLocationCoordinate2DInvalid.longitude
+    }
+
     init(modu: Modu) {
         self.modu = modu
         self.canBookmark = true

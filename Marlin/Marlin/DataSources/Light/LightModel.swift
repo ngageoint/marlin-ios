@@ -76,6 +76,16 @@ extension LightListModel: Bookmarkable {
     }
 }
 
+struct LightRangeModel: Hashable {
+    var color: String?
+    var range: Double?
+
+    init(range: LightRange) {
+        self.color = range.color
+        self.range = range.range
+    }
+}
+
 // this is being refactored soon so disable this check
 // swiftlint:disable type_body_length
 // swiftlint:disable file_length
@@ -147,7 +157,8 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible, Ha
     var subregionHeading: String?
     var volumeNumber: String?
     var requiresPostProcessing: Bool?
-    
+    var lightRange: Set<LightRangeModel>?
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try? container.encode(aidType, forKey: .aidType)
@@ -179,7 +190,13 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible, Ha
         try? container.encode(position, forKey: .position)
         try? container.encode(volumeNumber, forKey: .volumeNumber)
     }
-    
+
+    init() {
+        self.canBookmark = false
+        self.latitude = kCLLocationCoordinate2DInvalid.latitude
+        self.longitude = kCLLocationCoordinate2DInvalid.longitude
+    }
+
     init(light: Light) {
         self.light = light
         self.canBookmark = true
@@ -212,6 +229,13 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible, Ha
         self.subregionHeading = light.subregionHeading
         self.volumeNumber = light.volumeNumber
         self.requiresPostProcessing = light.requiresPostProcessing
+        let ranges: [LightRangeModel] = light.lightRange?.compactMap({ range in
+            if let range = range as? LightRange {
+                return LightRangeModel(range: range)
+            }
+            return nil
+        }) ?? []
+        self.lightRange = Set<LightRangeModel>(ranges)
     }
     
     init?(feature: Feature) {

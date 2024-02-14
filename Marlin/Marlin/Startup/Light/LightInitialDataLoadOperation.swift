@@ -24,8 +24,6 @@ class LightInitialDataLoadOperation: CountingDataLoadOperation {
 
     @MainActor override func finishLoad() {
         Task {
-            await localDataSource.postProcess()
-
             NotificationCenter.default.post(
                 name: .DataSourceLoaded,
                 object: DataSourceItem(dataSource: DataSources.light)

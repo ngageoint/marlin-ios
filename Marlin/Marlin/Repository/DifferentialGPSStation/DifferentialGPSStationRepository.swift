@@ -87,7 +87,7 @@ class DifferentialGPSStationRepository: ObservableObject {
         let dgpss = await remoteDataSource.fetch(noticeYear: noticeYear, noticeWeek: noticeWeek)
         let inserted = await localDataSource.insert(task: nil, dgpss: dgpss)
 
-        DispatchQueue.main.async {
+        await MainActor.run {
             MSI.shared.appState.loadingDataSource[DataSources.dgps.key] = false
             UserDefaults.standard.updateLastSyncTimeSeconds(DataSources.dgps)
             NotificationCenter.default.post(
@@ -97,7 +97,7 @@ class DifferentialGPSStationRepository: ObservableObject {
             if inserted != 0 {
                 NotificationCenter.default.post(
                     name: .DataSourceUpdated,
-                    object: DataSourceUpdatedNotification(key: DataSources.dgps.key)
+                    object: DataSourceUpdatedNotification(key: DataSources.dgps.key, inserts: inserted)
                 )
             }
         }

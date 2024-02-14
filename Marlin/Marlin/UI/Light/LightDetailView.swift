@@ -52,9 +52,9 @@ struct LightDetailView: View {
                                 
                                 Group {
                                     Text("""
-                                        \(firstLight.featureNumber ?? "") \
-                                        \(firstLight.internationalFeature ?? "") \
-                                        \(firstLight.volumeNumber ?? "")
+                                    \(firstLight.featureNumber ?? "") \
+                                    \(firstLight.internationalFeature ?? "") \
+                                    \(firstLight.volumeNumber ?? "")
                                     """)
                                     .overline()
                                     if let sectionHeader = firstLight.sectionHeader {

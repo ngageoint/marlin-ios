@@ -46,7 +46,8 @@ struct ModuSummaryView: DataSourceSummaryView {
                 bookmark: modu.canBookmark ? Actions.Bookmark(
                     itemKey: modu.id,
                     bookmarkViewModel: bookmarkViewModel
-                ) : nil
+                ) : nil,
+                share: modu.itemTitle
             )
         }
         .onAppear {

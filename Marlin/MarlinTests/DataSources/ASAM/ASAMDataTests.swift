@@ -21,10 +21,8 @@ final class ASAMDataTests: XCTestCase {
     override func setUp(completion: @escaping (Error?) -> Void) {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
         UserDefaults.registerMarlinDefaults()
-        for dataSource in DataSourceDefinitions.allCases {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
-        }
+        UserDefaults.standard.initialDataLoaded = false
+        UserDefaults.standard.clearLastSyncTimeSeconds(DataSources.asam)
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
@@ -493,7 +491,7 @@ final class ASAMDataTests: XCTestCase {
     }
     
     func testMapImage() {
-        let newItem = Asam(context: persistentStore.viewContext)
+        var newItem = AsamModel()
         newItem.asamDescription = "description"
         newItem.longitude = 1.0
         newItem.latitude = 1.0
@@ -509,7 +507,7 @@ final class ASAMDataTests: XCTestCase {
         var imageSize: CGSize = .zero
         
         for i in 1...18 {
-            let image = AsamImage(asam: AsamModel(asam: newItem))
+            let image = AsamImage(asam: newItem)
             let images = image.image(context: nil, zoom: i, tileBounds: MapBoundingBox(swCorner: (x:-10, y:-10), neCorner: (x: 10, y:10)), tileSize: 512.0)
             XCTAssertNotNil(images)
             XCTAssertEqual(images.count, 2)
