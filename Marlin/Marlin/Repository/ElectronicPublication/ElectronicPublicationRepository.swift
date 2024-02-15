@@ -51,16 +51,16 @@ class ElectronicPublicationRepository: ObservableObject {
         localDataSource.sectionHeaders(filters: filters, paginatedBy: paginator)
     }
 
-//    func epubs(
-//        filters: [DataSourceFilterParameter]?,
-//        paginatedBy paginator: Trigger.Signal? = nil
-//    ) -> AnyPublisher<[ElectronicPublicationItem], Error> {
-//        localDataSource.epubs(filters: filters, paginatedBy: paginator)
-//    }
+    func epubs(
+        filters: [DataSourceFilterParameter]?,
+        paginatedBy paginator: Trigger.Signal? = nil
+    ) -> AnyPublisher<[ElectronicPublicationItem], Error> {
+        localDataSource.epubs(filters: filters, paginatedBy: paginator)
+    }
 
     func fetch() async -> [ElectronicPublicationModel] {
         NSLog("Fetching Electronic Publications")
-        DispatchQueue.main.async {
+        await MainActor.run {
             MSI.shared.appState.loadingDataSource[DataSources.epub.key] = true
             NotificationCenter.default.post(
                 name: .DataSourceLoading,
@@ -71,7 +71,7 @@ class ElectronicPublicationRepository: ObservableObject {
         let epubs = await remoteDataSource.fetch()
         let inserted = await localDataSource.insert(task: nil, epubs: epubs)
 
-        DispatchQueue.main.async {
+        await MainActor.run {
             MSI.shared.appState.loadingDataSource[DataSources.epub.key] = false
             UserDefaults.standard.updateLastSyncTimeSeconds(DataSources.epub)
             NotificationCenter.default.post(
@@ -81,7 +81,7 @@ class ElectronicPublicationRepository: ObservableObject {
             if inserted != 0 {
                 NotificationCenter.default.post(
                     name: .DataSourceUpdated,
-                    object: DataSourceUpdatedNotification(key: DataSources.epub.key)
+                    object: DataSourceUpdatedNotification(key: DataSources.epub.key, inserts: inserted)
                 )
             }
         }

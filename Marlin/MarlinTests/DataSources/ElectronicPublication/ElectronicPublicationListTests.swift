@@ -69,6 +69,7 @@ final class ElectronicPublicationListTests: XCTestCase {
     }
     
     func testOneSectionList() throws {
+        XCTFail()
         stub(condition: isScheme("https") && pathEndsWith("/publications/stored-pubs")) { request in
             return HTTPStubsResponse(
                 fileAtPath: OHPathForFile("fullEpubList.json", type(of: self))!,
@@ -97,7 +98,7 @@ final class ElectronicPublicationListTests: XCTestCase {
             return true
         }
 
-        MSI.shared.loadData(type: ElectronicPublication.decodableRoot, dataType: ElectronicPublication.self)
+//        MSI.shared.loadData(type: ElectronicPublication.decodableRoot, dataType: ElectronicPublication.self)
         
         waitForExpectations(timeout: 10, handler: nil)
         

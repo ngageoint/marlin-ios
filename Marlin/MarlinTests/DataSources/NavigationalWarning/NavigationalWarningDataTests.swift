@@ -20,13 +20,16 @@ final class NavigationalWarningDataTests: XCTestCase {
         .receive(on: RunLoop.main)
     
     override func setUp(completion: @escaping (Error?) -> Void) {
-        for dataSource in DataSourceDefinitions.allCases {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
-        }
+        UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+        UserDefaults.registerMarlinDefaults()
+
+        UserDefaults.standard.initialDataLoaded = false
+        UserDefaults.standard.clearLastSyncTimeSeconds(DataSources.navWarning)
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
+
+        UserDefaults.standard.setFilter(DataSources.navWarning.key, filter: [])
+        UserDefaults.standard.setSort(DataSources.navWarning.key, sort: DataSources.navWarning.filterable!.defaultSort)
         persistentStoreLoadedPub
             .removeDuplicates()
             .sink { output in
@@ -37,10 +40,11 @@ final class NavigationalWarningDataTests: XCTestCase {
     }
     
     override func tearDown() {
+        HTTPStubs.removeAllStubs()
     }
     
-    func testLoadData() throws {
-        
+    func testLoadData() async throws {
+
         stub(condition: isScheme("https") && pathEndsWith("/publications/broadcast-warn")) { request in
             return HTTPStubsResponse(
                 fileAtPath: OHPathForFile("navwarnMockData.json", type(of: self))!,
@@ -49,44 +53,59 @@ final class NavigationalWarningDataTests: XCTestCase {
             )
         }
         
-        expectation(forNotification: .DataSourceLoading,
-                    object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
+        let loadingNotification = expectation(forNotification: .DataSourceLoading,
+                                              object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
             }
             return true
         }
-        
-        expectation(forNotification: .DataSourceLoaded,
-                    object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
+
+        let loadedNotification = expectation(forNotification: .DataSourceLoaded,
+                                             object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
             }
             return true
         }
-        
-        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+
+        let didSaveNotification = expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
             let count = try? self.persistentStore.countOfObjects(NavigationalWarning.self)
             XCTAssertEqual(count, 2)
             return true
         }
-        
-        expectation(forNotification: .DataSourceProcessed,
-                    object: nil) { notification in
-            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
+
+        let batchUpdateCompleteNotification = expectation(forNotification: .BatchUpdateComplete,
+                                                          object: nil) { notification in
+            guard let updatedNotification = notification.object as? BatchUpdateComplete else {
+                XCTFail("Incorrect notification")
+                return false
+            }
+            let updates = updatedNotification.dataSourceUpdates
+            if updates.isEmpty {
+                XCTFail("should be some updates")
+            }
+            XCTAssertFalse(updates.isEmpty)
+            let update = updates[0]
+            XCTAssertEqual(2, update.inserts)
+            XCTAssertEqual(0, update.updates)
             return true
         }
-        
-        MSI.shared.loadData(type: NavigationalWarning.decodableRoot, dataType: NavigationalWarning.self)
-        
-        waitForExpectations(timeout: 10, handler: nil)
+
+        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
+
+        let fetched = await repository.fetch()
+
+        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
+
+        XCTAssertEqual(repository.getCount(filters: nil), 2)
     }
     
-    func testRejectInvalidNavigationalWarningNoMsgYear() throws {
+    func testRejectInvalidNavigationalWarningNoMsgYear() async throws {
         stub(condition: isScheme("https") && pathEndsWith("/publications/broadcast-warn")) { request in
             let jsonObject = [
                 "broadcast-warn": [
@@ -129,7 +148,7 @@ final class NavigationalWarningDataTests: XCTestCase {
             return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
         }
         
-        expectation(forNotification: .DataSourceLoading,
+        let loadingNotification = expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
             if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
                 XCTAssertTrue(loading)
@@ -139,7 +158,7 @@ final class NavigationalWarningDataTests: XCTestCase {
             return true
         }
         
-        expectation(forNotification: .DataSourceLoaded,
+        let loadedNotification = expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
             if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
                 XCTAssertFalse(loading)
@@ -149,24 +168,40 @@ final class NavigationalWarningDataTests: XCTestCase {
             return true
         }
         
-        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+        let didSaveNotification = expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
             let count = try? self.persistentStore.countOfObjects(NavigationalWarning.self)
             XCTAssertEqual(count, 1)
             return true
         }
-        
-        expectation(forNotification: .DataSourceProcessed,
-                    object: nil) { notification in
-            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
+
+        let batchUpdateCompleteNotification = expectation(forNotification: .BatchUpdateComplete,
+                                                          object: nil) { notification in
+            guard let updatedNotification = notification.object as? BatchUpdateComplete else {
+                XCTFail("Incorrect notification")
+                return false
+            }
+            let updates = updatedNotification.dataSourceUpdates
+            if updates.isEmpty {
+                XCTFail("should be some updates")
+            }
+            XCTAssertFalse(updates.isEmpty)
+            let update = updates[0]
+            XCTAssertEqual(1, update.inserts)
+            XCTAssertEqual(0, update.updates)
             return true
         }
-        
-        MSI.shared.loadData(type: NavigationalWarning.decodableRoot, dataType: NavigationalWarning.self)
-        
-        waitForExpectations(timeout: 10, handler: nil)
+
+        let repository = NavigationalWarningRepository(
+            localDataSource: NavigationalWarningCoreDataDataSource(),
+            remoteDataSource: NavigationalWarningRemoteDataSource()
+        )
+
+        await repository.fetch()
+
+        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
     }
     
-    func testRejectInvalidNavigationalWarningNoMsgNumber() throws {
+    func testRejectInvalidNavigationalWarningNoMsgNumber() async throws {
         stub(condition: isScheme("https") && pathEndsWith("/publications/broadcast-warn")) { request in
             let jsonObject = [
                 "broadcast-warn": [
@@ -208,9 +243,8 @@ final class NavigationalWarningDataTests: XCTestCase {
             ]
             return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
         }
-        
-        expectation(forNotification: .DataSourceLoading,
-                    object: nil) { notification in
+        let loadingNotification = expectation(forNotification: .DataSourceLoading,
+                                              object: nil) { notification in
             if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
                 XCTAssertTrue(loading)
             } else {
@@ -218,9 +252,9 @@ final class NavigationalWarningDataTests: XCTestCase {
             }
             return true
         }
-        
-        expectation(forNotification: .DataSourceLoaded,
-                    object: nil) { notification in
+
+        let loadedNotification = expectation(forNotification: .DataSourceLoaded,
+                                             object: nil) { notification in
             if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
                 XCTAssertFalse(loading)
             } else {
@@ -228,25 +262,41 @@ final class NavigationalWarningDataTests: XCTestCase {
             }
             return true
         }
-        
-        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+
+        let didSaveNotification = expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
             let count = try? self.persistentStore.countOfObjects(NavigationalWarning.self)
             XCTAssertEqual(count, 1)
             return true
         }
-        
-        expectation(forNotification: .DataSourceProcessed,
-                    object: nil) { notification in
-            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
+
+        let batchUpdateCompleteNotification = expectation(forNotification: .BatchUpdateComplete,
+                                                          object: nil) { notification in
+            guard let updatedNotification = notification.object as? BatchUpdateComplete else {
+                XCTFail("Incorrect notification")
+                return false
+            }
+            let updates = updatedNotification.dataSourceUpdates
+            if updates.isEmpty {
+                XCTFail("should be some updates")
+            }
+            XCTAssertFalse(updates.isEmpty)
+            let update = updates[0]
+            XCTAssertEqual(1, update.inserts)
+            XCTAssertEqual(0, update.updates)
             return true
         }
-        
-        MSI.shared.loadData(type: NavigationalWarning.decodableRoot, dataType: NavigationalWarning.self)
-        
-        waitForExpectations(timeout: 10, handler: nil)
+
+        let repository = NavigationalWarningRepository(
+            localDataSource: NavigationalWarningCoreDataDataSource(),
+            remoteDataSource: NavigationalWarningRemoteDataSource()
+        )
+
+        await repository.fetch()
+
+        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
     }
     
-    func testRejectInvalidNavigationalWarningNoNavArea() throws {
+    func testRejectInvalidNavigationalWarningNoNavArea() async throws {
         stub(condition: isScheme("https") && pathEndsWith("/publications/broadcast-warn")) { request in
             let jsonObject = [
                 "broadcast-warn": [
@@ -288,9 +338,8 @@ final class NavigationalWarningDataTests: XCTestCase {
             ]
             return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
         }
-        
-        expectation(forNotification: .DataSourceLoading,
-                    object: nil) { notification in
+        let loadingNotification = expectation(forNotification: .DataSourceLoading,
+                                              object: nil) { notification in
             if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
                 XCTAssertTrue(loading)
             } else {
@@ -298,9 +347,9 @@ final class NavigationalWarningDataTests: XCTestCase {
             }
             return true
         }
-        
-        expectation(forNotification: .DataSourceLoaded,
-                    object: nil) { notification in
+
+        let loadedNotification = expectation(forNotification: .DataSourceLoaded,
+                                             object: nil) { notification in
             if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
                 XCTAssertFalse(loading)
             } else {
@@ -308,25 +357,41 @@ final class NavigationalWarningDataTests: XCTestCase {
             }
             return true
         }
-        
-        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+
+        let didSaveNotification = expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
             let count = try? self.persistentStore.countOfObjects(NavigationalWarning.self)
             XCTAssertEqual(count, 1)
             return true
         }
-        
-        expectation(forNotification: .DataSourceProcessed,
-                    object: nil) { notification in
-            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
+
+        let batchUpdateCompleteNotification = expectation(forNotification: .BatchUpdateComplete,
+                                                          object: nil) { notification in
+            guard let updatedNotification = notification.object as? BatchUpdateComplete else {
+                XCTFail("Incorrect notification")
+                return false
+            }
+            let updates = updatedNotification.dataSourceUpdates
+            if updates.isEmpty {
+                XCTFail("should be some updates")
+            }
+            XCTAssertFalse(updates.isEmpty)
+            let update = updates[0]
+            XCTAssertEqual(1, update.inserts)
+            XCTAssertEqual(0, update.updates)
             return true
         }
-        
-        MSI.shared.loadData(type: NavigationalWarning.decodableRoot, dataType: NavigationalWarning.self)
-        
-        waitForExpectations(timeout: 10, handler: nil)
+
+        let repository = NavigationalWarningRepository(
+            localDataSource: NavigationalWarningCoreDataDataSource(),
+            remoteDataSource: NavigationalWarningRemoteDataSource()
+        )
+
+        await repository.fetch()
+
+        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
     }
     
-    func testUpdateNavigationalWarningsDeleteOld() throws {
+    func testUpdateNavigationalWarningsDeleteOld() async throws {
         var requestCount = 0
         stub(condition: isScheme("https") && pathEndsWith("/publications/broadcast-warn")) { request in
             if requestCount == 0 {
@@ -395,81 +460,113 @@ final class NavigationalWarningDataTests: XCTestCase {
                 return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
             }
         }
-        
-        expectation(forNotification: .DataSourceLoading,
-                    object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
+
+        let loadingNotification = expectation(forNotification: .DataSourceLoading,
+                                              object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
             }
             return true
         }
-        
-        expectation(forNotification: .DataSourceLoaded,
-                    object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
+
+        let loadedNotification = expectation(forNotification: .DataSourceLoaded,
+                                             object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
             }
             return true
         }
-        
-        let e2 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { _, _ in
+
+        let didSaveNotification = expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
             let count = try? self.persistentStore.countOfObjects(NavigationalWarning.self)
-            return count == 2
-        }), object: self.persistentStore.viewContext)
-        
-        expectation(forNotification: .DataSourceProcessed,
-                    object: nil) { notification in
-            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
+            XCTAssertEqual(count, 2)
             return true
         }
-        
-        MSI.shared.loadData(type: NavigationalWarning.decodableRoot, dataType: NavigationalWarning.self)
-        
-        waitForExpectations(timeout: 10, handler: nil)
-        wait(for: [e2], timeout: 10)
-        
-        expectation(forNotification: .DataSourceLoading,
-                    object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
+
+        let batchUpdateCompleteNotification = expectation(forNotification: .BatchUpdateComplete,
+                                                          object: nil) { notification in
+            guard let updatedNotification = notification.object as? BatchUpdateComplete else {
+                XCTFail("Incorrect notification")
+                return false
+            }
+            let updates = updatedNotification.dataSourceUpdates
+            if updates.isEmpty {
+                XCTFail("should be some updates")
+            }
+            XCTAssertFalse(updates.isEmpty)
+            let update = updates[0]
+            XCTAssertEqual(2, update.inserts)
+            XCTAssertEqual(0, update.updates)
+            return true
+        }
+
+        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
+
+        let fetched = await repository.fetch()
+
+        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
+
+        XCTAssertEqual(repository.getCount(filters: nil), 2)
+
+        let loadingNotification2 = expectation(forNotification: .DataSourceLoading,
+                                               object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
             }
             return true
         }
-        
-        expectation(forNotification: .DataSourceLoaded,
-                    object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
+
+        let loadedNotification2 = expectation(forNotification: .DataSourceLoaded,
+                                              object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
             }
             return true
         }
-        
-        let e = XCTNSPredicateExpectation(predicate: NSPredicate(block: { _, _ in
+
+        let didSaveNotification2 = expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
             let count = try? self.persistentStore.countOfObjects(NavigationalWarning.self)
-            return count == 1
-        }), object: self.persistentStore.viewContext)
-        
-        expectation(forNotification: .DataSourceProcessed,
-                    object: nil) { notification in
-            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
+            XCTAssertEqual(count, 1)
             return true
         }
-        
-        MSI.shared.loadData(type: NavigationalWarning.decodableRoot, dataType: NavigationalWarning.self)
-        
-        waitForExpectations(timeout: 10, handler: nil)
-        wait(for: [e], timeout: 10)
+
+        let batchUpdateCompleteNotification2 = expectation(forNotification: .BatchUpdateComplete,
+                                                           object: nil) { notification in
+            guard let updatedNotification = notification.object as? BatchUpdateComplete else {
+                XCTFail("Incorrect notification")
+                return false
+            }
+            let updates = updatedNotification.dataSourceUpdates
+            if updates.isEmpty {
+                XCTFail("should be some updates")
+            }
+            NSLog("updates \(updates)")
+            XCTAssertFalse(updates.isEmpty)
+            let update = updates[0]
+            XCTAssertEqual(0, update.inserts)
+            XCTAssertEqual(0, update.updates)
+            XCTAssertEqual(1, update.deletes)
+            return true
+        }
+
+        // force the sync
+        UserDefaults.standard.clearLastSyncTimeSeconds(DataSources.navWarning)
+        let fetched2 = await repository.fetch()
+
+        await fulfillment(of: [loadingNotification2, loadedNotification2, didSaveNotification2, batchUpdateCompleteNotification2], timeout: 10)
+
+        XCTAssertEqual(repository.getCount(filters: nil), 1)
     }
     
-    func testUpdateNavigationalWarningsDeleteOldAddNew() throws {
+    func testUpdateNavigationalWarningsDeleteOldAddNew() async throws {
         var requestCount = 0
         stub(condition: isScheme("https") && pathEndsWith("/publications/broadcast-warn")) { request in
             if requestCount == 0 {
@@ -538,87 +635,103 @@ final class NavigationalWarningDataTests: XCTestCase {
                 return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
             }
         }
-        
-        expectation(forNotification: .DataSourceLoading,
-                    object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
+        let loadingNotification = expectation(forNotification: .DataSourceLoading,
+                                              object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
             }
             return true
         }
-        
-        expectation(forNotification: .DataSourceLoaded,
-                    object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
+
+        let loadedNotification = expectation(forNotification: .DataSourceLoaded,
+                                             object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
             }
             return true
         }
-        
-        let e2 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { _, _ in
+
+        let didSaveNotification = expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
             let count = try? self.persistentStore.countOfObjects(NavigationalWarning.self)
-            return count == 2
-        }), object: self.persistentStore.viewContext)
-        
-        expectation(forNotification: .DataSourceProcessed,
-                    object: nil) { notification in
-            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
+            XCTAssertEqual(count, 2)
             return true
         }
-        
-        MSI.shared.loadData(type: NavigationalWarning.decodableRoot, dataType: NavigationalWarning.self)
-        
-        waitForExpectations(timeout: 10, handler: nil)
-        wait(for: [e2], timeout: 10)
-        
-        expectation(forNotification: .DataSourceLoading,
-                    object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
+
+        let batchUpdateCompleteNotification = expectation(forNotification: .BatchUpdateComplete,
+                                                          object: nil) { notification in
+            guard let updatedNotification = notification.object as? BatchUpdateComplete else {
+                XCTFail("Incorrect notification")
+                return false
+            }
+            let updates = updatedNotification.dataSourceUpdates
+            if updates.isEmpty {
+                XCTFail("should be some updates")
+            }
+            XCTAssertFalse(updates.isEmpty)
+            let update = updates[0]
+            XCTAssertEqual(2, update.inserts)
+            XCTAssertEqual(0, update.updates)
+            return true
+        }
+
+        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
+
+        let fetched = await repository.fetch()
+
+        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
+
+        XCTAssertEqual(repository.getCount(filters: nil), 2)
+
+        let loadingNotification2 = expectation(forNotification: .DataSourceLoading,
+                                               object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
             }
             return true
         }
-        
-        expectation(forNotification: .DataSourceLoaded,
-                    object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[NavigationalWarning.key] {
+
+        let loadedNotification2 = expectation(forNotification: .DataSourceLoaded,
+                                              object: nil) { notification in
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
             }
             return true
         }
-        
-        let e = XCTNSPredicateExpectation(predicate: NSPredicate(block: { _, _ in
+
+        let didSaveNotification2 = expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
             let count = try? self.persistentStore.countOfObjects(NavigationalWarning.self)
-            return count == 1
-        }), object: self.persistentStore.viewContext)
-        
-        expectation(forNotification: .DataSourceProcessed,
-                    object: nil) { notification in
-            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, NavigationalWarning.key)
+            XCTAssertEqual(count, 1)
             return true
         }
-        
-        MSI.shared.loadData(type: NavigationalWarning.decodableRoot, dataType: NavigationalWarning.self)
-        
-        waitForExpectations(timeout: 10, handler: nil)
-        wait(for: [e], timeout: 10)
-        
-        let navWarn = try self.persistentStore.fetchFirst(NavigationalWarning.self, sortBy: [NavigationalWarning.defaultSort[0].toNSSortDescriptor()], predicate: nil, context: nil)
+
+        // force the sync
+        UserDefaults.standard.clearLastSyncTimeSeconds(DataSources.navWarning)
+        let fetched2 = await repository.fetch()
+
+        await fulfillment(of: [
+            loadingNotification2,
+            loadedNotification2,
+            didSaveNotification2
+        ], timeout: 10)
+
+        XCTAssertEqual(repository.getCount(filters: nil), 1)
+
+        let navWarn = repository.getNavigationalWarning(msgYear: 2023, msgNumber: 1177, navArea: "4")
+
         XCTAssertEqual(navWarn!.msgYear, 2023)
+        XCTAssertEqual(navWarn!.msgNumber, 1177)
     }
     
     func testDataRequest() {
-        let requests = NavigationalWarning.dataRequest()
-        XCTAssertEqual(requests.count, 1)
-        let request = requests[0]
+        let request = NavigationalWarningService.getNavigationalWarnings
         XCTAssertEqual(request.method, .get)
         let parameters = request.parameters
         XCTAssertEqual(parameters?.count, 2)
@@ -627,12 +740,12 @@ final class NavigationalWarningDataTests: XCTestCase {
     }
     
     func testShouldSync() {
-        UserDefaults.standard.setValue(false, forKey: "\(NavigationalWarning.key)DataSourceEnabled")
-        XCTAssertFalse(NavigationalWarning.shouldSync())
-        UserDefaults.standard.setValue(true, forKey: "\(NavigationalWarning.key)DataSourceEnabled")
-        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60) - 10, forKey: "\(NavigationalWarning.key)LastSyncTime")
-        XCTAssertTrue(NavigationalWarning.shouldSync())
-        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60) + (60 * 10), forKey: "\(NavigationalWarning.key)LastSyncTime")
-        XCTAssertFalse(NavigationalWarning.shouldSync())
+        UserDefaults.standard.setValue(false, forKey: "\(DataSources.navWarning.key)DataSourceEnabled")
+        XCTAssertFalse(DataSources.navWarning.shouldSync())
+        UserDefaults.standard.setValue(true, forKey: "\(DataSources.navWarning.key)DataSourceEnabled")
+        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60) - 10, forKey: "\(DataSources.navWarning.key)LastSyncTime")
+        XCTAssertTrue(DataSources.navWarning.shouldSync())
+        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60) + (60 * 10), forKey: "\(DataSources.navWarning.key)LastSyncTime")
+        XCTAssertFalse(DataSources.navWarning.shouldSync())
     }
 }

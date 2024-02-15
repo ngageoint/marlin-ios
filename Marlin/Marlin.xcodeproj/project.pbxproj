@@ -193,6 +193,15 @@
 		F72478802B7D70B2003D4118 /* RadioBeaconRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F724787F2B7D70B2003D4118 /* RadioBeaconRepositoryTests.swift */; };
 		F72478822B7D72A6003D4118 /* RadioBeaconStaticLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478812B7D72A6003D4118 /* RadioBeaconStaticLocalDataSource.swift */; };
 		F72478842B7D7522003D4118 /* RadioBeaconStaticRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478832B7D7522003D4118 /* RadioBeaconStaticRemoteDataSource.swift */; };
+		F72478862B7E6F27003D4118 /* ElectronicPublicationCoreDataDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478852B7E6F27003D4118 /* ElectronicPublicationCoreDataDataSourceTests.swift */; };
+		F72478892B7E88EF003D4118 /* ElectronicPublicationRemoteDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478882B7E88EF003D4118 /* ElectronicPublicationRemoteDataSourceTests.swift */; };
+		F724788B2B7E89D9003D4118 /* ElectronicPublicationRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F724788A2B7E89D9003D4118 /* ElectronicPublicationRepositoryTests.swift */; };
+		F724788D2B7E8AAB003D4118 /* ElectronicPublicationStaticLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F724788C2B7E8AAB003D4118 /* ElectronicPublicationStaticLocalDataSource.swift */; };
+		F724788F2B7E8BE2003D4118 /* ElectronicPublicationStaticRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F724788E2B7E8BE2003D4118 /* ElectronicPublicationStaticRemoteDataSource.swift */; };
+		F72478982B7EA9B6003D4118 /* NavigationalWarningInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478972B7EA9B6003D4118 /* NavigationalWarningInitializer.swift */; };
+		F724789A2B7EAA82003D4118 /* NoticeToMarinersInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478992B7EAA82003D4118 /* NoticeToMarinersInitializer.swift */; };
+		F724789C2B7EAAE1003D4118 /* NoticeToMarinersRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F724789B2B7EAAE1003D4118 /* NoticeToMarinersRepository.swift */; };
+		F724789F2B7EB8A6003D4118 /* NoticeToMarinersCoreDataDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F724789E2B7EB8A6003D4118 /* NoticeToMarinersCoreDataDataSourceTests.swift */; };
 		F7249AEB2AF4321A00961E65 /* AsamService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7249AEA2AF4321A00961E65 /* AsamService.swift */; };
 		F7249AED2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */; };
 		F726247E2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F726247D2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift */; };
@@ -812,6 +821,15 @@
 		F724787F2B7D70B2003D4118 /* RadioBeaconRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconRepositoryTests.swift; sourceTree = "<group>"; };
 		F72478812B7D72A6003D4118 /* RadioBeaconStaticLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconStaticLocalDataSource.swift; sourceTree = "<group>"; };
 		F72478832B7D7522003D4118 /* RadioBeaconStaticRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconStaticRemoteDataSource.swift; sourceTree = "<group>"; };
+		F72478852B7E6F27003D4118 /* ElectronicPublicationCoreDataDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationCoreDataDataSourceTests.swift; sourceTree = "<group>"; };
+		F72478882B7E88EF003D4118 /* ElectronicPublicationRemoteDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationRemoteDataSourceTests.swift; sourceTree = "<group>"; };
+		F724788A2B7E89D9003D4118 /* ElectronicPublicationRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationRepositoryTests.swift; sourceTree = "<group>"; };
+		F724788C2B7E8AAB003D4118 /* ElectronicPublicationStaticLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationStaticLocalDataSource.swift; sourceTree = "<group>"; };
+		F724788E2B7E8BE2003D4118 /* ElectronicPublicationStaticRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationStaticRemoteDataSource.swift; sourceTree = "<group>"; };
+		F72478972B7EA9B6003D4118 /* NavigationalWarningInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningInitializer.swift; sourceTree = "<group>"; };
+		F72478992B7EAA82003D4118 /* NoticeToMarinersInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersInitializer.swift; sourceTree = "<group>"; };
+		F724789B2B7EAAE1003D4118 /* NoticeToMarinersRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersRepository.swift; sourceTree = "<group>"; };
+		F724789E2B7EB8A6003D4118 /* NoticeToMarinersCoreDataDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersCoreDataDataSourceTests.swift; sourceTree = "<group>"; };
 		F7249AEA2AF4321A00961E65 /* AsamService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamService.swift; sourceTree = "<group>"; };
 		F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRemoteDataSourceTests.swift; sourceTree = "<group>"; };
 		F726247D2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamStaticRemoteDataSource.swift; sourceTree = "<group>"; };
@@ -1543,6 +1561,7 @@
 			children = (
 				F7222F962B6C0BAF00C3E4F1 /* NoticeToMarinersLocalDataSource.swift */,
 				F7222FB72B6D7D2700C3E4F1 /* NoticeToMarinersRemoteDataSource.swift */,
+				F724789B2B7EAAE1003D4118 /* NoticeToMarinersRepository.swift */,
 			);
 			path = NoticeToMariners;
 			sourceTree = "<group>";
@@ -1578,6 +1597,7 @@
 			isa = PBXGroup;
 			children = (
 				F7222FA22B6D4F7800C3E4F1 /* NoticeToMarinersInitialDataLoadOperation.swift */,
+				F72478992B7EAA82003D4118 /* NoticeToMarinersInitializer.swift */,
 			);
 			path = NoticeToMariners;
 			sourceTree = "<group>";
@@ -1639,6 +1659,39 @@
 				F724787F2B7D70B2003D4118 /* RadioBeaconRepositoryTests.swift */,
 			);
 			path = RadioBeacon;
+			sourceTree = "<group>";
+		};
+		F72478872B7E88CB003D4118 /* ElectronicPublication */ = {
+			isa = PBXGroup;
+			children = (
+				F72478852B7E6F27003D4118 /* ElectronicPublicationCoreDataDataSourceTests.swift */,
+				F72478882B7E88EF003D4118 /* ElectronicPublicationRemoteDataSourceTests.swift */,
+				F724788A2B7E89D9003D4118 /* ElectronicPublicationRepositoryTests.swift */,
+			);
+			path = ElectronicPublication;
+			sourceTree = "<group>";
+		};
+		F72478902B7EA5C8003D4118 /* NavigationalWarning */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = NavigationalWarning;
+			sourceTree = "<group>";
+		};
+		F72478962B7EA99D003D4118 /* NavigationalWarning */ = {
+			isa = PBXGroup;
+			children = (
+				F72478972B7EA9B6003D4118 /* NavigationalWarningInitializer.swift */,
+			);
+			path = NavigationalWarning;
+			sourceTree = "<group>";
+		};
+		F724789D2B7EB884003D4118 /* NoticeToMariners */ = {
+			isa = PBXGroup;
+			children = (
+				F724789E2B7EB8A6003D4118 /* NoticeToMarinersCoreDataDataSourceTests.swift */,
+			);
+			path = NoticeToMariners;
 			sourceTree = "<group>";
 		};
 		F7249AE62AF41D7D00961E65 /* Network */ = {
@@ -2146,6 +2199,7 @@
 				F7222F9B2B6D4E5200C3E4F1 /* ElectronicPublication */,
 				F7222F9E2B6D4ED400C3E4F1 /* Light */,
 				F7CB00FE2B5F1F1100034B9C /* MODU */,
+				F72478962B7EA99D003D4118 /* NavigationalWarning */,
 				F7222FA12B6D4F6300C3E4F1 /* NoticeToMariners */,
 				F72E4D992B69AB29006ED371 /* Port */,
 				F7222FA42B6D500300C3E4F1 /* RadioBeacon */,
@@ -2241,6 +2295,8 @@
 				F72478772B7D5392003D4118 /* PortStaticRemoteDataSource.swift */,
 				F72478812B7D72A6003D4118 /* RadioBeaconStaticLocalDataSource.swift */,
 				F72478832B7D7522003D4118 /* RadioBeaconStaticRemoteDataSource.swift */,
+				F724788C2B7E8AAB003D4118 /* ElectronicPublicationStaticLocalDataSource.swift */,
+				F724788E2B7E8BE2003D4118 /* ElectronicPublicationStaticRemoteDataSource.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -2570,6 +2626,9 @@
 		F7CCDC832AF147FE00BF41F9 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				F724789D2B7EB884003D4118 /* NoticeToMariners */,
+				F72478902B7EA5C8003D4118 /* NavigationalWarning */,
+				F72478872B7E88CB003D4118 /* ElectronicPublication */,
 				F72478792B7D5F4E003D4118 /* RadioBeacon */,
 				F724786E2B7D425B003D4118 /* Port */,
 				F72478632B7D0780003D4118 /* Modu */,
@@ -3390,6 +3449,7 @@
 				F7194E122AFD9C0B0018E4B4 /* MockBundle.swift in Sources */,
 				F75324CE298C5E87005C509F /* SideMenuContentTests.swift in Sources */,
 				F75F81E2295F70A50062A708 /* BooleanFilterTests.swift in Sources */,
+				F724788F2B7E8BE2003D4118 /* ElectronicPublicationStaticRemoteDataSource.swift in Sources */,
 				F72D89022979BCA300D022FB /* ModuDetailViewTests.swift in Sources */,
 				F72D891B297F449C00D022FB /* DFRSDataTests.swift in Sources */,
 				F72624832B7AD13A00C727D5 /* DifferentialGPSStationCoreDataDataSourceTests.swift in Sources */,
@@ -3413,6 +3473,7 @@
 				F7EFFED32A85196F0097E5EF /* BookmarkSummaryViewTests.swift in Sources */,
 				F724787E2B7D6D6A003D4118 /* RadioBeaconRemoteDataSourceTests.swift in Sources */,
 				F75F81E42960B4D90062A708 /* StringFilterTests.swift in Sources */,
+				F724788B2B7E89D9003D4118 /* ElectronicPublicationRepositoryTests.swift in Sources */,
 				F7ABB604299C1ECE00BAD868 /* NavigationalWarningNavAreaListViewTests.swift in Sources */,
 				F76052BD29A96F5A00F13260 /* NoticeToMarinersFullNoticeViewTests.swift in Sources */,
 				F72624872B7BB44C00C727D5 /* DifferentialGPSStationRepositoryTests.swift in Sources */,
@@ -3421,6 +3482,7 @@
 				F72624852B7BB31100C727D5 /* DifferentialGPSStationRemoteDataSourceTests.swift in Sources */,
 				F72D88F82971FF8000D022FB /* HamburgerTests.swift in Sources */,
 				F7D8FA64293AB5B000E7D0A1 /* MockDataSource.swift in Sources */,
+				F72478862B7E6F27003D4118 /* ElectronicPublicationCoreDataDataSourceTests.swift in Sources */,
 				F7CCDC862AF1482900BF41F9 /* AsamCoreDataDataSourceTests.swift in Sources */,
 				F72D890A2979E7FC00D022FB /* RadioBeaconDetailViewTests.swift in Sources */,
 				F76052BB29A94FA800F13260 /* MarlinRegularWidthTests.swift in Sources */,
@@ -3435,6 +3497,7 @@
 				F72E0F6E2A2926600099BFFD /* MarlinFullFlowTest.swift in Sources */,
 				F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */,
 				F7D8FA792941005E00E7D0A1 /* ChartCorrectionListViewModelTests.swift in Sources */,
+				F724789F2B7EB8A6003D4118 /* NoticeToMarinersCoreDataDataSourceTests.swift in Sources */,
 				F749E43529AE90E200B2FF8B /* NewMapLayerViewModelTests.swift in Sources */,
 				F75324D2298DBC15005C509F /* SideMenuTests.swift in Sources */,
 				F75F81DC295F3F190062A708 /* AsamDetailViewTests.swift in Sources */,
@@ -3450,6 +3513,7 @@
 				F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */,
 				F75324C529885521005C509F /* SearchResultsMapTests.swift in Sources */,
 				F749E43929AEA39E00B2FF8B /* NewMapLayerViewTests.swift in Sources */,
+				F724788D2B7E8AAB003D4118 /* ElectronicPublicationStaticLocalDataSource.swift in Sources */,
 				F7ABB5FE299AC4A500BAD868 /* ElectronicPublicationListTests.swift in Sources */,
 				F72D890E2979F48E00D022FB /* NavigationalWarningDetailTests.swift in Sources */,
 				F75324C229833BBB005C509F /* MarlinMapTests.swift in Sources */,
@@ -3465,6 +3529,7 @@
 				F726247E2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift in Sources */,
 				F75F81E729623AAA0062A708 /* MarlinBottomSheetTests.swift in Sources */,
 				F7D8FA7F294240B400E7D0A1 /* NoticeToMarinersFullNoticeViewModelTests.swift in Sources */,
+				F72478892B7E88EF003D4118 /* ElectronicPublicationRemoteDataSourceTests.swift in Sources */,
 				F75324C02983272A005C509F /* MarlinCompactWidthViewTests.swift in Sources */,
 				F72D88FA297211BC00D022FB /* FilterButtonTests.swift in Sources */,
 				F71DF482284E783600686951 /* TestHelper.swift in Sources */,
@@ -3480,6 +3545,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F72478982B7EA9B6003D4118 /* NavigationalWarningInitializer.swift in Sources */,
 				F7D2225228E4F83000F527F2 /* SortButton.swift in Sources */,
 				F7D671E42871C5F900758F1C /* NavigationalWarningActionBar.swift in Sources */,
 				F7D671ED2874737F00758F1C /* DataSourceCell.swift in Sources */,
@@ -3525,6 +3591,7 @@
 				F7391CA92ABB690D0002ABDD /* PortModel.swift in Sources */,
 				F70BCE9929C4F1AE00AEF73D /* UserLayersMap.swift in Sources */,
 				F7222FAC2B6D585E00C3E4F1 /* RemoteDataSource.swift in Sources */,
+				F724789C2B7EAAE1003D4118 /* NoticeToMarinersRepository.swift in Sources */,
 				F7EFFEC92A7DA4260097E5EF /* BookmarkListEmptyState.swift in Sources */,
 				F7222FC22B7147EA00C3E4F1 /* LightSheet.swift in Sources */,
 				F7F597AA2864DD3900F9B32E /* NavigationalWarningSummaryView.swift in Sources */,
@@ -3591,6 +3658,7 @@
 				F715E3112B766DBA00752688 /* LightGeoPackageExportable.swift in Sources */,
 				F7FFB33628D8F5A300C31AA3 /* LightSettingsView.swift in Sources */,
 				F7D5C05D28AA7A1F000C2C29 /* Snackbar.swift in Sources */,
+				F724789A2B7EAA82003D4118 /* NoticeToMarinersInitializer.swift in Sources */,
 				F71FC0D32A3B9DDA00911BAC /* DataSourceActionBar.swift in Sources */,
 				F7D5C05328A2CAAB000C2C29 /* BottomSheetItem.swift in Sources */,
 				F7FFB2E228D6202E00C31AA3 /* DFRSArea+BatchImportable.swift in Sources */,

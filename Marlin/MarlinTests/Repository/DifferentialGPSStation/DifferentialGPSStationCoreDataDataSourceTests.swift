@@ -25,10 +25,8 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
         UserDefaults.registerMarlinDefaults()
         UserDefaults.standard.setSort(DataSources.dgps.key, sort: DataSources.dgps.filterable!.defaultSort)
-        for dataSource in DataSourceDefinitions.allCases {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
-        }
+        UserDefaults.standard.initialDataLoaded = false
+        UserDefaults.standard.clearLastSyncTimeSeconds(DataSources.dgps)
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
 
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")

@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import Combine
 
 enum NavigationalWarningItem: Hashable, Identifiable {
     var id: String {
@@ -46,5 +47,43 @@ class NavigationalWarningRepository: ObservableObject {
         filters: [DataSourceFilterParameter]?
     ) async -> [NavigationalWarningModel] {
         await localDataSource.getNavigationalWarnings(filters: filters)
+    }
+
+    func navigationalWarnings(
+        filters: [DataSourceFilterParameter]?,
+        paginatedBy paginator: Trigger.Signal? = nil
+    ) -> AnyPublisher<[NavigationalWarningItem], Error> {
+        localDataSource.navigationalWarnings(filters: filters, paginatedBy: paginator)
+    }
+
+    func fetch() async -> [NavigationalWarningModel] {
+        NSLog("Fetching Navigational Warnings")
+        await MainActor.run {
+            MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] = true
+            NotificationCenter.default.post(
+                name: .DataSourceLoading,
+                object: DataSourceItem(dataSource: DataSources.navWarning)
+            )
+        }
+
+        let navWarnings = await remoteDataSource.fetch()
+        let inserted = await localDataSource.insert(task: nil, navigationalWarnings: navWarnings)
+
+        await MainActor.run {
+            MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] = false
+            UserDefaults.standard.updateLastSyncTimeSeconds(DataSources.navWarning)
+            NotificationCenter.default.post(
+                name: .DataSourceLoaded,
+                object: DataSourceItem(dataSource: DataSources.navWarning)
+            )
+            if inserted != 0 {
+                NotificationCenter.default.post(
+                    name: .DataSourceUpdated,
+                    object: DataSourceUpdatedNotification(key: DataSources.navWarning.key, inserts: inserted)
+                )
+            }
+        }
+
+        return navWarnings
     }
 }

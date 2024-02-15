@@ -146,6 +146,7 @@ struct MarlinApp: App {
     var radioBeaconRepository: RadioBeaconRepository
     var electronicPublicationRepository: ElectronicPublicationRepository
     var navigationalWarningRepository: NavigationalWarningRepository
+    var noticeToMarinersRepository: NoticeToMarinersRepository
 
     var routeRepository: RouteRepository
     var routeWaypointRepository: RouteWaypointRepository
@@ -167,11 +168,6 @@ struct MarlinApp: App {
         UserDefaults.registerMarlinDefaults()
         shared = MSI.shared
         appState = MSI.shared.appState
-        persistentStoreLoadedPub.sink { _ in
-            NSLog("Persistent store loaded, load all data")
-            MSI.shared.loadAllData()
-        }
-        .store(in: &cancellable)
         persistentStore = PersistenceController.shared
         bookmarkRepository = BookmarkRepositoryManager(
             repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
@@ -207,6 +203,10 @@ struct MarlinApp: App {
             localDataSource: NavigationalWarningCoreDataDataSource(),
             remoteDataSource: NavigationalWarningRemoteDataSource()
         )
+        noticeToMarinersRepository = NoticeToMarinersRepository(
+            localDataSource: NoticeToMarinersCoreDataDataSource(),
+            remoteDataSource: NoticeToMarinersRemoteDataSource()
+        )
 
         routeRepository = RouteRepository(localDataSource: RouteCoreDataDataSource())
         routeWaypointRepository = RouteWaypointRepository(
@@ -230,9 +230,16 @@ struct MarlinApp: App {
             differentialGPSStationRepository: differentialGPSStationRepository,
             electronicPublicationRepository: electronicPublicationRepository,
             navigationalWarningRepository: navigationalWarningRepository,
+            noticeToMarinersRepository: noticeToMarinersRepository,
             routeRepository: routeRepository
         )
         UNUserNotificationCenter.current().delegate = appDelegate
+
+        persistentStoreLoadedPub.sink { _ in
+            NSLog("Persistent store loaded, load all data")
+            MSI.shared.loadAllData()
+        }
+        .store(in: &cancellable)
     }
 
     var body: some Scene {
@@ -253,6 +260,7 @@ struct MarlinApp: App {
                 .environmentObject(routeWaypointRepository)
                 .environmentObject(navigationalWarningRepository)
                 .environmentObject(electronicPublicationRepository)
+                .environmentObject(noticeToMarinersRepository)
                 .environmentObject(asamsTileRepository)
                 .environmentObject(modusTileRepository)
                 .environmentObject(portsTileRepository)

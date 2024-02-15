@@ -9,9 +9,7 @@ import Foundation
 import Alamofire
 import OSLog
 import CoreData
-import Combine
 import SwiftUI
-import BackgroundTasks
 
 public class MSI {
     
@@ -23,6 +21,7 @@ public class MSI {
     var differentialGPSStationRepository: DifferentialGPSStationRepository?
     var electronicPublicationRepository: ElectronicPublicationRepository?
     var navigationalWarningRepository: NavigationalWarningRepository?
+    var noticeToMarinersRepository: NoticeToMarinersRepository?
     var routeRepository: RouteRepository?
 
     var asamInitializer: AsamInitializer?
@@ -32,6 +31,8 @@ public class MSI {
     var radioBeaconInitializer: RadioBeaconInitializer?
     var differentialGPSStationInitializer: DifferentialGPSStationInitializer?
     var electronicPublicationInitializer: ElectronicPublicationInitializer?
+    var navigationalWarningInitializer: NavigationalWarningInitializer?
+    var noticeToMarinersInitializer: NoticeToMarinersInitializer?
 
     // swiftlint:disable function_parameter_count
     func addRepositories(
@@ -43,6 +44,7 @@ public class MSI {
         differentialGPSStationRepository: DifferentialGPSStationRepository,
         electronicPublicationRepository: ElectronicPublicationRepository,
         navigationalWarningRepository: NavigationalWarningRepository,
+        noticeToMarinersRepository: NoticeToMarinersRepository,
         routeRepository: RouteRepository
     ) {
         self.asamRepository = asamRepository
@@ -53,6 +55,7 @@ public class MSI {
         self.differentialGPSStationRepository = differentialGPSStationRepository
         self.electronicPublicationRepository = electronicPublicationRepository
         self.navigationalWarningRepository = navigationalWarningRepository
+        self.noticeToMarinersRepository = noticeToMarinersRepository
         self.routeRepository = routeRepository
 
         asamInitializer = AsamInitializer(repository: asamRepository)
@@ -66,17 +69,23 @@ public class MSI {
         electronicPublicationInitializer = ElectronicPublicationInitializer(
             repository: electronicPublicationRepository
         )
+        navigationalWarningInitializer = NavigationalWarningInitializer(
+            repository: navigationalWarningRepository
+        )
+        noticeToMarinersInitializer = NoticeToMarinersInitializer(
+            repository: noticeToMarinersRepository
+        )
     }
     // swiftlint:enable function_parameter_count
 
-    var backgroundTask: UIBackgroundTaskIdentifier = .invalid
+//    var backgroundTask: UIBackgroundTaskIdentifier = .invalid
     
-    let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "persistence")
+//    let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "persistence")
     
-    var cancellable = Set<AnyCancellable>()
+//    var cancellable = Set<AnyCancellable>()
     
     var loading: Bool {
-        for importable in self.mainDataList where self.appState.loadingDataSource[importable.key] == true {
+        for dataSource in DataSourceDefinitions.allCases where self.appState.loadingDataSource[dataSource.definition.key] == true {
             return true
         }
         return false
@@ -102,10 +111,10 @@ public class MSI {
         return Session(configuration: configuration, serverTrustManager: manager)
     }()
     
-    let mainDataList: [any BatchImportable.Type] = [
+//    let mainDataList: [any BatchImportable.Type] = [
 //        Asam.self,
 //        Modu.self,
-        NavigationalWarning.self,
+//        NavigationalWarning.self,
 //        Light.self,
 //        Port.self,
 //        RadioBeacon.self,
@@ -113,54 +122,54 @@ public class MSI {
 //        DFRS.self,
 //        DFRSArea.self,
 //        ElectronicPublication.self,
-        NoticeToMariners.self
-    ]
+//        NoticeToMariners.self
+//    ]
 
-    lazy var initialLoadQueue: OperationQueue = {
-        var queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        queue.name = "Initial data load queue"
-        return queue
-    }()
+//    lazy var initialLoadQueue: OperationQueue = {
+//        var queue = OperationQueue()
+//        queue.maxConcurrentOperationCount = 1
+//        queue.name = "Initial data load queue"
+//        return queue
+//    }()
     
-    lazy var dataFetchQueue: OperationQueue = {
-        var queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        queue.name = "Data fetch queue"
-        return queue
-    }()
+//    lazy var dataFetchQueue: OperationQueue = {
+//        var queue = OperationQueue()
+//        queue.maxConcurrentOperationCount = 1
+//        queue.name = "Data fetch queue"
+//        return queue
+//    }()
+//    
+//    lazy var backgroundFetchQueue: OperationQueue = {
+//        var queue = OperationQueue()
+//        queue.maxConcurrentOperationCount = 1
+//        queue.name = "Background fetch queue"
+//        return queue
+//    }()
     
-    lazy var backgroundFetchQueue: OperationQueue = {
-        var queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        queue.name = "Background fetch queue"
-        return queue
-    }()
-    
-    init() {
-        NotificationCenter.default.publisher(for: .DataSourceProcessed)
-            .receive(on: RunLoop.main)
-            .compactMap {
-                $0.object as? DataSourceUpdatedNotification
-            }
-            .sink { item in
-                let dataSource = self.mainDataList.first { type in
-                    item.key == type.key
-                }
-                switch dataSource {
-                case let mapImage as MapImage.Type:
-                    mapImage.imageCache.clearCache()
-                default:
-                    break
-                }
-            }
-            .store(in: &cancellable)
-    }
+//    init() {
+//        NotificationCenter.default.publisher(for: .DataSourceProcessed)
+//            .receive(on: RunLoop.main)
+//            .compactMap {
+//                $0.object as? DataSourceUpdatedNotification
+//            }
+//            .sink { item in
+//                let dataSource = self.mainDataList.first { type in
+//                    item.key == type.key
+//                }
+//                switch dataSource {
+//                case let mapImage as MapImage.Type:
+//                    mapImage.imageCache.clearCache()
+//                default:
+//                    break
+//                }
+//            }
+//            .store(in: &cancellable)
+//    }
     
     func registerBackgroundHandler() {
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: "mil.nga.msi.refresh", using: nil) { task in
-            MSI.shared.backgroundFetch(task: task)
-        }
+//        BGTaskScheduler.shared.register(forTaskWithIdentifier: "mil.nga.msi.refresh", using: nil) { task in
+//            MSI.shared.backgroundFetch(task: task)
+//        }
         
         asamInitializer?.registerBackgroundHandler()
         moduInitializer?.registerBackgroundHandler()
@@ -169,43 +178,45 @@ public class MSI {
         radioBeaconInitializer?.registerBackgroundHandler()
         differentialGPSStationInitializer?.registerBackgroundHandler()
         electronicPublicationInitializer?.registerBackgroundHandler()
+        navigationalWarningInitializer?.registerBackgroundHandler()
+        noticeToMarinersInitializer?.registerBackgroundHandler()
     }
     
-    func backgroundFetch(task: BGTask) {
-        print("background handler")
-        MSI.shared.scheduleAppRefresh()
-        
-        let allLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
-            let sync = importable.shouldSync()
-            return sync
-        }
-        
-        NSLog("Fetching new data from the API for \(allLoadList.count) data sources")
-        
-        if allLoadList.isEmpty {
-            task.setTaskCompleted(success: true)
-        }
-        
-        for importable in allLoadList {
-            NSLog("Fetching new data for \(importable.key)")
-            self.loadData(
-                type: importable.decodableRoot,
-                dataType: importable,
-                operationQueue: self.backgroundFetchQueue)
-        }
-        
-        var expired = false
-        task.expirationHandler = {
-            expired = true
-            self.backgroundFetchQueue.cancelAllOperations()
-        }
-        
-        self.backgroundFetchQueue.addBarrierBlock {
-            DispatchQueue.main.async {
-                task.setTaskCompleted(success: !expired)
-            }
-        }
-    }
+//    func backgroundFetch(task: BGTask) {
+//        print("background handler")
+//        MSI.shared.scheduleAppRefresh()
+//        
+//        let allLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
+//            let sync = importable.shouldSync()
+//            return sync
+//        }
+//        
+//        NSLog("Fetching new data from the API for \(allLoadList.count) data sources")
+//        
+//        if allLoadList.isEmpty {
+//            task.setTaskCompleted(success: true)
+//        }
+//        
+//        for importable in allLoadList {
+//            NSLog("Fetching new data for \(importable.key)")
+//            self.loadData(
+//                type: importable.decodableRoot,
+//                dataType: importable,
+//                operationQueue: self.backgroundFetchQueue)
+//        }
+//        
+//        var expired = false
+//        task.expirationHandler = {
+//            expired = true
+//            self.backgroundFetchQueue.cancelAllOperations()
+//        }
+//        
+//        self.backgroundFetchQueue.addBarrierBlock {
+//            DispatchQueue.main.async {
+//                task.setTaskCompleted(success: !expired)
+//            }
+//        }
+//    }
     
     func onChangeOfScenePhase(_ newPhase: ScenePhase) {
         switch newPhase {
@@ -221,22 +232,15 @@ public class MSI {
     }
     
     func scheduleAppRefresh() {
-        let request = BGAppRefreshTaskRequest(identifier: "mil.nga.msi.refresh")
-        // Fetch no earlier than 1 hour from now
-        request.earliestBeginDate = Calendar.current.date(byAdding: .minute, value: 1, to: Date())
-        
-        do {
-            try BGTaskScheduler.shared.submit(request)
-        } catch BGTaskScheduler.Error.notPermitted {
-            print("BGTaskScheduler.shared.submit notPermitted")
-        } catch BGTaskScheduler.Error.tooManyPendingTaskRequests {
-            print("BGTaskScheduler.shared.submit tooManyPendingTaskRequests")
-        } catch BGTaskScheduler.Error.unavailable {
-            print("BGTaskScheduler.shared.submit unavailable")
-        } catch {
-            print("BGTaskScheduler.shared.submit \(error.localizedDescription)")
-        }
-        print("Background task scheduled")
+        asamInitializer?.scheduleRefresh()
+        moduInitializer?.scheduleRefresh()
+        portInitializer?.scheduleRefresh()
+        lightInitializer?.scheduleRefresh()
+        radioBeaconInitializer?.scheduleRefresh()
+        differentialGPSStationInitializer?.scheduleRefresh()
+        electronicPublicationInitializer?.scheduleRefresh()
+        navigationalWarningInitializer?.scheduleRefresh()
+        noticeToMarinersInitializer?.scheduleRefresh()
     }
     
     func loadAllData() {
@@ -255,42 +259,44 @@ public class MSI {
         radioBeaconInitializer?.fetch()
         differentialGPSStationInitializer?.fetch()
         electronicPublicationInitializer?.fetch()
+        navigationalWarningInitializer?.fetch()
+        noticeToMarinersInitializer?.fetch()
 
-        let initialDataLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
-            if let dataSourceType = importable as? any DataSource.Type {
-                return UserDefaults.standard
-                    .dataSourceEnabled(dataSourceType.definition) &&
-                !self.isLoaded(type: importable) &&
-                !(importable.seedDataFiles ?? []).isEmpty
-            }
-            return false
-        }
-        if !initialDataLoadList.isEmpty {
-            
-            NSLog("Loading initial data from \(initialDataLoadList.count) data sources")
-            PersistenceController.current.addViewContextObserver(
-                self,
-                selector: #selector(self.managedObjectContextObjectChangedObserver(notification:)),
-                name: .NSManagedObjectContextObjectsDidChange)
-
-            for importable in initialDataLoadList {
-                self.loadInitialData(type: importable.decodableRoot, dataType: importable)
-            }
-
-        } else {
-            UserDefaults.standard.initialDataLoaded = true
-            
-            let allLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
-                let sync = importable.shouldSync()
-                return sync
-            }
-            
-            NSLog("Fetching new data from the API for \(allLoadList.count) data sources")
-            for importable in allLoadList {
-                NSLog("Fetching new data for \(importable.key)")
-                self.loadData(type: importable.decodableRoot, dataType: importable)
-            }
-        }
+//        let initialDataLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
+//            if let dataSourceType = importable as? any DataSource.Type {
+//                return UserDefaults.standard
+//                    .dataSourceEnabled(dataSourceType.definition) &&
+//                !self.isLoaded(type: importable) &&
+//                !(importable.seedDataFiles ?? []).isEmpty
+//            }
+//            return false
+//        }
+//        if !initialDataLoadList.isEmpty {
+//            
+//            NSLog("Loading initial data from \(initialDataLoadList.count) data sources")
+//            PersistenceController.current.addViewContextObserver(
+//                self,
+//                selector: #selector(self.managedObjectContextObjectChangedObserver(notification:)),
+//                name: .NSManagedObjectContextObjectsDidChange)
+//
+//            for importable in initialDataLoadList {
+//                self.loadInitialData(type: importable.decodableRoot, dataType: importable)
+//            }
+//
+//        } else {
+//            UserDefaults.standard.initialDataLoaded = true
+//            
+//            let allLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
+//                let sync = importable.shouldSync()
+//                return sync
+//            }
+//            
+//            NSLog("Fetching new data from the API for \(allLoadList.count) data sources")
+//            for importable in allLoadList {
+//                NSLog("Fetching new data for \(importable.key)")
+//                self.loadData(type: importable.decodableRoot, dataType: importable)
+//            }
+//        }
     }
     
     @objc func managedObjectContextObjectChangedObserver(notification: Notification) {
@@ -322,51 +328,51 @@ public class MSI {
         }
     }
         
-    func loadInitialData<T: Decodable, D: NSManagedObject & BatchImportable>(
-        type: T.Type,
-        dataType: D.Type,
-        operationQueue: OperationQueue? = nil
-    ) {
-        let initialDataLoadOperation = DataLoadOperation(
-            appState: appState,
-            taskName: "Load Initial Data \(dataType.key)")
-        initialDataLoadOperation.action = { [weak initialDataLoadOperation] in
-            guard let initialDataLoadOperation = initialDataLoadOperation else {
-                return
-            }
-            initialDataLoadOperation.loadInitialData(type: type.self, dataType: dataType)
-        }
-        DispatchQueue.main.async {
-            self.appState.loadingDataSource[dataType.key] = true
-        }
-        (operationQueue ?? initialLoadQueue).addOperation(initialDataLoadOperation)
-    }
+//    func loadInitialData<T: Decodable, D: NSManagedObject & BatchImportable>(
+//        type: T.Type,
+//        dataType: D.Type,
+//        operationQueue: OperationQueue? = nil
+//    ) {
+//        let initialDataLoadOperation = DataLoadOperation(
+//            appState: appState,
+//            taskName: "Load Initial Data \(dataType.key)")
+//        initialDataLoadOperation.action = { [weak initialDataLoadOperation] in
+//            guard let initialDataLoadOperation = initialDataLoadOperation else {
+//                return
+//            }
+//            initialDataLoadOperation.loadInitialData(type: type.self, dataType: dataType)
+//        }
+//        DispatchQueue.main.async {
+//            self.appState.loadingDataSource[dataType.key] = true
+//        }
+//        (operationQueue ?? initialLoadQueue).addOperation(initialDataLoadOperation)
+//    }
+//    
+//    func loadData<T: Decodable, D: NSManagedObject & BatchImportable>(
+//        type: T.Type,
+//        dataType: D.Type,
+//        operationQueue: OperationQueue? = nil
+//    ) {
+//        if dataType.key == DataSources.asam.key || dataType.key == DataSources.modu.key {
+//            return
+//        }
+//        
+//        let dataLoadOperation = DataLoadOperation(appState: appState, taskName: "Load Data \(dataType.key)")
+//        dataLoadOperation.action = { [weak dataLoadOperation] in
+//            guard let dataLoadOperation = dataLoadOperation else {
+//                return
+//            }
+//            dataLoadOperation.loadData(type: type.self, dataType: dataType)
+//        }
+//
+//        DispatchQueue.main.async {
+//            self.appState.loadingDataSource[dataType.key] = true
+//        }
+//        (operationQueue ?? dataFetchQueue).addOperation(dataLoadOperation)
+//    }
     
-    func loadData<T: Decodable, D: NSManagedObject & BatchImportable>(
-        type: T.Type,
-        dataType: D.Type,
-        operationQueue: OperationQueue? = nil
-    ) {
-        if dataType.key == DataSources.asam.key || dataType.key == DataSources.modu.key {
-            return
-        }
-        
-        let dataLoadOperation = DataLoadOperation(appState: appState, taskName: "Load Data \(dataType.key)")
-        dataLoadOperation.action = { [weak dataLoadOperation] in
-            guard let dataLoadOperation = dataLoadOperation else {
-                return
-            }
-            dataLoadOperation.loadData(type: type.self, dataType: dataType)
-        }
-
-        DispatchQueue.main.async {
-            self.appState.loadingDataSource[dataType.key] = true
-        }
-        (operationQueue ?? dataFetchQueue).addOperation(dataLoadOperation)
-    }
-    
-    func isLoaded<D: BatchImportable>(type: D.Type) -> Bool {
-        let count = try? PersistenceController.current.countOfObjects(D.self)
-        return (count ?? 0) > 0
-    }
+//    func isLoaded<D: BatchImportable>(type: D.Type) -> Bool {
+//        let count = try? PersistenceController.current.countOfObjects(D.self)
+//        return (count ?? 0) > 0
+//    }
 }

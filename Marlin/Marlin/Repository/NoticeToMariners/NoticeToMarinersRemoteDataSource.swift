@@ -15,7 +15,7 @@ class NoticeToMarinersRemoteDataSource: RemoteDataSource<NoticeToMarinersModel> 
 
     func fetch(
         task: BGTask? = nil,
-        noticeNumber: Int64? = nil
+        noticeNumber: Int? = nil
     ) async -> [NoticeToMarinersModel] {
         let operation = NoticeToMarinersDataFetchOperation(noticeNumber: noticeNumber)
         return await fetch(task: task, operation: operation)

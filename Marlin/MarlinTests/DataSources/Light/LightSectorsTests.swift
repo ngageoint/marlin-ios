@@ -11,51 +11,9 @@ import Combine
 @testable import Marlin
 
 final class LightSectorsTests: XCTestCase {
-    
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    override func setUp(completion: @escaping (Error?) -> Void) {
-        for dataSource in DataSourceDefinitions.allCases {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        persistentStore.viewContext.performAndWait {
-            if let lights = persistentStore.viewContext.fetchAll(Light.self) {
-                for light in lights {
-                    persistentStore.viewContext.delete(light)
-                }
-            }
-        }
-        
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
-        
-    }
-    override func tearDown(completion: @escaping (Error?) -> Void) {
-        persistentStore.viewContext.performAndWait {
-            if let lights = persistentStore.viewContext.fetchAll(Light.self) {
-                for light in lights {
-                    persistentStore.viewContext.delete(light)
-                }
-            }
-        }
-        completion(nil)
-    }
-    
     func testVisibleAndObscured() {
-        let light = Light(context: persistentStore.viewContext)
-        
+        var light = LightModel()
+
         light.volumeNumber = "PUB 114"
         light.aidType = "Lighted Aids"
         light.geopoliticalHeading = "ENGLAND-SCILLY ISLES"
@@ -84,8 +42,7 @@ final class LightSectorsTests: XCTestCase {
         light.longitude = 2.0
         light.sectionHeader = "Section"
         
-        let model = LightModel(light: light)
-        let sectors = model.lightSectors!
+        let sectors = light.lightSectors!
         XCTAssertEqual(sectors.count, 3)
         XCTAssertFalse(sectors[0].obscured)
         XCTAssertFalse(sectors[1].obscured)

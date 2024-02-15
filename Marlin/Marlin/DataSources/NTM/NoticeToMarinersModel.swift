@@ -11,6 +11,92 @@ import GeoJSON
 import UIKit
 import OSLog
 
+struct NoticeToMarinersListModel: Hashable, Identifiable {
+    var dateString: String? {
+        if let date = lastModified {
+            return DataSources.noticeToMariners.dateFormatter.string(from: date)
+        }
+        return nil
+    }
+
+    var itemTitle: String {
+        return "\(self.title ?? "") \(self.isFullPublication ?? false ? (self.fileExtension ?? "") : "")"
+    }
+
+    static var definition: any DataSourceDefinition {
+        DataSources.asam
+    }
+
+    var id: String {
+        "\(noticeNumber ?? -1)"
+    }
+
+    var itemKey: String {
+        return "\(noticeNumber ?? -1)"
+    }
+
+    var key: String {
+        DataSources.noticeToMariners.key
+    }
+
+    var publicationIdentifier: Int?
+    var noticeNumber: Int?
+    var title: String?
+    var odsKey: String?
+    var sectionOrder: Int?
+    var limitedDist: Bool?
+    var odsEntryId: Int?
+    var odsContentId: Int?
+    var internalPath: String?
+    var filenameBase: String?
+    var fileExtension: String?
+    var fileSize: Int?
+    var isFullPublication: Bool?
+    var uploadTime: Date?
+    var lastModified: Date?
+    var canBookmark: Bool = false
+
+    init(noticeToMariners: NoticeToMariners) {
+        self.canBookmark = true
+        publicationIdentifier = Int(noticeToMariners.publicationIdentifier)
+        noticeNumber = Int(noticeToMariners.noticeNumber)
+        title = noticeToMariners.title
+        odsKey = noticeToMariners.odsKey
+        sectionOrder = Int(noticeToMariners.sectionOrder)
+        limitedDist = noticeToMariners.limitedDist
+        odsEntryId = Int(noticeToMariners.odsEntryId)
+        odsContentId = Int(noticeToMariners.odsContentId)
+        internalPath = noticeToMariners.internalPath
+        filenameBase = noticeToMariners.filenameBase
+        fileExtension = noticeToMariners.fileExtension
+        fileSize = Int(noticeToMariners.fileSize)
+        isFullPublication = noticeToMariners.isFullPublication
+        uploadTime = noticeToMariners.uploadTime
+        lastModified = noticeToMariners.lastModified
+    }
+}
+
+extension NoticeToMarinersListModel {
+    init(noticeToMarinersModel: NoticeToMarinersModel) {
+        publicationIdentifier = noticeToMarinersModel.publicationIdentifier
+        noticeNumber = noticeToMarinersModel.noticeNumber
+        title = noticeToMarinersModel.title
+        odsKey = noticeToMarinersModel.odsKey
+        sectionOrder = noticeToMarinersModel.sectionOrder
+        limitedDist = noticeToMarinersModel.limitedDist
+        odsEntryId = noticeToMarinersModel.odsEntryId
+        odsContentId = noticeToMarinersModel.odsContentId
+        internalPath = noticeToMarinersModel.internalPath
+        filenameBase = noticeToMarinersModel.filenameBase
+        fileExtension = noticeToMarinersModel.fileExtension
+        fileSize = noticeToMarinersModel.fileSize
+        isFullPublication = noticeToMarinersModel.isFullPublication
+        uploadTime = noticeToMarinersModel.uploadTime
+        lastModified = noticeToMarinersModel.lastModified
+        canBookmark = noticeToMarinersModel.canBookmark
+    }
+}
+
 struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable {
 
     var id: String {
@@ -49,21 +135,25 @@ struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable {
         case lastModified
     }
 
-    let publicationIdentifier: Int?
-    let noticeNumber: Int?
-    let title: String?
-    let odsKey: String?
-    let sectionOrder: Int?
-    let limitedDist: Bool?
-    let odsEntryId: Int?
-    let odsContentId: Int?
-    let internalPath: String?
-    let filenameBase: String?
-    let fileExtension: String?
-    let fileSize: Int?
-    let isFullPublication: Bool?
-    let uploadTime: Date?
-    let lastModified: Date?
+    var publicationIdentifier: Int?
+    var noticeNumber: Int?
+    var title: String?
+    var odsKey: String?
+    var sectionOrder: Int?
+    var limitedDist: Bool?
+    var odsEntryId: Int?
+    var odsContentId: Int?
+    var internalPath: String?
+    var filenameBase: String?
+    var fileExtension: String?
+    var fileSize: Int?
+    var isFullPublication: Bool?
+    var uploadTime: Date?
+    var lastModified: Date?
+
+    init() {
+
+    }
 
     init(noticeToMariners: NoticeToMariners) {
         self.publicationIdentifier = Int(noticeToMariners.publicationIdentifier)

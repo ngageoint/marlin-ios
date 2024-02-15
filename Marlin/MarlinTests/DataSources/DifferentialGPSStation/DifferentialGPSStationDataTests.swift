@@ -21,10 +21,9 @@ final class DifferentialGPSStationDataTests: XCTestCase {
     
     override func setUp(completion: @escaping (Error?) -> Void) {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
-        for dataSource in DataSourceDefinitions.allCases {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
-        }
+        UserDefaults.registerMarlinDefaults()
+        UserDefaults.standard.initialDataLoaded = false
+        UserDefaults.standard.clearLastSyncTimeSeconds(DataSources.dgps)
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")

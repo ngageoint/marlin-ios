@@ -11,25 +11,15 @@ import Combine
 import UIKit
 import BackgroundTasks
 
-enum NoticeToMarinersItem: Hashable, Identifiable {
-    var id: String {
-        switch self {
-        case .listItem(let noticeToMariners):
-            return noticeToMariners.id
-        case .sectionHeader(let header):
-            return header
-        }
-    }
-
-    case listItem(_ noticeToMariners: NoticeToMarinersModel)
-    case sectionHeader(header: String)
-}
-
 protocol NoticeToMarinersLocalDataSource {
     func getNoticeToMariners(
-        noticeNumber: Int64?
+        noticeNumber: Int?
     ) -> NoticeToMarinersModel?
 
+    func getNewestNoticeToMariners() -> NoticeToMarinersModel?
+    func getNoticesToMariners(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [NoticeToMarinersModel]
     func noticeToMariners(
         filters: [DataSourceFilterParameter]?,
         paginatedBy paginator: Trigger.Signal?
@@ -46,6 +36,7 @@ class NoticeToMarinersCoreDataDataSource:
     ObservableObject {
     typealias DataType = NoticeToMariners
     typealias ModelType = NoticeToMarinersModel
+    typealias ListModelType = NoticeToMarinersListModel
     typealias Item = NoticeToMarinersItem
 
     private lazy var context: NSManagedObjectContext = {
@@ -53,16 +44,54 @@ class NoticeToMarinersCoreDataDataSource:
     }()
 
     func getNoticeToMariners(
-        noticeNumber: Int64?
+        noticeNumber: Int?
     ) -> ModelType? {
-        if let noticeNumber = noticeNumber {
-            if let notice = try? context.fetchFirst(
-                DataType.self,
-                predicate: NSPredicate(format: "noticeNumber == %i", argumentArray: [noticeNumber])) {
-                return ModelType(noticeToMariners: notice)
+        return context.performAndWait {
+            if let noticeNumber = noticeNumber {
+                if let notice = try? context.fetchFirst(
+                    DataType.self,
+                    predicate: NSPredicate(format: "noticeNumber == %i", argumentArray: [noticeNumber])) {
+                    return ModelType(noticeToMariners: notice)
+                }
+            }
+            return nil
+        }
+    }
+
+    func getNewestNoticeToMariners() -> NoticeToMarinersModel? {
+        var ntm: NoticeToMarinersModel?
+        context.performAndWait {
+            if let newestNoticeToMariners = try? PersistenceController.current.fetchFirst(
+                NoticeToMariners.self,
+                sortBy: [
+                    NSSortDescriptor(keyPath: \NoticeToMariners.noticeNumber, ascending: false)
+                ],
+                predicate: nil,
+                context: context
+            ) {
+                ntm = NoticeToMarinersModel(noticeToMariners: newestNoticeToMariners)
             }
         }
-        return nil
+        return ntm
+    }
+
+    func getNoticesToMariners(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [NoticeToMarinersModel] {
+        return await context.perform {
+            let fetchRequest = NoticeToMariners.fetchRequest()
+            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
+
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            fetchRequest.predicate = predicate
+
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.noticeToMariners.key).map({ sortParameter in
+                sortParameter.toNSSortDescriptor()
+            })
+            return (self.context.fetch(request: fetchRequest)?.map { ntm in
+                NoticeToMarinersModel(noticeToMariners: ntm)
+            }) ?? []
+        }
     }
 
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
@@ -130,11 +159,11 @@ extension NoticeToMarinersCoreDataDataSource {
 
                 list = fetched.flatMap { item in
                     guard let sortDescriptor = sortDescriptors.first else {
-                        return [Item.listItem(ModelType(noticeToMariners: item))]
+                        return [Item.listItem(ListModelType(noticeToMariners: item))]
                     }
 
                     if !sortDescriptor.section {
-                        return [Item.listItem(ModelType(noticeToMariners: item))]
+                        return [Item.listItem(ListModelType(noticeToMariners: item))]
                     }
 
                     return createSectionHeaderAndListItem(
@@ -171,18 +200,18 @@ extension NoticeToMarinersCoreDataDataSource {
                 previousHeader = sortValueString
                 return [
                     Item.sectionHeader(header: sortValueString),
-                    Item.listItem(ModelType(noticeToMariners: item))
+                    Item.listItem(ListModelType(noticeToMariners: item))
                 ]
             }
         } else if previousHeader == nil, let sortValueString = sortValueString {
             previousHeader = sortValueString
             return [
                 Item.sectionHeader(header: sortValueString),
-                Item.listItem(ModelType(noticeToMariners: item))
+                Item.listItem(ListModelType(noticeToMariners: item))
             ]
         }
 
-        return [Item.listItem(ModelType(noticeToMariners: item))]
+        return [Item.listItem(ListModelType(noticeToMariners: item))]
     }
 
     // ignore due to the amount of data types

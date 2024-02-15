@@ -9,7 +9,7 @@ import Foundation
 import Alamofire
 
 enum NoticeToMarinersService: URLRequestConvertible {
-    case getNoticeToMariners(noticeNumber: Int64? = nil)
+    case getNoticeToMariners(noticeNumber: Int? = nil)
 
     var method: HTTPMethod {
         switch self {

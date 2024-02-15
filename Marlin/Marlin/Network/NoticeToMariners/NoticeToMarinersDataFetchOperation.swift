@@ -9,9 +9,9 @@ import Foundation
 
 class NoticeToMarinersDataFetchOperation: DataFetchOperation<NoticeToMarinersModel> {
 
-    var noticeNumber: Int64?
+    var noticeNumber: Int?
 
-    init(noticeNumber: Int64? = nil) {
+    init(noticeNumber: Int? = nil) {
         self.noticeNumber = noticeNumber
     }
 

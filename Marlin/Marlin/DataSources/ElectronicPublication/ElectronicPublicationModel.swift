@@ -35,6 +35,14 @@ struct ElectronicPublicationListModel: Hashable, Identifiable, Bookmarkable {
         self.uploadTime = epub.uploadTime
         self.s3Key = epub.s3Key
     }
+
+    init(epubModel: ElectronicPublicationModel) {
+        self.canBookmark = true
+        self.sectionDisplayName = epubModel.sectionDisplayName
+        self.fileSize = epubModel.fileSize
+        self.uploadTime = epubModel.uploadTime
+        self.s3Key = epubModel.s3Key
+    }
 }
 
 struct ElectronicPublicationModel: Bookmarkable, Codable, Hashable, Identifiable {
@@ -78,26 +86,32 @@ struct ElectronicPublicationModel: Bookmarkable, Codable, Hashable, Identifiable
         case uploadTime
     }
 
-    let contentId: Int?
-    let fileExtension: String?
-    let filenameBase: String?
-    let fileSize: Int?
-    let fullFilename: String?
-    let fullPubFlag: Bool?
-    let internalPath: String?
-    let odsEntryId: Int?
-    let pubDownloadDisplayName: String?
-    let pubDownloadId: Int?
-    let pubDownloadOrder: Int?
-    let pubsecId: Int?
-    let pubsecLastModified: Date?
-    let pubTypeId: Int?
-    let s3Key: String?
-    let sectionDisplayName: String?
-    let sectionLastModified: Date?
-    let sectionName: String?
-    let sectionOrder: Int?
-    let uploadTime: Date?
+    var contentId: Int?
+    var fileExtension: String?
+    var filenameBase: String?
+    var fileSize: Int?
+    var fullFilename: String?
+    var fullPubFlag: Bool?
+    var internalPath: String?
+    var odsEntryId: Int?
+    var pubDownloadDisplayName: String?
+    var pubDownloadId: Int?
+    var pubDownloadOrder: Int?
+    var pubsecId: Int?
+    var pubsecLastModified: Date?
+    var pubTypeId: Int?
+    var s3Key: String?
+    var sectionDisplayName: String?
+    var sectionLastModified: Date?
+    var sectionName: String?
+    var sectionOrder: Int?
+    var uploadTime: Date?
+    var isDownloaded: Bool?
+    var isDownloading: Bool?
+
+    init() {
+
+    }
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -172,6 +186,8 @@ struct ElectronicPublicationModel: Bookmarkable, Codable, Hashable, Identifiable
         self.sectionName = epub.sectionName
         self.sectionOrder = Int(epub.sectionOrder)
         self.uploadTime = epub.uploadTime
+        self.isDownloaded = epub.isDownloaded
+        self.isDownloading = epub.isDownloading
     }
 
     // The keys must have the same name as the attributes of the Asam entity.

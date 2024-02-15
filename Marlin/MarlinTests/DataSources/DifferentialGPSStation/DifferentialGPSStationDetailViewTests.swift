@@ -12,19 +12,7 @@ import SwiftUI
 @testable import Marlin
 
 final class DifferentialGPSStationDetailViewTests: XCTestCase {
-    override func setUp() {
-        for dataSource in DataSourceDefinitions.allCases {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-    }
-    
-    override func tearDown() {
-    }
-    
+
     func testLoading() {
         var dgps = DifferentialGPSStationModel()
         dgps.volumeNumber = "PUB 112"

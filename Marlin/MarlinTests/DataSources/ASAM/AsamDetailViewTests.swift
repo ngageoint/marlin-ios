@@ -12,21 +12,6 @@ import SwiftUI
 
 final class AsamDetailViewTests: XCTestCase {
     
-    override func setUp() {
-        Task.init {
-            await TestHelpers.asyncGetKeyWindowVisible()
-        }
-        UserDefaults.standard.initialDataLoaded = false
-        UserDefaults.standard.clearLastSyncTimeSeconds(DataSources.asam)
-
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-    }
-    
-    override func tearDown() {
-    }
-    
     func testLoading() {
         var asam = AsamModel()
         asam.asamDescription = "description"
