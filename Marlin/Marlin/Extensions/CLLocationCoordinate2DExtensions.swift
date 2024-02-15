@@ -406,14 +406,14 @@ extension CLLocationCoordinate2D {
         
         if let direction = coordinateToParse.last {
             // the last character might be a direction not a number
-            if direction.wholeNumberValue != nil {
+            if direction.wholeNumberValue == nil {
                 dmsCoordinate.direction = "\(direction)".uppercased()
                 coordinateToParse = "\(coordinateToParse.dropLast(1))"
             }
         }
         if let direction = coordinateToParse.first {
             // the first character might be a direction not a number
-            if direction.wholeNumberValue != nil {
+            if direction.wholeNumberValue == nil {
                 dmsCoordinate.direction = "\(direction)".uppercased()
                 coordinateToParse = "\(coordinateToParse.dropFirst(1))"
             }
@@ -676,8 +676,8 @@ extension CLLocationCoordinate2D {
             latMinutes = 0
         }
         return """
-            \(abs(latDegrees))° \(formatter.string(for: latMinutes) ?? "")\' \
-            \(formatter.string(for: latSeconds) ?? "")\" \(latDegrees >= 0 ? "N" : "S")
+        \(abs(latDegrees))° \(formatter.string(for: latMinutes) ?? "")\' \
+        \(formatter.string(for: latSeconds) ?? "")\" \(latDegrees >= 0 ? "N" : "S")
         """
     }
     
@@ -702,8 +702,8 @@ extension CLLocationCoordinate2D {
             lonMinutes = 0
         }
         return """
-            \(abs(lonDegrees))° \(formatter.string(for: lonMinutes) ?? "")\' \
-            \(formatter.string(for: lonSeconds) ?? "")\" \(lonDegrees >= 0 ? "E" : "W")
+        \(abs(lonDegrees))° \(formatter.string(for: lonMinutes) ?? "")\' \
+        \(formatter.string(for: lonSeconds) ?? "")\" \(lonDegrees >= 0 ? "E" : "W")
         """
     }
 
