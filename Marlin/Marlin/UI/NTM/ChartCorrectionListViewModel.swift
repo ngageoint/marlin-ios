@@ -184,8 +184,8 @@ class ChartCorrectionListViewModel: NSObject, ObservableObject {
         }
 
         let newUrlString = """
-            \(MSIRouter.baseURLString)/publications/ntm/ntm-chart-corr/geo?\
-            \(queryParameters.joined(separator: "&"))
+        \(MSIRouter.baseURLString)/publications/ntm/ntm-chart-corr/geo?\
+        \(queryParameters.joined(separator: "&"))
         """
         if newUrlString == urlString {
             return
