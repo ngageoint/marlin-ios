@@ -87,7 +87,7 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView(mapState: mapState)
+                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
                 }
             }
         }
@@ -124,7 +124,7 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView<MKLocalSearchMock>(mapState: mapState)
+                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
                 }
                 .onAppear {
                     self.passThrough.mapState = mapState
@@ -193,7 +193,7 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView<MKLocalSearchMock>(mapState: mapState)
+                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
                 }
                 .onAppear {
                     self.passThrough.mapState = mapState
@@ -242,7 +242,7 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView<MKLocalSearchMock>(mapState: mapState)
+                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
                 }
                 .onAppear {
                     self.passThrough.mapState = mapState
@@ -276,7 +276,73 @@ final class SearchViewTests: XCTestCase {
         XCTAssertEqual(MKLocalSearchMock.searchRequest?.naturalLanguageQuery, "1.0, 2.0")
         tester().waitForView(withAccessibilityLabel: "Test item")
     }
-
+    
+    func testUsingSearchProvider() throws {
+        class PassThrough: ObservableObject {
+            var mapState: MapState?
+        }
+        
+        struct Container: View {
+            @ObservedObject var passThrough: PassThrough
+            @StateObject var mapState: MapState = MapState()
+            
+            init(passThrough: PassThrough) {
+                self.passThrough = passThrough
+            }
+            
+            var body: some View {
+                NavigationView {
+                    SearchView<MockSearchProvider>(mapState: mapState)
+                }
+                .onAppear {
+                    self.passThrough.mapState = mapState
+                }
+            }
+        }
+        let passThrough = PassThrough()
+        
+        let container = Container(passThrough: passThrough)
+            .environment(\.managedObjectContext, persistentStore.viewContext)
+        
+        let controller = UIHostingController(rootView: container)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        
+        tester().waitForView(withAccessibilityLabel: "Expand Search")
+        tester().tapView(withAccessibilityLabel: "Expand Search")
+        
+        tester().waitForView(withAccessibilityLabel: "Collapse Search")
+        
+        
+        let e = XCTNSPredicateExpectation(predicate: NSPredicate(block: { _, _ in
+            return passThrough.mapState?.searchResults?.count == 1
+        }), object: passThrough.mapState)
+        
+        tester().enterText("search", intoViewWithAccessibilityLabel: "Search Field")
+         
+        // wait for the debounce
+        wait(for: [e], timeout: 5)
+        tester().waitForView(withAccessibilityLabel: "Test item")
+        tester().waitForView(withAccessibilityLabel: "Location")
+        expectation(forNotification: .SnackbarNotification,
+                    object: nil) { notification in
+            let model = try? XCTUnwrap(notification.object as? SnackbarNotification)
+            XCTAssertEqual(model?.snackbarModel?.message, "Location \(UserDefaults.standard.coordinateDisplay.format(coordinate: CLLocationCoordinate2D(latitude: 1.0, longitude: 1.0))) copied to clipboard")
+            XCTAssertEqual(UIPasteboard.general.string, "\(UserDefaults.standard.coordinateDisplay.format(coordinate: CLLocationCoordinate2D(latitude: 1.0, longitude: 1.0)))")
+            return true
+        }
+        tester().tapView(withAccessibilityLabel: "Location")
+        waitForExpectations(timeout: 10)
+        
+        tester().waitForView(withAccessibilityLabel: "focus")
+        tester().tapView(withAccessibilityLabel: "focus")
+        XCTAssertEqual(passThrough.mapState?.center?.center.latitude, 1.0)
+        XCTAssertEqual(passThrough.mapState?.center?.center.longitude, 1.0)
+        
+        tester().waitForView(withAccessibilityLabel: "clear")
+        tester().tapView(withAccessibilityLabel: "clear")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Test item")
+    }
 }
 
 class MKLocalSearchMock: MKLocalSearch {
@@ -310,4 +376,21 @@ class MockMKLocalSearchResponse: MKLocalSearch.Response {
     init(mapItems: [MKMapItem]) {
         self._mapItems = mapItems
     }
+}
+
+class MockSearchProvider: SearchProvider {
+    static func performSearch(
+        searchText: String,
+        region: MKCoordinateRegion?,
+        onCompletion: @escaping ([MKMapItem]) -> Void) {
+            if(searchText == "search"){
+                let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 1.0, longitude: 1.0))
+                let mapItem = MKMapItem(placemark: placemark)
+                mapItem.name = "Test item"
+                mapItem.pointOfInterestCategory = .airport
+                onCompletion([mapItem])
+            } else {
+                onCompletion([])
+            }
+        }
 }
