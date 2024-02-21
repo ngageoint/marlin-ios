@@ -16,6 +16,7 @@ struct MapSettings: View {
     @AppStorage("showCurrentLocation") var showCurrentLocation: Bool = false
     @AppStorage("showMapScale") var showMapScale = false
     @AppStorage("coordinateDisplay") var coordinateDisplay: CoordinateDisplayType = .latitudeLongitude
+    @AppStorage("searchType") var searchType: SearchType = .native
 
     var body: some View {
         Self._printChanges()
@@ -195,6 +196,42 @@ struct MapSettings: View {
                 }
                 .accessibilityElement(children: .contain)
                 .accessibilityLabel("Light Settings")
+            }
+            
+            Section {
+                HStack(spacing: 4) {
+                    Text("Apple Maps").font(Font.body1)
+                        .foregroundColor(Color.onSurfaceColor.opacity(0.87))
+                    Spacer()
+                    Image(systemName: searchType == .native ? "circle.inset.filled": "circle")
+                        .foregroundColor(Color.primaryColor)
+                        .onTapGesture {
+                            searchType = .native
+                        }
+                        .accessibilityElement()
+                        .accessibilityLabel("Apple Maps Search")
+                }
+                .padding(.top, 4)
+                .padding(.bottom, 4)
+                HStack(spacing: 4) {
+                    Text("Nominatim").font(Font.body1)
+                        .foregroundColor(Color.onSurfaceColor.opacity(0.87))
+                    Spacer()
+                    Image(systemName: searchType == .nominatim ? "circle.inset.filled": "circle")
+                        .foregroundColor(Color.primaryColor)
+                        .onTapGesture {
+                            searchType = .nominatim
+                        }
+                        .accessibilityElement()
+                        .accessibilityLabel("Nominatim Search")
+                }
+                .padding(.top, 4)
+                .padding(.bottom, 4)
+            } header: {
+                Text("Location Search")
+            } footer: {
+                Text("Nominatim is provided by [OpenStreetMap](https://www.openstreetmap.org/copyright).")
+                    .tint(Color.blue)
             }
             
             Section("Display") {

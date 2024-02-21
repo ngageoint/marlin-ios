@@ -117,4 +117,25 @@ final class MapSettingsTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Toggle GARS Grid")
         XCTAssertEqual(false, UserDefaults.standard.bool(forKey: "showGARS"))
     }
+    
+    func testSearchType() {
+        let view = MapSettings()
+        let nav = NavigationView {
+            view
+        }
+        
+        let controller = UIHostingController(rootView: nav)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        
+        XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchType"), SearchType.native.rawValue)
+        
+        tester().waitForView(withAccessibilityLabel: "Nominatim Search")
+        tester().tapView(withAccessibilityLabel: "Nominatim Search")
+        XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchType"), SearchType.nominatim.rawValue)
+        
+        tester().waitForView(withAccessibilityLabel: "Apple Maps Search")
+        tester().tapView(withAccessibilityLabel: "Apple Maps Search")
+        XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchType"), SearchType.native.rawValue)
+    }
 }
