@@ -67,8 +67,8 @@ struct RouteMapView: View {
     @State var showBottomSheet: Bool = false
     @StateObject var itemList: BottomSheetItemList = BottomSheetItemList()
     
-    @EnvironmentObject var router: MarlinRouter
-
+    @Binding var path: NavigationPath
+    
     @ObservedObject var routeViewModel: RouteViewModel
 
     let focusMapAtLocation = NotificationCenter.default.publisher(for: .FocusMapAtLocation)
@@ -112,22 +112,6 @@ struct RouteMapView: View {
             }
             
             var bottomSheetItems: [BottomSheetItem] = []
-            
-            if let itemKeys = notification.itemKeys {
-                for (dataSourceKey, itemKeys) in itemKeys {
-                    for itemKey in itemKeys {
-                        let bottomSheetItem = BottomSheetItem(
-                            mapName: "Route Map",
-                            zoom: false,
-                            itemKey: itemKey,
-                            dataSourceKey: dataSourceKey
-                        )
-                        bottomSheetItems.append(bottomSheetItem)
-                    }
-                    
-                }
-            }
-            
             if let items = notification.items, !items.isEmpty {
                 
                 print("Route map items tapped")
@@ -136,9 +120,6 @@ struct RouteMapView: View {
                     let bottomSheetItem = BottomSheetItem(item: item, mapName: "Route Map", zoom: false)
                     bottomSheetItems.append(bottomSheetItem)
                 }
-            }
-            
-            if !bottomSheetItems.isEmpty {
                 itemList.bottomSheetItems = bottomSheetItems
                 showBottomSheet.toggle()
             }
@@ -154,10 +135,7 @@ struct RouteMapView: View {
                 )
             },
             content: {
-                MarlinBottomSheet(
-                    itemList: itemList,
-                    focusNotification: .RouteFocus
-                ) { dataSourceViewBuilder in
+                MarlinBottomSheet(itemList: itemList, focusNotification: .RouteFocus) { dataSourceViewBuilder in
                     VStack {
                         Text(dataSourceViewBuilder.itemTitle)
                         HStack {
@@ -177,7 +155,6 @@ struct RouteMapView: View {
                     }
                 }
                 .environmentObject(LocationManager.shared())
-                .environmentObject(router)
                 .presentationDetents([.height(150)])
             }
         )

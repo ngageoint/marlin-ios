@@ -109,9 +109,7 @@ extension RadioBeacon: Locatable, GeoPackageExportable, GeoJSONExportable {
         return dateFormatter
     }
     
-    static func postProcess() {
-        imageCache.clearCache()
-    }
+    static func postProcess() {}
 }
 
 extension RadioBeacon: BatchImportable {

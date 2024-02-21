@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct NoticeToMarinersView: View {
-
+    @Binding var path: NavigationPath
+    
     func getFirstDay(WeekNumber weekNumber: Int, CurrentYear currentYear: Int) -> Date? {
         let calendar = Calendar(identifier: .gregorian)
         var dayComponent = DateComponents()
@@ -48,6 +49,7 @@ struct NoticeToMarinersView: View {
         List {
             NavigationLink {
                 MSIListView<NoticeToMariners, AnyView, NoticeToMarinersFullNoticeView, EmptyView>(
+                    path: $path,
                     watchFocusedItem: false,
                     allowUserSort: false,
                     allowUserFilter: false,

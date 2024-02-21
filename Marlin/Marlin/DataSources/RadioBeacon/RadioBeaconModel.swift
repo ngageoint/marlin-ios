@@ -501,9 +501,7 @@ extension RadioBeaconModel: DataSource {
         DataSourceProperty(name: "Delete Flag", key: #keyPath(RadioBeacon.deleteFlag), type: .string)
     ]
     
-    static func postProcess() {
-        imageCache.clearCache()
-    }
+    static func postProcess() {}
 }
 
 extension RadioBeaconModel: MapImage {

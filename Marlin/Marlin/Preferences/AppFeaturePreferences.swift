@@ -1,5 +1,5 @@
 //
-//  UserDefaults.swift
+//  AppFeaturePreferences.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 12/20/23.

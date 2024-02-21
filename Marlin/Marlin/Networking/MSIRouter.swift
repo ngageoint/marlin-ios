@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 
 enum MSIRouter: URLRequestConvertible {
+    case readAsams(date: String? = nil)
     case readModus(date: String? = nil)
     case readNavigationalWarnings
     case readLights(volume: String, noticeYear: String? = nil, noticeWeek: String? = nil)
@@ -25,6 +26,8 @@ enum MSIRouter: URLRequestConvertible {
     
     var method: HTTPMethod {
         switch self {
+        case .readAsams:
+            return .get
         case .readModus:
             return .get
         case .readNavigationalWarnings:
@@ -50,6 +53,8 @@ enum MSIRouter: URLRequestConvertible {
     
     var path: String {
         switch self {
+        case .readAsams:
+            return "/publications/asam"
         case .readModus:
             return "/publications/modu"
         case .readNavigationalWarnings:
@@ -75,6 +80,20 @@ enum MSIRouter: URLRequestConvertible {
     
     var parameters: Parameters? {
         switch self {
+        case .readAsams:
+            // we cannot reliably query for asams that occured after the date we have because
+            // records can be inserted with an occurance date in the past
+            // we have to query for all records all the time
+            let params = [
+                "sort": "date",
+                "output": "json"
+//                "maxOccurDate": Asam.dateFormatter.string(
+//                    from:Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date())
+            ]
+//            if let date = date {
+//                params["minOccurDate"] = date
+//            }
+            return params
         case .readModus(date: let date):
             var params = [
                 "maxSourceDate": Modu.dateFormatter.string(

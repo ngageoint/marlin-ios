@@ -230,6 +230,7 @@ class CoreDataPersistentStore: PersistentStore {
         do {
             let currentStore = _container?.persistentStoreCoordinator.persistentStores.last!
             if let currentStoreURL = currentStore?.url {
+                print("Current store url \(currentStoreURL)")
                 try _container?.persistentStoreCoordinator.destroyPersistentStore(at: currentStoreURL, type: .sqlite)
 
             }
@@ -251,6 +252,7 @@ class CoreDataPersistentStore: PersistentStore {
         print("Peristent store URL \(String(describing: description.url))")
         if inMemory {
             description.url = URL(fileURLWithPath: "/dev/null")
+            print("in memory")
         }
         
         // Enable persistent store remote change notifications
@@ -282,7 +284,8 @@ class CoreDataPersistentStore: PersistentStore {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
             self.isLoaded = true
-
+            print("Persistent store was loaded sending notification")
+            
             NotificationCenter.default.post(name: .PersistentStoreLoaded, object: nil)
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
@@ -328,6 +331,7 @@ class CoreDataPersistentStore: PersistentStore {
         let lastLoadDate = UserDefaults.standard.lastLoadDate
         
         if let forceReloadDate = forceReloadDate, lastLoadDate < forceReloadDate, !inMemory {
+            NSLog("Delete and reload")
             if !inMemory {
                 do {
                     let storeURL: URL = NSPersistentContainer
@@ -448,24 +452,13 @@ class CoreDataPersistentStore: PersistentStore {
     }
     
     private func mergePersistentHistoryChanges(from history: [NSPersistentHistoryTransaction]) {
-        let entityMap: [String?: String] = [
-            Asam.entity().name: DataSources.asam.key,
-            DFRS.entity().name: DataSources.dfrs.key,
-            DifferentialGPSStation.entity().name: DataSources.dgps.key,
-            ElectronicPublication.entity().name: DataSources.epub.key,
-            Light.entity().name: DataSources.light.key,
-            Modu.entity().name: DataSources.modu.key,
-            NavigationalWarning.entity().name: DataSources.navWarning.key,
-            NoticeToMariners.entity().name: DataSources.noticeToMariners.key,
-            Port.entity().name: DataSources.port.key,
-            RadioBeacon.entity().name: DataSources.radioBeacon.key
-        ]
-
-        self.logger.info("Received \(history.count) persistent history transactions.")
-        if let newToken = history.last?.token {
-            self.lastToken = newToken
-            self.storeHistoryToken(newToken)
+        let entityMap: [String?: String] = 
+        MSI.shared.mainDataList.reduce([String?: String]()) { (partialResult, importable) -> [String?: String] in
+            var partialResult = partialResult
+            partialResult[importable.entity().name] = importable.key
+            return partialResult
         }
+        self.logger.info("Received \(history.count) persistent history transactions.")
         // Update view context with objectIDs from history change request.
         /// - Tag: mergeChanges
         let viewContext = container.viewContext
@@ -473,7 +466,6 @@ class CoreDataPersistentStore: PersistentStore {
             var updateCounts: [String?: Int] = [:]
             var insertCounts: [String?: Int] = [:]
             for transaction in history {
-                NSLog("Transaction author \(transaction.author ?? "No author")")
                 let notif = transaction.objectIDNotification()
                 let inserts: Set<NSManagedObjectID> =
                 notif.userInfo?["inserted_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
@@ -489,8 +481,12 @@ class CoreDataPersistentStore: PersistentStore {
                     updateCounts[entityKey] = (updateCounts[entityKey] ?? 0) + 1
                 }
                 viewContext.mergeChanges(fromContextDidSave: transaction.objectIDNotification())
+                self.lastToken = transaction.token
             }
             
+            if let newToken = history.last?.token {
+                self.storeHistoryToken(newToken)
+            }
             var dataSourceUpdatedNotifications: [DataSourceUpdatedNotification] = []
             for dataSource in MSI.shared.mainDataList {
                 let inserts = insertCounts[dataSource.key] ?? 0

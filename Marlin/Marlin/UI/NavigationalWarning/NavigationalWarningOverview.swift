@@ -9,13 +9,13 @@ import SwiftUI
 import MapKit
 
 struct NavigationalWarningsOverview {
-    @EnvironmentObject var router: MarlinRouter
     @ObservedObject var generalLocation: GeneralLocation = GeneralLocation.shared
     
     let MAP_NAME = "Navigational Warning List View Map"
     @State var expandMap: Bool = false
     @State var selection: String?
-
+    @Binding var path: NavigationPath
+    
     @ObservedObject var focusedItem: ItemWrapper
     var watchFocusedItem: Bool = false
     
@@ -37,7 +37,7 @@ extension NavigationalWarningsOverview: View {
                 )
                 .edgesIgnoringSafeArea([.leading, .trailing])
                 
-                NavigationalWarningAreasView(mapName: MAP_NAME)
+                NavigationalWarningAreasView(mapName: MAP_NAME, path: $path)
                     .currentNavArea(generalLocation.currentNavArea?.name)
             }
         }
@@ -54,18 +54,18 @@ extension NavigationalWarningsOverview: View {
             NavigationalWarningNavAreaListView(
                 warnings: section.warnings,
                 navArea: section.id,
-                mapName: MAP_NAME
+                mapName: MAP_NAME, path: $path
             )
             .accessibilityElement(children: .contain)
         }
         .onChange(of: focusedItem.date) { _ in
             if watchFocusedItem, let focusedItem = focusedItem.dataSource as? NavigationalWarning {
-                router.path.append(focusedItem)
+                path.append(focusedItem)
             }
         }
         .onAppear {
             if watchFocusedItem, let focusedItem = focusedItem.dataSource as? NavigationalWarning {
-                router.path.append(focusedItem)
+                path.append(focusedItem)
             }
             Metrics.shared.appRoute([NavigationalWarning.metricsKey, "group"])
             Metrics.shared.dataSourceList(dataSource: NavigationalWarning.definition)
@@ -73,7 +73,7 @@ extension NavigationalWarningsOverview: View {
         .onReceive(viewDataSourcePub) { output in
             if let dataSource = output.dataSource as? NavigationalWarning, output.mapName == MAP_NAME {
                 NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-                router.path.append(dataSource)
+                path.append(dataSource)
             }
         }
     }

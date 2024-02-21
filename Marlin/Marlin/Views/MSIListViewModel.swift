@@ -66,7 +66,7 @@ class MSIListViewModel<T: DataSource & BatchImportable>:
         
         for filter in filters {
             if let predicate = filter.toPredicate(
-                dataSource: DataSources.filterableFromDefintion(T.definition)
+                dataSource: DataSourceDefinitions.filterableFromDefintion(T.definition)
             ) {
                 predicates.append(predicate)
             }

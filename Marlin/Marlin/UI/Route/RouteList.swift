@@ -30,7 +30,7 @@ struct RouteSummaryView: DataSourceSummaryView {
                         if let first = route.waypointArray.first {
                             if let dataSourceKey = first.dataSource, 
                                 let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
-                                DataSourceCircleImage(definition: type.definition, size: 15)
+                                DataSourceCircleImage(dataSource: type, size: 15)
                             }
                             if let dataSource = first.decodeToDataSource() {
                                 Text(dataSource.itemTitle)
@@ -44,7 +44,7 @@ struct RouteSummaryView: DataSourceSummaryView {
                             Group {
                                 if let dataSourceKey = last.dataSource, 
                                     let type = DataSourceType.fromKey(dataSourceKey)?.toDataSource() {
-                                    DataSourceCircleImage(definition: type.definition, size: 15)
+                                    DataSourceCircleImage(dataSource: type, size: 15)
                                 }
                                 if let dataSource = last.decodeToDataSource() {
                                     Text(dataSource.itemTitle)
@@ -72,14 +72,14 @@ struct RouteList: View {
     @EnvironmentObject var routeRepository: RouteRepositoryManager
     @StateObject var viewModel: RoutesViewModel = RoutesViewModel()
     
-    @EnvironmentObject var router: MarlinRouter
+    @Binding var path: NavigationPath
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             List(viewModel.routes) { route in
                 RouteSummaryView(route: route)
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    router.path.append(MarlinRoute.editRoute(routeURI: route.routeURL))
+                    path.append(MarlinRoute.editRoute(routeURI: route.routeURL))
                 }
                 .swipeActions(edge: .trailing) {
                     Button(role: .destructive) {

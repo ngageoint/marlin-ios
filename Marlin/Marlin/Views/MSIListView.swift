@@ -9,7 +9,7 @@ import SwiftUI
 import CoreData
 
 extension MSIListView where SectionHeader == EmptyView, Content == EmptyView, EmptyContent == EmptyView {
-    init(
+    init(path: Binding<NavigationPath>,
          focusedItem: ItemWrapper = ItemWrapper(),
          watchFocusedItem: Bool = false,
          allowUserSort: Bool = true,
@@ -19,6 +19,7 @@ extension MSIListView where SectionHeader == EmptyView, Content == EmptyView, Em
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil
     ) {
         self.init(
+            path: path, 
             focusedItem: focusedItem,
             watchFocusedItem: watchFocusedItem,
             allowUserSort: allowUserSort,
@@ -33,7 +34,7 @@ extension MSIListView where SectionHeader == EmptyView, Content == EmptyView, Em
 }
 
 extension MSIListView where Content == EmptyView, EmptyContent == EmptyView {
-    init(
+    init(path: Binding<NavigationPath>,
          focusedItem: ItemWrapper = ItemWrapper(),
          watchFocusedItem: Bool = false,
          allowUserSort: Bool = true,
@@ -43,6 +44,7 @@ extension MSIListView where Content == EmptyView, EmptyContent == EmptyView {
          sectionNameBuilder: ((MSISection<T>) -> String)? = nil,
          @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader) {
         self.init(
+            path: path, 
             focusedItem: focusedItem,
             watchFocusedItem: watchFocusedItem,
             allowUserSort: allowUserSort,
@@ -61,13 +63,13 @@ struct MSIListView<
         SectionHeader: View,
         Content: View,
         EmptyContent: View>: View {
-    @EnvironmentObject var router: MarlinRouter
     @State var sortOpen: Bool = false
     
     @ObservedObject var focusedItem: ItemWrapper
     @State var selection: String?
     @State var filterOpen: Bool = false
-
+    @Binding var path: NavigationPath
+    
     var allowUserSort: Bool = true
     var allowUserFilter: Bool = true
     var sectionHeaderIsSubList: Bool = false
@@ -82,7 +84,7 @@ struct MSIListView<
     let content: ((MSISection<T>) -> Content)
     let emptyView: (() -> EmptyContent)
     
-    init(
+    init(path: Binding<NavigationPath>,
          focusedItem: ItemWrapper = ItemWrapper(),
          watchFocusedItem: Bool = false,
          allowUserSort: Bool = true,
@@ -93,6 +95,7 @@ struct MSIListView<
          @ViewBuilder sectionViewBuilder: @escaping (MSISection<T>) -> SectionHeader,
          @ViewBuilder content: @escaping (MSISection<T>) -> Content,
          @ViewBuilder emptyView: @escaping () -> EmptyContent) {
+        _path = path
         self.focusedItem = focusedItem
         self.watchFocusedItem = watchFocusedItem
         self.allowUserSort = allowUserSort
@@ -102,7 +105,8 @@ struct MSIListView<
         self.sectionNameBuilder = sectionNameBuilder
         self.sectionViewBuilder = sectionViewBuilder
         self.content = content
-        self.filterViewModel = PersistedFilterViewModel(dataSource: DataSources.filterableFromDefintion(T.definition))
+        self.filterViewModel = PersistedFilterViewModel(
+            dataSource: DataSourceDefinitions.filterableFromDefintion(T.definition))
         self.emptyView = emptyView
     }
     
@@ -110,6 +114,7 @@ struct MSIListView<
         Self._printChanges()
         return ZStack(alignment: .bottomTrailing) {
             GenericSectionedList<T, SectionHeader, Content, EmptyContent>(
+                path: $path,
                 sectionHeaderIsSubList: sectionHeaderIsSubList,
                 sectionGroupNameBuilder: sectionGroupNameBuilder,
                 sectionNameBuilder: sectionNameBuilder,
@@ -117,7 +122,7 @@ struct MSIListView<
                 content: content,
                 emptyView: emptyView)
             if T.self as? GeoPackageExportable.Type != nil, 
-                let filterable = DataSources.filterableFromDefintion(T.definition) {
+                let filterable = DataSourceDefinitions.filterableFromDefintion(T.definition) {
                 GeoPackageExportButton(filterable: filterable)
             }
         }
@@ -125,13 +130,13 @@ struct MSIListView<
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
-                router.path.append(MarlinRoute.dataSourceDetail(dataSourceKey: T.definition.key, itemKey: focusedItem.itemKey))
+                path.append(MarlinRoute.dataSourceDetail(dataSourceKey: T.definition.key, itemKey: focusedItem.itemKey))
             }
             Metrics.shared.dataSourceList(dataSource: T.definition)
         }
         .onChange(of: focusedItem.date) { _ in
             if watchFocusedItem, let focusedItem = focusedItem.dataSource as? T {
-                router.path.append(MarlinRoute.dataSourceDetail(dataSourceKey: T.definition.key, itemKey: focusedItem.itemKey))
+                path.append(MarlinRoute.dataSourceDetail(dataSourceKey: T.definition.key, itemKey: focusedItem.itemKey))
             }
         }
         .navigationDestination(for: T.self) { item in
@@ -153,7 +158,7 @@ struct MSIListView<
             NavigationStack {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
-                        SortView(definition: T.definition)
+                        SortView(dataSource: T.self)
                             .background(Color.surfaceColor)
                         
                         Spacer()
@@ -195,7 +200,7 @@ struct GenericSectionedList
  SectionHeader: View,
     Content: View,
     EmptyContent: View>: View {
-    @EnvironmentObject var router: MarlinRouter
+    @Binding var path: NavigationPath
     let sectionHeaderIsSubList: Bool
     var sectionGroupNameBuilder: ((MSISection<T>) -> String)?
     var sectionNameBuilder: ((MSISection<T>) -> String)?
@@ -382,7 +387,7 @@ struct GenericSectionedList
             }
             .padding(.all, 8)
             .onTapGesture {
-                router.path.append(MarlinRoute.dataSourceDetail(dataSourceKey: T.definition.key, itemKey: item.itemKey))
+                path.append(MarlinRoute.dataSourceDetail(dataSourceKey: T.definition.key, itemKey: item.itemKey))
             }
             .accessibilityElement(children: .contain)
             .accessibilityLabel("\(item.itemTitle) summary")

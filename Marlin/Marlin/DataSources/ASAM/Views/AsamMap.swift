@@ -22,48 +22,4 @@ class AsamMap<T: MapImage>: FetchRequestMap<T> {
         super.setupMixin(mapState: mapState, mapView: mapView)
         mapView.register(ImageAnnotationView.self, forAnnotationViewWithReuseIdentifier: Asam.key)
     }
-
-    override func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [any DataSource]? {
-        return nil
-    }
-
-    override func itemKeys(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [String: [String]] {
-        if mapView.zoomLevel < minZoom {
-            return [:]
-        }
-        guard show == true else {
-            return [:]
-        }
-        let screenPercentage = 0.03
-        let tolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
-        let minLon = location.longitude - tolerance
-        let maxLon = location.longitude + tolerance
-        let minLat = location.latitude - tolerance
-        let maxLat = location.latitude + tolerance
-
-        guard let fetchRequest = self.getFetchRequest(show: self.show) else {
-            return [:]
-        }
-        var predicates: [NSPredicate] = []
-        if let predicate = fetchRequest.predicate {
-            predicates.append(predicate)
-        }
-
-        predicates.append(getBoundingPredicate(minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon))
-
-        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-
-        if let asams = try? PersistenceController.current.fetch(fetchRequest: fetchRequest) as? [any DataSource] {
-            let asamKeys: [String] = asams.compactMap { asam in
-                if let asam = asam as? Asam {
-                    return asam.reference
-                }
-                return nil
-            }
-            return [DataSources.asam.key: asamKeys]
-        }
-
-        return [:]
-    }
-
 }
