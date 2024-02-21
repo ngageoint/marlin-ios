@@ -14,12 +14,6 @@ import SwiftUI
 import BackgroundTasks
 
 public class MSI {
-    
-    var asamInitializer: AsamInitializer?
-    func addRepositories(asamRepository: AsamRepository) {
-        asamInitializer = AsamInitializer(repository: asamRepository)
-    }
-    
     var backgroundTask: UIBackgroundTaskIdentifier = .invalid
     
     let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "persistence")
@@ -98,6 +92,9 @@ public class MSI {
                 let dataSource = self.mainDataList.first { type in
                     item.key == type.key
                 }
+                if let mapImageDataSource = dataSource as? (any MapImage) {
+                    type(of: mapImageDataSource).imageCache.clearCache()
+                }
                 dataSource?.postProcess()
             }
             .store(in: &cancellable)
@@ -125,8 +122,6 @@ public class MSI {
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "mil.nga.msi.refresh", using: nil) { task in
             MSI.shared.backgroundFetch(task: task)
         }
-        
-        asamInitializer?.registerBackgroundHandler()
     }
     
     func backgroundFetch(task: BGTask) {
@@ -145,15 +140,11 @@ public class MSI {
         }
         
         for importable in allLoadList {
-            if importable.key == Asam.key {
-                NSLog("Skipping ASAM in MSI.shared")
-            } else {
-                NSLog("Fetching new data for \(importable.key)")
+            NSLog("Fetching new data for \(importable.key)")
             self.loadData(
                 type: importable.decodableRoot,
                 dataType: importable,
                 operationQueue: self.backgroundFetchQueue)
-            }
         }
         
         var expired = false
@@ -210,8 +201,6 @@ public class MSI {
         loadAllDataTime = Date()
         NSLog("Load all data")
         
-        asamInitializer?.fetchAsams()
-
         let initialDataLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
             if let dataSourceType = importable as? any DataSource.Type {
                 return UserDefaults.standard
@@ -221,6 +210,7 @@ public class MSI {
             }
             return false
         }
+        
         if !initialDataLoadList.isEmpty {
             
             NSLog("Loading initial data from \(initialDataLoadList.count) data sources")
@@ -237,7 +227,7 @@ public class MSI {
             UserDefaults.standard.initialDataLoaded = true
             
             let allLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
-                let sync = importable.shouldSync() && importable.key != Asam.key
+                let sync = importable.shouldSync()
                 return sync
             }
             
@@ -281,12 +271,7 @@ public class MSI {
     func loadInitialData<T: Decodable, D: NSManagedObject & BatchImportable>(
         type: T.Type,
         dataType: D.Type,
-        operationQueue: OperationQueue? = nil
-    ) {
-        if dataType.key == Asam.key {
-            return
-        }
-
+        operationQueue: OperationQueue? = nil) {
         let initialDataLoadOperation = DataLoadOperation(
             appState: appState,
             taskName: "Load Initial Data \(dataType.key)")
@@ -305,12 +290,7 @@ public class MSI {
     func loadData<T: Decodable, D: NSManagedObject & BatchImportable>(
         type: T.Type,
         dataType: D.Type,
-        operationQueue: OperationQueue? = nil
-    ) {
-        if dataType.key == Asam.key {
-            return
-        }
-        
+        operationQueue: OperationQueue? = nil) {
         let dataLoadOperation = DataLoadOperation(appState: appState, taskName: "Load Data \(dataType.key)")
         dataLoadOperation.action = { [weak dataLoadOperation] in
             guard let dataLoadOperation = dataLoadOperation else {
@@ -318,7 +298,6 @@ public class MSI {
             }
             dataLoadOperation.loadData(type: type.self, dataType: dataType)
         }
-
         DispatchQueue.main.async {
             self.appState.loadingDataSource[dataType.key] = true
         }

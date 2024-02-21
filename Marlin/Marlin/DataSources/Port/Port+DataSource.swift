@@ -40,9 +40,7 @@ extension Port: Locatable, GeoPackageExportable, GeoJSONExportable {
         return Port.color
     }
     
-    static func postProcess() {
-        imageCache.clearCache()
-    }
+    static func postProcess() {}
     
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("Ports", comment: "Port data source display name")

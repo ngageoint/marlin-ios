@@ -11,14 +11,13 @@ struct DataSourceNavView: View {
     var dataSource: DataSourceItem
     @ObservedObject var focusedItem: ItemWrapper
     var watchFocusedItem: Bool = false
-    @ObservedObject private var router: MarlinRouter = MarlinRouter()
-
+    @State private var path: NavigationPath = NavigationPath()
+    
     var body: some View {
         Self._printChanges()
-        return NavigationStack(path: $router.path) {
-            DataSourceListView(dataSource: dataSource, focusedItem: focusedItem)
-                .marlinRoutes()
-                .environmentObject(router)
+        return NavigationStack(path: $path) {
+            DataSourceListView(dataSource: dataSource, focusedItem: focusedItem, path: $path)
+                .marlinRoutes(path: $path)
         }
     }
 }
@@ -27,54 +26,65 @@ struct DataSourceListView: View {
     var dataSource: DataSourceItem
     @ObservedObject var focusedItem: ItemWrapper
     var watchFocusedItem: Bool = false
-    @EnvironmentObject var router: MarlinRouter
-
+    @Binding var path: NavigationPath
+    
     var body: some View {
         if dataSource.key == Asam.key {
-            AsamList()
+            MSIListView<Asam, EmptyView, EmptyView, EmptyView>(
+                path: $path,
+                focusedItem: focusedItem, 
+                watchFocusedItem: watchFocusedItem
+            )
         } else if dataSource.key == Modu.key {
             MSIListView<Modu, EmptyView, EmptyView, EmptyView>(
+                path: $path,
                 focusedItem: focusedItem,
                 watchFocusedItem: watchFocusedItem
             )
         } else if dataSource.key == Light.key {
             MSIListView<Light, EmptyView, EmptyView, EmptyView>(
+                path: $path,
                 focusedItem: focusedItem,
                 watchFocusedItem: watchFocusedItem
             )
         } else if dataSource.key == NavigationalWarning.key {
             NavigationalWarningsOverview(
+                path: $path,
                 focusedItem: focusedItem,
                 watchFocusedItem: watchFocusedItem
             )
         } else if dataSource.key == Port.key {
             MSIListView<Port, EmptyView, EmptyView, EmptyView>(
+                path: $path,
                 focusedItem: focusedItem,
                 watchFocusedItem: watchFocusedItem
             )
         } else if dataSource.key == RadioBeacon.key {
             MSIListView<RadioBeacon, EmptyView, EmptyView, EmptyView>(
+                path: $path,
                 focusedItem: focusedItem,
                 watchFocusedItem: watchFocusedItem
             )
         } else if dataSource.key == DifferentialGPSStation.key {
             MSIListView<DifferentialGPSStation, EmptyView, EmptyView, EmptyView>(
+                path: $path,
                 focusedItem: focusedItem,
                 watchFocusedItem: watchFocusedItem
             )
         } else if dataSource.key == DFRS.key {
-            MSIListView<DFRS, EmptyView, EmptyView, EmptyView>()
+            MSIListView<DFRS, EmptyView, EmptyView, EmptyView>(path: $path)
         } else if dataSource.key == ElectronicPublication.key {
             ElectronicPublicationsList()
         } else if dataSource.key == NoticeToMariners.key {
-            NoticeToMarinersView()
+            NoticeToMarinersView(path: $path)
         } else if dataSource.key == Bookmark.key {
             BookmarkListView(
-                focusedItem: focusedItem,
+                path: $path,
+                focusedItem: focusedItem, 
                 watchFocusedItem: watchFocusedItem
             )
         } else if dataSource.key == Route.key {
-            RouteList()
+            RouteList(path: $path)
         }
     }
 }

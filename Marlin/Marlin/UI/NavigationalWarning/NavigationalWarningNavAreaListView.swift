@@ -9,7 +9,6 @@ import SwiftUI
 import Combine
 
 struct NavigationalWarningNavAreaListView: View {
-    @EnvironmentObject var router: MarlinRouter
     @AppStorage<String> var lastSeen: String
     @State var lastSavedDate: Date = Date(timeIntervalSince1970: 0)
     @State var scrollingTo: String?
@@ -25,11 +24,13 @@ struct NavigationalWarningNavAreaListView: View {
     var mapName: String?
     var navArea: String
     var warnings: [NavigationalWarning]
-    init(warnings: [NavigationalWarning], navArea: String, mapName: String?) {
+    @Binding var path: NavigationPath
+    init(warnings: [NavigationalWarning], navArea: String, mapName: String?, path: Binding<NavigationPath>) {
         self.warnings = warnings
         self.navArea = navArea
         self._lastSeen = AppStorage(wrappedValue: "", "lastSeen-\(navArea)")
         self.mapName = mapName
+        _path = path
     }
     
     var body: some View {
@@ -63,7 +64,7 @@ struct NavigationalWarningNavAreaListView: View {
                             }
                         }
                         .onTapGesture {
-                            router.path.append(navigationalWarning)
+                            path.append(navigationalWarning)
                         }
                         .accessibilityElement(children: .contain)
                         .accessibilityLabel("\(navigationalWarning.itemTitle) summary")

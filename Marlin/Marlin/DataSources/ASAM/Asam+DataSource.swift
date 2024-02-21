@@ -32,10 +32,6 @@ extension Asam: Bookmarkable {
 }
 
 extension Asam: DataSource, Locatable, GeoPackageExportable, GeoJSONExportable {
-    var itemTitle: String {
-        return "\(self.hostility ?? "")\(self.hostility != nil && self.victim != nil ? ": " : "")\(self.victim ?? "")"
-    }
-
     static var definition: any DataSourceDefinition = DataSourceDefinitions.asam.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
@@ -47,9 +43,7 @@ extension Asam: DataSource, Locatable, GeoPackageExportable, GeoJSONExportable {
         return dateFormatter
     }
     
-    static func postProcess() {
-        imageCache.clearCache()
-    }
+    static func postProcess() {}
     
     static var isMappable: Bool = true
     static var dataSourceName: String = 
@@ -96,6 +90,46 @@ extension Asam: DataSource, Locatable, GeoPackageExportable, GeoJSONExportable {
         DataSourceProperty(name: "Hostility", key: #keyPath(Asam.hostility), type: .string),
         DataSourceProperty(name: "Victim", key: #keyPath(Asam.victim), type: .string)
     ]
+}
+
+extension Asam: BatchImportable {
+    static var seedDataFiles: [String]? = ["asam"]
+    static var decodableRoot: Decodable.Type = AsamPropertyContainer.self
+    
+    static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
+        guard let value = value as? AsamPropertyContainer else {
+            return 0
+        }
+        let count = value.asam.count
+        NSLog("Received \(count) \(Self.key) records.")
+        
+        let crossReference = Dictionary(grouping: value.asam, by: \.reference)
+        let duplicates = crossReference
+            .filter { $1.count > 1 }
+        
+        print("Found Dupicate ASAMs \(duplicates.keys)")
+        return try await Self.importRecords(
+            from: value.asam,
+            taskContext: PersistenceController.current.newTaskContext())
+    }
+    
+    static func dataRequest() -> [MSIRouter] {
+        let context = PersistenceController.current.newTaskContext()
+        var date: String?
+        context.performAndWait {
+            let newestAsam = 
+            try? PersistenceController.current.fetchFirst(Asam.self,
+                                                          sortBy: [
+                                                            NSSortDescriptor(
+                                                                keyPath: \Asam.date,
+                                                                ascending: false)],
+                                                          predicate: nil,
+                                                          context: context
+            )
+            date = newestAsam?.dateString
+        }
+        return [MSIRouter.readAsams(date: date)]
+    }
     
     static func shouldSync() -> Bool {
         // sync once every hour
@@ -103,24 +137,55 @@ extension Asam: DataSource, Locatable, GeoPackageExportable, GeoJSONExportable {
         && (Date().timeIntervalSince1970 - (60 * 60)) >
         UserDefaults.standard.lastSyncTimeSeconds(DataSourceDefinitions.asam.definition)
     }
-}
-
-// TODO: This is only for the MSI masterDataList depending on BatchImportable
-extension Asam: BatchImportable {
-    static func batchImport(value: Decodable?, initialLoad: Bool) async throws -> Int {
-        return 0
+    
+    static func newBatchInsertRequest(with propertyList: [AsamModel]) -> NSBatchInsertRequest {
+        var index = 0
+        let total = propertyList.count
+        
+        // Provide one dictionary at a time when the closure is called.
+        let batchInsertRequest = NSBatchInsertRequest(entity: Asam.entity(), dictionaryHandler: { dictionary in
+            guard index < total else { return true }
+            let propertyDictionary = propertyList[index].dictionaryValue
+            dictionary.addEntries(from: propertyDictionary.mapValues({ value in
+                if let value = value {
+                    return value
+                }
+                return NSNull()
+            }) as [AnyHashable: Any])
+            index += 1
+            return false
+        })
+        return batchInsertRequest
     }
     
-    static func dataRequest() -> [MSIRouter] {
-        return []
+    static func importRecords(
+        from propertiesList: [AsamModel],
+        taskContext: NSManagedObjectContext) async throws -> Int {
+        guard !propertiesList.isEmpty else { return 0 }
+        
+        // Add name and author to identify source of persistent history changes.
+        taskContext.name = "importContext"
+        taskContext.transactionAuthor = "importAsams"
+        
+        /// - Tag: performAndWait
+        let count = try await taskContext.perform {
+            // Execute the batch insert.
+            /// - Tag: batchInsertRequest
+            let batchInsertRequest = Asam.newBatchInsertRequest(with: propertiesList)
+            batchInsertRequest.resultType = .count
+            if let fetchResult = try? taskContext.execute(batchInsertRequest),
+               let batchInsertResult = fetchResult as? NSBatchInsertResult {
+                try? taskContext.save()
+                if let count = batchInsertResult.result as? Int, count > 0 {
+                    NSLog("Inserted \(count) ASAM records")
+                    return count
+                } else {
+                    NSLog("No new ASAM records")
+                }
+                return 0
+            }
+            throw MSIError.batchInsertError
+        }
+        return count
     }
-    
-    static var seedDataFiles: [String]? {
-        return []
-    }
-    
-    static var decodableRoot: Decodable.Type {
-        AsamPropertyContainer.self
-    }
-    
 }

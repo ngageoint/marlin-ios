@@ -30,19 +30,3 @@ struct FocusButton: View {
         .accessibilityLabel("focus")
     }
 }
-
-struct FocusButton2: View {
-    var action: Action
-    var body: some View {
-        Button(action: action.action) {
-            Label(
-                title: {},
-                icon: { Image(systemName: "scope")
-                        .renderingMode(.template)
-                        .foregroundColor(Color.primaryColorVariant)
-                })
-        }
-        .accessibilityElement()
-        .accessibilityLabel("focus")
-    }
-}

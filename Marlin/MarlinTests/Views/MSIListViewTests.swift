@@ -104,22 +104,22 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>(path: $path)
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
         let passThrough = PassThrough()
         
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
         
         let container = Container(passThrough: passThrough)
@@ -143,17 +143,17 @@ final class MSIListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>(path: $path)
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
@@ -176,23 +176,23 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>(path: $path)
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
         let passThrough = PassThrough()
         
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
 
         let container = Container(passThrough: passThrough)
@@ -253,23 +253,23 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>(path: $path)
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
         let passThrough = PassThrough()
         
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
 
         let container = Container(passThrough: passThrough)
@@ -366,23 +366,23 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>(path: $path)
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
         let passThrough = PassThrough()
         
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
 
         let container = Container(passThrough: passThrough)
@@ -446,18 +446,18 @@ final class MSIListViewTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             @EnvironmentObject var locationManager: LocationManager
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>(path: $path)
                         .environmentObject(locationManager)
                 }
-                .environmentObject(router)
+                 
             }
         }
         
@@ -466,7 +466,7 @@ final class MSIListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough()
         
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
 
         let container = Container(passThrough: passThrough)
@@ -539,23 +539,23 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>()
+                NavigationStack(path: $path) {
+                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>(path: $path)
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
         let passThrough = PassThrough()
         
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
 
         let container = Container(passThrough: passThrough)
@@ -630,22 +630,22 @@ final class MSIListViewTests: XCTestCase {
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
             
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>(sectionHeaderIsSubList: true)
+                NavigationStack(path: $path) {
+                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>(path: $path, sectionHeaderIsSubList: true)
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
         let passThrough = PassThrough()
         
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
 
         let container = Container(passThrough: passThrough)
@@ -720,25 +720,25 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>(sectionHeaderIsSubList: true, sectionGroupNameBuilder: { section in
+                NavigationStack(path: $path) {
+                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>(path: $path, sectionHeaderIsSubList: true, sectionGroupNameBuilder: { section in
                         "\(section.name) Header"
                     })
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
         let passThrough = PassThrough()
         
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
 
         let container = Container(passThrough: passThrough)
@@ -810,27 +810,27 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    MSIListView<Modu, EmptyView, AnyView, EmptyView>(sectionHeaderIsSubList: true, sectionNameBuilder: { section in
+                NavigationStack(path: $path) {
+                    MSIListView<Modu, EmptyView, AnyView, EmptyView>(path: $path, sectionHeaderIsSubList: true, sectionNameBuilder: { section in
                         return "MODU SECTION \(section.name) (\(section.items.count))"
                     }, sectionViewBuilder: { _ in EmptyView()}, content: { section in
                         AnyView(Text("content of the section \(section.name) \(section.items.count)"))
                     }, emptyView: {})
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
         let passThrough = PassThrough()
         
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
 
         let container = Container(passThrough: passThrough)
@@ -899,33 +899,34 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @ObservedObject var passThrough: PassThrough
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>()
-                        .marlinRoutes()
+                NavigationStack(path: $path) {
+                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>(path: $path)
+                        .marlinRoutes(path: $path)
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
         let passThrough = PassThrough()
         
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
+        let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
+
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
-        
+
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -987,7 +988,7 @@ final class MSIListViewTests: XCTestCase {
         
         struct Container: View {
             @StateObject var itemWrapper: ItemWrapper = ItemWrapper()
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             @ObservedObject var passThrough: PassThrough
             
@@ -996,31 +997,32 @@ final class MSIListViewTests: XCTestCase {
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>(focusedItem: itemWrapper, watchFocusedItem: true)
-                        .marlinRoutes()
+                NavigationStack(path: $path) {
+                    MSIListView<Modu, EmptyView, EmptyView, EmptyView>(path: $path, focusedItem: itemWrapper, watchFocusedItem: true)
+                        .marlinRoutes(path: $path)
                 }
                 .onChange(of: passThrough.date) { newValue in
                     print("change date to \(newValue)")
                     itemWrapper.dataSource = passThrough.item
                     itemWrapper.date = Date()
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
         let passThrough = PassThrough()
         
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
+        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
+        let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
+
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
-        
+
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller

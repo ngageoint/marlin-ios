@@ -249,9 +249,7 @@ extension ModuModel: DataSource {
         return dateFormatter
     }
     
-    static func postProcess() {
-        imageCache.clearCache()
-    }
+    static func postProcess() {}
     
     var itemKey: String {
         return name ?? ""

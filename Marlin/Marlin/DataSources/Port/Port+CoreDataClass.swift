@@ -499,12 +499,3 @@ extension Double {
         return "\(self)"
     }
 }
-
-extension Float {
-    var zeroIsEmptyString: String {
-        if self == 0.0 {
-            return ""
-        }
-        return "\(self)"
-    }
-}

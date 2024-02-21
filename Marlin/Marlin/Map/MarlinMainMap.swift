@@ -14,7 +14,9 @@ struct MarlinMainMap: View {
     
     @StateObject var mixins: MainMapMixins = MainMapMixins()
     @StateObject var mapState: MapState = MapState()
-        
+    
+    @Binding var path: NavigationPath
+    
     @EnvironmentObject var dataSourceList: DataSourceList
     
     var showSettings: Bool = true

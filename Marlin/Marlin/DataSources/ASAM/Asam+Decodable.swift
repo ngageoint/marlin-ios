@@ -16,10 +16,6 @@ struct AsamPropertyContainer: Decodable {
     }
     let asam: [AsamModel]
     
-    init(asams: [AsamModel]) {
-        asam = asams
-    }
-    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         asam = try container.decode([Throwable<AsamModel>].self, forKey: .asam).compactMap { try? $0.result.get() }

@@ -23,6 +23,7 @@ struct NavigationalWarningSection: Hashable {
 struct NavigationalWarningSectionRow: View {
     var section: SectionedFetchResults<String, NavigationalWarning>.Element
     var mapName: String?
+    @Binding var path: NavigationPath
     
     var body: some View {
         NavigationLink(value: NavigationalWarningSection(id: section.id, warnings: [NavigationalWarning](section))) {

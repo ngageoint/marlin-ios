@@ -89,18 +89,18 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         }
         
         struct Container: View {
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
             @ObservedObject var passThrough: PassThrough
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
-                        .marlinRoutes()
+                NavigationStack(path: $path) {
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
+                        .marlinRoutes(path: $path)
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
@@ -156,20 +156,20 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             
             @ObservedObject var passThrough: PassThrough
             @StateObject var focusedItem: ItemWrapper = ItemWrapper()
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    NavigationalWarningsOverview(focusedItem: focusedItem)
-                        .marlinRoutes()
+                NavigationStack(path: $path) {
+                    NavigationalWarningsOverview(path: $path, focusedItem: focusedItem)
+                        .marlinRoutes(path: $path)
 
 //                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
@@ -240,18 +240,18 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
-                        .marlinRoutes()
+                NavigationStack(path: $path) {
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
+                        .marlinRoutes(path: $path)
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
@@ -317,18 +317,18 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
-                        .marlinRoutes()
+                NavigationStack(path: $path) {
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
+                        .marlinRoutes(path: $path)
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
@@ -395,18 +395,18 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
-                        .marlinRoutes()
+                NavigationStack(path: $path) {
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
+                        .marlinRoutes(path: $path)
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()
@@ -476,18 +476,18 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         struct Container: View {
             
             @ObservedObject var passThrough: PassThrough
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
-                        .marlinRoutes()
+                NavigationStack(path: $path) {
+                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map", path: $path)
+                        .marlinRoutes(path: $path)
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()

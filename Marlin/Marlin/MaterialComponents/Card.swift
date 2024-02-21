@@ -13,7 +13,7 @@ struct CardModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .background(Color.surfaceColor)
-            .cornerRadius(12)
+            .cornerRadius(2)
             .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
     }
     
@@ -22,24 +22,6 @@ struct CardModifier: ViewModifier {
 extension View {
     func card() -> some View {
         modifier(CardModifier())
-    }
-}
-
-struct PaddedCardModifier: ViewModifier {
-    
-    func body(content: Content) -> some View {
-        content
-            .padding(16)
-            .background(Color.surfaceColor)
-            .cornerRadius(12)
-            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
-    }
-    
-}
-
-extension View {
-    func paddedCard() -> some View {
-        modifier(PaddedCardModifier())
     }
 }
 
@@ -163,7 +145,7 @@ extension View {
 struct DataSourceItemSectionModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
+            .listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8))
             .listRowBackground(Color.backgroundColor)
             .listRowSeparator(.hidden)
     }
@@ -179,27 +161,15 @@ struct DataSourceItemDetailListModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .padding([.leading, .trailing], 0)
-            .listStyle(.plain)
+            .listStyle(.grouped)
             .background(Color.backgroundColor)
-            .scrollContentBackground(.hidden)
-    }
-}
-
-extension View {
-    func sectionHeader() -> some View {
-        modifier(SectionHeaderModifier())
-    }
-}
-
-struct SectionHeaderModifier: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .font(.headline)
-        // TODO: for now; this should be removed to match what apple wants for section headers
-            .foregroundColor(Color.onBackgroundColor.opacity(0.45))
-            .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 0, trailing: 8))
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color.backgroundColor)
+            .complexModifier {
+                if #available(iOS 16, *) {
+                    $0.scrollContentBackground(.hidden)
+                } else {
+                    $0
+                }
+            }
     }
 }
 

@@ -12,79 +12,7 @@ import UIKit
 import OSLog
 import mgrs_ios
 
-struct AsamListModel: Hashable, Identifiable {
-    var id: String {
-        reference ?? ""
-    }
-    var coordinate: CLLocationCoordinate2D {
-        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-    }
-    
-    var asamDescription: String?
-    var date: Date?
-    var hostility: String?
-    var latitude: Double
-    var longitude: Double
-    var reference: String?
-    var victim: String?
-    
-    var canBookmark: Bool = false
-    
-    init(asam: Asam) {
-        self.canBookmark = true
-        self.asamDescription = asam.asamDescription
-        self.date = asam.date
-        self.hostility = asam.hostility
-        self.latitude = asam.latitude
-        self.longitude = asam.longitude
-        self.reference = asam.reference
-        self.victim = asam.victim
-    }
-}
-
-extension AsamListModel {
-    var dateString: String? {
-        if let date = date {
-            return Asam.dateFormatter.string(from: date)
-        }
-        return nil
-    }
-    
-    var itemTitle: String {
-        return "\(self.hostility ?? "")\(self.hostility != nil && self.victim != nil ? ": " : "")\(self.victim ?? "")"
-    }
-}
-
-extension AsamListModel: Bookmarkable {
-    static var definition: any DataSourceDefinition {
-        DataSources.asam
-    }
-    
-    var itemKey: String {
-        return reference ?? ""
-    }
-    
-    var key: String {
-        DataSources.asam.key
-    }
-}
-
-extension AsamListModel {
-    init(asamModel: AsamModel) {
-        self.asamDescription = asamModel.asamDescription
-        self.date = asamModel.date
-        self.hostility = asamModel.hostility
-        self.latitude = asamModel.latitude
-        self.longitude = asamModel.longitude
-        self.reference = asamModel.reference
-        self.victim = asamModel.victim
-    }
-}
-
-struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hashable, Identifiable {
-    var id: String {
-        reference ?? ""
-    }
+struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable {
     static var definition: any DataSourceDefinition = DataSourceDefinitions.asam.definition
     var sfGeometry: SFGeometry? {
         return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
@@ -112,7 +40,9 @@ struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hashable,
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
+    
     var asam: Asam?
+    
     var asamDescription: String?
     var date: Date?
     var hostility: String?
@@ -126,23 +56,16 @@ struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hashable,
     var victim: String?
     
     func isEqualTo(_ other: AsamModel) -> Bool {
-//        return self.asam == other.asam
-        return self.reference == other.reference
+        return self.asam == other.asam
     }
     
     static func == (lhs: AsamModel, rhs: AsamModel) -> Bool {
         lhs.isEqualTo(rhs)
     }
     
-    init() {
-        self.canBookmark = false
-        self.latitude = kCLLocationCoordinate2DInvalid.latitude
-        self.longitude = kCLLocationCoordinate2DInvalid.longitude
-    }
-    
     init(asam: Asam) {
-        self.canBookmark = true
         self.asam = asam
+        self.canBookmark = true
         self.asamDescription = asam.asamDescription
         self.date = asam.date
         self.hostility = asam.hostility
@@ -274,9 +197,7 @@ extension AsamModel: DataSource {
         return dateFormatter
     }
     
-    static func postProcess() {
-        imageCache.clearCache()
-    }
+    static func postProcess() {}
     
     static var isMappable: Bool = true
     static var dataSourceName: String = NSLocalizedString("ASAM", comment: "ASAM data source display name")

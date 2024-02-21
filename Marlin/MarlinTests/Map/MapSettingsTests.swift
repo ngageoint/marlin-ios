@@ -19,13 +19,13 @@ final class MapSettingsTests: XCTestCase {
         UserDefaults.standard.actualRangeSectorLights = false
 
         struct Container: View {
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
             var body: some View {
-                NavigationStack(path: $router.path) {
+                NavigationStack(path: $path) {
                     MapSettings()
-                        .marlinRoutes()
+                        .marlinRoutes(path: $path)
                 }
-                .environmentObject(router)
+                 
             }
         }
 

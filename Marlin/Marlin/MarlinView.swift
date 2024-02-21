@@ -29,7 +29,6 @@ class MapMixins: ObservableObject {
 struct MarlinView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @EnvironmentObject var dataSourceList: DataSourceList
-    @EnvironmentObject var appState: AppState
 
     @State var selection: String?
     @State var showBottomSheet: Bool = false
@@ -50,12 +49,6 @@ struct MarlinView: View {
 
     let snackbarPub = NotificationCenter.default.publisher(for: .SnackbarNotification)
     let documentPreviewPub = NotificationCenter.default.publisher(for: .DocumentPreview).map { notification in
-        notification.object
-    }
-    let dataSourceLoadingPub = NotificationCenter.default.publisher(for: .DataSourceLoading).map { notification in
-        notification.object
-    }
-    let dataSourceLoadedPub = NotificationCenter.default.publisher(for: .DataSourceLoaded).map { notification in
         notification.object
     }
     
@@ -104,18 +97,6 @@ struct MarlinView: View {
             }
         }
         .documentPreview(previewUrl: $previewUrl, previewDate: $previewDate) { }
-        .onReceive(dataSourceLoadingPub) { output in
-            guard let dataSourceItem = output as? DataSourceItem else {
-                return
-            }
-            self.appState.loadingDataSource[dataSourceItem.key] = true
-        }
-        .onReceive(dataSourceLoadedPub) { output in
-            guard let dataSourceItem = output as? DataSourceItem else {
-                return
-            }
-            self.appState.loadingDataSource[dataSourceItem.key] = false
-        }
         .onReceive(snackbarPub) { output in
             guard let notification = output.object as? SnackbarNotification else {
                 return

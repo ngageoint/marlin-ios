@@ -45,22 +45,6 @@ struct MarlinDataBottomSheet: View {
                     return
                 }
                 var bottomSheetItems: [BottomSheetItem] = []
-                
-                if let itemKeys = notification.itemKeys {
-                    for (dataSourceKey, itemKeys) in itemKeys {
-                        for itemKey in itemKeys {
-                            print("item key \(itemKey)")
-                            let bottomSheetItem = BottomSheetItem(
-                                mapName: notification.mapName,
-                                zoom: notification.zoom,
-                                itemKey: itemKey,
-                                dataSourceKey: dataSourceKey
-                            )
-                            bottomSheetItems.append(bottomSheetItem)
-                        }
-                    }
-                }
-                
                 bottomSheetItems += self.handleTappedItems(
                     items: notification.items,
                     mapName: notification.mapName,
@@ -90,8 +74,6 @@ struct MarlinDataBottomSheet: View {
 }
 
 struct MarlinBottomSheet <Content: View>: View {
-    @EnvironmentObject var router: MarlinRouter
-
     @ObservedObject var itemList: BottomSheetItemList
     @State var selectedItem: Int = 0
 
@@ -110,10 +92,7 @@ struct MarlinBottomSheet <Content: View>: View {
         self.focusNotification = focusNotification
     }
     
-    init(
-        itemList: BottomSheetItemList,
-        focusNotification: NSNotification.Name
-    ) where Content == AnyView {
+    init(itemList: BottomSheetItemList, focusNotification: NSNotification.Name) where Content == AnyView {
         self.init(itemList: itemList, focusNotification: focusNotification) { item in
             AnyView(
                 // TODO: need a way to specify views for the models, 
@@ -132,11 +111,6 @@ struct MarlinBottomSheet <Content: View>: View {
             Rectangle()
                 .fill(Color(type(of: item).definition.color))
                 .frame(maxWidth: 8, maxHeight: .infinity)
-        } else if let dataSourceKey = itemList.bottomSheetItems?[selectedItem].dataSourceKey,
-                    let definition = DataSourceDefinitions(rawValue: dataSourceKey) {
-            Rectangle()
-                .fill(Color(definition.definition.color))
-                .frame(maxWidth: 8, maxHeight: .infinity)
         }
     }
     
@@ -146,20 +120,12 @@ struct MarlinBottomSheet <Content: View>: View {
             VStack {
                 ZStack {
                     if let bottomSheetItems = itemList.bottomSheetItems, bottomSheetItems.count >= selectedItem + 1 {
-                        if let item = bottomSheetItems[selectedItem].item {
-                            // TODO: this shouldn't rely on the DataSource.Type
-                            HStack {
-                                DataSourceCircleImage(definition: item.definition, size: 30)
-                                Spacer()
-                            }
-                        } else if let dataSourceKey = bottomSheetItems[selectedItem].dataSourceKey, 
-                                    let definition = DataSourceDefinitions(rawValue: dataSourceKey) {
-                            HStack {
-                                DataSourceCircleImage(definition: definition.definition, size: 30)
-                                Spacer()
-                            }
+                        let item = bottomSheetItems[selectedItem].item
+                        HStack {
+                            DataSourceCircleImage(dataSource: type(of: item), size: 30)
+                            Spacer()
                         }
-
+                        
                         if bottomSheetItems.count > 1 {
                             HStack(spacing: 8) {
                                 Button(
@@ -218,14 +184,6 @@ struct MarlinBottomSheet <Content: View>: View {
                     if let dataSource = item.item as? (any DataSourceViewBuilder) {
                         contentBuilder(dataSource)
                             .transition(.opacity)
-                    } else if let itemKey = item.itemKey, let dataSourceKey = item.dataSourceKey {
-                        switch dataSourceKey {
-                        case DataSources.asam.key:
-                            AsamSheetView(reference: itemKey)
-                                .transition(.opacity)
-                        default:
-                            EmptyView()
-                        }
                     }
                 }
                 
@@ -253,7 +211,6 @@ struct MarlinBottomSheet <Content: View>: View {
                         )
                     )
                 }
-                // TODO: if itemKey and dataSourceKey focus properly
             }
             .onAppear {
                 if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1,
@@ -271,7 +228,6 @@ struct MarlinBottomSheet <Content: View>: View {
                         Metrics.shared.dataSourceBottomSheet(dataSource: type(of: dataSource).definition)
                     }
                 }
-                // TODO: if itemKey and dataSourceKey focus properly
             }
     }
 }
