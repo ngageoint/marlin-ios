@@ -101,20 +101,17 @@ enum PublicationTypeEnum: Int, CaseIterable, CustomStringConvertible {
     }
 }
 
-protocol Downloadable: NSManagedObject {
-    var isDownloaded: Bool { get set }
-    var isDownloading: Bool { get set }
-    var downloadProgress: Float { get set }
+protocol Downloadable {
+    var id: String { get }
     var remoteLocation: URL? { get }
     var savePath: String { get }
     var title: String? { get }
-    var error: String? { get set }
-    func checkFileExists() -> Bool
-    func deleteFile()
 }
 
 class ElectronicPublication: NSManagedObject, Downloadable {
-    
+    var id: String {
+        s3Key ?? ""
+    }
     var error: String?
         
     var title: String? {
@@ -135,53 +132,53 @@ class ElectronicPublication: NSManagedObject, Downloadable {
         "Name: \(pubDownloadDisplayName ?? "")\n"
     }
     
-    func deleteFile() {
-        guard let s3Key else {
-            return
-        }
-        let docsUrl = URL.documentsDirectory
-        let fileUrl = "\(docsUrl.absoluteString)\(s3Key)"
-        let destinationUrl = URL(string: fileUrl)
-        
-        if let destinationUrl = destinationUrl {
-            guard FileManager().fileExists(atPath: destinationUrl.path) else { return }
-            do {
-                try FileManager().removeItem(atPath: destinationUrl.path)
-                self.managedObjectContext?.perform {
-                    self.objectWillChange.send()
-                    self.isDownloaded = false
-                    try? self.managedObjectContext?.save()
-                }
-            } catch let error {
-                print("Error while deleting file: ", error)
-            }
-        }
-    }
-    
-    func checkFileExists() -> Bool {
-        var downloaded = false
-        if let destinationUrl = URL(string: self.savePath) {
-            downloaded = FileManager().fileExists(atPath: destinationUrl.path)
-        }
-        if downloaded != self.isDownloaded {
-            self.managedObjectContext?.perform {
-                self.objectWillChange.send()
-                self.isDownloaded = downloaded
-                try? self.managedObjectContext?.save()
-            }
-        }
-        return downloaded
-    }
-    
-    func downloadFile() {
-        error = nil
-        if isDownloaded && checkFileExists() {
-            return
-        }
-        DownloadManager.shared.download(downloadable: self)
-    }
-    
-    func cancelDownload() {
-        DownloadManager.shared.cancel(downloadable: self)
-    }
+//    func deleteFile() {
+//        guard let s3Key else {
+//            return
+//        }
+//        let docsUrl = URL.documentsDirectory
+//        let fileUrl = "\(docsUrl.absoluteString)\(s3Key)"
+//        let destinationUrl = URL(string: fileUrl)
+//        
+//        if let destinationUrl = destinationUrl {
+//            guard FileManager().fileExists(atPath: destinationUrl.path) else { return }
+//            do {
+//                try FileManager().removeItem(atPath: destinationUrl.path)
+//                self.managedObjectContext?.perform {
+//                    self.objectWillChange.send()
+//                    self.isDownloaded = false
+//                    try? self.managedObjectContext?.save()
+//                }
+//            } catch let error {
+//                print("Error while deleting file: ", error)
+//            }
+//        }
+//    }
+//    
+//    func checkFileExists() -> Bool {
+//        var downloaded = false
+//        if let destinationUrl = URL(string: self.savePath) {
+//            downloaded = FileManager().fileExists(atPath: destinationUrl.path)
+//        }
+//        if downloaded != self.isDownloaded {
+//            self.managedObjectContext?.perform {
+//                self.objectWillChange.send()
+//                self.isDownloaded = downloaded
+//                try? self.managedObjectContext?.save()
+//            }
+//        }
+//        return downloaded
+//    }
+//    
+//    func downloadFile() {
+//        error = nil
+//        if isDownloaded && checkFileExists() {
+//            return
+//        }
+//        DownloadManager.shared.download(downloadable: self)
+//    }
+//    
+//    func cancelDownload() {
+//        DownloadManager.shared.cancel(downloadable: self)
+//    }
 }

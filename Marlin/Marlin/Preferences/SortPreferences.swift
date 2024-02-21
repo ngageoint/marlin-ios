@@ -17,13 +17,13 @@ extension UserDefaults {
             return publisher(for: \.moduSort)
         case DataSources.light.key:
             return publisher(for: \.lightSort)
-        case NoticeToMariners.key:
+        case DataSources.noticeToMariners.key:
             return publisher(for: \.ntmSort)
         case DFRS.key:
             return publisher(for: \.dfrsSort)
         case DataSources.dgps.key:
             return publisher(for: \.differentialGPSStationSort)
-        case ElectronicPublication.key:
+        case DataSources.epub.key:
             return publisher(for: \.epubSort)
         case DataSources.port.key:
             return publisher(for: \.portSort)

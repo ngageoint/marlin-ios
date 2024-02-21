@@ -304,12 +304,17 @@ extension DataSources {
         var metricsKey: String = "ntms"
         var name: String = "NTM"
         var fullName: String = "Notice To Mariners"
+        var dateFormatter: DateFormatter {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+            return dateFormatter
+        }
         @AppStorage("ntmOrder") var order: Int = 0
         func shouldSync() -> Bool {
             // sync once every day
-            return UserDefaults.standard.dataSourceEnabled(NoticeToMariners.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60 * 24)) > 
-            UserDefaults.standard.lastSyncTimeSeconds(NoticeToMariners.definition)
+            return UserDefaults.standard.dataSourceEnabled(DataSources.noticeToMariners)
+            && (Date().timeIntervalSince1970 - (60 * 60 * 24)) >
+            UserDefaults.standard.lastSyncTimeSeconds(DataSources.noticeToMariners)
         }
 
         fileprivate init() { }
@@ -382,11 +387,16 @@ extension DataSources {
         @AppStorage("epubOrder") var order: Int = 0
         func shouldSync() -> Bool {
             // sync once every day
-            return UserDefaults.standard.dataSourceEnabled(ElectronicPublication.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 1)) > 
-            UserDefaults.standard.lastSyncTimeSeconds(ElectronicPublication.definition)
+            return UserDefaults.standard.dataSourceEnabled(DataSources.epub)
+            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 1)) >
+            UserDefaults.standard.lastSyncTimeSeconds(DataSources.epub)
         }
-
+        var dateFormatter: DateFormatter {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+            return dateFormatter
+        }
+        var backgroundDownloadIdentifier: String { "\(key)Download" }
         fileprivate init() { }
     }
 

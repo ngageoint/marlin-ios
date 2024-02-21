@@ -63,10 +63,10 @@ struct ChartCorrection: Decodable, Hashable, Identifiable, DataSource, Bookmarka
     static var fullDataSourceName: String = "Chart Corrections"
     static var key: String = "chartCorrection"
     static var metricsKey: String = "corrections"
-    static var color: UIColor = NoticeToMariners.color
+    static var color: UIColor = DataSources.noticeToMariners.color
     static var imageName: String?
     static var systemImageName: String?
-    var color: UIColor = NoticeToMariners.color
+    var color: UIColor = DataSources.noticeToMariners.color
     static var imageScale: CGFloat = 1.0
     static var dateFormatter: DateFormatter = DateFormatter()
     

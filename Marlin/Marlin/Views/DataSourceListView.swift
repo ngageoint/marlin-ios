@@ -36,7 +36,7 @@ struct DataSourceListView: View {
             ModuList()
         } else if dataSource.key == DataSources.light.key {
             LightList()
-        } else if dataSource.key == NavigationalWarning.key {
+        } else if dataSource.key == DataSources.navWarning.key {
             NavigationalWarningsOverview(
                 focusedItem: focusedItem,
                 watchFocusedItem: watchFocusedItem
@@ -47,9 +47,9 @@ struct DataSourceListView: View {
             RadioBeaconList()
         } else if dataSource.key == DataSources.dgps.key {
             DifferentialGPSStationList()
-        } else if dataSource.key == ElectronicPublication.key {
+        } else if dataSource.key == DataSources.epub.key {
             ElectronicPublicationsList()
-        } else if dataSource.key == NoticeToMariners.key {
+        } else if dataSource.key == DataSources.noticeToMariners.key {
             NoticeToMarinersView()
         } else if dataSource.key == Bookmark.key {
             BookmarkListView(

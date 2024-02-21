@@ -135,5 +135,4 @@ final class ElectronicPublicationRepositoryTests: XCTestCase {
         let operation = repository.createOperation()
         XCTAssertNotNil(operation)
     }
-
 }

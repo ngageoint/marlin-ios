@@ -23,6 +23,8 @@ enum NoticeToMarinersItem: Hashable, Identifiable {
 }
 
 class NoticeToMarinersRepository: ObservableObject {
+    private var cancellables = Set<AnyCancellable>()
+
     var localDataSource: NoticeToMarinersLocalDataSource
     private var remoteDataSource: NoticeToMarinersRemoteDataSource
     init(localDataSource: NoticeToMarinersLocalDataSource, remoteDataSource: NoticeToMarinersRemoteDataSource) {
@@ -87,5 +89,62 @@ class NoticeToMarinersRepository: ObservableObject {
         }
 
         return notices
+    }
+}
+
+extension NoticeToMarinersRepository {
+    func downloadFile(id: Int) {
+        guard let notice = localDataSource.getNoticeToMariners(noticeNumber: Int(id)) else {
+            return
+        }
+        if notice.isDownloaded == true && localDataSource.checkFileExists(noticeNumber: id) {
+            return
+        }
+        let subject = PassthroughSubject<DownloadProgress, Never>()
+        var cancellable: AnyCancellable?
+        cancellable = subject
+            .sink(
+                receiveCompletion: { [weak self] _ in
+                    if let cancellable = cancellable {
+                        self?.cancellables.remove(cancellable)
+                    }
+                },
+                receiveValue: { downloadProgress in
+                    self.localDataSource.updateProgress(noticeNumber: id, progress: downloadProgress)
+                }
+            )
+        if let cancellable = cancellable {
+            cancellable.store(in: &cancellables)
+        }
+
+        remoteDataSource.downloadFile(model: notice, subject: subject)
+    }
+
+    func deleteFile(id: Int) {
+        localDataSource.deleteFile(noticeNumber: id)
+    }
+
+    func observeNoticeToMariners(
+        noticeNumber: Int
+    ) -> AnyPublisher<NoticeToMarinersModel, Never>? {
+        return localDataSource.observeNoticeToMariners(noticeNumber: noticeNumber)
+    }
+
+    func checkFileExists(id: Int) -> Bool {
+        return localDataSource.checkFileExists(noticeNumber: id)
+    }
+
+    func cancelDownload(noticeNumber: Int) {
+        guard let notice = localDataSource.getNoticeToMariners(noticeNumber: noticeNumber) else {
+            return
+        }
+        remoteDataSource.cancelDownload(model: notice)
+        localDataSource.updateProgress(noticeNumber: noticeNumber, progress: DownloadProgress(
+            id: notice.id,
+            isDownloading: false,
+            isDownloaded: false,
+            downloadProgress: 0.0,
+            error: ""
+        ))
     }
 }

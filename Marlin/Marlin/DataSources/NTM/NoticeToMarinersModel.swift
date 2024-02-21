@@ -39,6 +39,11 @@ struct NoticeToMarinersListModel: Hashable, Identifiable {
         DataSources.noticeToMariners.key
     }
 
+    var savePath: String {
+        let docsUrl = URL.documentsDirectory
+        return "\(docsUrl.absoluteString)\(odsKey ?? "")"
+    }
+
     var publicationIdentifier: Int?
     var noticeNumber: Int?
     var title: String?
@@ -51,10 +56,14 @@ struct NoticeToMarinersListModel: Hashable, Identifiable {
     var filenameBase: String?
     var fileExtension: String?
     var fileSize: Int?
-    var isFullPublication: Bool?
+    var isFullPublication: Bool = false
     var uploadTime: Date?
     var lastModified: Date?
     var canBookmark: Bool = false
+    var isDownloading: Bool = false
+    var downloadProgress: Float = 0.0
+    var isDownloaded: Bool = false
+    var error: String?
 
     init(noticeToMariners: NoticeToMariners) {
         self.canBookmark = true
@@ -73,6 +82,89 @@ struct NoticeToMarinersListModel: Hashable, Identifiable {
         isFullPublication = noticeToMariners.isFullPublication
         uploadTime = noticeToMariners.uploadTime
         lastModified = noticeToMariners.lastModified
+        isDownloading = noticeToMariners.isDownloading
+        downloadProgress = noticeToMariners.downloadProgress
+        isDownloaded = noticeToMariners.isDownloaded
+        error = noticeToMariners.error
+    }
+
+    func getFirstDay(weekNumber: Int, currentYear: Int) -> Date? {
+        let calendar = Calendar(identifier: .gregorian)
+        var dayComponent = DateComponents()
+        dayComponent.weekOfYear = weekNumber
+        dayComponent.weekday = 7
+        dayComponent.yearForWeekOfYear = currentYear
+        var date = calendar.date(from: dayComponent)!
+        if weekNumber == 1 && calendar.component(.month, from: date) != 1 {
+            dayComponent.year = currentYear - 1
+            date = calendar.date(from: dayComponent)!
+        }
+        return date
+
+    }
+
+    func dateRange() -> String {
+        let firstDate = getFirstDay(weekNumber: (noticeNumber ?? 0) % 100, currentYear: (noticeNumber ?? 0) / 100) ?? Date()
+        let lastDate = Calendar.current.date(byAdding: .day, value: 6, to: firstDate) ?? Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM d"
+        return "\(dateFormatter.string(from: firstDate)) - \(dateFormatter.string(from: lastDate))"
+    }
+
+    func checkFileExists() -> Bool {
+        return false
+//        var downloaded = false
+//        if let destinationUrl = URL(string: self.savePath) {
+//            downloaded = FileManager().fileExists(atPath: destinationUrl.path)
+//        }
+//        if downloaded != self.isDownloaded {
+//            PersistenceController.current.perform {
+//                self.objectWillChange.send()
+//                self.isDownloaded = downloaded
+//                DispatchQueue.main.async {
+//                    try? PersistenceController.current.save()
+//                }
+//            }
+//        }
+//        return downloaded
+    }
+
+    func deleteFile() {
+//        guard let odsKey else {
+//            return
+//        }
+//        let docsUrl = URL.documentsDirectory
+//        let fileUrl = "\(docsUrl.absoluteString)\(odsKey)"
+//        let destinationUrl = URL(string: fileUrl)
+//
+//        if let destinationUrl = destinationUrl {
+//            guard FileManager().fileExists(atPath: destinationUrl.path) else { return }
+//            do {
+//                try FileManager().removeItem(atPath: destinationUrl.path)
+//            } catch let error {
+//                print("Error while deleting file: ", error)
+//            }
+//        }
+//
+//        PersistenceController.current.perform {
+//            self.objectWillChange.send()
+//            self.isDownloaded = false
+//            self.downloadProgress = 0.0
+//            DispatchQueue.main.async {
+//                try? PersistenceController.current.save()
+//            }
+//        }
+    }
+
+    func downloadFile() {
+//        if isDownloaded && checkFileExists() {
+//            return
+//        }
+//        DownloadManager.shared.download(downloadable: self)
+    }
+
+    func cancelDownload() {
+//        DownloadManager.shared.cancel(downloadable: self)
     }
 }
 
@@ -94,10 +186,24 @@ extension NoticeToMarinersListModel {
         uploadTime = noticeToMarinersModel.uploadTime
         lastModified = noticeToMarinersModel.lastModified
         canBookmark = noticeToMarinersModel.canBookmark
+        isDownloading = noticeToMarinersModel.isDownloading
+        isDownloaded = noticeToMarinersModel.isDownloaded
+        downloadProgress = noticeToMarinersModel.downloadProgress
+        error = noticeToMarinersModel.error
     }
 }
 
-struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable {
+struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable, Downloadable {
+    var remoteLocation: URL? {
+        guard let odsKey else {
+            return nil
+        }
+        return URL(string: "\(MSIRouter.baseURLString)/publications/download?key=\(odsKey)&type=download")
+    }
+    var savePath: String {
+        let docsUrl = URL.documentsDirectory
+        return "\(docsUrl.absoluteString)\(odsKey ?? "")"
+    }
 
     var id: String {
         "\(noticeNumber ?? -1)"
@@ -113,6 +219,29 @@ struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable {
 
     var itemTitle: String {
         return "\(self.title ?? "") \(self.isFullPublication ?? false ? (self.fileExtension ?? "") : "")"
+    }
+
+    func getFirstDay(weekNumber: Int, currentYear: Int) -> Date? {
+        let calendar = Calendar(identifier: .gregorian)
+        var dayComponent = DateComponents()
+        dayComponent.weekOfYear = weekNumber
+        dayComponent.weekday = 7
+        dayComponent.yearForWeekOfYear = currentYear
+        var date = calendar.date(from: dayComponent)!
+        if weekNumber == 1 && calendar.component(.month, from: date) != 1 {
+            dayComponent.year = currentYear - 1
+            date = calendar.date(from: dayComponent)!
+        }
+        return date
+
+    }
+
+    func dateRange() -> String {
+        let firstDate = getFirstDay(weekNumber: (noticeNumber ?? 0) % 100, currentYear: (noticeNumber ?? 0) / 100) ?? Date()
+        let lastDate = Calendar.current.date(byAdding: .day, value: 6, to: firstDate) ?? Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM d"
+        return "\(dateFormatter.string(from: firstDate)) - \(dateFormatter.string(from: lastDate))"
     }
 
     // MARK: Codable
@@ -147,9 +276,13 @@ struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable {
     var filenameBase: String?
     var fileExtension: String?
     var fileSize: Int?
-    var isFullPublication: Bool?
+    var isFullPublication: Bool = false
     var uploadTime: Date?
     var lastModified: Date?
+    var isDownloading: Bool = false
+    var isDownloaded: Bool = false
+    var downloadProgress: Float = 0.0
+    var error: String?
 
     init() {
 
@@ -171,6 +304,11 @@ struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable {
         self.isFullPublication = noticeToMariners.isFullPublication
         self.uploadTime = noticeToMariners.uploadTime
         self.lastModified = noticeToMariners.lastModified
+        self.isDownloading = noticeToMariners.isDownloading
+        self.isDownloaded = noticeToMariners.isDownloaded
+        self.downloadProgress = noticeToMariners.downloadProgress
+        self.error = noticeToMariners.error
+        canBookmark = true
     }
 
     init(from decoder: Decoder) throws {
@@ -201,11 +339,11 @@ struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable {
         self.filenameBase = try? values.decode(String.self, forKey: .filenameBase)
         self.fileExtension = try? values.decode(String.self, forKey: .fileExtension)
         self.fileSize = try? values.decode(Int.self, forKey: .fileSize)
-        self.isFullPublication = try? values.decode(Bool.self, forKey: .isFullPublication)
-
+        var isFull = try? values.decode(Bool.self, forKey: .isFullPublication)
+        self.isFullPublication = isFull ?? false
         var parsedUploadTime: Date?
         if let dateString = try? values.decode(String.self, forKey: .uploadTime) {
-            if let date = NoticeToMariners.dateFormatter.date(from: dateString) {
+            if let date = DataSources.noticeToMariners.dateFormatter.date(from: dateString) {
                 parsedUploadTime = date
             }
         }
@@ -213,7 +351,7 @@ struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable {
 
         var parsedLastModified: Date?
         if let dateString = try? values.decode(String.self, forKey: .lastModified) {
-            if let date = NoticeToMariners.dateFormatter.date(from: dateString) {
+            if let date = DataSources.noticeToMariners.dateFormatter.date(from: dateString) {
                 parsedLastModified = date
             }
         }
@@ -280,7 +418,7 @@ extension NoticeToMarinersModel: DataSource {
     static var systemImageName: String? = "speaker.badge.exclamationmark.fill"
 
     var color: UIColor {
-        NoticeToMariners.color
+        DataSources.noticeToMariners.color
     }
 
     static var imageScale: CGFloat = 1.0

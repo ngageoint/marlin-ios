@@ -38,7 +38,7 @@ final class NoticeToMarinersFullNoticeViewModelTests: XCTestCase {
         XCTAssertEqual(model.noticeNumber, 199951)
         XCTAssertEqual(model.noticeNumberString, "99/51")
         XCTAssertEqual(model.predicate, NSPredicate(format: "noticeNumber == %i", argumentArray: [199951]))
-        let sort = NoticeToMariners.defaultSort.reduce(into: []) { sorts, parameter in
+        let sort = DataSources.noticeToMariners.defaultSort.reduce(into: []) { sorts, parameter in
             sorts.append(parameter.toNSSortDescriptor())
         }
         

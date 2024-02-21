@@ -28,7 +28,7 @@ struct NoticeToMarinersFullNoticeView: View {
     @ViewBuilder
     func sectionHeader() -> some View {
         if let pub = noticeToMarinersPublications.first {
-            NoticeToMarinersSummaryView(noticeToMariners: pub)
+            NoticeToMarinersSummaryView(noticeToMariners: NoticeToMarinersListModel(noticeToMariners: pub))
                 .showBookmarkNotes(true)
         }
     }
@@ -44,7 +44,7 @@ struct NoticeToMarinersFullNoticeView: View {
             graphicsView()
             Section("Files") {
                 ForEach(noticeToMarinersPublications) { ntm in
-                    NoticeToMarinersFileSummaryView(noticeToMariners: ntm)
+                    NoticeToMarinersFileSummaryView(noticeNumber: Int(ntm.noticeNumber))
                         .padding(.all, 16)
                         .card()
                 }

@@ -661,4 +661,72 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
         let retrieved = dataSource.getElectronicPublication(s3Key: "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf")
         XCTAssertEqual(retrieved?.s3Key, epub.s3Key)
     }
+
+    func testObserveElectronicPublication() async {
+        var epub = ElectronicPublicationModel()
+
+        epub.pubTypeId = 9
+        epub.pubDownloadId = 3
+        epub.fullPubFlag = false
+        epub.pubDownloadOrder = 1
+        epub.pubDownloadDisplayName = "Pub. 110 - Greenland, East Coasts of North and South America, and West Indies"
+        epub.pubsecId = 129
+        epub.odsEntryId = 22266
+        epub.sectionOrder = 1
+        epub.sectionName = "UpdatedPub110bk"
+        epub.sectionDisplayName = "Pub 110 - Updated to NTM 44/22"
+        epub.sectionLastModified = Date(timeIntervalSince1970: 0)
+        epub.contentId = 16694312
+        epub.internalPath = "NIMA_LOL/Pub110"
+        epub.filenameBase = "UpdatedPub110bk"
+        epub.fileExtension = "pdf"
+        epub.s3Key = "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf"
+        epub.fileSize = 2389496
+        epub.uploadTime = Date(timeIntervalSince1970: 0)
+        epub.fullFilename = "UpdatedPub110bk.pdf"
+        epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
+        epub.isDownloaded = false
+        epub.isDownloading = false
+
+        let dataSource = ElectronicPublicationCoreDataDataSource()
+        let inserted = await dataSource.insert(epubs: [epub])
+        XCTAssertEqual(1, inserted)
+
+        var disposables = Set<AnyCancellable>()
+
+        dataSource.observeElectronicPublication(s3Key: "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf")?
+            .sink(receiveValue: { updatedObject in
+                epub = updatedObject
+            })
+            .store(in: &disposables)
+
+        persistentStore.viewContext.performAndWait {
+            var fetched: ElectronicPublication? = persistentStore.viewContext.fetchFirst(ElectronicPublication.self, key: "s3Key", value: "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf")
+            fetched?.isDownloading = true
+            fetched?.downloadProgress = 0.5
+            do {
+                try persistentStore.viewContext.save()
+            } catch {
+                NSLog("Error updating \(error)")
+            }
+        }
+
+        persistentStore.viewContext.performAndWait {
+            var fetched: ElectronicPublication? = persistentStore.viewContext.fetchFirst(ElectronicPublication.self, key: "s3Key", value: "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf")
+            fetched?.isDownloading = true
+            fetched?.downloadProgress = 0.9
+            do {
+                try persistentStore.viewContext.save()
+            } catch {
+                NSLog("Error updating \(error)")
+            }
+        }
+
+        print("disposables is \(disposables)")
+
+        let expectation1 = expectation(for: epub.isDownloading == true)
+        let expectation2 = expectation(for: epub.downloadProgress == 0.9)
+
+        await fulfillment(of: [expectation1, expectation2], timeout: 5)
+    }
 }

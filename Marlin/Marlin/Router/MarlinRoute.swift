@@ -121,14 +121,14 @@ struct MarlinRouteModifier: ViewModifier {
                         ModuDetailView(name: itemKey)
                     case DataSources.port.key:
                         PortDetailView(portNumber: Int64(itemKey))
-                    case NavigationalWarning.key:
+                    case DataSources.navWarning.key:
 
                         if let navWarning = NavigationalWarning.getItem(
                             context: PersistenceController.current.viewContext,
                             itemKey: itemKey) as? NavigationalWarning {
                             NavigationalWarningDetailView(navigationalWarning: navWarning)
                         }
-                    case NoticeToMariners.key:
+                    case DataSources.noticeToMariners.key:
                         if let noticeNumber = Int64(itemKey) {
                             NoticeToMarinersFullNoticeView(
                                 viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: noticeNumber))
@@ -148,19 +148,20 @@ struct MarlinRouteModifier: ViewModifier {
                         if split.count == 2 {
                             RadioBeaconDetailView(featureNumber: Int(split[0]), volumeNumber: "\(split[1])")
                         }
-                    case ElectronicPublication.key:
-                        if let epub = ElectronicPublication.getItem(
-                            context: PersistenceController.current.viewContext,
-                            itemKey: itemKey) as? ElectronicPublication {
-                            ElectronicPublicationDetailView(electronicPublication: epub)
-                        }
-                    case GeoPackageFeatureItem.key:
+                    case DataSources.epub.key:
+                        Text("epub detail view")
+//                        if let epub = ElectronicPublication.getItem(
+//                            context: PersistenceController.current.viewContext,
+//                            itemKey: itemKey) as? ElectronicPublication {
+//                            ElectronicPublicationDetailView(electronicPublication: epub)
+//                        }
+                    case DataSources.geoPackage.key:
                         if let gpFeature = GeoPackageFeatureItem.getItem(
                             context: PersistenceController.current.viewContext,
                             itemKey: itemKey) as? GeoPackageFeatureItem {
                             GeoPackageFeatureItemDetailView(featureItem: gpFeature)
                         }
-                    case Route.key:
+                    case DataSources.route.key:
                         CreateRouteView(routeURI: URL(string: itemKey))
                     default:
                         EmptyView()

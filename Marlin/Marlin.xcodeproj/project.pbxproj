@@ -202,6 +202,10 @@
 		F724789A2B7EAA82003D4118 /* NoticeToMarinersInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478992B7EAA82003D4118 /* NoticeToMarinersInitializer.swift */; };
 		F724789C2B7EAAE1003D4118 /* NoticeToMarinersRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F724789B2B7EAAE1003D4118 /* NoticeToMarinersRepository.swift */; };
 		F724789F2B7EB8A6003D4118 /* NoticeToMarinersCoreDataDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F724789E2B7EB8A6003D4118 /* NoticeToMarinersCoreDataDataSourceTests.swift */; };
+		F72478A12B7FA8EC003D4118 /* NoticeToMarinersStaticLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478A02B7FA8EC003D4118 /* NoticeToMarinersStaticLocalDataSource.swift */; };
+		F72478A52B800F85003D4118 /* ElectronicPublicationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478A42B800F85003D4118 /* ElectronicPublicationViewModel.swift */; };
+		F72478A72B863856003D4118 /* NoticeToMarinersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478A62B863856003D4118 /* NoticeToMarinersViewModel.swift */; };
+		F72478A92B86A496003D4118 /* NoticeToMarinersStaticRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478A82B86A496003D4118 /* NoticeToMarinersStaticRemoteDataSource.swift */; };
 		F7249AEB2AF4321A00961E65 /* AsamService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7249AEA2AF4321A00961E65 /* AsamService.swift */; };
 		F7249AED2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */; };
 		F726247E2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F726247D2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift */; };
@@ -830,6 +834,10 @@
 		F72478992B7EAA82003D4118 /* NoticeToMarinersInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersInitializer.swift; sourceTree = "<group>"; };
 		F724789B2B7EAAE1003D4118 /* NoticeToMarinersRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersRepository.swift; sourceTree = "<group>"; };
 		F724789E2B7EB8A6003D4118 /* NoticeToMarinersCoreDataDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersCoreDataDataSourceTests.swift; sourceTree = "<group>"; };
+		F72478A02B7FA8EC003D4118 /* NoticeToMarinersStaticLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersStaticLocalDataSource.swift; sourceTree = "<group>"; };
+		F72478A42B800F85003D4118 /* ElectronicPublicationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationViewModel.swift; sourceTree = "<group>"; };
+		F72478A62B863856003D4118 /* NoticeToMarinersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersViewModel.swift; sourceTree = "<group>"; };
+		F72478A82B86A496003D4118 /* NoticeToMarinersStaticRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersStaticRemoteDataSource.swift; sourceTree = "<group>"; };
 		F7249AEA2AF4321A00961E65 /* AsamService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamService.swift; sourceTree = "<group>"; };
 		F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRemoteDataSourceTests.swift; sourceTree = "<group>"; };
 		F726247D2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamStaticRemoteDataSource.swift; sourceTree = "<group>"; };
@@ -2297,6 +2305,8 @@
 				F72478832B7D7522003D4118 /* RadioBeaconStaticRemoteDataSource.swift */,
 				F724788C2B7E8AAB003D4118 /* ElectronicPublicationStaticLocalDataSource.swift */,
 				F724788E2B7E8BE2003D4118 /* ElectronicPublicationStaticRemoteDataSource.swift */,
+				F72478A02B7FA8EC003D4118 /* NoticeToMarinersStaticLocalDataSource.swift */,
+				F72478A82B86A496003D4118 /* NoticeToMarinersStaticRemoteDataSource.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -2486,6 +2496,7 @@
 				F7EFFEC62A7D57980097E5EF /* NoticeToMarinersSummaryView.swift */,
 				F72EAAE0291F040D00AC6026 /* NoticeToMarinersView.swift */,
 				F7D8FA7C29414FA100E7D0A1 /* NoticeToMarinersFullNoticeViewViewModel.swift */,
+				F72478A62B863856003D4118 /* NoticeToMarinersViewModel.swift */,
 			);
 			path = NTM;
 			sourceTree = "<group>";
@@ -2510,6 +2521,7 @@
 				F7C23E0B290850D70002A7DF /* ElectronicPublicationDetailView.swift */,
 				F7C23E0D2908609E0002A7DF /* ElectronicPublicationsList.swift */,
 				F7C23E0F2909AC430002A7DF /* ElectronicPublicationActionBar.swift */,
+				F72478A42B800F85003D4118 /* ElectronicPublicationViewModel.swift */,
 			);
 			path = ElectronicPublication;
 			sourceTree = "<group>";
@@ -3536,6 +3548,8 @@
 				F72EAAC6291C334200AC6026 /* ElectronicPublicationDataTests.swift in Sources */,
 				F7249AED2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift in Sources */,
 				F72281DF296F644600218FC0 /* DataSourceRailTests.swift in Sources */,
+				F72478A92B86A496003D4118 /* NoticeToMarinersStaticRemoteDataSource.swift in Sources */,
+				F72478A12B7FA8EC003D4118 /* NoticeToMarinersStaticLocalDataSource.swift in Sources */,
 				F72478802B7D70B2003D4118 /* RadioBeaconRepositoryTests.swift in Sources */,
 				F75F81D8295DE0EF0062A708 /* AboutCellTests.swift in Sources */,
 			);
@@ -3741,6 +3755,7 @@
 				F7FDF2B42AB4E8BB009A5E8F /* ModuViewModel.swift in Sources */,
 				F79D79712B645157007EB90F /* ModuTileRepository.swift in Sources */,
 				F7FFB34328DD06EF00C31AA3 /* MSIListView.swift in Sources */,
+				F72478A72B863856003D4118 /* NoticeToMarinersViewModel.swift in Sources */,
 				F7DEA1DB2B6AECA500EB801A /* RadioBeaconService.swift in Sources */,
 				F7D2225428E5F03500F527F2 /* SortView.swift in Sources */,
 				F7FFB2F028D626DC00C31AA3 /* DifferentialGPSStationModel.swift in Sources */,
@@ -3939,6 +3954,7 @@
 				F7FB156D284AAF1B004ACAC5 /* MSIRouter.swift in Sources */,
 				F7EB1B0E2A0D7FC200D1433B /* SFGeometryExtensions.swift in Sources */,
 				F7AFF93D2AD4603000555960 /* RouteRepository.swift in Sources */,
+				F72478A52B800F85003D4118 /* ElectronicPublicationViewModel.swift in Sources */,
 				F7B84E242A7309A600640C76 /* BookmarkViewModel.swift in Sources */,
 				F7C255CD2AC76431003A5B7E /* EncodableExtensions.swift in Sources */,
 				F7FFB30E28D63C2700C31AA3 /* ModuPropertyContainer.swift in Sources */,

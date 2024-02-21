@@ -61,8 +61,8 @@ final class NoticeToMarinersCoreDataDataSourceTests: XCTestCase {
             ntm.fileExtension = "pdf"
             ntm.fileSize = 63491
             ntm.isFullPublication = false
-            ntm.uploadTime = NoticeToMariners.dateFormatter.date(from: "2022-11-08T12:28:33.961+0000")
-            ntm.lastModified = NoticeToMariners.dateFormatter.date(from: "2022-11-08T12:28:33.961Z")
+            ntm.uploadTime = DataSources.noticeToMariners.dateFormatter.date(from: "2022-11-08T12:28:33.961+0000")
+            ntm.lastModified = DataSources.noticeToMariners.dateFormatter.date(from: "2022-11-08T12:28:33.961Z")
 
             newItem = ntm
             try? persistentStore.viewContext.save()

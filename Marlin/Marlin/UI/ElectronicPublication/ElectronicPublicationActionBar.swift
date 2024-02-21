@@ -8,101 +8,110 @@
 import SwiftUI
 
 struct ElectronicPublicationActionBar: View {
+    @EnvironmentObject var repository: ElectronicPublicationRepository
     @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     
-    @ObservedObject var electronicPublication: ElectronicPublication
-    
-    init(electronicPublication: ElectronicPublication) {
-        self.electronicPublication = electronicPublication
+    @ObservedObject var viewModel: ElectronicPublicationViewModel
+
+    init(viewModel: ElectronicPublicationViewModel) {
+        self.viewModel = viewModel
     }
     
     var body: some View {
-        HStack(spacing: 0) {
-            Spacer()
-            BookmarkButton(viewModel: bookmarkViewModel)
-            if electronicPublication.isDownloading {
-                if let error = electronicPublication.error {
-                    Text(error)
-                        .secondary()
-                    Spacer()
+        switch viewModel.electronicPublication {
+        case nil:
+            Color.clear
+        case .some(let electronicPublication):
+            HStack(spacing: 0) {
+                Spacer()
+                BookmarkButton(viewModel: bookmarkViewModel)
+                if electronicPublication.isDownloading != true {
+                    if let error = electronicPublication.error {
+                        Text(error)
+                            .secondary()
+                        Spacer()
+                    } else {
+                        ProgressView(value: electronicPublication.downloadProgress)
+                            .tint(Color.primaryColorVariant)
+                    }
+                }
+                if electronicPublication.isDownloaded == true, viewModel.checkFileExists(),
+                   let url = URL(string: electronicPublication.savePath) {
+                    Button(
+                        action: {
+                            NotificationCenter.default.post(name: .DocumentPreview, object: url)
+                        },
+                        label: {
+                            Label(
+                                title: {},
+                                icon: { Image("preview")
+                                        .renderingMode(.template)
+                                        .foregroundColor(Color.primaryColorVariant)
+                                })
+                        }
+                    )
+                    .accessibilityElement()
+                    .accessibilityLabel("Open")
+
+                    Button(
+                        action: {
+                            viewModel.deleteFile()
+                        },
+                        label: {
+                            Label(
+                                title: {},
+                                icon: { Image(systemName: "trash.fill")
+                                        .renderingMode(.template)
+                                        .foregroundColor(Color.primaryColorVariant)
+                                })
+                        }
+                    )
+                    .accessibilityElement()
+                    .accessibilityLabel("Delete")
+                } else if (electronicPublication.isDownloading ?? false) == false {
+                    Button(
+                        action: {
+                            viewModel.downloadFile()
+                        },
+                        label: {
+                            Label(
+                                title: {},
+                                icon: { Image(systemName: "square.and.arrow.down")
+                                        .renderingMode(.template)
+                                        .foregroundColor(Color.primaryColorVariant)
+                                })
+                        }
+                    )
+                    .accessibilityElement()
+                    .accessibilityLabel("Download")
                 } else {
-                    ProgressView(value: electronicPublication.downloadProgress)
-                        .tint(Color.primaryColorVariant)
+                    Button(
+                        action: {
+                            viewModel.cancelDownload()
+                        },
+                        label: {
+                            Label(
+                                title: {},
+                                icon: { Image(systemName: "xmark.circle.fill")
+                                        .renderingMode(.template)
+                                        .foregroundColor(Color.primaryColorVariant)
+                                })
+                        }
+                    )
+                    .accessibilityElement()
+                    .accessibilityLabel("Cancel")
                 }
             }
-            if electronicPublication.isDownloaded, electronicPublication.checkFileExists(),
-               let url = URL(string: electronicPublication.savePath) {
-                Button(
-                    action: {
-                        NotificationCenter.default.post(name: .DocumentPreview, object: url)
-                    },
-                    label: {
-                        Label(
-                            title: {},
-                            icon: { Image("preview")
-                                    .renderingMode(.template)
-                                    .foregroundColor(Color.primaryColorVariant)
-                            })
-                    }
+            .padding(.trailing, -8)
+            .buttonStyle(MaterialButtonStyle())
+            .onAppear {
+                bookmarkViewModel.repository = bookmarkRepository
+                bookmarkViewModel.getBookmark(
+                    itemKey: electronicPublication.itemKey,
+                    dataSource: electronicPublication.key
                 )
-                .accessibilityElement()
-                .accessibilityLabel("Open")
-                
-                Button(
-                    action: {
-                        electronicPublication.deleteFile()
-                    },
-                    label: {
-                        Label(
-                            title: {},
-                            icon: { Image(systemName: "trash.fill")
-                                    .renderingMode(.template)
-                                    .foregroundColor(Color.primaryColorVariant)
-                            })
-                    }
-                )
-                .accessibilityElement()
-                .accessibilityLabel("Delete")
-            } else if !electronicPublication.isDownloading {
-                Button(
-                    action: {
-                        electronicPublication.downloadFile()
-                    },
-                    label: {
-                        Label(
-                            title: {},
-                            icon: { Image(systemName: "square.and.arrow.down")
-                                    .renderingMode(.template)
-                                    .foregroundColor(Color.primaryColorVariant)
-                            })
-                    }
-                )
-                .accessibilityElement()
-                .accessibilityLabel("Download")
-            } else {
-                Button(
-                    action: {
-                        electronicPublication.cancelDownload()
-                    },
-                    label: {
-                        Label(
-                            title: {},
-                            icon: { Image(systemName: "xmark.circle.fill")
-                                    .renderingMode(.template)
-                                    .foregroundColor(Color.primaryColorVariant)
-                            })
-                    }
-                )
-                .accessibilityElement()
-                .accessibilityLabel("Cancel")
             }
-        }
-        .padding(.trailing, -8)
-        .buttonStyle(MaterialButtonStyle())
-        .onAppear {
-            bookmarkViewModel.repository = bookmarkRepository
-            bookmarkViewModel.getBookmark(itemKey: electronicPublication.itemKey, dataSource: electronicPublication.key)
         }
     }
 }

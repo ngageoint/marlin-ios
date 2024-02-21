@@ -24,7 +24,7 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
     
     var sortDescriptors: [NSSortDescriptor] {
         var sortDescriptors: [NSSortDescriptor] = []
-        for sortDescriptor in NoticeToMariners.defaultSort {
+        for sortDescriptor in DataSources.noticeToMariners.defaultSort {
             sortDescriptors.append(sortDescriptor.toNSSortDescriptor())
         }
         return sortDescriptors
@@ -88,7 +88,7 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
                 entity: Bookmark.entity(),
                 sortDescriptors: [],
                 predicate: NSPredicate(
-                    format: "id == %@ AND dataSource == %@", "\(noticeNumber)", NoticeToMariners.key)
+                    format: "id == %@ AND dataSource == %@", "\(noticeNumber)", DataSources.noticeToMariners.key)
             )
         }
         return FetchRequest(entity: Bookmark.entity(), sortDescriptors: [], predicate: NSPredicate(value: false))

@@ -30,9 +30,9 @@ final class ElectronicPublicationListTests: XCTestCase {
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
         
-        UserDefaults.standard.setFilter(ElectronicPublication.key, filter: [])
-        UserDefaults.standard.setSort(ElectronicPublication.key, sort: ElectronicPublication.defaultSort)
-        
+        UserDefaults.standard.setFilter(DataSources.epub.key, filter: [])
+        UserDefaults.standard.setSort(DataSources.epub.key, sort: DataSources.epub.defaultSort)
+
         persistentStore.viewContext.performAndWait {
             if let epubs = persistentStore.viewContext.fetchAll(ElectronicPublication.self) {
                 for epub in epubs {
@@ -80,7 +80,7 @@ final class ElectronicPublicationListTests: XCTestCase {
         
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[ElectronicPublication.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.epub.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -90,7 +90,7 @@ final class ElectronicPublicationListTests: XCTestCase {
         
         expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[ElectronicPublication.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.epub.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")

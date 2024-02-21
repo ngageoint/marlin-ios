@@ -45,8 +45,16 @@ struct ElectronicPublicationListModel: Hashable, Identifiable, Bookmarkable {
     }
 }
 
-struct ElectronicPublicationModel: Bookmarkable, Codable, Hashable, Identifiable {
-
+struct ElectronicPublicationModel: Bookmarkable, Codable, Hashable, Identifiable, Downloadable {
+    var remoteLocation: URL? {
+        guard let s3Key else {
+            return nil
+        }
+        return URL(string: "\(MSIRouter.baseURLString)/publications/download?key=\(s3Key)&type=download")
+    }
+    var title: String? {
+        return sectionDisplayName ?? "Electronic Publication"
+    }
     static var definition: any DataSourceDefinition = DataSourceDefinitions.epub.definition
 
     var canBookmark: Bool = false
@@ -61,6 +69,11 @@ struct ElectronicPublicationModel: Bookmarkable, Codable, Hashable, Identifiable
 
     var itemTitle: String {
         return "\(self.sectionDisplayName ?? "")"
+    }
+
+    var savePath: String {
+        let docsUrl = URL.documentsDirectory
+        return "\(docsUrl.absoluteString)\(s3Key ?? "")"
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -108,6 +121,8 @@ struct ElectronicPublicationModel: Bookmarkable, Codable, Hashable, Identifiable
     var uploadTime: Date?
     var isDownloaded: Bool?
     var isDownloading: Bool?
+    var downloadProgress: Float?
+    var error: String?
 
     init() {
 
@@ -141,7 +156,7 @@ struct ElectronicPublicationModel: Bookmarkable, Codable, Hashable, Identifiable
 
         var parsedPubsecLastModifiedDate: Date?
         if let dateString = try? values.decode(String.self, forKey: .pubsecLastModified) {
-            if let date = ElectronicPublication.dateFormatter.date(from: dateString) {
+            if let date = DataSources.epub.dateFormatter.date(from: dateString) {
                 parsedPubsecLastModifiedDate = date
             }
         }
@@ -149,7 +164,7 @@ struct ElectronicPublicationModel: Bookmarkable, Codable, Hashable, Identifiable
 
         var parsedSectionLastModifiedDate: Date?
         if let dateString = try? values.decode(String.self, forKey: .sectionLastModified) {
-            if let date = ElectronicPublication.dateFormatter.date(from: dateString) {
+            if let date = DataSources.epub.dateFormatter.date(from: dateString) {
                 parsedSectionLastModifiedDate = date
             }
         }
@@ -157,7 +172,7 @@ struct ElectronicPublicationModel: Bookmarkable, Codable, Hashable, Identifiable
 
         var parsedUploadTime: Date?
         if let dateString = try? values.decode(String.self, forKey: .uploadTime) {
-            if let date = ElectronicPublication.dateFormatter.date(from: dateString) {
+            if let date = DataSources.epub.dateFormatter.date(from: dateString) {
                 parsedUploadTime = date
             }
         }
@@ -188,6 +203,8 @@ struct ElectronicPublicationModel: Bookmarkable, Codable, Hashable, Identifiable
         self.uploadTime = epub.uploadTime
         self.isDownloaded = epub.isDownloaded
         self.isDownloading = epub.isDownloading
+        self.downloadProgress = epub.downloadProgress
+        self.error = epub.error
     }
 
     // The keys must have the same name as the attributes of the Asam entity.

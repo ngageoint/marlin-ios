@@ -15,7 +15,12 @@ protocol NoticeToMarinersLocalDataSource {
     func getNoticeToMariners(
         noticeNumber: Int?
     ) -> NoticeToMarinersModel?
-
+    func observeNoticeToMariners(
+        noticeNumber: Int
+    ) -> AnyPublisher<NoticeToMarinersModel, Never>?
+    func checkFileExists(noticeNumber: Int) -> Bool
+    func deleteFile(noticeNumber: Int)
+    func updateProgress(noticeNumber: Int, progress: DownloadProgress)
     func getNewestNoticeToMariners() -> NoticeToMarinersModel?
     func getNoticesToMariners(
         filters: [DataSourceFilterParameter]?
@@ -85,7 +90,9 @@ class NoticeToMarinersCoreDataDataSource:
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
             fetchRequest.predicate = predicate
 
-            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.noticeToMariners.key).map({ sortParameter in
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(
+                DataSources.noticeToMariners.key
+            ).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
             return (self.context.fetch(request: fetchRequest)?.map { ntm in
@@ -116,7 +123,81 @@ class NoticeToMarinersCoreDataDataSource:
 
 // MARK: Data Publisher methods
 extension NoticeToMarinersCoreDataDataSource {
+    func updateProgress(noticeNumber: Int, progress: DownloadProgress) {
+        return context.performAndWait {
+            guard let notice = try? context.fetchFirst(
+                DataType.self,
+                predicate: NSPredicate(format: "noticeNumber == %i", argumentArray: [noticeNumber])) else {
+                return
+            }
+            notice.isDownloading = progress.isDownloading
+            notice.isDownloaded = progress.isDownloaded
+            notice.downloadProgress = progress.downloadProgress
+            notice.error = progress.error
+            try? context.save()
+        }
+    }
 
+    func deleteFile(noticeNumber: Int) {
+        return context.performAndWait {
+            guard let notice = try? context.fetchFirst(
+                DataType.self,
+                predicate: NSPredicate(format: "noticeNumber == %i", argumentArray: [noticeNumber])),
+            let odsKey = notice.odsKey else {
+                return
+            }
+            let docsUrl = URL.documentsDirectory
+            let fileUrl = "\(docsUrl.absoluteString)\(odsKey)"
+            let destinationUrl = URL(string: fileUrl)
+
+            if let destinationUrl = destinationUrl {
+                guard FileManager().fileExists(atPath: destinationUrl.path) else { return }
+                do {
+                    try FileManager().removeItem(atPath: destinationUrl.path)
+                    notice.isDownloaded = false
+                    try? context.save()
+                } catch let error {
+                    print("Error while deleting file: ", error)
+                }
+            }
+        }
+    }
+
+    func checkFileExists(noticeNumber: Int) -> Bool {
+        return context.performAndWait {
+            guard let notice = try? context.fetchFirst(
+                DataType.self,
+                predicate: NSPredicate(format: "noticeNumber == %i", argumentArray: [noticeNumber])) else {
+                return false
+            }
+            var downloaded = false
+            if let destinationUrl = URL(string: notice.savePath) {
+                downloaded = FileManager().fileExists(atPath: destinationUrl.path)
+            }
+            if downloaded != notice.isDownloaded {
+                notice.isDownloaded = downloaded
+                try? context.save()
+            }
+            return downloaded
+        }
+    }
+
+    func observeNoticeToMariners(
+        noticeNumber: Int
+    ) -> AnyPublisher<NoticeToMarinersModel, Never>? {
+        return context.performAndWait {
+            guard let notice = try? context.fetchFirst(
+                DataType.self,
+                predicate: NSPredicate(format: "noticeNumber == %i", argumentArray: [noticeNumber])) else {
+                return nil
+            }
+            return publisher(for: notice, in: context)
+                .map({ notice in
+                    return NoticeToMarinersModel(noticeToMariners: notice)
+                })
+                .eraseToAnyPublisher()
+        }
+    }
     struct ModelPage {
         var list: [Item]
         var next: Int?

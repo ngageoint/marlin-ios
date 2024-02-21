@@ -8,16 +8,25 @@
 import Foundation
 import AVKit
 import OSLog
+import Combine
+
+struct DownloadProgress {
+    var id: String
+    var isDownloading: Bool
+    var isDownloaded: Bool
+    var downloadProgress: Float
+    var error: String
+}
 
 final class DownloadManager: NSObject {        
     var urlToDownloadableMap: [URL: Downloadable] = [:]
     var urlToDownloadTask: [URL: URLSessionDownloadTask] = [:]
     
-    static let shared: DownloadManager = DownloadManager()
+//    static let shared: DownloadManager = DownloadManager()
     // since it is impossible to stub http requests on a background session, this is purely to be able
     // to override for testing
     var sessionConfig: URLSessionConfiguration = URLSessionConfiguration.background(
-        withIdentifier: ElectronicPublication.backgroundDownloadIdentifier
+        withIdentifier: DataSources.epub.backgroundDownloadIdentifier
     )
 
     private lazy var urlSession: URLSession = {
@@ -25,37 +34,46 @@ final class DownloadManager: NSObject {
         sessionConfig.sessionSendsLaunchEvents = true
         return URLSession(configuration: sessionConfig, delegate: self, delegateQueue: nil)
     }()
-    
-    private override init() {
-        
+
+    let subject: PassthroughSubject<DownloadProgress, Never>
+    let downloadable: Downloadable
+
+    init(subject: PassthroughSubject<DownloadProgress, Never>, downloadable: Downloadable) {
+        self.subject = subject
+        self.downloadable = downloadable
     }
     
-    func download(downloadable: Downloadable) {
-        if downloadable.isDownloaded && downloadable.checkFileExists() {
-            return
-        }
+    func download() {
         guard let requestUrl = downloadable.remoteLocation else {
             return
         }
         urlToDownloadableMap[requestUrl] = downloadable
-        PersistenceController.current.perform {
-            downloadable.objectWillChange.send()
-            downloadable.isDownloading = true
-            DispatchQueue.main.async {
-                try? PersistenceController.current.save()
-            }
-        }
+        print("download from \(requestUrl)")
+        subject.send(
+            DownloadProgress(
+                id: downloadable.id,
+                isDownloading: true,
+                isDownloaded: false,
+                downloadProgress: 0.0,
+                error: ""
+            )
+        )
         if let destinationUrl = URL(string: downloadable.savePath) {
+            print("dest url is \(destinationUrl)")
             if FileManager().fileExists(atPath: destinationUrl.path) {
-                PersistenceController.current.perform {
-                    downloadable.objectWillChange.send()
-                    downloadable.isDownloading = false
-                    downloadable.isDownloaded = true
-                    DispatchQueue.main.async {
-                        try? PersistenceController.current.save()
-                    }
-                }
+                print("file already exists \(destinationUrl.path)")
+                subject.send(
+                    DownloadProgress(
+                        id: downloadable.id,
+                        isDownloading: false,
+                        isDownloaded: true,
+                        downloadProgress: 1.0,
+                        error: ""
+                    )
+                )
+                subject.send(completion: .finished)
             } else {
+                print("run the download")
                 let urlRequest = URLRequest(url: requestUrl)
                 
                 Metrics.shared.fileDownload(url: urlRequest.url)
@@ -67,7 +85,7 @@ final class DownloadManager: NSObject {
         }
     }
     
-    func cancel(downloadable: Downloadable) {
+    func cancel() {
         guard let requestUrl = downloadable.remoteLocation else {
             return
         }
@@ -75,14 +93,16 @@ final class DownloadManager: NSObject {
         task?.cancel()
         urlToDownloadTask.removeValue(forKey: requestUrl)
         urlToDownloadableMap.removeValue(forKey: requestUrl)
-        PersistenceController.current.perform {
-            downloadable.objectWillChange.send()
-            downloadable.isDownloading = false
-            downloadable.isDownloaded = false
-            DispatchQueue.main.async {
-                try? PersistenceController.current.save()
-            }
-        }
+        subject.send(
+            DownloadProgress(
+                id: downloadable.id,
+                isDownloading: false,
+                isDownloaded: false,
+                downloadProgress: 0.0,
+                error: ""
+            )
+        )
+        subject.send(completion: .finished)
     }
 }
 
@@ -134,22 +154,30 @@ extension DownloadManager: URLSessionDownloadDelegate {
         guard let url = downloadTask.currentRequest?.url else {
             return
         }
-        let downloadable = urlToDownloadableMap[url]
-        downloadable?.managedObjectContext?.perform {
-            downloadable?.objectWillChange.send()
-            downloadable?.downloadProgress = Float(totalBytesWritten)/Float(totalBytesExpectedToWrite)
-            try? downloadable?.managedObjectContext?.save()
-        }
+        print("bytes downloaded \(totalBytesWritten)")
+        subject.send(
+            DownloadProgress(
+                id: downloadable.id,
+                isDownloading: true,
+                isDownloaded: false,
+                downloadProgress: Float(totalBytesWritten)/Float(totalBytesExpectedToWrite),
+                error: ""
+            )
+        )
     }
 
     func saveError(downloadable: Downloadable, response: URLResponse?) {
         print("server error code \(response.debugDescription)")
         if let httpResponse = response as? HTTPURLResponse {
-            downloadable.managedObjectContext?.perform {
-                downloadable.objectWillChange.send()
-                downloadable.error = "Error downloading (\(httpResponse.statusCode))"
-                try? downloadable.managedObjectContext?.save()
-            }
+            subject.send(
+                DownloadProgress(
+                    id: downloadable.id,
+                    isDownloading: false,
+                    isDownloaded: false,
+                    downloadProgress: 0.0,
+                    error: "Error downloading (\(httpResponse.statusCode))"
+                )
+            )
         }
     }
 
@@ -181,11 +209,7 @@ extension DownloadManager: URLSessionDownloadDelegate {
         urlToDownloadTask.removeValue(forKey: url)
         urlToDownloadableMap.removeValue(forKey: url)
         
-        var destinationUrl: URL?
-        
-        downloadable.managedObjectContext?.performAndWait {
-            destinationUrl = URL(string: downloadable.savePath)
-        }
+        var destinationUrl: URL? = URL(string: downloadable.savePath)
 
         guard let destinationUrl = destinationUrl else {
             return
@@ -201,11 +225,16 @@ extension DownloadManager: URLSessionDownloadDelegate {
 
         print("Does the file exist \(location.path)")
         if !FileManager.default.fileExists(atPath: location.path) {
-            downloadable.managedObjectContext?.perform {
-                downloadable.objectWillChange.send()
-                downloadable.error = "Error downloading (file not saved)"
-                try? downloadable.managedObjectContext?.save()
-            }
+            print("error file not saved")
+            subject.send(
+                DownloadProgress(
+                    id: downloadable.id,
+                    isDownloading: false,
+                    isDownloaded: false,
+                    downloadProgress: 0.0,
+                    error: "Error downloading (file not saved)"
+                )
+            )
             return
         }
         
@@ -215,34 +244,37 @@ extension DownloadManager: URLSessionDownloadDelegate {
     func saveFile(location: URL, destinationUrl: URL, downloadable: Downloadable) {
         do {
             try FileManager.default.moveItem(at: location, to: destinationUrl)
-            downloadable.managedObjectContext?.perform {
-                let center = UNUserNotificationCenter.current()
-                let content = UNMutableNotificationContent()
-                content.title = NSString.localizedUserNotificationString(
-                    forKey: "Download Complete",
-                    arguments: nil
-                )
-                content.body = NSString.localizedUserNotificationString(
-                    forKey: "Downloaded the file \(downloadable.title ?? "")",
-                    arguments: nil
-                )
-                content.sound = UNNotificationSound.default
-                content.categoryIdentifier = "mil.nga.msi"
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2.0, repeats: false)
-                let request = UNNotificationRequest.init(
-                    identifier: "downloadCompleted",
-                    content: content,
-                    trigger: trigger
-                )
+            let center = UNUserNotificationCenter.current()
+            let content = UNMutableNotificationContent()
+            content.title = NSString.localizedUserNotificationString(
+                forKey: "Download Complete",
+                arguments: nil
+            )
+            content.body = NSString.localizedUserNotificationString(
+                forKey: "Downloaded the file \(downloadable.title ?? "")",
+                arguments: nil
+            )
+            content.sound = UNNotificationSound.default
+            content.categoryIdentifier = "mil.nga.msi"
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2.0, repeats: false)
+            let request = UNNotificationRequest.init(
+                identifier: "downloadCompleted",
+                content: content,
+                trigger: trigger
+            )
 
-                // Schedule the notification.
-                center.add(request)
-
-                downloadable.objectWillChange.send()
-                downloadable.isDownloaded = true
-                downloadable.isDownloading = false
-                try? downloadable.managedObjectContext?.save()
-            }
+            // Schedule the notification.
+            center.add(request)
+            print("sending complete message")
+            subject.send(
+                DownloadProgress(
+                    id: downloadable.id,
+                    isDownloading: false,
+                    isDownloaded: true,
+                    downloadProgress: 1.0,
+                    error: ""
+                )
+            )
         } catch {
             print("error saving file to \(destinationUrl.path) \(error)")
         }

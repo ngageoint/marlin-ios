@@ -16,19 +16,19 @@ extension UserDefaults {
             return publisher(for: \.moduOrder)
         case DataSources.light.key:
             return publisher(for: \.lightOrder)
-        case NoticeToMariners.key:
+        case DataSources.noticeToMariners.key:
             return publisher(for: \.ntmOrder)
         case DFRS.key:
             return publisher(for: \.dfrsOrder)
         case DataSources.dgps.key:
             return publisher(for: \.differentialGPSStationOrder)
-        case ElectronicPublication.key:
+        case DataSources.epub.key:
             return publisher(for: \.epubOrder)
         case DataSources.port.key:
             return publisher(for: \.portOrder)
         case DataSources.radioBeacon.key:
             return publisher(for: \.radioBeaconOrder)
-        case NavigationalWarning.key:
+        case DataSources.navWarning.key:
             return publisher(for: \.navWarningOrder)
         default:
             return publisher(for: \.asamOrder)

@@ -9,7 +9,8 @@ import Foundation
 import CoreData
 import UIKit
 
-class NoticeToMariners: NSManagedObject, Downloadable {
+class NoticeToMariners: NSManagedObject {
+
     var error: String?
 
     var remoteLocation: URL? {
@@ -70,7 +71,7 @@ class NoticeToMariners: NSManagedObject, Downloadable {
 
     var dateString: String? {
         if let date = uploadTime {
-            return NoticeToMariners.dateFormatter.string(from: date)
+            return DataSources.noticeToMariners.dateFormatter.string(from: date)
         }
         return nil
     }
@@ -83,11 +84,11 @@ class NoticeToMariners: NSManagedObject, Downloadable {
         if isDownloaded && checkFileExists() {
             return
         }
-        DownloadManager.shared.download(downloadable: self)
+//        DownloadManager.shared.download(downloadable: self)
     }
     
     func cancelDownload() {
-        DownloadManager.shared.cancel(downloadable: self)
+//        DownloadManager.shared.cancel(downloadable: self)
     }
     
     func getFirstDay(WeekNumber weekNumber: Int, CurrentYear currentYear: Int) -> Date? {

@@ -28,7 +28,7 @@ class ElectronicPublicationDataLoadOperation: CountingDataLoadOperation {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(
                     name: .DataSourceUpdated,
-                    object: DataSourceUpdatedNotification(key: DataSources.dgps.key)
+                    object: DataSourceUpdatedNotification(key: DataSources.epub.key)
                 )
             }
         }

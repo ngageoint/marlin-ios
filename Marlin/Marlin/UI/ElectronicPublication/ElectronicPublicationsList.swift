@@ -77,7 +77,7 @@ struct ElectronicPublicationsList: View {
         }
         
         .listStyle(.plain)
-        .navigationTitle(ElectronicPublication.fullDataSourceName)
+        .navigationTitle(DataSources.epub.fullName)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             Metrics.shared.appRoute(["epubs"])
@@ -88,7 +88,8 @@ struct ElectronicPublicationsList: View {
     func defaultPublications(section: SectionedFetchResults<Int64, ElectronicPublication>.Element) -> some View {
         List {
             ForEach(section) { epub in
-                epub.summary
+                ElectronicPublicationSummaryView(s3Key: epub.s3Key ?? "")
+//                epub.summary
                     .setShowSectionHeader(false)
                     .setShowMoreDetails(false)
                     .setShowTitle(true)
@@ -115,7 +116,8 @@ struct ElectronicPublicationsList: View {
             if !completeVolumes.isEmpty {
                 Section(completeTitle) {
                     ForEach(completeVolumes) { epub in
-                        epub.summary
+                        ElectronicPublicationSummaryView(s3Key: epub.s3Key ?? "")
+//                        epub.summary
                             .setShowSectionHeader(false)
                             .setShowMoreDetails(false)
                             .setShowTitle(true)
@@ -145,7 +147,8 @@ struct ElectronicPublicationsList: View {
             if !completeVolumes.isEmpty {
                 Section(completeTitle) {
                     ForEach(completeVolumes) { epub in
-                        epub.summary
+                        ElectronicPublicationSummaryView(s3Key: epub.s3Key ?? "")
+// epub.summary
                             .padding([.top, .bottom], 16)
                     }
                 }
@@ -165,7 +168,7 @@ struct ElectronicPublicationsList: View {
                         }
                         return $0.sectionOrder < $1.sectionOrder
                     }) { epub in
-                        epub.summary
+                        ElectronicPublicationSummaryView(s3Key: epub.s3Key ?? "")
                             .setShowSectionHeader(false)
                             .setShowMoreDetails(false)
                             .setShowTitle(true)
@@ -199,7 +202,8 @@ struct ElectronicPublicationsList: View {
                             ForEach(group.sorted {
                                 return $0.sectionOrder < $1.sectionOrder
                             }, id: \.self) { epub in
-                                epub.summary
+                                ElectronicPublicationSummaryView(s3Key: epub.s3Key ?? "")
+// epub.summary
                                     .setShowSectionHeader(false)
                                     .setShowMoreDetails(false)
                                     .setShowTitle(true)

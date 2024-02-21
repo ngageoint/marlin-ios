@@ -17,6 +17,8 @@ class BookmarkStaticRepository: BookmarkRepository {
     let moduRepository: ModuRepository?
     let portRepository: PortRepository?
     let radioBeaconRepository: RadioBeaconRepository?
+    let noticeToMarinersRepository: NoticeToMarinersRepository?
+    let electronicPublicationRepository: ElectronicPublicationRepository?
 
     init(
         asamRepository: AsamRepository? = nil,
@@ -24,7 +26,9 @@ class BookmarkStaticRepository: BookmarkRepository {
         lightRepository: LightRepository? = nil,
         moduRepository: ModuRepository? = nil,
         portRepository: PortRepository? = nil,
-        radioBeaconRepository: RadioBeaconRepository? = nil
+        radioBeaconRepository: RadioBeaconRepository? = nil,
+        noticeToMarinersRepository: NoticeToMarinersRepository? = nil,
+        electronicPublicationRepository: ElectronicPublicationRepository? = nil
     ) {
         self.asamRepository = asamRepository
         self.dgpsRepository = dgpsRepository
@@ -32,6 +36,8 @@ class BookmarkStaticRepository: BookmarkRepository {
         self.moduRepository = moduRepository
         self.portRepository = portRepository
         self.radioBeaconRepository = radioBeaconRepository
+        self.noticeToMarinersRepository = noticeToMarinersRepository
+        self.electronicPublicationRepository = electronicPublicationRepository
     }
     func createBookmark(notes: String?, itemKey: String, dataSource: String) async {
         let model = BookmarkModel(dataSource: dataSource, id: itemKey, itemKey: itemKey, notes: notes, timestamp: Date())
@@ -64,10 +70,8 @@ class BookmarkStaticRepository: BookmarkRepository {
 //            if let context = context {
 //                return NavigationalWarning.getItem(context: context, itemKey: self.id)
 //            }
-//        case NoticeToMariners.key:
-//            if let context = context {
-//                return NoticeToMariners.getItem(context: context, itemKey: self.id)
-//            }
+        case DataSources.noticeToMariners.key:
+            return noticeToMarinersRepository?.getNoticeToMariners(noticeNumber: Int(itemKey))
         case DataSources.dgps.key:
             let split = itemKey.split(separator: "--")
             if split.count == 2 {
@@ -93,10 +97,8 @@ class BookmarkStaticRepository: BookmarkRepository {
                     volumeNumber: "\(split[1])"
                 )
             }
-//        case ElectronicPublication.key:
-//            if let context = context {
-//                return ElectronicPublication.getItem(context: context, itemKey: self.id)
-//            }
+        case DataSources.epub.key:
+            return electronicPublicationRepository?.getElectronicPublication(s3Key: itemKey)
 //        case GeoPackageFeatureItem.key:
 //            if let context = context {
 //                return GeoPackageFeatureItem.getItem(context: context, itemKey: self.id)

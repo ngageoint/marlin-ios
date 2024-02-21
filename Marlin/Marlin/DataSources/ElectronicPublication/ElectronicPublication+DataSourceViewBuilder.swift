@@ -8,17 +8,17 @@
 import Foundation
 import SwiftUI
 
-extension ElectronicPublication: DataSourceViewBuilder {
-    var itemTitle: String {
-        return "\(self.sectionDisplayName ?? "")"
-    }
-    
-    var detailView: AnyView {
-        AnyView(ElectronicPublicationSummaryView(electronicPublication: self)
-            .showBookmarkNotes(true))
-    }
-    
-    var summary: some DataSourceSummaryView {
-        ElectronicPublicationSummaryView(electronicPublication: self)
-    }
-}
+// extension ElectronicPublication: DataSourceViewBuilder {
+//    var itemTitle: String {
+//        return "\(self.sectionDisplayName ?? "")"
+//    }
+//    
+//    var detailView: AnyView {
+//        AnyView(ElectronicPublicationSummaryView(electronicPublication: self)
+//            .showBookmarkNotes(true))
+//    }
+//    
+//    var summary: some DataSourceSummaryView {
+//        ElectronicPublicationSummaryView(electronicPublication: self)
+//    }
+// }

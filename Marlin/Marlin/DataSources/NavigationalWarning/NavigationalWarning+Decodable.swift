@@ -25,7 +25,9 @@ struct NavigationalWarningPropertyContainer: Decodable {
     }
 }
 
-struct NavigationalWarningModel: Codable, Hashable, Identifiable {
+struct NavigationalWarningModel: Codable, Hashable, Identifiable, Bookmarkable {
+    static var definition: any DataSourceDefinition = DataSources.navWarning
+
     var canBookmark: Bool = false
     var id: String { self.itemKey }
     var itemTitle: String {

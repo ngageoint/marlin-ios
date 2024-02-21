@@ -16,13 +16,13 @@ extension UserDefaults {
             return publisher(for: \.moduFilter)
         case DataSources.light.key:
             return publisher(for: \.lightFilter)
-        case NoticeToMariners.key:
+        case DataSources.noticeToMariners.key:
             return publisher(for: \.ntmFilter)
         case DFRS.key:
             return publisher(for: \.dfrsFilter)
         case DataSources.dgps.key:
             return publisher(for: \.differentialGPSStationFilter)
-        case ElectronicPublication.key:
+        case DataSources.epub.key:
             return publisher(for: \.epubFilter)
         case DataSources.port.key:
             return publisher(for: \.portFilter)

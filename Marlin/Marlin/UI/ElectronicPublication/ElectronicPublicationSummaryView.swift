@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct ElectronicPublicationSummaryView: DataSourceSummaryView {
+    @EnvironmentObject var repository: ElectronicPublicationRepository
     @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+
+    var s3Key: String
 
     var showTitle: Bool = false
     
@@ -17,8 +20,9 @@ struct ElectronicPublicationSummaryView: DataSourceSummaryView {
     
     var showBookmarkNotes: Bool = false
 
-    var electronicPublication: ElectronicPublication
     var showMoreDetails: Bool = false
+
+    @StateObject var viewModel: ElectronicPublicationViewModel = ElectronicPublicationViewModel()
 
     var bcf: ByteCountFormatter {
         let bcf = ByteCountFormatter()
@@ -28,21 +32,28 @@ struct ElectronicPublicationSummaryView: DataSourceSummaryView {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("\(electronicPublication.sectionDisplayName ?? "")")
-                .primary()
-            Text("File Size: \(bcf.string(fromByteCount: electronicPublication.fileSize))")
-                .secondary()
-            if let uploadTime = electronicPublication.uploadTime {
-                Text("Upload Time: \(uploadTime.formatted())")
-                    .overline()
+        switch viewModel.electronicPublication {
+        case nil:
+            Color.clear.onAppear {
+                viewModel.setupModel(repository: repository, s3Key: s3Key)
             }
-            bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
-            ElectronicPublicationActionBar(electronicPublication: electronicPublication)
-        }
-        .onAppear {
-            bookmarkViewModel.repository = bookmarkRepository
-            bookmarkViewModel.getBookmark(itemKey: electronicPublication.itemKey, dataSource: DataSources.epub.key)
+        case .some(let electronicPublication):
+            VStack(alignment: .leading, spacing: 8) {
+                Text("\(electronicPublication.sectionDisplayName ?? "")")
+                    .primary()
+                Text("File Size: \(bcf.string(fromByteCount: Int64(electronicPublication.fileSize ?? 0)))")
+                    .secondary()
+                if let uploadTime = electronicPublication.uploadTime {
+                    Text("Upload Time: \(uploadTime.formatted())")
+                        .overline()
+                }
+                bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
+                ElectronicPublicationActionBar(viewModel: viewModel)
+            }
+            .onAppear {
+                bookmarkViewModel.repository = bookmarkRepository
+                bookmarkViewModel.getBookmark(itemKey: electronicPublication.itemKey, dataSource: DataSources.epub.key)
+            }
         }
     }
 }

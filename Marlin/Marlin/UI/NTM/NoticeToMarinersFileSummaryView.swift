@@ -8,14 +8,22 @@
 import SwiftUI
 
 struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
+    @EnvironmentObject var repository: NoticeToMarinersRepository
+    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+    @EnvironmentObject var router: MarlinRouter
+
+    var noticeNumber: Int
+
     var showTitle: Bool = false
     
     var showSectionHeader: Bool = false
     
     var showBookmarkNotes: Bool = false
-    @ObservedObject var noticeToMariners: NoticeToMariners
     var showMoreDetails: Bool = false
-    
+
+    @StateObject var viewModel: NoticeToMarinersViewModel = NoticeToMarinersViewModel()
+
     var bcf: ByteCountFormatter {
         let bcf = ByteCountFormatter()
         bcf.allowedUnits = [.useAll]
@@ -24,94 +32,107 @@ struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("""
-                \(noticeToMariners.title ?? "")\
-                \(noticeToMariners.isFullPublication ? (" \(noticeToMariners.fileExtension ?? "")") : "")
-            """)
-            .primary()
-            Text("File Size: \(bcf.string(fromByteCount: noticeToMariners.fileSize))")
-                .secondary()
-            if let uploadTime = noticeToMariners.uploadTime {
-                Text("Upload Time: \(uploadTime.formatted(date: .complete, time: .omitted))")
-                    .overline()
+        switch viewModel.noticeToMariners {
+        case nil:
+            Color.clear.onAppear {
+                viewModel.setupModel(repository: repository, noticeNumber: noticeNumber)
             }
-            HStack(spacing: 8) {
-                Spacer()
-                if noticeToMariners.isDownloading {
-                    ProgressView(value: noticeToMariners.downloadProgress)
-                        .tint(Color.primaryColorVariant)
+        case .some(let noticeToMariners):
+            VStack(alignment: .leading, spacing: 8) {
+                Text("""
+                    \(noticeToMariners.title ?? "")\
+                    \(noticeToMariners.isFullPublication ? (" \(noticeToMariners.fileExtension ?? "")") : "")
+                    """)
+                .primary()
+                Text("File Size: \(bcf.string(fromByteCount: Int64(noticeToMariners.fileSize ?? 0)))")
+                    .secondary()
+                if let uploadTime = noticeToMariners.uploadTime {
+                    Text("Upload Time: \(uploadTime.formatted(date: .complete, time: .omitted))")
+                        .overline()
                 }
-                if noticeToMariners.isDownloaded, 
-                    noticeToMariners.checkFileExists(),
-                    let url = URL(string: noticeToMariners.savePath) {
-                    Button(
-                        action: {
-                            NotificationCenter.default.post(name: .DocumentPreview, object: url)
-                        },
-                        label: {
-                            Label(
-                                title: {},
-                                icon: { Image("preview")
-                                        .renderingMode(.template)
-                                        .foregroundColor(Color.primaryColorVariant)
-                                })
+                HStack(spacing: 0) {
+                    Spacer()
+                    if noticeToMariners.isDownloading != true {
+                        if let error = noticeToMariners.error {
+                            Text(error)
+                                .secondary()
+                            Spacer()
+                        } else {
+                            ProgressView(value: noticeToMariners.downloadProgress)
+                                .tint(Color.primaryColorVariant)
                         }
-                    )
-                    .accessibilityElement()
-                    .accessibilityLabel("Open")
-                    
-                    Button(
-                        action: {
-                            noticeToMariners.deleteFile()
-                        },
-                        label: {
-                            Label(
-                                title: {},
-                                icon: { Image(systemName: "trash.fill")
-                                        .renderingMode(.template)
-                                        .foregroundColor(Color.primaryColorVariant)
-                                })
-                        }
-                    )
-                    .accessibilityElement()
-                    .accessibilityLabel("Delete")
-                } else if !noticeToMariners.isDownloading {
-                    Button(
-                        action: {
-                            noticeToMariners.downloadFile()
-                        },
-                        label: {
-                            Label(
-                                title: {},
-                                icon: { Image(systemName: "square.and.arrow.down")
-                                        .renderingMode(.template)
-                                        .foregroundColor(Color.primaryColorVariant)
-                                })
-                        }
-                    )
-                    .accessibilityElement()
-                    .accessibilityLabel("Download")
-                } else {
-                    Button(
-                        action: {
-                            noticeToMariners.cancelDownload()
-                        },
-                        label: {
-                            Label(
-                                title: {},
-                                icon: { Image(systemName: "xmark.circle.fill")
-                                        .renderingMode(.template)
-                                        .foregroundColor(Color.primaryColorVariant)
-                                })
-                        }
-                    )
-                    .accessibilityElement()
-                    .accessibilityLabel("Cancel")
+                    }
+                    if noticeToMariners.isDownloaded == true, viewModel.checkFileExists(),
+                       let url = URL(string: noticeToMariners.savePath) {
+                        Button(
+                            action: {
+                                NotificationCenter.default.post(name: .DocumentPreview, object: url)
+                            },
+                            label: {
+                                Label(
+                                    title: {},
+                                    icon: { Image("preview")
+                                            .renderingMode(.template)
+                                            .foregroundColor(Color.primaryColorVariant)
+                                    })
+                            }
+                        )
+                        .accessibilityElement()
+                        .accessibilityLabel("Open")
+
+                        Button(
+                            action: {
+                                viewModel.deleteFile()
+                            },
+                            label: {
+                                Label(
+                                    title: {},
+                                    icon: { Image(systemName: "trash.fill")
+                                            .renderingMode(.template)
+                                            .foregroundColor(Color.primaryColorVariant)
+                                    })
+                            }
+                        )
+                        .accessibilityElement()
+                        .accessibilityLabel("Delete")
+                    } else if (noticeToMariners.isDownloading) == false {
+                        Button(
+                            action: {
+                                viewModel.downloadFile()
+                            },
+                            label: {
+                                Label(
+                                    title: {},
+                                    icon: { Image(systemName: "square.and.arrow.down")
+                                            .renderingMode(.template)
+                                            .foregroundColor(Color.primaryColorVariant)
+                                    })
+                            }
+                        )
+                        .accessibilityElement()
+                        .accessibilityLabel("Download")
+                    } else {
+                        Button(
+                            action: {
+                                viewModel.cancelDownload()
+                            },
+                            label: {
+                                Label(
+                                    title: {},
+                                    icon: { Image(systemName: "xmark.circle.fill")
+                                            .renderingMode(.template)
+                                            .foregroundColor(Color.primaryColorVariant)
+                                    })
+                            }
+                        )
+                        .accessibilityElement()
+                        .accessibilityLabel("Cancel")
+                    }
                 }
+                .padding(.trailing, -8)
+                .buttonStyle(MaterialButtonStyle())
+
             }
-            .buttonStyle(MaterialButtonStyle(type: .text))
         }
-        .frame(maxWidth: .infinity)
     }
 }

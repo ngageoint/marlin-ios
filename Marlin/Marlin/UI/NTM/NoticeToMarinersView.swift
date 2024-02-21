@@ -33,44 +33,45 @@ struct NoticeToMarinersView: View {
         return "\(dateFormatter.string(from: firstDate)) - \(dateFormatter.string(from: lastDate))"
     }
     
-    @ViewBuilder
-    func sectionHeader(section: MSISection<NoticeToMariners>) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(section.name)
-            if let sectionInt = Int(section.name) {
-                Text(dateRange(sectionInt: sectionInt))
-                    .secondary()
-            }
-        }
-    }
+//    @ViewBuilder
+//    func sectionHeader(section: MSISection<NoticeToMariners>) -> some View {
+//        VStack(alignment: .leading, spacing: 8) {
+//            Text(section.name)
+//            if let sectionInt = Int(section.name) {
+//                Text(dateRange(sectionInt: sectionInt))
+//                    .secondary()
+//            }
+//        }
+//    }
 
     var body: some View {
         List {
             NavigationLink {
-                MSIListView<NoticeToMariners, AnyView, NoticeToMarinersFullNoticeView, EmptyView>(
-                    watchFocusedItem: false,
-                    allowUserSort: false,
-                    allowUserFilter: false,
-                    sectionHeaderIsSubList: true,
-                    sectionGroupNameBuilder: { section in
-                    if let sectionInt = Int(section.name) {
-                        return "\(Int(sectionInt / 100))"
-                    } else {
-                        return ""
-                    }
-                }, sectionViewBuilder: { section in
-                    AnyView(sectionHeader(section: section))
-                }, content: { section in
-                    NoticeToMarinersFullNoticeView(
-                        viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: Int64(section.name)))
-                }, emptyView: {
-                    EmptyView()
-                })
-                .navigationTitle(NoticeToMariners.fullDataSourceName)
-                .navigationBarTitleDisplayMode(.inline)
-                .onAppear {
-                    Metrics.shared.appRoute(["ntms", "all"])
-                }
+                Text("hi")
+//                MSIListView<NoticeToMariners, AnyView, NoticeToMarinersFullNoticeView, EmptyView>(
+//                    watchFocusedItem: false,
+//                    allowUserSort: false,
+//                    allowUserFilter: false,
+//                    sectionHeaderIsSubList: true,
+//                    sectionGroupNameBuilder: { section in
+//                    if let sectionInt = Int(section.name) {
+//                        return "\(Int(sectionInt / 100))"
+//                    } else {
+//                        return ""
+//                    }
+//                }, sectionViewBuilder: { section in
+//                    AnyView(sectionHeader(section: section))
+//                }, content: { section in
+//                    NoticeToMarinersFullNoticeView(
+//                        viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: Int64(section.name)))
+//                }, emptyView: {
+//                    EmptyView()
+//                })
+//                .navigationTitle(NoticeToMariners.fullDataSourceName)
+//                .navigationBarTitleDisplayMode(.inline)
+//                .onAppear {
+//                    Metrics.shared.appRoute(["ntms", "all"])
+//                }
             } label: {
                 HStack {
                     Text("View All Notice to Mariners")
@@ -93,7 +94,7 @@ struct NoticeToMarinersView: View {
             .padding(.top, 8)
             .padding(.bottom, 8)
         }
-        .navigationTitle(NoticeToMariners.fullDataSourceName)
+        .navigationTitle(DataSources.noticeToMariners.fullName)
         .navigationBarTitleDisplayMode(.inline)
         .listStyle(.grouped)
         .listRowBackground(Color.surfaceColor)

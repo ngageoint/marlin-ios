@@ -14,6 +14,12 @@ import BackgroundTasks
 protocol ElectronicPublicationLocalDataSource {
     func getElectronicPublication(s3Key: String?) -> ElectronicPublicationModel?
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
+    func observeElectronicPublication(
+        s3Key: String
+    ) -> AnyPublisher<ElectronicPublicationModel, Never>?
+    func checkFileExists(s3Key: String) -> Bool
+    func deleteFile(s3Key: String)
+    func updateProgress(s3Key: String, progress: DownloadProgress)
     func epubs(
         filters: [DataSourceFilterParameter]?,
         paginatedBy paginator: Trigger.Signal?
@@ -36,7 +42,7 @@ class ElectronicPublicationCoreDataDataSource:
     CoreDataDataSource,
     ElectronicPublicationLocalDataSource,
     ObservableObject {
-    private lazy var context: NSManagedObjectContext = {
+    lazy var context: NSManagedObjectContext = {
         PersistenceController.current.newTaskContext()
     }()
 
@@ -61,17 +67,83 @@ class ElectronicPublicationCoreDataDataSource:
             sortParameter.toNSSortDescriptor()
         })
 
-        var count = 0
-        context.performAndWait {
-            count = (try? context.count(for: fetchRequest)) ?? 0
+        return context.performAndWait {
+            (try? context.count(for: fetchRequest)) ?? 0
         }
-        return count
     }
-
 }
 
 // MARK: epub publishers
 extension ElectronicPublicationCoreDataDataSource {
+
+    func updateProgress(s3Key: String, progress: DownloadProgress) {
+        return context.performAndWait {
+            guard let epub = context.fetchFirst(ElectronicPublication.self, key: "s3Key", value: s3Key) else {
+                return
+            }
+            epub.isDownloading = progress.isDownloading
+            epub.isDownloaded = progress.isDownloaded
+            epub.downloadProgress = progress.downloadProgress
+            epub.error = progress.error
+            try? context.save()
+        }
+    }
+
+    func deleteFile(s3Key: String) {
+        return context.performAndWait {
+            guard let epub = context.fetchFirst(ElectronicPublication.self, key: "s3Key", value: s3Key) else {
+                return
+            }
+            let docsUrl = URL.documentsDirectory
+            let fileUrl = "\(docsUrl.absoluteString)\(s3Key)"
+            let destinationUrl = URL(string: fileUrl)
+
+            if let destinationUrl = destinationUrl {
+                guard FileManager().fileExists(atPath: destinationUrl.path) else { return }
+                do {
+                    try FileManager().removeItem(atPath: destinationUrl.path)
+                    epub.isDownloaded = false
+                    try? context.save()
+                } catch let error {
+                    print("Error while deleting file: ", error)
+                }
+            }
+        }
+    }
+
+    func checkFileExists(s3Key: String) -> Bool {
+        return context.performAndWait {
+            guard let epub = context.fetchFirst(ElectronicPublication.self, key: "s3Key", value: s3Key) else {
+                return false
+            }
+            var downloaded = false
+            if let destinationUrl = URL(string: epub.savePath) {
+                downloaded = FileManager().fileExists(atPath: destinationUrl.path)
+            }
+            if downloaded != epub.isDownloaded {
+                epub.isDownloaded = downloaded
+                try? context.save()
+            }
+            return downloaded
+        }
+    }
+
+    func observeElectronicPublication(
+        s3Key: String
+    ) -> AnyPublisher<ElectronicPublicationModel, Never>? {
+        return context.performAndWait {
+            let epub = context.fetchFirst(ElectronicPublication.self, key: "s3Key", value: s3Key)
+
+            if let epub = epub {
+                return publisher(for: epub, in: context)
+                    .map({ epub in
+                        return ElectronicPublicationModel(epub: epub)
+                    })
+                    .eraseToAnyPublisher()
+            }
+            return nil
+        }
+    }
 
     func epubs(
         filters: [DataSourceFilterParameter]?,

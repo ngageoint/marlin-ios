@@ -99,10 +99,17 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
             return MSI.shared.moduRepository?.getModu(name: itemKey)
         case DataSources.port.key:
             return MSI.shared.portRepository?.getPort(portNumber: Int64(itemKey))
-        case NavigationalWarning.key:
-                return NavigationalWarning.getItem(context: context, itemKey: itemKey)
-        case NoticeToMariners.key:
-                return NoticeToMariners.getItem(context: context, itemKey: itemKey)
+        case DataSources.navWarning.key:
+            let split = itemKey.split(separator: "--")
+            if split.count == 3 {
+                return MSI.shared.navigationalWarningRepository?.getNavigationalWarning(
+                    msgYear: Int64(split[0]) ?? 0,
+                    msgNumber: Int64(split[1]) ?? 0,
+                    navArea: "\(split[2])"
+                )
+            }
+        case DataSources.noticeToMariners.key:
+            return MSI.shared.noticeToMarinersRepository?.getNoticeToMariners(noticeNumber: Int(itemKey))
         case DataSources.dgps.key:
             let split = itemKey.split(separator: "--")
             if split.count == 2 {
@@ -128,8 +135,8 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
                     volumeNumber: "\(split[1])"
                 )
             }
-        case ElectronicPublication.key:
-                return ElectronicPublication.getItem(context: context, itemKey: itemKey)
+        case DataSources.epub.key:
+            return MSI.shared.electronicPublicationRepository?.getElectronicPublication(s3Key: itemKey)
         case GeoPackageFeatureItem.key:
                 return GeoPackageFeatureItem.getItem(context: context, itemKey: itemKey)
         default:

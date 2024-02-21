@@ -8,6 +8,8 @@
 import Foundation
 import UIKit
 import BackgroundTasks
+import CoreData
+import Combine
 
 class CoreDataDataSource {
     typealias Page = Int
@@ -42,6 +44,24 @@ class CoreDataDataSource {
             UIApplication.shared.endBackgroundTask(backgroundTask)
             backgroundTask = .invalid
         }
+    }
+
+    func publisher<T: NSManagedObject>(for managedObject: T,
+                                       in context: NSManagedObjectContext
+    ) -> AnyPublisher<T, Never> {
+        let notification = NSManagedObjectContext.didSaveObjectsNotification
+        return NotificationCenter.default.publisher(for: notification) // , object: context)
+            .compactMap({ notification in
+                if let updated = notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>,
+                   let updatedObject = updated.first(where: { object in
+                       object.objectID == managedObject.objectID
+                   }) as? T {
+                    return updatedObject
+                } else {
+                    return nil
+                }
+            })
+            .eraseToAnyPublisher()
     }
 
     func executeOperationInBackground(task: BGTask? = nil) async -> Int {

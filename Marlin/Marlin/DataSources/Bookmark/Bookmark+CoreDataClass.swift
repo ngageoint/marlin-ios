@@ -66,14 +66,12 @@ class Bookmark: NSManagedObject, BatchImportable {
             return MSI.shared.moduRepository?.getModu(name: self.id)
         case DataSources.port.key:
             return MSI.shared.portRepository?.getPort(portNumber: Int64(self.id ?? ""))
-        case NavigationalWarning.key:
+        case DataSources.navWarning.key:
             if let context = context {
                 return NavigationalWarning.getItem(context: context, itemKey: self.id)
             }
-        case NoticeToMariners.key:
-            if let context = context {
-                return NoticeToMariners.getItem(context: context, itemKey: self.id)
-            }
+        case DataSources.noticeToMariners.key:
+            return MSI.shared.noticeToMarinersRepository?.getNoticeToMariners(noticeNumber: Int(self.id ?? ""))
         case DataSources.dgps.key:
             let split = itemKey.split(separator: "--")
             if split.count == 2 {
@@ -99,10 +97,8 @@ class Bookmark: NSManagedObject, BatchImportable {
                     volumeNumber: "\(split[1])"
                 )
             }
-        case ElectronicPublication.key:
-            if let context = context {
-                return ElectronicPublication.getItem(context: context, itemKey: self.id)
-            }
+        case DataSources.epub.key:
+            return MSI.shared.electronicPublicationRepository?.getElectronicPublication(s3Key: itemKey)
         case GeoPackageFeatureItem.key:
             if let context = context {
                 return GeoPackageFeatureItem.getItem(context: context, itemKey: self.id)
