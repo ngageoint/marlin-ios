@@ -11,32 +11,37 @@ import Alamofire
 
 class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
     
-    var noticeNumber: Int64?
-    
+    var noticeNumber: Int?
+
     @Published var graphics: [String?: [NTMGraphics]] = [:]
     @Published var loadingGraphics = false
-    
+
+    @Published var notices: [NoticeToMarinersModel] = []
+
+    init(noticeNumber: Int? = nil) {
+        self.noticeNumber = noticeNumber
+    }
+
+    var repository: NoticeToMarinersRepository? {
+        didSet {
+            if let noticeNumber = noticeNumber {
+                getNotices(noticeNumber: noticeNumber)
+            }
+        }
+    }
+
+    @discardableResult
+    func getNotices(noticeNumber: Int) -> [NoticeToMarinersModel]? {
+        notices = repository?.getNoticesToMariners(noticeNumber: noticeNumber) ?? []
+        return notices
+    }
+
     var sortedGraphicKeys: [String] {
         return graphics.keys.sorted {
             return $0 ?? "" < $1 ?? ""
         }.compactMap { $0 }
     }
-    
-    var sortDescriptors: [NSSortDescriptor] {
-        var sortDescriptors: [NSSortDescriptor] = []
-        for sortDescriptor in DataSources.noticeToMariners.defaultSort {
-            sortDescriptors.append(sortDescriptor.toNSSortDescriptor())
-        }
-        return sortDescriptors
-    }
-    
-    var predicate: NSPredicate? {
-        if let noticeNumber = noticeNumber {
-            return NSPredicate(format: "noticeNumber == %i", argumentArray: [noticeNumber])
-        }
-        return nil
-    }
-    
+
     var noticeNumberString: String? {
         if let noticeNumber = noticeNumber {
             return "\(Int(noticeNumber / 100) % 100)/\(noticeNumber % 100)"
@@ -44,44 +49,44 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
         return nil
     }
     
-    init(noticeNumber: Int64? = nil, noticeNumberString: String? = nil) {
-        self.noticeNumber = noticeNumber
-        if let noticeNumberString = noticeNumberString {
-            let components = noticeNumberString.components(separatedBy: "/")
-            if components.count == 2 {
-                // notice to mariners that we can obtain only go back to 1999
-                if components[1] == "99" {
-                    if let noticeNumber = 
-                        Int64("19\(components[1])\(String(format: "%02d", Int(components[0]) ?? 0))") {
-                        self.noticeNumber = noticeNumber
-                    }
-                } else {
-                    if let noticeNumber = 
-                        Int64("20\(components[1])\(String(format: "%02d", Int(components[0]) ?? 0))") {
-                        self.noticeNumber = noticeNumber
-                    }
-                }
-            }
-        }
-    }
+//    init(noticeNumber: Int64? = nil, noticeNumberString: String? = nil) {
+//        self.noticeNumber = noticeNumber
+//        if let noticeNumberString = noticeNumberString {
+//            let components = noticeNumberString.components(separatedBy: "/")
+//            if components.count == 2 {
+//                // notice to mariners that we can obtain only go back to 1999
+//                if components[1] == "99" {
+//                    if let noticeNumber = 
+//                        Int64("19\(components[1])\(String(format: "%02d", Int(components[0]) ?? 0))") {
+//                        self.noticeNumber = noticeNumber
+//                    }
+//                } else {
+//                    if let noticeNumber = 
+//                        Int64("20\(components[1])\(String(format: "%02d", Int(components[0]) ?? 0))") {
+//                        self.noticeNumber = noticeNumber
+//                    }
+//                }
+//            }
+//        }
+//    }
     
-    func createFetchRequest() -> FetchRequest<NoticeToMariners> {
-        if let predicate = predicate {
-            // Intialize the FetchRequest property wrapper
-            return FetchRequest(
-                entity: NoticeToMariners.entity(),
-                sortDescriptors: sortDescriptors,
-                predicate: predicate
-            )
-        } else {
-            return FetchRequest(
-                entity: NoticeToMariners.entity(),
-                sortDescriptors: sortDescriptors,
-                predicate: NSPredicate(value: false)
-            )
-        }
-    }
-    
+//    func createFetchRequest() -> FetchRequest<NoticeToMariners> {
+//        if let predicate = predicate {
+//            // Intialize the FetchRequest property wrapper
+//            return FetchRequest(
+//                entity: NoticeToMariners.entity(),
+//                sortDescriptors: sortDescriptors,
+//                predicate: predicate
+//            )
+//        } else {
+//            return FetchRequest(
+//                entity: NoticeToMariners.entity(),
+//                sortDescriptors: sortDescriptors,
+//                predicate: NSPredicate(value: false)
+//            )
+//        }
+//    }
+//    
     func createBookmarkFetchRequest() -> FetchRequest<Bookmark> {
         if let noticeNumber = noticeNumber {
             return FetchRequest(
@@ -96,8 +101,8 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
     
     func loadGraphics() {
         let urlString = """
-            \(MSIRouter.baseURLString)/publications/ntm/ntm-graphics?\
-            noticeNumber=\(noticeNumber ?? 0)&graphicType=All&output=json
+        \(MSIRouter.baseURLString)/publications/ntm/ntm-graphics?\
+        noticeNumber=\(noticeNumber ?? 0)&graphicType=All&output=json
         """
         guard let url = URL(string: urlString) else {
             print("Your API end point is Invalid")

@@ -28,7 +28,7 @@ struct NoticeToMarinersListModel: Hashable, Identifiable {
     }
 
     var id: String {
-        "\(noticeNumber ?? -1)"
+        "\(odsEntryId ?? -1)"
     }
 
     var itemKey: String {
@@ -206,7 +206,7 @@ struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable, Dow
     }
 
     var id: String {
-        "\(noticeNumber ?? -1)"
+        "\(odsEntryId ?? -1)"
     }
 
     var itemKey: String {

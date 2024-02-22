@@ -206,6 +206,8 @@
 		F72478A52B800F85003D4118 /* ElectronicPublicationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478A42B800F85003D4118 /* ElectronicPublicationViewModel.swift */; };
 		F72478A72B863856003D4118 /* NoticeToMarinersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478A62B863856003D4118 /* NoticeToMarinersViewModel.swift */; };
 		F72478A92B86A496003D4118 /* NoticeToMarinersStaticRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478A82B86A496003D4118 /* NoticeToMarinersStaticRemoteDataSource.swift */; };
+		F72478AB2B86B5C4003D4118 /* NoticesToMarinersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478AA2B86B5C4003D4118 /* NoticesToMarinersViewModel.swift */; };
+		F72478AD2B87B9CD003D4118 /* NoticesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72478AC2B87B9CD003D4118 /* NoticesList.swift */; };
 		F7249AEB2AF4321A00961E65 /* AsamService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7249AEA2AF4321A00961E65 /* AsamService.swift */; };
 		F7249AED2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */; };
 		F726247E2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F726247D2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift */; };
@@ -838,6 +840,8 @@
 		F72478A42B800F85003D4118 /* ElectronicPublicationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationViewModel.swift; sourceTree = "<group>"; };
 		F72478A62B863856003D4118 /* NoticeToMarinersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersViewModel.swift; sourceTree = "<group>"; };
 		F72478A82B86A496003D4118 /* NoticeToMarinersStaticRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeToMarinersStaticRemoteDataSource.swift; sourceTree = "<group>"; };
+		F72478AA2B86B5C4003D4118 /* NoticesToMarinersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticesToMarinersViewModel.swift; sourceTree = "<group>"; };
+		F72478AC2B87B9CD003D4118 /* NoticesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticesList.swift; sourceTree = "<group>"; };
 		F7249AEA2AF4321A00961E65 /* AsamService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamService.swift; sourceTree = "<group>"; };
 		F7249AEC2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRemoteDataSourceTests.swift; sourceTree = "<group>"; };
 		F726247D2B7AA25800C727D5 /* AsamStaticRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamStaticRemoteDataSource.swift; sourceTree = "<group>"; };
@@ -2497,6 +2501,8 @@
 				F72EAAE0291F040D00AC6026 /* NoticeToMarinersView.swift */,
 				F7D8FA7C29414FA100E7D0A1 /* NoticeToMarinersFullNoticeViewViewModel.swift */,
 				F72478A62B863856003D4118 /* NoticeToMarinersViewModel.swift */,
+				F72478AA2B86B5C4003D4118 /* NoticesToMarinersViewModel.swift */,
+				F72478AC2B87B9CD003D4118 /* NoticesList.swift */,
 			);
 			path = NTM;
 			sourceTree = "<group>";
@@ -3652,6 +3658,7 @@
 				F7CB01002B5F1F2200034B9C /* ModuInitializer.swift in Sources */,
 				F7D8FA772940EF7400E7D0A1 /* ChartCorrectionListViewModel.swift in Sources */,
 				F7066DB32A5CB2720058122E /* CommonDataSource.swift in Sources */,
+				F72478AD2B87B9CD003D4118 /* NoticesList.swift in Sources */,
 				F7FDF2B82AB8DA60009A5E8F /* LightViewModel.swift in Sources */,
 				F714DD7E2B335B74003D7996 /* DataSourceDefinitions.swift in Sources */,
 				F71FC0CB2A3B3EB200911BAC /* CoordinateButton.swift in Sources */,
@@ -3968,6 +3975,7 @@
 				F7EFFEC52A7C113A0097E5EF /* DataSourceIcon.swift in Sources */,
 				F7D8FA4F293A960E00E7D0A1 /* StringFilter.swift in Sources */,
 				F7C23E0A29084F280002A7DF /* ElectronicPublicationSummaryView.swift in Sources */,
+				F72478AB2B86B5C4003D4118 /* NoticesToMarinersViewModel.swift in Sources */,
 				F7CCDC822AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift in Sources */,
 				F76052C329AD279E00F13260 /* MapLayersViewModel.swift in Sources */,
 				F7DEA1E42B6BEB3100EB801A /* NavigationalWarningService.swift in Sources */,

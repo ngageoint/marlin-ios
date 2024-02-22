@@ -10,16 +10,16 @@ import Combine
 
 class NoticeToMarinersViewModel: ObservableObject {
     var repository: NoticeToMarinersRepository?
-    var noticeNumber: Int?
+    var odsEntryId: Int?
     var disposables = Set<AnyCancellable>()
     @Published var noticeToMariners: NoticeToMarinersModel?
 
-    func setupModel(repository: NoticeToMarinersRepository, noticeNumber: Int?) {
+    func setupModel(repository: NoticeToMarinersRepository, odsEntryId: Int?) {
         self.repository = repository
-        self.noticeNumber = noticeNumber
-        if let noticeNumber = noticeNumber {
-            noticeToMariners = repository.getNoticeToMariners(noticeNumber: noticeNumber)
-            repository.observeNoticeToMariners(noticeNumber: noticeNumber)?
+        self.odsEntryId = odsEntryId
+        if let odsEntryId = odsEntryId {
+            noticeToMariners = repository.getNoticeToMariners(odsEntryId: odsEntryId)
+            repository.observeNoticeToMariners(odsEntryId: odsEntryId)?
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { updatedObject in
                     print("notice was updated with progress \(updatedObject.downloadProgress)")
@@ -30,30 +30,30 @@ class NoticeToMarinersViewModel: ObservableObject {
     }
 
     func checkFileExists() -> Bool {
-        guard let repository = repository, let noticeNumber = noticeNumber else {
+        guard let repository = repository, let odsEntryId = odsEntryId else {
             return false
         }
-        return repository.checkFileExists(id: noticeNumber)
+        return repository.checkFileExists(odsEntryId: odsEntryId)
     }
 
     func deleteFile() {
-        guard let repository = repository, let noticeNumber = noticeNumber else {
+        guard let repository = repository, let odsEntryId = odsEntryId else {
             return
         }
-        repository.deleteFile(id: noticeNumber)
+        repository.deleteFile(odsEntryId: odsEntryId)
     }
 
     func downloadFile() {
-        guard let repository = repository, let noticeNumber = noticeNumber else {
+        guard let repository = repository, let odsEntryId = odsEntryId else {
             return
         }
-        repository.downloadFile(id: noticeNumber)
+        repository.downloadFile(odsEntryId: odsEntryId)
     }
 
     func cancelDownload() {
-        guard let repository = repository, let noticeNumber = noticeNumber else {
+        guard let repository = repository, let odsEntryId = odsEntryId else {
             return
         }
-        repository.cancelDownload(noticeNumber: noticeNumber)
+        repository.cancelDownload(odsEntryId: odsEntryId)
     }
 }

@@ -46,8 +46,19 @@ struct BookmarkSummary: DataSourceSummaryView {
                 RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel: dataSource))
                     .showBookmarkNotes(true)
             case let dataSource as DifferentialGPSStationModel:
-                DifferentialGPSStationSummaryView(differentialGPSStation: DifferentialGPSStationListModel(differentialGPSStationModel: dataSource))
-                    .showBookmarkNotes(true)
+                DifferentialGPSStationSummaryView(
+                    differentialGPSStation: DifferentialGPSStationListModel(
+                        differentialGPSStationModel: dataSource
+                    )
+                )
+                .showBookmarkNotes(true)
+            case let dataSource as NoticeToMarinersModel:
+                NoticeToMarinersSummaryView(
+                    noticeToMariners: NoticeToMarinersListModel(
+                        noticeToMarinersModel: dataSource
+                    )
+                )
+                .showBookmarkNotes(true)
             case let dataSource as any DataSourceViewBuilder:
                 AnyView(
                     dataSource.summary

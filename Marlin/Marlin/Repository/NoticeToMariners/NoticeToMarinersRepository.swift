@@ -11,8 +11,10 @@ import Combine
 enum NoticeToMarinersItem: Hashable, Identifiable {
     var id: String {
         switch self {
+        case .week(let noticeNumber):
+            return "week-\(noticeNumber)"
         case .listItem(let ntm):
-            return ntm.id
+            return "ntmid-\(ntm.id)"
         case .sectionHeader(let header):
             return header
         }
@@ -20,6 +22,7 @@ enum NoticeToMarinersItem: Hashable, Identifiable {
 
     case listItem(_ ntm: NoticeToMarinersListModel)
     case sectionHeader(header: String)
+    case week(noticeNumber: Int)
 }
 
 class NoticeToMarinersRepository: ObservableObject {
@@ -37,10 +40,15 @@ class NoticeToMarinersRepository: ObservableObject {
         return NoticeToMarinersDataFetchOperation(noticeNumber: newestNotice?.noticeNumber)
     }
 
-    func getNoticeToMariners(
+    func getNoticesToMariners(
         noticeNumber: Int?
+    ) -> [NoticeToMarinersModel]? {
+        localDataSource.getNoticesToMariners(noticeNumber: noticeNumber)
+    }
+    func getNoticeToMariners(
+        odsEntryId: Int?
     ) -> NoticeToMarinersModel? {
-        localDataSource.getNoticeToMariners(noticeNumber: noticeNumber)
+        localDataSource.getNoticeToMariners(odsEntryId: odsEntryId)
     }
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
         localDataSource.getCount(filters: filters)
@@ -50,6 +58,13 @@ class NoticeToMarinersRepository: ObservableObject {
         paginatedBy paginator: Trigger.Signal? = nil
     ) -> AnyPublisher<[NoticeToMarinersItem], Error> {
         localDataSource.noticeToMariners(filters: filters, paginatedBy: paginator)
+    }
+
+    func sectionHeaders(
+        filters: [DataSourceFilterParameter]?,
+        paginatedBy paginator: Trigger.Signal? = nil
+    ) -> AnyPublisher<[NoticeToMarinersItem], Error> {
+        localDataSource.sectionHeaders(filters: filters, paginatedBy: paginator)
     }
 
     func getNoticesToMariners(
@@ -93,11 +108,11 @@ class NoticeToMarinersRepository: ObservableObject {
 }
 
 extension NoticeToMarinersRepository {
-    func downloadFile(id: Int) {
-        guard let notice = localDataSource.getNoticeToMariners(noticeNumber: Int(id)) else {
+    func downloadFile(odsEntryId: Int) {
+        guard let notice = localDataSource.getNoticeToMariners(odsEntryId: odsEntryId) else {
             return
         }
-        if notice.isDownloaded == true && localDataSource.checkFileExists(noticeNumber: id) {
+        if notice.isDownloaded == true && localDataSource.checkFileExists(odsEntryId: odsEntryId) {
             return
         }
         let subject = PassthroughSubject<DownloadProgress, Never>()
@@ -110,7 +125,7 @@ extension NoticeToMarinersRepository {
                     }
                 },
                 receiveValue: { downloadProgress in
-                    self.localDataSource.updateProgress(noticeNumber: id, progress: downloadProgress)
+                    self.localDataSource.updateProgress(odsEntryId: odsEntryId, progress: downloadProgress)
                 }
             )
         if let cancellable = cancellable {
@@ -120,27 +135,27 @@ extension NoticeToMarinersRepository {
         remoteDataSource.downloadFile(model: notice, subject: subject)
     }
 
-    func deleteFile(id: Int) {
-        localDataSource.deleteFile(noticeNumber: id)
+    func deleteFile(odsEntryId: Int) {
+        localDataSource.deleteFile(odsEntryId: odsEntryId)
     }
 
     func observeNoticeToMariners(
-        noticeNumber: Int
+        odsEntryId: Int
     ) -> AnyPublisher<NoticeToMarinersModel, Never>? {
-        return localDataSource.observeNoticeToMariners(noticeNumber: noticeNumber)
+        return localDataSource.observeNoticeToMariners(odsEntryId: odsEntryId)
     }
 
-    func checkFileExists(id: Int) -> Bool {
-        return localDataSource.checkFileExists(noticeNumber: id)
+    func checkFileExists(odsEntryId: Int) -> Bool {
+        return localDataSource.checkFileExists(odsEntryId: odsEntryId)
     }
 
-    func cancelDownload(noticeNumber: Int) {
-        guard let notice = localDataSource.getNoticeToMariners(noticeNumber: noticeNumber) else {
+    func cancelDownload(odsEntryId: Int) {
+        guard let notice = localDataSource.getNoticeToMariners(odsEntryId: odsEntryId) else {
             return
         }
         remoteDataSource.cancelDownload(model: notice)
-        localDataSource.updateProgress(noticeNumber: noticeNumber, progress: DownloadProgress(
-            id: notice.id,
+        localDataSource.updateProgress(odsEntryId: odsEntryId, progress: DownloadProgress(
+            id: "\(odsEntryId)",
             isDownloading: false,
             isDownloaded: false,
             downloadProgress: 0.0,

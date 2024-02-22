@@ -109,7 +109,7 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
                 )
             }
         case DataSources.noticeToMariners.key:
-            return MSI.shared.noticeToMarinersRepository?.getNoticeToMariners(noticeNumber: Int(itemKey))
+            return MSI.shared.noticeToMarinersRepository?.getNoticesToMariners(noticeNumber: Int(itemKey))?.first
         case DataSources.dgps.key:
             let split = itemKey.split(separator: "--")
             if split.count == 2 {

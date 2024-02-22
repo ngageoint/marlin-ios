@@ -71,7 +71,7 @@ class Bookmark: NSManagedObject, BatchImportable {
                 return NavigationalWarning.getItem(context: context, itemKey: self.id)
             }
         case DataSources.noticeToMariners.key:
-            return MSI.shared.noticeToMarinersRepository?.getNoticeToMariners(noticeNumber: Int(self.id ?? ""))
+            return MSI.shared.noticeToMarinersRepository?.getNoticeToMariners(odsEntryId: Int(self.id ?? ""))
         case DataSources.dgps.key:
             let split = itemKey.split(separator: "--")
             if split.count == 2 {

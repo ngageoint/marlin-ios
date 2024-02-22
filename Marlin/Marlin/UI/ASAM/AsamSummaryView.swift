@@ -31,7 +31,6 @@ struct AsamSummaryView: DataSourceSummaryView {
             Text(asam.asamDescription ?? "")
                 .lineLimit(8)
                 .secondary()
-            Text("Asam can bookmark? \(asam.canBookmark ? "yes" : "no")")
             if asam.canBookmark {
                 bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
             }

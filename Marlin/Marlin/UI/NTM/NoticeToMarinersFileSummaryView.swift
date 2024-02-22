@@ -13,7 +13,7 @@ struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     @EnvironmentObject var router: MarlinRouter
 
-    var noticeNumber: Int
+    @State var odsEntryId: Int
 
     var showTitle: Bool = false
     
@@ -35,7 +35,7 @@ struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
         switch viewModel.noticeToMariners {
         case nil:
             Color.clear.onAppear {
-                viewModel.setupModel(repository: repository, noticeNumber: noticeNumber)
+                viewModel.setupModel(repository: repository, odsEntryId: odsEntryId)
             }
         case .some(let noticeToMariners):
             VStack(alignment: .leading, spacing: 8) {
@@ -57,9 +57,6 @@ struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
                             Text(error)
                                 .secondary()
                             Spacer()
-                        } else {
-                            ProgressView(value: noticeToMariners.downloadProgress)
-                                .tint(Color.primaryColorVariant)
                         }
                     }
                     if noticeToMariners.isDownloaded == true, viewModel.checkFileExists(),
@@ -112,6 +109,8 @@ struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
                         .accessibilityElement()
                         .accessibilityLabel("Download")
                     } else {
+                        ProgressView(value: noticeToMariners.downloadProgress)
+                            .tint(Color.primaryColorVariant)
                         Button(
                             action: {
                                 viewModel.cancelDownload()

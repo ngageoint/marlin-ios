@@ -31,9 +31,6 @@ struct ElectronicPublicationActionBar: View {
                         Text(error)
                             .secondary()
                         Spacer()
-                    } else {
-                        ProgressView(value: electronicPublication.downloadProgress)
-                            .tint(Color.primaryColorVariant)
                     }
                 }
                 if electronicPublication.isDownloaded == true, viewModel.checkFileExists(),
@@ -86,6 +83,8 @@ struct ElectronicPublicationActionBar: View {
                     .accessibilityElement()
                     .accessibilityLabel("Download")
                 } else {
+                    ProgressView(value: electronicPublication.downloadProgress)
+                        .tint(Color.primaryColorVariant)
                     Button(
                         action: {
                             viewModel.cancelDownload()

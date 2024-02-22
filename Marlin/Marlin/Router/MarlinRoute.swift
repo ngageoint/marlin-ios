@@ -30,6 +30,12 @@ enum MarlinRoute: Hashable {
     case dataSourceRouteDetail(dataSourceKey: String, itemKey: String, waypointURI: URL)
 }
 
+enum NoticeToMarinersRoute: Hashable {
+    case notices
+    case chartQuery
+    case fullView(Int)
+}
+
 enum AsamRoute: Hashable {
     case detail(String)
 }
@@ -129,9 +135,8 @@ struct MarlinRouteModifier: ViewModifier {
                             NavigationalWarningDetailView(navigationalWarning: navWarning)
                         }
                     case DataSources.noticeToMariners.key:
-                        if let noticeNumber = Int64(itemKey) {
-                            NoticeToMarinersFullNoticeView(
-                                viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: noticeNumber))
+                        if let noticeNumber = Int(itemKey) {
+                            NoticeToMarinersFullNoticeView(noticeNumber: noticeNumber)
                         }
                     case DataSources.dgps.key:
                         let split = itemKey.split(separator: "--")
@@ -291,6 +296,16 @@ struct MarlinRouteModifier: ViewModifier {
                     // swiftlint:enable redundant_discardable_let
 
                     DifferentialGPSStationDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
+                }
+            }
+            .navigationDestination(for: NoticeToMarinersRoute.self) { item in
+                switch item {
+                case .fullView(let noticeNumber):
+                    NoticeToMarinersFullNoticeView(noticeNumber: noticeNumber)
+                case .notices:
+                    NoticesList()
+                case .chartQuery:
+                    ChartCorrectionQuery()
                 }
             }
             .navigationDestination(for: ItemWrapper.self) { item in

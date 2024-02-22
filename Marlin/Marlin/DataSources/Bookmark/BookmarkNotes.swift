@@ -37,9 +37,7 @@ struct BookmarkNotes: View {
     
     var body: some View {
         Group {
-            Text("Notes")
             if let bookmark = bookmarkViewModel.bookmark {
-                Text("bookmark")
                 if let notes = bookmark.notes {
                     Text("Bookmark Notes")
                         .primary()

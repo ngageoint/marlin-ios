@@ -97,10 +97,7 @@ struct ChartCorrectionList: View {
                         if (ntm.noticeYear >= 99 && ntm.noticeWeek >= 29)
                             || ntm.noticeYear <= Int(Calendar.current.component(.year, from: Date())) % 1000 {
                             NavigationLink {
-                                NoticeToMarinersFullNoticeView(
-                                    viewModel: NoticeToMarinersFullNoticeViewViewModel(
-                                        noticeNumberString: ntm.currNoticeNum)
-                                )
+                                NoticeToMarinersFullNoticeView(noticeNumber: getNoticeNumber(noticeNumberString: ntm.currNoticeNum))
                             } label: {
                                 Text("NTM \(ntm.currNoticeNum ?? "") Details")
                             }
@@ -111,7 +108,28 @@ struct ChartCorrectionList: View {
             }
         }
     }
-    
+
+    func getNoticeNumber(noticeNumberString: String?) -> Int {
+        if let noticeNumberString = noticeNumberString {
+            let components = noticeNumberString.components(separatedBy: "/")
+            if components.count == 2 {
+                // notice to mariners that we can obtain only go back to 1999
+                if components[1] == "99" {
+                    if let noticeNumber =
+                        Int("19\(components[1])\(String(format: "%02d", Int(components[0]) ?? 0))") {
+                        return noticeNumber
+                    }
+                } else {
+                    if let noticeNumber =
+                        Int("20\(components[1])\(String(format: "%02d", Int(components[0]) ?? 0))") {
+                        return noticeNumber
+                    }
+                }
+            }
+        }
+        return -1
+    }
+
     @ViewBuilder
     func ntmSummary(ntm: ChartCorrection) -> some View {
     

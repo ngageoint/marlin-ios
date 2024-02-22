@@ -18,4 +18,10 @@ class NavigationalWarningInitializer: Initializer {
     override func createOperation() -> Operation {
         repository.createOperation()
     }
+
+    override func fetch() {
+        Task {
+            await self.repository.fetch()
+        }
+    }
 }

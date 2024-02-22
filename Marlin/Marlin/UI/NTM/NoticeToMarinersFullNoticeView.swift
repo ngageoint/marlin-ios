@@ -8,27 +8,21 @@
 import SwiftUI
 
 struct NoticeToMarinersFullNoticeView: View {
-    @StateObject var viewModel: NoticeToMarinersFullNoticeViewViewModel
+    @EnvironmentObject var noticeToMarinersRepository: NoticeToMarinersRepository
+    @State var noticeNumber: Int
+    @StateObject var viewModel: NoticeToMarinersFullNoticeViewViewModel = NoticeToMarinersFullNoticeViewViewModel()
 
-    @FetchRequest<NoticeToMariners>
-    var noticeToMarinersPublications: FetchedResults<NoticeToMariners>
-    
-    @FetchRequest<Bookmark>
-    var bookmark: FetchedResults<Bookmark>
-        
     private var gridColumns = Array(repeating: GridItem(.flexible()), count: 3)
     private var numColumns = 3
-    
-    init(viewModel: NoticeToMarinersFullNoticeViewViewModel) {
-        self._noticeToMarinersPublications = viewModel.createFetchRequest()
-        self._bookmark = viewModel.createBookmarkFetchRequest()
-        self._viewModel = StateObject(wrappedValue: viewModel)
+
+    init(noticeNumber: Int) {
+        self.noticeNumber = noticeNumber
     }
-    
+
     @ViewBuilder
     func sectionHeader() -> some View {
-        if let pub = noticeToMarinersPublications.first {
-            NoticeToMarinersSummaryView(noticeToMariners: NoticeToMarinersListModel(noticeToMariners: pub))
+        if let pub = viewModel.notices.first {
+            NoticeToMarinersSummaryView(noticeToMariners: NoticeToMarinersListModel(noticeToMarinersModel: pub))
                 .showBookmarkNotes(true)
         }
     }
@@ -43,10 +37,12 @@ struct NoticeToMarinersFullNoticeView: View {
             .dataSourceSection()
             graphicsView()
             Section("Files") {
-                ForEach(noticeToMarinersPublications) { ntm in
-                    NoticeToMarinersFileSummaryView(noticeNumber: Int(ntm.noticeNumber))
-                        .padding(.all, 16)
-                        .card()
+                ForEach(viewModel.notices) { ntm in
+                    if let odsEntryId = ntm.odsEntryId {
+                        NoticeToMarinersFileSummaryView(odsEntryId: odsEntryId)
+                            .padding(.all, 16)
+                            .card()
+                    }
                 }
                 .dataSourceSummaryItem()
             }
@@ -56,6 +52,8 @@ struct NoticeToMarinersFullNoticeView: View {
         .navigationTitle("Notice \(viewModel.noticeNumberString ?? "")")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
+            viewModel.repository = noticeToMarinersRepository
+            viewModel.getNotices(noticeNumber: noticeNumber)
             viewModel.loadGraphics()
             Metrics.shared.appRoute(["ntms", "detail"])
         }
