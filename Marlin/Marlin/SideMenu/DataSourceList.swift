@@ -19,7 +19,6 @@ class DataSourceList: ObservableObject {
         DataSourceItem(dataSource: DataSources.port),
         DataSourceItem(dataSource: DataSources.radioBeacon),
         DataSourceItem(dataSource: DataSources.dgps),
-        DataSourceItem(dataSource: DataSources.dfrs),
         DataSourceItem(dataSource: DataSources.epub),
         DataSourceItem(dataSource: DataSources.noticeToMariners),
         DataSourceItem(dataSource: DataSources.bookmark),

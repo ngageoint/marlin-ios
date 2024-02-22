@@ -14,7 +14,6 @@ enum DataSourceDefinitions: String, Identifiable, CaseIterable {
     case bookmark
     case common
     case chartCorrection
-    case dfrs
     case differentialGPSStation
     case epub
     case geoPackage
@@ -73,8 +72,6 @@ enum DataSourceDefinitions: String, Identifiable, CaseIterable {
             return DataSources.common
         case .noticeToMariners:
             return DataSources.noticeToMariners
-        case .dfrs:
-            return DataSources.dfrs
         case .differentialGPSStation:
             return DataSources.dgps
         case .epub:

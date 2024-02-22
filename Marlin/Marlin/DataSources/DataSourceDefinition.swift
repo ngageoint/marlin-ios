@@ -68,7 +68,6 @@ enum DataSources {
     static let bookmark: BookmarkDefinition = BookmarkDefinition()
     static let common: CommonDefinition = CommonDefinition()
     static let chartCorrection: ChartCorrectionDefinition = ChartCorrectionDefinition()
-    static let dfrs: DFRSDefinition = DFRSDefinition()
     static let dgps: DifferentialGPSStationDefinition = DifferentialGPSStationDefinition()
     static let epub: ElectronicPublicationDefinition = ElectronicPublicationDefinition()
     static let geoPackage: GeoPackageDefinition = GeoPackageDefinition()
@@ -121,8 +120,6 @@ enum DataSources {
             return DataSources.bookmark
         case is ChartCorrection.Type:
             return DataSources.chartCorrection
-        case is DFRS.Type:
-            return DataSources.dfrs
         case is DifferentialGPSStation.Type:
             return DataSources.dgps
         case is ElectronicPublication.Type:
@@ -156,8 +153,6 @@ enum DataSources {
             return DataSources.bookmark
         case DataSources.chartCorrection.key:
             return DataSources.chartCorrection
-        case DataSources.dfrs.key:
-            return DataSources.dfrs
         case DataSources.dgps.key:
             return DataSources.dgps
         case DataSources.epub.key:
@@ -191,8 +186,6 @@ enum DataSources {
             return DataSources.bookmark
         case is ChartCorrection.Type:
             return DataSources.chartCorrection
-        case is DFRS.Type:
-            return DataSources.dfrs
         case is DifferentialGPSStation.Type:
             return DataSources.dgps
         case is ElectronicPublication.Type:
@@ -315,33 +308,6 @@ extension DataSources {
             return UserDefaults.standard.dataSourceEnabled(DataSources.noticeToMariners)
             && (Date().timeIntervalSince1970 - (60 * 60 * 24)) >
             UserDefaults.standard.lastSyncTimeSeconds(DataSources.noticeToMariners)
-        }
-
-        fileprivate init() { }
-    }
-
-    class DFRSDefinition: DataSourceDefinition {
-        var filterable: Filterable?
-        var mappable: Bool = true
-        var color: UIColor = UIColor(argbValue: 0xFFFFB300)
-        var imageName: String?
-        var systemImageName: String? = "antenna.radiowaves.left.and.right.circle"
-        var key: String = "dfrs"
-        var metricsKey: String = "dfrs"
-        var name: String = 
-        NSLocalizedString("DFRS", comment: "Radio Direction Finders and Radar station data source display name")
-        var fullName: String = 
-        NSLocalizedString("Radio Direction Finders & Radar Stations",
-                          comment: "Radio Direction Finders and Radar station data source full display name")
-        var imageScale: CGFloat {
-            UserDefaults.standard.imageScale(key) ?? 0.66
-        }
-        @AppStorage("dfrsOrder") var order: Int = 0
-        func shouldSync() -> Bool {
-            // sync once every week
-            return UserDefaults.standard.dataSourceEnabled(DFRS.definition) 
-            && (Date().timeIntervalSince1970 - (60 * 60 * 24 * 7)) > 
-            UserDefaults.standard.lastSyncTimeSeconds(DFRS.definition)
         }
 
         fileprivate init() { }

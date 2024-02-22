@@ -19,8 +19,6 @@ extension UserDefaults {
             return publisher(for: \.lightSort)
         case DataSources.noticeToMariners.key:
             return publisher(for: \.ntmSort)
-        case DFRS.key:
-            return publisher(for: \.dfrsSort)
         case DataSources.dgps.key:
             return publisher(for: \.differentialGPSStationSort)
         case DataSources.epub.key:

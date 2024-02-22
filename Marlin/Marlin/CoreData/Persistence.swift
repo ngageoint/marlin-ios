@@ -455,7 +455,6 @@ extension CoreDataPersistentStore {
     private func mergePersistentHistoryChanges(from history: [NSPersistentHistoryTransaction]) {
         let entityMap: [String?: String] = [
             Asam.entity().name: DataSources.asam.key,
-            DFRS.entity().name: DataSources.dfrs.key,
             DifferentialGPSStation.entity().name: DataSources.dgps.key,
             ElectronicPublication.entity().name: DataSources.epub.key,
             Light.entity().name: DataSources.light.key,

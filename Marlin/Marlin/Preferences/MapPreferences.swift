@@ -76,10 +76,6 @@ extension UserDefaults {
         bool(forKey: "showOnMap\(DataSources.dgps.key)")
     }
 
-    @objc var showOnMapdfrs: Bool {
-        bool(forKey: "showOnMap\(DFRS.key)")
-    }
-
     @objc var showOnMapnavWarning: Bool {
         bool(forKey: "showOnMap\(NavigationalWarning.key)")
     }

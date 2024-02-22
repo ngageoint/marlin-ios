@@ -106,9 +106,6 @@ class MainMapMixins: MapMixins {
         super.init()
         var mixins: [any MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
 
-        if UserDefaults.standard.dataSourceEnabled(DFRS.definition) {
-            mixins.append(DFRSMap<DFRS>(showAsTiles: true))
-        }
         mixins.append(NavigationalWarningFetchMap())
         self.mixins = mixins
     }

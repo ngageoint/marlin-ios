@@ -18,8 +18,6 @@ extension UserDefaults {
             return publisher(for: \.lightFilter)
         case DataSources.noticeToMariners.key:
             return publisher(for: \.ntmFilter)
-        case DFRS.key:
-            return publisher(for: \.dfrsFilter)
         case DataSources.dgps.key:
             return publisher(for: \.differentialGPSStationFilter)
         case DataSources.epub.key:
