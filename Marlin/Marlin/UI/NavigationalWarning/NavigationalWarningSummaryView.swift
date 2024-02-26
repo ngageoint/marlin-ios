@@ -45,7 +45,8 @@ struct NavigationalWarningSummaryView: DataSourceSummaryView {
                     path: $router.path
                 ) : nil,
                 location: Actions.Location(latLng: navigationalWarning.coordinate),
-                zoom: !showMoreDetails ? NavigationalWarningActions.Zoom(
+                zoom: !showMoreDetails && CLLocationCoordinate2DIsValid(navigationalWarning.coordinate) ?
+                NavigationalWarningActions.Zoom(
                     latLng: navigationalWarning.coordinate,
                     itemKey: navigationalWarning.itemKey
                 ) : nil,

@@ -14,7 +14,7 @@ struct CoordinateButton: View {
     @AppStorage("coordinateDisplay") var coordinateDisplay: CoordinateDisplayType = .latitudeLongitude
     
     var body: some View {
-        if let coordinate = coordinate {
+        if let coordinate = coordinate, CLLocationCoordinate2DIsValid(coordinate) {
             Button(
                 action: {
                     UIPasteboard.general.string = coordinateDisplay.format(coordinate: coordinate)
@@ -47,11 +47,13 @@ struct CoordinateButton2: View {
     @AppStorage("coordinateDisplay") var coordinateDisplay: CoordinateDisplayType = .latitudeLongitude
 
     var body: some View {
-        Button(action: action.action) {
-            Text(coordinateDisplay.format(coordinate: action.latLng))
-                .foregroundColor(Color.primaryColorVariant)
+        if CLLocationCoordinate2DIsValid(action.latLng) {
+            Button(action: action.action) {
+                Text(coordinateDisplay.format(coordinate: action.latLng))
+                    .foregroundColor(Color.primaryColorVariant)
+            }
+            .accessibilityElement()
+            .accessibilityLabel("Location")
         }
-        .accessibilityElement()
-        .accessibilityLabel("Location")
     }
 }
