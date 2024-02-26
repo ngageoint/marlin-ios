@@ -31,7 +31,7 @@ class ModuTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [DataSourceImage] {
+    ) async -> [DataSourceImage] {
         var images: [DataSourceImage] = []
 
         if let modu = localDataSource.getModu(name: name) {
@@ -48,8 +48,8 @@ class ModuTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [String] {
-        return localDataSource.getModusInBounds(
+    ) async -> [String] {
+        return await localDataSource.getModusInBounds(
             filters: UserDefaults.standard.filter(DataSources.modu),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
@@ -85,11 +85,11 @@ class ModusTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [DataSourceImage] {
+    ) async -> [DataSourceImage] {
         if !UserDefaults.standard.showOnMapmodu {
             return []
         }
-        return localDataSource.getModusInBounds(
+        return await localDataSource.getModusInBounds(
             filters: UserDefaults.standard.filter(DataSources.modu),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
@@ -105,11 +105,11 @@ class ModusTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [String] {
+    ) async -> [String] {
         if !UserDefaults.standard.showOnMapmodu {
             return []
         }
-        return localDataSource.getModusInBounds(
+        return await localDataSource.getModusInBounds(
             filters: UserDefaults.standard.filter(DataSources.modu),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,

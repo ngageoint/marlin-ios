@@ -25,7 +25,7 @@ protocol MapFeatureRepository {
         minLongitude: Double,
         maxLongitude: Double,
         distanceTolerance: Double
-    ) -> [String]
+    ) async -> [String]
 }
 
 extension MapFeatureRepository {

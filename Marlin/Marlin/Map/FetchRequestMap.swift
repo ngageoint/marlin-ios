@@ -57,11 +57,9 @@ class DataSourceMap: MapMixin {
 //                .store(in: &cancellable)
 //        }
 
-        DispatchQueue.main.async {
-            self.setupDataSourceUpdatedPublisher(mapState: mapState)
-            self.setupUserDefaultsShowPublisher(mapState: mapState)
-            self.setupOrderPublisher(mapState: mapState)
-        }
+        self.setupDataSourceUpdatedPublisher(mapState: mapState)
+        self.setupUserDefaultsShowPublisher(mapState: mapState)
+        self.setupOrderPublisher(mapState: mapState)
 
         LocationManager.shared().$current10kmMGRS
             .receive(on: RunLoop.main)
@@ -211,22 +209,22 @@ class DataSourceMap: MapMixin {
         at location: CLLocationCoordinate2D,
         mapView: MKMapView,
         touchPoint: CGPoint
-    ) -> [String: [String]] {
-        if mapView.zoomLevel < minZoom {
+    ) async -> [String: [String]] {
+        if await mapView.zoomLevel < minZoom {
             return [:]
         }
         guard show == true else {
             return [:]
         }
         let screenPercentage = 0.03
-        let tolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
+        let tolerance = await mapView.region.span.longitudeDelta * Double(screenPercentage)
         let minLon = location.longitude - tolerance
         let maxLon = location.longitude + tolerance
         let minLat = location.latitude - tolerance
         let maxLat = location.latitude + tolerance
 
         return [
-            dataSourceKey: repository?.getItemKeys(
+            dataSourceKey: await repository?.getItemKeys(
                 minLatitude: minLat,
                 maxLatitude: maxLat,
                 minLongitude: minLon,

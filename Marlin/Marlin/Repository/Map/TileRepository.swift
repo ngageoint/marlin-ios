@@ -179,14 +179,14 @@ protocol TileRepository {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [DataSourceImage]
+    ) async -> [DataSourceImage]
 
     func getItemKeys(
         minLatitude: Double,
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [String]
+    ) async -> [String]
 
     func clearCache(completion: @escaping () -> Void)
 }

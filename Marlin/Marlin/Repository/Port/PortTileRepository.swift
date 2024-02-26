@@ -30,7 +30,7 @@ class PortTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [DataSourceImage] {
+    ) async -> [DataSourceImage] {
         var images: [DataSourceImage] = []
 
         if let port = localDataSource.getPort(portNumber: portNumber) {
@@ -47,8 +47,8 @@ class PortTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [String] {
-        return localDataSource.getPortsInBounds(
+    ) async -> [String] {
+        return await localDataSource.getPortsInBounds(
             filters: UserDefaults.standard.filter(DataSources.port),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
@@ -84,11 +84,11 @@ class PortsTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [DataSourceImage] {
+    ) async -> [DataSourceImage] {
         if !UserDefaults.standard.showOnMapport {
             return []
         }
-        return localDataSource.getPortsInBounds(
+        return await localDataSource.getPortsInBounds(
             filters: UserDefaults.standard.filter(DataSources.port),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
@@ -104,11 +104,11 @@ class PortsTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [String] {
+    ) async -> [String] {
         if !UserDefaults.standard.showOnMapasam {
             return []
         }
-        return localDataSource.getPortsInBounds(
+        return await localDataSource.getPortsInBounds(
             filters: UserDefaults.standard.filter(DataSources.port),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,

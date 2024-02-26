@@ -35,7 +35,7 @@ protocol LightLocalDataSource {
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [LightModel]
+    ) async -> [LightModel]
 
     func lights(
         filters: [DataSourceFilterParameter]?,
@@ -129,11 +129,11 @@ class LightCoreDataDataSource:
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [ModelType] {
-        // TODO: this should probably execute on a different context and be a perform
-        return context.performAndWait {
+    ) async -> [ModelType] {
+        let context = PersistenceController.current.newTaskContext()
+        return await context.perform {
             let fetchRequest = DataType.fetchRequest()
-            var predicates: [NSPredicate] = buildPredicates(filters: filters)
+            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
 
             if let minLatitude = minLatitude,
                let maxLatitude = maxLatitude,

@@ -22,7 +22,7 @@ protocol ModuLocalDataSource {
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [ModuModel]
+    ) async -> [ModuModel]
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
     func getModu(name: String?) -> ModuModel?
     func modus(
@@ -204,12 +204,11 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [ModuModel] {
-        var modus: [ModuModel] = []
-        // TODO: this should probably execute on a different context and be a perform
-        context.performAndWait {
+    ) async -> [ModuModel] {
+        let context = PersistenceController.current.newTaskContext()
+        return await context.perform {
             let fetchRequest = Modu.fetchRequest()
-            var predicates: [NSPredicate] = buildPredicates(filters: filters)
+            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
 
             if let minLatitude = minLatitude,
                let maxLatitude = maxLatitude,
@@ -230,12 +229,10 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
             fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.modu.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
-            modus = (context.fetch(request: fetchRequest)?.map { modu in
+            return (context.fetch(request: fetchRequest)?.map { modu in
                 ModuModel(modu: modu)
             }) ?? []
         }
-
-        return modus
     }
 
     func createSectionHeaderAndListItem(

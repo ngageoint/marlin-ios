@@ -21,7 +21,7 @@ protocol RadioBeaconLocalDataSource {
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [RadioBeaconModel]
+    ) async -> [RadioBeaconModel]
     func getRadioBeacons(
         filters: [DataSourceFilterParameter]?
     ) async -> [RadioBeaconModel]
@@ -81,12 +81,11 @@ class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSou
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [RadioBeaconModel] {
-        var radioBeacons: [RadioBeaconModel] = []
-        // TODO: this should probably execute on a different context and be a perform
-        context.performAndWait {
+    ) async -> [RadioBeaconModel] {
+        let context = PersistenceController.current.newTaskContext()
+        return await context.perform {
             let fetchRequest = RadioBeacon.fetchRequest()
-            var predicates: [NSPredicate] = buildPredicates(filters: filters)
+            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
 
             if let minLatitude = minLatitude,
                let maxLatitude = maxLatitude,
@@ -107,12 +106,10 @@ class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSou
             fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.radioBeacon.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
-            radioBeacons = (context.fetch(request: fetchRequest)?.map { radioBeacon in
+            return (context.fetch(request: fetchRequest)?.map { radioBeacon in
                 RadioBeaconModel(radioBeacon: radioBeacon)
             }) ?? []
         }
-
-        return radioBeacons
     }
 
     func getRadioBeacons(
@@ -120,7 +117,7 @@ class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSou
     ) async -> [RadioBeaconModel] {
         return await context.perform {
             let fetchRequest = RadioBeacon.fetchRequest()
-            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
+            let predicates: [NSPredicate] = self.buildPredicates(filters: filters)
 
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
             fetchRequest.predicate = predicate

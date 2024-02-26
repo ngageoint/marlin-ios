@@ -118,37 +118,39 @@ struct DataSourceTileProvider2: ImageDataProvider {
         handler: @escaping (Result<Data, Error>) -> Void
     ) {
 
-        let items = tileRepository.getTileableItems(
-            minLatitude: queryBounds.swCorner.y,
-            maxLatitude: queryBounds.neCorner.y,
-            minLongitude: queryBounds.swCorner.x,
-            maxLongitude: queryBounds.neCorner.x
-        )
-
-        UIGraphicsBeginImageContext(self.tileSize)
-
-        items.forEach { dataSourceImage in
-            dataSourceImage.image(
-                context: UIGraphicsGetCurrentContext(),
-                zoom: zoomLevel,
-                tileBounds: tileBounds3857,
-                tileSize: tileSize.width
+        Task {
+            let items = await tileRepository.getTileableItems(
+                minLatitude: queryBounds.swCorner.y,
+                maxLatitude: queryBounds.neCorner.y,
+                minLongitude: queryBounds.swCorner.x,
+                maxLongitude: queryBounds.neCorner.x
             )
-        }
 
-        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+            UIGraphicsBeginImageContext(self.tileSize)
 
-        UIGraphicsEndImageContext()
+            items.forEach { dataSourceImage in
+                dataSourceImage.image(
+                    context: UIGraphicsGetCurrentContext(),
+                    zoom: zoomLevel,
+                    tileBounds: tileBounds3857,
+                    tileSize: tileSize.width
+                )
+            }
 
-        guard let cgImage = newImage.cgImage else {
-            handler(.failure(DataTileError.notFound))
-            return
-        }
-        let data = UIImage(cgImage: cgImage).pngData()
-        if let data = data {
-            handler(.success(data))
-        } else {
-            handler(.failure(DataTileError.notFound))
+            let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+
+            UIGraphicsEndImageContext()
+
+            guard let cgImage = newImage.cgImage else {
+                handler(.failure(DataTileError.notFound))
+                return
+            }
+            let data = UIImage(cgImage: cgImage).pngData()
+            if let data = data {
+                handler(.success(data))
+            } else {
+                handler(.failure(DataTileError.notFound))
+            }
         }
     }
 

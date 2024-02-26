@@ -88,7 +88,14 @@ public class MSI {
         
         return Session(configuration: configuration, serverTrustManager: manager)
     }()
-    
+
+    lazy var backgroundLoadQueue: OperationQueue = {
+        var queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
+        queue.name = "Data load queue"
+        return queue
+    }()
+
     lazy var capabilitiesSession: Session = {
         configuration.httpMaximumConnectionsPerHost = 4
         configuration.timeoutIntervalForRequest = 120
@@ -97,15 +104,15 @@ public class MSI {
     }()
 
     func registerBackgroundHandler() {
-//        asamInitializer?.registerBackgroundHandler()
-//        moduInitializer?.registerBackgroundHandler()
-//        portInitializer?.registerBackgroundHandler()
-//        lightInitializer?.registerBackgroundHandler()
-//        radioBeaconInitializer?.registerBackgroundHandler()
-//        differentialGPSStationInitializer?.registerBackgroundHandler()
-//        electronicPublicationInitializer?.registerBackgroundHandler()
+        asamInitializer?.registerBackgroundHandler()
+        moduInitializer?.registerBackgroundHandler()
+        portInitializer?.registerBackgroundHandler()
+        lightInitializer?.registerBackgroundHandler()
+        radioBeaconInitializer?.registerBackgroundHandler()
+        differentialGPSStationInitializer?.registerBackgroundHandler()
+        electronicPublicationInitializer?.registerBackgroundHandler()
         navigationalWarningInitializer?.registerBackgroundHandler()
-//        noticeToMarinersInitializer?.registerBackgroundHandler()
+        noticeToMarinersInitializer?.registerBackgroundHandler()
     }
 
     func onChangeOfScenePhase(_ newPhase: ScenePhase) {
@@ -122,15 +129,15 @@ public class MSI {
     }
     
     func scheduleAppRefresh() {
-//        asamInitializer?.scheduleRefresh()
-//        moduInitializer?.scheduleRefresh()
-//        portInitializer?.scheduleRefresh()
-//        lightInitializer?.scheduleRefresh()
-//        radioBeaconInitializer?.scheduleRefresh()
-//        differentialGPSStationInitializer?.scheduleRefresh()
-//        electronicPublicationInitializer?.scheduleRefresh()
+        asamInitializer?.scheduleRefresh()
+        moduInitializer?.scheduleRefresh()
+        portInitializer?.scheduleRefresh()
+        lightInitializer?.scheduleRefresh()
+        radioBeaconInitializer?.scheduleRefresh()
+        differentialGPSStationInitializer?.scheduleRefresh()
+        electronicPublicationInitializer?.scheduleRefresh()
         navigationalWarningInitializer?.scheduleRefresh()
-//        noticeToMarinersInitializer?.scheduleRefresh()
+        noticeToMarinersInitializer?.scheduleRefresh()
     }
     
     func loadAllData() {
@@ -142,15 +149,15 @@ public class MSI {
         loadAllDataTime = Date()
         NSLog("Load all data")
         
-//        asamInitializer?.fetch()
-//        moduInitializer?.fetch()
-//        portInitializer?.fetch()
-//        lightInitializer?.fetch()
-//        radioBeaconInitializer?.fetch()
-//        differentialGPSStationInitializer?.fetch()
-//        electronicPublicationInitializer?.fetch()
+        asamInitializer?.fetch()
+        moduInitializer?.fetch()
+        portInitializer?.fetch()
+        lightInitializer?.fetch()
+        radioBeaconInitializer?.fetch()
+        differentialGPSStationInitializer?.fetch()
+        electronicPublicationInitializer?.fetch()
         navigationalWarningInitializer?.fetch()
-//        noticeToMarinersInitializer?.fetch()
+        noticeToMarinersInitializer?.fetch()
     }
     
     @objc func managedObjectContextObjectChangedObserver(notification: Notification) {

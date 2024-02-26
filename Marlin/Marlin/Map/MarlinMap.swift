@@ -491,19 +491,21 @@ extension MapCoordinator {
                 }
             }
         }
-        
-        var items: [any DataSource] = []
-        var itemKeys: [String: [String]] = [:]
-        for mixin in marlinMap.mixins.mixins.reversed() {
-            if let matchedItems = mixin.items(at: tapCoord, mapView: mapView, touchPoint: tapPoint) {
-                items.append(contentsOf: matchedItems)
+        Task { [annotationsTapped] in
+
+            var items: [any DataSource] = []
+            var itemKeys: [String: [String]] = [:]
+            for mixin in marlinMap.mixins.mixins.reversed() {
+                if let matchedItems = mixin.items(at: tapCoord, mapView: mapView, touchPoint: tapPoint) {
+                    items.append(contentsOf: matchedItems)
+                }
+                let matchedItemKeys = await mixin.itemKeys(at: tapCoord, mapView: mapView, touchPoint: tapPoint)
+                itemKeys.merge(matchedItemKeys) { current, new in
+                    current + new
+                }
             }
-            let matchedItemKeys = mixin.itemKeys(at: tapCoord, mapView: mapView, touchPoint: tapPoint)
-            itemKeys.merge(matchedItemKeys) { current, new in
-                current + new
-            }
+            handleTappedItems(annotations: annotationsTapped, items: items, itemKeys: itemKeys, mapName: marlinMap.name)
         }
-        handleTappedItems(annotations: annotationsTapped, items: items, itemKeys: itemKeys, mapName: marlinMap.name)
     }
 }
 

@@ -60,7 +60,7 @@ class LightSettingsTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [DataSourceImage] {
+    ) async -> [DataSourceImage] {
         var images: [DataSourceImage] = []
 
         if minLatitude...maxLatitude ~= light1.latitude && minLongitude...maxLongitude ~= light1.longitude {
@@ -74,7 +74,12 @@ class LightSettingsTileRepository: TileRepository, ObservableObject {
         return images
     }
 
-    func getItemKeys(minLatitude: Double, maxLatitude: Double, minLongitude: Double, maxLongitude: Double) -> [String] {
+    func getItemKeys(
+        minLatitude: Double,
+        maxLatitude: Double,
+        minLongitude: Double,
+        maxLongitude: Double
+    ) async -> [String] {
         return []
     }
 }

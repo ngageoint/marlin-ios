@@ -36,7 +36,7 @@ class LightTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [DataSourceImage] {
+    ) async -> [DataSourceImage] {
         var images: [DataSourceImage] = []
 
         let light = localDataSource.getCharacteristic(
@@ -53,8 +53,13 @@ class LightTileRepository: TileRepository, ObservableObject {
         return images
     }
     
-    func getItemKeys(minLatitude: Double, maxLatitude: Double, minLongitude: Double, maxLongitude: Double) -> [String] {
-        return localDataSource.getLightsInBounds(
+    func getItemKeys(
+        minLatitude: Double,
+        maxLatitude: Double,
+        minLongitude: Double,
+        maxLongitude: Double
+    ) async -> [String] {
+        return await localDataSource.getLightsInBounds(
             filters: UserDefaults.standard.filter(DataSources.light),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
@@ -93,11 +98,11 @@ class LightsTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [DataSourceImage] {
+    ) async -> [DataSourceImage] {
         if !UserDefaults.standard.showOnMaplight {
             return []
         }
-        return localDataSource.getLightsInBounds(
+        return await localDataSource.getLightsInBounds(
             filters: UserDefaults.standard.filter(DataSources.light),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
@@ -113,11 +118,11 @@ class LightsTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [String] {
+    ) async -> [String] {
         if !UserDefaults.standard.showOnMaplight {
             return []
         }
-        return localDataSource.getLightsInBounds(
+        return await localDataSource.getLightsInBounds(
             filters: UserDefaults.standard.filter(DataSources.light),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,

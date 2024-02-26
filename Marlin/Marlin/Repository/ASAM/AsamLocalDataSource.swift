@@ -21,7 +21,7 @@ protocol AsamLocalDataSource {
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [AsamModel]
+    ) async -> [AsamModel]
     func asams(
         filters: [DataSourceFilterParameter]?,
         paginatedBy paginator: Trigger.Signal?
@@ -81,12 +81,11 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [AsamModel] {
-        var asams: [AsamModel] = []
-        // TODO: this should probably execute on a different context and be a perform
-        context.performAndWait {
+    ) async -> [AsamModel] {
+        let context = PersistenceController.current.newTaskContext()
+        return await context.perform {
             let fetchRequest = Asam.fetchRequest()
-            var predicates: [NSPredicate] = buildPredicates(filters: filters)
+            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
 
             if let minLatitude = minLatitude,
                let maxLatitude = maxLatitude,
@@ -107,12 +106,10 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
             fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.asam.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
-            asams = (context.fetch(request: fetchRequest)?.map { asam in
+            return (context.fetch(request: fetchRequest)?.map { asam in
                 AsamModel(asam: asam)
             }) ?? []
         }
-
-        return asams
     }
 
     func getAsams(

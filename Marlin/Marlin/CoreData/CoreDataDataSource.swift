@@ -18,13 +18,6 @@ class CoreDataDataSource {
     var cleanup: (() -> Void)?
     var operation: CountingDataLoadOperation?
 
-    lazy var backgroundLoadQueue: OperationQueue = {
-        var queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        queue.name = "\(NSStringFromClass(type(of: self))) load queue"
-        return queue
-    }()
-
     func registerBackgroundTask(name: String) {
         NSLog("Register the background task \(name)")
         backgroundTask = UIApplication.shared.beginBackgroundTask(withName: name) { [weak self] in
@@ -77,7 +70,7 @@ class CoreDataDataSource {
 
         // Start the operation.
         if let operation = operation {
-            self.backgroundLoadQueue.addOperation(operation)
+            MSI.shared.backgroundLoadQueue.addOperation(operation)
         }
 
         return await withCheckedContinuation { continuation in

@@ -20,7 +20,7 @@ protocol DifferentialGPSStationLocalDataSource {
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [DifferentialGPSStationModel]
+    ) async -> [DifferentialGPSStationModel]
 
     func dgps(
         filters: [DataSourceFilterParameter]?,
@@ -82,12 +82,12 @@ class DifferentialGPSStationCoreDataDataSource:
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [DifferentialGPSStationModel] {
-        var dgpss: [DifferentialGPSStationModel] = []
-        // TODO: this should probably execute on a different context and be a perform
-        context.performAndWait {
+    ) async -> [DifferentialGPSStationModel] {
+        let context = PersistenceController.current.newTaskContext()
+
+        return await context.perform {
             let fetchRequest = DifferentialGPSStation.fetchRequest()
-            var predicates: [NSPredicate] = buildPredicates(filters: filters)
+            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
 
             if let minLatitude = minLatitude,
                let maxLatitude = maxLatitude,
@@ -108,11 +108,10 @@ class DifferentialGPSStationCoreDataDataSource:
             fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.dgps.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
-            dgpss = (context.fetch(request: fetchRequest)?.map { dgps in
+            return (context.fetch(request: fetchRequest)?.map { dgps in
                 DifferentialGPSStationModel(differentialGPSStation: dgps)
             }) ?? []
         }
-        return dgpss
     }
 
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {

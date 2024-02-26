@@ -19,7 +19,7 @@ protocol PortLocalDataSource {
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [PortModel]
+    ) async -> [PortModel]
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
     func getPorts(
         filters: [DataSourceFilterParameter]?
@@ -62,12 +62,11 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [PortModel] {
-        var ports: [PortModel] = []
-        // TODO: this should probably execute on a different context and be a perform
-        context.performAndWait {
+    ) async -> [PortModel] {
+        let context = PersistenceController.current.newTaskContext()
+        return await context.perform {
             let fetchRequest = Port.fetchRequest()
-            var predicates: [NSPredicate] = buildPredicates(filters: filters)
+            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
 
             if let minLatitude = minLatitude,
                let maxLatitude = maxLatitude,
@@ -88,12 +87,10 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
             fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.port.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
-            ports = (context.fetch(request: fetchRequest)?.map { port in
+            return (context.fetch(request: fetchRequest)?.map { port in
                 PortModel(port: port)
             }) ?? []
         }
-
-        return ports
     }
 
     func getPorts(
@@ -101,7 +98,7 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
     ) async -> [PortModel] {
         return await context.perform {
             let fetchRequest = Port.fetchRequest()
-            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
+            let predicates: [NSPredicate] = self.buildPredicates(filters: filters)
 
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
             fetchRequest.predicate = predicate

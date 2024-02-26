@@ -30,7 +30,7 @@ class AsamTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [DataSourceImage] {
+    ) async -> [DataSourceImage] {
         var images: [DataSourceImage] = []
 
         if let asam = localDataSource.getAsam(reference: reference) {
@@ -47,8 +47,8 @@ class AsamTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [String] {
-        return localDataSource.getAsamsInBounds(
+    ) async -> [String] {
+        return await localDataSource.getAsamsInBounds(
             filters: UserDefaults.standard.filter(DataSources.asam),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
@@ -84,18 +84,18 @@ class AsamsTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [DataSourceImage] {
+    ) async -> [DataSourceImage] {
         if !UserDefaults.standard.showOnMapasam {
             return []
         }
-        return localDataSource.getAsamsInBounds(
+        return await localDataSource.getAsamsInBounds(
             filters: UserDefaults.standard.filter(DataSources.asam),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
             minLongitude: minLongitude,
             maxLongitude: maxLongitude)
         .map { model in
-            AsamImage(asam: model)
+            return AsamImage(asam: model)
         }
     }
 
@@ -104,11 +104,11 @@ class AsamsTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [String] {
+    ) async -> [String] {
         if !UserDefaults.standard.showOnMapasam {
             return []
         }
-        return localDataSource.getAsamsInBounds(
+        return await localDataSource.getAsamsInBounds(
             filters: UserDefaults.standard.filter(DataSources.asam),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,

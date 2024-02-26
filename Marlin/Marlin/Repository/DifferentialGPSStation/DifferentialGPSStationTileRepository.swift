@@ -32,7 +32,7 @@ class DifferentialGPSStationTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [DataSourceImage] {
+    ) async -> [DataSourceImage] {
         var images: [DataSourceImage] = []
 
         if let dgps = localDataSource.getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber) {
@@ -49,8 +49,8 @@ class DifferentialGPSStationTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [String] {
-        return localDataSource.getDifferentialGPSStationsInBounds(
+    ) async -> [String] {
+        return await localDataSource.getDifferentialGPSStationsInBounds(
             filters: UserDefaults.standard.filter(DataSources.dgps),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
@@ -86,11 +86,11 @@ class DifferentialGPSStationsTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [DataSourceImage] {
+    ) async -> [DataSourceImage] {
         if !UserDefaults.standard.showOnMapdifferentialGPSStation {
             return []
         }
-        return localDataSource.getDifferentialGPSStationsInBounds(
+        return await localDataSource.getDifferentialGPSStationsInBounds(
             filters: UserDefaults.standard.filter(DataSources.dgps),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
@@ -106,11 +106,11 @@ class DifferentialGPSStationsTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [String] {
+    ) async -> [String] {
         if !UserDefaults.standard.showOnMapdifferentialGPSStation {
             return []
         }
-        return localDataSource.getDifferentialGPSStationsInBounds(
+        return await localDataSource.getDifferentialGPSStationsInBounds(
             filters: UserDefaults.standard.filter(DataSources.dgps),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,

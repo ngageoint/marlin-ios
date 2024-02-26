@@ -32,7 +32,7 @@ class RadioBeaconTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [DataSourceImage] {
+    ) async -> [DataSourceImage] {
         var images: [DataSourceImage] = []
 
         if let radioBeacon = localDataSource.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber) {
@@ -49,8 +49,8 @@ class RadioBeaconTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [String] {
-        return localDataSource.getRadioBeaconsInBounds(
+    ) async -> [String] {
+        return await localDataSource.getRadioBeaconsInBounds(
             filters: UserDefaults.standard.filter(DataSources.radioBeacon),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
@@ -86,11 +86,11 @@ class RadioBeaconsTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [DataSourceImage] {
+    ) async -> [DataSourceImage] {
         if !UserDefaults.standard.showOnMapradioBeacon {
             return []
         }
-        return localDataSource.getRadioBeaconsInBounds(
+        return await localDataSource.getRadioBeaconsInBounds(
             filters: UserDefaults.standard.filter(DataSources.radioBeacon),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
@@ -106,11 +106,11 @@ class RadioBeaconsTileRepository: TileRepository, ObservableObject {
         maxLatitude: Double,
         minLongitude: Double,
         maxLongitude: Double
-    ) -> [String] {
+    ) async -> [String] {
         if !UserDefaults.standard.showOnMapradioBeacon {
             return []
         }
-        return localDataSource.getRadioBeaconsInBounds(
+        return await localDataSource.getRadioBeaconsInBounds(
             filters: UserDefaults.standard.filter(DataSources.radioBeacon),
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,

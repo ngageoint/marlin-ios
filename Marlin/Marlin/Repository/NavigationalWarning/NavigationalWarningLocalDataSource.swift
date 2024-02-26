@@ -27,7 +27,7 @@ protocol NavigationalWarningLocalDataSource {
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [NavigationalWarningModel]
+    ) async -> [NavigationalWarningModel]
 
     func getNavigationalWarnings(
         filters: [DataSourceFilterParameter]?
@@ -117,12 +117,11 @@ class NavigationalWarningCoreDataDataSource:
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) -> [ModelType] {
-        var models: [ModelType] = []
-        // TODO: this should probably execute on a different context and be a perform
-        context.performAndWait {
+    ) async -> [ModelType] {
+        let context = PersistenceController.current.newTaskContext()
+        return await context.perform {
             let fetchRequest = DataType.fetchRequest()
-            var predicates: [NSPredicate] = buildPredicates(filters: filters)
+            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
 
             if let minLatitude = minLatitude,
                let maxLatitude = maxLatitude,
@@ -144,11 +143,10 @@ class NavigationalWarningCoreDataDataSource:
             fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.navWarning.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
-            models = (context.fetch(request: fetchRequest)?.map { model in
+            return (context.fetch(request: fetchRequest)?.map { model in
                 ModelType(navigationalWarning: model)
             }) ?? []
         }
-        return models
     }
 
     override func boundsPredicate(

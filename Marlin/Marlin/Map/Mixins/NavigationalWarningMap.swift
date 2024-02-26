@@ -108,24 +108,24 @@ class NavigationalWarningMap: DataSourceMap {
         at location: CLLocationCoordinate2D,
         mapView: MKMapView,
         touchPoint: CGPoint
-    ) -> [String: [String]] {
-        if mapView.zoomLevel < minZoom {
+    ) async -> [String: [String]] {
+        if await mapView.zoomLevel < minZoom {
             return [:]
         }
         guard show == true else {
             return [:]
         }
         let screenPercentage = 0.03
-        let tolerance = mapView.region.span.longitudeDelta * Double(screenPercentage)
+        let tolerance = await mapView.region.span.longitudeDelta * Double(screenPercentage)
         let minLon = location.longitude - tolerance
         let maxLon = location.longitude + tolerance
         let minLat = location.latitude - tolerance
         let maxLat = location.latitude + tolerance
 
-        let distanceTolerance = mapView.visibleMapRect.size.width * Double(screenPercentage)
+        let distanceTolerance = await mapView.visibleMapRect.size.width * Double(screenPercentage)
 
         return [
-            dataSourceKey: mapFeatureRepository?.getItemKeys(
+            dataSourceKey: await mapFeatureRepository?.getItemKeys(
                 minLatitude: minLat,
                 maxLatitude: maxLat,
                 minLongitude: minLon,

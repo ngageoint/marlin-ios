@@ -91,7 +91,7 @@ class NavigationalWarningMapFeatureRepository: MapFeatureRepository, ObservableO
         minLongitude: Double,
         maxLongitude: Double,
         distanceTolerance: Double
-    ) -> [String] {
+    ) async -> [String] {
         []
     }
 }
@@ -168,11 +168,11 @@ class NavigationalWarningsMapFeatureRepository: MapFeatureRepository, Observable
         minLongitude: Double,
         maxLongitude: Double,
         distanceTolerance: Double
-    ) -> [String] {
+    ) async -> [String] {
         let location = CLLocationCoordinate2D(
             latitude: (maxLatitude - ((maxLatitude - minLatitude) / 2.0)),
             longitude: (maxLongitude - ((maxLongitude - minLongitude) / 2.0)))
-        return localDataSource.getNavigationalWarningsInBounds(
+        return await localDataSource.getNavigationalWarningsInBounds(
             filters: nil,
             minLatitude: minLatitude,
             maxLatitude: maxLatitude,
