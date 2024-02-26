@@ -157,6 +157,7 @@ struct MarlinApp: App {
     var lightsTileRepository: LightsTileRepository
     var radioBeaconsTileRepository: RadioBeaconsTileRepository
     var differentialGPSStationsTileRepository: DifferentialGPSStationsTileRepository
+    var navigationalWarningsMapFeatureRepository: NavigationalWarningsMapFeatureRepository
 
     private var router: MarlinRouter = MarlinRouter()
 
@@ -164,13 +165,10 @@ struct MarlinApp: App {
         .receive(on: RunLoop.main)
 
     init() {
-        // set up default user defaults
-        UserDefaults.registerMarlinDefaults()
         shared = MSI.shared
         appState = MSI.shared.appState
         persistentStore = PersistenceController.shared
-        bookmarkRepository = BookmarkRepositoryManager(
-            repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+
         asamRepository = AsamRepository(
             localDataSource: AsamCoreDataDataSource(),
             remoteDataSource: AsamRemoteDataSource()
@@ -212,6 +210,18 @@ struct MarlinApp: App {
         routeWaypointRepository = RouteWaypointRepository(
             localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
 
+        bookmarkRepository = BookmarkRepositoryManager(
+            repository: BookmarkCoreDataRepository(
+                asamRepository: asamRepository,
+                dgpsRepository: differentialGPSStationRepository,
+                lightRepository: lightRepository,
+                moduRepository: moduRepository,
+                portRepository: portRepository,
+                radioBeaconRepository: radioBeaconRepository,
+                noticeToMarinersRepository: noticeToMarinersRepository,
+                electronicPublicationRepository: electronicPublicationRepository
+            ))
+
         asamsTileRepository = AsamsTileRepository(localDataSource: asamRepository.localDataSource)
         modusTileRepository = ModusTileRepository(localDataSource: moduRepository.localDataSource)
         portsTileRepository = PortsTileRepository(localDataSource: portRepository.localDataSource)
@@ -219,6 +229,9 @@ struct MarlinApp: App {
         radioBeaconsTileRepository = RadioBeaconsTileRepository(localDataSource: radioBeaconRepository.localDataSource)
         differentialGPSStationsTileRepository = DifferentialGPSStationsTileRepository(
             localDataSource: differentialGPSStationRepository.localDataSource
+        )
+        navigationalWarningsMapFeatureRepository = NavigationalWarningsMapFeatureRepository(
+            localDataSource: navigationalWarningRepository.localDataSource
         )
 
         MSI.shared.addRepositories(
@@ -267,6 +280,7 @@ struct MarlinApp: App {
                 .environmentObject(lightsTileRepository)
                 .environmentObject(radioBeaconsTileRepository)
                 .environmentObject(differentialGPSStationsTileRepository)
+                .environmentObject(navigationalWarningsMapFeatureRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
                 .environmentObject(router)
                 .background(Color.surfaceColor)
@@ -306,7 +320,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     
     func application(
         _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
+        UserDefaults.registerMarlinDefaults()
         MSI.shared.registerBackgroundHandler()
         return true
     }

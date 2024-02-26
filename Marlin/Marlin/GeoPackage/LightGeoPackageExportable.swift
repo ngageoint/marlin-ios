@@ -13,6 +13,11 @@ import sf_ios
 class LightGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.light
 
+    let lightRepository: LightRepository
+    init(lightRepository: LightRepository) {
+        self.lightRepository = lightRepository
+    }
+
     func createFeatures(
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,
@@ -22,11 +27,7 @@ class LightGeoPackageExportable: GeoPackageExportable {
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
 
-        guard let repository = MSI.shared.lightRepository else {
-            return
-        }
-
-        let models = await repository.getLights(filters: (filters ?? []) + (commonFilters ?? []))
+        let models = await lightRepository.getLights(filters: (filters ?? []) + (commonFilters ?? []))
         var exported = 0
         for model in models {
             for (color, sfGeometry) in model.sfGeometryByColor() ?? [:] {

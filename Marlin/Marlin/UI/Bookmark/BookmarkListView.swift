@@ -12,13 +12,14 @@ struct BookmarkListView: View {
     var watchFocusedItem: Bool = false
     
     var body: some View {
-        MSIListView<Bookmark, EmptyView, EmptyView, BookmarkListEmptyState>(
-            focusedItem: focusedItem,
-            watchFocusedItem: watchFocusedItem,
-            sectionViewBuilder: { _ in EmptyView() }, content: { _ in EmptyView() },
-            emptyView: {
-                BookmarkListEmptyState()
-            }
-        )
+        Text("bookmarks")
+//        MSIListView<Bookmark, EmptyView, EmptyView, BookmarkListEmptyState>(
+//            focusedItem: focusedItem,
+//            watchFocusedItem: watchFocusedItem,
+//            sectionViewBuilder: { _ in EmptyView() }, content: { _ in EmptyView() },
+//            emptyView: {
+//                BookmarkListEmptyState()
+//            }
+//        )
     }
 }

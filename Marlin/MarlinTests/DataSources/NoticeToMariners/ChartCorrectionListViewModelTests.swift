@@ -147,25 +147,31 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
                 headers: ["Content-Type":"application/json"]
             )
         }
-        
-        let view = ChartCorrectionList()
-        
-        let navView = NavigationView {
-            view
-        }.environment(\.managedObjectContext, PersistenceController.shared.viewContext)
-        
-        let controller = UIHostingController(rootView: navView)
+
+        struct Container: View {
+            @State var router: MarlinRouter = MarlinRouter()
+            @State var view = ChartCorrectionList()
+            var body: some View {
+                NavigationStack(path: $router.path) {
+                    view.marlinRoutes()
+                }
+                .environmentObject(router)
+                .environmentObject(NoticeToMarinersRepository(localDataSource: NoticeToMarinersStaticLocalDataSource(), remoteDataSource: NoticeToMarinersRemoteDataSource()))
+            }
+        }
+        let container = Container()
+        let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        let publishExpectation = expectation(for: !view.viewModel.sortedChartIds.isEmpty)
+        let publishExpectation = expectation(for: !container.view.viewModel.sortedChartIds.isEmpty)
         wait(for: [publishExpectation], timeout: 10.0)
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Querying...")
         
-        XCTAssertEqual(view.viewModel.sortedChartIds, ["12", "104"])
-        
-        XCTAssertEqual(view.viewModel.sortedChartCorrections(key: "12")?.count, 2)
-        XCTAssertEqual(view.viewModel.sortedChartCorrections(key: "104")?.count, 7)
-        
+        XCTAssertEqual(container.view.viewModel.sortedChartIds, ["12", "104"])
+
+        XCTAssertEqual(container.view.viewModel.sortedChartCorrections(key: "12")?.count, 2)
+        XCTAssertEqual(container.view.viewModel.sortedChartCorrections(key: "104")?.count, 7)
+
         // verify the things that should be here
         // tap the rows
         tester().waitForView(withAccessibilityLabel: "104")

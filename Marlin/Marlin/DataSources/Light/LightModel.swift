@@ -241,9 +241,7 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible, Ha
     init?(feature: Feature) {
         if let json = try? JSONEncoder().encode(feature.properties), let string = String(data: json, encoding: .utf8) {
             
-            print(string)
             let decoder = JSONDecoder()
-            print("json is \(string)")
             let jsonData = Data(string.utf8)
             if let model = try? decoder.decode(LightModel.self, from: jsonData) {
                 self = model

@@ -137,11 +137,17 @@ class PredicateTileOverlay<MapImageType: MapImage>: MKTileOverlay, PredicateBase
     }
 }
 
-class DataSourceTileOverlay: MKTileOverlay {
+protocol DataSourceOverlay {
+    var key: String? { get set }
+}
+
+class DataSourceTileOverlay: MKTileOverlay, DataSourceOverlay {
+    var key: String?
     let tileRepository: TileRepository
 
-    init(tileRepository: TileRepository) {
+    init(tileRepository: TileRepository, key: String) {
         self.tileRepository = tileRepository
+        self.key = key
         super.init(urlTemplate: nil)
     }
 

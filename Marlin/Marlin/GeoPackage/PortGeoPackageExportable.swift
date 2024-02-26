@@ -13,6 +13,11 @@ import sf_ios
 class PortGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.port
 
+    let portRepository: PortRepository
+    init(portRepository: PortRepository) {
+        self.portRepository = portRepository
+    }
+
     func createFeatures(
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,
@@ -22,11 +27,7 @@ class PortGeoPackageExportable: GeoPackageExportable {
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
 
-        guard let repository = MSI.shared.portRepository else {
-            return
-        }
-
-        let models = await repository.getPorts(filters: (filters ?? []) + (commonFilters ?? []))
+        let models = await portRepository.getPorts(filters: (filters ?? []) + (commonFilters ?? []))
         var exported = 0
         for model in models {
             createFeature(model: model, sfGeometry: model.sfGeometry, geoPackage: geoPackage, table: table, styleRows: styleRows)

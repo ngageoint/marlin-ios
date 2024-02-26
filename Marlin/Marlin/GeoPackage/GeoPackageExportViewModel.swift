@@ -298,29 +298,7 @@ class GeoPackageExportViewModel: ObservableObject {
                     (viewModel2.dataSource?.definition.order ?? -1)
             }) {
                 guard let dataSource = viewModel.dataSource else { continue }
-                var exportable: GeoPackageExportable?
-
-                switch dataSource.definition.key {
-                case DataSources.asam.key:
-                    exportable = AsamGeoPackageExportable()
-                case DataSources.modu.key:
-                    exportable = ModuGeoPackageExportable()
-                case DataSources.dgps.key:
-                    exportable = DifferentialGPSStationGeoPackageExportable()
-                case DataSources.light.key:
-                    exportable = LightGeoPackageExportable()
-                case DataSources.port.key:
-                    exportable = PortGeoPackageExportable()
-                case DataSources.radioBeacon.key:
-                    exportable = RadioBeaconGeoPackageExportable()
-                case DataSources.navWarning.key:
-                    exportable = NavigationalWarningGeoPackageExportable()
-                case DataSources.route.key:
-                    exportable = RouteGeoPackageExportable()
-                default:
-                    exportable = nil
-                }
-
+                var exportable: GeoPackageExportable? = getExportable(definition: dataSource.definition)
                 guard let exportable = exportable,
                       let dataSource = viewModel.dataSource,
                       let definitions = DataSourceDefinitions.from(dataSource.definition),
@@ -370,5 +348,51 @@ class GeoPackageExportViewModel: ObservableObject {
             self.complete = true
         }
 //        }
+    }
+
+    func getExportable(definition: any DataSourceDefinition) -> GeoPackageExportable? {
+        var exportable: GeoPackageExportable?
+
+        switch definition.key {
+        case DataSources.asam.key:
+            if let asamRepository = asamRepository {
+                exportable = AsamGeoPackageExportable(asamRepository: asamRepository)
+            }
+        case DataSources.modu.key:
+            if let moduRepository = moduRepository {
+                exportable = ModuGeoPackageExportable(moduRepository: moduRepository)
+            }
+        case DataSources.dgps.key:
+            if let dgpsRepository = dgpsRepository {
+                exportable = DifferentialGPSStationGeoPackageExportable(
+                    differentialGPSStationRepository: dgpsRepository
+                )
+            }
+        case DataSources.light.key:
+            if let lightRepository = lightRepository {
+                exportable = LightGeoPackageExportable(lightRepository: lightRepository)
+            }
+        case DataSources.port.key:
+            if let portRepository = portRepository {
+                exportable = PortGeoPackageExportable(portRepository: portRepository)
+            }
+        case DataSources.radioBeacon.key:
+            if let radioBeaconRepository = radioBeaconRepository {
+                exportable = RadioBeaconGeoPackageExportable(radioBeaconRepository: radioBeaconRepository)
+            }
+        case DataSources.navWarning.key:
+            if let navigationalWarningRepository = navigationalWarningRepository {
+                exportable = NavigationalWarningGeoPackageExportable(
+                    navigationalWarningRepository: navigationalWarningRepository
+                )
+            }
+        case DataSources.route.key:
+            if let routeRepository = routeRepository {
+                exportable = RouteGeoPackageExportable(routeRepository: routeRepository)
+            }
+        default:
+            exportable = nil
+        }
+        return exportable
     }
 }

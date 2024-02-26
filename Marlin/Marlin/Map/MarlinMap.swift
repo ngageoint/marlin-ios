@@ -100,13 +100,13 @@ class MapState: ObservableObject, Hashable {
 
 class MainMapMixins: MapMixins {
     var subscriptions = Set<AnyCancellable>()
-    var navigationalWarningMap = NavigationalWarningFetchMap()
+//    var navigationalWarningMap = NavigationalWarningFetchMap()
         
     override init() {
         super.init()
         var mixins: [any MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
 
-        mixins.append(NavigationalWarningFetchMap())
+//        mixins.append(NavigationalWarningFetchMap())
         self.mixins = mixins
     }
     
@@ -149,6 +149,12 @@ class MainMapMixins: MapMixins {
             mixins.append(DifferentialGPSStationMap(repository: tileRepository))
         }
     }
+
+    func addNavigationalWarningsMapFeatureRepository(mapFeatureRepository: MapFeatureRepository) {
+        if UserDefaults.standard.dataSourceEnabled(DataSources.navWarning) {
+            mixins.append(NavigationalWarningMap(mapFeatureRepository: mapFeatureRepository))
+        }
+    }
 }
 
 class NavigationalMapMixins: MapMixins {
@@ -168,7 +174,11 @@ class NavigationalMapMixins: MapMixins {
             polygonColor: Color.dynamicLandColor,
             index: 1
         )
-        self.mixins = [NavigationalWarningFetchMap(), navareaMap, backgroundMap]
+        self.mixins = [navareaMap, backgroundMap]
+    }
+
+    func setMapFeatureRepository(mapFeatureRepository: MapFeatureRepository) {
+        self.mixins.append(NavigationalWarningMap(mapFeatureRepository: mapFeatureRepository))
     }
 }
 

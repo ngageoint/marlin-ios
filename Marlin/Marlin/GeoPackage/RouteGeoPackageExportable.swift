@@ -13,7 +13,12 @@ import sf_ios
 class RouteGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.route
 
+    let routeRepository: RouteRepository
     var sfGeometry: SFGeometry?
+    init(routeRepository: RouteRepository, sfGeometry: SFGeometry? = nil) {
+        self.routeRepository = routeRepository
+        self.sfGeometry = sfGeometry
+    }
 
     func createFeatures(
         geoPackage: GPKGGeoPackage,
@@ -23,12 +28,7 @@ class RouteGeoPackageExportable: GeoPackageExportable {
         styleRows: [GPKGStyleRow],
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
-
-        guard let repository = MSI.shared.routeRepository else {
-            return
-        }
-
-        let routes = await repository.getRoutes(filters: (filters ?? []) + (commonFilters ?? []))
+        let routes = await routeRepository.getRoutes(filters: (filters ?? []) + (commonFilters ?? []))
         var exported = 0
         for route in routes {
             createFeature(model: route, sfGeometry: route.sfGeometry, geoPackage: geoPackage, table: table, styleRows: styleRows)

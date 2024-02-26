@@ -21,8 +21,8 @@ class RadioBeaconMap: DataSourceMap {
         }
     }
 
-    override init(repository: TileRepository) {
-        super.init(repository: repository)
+    override init(repository: TileRepository? = nil, mapFeatureRepository: MapFeatureRepository? = nil) {
+        super.init(repository: repository, mapFeatureRepository: mapFeatureRepository)
 
         orderPublisher = UserDefaults.standard.orderPublisher(key: DataSources.radioBeacon.key)
         userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMapradioBeacon)

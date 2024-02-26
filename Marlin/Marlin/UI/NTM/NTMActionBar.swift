@@ -16,11 +16,12 @@ struct NTMActionBar: View {
             Spacer()
             if (ntm.noticeYear >= 99 && ntm.noticeWeek >= 29) 
                 || ntm.noticeYear <= Int(Calendar.current.component(.year, from: Date())) % 1000 {
-                NavigationLink {
-                    NoticeToMarinersFullNoticeView(noticeNumber: getNoticeNumber(noticeNumberString: ntm.currNoticeNum))
-                } label: {
-                    Text("NTM \(ntm.currNoticeNum ?? "") Details")
-                }
+                NavigationLink(
+                    value: NoticeToMarinersRoute.fullView(getNoticeNumber(noticeNumberString: ntm.currNoticeNum)),
+                    label: {
+                        Text("NTM \(ntm.currNoticeNum ?? "") Details")
+                    }
+                )
                 .buttonStyle(MaterialButtonStyle())
             }
         }

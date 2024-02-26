@@ -28,25 +28,13 @@ class BookmarkViewModel: ObservableObject {
     
     func createBookmark(notes: String) {
         Task {
-            await repository?.createBookmark(notes: notes, itemKey: self.itemKey ?? "", dataSource: self.dataSource ?? "")
+            await repository?.createBookmark(
+                notes: notes,
+                itemKey: self.itemKey ?? "",
+                dataSource: self.dataSource ?? ""
+            )
             await updateBookmarked()
         }
-//        let viewContext = PersistenceController.current.viewContext
-//        viewContext.perform {
-//            let bookmark = Bookmark(context: viewContext)
-//            bookmark.notes = self.bnotes
-//            bookmark.dataSource = self.dataSource
-//            bookmark.id = self.itemKey
-//            bookmark.timestamp = Date()
-//            do {
-//                try viewContext.save()
-//            } catch {
-//                print("Error saving bookmark \(error)")
-//            }
-//            self.itemKey = self.itemKey
-//            self.dataSource = self.dataSource
-//            self.isBookmarked = true
-//        }
     }
 
     @MainActor
@@ -64,20 +52,5 @@ class BookmarkViewModel: ObservableObject {
         Task {
             await updateBookmarked()
         }
-//        let viewContext = PersistenceController.current.viewContext
-//        viewContext.perform {
-//            let request = Bookmark.fetchRequest()
-//            request.predicate = NSPredicate(format: "id = %@ AND dataSource = %@", itemKey, dataSource)
-//            for bookmark in viewContext.fetch(request: request) ?? [] {
-//                viewContext.delete(bookmark)
-//            }
-//            do {
-//                try viewContext.save()
-//                self.isBookmarked = false
-//            } catch {
-//                print("Error removing bookmark")
-//            }
-//            
-//        }
     }
 }

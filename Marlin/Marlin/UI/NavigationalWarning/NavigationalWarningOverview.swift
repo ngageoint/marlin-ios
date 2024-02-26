@@ -44,29 +44,7 @@ extension NavigationalWarningsOverview: View {
         .navigationTitle(NavigationalWarning.fullDataSourceName)
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.surfaceColor)
-        .navigationDestination(for: NavigationalWarning.self) { item in
-            item.detailView
-                .onDisappear {
-                    focusedItem.dataSource = nil
-                }
-        }
-        .navigationDestination(for: NavigationalWarningSection.self) { section in
-            NavigationalWarningNavAreaListView(
-                warnings: section.warnings,
-                navArea: section.id,
-                mapName: MAP_NAME
-            )
-            .accessibilityElement(children: .contain)
-        }
-        .onChange(of: focusedItem.date) { _ in
-            if watchFocusedItem, let focusedItem = focusedItem.dataSource as? NavigationalWarning {
-                router.path.append(focusedItem)
-            }
-        }
         .onAppear {
-            if watchFocusedItem, let focusedItem = focusedItem.dataSource as? NavigationalWarning {
-                router.path.append(focusedItem)
-            }
             Metrics.shared.appRoute([NavigationalWarning.metricsKey, "group"])
             Metrics.shared.dataSourceList(dataSource: NavigationalWarning.definition)
         }

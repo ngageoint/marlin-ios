@@ -24,8 +24,8 @@ class LightMap: DataSourceMap {
     var defaultsShowLightRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
     var defaultsShowLightSectorRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
 
-    override init(repository: TileRepository) {
-        super.init(repository: repository)
+    override init(repository: TileRepository? = nil, mapFeatureRepository: MapFeatureRepository? = nil) {
+        super.init(repository: repository, mapFeatureRepository: mapFeatureRepository)
 
         orderPublisher = UserDefaults.standard.orderPublisher(key: DataSources.light.key)
         userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMaplight)

@@ -23,6 +23,13 @@ enum NavigationalWarningItem: Hashable, Identifiable {
     case sectionHeader(header: String)
 }
 
+struct NavigationalAreaInformation: Identifiable {
+    var id: String { navArea.name }
+    let navArea: NavigationalWarningNavArea
+    let unread: Int
+    let total: Int
+}
+
 class NavigationalWarningRepository: ObservableObject {
     var localDataSource: NavigationalWarningLocalDataSource
     private var remoteDataSource: NavigationalWarningRemoteDataSource
@@ -35,12 +42,31 @@ class NavigationalWarningRepository: ObservableObject {
         return NavigationalWarningDataFetchOperation()
     }
 
-    func getNavigationalWarning(msgYear: Int64, msgNumber: Int64, navArea: String?) -> NavigationalWarningModel? {
+    func getNavAreasInformation() async -> [NavigationalAreaInformation] {
+        await localDataSource.getNavAreasInformation()
+    }
+
+    func getNavigationalWarning(msgYear: Int, msgNumber: Int, navArea: String?) -> NavigationalWarningModel? {
         localDataSource.getNavigationalWarning(msgYear: msgYear, msgNumber: msgNumber, navArea: navArea)
     }
     
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
         localDataSource.getCount(filters: filters)
+    }
+
+    func getNavAreaNavigationalWarnings(navArea: String) async -> [NavigationalWarningModel] {
+        // if navArea == "unknown" get unparsed locations
+        await getNavigationalWarnings(filters: [
+            DataSourceFilterParameter(
+                property: DataSourceProperty(
+                    name: "Navigational Area",
+                    key: "navArea",
+                    type: .string
+                ),
+                comparison: .equals,
+                valueString: navArea
+            )
+        ])
     }
 
     func getNavigationalWarnings(

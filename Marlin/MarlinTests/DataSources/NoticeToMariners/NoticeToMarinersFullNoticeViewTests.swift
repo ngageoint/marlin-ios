@@ -270,9 +270,10 @@ final class NoticeToMarinersFullNoticeViewTests: XCTestCase {
             HTTPStubsResponse(data: TestHelpers.createGradientImage(startColor: UIColor(Color.ngaGreen), endColor: UIColor(Color.ngaBlue), size: CGSize(width: 50, height: 50)).jpegData(compressionQuality: 0.8)!, statusCode: 200, headers: ["Content-Type":"image/jpeg"])
         }
         
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        let repository = NoticeToMarinersRepository(localDataSource: NoticeToMarinersCoreDataDataSource(), remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(noticeToMarinersRepository: repository))
         
-        let detailView = NoticeToMarinersFullNoticeView(viewModel: NoticeToMarinersFullNoticeViewViewModel(noticeNumber: newItem.noticeNumber))
+        let detailView = NoticeToMarinersFullNoticeView(noticeNumber: Int(newItem.noticeNumber))
             .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: detailView)

@@ -16,6 +16,7 @@ protocol RouteWaypointLocalDataSource {
     func getDifferentialGPSStation(waypointURI: URL?) -> DifferentialGPSStationModel?
     func getLight(waypointURI: URL?) -> [LightModel]?
     func getRadioBeacon(waypointURI: URL?) -> RadioBeaconModel?
+    func getNavigationalWarning(waypointURI: URL?) -> NavigationalWarningModel?
 }
 
 class RouteWaypointCoreDataDataSource: RouteWaypointLocalDataSource, ObservableObject {
@@ -109,6 +110,21 @@ class RouteWaypointCoreDataDataSource: RouteWaypointLocalDataSource, ObservableO
                let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
                 let dataSource = waypoint.decodeToDataSource()
                 if let dataSource = dataSource as? RadioBeaconModel {
+                    return dataSource
+                }
+            }
+        }
+        return nil
+    }
+
+    func getNavigationalWarning(waypointURI: URL?) -> NavigationalWarningModel? {
+        if let waypointURI = waypointURI {
+            if let id = context.persistentStoreCoordinator?.managedObjectID(
+                forURIRepresentation: waypointURI
+            ),
+               let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
+                let dataSource = waypoint.decodeToDataSource()
+                if let dataSource = dataSource as? NavigationalWarningModel {
                     return dataSource
                 }
             }

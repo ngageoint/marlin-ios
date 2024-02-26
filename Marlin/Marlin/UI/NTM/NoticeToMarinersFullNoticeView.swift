@@ -52,6 +52,7 @@ struct NoticeToMarinersFullNoticeView: View {
         .navigationTitle("Notice \(viewModel.noticeNumberString ?? "")")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
+            viewModel.setupModel(noticeNumber: noticeNumber)
             viewModel.repository = noticeToMarinersRepository
             viewModel.getNotices(noticeNumber: noticeNumber)
             viewModel.loadGraphics()

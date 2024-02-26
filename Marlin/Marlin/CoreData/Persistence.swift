@@ -480,16 +480,12 @@ extension CoreDataPersistentStore {
             for transaction in history {
                 NSLog("Transaction author \(transaction.author ?? "No author")")
                 let notif = transaction.objectIDNotification()
-                NSLog("notif user info \(notif.userInfo)")
                 let inserts: Set<NSManagedObjectID> =
                 notif.userInfo?["inserted_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
                 let updates: Set<NSManagedObjectID> =
                 notif.userInfo?["updated_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
                 let deletes: Set<NSManagedObjectID> =
                 notif.userInfo?["deleted_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
-                NSLog("Inserts: \(inserts)")
-                NSLog("Updates: \(updates)")
-                NSLog("Delete: \(updates)")
                 for insert in inserts {
                     let entityKey = entityMap[insert.entity.name]
                     insertCounts[entityKey] = (insertCounts[entityKey] ?? 0) + 1

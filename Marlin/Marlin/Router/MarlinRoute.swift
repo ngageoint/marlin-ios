@@ -60,6 +60,11 @@ enum DifferentialGPSStationRoute: Hashable {
     case detail(featureNumber: Int, volumeNumber: String)
 }
 
+enum NavigationalWarningRoute: Hashable {
+    case detail(msgYear: Int, msgNumber: Int, navArea: String)
+    case areaList(navArea: String)
+}
+
 enum DataSourceRoute: Hashable {
     case detail(dataSourceKey: String, itemKey: String)
 }
@@ -128,11 +133,13 @@ struct MarlinRouteModifier: ViewModifier {
                     case DataSources.port.key:
                         PortDetailView(portNumber: Int64(itemKey))
                     case DataSources.navWarning.key:
-
-                        if let navWarning = NavigationalWarning.getItem(
-                            context: PersistenceController.current.viewContext,
-                            itemKey: itemKey) as? NavigationalWarning {
-                            NavigationalWarningDetailView(navigationalWarning: navWarning)
+                        let split = itemKey.split(separator: "--")
+                        if split.count == 3 {
+                            NavigationalWarningDetailView(
+                                msgYear: Int(split[0]) ?? -1,
+                                msgNumber: Int(split[1]) ?? -1,
+                                navArea: "\(split[2])"
+                            )
                         }
                     case DataSources.noticeToMariners.key:
                         if let noticeNumber = Int(itemKey) {
@@ -169,7 +176,7 @@ struct MarlinRouteModifier: ViewModifier {
                     case DataSources.route.key:
                         CreateRouteView(routeURI: URL(string: itemKey))
                     default:
-                        EmptyView()
+                        Text("no default")
                     }
                 case .dataSourceRouteDetail(let dataSourceKey, let itemKey, let waypointURI):
                     switch dataSourceKey {
@@ -204,7 +211,7 @@ struct MarlinRouteModifier: ViewModifier {
                                 waypointURI: waypointURI)
                         }
                     default:
-                        EmptyView()
+                        Text("no default")
                     }
                 }
             }
@@ -306,6 +313,25 @@ struct MarlinRouteModifier: ViewModifier {
                     NoticesList()
                 case .chartQuery:
                     ChartCorrectionQuery()
+                }
+            }
+            .navigationDestination(for: NavigationalWarningRoute.self) { item in
+                switch item {
+                case .detail(let msgYear, let msgNumber, let navArea):
+                    // disable this rule in order to execute a statement prior to returning a view
+                    // swiftlint:disable redundant_discardable_let
+                    let _ = NotificationCenter.default.post(
+                        name: .DismissBottomSheet,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    // swiftlint:enable redundant_discardable_let
+                    NavigationalWarningDetailView(msgYear: msgYear, msgNumber: msgNumber, navArea: navArea)
+                case .areaList(let navArea):
+                    NavigationalWarningNavAreaListView(
+                        navArea: navArea,
+                        mapName: "Navigational Warning List View Map"
+                    )
                 }
             }
             .navigationDestination(for: ItemWrapper.self) { item in

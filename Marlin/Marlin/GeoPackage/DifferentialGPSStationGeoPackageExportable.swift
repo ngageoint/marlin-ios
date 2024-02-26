@@ -13,6 +13,11 @@ import sf_ios
 class DifferentialGPSStationGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.dgps
 
+    let differentialGPSStationRepository: DifferentialGPSStationRepository
+    init(differentialGPSStationRepository: DifferentialGPSStationRepository) {
+        self.differentialGPSStationRepository = differentialGPSStationRepository
+    }
+
     func createFeatures(
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,
@@ -22,11 +27,7 @@ class DifferentialGPSStationGeoPackageExportable: GeoPackageExportable {
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
 
-        guard let repository = MSI.shared.differentialGPSStationRepository else {
-            return
-        }
-
-        let models = await repository.getDifferentialGPSStations(filters: (filters ?? []) + (commonFilters ?? []))
+        let models = await differentialGPSStationRepository.getDifferentialGPSStations(filters: (filters ?? []) + (commonFilters ?? []))
         var exported = 0
         for model in models {
             createFeature(model: model, sfGeometry: model.sfGeometry, geoPackage: geoPackage, table: table, styleRows: styleRows)

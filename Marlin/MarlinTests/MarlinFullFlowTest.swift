@@ -13,9 +13,6 @@ import SwiftUI
 
 final class MarlinFullFlowTest: XCTestCase {
 
-    func testLoading() {
-        XCTFail()
-    }
 //    var cancellable = Set<AnyCancellable>()
 //    var persistentStore: PersistentStore = PersistenceController.shared
 //    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)

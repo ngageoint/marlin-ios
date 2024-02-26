@@ -38,6 +38,11 @@ extension NavigationalWarningNavArea {
         name: "12",
         display: "NAVAREA XII",
         color: UIColor(argbValue: 0xFF8BCC6B))
+    static let UNKNOWN = NavigationalWarningNavArea(
+        name: "Unknown",
+        display: "Unknown",
+        color: UIColor.systemGray
+    )
 
     static func areas() -> [NavigationalWarningNavArea] {
         return [

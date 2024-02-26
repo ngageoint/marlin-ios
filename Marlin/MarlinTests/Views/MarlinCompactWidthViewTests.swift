@@ -14,9 +14,6 @@ import CoreLocation
 
 final class MarlinCompactWidthViewTests: XCTestCase {
 
-    func testLoading() {
-        XCTFail()
-    }
 //    let scheme = MarlinScheme()
 //    var cancellable = Set<AnyCancellable>()
 //    var persistentStore: PersistentStore = PersistenceController.shared

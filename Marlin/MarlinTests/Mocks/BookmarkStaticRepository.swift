@@ -19,6 +19,8 @@ class BookmarkStaticRepository: BookmarkRepository {
     let radioBeaconRepository: RadioBeaconRepository?
     let noticeToMarinersRepository: NoticeToMarinersRepository?
     let electronicPublicationRepository: ElectronicPublicationRepository?
+    let navigationalWarningRepository: NavigationalWarningRepository?
+    let differentialGPSStationRepository: DifferentialGPSStationRepository?
 
     init(
         asamRepository: AsamRepository? = nil,
@@ -28,7 +30,9 @@ class BookmarkStaticRepository: BookmarkRepository {
         portRepository: PortRepository? = nil,
         radioBeaconRepository: RadioBeaconRepository? = nil,
         noticeToMarinersRepository: NoticeToMarinersRepository? = nil,
-        electronicPublicationRepository: ElectronicPublicationRepository? = nil
+        electronicPublicationRepository: ElectronicPublicationRepository? = nil,
+        navigationalWarningRepository: NavigationalWarningRepository? = nil,
+        differentialGPSStationRepository: DifferentialGPSStationRepository? = nil
     ) {
         self.asamRepository = asamRepository
         self.dgpsRepository = dgpsRepository
@@ -38,6 +42,8 @@ class BookmarkStaticRepository: BookmarkRepository {
         self.radioBeaconRepository = radioBeaconRepository
         self.noticeToMarinersRepository = noticeToMarinersRepository
         self.electronicPublicationRepository = electronicPublicationRepository
+        self.navigationalWarningRepository = navigationalWarningRepository
+        self.differentialGPSStationRepository = differentialGPSStationRepository
     }
     func createBookmark(notes: String?, itemKey: String, dataSource: String) async {
         let model = BookmarkModel(dataSource: dataSource, id: itemKey, itemKey: itemKey, notes: notes, timestamp: Date())
@@ -59,6 +65,7 @@ class BookmarkStaticRepository: BookmarkRepository {
 
     func getDataSourceItem(itemKey: String, dataSource: String) -> (any Bookmarkable)? {
         NSLog("GetDataSource Item: Bookmarks is \(bookmarks)")
+        let split = itemKey.split(separator: "--")
         switch dataSource {
         case DataSources.asam.key:
             return asamRepository?.getAsam(reference: itemKey)
@@ -66,14 +73,17 @@ class BookmarkStaticRepository: BookmarkRepository {
             return moduRepository?.getModu(name: itemKey)
         case DataSources.port.key:
             return portRepository?.getPort(portNumber: Int64(itemKey))
-//        case NavigationalWarning.key:
-//            if let context = context {
-//                return NavigationalWarning.getItem(context: context, itemKey: self.id)
-//            }
+        case NavigationalWarning.key:
+            if split.count == 3 {
+                return navigationalWarningRepository?.getNavigationalWarning(
+                    msgYear: Int64(split[0]) ?? 0,
+                    msgNumber: Int64(split[1]) ?? 0,
+                    navArea: "\(split[2])"
+                )
+            }
         case DataSources.noticeToMariners.key:
-            return noticeToMarinersRepository?.getNoticeToMariners(noticeNumber: Int(itemKey))
+            return noticeToMarinersRepository?.getNoticesToMariners(noticeNumber: Int(itemKey))?.first
         case DataSources.dgps.key:
-            let split = itemKey.split(separator: "--")
             if split.count == 2 {
                 return dgpsRepository?.getDifferentialGPSStation(
                     featureNumber: Int(split[0]) ?? -1,
@@ -81,7 +91,6 @@ class BookmarkStaticRepository: BookmarkRepository {
                 )
             }
         case DataSources.light.key:
-            let split = itemKey.split(separator: "--")
             if split.count == 3 {
                 return lightRepository?.getCharacteristic(
                     featureNumber: "\(split[0])",
@@ -90,7 +99,6 @@ class BookmarkStaticRepository: BookmarkRepository {
                 )
             }
         case DataSources.radioBeacon.key:
-            let split = itemKey.split(separator: "--")
             if split.count == 2 {
                 return radioBeaconRepository?.getRadioBeacon(
                     featureNumber: Int(split[0]) ?? -1,

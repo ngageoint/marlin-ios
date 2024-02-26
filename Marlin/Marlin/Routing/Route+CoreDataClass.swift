@@ -47,6 +47,9 @@ class RouteWaypoint: NSManagedObject {
                     case DataSources.radioBeacon.key:
                         let rbModel = RadioBeaconModel(feature: featureCollection.features[0])
                         return rbModel
+                    case DataSources.navWarning.key:
+                        let nwModel = NavigationalWarningModel(feature: featureCollection.features[0])
+                        return nwModel
                     case CommonDataSource.key:
                         let commonModel = CommonDataSource(feature: featureCollection.features[0])
                         return commonModel

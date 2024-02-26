@@ -53,6 +53,10 @@ extension NavigationalWarning: Bookmarkable {
 }
 
 extension NavigationalWarning: Locatable, GeoJSONExportable {
+    var itemTitle: String {
+        return "\(self.navAreaName) \(String(self.msgNumber))/\(String(self.msgYear)) (\(self.subregion ?? ""))"
+    }
+
     static var definition: any DataSourceDefinition = DataSources.navWarning
 
     var sfGeometry: SFGeometry? {

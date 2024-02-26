@@ -13,6 +13,11 @@ import sf_ios
 class RadioBeaconGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.radioBeacon
 
+    let radioBeaconRepository: RadioBeaconRepository
+    init(radioBeaconRepository: RadioBeaconRepository) {
+        self.radioBeaconRepository = radioBeaconRepository
+    }
+
     func createFeatures(
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,
@@ -21,12 +26,7 @@ class RadioBeaconGeoPackageExportable: GeoPackageExportable {
         styleRows: [GPKGStyleRow],
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
-
-        guard let repository = MSI.shared.radioBeaconRepository else {
-            return
-        }
-
-        let models = await repository.getRadioBeacons(filters: (filters ?? []) + (commonFilters ?? []))
+        let models = await radioBeaconRepository.getRadioBeacons(filters: (filters ?? []) + (commonFilters ?? []))
         var exported = 0
         for model in models {
             createFeature(model: model, sfGeometry: model.sfGeometry, geoPackage: geoPackage, table: table, styleRows: styleRows)

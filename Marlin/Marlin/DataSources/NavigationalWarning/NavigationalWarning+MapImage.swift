@@ -11,6 +11,10 @@ import MapKit
 import sf_wkt_ios
 
 extension NavigationalWarning: MapImage {
+    static var image: UIImage? {
+        return nil
+    }
+    
     static var cacheTiles: Bool = false
 
     func distanceCircle(

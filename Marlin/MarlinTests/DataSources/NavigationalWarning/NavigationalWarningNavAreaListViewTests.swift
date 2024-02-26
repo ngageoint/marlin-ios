@@ -106,7 +106,10 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough(navArea: "4", warnings: warnings)
         
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        
+        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
+
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
 
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
@@ -177,8 +180,9 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
 
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
         let container = Container(passThrough: passThrough)
             .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(appState)
@@ -257,8 +261,9 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough(navArea: "4", warnings: warnings)
         
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
 
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)
@@ -334,8 +339,9 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough(navArea: "4", warnings: warnings)
         
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
 
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)
@@ -412,8 +418,9 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough(navArea: "4", warnings: warnings)
         
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
 
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
         UserDefaults.standard.setValue(warnings[5].primaryKey, forKey: "lastSeen-4")
         
         let container = Container(passThrough: passThrough)
@@ -495,8 +502,9 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         
         UserDefaults.standard.setValue("no", forKey: "lastSeen-4")
         
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
 
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)

@@ -464,9 +464,7 @@ extension LightCoreDataDataSource {
         await context.perform {
             if let objects = try? context.fetch(fetchRequest) {
                 if !objects.isEmpty {
-                    NSLog("there are \(objects.count) lights to process")
                     for light in objects {
-                        NSLog("light \(light)")
                         var ranges: [LightRange] = []
                         light.requiresPostProcessing = false
                         if let rangeString = light.range {
@@ -486,9 +484,7 @@ extension LightCoreDataDataSource {
                                 }
                             }
                         }
-                        NSLog("appending ranges \(ranges)")
                         light.lightRange = NSSet(array: ranges)
-                        NSLog("Light range is \(light.lightRange)")
                     }
                 }
             }

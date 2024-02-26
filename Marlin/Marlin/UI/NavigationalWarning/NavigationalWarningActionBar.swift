@@ -19,25 +19,25 @@ struct NavigationalWarningActionBar: View {
     var body: some View {
         HStack(spacing: 0) {
             if showMoreDetails {
-                Button(
-                    action: {
-                        NotificationCenter.default.post(
-                            name: .ViewDataSource,
-                            object: ViewDataSource(mapName: mapName, dataSource: self.navigationalWarning)
-                        )
-                    },
-                    label: {
-                        Text("More Details")
-                            .foregroundColor(Color.primaryColorVariant)
-                    }
-                )
+//                Button(
+//                    action: {
+//                        NotificationCenter.default.post(
+//                            name: .ViewDataSource,
+//                            object: ViewDataSource(mapName: mapName, dataSource: self.navigationalWarning)
+//                        )
+//                    },
+//                    label: {
+//                        Text("More Details")
+//                            .foregroundColor(Color.primaryColorVariant)
+//                    }
+//                )
             }
             Spacer()
             BookmarkButton(viewModel: bookmarkViewModel)
-            ShareButton(shareText: navigationalWarning.description, dataSource: navigationalWarning)
-            if !showMoreDetails {
-                FocusButton(data: navigationalWarning)
-            }
+//            ShareButton(shareText: navigationalWarning.description, dataSource: navigationalWarning)
+//            if !showMoreDetails {
+//                FocusButton(data: navigationalWarning)
+//            }
         }
         .buttonStyle(MaterialButtonStyle())
         .onAppear {

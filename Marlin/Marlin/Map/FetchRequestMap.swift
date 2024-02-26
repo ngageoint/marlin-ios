@@ -16,11 +16,13 @@ class DataSourceMap: MapMixin {
     var cancellable = Set<AnyCancellable>()
     var minZoom = 2
 
-    var repository: TileRepository
+    var repository: TileRepository?
+    var mapFeatureRepository: MapFeatureRepository?
 
     var mapState: MapState?
     var lastChange: Date?
-    var overlay: DataSourceTileOverlay?
+    var overlays: [MKOverlay] = []
+    var annotations: [MKAnnotation] = []
 
     var focusNotificationName: Notification.Name?
 
@@ -28,11 +30,17 @@ class DataSourceMap: MapMixin {
     var orderPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Int>?
 
     var show = false
-    var repositoryAlwaysShow = false
+    var repositoryAlwaysShow: Bool {
+        repository?.alwaysShow ?? mapFeatureRepository?.alwaysShow ?? false
+    }
 
-    init(repository: TileRepository) {
+    var dataSourceKey: String {
+        repository?.dataSource.key ?? mapFeatureRepository?.dataSource.key ?? ""
+    }
+
+    init(repository: TileRepository? = nil, mapFeatureRepository: MapFeatureRepository? = nil) {
         self.repository = repository
-        self.repositoryAlwaysShow = repository.alwaysShow
+        self.mapFeatureRepository = mapFeatureRepository
     }
 
     func setupMixin(mapState: MapState, mapView: MKMapView) {
@@ -64,7 +72,7 @@ class DataSourceMap: MapMixin {
     }
 
     func updateMixin(mapView: MKMapView, mapState: MapState) {
-        var stateKey = "FetchRequestMixin\(repository.dataSource.key)DateUpdated"
+        var stateKey = "FetchRequestMixin\(dataSourceKey)DateUpdated"
         if lastChange == nil
             || lastChange != mapState.mixinStates[stateKey] as? Date {
             lastChange = mapState.mixinStates[stateKey] as? Date ?? Date()
@@ -75,50 +83,77 @@ class DataSourceMap: MapMixin {
                 }
             }
 
-            if let selfOverlay = self.overlay {
-                mapView.removeOverlay(selfOverlay)
+            for overlay in overlays {
+                mapView.removeOverlay(overlay)
             }
+            mapView.removeAnnotations(annotations)
 
             if !show && !repositoryAlwaysShow {
                 return
             }
-            let newOverlay = DataSourceTileOverlay(tileRepository: repository)
-            newOverlay.tileSize = CGSize(width: 512, height: 512)
-            newOverlay.minimumZ = self.minZoom
+            if let repository = repository {
+                let newOverlay = DataSourceTileOverlay(tileRepository: repository, key: dataSourceKey)
+                newOverlay.tileSize = CGSize(width: 512, height: 512)
+                newOverlay.minimumZ = self.minZoom
 
-            self.overlay = newOverlay
-            // find the right place
-            var mapOrder = UserDefaults.standard.dataSourceMapOrder(self.repository.dataSource.key)
-            if mapView.overlays(in: .aboveLabels).isEmpty {
-                mapView.insertOverlay(newOverlay, at: 0, level: .aboveLabels)
-            } else {
-                for added in mapView.overlays(in: .aboveLabels) {
-                    if let added = added as? any PredicateBasedTileOverlay,
-                        let key = added.key,
-                       let addedOverlay = added as? MKTileOverlay {
-                        let addedOrder = UserDefaults.standard.dataSourceMapOrder(key)
-                        if addedOrder < mapOrder {
-                            mapView.insertOverlay(newOverlay, below: addedOverlay)
-                            return
-                        }
+                overlays.append(newOverlay)
+                addFeatures(features: AnnotationsAndOverlays(annotations: [], overlays: overlays), mapView: mapView)
+            }
+
+            Task {
+                let features = await mapFeatureRepository?.getAnnotationsAndOverlays()
+                if let features = features {
+                    annotations.append(contentsOf: features.annotations)
+                    overlays.append(contentsOf: features.overlays)
+                    await MainActor.run {
+                        addFeatures(features: features, mapView: mapView)
                     }
                 }
             }
+        }
+    }
 
-            mapView.insertOverlay(newOverlay, at: mapView.overlays(in: .aboveLabels).count, level: .aboveLabels)
+    func addFeatures(features: AnnotationsAndOverlays, mapView: MKMapView) {
+        mapView.addAnnotations(features.annotations)
+
+        // find the right place
+        var mapOrder = UserDefaults.standard.dataSourceMapOrder(dataSourceKey)
+        if mapView.overlays(in: .aboveLabels).isEmpty {
+            for overlay in features.overlays {
+                mapView.insertOverlay(overlay, at: 0, level: .aboveLabels)
+            }
+        } else {
+            for added in mapView.overlays(in: .aboveLabels) {
+                if let added = added as? any DataSourceOverlay,
+                   let key = added.key,
+                   let addedOverlay = added as? MKTileOverlay {
+                    let addedOrder = UserDefaults.standard.dataSourceMapOrder(key)
+                    if addedOrder < mapOrder {
+                        for overlay in features.overlays {
+                            mapView.insertOverlay(overlay, below: addedOverlay)
+                        }
+                        return
+                    }
+                }
+            }
+        }
+
+        for overlay in features.overlays {
+            mapView.insertOverlay(overlay, at: mapView.overlays(in: .aboveLabels).count, level: .aboveLabels)
         }
     }
 
     func removeMixin(mapView: MKMapView, mapState: MapState) {
-        if let overlay = self.overlay {
+        for overlay in overlays {
             mapView.removeOverlay(overlay)
         }
+        mapView.removeAnnotations(annotations)
     }
 
     func refreshOverlay(mapState: MapState) {
         DispatchQueue.main.async {
             self.mapState?.mixinStates[
-                "FetchRequestMixin\(self.repository.dataSource.key)DateUpdated"
+                "FetchRequestMixin\(self.dataSourceKey)DateUpdated"
             ] = Date()
         }
     }
@@ -130,10 +165,10 @@ class DataSourceMap: MapMixin {
                 $0.object as? DataSourceUpdatedNotification
             }
             .sink { item in
-                let key = self.repository.dataSource.key
+                let key = self.dataSourceKey
                 if item.key == key {
                     NSLog("New data for \(key), refresh overlay, clear the cache")
-                    self.repository.clearCache(completion: {
+                    self.repository?.clearCache(completion: {
                         self.refreshOverlay(mapState: mapState)
                     })
                 }
@@ -147,7 +182,7 @@ class DataSourceMap: MapMixin {
             .receive(on: RunLoop.main)
             .sink { [weak self] show in
                 self?.show = show
-                NSLog("Show \(self?.repository.dataSource.key ?? ""): \(show)")
+                NSLog("Show \(self?.dataSourceKey ?? ""): \(show)")
                 self?.refreshOverlay(mapState: mapState)
             }
             .store(in: &cancellable)
@@ -157,7 +192,7 @@ class DataSourceMap: MapMixin {
         orderPublisher?
             .removeDuplicates()
             .sink { [weak self] order in
-                NSLog("Order update \(self?.repository.dataSource.key ?? ""): \(order)")
+                NSLog("Order update \(self?.dataSourceKey ?? ""): \(order)")
 
                 self?.refreshOverlay(mapState: mapState)
             }
@@ -191,13 +226,21 @@ class DataSourceMap: MapMixin {
         let maxLat = location.latitude + tolerance
 
         return [
-            repository.dataSource.key: repository.getItemKeys(
+            dataSourceKey: repository?.getItemKeys(
                 minLatitude: minLat,
                 maxLatitude: maxLat,
                 minLongitude: minLon,
                 maxLongitude: maxLon
-            )
+            ) ?? []
         ]
+    }
+
+    func renderer(overlay: MKOverlay) -> MKOverlayRenderer? {
+        standardRenderer(overlay: overlay)
+    }
+
+    func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
+        return nil
     }
 
 }

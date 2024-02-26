@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct NavigationalWarningSummaryView: DataSourceSummaryView {
+    @EnvironmentObject var router: MarlinRouter
     @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     
@@ -16,7 +17,7 @@ struct NavigationalWarningSummaryView: DataSourceSummaryView {
     
     var showBookmarkNotes: Bool = false
 
-    var navigationalWarning: NavigationalWarning
+    var navigationalWarning: NavigationalWarningModel
     var showMoreDetails: Bool = false
     var mapName: String?
     var showTitle: Bool = true
@@ -33,11 +34,26 @@ struct NavigationalWarningSummaryView: DataSourceSummaryView {
                 .multilineTextAlignment(.leading)
                 .lineLimit(8)
                 .secondary()
-            bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
-            NavigationalWarningActionBar(
-                navigationalWarning: navigationalWarning,
-                showMoreDetails: showMoreDetails,
-                mapName: mapName
+            if navigationalWarning.canBookmark {
+                bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
+            }
+            DataSourceActions(
+                moreDetails: showMoreDetails ? NavigationalWarningActions.Tap(
+                    msgYear: navigationalWarning.msgYear,
+                    msgNumber: navigationalWarning.msgNumber,
+                    navArea: navigationalWarning.navArea,
+                    path: $router.path
+                ) : nil,
+                location: Actions.Location(latLng: navigationalWarning.coordinate),
+                zoom: !showMoreDetails ? NavigationalWarningActions.Zoom(
+                    latLng: navigationalWarning.coordinate,
+                    itemKey: navigationalWarning.itemKey
+                ) : nil,
+                bookmark: navigationalWarning.canBookmark ? Actions.Bookmark(
+                    itemKey: navigationalWarning.itemKey,
+                    bookmarkViewModel: bookmarkViewModel
+                ) : nil,
+                share: navigationalWarning.itemTitle
             )
         }
         .onAppear {

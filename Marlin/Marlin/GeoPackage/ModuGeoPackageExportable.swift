@@ -13,6 +13,10 @@ import sf_ios
 class ModuGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.modu
 
+    let moduRepository: ModuRepository
+    init(moduRepository: ModuRepository) {
+        self.moduRepository = moduRepository
+    }
     func createFeatures(
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,
@@ -21,12 +25,7 @@ class ModuGeoPackageExportable: GeoPackageExportable {
         styleRows: [GPKGStyleRow],
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
-
-        guard let repository = MSI.shared.moduRepository else {
-            return
-        }
-
-        let modus = await repository.getModus(filters: (filters ?? []) + (commonFilters ?? []))
+        let modus = await moduRepository.getModus(filters: (filters ?? []) + (commonFilters ?? []))
         var exported = 0
         for modu in modus {
             createFeature(model: modu, sfGeometry: modu.sfGeometry, geoPackage: geoPackage, table: table, styleRows: styleRows)

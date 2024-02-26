@@ -226,7 +226,7 @@ final class NoticeToMarinersDataTests: XCTestCase {
 
         XCTAssertEqual(repository.getCount(filters: nil), 23)
 
-        let newNtm = repository.getNoticeToMariners(noticeNumber: 202248)
+        let newNtm = repository.getNoticeToMariners(odsEntryId: 29432)
 
         XCTAssertEqual(newNtm?.noticeNumber, 202248)
     }

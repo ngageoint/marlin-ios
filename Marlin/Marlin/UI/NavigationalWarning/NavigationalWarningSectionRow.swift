@@ -21,24 +21,25 @@ struct NavigationalWarningSection: Hashable {
 }
 
 struct NavigationalWarningSectionRow: View {
-    var section: SectionedFetchResults<String, NavigationalWarning>.Element
+    var navAreaInformation: NavigationalAreaInformation
+//    var section: SectionedFetchResults<String, NavigationalWarning>.Element
     var mapName: String?
     
     var body: some View {
-        NavigationLink(value: NavigationalWarningSection(id: section.id, warnings: [NavigationalWarning](section))) {
+        NavigationLink(value: NavigationalWarningRoute.areaList(navArea: navAreaInformation.navArea.name)) {
             HStack {
                 VStack(alignment: .leading) {
-                    Text(NavigationalWarningNavArea.fromId(id: section.id)?.display ?? "")
+                    Text(NavigationalWarningNavArea.fromId(id: navAreaInformation.navArea.name)?.display ?? "")
                         .font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.87)
-                    Text("\(section.count) Active")
+                    Text("\(navAreaInformation.total) Active")
                         .font(Font.caption)
                         .foregroundColor(Color.onSurfaceColor)
                         .opacity(0.6)
                 }
                 Spacer()
-                NavigationalWarningAreaUnreadBadge(navArea: section.id, warnings: [NavigationalWarning](section))
+                NavigationalWarningAreaUnreadBadge(unreadCount: navAreaInformation.unread)
             }
         }
         .isDetailLink(false)
@@ -49,7 +50,7 @@ struct NavigationalWarningSectionRow: View {
         .background(
             HStack {
                 Rectangle()
-                    .fill(Color(NavigationalWarningNavArea.fromId(id: section.id)?.color ?? UIColor.clear))
+                    .fill(Color(NavigationalWarningNavArea.fromId(id: navAreaInformation.navArea.name)?.color ?? UIColor.clear))
                     .frame(maxWidth: 6, maxHeight: .infinity)
                 Spacer()
             }

@@ -34,13 +34,13 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         ntm.lastModified = DataSources.noticeToMariners.dateFormatter.date(from: "2022-11-08T12:28:33.961Z")
 
         let localDataSource = NoticeToMarinersStaticLocalDataSource()
-        localDataSource.map[ntm.noticeNumber ?? -1] = ntm
-        localDataSource.deleteFile(noticeNumber: ntm.noticeNumber ?? -1)
+        localDataSource.map[ntm.odsEntryId ?? -1] = ntm
+        localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
         let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
         let bookmarkStaticRepository = BookmarkStaticRepository(noticeToMarinersRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
 
-        let summaryView = NoticeToMarinersFileSummaryView(noticeNumber: ntm.noticeNumber!)
+        let summaryView = NoticeToMarinersFileSummaryView(odsEntryId: ntm.odsEntryId!)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
@@ -72,8 +72,8 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         ntm.lastModified = DataSources.noticeToMariners.dateFormatter.date(from: "2022-11-08T12:28:33.961Z")
 
         let localDataSource = NoticeToMarinersStaticLocalDataSource()
-        localDataSource.map[ntm.noticeNumber ?? -1] = ntm
-        localDataSource.deleteFile(noticeNumber: ntm.noticeNumber ?? -1)
+        localDataSource.map[ntm.odsEntryId ?? -1] = ntm
+        localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
         let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
         let bookmarkStaticRepository = BookmarkStaticRepository(noticeToMarinersRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
@@ -114,13 +114,13 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         ntm.isDownloading = true
 
         let localDataSource = NoticeToMarinersStaticLocalDataSource()
-        localDataSource.map[ntm.noticeNumber ?? -1] = ntm
-        localDataSource.deleteFile(noticeNumber: ntm.noticeNumber ?? -1)
+        localDataSource.map[ntm.odsEntryId ?? -1] = ntm
+        localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
         let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
         let bookmarkStaticRepository = BookmarkStaticRepository(noticeToMarinersRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
 
-        let summaryView = NoticeToMarinersFileSummaryView(noticeNumber: ntm.noticeNumber!)
+        let summaryView = NoticeToMarinersFileSummaryView(odsEntryId: ntm.odsEntryId!)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
@@ -145,7 +145,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Download")
         tester().tapView(withAccessibilityLabel: "Download")
         
-        let progressExpectation = expectation(for: repository.getNoticeToMariners(noticeNumber: ntm.noticeNumber!)?.downloadProgress == 1.0)
+        let progressExpectation = expectation(for: repository.getNoticeToMariners(odsEntryId: ntm.odsEntryId!)?.downloadProgress == 1.0)
 
         wait(for: [progressExpectation], timeout: 5)
 
@@ -160,9 +160,9 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Open")
         waitForExpectations(timeout: 10, handler: nil)
         
-        XCTAssertTrue(repository.checkFileExists(id: ntm.noticeNumber ?? -1))
+        XCTAssertTrue(repository.checkFileExists(odsEntryId: ntm.odsEntryId ?? -1))
         tester().tapView(withAccessibilityLabel: "Delete")
-        XCTAssertFalse(repository.checkFileExists(id: ntm.noticeNumber ?? -1))
+        XCTAssertFalse(repository.checkFileExists(odsEntryId: ntm.odsEntryId ?? -1))
     }
     
     func testDownloadFullPublication() {
@@ -187,13 +187,13 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         ntm.isDownloading = false
 
         let localDataSource = NoticeToMarinersStaticLocalDataSource()
-        localDataSource.map[ntm.noticeNumber ?? -1] = ntm
-        localDataSource.deleteFile(noticeNumber: ntm.noticeNumber ?? -1)
+        localDataSource.map[ntm.odsEntryId ?? -1] = ntm
+        localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
         let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
         let bookmarkStaticRepository = BookmarkStaticRepository(noticeToMarinersRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
 
-        let summaryView = NoticeToMarinersFileSummaryView(noticeNumber: ntm.noticeNumber!)
+        let summaryView = NoticeToMarinersFileSummaryView(odsEntryId: ntm.odsEntryId!)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
@@ -219,7 +219,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Download")
         tester().tapView(withAccessibilityLabel: "Download")
         
-        let progressExpectation = expectation(for: repository.getNoticeToMariners(noticeNumber: ntm.noticeNumber!)?.downloadProgress == 1.0)
+        let progressExpectation = expectation(for: repository.getNoticeToMariners(odsEntryId: ntm.odsEntryId!)?.downloadProgress == 1.0)
 
         wait(for: [progressExpectation], timeout: 5)
 
@@ -234,9 +234,9 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Open")
         waitForExpectations(timeout: 10, handler: nil)
         
-        XCTAssertTrue(repository.checkFileExists(id: ntm.noticeNumber ?? -1))
+        XCTAssertTrue(repository.checkFileExists(odsEntryId: ntm.odsEntryId ?? -1))
         tester().tapView(withAccessibilityLabel: "Delete")
-        XCTAssertFalse(repository.checkFileExists(id: ntm.noticeNumber ?? -1))
+        XCTAssertFalse(repository.checkFileExists(odsEntryId: ntm.odsEntryId ?? -1))
     }
 
 }

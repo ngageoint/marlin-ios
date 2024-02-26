@@ -38,35 +38,29 @@ final class NavigationalWarningDetailTests: XCTestCase {
     }
     
     func testLoading() {
-        var newItem: NavigationalWarning?
-        persistentStore.viewContext.performAndWait {
-            let nw = NavigationalWarning(context: persistentStore.viewContext)
-            
-            nw.cancelMsgNumber = 1
-            nw.authority = "authority"
-            nw.cancelDate = Date(timeIntervalSince1970: 0)
-            nw.cancelMsgYear = 2020
-            nw.cancelNavArea = "P"
-            nw.issueDate = Date(timeIntervalSince1970: 0)
-            nw.msgNumber = 2
-            nw.msgYear = 2019
-            nw.navArea = "P"
-            nw.status = "status"
-            nw.subregion = "subregion"
-            nw.text = "text of the warning"
-            
-            newItem = nw
-            try? persistentStore.viewContext.save()
-        }
-        
-        guard let newItem = newItem else {
-            XCTFail()
-            return
-        }
-        
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let detailView = newItem.detailView.environment(\.managedObjectContext, persistentStore.viewContext)
+        var newItem = NavigationalWarningModel()
+
+        newItem.cancelMsgNumber = 1
+        newItem.authority = "authority"
+        newItem.cancelDate = Date(timeIntervalSince1970: 0)
+        newItem.cancelMsgYear = 2020
+        newItem.cancelNavArea = "P"
+        newItem.issueDate = Date(timeIntervalSince1970: 0)
+        newItem.msgNumber = 2
+        newItem.msgYear = 2019
+        newItem.navArea = "P"
+        newItem.status = "status"
+        newItem.subregion = "subregion"
+        newItem.text = "text of the warning"
+
+        let localDataSource = NavigationalWarningStaticLocalDataSource()
+        localDataSource.list.append(newItem)
+        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
+
+        let bookmarkStaticRepository = BookmarkStaticRepository(navigationalWarningRepository: repository)
+        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let detailView = NavigationalWarningDetailView()
+//        newItem.detailView.environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: detailView)
@@ -95,6 +89,6 @@ final class NavigationalWarningDetailTests: XCTestCase {
         let textView = viewTester().usingLabel("Text").view as! UITextView
         XCTAssertEqual(textView.text, newItem.text)
         
-        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkStaticRepository, bookmarkable: newItem)
     }
 }

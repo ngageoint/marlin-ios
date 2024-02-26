@@ -19,16 +19,18 @@ class NavigationalWarningDataLoadOperation: CountingDataLoadOperation {
     }
 
     @MainActor override func finishLoad() {
-        Kingfisher.ImageCache(name: DataSources.navWarning.key).clearCache()
-        self.state = .isFinished
-
-        MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] = false
         if count != 0 {
-            NotificationCenter.default.post(
-                name: .DataSourceUpdated,
-                object: DataSourceUpdatedNotification(key: DataSources.navWarning.key)
-            )
+            Task {
+                await localDataSource.postProcess()
+                NotificationCenter.default.post(
+                    name: .DataSourceUpdated,
+                    object: DataSourceUpdatedNotification(key: DataSources.navWarning.key)
+                )
+            }
         }
+
+        self.state = .isFinished
+        MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] = false
     }
 
     override func loadData() async {

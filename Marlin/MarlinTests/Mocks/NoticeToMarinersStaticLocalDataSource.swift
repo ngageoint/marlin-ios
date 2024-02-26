@@ -12,21 +12,33 @@ import BackgroundTasks
 @testable import Marlin
 
 class NoticeToMarinersStaticLocalDataSource: NoticeToMarinersLocalDataSource {
+    func getNoticesToMariners(noticeNumber: Int?) -> [Marlin.NoticeToMarinersModel]? {
+        map.values.filter { model in
+            model.noticeNumber == noticeNumber
+        }
+    }
+    
+    func sectionHeaders(filters: [Marlin.DataSourceFilterParameter]?, paginatedBy paginator: Marlin.Trigger.Signal?) -> AnyPublisher<[Marlin.NoticeToMarinersItem], Error> {
+        AnyPublisher(Just(map.values.map({ model in
+            NoticeToMarinersItem.listItem(NoticeToMarinersListModel(noticeToMarinersModel:model))
+        })).setFailureType(to: Error.self))
+    }
+    
     var existsMap: [Int: Bool] = [:]
     var map: [Int: NoticeToMarinersModel] = [:]
     var subjectMap: [Int : PassthroughSubject<NoticeToMarinersModel, Never>] = [:]
 
-    func observeNoticeToMariners(noticeNumber: Int) -> AnyPublisher<Marlin.NoticeToMarinersModel, Never>? {
+    func observeNoticeToMariners(odsEntryId: Int) -> AnyPublisher<Marlin.NoticeToMarinersModel, Never>? {
         let subject = PassthroughSubject<NoticeToMarinersModel, Never>()
-        subjectMap[noticeNumber] = subject
-        if let model = map[noticeNumber] {
+        subjectMap[odsEntryId] = subject
+        if let model = map[odsEntryId] {
             return AnyPublisher(subject)
         }
         return nil
     }
     
-    func checkFileExists(noticeNumber: Int) -> Bool {
-        guard let epub = map[noticeNumber] else {
+    func checkFileExists(odsEntryId: Int) -> Bool {
+        guard let epub = map[odsEntryId] else {
             return false
         }
         var downloaded = false
@@ -34,53 +46,53 @@ class NoticeToMarinersStaticLocalDataSource: NoticeToMarinersLocalDataSource {
             downloaded = FileManager().fileExists(atPath: destinationUrl.path)
         }
         if downloaded != epub.isDownloaded {
-            var model = map[noticeNumber] ?? NoticeToMarinersModel()
+            var model = map[odsEntryId] ?? NoticeToMarinersModel()
             model.isDownloaded = true
-            existsMap[noticeNumber] = true
+            existsMap[odsEntryId] = true
 
-            map[noticeNumber] = model
-            if let subject = subjectMap[noticeNumber] {
+            map[odsEntryId] = model
+            if let subject = subjectMap[odsEntryId] {
                 subject.send(model)
             }
         }
-        return existsMap[noticeNumber] ?? false
+        return existsMap[odsEntryId] ?? false
     }
     
-    func deleteFile(noticeNumber: Int) {
-        guard let epub = map[noticeNumber] else {
+    func deleteFile(odsEntryId: Int) {
+        guard let epub = map[odsEntryId] else {
             return
         }
-        existsMap[noticeNumber] = false
+        existsMap[odsEntryId] = false
 
         if let destinationUrl = URL(string: epub.savePath) {
             try? FileManager().removeItem(atPath: destinationUrl.path)
         }
-        var model = map[noticeNumber] ?? NoticeToMarinersModel()
+        var model = map[odsEntryId] ?? NoticeToMarinersModel()
         model.isDownloaded = false
-        if let subject = subjectMap[noticeNumber] {
+        if let subject = subjectMap[odsEntryId] {
             subject.send(model)
         }
-        map[noticeNumber] = model
+        map[odsEntryId] = model
     }
     
-    func updateProgress(noticeNumber: Int, progress: Marlin.DownloadProgress) {
-        print("update progress \(noticeNumber) \(progress)")
-        var model = map[noticeNumber] ?? NoticeToMarinersModel()
+    func updateProgress(odsEntryId: Int, progress: Marlin.DownloadProgress) {
+        print("update progress \(odsEntryId) \(progress)")
+        var model = map[odsEntryId] ?? NoticeToMarinersModel()
         model.isDownloaded = progress.isDownloaded
         model.isDownloading = progress.isDownloading
         model.downloadProgress = progress.downloadProgress
         model.error = progress.error
         if progress.downloadProgress == 1.0 {
-            existsMap[noticeNumber] = true
+            existsMap[odsEntryId] = true
         }
-        if let subject = subjectMap[noticeNumber] {
+        if let subject = subjectMap[odsEntryId] {
             subject.send(model)
         }
-        map[noticeNumber] = model
+        map[odsEntryId] = model
     }
     
-    func getNoticeToMariners(noticeNumber: Int?) -> Marlin.NoticeToMarinersModel? {
-        map[noticeNumber ?? -1]
+    func getNoticeToMariners(odsEntryId: Int?) -> Marlin.NoticeToMarinersModel? {
+        map[odsEntryId ?? -1]
     }
     
     func getNewestNoticeToMariners() -> Marlin.NoticeToMarinersModel? {

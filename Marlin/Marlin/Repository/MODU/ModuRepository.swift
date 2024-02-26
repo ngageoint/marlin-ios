@@ -86,7 +86,7 @@ class ModuRepository: ObservableObject {
             if inserted != 0 {
                 NotificationCenter.default.post(
                     name: .DataSourceUpdated,
-                    object: DataSourceUpdatedNotification(key: DataSources.modu.key)
+                    object: DataSourceUpdatedNotification(key: DataSources.modu.key, inserts: inserted)
                 )
             }
         }

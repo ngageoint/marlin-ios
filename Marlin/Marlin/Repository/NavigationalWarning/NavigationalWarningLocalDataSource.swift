@@ -10,12 +10,14 @@ import CoreData
 import Combine
 import UIKit
 import BackgroundTasks
+import Kingfisher
 
 protocol NavigationalWarningLocalDataSource {
 
+    func getNavAreasInformation() async -> [NavigationalAreaInformation]
     func getNavigationalWarning(
-        msgYear: Int64,
-        msgNumber: Int64,
+        msgYear: Int,
+        msgNumber: Int,
         navArea: String?
     ) -> NavigationalWarningModel?
 
@@ -39,6 +41,7 @@ protocol NavigationalWarningLocalDataSource {
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
     func insert(task: BGTask?, navigationalWarnings: [NavigationalWarningModel]) async -> Int
     func batchImport(from propertiesList: [NavigationalWarningModel]) async throws -> Int
+    func postProcess() async
 }
 
 class NavigationalWarningCoreDataDataSource:
@@ -53,9 +56,44 @@ class NavigationalWarningCoreDataDataSource:
         PersistenceController.current.newTaskContext()
     }()
 
+    func getNavAreasInformation() async -> [NavigationalAreaInformation] {
+        let context = PersistenceController.current.newTaskContext()
+        return await context.perform {
+            var areaInformations: [NavigationalAreaInformation] = []
+            for area in NavigationalWarningNavArea.areas() {
+                let request = NavigationalWarning.fetchRequest()
+                request.predicate = NSPredicate(format: "navArea = %@", argumentArray: [area.name])
+                request.sortDescriptors = DataSources.navWarning.defaultSort.toNSSortDescriptors()
+                let count = try? context.count(for: request)
+                var unread = count
+                let lastSeen = UserDefaults.standard.string(forKey: "lastSeen-\(area.name)")
+                if let split = lastSeen?.split(separator: " "), split.count == 2 {
+                    let yearNumberSplit = split[1].split(separator: "/")
+                    if yearNumberSplit.count == 2 {
+                        let year = String(yearNumberSplit[1])
+                        let number = String(yearNumberSplit[0])
+                        if let year = Int(year), let number = Int(number) {
+                            let unreadRequest = NavigationalWarning.fetchRequest()
+                            unreadRequest.predicate = NSPredicate(
+                                format: "navArea = %@ AND ((msgYear = %d AND msgNumber > %d) OR (msgYear > %d))",
+                                argumentArray: [area.name, year, number, year]
+                            )
+                            unreadRequest.sortDescriptors = DataSources.navWarning.defaultSort.toNSSortDescriptors()
+                            unread = (try? context.count(for: unreadRequest)) ?? -1
+                        }
+                    }
+                }
+                areaInformations.append(
+                    NavigationalAreaInformation(navArea: area, unread: unread ?? 0, total: count ?? 0)
+                )
+            }
+            return areaInformations
+        }
+    }
+
     func getNavigationalWarning(
-        msgYear: Int64,
-        msgNumber: Int64,
+        msgYear: Int,
+        msgNumber: Int,
         navArea: String?
     ) -> ModelType? {
         return context.performAndWait {
@@ -164,6 +202,41 @@ class NavigationalWarningCoreDataDataSource:
         }
     }
 
+    func postProcess() async {
+        Kingfisher.ImageCache(name: DataSources.navWarning.key).clearCache()
+        DispatchQueue.global(qos: .utility).async {
+            let fetchRequest = NavigationalWarning.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "locations == nil")
+            let context = PersistenceController.current.newTaskContext()
+            context.performAndWait {
+                if let objects = try? context.fetch(fetchRequest), !objects.isEmpty {
+
+                    for warning in objects {
+                        if let mappedLocation = warning.mappedLocation {
+                            if let region = mappedLocation.region {
+                                warning.latitude = region.center.latitude
+                                warning.longitude = region.center.longitude
+                                warning.minLatitude = region.center.latitude - (region.span.latitudeDelta / 2.0)
+                                warning.maxLatitude = region.center.latitude + (region.span.latitudeDelta / 2.0)
+                                warning.minLongitude = region.center.longitude - (region.span.longitudeDelta / 2.0)
+                                warning.maxLongitude = region.center.longitude + (region.span.longitudeDelta / 2.0)
+                            }
+                            warning.locations = mappedLocation.wktDistance
+                        }
+                    }
+                }
+                do {
+                    try context.save()
+                } catch {
+                }
+            }
+
+            NotificationCenter.default.post(
+                Notification(
+                    name: .DataSourceProcessed,
+                    object: DataSourceUpdatedNotification(key: NavigationalWarning.key)))
+        }
+    }
 }
 
 // MARK: Data Publisher methods

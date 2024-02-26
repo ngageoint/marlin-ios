@@ -30,4 +30,7 @@ class RouteWaypointRepository: ObservableObject {
     func getRadioBeacon(waypointURI: URL?) -> RadioBeaconModel? {
         localDataSource.getRadioBeacon(waypointURI: waypointURI)
     }
+    func getNavigationalWarning(waypointURI: URL?) -> NavigationalWarningModel? {
+        localDataSource.getNavigationalWarning(waypointURI: waypointURI)
+    }
 }

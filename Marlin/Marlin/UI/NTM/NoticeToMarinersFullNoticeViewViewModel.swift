@@ -18,8 +18,30 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
 
     @Published var notices: [NoticeToMarinersModel] = []
 
-    init(noticeNumber: Int? = nil) {
+    func setupModel(noticeNumber: Int? = nil, noticeNumberString: String? = nil) {
         self.noticeNumber = noticeNumber
+        if let noticeNumberString = noticeNumberString {
+            let components = noticeNumberString.components(separatedBy: "/")
+            if components.count == 2 {
+                // notice to mariners that we can obtain only go back to 1999
+                if components[1] == "99" {
+                    if let noticeNumber =
+                        Int("19\(components[1])\(String(format: "%02d", Int(components[0]) ?? 0))") {
+                        self.noticeNumber = noticeNumber
+                    }
+                } else {
+                    if let noticeNumber =
+                        Int("20\(components[1])\(String(format: "%02d", Int(components[0]) ?? 0))") {
+                        self.noticeNumber = noticeNumber
+                    }
+                }
+            }
+        }
+        if let repository = repository {
+            if let noticeNumber = noticeNumber {
+                getNotices(noticeNumber: noticeNumber)
+            }
+        }
     }
 
     var repository: NoticeToMarinersRepository? {
@@ -43,6 +65,7 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
     }
 
     var noticeNumberString: String? {
+        print("notice number string for notice number \(noticeNumber)")
         if let noticeNumber = noticeNumber {
             return "\(Int(noticeNumber / 100) % 100)/\(noticeNumber % 100)"
         }

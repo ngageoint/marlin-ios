@@ -12,17 +12,6 @@ import CoreData
 import SwiftUI
 
 public class MSI {
-    
-    var asamRepository: AsamRepository?
-    var moduRepository: ModuRepository?
-    var portRepository: PortRepository?
-    var lightRepository: LightRepository?
-    var radioBeaconRepository: RadioBeaconRepository?
-    var differentialGPSStationRepository: DifferentialGPSStationRepository?
-    var electronicPublicationRepository: ElectronicPublicationRepository?
-    var navigationalWarningRepository: NavigationalWarningRepository?
-    var noticeToMarinersRepository: NoticeToMarinersRepository?
-    var routeRepository: RouteRepository?
 
     var asamInitializer: AsamInitializer?
     var moduInitializer: ModuInitializer?
@@ -47,16 +36,16 @@ public class MSI {
         noticeToMarinersRepository: NoticeToMarinersRepository,
         routeRepository: RouteRepository
     ) {
-        self.asamRepository = asamRepository
-        self.moduRepository = moduRepository
-        self.portRepository = portRepository
-        self.lightRepository = lightRepository
-        self.radioBeaconRepository = radioBeaconRepository
-        self.differentialGPSStationRepository = differentialGPSStationRepository
-        self.electronicPublicationRepository = electronicPublicationRepository
-        self.navigationalWarningRepository = navigationalWarningRepository
-        self.noticeToMarinersRepository = noticeToMarinersRepository
-        self.routeRepository = routeRepository
+//        self.asamRepository = asamRepository
+//        self.moduRepository = moduRepository
+//        self.portRepository = portRepository
+//        self.lightRepository = lightRepository
+//        self.radioBeaconRepository = radioBeaconRepository
+//        self.differentialGPSStationRepository = differentialGPSStationRepository
+//        self.electronicPublicationRepository = electronicPublicationRepository
+//        self.navigationalWarningRepository = navigationalWarningRepository
+//        self.noticeToMarinersRepository = noticeToMarinersRepository
+//        self.routeRepository = routeRepository
 
         asamInitializer = AsamInitializer(repository: asamRepository)
         moduInitializer = ModuInitializer(repository: moduRepository)
@@ -75,17 +64,13 @@ public class MSI {
         noticeToMarinersInitializer = NoticeToMarinersInitializer(
             repository: noticeToMarinersRepository
         )
+        registerBackgroundHandler()
     }
     // swiftlint:enable function_parameter_count
 
-//    var backgroundTask: UIBackgroundTaskIdentifier = .invalid
-    
-//    let logger = Logger(subsystem: "mil.nga.msi.Marlin", category: "persistence")
-    
-//    var cancellable = Set<AnyCancellable>()
-    
     var loading: Bool {
-        for dataSource in DataSourceDefinitions.allCases where self.appState.loadingDataSource[dataSource.definition.key] == true {
+        for dataSource in DataSourceDefinitions.allCases 
+        where self.appState.loadingDataSource[dataSource.definition.key] == true {
             return true
         }
         return false
@@ -110,114 +95,19 @@ public class MSI {
         let manager = ServerTrustManager(allHostsMustBeEvaluated: false, evaluators: [:])
         return Session(configuration: configuration, serverTrustManager: manager)
     }()
-    
-//    let mainDataList: [any BatchImportable.Type] = [
-//        Asam.self,
-//        Modu.self,
-//        NavigationalWarning.self,
-//        Light.self,
-//        Port.self,
-//        RadioBeacon.self,
-//        DifferentialGPSStation.self,
-//        DFRS.self,
-//        DFRSArea.self,
-//        ElectronicPublication.self,
-//        NoticeToMariners.self
-//    ]
 
-//    lazy var initialLoadQueue: OperationQueue = {
-//        var queue = OperationQueue()
-//        queue.maxConcurrentOperationCount = 1
-//        queue.name = "Initial data load queue"
-//        return queue
-//    }()
-    
-//    lazy var dataFetchQueue: OperationQueue = {
-//        var queue = OperationQueue()
-//        queue.maxConcurrentOperationCount = 1
-//        queue.name = "Data fetch queue"
-//        return queue
-//    }()
-//    
-//    lazy var backgroundFetchQueue: OperationQueue = {
-//        var queue = OperationQueue()
-//        queue.maxConcurrentOperationCount = 1
-//        queue.name = "Background fetch queue"
-//        return queue
-//    }()
-    
-//    init() {
-//        NotificationCenter.default.publisher(for: .DataSourceProcessed)
-//            .receive(on: RunLoop.main)
-//            .compactMap {
-//                $0.object as? DataSourceUpdatedNotification
-//            }
-//            .sink { item in
-//                let dataSource = self.mainDataList.first { type in
-//                    item.key == type.key
-//                }
-//                switch dataSource {
-//                case let mapImage as MapImage.Type:
-//                    mapImage.imageCache.clearCache()
-//                default:
-//                    break
-//                }
-//            }
-//            .store(in: &cancellable)
-//    }
-    
     func registerBackgroundHandler() {
-//        BGTaskScheduler.shared.register(forTaskWithIdentifier: "mil.nga.msi.refresh", using: nil) { task in
-//            MSI.shared.backgroundFetch(task: task)
-//        }
-        
-        asamInitializer?.registerBackgroundHandler()
-        moduInitializer?.registerBackgroundHandler()
-        portInitializer?.registerBackgroundHandler()
-        lightInitializer?.registerBackgroundHandler()
-        radioBeaconInitializer?.registerBackgroundHandler()
-        differentialGPSStationInitializer?.registerBackgroundHandler()
-        electronicPublicationInitializer?.registerBackgroundHandler()
+//        asamInitializer?.registerBackgroundHandler()
+//        moduInitializer?.registerBackgroundHandler()
+//        portInitializer?.registerBackgroundHandler()
+//        lightInitializer?.registerBackgroundHandler()
+//        radioBeaconInitializer?.registerBackgroundHandler()
+//        differentialGPSStationInitializer?.registerBackgroundHandler()
+//        electronicPublicationInitializer?.registerBackgroundHandler()
         navigationalWarningInitializer?.registerBackgroundHandler()
-        noticeToMarinersInitializer?.registerBackgroundHandler()
+//        noticeToMarinersInitializer?.registerBackgroundHandler()
     }
-    
-//    func backgroundFetch(task: BGTask) {
-//        print("background handler")
-//        MSI.shared.scheduleAppRefresh()
-//        
-//        let allLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
-//            let sync = importable.shouldSync()
-//            return sync
-//        }
-//        
-//        NSLog("Fetching new data from the API for \(allLoadList.count) data sources")
-//        
-//        if allLoadList.isEmpty {
-//            task.setTaskCompleted(success: true)
-//        }
-//        
-//        for importable in allLoadList {
-//            NSLog("Fetching new data for \(importable.key)")
-//            self.loadData(
-//                type: importable.decodableRoot,
-//                dataType: importable,
-//                operationQueue: self.backgroundFetchQueue)
-//        }
-//        
-//        var expired = false
-//        task.expirationHandler = {
-//            expired = true
-//            self.backgroundFetchQueue.cancelAllOperations()
-//        }
-//        
-//        self.backgroundFetchQueue.addBarrierBlock {
-//            DispatchQueue.main.async {
-//                task.setTaskCompleted(success: !expired)
-//            }
-//        }
-//    }
-    
+
     func onChangeOfScenePhase(_ newPhase: ScenePhase) {
         switch newPhase {
         case .background:
@@ -232,15 +122,15 @@ public class MSI {
     }
     
     func scheduleAppRefresh() {
-        asamInitializer?.scheduleRefresh()
-        moduInitializer?.scheduleRefresh()
-        portInitializer?.scheduleRefresh()
-        lightInitializer?.scheduleRefresh()
-        radioBeaconInitializer?.scheduleRefresh()
-        differentialGPSStationInitializer?.scheduleRefresh()
-        electronicPublicationInitializer?.scheduleRefresh()
+//        asamInitializer?.scheduleRefresh()
+//        moduInitializer?.scheduleRefresh()
+//        portInitializer?.scheduleRefresh()
+//        lightInitializer?.scheduleRefresh()
+//        radioBeaconInitializer?.scheduleRefresh()
+//        differentialGPSStationInitializer?.scheduleRefresh()
+//        electronicPublicationInitializer?.scheduleRefresh()
         navigationalWarningInitializer?.scheduleRefresh()
-        noticeToMarinersInitializer?.scheduleRefresh()
+//        noticeToMarinersInitializer?.scheduleRefresh()
     }
     
     func loadAllData() {
@@ -252,51 +142,15 @@ public class MSI {
         loadAllDataTime = Date()
         NSLog("Load all data")
         
-        asamInitializer?.fetch()
-        moduInitializer?.fetch()
-        portInitializer?.fetch()
-        lightInitializer?.fetch()
-        radioBeaconInitializer?.fetch()
-        differentialGPSStationInitializer?.fetch()
-        electronicPublicationInitializer?.fetch()
+//        asamInitializer?.fetch()
+//        moduInitializer?.fetch()
+//        portInitializer?.fetch()
+//        lightInitializer?.fetch()
+//        radioBeaconInitializer?.fetch()
+//        differentialGPSStationInitializer?.fetch()
+//        electronicPublicationInitializer?.fetch()
         navigationalWarningInitializer?.fetch()
-        noticeToMarinersInitializer?.fetch()
-
-//        let initialDataLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
-//            if let dataSourceType = importable as? any DataSource.Type {
-//                return UserDefaults.standard
-//                    .dataSourceEnabled(dataSourceType.definition) &&
-//                !self.isLoaded(type: importable) &&
-//                !(importable.seedDataFiles ?? []).isEmpty
-//            }
-//            return false
-//        }
-//        if !initialDataLoadList.isEmpty {
-//            
-//            NSLog("Loading initial data from \(initialDataLoadList.count) data sources")
-//            PersistenceController.current.addViewContextObserver(
-//                self,
-//                selector: #selector(self.managedObjectContextObjectChangedObserver(notification:)),
-//                name: .NSManagedObjectContextObjectsDidChange)
-//
-//            for importable in initialDataLoadList {
-//                self.loadInitialData(type: importable.decodableRoot, dataType: importable)
-//            }
-//
-//        } else {
-//            UserDefaults.standard.initialDataLoaded = true
-//            
-//            let allLoadList: [any BatchImportable.Type] = self.mainDataList.filter { importable in
-//                let sync = importable.shouldSync()
-//                return sync
-//            }
-//            
-//            NSLog("Fetching new data from the API for \(allLoadList.count) data sources")
-//            for importable in allLoadList {
-//                NSLog("Fetching new data for \(importable.key)")
-//                self.loadData(type: importable.decodableRoot, dataType: importable)
-//            }
-//        }
+//        noticeToMarinersInitializer?.fetch()
     }
     
     @objc func managedObjectContextObjectChangedObserver(notification: Notification) {
@@ -327,52 +181,4 @@ public class MSI {
             }
         }
     }
-        
-//    func loadInitialData<T: Decodable, D: NSManagedObject & BatchImportable>(
-//        type: T.Type,
-//        dataType: D.Type,
-//        operationQueue: OperationQueue? = nil
-//    ) {
-//        let initialDataLoadOperation = DataLoadOperation(
-//            appState: appState,
-//            taskName: "Load Initial Data \(dataType.key)")
-//        initialDataLoadOperation.action = { [weak initialDataLoadOperation] in
-//            guard let initialDataLoadOperation = initialDataLoadOperation else {
-//                return
-//            }
-//            initialDataLoadOperation.loadInitialData(type: type.self, dataType: dataType)
-//        }
-//        DispatchQueue.main.async {
-//            self.appState.loadingDataSource[dataType.key] = true
-//        }
-//        (operationQueue ?? initialLoadQueue).addOperation(initialDataLoadOperation)
-//    }
-//    
-//    func loadData<T: Decodable, D: NSManagedObject & BatchImportable>(
-//        type: T.Type,
-//        dataType: D.Type,
-//        operationQueue: OperationQueue? = nil
-//    ) {
-//        if dataType.key == DataSources.asam.key || dataType.key == DataSources.modu.key {
-//            return
-//        }
-//        
-//        let dataLoadOperation = DataLoadOperation(appState: appState, taskName: "Load Data \(dataType.key)")
-//        dataLoadOperation.action = { [weak dataLoadOperation] in
-//            guard let dataLoadOperation = dataLoadOperation else {
-//                return
-//            }
-//            dataLoadOperation.loadData(type: type.self, dataType: dataType)
-//        }
-//
-//        DispatchQueue.main.async {
-//            self.appState.loadingDataSource[dataType.key] = true
-//        }
-//        (operationQueue ?? dataFetchQueue).addOperation(dataLoadOperation)
-//    }
-    
-//    func isLoaded<D: BatchImportable>(type: D.Type) -> Bool {
-//        let count = try? PersistenceController.current.countOfObjects(D.self)
-//        return (count ?? 0) > 0
-//    }
 }

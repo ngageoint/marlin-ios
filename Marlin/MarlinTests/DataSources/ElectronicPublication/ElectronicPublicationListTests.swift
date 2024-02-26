@@ -69,7 +69,7 @@ final class ElectronicPublicationListTests: XCTestCase {
     }
     
     func testOneSectionList() throws {
-        XCTFail()
+//        XCTFail()
         stub(condition: isScheme("https") && pathEndsWith("/publications/stored-pubs")) { request in
             return HTTPStubsResponse(
                 fileAtPath: OHPathForFile("fullEpubList.json", type(of: self))!,
@@ -99,7 +99,14 @@ final class ElectronicPublicationListTests: XCTestCase {
         }
 
 //        MSI.shared.loadData(type: ElectronicPublication.decodableRoot, dataType: ElectronicPublication.self)
-        
+
+        let bundle = MockBundle()
+        bundle.mockPath = "fullEpubList.json"
+
+        let localDataSource = ElectronicPublicationCoreDataDataSource()
+        let operation = ElectronicPublicationInitialDataLoadOperation(localDataSource: localDataSource, bundle: bundle)
+        operation.start()
+
         waitForExpectations(timeout: 10, handler: nil)
         
         class PassThrough: ObservableObject {
@@ -120,12 +127,14 @@ final class ElectronicPublicationListTests: XCTestCase {
             }
         }
         let passThrough = PassThrough()
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
+        let repository = ElectronicPublicationRepository(localDataSource: localDataSource, remoteDataSource: ElectronicPublicationRemoteDataSource())
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(electronicPublicationRepository: repository))
 
         let container = Container(passThrough: passThrough)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-        
+            .environment(\.managedObjectContext, persistentStore.viewContext)
+
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller

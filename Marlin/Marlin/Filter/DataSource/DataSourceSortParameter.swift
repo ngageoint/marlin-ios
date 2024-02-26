@@ -6,6 +6,15 @@
 //
 
 import Foundation
+import CoreData
+
+extension Array where Element == DataSourceSortParameter {
+    func toNSSortDescriptors() -> [NSSortDescriptor] {
+        return self.map { sortParam in
+            sortParam.toNSSortDescriptor()
+        }
+    }
+}
 
 struct DataSourceSortParameter: Identifiable, Hashable, Codable {
     static func == (lhs: DataSourceSortParameter, rhs: DataSourceSortParameter) -> Bool {

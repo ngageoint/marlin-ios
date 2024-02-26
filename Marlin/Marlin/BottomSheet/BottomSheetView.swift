@@ -256,6 +256,16 @@ struct MarlinBottomSheet <Content: View>: View {
                                     focusNotification: focusNotification
                                 )
                             }
+                        case DataSources.navWarning.key:
+                            let split = itemKey.split(separator: "--")
+                            if split.count == 3 {
+                                NavigationalWarningSheetView(
+                                    msgYear: Int(split[0]) ?? -1,
+                                    msgNumber: Int(split[1]) ?? -1,
+                                    navArea: "\(split[2])",
+                                    focusNotification: focusNotification
+                                )
+                            }
                         default:
                             EmptyView()
                         }

@@ -9,6 +9,7 @@ import Foundation
 import CoreLocation
 import OSLog
 import MapKit
+import GeoJSON
 
 struct NavigationalWarningPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
@@ -25,7 +26,8 @@ struct NavigationalWarningPropertyContainer: Decodable {
     }
 }
 
-struct NavigationalWarningModel: Codable, Hashable, Identifiable, Bookmarkable {
+// swiftlint:disable type_body_length
+struct NavigationalWarningModel: Codable, Hashable, Identifiable, Bookmarkable, GeoJSONExportable, Locatable {
     static var definition: any DataSourceDefinition = DataSources.navWarning
 
     var canBookmark: Bool = false
@@ -36,6 +38,9 @@ struct NavigationalWarningModel: Codable, Hashable, Identifiable, Bookmarkable {
     var itemKey: String {
         return "\(msgYear ?? 0)--\(msgNumber ?? 0)--\(navArea)"
     }
+    var primaryKey: String {
+        return "\(self.navArea) \(self.msgNumber ?? -1)/\(self.msgYear ?? -1)"
+    }
 
     var navAreaName: String {
         if let navAreaEnum = NavigationalWarningNavArea.fromId(id: navArea) {
@@ -44,13 +49,63 @@ struct NavigationalWarningModel: Codable, Hashable, Identifiable, Bookmarkable {
         return ""
     }
 
+    var dateString: String? {
+        if let date = issueDate {
+            return NavigationalWarning.dateFormatter.string(from: date)
+        }
+        return nil
+    }
+
+    var cancelDateString: String? {
+        if let date = cancelDate {
+            return NavigationalWarning.dateFormatter.string(from: date)
+        }
+        return nil
+    }
+
     static let apiToDateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "ddHHmm'Z' MMM yyyy"
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         return dateFormatter
     }()
-    
+
+    var coordinate: CLLocationCoordinate2D {
+        if let locations = locations, !locations.isEmpty, let latitude = latitude, let longitude = longitude {
+            return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        }
+        return kCLLocationCoordinate2DInvalid
+    }
+
+    var coordinateRegion: MKCoordinateRegion? {
+        if let locations = locations,
+           !locations.isEmpty,
+           let maxLatitude = maxLatitude,
+           let minLatitude = minLatitude,
+           let maxLongitude = maxLongitude,
+           let minLongitude = minLongitude,
+           let latitude = latitude,
+           let longitude = longitude {
+            var latitudeDelta = maxLatitude - minLatitude
+            var longitudeDelta = maxLongitude - minLongitude
+
+            if latitudeDelta == 0.0 {
+                latitudeDelta = 0.5
+            }
+            if longitudeDelta == 0.0 {
+                longitudeDelta = 0.5
+            }
+            return MKCoordinateRegion(
+                center: CLLocationCoordinate2D(
+                    latitude: latitude,
+                    longitude: longitude),
+                span: MKCoordinateSpan(
+                    latitudeDelta: latitudeDelta,
+                    longitudeDelta: longitudeDelta))
+        }
+        return nil
+    }
+
     // MARK: Codable
     
     private enum CodingKeys: String, CodingKey {
@@ -68,19 +123,32 @@ struct NavigationalWarningModel: Codable, Hashable, Identifiable, Bookmarkable {
         case text
     }
     
-    let cancelMsgNumber: Int?
-    let authority: String?
-    let cancelDate: Date?
-    let cancelMsgYear: Int?
-    let cancelNavArea: String?
-    let issueDate: Date?
-    let msgNumber: Int?
-    let msgYear: Int?
-    let navArea: String
-    let status: String?
-    let subregion: String?
-    let text: String?
-    let locations: [[String: String]]?
+    var cancelMsgNumber: Int?
+    var authority: String?
+    var cancelDate: Date?
+    var cancelMsgYear: Int?
+    var cancelNavArea: String?
+    var issueDate: Date?
+    var msgNumber: Int?
+    var msgYear: Int?
+    var navArea: String
+    var status: String?
+    var subregion: String?
+    var text: String?
+    var locations: [[String: String]]?
+    var latitude: Double?
+    var longitude: Double?
+    var maxLatitude: Double?
+    var minLatitude: Double?
+    var maxLongitude: Double?
+    var minLongitude: Double?
+
+    init(navArea: String) {
+        self.navArea = navArea
+        self.canBookmark = false
+        self.latitude = kCLLocationCoordinate2DInvalid.latitude
+        self.longitude = kCLLocationCoordinate2DInvalid.longitude
+    }
 
     init(navigationalWarning: NavigationalWarning) {
         self.cancelMsgNumber = Int(navigationalWarning.cancelMsgNumber)
@@ -96,6 +164,28 @@ struct NavigationalWarningModel: Codable, Hashable, Identifiable, Bookmarkable {
         self.subregion = navigationalWarning.subregion
         self.text = navigationalWarning.text
         self.locations = navigationalWarning.locations
+        self.latitude = navigationalWarning.latitude
+        self.longitude = navigationalWarning.longitude
+        self.maxLatitude = navigationalWarning.maxLatitude
+        self.minLatitude = navigationalWarning.minLatitude
+        self.maxLongitude = navigationalWarning.maxLongitude
+        self.minLongitude = navigationalWarning.minLongitude
+    }
+
+    init?(feature: Feature) {
+        if let json = try? JSONEncoder().encode(feature.properties), let string = String(data: json, encoding: .utf8) {
+
+            let decoder = JSONDecoder()
+            let jsonData = Data(string.utf8)
+
+            if let model = try? decoder.decode(NavigationalWarningModel.self, from: jsonData) {
+                self = model
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
     }
 
     init(from decoder: Decoder) throws {

@@ -39,159 +39,115 @@ final class MarlinBottomSheetTests: XCTestCase {
     }
     
     func testLoading() {
-        XCTFail()
-//        let newItem = Asam(context: persistentStore.viewContext)
-//        newItem.asamDescription = "description"
-//        newItem.longitude = 1.0
-//        newItem.latitude = 1.0
-//        newItem.date = Date()
-//        newItem.navArea = "XI"
-//        newItem.reference = "2022-100"
-//        newItem.subreg = "71"
-//        newItem.position = "1°00'00\"N \n1°00'00\"E"
-//        newItem.hostility = "Boarding"
-//        newItem.victim = "Boat"
-//        
-//        let bottomSheetItem = BottomSheetItem(item: newItem, zoom: false)
-//        
-//        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
-//        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-//        
-//        let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem])
-//            .environmentObject(repository)
-//            .environmentObject(bookmarkRepository)
-//        
-//        let controller = UIHostingController(rootView: view)
-//        let window = TestHelpers.getKeyWindowVisible()
-//        window.rootViewController = controller
-//        tester().waitForView(withAccessibilityLabel: "stack")
-//        tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
-//        
-//        expectation(forNotification: .ViewDataSource,
-//                    object: nil) { notification in
-//            do {
-//                let vds = try XCTUnwrap(notification.object as? ViewDataSource)
-//                let asam = try XCTUnwrap(vds.dataSource as? AsamModel)
-//                XCTAssertEqual(asam.hostility, "Boarding")
-//                XCTAssertEqual(asam.victim, "Boat")
-//                return true
-//            } catch {
-//                XCTFail()
-//                return true
-//            }
-//        }
-//        tester().tapView(withAccessibilityLabel: "More Details")
-//        
-//        waitForExpectations(timeout: 10, handler: nil)
-//        
-//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Boarding: Boat")
+        var newItem = AsamModel()
+        newItem.asamDescription = "description"
+        newItem.longitude = 1.0
+        newItem.latitude = 1.0
+        newItem.date = Date()
+        newItem.navArea = "XI"
+        newItem.reference = "2022-100"
+        newItem.subreg = "71"
+        newItem.position = "1°00'00\"N \n1°00'00\"E"
+        newItem.hostility = "Boarding"
+        newItem.victim = "Boat"
+        
+        let bottomSheetItem = BottomSheetItem(zoom: false, itemKey: newItem.itemKey, dataSourceKey: DataSources.asam.key)
+
+        let localDataSource = AsamStaticLocalDataSource()
+        localDataSource.list.append(newItem)
+        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(asamRepository: repository))
+        let router = MarlinRouter()
+        let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem])
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
+            .environmentObject(router)
+
+        let controller = UIHostingController(rootView: view)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        tester().waitForView(withAccessibilityLabel: "stack")
+        tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
+
+        XCTAssertEqual(router.path.count, 0)
+        tester().tapView(withAccessibilityLabel: "More Details")
+        XCTAssertEqual(router.path.count, 1)
+
+        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Boarding: Boat")
     }
     
-//    func testMultipleItems() {
-//        let newItem = Asam(context: persistentStore.viewContext)
-//        newItem.asamDescription = "description"
-//        newItem.longitude = 1.0
-//        newItem.latitude = 1.0
-//        newItem.date = Date()
-//        newItem.navArea = "XI"
-//        newItem.reference = "2022-100"
-//        newItem.subreg = "71"
-//        newItem.position = "1°00'00\"N \n1°00'00\"E"
-//        newItem.hostility = "Boarding"
-//        newItem.victim = "Boat"
-//        
-//        let bottomSheetItem = BottomSheetItem(item: newItem, zoom: false)
-//        
-//        let newItem2 = Modu(context: persistentStore.viewContext)
-//        newItem2.name = "name"
-//        newItem2.date = Date(timeIntervalSince1970: 0)
-//        newItem2.rigStatus = "Inactive"
-//        newItem2.specialStatus = "Wide Berth Requested"
-//        newItem2.longitude = 1.0
-//        newItem2.latitude = 1.0
-//        newItem2.position = "1°00'00\"N \n1°00'00\"E"
-//        newItem2.navArea = "HYDROPAC"
-//        newItem2.region = 6
-//        newItem2.subregion = 63
-//        
-//        let bottomSheetItem2 = BottomSheetItem(item: newItem2, zoom: false)
-//        
-//        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext), remoteDataSource: AsamRemoteDataSource())
-//        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-//        let moduRepository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
-//        
-//        let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem, bottomSheetItem2])
-//            .environmentObject(repository)
-//            .environmentObject(moduRepository)
-//            .environmentObject(bookmarkRepository)
-//        
-//        let controller = UIHostingController(rootView: view)
-//        let window = TestHelpers.getKeyWindowVisible()
-//        window.rootViewController = controller
-//        tester().waitForView(withAccessibilityLabel: "stack")
-//        tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
-//        
-//        expectation(forNotification: .ViewDataSource,
-//                    object: nil) { notification in
-//            do {
-//                let vds = try XCTUnwrap(notification.object as? ViewDataSource)
-//                let asam = try XCTUnwrap(vds.dataSource as? AsamModel)
-//                XCTAssertEqual(asam.hostility, "Boarding")
-//                XCTAssertEqual(asam.victim, "Boat")
-//                return true
-//            } catch {
-//                XCTFail()
-//                return true
-//            }
-//        }
-//        tester().tapView(withAccessibilityLabel: "More Details")
-//        
-//        waitForExpectations(timeout: 10, handler: nil)
-//        
-//        tester().tapView(withAccessibilityLabel: "next")
-//        
-//        tester().waitForView(withAccessibilityLabel: "name")
-//        
-//        expectation(forNotification: .ViewDataSource,
-//                    object: nil) { notification in
-//            do {
-//                let vds = try XCTUnwrap(notification.object as? ViewDataSource)
-//                let modu = try XCTUnwrap(vds.dataSource as? ModuModel)
-//                XCTAssertEqual(modu.name, "name")
-//                XCTAssertEqual(modu.rigStatus, "Inactive")
-//                return true
-//            } catch {
-//                XCTFail()
-//                return true
-//            }
-//        }
-//        tester().tapView(withAccessibilityLabel: "More Details")
-//        
-//        waitForExpectations(timeout: 10, handler: nil)
-//        
-//        tester().tapView(withAccessibilityLabel: "previous")
-//        tester().waitForView(withAccessibilityLabel: "stack")
-//        tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
-//        
-//        expectation(forNotification: .ViewDataSource,
-//                    object: nil) { notification in
-//            do {
-//                let vds = try XCTUnwrap(notification.object as? ViewDataSource)
-//                let asam = try XCTUnwrap(vds.dataSource as? AsamModel)
-//                XCTAssertEqual(asam.hostility, "Boarding")
-//                XCTAssertEqual(asam.victim, "Boat")
-//                return true
-//            } catch {
-//                XCTFail()
-//                return true
-//            }
-//        }
-//        tester().tapView(withAccessibilityLabel: "More Details")
-//        
-//        waitForExpectations(timeout: 10, handler: nil)
-//        
-//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Boarding: Boat")
-//    }
+    func testMultipleItems() {
+        var newItem = AsamModel()
+        newItem.asamDescription = "description"
+        newItem.longitude = 1.0
+        newItem.latitude = 1.0
+        newItem.date = Date()
+        newItem.navArea = "XI"
+        newItem.reference = "2022-100"
+        newItem.subreg = "71"
+        newItem.position = "1°00'00\"N \n1°00'00\"E"
+        newItem.hostility = "Boarding"
+        newItem.victim = "Boat"
+        
+        let bottomSheetItem = BottomSheetItem(zoom: false, itemKey: newItem.itemKey, dataSourceKey: DataSources.asam.key)
+
+        var newItem2 = ModuModel()
+        newItem2.name = "name"
+        newItem2.date = Date(timeIntervalSince1970: 0)
+        newItem2.rigStatus = "Inactive"
+        newItem2.specialStatus = "Wide Berth Requested"
+        newItem2.longitude = 1.0
+        newItem2.latitude = 1.0
+        newItem2.position = "1°00'00\"N \n1°00'00\"E"
+        newItem2.navArea = "HYDROPAC"
+        newItem2.region = 6
+        newItem2.subregion = 63
+        
+        let bottomSheetItem2 = BottomSheetItem(zoom: false, itemKey: newItem2.itemKey, dataSourceKey: DataSources.modu.key)
+
+        let localDataSource = AsamStaticLocalDataSource()
+        localDataSource.list.append(newItem)
+        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
+        let moduLocalDataSource = ModuStaticLocalDataSource()
+        moduLocalDataSource.list.append(newItem2)
+        let moduRepository = ModuRepository(localDataSource: moduLocalDataSource, remoteDataSource: ModuRemoteDataSource())
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(asamRepository: repository, moduRepository: moduRepository))
+        let router = MarlinRouter()
+        let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem, bottomSheetItem2])
+            .environmentObject(repository)
+            .environmentObject(moduRepository)
+            .environmentObject(bookmarkRepository)
+            .environmentObject(router)
+
+        let controller = UIHostingController(rootView: view)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        tester().waitForView(withAccessibilityLabel: "stack")
+        tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
+
+        // TODO: would be nice to verify the path contains the correct item but I cannot find a way to mock it
+        XCTAssertEqual(router.path.count, 0)
+        tester().tapView(withAccessibilityLabel: "More Details")
+        XCTAssertEqual(router.path.count, 1)
+
+        tester().tapView(withAccessibilityLabel: "next")
+        
+        tester().waitForView(withAccessibilityLabel: "name")
+        
+        XCTAssertEqual(router.path.count, 1)
+        tester().tapView(withAccessibilityLabel: "More Details")
+        XCTAssertEqual(router.path.count, 2)
+
+        tester().tapView(withAccessibilityLabel: "previous")
+        tester().waitForView(withAccessibilityLabel: "stack")
+        tester().waitForView(withAccessibilityLabel: "Boarding: Boat")
+        
+        XCTAssertEqual(router.path.count, 2)
+        tester().tapView(withAccessibilityLabel: "More Details")
+        XCTAssertEqual(router.path.count, 3)
+
+        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "Boarding: Boat")
+    }
 }

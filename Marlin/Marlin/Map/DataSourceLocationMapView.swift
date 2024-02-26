@@ -21,9 +21,9 @@ struct DataSourceLocationMapView: View {
         return MarlinMap(name: mapName, mixins: mapMixins, mapState: mapState, allowMapTapsOnItems: false)
             .onAppear {
                 mapMixins.mixins.append(contentsOf: mixins + [UserLayersMap()])
-                if let region = dataSourceLocation.coordinateRegion {
+                if let region = dataSourceLocation.coordinateRegion, CLLocationCoordinate2DIsValid(region.center) {
                     mapState.center = region.padded(percent: 0.1, maxDelta: 45)
-                } else {
+                } else if CLLocationCoordinate2DIsValid(dataSourceLocation.coordinate) {
                     mapState.center = MKCoordinateRegion(
                         center: dataSourceLocation.coordinate,
                         zoomLevel: 17.0,

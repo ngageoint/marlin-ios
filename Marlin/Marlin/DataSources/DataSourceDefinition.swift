@@ -177,40 +177,6 @@ enum DataSources {
             return nil
         }
     }
-
-    static func fromDataSourceType(_ type: any DataSource.Type) -> (any DataSourceDefinition)? {
-        switch type {
-        case is AsamModel.Type, is Asam.Type:
-            return DataSources.asam
-        case is Bookmark.Type:
-            return DataSources.bookmark
-        case is ChartCorrection.Type:
-            return DataSources.chartCorrection
-        case is DifferentialGPSStation.Type:
-            return DataSources.dgps
-        case is ElectronicPublication.Type:
-            return DataSources.epub
-        case is GeoPackageFeatureItem.Type:
-            return DataSources.geoPackage
-        case is Light.Type, is LightModel.Type:
-            return DataSources.light
-        case is ModuModel.Type, is Modu.Type:
-            return DataSources.modu
-        case is NavigationalWarning.Type:
-            return DataSources.navWarning
-        case is NoticeToMariners.Type:
-            return DataSources.noticeToMariners
-        case is Port.Type, is PortModel.Type:
-            return DataSources.port
-        case is RadioBeacon.Type, is RadioBeaconModel.Type:
-            return DataSources.radioBeacon
-        case is Route.Type, is RouteModel.Type:
-            return DataSources.route
-        default:
-            return nil
-        }
-    }
-    // swiftlint:enable cyclomatic_complexity
 }
 
 extension DataSources {

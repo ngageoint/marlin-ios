@@ -13,6 +13,11 @@ import sf_ios
 class AsamGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.asam
 
+    let asamRepository: AsamRepository
+    init(asamRepository: AsamRepository) {
+        self.asamRepository = asamRepository
+    }
+
     var sfGeometry: SFGeometry?
 
     func createFeatures(
@@ -23,12 +28,7 @@ class AsamGeoPackageExportable: GeoPackageExportable {
         styleRows: [GPKGStyleRow],
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
-
-        guard let repository = MSI.shared.asamRepository else {
-            return
-        }
-
-        let asams = await repository.getAsams(filters: (filters ?? []) + (commonFilters ?? []))
+        let asams = await asamRepository.getAsams(filters: (filters ?? []) + (commonFilters ?? []))
         var exported = 0
         for asam in asams {
             createFeature(model: asam, sfGeometry: asam.sfGeometry, geoPackage: geoPackage, table: table, styleRows: styleRows)

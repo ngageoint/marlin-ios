@@ -17,6 +17,7 @@ struct MarlinMainMap: View {
     @EnvironmentObject var lightsTileRepository: LightsTileRepository
     @EnvironmentObject var radioBeaconsTileRepository: RadioBeaconsTileRepository
     @EnvironmentObject var differentialGPSStationsTileRepository: DifferentialGPSStationsTileRepository
+    @EnvironmentObject var navigationalWarningsMapFeatureRepository: NavigationalWarningsMapFeatureRepository
 
     @StateObject var mixins: MainMapMixins = MainMapMixins()
     @StateObject var mapState: MapState = MapState()
@@ -47,6 +48,9 @@ struct MarlinMainMap: View {
             mixins.addLightTileRepository(tileRepository: lightsTileRepository)
             mixins.addRadioBeaconTileRepository(tileRepository: radioBeaconsTileRepository)
             mixins.addDifferentialGPSStationTileRepository(tileRepository: differentialGPSStationsTileRepository)
+            mixins.addNavigationalWarningsMapFeatureRepository(
+                mapFeatureRepository: navigationalWarningsMapFeatureRepository
+            )
         }
     }
     
