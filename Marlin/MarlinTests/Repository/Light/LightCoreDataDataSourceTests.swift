@@ -272,7 +272,7 @@ final class LightCoreDataDataSourceTests: XCTestCase {
         XCTAssertEqual(retrieved?.volumeNumber, newItem2.volumeNumber)
     }
 
-    func testGetLightsInBounds() {
+    func testGetLightsInBounds() async {
         var newItem: Light?
         var newItem2: Light?
         persistentStore.viewContext.performAndWait {
@@ -323,13 +323,13 @@ final class LightCoreDataDataSourceTests: XCTestCase {
 
         let dataSource = LightCoreDataDataSource()
 
-        let retrieved = dataSource.getLightsInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
+        let retrieved = await dataSource.getLightsInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
         XCTAssertEqual(retrieved.count, 1)
         XCTAssertEqual(retrieved[0].featureNumber, newItem.featureNumber)
-        let retrieved2 = dataSource.getLightsInBounds(filters: nil, minLatitude: 0, maxLatitude: 2, minLongitude: 0, maxLongitude: 2)
+        let retrieved2 = await dataSource.getLightsInBounds(filters: nil, minLatitude: 0, maxLatitude: 2, minLongitude: 0, maxLongitude: 2)
         XCTAssertEqual(retrieved2.count, 1)
         XCTAssertEqual(retrieved2[0].featureNumber, newItem2.featureNumber)
-        let retrieved3 = dataSource.getLightsInBounds(filters: nil, minLatitude: 0, maxLatitude: 21, minLongitude: 0, maxLongitude: 21)
+        let retrieved3 = await dataSource.getLightsInBounds(filters: nil, minLatitude: 0, maxLatitude: 21, minLongitude: 0, maxLongitude: 21)
         XCTAssertEqual(retrieved3.count, 2)
     }
 

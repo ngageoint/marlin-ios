@@ -242,7 +242,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
         XCTAssertNil(retrieved)
     }
 
-    func testGetAsamsInBounds() {
+    func testGetAsamsInBounds() async {
         var newItem: DifferentialGPSStation?
         var newItem2: DifferentialGPSStation?
         persistentStore.viewContext.performAndWait {
@@ -310,15 +310,15 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
 
         let dataSource = DifferentialGPSStationCoreDataDataSource()
 
-        let retrieved = dataSource.getDifferentialGPSStationsInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
+        let retrieved = await dataSource.getDifferentialGPSStationsInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
         XCTAssertEqual(retrieved.count, 1)
         XCTAssertEqual(retrieved[0].featureNumber, Int(newItem2.featureNumber))
         XCTAssertEqual(retrieved[0].volumeNumber, newItem2.volumeNumber)
-        let retrieved2 = dataSource.getDifferentialGPSStationsInBounds(filters: nil, minLatitude: 0, maxLatitude: 2, minLongitude: 0, maxLongitude: 2)
+        let retrieved2 = await dataSource.getDifferentialGPSStationsInBounds(filters: nil, minLatitude: 0, maxLatitude: 2, minLongitude: 0, maxLongitude: 2)
         XCTAssertEqual(retrieved2.count, 1)
         XCTAssertEqual(retrieved2[0].featureNumber, Int(newItem.featureNumber))
         XCTAssertEqual(retrieved2[0].volumeNumber, newItem.volumeNumber)
-        let retrieved3 = dataSource.getDifferentialGPSStationsInBounds(filters: nil, minLatitude: 0, maxLatitude: 21, minLongitude: 0, maxLongitude: 21)
+        let retrieved3 = await dataSource.getDifferentialGPSStationsInBounds(filters: nil, minLatitude: 0, maxLatitude: 21, minLongitude: 0, maxLongitude: 21)
         XCTAssertEqual(retrieved3.count, 2)
     }
 

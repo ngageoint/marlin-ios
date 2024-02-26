@@ -188,7 +188,7 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
         XCTAssertNil(retrieved)
     }
 
-    func testGetModuInBounds() {
+    func testGetModuInBounds() async {
         var newItem: Modu?
         var newItem2: Modu?
         persistentStore.viewContext.performAndWait {
@@ -236,13 +236,13 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
 
         let dataSource = ModuCoreDataDataSource()
 
-        let retrieved = dataSource.getModusInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
+        let retrieved = await dataSource.getModusInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
         XCTAssertEqual(retrieved.count, 1)
         XCTAssertEqual(retrieved[0].name, newItem2.name)
-        let retrieved2 = dataSource.getModusInBounds(filters: nil, minLatitude: 0, maxLatitude: 1, minLongitude: 0, maxLongitude: 1)
+        let retrieved2 = await dataSource.getModusInBounds(filters: nil, minLatitude: 0, maxLatitude: 1, minLongitude: 0, maxLongitude: 1)
         XCTAssertEqual(retrieved2.count, 1)
         XCTAssertEqual(retrieved2[0].name, newItem.name)
-        let retrieved3 = dataSource.getModusInBounds(filters: nil, minLatitude: 0, maxLatitude: 21, minLongitude: 0, maxLongitude: 21)
+        let retrieved3 = await dataSource.getModusInBounds(filters: nil, minLatitude: 0, maxLatitude: 21, minLongitude: 0, maxLongitude: 21)
         XCTAssertEqual(retrieved3.count, 2)
     }
 

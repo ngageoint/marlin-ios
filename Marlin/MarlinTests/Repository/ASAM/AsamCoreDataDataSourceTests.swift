@@ -181,7 +181,7 @@ final class AsamCoreDataDataSourceTests: XCTestCase {
         XCTAssertNil(retrieved)
     }
 
-    func testGetAsamsInBounds() {
+    func testGetAsamsInBounds() async {
         var newItem: Asam?
         var newItem2: Asam?
         persistentStore.viewContext.performAndWait {
@@ -225,13 +225,13 @@ final class AsamCoreDataDataSourceTests: XCTestCase {
 
         let dataSource = AsamCoreDataDataSource()
 
-        let retrieved = dataSource.getAsamsInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
+        let retrieved = await dataSource.getAsamsInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
         XCTAssertEqual(retrieved.count, 1)
         XCTAssertEqual(retrieved[0].reference, newItem.reference)
-        let retrieved2 = dataSource.getAsamsInBounds(filters: nil, minLatitude: 0, maxLatitude: 1, minLongitude: 0, maxLongitude: 1)
+        let retrieved2 = await dataSource.getAsamsInBounds(filters: nil, minLatitude: 0, maxLatitude: 1, minLongitude: 0, maxLongitude: 1)
         XCTAssertEqual(retrieved2.count, 1)
         XCTAssertEqual(retrieved2[0].reference, newItem2.reference)
-        let retrieved3 = dataSource.getAsamsInBounds(filters: nil, minLatitude: 0, maxLatitude: 21, minLongitude: 0, maxLongitude: 21)
+        let retrieved3 = await dataSource.getAsamsInBounds(filters: nil, minLatitude: 0, maxLatitude: 21, minLongitude: 0, maxLongitude: 21)
         XCTAssertEqual(retrieved3.count, 2)
     }
 

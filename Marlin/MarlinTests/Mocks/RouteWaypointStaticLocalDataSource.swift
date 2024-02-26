@@ -10,6 +10,13 @@ import Foundation
 @testable import Marlin
 
 class RouteWaypointStaticLocalDataSource: RouteWaypointLocalDataSource {
+    func getNavigationalWarning(waypointURI: URL?) -> Marlin.NavigationalWarningModel? {
+        if let waypointURI = waypointURI {
+            return waypoints[waypointURI] as? NavigationalWarningModel
+        }
+        return nil
+    }
+    
     var waypoints: [URL: Any] = [:]
 
     func getAsam(waypointURI: URL?) -> Marlin.AsamModel? {

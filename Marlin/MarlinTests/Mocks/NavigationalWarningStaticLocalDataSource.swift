@@ -12,19 +12,27 @@ import BackgroundTasks
 @testable import Marlin
 
 class NavigationalWarningStaticLocalDataSource: NavigationalWarningLocalDataSource {
+    func getNavAreasInformation() async -> [Marlin.NavigationalAreaInformation] {
+        []
+    }
+    
+    func postProcess() async {
+
+    }
+    
     var list: [NavigationalWarningModel] = []
-    func getNavigationalWarning(msgYear: Int64, msgNumber: Int64, navArea: String?) -> Marlin.NavigationalWarningModel? {
+    func getNavigationalWarning(msgYear: Int, msgNumber: Int, navArea: String?) -> Marlin.NavigationalWarningModel? {
         list.first { model in
             (model.msgYear ?? -1) == msgYear && (model.msgNumber ?? -1) == msgNumber && model.navArea == navArea
         }
     }
 
-    func getNavigationalWarningsInBounds(filters: [Marlin.DataSourceFilterParameter]?, minLatitude: Double?, maxLatitude: Double?, minLongitude: Double?, maxLongitude: Double?) -> [NavigationalWarningModel] {
+    func getNavigationalWarningsInBounds(filters: [Marlin.DataSourceFilterParameter]?, minLatitude: Double?, maxLatitude: Double?, minLongitude: Double?, maxLongitude: Double?) async -> [NavigationalWarningModel] {
         guard let minLatitude = minLatitude, let maxLatitude = maxLatitude, let minLongitude = minLongitude, let maxLongitude = maxLongitude else {
             return []
         }
         return list.filter { warning in
-            minLatitude...maxLatitude ~= warning.latitude && minLongitude...maxLongitude ~= warning.longitude
+            minLatitude...maxLatitude ~= warning.latitude ?? 0.0 && minLongitude...maxLongitude ~= warning.longitude ?? 0.0
         }
     }
 

@@ -99,7 +99,7 @@ final class PortCoreDataDataSourceTests: XCTestCase {
         XCTAssertNil(no)
     }
 
-    func testGetPortsInBounds() {
+    func testGetPortsInBounds() async {
         var newItem: Marlin.Port?
         var newItem2: Marlin.Port?
         persistentStore.viewContext.performAndWait {
@@ -128,13 +128,13 @@ final class PortCoreDataDataSourceTests: XCTestCase {
 
         let dataSource = PortCoreDataDataSource()
 
-        let retrieved = dataSource.getPortsInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
+        let retrieved = await dataSource.getPortsInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
         XCTAssertEqual(retrieved.count, 1)
         XCTAssertEqual(retrieved[0].portNumber, Int(newItem2.portNumber))
-        let retrieved2 = dataSource.getPortsInBounds(filters: nil, minLatitude: 0, maxLatitude: 1, minLongitude: 0, maxLongitude: 1)
+        let retrieved2 = await dataSource.getPortsInBounds(filters: nil, minLatitude: 0, maxLatitude: 1, minLongitude: 0, maxLongitude: 1)
         XCTAssertEqual(retrieved2.count, 1)
         XCTAssertEqual(retrieved2[0].portNumber, Int(newItem.portNumber))
-        let retrieved3 = dataSource.getPortsInBounds(filters: nil, minLatitude: 0, maxLatitude: 21, minLongitude: 0, maxLongitude: 21)
+        let retrieved3 = await dataSource.getPortsInBounds(filters: nil, minLatitude: 0, maxLatitude: 21, minLongitude: 0, maxLongitude: 21)
         XCTAssertEqual(retrieved3.count, 2)
     }
 

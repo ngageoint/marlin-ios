@@ -92,8 +92,8 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
             try? persistentStore.viewContext.save()
         }
         
-        let view = NavigationalWarningAreaUnreadBadge(navArea: "A", warnings: warnings)
-        
+        let view = NavigationalWarningAreaUnreadBadge(unreadCount: 2)
+
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -152,7 +152,7 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    NavigationalWarningAreaUnreadBadge(navArea: passThrough.navArea, warnings: passThrough.warnings)
+                    NavigationalWarningAreaUnreadBadge(unreadCount: 1)
                 }
             }
         }
@@ -224,7 +224,7 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    NavigationalWarningAreaUnreadBadge(navArea: passThrough.navArea, warnings: passThrough.warnings)
+                    NavigationalWarningAreaUnreadBadge(unreadCount: 2)
                 }
             }
         }

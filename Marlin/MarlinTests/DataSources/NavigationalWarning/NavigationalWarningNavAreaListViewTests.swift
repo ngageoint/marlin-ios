@@ -97,7 +97,7 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $router.path) {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                    NavigationalWarningNavAreaListView(navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
                         .marlinRoutes()
                 }
                 .environmentObject(router)
@@ -252,7 +252,7 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $router.path) {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                    NavigationalWarningNavAreaListView(navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
                         .marlinRoutes()
                 }
                 .environmentObject(router)
@@ -330,7 +330,7 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $router.path) {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                    NavigationalWarningNavAreaListView(navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
                         .marlinRoutes()
                 }
                 .environmentObject(router)
@@ -409,7 +409,7 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $router.path) {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                    NavigationalWarningNavAreaListView(navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
                         .marlinRoutes()
                 }
                 .environmentObject(router)
@@ -491,7 +491,7 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             
             var body: some View {
                 NavigationStack(path: $router.path) {
-                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
+                    NavigationalWarningNavAreaListView(navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
                         .marlinRoutes()
                 }
                 .environmentObject(router)

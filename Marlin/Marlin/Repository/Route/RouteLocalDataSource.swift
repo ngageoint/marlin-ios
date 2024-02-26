@@ -53,7 +53,13 @@ class RouteCoreDataDataSource: CoreDataDataSource, RouteLocalDataSource, Observa
         return nil
     }
     
-    func getRoutesInBounds(filters: [DataSourceFilterParameter]?, minLatitude: Double?, maxLatitude: Double?, minLongitude: Double?, maxLongitude: Double?) -> [RouteModel] {
+    func getRoutesInBounds(
+        filters: [DataSourceFilterParameter]?,
+        minLatitude: Double?,
+        maxLatitude: Double?,
+        minLongitude: Double?,
+        maxLongitude: Double?
+    ) -> [RouteModel] {
         var routes: [RouteModel] = []
         // TODO: this should probably execute on a different context and be a perform
         context.performAndWait {

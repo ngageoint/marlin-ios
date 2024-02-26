@@ -38,7 +38,7 @@ final class NavigationalWarningDetailTests: XCTestCase {
     }
     
     func testLoading() {
-        var newItem = NavigationalWarningModel()
+        var newItem = NavigationalWarningModel(navArea: "P")
 
         newItem.cancelMsgNumber = 1
         newItem.authority = "authority"
@@ -59,7 +59,7 @@ final class NavigationalWarningDetailTests: XCTestCase {
 
         let bookmarkStaticRepository = BookmarkStaticRepository(navigationalWarningRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
-        let detailView = NavigationalWarningDetailView()
+        let detailView = NavigationalWarningDetailView(msgYear: newItem.msgYear!, msgNumber: newItem.msgNumber!, navArea: newItem.navArea)
 //        newItem.detailView.environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(bookmarkRepository)
         

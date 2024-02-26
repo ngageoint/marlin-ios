@@ -76,8 +76,8 @@ class BookmarkStaticRepository: BookmarkRepository {
         case NavigationalWarning.key:
             if split.count == 3 {
                 return navigationalWarningRepository?.getNavigationalWarning(
-                    msgYear: Int64(split[0]) ?? 0,
-                    msgNumber: Int64(split[1]) ?? 0,
+                    msgYear: Int(split[0]) ?? 0,
+                    msgNumber: Int(split[1]) ?? 0,
                     navArea: "\(split[2])"
                 )
             }

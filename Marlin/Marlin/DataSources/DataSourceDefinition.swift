@@ -78,6 +78,7 @@ enum DataSources {
     static let port: PortDefinition = PortDefinition()
     static let radioBeacon: RadioBeaconDefinition = RadioBeaconDefinition()
     static let route: RouteDefinition = RouteDefinition()
+    static let userPlace: UserPlaceDefinition = UserPlaceDefinition()
 
     // swiftlint:disable cyclomatic_complexity
     static func filterableFromDefintion(_ definition: any DataSourceDefinition) -> Filterable? {
@@ -106,7 +107,8 @@ enum DataSources {
             return DataSourceDefinitions.radioBeacon.filterable
         case is DataSources.ChartCorrectionDefinition:
             return DataSourceDefinitions.chartCorrection.filterable
-
+        case is DataSources.UserPlaceDefinition:
+            return DataSources.userPlace.filterable
         default:
             return nil
         }
@@ -173,6 +175,8 @@ enum DataSources {
             return DataSources.radioBeacon
         case DataSources.route.key:
             return DataSources.route
+        case DataSources.userPlace.key:
+            return DataSources.userPlace
         default:
             return nil
         }
@@ -213,6 +217,21 @@ extension DataSources {
         var name: String = NSLocalizedString("Routes", comment: "Route data source display name")
         var fullName: String = NSLocalizedString("Routes", comment: "Route data source full display name")
         @AppStorage("routeOrder") var order: Int = 0
+
+        fileprivate init() { }
+    }
+
+    class UserPlaceDefinition: DataSourceDefinition {
+        var filterable: Filterable? = CommonFilterable()
+        var mappable: Bool = false
+        var color: UIColor = Color.primaryUIColor
+        var imageName: String?
+        var systemImageName: String? = "mappin"
+        var key: String = "UserPlace"
+        var metricsKey: String = "UserPlace"
+        var name: String = "My Places"
+        var fullName: String = "My Places"
+        @AppStorage("userPlaceOrder") var order: Int = 0
 
         fileprivate init() { }
     }

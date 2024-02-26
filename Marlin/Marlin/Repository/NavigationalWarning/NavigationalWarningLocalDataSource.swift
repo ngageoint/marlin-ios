@@ -184,9 +184,10 @@ class NavigationalWarningCoreDataDataSource:
     func getNavigationalWarnings(
         filters: [DataSourceFilterParameter]?
     ) async -> [NavigationalWarningModel] {
+        let context = PersistenceController.current.newTaskContext()
         return await context.perform {
             let fetchRequest = DataType.fetchRequest()
-            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
+            let predicates: [NSPredicate] = self.buildPredicates(filters: filters)
 
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
             fetchRequest.predicate = predicate
@@ -194,7 +195,7 @@ class NavigationalWarningCoreDataDataSource:
             fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.asam.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
-            return (self.context.fetch(request: fetchRequest)?.map { navigationalWarning in
+            return (context.fetch(request: fetchRequest)?.map { navigationalWarning in
                 NavigationalWarningModel(navigationalWarning: navigationalWarning)
             }) ?? []
         }
@@ -407,7 +408,10 @@ extension NavigationalWarningCoreDataDataSource {
         NSLog("Received \(count) \(DataSources.navWarning.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = NavigationalWarningDataLoadOperation(navigationalWarnings: navigationalWarnings, localDataSource: self)
+        operation = NavigationalWarningDataLoadOperation(
+            navigationalWarnings: navigationalWarnings,
+            localDataSource: self
+        )
 
         return await executeOperationInBackground(task: task)
     }

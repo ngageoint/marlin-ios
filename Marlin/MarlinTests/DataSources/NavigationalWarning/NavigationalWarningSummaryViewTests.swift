@@ -12,43 +12,10 @@ import SwiftUI
 @testable import Marlin
 
 final class NavigationalWarningSummaryViewTests: XCTestCase {
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    override func setUp(completion: @escaping (Error?) -> Void) {
-        for dataSource in DataSourceDefinitions.allCases {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
-    }
-    
-    override func tearDown(completion: @escaping (Error?) -> Void) {
-        persistentStore.viewContext.performAndWait {
-            if let nws = persistentStore.viewContext.fetchAll(NavigationalWarning.self) {
-                for nw in nws {
-                    persistentStore.viewContext.delete(nw)
-                }
-            }
-            try? persistentStore.viewContext.save()
-        }
-        completion(nil)
-    }
-    
+
     func testLoading() {
-        let nw = NavigationalWarning(context: persistentStore.viewContext)
-        
+        var nw = NavigationalWarningModel(navArea: "P")
+
         nw.cancelMsgNumber = 1
         nw.authority = "authority"
         nw.cancelDate = Date(timeIntervalSince1970: 0)
@@ -62,12 +29,14 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         nw.subregion = "subregion"
         nw.text = "text of the warning"
         
-        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
+        let localDataSource = NavigationalWarningStaticLocalDataSource()
+        localDataSource.list.append(nw)
+        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
 
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
-        let summary = nw.summary
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkStaticRepository(navigationalWarningRepository: repository))
+        let summary = NavigationalWarningSummaryView(navigationalWarning: nw)
             .setShowMoreDetails(false)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
@@ -84,7 +53,7 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapView(withAccessibilityLabel: "dismiss popup")
         
-        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: nw)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: nw)
 
     }
 }

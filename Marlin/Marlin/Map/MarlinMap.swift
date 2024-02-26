@@ -554,9 +554,23 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
             })
     }
     
-    func handleTappedItems(annotations: [MKAnnotation], items: [DataSource], itemKeys: [String: [String]], mapName: String) {
-        let notification = MapItemsTappedNotification(annotations: annotations, items: items, itemKeys: itemKeys, mapName: mapName)
-        NotificationCenter.default.post(name: marlinMap.notificationOnTap, object: notification)
+    func handleTappedItems(
+        annotations: [MKAnnotation],
+        items: [DataSource],
+        itemKeys: [String: [String]],
+        mapName: String
+    ) {
+        Task {
+            await MainActor.run {
+                let notification = MapItemsTappedNotification(
+                    annotations: annotations,
+                    items: items,
+                    itemKeys: itemKeys,
+                    mapName: mapName
+                )
+                NotificationCenter.default.post(name: marlinMap.notificationOnTap, object: notification)
+            }
+        }
     }
     
     @objc func singleTapGesture(tapGestureRecognizer: UITapGestureRecognizer) {
