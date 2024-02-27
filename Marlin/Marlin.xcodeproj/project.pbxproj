@@ -385,6 +385,16 @@
 		F767DB412B8D1096002C12C7 /* UserPlaceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB402B8D1096002C12C7 /* UserPlaceModel.swift */; };
 		F767DB432B8D11A9002C12C7 /* UserPlaceFilterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB422B8D11A9002C12C7 /* UserPlaceFilterable.swift */; };
 		F767DB462B8D40EA002C12C7 /* UserPlaceCoreDataDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB452B8D40EA002C12C7 /* UserPlaceCoreDataDataSourceTests.swift */; };
+		F767DB482B8D5A04002C12C7 /* ElectronicPublicationsSectionListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB472B8D5A04002C12C7 /* ElectronicPublicationsSectionListViewModel.swift */; };
+		F767DB4A2B8E267F002C12C7 /* ElectronicPublicationsCompleteVolumesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB492B8E267F002C12C7 /* ElectronicPublicationsCompleteVolumesList.swift */; };
+		F767DB4C2B8E276D002C12C7 /* ElectronicPublicationsTypeIdListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB4B2B8E276D002C12C7 /* ElectronicPublicationsTypeIdListViewModel.swift */; };
+		F767DB4E2B8E38EF002C12C7 /* ElectronicPublicationsTypeIdListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB4D2B8E38EF002C12C7 /* ElectronicPublicationsTypeIdListView.swift */; };
+		F767DB502B8E4295002C12C7 /* ElectronicPublictionsCompleteVolumeListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB4F2B8E4295002C12C7 /* ElectronicPublictionsCompleteVolumeListViewModel.swift */; };
+		F767DB522B8E4664002C12C7 /* ElectronicPublicationsChaptersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB512B8E4664002C12C7 /* ElectronicPublicationsChaptersList.swift */; };
+		F767DB542B8E47DB002C12C7 /* ElectronicPublicationsChaptersListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB532B8E47DB002C12C7 /* ElectronicPublicationsChaptersListViewModel.swift */; };
+		F767DB562B8E5155002C12C7 /* ElectronicPublicationsNestedFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB552B8E5155002C12C7 /* ElectronicPublicationsNestedFolder.swift */; };
+		F767DB582B8E53C2002C12C7 /* ElectronicPublicationsNestedFolderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB572B8E53C2002C12C7 /* ElectronicPublicationsNestedFolderViewModel.swift */; };
+		F767DB5A2B8E563E002C12C7 /* ElectronicPublicationsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB592B8E563E002C12C7 /* ElectronicPublicationsListView.swift */; };
 		F77671CB2B34D5930026DD50 /* CoreDataDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77671CA2B34D5930026DD50 /* CoreDataDataSource.swift */; };
 		F77671CD2B34D75A0026DD50 /* CountingDataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77671CC2B34D75A0026DD50 /* CountingDataLoadOperation.swift */; };
 		F7830BFB2A8AB3FE008376F7 /* Route+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFA2A8AB3FE008376F7 /* Route+CoreDataClass.swift */; };
@@ -447,7 +457,7 @@
 		F7C23E06290844740002A7DF /* ElectronicPublication+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23E05290844740002A7DF /* ElectronicPublication+Decodable.swift */; };
 		F7C23E0A29084F280002A7DF /* ElectronicPublicationSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23E0929084F280002A7DF /* ElectronicPublicationSummaryView.swift */; };
 		F7C23E0C290850D70002A7DF /* ElectronicPublicationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23E0B290850D70002A7DF /* ElectronicPublicationDetailView.swift */; };
-		F7C23E0E2908609E0002A7DF /* ElectronicPublicationsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23E0D2908609E0002A7DF /* ElectronicPublicationsList.swift */; };
+		F7C23E0E2908609E0002A7DF /* ElectronicPublicationsSectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23E0D2908609E0002A7DF /* ElectronicPublicationsSectionList.swift */; };
 		F7C23E102909AC430002A7DF /* ElectronicPublicationActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23E0F2909AC430002A7DF /* ElectronicPublicationActionBar.swift */; };
 		F7C23E122909B6C70002A7DF /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23E112909B6C70002A7DF /* DownloadManager.swift */; };
 		F7C23E1429115AF40002A7DF /* DocumentPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23E1329115AF40002A7DF /* DocumentPreview.swift */; };
@@ -1017,6 +1027,16 @@
 		F767DB402B8D1096002C12C7 /* UserPlaceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPlaceModel.swift; sourceTree = "<group>"; };
 		F767DB422B8D11A9002C12C7 /* UserPlaceFilterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPlaceFilterable.swift; sourceTree = "<group>"; };
 		F767DB452B8D40EA002C12C7 /* UserPlaceCoreDataDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPlaceCoreDataDataSourceTests.swift; sourceTree = "<group>"; };
+		F767DB472B8D5A04002C12C7 /* ElectronicPublicationsSectionListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationsSectionListViewModel.swift; sourceTree = "<group>"; };
+		F767DB492B8E267F002C12C7 /* ElectronicPublicationsCompleteVolumesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationsCompleteVolumesList.swift; sourceTree = "<group>"; };
+		F767DB4B2B8E276D002C12C7 /* ElectronicPublicationsTypeIdListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationsTypeIdListViewModel.swift; sourceTree = "<group>"; };
+		F767DB4D2B8E38EF002C12C7 /* ElectronicPublicationsTypeIdListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationsTypeIdListView.swift; sourceTree = "<group>"; };
+		F767DB4F2B8E4295002C12C7 /* ElectronicPublictionsCompleteVolumeListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublictionsCompleteVolumeListViewModel.swift; sourceTree = "<group>"; };
+		F767DB512B8E4664002C12C7 /* ElectronicPublicationsChaptersList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationsChaptersList.swift; sourceTree = "<group>"; };
+		F767DB532B8E47DB002C12C7 /* ElectronicPublicationsChaptersListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationsChaptersListViewModel.swift; sourceTree = "<group>"; };
+		F767DB552B8E5155002C12C7 /* ElectronicPublicationsNestedFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationsNestedFolder.swift; sourceTree = "<group>"; };
+		F767DB572B8E53C2002C12C7 /* ElectronicPublicationsNestedFolderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationsNestedFolderViewModel.swift; sourceTree = "<group>"; };
+		F767DB592B8E563E002C12C7 /* ElectronicPublicationsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationsListView.swift; sourceTree = "<group>"; };
 		F7738AEA2B322B5A00157CA3 /* libKIF.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libKIF.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F77671CA2B34D5930026DD50 /* CoreDataDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataDataSource.swift; sourceTree = "<group>"; };
 		F77671CC2B34D75A0026DD50 /* CountingDataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountingDataLoadOperation.swift; sourceTree = "<group>"; };
@@ -1085,7 +1105,7 @@
 		F7C23E05290844740002A7DF /* ElectronicPublication+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ElectronicPublication+Decodable.swift"; sourceTree = "<group>"; };
 		F7C23E0929084F280002A7DF /* ElectronicPublicationSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationSummaryView.swift; sourceTree = "<group>"; };
 		F7C23E0B290850D70002A7DF /* ElectronicPublicationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationDetailView.swift; sourceTree = "<group>"; };
-		F7C23E0D2908609E0002A7DF /* ElectronicPublicationsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationsList.swift; sourceTree = "<group>"; };
+		F7C23E0D2908609E0002A7DF /* ElectronicPublicationsSectionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationsSectionList.swift; sourceTree = "<group>"; };
 		F7C23E0F2909AC430002A7DF /* ElectronicPublicationActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicPublicationActionBar.swift; sourceTree = "<group>"; };
 		F7C23E112909B6C70002A7DF /* DownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
 		F7C23E1329115AF40002A7DF /* DocumentPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPreview.swift; sourceTree = "<group>"; };
@@ -2525,9 +2545,19 @@
 			children = (
 				F7C23E0929084F280002A7DF /* ElectronicPublicationSummaryView.swift */,
 				F7C23E0B290850D70002A7DF /* ElectronicPublicationDetailView.swift */,
-				F7C23E0D2908609E0002A7DF /* ElectronicPublicationsList.swift */,
+				F7C23E0D2908609E0002A7DF /* ElectronicPublicationsSectionList.swift */,
 				F7C23E0F2909AC430002A7DF /* ElectronicPublicationActionBar.swift */,
 				F72478A42B800F85003D4118 /* ElectronicPublicationViewModel.swift */,
+				F767DB472B8D5A04002C12C7 /* ElectronicPublicationsSectionListViewModel.swift */,
+				F767DB492B8E267F002C12C7 /* ElectronicPublicationsCompleteVolumesList.swift */,
+				F767DB4B2B8E276D002C12C7 /* ElectronicPublicationsTypeIdListViewModel.swift */,
+				F767DB4D2B8E38EF002C12C7 /* ElectronicPublicationsTypeIdListView.swift */,
+				F767DB4F2B8E4295002C12C7 /* ElectronicPublictionsCompleteVolumeListViewModel.swift */,
+				F767DB512B8E4664002C12C7 /* ElectronicPublicationsChaptersList.swift */,
+				F767DB532B8E47DB002C12C7 /* ElectronicPublicationsChaptersListViewModel.swift */,
+				F767DB552B8E5155002C12C7 /* ElectronicPublicationsNestedFolder.swift */,
+				F767DB572B8E53C2002C12C7 /* ElectronicPublicationsNestedFolderViewModel.swift */,
+				F767DB592B8E563E002C12C7 /* ElectronicPublicationsListView.swift */,
 			);
 			path = ElectronicPublication;
 			sourceTree = "<group>";
@@ -3698,6 +3728,7 @@
 				F7FFB30028D6376100C31AA3 /* NavigationalWarning+Decodable.swift in Sources */,
 				F7B84E222A72DEB200640C76 /* BookmarkButton.swift in Sources */,
 				F7D671F1287484FE00758F1C /* MarlinUserDefaults.swift in Sources */,
+				F767DB562B8E5155002C12C7 /* ElectronicPublicationsNestedFolder.swift in Sources */,
 				F7364E3E2A1E46860098F243 /* NavigationalWarningAreasView.swift in Sources */,
 				F7C5F1E82AEC44430091BC01 /* NavigationalWarningRepository.swift in Sources */,
 				F7EFFEBF2A7C0F300097E5EF /* DataSourceSummaryView.swift in Sources */,
@@ -3706,6 +3737,7 @@
 				F71DF4862857954A00686951 /* Modu.swift in Sources */,
 				F7CB01132B61591600034B9C /* TileRepository.swift in Sources */,
 				F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */,
+				F767DB4C2B8E276D002C12C7 /* ElectronicPublicationsTypeIdListViewModel.swift in Sources */,
 				F7D671E72871D46000758F1C /* SideMenuContent.swift in Sources */,
 				F7391CAB2ABB98440002ABDD /* PortRepository.swift in Sources */,
 				F72E4DA32B6A91F4006ED371 /* PortList.swift in Sources */,
@@ -3719,6 +3751,7 @@
 				F7517D452B16805100A9DC72 /* AsamSheetView.swift in Sources */,
 				F72478B32B880430003D4118 /* NavigationalWarningViewModel.swift in Sources */,
 				F715E2EB2B741F5900752688 /* RadioBeaconList.swift in Sources */,
+				F767DB542B8E47DB002C12C7 /* ElectronicPublicationsChaptersListViewModel.swift in Sources */,
 				F730DFC72A9950B20051775C /* GeoJSONExportable.swift in Sources */,
 				F7222FAE2B6D71A000C3E4F1 /* DifferentialGPSStationRemoteDataSource.swift in Sources */,
 				F73357032B308F9900BEE26F /* PortFilterable.swift in Sources */,
@@ -3820,16 +3853,19 @@
 				F7F597B02866241100F9B32E /* NavigationalWarningsAreaViewModel.swift in Sources */,
 				F71DF4962858C18000686951 /* StyledPolyline.swift in Sources */,
 				F714DD7C2B335B28003D7996 /* DataSourceDefinition.swift in Sources */,
+				F767DB582B8E53C2002C12C7 /* ElectronicPublicationsNestedFolderViewModel.swift in Sources */,
 				F7AFF9412AD46A2300555960 /* AllRoutesMixin.swift in Sources */,
 				F7222F9A2B6D4DAA00C3E4F1 /* DifferentialGPSStationInitialDataLoadOperation.swift in Sources */,
 				F7D8FA3C2939232100E7D0A1 /* FilterViewModel.swift in Sources */,
 				F72E4D8F2B6996D3006ED371 /* PortLocalDataSource.swift in Sources */,
+				F767DB502B8E4295002C12C7 /* ElectronicPublictionsCompleteVolumeListViewModel.swift in Sources */,
 				F75E32C129C4BC1F006F2394 /* LayerConfigurationView.swift in Sources */,
 				F7222F852B6C05BB00C3E4F1 /* ElectronicPublicationDataLoadOperation.swift in Sources */,
 				F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */,
 				F7066DB02A4F7AF90058122E /* MarlinRoute.swift in Sources */,
 				F7DEA1D62B6AD18E00EB801A /* RadioBeaconLocalDataSource.swift in Sources */,
 				F7D8FA6E293E92A900E7D0A1 /* SortViewModel.swift in Sources */,
+				F767DB5A2B8E563E002C12C7 /* ElectronicPublicationsListView.swift in Sources */,
 				F71D286E28BE8CB800F1775C /* DFRS+CoreDataClass.swift in Sources */,
 				F73357092B308FFB00BEE26F /* CommonFilterable.swift in Sources */,
 				F7D8FA5A293AA15B00E7D0A1 /* DataSourceSortParameter.swift in Sources */,
@@ -3849,9 +3885,11 @@
 				F714DD822B337376003D7996 /* ImportGeoPackageFile.swift in Sources */,
 				F7DEA1ED2B6BECF900EB801A /* ElectronicPublicationService.swift in Sources */,
 				F7C23DFC2906F1460002A7DF /* Metrics.swift in Sources */,
+				F767DB4A2B8E267F002C12C7 /* ElectronicPublicationsCompleteVolumesList.swift in Sources */,
 				F7E768B729EF11CC001EFFFF /* NAVTEXTextParser.swift in Sources */,
 				F7DEA1D42B6AB7B500EB801A /* PortSheetView.swift in Sources */,
 				F7397C732AFED08100E79852 /* AsamsViewModel.swift in Sources */,
+				F767DB522B8E4664002C12C7 /* ElectronicPublicationsChaptersList.swift in Sources */,
 				F72E4D982B69A842006ED371 /* PortRemoteDataSource.swift in Sources */,
 				F7ADDCE22887026500137D95 /* LocationManager.swift in Sources */,
 				F715E3012B7557AD00752688 /* DifferentialGPSStationPropertyContainer.swift in Sources */,
@@ -3892,7 +3930,7 @@
 				F715E30F2B766BF400752688 /* DifferentialGPSStationGeoPackageExportable.swift in Sources */,
 				F71F2B202ACF3CC700DFB5BA /* PublisherExtensions.swift in Sources */,
 				F71E3E3A28F49ABE002F2019 /* SearchResultsMap.swift in Sources */,
-				F7C23E0E2908609E0002A7DF /* ElectronicPublicationsList.swift in Sources */,
+				F7C23E0E2908609E0002A7DF /* ElectronicPublicationsSectionList.swift in Sources */,
 				F7EFFEC72A7D57980097E5EF /* NoticeToMarinersSummaryView.swift in Sources */,
 				F7FFB30428D6389700C31AA3 /* AsamPropertyContainer.swift in Sources */,
 				F733570B2B30901F00BEE26F /* NoticeToMarinersFilterable.swift in Sources */,
@@ -3924,6 +3962,7 @@
 				F71DF4942858C0EF00686951 /* StyledPolygon.swift in Sources */,
 				F7D671D6286DFAA800758F1C /* UserTrackingButton.swift in Sources */,
 				F7FFB32828D6427200C31AA3 /* RadioBeaconPropertyContainer.swift in Sources */,
+				F767DB482B8D5A04002C12C7 /* ElectronicPublicationsSectionListViewModel.swift in Sources */,
 				F71D287B28C1401500F1775C /* FetchRequestMap.swift in Sources */,
 				F70BCE9B29D1F61C00AEF73D /* GeoPackageCompositeOverlay.swift in Sources */,
 				F7D671D8286E163E00758F1C /* MapSettings.swift in Sources */,
@@ -3937,6 +3976,7 @@
 				F7D671DE286F877C00758F1C /* MaterialButtonStyle.swift in Sources */,
 				F7222FA32B6D4F7800C3E4F1 /* NoticeToMarinersInitialDataLoadOperation.swift in Sources */,
 				F7FFB34528DE18B900C31AA3 /* Badge.swift in Sources */,
+				F767DB4E2B8E38EF002C12C7 /* ElectronicPublicationsTypeIdListView.swift in Sources */,
 				F7DEA1E72B6BEB9D00EB801A /* LightService.swift in Sources */,
 				F72EAADF291EECF400AC6026 /* NTMActionBar.swift in Sources */,
 				F7BDF7742A1BD97C0083B97F /* DataSourceLocationMapView.swift in Sources */,

@@ -122,7 +122,7 @@ final class ElectronicPublicationListTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    ElectronicPublicationsList()
+                    ElectronicPublicationsSectionList()
                 }
             }
         }

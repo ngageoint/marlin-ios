@@ -65,6 +65,14 @@ enum NavigationalWarningRoute: Hashable {
     case areaList(navArea: String)
 }
 
+enum ElectronicPublicationRoute: Hashable {
+    case completeVolumes(typeId: Int)
+    case nestedFolder(typeId: Int)
+    case publicationList(key: String, pubs: [ElectronicPublicationModel])
+    case completeAndChapters(typeId: Int, title: String, chapterTitle: String)
+    case publications(typeId: Int)
+}
+
 enum DataSourceRoute: Hashable {
     case detail(dataSourceKey: String, itemKey: String)
 }
@@ -332,6 +340,20 @@ struct MarlinRouteModifier: ViewModifier {
                         navArea: navArea,
                         mapName: "Navigational Warning List View Map"
                     )
+                }
+            }
+            .navigationDestination(for: ElectronicPublicationRoute.self) { item in
+                switch item {
+                case .publications(typeId: let typeId):
+                    ElectronicPublicationsTypeIdListView(pubTypeId: typeId)
+                case .completeVolumes(typeId: let typeId):
+                    ElectronicPublicationsCompleteVolumesList(pubTypeId: typeId)
+                case .nestedFolder(typeId: let typeId):
+                    ElectronicPublicationsNestedFolder(pubTypeId: typeId)
+                case .publicationList(key: let key, pubs: let pubs):
+                    ElectronicPublicationsListView(key: key, publications: pubs)
+                case .completeAndChapters(typeId: let typeId, title: let title, chapterTitle: let chapterTitle):
+                    ElectronicPublicationsChaptersList(pubTypeId: typeId, title: title, chapterTitle: chapterTitle)
                 }
             }
             .navigationDestination(for: ItemWrapper.self) { item in

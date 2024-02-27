@@ -15,11 +15,14 @@ enum ElectronicPublicationItem: Hashable, Identifiable {
             return epub.id
         case .sectionHeader(let header):
             return header
+        case .pubType(let type, _):
+            return type.description
         }
     }
 
     case listItem(_ epub: ElectronicPublicationListModel)
     case sectionHeader(header: String)
+    case pubType(type: PublicationTypeEnum, count: Int)
 }
 
 class ElectronicPublicationRepository: ObservableObject {
@@ -44,6 +47,14 @@ class ElectronicPublicationRepository: ObservableObject {
     }
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
         localDataSource.getCount(filters: filters)
+    }
+
+    func getPublications(typeId: Int) async -> [ElectronicPublicationModel] {
+        await localDataSource.getPublications(typeId: typeId)
+    }
+
+    func getSections() async -> [ElectronicPublicationItem] {
+        await localDataSource.getSections(filters: nil) ?? []
     }
 
     func sectionHeaders(

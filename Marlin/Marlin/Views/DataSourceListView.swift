@@ -14,8 +14,7 @@ struct DataSourceNavView: View {
     @StateObject private var router: MarlinRouter = MarlinRouter()
 
     var body: some View {
-        Self._printChanges()
-        return NavigationStack(path: $router.path) {
+        NavigationStack(path: $router.path) {
             DataSourceListView(dataSource: dataSource, focusedItem: focusedItem)
                 .marlinRoutes()
                 .environmentObject(router)
@@ -48,7 +47,7 @@ struct DataSourceListView: View {
         } else if dataSource.key == DataSources.dgps.key {
             DifferentialGPSStationList()
         } else if dataSource.key == DataSources.epub.key {
-            ElectronicPublicationsList()
+            ElectronicPublicationsSectionList()
         } else if dataSource.key == DataSources.noticeToMariners.key {
             NoticeToMarinersView()
         } else if dataSource.key == Bookmark.key {

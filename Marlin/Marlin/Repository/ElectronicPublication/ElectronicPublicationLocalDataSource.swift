@@ -13,6 +13,8 @@ import BackgroundTasks
 
 protocol ElectronicPublicationLocalDataSource {
     func getElectronicPublication(s3Key: String?) -> ElectronicPublicationModel?
+    func getSections(filters: [DataSourceFilterParameter]?) async -> [ElectronicPublicationItem]?
+    func getPublications(typeId: Int) async -> [ElectronicPublicationModel]
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
     func observeElectronicPublication(
         s3Key: String
@@ -63,13 +65,99 @@ class ElectronicPublicationCoreDataDataSource:
         let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         fetchRequest.predicate = predicate
 
-        fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.epub.key).map({ sortParameter in
-            sortParameter.toNSSortDescriptor()
-        })
+        fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.epub.key).toNSSortDescriptors()
 
         return context.performAndWait {
             (try? context.count(for: fetchRequest)) ?? 0
         }
+    }
+
+    func getPublications(typeId: Int) async -> [ElectronicPublicationModel] {
+        let filters: [DataSourceFilterParameter] = [
+            DataSourceFilterParameter(
+                property: DataSourceProperty(
+                    name: "Type",
+                    key: #keyPath(ElectronicPublication.pubTypeId),
+                    type: .int
+                ),
+                comparison: .equals,
+                valueInt: typeId
+            )
+        ]
+
+        let fetchRequest = ElectronicPublication.fetchRequest()
+        let predicates: [NSPredicate] = buildPredicates(filters: filters)
+
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        fetchRequest.predicate = predicate
+
+        fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.epub.key).toNSSortDescriptors()
+
+        let context = PersistenceController.current.newTaskContext()
+        return await context.perform {
+            return context.fetch(request: fetchRequest)?
+                .compactMap({ pub in
+                    ElectronicPublicationModel(epub: pub)
+                }) ?? []
+        }
+    }
+
+    func getSections(filters: [DataSourceFilterParameter]?) async -> [ElectronicPublicationItem]? {
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ElectronicPublication")
+        let predicates: [NSPredicate] = buildPredicates(filters: filters)
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        request.predicate = predicate
+
+        let sectionHeaderSort: [DataSourceSortParameter] = [
+            DataSourceSortParameter(
+                property: DataSourceProperty(
+                    name: "Type",
+                    key: #keyPath(ElectronicPublication.pubTypeId),
+                    type: .int),
+                ascending: true,
+                section: true)
+        ]
+
+        let sortDescriptors: [DataSourceSortParameter] = sectionHeaderSort
+
+        let keypathExp = NSExpression(forKeyPath: sortDescriptors[0].property.key)
+        let expression = NSExpression(forFunction: "count:", arguments: [keypathExp])
+        let countDesc = NSExpressionDescription()
+
+        countDesc.expression = expression
+        countDesc.name = "count"
+        countDesc.expressionResultType = .integer64AttributeType
+
+        request.propertiesToGroupBy = [sortDescriptors[0].property.key]
+        request.propertiesToFetch = [sortDescriptors[0].property.key, countDesc]
+        request.resultType = .dictionaryResultType
+        request.sortDescriptors = [sortDescriptors[0].toNSSortDescriptor()]
+        let context = PersistenceController.current.newTaskContext()
+
+        return await context.perform {
+            if let res = try? context.fetch(request) as? [[String: Any]] {
+                struct PubTypeCount {
+                    var pubType: PublicationTypeEnum
+                    var count: Int
+                }
+
+                return res.compactMap({ result in
+                    if let id = result["pubTypeId"] as? Int,
+                       let pubType = PublicationTypeEnum(rawValue: id) {
+                        return PubTypeCount(pubType: pubType, count: result["count"] as? Int ?? 0)
+                    }
+                    return nil
+                })
+                .sorted(by: { pubTypeCount1, pubTypeCount2 in
+                    pubTypeCount1.pubType.description < pubTypeCount2.pubType.description
+                })
+                .compactMap { pubTypeCount in
+                    ElectronicPublicationItem.pubType(type: pubTypeCount.pubType, count: pubTypeCount.count)
+                }
+            }
+            return nil
+        }
+
     }
 }
 
@@ -370,11 +458,17 @@ extension ElectronicPublicationCoreDataDataSource {
 
         request.sortDescriptors = [sortDescriptors[0].toNSSortDescriptor()]
         var epubs: [ElectronicPublicationItem] = []
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let res = try? context.fetch(request) as? [[String: Any]] {
                 epubs = res.compactMap {
-                    ElectronicPublicationItem.sectionHeader(
-                        header: "\(PublicationTypeEnum(rawValue: $0["pubTypeId"] as? Int ?? -1)?.description ?? "")")
+                    PublicationTypeEnum(rawValue: $0["pubTypeId"] as? Int ?? -1)
+                }
+                .sorted(by: { section1, section2 in
+                    section1.description < section2.description
+                })
+                .compactMap {
+                    ElectronicPublicationItem.pubType(type: $0, count: 0)
                 }
             }
         }
