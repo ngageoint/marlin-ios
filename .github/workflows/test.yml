@@ -23,6 +23,7 @@ jobs:
           echo $default | cat >default
           echo Using default scheme: $default
       - name: Install Pods
+        working-directory: ./Marlin
         run: |
           pod repo update
           pod install
