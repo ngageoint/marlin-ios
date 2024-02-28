@@ -10,7 +10,8 @@ import SwiftUI
 
 struct ElectronicPublicationsNestedFolder: View {
     @EnvironmentObject var repository: ElectronicPublicationRepository
-    @StateObject var viewModel: ElectronicPublicationsNestedFolderViewModel = ElectronicPublicationsNestedFolderViewModel()
+    @StateObject var viewModel: ElectronicPublicationsNestedFolderViewModel = 
+        ElectronicPublicationsNestedFolderViewModel()
     var pubTypeId: Int
 
     var body: some View {
@@ -23,7 +24,7 @@ struct ElectronicPublicationsNestedFolder: View {
                                 .renderingMode(.template)
                                 .foregroundColor(Color.onSurfaceColor.opacity(0.87))
                             VStack(alignment: .leading) {
-                                Text("\(key ?? "")")
+                                Text(key)
                                     .primary()
                                 Text("\(group.count) files")
                                     .secondary()
@@ -32,7 +33,7 @@ struct ElectronicPublicationsNestedFolder: View {
                         .padding(.top, 8)
                         .padding(.bottom, 8)
                         .accessibilityElement()
-                        .accessibilityLabel(key ?? "")
+                        .accessibilityLabel(key)
                     }
                 }
             }
@@ -45,6 +46,7 @@ struct ElectronicPublicationsNestedFolder: View {
         .task {
             viewModel.repository = repository
             viewModel.pubTypeId = pubTypeId
+            Metrics.shared.appRoute(["epubs", PublicationTypeEnum(rawValue: pubTypeId)?.description ?? "pubs"])
         }
     }
 }

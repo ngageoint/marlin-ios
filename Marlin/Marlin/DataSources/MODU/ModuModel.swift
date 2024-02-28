@@ -148,9 +148,7 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
-    
-    var modu: Modu?
-    
+
     var date: Date?
     var distance: Double?
     var latitude: Double
@@ -167,7 +165,7 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
     var bookmark: Bookmark?
     
     func isEqualTo(_ other: ModuModel) -> Bool {
-        return self.modu == other.modu
+        return self.name == other.name
     }
     
     static func == (lhs: ModuModel, rhs: ModuModel) -> Bool {
@@ -181,7 +179,6 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
     }
 
     init(modu: Modu) {
-        self.modu = modu
         self.canBookmark = true
         self.date = modu.date
         self.distance = modu.distance

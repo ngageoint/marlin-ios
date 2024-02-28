@@ -34,6 +34,8 @@ struct NavigationalWarningAreasView: View {
             List {
                 if let navArea = viewModel.currentArea {
                     CurrentNavigationalWarningSection(navAreaInformation: navArea, mapName: mapName)
+                        .accessibilityLabel("\(navArea.navArea.display) (Current)")
+                        .accessibilityElement(children: .contain)
                 }
                 ForEach(viewModel.warningAreas) { area in
 
@@ -41,7 +43,6 @@ struct NavigationalWarningAreasView: View {
                         .accessibilityElement(children: .contain)
                         .accessibilityLabel("\(area.navArea.display)")
                 }
-                .accessibilityElement(children: .contain)
                 .listRowBackground(Color.surfaceColor)
                 .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
                 .accessibilityElement(children: .contain)
@@ -76,6 +77,7 @@ struct NavigationalWarningAreasView: View {
                 viewModel.currentNavAreaName = newValue
             })
             .onAppear {
+                print("xxx current nav area name \(generalLocation.currentNavAreaName)")
                 viewModel.currentNavAreaName = generalLocation.currentNavAreaName
                 viewModel.repository = repository
             }

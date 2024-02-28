@@ -182,8 +182,8 @@ final class AsamCoreDataDataSourceTests: XCTestCase {
     }
 
     func testGetAsamsInBounds() async {
-        var newItem: Asam?
-        var newItem2: Asam?
+        var newItem: AsamModel?
+        var newItem2: AsamModel?
         persistentStore.viewContext.performAndWait {
             let asam = Asam(context: persistentStore.viewContext)
             asam.asamDescription = "description"
@@ -197,7 +197,7 @@ final class AsamCoreDataDataSourceTests: XCTestCase {
             asam.hostility = "Boarding"
             asam.victim = "Ship"
 
-            newItem = asam
+            newItem = AsamModel(asam: asam)
 
             let asam2 = Asam(context: persistentStore.viewContext)
             asam2.asamDescription = "description"
@@ -211,7 +211,7 @@ final class AsamCoreDataDataSourceTests: XCTestCase {
             asam2.hostility = "Boarding"
             asam2.victim = "Boat"
 
-            newItem2 = asam2
+            newItem2 = AsamModel(asam: asam2)
             try? persistentStore.viewContext.save()
         }
         guard let newItem = newItem else {

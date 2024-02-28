@@ -13,7 +13,14 @@ import BackgroundTasks
 
 class NavigationalWarningStaticLocalDataSource: NavigationalWarningLocalDataSource {
     func getNavAreasInformation() async -> [Marlin.NavigationalAreaInformation] {
-        []
+        let grouped = Dictionary(grouping: list, by: { $0.navArea })
+        var areas: [NavigationalAreaInformation] = []
+        for (navArea, models) in grouped {
+            if let navArea = NavigationalWarningNavArea.fromId(id: navArea) {
+                areas.append(NavigationalAreaInformation(navArea: navArea, unread: models.count, total: models.count))
+            }
+        }
+        return areas
     }
     
     func postProcess() async {
@@ -37,7 +44,9 @@ class NavigationalWarningStaticLocalDataSource: NavigationalWarningLocalDataSour
     }
 
     func getNavigationalWarnings(filters: [Marlin.DataSourceFilterParameter]?) async -> [Marlin.NavigationalWarningModel] {
-        list
+        list.sorted { first, second in
+            first.issueDate ?? Date(timeIntervalSince1970: 0) > second.issueDate ?? Date(timeIntervalSince1970: 0)
+        }
     }
 
     func navigationalWarnings(filters: [Marlin.DataSourceFilterParameter]?, paginatedBy paginator: Marlin.Trigger.Signal?) -> AnyPublisher<[Marlin.NavigationalWarningItem], Error> {

@@ -39,6 +39,12 @@ enum MockEnum: String, CaseIterable, CustomStringConvertible {
     }
 }
 
+extension DataSources {
+    static let mockDataSource: MockDataSourceDefinition = MockDataSourceDefinition()
+    static let mockDataSourceDefaultSort: MockDataSourceDefaultSortDefinition = MockDataSourceDefaultSortDefinition()
+    static let mockDataSourceNonMappable: MockDataSourceNonMappableDefinition = MockDataSourceNonMappableDefinition()
+}
+
 class MockDataSourceDefinition: DataSourceDefinition {
     var mappable: Bool = true
     var color: UIColor = .black
@@ -49,11 +55,38 @@ class MockDataSourceDefinition: DataSourceDefinition {
     var name: String = NSLocalizedString("mockdatasource", comment: "mockdatasource data source display name")
     var fullName: String = NSLocalizedString("mock data source", comment: "mock data source data source full display name")
     var order: Int = 0
+    var filterable: Filterable? = MockDataSourceFilterable()
+}
+
+class MockDataSourceFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSources.mockDataSource
+    }
+
+    var properties: [Marlin.DataSourceProperty] = [
+        DataSourceProperty(name: "String", key: "stringProperty", type: .string),
+        DataSourceProperty(name: "Date", key: "dateProperty", type: .date),
+        DataSourceProperty(name: "Int", key: "intProperty", type: .int),
+        DataSourceProperty(name: "Double", key: "doubleProperty", type: .double),
+        DataSourceProperty(name: "Float", key: "floatProperty", type: .float),
+        DataSourceProperty(name: "Enumeration", key: "enumerationProperty", type: .enumeration),
+        DataSourceProperty(name: "Location", key: "locationProperty", type: .location),
+        DataSourceProperty(name: "Latitude", key: "latitudeProperty", type: .latitude),
+        DataSourceProperty(name: "Longitude", key: "longitudeProperty", type: .longitude),
+        DataSourceProperty(name: "Date", key: "dateProperty", type: .date),
+        DataSourceProperty(name: "Boolean", key: "booleanProperty", type: .boolean)
+    ]
+
+    var defaultFilter: [Marlin.DataSourceFilterParameter] = []
+
+    var defaultSort: [Marlin.DataSourceSortParameter] = []
 }
 
 class MockDataSource: DataSource {
-    static var definition: any DataSourceDefinition = MockDataSourceDefinition()
-    
+    static var definition: any DataSourceDefinition {
+        DataSources.mockDataSource
+    }
+
     var itemKey: String { "itemKey" }
     
     var itemTitle: String { "itemTitle" }
@@ -129,6 +162,25 @@ class MockDataSourceDefaultSortDefinition: DataSourceDefinition {
     var name: String = NSLocalizedString("mockdefaultsort", comment: "mockdatasource data source display name")
     var fullName: String = NSLocalizedString("mock default sort", comment: "mock data source data source full display name")
     var order: Int = 0
+    var filterable: Filterable? = MockDataSourceDefaultSortFilterable()
+}
+
+class MockDataSourceDefaultSortFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSources.mockDataSourceDefaultSort
+    }
+
+    var properties: [Marlin.DataSourceProperty] = [
+        DataSourceProperty(name: "String", key: "stringProperty", type: .string),
+        DataSourceProperty(name: "Date", key: "dateProperty", type: .date),
+        DataSourceProperty(name: "Int", key: "intProperty", type: .int)
+    ]
+
+    var defaultFilter: [Marlin.DataSourceFilterParameter] = [DataSourceFilterParameter(property: DataSourceProperty(name: "Date", key: #keyPath(MockDataSourceDefaultSort.dateProperty), type: .date), comparison: .window, windowUnits: DataSourceWindowUnits.last365Days)]
+
+    var defaultSort: [Marlin.DataSourceSortParameter] = [
+        DataSourceSortParameter(property: DataSourceProperty(name: "Date", key: "dateProperty", type: .date), ascending: true)
+    ]
 }
 
 class MockDataSourceDefaultSort: DataSource {
@@ -201,6 +253,29 @@ class MockDataSourceNonMappableDefinition: DataSourceDefinition {
     var name: String = NSLocalizedString("mocknonmappable", comment: "mockdatasource data source display name")
     var fullName: String = NSLocalizedString("mock non mappable", comment: "mock data source data source full display name")
     var order: Int = 0
+    var filterable: Filterable? = MockDataSourceNonMappableFilterable()
+}
+
+class MockDataSourceNonMappableFilterable: Filterable {
+    var definition: any DataSourceDefinition {
+        DataSources.mockDataSourceNonMappable
+    }
+
+    var properties: [Marlin.DataSourceProperty] = [
+        DataSourceProperty(name: "String", key: "stringProperty", type: .string),
+        DataSourceProperty(name: "Date", key: "dateProperty", type: .date),
+        DataSourceProperty(name: "Int", key: "intProperty", type: .int),
+        DataSourceProperty(name: "Double", key: "doubleProperty", type: .double),
+        DataSourceProperty(name: "Float", key: "floatProperty", type: .float),
+        DataSourceProperty(name: "Enumeration", key: "enumerationProperty", type: .enumeration),
+        DataSourceProperty(name: "Location", key: "locationProperty", type: .location),
+        DataSourceProperty(name: "Date", key: "dateProperty", type: .date),
+        DataSourceProperty(name: "Boolean", key: "booleanProperty", type: .boolean)
+    ]
+
+    var defaultFilter: [Marlin.DataSourceFilterParameter] = []
+
+    var defaultSort: [Marlin.DataSourceSortParameter] = []
 }
 
 class MockDataSourceNonMappable: DataSource {

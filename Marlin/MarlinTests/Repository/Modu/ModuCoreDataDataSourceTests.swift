@@ -189,8 +189,8 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
     }
 
     func testGetModuInBounds() async {
-        var newItem: Modu?
-        var newItem2: Modu?
+        var newItem: ModuModel?
+        var newItem2: ModuModel?
         persistentStore.viewContext.performAndWait {
             let modu = Modu(context: persistentStore.viewContext)
 
@@ -206,7 +206,7 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
             modu.region = 6
             modu.subregion = 63
 
-            newItem = modu
+            newItem = ModuModel(modu: modu)
 
             let modu2 = Modu(context: persistentStore.viewContext)
 
@@ -222,7 +222,7 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
             modu2.region = 6
             modu2.subregion = 63
 
-            newItem2 = modu2
+            newItem2 = ModuModel(modu: modu2)
             try? persistentStore.viewContext.save()
         }
         guard let newItem = newItem else {

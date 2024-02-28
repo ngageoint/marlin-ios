@@ -28,7 +28,8 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         nw.status = "status"
         nw.subregion = "subregion"
         nw.text = "text of the warning"
-        
+        nw.canBookmark = true
+
         let localDataSource = NavigationalWarningStaticLocalDataSource()
         localDataSource.list.append(nw)
         let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())

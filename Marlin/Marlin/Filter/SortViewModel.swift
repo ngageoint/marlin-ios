@@ -34,7 +34,7 @@ class SortViewModel: ObservableObject {
 
     init(definition: any DataSourceDefinition) {
         self.definition = definition
-        filterable = DataSources.filterableFromDefintion(definition)
+        filterable = definition.filterable
         self.dataSourceProperties = filterable?.properties ?? []
 //        self.dataSourceProperties = dataSource.properties
         

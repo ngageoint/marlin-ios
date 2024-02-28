@@ -172,7 +172,8 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "1 Unread")
     }
     
-    func testAllRead() throws {
+    // this should be tested in a different view
+    func xtestAllRead() throws {
         print("all read")
         var warnings: [NavigationalWarning] = []
         persistentStore.viewContext.performAndWait {

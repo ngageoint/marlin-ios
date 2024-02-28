@@ -67,15 +67,17 @@ struct NoticeToMarinersFullNoticeView: View {
                 Section("\(items[0].graphicType ?? "Graphic")s") {
                     LazyVGrid(columns: gridColumns) {
                         ForEach(items) { item in
-                            VStack {
-                                AsyncImage(
-                                    url: URL(string: item.graphicUrl)!,
-                                    name: item.fileName ?? "image.png",
-                                    placeholder: { Text("Loading ...").overline() },
-                                    image: { Image(uiImage: $0).resizable() }
-                                )
-                                .aspectRatio(contentMode: .fit)
-                                Text("\(item.graphicType ?? "Chart") \(item.chartNumber ?? "")").overline()
+                            if let url = URL(string: item.graphicUrl) {
+                                VStack {
+                                    AsyncImage(
+                                        url: url,
+                                        name: item.fileName ?? "image.png",
+                                        placeholder: { Text("Loading ...").overline() },
+                                        image: { Image(uiImage: $0).resizable() }
+                                    )
+                                    .aspectRatio(contentMode: .fit)
+                                    Text("\(item.graphicType ?? "Chart") \(item.chartNumber ?? "")").overline()
+                                }
                             }
                         }
                     }

@@ -13,6 +13,7 @@ import BackgroundTasks
 @testable import Marlin
 
 class ElectronicPublicationStaticLocalDataSource: ElectronicPublicationLocalDataSource {
+    
     var existsMap: [String: Bool] = [:]
     func checkFileExists(s3Key: String) -> Bool {
         guard let epub = map[s3Key] else {
@@ -79,6 +80,21 @@ class ElectronicPublicationStaticLocalDataSource: ElectronicPublicationLocalData
             return AnyPublisher(subject)
         }
         return nil
+    }
+
+    func getSections(filters: [Marlin.DataSourceFilterParameter]?) async -> [Marlin.ElectronicPublicationItem]? {
+        let grouped = Dictionary(grouping: Array(map.values), by: { PublicationTypeEnum(rawValue:$0.pubTypeId ?? -1) })
+        var sections: [ElectronicPublicationItem] = []
+        for (pubType, models) in grouped {
+            if let pubType = pubType {
+                sections.append(ElectronicPublicationItem.pubType(type: pubType, count: models.count))
+            }
+        }
+        return sections
+    }
+
+    func getPublications(typeId: Int) async -> [Marlin.ElectronicPublicationModel] {
+        Array(map.values)
     }
 
     func getElectronicPublication(s3Key: String?) -> Marlin.ElectronicPublicationModel? {

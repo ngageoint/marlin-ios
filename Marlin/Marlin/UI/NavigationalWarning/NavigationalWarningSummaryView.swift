@@ -29,6 +29,8 @@ struct NavigationalWarningSummaryView: DataSourceSummaryView {
             if showTitle {
                 Text(navigationalWarning.itemTitle)
                     .primary()
+                    .accessibilityElement()
+                    .accessibilityLabel(navigationalWarning.itemTitle)
             }
             Text("\(navigationalWarning.text ?? "")")
                 .multilineTextAlignment(.leading)

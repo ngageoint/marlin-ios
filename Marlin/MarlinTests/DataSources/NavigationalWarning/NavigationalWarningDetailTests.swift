@@ -52,6 +52,7 @@ final class NavigationalWarningDetailTests: XCTestCase {
         newItem.status = "status"
         newItem.subregion = "subregion"
         newItem.text = "text of the warning"
+        newItem.canBookmark = true
 
         let localDataSource = NavigationalWarningStaticLocalDataSource()
         localDataSource.list.append(newItem)
@@ -59,10 +60,13 @@ final class NavigationalWarningDetailTests: XCTestCase {
 
         let bookmarkStaticRepository = BookmarkStaticRepository(navigationalWarningRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
+
         let detailView = NavigationalWarningDetailView(msgYear: newItem.msgYear!, msgNumber: newItem.msgNumber!, navArea: newItem.navArea)
-//        newItem.detailView.environment(\.managedObjectContext, persistentStore.viewContext)
+            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(routeWaypointRepository)
+
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -83,8 +87,8 @@ final class NavigationalWarningDetailTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: newItem.cancelDateString)
         
         tester().waitForView(withAccessibilityLabel: "Cancelled By")
-        tester().waitForView(withAccessibilityLabel: "HYDROPAC \(newItem.cancelMsgNumber)/\(newItem.cancelMsgYear)")
-        
+        tester().waitForView(withAccessibilityLabel: "HYDROPAC \(newItem.cancelMsgNumber!)/\(newItem.cancelMsgYear!)")
+
         tester().waitForView(withAccessibilityLabel: "Text")
         let textView = viewTester().usingLabel("Text").view as! UITextView
         XCTAssertEqual(textView.text, newItem.text)

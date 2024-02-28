@@ -13,78 +13,30 @@ import SwiftUI
 
 final class NavigationalWarningNavAreaListViewTests: XCTestCase {
 
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    override func setUp(completion: @escaping (Error?) -> Void) {
+    override func setUp() {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
         UserDefaults.registerMarlinDefaults()
-
-        for dataSource in DataSourceDefinitions.allCases {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        
-        UserDefaults.standard.setFilter(NavigationalWarning.key, filter: [])
-        UserDefaults.standard.setSort(NavigationalWarning.key, sort: NavigationalWarning.defaultSort)
-        
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                let e5 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
-                    if let count = try? self.persistentStore.countOfObjects(NavigationalWarning.self) {
-                        return count == 0
-                    }
-                    return false
-                }), object: self.persistentStore.viewContext)
-                self.wait(for: [e5], timeout: 10)
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
-        
-    }
-    override func tearDown(completion: @escaping (Error?) -> Void) {
-        persistentStore.viewContext.performAndWait {
-            if let nws = persistentStore.viewContext.fetchAll(NavigationalWarning.self) {
-                for nw in nws {
-                    persistentStore.viewContext.delete(nw)
-                }
-            }
-            try? persistentStore.viewContext.save()
-        }
-        completion(nil)
     }
 
     func testOneNavWarning() throws {
-        var warnings: [NavigationalWarning] = []
-        persistentStore.viewContext.performAndWait {
-            let navWarning = NavigationalWarning(context: persistentStore.viewContext)
-            navWarning.msgYear = 2022
-            navWarning.msgNumber = 1177
-            navWarning.navArea = "4"
-            navWarning.subregion = "11,26"
-            navWarning.text = "WESTERN NORTH ATLANTIC.\nFLORIDA.\n1. HAZARDOUS OPERATIONS, ROCKET LAUNCHING\n   121606Z TO 121854Z NOV, ALTERNATE\n   131606Z TO 131854Z AND 1607Z TO 1854Z DAILY\n   14 THRU 18 NOV IN AREAS BOUND BY:\n   A. 28-39.92N 080-38.33W, 28-40.00N 079-44.00W,\n      28-28.00N 079-40.00W, 28-29.97N 080-32.29W\n   B. 27-51.00N 073-56.00W, 28-37.00N 073-55.00W,\n      28-40.00N 071-21.00W, 28-13.00N 069-58.00W,\n      27-31.00N 069-58.00W, 27-21.00N 071-43.00W.\n2. CANCEL NAVAREA IV 1165/22.\n3. CANCEL THIS MSG 181954Z NOV 22.\n"
-            navWarning.status = "A"
-            navWarning.issueDate = Date()
-            navWarning.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
-            
-            warnings.append(navWarning)
-            
-            try? persistentStore.viewContext.save()
-        }
+        var warnings: [NavigationalWarningModel] = []
+        var navWarning = NavigationalWarningModel(navArea: "4")
+        navWarning.msgYear = 2022
+        navWarning.msgNumber = 1177
+        navWarning.navArea = "4"
+        navWarning.subregion = "11,26"
+        navWarning.text = "WESTERN NORTH ATLANTIC.\nFLORIDA.\n1. HAZARDOUS OPERATIONS, ROCKET LAUNCHING\n   121606Z TO 121854Z NOV, ALTERNATE\n   131606Z TO 131854Z AND 1607Z TO 1854Z DAILY\n   14 THRU 18 NOV IN AREAS BOUND BY:\n   A. 28-39.92N 080-38.33W, 28-40.00N 079-44.00W,\n      28-28.00N 079-40.00W, 28-29.97N 080-32.29W\n   B. 27-51.00N 073-56.00W, 28-37.00N 073-55.00W,\n      28-40.00N 071-21.00W, 28-13.00N 069-58.00W,\n      27-31.00N 069-58.00W, 27-21.00N 071-43.00W.\n2. CANCEL NAVAREA IV 1165/22.\n3. CANCEL THIS MSG 181954Z NOV 22.\n"
+        navWarning.status = "A"
+        navWarning.issueDate = Date()
+        navWarning.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
+
+        warnings.append(navWarning)
         
         class PassThrough: ObservableObject {
             var navArea: String
-            var warnings: [NavigationalWarning]
-            
-            init(navArea: String, warnings: [NavigationalWarning]) {
+
+            init(navArea: String) {
                 self.navArea = navArea
-                self.warnings = warnings
             }
         }
         
@@ -104,17 +56,21 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             }
         }
         let appState = AppState()
-        let passThrough = PassThrough(navArea: "4", warnings: warnings)
+        let passThrough = PassThrough(navArea: "4")
         
-        
-        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
+        let localDataSource = NavigationalWarningStaticLocalDataSource()
+        localDataSource.list.append(contentsOf: warnings)
+        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
 
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(repository)
+            .environmentObject(routeWaypointRepository)
+
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -124,34 +80,24 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
     }
     
     func testOneNavWarningNavAreasView() throws {
-        var warnings: [NavigationalWarning] = []
-        persistentStore.viewContext.performAndWait {
-            let navWarning = NavigationalWarning(context: persistentStore.viewContext)
-            navWarning.msgYear = 2022
-            navWarning.msgNumber = 1177
-            navWarning.navArea = "4"
-            navWarning.subregion = "11,26"
-            navWarning.text = "WESTERN NORTH ATLANTIC.\nFLORIDA.\n1. HAZARDOUS OPERATIONS, ROCKET LAUNCHING\n   121606Z TO 121854Z NOV, ALTERNATE\n   131606Z TO 131854Z AND 1607Z TO 1854Z DAILY\n   14 THRU 18 NOV IN AREAS BOUND BY:\n   A. 28-39.92N 080-38.33W, 28-40.00N 079-44.00W,\n      28-28.00N 079-40.00W, 28-29.97N 080-32.29W\n   B. 27-51.00N 073-56.00W, 28-37.00N 073-55.00W,\n      28-40.00N 071-21.00W, 28-13.00N 069-58.00W,\n      27-31.00N 069-58.00W, 27-21.00N 071-43.00W.\n2. CANCEL NAVAREA IV 1165/22.\n3. CANCEL THIS MSG 181954Z NOV 22.\n"
-            navWarning.status = "A"
-            navWarning.issueDate = Date()
-            navWarning.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
-            
-            warnings.append(navWarning)
-            
-            try? persistentStore.viewContext.save()
-        }
-//        guard let objects = TestHelpers.createOneOfEachType(persistentStore.viewContext) else {
-//            XCTFail()
-//            return
-//        }
-        
+        var warnings: [NavigationalWarningModel] = []
+        var navWarning = NavigationalWarningModel(navArea: "4")
+        navWarning.msgYear = 2022
+        navWarning.msgNumber = 1177
+        navWarning.navArea = "4"
+        navWarning.subregion = "11,26"
+        navWarning.text = "WESTERN NORTH ATLANTIC.\nFLORIDA.\n1. HAZARDOUS OPERATIONS, ROCKET LAUNCHING\n   121606Z TO 121854Z NOV, ALTERNATE\n   131606Z TO 131854Z AND 1607Z TO 1854Z DAILY\n   14 THRU 18 NOV IN AREAS BOUND BY:\n   A. 28-39.92N 080-38.33W, 28-40.00N 079-44.00W,\n      28-28.00N 079-40.00W, 28-29.97N 080-32.29W\n   B. 27-51.00N 073-56.00W, 28-37.00N 073-55.00W,\n      28-40.00N 071-21.00W, 28-13.00N 069-58.00W,\n      27-31.00N 069-58.00W, 27-21.00N 071-43.00W.\n2. CANCEL NAVAREA IV 1165/22.\n3. CANCEL THIS MSG 181954Z NOV 22.\n"
+        navWarning.status = "A"
+        navWarning.issueDate = Date()
+        navWarning.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
+
+        warnings.append(navWarning)
+
         class PassThrough: ObservableObject {
             var navArea: String
-            var warnings: [NavigationalWarning]
-            
-            init(navArea: String, warnings: [NavigationalWarning]) {
+
+            init(navArea: String) {
                 self.navArea = navArea
-                self.warnings = warnings
             }
         }
         
@@ -169,26 +115,28 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
                 NavigationStack(path: $router.path) {
                     NavigationalWarningsOverview(focusedItem: focusedItem)
                         .marlinRoutes()
-
-//                    NavigationalWarningNavAreaListView(warnings: passThrough.warnings, navArea: passThrough.navArea, mapName: "Navigational Warning List View Map")
                 }
                 .environmentObject(router)
             }
         }
         let appState = AppState()
-        let passThrough = PassThrough(navArea: "4", warnings: warnings)
+        let passThrough = PassThrough(navArea: "4")
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
-        
-        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
+        let localDataSource = NavigationalWarningStaticLocalDataSource()
+        localDataSource.list.append(contentsOf: warnings)
+        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
+        let mapFeatureRepository = NavigationalWarningsMapFeatureRepository(localDataSource: repository.localDataSource)
         let container = Container(passThrough: passThrough)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(appState)
             .environmentObject(mockLocationManager as LocationManager)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(repository)
+            .environmentObject(routeWaypointRepository)
+            .environmentObject(mapFeatureRepository)
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -212,32 +160,26 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         dateComponents.timeZone = TimeZone(secondsFromGMT: 0)
         
         let year = Calendar.current.date(from: dateComponents)!
-        var warnings: [NavigationalWarning] = []
-        persistentStore.viewContext.performAndWait {
-            for i in 1...12 {
-                let navWarning = NavigationalWarning(context: persistentStore.viewContext)
-                navWarning.msgYear = 2022
-                navWarning.msgNumber = Int64(13 - i)
-                navWarning.navArea = "4"
-                navWarning.subregion = "11,26"
-                navWarning.text = "WESTERN NORTH ATLANTIC.\nFLORIDA.\n1. HAZARDOUS OPERATIONS, ROCKET LAUNCHING\n   121606Z TO 121854Z NOV, ALTERNATE\n   131606Z TO 131854Z AND 1607Z TO 1854Z DAILY\n   14 THRU 18 NOV IN AREAS BOUND BY:\n   A. 28-39.92N 080-38.33W, 28-40.00N 079-44.00W,\n      28-28.00N 079-40.00W, 28-29.97N 080-32.29W\n   B. 27-51.00N 073-56.00W, 28-37.00N 073-55.00W,\n      28-40.00N 071-21.00W, 28-13.00N 069-58.00W,\n      27-31.00N 069-58.00W, 27-21.00N 071-43.00W.\n2. CANCEL NAVAREA IV 1165/22.\n3. CANCEL THIS MSG 181954Z NOV 22.\n"
-                navWarning.status = "A"
-                navWarning.issueDate = Calendar.current.date(bySetting: .month, value: 13 - i, of: year)
-                navWarning.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
-                
-                warnings.append(navWarning)
-            }
-            
-            try? persistentStore.viewContext.save()
+        var warnings: [NavigationalWarningModel] = []
+        for i in 1...12 {
+            var navWarning = NavigationalWarningModel(navArea: "4")
+            navWarning.msgYear = 2022
+            navWarning.msgNumber = Int(13 - i)
+            navWarning.navArea = "4"
+            navWarning.subregion = "11,26"
+            navWarning.text = "WESTERN NORTH ATLANTIC.\nFLORIDA.\n1. HAZARDOUS OPERATIONS, ROCKET LAUNCHING\n   121606Z TO 121854Z NOV, ALTERNATE\n   131606Z TO 131854Z AND 1607Z TO 1854Z DAILY\n   14 THRU 18 NOV IN AREAS BOUND BY:\n   A. 28-39.92N 080-38.33W, 28-40.00N 079-44.00W,\n      28-28.00N 079-40.00W, 28-29.97N 080-32.29W\n   B. 27-51.00N 073-56.00W, 28-37.00N 073-55.00W,\n      28-40.00N 071-21.00W, 28-13.00N 069-58.00W,\n      27-31.00N 069-58.00W, 27-21.00N 071-43.00W.\n2. CANCEL NAVAREA IV 1165/22.\n3. CANCEL THIS MSG 181954Z NOV 22.\n"
+            navWarning.status = "A"
+            navWarning.issueDate = Calendar.current.date(bySetting: .month, value: 13 - i, of: year)
+            navWarning.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
+
+            warnings.append(navWarning)
         }
         
         class PassThrough: ObservableObject {
             var navArea: String
-            var warnings: [NavigationalWarning]
-            
-            init(navArea: String, warnings: [NavigationalWarning]) {
+
+            init(navArea: String) {
                 self.navArea = navArea
-                self.warnings = warnings
             }
         }
         
@@ -259,21 +201,26 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             }
         }
         let appState = AppState()
-        let passThrough = PassThrough(navArea: "4", warnings: warnings)
-        
-        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
+        let passThrough = PassThrough(navArea: "4")
+        let localDataSource = NavigationalWarningStaticLocalDataSource()
+        localDataSource.list.append(contentsOf: warnings)
+        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(repository)
+            .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        
-        tester().waitForAnimationsToFinish()
+
         tester().waitForView(withAccessibilityLabel: "Unread Warnings")
+        // have to do multiple scrolls due to lazy v stack not being completely set up and KIF not playing well together
+        tester().scrollView(withAccessibilityIdentifier: "Navigation Warning Scroll", byFractionOfSizeHorizontal: 0, vertical: 1.0)
+        tester().wait(forTimeInterval: 1)
         tester().scrollView(withAccessibilityIdentifier: "Navigation Warning Scroll", byFractionOfSizeHorizontal: 0, vertical: 1.0)
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Unread Warnings")
     }
@@ -290,32 +237,26 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         dateComponents.timeZone = TimeZone(secondsFromGMT: 0)
         
         let year = Calendar.current.date(from: dateComponents)!
-        var warnings: [NavigationalWarning] = []
-        persistentStore.viewContext.performAndWait {
-            for i in 1...12 {
-                let navWarning = NavigationalWarning(context: persistentStore.viewContext)
-                navWarning.msgYear = 2022
-                navWarning.msgNumber = Int64(13 - i)
-                navWarning.navArea = "4"
-                navWarning.subregion = "11,26"
-                navWarning.text = "WESTERN NORTH ATLANTIC.\nFLORIDA.\n1. HAZARDOUS OPERATIONS, ROCKET LAUNCHING\n   121606Z TO 121854Z NOV, ALTERNATE\n   131606Z TO 131854Z AND 1607Z TO 1854Z DAILY\n   14 THRU 18 NOV IN AREAS BOUND BY:\n   A. 28-39.92N 080-38.33W, 28-40.00N 079-44.00W,\n      28-28.00N 079-40.00W, 28-29.97N 080-32.29W\n   B. 27-51.00N 073-56.00W, 28-37.00N 073-55.00W,\n      28-40.00N 071-21.00W, 28-13.00N 069-58.00W,\n      27-31.00N 069-58.00W, 27-21.00N 071-43.00W.\n2. CANCEL NAVAREA IV 1165/22.\n3. CANCEL THIS MSG 181954Z NOV 22.\n"
-                navWarning.status = "A"
-                navWarning.issueDate = Calendar.current.date(bySetting: .month, value: 13 - i, of: year)
-                navWarning.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
-                
-                warnings.append(navWarning)
-            }
-            
-            try? persistentStore.viewContext.save()
+        var warnings: [NavigationalWarningModel] = []
+        for i in 1...12 {
+            var navWarning = NavigationalWarningModel(navArea: "4")
+            navWarning.msgYear = 2022
+            navWarning.msgNumber = Int(13 - i)
+            navWarning.navArea = "4"
+            navWarning.subregion = "11,26"
+            navWarning.text = "WESTERN NORTH ATLANTIC.\nFLORIDA.\n1. HAZARDOUS OPERATIONS, ROCKET LAUNCHING\n   121606Z TO 121854Z NOV, ALTERNATE\n   131606Z TO 131854Z AND 1607Z TO 1854Z DAILY\n   14 THRU 18 NOV IN AREAS BOUND BY:\n   A. 28-39.92N 080-38.33W, 28-40.00N 079-44.00W,\n      28-28.00N 079-40.00W, 28-29.97N 080-32.29W\n   B. 27-51.00N 073-56.00W, 28-37.00N 073-55.00W,\n      28-40.00N 071-21.00W, 28-13.00N 069-58.00W,\n      27-31.00N 069-58.00W, 27-21.00N 071-43.00W.\n2. CANCEL NAVAREA IV 1165/22.\n3. CANCEL THIS MSG 181954Z NOV 22.\n"
+            navWarning.status = "A"
+            navWarning.issueDate = Calendar.current.date(bySetting: .month, value: 13 - i, of: year)
+            navWarning.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
+
+            warnings.append(navWarning)
         }
         
         class PassThrough: ObservableObject {
             var navArea: String
-            var warnings: [NavigationalWarning]
-            
-            init(navArea: String, warnings: [NavigationalWarning]) {
+
+            init(navArea: String) {
                 self.navArea = navArea
-                self.warnings = warnings
             }
         }
         
@@ -337,15 +278,18 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             }
         }
         let appState = AppState()
-        let passThrough = PassThrough(navArea: "4", warnings: warnings)
-        
-        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
+        let passThrough = PassThrough(navArea: "4")
+        let localDataSource = NavigationalWarningStaticLocalDataSource()
+        localDataSource.list.append(contentsOf: warnings)
+        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(repository)
+            .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -369,32 +313,26 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         dateComponents.timeZone = TimeZone(secondsFromGMT: 0)
         
         let year = Calendar.current.date(from: dateComponents)!
-        var warnings: [NavigationalWarning] = []
-        persistentStore.viewContext.performAndWait {
-            for i in 1...12 {
-                let navWarning = NavigationalWarning(context: persistentStore.viewContext)
-                navWarning.msgYear = 2022
-                navWarning.msgNumber = Int64(13 - i)
-                navWarning.navArea = "4"
-                navWarning.subregion = "11,26"
-                navWarning.text = "WESTERN NORTH ATLANTIC.\nFLORIDA.\n1. HAZARDOUS OPERATIONS, ROCKET LAUNCHING\n   121606Z TO 121854Z NOV, ALTERNATE\n   131606Z TO 131854Z AND 1607Z TO 1854Z DAILY\n   14 THRU 18 NOV IN AREAS BOUND BY:\n   A. 28-39.92N 080-38.33W, 28-40.00N 079-44.00W,\n      28-28.00N 079-40.00W, 28-29.97N 080-32.29W\n   B. 27-51.00N 073-56.00W, 28-37.00N 073-55.00W,\n      28-40.00N 071-21.00W, 28-13.00N 069-58.00W,\n      27-31.00N 069-58.00W, 27-21.00N 071-43.00W.\n2. CANCEL NAVAREA IV 1165/22.\n3. CANCEL THIS MSG 181954Z NOV 22.\n"
-                navWarning.status = "A"
-                navWarning.issueDate = Calendar.current.date(bySetting: .month, value: 13 - i, of: year)
-                navWarning.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
-                
-                warnings.append(navWarning)
-            }
-            
-            try? persistentStore.viewContext.save()
+        var warnings: [NavigationalWarningModel] = []
+        for i in 1...12 {
+            var navWarning = NavigationalWarningModel(navArea: "4")
+            navWarning.msgYear = 2022
+            navWarning.msgNumber = Int(13 - i)
+            navWarning.navArea = "4"
+            navWarning.subregion = "11,26"
+            navWarning.text = "WESTERN NORTH ATLANTIC.\nFLORIDA.\n1. HAZARDOUS OPERATIONS, ROCKET LAUNCHING\n   121606Z TO 121854Z NOV, ALTERNATE\n   131606Z TO 131854Z AND 1607Z TO 1854Z DAILY\n   14 THRU 18 NOV IN AREAS BOUND BY:\n   A. 28-39.92N 080-38.33W, 28-40.00N 079-44.00W,\n      28-28.00N 079-40.00W, 28-29.97N 080-32.29W\n   B. 27-51.00N 073-56.00W, 28-37.00N 073-55.00W,\n      28-40.00N 071-21.00W, 28-13.00N 069-58.00W,\n      27-31.00N 069-58.00W, 27-21.00N 071-43.00W.\n2. CANCEL NAVAREA IV 1165/22.\n3. CANCEL THIS MSG 181954Z NOV 22.\n"
+            navWarning.status = "A"
+            navWarning.issueDate = Calendar.current.date(bySetting: .month, value: 13 - i, of: year)
+            navWarning.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
+
+            warnings.append(navWarning)
         }
         
         class PassThrough: ObservableObject {
             var navArea: String
-            var warnings: [NavigationalWarning]
-            
-            init(navArea: String, warnings: [NavigationalWarning]) {
+
+            init(navArea: String) {
                 self.navArea = navArea
-                self.warnings = warnings
             }
         }
         
@@ -416,9 +354,12 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             }
         }
         let appState = AppState()
-        let passThrough = PassThrough(navArea: "4", warnings: warnings)
+        let passThrough = PassThrough(navArea: "4")
         
-        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
+        let localDataSource = NavigationalWarningStaticLocalDataSource()
+        localDataSource.list.append(contentsOf: warnings)
+        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
         UserDefaults.standard.setValue(warnings[5].primaryKey, forKey: "lastSeen-4")
@@ -426,7 +367,8 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(repository)
+            .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -451,32 +393,26 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         dateComponents.timeZone = TimeZone(secondsFromGMT: 0)
         
         let year = Calendar.current.date(from: dateComponents)!
-        var warnings: [NavigationalWarning] = []
-        persistentStore.viewContext.performAndWait {
-            for i in 1...12 {
-                let navWarning = NavigationalWarning(context: persistentStore.viewContext)
-                navWarning.msgYear = 2022
-                navWarning.msgNumber = Int64(13 - i)
-                navWarning.navArea = "4"
-                navWarning.subregion = "11,26"
-                navWarning.text = "WESTERN NORTH ATLANTIC.\nFLORIDA.\n1. HAZARDOUS OPERATIONS, ROCKET LAUNCHING\n   121606Z TO 121854Z NOV, ALTERNATE\n   131606Z TO 131854Z AND 1607Z TO 1854Z DAILY\n   14 THRU 18 NOV IN AREAS BOUND BY:\n   A. 28-39.92N 080-38.33W, 28-40.00N 079-44.00W,\n      28-28.00N 079-40.00W, 28-29.97N 080-32.29W\n   B. 27-51.00N 073-56.00W, 28-37.00N 073-55.00W,\n      28-40.00N 071-21.00W, 28-13.00N 069-58.00W,\n      27-31.00N 069-58.00W, 27-21.00N 071-43.00W.\n2. CANCEL NAVAREA IV 1165/22.\n3. CANCEL THIS MSG 181954Z NOV 22.\n"
-                navWarning.status = "A"
-                navWarning.issueDate = Calendar.current.date(bySetting: .month, value: 13 - i, of: year)
-                navWarning.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
-                
-                warnings.append(navWarning)
-            }
-            
-            try? persistentStore.viewContext.save()
+        var warnings: [NavigationalWarningModel] = []
+        for i in 1...12 {
+            var navWarning = NavigationalWarningModel(navArea: "4")
+            navWarning.msgYear = 2022
+            navWarning.msgNumber = Int(13 - i)
+            navWarning.navArea = "4"
+            navWarning.subregion = "11,26"
+            navWarning.text = "WESTERN NORTH ATLANTIC.\nFLORIDA.\n1. HAZARDOUS OPERATIONS, ROCKET LAUNCHING\n   121606Z TO 121854Z NOV, ALTERNATE\n   131606Z TO 131854Z AND 1607Z TO 1854Z DAILY\n   14 THRU 18 NOV IN AREAS BOUND BY:\n   A. 28-39.92N 080-38.33W, 28-40.00N 079-44.00W,\n      28-28.00N 079-40.00W, 28-29.97N 080-32.29W\n   B. 27-51.00N 073-56.00W, 28-37.00N 073-55.00W,\n      28-40.00N 071-21.00W, 28-13.00N 069-58.00W,\n      27-31.00N 069-58.00W, 27-21.00N 071-43.00W.\n2. CANCEL NAVAREA IV 1165/22.\n3. CANCEL THIS MSG 181954Z NOV 22.\n"
+            navWarning.status = "A"
+            navWarning.issueDate = Calendar.current.date(bySetting: .month, value: 13 - i, of: year)
+            navWarning.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
+
+            warnings.append(navWarning)
         }
         
         class PassThrough: ObservableObject {
             var navArea: String
-            var warnings: [NavigationalWarning]
-            
-            init(navArea: String, warnings: [NavigationalWarning]) {
+
+            init(navArea: String) {
                 self.navArea = navArea
-                self.warnings = warnings
             }
         }
         
@@ -498,17 +434,20 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
             }
         }
         let appState = AppState()
-        let passThrough = PassThrough(navArea: "4", warnings: warnings)
+        let passThrough = PassThrough(navArea: "4")
         
         UserDefaults.standard.setValue("no", forKey: "lastSeen-4")
-        
-        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
+        let localDataSource = NavigationalWarningStaticLocalDataSource()
+        localDataSource.list.append(contentsOf: warnings)
+        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
+        var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(repository)
+            .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller

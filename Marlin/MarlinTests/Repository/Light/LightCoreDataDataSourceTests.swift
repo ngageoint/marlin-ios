@@ -273,8 +273,8 @@ final class LightCoreDataDataSourceTests: XCTestCase {
     }
 
     func testGetLightsInBounds() async {
-        var newItem: Light?
-        var newItem2: Light?
+        var newItem: LightModel?
+        var newItem2: LightModel?
         persistentStore.viewContext.performAndWait {
             let light = Light(context: persistentStore.viewContext)
             light.characteristicNumber = 1
@@ -291,7 +291,7 @@ final class LightCoreDataDataSourceTests: XCTestCase {
             light.sectionHeader = "Section"
             light.structure = "Yellow pedestal, red band; 7.\n"
             light.name = "-Outer."
-            newItem = light
+            newItem = LightModel(light: light)
 
             let light2 = Light(context: persistentStore.viewContext)
             light2.characteristicNumber = 1
@@ -309,7 +309,7 @@ final class LightCoreDataDataSourceTests: XCTestCase {
             light2.structure = "Yellow pedestal, red band; 7.\n"
             light2.name = "-Outer."
 
-            newItem2 = light2
+            newItem2 = LightModel(light: light2)
             try? persistentStore.viewContext.save()
         }
         guard let newItem = newItem else {

@@ -23,6 +23,7 @@ class NavigationalWarningsAreaViewModel: ObservableObject {
     func getNavigationalWarnings(navArea: String) {
         Task {
             let loaded = await self.repository?.getNavAreaNavigationalWarnings(navArea: navArea) ?? []
+            print("loaded \(loaded)")
             await MainActor.run {
                 warnings = loaded
             }

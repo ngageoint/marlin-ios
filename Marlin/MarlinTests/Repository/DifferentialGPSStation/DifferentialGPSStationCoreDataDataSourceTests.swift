@@ -242,9 +242,9 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
         XCTAssertNil(retrieved)
     }
 
-    func testGetAsamsInBounds() async {
-        var newItem: DifferentialGPSStation?
-        var newItem2: DifferentialGPSStation?
+    func testGetDgpsInBounds() async {
+        var newItem: DifferentialGPSStationModel?
+        var newItem2: DifferentialGPSStationModel?
         persistentStore.viewContext.performAndWait {
             let dgps = DifferentialGPSStation(context: persistentStore.viewContext)
             dgps.volumeNumber = "PUB 112"
@@ -270,7 +270,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
             dgps.noticeWeek = "34"
             dgps.noticeYear = "2011"
 
-            newItem = dgps
+            newItem = DifferentialGPSStationModel(differentialGPSStation: dgps)
 
             let dgps2 = DifferentialGPSStation(context: persistentStore.viewContext)
             dgps2.volumeNumber = "PUB 112"
@@ -296,7 +296,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
             dgps2.noticeWeek = "34"
             dgps2.noticeYear = "2020"
 
-            newItem2 = dgps2
+            newItem2 = DifferentialGPSStationModel(differentialGPSStation: dgps2)
             try? persistentStore.viewContext.save()
         }
         guard let newItem = newItem else {
@@ -312,11 +312,11 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
 
         let retrieved = await dataSource.getDifferentialGPSStationsInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
         XCTAssertEqual(retrieved.count, 1)
-        XCTAssertEqual(retrieved[0].featureNumber, Int(newItem2.featureNumber))
+        XCTAssertEqual(retrieved[0].featureNumber, Int(exactly: newItem2.featureNumber!)!)
         XCTAssertEqual(retrieved[0].volumeNumber, newItem2.volumeNumber)
         let retrieved2 = await dataSource.getDifferentialGPSStationsInBounds(filters: nil, minLatitude: 0, maxLatitude: 2, minLongitude: 0, maxLongitude: 2)
         XCTAssertEqual(retrieved2.count, 1)
-        XCTAssertEqual(retrieved2[0].featureNumber, Int(newItem.featureNumber))
+        XCTAssertEqual(retrieved2[0].featureNumber, Int(exactly: newItem.featureNumber!)!)
         XCTAssertEqual(retrieved2[0].volumeNumber, newItem.volumeNumber)
         let retrieved3 = await dataSource.getDifferentialGPSStationsInBounds(filters: nil, minLatitude: 0, maxLatitude: 21, minLongitude: 0, maxLongitude: 21)
         XCTAssertEqual(retrieved3.count, 2)

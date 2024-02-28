@@ -253,8 +253,8 @@ final class RadioBeaconCoreDataDataSourceTests: XCTestCase {
     }
 
     func testGetRadioBeaconsInBounds() async {
-        var newItem: RadioBeacon?
-        var newItem2: RadioBeacon?
+        var newItem: RadioBeaconModel?
+        var newItem2: RadioBeaconModel?
 
         persistentStore.viewContext.performAndWait {
             let rb = RadioBeacon(context: persistentStore.viewContext)
@@ -282,7 +282,7 @@ final class RadioBeaconCoreDataDataSourceTests: XCTestCase {
             rb.longitude = 1.0
             rb.sectionHeader = "section"
 
-            newItem = rb
+            newItem = RadioBeaconModel(radioBeacon: rb)
 
             let rb2 = RadioBeacon(context: persistentStore.viewContext)
 
@@ -309,7 +309,7 @@ final class RadioBeaconCoreDataDataSourceTests: XCTestCase {
             rb2.longitude = 20.0
             rb2.sectionHeader = "section"
 
-            newItem2 = rb2
+            newItem2 = RadioBeaconModel(radioBeacon: rb2)
             try? persistentStore.viewContext.save()
         }
 
@@ -326,10 +326,10 @@ final class RadioBeaconCoreDataDataSourceTests: XCTestCase {
 
         let retrieved = await dataSource.getRadioBeaconsInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
         XCTAssertEqual(retrieved.count, 1)
-        XCTAssertEqual(retrieved[0].featureNumber, Int(newItem2.featureNumber))
+        XCTAssertEqual(retrieved[0].featureNumber, Int(exactly: newItem2.featureNumber!)!)
         let retrieved2 = await dataSource.getRadioBeaconsInBounds(filters: nil, minLatitude: 0, maxLatitude: 1, minLongitude: 0, maxLongitude: 1)
         XCTAssertEqual(retrieved2.count, 1)
-        XCTAssertEqual(retrieved2[0].featureNumber, Int(newItem.featureNumber))
+        XCTAssertEqual(retrieved2[0].featureNumber, Int(exactly: newItem.featureNumber!)!)
         let retrieved3 = await dataSource.getRadioBeaconsInBounds(filters: nil, minLatitude: 0, maxLatitude: 21, minLongitude: 0, maxLongitude: 21)
         XCTAssertEqual(retrieved3.count, 2)
     }

@@ -33,6 +33,7 @@ struct ElectronicPublicationsCompleteVolumesList: View {
         .task {
             viewModel.repository = repository
             viewModel.pubTypeId = pubTypeId
+            Metrics.shared.appRoute(["epubs", PublicationTypeEnum(rawValue: pubTypeId)?.description ?? "pubs"])
         }
     }
 }

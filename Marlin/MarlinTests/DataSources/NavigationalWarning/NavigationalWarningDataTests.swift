@@ -96,11 +96,17 @@ final class NavigationalWarningDataTests: XCTestCase {
             return true
         }
 
+        let processed = expectation(forNotification: .DataSourceProcessed,
+                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, DataSources.navWarning.key)
+            return true
+        }
+
         let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
 
         let fetched = await repository.fetch()
 
-        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
+        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification, processed], timeout: 10)
 
         XCTAssertEqual(repository.getCount(filters: nil), 2)
     }
@@ -191,6 +197,12 @@ final class NavigationalWarningDataTests: XCTestCase {
             return true
         }
 
+        let processed = expectation(forNotification: .DataSourceProcessed,
+                                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, DataSources.navWarning.key)
+            return true
+        }
+
         let repository = NavigationalWarningRepository(
             localDataSource: NavigationalWarningCoreDataDataSource(),
             remoteDataSource: NavigationalWarningRemoteDataSource()
@@ -198,7 +210,7 @@ final class NavigationalWarningDataTests: XCTestCase {
 
         await repository.fetch()
 
-        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
+        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification, processed], timeout: 10)
     }
     
     func testRejectInvalidNavigationalWarningNoMsgNumber() async throws {
@@ -286,6 +298,12 @@ final class NavigationalWarningDataTests: XCTestCase {
             return true
         }
 
+        let processed = expectation(forNotification: .DataSourceProcessed,
+                                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, DataSources.navWarning.key)
+            return true
+        }
+
         let repository = NavigationalWarningRepository(
             localDataSource: NavigationalWarningCoreDataDataSource(),
             remoteDataSource: NavigationalWarningRemoteDataSource()
@@ -293,7 +311,7 @@ final class NavigationalWarningDataTests: XCTestCase {
 
         await repository.fetch()
 
-        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
+        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification, processed], timeout: 10)
     }
     
     func testRejectInvalidNavigationalWarningNoNavArea() async throws {
@@ -381,6 +399,12 @@ final class NavigationalWarningDataTests: XCTestCase {
             return true
         }
 
+        let processed = expectation(forNotification: .DataSourceProcessed,
+                                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, DataSources.navWarning.key)
+            return true
+        }
+
         let repository = NavigationalWarningRepository(
             localDataSource: NavigationalWarningCoreDataDataSource(),
             remoteDataSource: NavigationalWarningRemoteDataSource()
@@ -388,7 +412,7 @@ final class NavigationalWarningDataTests: XCTestCase {
 
         await repository.fetch()
 
-        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
+        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification, processed], timeout: 10)
     }
     
     func testUpdateNavigationalWarningsDeleteOld() async throws {
@@ -504,11 +528,17 @@ final class NavigationalWarningDataTests: XCTestCase {
             return true
         }
 
+        let processed = expectation(forNotification: .DataSourceProcessed,
+                                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, DataSources.navWarning.key)
+            return true
+        }
+
         let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
 
         let fetched = await repository.fetch()
 
-        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
+        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification, processed], timeout: 10)
 
         XCTAssertEqual(repository.getCount(filters: nil), 2)
 
@@ -557,11 +587,17 @@ final class NavigationalWarningDataTests: XCTestCase {
             return true
         }
 
+        let processed2 = expectation(forNotification: .DataSourceProcessed,
+                                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, DataSources.navWarning.key)
+            return true
+        }
+
         // force the sync
         UserDefaults.standard.clearLastSyncTimeSeconds(DataSources.navWarning)
         let fetched2 = await repository.fetch()
 
-        await fulfillment(of: [loadingNotification2, loadedNotification2, didSaveNotification2, batchUpdateCompleteNotification2], timeout: 10)
+        await fulfillment(of: [loadingNotification2, loadedNotification2, didSaveNotification2, batchUpdateCompleteNotification2, processed2], timeout: 10)
 
         XCTAssertEqual(repository.getCount(filters: nil), 1)
     }
@@ -678,11 +714,17 @@ final class NavigationalWarningDataTests: XCTestCase {
             return true
         }
 
+        let processed = expectation(forNotification: .DataSourceProcessed,
+                                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, DataSources.navWarning.key)
+            return true
+        }
+
         let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
 
         let fetched = await repository.fetch()
 
-        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
+        await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification, processed], timeout: 10)
 
         XCTAssertEqual(repository.getCount(filters: nil), 2)
 
@@ -712,6 +754,12 @@ final class NavigationalWarningDataTests: XCTestCase {
             return true
         }
 
+        let processed2 = expectation(forNotification: .DataSourceProcessed,
+                                    object: nil) { notification in
+            XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, DataSources.navWarning.key)
+            return true
+        }
+
         // force the sync
         UserDefaults.standard.clearLastSyncTimeSeconds(DataSources.navWarning)
         let fetched2 = await repository.fetch()
@@ -719,7 +767,8 @@ final class NavigationalWarningDataTests: XCTestCase {
         await fulfillment(of: [
             loadingNotification2,
             loadedNotification2,
-            didSaveNotification2
+            didSaveNotification2,
+            processed2
         ], timeout: 10)
 
         XCTAssertEqual(repository.getCount(filters: nil), 1)

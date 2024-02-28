@@ -275,7 +275,8 @@ final class NoticeToMarinersFullNoticeViewTests: XCTestCase {
         
         let detailView = NoticeToMarinersFullNoticeView(noticeNumber: Int(newItem.noticeNumber))
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(repository)
+
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller

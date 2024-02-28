@@ -100,20 +100,20 @@ final class PortCoreDataDataSourceTests: XCTestCase {
     }
 
     func testGetPortsInBounds() async {
-        var newItem: Marlin.Port?
-        var newItem2: Marlin.Port?
+        var newItem: PortModel?
+        var newItem2: PortModel?
         persistentStore.viewContext.performAndWait {
             let port = Marlin.Port(context: persistentStore.viewContext)
             port.portNumber = 5
             port.longitude = 1.0
             port.latitude = 1.0
-            newItem = port
+            newItem = PortModel(port: port)
 
             let port2 = Marlin.Port(context: persistentStore.viewContext)
             port2.portNumber = 6
             port2.longitude = 20.0
             port2.latitude = 20.0
-            newItem2 = port2
+            newItem2 = PortModel(port: port2)
 
             try? persistentStore.viewContext.save()
         }

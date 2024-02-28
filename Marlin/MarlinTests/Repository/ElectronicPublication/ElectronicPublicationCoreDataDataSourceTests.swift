@@ -256,7 +256,7 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
         switch itema {
         case .listItem(let epub):
             XCTAssertEqual(epub.s3Key, "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf")
-        case .sectionHeader(let header):
+        default:
             XCTFail()
         }
 
@@ -299,14 +299,14 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
         switch itema1 {
         case .listItem(let epub):
             XCTAssertEqual(epub.s3Key, "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf")
-        case .sectionHeader(let header):
+        default:
             XCTFail()
         }
         let item1 = state.rows[1]
         switch item1 {
         case .listItem(let epub):
             XCTAssertEqual(epub.s3Key, "16694312/SFH00000/NIMA_LOL/Pub110/2UpdatedPub110bk.pdf")
-        case .sectionHeader(let header):
+        default:
             XCTFail()
         }
     }
@@ -407,16 +407,16 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
 
         let item = state.rows[0]
         switch item {
-        case .listItem(_):
-            XCTFail()
         case .sectionHeader(let header):
             XCTAssertEqual(header, "Pub 110 - Updated to NTM 44/22")
+        default:
+            XCTFail()
         }
         let item1 = state.rows[1]
         switch item1 {
         case .listItem(let epub):
             XCTAssertEqual(epub.s3Key, "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf")
-        case .sectionHeader(_):
+        default:
             XCTFail()
         }
 
@@ -457,30 +457,30 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
 
         let itema = state.rows[0]
         switch itema {
-        case .listItem(_):
-            XCTFail()
         case .sectionHeader(let header):
             XCTAssertEqual(header, "Pub 110 - Updated to NTM 44/22")
+        default:
+            XCTFail()
         }
         let itema1 = state.rows[1]
         switch itema1 {
         case .listItem(let epub):
             XCTAssertEqual(epub.s3Key, "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf")
-        case .sectionHeader(_):
+        default:
             XCTFail()
         }
         let itema2 = state.rows[2]
         switch itema2 {
-        case .listItem(_):
-            XCTFail()
         case .sectionHeader(let header):
             XCTAssertEqual(header, "Pub 110 - 2Updated to NTM 44/22")
+        default:
+            XCTFail()
         }
         let itema3 = state.rows[3]
         switch itema3 {
         case .listItem(let epub):
             XCTAssertEqual(epub.s3Key, "16694312/SFH00000/NIMA_LOL/Pub110/2UpdatedPub110bk.pdf")
-        case .sectionHeader(_):
+        default:
             XCTFail()
         }
     }
@@ -570,10 +570,10 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
 
         let item = state.rows[0]
         switch item {
-        case .listItem(_):
+        case .pubType(type: let type, count: let count):
+            XCTAssertEqual(type, PublicationTypeEnum.listOfLights)
+        default:
             XCTFail()
-        case .sectionHeader(let header):
-            XCTAssertEqual(header, "List of Lights")
         }
 
         NSLog("Insert a new one")
@@ -613,17 +613,17 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
 
         let itema = state.rows[0]
         switch itema {
-        case .listItem(_):
+        case .pubType(type: let type, count: let count):
+            XCTAssertEqual(type, PublicationTypeEnum.listOfLights)
+        default:
             XCTFail()
-        case .sectionHeader(let header):
-            XCTAssertEqual(header, "List of Lights")
         }
         let itema2 = state.rows[1]
         switch itema2 {
-        case .listItem(_):
+        case .pubType(type: let type, count: let count):
+            XCTAssertEqual(type, PublicationTypeEnum.radarNavigationAndManeuveringBoardManual)
+        default:
             XCTFail()
-        case .sectionHeader(let header):
-            XCTAssertEqual(header, "Radar Navigation and Maneuvering Board Manual")
         }
     }
 

@@ -120,7 +120,6 @@ struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hashable,
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
-    var asam: Asam?
     var asamDescription: String?
     var date: Date?
     var hostility: String?
@@ -134,7 +133,6 @@ struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hashable,
     var victim: String?
     
     func isEqualTo(_ other: AsamModel) -> Bool {
-//        return self.asam == other.asam
         return self.reference == other.reference
     }
     
@@ -150,7 +148,6 @@ struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hashable,
     
     init(asam: Asam) {
         self.canBookmark = true
-        self.asam = asam
         self.asamDescription = asam.asamDescription
         self.date = asam.date
         self.hostility = asam.hostility

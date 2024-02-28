@@ -120,10 +120,13 @@ final class ElectronicPublicationListTests: XCTestCase {
                 self.passThrough = passThrough
             }
             
+            @State var router: MarlinRouter = MarlinRouter()
             var body: some View {
-                NavigationView {
+                NavigationStack(path: $router.path) {
                     ElectronicPublicationsSectionList()
+                        .marlinRoutes()
                 }
+                .environmentObject(router)
             }
         }
         let passThrough = PassThrough()

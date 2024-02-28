@@ -192,9 +192,7 @@ class NavigationalWarningCoreDataDataSource:
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
             fetchRequest.predicate = predicate
 
-            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.asam.key).map({ sortParameter in
-                sortParameter.toNSSortDescriptor()
-            })
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.navWarning.key).toNSSortDescriptors()
             return (context.fetch(request: fetchRequest)?.map { navigationalWarning in
                 NavigationalWarningModel(navigationalWarning: navigationalWarning)
             }) ?? []
