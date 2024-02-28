@@ -10,7 +10,6 @@ import MapKit
 import Alamofire
 
 struct NominatimResponseItem: Decodable {
-    let name: String
     let displayName: String
     let lat: String
     let lon: String
@@ -18,16 +17,21 @@ struct NominatimResponseItem: Decodable {
 
 class NominatimSearchProvider: SearchProvider {
     static func performSearch(
-        searchText: String,
+        searchText rawSearchTerm: String,
         region: MKCoordinateRegion?,
         onCompletion: @escaping ([MKMapItem]) -> Void) {
             do {
-                let url = try "https://nominatim.openstreetmap.org".asURL()
+                var searchTerm = rawSearchTerm
+                let parsedLocation = CLLocationCoordinate2D(coordinateString: searchTerm)
+                if let location = parsedLocation {
+                    searchTerm = "\(location.latitude), \(location.longitude)"
+                }
+                
+                let url = try "https://osm-nominatim.gs.mil".asURL()
                 var urlRequest = URLRequest(url: url.appendingPathComponent("/search"))
                 urlRequest.httpMethod = HTTPMethod.get.rawValue
                 urlRequest.setValue("marlin-ios", forHTTPHeaderField: "User-Agent")
-                urlRequest = try URLEncoding.default.encode(urlRequest, with: ["q": searchText, "format": "json"])
-                
+                urlRequest = try URLEncoding.default.encode(urlRequest, with: ["q": searchTerm, "format": "json"])
                 URLSession.shared.dataTask(with: urlRequest) { data, _, _ in
                     guard let data = data else {
                         onCompletion([])
@@ -41,7 +45,7 @@ class NominatimSearchProvider: SearchProvider {
                         return
                     }
                     
-                    let mapItems = nominatimResponse.map { item in
+                    var mapItems = nominatimResponse.map { item in
                         let placemark = MKPlacemark(
                             coordinate: CLLocationCoordinate2D(
                                 latitude: Double(item.lat) ?? 0.0,
@@ -49,6 +53,12 @@ class NominatimSearchProvider: SearchProvider {
                         let mapItem = MKMapItem(placemark: placemark)
                         mapItem.name = item.displayName
                         return mapItem
+                    }
+                    if let location = parsedLocation {
+                        let coordPlacemark = MKPlacemark(coordinate: location)
+                        let coordMapItem = MKMapItem(placemark: coordPlacemark)
+                        coordMapItem.name = "\(location.latitude), \(location.longitude)"
+                        mapItems.insert(coordMapItem, at: 0)
                     }
                     onCompletion(mapItems)
                     return

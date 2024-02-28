@@ -230,7 +230,7 @@ struct MapSettings: View {
             } header: {
                 Text("Location Search")
             } footer: {
-                Text("Nominatim is provided by [OpenStreetMap](https://www.openstreetmap.org/copyright).")
+                Text("Nominatim data is provided by [OpenStreetMap](https://www.openstreetmap.org/copyright).")
                     .tint(Color.blue)
             }
             
