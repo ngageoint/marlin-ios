@@ -25,7 +25,7 @@ jobs:
       - name: Install Pods
         working-directory: ./Marlin
         run: |
-          pod repo update
+          # pod repo update
           pod install
       - name: Build
         working-directory: ./Marlin
