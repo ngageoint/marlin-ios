@@ -109,16 +109,14 @@ class NoticeToMarinersCoreDataDataSource:
     ) async -> [NoticeToMarinersModel] {
         return await context.perform {
             let fetchRequest = NoticeToMariners.fetchRequest()
-            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
+            let predicates: [NSPredicate] = self.buildPredicates(filters: filters)
 
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
             fetchRequest.predicate = predicate
 
             fetchRequest.sortDescriptors = UserDefaults.standard.sort(
                 DataSources.noticeToMariners.key
-            ).map({ sortParameter in
-                sortParameter.toNSSortDescriptor()
-            })
+            ).toNSSortDescriptors()
             return (self.context.fetch(request: fetchRequest)?.map { ntm in
                 NoticeToMarinersModel(noticeToMariners: ntm)
             }) ?? []
@@ -132,9 +130,9 @@ class NoticeToMarinersCoreDataDataSource:
         let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         fetchRequest.predicate = predicate
 
-        fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.noticeToMariners.key).map({ sortParameter in
-            sortParameter.toNSSortDescriptor()
-        })
+        fetchRequest.sortDescriptors = UserDefaults.standard.sort(
+            DataSources.noticeToMariners.key
+        ).toNSSortDescriptors()
 
         var count = 0
         context.performAndWait {

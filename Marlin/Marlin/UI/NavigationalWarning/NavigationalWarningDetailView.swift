@@ -119,12 +119,13 @@ struct NavigationalWarningDetailView: View {
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 bookmarkViewModel.repository = bookmarkRepository
-                bookmarkViewModel.getBookmark(itemKey: navigationalWarning.itemKey, dataSource: DataSources.navWarning.key)
+                bookmarkViewModel.getBookmark(
+                    itemKey: navigationalWarning.itemKey,
+                    dataSource: DataSources.navWarning.key
+                )
                 Metrics.shared.dataSourceDetail(dataSource: NavigationalWarning.definition)
             }
-            //            onChange(of: msgNumber, perform: { _ in
-            //                viewModel.getNavigationalWarning(msgYear: msgYear, msgNumber: msgNumber, navArea: navArea, waypointURI: waypointURI)
-            //            })
+
         }
 
     }

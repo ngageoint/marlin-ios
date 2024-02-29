@@ -48,7 +48,13 @@ class LightGeoPackageExportable: GeoPackageExportable {
                     styleArray.append(styleRows[6])
                 }
 
-                createFeature(model: model, sfGeometry: sfGeometry, geoPackage: geoPackage, table: table, styleRows: styleArray)
+                createFeature(
+                    model: model,
+                    sfGeometry: sfGeometry,
+                    geoPackage: geoPackage,
+                    table: table,
+                    styleRows: styleArray
+                )
             }
             exported += 1
             if exported % 10 == 0 {

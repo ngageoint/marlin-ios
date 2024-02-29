@@ -20,7 +20,7 @@ struct NoticeToMarinersListModel: Hashable, Identifiable {
     }
 
     var itemTitle: String {
-        return "\(self.title ?? "") \(self.isFullPublication ?? false ? (self.fileExtension ?? "") : "")"
+        return "\(self.title ?? "") \(self.isFullPublication ? (self.fileExtension ?? "") : "")"
     }
 
     static var definition: any DataSourceDefinition {
@@ -218,7 +218,7 @@ struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable, Dow
     static var definition: any DataSourceDefinition = DataSourceDefinitions.noticeToMariners.definition
 
     var itemTitle: String {
-        return "\(self.title ?? "") \(self.isFullPublication ?? false ? (self.fileExtension ?? "") : "")"
+        return "\(self.title ?? "") \(self.isFullPublication ? (self.fileExtension ?? "") : "")"
     }
 
     func getFirstDay(weekNumber: Int, currentYear: Int) -> Date? {
@@ -237,7 +237,10 @@ struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable, Dow
     }
 
     func dateRange() -> String {
-        let firstDate = getFirstDay(weekNumber: (noticeNumber ?? 0) % 100, currentYear: (noticeNumber ?? 0) / 100) ?? Date()
+        let firstDate = getFirstDay(
+            weekNumber: (noticeNumber ?? 0) % 100,
+            currentYear: (noticeNumber ?? 0) / 100
+        ) ?? Date()
         let lastDate = Calendar.current.date(byAdding: .day, value: 6, to: firstDate) ?? Date()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM d"
@@ -339,7 +342,7 @@ struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable, Dow
         self.filenameBase = try? values.decode(String.self, forKey: .filenameBase)
         self.fileExtension = try? values.decode(String.self, forKey: .fileExtension)
         self.fileSize = try? values.decode(Int.self, forKey: .fileSize)
-        var isFull = try? values.decode(Bool.self, forKey: .isFullPublication)
+        let isFull = try? values.decode(Bool.self, forKey: .isFullPublication)
         self.isFullPublication = isFull ?? false
         var parsedUploadTime: Date?
         if let dateString = try? values.decode(String.self, forKey: .uploadTime) {

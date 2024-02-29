@@ -31,7 +31,13 @@ class AsamGeoPackageExportable: GeoPackageExportable {
         let asams = await asamRepository.getAsams(filters: (filters ?? []) + (commonFilters ?? []))
         var exported = 0
         for asam in asams {
-            createFeature(model: asam, sfGeometry: asam.sfGeometry, geoPackage: geoPackage, table: table, styleRows: styleRows)
+            createFeature(
+                model: asam,
+                sfGeometry: asam.sfGeometry,
+                geoPackage: geoPackage,
+                table: table,
+                styleRows: styleRows
+            )
             exported += 1
             if exported % 10 == 0 {
                 await updateProgress(dataSourceProgress: dataSourceProgress, count: exported)

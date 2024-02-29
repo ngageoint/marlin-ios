@@ -26,8 +26,8 @@ enum MarlinRoute: Hashable {
     case acknowledgements
     case createRoute
     case editRoute(routeURI: URL?)
-    case dataSourceDetail(dataSourceKey: String, itemKey: String)
-    case dataSourceRouteDetail(dataSourceKey: String, itemKey: String, waypointURI: URL)
+//    case dataSourceDetail(dataSourceKey: String, itemKey: String)
+//    case dataSourceRouteDetail(dataSourceKey: String, itemKey: String, waypointURI: URL)
 }
 
 enum NoticeToMarinersRoute: Hashable {
@@ -65,12 +65,16 @@ enum NavigationalWarningRoute: Hashable {
     case areaList(navArea: String)
 }
 
-enum ElectronicPublicationRoute: Hashable {
+enum PublicationRoute: Hashable {
     case completeVolumes(typeId: Int)
     case nestedFolder(typeId: Int)
-    case publicationList(key: String, pubs: [ElectronicPublicationModel])
+    case publicationList(key: String, pubs: [PublicationModel])
     case completeAndChapters(typeId: Int, title: String, chapterTitle: String)
     case publications(typeId: Int)
+}
+
+enum GeoPackageRoute: Hashable {
+    case detail(featureItem: GeoPackageFeatureItem)
 }
 
 enum DataSourceRoute: Hashable {
@@ -80,6 +84,235 @@ enum DataSourceRoute: Hashable {
 extension View {
     func marlinRoutes() -> some View {
         modifier(MarlinRouteModifier())
+    }
+    func asamRoutes() -> some View {
+        modifier(AsamRouteModifier())
+    }
+    func moduRoutes() -> some View {
+        modifier(ModuRouteModifier())
+    }
+    func portRoutes() -> some View {
+        modifier(PortRouteModifier())
+    }
+    func lightRoutes() -> some View {
+        modifier(LightRouteModifier())
+    }
+    func radioBeaconRoutes() -> some View {
+        modifier(RadioBeaconRouteModifier())
+    }
+    func differentialGPSStationRoutes() -> some View {
+        modifier(DifferentialGPSStationRouteModifier())
+    }
+    func noticeToMarinersRoutes() -> some View {
+        modifier(NoticeToMarinersRouteModifier())
+    }
+    func navigationalWarningRoutes() -> some View {
+        modifier(NavigationalWarningRouteModifier())
+    }
+    func publicationRoutes() -> some View {
+        modifier(PublicationRouteModifier())
+    }
+    func geoPackageRoutes() -> some View {
+        modifier(GeoPackageRouteModifier())
+    }
+}
+
+struct AsamRouteModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .navigationDestination(for: AsamRoute.self) { item in
+                switch item {
+                case .detail(let reference):
+                    // disable this rule in order to execute a statement prior to returning a view
+                    // swiftlint:disable redundant_discardable_let
+                    let _ = NotificationCenter.default.post(
+                        name: .DismissBottomSheet,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    // swiftlint:enable redundant_discardable_let
+
+                    AsamDetailView(reference: reference)
+                }
+            }
+    }
+}
+
+struct ModuRouteModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .navigationDestination(for: ModuRoute.self) { item in
+                switch item {
+                case .detail(let name):
+                    // disable this rule in order to execute a statement prior to returning a view
+                    // swiftlint:disable redundant_discardable_let
+                    let _ = NotificationCenter.default.post(
+                        name: .DismissBottomSheet,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    // swiftlint:enable redundant_discardable_let
+
+                    ModuDetailView(name: name)
+                }
+            }
+    }
+}
+
+struct PortRouteModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+        .navigationDestination(for: PortRoute.self) { item in
+            switch item {
+            case .detail(let portNumber):
+                // disable this rule in order to execute a statement prior to returning a view
+                // swiftlint:disable redundant_discardable_let
+                let _ = NotificationCenter.default.post(
+                    name: .DismissBottomSheet,
+                    object: nil,
+                    userInfo: nil
+                )
+                // swiftlint:enable redundant_discardable_let
+
+                PortDetailView(portNumber: portNumber)
+            }
+        }
+    }
+}
+
+struct LightRouteModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .navigationDestination(for: LightRoute.self) { item in
+                switch item {
+                case .detail(let volumeNumber, let featureNumber):
+                    // disable this rule in order to execute a statement prior to returning a view
+                    // swiftlint:disable redundant_discardable_let
+                    let _ = NotificationCenter.default.post(
+                        name: .DismissBottomSheet,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    // swiftlint:enable redundant_discardable_let
+
+                    LightDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
+                }
+            }
+    }
+}
+
+struct RadioBeaconRouteModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+        .navigationDestination(for: RadioBeaconRoute.self) { item in
+            switch item {
+            case .detail(let featureNumber, let volumeNumber):
+                // disable this rule in order to execute a statement prior to returning a view
+                // swiftlint:disable redundant_discardable_let
+                let _ = NotificationCenter.default.post(
+                    name: .DismissBottomSheet,
+                    object: nil,
+                    userInfo: nil
+                )
+                // swiftlint:enable redundant_discardable_let
+
+                RadioBeaconDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
+            }
+        }
+    }
+}
+
+struct DifferentialGPSStationRouteModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .navigationDestination(for: DifferentialGPSStationRoute.self) { item in
+                switch item {
+                case .detail(let featureNumber, let volumeNumber):
+                    // disable this rule in order to execute a statement prior to returning a view
+                    // swiftlint:disable redundant_discardable_let
+                    let _ = NotificationCenter.default.post(
+                        name: .DismissBottomSheet,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    // swiftlint:enable redundant_discardable_let
+
+                    DifferentialGPSStationDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
+                }
+            }
+    }
+}
+
+struct NoticeToMarinersRouteModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .navigationDestination(for: NoticeToMarinersRoute.self) { item in
+                switch item {
+                case .fullView(let noticeNumber):
+                    NoticeToMarinersFullNoticeView(noticeNumber: noticeNumber)
+                case .notices:
+                    NoticesList()
+                case .chartQuery:
+                    ChartCorrectionQuery()
+                }
+            }
+    }
+}
+
+struct NavigationalWarningRouteModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .navigationDestination(for: NavigationalWarningRoute.self) { item in
+                switch item {
+                case .detail(let msgYear, let msgNumber, let navArea):
+                    // disable this rule in order to execute a statement prior to returning a view
+                    // swiftlint:disable redundant_discardable_let
+                    let _ = NotificationCenter.default.post(
+                        name: .DismissBottomSheet,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    // swiftlint:enable redundant_discardable_let
+                    NavigationalWarningDetailView(msgYear: msgYear, msgNumber: msgNumber, navArea: navArea)
+                case .areaList(let navArea):
+                    NavigationalWarningNavAreaListView(
+                        navArea: navArea,
+                        mapName: "Navigational Warning List View Map"
+                    )
+                }
+            }
+    }
+}
+
+struct PublicationRouteModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+        .navigationDestination(for: PublicationRoute.self) { item in
+            switch item {
+            case .publications(typeId: let typeId):
+                PublicationsTypeIdListView(pubTypeId: typeId)
+            case .completeVolumes(typeId: let typeId):
+                PublicationsCompleteVolumesList(pubTypeId: typeId)
+            case .nestedFolder(typeId: let typeId):
+                PublicationsNestedFolder(pubTypeId: typeId)
+            case .publicationList(key: let key, pubs: let pubs):
+                PublicationsListView(key: key, publications: pubs)
+            case .completeAndChapters(typeId: let typeId, title: let title, chapterTitle: let chapterTitle):
+                PublicationsChaptersList(pubTypeId: typeId, title: title, chapterTitle: chapterTitle)
+            }
+        }
+    }
+}
+
+struct GeoPackageRouteModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .navigationDestination(for: GeoPackageRoute.self) { item in
+                switch item {
+                case .detail(let featureItem):
+                    GeoPackageFeatureItemSummaryView(featureItem: featureItem)
+                }
+            }
     }
 }
 
@@ -96,11 +329,18 @@ struct MarlinRouteModifier: ViewModifier {
         }
         return dataSources
     }
-    
-    // this is being refactored, ignore this error for now
-    // swiftlint:disable cyclomatic_complexity function_body_length
+
     func body(content: Content) -> some View {
         content
+            .asamRoutes()
+            .moduRoutes()
+            .portRoutes()
+            .lightRoutes()
+            .radioBeaconRoutes()
+            .differentialGPSStationRoutes()
+            .noticeToMarinersRoutes()
+            .navigationalWarningRoutes()
+            .publicationRoutes()
             .navigationDestination(for: MarlinRoute.self) { item in
                 switch item {
                 case .exportGeoPackageDataSource(let dataSource, let filters):
@@ -132,228 +372,6 @@ struct MarlinRouteModifier: ViewModifier {
                     CreateRouteView()
                 case .editRoute(let routeURI):
                     CreateRouteView(routeURI: routeURI)
-                case .dataSourceDetail(let dataSourceKey, let itemKey):
-                    switch dataSourceKey {
-                    case DataSources.asam.key:
-                        AsamDetailView(reference: itemKey)
-                    case DataSources.modu.key:
-                        ModuDetailView(name: itemKey)
-                    case DataSources.port.key:
-                        PortDetailView(portNumber: Int64(itemKey))
-                    case DataSources.navWarning.key:
-                        let split = itemKey.split(separator: "--")
-                        if split.count == 3 {
-                            NavigationalWarningDetailView(
-                                msgYear: Int(split[0]) ?? -1,
-                                msgNumber: Int(split[1]) ?? -1,
-                                navArea: "\(split[2])"
-                            )
-                        }
-                    case DataSources.noticeToMariners.key:
-                        if let noticeNumber = Int(itemKey) {
-                            NoticeToMarinersFullNoticeView(noticeNumber: noticeNumber)
-                        }
-                    case DataSources.dgps.key:
-                        let split = itemKey.split(separator: "--")
-                        if split.count == 2 {
-                            DifferentialGPSStationDetailView(featureNumber: Int(split[0]), volumeNumber: "\(split[1])")
-                        }
-                    case DataSources.light.key:
-                        let split = itemKey.split(separator: "--")
-                        if split.count == 3 {
-                            LightDetailView(featureNumber: "\(split[0])", volumeNumber: "\(split[1])")
-                        }
-                    case DataSources.radioBeacon.key:
-                        let split = itemKey.split(separator: "--")
-                        if split.count == 2 {
-                            RadioBeaconDetailView(featureNumber: Int(split[0]), volumeNumber: "\(split[1])")
-                        }
-                    case DataSources.epub.key:
-                        Text("epub detail view")
-//                        if let epub = ElectronicPublication.getItem(
-//                            context: PersistenceController.current.viewContext,
-//                            itemKey: itemKey) as? ElectronicPublication {
-//                            ElectronicPublicationDetailView(electronicPublication: epub)
-//                        }
-                    case DataSources.geoPackage.key:
-                        if let gpFeature = GeoPackageFeatureItem.getItem(
-                            context: PersistenceController.current.viewContext,
-                            itemKey: itemKey) as? GeoPackageFeatureItem {
-                            GeoPackageFeatureItemDetailView(featureItem: gpFeature)
-                        }
-                    case DataSources.route.key:
-                        CreateRouteView(routeURI: URL(string: itemKey))
-                    default:
-                        Text("no default")
-                    }
-                case .dataSourceRouteDetail(let dataSourceKey, let itemKey, let waypointURI):
-                    switch dataSourceKey {
-                    case DataSources.asam.key:
-                        AsamDetailView(reference: itemKey, waypointURI: waypointURI)
-                    case DataSources.modu.key:
-                        ModuDetailView(name: itemKey, waypointURI: waypointURI)
-                    case DataSources.light.key:
-                        let split = itemKey.split(separator: "--")
-                        if split.count == 3 {
-                            LightDetailView(
-                                featureNumber: "\(split[0])",
-                                volumeNumber: "\(split[1])",
-                                waypointURI: waypointURI)
-                        }
-                    case DataSources.port.key:
-                        PortDetailView(portNumber: Int64(itemKey), waypointURI: waypointURI)
-                    case DataSources.dgps.key:
-                        let split = itemKey.split(separator: "--")
-                        if split.count == 2 {
-                            DifferentialGPSStationDetailView(
-                                featureNumber: Int(split[0]),
-                                volumeNumber: "\(split[1])",
-                                waypointURI: waypointURI)
-                        }
-                    case DataSources.radioBeacon.key:
-                        let split = itemKey.split(separator: "--")
-                        if split.count == 2 {
-                            RadioBeaconDetailView(
-                                featureNumber: Int(split[0]),
-                                volumeNumber: "\(split[1])",
-                                waypointURI: waypointURI)
-                        }
-                    default:
-                        Text("no default")
-                    }
-                }
-            }
-            .navigationDestination(for: AsamRoute.self) { item in
-                switch item {
-                case .detail(let reference):
-                    // disable this rule in order to execute a statement prior to returning a view
-                    // swiftlint:disable redundant_discardable_let
-                    let _ = NotificationCenter.default.post(
-                        name: .DismissBottomSheet,
-                        object: nil,
-                        userInfo: nil
-                    )
-                    // swiftlint:enable redundant_discardable_let
-
-                    AsamDetailView(reference: reference)
-                }
-            }
-            .navigationDestination(for: ModuRoute.self) { item in
-                switch item {
-                case .detail(let name):
-                    // disable this rule in order to execute a statement prior to returning a view
-                    // swiftlint:disable redundant_discardable_let
-                    let _ = NotificationCenter.default.post(
-                        name: .DismissBottomSheet,
-                        object: nil,
-                        userInfo: nil
-                    )
-                    // swiftlint:enable redundant_discardable_let
-
-                    ModuDetailView(name: name)
-                }
-            }
-            .navigationDestination(for: PortRoute.self) { item in
-                switch item {
-                case .detail(let portNumber):
-                    // disable this rule in order to execute a statement prior to returning a view
-                    // swiftlint:disable redundant_discardable_let
-                    let _ = NotificationCenter.default.post(
-                        name: .DismissBottomSheet,
-                        object: nil,
-                        userInfo: nil
-                    )
-                    // swiftlint:enable redundant_discardable_let
-
-                    PortDetailView(portNumber: portNumber)
-                }
-            }
-            .navigationDestination(for: LightRoute.self) { item in
-                switch item {
-                case .detail(let volumeNumber, let featureNumber):
-                    // disable this rule in order to execute a statement prior to returning a view
-                    // swiftlint:disable redundant_discardable_let
-                    let _ = NotificationCenter.default.post(
-                        name: .DismissBottomSheet,
-                        object: nil,
-                        userInfo: nil
-                    )
-                    // swiftlint:enable redundant_discardable_let
-
-                    LightDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
-                }
-            }
-            .navigationDestination(for: RadioBeaconRoute.self) { item in
-                switch item {
-                case .detail(let featureNumber, let volumeNumber):
-                    // disable this rule in order to execute a statement prior to returning a view
-                    // swiftlint:disable redundant_discardable_let
-                    let _ = NotificationCenter.default.post(
-                        name: .DismissBottomSheet,
-                        object: nil,
-                        userInfo: nil
-                    )
-                    // swiftlint:enable redundant_discardable_let
-
-                    RadioBeaconDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
-                }
-            }
-            .navigationDestination(for: DifferentialGPSStationRoute.self) { item in
-                switch item {
-                case .detail(let featureNumber, let volumeNumber):
-                    // disable this rule in order to execute a statement prior to returning a view
-                    // swiftlint:disable redundant_discardable_let
-                    let _ = NotificationCenter.default.post(
-                        name: .DismissBottomSheet,
-                        object: nil,
-                        userInfo: nil
-                    )
-                    // swiftlint:enable redundant_discardable_let
-
-                    DifferentialGPSStationDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
-                }
-            }
-            .navigationDestination(for: NoticeToMarinersRoute.self) { item in
-                switch item {
-                case .fullView(let noticeNumber):
-                    NoticeToMarinersFullNoticeView(noticeNumber: noticeNumber)
-                case .notices:
-                    NoticesList()
-                case .chartQuery:
-                    ChartCorrectionQuery()
-                }
-            }
-            .navigationDestination(for: NavigationalWarningRoute.self) { item in
-                switch item {
-                case .detail(let msgYear, let msgNumber, let navArea):
-                    // disable this rule in order to execute a statement prior to returning a view
-                    // swiftlint:disable redundant_discardable_let
-                    let _ = NotificationCenter.default.post(
-                        name: .DismissBottomSheet,
-                        object: nil,
-                        userInfo: nil
-                    )
-                    // swiftlint:enable redundant_discardable_let
-                    NavigationalWarningDetailView(msgYear: msgYear, msgNumber: msgNumber, navArea: navArea)
-                case .areaList(let navArea):
-                    NavigationalWarningNavAreaListView(
-                        navArea: navArea,
-                        mapName: "Navigational Warning List View Map"
-                    )
-                }
-            }
-            .navigationDestination(for: ElectronicPublicationRoute.self) { item in
-                switch item {
-                case .publications(typeId: let typeId):
-                    ElectronicPublicationsTypeIdListView(pubTypeId: typeId)
-                case .completeVolumes(typeId: let typeId):
-                    ElectronicPublicationsCompleteVolumesList(pubTypeId: typeId)
-                case .nestedFolder(typeId: let typeId):
-                    ElectronicPublicationsNestedFolder(pubTypeId: typeId)
-                case .publicationList(key: let key, pubs: let pubs):
-                    ElectronicPublicationsListView(key: key, publications: pubs)
-                case .completeAndChapters(typeId: let typeId, title: let title, chapterTitle: let chapterTitle):
-                    ElectronicPublicationsChaptersList(pubTypeId: typeId, title: title, chapterTitle: chapterTitle)
                 }
             }
             .navigationDestination(for: ItemWrapper.self) { item in
@@ -362,5 +380,4 @@ struct MarlinRouteModifier: ViewModifier {
                 }
             }
     }
-    // swiftlint:enable cyclomatic_complexity function_body_length
 }

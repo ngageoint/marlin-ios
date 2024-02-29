@@ -59,9 +59,7 @@ struct PortList: View {
                                     }
                                 }
                                 .onTapGesture {
-                                    router.path.append(MarlinRoute.dataSourceDetail(
-                                        dataSourceKey: DataSources.port.key, itemKey: port.itemKey)
-                                    )
+                                    router.path.append(PortRoute.detail(port.portNumber))
                                 }
                                 .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
                                 .listRowSeparator(.hidden)

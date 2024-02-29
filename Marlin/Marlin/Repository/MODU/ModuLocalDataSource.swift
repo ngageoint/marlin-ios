@@ -65,7 +65,7 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
     ) async -> [ModuModel] {
         return await context.perform {
             let fetchRequest = Modu.fetchRequest()
-            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
+            let predicates: [NSPredicate] = self.buildPredicates(filters: filters)
 
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
             fetchRequest.predicate = predicate

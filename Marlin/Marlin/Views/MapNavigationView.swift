@@ -16,9 +16,9 @@ struct MapNavigationView: View {
     
     @EnvironmentObject var router: MarlinRouter
 
-    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
-        notification.object as? ViewDataSource
-    }
+//    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
+//        notification.object as? ViewDataSource
+//    }
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
     }
@@ -49,15 +49,15 @@ struct MapNavigationView: View {
                 DataSourceListView(dataSource: item, focusedItem: itemWrapper)
             }
             .marlinRoutes()
-            .onReceive(viewDataSourcePub) { output in
-                if let dataSource = output.dataSource {
-                    if output.mapName == nil || output.mapName == "Marlin Map" {
-                        viewData(dataSource)
-                    }
-                } else if let definition = output.definition, let itemKey = output.itemKey {
-                    viewData(definition: definition, itemKey: itemKey)
-                }
-            }
+//            .onReceive(viewDataSourcePub) { output in
+//                if let dataSource = output.dataSource {
+//                    if output.mapName == nil || output.mapName == "Marlin Map" {
+//                        viewData(dataSource)
+//                    }
+//                } else if let definition = output.definition, let itemKey = output.itemKey {
+//                    viewData(definition: definition, itemKey: itemKey)
+//                }
+//            }
             .onReceive(switchTabPub) { output in
                 if let output = output as? String {
                     if output == "settings" {
@@ -80,15 +80,17 @@ struct MapNavigationView: View {
         }
     }
     
-    func viewData(definition: any DataSourceDefinition, itemKey: String) {
-        NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
-        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-        router.path.append(MarlinRoute.dataSourceDetail(dataSourceKey: definition.key, itemKey: itemKey))
-    }
-    
-    func viewData(_ data: any DataSource) {
-        NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
-        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-        router.path.append(MarlinRoute.dataSourceDetail(dataSourceKey: type(of: data).definition.key, itemKey: data.itemKey))
-    }
+//    func viewData(definition: any DataSourceDefinition, itemKey: String) {
+//        NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
+//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+//        router.path.append(MarlinRoute.dataSourceDetail(dataSourceKey: definition.key, itemKey: itemKey))
+//    }
+//    
+//    func viewData(_ data: any DataSource) {
+//        NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
+//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+//        router.path.append(
+//            MarlinRoute.dataSourceDetail(dataSourceKey: type(of: data).definition.key, itemKey: data.itemKey)
+//        )
+//    }
 }

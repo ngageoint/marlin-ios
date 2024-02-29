@@ -263,7 +263,13 @@ extension GeoPackageExportable {
 //        }
 //    }
 
-    func createFeature(model: Encodable, sfGeometry: SFGeometry?, geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, styleRows: [GPKGStyleRow]) {
+    func createFeature(
+        model: Encodable,
+        sfGeometry: SFGeometry?,
+        geoPackage: GPKGGeoPackage,
+        table: GPKGFeatureTable,
+        styleRows: [GPKGStyleRow]
+    ) {
         guard let featureDao = geoPackage.featureDao(with: table), let row = featureDao.newRow() else {
             return
         }

@@ -72,7 +72,7 @@ struct NoticesList: View {
                 ZStack(alignment: .bottomTrailing) {
                     List(rows) { noticeItem in
                         switch noticeItem {
-                        case .listItem(let notice):
+                        case .listItem:
                             EmptyView()
                         case .sectionHeader(let header):
                             Text(header)

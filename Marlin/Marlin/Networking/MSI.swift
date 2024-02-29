@@ -19,7 +19,7 @@ public class MSI {
     var lightInitializer: LightInitializer?
     var radioBeaconInitializer: RadioBeaconInitializer?
     var differentialGPSStationInitializer: DifferentialGPSStationInitializer?
-    var electronicPublicationInitializer: ElectronicPublicationInitializer?
+    var publicationInitializer: PublicationInitializer?
     var navigationalWarningInitializer: NavigationalWarningInitializer?
     var noticeToMarinersInitializer: NoticeToMarinersInitializer?
 
@@ -31,7 +31,7 @@ public class MSI {
         lightRepository: LightRepository,
         radioBeaconRepository: RadioBeaconRepository,
         differentialGPSStationRepository: DifferentialGPSStationRepository,
-        electronicPublicationRepository: ElectronicPublicationRepository,
+        publicationRepository: PublicationRepository,
         navigationalWarningRepository: NavigationalWarningRepository,
         noticeToMarinersRepository: NoticeToMarinersRepository,
         routeRepository: RouteRepository
@@ -55,8 +55,8 @@ public class MSI {
         differentialGPSStationInitializer = DifferentialGPSStationInitializer(
             repository: differentialGPSStationRepository
         )
-        electronicPublicationInitializer = ElectronicPublicationInitializer(
-            repository: electronicPublicationRepository
+        publicationInitializer = PublicationInitializer(
+            repository: publicationRepository
         )
         navigationalWarningInitializer = NavigationalWarningInitializer(
             repository: navigationalWarningRepository
@@ -110,7 +110,7 @@ public class MSI {
         lightInitializer?.registerBackgroundHandler()
         radioBeaconInitializer?.registerBackgroundHandler()
         differentialGPSStationInitializer?.registerBackgroundHandler()
-        electronicPublicationInitializer?.registerBackgroundHandler()
+        publicationInitializer?.registerBackgroundHandler()
         navigationalWarningInitializer?.registerBackgroundHandler()
         noticeToMarinersInitializer?.registerBackgroundHandler()
     }
@@ -135,7 +135,7 @@ public class MSI {
         lightInitializer?.scheduleRefresh()
         radioBeaconInitializer?.scheduleRefresh()
         differentialGPSStationInitializer?.scheduleRefresh()
-        electronicPublicationInitializer?.scheduleRefresh()
+        publicationInitializer?.scheduleRefresh()
         navigationalWarningInitializer?.scheduleRefresh()
         noticeToMarinersInitializer?.scheduleRefresh()
     }
@@ -155,7 +155,7 @@ public class MSI {
         lightInitializer?.fetch()
         radioBeaconInitializer?.fetch()
         differentialGPSStationInitializer?.fetch()
-        electronicPublicationInitializer?.fetch()
+        publicationInitializer?.fetch()
         navigationalWarningInitializer?.fetch()
         noticeToMarinersInitializer?.fetch()
     }

@@ -29,7 +29,6 @@ class LightDataFetchOperation: DataFetchOperation<LightModel> {
             noticeYear: noticeYear,
             noticeWeek: noticeWeek
         )
-        NSLog("Request for lights \(request.parameters)")
         let queue = DispatchQueue(label: "mil.nga.msi.Marlin.api", qos: .background)
 
         return await withCheckedContinuation { continuation in

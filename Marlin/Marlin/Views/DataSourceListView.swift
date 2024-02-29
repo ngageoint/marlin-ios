@@ -47,7 +47,7 @@ struct DataSourceListView: View {
         } else if dataSource.key == DataSources.dgps.key {
             DifferentialGPSStationList()
         } else if dataSource.key == DataSources.epub.key {
-            ElectronicPublicationsSectionList()
+            PublicationsSectionList()
         } else if dataSource.key == DataSources.noticeToMariners.key {
             NoticeToMarinersView()
         } else if dataSource.key == Bookmark.key {

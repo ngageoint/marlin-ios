@@ -35,7 +35,10 @@ class DifferentialGPSStationTileRepository: TileRepository, ObservableObject {
     ) async -> [DataSourceImage] {
         var images: [DataSourceImage] = []
 
-        if let dgps = localDataSource.getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber) {
+        if let dgps = localDataSource.getDifferentialGPSStation(
+            featureNumber: featureNumber,
+            volumeNumber: volumeNumber
+        ) {
             if minLatitude...maxLatitude ~= dgps.latitude && minLongitude...maxLongitude ~= dgps.longitude {
                 images.append(DifferentialGPSStationImage(differentialGPSStation: dgps))
             }

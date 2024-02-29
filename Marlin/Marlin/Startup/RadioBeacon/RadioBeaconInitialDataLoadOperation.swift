@@ -20,7 +20,10 @@ class RadioBeaconInitialDataLoadOperation: CountingDataLoadOperation {
     @MainActor override func startLoad() {
         MSI.shared.appState.loadingDataSource[DataSources.radioBeacon.key] = true
 
-        NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.radioBeacon))
+        NotificationCenter.default.post(
+            name: .DataSourceLoading,
+            object: DataSourceItem(dataSource: DataSources.radioBeacon)
+        )
     }
 
     @MainActor override func finishLoad() {

@@ -298,7 +298,7 @@ class GeoPackageExportViewModel: ObservableObject {
                     (viewModel2.dataSource?.definition.order ?? -1)
             }) {
                 guard let dataSource = viewModel.dataSource else { continue }
-                var exportable: GeoPackageExportable? = getExportable(definition: dataSource.definition)
+                let exportable: GeoPackageExportable? = getExportable(definition: dataSource.definition)
                 guard let exportable = exportable,
                       let dataSource = viewModel.dataSource,
                       let definitions = DataSourceDefinitions.from(dataSource.definition),

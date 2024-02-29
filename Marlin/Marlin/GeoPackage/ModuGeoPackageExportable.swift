@@ -28,7 +28,13 @@ class ModuGeoPackageExportable: GeoPackageExportable {
         let modus = await moduRepository.getModus(filters: (filters ?? []) + (commonFilters ?? []))
         var exported = 0
         for modu in modus {
-            createFeature(model: modu, sfGeometry: modu.sfGeometry, geoPackage: geoPackage, table: table, styleRows: styleRows)
+            createFeature(
+                model: modu,
+                sfGeometry: modu.sfGeometry,
+                geoPackage: geoPackage,
+                table: table,
+                styleRows: styleRows
+            )
             exported += 1
             if exported % 10 == 0 {
                 await updateProgress(dataSourceProgress: dataSourceProgress, count: exported)

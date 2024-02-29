@@ -76,7 +76,7 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
             XCTFail()
             return
         }
-        let dataSource = ElectronicPublicationCoreDataDataSource()
+        let dataSource = PublicationCoreDataDataSource()
 
         XCTAssertEqual(dataSource.getCount(filters: nil), 1)
     }
@@ -147,15 +147,15 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
             return
         }
 
-        let dataSource = ElectronicPublicationCoreDataDataSource()
+        let dataSource = PublicationCoreDataDataSource()
 
-        let retrieved = dataSource.getElectronicPublication(s3Key: newItem.s3Key)
+        let retrieved = dataSource.getPublication(s3Key: newItem.s3Key)
         XCTAssertEqual(retrieved?.s3Key, newItem.s3Key)
 
-        let retrieved2 = dataSource.getElectronicPublication(s3Key: newItem2.s3Key)
+        let retrieved2 = dataSource.getPublication(s3Key: newItem2.s3Key)
         XCTAssertEqual(retrieved2?.s3Key, newItem2.s3Key)
 
-        let no = dataSource.getElectronicPublication(s3Key: "Nope")
+        let no = dataSource.getPublication(s3Key: "Nope")
         XCTAssertNil(no)
     }
 
@@ -203,10 +203,10 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
         var disposables = Set<AnyCancellable>()
         enum State {
             case loading
-            case loaded(rows: [ElectronicPublicationItem])
+            case loaded(rows: [PublicationItem])
             case failure(error: Error)
 
-            fileprivate var rows: [ElectronicPublicationItem] {
+            fileprivate var rows: [PublicationItem] {
                 if case let .loaded(rows: rows) = self {
                     return rows
                 } else {
@@ -221,12 +221,12 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
         var state: State = .loading
 
         let trigger = Trigger()
-        let dataSource = ElectronicPublicationCoreDataDataSource()
+        let dataSource = PublicationCoreDataDataSource()
 
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, dataSource] in
-            dataSource.epubs(
+            dataSource.pubs(
                 filters: UserDefaults.standard.filter(DataSources.epub),
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
@@ -356,10 +356,10 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
         var disposables = Set<AnyCancellable>()
         enum State {
             case loading
-            case loaded(rows: [ElectronicPublicationItem])
+            case loaded(rows: [PublicationItem])
             case failure(error: Error)
 
-            fileprivate var rows: [ElectronicPublicationItem] {
+            fileprivate var rows: [PublicationItem] {
                 if case let .loaded(rows: rows) = self {
                     return rows
                 } else {
@@ -374,12 +374,12 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
         var state: State = .loading
 
         let trigger = Trigger()
-        let dataSource = ElectronicPublicationCoreDataDataSource()
+        let dataSource = PublicationCoreDataDataSource()
 
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, dataSource] in
-            dataSource.epubs(
+            dataSource.pubs(
                 filters: UserDefaults.standard.filter(DataSources.epub),
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
@@ -519,10 +519,10 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
         var disposables = Set<AnyCancellable>()
         enum State {
             case loading
-            case loaded(rows: [ElectronicPublicationItem])
+            case loaded(rows: [PublicationItem])
             case failure(error: Error)
 
-            fileprivate var rows: [ElectronicPublicationItem] {
+            fileprivate var rows: [PublicationItem] {
                 if case let .loaded(rows: rows) = self {
                     return rows
                 } else {
@@ -537,7 +537,7 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
         var state: State = .loading
 
         let trigger = Trigger()
-        let dataSource = ElectronicPublicationCoreDataDataSource()
+        let dataSource = PublicationCoreDataDataSource()
 
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
@@ -628,7 +628,7 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
     }
 
     func testInsert() async {
-        var epub = ElectronicPublicationModel()
+        var epub = PublicationModel()
 
         epub.pubTypeId = 9
         epub.pubDownloadId = 3
@@ -653,17 +653,17 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
         epub.isDownloaded = false
         epub.isDownloading = true
 
-        let dataSource = ElectronicPublicationCoreDataDataSource()
+        let dataSource = PublicationCoreDataDataSource()
 
         let inserted = await dataSource.insert(epubs: [epub])
         XCTAssertEqual(1, inserted)
 
-        let retrieved = dataSource.getElectronicPublication(s3Key: "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf")
+        let retrieved = dataSource.getPublication(s3Key: "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf")
         XCTAssertEqual(retrieved?.s3Key, epub.s3Key)
     }
 
     func testObserveElectronicPublication() async {
-        var epub = ElectronicPublicationModel()
+        var epub = PublicationModel()
 
         epub.pubTypeId = 9
         epub.pubDownloadId = 3
@@ -688,13 +688,13 @@ final class ElectronicPublicationCoreDataDataSourceTests: XCTestCase {
         epub.isDownloaded = false
         epub.isDownloading = false
 
-        let dataSource = ElectronicPublicationCoreDataDataSource()
+        let dataSource = PublicationCoreDataDataSource()
         let inserted = await dataSource.insert(epubs: [epub])
         XCTAssertEqual(1, inserted)
 
         var disposables = Set<AnyCancellable>()
 
-        dataSource.observeElectronicPublication(s3Key: "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf")?
+        dataSource.observePublication(s3Key: "16694312/SFH00000/NIMA_LOL/Pub110/UpdatedPub110bk.pdf")?
             .sink(receiveValue: { updatedObject in
                 epub = updatedObject
             })

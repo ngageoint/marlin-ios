@@ -213,14 +213,12 @@ class LightCoreDataDataSource:
     ) async -> [LightModel] {
         return await context.perform {
             let fetchRequest = Light.fetchRequest()
-            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
+            let predicates: [NSPredicate] = self.buildPredicates(filters: filters)
 
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
             fetchRequest.predicate = predicate
 
-            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.light.key).map({ sortParameter in
-                sortParameter.toNSSortDescriptor()
-            })
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.light.key).toNSSortDescriptors()
             return (self.context.fetch(request: fetchRequest)?.map { light in
                 LightModel(light: light)
             }) ?? []

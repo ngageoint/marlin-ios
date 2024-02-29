@@ -19,9 +19,9 @@ struct NavigationalWarningsOverview {
     @ObservedObject var focusedItem: ItemWrapper
     var watchFocusedItem: Bool = false
     
-    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
-        notification.object as? ViewDataSource
-    }
+//    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
+//        notification.object as? ViewDataSource
+//    }
 }
 
 extension NavigationalWarningsOverview: View {
@@ -48,12 +48,12 @@ extension NavigationalWarningsOverview: View {
             Metrics.shared.appRoute([NavigationalWarning.metricsKey, "group"])
             Metrics.shared.dataSourceList(dataSource: NavigationalWarning.definition)
         }
-        .onReceive(viewDataSourcePub) { output in
-            if let dataSource = output.dataSource as? NavigationalWarning, output.mapName == MAP_NAME {
-                NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-                router.path.append(dataSource)
-            }
-        }
+//        .onReceive(viewDataSourcePub) { output in
+//            if let dataSource = output.dataSource as? NavigationalWarning, output.mapName == MAP_NAME {
+//                NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+//                router.path.append(dataSource)
+//            }
+//        }
     }
     
 }

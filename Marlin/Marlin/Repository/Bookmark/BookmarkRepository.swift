@@ -35,6 +35,7 @@ protocol BookmarkRepository {
     func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel?
 
     func createBookmark(notes: String?, itemKey: String, dataSource: String) async
+    @discardableResult
     func removeBookmark(itemKey: String, dataSource: String) -> Bool
     func getDataSourceItem(itemKey: String, dataSource: String) -> (any Bookmarkable)?
 }
@@ -51,7 +52,7 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
     let portRepository: PortRepository?
     let radioBeaconRepository: RadioBeaconRepository?
     let noticeToMarinersRepository: NoticeToMarinersRepository?
-    let electronicPublicationRepository: ElectronicPublicationRepository?
+    let publicationRepository: PublicationRepository?
     let navigationalWarningRepository: NavigationalWarningRepository?
     let differentialGPSStationRepository: DifferentialGPSStationRepository?
 
@@ -63,7 +64,7 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
         portRepository: PortRepository? = nil,
         radioBeaconRepository: RadioBeaconRepository? = nil,
         noticeToMarinersRepository: NoticeToMarinersRepository? = nil,
-        electronicPublicationRepository: ElectronicPublicationRepository? = nil,
+        publicationRepository: PublicationRepository? = nil,
         navigationalWarningRepository: NavigationalWarningRepository? = nil,
         differentialGPSStationRepository: DifferentialGPSStationRepository? = nil
     ) {
@@ -74,7 +75,7 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
         self.portRepository = portRepository
         self.radioBeaconRepository = radioBeaconRepository
         self.noticeToMarinersRepository = noticeToMarinersRepository
-        self.electronicPublicationRepository = electronicPublicationRepository
+        self.publicationRepository = publicationRepository
         self.navigationalWarningRepository = navigationalWarningRepository
         self.differentialGPSStationRepository = differentialGPSStationRepository
     }
@@ -164,7 +165,7 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
                 )
             }
         case DataSources.epub.key:
-            return electronicPublicationRepository?.getElectronicPublication(s3Key: itemKey)
+            return publicationRepository?.getPublication(s3Key: itemKey)
         case GeoPackageFeatureItem.key:
             return GeoPackageFeatureItem.getItem(context: context, itemKey: itemKey)
         default:

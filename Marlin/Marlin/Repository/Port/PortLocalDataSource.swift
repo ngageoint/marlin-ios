@@ -251,8 +251,6 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
         return [PortItem.listItem(PortListModel(port: port))]
     }
 
-    // ignore due to the amount of data types
-    // swiftlint:disable cyclomatic_complexity
     func getCurrentSortValue(sortDescriptor: DataSourceSortParameter, sortValue: Any?) -> String? {
         var sortValueString: String?
         switch sortDescriptor.property.type {
@@ -281,7 +279,6 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
         }
         return sortValueString
     }
-    // swiftlint:enable cyclomatic_complexity
 
     func insert(task: BGTask? = nil, ports: [PortModel]) async -> Int {
         let count = ports.count

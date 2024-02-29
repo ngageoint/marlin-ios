@@ -18,7 +18,7 @@ class BookmarkStaticRepository: BookmarkRepository {
     let portRepository: PortRepository?
     let radioBeaconRepository: RadioBeaconRepository?
     let noticeToMarinersRepository: NoticeToMarinersRepository?
-    let electronicPublicationRepository: ElectronicPublicationRepository?
+    let publicationRepository: PublicationRepository?
     let navigationalWarningRepository: NavigationalWarningRepository?
     let differentialGPSStationRepository: DifferentialGPSStationRepository?
 
@@ -30,7 +30,7 @@ class BookmarkStaticRepository: BookmarkRepository {
         portRepository: PortRepository? = nil,
         radioBeaconRepository: RadioBeaconRepository? = nil,
         noticeToMarinersRepository: NoticeToMarinersRepository? = nil,
-        electronicPublicationRepository: ElectronicPublicationRepository? = nil,
+        electronicPublicationRepository: PublicationRepository? = nil,
         navigationalWarningRepository: NavigationalWarningRepository? = nil,
         differentialGPSStationRepository: DifferentialGPSStationRepository? = nil
     ) {
@@ -41,7 +41,7 @@ class BookmarkStaticRepository: BookmarkRepository {
         self.portRepository = portRepository
         self.radioBeaconRepository = radioBeaconRepository
         self.noticeToMarinersRepository = noticeToMarinersRepository
-        self.electronicPublicationRepository = electronicPublicationRepository
+        self.publicationRepository = electronicPublicationRepository
         self.navigationalWarningRepository = navigationalWarningRepository
         self.differentialGPSStationRepository = differentialGPSStationRepository
     }
@@ -106,7 +106,7 @@ class BookmarkStaticRepository: BookmarkRepository {
                 )
             }
         case DataSources.epub.key:
-            return electronicPublicationRepository?.getElectronicPublication(s3Key: itemKey)
+            return publicationRepository?.getPublication(s3Key: itemKey)
 //        case GeoPackageFeatureItem.key:
 //            if let context = context {
 //                return GeoPackageFeatureItem.getItem(context: context, itemKey: self.id)

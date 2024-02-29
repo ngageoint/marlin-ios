@@ -276,8 +276,6 @@ struct RouteWaypointModel: Codable, Hashable, Identifiable {
 }
 
 extension RouteWaypointModel {
-    // ignoring this error because this is how many data sources we have
-    // swiftlint:disable cyclomatic_complexity
     func decodeToDataSource() -> (any GeoJSONExportable)? {
         do {
             let decoder = JSONDecoder()
@@ -317,5 +315,4 @@ extension RouteWaypointModel {
         }
         return nil
     }
-    // swiftlint:enable cyclomatic_complexity
 }

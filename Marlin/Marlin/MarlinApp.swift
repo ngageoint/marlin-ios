@@ -144,7 +144,7 @@ struct MarlinApp: App {
     var differentialGPSStationRepository: DifferentialGPSStationRepository
     var lightRepository: LightRepository
     var radioBeaconRepository: RadioBeaconRepository
-    var electronicPublicationRepository: ElectronicPublicationRepository
+    var publicationRepository: PublicationRepository
     var navigationalWarningRepository: NavigationalWarningRepository
     var noticeToMarinersRepository: NoticeToMarinersRepository
 
@@ -193,9 +193,9 @@ struct MarlinApp: App {
             localDataSource: RadioBeaconCoreDataDataSource(),
             remoteDataSource: RadioBeaconRemoteDataSource()
         )
-        electronicPublicationRepository = ElectronicPublicationRepository(
-            localDataSource: ElectronicPublicationCoreDataDataSource(),
-            remoteDataSource: ElectronicPublicationRemoteDataSource()
+        publicationRepository = PublicationRepository(
+            localDataSource: PublicationCoreDataDataSource(),
+            remoteDataSource: PublicationRemoteDataSource()
         )
         navigationalWarningRepository = NavigationalWarningRepository(
             localDataSource: NavigationalWarningCoreDataDataSource(),
@@ -219,7 +219,7 @@ struct MarlinApp: App {
                 portRepository: portRepository,
                 radioBeaconRepository: radioBeaconRepository,
                 noticeToMarinersRepository: noticeToMarinersRepository,
-                electronicPublicationRepository: electronicPublicationRepository
+                publicationRepository: publicationRepository
             ))
 
         asamsTileRepository = AsamsTileRepository(localDataSource: asamRepository.localDataSource)
@@ -241,7 +241,7 @@ struct MarlinApp: App {
             lightRepository: lightRepository,
             radioBeaconRepository: radioBeaconRepository,
             differentialGPSStationRepository: differentialGPSStationRepository,
-            electronicPublicationRepository: electronicPublicationRepository,
+            publicationRepository: publicationRepository,
             navigationalWarningRepository: navigationalWarningRepository,
             noticeToMarinersRepository: noticeToMarinersRepository,
             routeRepository: routeRepository
@@ -272,7 +272,7 @@ struct MarlinApp: App {
                 .environmentObject(routeRepository)
                 .environmentObject(routeWaypointRepository)
                 .environmentObject(navigationalWarningRepository)
-                .environmentObject(electronicPublicationRepository)
+                .environmentObject(publicationRepository)
                 .environmentObject(noticeToMarinersRepository)
                 .environmentObject(asamsTileRepository)
                 .environmentObject(modusTileRepository)

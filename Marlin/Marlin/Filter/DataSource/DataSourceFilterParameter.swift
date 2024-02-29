@@ -12,10 +12,9 @@ import sf_proj_ios
 
 extension Array where Element == DataSourceFilterParameter {
     func getCacheKey() -> String {
-        var key: String = self.reduce("") { currentKey, param in
+        return self.reduce("") { currentKey, param in
             currentKey + param.display()
         }
-        return key
     }
 }
 

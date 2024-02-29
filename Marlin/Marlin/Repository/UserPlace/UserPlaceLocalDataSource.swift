@@ -63,7 +63,7 @@ class UserPlaceCoreDataDataSource:
     func insert(userPlace: UserPlaceModel) async -> UserPlaceModel? {
         let context = PersistenceController.current.newTaskContext()
         return await context.perform {
-            var managedObject = UserPlace(context: context)
+            let managedObject = UserPlace(context: context)
             managedObject.populateFromModel(userPlaceModel: userPlace)
             try? context.obtainPermanentIDs(for: [managedObject])
             try? context.save()
@@ -239,8 +239,6 @@ extension UserPlaceCoreDataDataSource {
         return [Item.listItem(ModelType(userPlace: item))]
     }
 
-    // ignore due to the amount of data types
-    // swiftlint:disable cyclomatic_complexity
     func getCurrentSortValue(sortDescriptor: DataSourceSortParameter, sortValue: Any?) -> String? {
         var sortValueString: String?
         switch sortDescriptor.property.type {
@@ -269,7 +267,6 @@ extension UserPlaceCoreDataDataSource {
         }
         return sortValueString
     }
-    // swiftlint:enable cyclomatic_complexity
 
     func models(
         filters: [DataSourceFilterParameter]?,

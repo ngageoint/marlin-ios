@@ -61,9 +61,9 @@ struct ModuList: View {
                                     }
                                 }
                                 .onTapGesture {
-                                    router.path.append(MarlinRoute.dataSourceDetail(
-                                        dataSourceKey: DataSources.modu.key, itemKey: modu.itemKey)
-                                    )
+                                    if let name = modu.name {
+                                        router.path.append(ModuRoute.detail(name))
+                                    }
                                 }
                                 .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
                                 .listRowSeparator(.hidden)

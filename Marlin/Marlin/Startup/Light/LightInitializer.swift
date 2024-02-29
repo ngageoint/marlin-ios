@@ -21,7 +21,7 @@ class LightInitializer: Initializer {
         print("\(dataSource.name) background fetch")
         scheduleRefresh()
 
-        var operations = repository.createOperations()
+        let operations = repository.createOperations()
 
         for operation in operations {
             // Inform the system that the background task is complete
@@ -33,9 +33,7 @@ class LightInitializer: Initializer {
             // Start the operation.
             self.backgroundFetchQueue.addOperation(operation)
         }
-        // Create an operation that performs the main part of the background task.
-        let operation = createOperation()
-
+        
         // Provide the background task with an expiration handler that cancels the operation.
         task.expirationHandler = {
             for operation in operations {

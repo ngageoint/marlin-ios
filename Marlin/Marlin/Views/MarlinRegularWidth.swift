@@ -21,9 +21,9 @@ struct MarlinRegularWidth: View {
 
     @EnvironmentObject var dataSourceList: DataSourceList
         
-    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
-        notification.object as? ViewDataSource
-    }
+//    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
+//        notification.object as? ViewDataSource
+//    }
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
     }
@@ -113,11 +113,11 @@ struct MarlinRegularWidth: View {
                 .animation(.default, value: self.menuOpen)
             }
         }
-        .onReceive(viewDataSourcePub) { output in
-            if let dataSource = output.dataSource {
-                viewData(dataSource)
-            }
-        }
+//        .onReceive(viewDataSourcePub) { output in
+//            if let dataSource = output.dataSource {
+//                viewData(dataSource)
+//            }
+//        }
         .onReceive(switchTabPub) { output in
             if let output = output as? String {
                 if output == "settings" {
@@ -142,15 +142,15 @@ struct MarlinRegularWidth: View {
         self.menuOpen.toggle()
     }
     
-    func viewData(_ data: any DataSource) {
-        NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
-        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-        activeRailItem = dataSourceList.allTabs.first(where: { item in
-            item.dataSource.key == data.definition.key
-        })
-        itemWrapper.dataSource = data
-        itemWrapper.date = Date()
-    }
+//    func viewData(_ data: any DataSource) {
+//        NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
+//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+//        activeRailItem = dataSourceList.allTabs.first(where: { item in
+//            item.dataSource.key == data.definition.key
+//        })
+//        itemWrapper.dataSource = data
+//        itemWrapper.date = Date()
+//    }
     
     @ViewBuilder
     func loadingCapsule() -> some View {

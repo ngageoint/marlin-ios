@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GeoPackageFeatureItemSummaryView: DataSourceSummaryView {
+    @EnvironmentObject var router: MarlinRouter
     @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     
@@ -36,7 +37,15 @@ struct GeoPackageFeatureItemSummaryView: DataSourceSummaryView {
             Text(featureItem.layerName ?? "")
                 .overline()
             bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
-            DataSourceActionBar(data: featureItem, showMoreDetailsButton: true, showFocusButton: false)
+            DataSourceActions(
+                moreDetails: showMoreDetails ? GeoPackageActions.Tap(featureItem: featureItem, path: $router.path) : nil,
+                location: Actions.Location(latLng: featureItem.coordinate),
+                zoom: GeoPackageActions.Zoom(latLng: featureItem.coordinate, itemKey: featureItem.itemKey),
+                bookmark: Actions.Bookmark(
+                    itemKey: featureItem.itemKey,
+                    bookmarkViewModel: bookmarkViewModel
+                )
+            )
         }
         .onAppear {
             bookmarkViewModel.repository = bookmarkRepository

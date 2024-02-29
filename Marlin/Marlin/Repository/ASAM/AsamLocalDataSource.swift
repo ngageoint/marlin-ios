@@ -243,8 +243,6 @@ extension AsamCoreDataDataSource {
         return [AsamItem.listItem(AsamListModel(asam: asam))]
     }
 
-    // ignore due to the amount of data types
-    // swiftlint:disable cyclomatic_complexity
     func getCurrentSortValue(sortDescriptor: DataSourceSortParameter, sortValue: Any?) -> String? {
         var sortValueString: String?
         switch sortDescriptor.property.type {
@@ -273,7 +271,6 @@ extension AsamCoreDataDataSource {
         }
         return sortValueString
     }
-    // swiftlint:enable cyclomatic_complexity
 
     func asams(
         filters: [DataSourceFilterParameter]?,

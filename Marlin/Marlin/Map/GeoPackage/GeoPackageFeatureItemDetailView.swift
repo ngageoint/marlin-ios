@@ -10,8 +10,13 @@ import MapKit
 import geopackage_ios
 
 struct GeoPackageFeatureItemDetailView: View {
+    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var router: MarlinRouter
+
     var featureItem: GeoPackageFeatureItem
-    
+
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+
     init(featureItem: GeoPackageFeatureItem) {
         self.featureItem = featureItem
     }
@@ -40,8 +45,15 @@ struct GeoPackageFeatureItemDetailView: View {
                         }
                         Text(featureItem.layerName ?? "")
                             .overline()
-                        DataSourceActionBar(data: featureItem, showMoreDetailsButton: false, showFocusButton: true)
-                            .padding(.bottom, 16)
+                        DataSourceActions(
+                            location: Actions.Location(latLng: featureItem.coordinate),
+                            zoom: GeoPackageActions.Zoom(latLng: featureItem.coordinate, itemKey: featureItem.itemKey),
+                            bookmark: Actions.Bookmark(
+                                itemKey: featureItem.itemKey,
+                                bookmarkViewModel: bookmarkViewModel
+                            )
+                        )
+                        .padding(.bottom, 16)
                     }.padding([.leading, .trailing], 16)
                 }
                 .card()

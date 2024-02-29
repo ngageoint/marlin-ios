@@ -31,7 +31,13 @@ class RouteGeoPackageExportable: GeoPackageExportable {
         let routes = await routeRepository.getRoutes(filters: (filters ?? []) + (commonFilters ?? []))
         var exported = 0
         for route in routes {
-            createFeature(model: route, sfGeometry: route.sfGeometry, geoPackage: geoPackage, table: table, styleRows: styleRows)
+            createFeature(
+                model: route,
+                sfGeometry: route.sfGeometry,
+                geoPackage: geoPackage,
+                table: table,
+                styleRows: styleRows
+            )
             exported += 1
             if exported % 10 == 0 {
                 await updateProgress(dataSourceProgress: dataSourceProgress, count: exported)

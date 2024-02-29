@@ -392,3 +392,4 @@ struct NavigationalWarningModel: Codable, Hashable, Identifiable, Bookmarkable, 
     }
 
 }
+// swiftlint:enable type_body_length

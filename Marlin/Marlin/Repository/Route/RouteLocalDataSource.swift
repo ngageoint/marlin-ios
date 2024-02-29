@@ -193,8 +193,6 @@ class RouteCoreDataDataSource: CoreDataDataSource, RouteLocalDataSource, Observa
         return [RouteItem.listItem(RouteModel(route: route))]
     }
 
-    // ignore due to the amount of data types
-    // swiftlint:disable cyclomatic_complexity
     func getCurrentSortValue(sortDescriptor: DataSourceSortParameter, sortValue: Any?) -> String? {
         var sortValueString: String?
         switch sortDescriptor.property.type {
@@ -223,7 +221,6 @@ class RouteCoreDataDataSource: CoreDataDataSource, RouteLocalDataSource, Observa
         }
         return sortValueString
     }
-    // swiftlint:enable cyclomatic_complexity
 
     func routes(
         filters: [DataSourceFilterParameter]?,
@@ -257,14 +254,12 @@ class RouteCoreDataDataSource: CoreDataDataSource, RouteLocalDataSource, Observa
     func getRoutes(filters: [DataSourceFilterParameter]?) async -> [RouteModel] {
         return await context.perform {
             let fetchRequest = Route.fetchRequest()
-            var predicates: [NSPredicate] = self.buildPredicates(filters: filters)
+            let predicates: [NSPredicate] = self.buildPredicates(filters: filters)
 
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
             fetchRequest.predicate = predicate
 
-            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.route.key).map({ sortParameter in
-                sortParameter.toNSSortDescriptor()
-            })
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.route.key).toNSSortDescriptors()
             return (self.context.fetch(request: fetchRequest)?.map { route in
                 RouteModel(route: route)
             }) ?? []
@@ -278,10 +273,7 @@ class RouteCoreDataDataSource: CoreDataDataSource, RouteLocalDataSource, Observa
         let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         fetchRequest.predicate = predicate
 
-        fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.port.key).map({ sortParameter in
-            sortParameter.toNSSortDescriptor()
-        })
-
+        fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.port.key).toNSSortDescriptors()
         var count = 0
         context.performAndWait {
             count = (try? context.count(for: fetchRequest)) ?? 0

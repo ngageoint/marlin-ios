@@ -36,18 +36,11 @@ extension View where Self: DataSourceSummaryView {
         newView.showBookmarkNotes = showBookmarkNotes
         return newView
     }
-    
-//    @ViewBuilder
-//    func bookmarkNotesView(_ bookmarkable: (any Bookmarkable)? = nil) -> some View {
-////        if showBookmarkNotes, let bookmarkViewModel = bookmarkViewModel {
-////            BookmarkNotes(bookmarkViewModel: bookmarkViewModel) // itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key)
-////        }
-//    }
 
     @ViewBuilder
     func bookmarkNotesView(bookmarkViewModel: BookmarkViewModel?) -> some View {
         if showBookmarkNotes, let bookmarkViewModel = bookmarkViewModel {
-            BookmarkNotes(bookmarkViewModel: bookmarkViewModel) // itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key)
+            BookmarkNotes(bookmarkViewModel: bookmarkViewModel)
         }
     }
 }

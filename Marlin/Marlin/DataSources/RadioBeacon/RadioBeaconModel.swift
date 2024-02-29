@@ -512,7 +512,11 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
                 if end <= previousEnd {
                     end += 360
                 }
-                sectors.append(ImageSector(startDegrees: previousEnd, endDegrees: end, color: DataSources.radioBeacon.color))
+                sectors.append(ImageSector(
+                    startDegrees: previousEnd,
+                    endDegrees: end,
+                    color: DataSources.radioBeacon.color
+                ))
             }
             previousEnd = end
         })

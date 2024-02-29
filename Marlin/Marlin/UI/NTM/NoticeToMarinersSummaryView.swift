@@ -30,7 +30,12 @@ struct NoticeToMarinersSummaryView: DataSourceSummaryView {
                         .secondary()
                 }
                 Spacer()
-                BookmarkButton(viewModel: bookmarkViewModel)
+                BookmarkButton(
+                    action: Actions.Bookmark(
+                        itemKey: noticeToMariners.itemKey,
+                        bookmarkViewModel: bookmarkViewModel
+                    )
+                )
             }
             bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
         }

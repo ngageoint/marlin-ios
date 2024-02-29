@@ -36,7 +36,8 @@ class RadioBeaconTileRepository: TileRepository, ObservableObject {
         var images: [DataSourceImage] = []
 
         if let radioBeacon = localDataSource.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber) {
-            if minLatitude...maxLatitude ~= radioBeacon.latitude && minLongitude...maxLongitude ~= radioBeacon.longitude {
+            if minLatitude...maxLatitude ~= radioBeacon.latitude 
+                && minLongitude...maxLongitude ~= radioBeacon.longitude {
                 images.append(RadioBeaconImage(radioBeacon: radioBeacon))
             }
         }

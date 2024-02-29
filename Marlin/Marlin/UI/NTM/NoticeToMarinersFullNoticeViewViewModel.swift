@@ -37,7 +37,7 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
                 }
             }
         }
-        if let repository = repository {
+        if repository != nil {
             if let noticeNumber = noticeNumber {
                 getNotices(noticeNumber: noticeNumber)
             }
@@ -72,44 +72,6 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
         return nil
     }
     
-//    init(noticeNumber: Int64? = nil, noticeNumberString: String? = nil) {
-//        self.noticeNumber = noticeNumber
-//        if let noticeNumberString = noticeNumberString {
-//            let components = noticeNumberString.components(separatedBy: "/")
-//            if components.count == 2 {
-//                // notice to mariners that we can obtain only go back to 1999
-//                if components[1] == "99" {
-//                    if let noticeNumber = 
-//                        Int64("19\(components[1])\(String(format: "%02d", Int(components[0]) ?? 0))") {
-//                        self.noticeNumber = noticeNumber
-//                    }
-//                } else {
-//                    if let noticeNumber = 
-//                        Int64("20\(components[1])\(String(format: "%02d", Int(components[0]) ?? 0))") {
-//                        self.noticeNumber = noticeNumber
-//                    }
-//                }
-//            }
-//        }
-//    }
-    
-//    func createFetchRequest() -> FetchRequest<NoticeToMariners> {
-//        if let predicate = predicate {
-//            // Intialize the FetchRequest property wrapper
-//            return FetchRequest(
-//                entity: NoticeToMariners.entity(),
-//                sortDescriptors: sortDescriptors,
-//                predicate: predicate
-//            )
-//        } else {
-//            return FetchRequest(
-//                entity: NoticeToMariners.entity(),
-//                sortDescriptors: sortDescriptors,
-//                predicate: NSPredicate(value: false)
-//            )
-//        }
-//    }
-//    
     func createBookmarkFetchRequest() -> FetchRequest<Bookmark> {
         if let noticeNumber = noticeNumber {
             return FetchRequest(

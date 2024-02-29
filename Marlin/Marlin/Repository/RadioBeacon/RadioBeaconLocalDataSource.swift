@@ -103,9 +103,9 @@ class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSou
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
             fetchRequest.predicate = predicate
 
-            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.radioBeacon.key).map({ sortParameter in
-                sortParameter.toNSSortDescriptor()
-            })
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(
+                DataSources.radioBeacon.key
+            ).toNSSortDescriptors()
             return (context.fetch(request: fetchRequest)?.map { radioBeacon in
                 RadioBeaconModel(radioBeacon: radioBeacon)
             }) ?? []
@@ -122,9 +122,9 @@ class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSou
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
             fetchRequest.predicate = predicate
 
-            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.radioBeacon.key).map({ sortParameter in
-                sortParameter.toNSSortDescriptor()
-            })
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(
+                DataSources.radioBeacon.key
+            ).toNSSortDescriptors()
             return (self.context.fetch(request: fetchRequest)?.map { radioBeacon in
                 RadioBeaconModel(radioBeacon: radioBeacon)
             }) ?? []
@@ -222,8 +222,6 @@ class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSou
         return [RadioBeaconItem.listItem(RadioBeaconListModel(radioBeacon: radioBeacon))]
     }
 
-    // ignore due to the amount of data types
-    // swiftlint:disable cyclomatic_complexity
     func getCurrentSortValue(sortDescriptor: DataSourceSortParameter, sortValue: Any?) -> String? {
         var sortValueString: String?
         switch sortDescriptor.property.type {
@@ -252,7 +250,6 @@ class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSou
         }
         return sortValueString
     }
-    // swiftlint:enable cyclomatic_complexity
 
     func radioBeacons(
         filters: [DataSourceFilterParameter]?,

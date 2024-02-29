@@ -50,7 +50,9 @@ struct NavigationalWarningSectionRow: View {
         .background(
             HStack {
                 Rectangle()
-                    .fill(Color(NavigationalWarningNavArea.fromId(id: navAreaInformation.navArea.name)?.color ?? UIColor.clear))
+                    .fill(Color(
+                        NavigationalWarningNavArea.fromId(id: navAreaInformation.navArea.name)?.color ?? UIColor.clear
+                    ))
                     .frame(maxWidth: 6, maxHeight: .infinity)
                 Spacer()
             }

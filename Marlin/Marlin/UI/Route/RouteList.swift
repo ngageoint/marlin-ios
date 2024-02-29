@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct RouteSummaryView: DataSourceSummaryView {
+    @EnvironmentObject var router: MarlinRouter
+
     var showBookmarkNotes: Bool = false
     
     var showMoreDetails: Bool = false
@@ -63,7 +65,9 @@ struct RouteSummaryView: DataSourceSummaryView {
                 }
                 Spacer()
             }
-            DataSourceActionBar(data: route, showMoreDetailsButton: showMoreDetails, showFocusButton: false)
+            DataSourceActions(
+                moreDetails: showMoreDetails ? RouteActions.Tap(uri: route.routeURL, path: $router.path) : nil
+            )
         }
     }
 }

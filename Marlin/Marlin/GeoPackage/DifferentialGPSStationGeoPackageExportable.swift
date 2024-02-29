@@ -27,10 +27,18 @@ class DifferentialGPSStationGeoPackageExportable: GeoPackageExportable {
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
 
-        let models = await differentialGPSStationRepository.getDifferentialGPSStations(filters: (filters ?? []) + (commonFilters ?? []))
+        let models = await differentialGPSStationRepository.getDifferentialGPSStations(
+            filters: (filters ?? []) + (commonFilters ?? [])
+        )
         var exported = 0
         for model in models {
-            createFeature(model: model, sfGeometry: model.sfGeometry, geoPackage: geoPackage, table: table, styleRows: styleRows)
+            createFeature(
+                model: model,
+                sfGeometry: model.sfGeometry,
+                geoPackage: geoPackage,
+                table: table,
+                styleRows: styleRows
+            )
             exported += 1
             if exported % 10 == 0 {
                 await updateProgress(dataSourceProgress: dataSourceProgress, count: exported)

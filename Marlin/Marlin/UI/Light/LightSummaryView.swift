@@ -41,7 +41,9 @@ struct LightSummaryView: DataSourceSummaryView {
             }
 
             DataSourceActions(
-                moreDetails: showMoreDetails ? LightActions.Tap(volume: light.volumeNumber, featureNumber: light.featureNumber, path: $router.path) : nil,
+                moreDetails: showMoreDetails ? 
+                LightActions.Tap(volume: light.volumeNumber, featureNumber: light.featureNumber, path: $router.path)
+                : nil,
                 location: !showMoreDetails ? Actions.Location(latLng: light.coordinate) : nil,
                 zoom: !showMoreDetails ? LightActions.Zoom(latLng: light.coordinate, itemKey: light.id) : nil,
                 bookmark: light.canBookmark ? Actions.Bookmark(

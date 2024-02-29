@@ -18,9 +18,7 @@ class RouteWaypoint: NSManagedObject {
         let decoded = decodeToDataSource()
         return decoded?.sfGeometry
     }
-    
-    // ignoring this error because this is how many data sources we have
-    // swiftlint:disable cyclomatic_complexity
+
     func decodeToDataSource() -> (any GeoJSONExportable)? {
         do {
             let decoder = JSONDecoder()
@@ -63,7 +61,6 @@ class RouteWaypoint: NSManagedObject {
         }
         return nil
     }
-    // swiftlint:enable cyclomatic_complexity
 }
 
 extension Route: Locatable {
