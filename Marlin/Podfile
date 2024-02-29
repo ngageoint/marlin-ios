@@ -44,5 +44,13 @@ post_install do |installer|
           config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
       end
     end
+  installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+          
+          # remove code coverage
+          config.build_settings['CLANG_ENABLE_CODE_COVERAGE'] = 'NO'
+          config.build_settings['ENABLE_CODE_COVERAGE'] = 'NO'
+        end
+    end
   end
 end

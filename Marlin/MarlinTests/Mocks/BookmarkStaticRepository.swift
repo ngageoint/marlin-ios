@@ -85,7 +85,7 @@ class BookmarkStaticRepository: BookmarkRepository {
             return noticeToMarinersRepository?.getNoticesToMariners(noticeNumber: Int(itemKey))?.first
         case DataSources.dgps.key:
             if split.count == 2 {
-                return dgpsRepository?.getDifferentialGPSStation(
+                return dgpsRepository?.getDGPSStation(
                     featureNumber: Int(split[0]) ?? -1,
                     volumeNumber: "\(split[1])"
                 )

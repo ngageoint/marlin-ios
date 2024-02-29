@@ -91,7 +91,7 @@ final class PublicationDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.mockPath = "epubMockData.json"
 
-        let operation = PublicationInitialDataLoadOperation(localDataSource: ElectronicPublicationCoreDataDataSource(), bundle: bundle)
+        let operation = PublicationInitialDataLoadOperation(localDataSource: PublicationCoreDataDataSource(), bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -222,7 +222,7 @@ final class PublicationDataTests: XCTestCase {
             return true
         }
 
-        let repository = PublicationRepository(localDataSource: ElectronicPublicationCoreDataDataSource(), remoteDataSource: PublicationRemoteDataSource())
+        let repository = PublicationRepository(localDataSource: PublicationCoreDataDataSource(), remoteDataSource: PublicationRemoteDataSource())
 
         let fetched = await repository.fetch()
 
@@ -361,7 +361,7 @@ final class PublicationDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContentArray = jsonObject
 
-        let operation = PublicationInitialDataLoadOperation(localDataSource: ElectronicPublicationCoreDataDataSource(), bundle: bundle)
+        let operation = PublicationInitialDataLoadOperation(localDataSource: PublicationCoreDataDataSource(), bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)

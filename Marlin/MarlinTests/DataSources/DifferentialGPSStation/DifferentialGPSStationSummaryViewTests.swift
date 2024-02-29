@@ -43,7 +43,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         let bookmarkStaticRepository = BookmarkStaticRepository(dgpsRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
         
-        let summary = DGPSStationSummaryView(differentialGPSStation: DGPSStationListModel(dgpsStationModel: newItem))
+        let summary = DGPSStationSummaryView(dgpsStation: DGPSStationListModel(dgpsStationModel: newItem))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
@@ -98,7 +98,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         let bookmarkStaticRepository = BookmarkStaticRepository(dgpsRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
 
-        let summary = DGPSStationSummaryView(differentialGPSStation: DGPSStationListModel(dgpsStationModel: newItem))
+        let summary = DGPSStationSummaryView(dgpsStation: DGPSStationListModel(dgpsStationModel: newItem))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
         
@@ -175,7 +175,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
         let router = MarlinRouter()
 
-        let summary = DGPSStationSummaryView(differentialGPSStation: DGPSStationListModel(dgpsStationModel: newItem))
+        let summary = DGPSStationSummaryView(dgpsStation: DGPSStationListModel(dgpsStationModel: newItem))
             .setShowMoreDetails(true)
             .setShowSectionHeader(true)
             .environmentObject(repository)

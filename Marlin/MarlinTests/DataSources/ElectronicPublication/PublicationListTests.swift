@@ -13,61 +13,7 @@ import OHHTTPStubs
 @testable import Marlin
 
 final class PublicationListTests: XCTestCase {
-    
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    override func setUp(completion: @escaping (Error?) -> Void) {
-        UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
-        UserDefaults.registerMarlinDefaults()
 
-        for dataSource in DataSourceDefinitions.allCases {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        
-        UserDefaults.standard.setFilter(DataSources.epub.key, filter: [])
-        UserDefaults.standard.setSort(DataSources.epub.key, sort: DataSources.epub.defaultSort)
-
-        persistentStore.viewContext.performAndWait {
-            if let epubs = persistentStore.viewContext.fetchAll(ElectronicPublication.self) {
-                for epub in epubs {
-                    persistentStore.viewContext.delete(epub)
-                }
-            }
-        }
-        
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                let e5 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
-                    if let count = try? self.persistentStore.countOfObjects(ElectronicPublication.self) {
-                        return count == 0
-                    }
-                    return false
-                }), object: self.persistentStore.viewContext)
-                self.wait(for: [e5], timeout: 10)
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
-        
-    }
-    override func tearDown(completion: @escaping (Error?) -> Void) {
-        persistentStore.viewContext.performAndWait {
-            if let epubs = persistentStore.viewContext.fetchAll(ElectronicPublication.self) {
-                for epub in epubs {
-                    persistentStore.viewContext.delete(epub)
-                }
-            }
-        }
-        completion(nil)
-    }
-    
     func testOneSectionList() throws {
 //        XCTFail()
         stub(condition: isScheme("https") && pathEndsWith("/publications/stored-pubs")) { request in
@@ -103,7 +49,7 @@ final class PublicationListTests: XCTestCase {
         let bundle = MockBundle()
         bundle.mockPath = "fullEpubList.json"
 
-        let localDataSource = PublicationCoreDataDataSource()
+        let localDataSource = PublicationStaticLocalDataSource()
         let operation = PublicationInitialDataLoadOperation(localDataSource: localDataSource, bundle: bundle)
         operation.start()
 
@@ -131,12 +77,11 @@ final class PublicationListTests: XCTestCase {
         }
         let passThrough = PassThrough()
         let repository = PublicationRepository(localDataSource: localDataSource, remoteDataSource: PublicationRemoteDataSource())
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(electronicPublicationRepository: repository))
+        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(publicationRepository: repository))
 
         let container = Container(passThrough: passThrough)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
 
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
