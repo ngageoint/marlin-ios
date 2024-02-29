@@ -51,7 +51,6 @@ protocol GeoPackageExportable {
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,
         filters: [DataSourceFilterParameter]?,
-        commonFilters: [DataSourceFilterParameter]?,
         styleRows: [GPKGStyleRow],
         dataSourceProgress: DataSourceExportProgress) async throws
 //    func createFeature(geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, styleRows: [GPKGStyleRow])

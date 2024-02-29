@@ -81,15 +81,27 @@ class RouteCoreDataDataSource: CoreDataDataSource, RouteLocalDataSource, Observa
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
             fetchRequest.predicate = predicate
 
-            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.asam.key).map({ sortParameter in
-                sortParameter.toNSSortDescriptor()
-            })
+            fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.route.key).toNSSortDescriptors()
             routes = (context.fetch(request: fetchRequest)?.map { route in
                 RouteModel(route: route)
             }) ?? []
         }
 
         return routes
+    }
+
+    override func boundsPredicate(
+        minLatitude: Double,
+        maxLatitude: Double,
+        minLongitude: Double,
+        maxLongitude: Double
+    ) -> NSPredicate {
+        return NSPredicate(
+            format: """
+            (maxLatitude >= %lf AND minLatitude <= %lf AND maxLongitude >= %lf AND minLongitude <= %lf) \
+            OR minLongitude < -180 OR maxLongitude > 180
+            """, minLatitude, maxLatitude, minLongitude, maxLongitude
+        )
     }
 
     func observeRouteListItems() -> AnyPublisher<CollectionDifference<RouteModel>, Never> {
@@ -267,13 +279,13 @@ class RouteCoreDataDataSource: CoreDataDataSource, RouteLocalDataSource, Observa
     }
     
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
-        let fetchRequest = Port.fetchRequest()
+        let fetchRequest = Route.fetchRequest()
         let predicates: [NSPredicate] = buildPredicates(filters: filters)
 
         let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         fetchRequest.predicate = predicate
 
-        fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.port.key).toNSSortDescriptors()
+        fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.route.key).toNSSortDescriptors()
         var count = 0
         context.performAndWait {
             count = (try? context.count(for: fetchRequest)) ?? 0

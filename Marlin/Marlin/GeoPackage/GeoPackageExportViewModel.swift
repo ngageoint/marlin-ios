@@ -11,34 +11,36 @@ import ExceptionCatcher
 import CoreData
 import Combine
 
-class DataSourceExportRequest: Identifiable, Hashable, Equatable, ObservableObject {
-    
-    static func == (lhs: DataSourceExportRequest, rhs: DataSourceExportRequest) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
-    var id: String { filterable?.definition.key ?? "" }
-    var filterable: Filterable?
-    @Published var filters: [DataSourceFilterParameter]? {
-        didSet {
-            print("set the filters")
-        }
-    }
-    @Published var count: Int = 0
-    
-    init(filterable: Filterable?, filters: [DataSourceFilterParameter]?) {
-        self.filterable = filterable
-        self.filters = filters
-    }
-    
-//    func fetchRequest(commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<any NSFetchRequestResult>? {
-//        return filterable?.fetchRequest(filters: filters, commonFilters: commonFilters)
+// class DataSourceExportRequest: Identifiable, Hashable, Equatable, ObservableObject {
+//    
+//    static func == (lhs: DataSourceExportRequest, rhs: DataSourceExportRequest) -> Bool {
+//        return lhs.id == rhs.id
 //    }
-}
+//    
+//    func hash(into hasher: inout Hasher) {
+//        hasher.combine(id)
+//    }
+//    
+//    var id: String { 
+//        filterable?.definition.key ?? ""
+//    }
+//    var filterable: Filterable?
+//    @Published var filters: [DataSourceFilterParameter]? {
+//        didSet {
+//            print("set the filters")
+//        }
+//    }
+//    @Published var count: Int = 0
+//    
+//    init(filterable: Filterable?, filters: [DataSourceFilterParameter]?) {
+//        self.filterable = filterable
+//        self.filters = filters
+//    }
+//    
+////    func fetchRequest(commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<any NSFetchRequestResult>? {
+////        return filterable?.fetchRequest(filters: filters, commonFilters: commonFilters)
+////    }
+// }
 
 class DataSourceExportProgress: Identifiable, Hashable, Equatable, ObservableObject {
     static func == (lhs: DataSourceExportProgress, rhs: DataSourceExportProgress) -> Bool {
@@ -264,95 +266,94 @@ class GeoPackageExportViewModel: ObservableObject {
     }
     
     func export() async {
-        exporting = true
-        complete = false
-        error = false
-        exportProgresses.removeAll()
+        await MainActor.run {
+            exporting = true
+            complete = false
+            error = false
+        }
         await backgroundExport()
         Metrics.shared.geoPackageExport(dataSources: filterViewModels.values.compactMap(\.dataSource))
     }
     
     private func backgroundExport() async {
-//        DispatchQueue.global(qos: .userInitiated).async { [self] in
-            if !createGeoPackage() {
-                await MainActor.run {
-                    self.exporting = false
-                    self.complete = false
-                }
-                return
+        if !createGeoPackage() {
+            await MainActor.run {
+                self.exporting = false
+                self.complete = false
             }
-            guard let geoPackage = geoPackage else {
-                await MainActor.run {
-                    self.exporting = false
-                    self.complete = false
-                    self.error = true
-                    self.creationError = "Unable to create GeoPackage file"
-                }
-                return
+            return
+        }
+        guard let geoPackage = geoPackage else {
+            await MainActor.run {
+                self.exporting = false
+                self.complete = false
+                self.error = true
+                self.creationError = "Unable to create GeoPackage file"
             }
+            return
+        }
 
-            let rtree = GPKGRTreeIndexExtension(geoPackage: geoPackage)
-            
-            for viewModel in filterViewModels.values.sorted(by: { viewModel1, viewModel2 in
-                (viewModel1.dataSource?.definition.order ?? -1) <
-                    (viewModel2.dataSource?.definition.order ?? -1)
-            }) {
-                guard let dataSource = viewModel.dataSource else { continue }
-                let exportable: GeoPackageExportable? = getExportable(definition: dataSource.definition)
-                guard let exportable = exportable,
-                      let dataSource = viewModel.dataSource,
-                      let definitions = DataSourceDefinitions.from(dataSource.definition),
-                      let exportProgress = exportProgresses[definitions] else {
+        let rtree = GPKGRTreeIndexExtension(geoPackage: geoPackage)
+
+        for viewModel in filterViewModels.values.sorted(by: { viewModel1, viewModel2 in
+            (viewModel1.dataSource?.definition.order ?? -1) <
+                (viewModel2.dataSource?.definition.order ?? -1)
+        }) {
+            guard let dataSource = viewModel.dataSource else { continue }
+            let exportable: GeoPackageExportable? = getExportable(definition: dataSource.definition)
+            guard let exportable = exportable,
+                  let dataSource = viewModel.dataSource,
+                  let definitions = DataSourceDefinitions.from(dataSource.definition),
+                  let exportProgress = exportProgresses[definitions] else {
+                continue
+            }
+            do {
+                guard let table = try exportable.createTable(geoPackage: geoPackage),
+                      let featureTableStyles = GPKGFeatureTableStyles(
+                        geoPackage: geoPackage,
+                        andTable: table
+                      ) else {
                     continue
                 }
-                do {
-                    guard let table = try exportable.createTable(geoPackage: geoPackage),
-                          let featureTableStyles = GPKGFeatureTableStyles(
-                            geoPackage: geoPackage,
-                            andTable: table
-                          ) else {
-                        continue
-                    }
-                    let styles = exportable.createStyles(tableStyles: featureTableStyles)
+                let styles = exportable.createStyles(tableStyles: featureTableStyles)
 
-                    await MainActor.run {
-                        exportProgress.totalCount = Float(self.counts[definitions] ?? 0)
-                        exportProgress.exporting = true
-                    }
-                    try await exportable.createFeatures(
-                        geoPackage: geoPackage,
-                        table: table,
-                        filters: viewModel.filters,
-                        commonFilters: commonViewModel.filters,
-                        styleRows: styles,
-                        dataSourceProgress: exportProgress)
-                    rtree?.create(with: table)
-                    DispatchQueue.main.async {
-                        exportProgress.exporting = false
-                        exportProgress.complete = true
-                    }
-                } catch {
-                    await MainActor.run {
-                        complete = false
-                        exporting = false
-                        self.error = true
-                        creationError = error.localizedDescription
-                        print("Error:", error.localizedDescription)
-                    }
+                await MainActor.run {
+                    exportProgress.totalCount = Float(self.counts[definitions] ?? 0)
+                    exportProgress.exporting = true
+                }
+                try await exportable.createFeatures(
+                    geoPackage: geoPackage,
+                    table: table,
+                    filters: viewModel.filters + commonViewModel.filters,
+                    styleRows: styles,
+                    dataSourceProgress: exportProgress)
+                rtree?.create(with: table)
+                await MainActor.run {
+                    exportProgress.exporting = false
+                    exportProgress.complete = true
+                }
+            } catch {
+                await MainActor.run {
+                    complete = false
+                    exporting = false
+                    self.error = true
+                    creationError = error.localizedDescription
+                    print("Error:", error.localizedDescription)
                 }
             }
-            print("GeoPackage created \(geoPackage.path ?? "who knows")")
+        }
+        print("GeoPackage created \(geoPackage.path ?? "who knows")")
 
         await MainActor.run {
             self.exporting = false
             self.complete = true
         }
-//        }
     }
 
     func getExportable(definition: any DataSourceDefinition) -> GeoPackageExportable? {
         var exportable: GeoPackageExportable?
 
+        print("definition.key \(definition.key)")
         switch definition.key {
         case DataSources.asam.key:
             if let asamRepository = asamRepository {

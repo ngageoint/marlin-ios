@@ -157,8 +157,8 @@ class NavigationalWarningCoreDataDataSource:
     ) -> NSPredicate {
         return NSPredicate(
             format: """
-                (maxLatitude >= %lf AND minLatitude <= %lf AND maxLongitude >= %lf AND minLongitude <= %lf) \
-                OR minLongitude < -180 OR maxLongitude > 180
+            (maxLatitude >= %lf AND minLatitude <= %lf AND maxLongitude >= %lf AND minLongitude <= %lf) \
+            OR minLongitude < -180 OR maxLongitude > 180
             """, minLatitude, maxLatitude, minLongitude, maxLongitude
         )
     }

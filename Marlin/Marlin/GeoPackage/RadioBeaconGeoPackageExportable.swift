@@ -22,11 +22,10 @@ class RadioBeaconGeoPackageExportable: GeoPackageExportable {
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,
         filters: [DataSourceFilterParameter]?,
-        commonFilters: [DataSourceFilterParameter]?,
         styleRows: [GPKGStyleRow],
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
-        let models = await radioBeaconRepository.getRadioBeacons(filters: (filters ?? []) + (commonFilters ?? []))
+        let models = await radioBeaconRepository.getRadioBeacons(filters: (filters ?? []))
         var exported = 0
         for model in models {
             createFeature(

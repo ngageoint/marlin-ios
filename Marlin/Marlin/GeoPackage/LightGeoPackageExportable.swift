@@ -22,12 +22,11 @@ class LightGeoPackageExportable: GeoPackageExportable {
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,
         filters: [DataSourceFilterParameter]?,
-        commonFilters: [DataSourceFilterParameter]?,
         styleRows: [GPKGStyleRow],
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
 
-        let models = await lightRepository.getLights(filters: (filters ?? []) + (commonFilters ?? []))
+        let models = await lightRepository.getLights(filters: (filters ?? []))
         var exported = 0
         for model in models {
             for (color, sfGeometry) in model.sfGeometryByColor() ?? [:] {

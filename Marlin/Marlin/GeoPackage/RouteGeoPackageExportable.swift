@@ -24,11 +24,10 @@ class RouteGeoPackageExportable: GeoPackageExportable {
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,
         filters: [DataSourceFilterParameter]?,
-        commonFilters: [DataSourceFilterParameter]?,
         styleRows: [GPKGStyleRow],
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
-        let routes = await routeRepository.getRoutes(filters: (filters ?? []) + (commonFilters ?? []))
+        let routes = await routeRepository.getRoutes(filters: (filters ?? []))
         var exported = 0
         for route in routes {
             createFeature(

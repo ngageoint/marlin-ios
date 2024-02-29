@@ -22,12 +22,11 @@ class PortGeoPackageExportable: GeoPackageExportable {
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,
         filters: [DataSourceFilterParameter]?,
-        commonFilters: [DataSourceFilterParameter]?,
         styleRows: [GPKGStyleRow],
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
 
-        let models = await portRepository.getPorts(filters: (filters ?? []) + (commonFilters ?? []))
+        let models = await portRepository.getPorts(filters: (filters ?? []))
         var exported = 0
         for model in models {
             createFeature(

@@ -24,11 +24,10 @@ class AsamGeoPackageExportable: GeoPackageExportable {
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,
         filters: [DataSourceFilterParameter]?,
-        commonFilters: [DataSourceFilterParameter]?,
         styleRows: [GPKGStyleRow],
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
-        let asams = await asamRepository.getAsams(filters: (filters ?? []) + (commonFilters ?? []))
+        let asams = await asamRepository.getAsams(filters: (filters ?? []))
         var exported = 0
         for asam in asams {
             createFeature(

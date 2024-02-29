@@ -22,13 +22,12 @@ class DGPSStationGeoPackageExportable: GeoPackageExportable {
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,
         filters: [DataSourceFilterParameter]?,
-        commonFilters: [DataSourceFilterParameter]?,
         styleRows: [GPKGStyleRow],
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
 
         let models = await differentialGPSStationRepository.getDifferentialGPSStations(
-            filters: (filters ?? []) + (commonFilters ?? [])
+            filters: (filters ?? [])
         )
         var exported = 0
         for model in models {

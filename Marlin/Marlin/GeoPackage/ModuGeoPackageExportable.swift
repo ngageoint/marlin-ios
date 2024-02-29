@@ -21,11 +21,10 @@ class ModuGeoPackageExportable: GeoPackageExportable {
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,
         filters: [DataSourceFilterParameter]?,
-        commonFilters: [DataSourceFilterParameter]?,
         styleRows: [GPKGStyleRow],
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
-        let modus = await moduRepository.getModus(filters: (filters ?? []) + (commonFilters ?? []))
+        let modus = await moduRepository.getModus(filters: (filters ?? []))
         var exported = 0
         for modu in modus {
             createFeature(
