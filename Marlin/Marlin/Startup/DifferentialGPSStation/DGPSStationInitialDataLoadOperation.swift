@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationInitialDataLoadOperation.swift
+//  DGPSStationInitialDataLoadOperation.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 2/2/24.
@@ -8,11 +8,11 @@
 import Foundation
 import Kingfisher
 
-class DifferentialGPSStationInitialDataLoadOperation: CountingDataLoadOperation {
-    var localDataSource: DifferentialGPSStationLocalDataSource
+class DGPSStationInitialDataLoadOperation: CountingDataLoadOperation {
+    var localDataSource: DGPSStationLocalDataSource
     var bundle: Bundle
 
-    init(localDataSource: DifferentialGPSStationLocalDataSource, bundle: Bundle = .main) {
+    init(localDataSource: DGPSStationLocalDataSource, bundle: Bundle = .main) {
         self.localDataSource = localDataSource
         self.bundle = bundle
     }
@@ -47,7 +47,7 @@ class DifferentialGPSStationInitialDataLoadOperation: CountingDataLoadOperation 
             do {
                 let data = try Data(contentsOf: url)
                 let decoder = JSONDecoder()
-                let propertyContainer = try decoder.decode(DifferentialGPSStationPropertyContainer.self, from: data)
+                let propertyContainer = try decoder.decode(DGPSStationPropertyContainer.self, from: data)
                 count = await localDataSource.insert(task: nil, dgpss: propertyContainer.ngalol)
             } catch {
                 print("error:\(error)")

@@ -327,8 +327,6 @@ extension LightCoreDataDataSource {
         return [Item.listItem(ListModelType(light: item))]
     }
 
-    // ignore due to the amount of data types
-    // swiftlint:disable cyclomatic_complexity
     func getCurrentSortValue(sortDescriptor: DataSourceSortParameter, sortValue: Any?) -> String? {
         var sortValueString: String?
         switch sortDescriptor.property.type {
@@ -357,7 +355,6 @@ extension LightCoreDataDataSource {
         }
         return sortValueString
     }
-    // swiftlint:enable cyclomatic_complexity
 
     func models(
         filters: [DataSourceFilterParameter]?,

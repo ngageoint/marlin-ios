@@ -14,7 +14,7 @@ import SwiftUI
 final class DifferentialGPSStationDetailViewTests: XCTestCase {
 
     func testLoading() {
-        var dgps = DifferentialGPSStationModel()
+        var dgps = DGPSStationModel()
         dgps.volumeNumber = "PUB 112"
         dgps.aidType = "Differential GPS Stations"
         dgps.geopoliticalHeading = "KOREA"
@@ -40,15 +40,15 @@ final class DifferentialGPSStationDetailViewTests: XCTestCase {
 
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
         localDataSource.list = [dgps]
-        let repository = DifferentialGPSStationRepository(
+        let repository = DGPSStationRepository(
             localDataSource: localDataSource,
-            remoteDataSource: DifferentialGPSStationRemoteDataSource()
+            remoteDataSource: DGPSStationRemoteDataSource()
         )
         let bookmarkStaticRepository = BookmarkStaticRepository(dgpsRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
-        let view = DifferentialGPSStationDetailView(featureNumber: dgps.featureNumber, volumeNumber: dgps.volumeNumber)
+        let view = DGPSStationDetailView(featureNumber: dgps.featureNumber, volumeNumber: dgps.volumeNumber)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
@@ -72,7 +72,7 @@ final class DifferentialGPSStationDetailViewTests: XCTestCase {
     }
 
     func xtestTapButtons() {
-        var dgps = DifferentialGPSStationModel()
+        var dgps = DGPSStationModel()
         dgps.volumeNumber = "PUB 112"
         dgps.aidType = "Differential GPS Stations"
         dgps.geopoliticalHeading = "KOREA"
@@ -98,15 +98,15 @@ final class DifferentialGPSStationDetailViewTests: XCTestCase {
 
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
         localDataSource.list = [dgps]
-        let repository = DifferentialGPSStationRepository(
+        let repository = DGPSStationRepository(
             localDataSource: localDataSource,
-            remoteDataSource: DifferentialGPSStationRemoteDataSource()
+            remoteDataSource: DGPSStationRemoteDataSource()
         )
         let bookmarkStaticRepository = BookmarkStaticRepository(dgpsRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
-        let view = DifferentialGPSStationDetailView(featureNumber: dgps.featureNumber, volumeNumber: dgps.volumeNumber)
+        let view = DGPSStationDetailView(featureNumber: dgps.featureNumber, volumeNumber: dgps.volumeNumber)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)

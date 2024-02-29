@@ -157,7 +157,9 @@ class RadioBeaconImage: DataSourceImage {
 
     func raconImage(scale: Int, azimuthCoverage: [ImageSector]? = nil, zoomLevel: Int) -> UIImage? {
         let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * DataSources.radioBeacon.imageScale
-        let sectors = azimuthCoverage ?? [ImageSector(startDegrees: 0, endDegrees: 360, color: DataSources.radioBeacon.color)]
+        let sectors = azimuthCoverage ?? [
+            ImageSector(startDegrees: 0, endDegrees: 360, color: DataSources.radioBeacon.color)
+        ]
 
         if zoomLevel > 8 {
             return RaconImage(

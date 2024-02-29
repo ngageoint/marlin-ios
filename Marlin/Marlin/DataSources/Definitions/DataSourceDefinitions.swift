@@ -37,7 +37,7 @@ enum DataSourceDefinitions: String, Identifiable, CaseIterable {
             return DataSourceDefinitions.common
         case is DataSources.NoticeToMarinersDefinition:
             return DataSourceDefinitions.noticeToMariners
-        case is DataSources.DifferentialGPSStationDefinition:
+        case is DataSources.DGPSStationDefinition:
             return DataSourceDefinitions.differentialGPSStation
         case is DataSources.PublicationDefinition:
             return DataSourceDefinitions.epub
@@ -103,7 +103,7 @@ enum DataSourceDefinitions: String, Identifiable, CaseIterable {
         case .noticeToMariners:
             return NoticeToMarinersFilterable()
         case .differentialGPSStation:
-            return DifferentialGPSStationFilterable()
+            return DGPSStationFilterable()
         case .epub:
             return PublicationFilterable()
         case .port:
@@ -137,7 +137,7 @@ enum DataSourceDefinitions: String, Identifiable, CaseIterable {
             return DataSourceDefinitions.common.filterable
         case is DataSources.NoticeToMarinersDefinition:
             return DataSourceDefinitions.noticeToMariners.filterable
-        case is DataSources.DifferentialGPSStationDefinition:
+        case is DataSources.DGPSStationDefinition:
             return DataSourceDefinitions.differentialGPSStation.filterable
         case is DataSources.PublicationDefinition:
             return DataSourceDefinitions.epub.filterable

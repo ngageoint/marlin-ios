@@ -76,7 +76,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
             XCTFail()
             return
         }
-        let dataSource = DifferentialGPSStationCoreDataDataSource()
+        let dataSource = DGPSStationCoreDataDataSource()
 
         XCTAssertEqual(dataSource.getCount(filters: nil), 1)
     }
@@ -147,7 +147,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
             return
         }
 
-        let dataSource = DifferentialGPSStationCoreDataDataSource()
+        let dataSource = DGPSStationCoreDataDataSource()
 
         let retrieved = dataSource.getDifferentialGPSStation(featureNumber: Int(newItem.featureNumber), volumeNumber: newItem.volumeNumber)
         XCTAssertEqual(retrieved?.featureNumber, Int(newItem.featureNumber))
@@ -227,7 +227,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
             return
         }
 
-        let dataSource = DifferentialGPSStationCoreDataDataSource()
+        let dataSource = DGPSStationCoreDataDataSource()
 
         let retrieved = dataSource.getNewestDifferentialGPSStation()
         XCTAssertEqual(retrieved?.featureNumber, Int(newItem2.featureNumber))
@@ -236,15 +236,15 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
     }
 
     func testGetNewestEmpty() {
-        let dataSource = DifferentialGPSStationCoreDataDataSource()
+        let dataSource = DGPSStationCoreDataDataSource()
 
         let retrieved = dataSource.getNewestDifferentialGPSStation()
         XCTAssertNil(retrieved)
     }
 
     func testGetDgpsInBounds() async {
-        var newItem: DifferentialGPSStationModel?
-        var newItem2: DifferentialGPSStationModel?
+        var newItem: DGPSStationModel?
+        var newItem2: DGPSStationModel?
         persistentStore.viewContext.performAndWait {
             let dgps = DifferentialGPSStation(context: persistentStore.viewContext)
             dgps.volumeNumber = "PUB 112"
@@ -270,7 +270,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
             dgps.noticeWeek = "34"
             dgps.noticeYear = "2011"
 
-            newItem = DifferentialGPSStationModel(differentialGPSStation: dgps)
+            newItem = DGPSStationModel(differentialGPSStation: dgps)
 
             let dgps2 = DifferentialGPSStation(context: persistentStore.viewContext)
             dgps2.volumeNumber = "PUB 112"
@@ -296,7 +296,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
             dgps2.noticeWeek = "34"
             dgps2.noticeYear = "2020"
 
-            newItem2 = DifferentialGPSStationModel(differentialGPSStation: dgps2)
+            newItem2 = DGPSStationModel(differentialGPSStation: dgps2)
             try? persistentStore.viewContext.save()
         }
         guard let newItem = newItem else {
@@ -308,7 +308,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
             return
         }
 
-        let dataSource = DifferentialGPSStationCoreDataDataSource()
+        let dataSource = DGPSStationCoreDataDataSource()
 
         let retrieved = await dataSource.getDifferentialGPSStationsInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
         XCTAssertEqual(retrieved.count, 1)
@@ -367,10 +367,10 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
         var disposables = Set<AnyCancellable>()
         enum State {
             case loading
-            case loaded(rows: [DifferentialGPSStationItem])
+            case loaded(rows: [DGPSStationItem])
             case failure(error: Error)
 
-            fileprivate var rows: [DifferentialGPSStationItem] {
+            fileprivate var rows: [DGPSStationItem] {
                 if case let .loaded(rows: rows) = self {
                     return rows
                 } else {
@@ -385,7 +385,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
         var state: State = .loading
 
         let trigger = Trigger()
-        let dataSource = DifferentialGPSStationCoreDataDataSource()
+        let dataSource = DGPSStationCoreDataDataSource()
 
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
@@ -495,10 +495,10 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
         var disposables = Set<AnyCancellable>()
         enum State {
             case loading
-            case loaded(rows: [DifferentialGPSStationItem])
+            case loaded(rows: [DGPSStationItem])
             case failure(error: Error)
 
-            fileprivate var rows: [DifferentialGPSStationItem] {
+            fileprivate var rows: [DGPSStationItem] {
                 if case let .loaded(rows: rows) = self {
                     return rows
                 } else {
@@ -513,7 +513,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
         var state: State = .loading
 
         let trigger = Trigger()
-        let dataSource = DifferentialGPSStationCoreDataDataSource()
+        let dataSource = DGPSStationCoreDataDataSource()
 
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
@@ -625,7 +625,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
     }
 
     func testInsert() async {
-        var dgps = DifferentialGPSStationModel()
+        var dgps = DGPSStationModel()
         dgps.volumeNumber = "PUB 112"
         dgps.aidType = "Differential GPS Stations"
         dgps.geopoliticalHeading = "KOREA"
@@ -649,7 +649,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
         dgps.noticeWeek = "34"
         dgps.noticeYear = "2011"
 
-        let dataSource = DifferentialGPSStationCoreDataDataSource()
+        let dataSource = DGPSStationCoreDataDataSource()
 
         let inserted = await dataSource.insert(dgpss: [dgps])
         XCTAssertEqual(1, inserted)
@@ -660,7 +660,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
     }
 
     func testGetAsams() async {
-        var dgps = DifferentialGPSStationModel()
+        var dgps = DGPSStationModel()
         dgps.volumeNumber = "PUB 112"
         dgps.aidType = "Differential GPS Stations"
         dgps.geopoliticalHeading = "KOREA"
@@ -684,7 +684,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
         dgps.noticeWeek = "34"
         dgps.noticeYear = "2011"
 
-        let dataSource = DifferentialGPSStationCoreDataDataSource()
+        let dataSource = DGPSStationCoreDataDataSource()
 
         let inserted = await dataSource.insert(dgpss: [dgps])
         XCTAssertEqual(1, inserted)

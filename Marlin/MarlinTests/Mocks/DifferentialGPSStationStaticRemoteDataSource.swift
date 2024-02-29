@@ -10,14 +10,14 @@ import BackgroundTasks
 
 @testable import Marlin
 
-class DifferentialGPSStationStaticRemoteDataSource: DifferentialGPSStationRemoteDataSource {
-    var list: [DifferentialGPSStationModel] = []
+class DifferentialGPSStationStaticRemoteDataSource: DGPSStationRemoteDataSource {
+    var list: [DGPSStationModel] = []
 
     override func fetch(
         task: BGTask? = nil,
         noticeYear: String? = nil,
         noticeWeek: String? = nil
-    ) async -> [DifferentialGPSStationModel] {
+    ) async -> [DGPSStationModel] {
         NSLog("Returning \(list.count) dgps")
         return list
     }

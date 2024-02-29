@@ -29,7 +29,7 @@ final class DifferentialGPSStationRepositoryTests: XCTestCase {
     }
 
     func testFetch() async {
-        var models: [DifferentialGPSStationModel] = []
+        var models: [DGPSStationModel] = []
 
         let data: [[String: AnyHashable?]] = [
             [
@@ -76,7 +76,7 @@ final class DifferentialGPSStationRepositoryTests: XCTestCase {
             ]
         ]
         let jsonData = try! JSONSerialization.data(withJSONObject: data)
-        let decoded: [DifferentialGPSStationModel] = try! JSONDecoder().decode([DifferentialGPSStationModel].self, from: jsonData)
+        let decoded: [DGPSStationModel] = try! JSONDecoder().decode([DGPSStationModel].self, from: jsonData)
 
         models.append(contentsOf: decoded)
 
@@ -111,14 +111,14 @@ final class DifferentialGPSStationRepositoryTests: XCTestCase {
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
         let remoteDataSource = DifferentialGPSStationStaticRemoteDataSource()
         remoteDataSource.list = models
-        let repository = DifferentialGPSStationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = DGPSStationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
 
         let dgps = await repository.fetch()
         XCTAssertEqual(2, dgps.count)
 
         await fulfillment(of: [loadingExpectation, loadedExpectation, updatedExpectation])
 
-        let repoData = repository.getDifferentialGPSStation(featureNumber: 6, volumeNumber: "PUB 112")
+        let repoData = repository.getDGPSStation(featureNumber: 6, volumeNumber: "PUB 112")
         XCTAssertNotNil(repoData)
         XCTAssertEqual(repoData, localDataSource.getDifferentialGPSStation(featureNumber: 6, volumeNumber: "PUB 112"))
 
@@ -133,14 +133,14 @@ final class DifferentialGPSStationRepositoryTests: XCTestCase {
     func testCreateOperation() {
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
         let remoteDataSource = DifferentialGPSStationStaticRemoteDataSource()
-        var newest = DifferentialGPSStationModel()
+        var newest = DGPSStationModel()
         newest.noticeNumber = 202204
         newest.noticeYear = "2022"
         newest.noticeWeek = "04"
         localDataSource.list = [
             newest
         ]
-        let repository = DifferentialGPSStationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = DGPSStationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
         let operation = repository.createOperation()
         XCTAssertNotNil(operation.noticeYear)
         XCTAssertEqual(operation.noticeYear, "2022")

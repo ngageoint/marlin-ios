@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationLocalDataSource.swift
+//  DGPSStationLocalDataSource.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 2/1/24.
@@ -11,40 +11,40 @@ import Combine
 import UIKit
 import BackgroundTasks
 
-protocol DifferentialGPSStationLocalDataSource {
-    func getNewestDifferentialGPSStation() -> DifferentialGPSStationModel?
-    func getDifferentialGPSStation(featureNumber: Int?, volumeNumber: String?) -> DifferentialGPSStationModel?
+protocol DGPSStationLocalDataSource {
+    func getNewestDifferentialGPSStation() -> DGPSStationModel?
+    func getDifferentialGPSStation(featureNumber: Int?, volumeNumber: String?) -> DGPSStationModel?
     func getDifferentialGPSStationsInBounds(
         filters: [DataSourceFilterParameter]?,
         minLatitude: Double?,
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) async -> [DifferentialGPSStationModel]
+    ) async -> [DGPSStationModel]
 
     func dgps(
         filters: [DataSourceFilterParameter]?,
         paginatedBy paginator: Trigger.Signal?
-    ) -> AnyPublisher<[DifferentialGPSStationItem], Error>
+    ) -> AnyPublisher<[DGPSStationItem], Error>
     func getDifferentialGPSStations(
         filters: [DataSourceFilterParameter]?
-    ) async -> [DifferentialGPSStationModel]
+    ) async -> [DGPSStationModel]
 
     func getCount(filters: [DataSourceFilterParameter]?) -> Int
-    func insert(task: BGTask?, dgpss: [DifferentialGPSStationModel]) async -> Int
-    func batchImport(from propertiesList: [DifferentialGPSStationModel]) async throws -> Int
+    func insert(task: BGTask?, dgpss: [DGPSStationModel]) async -> Int
+    func batchImport(from propertiesList: [DGPSStationModel]) async throws -> Int
 }
 
-class DifferentialGPSStationCoreDataDataSource: 
+class DGPSStationCoreDataDataSource: 
     CoreDataDataSource,
-    DifferentialGPSStationLocalDataSource,
+    DGPSStationLocalDataSource,
     ObservableObject {
     private lazy var context: NSManagedObjectContext = {
         PersistenceController.current.newTaskContext()
     }()
 
-    func getNewestDifferentialGPSStation() -> DifferentialGPSStationModel? {
-        var model: DifferentialGPSStationModel?
+    func getNewestDifferentialGPSStation() -> DGPSStationModel? {
+        var model: DGPSStationModel?
         context.performAndWait {
             if let newestDifferentialGPSStation =
                 try? PersistenceController.current.fetchFirst(
@@ -54,13 +54,13 @@ class DifferentialGPSStationCoreDataDataSource:
                     ],
                     predicate: nil,
                     context: context) {
-                model = DifferentialGPSStationModel(differentialGPSStation: newestDifferentialGPSStation)
+                model = DGPSStationModel(differentialGPSStation: newestDifferentialGPSStation)
             }
         }
         return model
     }
 
-    func getDifferentialGPSStation(featureNumber: Int?, volumeNumber: String?) -> DifferentialGPSStationModel? {
+    func getDifferentialGPSStation(featureNumber: Int?, volumeNumber: String?) -> DGPSStationModel? {
         guard let featureNumber = featureNumber, let volumeNumber = volumeNumber else {
             return nil
         }
@@ -70,7 +70,7 @@ class DifferentialGPSStationCoreDataDataSource:
                 predicate: NSPredicate(
                     format: "featureNumber = %ld AND volumeNumber = %@",
                     argumentArray: [featureNumber, volumeNumber])) {
-                return DifferentialGPSStationModel(differentialGPSStation: dgps)
+                return DGPSStationModel(differentialGPSStation: dgps)
             }
             return nil
         }
@@ -82,7 +82,7 @@ class DifferentialGPSStationCoreDataDataSource:
         maxLatitude: Double?,
         minLongitude: Double?,
         maxLongitude: Double?
-    ) async -> [DifferentialGPSStationModel] {
+    ) async -> [DGPSStationModel] {
         let context = PersistenceController.current.newTaskContext()
 
         return await context.perform {
@@ -109,7 +109,7 @@ class DifferentialGPSStationCoreDataDataSource:
                 sortParameter.toNSSortDescriptor()
             })
             return (context.fetch(request: fetchRequest)?.map { dgps in
-                DifferentialGPSStationModel(differentialGPSStation: dgps)
+                DGPSStationModel(differentialGPSStation: dgps)
             }) ?? []
         }
     }
@@ -134,7 +134,7 @@ class DifferentialGPSStationCoreDataDataSource:
 
     func getDifferentialGPSStations(
         filters: [DataSourceFilterParameter]?
-    ) async -> [DifferentialGPSStationModel] {
+    ) async -> [DGPSStationModel] {
         return await context.perform {
             let fetchRequest = DifferentialGPSStation.fetchRequest()
             let predicates: [NSPredicate] = self.buildPredicates(filters: filters)
@@ -146,7 +146,7 @@ class DifferentialGPSStationCoreDataDataSource:
                 sortParameter.toNSSortDescriptor()
             })
             return (self.context.fetch(request: fetchRequest)?.map { dgps in
-                DifferentialGPSStationModel(differentialGPSStation: dgps)
+                DGPSStationModel(differentialGPSStation: dgps)
             }) ?? []
         }
     }
@@ -154,11 +154,11 @@ class DifferentialGPSStationCoreDataDataSource:
 }
 
 // MARK: Data Publisher methods
-extension DifferentialGPSStationCoreDataDataSource {
+extension DGPSStationCoreDataDataSource {
 
     typealias DataType = DifferentialGPSStation
-    typealias ModelType = DifferentialGPSStationModel
-    typealias Item = DifferentialGPSStationItem
+    typealias ModelType = DGPSStationModel
+    typealias Item = DGPSStationItem
 
     struct ModelPage {
         var list: [Item]
@@ -232,7 +232,7 @@ extension DifferentialGPSStationCoreDataDataSource {
         dgps: DataType,
         sortDescriptor: DataSourceSortParameter,
         previousHeader: inout String?
-    ) -> [DifferentialGPSStationItem] {
+    ) -> [DGPSStationItem] {
         let currentValue = dgps.value(forKey: sortDescriptor.property.key)
         let sortValueString: String? = getCurrentSortValue(sortDescriptor: sortDescriptor, sortValue: currentValue)
 
@@ -315,19 +315,19 @@ extension DifferentialGPSStationCoreDataDataSource {
 }
 
 // MARK: Import methods
-extension DifferentialGPSStationCoreDataDataSource {
+extension DGPSStationCoreDataDataSource {
 
-    func insert(task: BGTask? = nil, dgpss: [DifferentialGPSStationModel]) async -> Int {
+    func insert(task: BGTask? = nil, dgpss: [DGPSStationModel]) async -> Int {
         let count = dgpss.count
         NSLog("Received \(count) \(DataSources.dgps.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = DifferentialGPSStationDataLoadOperation(dgpss: dgpss, localDataSource: self)
+        operation = DGPSStationDataLoadOperation(dgpss: dgpss, localDataSource: self)
 
         return await executeOperationInBackground(task: task)
     }
 
-    func batchImport(from propertiesList: [DifferentialGPSStationModel]) async throws -> Int {
+    func batchImport(from propertiesList: [DGPSStationModel]) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         let taskContext = PersistenceController.current.newTaskContext()
         // Add name and author to identify source of persistent history changes.
@@ -355,7 +355,7 @@ extension DifferentialGPSStationCoreDataDataSource {
         return count
     }
 
-    func newBatchInsertRequest(with propertyList: [DifferentialGPSStationModel]) -> NSBatchInsertRequest {
+    func newBatchInsertRequest(with propertyList: [DGPSStationModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
 

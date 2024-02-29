@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationActions.swift
+//  DGPSStationActions.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 2/8/24.
@@ -9,7 +9,7 @@ import Foundation
 import MapKit
 import SwiftUI
 
-enum DifferentialGPSStationActions {
+enum DGPSStationActions {
     class Zoom: Action {
         var latLng: CLLocationCoordinate2D
         var itemKey: String
@@ -36,7 +36,7 @@ enum DifferentialGPSStationActions {
         func action() {
             guard let featureNumber = featureNumber, let volumeNumber = volumeNumber else { return }
 
-            path.append(DifferentialGPSStationRoute.detail(featureNumber: featureNumber, volumeNumber: volumeNumber))
+            path.append(DGPSStationRoute.detail(featureNumber: featureNumber, volumeNumber: volumeNumber))
         }
     }
 }

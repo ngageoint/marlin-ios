@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationDetailView.swift
+//  DGPSStationDetailView.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 8/30/22.
@@ -9,32 +9,32 @@ import SwiftUI
 import MapKit
 import CoreData
 
-struct DifferentialGPSStationDetailView: View {
-    @EnvironmentObject var dgpsRepository: DifferentialGPSStationRepository
+struct DGPSStationDetailView: View {
+    @EnvironmentObject var dgpsRepository: DGPSStationRepository
     @EnvironmentObject var routeWaypointRepository: RouteWaypointRepository
 
-    @StateObject var viewModel: DifferentialGPSStationViewModel = DifferentialGPSStationViewModel()
+    @StateObject var viewModel: DGPSStationViewModel = DGPSStationViewModel()
     @State var featureNumber: Int?
     @State var volumeNumber: String?
     @State var waypointURI: URL?
 
     var body: some View {
         Group {
-            switch viewModel.differentialGPSStation {
+            switch viewModel.dgpsStation {
             case nil:
                 Color.clear.onAppear {
                     viewModel.repository = dgpsRepository
-                    viewModel.getDifferentialGPSStation(
+                    viewModel.getDGPSStation(
                         featureNumber: featureNumber,
                         volumeNumber: volumeNumber,
                         waypointURI: waypointURI
                     )
                 }
-            case .some(let differentialGPSStation):
+            case .some(let dgpsStation):
                 List {
                     Section {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text(differentialGPSStation.itemTitle)
+                            Text(dgpsStation.itemTitle)
                                 .padding(.all, 8)
                                 .multilineTextAlignment(.leading)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -43,22 +43,22 @@ struct DifferentialGPSStationDetailView: View {
                                 .background(Color(uiColor: DataSources.dgps.color))
                                 .padding(.bottom, -8)
                             DataSourceLocationMapView(
-                                dataSourceLocation: differentialGPSStation,
+                                dataSourceLocation: dgpsStation,
                                 mapName: "DifferentialGPSStation Detail Map",
                                 mixins: [
-                                    DifferentialGPSStationMap(
-                                        repository: DifferentialGPSStationTileRepository(
-                                            featureNumber: differentialGPSStation.featureNumber ?? -1,
-                                            volumeNumber: differentialGPSStation.volumeNumber ?? "",
+                                    DGPSStationMap(
+                                        repository: DGPSStationTileRepository(
+                                            featureNumber: dgpsStation.featureNumber ?? -1,
+                                            volumeNumber: dgpsStation.volumeNumber ?? "",
                                             localDataSource: dgpsRepository.localDataSource
                                         )
                                     )
                                 ]
                             )
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                            DifferentialGPSStationSummaryView(
-                                differentialGPSStation: DifferentialGPSStationListModel(
-                                    differentialGPSStationModel: differentialGPSStation)
+                            DGPSStationSummaryView(
+                                dgpsStation: DGPSStationListModel(
+                                    dgpsStationModel: dgpsStation)
                             )
                             .showBookmarkNotes(true)
                             .setShowSectionHeader(true)
@@ -73,17 +73,17 @@ struct DifferentialGPSStationDetailView: View {
                     
                     KeyValueSection(
                         sectionName: "Additional Information",
-                        properties: differentialGPSStation.additionalKeyValues
+                        properties: dgpsStation.additionalKeyValues
                     )
                     .dataSourceSection()
                 }
                 .dataSourceDetailList()
             }
         }
-        .navigationTitle("\(viewModel.differentialGPSStation?.name ?? DataSources.dgps.fullName)" )
+        .navigationTitle("\(viewModel.dgpsStation?.name ?? DataSources.dgps.fullName)" )
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: featureNumber) { _ in
-            viewModel.getDifferentialGPSStation(
+            viewModel.getDGPSStation(
                 featureNumber: featureNumber,
                 volumeNumber: volumeNumber,
                 waypointURI: waypointURI

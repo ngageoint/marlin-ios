@@ -103,14 +103,10 @@ class MapState: ObservableObject, Hashable {
 
 class MainMapMixins: MapMixins {
     var subscriptions = Set<AnyCancellable>()
-//    var navigationalWarningMap = NavigationalWarningFetchMap()
         
     override init() {
         super.init()
-        var mixins: [any MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
-
-//        mixins.append(NavigationalWarningFetchMap())
-        self.mixins = mixins
+        self.mixins = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
     }
     
     func addRouteMixin(routeRepository: RouteRepository) {
@@ -149,7 +145,7 @@ class MainMapMixins: MapMixins {
 
     func addDifferentialGPSStationTileRepository(tileRepository: TileRepository) {
         if UserDefaults.standard.dataSourceEnabled(DataSources.dgps) {
-            mixins.append(DifferentialGPSStationMap(repository: tileRepository))
+            mixins.append(DGPSStationMap(repository: tileRepository))
         }
     }
 

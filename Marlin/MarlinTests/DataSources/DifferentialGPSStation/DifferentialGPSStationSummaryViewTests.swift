@@ -13,7 +13,7 @@ import SwiftUI
 
 final class DifferentialGPSStationSummaryViewTests: XCTestCase {
     func testLoading() {
-        var newItem = DifferentialGPSStationModel()
+        var newItem = DGPSStationModel()
         newItem.volumeNumber = "PUB 112"
         newItem.aidType = "Differential GPS Stations"
         newItem.geopoliticalHeading = "KOREA"
@@ -39,11 +39,11 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
 
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
         localDataSource.list = [newItem]
-        let repository = DifferentialGPSStationRepository(localDataSource: localDataSource, remoteDataSource: DifferentialGPSStationRemoteDataSource())
+        let repository = DGPSStationRepository(localDataSource: localDataSource, remoteDataSource: DGPSStationRemoteDataSource())
         let bookmarkStaticRepository = BookmarkStaticRepository(dgpsRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
         
-        let summary = DifferentialGPSStationSummaryView(differentialGPSStation: DifferentialGPSStationListModel(differentialGPSStationModel: newItem))
+        let summary = DGPSStationSummaryView(differentialGPSStation: DGPSStationListModel(dgpsStationModel: newItem))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
@@ -68,7 +68,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
     }
     
     func testLoadingNoVolume() {
-        var newItem = DifferentialGPSStationModel()
+        var newItem = DGPSStationModel()
         newItem.volumeNumber = nil
         newItem.aidType = "Differential GPS Stations"
         newItem.geopoliticalHeading = "KOREA"
@@ -94,11 +94,11 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
 
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
         localDataSource.list = [newItem]
-        let repository = DifferentialGPSStationRepository(localDataSource: localDataSource, remoteDataSource: DifferentialGPSStationRemoteDataSource())
+        let repository = DGPSStationRepository(localDataSource: localDataSource, remoteDataSource: DGPSStationRemoteDataSource())
         let bookmarkStaticRepository = BookmarkStaticRepository(dgpsRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
 
-        let summary = DifferentialGPSStationSummaryView(differentialGPSStation: DifferentialGPSStationListModel(differentialGPSStationModel: newItem))
+        let summary = DGPSStationSummaryView(differentialGPSStation: DGPSStationListModel(dgpsStationModel: newItem))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
         
@@ -144,7 +144,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
     }
     
     func testLoadingShowMoreDetails() {
-        var newItem = DifferentialGPSStationModel()
+        var newItem = DGPSStationModel()
         newItem.volumeNumber = "PUB 112"
         newItem.aidType = "Differential GPS Stations"
         newItem.geopoliticalHeading = "KOREA"
@@ -170,12 +170,12 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
         localDataSource.list = [newItem]
-        let repository = DifferentialGPSStationRepository(localDataSource: localDataSource, remoteDataSource: DifferentialGPSStationRemoteDataSource())
+        let repository = DGPSStationRepository(localDataSource: localDataSource, remoteDataSource: DGPSStationRemoteDataSource())
         let bookmarkStaticRepository = BookmarkStaticRepository(dgpsRepository: repository)
         let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
         let router = MarlinRouter()
 
-        let summary = DifferentialGPSStationSummaryView(differentialGPSStation: DifferentialGPSStationListModel(differentialGPSStationModel: newItem))
+        let summary = DGPSStationSummaryView(differentialGPSStation: DGPSStationListModel(dgpsStationModel: newItem))
             .setShowMoreDetails(true)
             .setShowSectionHeader(true)
             .environmentObject(repository)

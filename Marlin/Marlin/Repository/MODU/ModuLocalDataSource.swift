@@ -262,8 +262,6 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
         return [ModuItem.listItem(ModuListModel(modu: modu))]
     }
 
-    // ignore due to the amount of data types
-    // swiftlint:disable cyclomatic_complexity
     func getCurrentSortValue(sortDescriptor: DataSourceSortParameter, sortValue: Any?) -> String? {
         var sortValueString: String?
         switch sortDescriptor.property.type {
@@ -292,7 +290,6 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
         }
         return sortValueString
     }
-    // swiftlint:enable cyclomatic_complexity
 
     func insert(task: BGTask? = nil, modus: [ModuModel]) async -> Int {
         let count = modus.count

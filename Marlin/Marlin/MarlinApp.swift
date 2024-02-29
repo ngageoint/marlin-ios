@@ -141,7 +141,7 @@ struct MarlinApp: App {
     var asamRepository: AsamRepository
     var moduRepository: ModuRepository
     var portRepository: PortRepository
-    var differentialGPSStationRepository: DifferentialGPSStationRepository
+    var differentialGPSStationRepository: DGPSStationRepository
     var lightRepository: LightRepository
     var radioBeaconRepository: RadioBeaconRepository
     var publicationRepository: PublicationRepository
@@ -181,9 +181,9 @@ struct MarlinApp: App {
             localDataSource: PortCoreDataDataSource(),
             remoteDataSource: PortRemoteDataSource()
         )
-        differentialGPSStationRepository = DifferentialGPSStationRepository(
-            localDataSource: DifferentialGPSStationCoreDataDataSource(),
-            remoteDataSource: DifferentialGPSStationRemoteDataSource()
+        differentialGPSStationRepository = DGPSStationRepository(
+            localDataSource: DGPSStationCoreDataDataSource(),
+            remoteDataSource: DGPSStationRemoteDataSource()
         )
         lightRepository = LightRepository(
             localDataSource: LightCoreDataDataSource(),

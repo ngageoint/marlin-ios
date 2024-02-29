@@ -45,10 +45,10 @@ struct BookmarkSummary: DataSourceSummaryView {
             case let dataSource as RadioBeaconModel:
                 RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel: dataSource))
                     .showBookmarkNotes(true)
-            case let dataSource as DifferentialGPSStationModel:
-                DifferentialGPSStationSummaryView(
-                    differentialGPSStation: DifferentialGPSStationListModel(
-                        differentialGPSStationModel: dataSource
+            case let dataSource as DGPSStationModel:
+                DGPSStationSummaryView(
+                    dgpsStation: DGPSStationListModel(
+                        dgpsStationModel: dataSource
                     )
                 )
                 .showBookmarkNotes(true)

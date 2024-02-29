@@ -19,7 +19,10 @@ class NoticeToMarinersInitialDataLoadOperation: CountingDataLoadOperation {
     @MainActor override func startLoad() {
         MSI.shared.appState.loadingDataSource[DataSources.noticeToMariners.key] = true
 
-        NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.noticeToMariners))
+        NotificationCenter.default.post(
+            name: .DataSourceLoading,
+            object: DataSourceItem(dataSource: DataSources.noticeToMariners)
+        )
     }
 
     @MainActor override func finishLoad() {

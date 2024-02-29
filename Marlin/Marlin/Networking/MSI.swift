@@ -18,7 +18,7 @@ public class MSI {
     var portInitializer: PortInitializer?
     var lightInitializer: LightInitializer?
     var radioBeaconInitializer: RadioBeaconInitializer?
-    var differentialGPSStationInitializer: DifferentialGPSStationInitializer?
+    var differentialGPSStationInitializer: DGPSStationInitializer?
     var publicationInitializer: PublicationInitializer?
     var navigationalWarningInitializer: NavigationalWarningInitializer?
     var noticeToMarinersInitializer: NoticeToMarinersInitializer?
@@ -30,7 +30,7 @@ public class MSI {
         portRepository: PortRepository,
         lightRepository: LightRepository,
         radioBeaconRepository: RadioBeaconRepository,
-        differentialGPSStationRepository: DifferentialGPSStationRepository,
+        differentialGPSStationRepository: DGPSStationRepository,
         publicationRepository: PublicationRepository,
         navigationalWarningRepository: NavigationalWarningRepository,
         noticeToMarinersRepository: NoticeToMarinersRepository,
@@ -52,7 +52,7 @@ public class MSI {
         portInitializer = PortInitializer(repository: portRepository)
         lightInitializer = LightInitializer(repository: lightRepository)
         radioBeaconInitializer = RadioBeaconInitializer(repository: radioBeaconRepository)
-        differentialGPSStationInitializer = DifferentialGPSStationInitializer(
+        differentialGPSStationInitializer = DGPSStationInitializer(
             repository: differentialGPSStationRepository
         )
         publicationInitializer = PublicationInitializer(

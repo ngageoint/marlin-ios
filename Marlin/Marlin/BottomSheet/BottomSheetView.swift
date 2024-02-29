@@ -250,7 +250,7 @@ struct MarlinBottomSheet <Content: View>: View {
                         case DataSources.dgps.key:
                             let split = itemKey.split(separator: "--")
                             if split.count == 2 {
-                                DifferentialGPSStationSheetView(
+                                DGPSStationSheetView(
                                     featureNumber: Int(split[0]) ?? -1,
                                     volumeNumber: "\(split[1])",
                                     focusNotification: focusNotification

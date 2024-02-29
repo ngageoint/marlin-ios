@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationTileRepository.swift
+//  DGPSStationTileRepository.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 2/8/24.
@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import Kingfisher
 
-class DifferentialGPSStationTileRepository: TileRepository, ObservableObject {
+class DGPSStationTileRepository: TileRepository, ObservableObject {
     var dataSource: any DataSourceDefinition = DataSources.dgps
     var cacheSourceKey: String?
     var imageCache: Kingfisher.ImageCache?
@@ -18,10 +18,10 @@ class DifferentialGPSStationTileRepository: TileRepository, ObservableObject {
     }
     let featureNumber: Int
     let volumeNumber: String
-    let localDataSource: DifferentialGPSStationLocalDataSource
+    let localDataSource: DGPSStationLocalDataSource
     var alwaysShow: Bool = true
 
-    init(featureNumber: Int, volumeNumber: String, localDataSource: DifferentialGPSStationLocalDataSource) {
+    init(featureNumber: Int, volumeNumber: String, localDataSource: DGPSStationLocalDataSource) {
         self.featureNumber = featureNumber
         self.volumeNumber = volumeNumber
         self.localDataSource = localDataSource
@@ -78,9 +78,9 @@ class DifferentialGPSStationsTileRepository: TileRepository, ObservableObject {
     var filterCacheKey: String {
         UserDefaults.standard.filter(DataSources.dgps).getCacheKey()
     }
-    let localDataSource: DifferentialGPSStationLocalDataSource
+    let localDataSource: DGPSStationLocalDataSource
 
-    init(localDataSource: DifferentialGPSStationLocalDataSource) {
+    init(localDataSource: DGPSStationLocalDataSource) {
         self.localDataSource = localDataSource
     }
 
@@ -130,7 +130,7 @@ class DifferentialGPSStationImage: DataSourceImage {
 
     static var dataSource: any DataSourceDefinition = DataSources.dgps
 
-    init(differentialGPSStation: DifferentialGPSStationModel) {
+    init(differentialGPSStation: DGPSStationModel) {
         feature = differentialGPSStation.sfGeometry
     }
 

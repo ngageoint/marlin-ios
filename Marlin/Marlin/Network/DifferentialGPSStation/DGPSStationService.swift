@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationsService.swift
+//  DGPSStationService.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 2/1/24.
@@ -8,26 +8,26 @@
 import Foundation
 import Alamofire
 
-enum DifferentialGPSStationService: URLRequestConvertible {
-    case getDifferentialGPSStations(noticeYear: String? = nil, noticeWeek: String? = nil)
+enum DGPSStationService: URLRequestConvertible {
+    case getDGPSStations(noticeYear: String? = nil, noticeWeek: String? = nil)
 
     var method: HTTPMethod {
         switch self {
-        case .getDifferentialGPSStations:
+        case .getDGPSStations:
             return .get
         }
     }
 
     var path: String {
         switch self {
-        case .getDifferentialGPSStations:
+        case .getDGPSStations:
             return "/publications/ngalol/dgpsstations"
         }
     }
 
     var parameters: Parameters? {
         switch self {
-        case .getDifferentialGPSStations(noticeYear: let noticeYear, noticeWeek: let noticeWeek):
+        case .getDGPSStations(noticeYear: let noticeYear, noticeWeek: let noticeWeek):
             var params = [
                 "output": "json",
                 "includeRemovals": false

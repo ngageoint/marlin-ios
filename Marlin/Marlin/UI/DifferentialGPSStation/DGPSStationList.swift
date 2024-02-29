@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationList.swift
+//  DGPSStationList.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 2/8/24.
@@ -8,9 +8,9 @@
 import Foundation
 import SwiftUI
 
-struct DifferentialGPSStationList: View {
-    @EnvironmentObject var differentialGPSStationRepository: DifferentialGPSStationRepository
-    @StateObject var viewModel: DifferentialGPSStationsViewModel = DifferentialGPSStationsViewModel()
+struct DGPSStationList: View {
+    @EnvironmentObject var dgpsStationRepository: DGPSStationRepository
+    @StateObject var viewModel: DGPSStationsViewModel = DGPSStationsViewModel()
 
     @EnvironmentObject var router: MarlinRouter
 
@@ -51,9 +51,9 @@ struct DifferentialGPSStationList: View {
                     List(rows) { dgpsItem in
                         switch dgpsItem {
                         case .listItem(let dgps):
-                            DifferentialGPSStationSummaryView(
-                                differentialGPSStation: DifferentialGPSStationListModel(
-                                    differentialGPSStationModel: dgps)
+                            DGPSStationSummaryView(
+                                dgpsStation: DGPSStationListModel(
+                                    dgpsStationModel: dgps)
                             )
                             .showBookmarkNotes(true)
                             .paddedCard()
@@ -65,7 +65,7 @@ struct DifferentialGPSStationList: View {
                             .onTapGesture {
                                 if let featureNumber = dgps.featureNumber, let volumeNumber = dgps.volumeNumber {
                                     router.path.append(
-                                        DifferentialGPSStationRoute.detail(
+                                        DGPSStationRoute.detail(
                                             featureNumber: featureNumber,
                                             volumeNumber: volumeNumber
                                         )
@@ -133,7 +133,7 @@ struct DifferentialGPSStationList: View {
             }
         }
         .onAppear {
-            viewModel.repository = differentialGPSStationRepository
+            viewModel.repository = dgpsStationRepository
             Metrics.shared.dataSourceList(dataSource: DataSources.dgps)
         }
         .modifier(

@@ -13,7 +13,7 @@ protocol RouteWaypointLocalDataSource {
     func getAsam(waypointURI: URL?) -> AsamModel?
     func getModu(waypointURI: URL?) -> ModuModel?
     func getPort(waypointURI: URL?) -> PortModel?
-    func getDifferentialGPSStation(waypointURI: URL?) -> DifferentialGPSStationModel?
+    func getDifferentialGPSStation(waypointURI: URL?) -> DGPSStationModel?
     func getLight(waypointURI: URL?) -> [LightModel]?
     func getRadioBeacon(waypointURI: URL?) -> RadioBeaconModel?
     func getNavigationalWarning(waypointURI: URL?) -> NavigationalWarningModel?
@@ -71,14 +71,14 @@ class RouteWaypointCoreDataDataSource: RouteWaypointLocalDataSource, ObservableO
         return nil
     }
 
-    func getDifferentialGPSStation(waypointURI: URL?) -> DifferentialGPSStationModel? {
+    func getDifferentialGPSStation(waypointURI: URL?) -> DGPSStationModel? {
         if let waypointURI = waypointURI {
             if let id = context.persistentStoreCoordinator?.managedObjectID(
                 forURIRepresentation: waypointURI
             ),
                let waypoint = try? context.existingObject(with: id) as? RouteWaypoint {
                 let dataSource = waypoint.decodeToDataSource()
-                if let dataSource = dataSource as? DifferentialGPSStationModel {
+                if let dataSource = dataSource as? DGPSStationModel {
                     return dataSource
                 }
             }

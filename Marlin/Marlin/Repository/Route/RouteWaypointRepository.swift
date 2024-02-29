@@ -21,7 +21,7 @@ class RouteWaypointRepository: ObservableObject {
     func getPort(waypointURI: URL?) -> PortModel? {
         localDataSource.getPort(waypointURI: waypointURI)
     }
-    func getDifferentialGPSStation(waypointURI: URL?) -> DifferentialGPSStationModel? {
+    func getDGPSStation(waypointURI: URL?) -> DGPSStationModel? {
         localDataSource.getDifferentialGPSStation(waypointURI: waypointURI)
     }
     func getLight(waypointURI: URL?) -> [LightModel]? {

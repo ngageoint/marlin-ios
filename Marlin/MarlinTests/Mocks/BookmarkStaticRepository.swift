@@ -12,7 +12,7 @@ import Foundation
 class BookmarkStaticRepository: BookmarkRepository {
     var bookmarks: [String: BookmarkModel] = [:]
     let asamRepository: AsamRepository?
-    let dgpsRepository: DifferentialGPSStationRepository?
+    let dgpsRepository: DGPSStationRepository?
     let lightRepository: LightRepository?
     let moduRepository: ModuRepository?
     let portRepository: PortRepository?
@@ -20,11 +20,11 @@ class BookmarkStaticRepository: BookmarkRepository {
     let noticeToMarinersRepository: NoticeToMarinersRepository?
     let publicationRepository: PublicationRepository?
     let navigationalWarningRepository: NavigationalWarningRepository?
-    let differentialGPSStationRepository: DifferentialGPSStationRepository?
+    let differentialGPSStationRepository: DGPSStationRepository?
 
     init(
         asamRepository: AsamRepository? = nil,
-        dgpsRepository: DifferentialGPSStationRepository? = nil,
+        dgpsRepository: DGPSStationRepository? = nil,
         lightRepository: LightRepository? = nil,
         moduRepository: ModuRepository? = nil,
         portRepository: PortRepository? = nil,
@@ -32,7 +32,7 @@ class BookmarkStaticRepository: BookmarkRepository {
         noticeToMarinersRepository: NoticeToMarinersRepository? = nil,
         electronicPublicationRepository: PublicationRepository? = nil,
         navigationalWarningRepository: NavigationalWarningRepository? = nil,
-        differentialGPSStationRepository: DifferentialGPSStationRepository? = nil
+        differentialGPSStationRepository: DGPSStationRepository? = nil
     ) {
         self.asamRepository = asamRepository
         self.dgpsRepository = dgpsRepository

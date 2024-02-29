@@ -88,8 +88,8 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.mockPath = "dgpsMockData.json"
 
-        let operation = DifferentialGPSStationInitialDataLoadOperation(
-            localDataSource: DifferentialGPSStationCoreDataDataSource(), bundle: bundle
+        let operation = DGPSStationInitialDataLoadOperation(
+            localDataSource: DGPSStationCoreDataDataSource(), bundle: bundle
         )
         operation.start()
 
@@ -173,8 +173,8 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
 
-        let operation = DifferentialGPSStationInitialDataLoadOperation(
-            localDataSource: DifferentialGPSStationCoreDataDataSource(), bundle: bundle
+        let operation = DGPSStationInitialDataLoadOperation(
+            localDataSource: DGPSStationCoreDataDataSource(), bundle: bundle
         )
         operation.start()
 
@@ -258,8 +258,8 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
 
-        let operation = DifferentialGPSStationInitialDataLoadOperation(
-            localDataSource: DifferentialGPSStationCoreDataDataSource(), bundle: bundle
+        let operation = DGPSStationInitialDataLoadOperation(
+            localDataSource: DGPSStationCoreDataDataSource(), bundle: bundle
         )
         operation.start()
         waitForExpectations(timeout: 10, handler: nil)
@@ -342,22 +342,22 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
 
-        let operation = DifferentialGPSStationInitialDataLoadOperation(
-            localDataSource: DifferentialGPSStationCoreDataDataSource(), bundle: bundle
+        let operation = DGPSStationInitialDataLoadOperation(
+            localDataSource: DGPSStationCoreDataDataSource(), bundle: bundle
         )
         operation.start()
         waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testDataRequest() {
-        let request = DifferentialGPSStationService.getDifferentialGPSStations(noticeYear: nil, noticeWeek: nil)
+        let request = DGPSStationService.getDGPSStations(noticeYear: nil, noticeWeek: nil)
         XCTAssertEqual(request.method, .get)
         let parameters = request.parameters
         XCTAssertEqual(parameters?.count, 2)
         XCTAssertEqual(parameters?["includeRemovals"] as? Bool, false)
         XCTAssertEqual(parameters?["output"] as? String, "json")
 
-        let request2 = DifferentialGPSStationService.getDifferentialGPSStations(noticeYear: "2022", noticeWeek: "05")
+        let request2 = DGPSStationService.getDGPSStations(noticeYear: "2022", noticeWeek: "05")
         XCTAssertEqual(request2.method, .get)
         let parameters2 = request2.parameters
         XCTAssertEqual(parameters2?.count, 4)
@@ -435,7 +435,7 @@ final class DifferentialGPSStationDataTests: XCTestCase {
     }
     
     func testMapImage() {
-        var newItem = DifferentialGPSStationModel()
+        var newItem = DGPSStationModel()
         newItem.volumeNumber = "PUB 112"
         newItem.aidType = "Differential GPS Stations"
         newItem.geopoliticalHeading = "KOREA"

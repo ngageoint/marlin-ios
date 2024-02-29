@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationMap.swift
+//  DGPSStationMap.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 8/30/22.
@@ -10,7 +10,7 @@ import MapKit
 import CoreData
 import Combine
 
-class DifferentialGPSStationMap: DataSourceMap {
+class DGPSStationMap: DataSourceMap {
 
     override var minZoom: Int {
         get {

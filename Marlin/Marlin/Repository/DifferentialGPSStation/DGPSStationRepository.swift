@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationRepository.swift
+//  DGPSStationRepository.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 9/25/23.
@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-enum DifferentialGPSStationItem: Hashable, Identifiable {
+enum DGPSStationItem: Hashable, Identifiable {
     var id: String {
         switch self {
         case .listItem(let dgps):
@@ -18,34 +18,34 @@ enum DifferentialGPSStationItem: Hashable, Identifiable {
         }
     }
 
-    case listItem(_ dgps: DifferentialGPSStationModel)
+    case listItem(_ dgps: DGPSStationModel)
     case sectionHeader(header: String)
 }
 
-class DifferentialGPSStationRepository: ObservableObject {
-    var localDataSource: DifferentialGPSStationLocalDataSource
-    private var remoteDataSource: DifferentialGPSStationRemoteDataSource
+class DGPSStationRepository: ObservableObject {
+    var localDataSource: DGPSStationLocalDataSource
+    private var remoteDataSource: DGPSStationRemoteDataSource
     init(
-        localDataSource: DifferentialGPSStationLocalDataSource,
-        remoteDataSource: DifferentialGPSStationRemoteDataSource
+        localDataSource: DGPSStationLocalDataSource,
+        remoteDataSource: DGPSStationRemoteDataSource
     ) {
         self.localDataSource = localDataSource
         self.remoteDataSource = remoteDataSource
     }
 
-    func createOperation() -> DifferentialGPSStationDataFetchOperation {
+    func createOperation() -> DGPSStationDataFetchOperation {
         let newestRadioBeacon = localDataSource.getNewestDifferentialGPSStation()
         let noticeWeek = Int(newestRadioBeacon?.noticeWeek ?? "0") ?? 0
-        return DifferentialGPSStationDataFetchOperation(
+        return DGPSStationDataFetchOperation(
             noticeYear: newestRadioBeacon?.noticeYear,
             noticeWeek: String(format: "%02d", noticeWeek + 1)
         )
     }
 
-    func getDifferentialGPSStation(
+    func getDGPSStation(
         featureNumber: Int?,
         volumeNumber: String?
-    ) -> DifferentialGPSStationModel? {
+    ) -> DGPSStationModel? {
         localDataSource.getDifferentialGPSStation(
             featureNumber: featureNumber,
             volumeNumber: volumeNumber
@@ -59,17 +59,17 @@ class DifferentialGPSStationRepository: ObservableObject {
     func dgps(
         filters: [DataSourceFilterParameter]?,
         paginatedBy paginator: Trigger.Signal? = nil
-    ) -> AnyPublisher<[DifferentialGPSStationItem], Error> {
+    ) -> AnyPublisher<[DGPSStationItem], Error> {
         localDataSource.dgps(filters: filters, paginatedBy: paginator)
     }
 
     func getDifferentialGPSStations(
         filters: [DataSourceFilterParameter]?
-    ) async -> [DifferentialGPSStationModel] {
+    ) async -> [DGPSStationModel] {
         await localDataSource.getDifferentialGPSStations(filters: filters)
     }
 
-    func fetch() async -> [DifferentialGPSStationModel] {
+    func fetch() async -> [DGPSStationModel] {
         NSLog("Fetching DGPS")
         DispatchQueue.main.async {
             MSI.shared.appState.loadingDataSource[DataSources.dgps.key] = true

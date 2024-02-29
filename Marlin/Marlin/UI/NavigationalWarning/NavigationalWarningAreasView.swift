@@ -77,7 +77,6 @@ struct NavigationalWarningAreasView: View {
                 viewModel.currentNavAreaName = newValue
             })
             .onAppear {
-                print("xxx current nav area name \(generalLocation.currentNavAreaName)")
                 viewModel.currentNavAreaName = generalLocation.currentNavAreaName
                 viewModel.repository = repository
             }

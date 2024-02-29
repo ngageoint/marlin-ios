@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationGeoPackageExportable.swift
+//  DGPSStationGeoPackageExportable.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 2/9/24.
@@ -10,11 +10,11 @@ import geopackage_ios
 import ExceptionCatcher
 import sf_ios
 
-class DifferentialGPSStationGeoPackageExportable: GeoPackageExportable {
+class DGPSStationGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.dgps
 
-    let differentialGPSStationRepository: DifferentialGPSStationRepository
-    init(differentialGPSStationRepository: DifferentialGPSStationRepository) {
+    let differentialGPSStationRepository: DGPSStationRepository
+    init(differentialGPSStationRepository: DGPSStationRepository) {
         self.differentialGPSStationRepository = differentialGPSStationRepository
     }
 

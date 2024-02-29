@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationDataLoadOperation.swift
+//  DGPSStationDataLoadOperation.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 2/1/24.
@@ -8,12 +8,12 @@
 import Foundation
 import Kingfisher
 
-class DifferentialGPSStationDataLoadOperation: CountingDataLoadOperation {
+class DGPSStationDataLoadOperation: CountingDataLoadOperation {
 
-    var dgpss: [DifferentialGPSStationModel] = []
-    var localDataSource: DifferentialGPSStationLocalDataSource
+    var dgpss: [DGPSStationModel] = []
+    var localDataSource: DGPSStationLocalDataSource
 
-    init(dgpss: [DifferentialGPSStationModel], localDataSource: DifferentialGPSStationLocalDataSource) {
+    init(dgpss: [DGPSStationModel], localDataSource: DGPSStationLocalDataSource) {
         self.dgpss = dgpss
         self.localDataSource = localDataSource
     }

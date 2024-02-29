@@ -64,8 +64,13 @@ class LightGeoPackageExportable: GeoPackageExportable {
         await updateProgress(dataSourceProgress: dataSourceProgress, count: exported)
     }
 
-    func createFeature(model: Encodable, sfGeometry: SFGeometry?, geoPackage: GPKGGeoPackage, table: GPKGFeatureTable, styleRows: [GPKGStyleRow]) {
-
+    func createFeature(
+        model: Encodable,
+        sfGeometry: SFGeometry?,
+        geoPackage: GPKGGeoPackage,
+        table: GPKGFeatureTable,
+        styleRows: [GPKGStyleRow]
+    ) {
         guard let featureDao = geoPackage.featureDao(with: table),
               let featureTableStyles = GPKGFeatureTableStyles(geoPackage: geoPackage, andTable: table),
               let row = featureDao.newRow() else {

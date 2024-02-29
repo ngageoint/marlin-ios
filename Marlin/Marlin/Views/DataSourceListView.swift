@@ -45,7 +45,7 @@ struct DataSourceListView: View {
         } else if dataSource.key == DataSources.radioBeacon.key {
             RadioBeaconList()
         } else if dataSource.key == DataSources.dgps.key {
-            DifferentialGPSStationList()
+            DGPSStationList()
         } else if dataSource.key == DataSources.epub.key {
             PublicationsSectionList()
         } else if dataSource.key == DataSources.noticeToMariners.key {

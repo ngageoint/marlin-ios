@@ -68,7 +68,7 @@ enum DataSources {
     static let bookmark: BookmarkDefinition = BookmarkDefinition.definition
     static let common: CommonDefinition = CommonDefinition.definition
     static let chartCorrection: ChartCorrectionDefinition = ChartCorrectionDefinition.definition
-    static let dgps: DifferentialGPSStationDefinition = DifferentialGPSStationDefinition.definition
+    static let dgps: DGPSStationDefinition = DGPSStationDefinition.definition
     static let epub: PublicationDefinition = PublicationDefinition.definition
     static let geoPackage: GeoPackageDefinition = GeoPackageDefinition.definition
     static let light: LightDefinition = LightDefinition.definition
@@ -92,7 +92,7 @@ enum DataSources {
             return DataSourceDefinitions.common.filterable
         case is DataSources.NoticeToMarinersDefinition:
             return DataSourceDefinitions.noticeToMariners.filterable
-        case is DataSources.DifferentialGPSStationDefinition:
+        case is DataSources.DGPSStationDefinition:
             return DataSourceDefinitions.differentialGPSStation.filterable
         case is DataSources.PublicationDefinition:
             return DataSourceDefinitions.epub.filterable

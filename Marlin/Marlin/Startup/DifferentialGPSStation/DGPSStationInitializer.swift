@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationInitializer.swift
+//  DGPSStationInitializer.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 2/2/24.
@@ -7,10 +7,10 @@
 
 import Foundation
 
- class DifferentialGPSStationInitializer: Initializer {
-    let repository: DifferentialGPSStationRepository
+ class DGPSStationInitializer: Initializer {
+    let repository: DGPSStationRepository
 
-    init(repository: DifferentialGPSStationRepository) {
+    init(repository: DGPSStationRepository) {
         self.repository = repository
         super.init(dataSource: DataSources.dgps)
     }
@@ -21,7 +21,7 @@ import Foundation
 
     override func fetch() {
         if repository.getCount(filters: nil) == 0 {
-            let initialDataLoadOperation = DifferentialGPSStationInitialDataLoadOperation(
+            let initialDataLoadOperation = DGPSStationInitialDataLoadOperation(
                 localDataSource: self.repository.localDataSource
             )
             initialDataLoadOperation.completionBlock = {

@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationPropertyContainer.swift
+//  DGPSStationPropertyContainer.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 2/8/24.
@@ -7,20 +7,20 @@
 
 import Foundation
 
-struct DifferentialGPSStationPropertyContainer: Decodable {
+struct DGPSStationPropertyContainer: Decodable {
     private enum CodingKeys: String, CodingKey {
         case ngalol
     }
-    let ngalol: [DifferentialGPSStationModel]
+    let ngalol: [DGPSStationModel]
 
-    init(dgpss: [DifferentialGPSStationModel]) {
+    init(dgpss: [DGPSStationModel]) {
         ngalol = dgpss
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         ngalol = try container.decode(
-            [Throwable<DifferentialGPSStationModel>].self, forKey: .ngalol
+            [Throwable<DGPSStationModel>].self, forKey: .ngalol
         )
         .compactMap { try? $0.result.get() }
     }

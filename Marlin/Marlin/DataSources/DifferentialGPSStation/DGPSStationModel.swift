@@ -11,7 +11,7 @@ import CoreLocation
 import mgrs_ios
 import GeoJSON
 
-struct DifferentialGPSStationListModel: Hashable, Identifiable {
+struct DGPSStationListModel: Hashable, Identifiable {
     var id: String {
         "\(featureNumber ?? 0)--\(volumeNumber ?? "")"
     }
@@ -51,13 +51,13 @@ struct DifferentialGPSStationListModel: Hashable, Identifiable {
     }
 }
 
-extension DifferentialGPSStationListModel {
+extension DGPSStationListModel {
     var itemTitle: String {
         return "\(self.name ?? "\(self.featureNumber ?? 0)")"
     }
 }
 
-extension DifferentialGPSStationListModel: Bookmarkable {
+extension DGPSStationListModel: Bookmarkable {
     static var definition: any DataSourceDefinition {
         DataSources.dgps
     }
@@ -71,22 +71,22 @@ extension DifferentialGPSStationListModel: Bookmarkable {
     }
 }
 
-extension DifferentialGPSStationListModel {
-    init(differentialGPSStationModel: DifferentialGPSStationModel) {
-        self.canBookmark = differentialGPSStationModel.canBookmark
-        self.featureNumber = differentialGPSStationModel.featureNumber
-        self.volumeNumber = differentialGPSStationModel.volumeNumber
-        self.name = differentialGPSStationModel.name
-        self.geopoliticalHeading = differentialGPSStationModel.geopoliticalHeading
-        self.sectionHeader = differentialGPSStationModel.sectionHeader
-        self.stationID = differentialGPSStationModel.stationID
-        self.remarks = differentialGPSStationModel.remarks
-        self.latitude = differentialGPSStationModel.latitude
-        self.longitude = differentialGPSStationModel.longitude
+extension DGPSStationListModel {
+    init(dgpsStationModel: DGPSStationModel) {
+        self.canBookmark = dgpsStationModel.canBookmark
+        self.featureNumber = dgpsStationModel.featureNumber
+        self.volumeNumber = dgpsStationModel.volumeNumber
+        self.name = dgpsStationModel.name
+        self.geopoliticalHeading = dgpsStationModel.geopoliticalHeading
+        self.sectionHeader = dgpsStationModel.sectionHeader
+        self.stationID = dgpsStationModel.stationID
+        self.remarks = dgpsStationModel.remarks
+        self.latitude = dgpsStationModel.latitude
+        self.longitude = dgpsStationModel.longitude
     }
 }
 
-struct DifferentialGPSStationModel: 
+struct DGPSStationModel: 
     Locatable,
     Bookmarkable,
     Codable,
@@ -235,7 +235,7 @@ struct DifferentialGPSStationModel:
             let decoder = JSONDecoder()
             let jsonData = Data(string.utf8)
             
-            if let model = try? decoder.decode(DifferentialGPSStationModel.self, from: jsonData) {
+            if let model = try? decoder.decode(DGPSStationModel.self, from: jsonData) {
                 self = model
             } else {
                 return nil
@@ -304,7 +304,7 @@ struct DifferentialGPSStationModel:
         self.transferRate = try? values.decode(Int.self, forKey: .transferRate)
         
         if let position = self.position {
-            let coordinate = DifferentialGPSStationModel.parsePosition(position: position)
+            let coordinate = DGPSStationModel.parsePosition(position: position)
             self.longitude = coordinate.longitude
             self.latitude = coordinate.latitude
         } else {

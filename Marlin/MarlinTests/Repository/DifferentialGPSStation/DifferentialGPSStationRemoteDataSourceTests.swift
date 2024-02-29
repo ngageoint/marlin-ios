@@ -19,7 +19,7 @@ final class DifferentialGPSStationRemoteDataSourceTests: XCTestCase {
     }
 
     func testFetchDifferentialGPSStationsWithoutTask() async {
-        let dataSource = DifferentialGPSStationRemoteDataSource()
+        let dataSource = DGPSStationRemoteDataSource()
 
         stub(condition: isScheme("https") && pathEndsWith("/publications/ngalol/dgpsstations")) { request in
             let jsonObject = [

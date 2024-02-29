@@ -317,8 +317,6 @@ extension NoticeToMarinersCoreDataDataSource {
         return [Item.listItem(ListModelType(noticeToMariners: item))]
     }
 
-    // ignore due to the amount of data types
-    // swiftlint:disable cyclomatic_complexity
     func getCurrentSortValue(sortDescriptor: DataSourceSortParameter, sortValue: Any?) -> String? {
         if sortDescriptor.property.key == #keyPath(NoticeToMariners.noticeNumber), let sortValue = sortValue as? Int {
             return "\(Int(sortValue / 100))"
@@ -350,7 +348,6 @@ extension NoticeToMarinersCoreDataDataSource {
         }
         return sortValueString
     }
-    // swiftlint:enable cyclomatic_complexity
 
     func models(
         filters: [DataSourceFilterParameter]?,

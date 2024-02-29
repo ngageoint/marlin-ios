@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationDefinition.swift
+//  DGPSStationDefinition.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 2/28/24.
@@ -10,8 +10,8 @@ import UIKit
 import SwiftUI
 
 extension DataSources {
-    class DifferentialGPSStationDefinition: DataSourceDefinition {
-        var filterable: Filterable? = DifferentialGPSStationFilterable()
+    class DGPSStationDefinition: DataSourceDefinition {
+        var filterable: Filterable? = DGPSStationFilterable()
         var mappable: Bool = true
         var color: UIColor = UIColor(argbValue: 0xFF00E676)
         var imageName: String? = "dgps"
@@ -33,7 +33,7 @@ extension DataSources {
             UserDefaults.standard.lastSyncTimeSeconds(DataSources.dgps)
         }
         
-        static let definition = DifferentialGPSStationDefinition()
+        static let definition = DGPSStationDefinition()
         private init() { }
     }
 }

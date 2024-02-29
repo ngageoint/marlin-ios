@@ -26,7 +26,9 @@ import sf_ios
         styleRows: [GPKGStyleRow],
         dataSourceProgress: DataSourceExportProgress
     ) async throws {
-        let models = await navigationalWarningRepository.getNavigationalWarnings(filters: (filters ?? []) + (commonFilters ?? []))
+        let models = await navigationalWarningRepository.getNavigationalWarnings(
+            filters: (filters ?? []) + (commonFilters ?? [])
+        )
         var exported = 0
         for model in models {
             createFeature(

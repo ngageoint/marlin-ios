@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationsViewModel.swift
+//  DGPSStationsViewModel.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 2/8/24.
@@ -9,13 +9,13 @@ import Foundation
 import Combine
 import SwiftUI
 
-class DifferentialGPSStationsViewModel: ObservableObject {
+class DGPSStationsViewModel: ObservableObject {
     @Published private(set) var state: State = .loading
-    @Published var differentialGPSStations: [DifferentialGPSStationModel] = []
+    @Published var dgpsStations: [DGPSStationModel] = []
     @Published var loaded: Bool = false
     private var disposables = Set<AnyCancellable>()
 
-    private var _repository: DifferentialGPSStationRepository?
+    private var _repository: DGPSStationRepository?
 
     var dataSourceUpdatedPub: AnyCancellable {
         return NotificationCenter.default.publisher(for: .DataSourceUpdated)
@@ -30,7 +30,7 @@ class DifferentialGPSStationsViewModel: ObservableObject {
             }
     }
 
-    var repository: DifferentialGPSStationRepository? {
+    var repository: DGPSStationRepository? {
         get {
             return _repository
         }
@@ -42,16 +42,16 @@ class DifferentialGPSStationsViewModel: ObservableObject {
         }
     }
 
-    var publisher: AnyPublisher<CollectionDifference<DifferentialGPSStationModel>, Never>?
+    var publisher: AnyPublisher<CollectionDifference<DGPSStationModel>, Never>?
 
     private let trigger = Trigger()
 
     enum State {
         case loading
-        case loaded(rows: [DifferentialGPSStationItem])
+        case loaded(rows: [DGPSStationItem])
         case failure(error: Error)
 
-        fileprivate var rows: [DifferentialGPSStationItem] {
+        fileprivate var rows: [DGPSStationItem] {
             if case let .loaded(rows: rows) = self {
                 return rows
             } else {

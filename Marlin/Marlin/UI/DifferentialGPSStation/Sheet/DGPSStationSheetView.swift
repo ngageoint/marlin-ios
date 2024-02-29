@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationSheetView.swift
+//  DGPSStationSheetView.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 2/8/24.
@@ -8,20 +8,20 @@
 import Foundation
 import SwiftUI
 
-struct DifferentialGPSStationSheetView: View {
-    @EnvironmentObject var dgpsRepository: DifferentialGPSStationRepository
+struct DGPSStationSheetView: View {
+    @EnvironmentObject var dgpsRepository: DGPSStationRepository
     var featureNumber: Int
     var volumeNumber: String
     var focusNotification: NSNotification.Name
 
-    @StateObject var viewModel: DifferentialGPSStationViewModel = DifferentialGPSStationViewModel()
+    @StateObject var viewModel: DGPSStationViewModel = DGPSStationViewModel()
 
     var body: some View {
-        return VStack {
-            if let differentialGPSStation = viewModel.differentialGPSStation {
-                DifferentialGPSStationSummaryView(
-                    differentialGPSStation: DifferentialGPSStationListModel(
-                        differentialGPSStationModel: differentialGPSStation
+        VStack {
+            if let dgpsStation = viewModel.dgpsStation {
+                DGPSStationSummaryView(
+                    dgpsStation: DGPSStationListModel(
+                        dgpsStationModel: dgpsStation
                     )
                 )
                 .setShowMoreDetails(true)
@@ -30,30 +30,30 @@ struct DifferentialGPSStationSheetView: View {
             }
         }
         .onChange(of: featureNumber) { newFeatureNumber in
-            viewModel.getDifferentialGPSStation(featureNumber: newFeatureNumber, volumeNumber: volumeNumber)
+            viewModel.getDGPSStation(featureNumber: newFeatureNumber, volumeNumber: volumeNumber)
             NotificationCenter.default.post(
                 name: focusNotification,
                 object: FocusMapOnItemNotification(
-                    item: viewModel.differentialGPSStation
+                    item: viewModel.dgpsStation
                 )
             )
         }
         .onChange(of: volumeNumber) { newVolumeNumber in
-            viewModel.getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: newVolumeNumber)
+            viewModel.getDGPSStation(featureNumber: featureNumber, volumeNumber: newVolumeNumber)
             NotificationCenter.default.post(
                 name: focusNotification,
                 object: FocusMapOnItemNotification(
-                    item: viewModel.differentialGPSStation
+                    item: viewModel.dgpsStation
                 )
             )
         }
         .onAppear {
             viewModel.repository = dgpsRepository
-            viewModel.getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber)
+            viewModel.getDGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber)
             NotificationCenter.default.post(
                 name: focusNotification,
                 object: FocusMapOnItemNotification(
-                    item: viewModel.differentialGPSStation
+                    item: viewModel.dgpsStation
                 )
             )
         }

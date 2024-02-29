@@ -65,7 +65,6 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
     }
 
     var noticeNumberString: String? {
-        print("notice number string for notice number \(noticeNumber)")
         if let noticeNumber = noticeNumber {
             return "\(Int(noticeNumber / 100) % 100)/\(noticeNumber % 100)"
         }

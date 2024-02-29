@@ -40,9 +40,9 @@ class RouteWaypointStaticLocalDataSource: RouteWaypointLocalDataSource {
         return nil
     }
     
-    func getDifferentialGPSStation(waypointURI: URL?) -> Marlin.DifferentialGPSStationModel? {
+    func getDifferentialGPSStation(waypointURI: URL?) -> Marlin.DGPSStationModel? {
         if let waypointURI = waypointURI {
-            return waypoints[waypointURI] as? DifferentialGPSStationModel
+            return waypoints[waypointURI] as? DGPSStationModel
         }
         return nil
     }

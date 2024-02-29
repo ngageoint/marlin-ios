@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationViewModel.swift
+//  DGPSStationViewModel.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 9/26/23.
@@ -7,14 +7,14 @@
 
 import Foundation
 
-class DifferentialGPSStationViewModel: ObservableObject, Identifiable {
-    @Published var differentialGPSStation: DifferentialGPSStationModel?
+class DGPSStationViewModel: ObservableObject, Identifiable {
+    @Published var dgpsStation: DGPSStationModel?
     @Published var predicate: NSPredicate?
     
-    var repository: DifferentialGPSStationRepository? {
+    var repository: DGPSStationRepository? {
         didSet {
             if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
-                getDifferentialGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber)
+                getDGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber)
             }
         }
     }
@@ -29,19 +29,19 @@ class DifferentialGPSStationViewModel: ObservableObject, Identifiable {
     }
 
     @discardableResult
-    func getDifferentialGPSStation(
+    func getDGPSStation(
         featureNumber: Int?,
         volumeNumber: String?,
         waypointURI: URL? = nil
-    ) -> DifferentialGPSStationModel? {
+    ) -> DGPSStationModel? {
         if let waypointURI = waypointURI {
-            differentialGPSStation = routeWaypointRepository?.getDifferentialGPSStation(waypointURI: waypointURI)
+            dgpsStation = routeWaypointRepository?.getDGPSStation(waypointURI: waypointURI)
         } else {
-            differentialGPSStation = repository?.getDifferentialGPSStation(
+            dgpsStation = repository?.getDGPSStation(
                 featureNumber: featureNumber,
                 volumeNumber: volumeNumber
             )
         }
-        return differentialGPSStation
+        return dgpsStation
     }
 }

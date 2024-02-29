@@ -1,5 +1,5 @@
 //
-//  DifferentialGPSStationFilterable.swift
+//  DGPSStationFilterable.swift
 //  Marlin
 //
 //  Created by Daniel Barela on 12/18/23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DifferentialGPSStationFilterable: Filterable {
+struct DGPSStationFilterable: Filterable {
     var definition: any DataSourceDefinition {
         DataSourceDefinitions.differentialGPSStation.definition
     }
@@ -56,5 +56,4 @@ struct DifferentialGPSStationFilterable: Filterable {
             ascending: true)
     ]
 
-//    var locatableClass: Locatable.Type? = DifferentialGPSStation.self
 }

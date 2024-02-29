@@ -38,7 +38,9 @@ struct GeoPackageFeatureItemSummaryView: DataSourceSummaryView {
                 .overline()
             bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
             DataSourceActions(
-                moreDetails: showMoreDetails ? GeoPackageActions.Tap(featureItem: featureItem, path: $router.path) : nil,
+                moreDetails: showMoreDetails 
+                ? GeoPackageActions.Tap(featureItem: featureItem, path: $router.path)
+                : nil,
                 location: Actions.Location(latLng: featureItem.coordinate),
                 zoom: GeoPackageActions.Zoom(latLng: featureItem.coordinate, itemKey: featureItem.itemKey),
                 bookmark: Actions.Bookmark(

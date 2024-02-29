@@ -133,7 +133,11 @@ extension MapMixin {
         return nil
     }
     
-    func itemKeys(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) async -> [String: [String]] {
+    func itemKeys(
+        at location: CLLocationCoordinate2D,
+        mapView: MKMapView,
+        touchPoint: CGPoint
+    ) async -> [String: [String]] {
         [:]
     }
 

@@ -104,67 +104,14 @@ struct NoticeToMarinersListModel: Hashable, Identifiable {
     }
 
     func dateRange() -> String {
-        let firstDate = getFirstDay(weekNumber: (noticeNumber ?? 0) % 100, currentYear: (noticeNumber ?? 0) / 100) ?? Date()
+        let firstDate = getFirstDay(
+            weekNumber: (noticeNumber ?? 0) % 100,
+            currentYear: (noticeNumber ?? 0) / 100
+        ) ?? Date()
         let lastDate = Calendar.current.date(byAdding: .day, value: 6, to: firstDate) ?? Date()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM d"
         return "\(dateFormatter.string(from: firstDate)) - \(dateFormatter.string(from: lastDate))"
-    }
-
-    func checkFileExists() -> Bool {
-        return false
-//        var downloaded = false
-//        if let destinationUrl = URL(string: self.savePath) {
-//            downloaded = FileManager().fileExists(atPath: destinationUrl.path)
-//        }
-//        if downloaded != self.isDownloaded {
-//            PersistenceController.current.perform {
-//                self.objectWillChange.send()
-//                self.isDownloaded = downloaded
-//                DispatchQueue.main.async {
-//                    try? PersistenceController.current.save()
-//                }
-//            }
-//        }
-//        return downloaded
-    }
-
-    func deleteFile() {
-//        guard let odsKey else {
-//            return
-//        }
-//        let docsUrl = URL.documentsDirectory
-//        let fileUrl = "\(docsUrl.absoluteString)\(odsKey)"
-//        let destinationUrl = URL(string: fileUrl)
-//
-//        if let destinationUrl = destinationUrl {
-//            guard FileManager().fileExists(atPath: destinationUrl.path) else { return }
-//            do {
-//                try FileManager().removeItem(atPath: destinationUrl.path)
-//            } catch let error {
-//                print("Error while deleting file: ", error)
-//            }
-//        }
-//
-//        PersistenceController.current.perform {
-//            self.objectWillChange.send()
-//            self.isDownloaded = false
-//            self.downloadProgress = 0.0
-//            DispatchQueue.main.async {
-//                try? PersistenceController.current.save()
-//            }
-//        }
-    }
-
-    func downloadFile() {
-//        if isDownloaded && checkFileExists() {
-//            return
-//        }
-//        DownloadManager.shared.download(downloadable: self)
-    }
-
-    func cancelDownload() {
-//        DownloadManager.shared.cancel(downloadable: self)
     }
 }
 

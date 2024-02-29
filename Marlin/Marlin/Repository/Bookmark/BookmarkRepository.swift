@@ -46,7 +46,7 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
     }()
 
     let asamRepository: AsamRepository?
-    let dgpsRepository: DifferentialGPSStationRepository?
+    let dgpsRepository: DGPSStationRepository?
     let lightRepository: LightRepository?
     let moduRepository: ModuRepository?
     let portRepository: PortRepository?
@@ -54,19 +54,17 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
     let noticeToMarinersRepository: NoticeToMarinersRepository?
     let publicationRepository: PublicationRepository?
     let navigationalWarningRepository: NavigationalWarningRepository?
-    let differentialGPSStationRepository: DifferentialGPSStationRepository?
 
     init(
         asamRepository: AsamRepository? = nil,
-        dgpsRepository: DifferentialGPSStationRepository? = nil,
+        dgpsRepository: DGPSStationRepository? = nil,
         lightRepository: LightRepository? = nil,
         moduRepository: ModuRepository? = nil,
         portRepository: PortRepository? = nil,
         radioBeaconRepository: RadioBeaconRepository? = nil,
         noticeToMarinersRepository: NoticeToMarinersRepository? = nil,
         publicationRepository: PublicationRepository? = nil,
-        navigationalWarningRepository: NavigationalWarningRepository? = nil,
-        differentialGPSStationRepository: DifferentialGPSStationRepository? = nil
+        navigationalWarningRepository: NavigationalWarningRepository? = nil
     ) {
         self.asamRepository = asamRepository
         self.dgpsRepository = dgpsRepository
@@ -77,7 +75,6 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
         self.noticeToMarinersRepository = noticeToMarinersRepository
         self.publicationRepository = publicationRepository
         self.navigationalWarningRepository = navigationalWarningRepository
-        self.differentialGPSStationRepository = differentialGPSStationRepository
     }
 
     func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel? {
@@ -144,7 +141,7 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
             return noticeToMarinersRepository?.getNoticesToMariners(noticeNumber: Int(itemKey))?.first
         case DataSources.dgps.key:
             if split.count == 2 {
-                return differentialGPSStationRepository?.getDifferentialGPSStation(
+                return dgpsRepository?.getDGPSStation(
                     featureNumber: Int(split[0]) ?? -1,
                     volumeNumber: "\(split[1])"
                 )

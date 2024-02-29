@@ -56,7 +56,7 @@ enum RadioBeaconRoute: Hashable {
     case detail(featureNumber: Int, volumeNumber: String)
 }
 
-enum DifferentialGPSStationRoute: Hashable {
+enum DGPSStationRoute: Hashable {
     case detail(featureNumber: Int, volumeNumber: String)
 }
 
@@ -225,7 +225,7 @@ struct RadioBeaconRouteModifier: ViewModifier {
 struct DifferentialGPSStationRouteModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .navigationDestination(for: DifferentialGPSStationRoute.self) { item in
+            .navigationDestination(for: DGPSStationRoute.self) { item in
                 switch item {
                 case .detail(let featureNumber, let volumeNumber):
                     // disable this rule in order to execute a statement prior to returning a view
@@ -237,7 +237,7 @@ struct DifferentialGPSStationRouteModifier: ViewModifier {
                     )
                     // swiftlint:enable redundant_discardable_let
 
-                    DifferentialGPSStationDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
+                    DGPSStationDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
                 }
             }
     }

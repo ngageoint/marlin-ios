@@ -33,7 +33,9 @@ struct NavigationalWarningModel: Codable, Hashable, Identifiable, Bookmarkable, 
     var canBookmark: Bool = false
     var id: String { self.itemKey }
     var itemTitle: String {
-        return "\(self.navAreaName) \(String(self.msgNumber ?? 0))/\(String(self.msgYear ?? 0)) (\(self.subregion ?? ""))"
+        return """
+        \(self.navAreaName) \(String(self.msgNumber ?? 0))/\(String(self.msgYear ?? 0)) (\(self.subregion ?? ""))
+        """
     }
     var itemKey: String {
         return "\(msgYear ?? 0)--\(msgNumber ?? 0)--\(navArea)"

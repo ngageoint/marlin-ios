@@ -66,7 +66,7 @@ class GeoPackageExportViewModel: ObservableObject {
     var moduRepository: ModuRepository?
     var lightRepository: LightRepository?
     var portRepository: PortRepository?
-    var dgpsRepository: DifferentialGPSStationRepository?
+    var dgpsRepository: DGPSStationRepository?
     var radioBeaconRepository: RadioBeaconRepository?
     var routeRepository: RouteRepository?
     var navigationalWarningRepository: NavigationalWarningRepository?
@@ -364,7 +364,7 @@ class GeoPackageExportViewModel: ObservableObject {
             }
         case DataSources.dgps.key:
             if let dgpsRepository = dgpsRepository {
-                exportable = DifferentialGPSStationGeoPackageExportable(
+                exportable = DGPSStationGeoPackageExportable(
                     differentialGPSStationRepository: dgpsRepository
                 )
             }
