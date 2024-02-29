@@ -240,8 +240,8 @@ final class NoticeToMarinersFullNoticeViewTests: XCTestCase {
 
         let localDataSource = NoticeToMarinersStaticLocalDataSource()
         for notice in [ntm, ntm2, ntm3, ntm4, ntm5, ntm6, ntm7, ntm8, ntm9, ntm10, ntm11] {
-            if let noticeNumber = notice.noticeNumber {
-                localDataSource.map[noticeNumber] = notice
+            if let odsEntryId = notice.odsEntryId {
+                localDataSource.map[odsEntryId] = notice
             }
         }
         let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())

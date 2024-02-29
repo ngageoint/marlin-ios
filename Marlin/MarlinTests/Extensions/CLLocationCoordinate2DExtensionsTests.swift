@@ -123,7 +123,8 @@ final class CLLocationCoordinate2DExtensionsTests: XCTestCase {
     
     func testCreateCoordinate() {
         var coordinates = "112230N 0151545W"
-        var parsed = CLLocationCoordinate2D(coordinateString: coordinates)
+        var parsed: CLLocationCoordinate2D?
+        parsed = CLLocationCoordinate2D(coordinateString: coordinates)
         XCTAssertEqual(parsed?.latitude,11.375)
         XCTAssertEqual(parsed?.longitude,-15.2625)
 

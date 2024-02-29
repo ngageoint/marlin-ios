@@ -115,8 +115,8 @@ class NoticeToMarinersStaticLocalDataSource: NoticeToMarinersLocalDataSource {
     
     func insert(task: BGTask?, noticeToMariners: [Marlin.NoticeToMarinersModel]) async -> Int {
         for notice in noticeToMariners {
-            if let noticeNumber = notice.noticeNumber {
-                map[noticeNumber] = notice
+            if let odsEntryId = notice.odsEntryId {
+                map[odsEntryId] = notice
             }
         }
         return noticeToMariners.count
@@ -124,8 +124,8 @@ class NoticeToMarinersStaticLocalDataSource: NoticeToMarinersLocalDataSource {
     
     func batchImport(from propertiesList: [Marlin.NoticeToMarinersModel]) async throws -> Int {
         for notice in propertiesList {
-            if let noticeNumber = notice.noticeNumber {
-                map[noticeNumber] = notice
+            if let odsEntryId = notice.odsEntryId {
+                map[odsEntryId] = notice
             }
         }
         return propertiesList.count

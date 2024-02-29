@@ -414,6 +414,10 @@
 		F767DB7D2B8FD7DD002C12C7 /* ChartCorrectionDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB7C2B8FD7DD002C12C7 /* ChartCorrectionDefinition.swift */; };
 		F767DB7F2B8FD801002C12C7 /* GeoPackageDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB7E2B8FD801002C12C7 /* GeoPackageDefinition.swift */; };
 		F76EE0DA2B912477001128EB /* NavigationalWarningImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0D92B912477001128EB /* NavigationalWarningImage.swift */; };
+		F76EE0DC2B913D7C001128EB /* CoordinateDisplayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0DB2B913D7C001128EB /* CoordinateDisplayType.swift */; };
+		F76EE0DE2B913E3C001128EB /* CLLocationCoordinate2D+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0DD2B913E3C001128EB /* CLLocationCoordinate2D+Parsing.swift */; };
+		F76EE0E02B913EB1001128EB /* CLLocationCoordinate2D+DMSParsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0DF2B913EB1001128EB /* CLLocationCoordinate2D+DMSParsing.swift */; };
+		F76EE0E22B913F84001128EB /* CLLocationCoordinate2D+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0E12B913F84001128EB /* CLLocationCoordinate2D+Validation.swift */; };
 		F77671CB2B34D5930026DD50 /* CoreDataDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77671CA2B34D5930026DD50 /* CoreDataDataSource.swift */; };
 		F77671CD2B34D75A0026DD50 /* CountingDataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77671CC2B34D75A0026DD50 /* CountingDataLoadOperation.swift */; };
 		F7830BFB2A8AB3FE008376F7 /* Route+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFA2A8AB3FE008376F7 /* Route+CoreDataClass.swift */; };
@@ -1073,6 +1077,10 @@
 		F767DB7C2B8FD7DD002C12C7 /* ChartCorrectionDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartCorrectionDefinition.swift; sourceTree = "<group>"; };
 		F767DB7E2B8FD801002C12C7 /* GeoPackageDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageDefinition.swift; sourceTree = "<group>"; };
 		F76EE0D92B912477001128EB /* NavigationalWarningImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningImage.swift; sourceTree = "<group>"; };
+		F76EE0DB2B913D7C001128EB /* CoordinateDisplayType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateDisplayType.swift; sourceTree = "<group>"; };
+		F76EE0DD2B913E3C001128EB /* CLLocationCoordinate2D+Parsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Parsing.swift"; sourceTree = "<group>"; };
+		F76EE0DF2B913EB1001128EB /* CLLocationCoordinate2D+DMSParsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+DMSParsing.swift"; sourceTree = "<group>"; };
+		F76EE0E12B913F84001128EB /* CLLocationCoordinate2D+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Validation.swift"; sourceTree = "<group>"; };
 		F7738AEA2B322B5A00157CA3 /* libKIF.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libKIF.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F77671CA2B34D5930026DD50 /* CoreDataDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataDataSource.swift; sourceTree = "<group>"; };
 		F77671CC2B34D75A0026DD50 /* CountingDataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountingDataLoadOperation.swift; sourceTree = "<group>"; };
@@ -1535,6 +1543,7 @@
 				F7BDF76D2A13D7790083B97F /* ViewExpandButton.swift */,
 				F7BDF7732A1BD97C0083B97F /* DataSourceLocationMapView.swift */,
 				F7364E332A1D4BD10098F243 /* MarlinMainMap.swift */,
+				F76EE0DB2B913D7C001128EB /* CoordinateDisplayType.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -3057,6 +3066,9 @@
 				F7830C082A93B517008376F7 /* UIBezierPathExtensions.swift */,
 				D67E5C992A9E4AA5002FCE03 /* MKPolygonExtensions.swift */,
 				F7C255CC2AC76431003A5B7E /* EncodableExtensions.swift */,
+				F76EE0DD2B913E3C001128EB /* CLLocationCoordinate2D+Parsing.swift */,
+				F76EE0DF2B913EB1001128EB /* CLLocationCoordinate2D+DMSParsing.swift */,
+				F76EE0E12B913F84001128EB /* CLLocationCoordinate2D+Validation.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -3722,6 +3734,7 @@
 				F77671CB2B34D5930026DD50 /* CoreDataDataSource.swift in Sources */,
 				F7830BFF2A8BC9F8008376F7 /* GeoPackageExportButton.swift in Sources */,
 				F75CB8932B5F09BB008979ED /* ModuDataFetchOperation.swift in Sources */,
+				F76EE0E22B913F84001128EB /* CLLocationCoordinate2D+Validation.swift in Sources */,
 				F76052C129AD274E00F13260 /* MapLayersView.swift in Sources */,
 				F740AA79289D6DED00754293 /* MarlinRegularWidth.swift in Sources */,
 				F75E32B829C10C75006F2394 /* XYZTileOverlay.swift in Sources */,
@@ -3744,6 +3757,7 @@
 				F7DF1BBD29E98B5700F92E14 /* Keychain.swift in Sources */,
 				F73356FF2B308EF100BEE26F /* ModuFilterable.swift in Sources */,
 				F7D671CA286C945500758F1C /* GeopackageFeatureOverlay.swift in Sources */,
+				F76EE0DE2B913E3C001128EB /* CLLocationCoordinate2D+Parsing.swift in Sources */,
 				F767DB3F2B8D0FB7002C12C7 /* UserPlaceLocalDataSource.swift in Sources */,
 				F707BA87287C6596006A94C4 /* LightCard.swift in Sources */,
 				F7391CAF2AC213670002ABDD /* DGPSStationRepository.swift in Sources */,
@@ -3821,6 +3835,7 @@
 				F7066DAB2A462A740058122E /* GeoPackageExportable.swift in Sources */,
 				F767DB342B892215002C12C7 /* MapFeatureRepository.swift in Sources */,
 				F71DF480284E69DC00686951 /* NSManagedObjectContext+Extensions.swift in Sources */,
+				F76EE0E02B913EB1001128EB /* CLLocationCoordinate2D+DMSParsing.swift in Sources */,
 				F7C23E122909B6C70002A7DF /* DownloadManager.swift in Sources */,
 				F7C23E0229082D4A0002A7DF /* ElectronicPublication+CoreDataClass.swift in Sources */,
 				F767DB6D2B8FD6FF002C12C7 /* NoticeToMarinersDefinition.swift in Sources */,
@@ -3972,6 +3987,7 @@
 				F7391CA72ABA348F0002ABDD /* BookmarkRepository.swift in Sources */,
 				F714DD842B337449003D7996 /* WMSCapabilitiesView.swift in Sources */,
 				F767DB712B8FD746002C12C7 /* PublicationDefinition.swift in Sources */,
+				F76EE0DC2B913D7C001128EB /* CoordinateDisplayType.swift in Sources */,
 				F7D8FA3829391C7C00E7D0A1 /* FilterComparison.swift in Sources */,
 				F7F597AC2864DD5200F9B32E /* NavigationalWarningOverview.swift in Sources */,
 				F7FFB31C28D63F5500C31AA3 /* Light+MapImage.swift in Sources */,

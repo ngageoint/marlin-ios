@@ -57,7 +57,12 @@ class NavigationalWarningMapFeatureRepository: MapFeatureRepository, TileReposit
         }
     }
 
-    func getItemKeys(minLatitude: Double, maxLatitude: Double, minLongitude: Double, maxLongitude: Double) async -> [String] {
+    func getItemKeys(
+        minLatitude: Double,
+        maxLatitude: Double,
+        minLongitude: Double,
+        maxLongitude: Double
+    ) async -> [String] {
         []
     }
 
