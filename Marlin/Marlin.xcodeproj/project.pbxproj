@@ -413,6 +413,7 @@
 		F767DB7B2B8FD7C4002C12C7 /* BookmarkDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB7A2B8FD7C4002C12C7 /* BookmarkDefinition.swift */; };
 		F767DB7D2B8FD7DD002C12C7 /* ChartCorrectionDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB7C2B8FD7DD002C12C7 /* ChartCorrectionDefinition.swift */; };
 		F767DB7F2B8FD801002C12C7 /* GeoPackageDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767DB7E2B8FD801002C12C7 /* GeoPackageDefinition.swift */; };
+		F76EE0DA2B912477001128EB /* NavigationalWarningImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0D92B912477001128EB /* NavigationalWarningImage.swift */; };
 		F77671CB2B34D5930026DD50 /* CoreDataDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77671CA2B34D5930026DD50 /* CoreDataDataSource.swift */; };
 		F77671CD2B34D75A0026DD50 /* CountingDataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77671CC2B34D75A0026DD50 /* CountingDataLoadOperation.swift */; };
 		F7830BFB2A8AB3FE008376F7 /* Route+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFA2A8AB3FE008376F7 /* Route+CoreDataClass.swift */; };
@@ -1071,6 +1072,7 @@
 		F767DB7A2B8FD7C4002C12C7 /* BookmarkDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDefinition.swift; sourceTree = "<group>"; };
 		F767DB7C2B8FD7DD002C12C7 /* ChartCorrectionDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartCorrectionDefinition.swift; sourceTree = "<group>"; };
 		F767DB7E2B8FD801002C12C7 /* GeoPackageDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageDefinition.swift; sourceTree = "<group>"; };
+		F76EE0D92B912477001128EB /* NavigationalWarningImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningImage.swift; sourceTree = "<group>"; };
 		F7738AEA2B322B5A00157CA3 /* libKIF.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libKIF.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F77671CA2B34D5930026DD50 /* CoreDataDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataDataSource.swift; sourceTree = "<group>"; };
 		F77671CC2B34D75A0026DD50 /* CountingDataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountingDataLoadOperation.swift; sourceTree = "<group>"; };
@@ -2484,6 +2486,7 @@
 				F7222F902B6C0B1000C3E4F1 /* NavigationalWarningLocalDataSource.swift */,
 				F7222FB52B6D754300C3E4F1 /* NavigationalWarningRemoteDataSource.swift */,
 				F767DB312B891D6C002C12C7 /* NavigationalWarningMapFeatureRepository.swift */,
+				F76EE0D92B912477001128EB /* NavigationalWarningImage.swift */,
 			);
 			path = NavigationalWarning;
 			sourceTree = "<group>";
@@ -3656,6 +3659,7 @@
 				F715E30B2B7583B000752688 /* AsamGeoPackageExportable.swift in Sources */,
 				F707BA7728760EE7006A94C4 /* Light+CoreDataClass.swift in Sources */,
 				F749E43E29B63D9D00B2FF8B /* WMSLayerEditView.swift in Sources */,
+				F76EE0DA2B912477001128EB /* NavigationalWarningImage.swift in Sources */,
 				F72EAAE1291F040D00AC6026 /* NoticeToMarinersView.swift in Sources */,
 				F733570F2B3090D000BEE26F /* NavigationalWarningFilterable.swift in Sources */,
 				F73357052B308FC100BEE26F /* LightFilterable.swift in Sources */,

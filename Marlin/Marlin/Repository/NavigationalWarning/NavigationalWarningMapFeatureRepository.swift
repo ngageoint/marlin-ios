@@ -8,9 +8,15 @@
 import Foundation
 import UIKit
 import MapKit
+import Kingfisher
 
-class NavigationalWarningMapFeatureRepository: MapFeatureRepository, ObservableObject {
+class NavigationalWarningMapFeatureRepository: MapFeatureRepository, TileRepository, ObservableObject {
+    var cacheSourceKey: String?
+    var imageCache: Kingfisher.ImageCache?
 
+    var filterCacheKey: String {
+        ""
+    }
     var alwaysShow: Bool = true
     var dataSource: any DataSourceDefinition = DataSources.navWarning
     let msgYear: Int
@@ -30,59 +36,33 @@ class NavigationalWarningMapFeatureRepository: MapFeatureRepository, ObservableO
         self.localDataSource = localDataSource
     }
 
-    func getAnnotationsAndOverlays() async -> AnnotationsAndOverlays {
-        if let warning = localDataSource.getNavigationalWarning(
-            msgYear: msgYear,
-            msgNumber: msgNumber,
-            navArea: navArea
-        ) {
-            return getWarningFeatures(warning: warning)
+    func getTileableItems(
+        minLatitude: Double,
+        maxLatitude: Double,
+        minLongitude: Double,
+        maxLongitude: Double
+    ) async -> [DataSourceImage] {
+        if !UserDefaults.standard.showOnMapnavWarning {
+            return []
         }
-        return AnnotationsAndOverlays(annotations: [], overlays: [])
+        return await localDataSource.getNavigationalWarningsInBounds(
+            filters: UserDefaults.standard.filter(DataSources.navWarning),
+            minLatitude: minLatitude,
+            maxLatitude: maxLatitude,
+            minLongitude: minLongitude,
+            maxLongitude: maxLongitude
+        )
+        .map { model in
+            NavigationalWarningImage(navigationalWarning: model)
+        }
     }
 
-    func getWarningFeatures(warning: NavigationalWarningModel) -> AnnotationsAndOverlays {
-        var overlays: [MKOverlay] = []
-        var annotations: [MKAnnotation] = []
-        guard let locations = warning.locations else {
-            return AnnotationsAndOverlays(annotations: [], overlays: [])
-        }
-        for location in locations {
-            if let wkt = location["wkt"] {
-                var distance: Double?
-                if let distanceString = location["distance"] {
-                    distance = Double(distanceString)
-                }
-                if let shape = MKShape.fromWKT(wkt: wkt, distance: distance) {
-                    if let polygon = shape as? MKPolygon {
-                        let navPoly = NavigationalWarningPolygon(points: polygon.points(), count: polygon.pointCount)
-                        navPoly.warning = warning
-                        overlays.append(navPoly)
-                    } else if let polyline = shape as? MKGeodesicPolyline {
-                        let navline = NavigationalWarningGeodesicPolyline(
-                            points: polyline.points(),
-                            count: polyline.pointCount
-                        )
-                        navline.warning = warning
-                        overlays.append(navline)
-                    } else if let polyline = shape as? MKPolyline {
-                        let navline = NavigationalWarningPolyline(points: polyline.points(), count: polyline.pointCount)
-                        navline.warning = warning
-                        overlays.append(navline)
-                    } else if let point = shape as? MKPointAnnotation {
-                        let navpoint = NavigationalWarningAnnotation()
-                        navpoint.coordinate = point.coordinate
-                        navpoint.warning = warning
-                        annotations.append(navpoint)
-                    } else if let circle = shape as? MKCircle {
-                        let navcircle = NavigationalWarningCircle(center: circle.coordinate, radius: circle.radius)
-                        navcircle.warning = warning
-                        overlays.append(navcircle)
-                    }
-                }
-            }
-        }
-        return AnnotationsAndOverlays(annotations: annotations, overlays: overlays)
+    func getItemKeys(minLatitude: Double, maxLatitude: Double, minLongitude: Double, maxLongitude: Double) async -> [String] {
+        []
+    }
+
+    func getAnnotationsAndOverlays() async -> AnnotationsAndOverlays {
+        return AnnotationsAndOverlays(annotations: [], overlays: [])
     }
 
     func getItemKeys(
@@ -96,9 +76,52 @@ class NavigationalWarningMapFeatureRepository: MapFeatureRepository, ObservableO
     }
 }
 
-class NavigationalWarningsMapFeatureRepository: MapFeatureRepository, ObservableObject {
-    var alwaysShow: Bool = true
+class NavigationalWarningsMapFeatureRepository: MapFeatureRepository, TileRepository, ObservableObject {
     var dataSource: any DataSourceDefinition = DataSources.navWarning
+    var cacheSourceKey: String? { dataSource.key }
+    lazy var imageCache: Kingfisher.ImageCache? = {
+        if let cacheSourceKey = cacheSourceKey {
+            return Kingfisher.ImageCache(name: cacheSourceKey)
+        }
+        return nil
+    }()
+
+    var filterCacheKey: String {
+        UserDefaults.standard.filter(dataSource).getCacheKey()
+    }
+
+    var alwaysShow: Bool = false
+
+    func getTileableItems(
+        minLatitude: Double,
+        maxLatitude: Double,
+        minLongitude: Double,
+        maxLongitude: Double
+    ) async -> [DataSourceImage] {
+        if !UserDefaults.standard.showOnMapnavWarning {
+            return []
+        }
+        return await localDataSource.getNavigationalWarningsInBounds(
+            filters: UserDefaults.standard.filter(DataSources.navWarning),
+            minLatitude: minLatitude,
+            maxLatitude: maxLatitude,
+            minLongitude: minLongitude,
+            maxLongitude: maxLongitude
+        )
+        .map { model in
+            NavigationalWarningImage(navigationalWarning: model)
+        }
+    }
+
+    func getItemKeys(
+        minLatitude: Double,
+        maxLatitude: Double,
+        minLongitude: Double,
+        maxLongitude: Double
+    ) async -> [String] {
+        []
+    }
+
     let localDataSource: NavigationalWarningLocalDataSource
 
     init(
@@ -108,58 +131,11 @@ class NavigationalWarningsMapFeatureRepository: MapFeatureRepository, Observable
     }
 
     func getAnnotationsAndOverlays() async -> AnnotationsAndOverlays {
-        let warnings = await localDataSource.getNavigationalWarnings(filters: nil)
-
-        let x = await MainActor.run { () -> AnnotationsAndOverlays in
-            var overlays: [MKOverlay] = []
-            var annotations: [MKAnnotation] = []
-            for warning in warnings {
-                let features = getWarningFeatures(warning: warning)
-                overlays.append(contentsOf: features.overlays)
-                annotations.append(contentsOf: features.annotations)
-            }
-            return AnnotationsAndOverlays(annotations: annotations, overlays: overlays)
-        }
-        return x
+        return AnnotationsAndOverlays(annotations: [], overlays: [])
     }
 
     func getWarningFeatures(warning: NavigationalWarningModel) -> AnnotationsAndOverlays {
-        var overlays: [MKOverlay] = []
-        var annotations: [MKAnnotation] = []
-        guard let locations = warning.locations else {
-            return AnnotationsAndOverlays(annotations: [], overlays: [])
-        }
-        for location in locations {
-            if let wkt = location["wkt"] {
-                var distance: Double?
-                if let distanceString = location["distance"] {
-                    distance = Double(distanceString)
-                }
-                if let shape = MKShape.fromWKT(wkt: wkt, distance: distance) {
-                    if let polygon = shape as? MKPolygon {
-                        let navPoly = NavigationalWarningPolygon(points: polygon.points(), count: polygon.pointCount)
-                        overlays.append(navPoly)
-                    } else if let polyline = shape as? MKGeodesicPolyline {
-                        let navline: NavigationalWarningGeodesicPolyline = NavigationalWarningGeodesicPolyline(
-                            points: polyline.points(),
-                            count: polyline.pointCount
-                        )
-                        overlays.append(navline)
-                    } else if let polyline = shape as? MKPolyline {
-                        let navline = NavigationalWarningPolyline(points: polyline.points(), count: polyline.pointCount)
-                        overlays.append(navline)
-                    } else if let point = shape as? MKPointAnnotation {
-                        let navpoint = NavigationalWarningAnnotation()
-                        navpoint.coordinate = point.coordinate
-                        annotations.append(navpoint)
-                    } else if let circle = shape as? MKCircle {
-                        let navcircle = NavigationalWarningCircle(center: circle.coordinate, radius: circle.radius)
-                        overlays.append(navcircle)
-                    }
-                }
-            }
-        }
-        return AnnotationsAndOverlays(annotations: annotations, overlays: overlays)
+        return AnnotationsAndOverlays(annotations: [], overlays: [])
     }
 
     func getItemKeys(

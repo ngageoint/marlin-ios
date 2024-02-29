@@ -103,55 +103,78 @@ class MapState: ObservableObject, Hashable {
 
 class MainMapMixins: MapMixins {
     var subscriptions = Set<AnyCancellable>()
-        
+    var asamRepository: TileRepository?
+    var moduRepository: TileRepository?
+    var portRepository: TileRepository?
+    var lightRepository: TileRepository?
+    var radioBeaconRepository: TileRepository?
+    var dgpsRepository: TileRepository?
+    var navigationalWarningsRepository: TileRepository?
+    var routeRepository: RouteRepository?
+
     override init() {
         super.init()
         self.mixins = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
     }
     
     func addRouteMixin(routeRepository: RouteRepository) {
-        self.mixins.append(AllRoutesMixin(repository: routeRepository))
+        if self.routeRepository == nil {
+            self.routeRepository = routeRepository
+            self.mixins.append(AllRoutesMixin(repository: routeRepository))
+        }
     }
 
     func addAsamTileRepository(tileRepository: TileRepository) {
-        if UserDefaults.standard.dataSourceEnabled(DataSources.asam) {
+        if asamRepository == nil && UserDefaults.standard.dataSourceEnabled(DataSources.asam) {
+            asamRepository = tileRepository
             mixins.append(AsamMap(repository: tileRepository))
         }
     }
 
     func addModuTileRepository(tileRepository: TileRepository) {
-        if UserDefaults.standard.dataSourceEnabled(DataSources.modu) {
+        if moduRepository == nil && UserDefaults.standard.dataSourceEnabled(DataSources.modu) {
+            moduRepository = tileRepository
             mixins.append(ModuMap(repository: tileRepository))
         }
     }
 
     func addPortTileRepository(tileRepository: TileRepository) {
-        if UserDefaults.standard.dataSourceEnabled(DataSources.port) {
+        if portRepository == nil && UserDefaults.standard.dataSourceEnabled(DataSources.port) {
+            portRepository = tileRepository
             mixins.append(PortMap(repository: tileRepository))
         }
     }
 
     func addLightTileRepository(tileRepository: TileRepository) {
-        if UserDefaults.standard.dataSourceEnabled(DataSources.light) {
+        if lightRepository == nil && UserDefaults.standard.dataSourceEnabled(DataSources.light) {
+            lightRepository = tileRepository
             mixins.append(LightMap(repository: tileRepository))
         }
     }
 
     func addRadioBeaconTileRepository(tileRepository: TileRepository) {
-        if UserDefaults.standard.dataSourceEnabled(DataSources.radioBeacon) {
+        if radioBeaconRepository == nil && UserDefaults.standard.dataSourceEnabled(DataSources.radioBeacon) {
+            radioBeaconRepository = tileRepository
             mixins.append(RadioBeaconMap(repository: tileRepository))
         }
     }
 
     func addDifferentialGPSStationTileRepository(tileRepository: TileRepository) {
-        if UserDefaults.standard.dataSourceEnabled(DataSources.dgps) {
+        if dgpsRepository == nil && UserDefaults.standard.dataSourceEnabled(DataSources.dgps) {
+            dgpsRepository = tileRepository
             mixins.append(DGPSStationMap(repository: tileRepository))
         }
     }
 
-    func addNavigationalWarningsMapFeatureRepository(mapFeatureRepository: MapFeatureRepository) {
-        if UserDefaults.standard.dataSourceEnabled(DataSources.navWarning) {
-            mixins.append(NavigationalWarningMap(mapFeatureRepository: mapFeatureRepository))
+    func addNavigationalWarningsMapFeatureRepository(mapFeatureRepository: NavigationalWarningsMapFeatureRepository) {
+        if navigationalWarningsRepository == nil && UserDefaults.standard.dataSourceEnabled(DataSources.navWarning) {
+            navigationalWarningsRepository = mapFeatureRepository
+            mixins.append(
+                NavigationalWarningMap(
+                    repository: mapFeatureRepository,
+                    mapFeatureRepository: mapFeatureRepository
+                )
+            )
         }
     }
 }

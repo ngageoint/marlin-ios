@@ -44,17 +44,19 @@ struct NavigationalWarningDetailView: View {
                             .foregroundColor(Color.white)
                             .background(Color(uiColor: NavigationalWarning.color))
                             .padding(.bottom, -8)
+                        let mapRepository = NavigationalWarningMapFeatureRepository(
+                            msgYear: navigationalWarning.msgYear ?? -1,
+                            msgNumber: navigationalWarning.msgNumber ?? -1,
+                            navArea: navigationalWarning.navArea,
+                            localDataSource: navigationalWarningRepository.localDataSource
+                        )
                         DataSourceLocationMapView(
                             dataSourceLocation: navigationalWarning,
                             mapName: "Navigational Warning Detail Map",
                             mixins: [
                                 NavigationalWarningMap(
-                                    mapFeatureRepository: NavigationalWarningMapFeatureRepository(
-                                        msgYear: navigationalWarning.msgYear ?? -1,
-                                        msgNumber: navigationalWarning.msgNumber ?? -1,
-                                        navArea: navigationalWarning.navArea,
-                                        localDataSource: navigationalWarningRepository.localDataSource
-                                    )
+                                    repository: mapRepository,
+                                    mapFeatureRepository: mapRepository
                                 )
                             ]
                         )

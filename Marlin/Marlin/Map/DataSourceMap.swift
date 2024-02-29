@@ -74,6 +74,8 @@ class DataSourceMap: MapMixin {
                 mapView.removeOverlay(overlay)
             }
             mapView.removeAnnotations(annotations)
+            overlays = []
+            annotations = []
 
             if !show && !repositoryAlwaysShow {
                 return
@@ -102,13 +104,13 @@ class DataSourceMap: MapMixin {
 
     func addFeatures(features: AnnotationsAndOverlays, mapView: MKMapView) {
         mapView.addAnnotations(features.annotations)
-
         // find the right place
         let mapOrder = UserDefaults.standard.dataSourceMapOrder(dataSourceKey)
         if mapView.overlays(in: .aboveLabels).isEmpty {
             for overlay in features.overlays {
                 mapView.insertOverlay(overlay, at: 0, level: .aboveLabels)
             }
+            return
         } else {
             for added in mapView.overlays(in: .aboveLabels) {
                 if let added = added as? any DataSourceOverlay,
