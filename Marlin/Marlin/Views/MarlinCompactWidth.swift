@@ -78,8 +78,8 @@ struct MarlinCompactWidth: View {
                     } else if output == "submitReport" {
                         selectedTab = "map"
                     } else if dataSourceList.tabs.contains(where: { item in
-                            item.key == output
-                        }) {
+                        item.key == output
+                    }) {
                         selectedTab = "\(output)List"
                     } else {
                         selectedTab = "map"
