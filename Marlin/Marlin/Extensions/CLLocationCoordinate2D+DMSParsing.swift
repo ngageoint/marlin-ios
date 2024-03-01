@@ -29,7 +29,8 @@ extension CLLocationCoordinate2D {
 
         var seconds = ""
         if let parsedSeconds = parsed.seconds {
-            seconds = String(format: "%02d", parsedSeconds)
+            let roundedSeconds = Int(Double("\(parsedSeconds).\(parsed.decimalSeconds ?? 0)")?.rounded() ?? 0)
+            seconds = String(format: "%02d", roundedSeconds)
         }
 
         var minutes = ""
@@ -169,6 +170,7 @@ extension CLLocationCoordinate2D {
 
         dmsCoordinate.minutes = Int(coordinateToParse.suffix(2))
         dmsCoordinate.degrees = Int(coordinateToParse.dropLast(2))
+        print("dms \(dmsCoordinate)")
 
         CLLocationCoordinate2D.correctMinutesAndSeconds(dmsCoordinate: &dmsCoordinate, decimalSeconds: decimalSeconds)
 
@@ -199,8 +201,9 @@ extension CLLocationCoordinate2D {
             )
             dmsCoordinate.seconds = Int(seconds.rounded())
         } else if let decimalSeconds = decimalSeconds {
+            dmsCoordinate.decimalSeconds = decimalSeconds
             // add the decimal seconds to seconds and round
-            dmsCoordinate.seconds = Int(Double("\((dmsCoordinate.seconds ?? 0)).\(decimalSeconds)")?.rounded() ?? 0)
+//            dmsCoordinate.seconds = Int(Double("\((dmsCoordinate.seconds ?? 0)).\(decimalSeconds)")?.rounded() ?? 0)
         }
 
         if dmsCoordinate.seconds == 60 {

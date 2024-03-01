@@ -186,6 +186,11 @@ final class CLLocationCoordinate2DExtensionsTests: XCTestCase {
         parsed = CLLocationCoordinate2D(coordinateString: coordinates)
         XCTAssertEqual(parsed?.latitude,17.5)
         XCTAssertEqual(parsed?.longitude,-101.25)
+
+        coordinates = "65°33'53.89\"N \n37°12'25.7\"W"
+        parsed = CLLocationCoordinate2D(coordinateString: coordinates)
+        XCTAssertEqual(String(format: "%.5f",parsed!.latitude), "65.56497")
+        XCTAssertEqual(String(format: "%.5f",parsed!.longitude), "-37.20714")
     }
     
     func testValidate() {

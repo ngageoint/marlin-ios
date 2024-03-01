@@ -88,12 +88,20 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.mockPath = "dgpsMockData.json"
 
+        let localDataSource = DGPSStationCoreDataDataSource()
         let operation = DGPSStationInitialDataLoadOperation(
-            localDataSource: DGPSStationCoreDataDataSource(), bundle: bundle
+            localDataSource: localDataSource, bundle: bundle
         )
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
+        let newest = localDataSource.getNewestDifferentialGPSStation()
+        XCTAssertEqual(String(format: "%.5f", newest!.latitude), "38.55250")
+        XCTAssertEqual(String(format: "%.5f", newest!.longitude), "128.39833")
+        XCTAssertEqual(newest!.noticeNumber, 201134)
+        XCTAssertEqual(newest!.name, "Chojin Dan Lt")
+        XCTAssertEqual(newest!.noticeWeek, "34")
+        XCTAssertEqual(newest!.noticeYear, "2011")
     }
     
     func testRejectInvalidDifferentialGPSStationNoFeatureNumber() throws {

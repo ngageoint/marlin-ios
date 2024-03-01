@@ -147,8 +147,11 @@ extension CLLocationCoordinate2D {
             if let minutes = dms.minutes {
                 coordinateDegrees += Double(minutes) / 60.0
             }
-            if let seconds = dms.seconds {
+            if let seconds = dms.seconds, let decimalSeconds = dms.decimalSeconds {
+                coordinateDegrees += (Double("\(seconds).\(decimalSeconds)") ?? 0.0) / 3600.0
+            } else if let seconds = dms.seconds {
                 coordinateDegrees += Double(seconds) / 3600.0
+
             }
             if let direction = dms.direction {
                 if direction == "S" || direction == "W" {

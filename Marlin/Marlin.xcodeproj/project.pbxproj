@@ -418,6 +418,8 @@
 		F76EE0DE2B913E3C001128EB /* CLLocationCoordinate2D+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0DD2B913E3C001128EB /* CLLocationCoordinate2D+Parsing.swift */; };
 		F76EE0E02B913EB1001128EB /* CLLocationCoordinate2D+DMSParsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0DF2B913EB1001128EB /* CLLocationCoordinate2D+DMSParsing.swift */; };
 		F76EE0E22B913F84001128EB /* CLLocationCoordinate2D+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0E12B913F84001128EB /* CLLocationCoordinate2D+Validation.swift */; };
+		F76EE0E42B91491C001128EB /* DGPSStationModel+Initializers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0E32B91491C001128EB /* DGPSStationModel+Initializers.swift */; };
+		F76EE0E62B914991001128EB /* DGPSStationListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0E52B914991001128EB /* DGPSStationListModel.swift */; };
 		F77671CB2B34D5930026DD50 /* CoreDataDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77671CA2B34D5930026DD50 /* CoreDataDataSource.swift */; };
 		F77671CD2B34D75A0026DD50 /* CountingDataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77671CC2B34D75A0026DD50 /* CountingDataLoadOperation.swift */; };
 		F7830BFB2A8AB3FE008376F7 /* Route+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFA2A8AB3FE008376F7 /* Route+CoreDataClass.swift */; };
@@ -1081,6 +1083,8 @@
 		F76EE0DD2B913E3C001128EB /* CLLocationCoordinate2D+Parsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Parsing.swift"; sourceTree = "<group>"; };
 		F76EE0DF2B913EB1001128EB /* CLLocationCoordinate2D+DMSParsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+DMSParsing.swift"; sourceTree = "<group>"; };
 		F76EE0E12B913F84001128EB /* CLLocationCoordinate2D+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Validation.swift"; sourceTree = "<group>"; };
+		F76EE0E32B91491C001128EB /* DGPSStationModel+Initializers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DGPSStationModel+Initializers.swift"; sourceTree = "<group>"; };
+		F76EE0E52B914991001128EB /* DGPSStationListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DGPSStationListModel.swift; sourceTree = "<group>"; };
 		F7738AEA2B322B5A00157CA3 /* libKIF.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libKIF.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F77671CA2B34D5930026DD50 /* CoreDataDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataDataSource.swift; sourceTree = "<group>"; };
 		F77671CC2B34D75A0026DD50 /* CountingDataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountingDataLoadOperation.swift; sourceTree = "<group>"; };
@@ -1484,6 +1488,8 @@
 				F7FFB2EF28D626DC00C31AA3 /* DGPSStationModel.swift */,
 				F73357002B308F1300BEE26F /* DGPSStationFilterable.swift */,
 				F715E3002B7557AD00752688 /* DGPSStationPropertyContainer.swift */,
+				F76EE0E32B91491C001128EB /* DGPSStationModel+Initializers.swift */,
+				F76EE0E52B914991001128EB /* DGPSStationListModel.swift */,
 			);
 			path = DifferentialGPSStation;
 			sourceTree = "<group>";
@@ -3694,6 +3700,7 @@
 				F70F50192992DAFF0062E555 /* DataLoadedNotificationBanner.swift in Sources */,
 				F7DCCF732A67118600B0700C /* LocationFilterFullScreen.swift in Sources */,
 				F73927962A439D2700DE1E79 /* GeoPackageExportView.swift in Sources */,
+				F76EE0E62B914991001128EB /* DGPSStationListModel.swift in Sources */,
 				F72E4D9D2B69ACBA006ED371 /* PortInitialDataLoadOperation.swift in Sources */,
 				F7D671C3286C860900758F1C /* GeoPackageMap.swift in Sources */,
 				F7D671C5286C8A3100758F1C /* GeoPackageLayer.swift in Sources */,
@@ -3756,6 +3763,7 @@
 				F7C23DFE290721680002A7DF /* SubmitReportView.swift in Sources */,
 				F7DF1BBD29E98B5700F92E14 /* Keychain.swift in Sources */,
 				F73356FF2B308EF100BEE26F /* ModuFilterable.swift in Sources */,
+				F76EE0E42B91491C001128EB /* DGPSStationModel+Initializers.swift in Sources */,
 				F7D671CA286C945500758F1C /* GeopackageFeatureOverlay.swift in Sources */,
 				F76EE0DE2B913E3C001128EB /* CLLocationCoordinate2D+Parsing.swift in Sources */,
 				F767DB3F2B8D0FB7002C12C7 /* UserPlaceLocalDataSource.swift in Sources */,

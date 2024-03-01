@@ -121,6 +121,9 @@ final class LightDataTests: XCTestCase {
         })
         XCTAssertNotNil(white)
         XCTAssertEqual(white?.range, 12.0)
+
+        XCTAssertEqual(String(format: "%.5f",light.latitude), "65.56497")
+        XCTAssertEqual(String(format: "%.5f",light.longitude), "-37.20714")
     }
     
     func testLoadInitialDataAndUpdate() async throws {

@@ -70,10 +70,16 @@ final class RadioBeaconDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.mockPath = "radioBeaconMockData.json"
 
-        let operation = RadioBeaconInitialDataLoadOperation(localDataSource: RadioBeaconCoreDataDataSource(), bundle: bundle)
+        var localDataSource = RadioBeaconCoreDataDataSource()
+        let operation = RadioBeaconInitialDataLoadOperation(localDataSource: localDataSource, bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
+
+        let rb = localDataSource.getNewestRadioBeacon()
+        XCTAssertEqual(rb!.featureNumber, 10)
+        XCTAssertEqual(String(format: "%.5f", rb!.latitude), "70.48666")
+        XCTAssertEqual(String(format: "%.5f", rb!.longitude), "-21.97222")
     }
     
     func testRejectInvalidRadioBeaconNoFeatureNumber() throws {

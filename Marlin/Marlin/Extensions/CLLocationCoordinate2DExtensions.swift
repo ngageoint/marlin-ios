@@ -14,6 +14,7 @@ struct DMSCoordinate {
     var degrees: Int?
     var minutes: Int?
     var seconds: Int?
+    var decimalSeconds: Int?
     var direction: String?
 }
 
