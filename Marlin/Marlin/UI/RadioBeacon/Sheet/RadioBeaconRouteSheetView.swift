@@ -1,28 +1,38 @@
 //
-//  RadioBeaconSheetView.swift
+//  RadioBeaconRouteSheetView.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 2/8/24.
+//  Created by Daniel Barela on 3/1/24.
 //
 
 import Foundation
 import SwiftUI
 
-struct RadioBeaconSheetView: View {
-
+struct RadioBeaconRouteSheetView: View {
     @EnvironmentObject var radioBeaconRepository: RadioBeaconRepository
     var itemKey: String
     var focusNotification: NSNotification.Name
+    @ObservedObject var routeViewModel: RouteViewModel
+    @Binding var showBottomSheet: Bool
 
     @StateObject var viewModel: RadioBeaconViewModel = RadioBeaconViewModel()
 
     var body: some View {
-        VStack {
-            if let radioBeacon = viewModel.radioBeacon {
-                RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel: radioBeacon))
-                    .setShowMoreDetails(true)
-                    .setShowSectionHeader(true)
-                    .setShowTitle(true)
+        Group {
+            switch viewModel.radioBeacon {
+            case .some(let model):
+                VStack {
+                    Text(model.itemTitle)
+                    HStack {
+                        Button("Add To Route") {
+                            routeViewModel.addWaypoint(waypoint: model)
+                            showBottomSheet.toggle()
+                        }
+                        .buttonStyle(MaterialButtonStyle(type: .text))
+                    }
+                }
+            case nil:
+                Text("Loading...")
             }
         }
         .onChange(of: itemKey) { newItemKey in

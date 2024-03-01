@@ -66,7 +66,16 @@ extension Notification.Name {
 struct RouteMapView: View {
     @State var showBottomSheet: Bool = false
     @StateObject var itemList: BottomSheetItemList = BottomSheetItemList()
-    
+
+    @EnvironmentObject var routeRepository: RouteRepository
+    @EnvironmentObject var asamsTileRepository: AsamsTileRepository
+    @EnvironmentObject var modusTileRepository: ModusTileRepository
+    @EnvironmentObject var portsTileRepository: PortsTileRepository
+    @EnvironmentObject var lightsTileRepository: LightsTileRepository
+    @EnvironmentObject var radioBeaconsTileRepository: RadioBeaconsTileRepository
+    @EnvironmentObject var differentialGPSStationsTileRepository: DifferentialGPSStationsTileRepository
+    @EnvironmentObject var navigationalWarningsMapFeatureRepository: NavigationalWarningsMapFeatureRepository
+
     @EnvironmentObject var router: MarlinRouter
 
     @ObservedObject var routeViewModel: RouteViewModel
@@ -93,6 +102,16 @@ struct RouteMapView: View {
         }
         .onAppear {
             mixins.mixins.append(RouteMixin(viewModel: routeViewModel))
+            mixins.addRouteMixin(routeRepository: routeRepository)
+            mixins.addAsamTileRepository(tileRepository: asamsTileRepository)
+            mixins.addModuTileRepository(tileRepository: modusTileRepository)
+            mixins.addPortTileRepository(tileRepository: portsTileRepository)
+            mixins.addLightTileRepository(tileRepository: lightsTileRepository)
+            mixins.addRadioBeaconTileRepository(tileRepository: radioBeaconsTileRepository)
+            mixins.addDifferentialGPSStationTileRepository(tileRepository: differentialGPSStationsTileRepository)
+            mixins.addNavigationalWarningsMapFeatureRepository(
+                mapFeatureRepository: navigationalWarningsMapFeatureRepository
+            )
         }
         .onReceive(focusMapAtLocation) { notification in
             mapState.forceCenter = notification.object as? MKCoordinateRegion
@@ -157,24 +176,12 @@ struct RouteMapView: View {
                 MarlinBottomSheet(
                     itemList: itemList,
                     focusNotification: .RouteFocus
-                ) { dataSourceViewBuilder in
-                    VStack {
-                        Text(dataSourceViewBuilder.itemTitle)
-                        HStack {
-                            Button("Add To Route") {
-                                print("add to route")
-                                if let model = dataSourceViewBuilder as? any GeoJSONExportable {
-//                                    if let model = DataSourceType
-//                                        .fromKey(type(of: exportable).definition.key)?
-//                                        .createModel(dataSource: dataSourceViewBuilder) as? any GeoJSONExportable {
-                                        routeViewModel.addWaypoint(waypoint: model)
-                                        showBottomSheet.toggle()
-                                    }
-//                                }
-                            }
-                            .buttonStyle(MaterialButtonStyle(type: .text))
-                        }
-                    }
+                ) { item in
+                    RouteDataSourceSheetView(
+                        item: item,
+                        routeViewModel: routeViewModel,
+                        showBottomSheet: $showBottomSheet
+                    )
                 }
                 .environmentObject(LocationManager.shared())
                 .environmentObject(router)

@@ -1,28 +1,38 @@
 //
-//  PortSheetView.swift
+//  PortRouteSheetView.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 1/31/24.
+//  Created by Daniel Barela on 3/1/24.
 //
 
 import Foundation
 import SwiftUI
 
-struct PortSheetView: View {
+struct PortRouteSheetView: View {
     @EnvironmentObject var portRepository: PortRepository
     var itemKey: String
     var focusNotification: NSNotification.Name
+    @ObservedObject var routeViewModel: RouteViewModel
+    @Binding var showBottomSheet: Bool
 
     @StateObject var viewModel: PortViewModel = PortViewModel()
 
     var body: some View {
-        VStack {
-            if let port = viewModel.port {
-                PortSummaryView(port: PortListModel(portModel: port))
-                    .setShowMoreDetails(true)
-                    .setShowSectionHeader(true)
-                    .setShowTitle(true)
-
+        Group {
+            switch viewModel.port {
+            case .some(let model):
+                VStack {
+                    Text(model.itemTitle)
+                    HStack {
+                        Button("Add To Route") {
+                            routeViewModel.addWaypoint(waypoint: model)
+                            showBottomSheet.toggle()
+                        }
+                        .buttonStyle(MaterialButtonStyle(type: .text))
+                    }
+                }
+            case nil:
+                Text("Loading...")
             }
         }
         .onChange(of: itemKey) { _ in

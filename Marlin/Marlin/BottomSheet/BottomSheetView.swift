@@ -98,31 +98,23 @@ struct MarlinBottomSheet <Content: View>: View {
     var pages: Int { itemList.bottomSheetItems?.count ?? 0 }
     let focusNotification: NSNotification.Name
         
-    let contentBuilder: (_ item: any DataSourceViewBuilder) -> Content
-    
+    let contentBuilder: (_ item: BottomSheetItem) -> Content
+
     init(
         itemList: BottomSheetItemList,
         focusNotification: NSNotification.Name,
-        @ViewBuilder contentBuilder: @escaping (_ item: any DataSourceViewBuilder) -> Content
+        @ViewBuilder contentBuilder: @escaping (_ item: BottomSheetItem) -> Content
     ) {
         self.itemList = itemList
         self.contentBuilder = contentBuilder
         self.focusNotification = focusNotification
     }
-    
     init(
         itemList: BottomSheetItemList,
         focusNotification: NSNotification.Name
     ) where Content == AnyView {
         self.init(itemList: itemList, focusNotification: focusNotification) { item in
-            AnyView(
-                // TODO: need a way to specify views for the models, 
-                // maybe just move the data source view builder stuff to the models
-                item.summary
-                    .setShowMoreDetails(true)
-                    .setShowSectionHeader(true)
-                    .setShowTitle(true)
-            )
+            AnyView(DataSourceSheetView(item: item, focusNotification: focusNotification))
         }
     }
 
@@ -215,63 +207,10 @@ struct MarlinBottomSheet <Content: View>: View {
                 
                 if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1,
                    let item = itemList.bottomSheetItems?[selectedItem] {
-                    if let dataSource = item.item as? (any DataSourceViewBuilder) {
-                        contentBuilder(dataSource)
-                            .transition(.opacity)
-                    } else if let itemKey = item.itemKey, let dataSourceKey = item.dataSourceKey {
-                        switch dataSourceKey {
-                        case DataSources.asam.key:
-                            AsamSheetView(reference: itemKey, focusNotification: focusNotification)
-                                .transition(.opacity)
-                        case DataSources.modu.key:
-                            ModuSheetView(name: itemKey, focusNotification: focusNotification)
-                                .transition(.opacity)
-                        case DataSources.port.key:
-                            PortSheetView(portNumber: Int64(itemKey) ?? -1, focusNotification: focusNotification)
-                                .transition(.opacity)
-                        case DataSources.light.key:
-                            let split = itemKey.split(separator: "--")
-                            if split.count == 3 {
-                                LightSheetView(
-                                    featureNumber: "\(split[0])",
-                                    volumeNumber: "\(split[1])",
-                                    focusNotification: focusNotification
-                                )
-                            }
-                        case DataSources.radioBeacon.key:
-                            let split = itemKey.split(separator: "--")
-                            if split.count == 2 {
-                                RadioBeaconSheetView(
-                                    featureNumber: Int(split[0]) ?? -1,
-                                    volumeNumber: "\(split[1])",
-                                    focusNotification: focusNotification
-                                )
-                            }
-                        case DataSources.dgps.key:
-                            let split = itemKey.split(separator: "--")
-                            if split.count == 2 {
-                                DGPSStationSheetView(
-                                    featureNumber: Int(split[0]) ?? -1,
-                                    volumeNumber: "\(split[1])",
-                                    focusNotification: focusNotification
-                                )
-                            }
-                        case DataSources.navWarning.key:
-                            let split = itemKey.split(separator: "--")
-                            if split.count == 3 {
-                                NavigationalWarningSheetView(
-                                    msgYear: Int(split[0]) ?? -1,
-                                    msgNumber: Int(split[1]) ?? -1,
-                                    navArea: "\(split[2])",
-                                    focusNotification: focusNotification
-                                )
-                            }
-                        default:
-                            EmptyView()
-                        }
-                    }
+                    contentBuilder(item)
+                        .transition(.opacity)
                 }
-                
+
                 Spacer()
             }
             .navigationBarHidden(true)
@@ -293,7 +232,8 @@ struct MarlinBottomSheet <Content: View>: View {
                         object: FocusMapOnItemNotification(
                             item: item,
                             zoom: bottomSheetItem.zoom,
-                            mapName: bottomSheetItem.mapName
+                            mapName: bottomSheetItem.mapName,
+                            definition: bottomSheetItem.item?.definition
                         )
                     )
                 }
@@ -308,7 +248,8 @@ struct MarlinBottomSheet <Content: View>: View {
                         object: FocusMapOnItemNotification(
                             item: item,
                             zoom: bottomSheetItem.zoom,
-                            mapName: bottomSheetItem.mapName
+                            mapName: bottomSheetItem.mapName,
+                            definition: bottomSheetItem.item?.definition
                         )
                     )
                     if let dataSource = item as? DataSource {

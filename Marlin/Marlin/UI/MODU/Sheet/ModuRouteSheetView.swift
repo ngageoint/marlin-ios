@@ -1,30 +1,38 @@
 //
-//  ModuSheetView.swift
+//  ModuRouteSheetView.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 1/23/24.
+//  Created by Daniel Barela on 3/1/24.
 //
 
 import Foundation
 import SwiftUI
 
-struct ModuSheetView: View {
+struct ModuRouteSheetView: View {
     @EnvironmentObject var moduRepository: ModuRepository
     var itemKey: String
     var focusNotification: NSNotification.Name
+    @ObservedObject var routeViewModel: RouteViewModel
+    @Binding var showBottomSheet: Bool
 
     @StateObject var viewModel: ModuViewModel = ModuViewModel()
 
     var body: some View {
-        Self._printChanges()
-
-        return VStack {
-            if let modu = viewModel.modu {
-                ModuSummaryView(modu: ModuListModel(moduModel: modu))
-                    .setShowMoreDetails(true)
-                    .setShowSectionHeader(true)
-                    .setShowTitle(true)
-
+        Group {
+            switch viewModel.modu {
+            case .some(let model):
+                VStack {
+                    Text(model.itemTitle)
+                    HStack {
+                        Button("Add To Route") {
+                            routeViewModel.addWaypoint(waypoint: model)
+                            showBottomSheet.toggle()
+                        }
+                        .buttonStyle(MaterialButtonStyle(type: .text))
+                    }
+                }
+            case nil:
+                Text("Loading...")
             }
         }
         .onChange(of: itemKey) { newItemKey in

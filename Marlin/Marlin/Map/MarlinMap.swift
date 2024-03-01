@@ -474,16 +474,13 @@ extension MapCoordinator {
                     setMapRegion(region: MKCoordinateRegion(center: adjustedCenter, span: span))
                 }
             }
+            if let definition = notification.definition {
+                let enlarged = EnlargedAnnotation(coordinate: dataSource.coordinate, definition: definition)
+                enlarged.markForEnlarging()
+                focusedAnnotation = enlarged
+                mapView?.addAnnotation(enlarged)
+            }
         }
-        
-        guard let mapItem = notification.item as? MapImage else {
-            return
-        }
-        
-        let enlarged = EnlargedAnnotation(mapImage: mapItem)
-        enlarged.markForEnlarging()
-        focusedAnnotation = enlarged
-        mapView?.addAnnotation(enlarged)
     }
     
     func mapTap(tapPoint: CGPoint, gesture: UITapGestureRecognizer, mapView: MKMapView?) {
@@ -665,8 +662,21 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
             let annotationView = mapView.dequeueReusableAnnotationView(
                 withIdentifier: EnlargedAnnotationView.ReuseID,
                 for: enlarged)
-            let mapImage = enlarged.mapImage
-            let mapImages = mapImage.mapImage(marker: true, zoomLevel: 36, tileBounds3857: nil, context: nil)
+             var mapImages: [UIImage] = []
+            if let circleImage = CircleImage(
+                color: enlarged.definition.color,
+                radius: 40 * UIScreen.main.scale,
+                fill: true
+            ) {
+                mapImages.append(circleImage)
+                if let image = enlarged.definition.image,
+                   let dataSourceImage = image.aspectResize(
+                    to: CGSize(width: circleImage.size.width / 1.5, height: circleImage.size.height / 1.5))
+                    .withRenderingMode(.alwaysTemplate)
+                    .maskWithColor(color: UIColor.white) {
+                    mapImages.append(dataSourceImage)
+                }
+            }
             var finalImage: UIImage? = mapImages.first
             if mapImages.count > 1 {
                 for mapImage in mapImages.suffix(from: 1) {
@@ -736,11 +746,11 @@ class EnlargedAnnotation: NSObject, MKAnnotation {
     }
     
     var coordinate: CLLocationCoordinate2D
-    var mapImage: MapImage
-    
-    init(mapImage: MapImage) {
-        coordinate = mapImage.coordinate
-        self.mapImage = mapImage
+    var definition: any DataSourceDefinition
+
+    init(coordinate: CLLocationCoordinate2D, definition: any DataSourceDefinition) {
+        self.coordinate = coordinate
+        self.definition = definition
     }
     
     func markForEnlarging() {

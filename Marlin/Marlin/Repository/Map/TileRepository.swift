@@ -33,7 +33,7 @@ extension DataSourceImage {
         return 512.0
     }
 
-    static func defaultCircleImage() -> [UIImage] {
+    static func defaultCircleImage(dataSource: any DataSourceDefinition) -> [UIImage] {
         var images: [UIImage] = []
         if let circleImage = CircleImage(color: dataSource.color, radius: 40 * UIScreen.main.scale, fill: true) {
             images.append(circleImage)
@@ -58,7 +58,7 @@ extension DataSourceImage {
     ) -> [UIImage] {
         // zoom level 36 is a temporary hack to draw a large image for a real map marker
         if zoomLevel == 36 {
-            return Self.defaultCircleImage()
+            return Self.defaultCircleImage(dataSource: Self.dataSource)
         }
 
         var images: [UIImage] = []

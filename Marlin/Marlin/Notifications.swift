@@ -45,6 +45,7 @@ struct FocusMapOnItemNotification {
     var item: (any Locatable)?
     var zoom: Bool = false
     var mapName: String?
+    var definition: (any DataSourceDefinition)?
 }
 
 struct MapAnnotationFocusedNotification {
