@@ -44,17 +44,3 @@ extension View where Self: DataSourceSummaryView {
         }
     }
 }
-
-struct BasicSummaryView: DataSourceSummaryView {
-    var showBookmarkNotes: Bool = false
-
-    var showMoreDetails: Bool = false
-
-    var showTitle: Bool = false
-
-    var showSectionHeader: Bool = false
-
-    var body: some View {
-        Text("Data Source")
-    }
-}

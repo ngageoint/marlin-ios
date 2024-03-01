@@ -24,6 +24,7 @@ struct NavigationalWarningSectionRow: View {
     var navAreaInformation: NavigationalAreaInformation
 //    var section: SectionedFetchResults<String, NavigationalWarning>.Element
     var mapName: String?
+    @Binding var path: NavigationPath
     
     var body: some View {
         NavigationLink(value: NavigationalWarningRoute.areaList(navArea: navAreaInformation.navArea.name)) {

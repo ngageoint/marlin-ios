@@ -11,13 +11,13 @@ import GeoJSON
 import Combine
 
 struct CreateRouteView: View {
-    @EnvironmentObject var router: MarlinRouter
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var locationManager: LocationManager
     
     let maxFeatureAreaSize: CGFloat = 300
+    @Binding var path: NavigationPath
     @State var routeURI: URL?
-
+    
     @State private var waypointsFrameSize: CGSize = .zero
     @State private var firstWaypointFrameSize: CGSize = .zero
     @State private var lastWaypointFrameSize: CGSize = .zero
@@ -53,7 +53,7 @@ struct CreateRouteView: View {
                 .overlay {
                     routeList()
                 }
-            RouteMapView(routeViewModel: routeViewModel)
+            RouteMapView(path: $path, routeViewModel: routeViewModel)
                 .edgesIgnoringSafeArea([.leading, .trailing])
         }
         .gesture(tapGesture)
@@ -62,7 +62,7 @@ struct CreateRouteView: View {
                 if routeViewModel.waypoints.count > 1 {
                     Button("Save") {
                         routeViewModel.createRoute(context: managedObjectContext)
-                        router.path.removeLast()
+                        path.removeLast()
                     }
                 }
             }

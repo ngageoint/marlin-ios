@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct BookmarkListView: View {
+    @Binding var path: NavigationPath
     @ObservedObject var focusedItem: ItemWrapper = ItemWrapper()
     var watchFocusedItem: Bool = false
     

@@ -7,12 +7,8 @@
 
 import Foundation
 import CoreData
-import Combine
-import UIKit
-import BackgroundTasks
 
 protocol AsamLocalDataSource {
-    func getNewestAsam() -> AsamModel?
     @discardableResult
     func getAsam(reference: String?) -> AsamModel?
     func getAsamsInBounds(
@@ -64,15 +60,12 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
     }
 
     func getAsam(reference: String?) -> AsamModel? {
-        var model: AsamModel?
-        context.performAndWait {
-            if let reference = reference {
-                if let asam = context.fetchFirst(Asam.self, key: "reference", value: reference) {
-                    model = AsamModel(asam: asam)
-                }
+        if let reference = reference {
+            if let asam = context.fetchFirst(Asam.self, key: "reference", value: reference) {
+                return AsamModel(asam: asam)
             }
         }
-        return model
+        return nil
     }
 
     func getAsamsInBounds(

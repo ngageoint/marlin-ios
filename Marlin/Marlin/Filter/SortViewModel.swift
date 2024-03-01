@@ -8,13 +8,12 @@
 import Foundation
 
 class SortViewModel: ObservableObject {
-    let definition: any DataSourceDefinition
-    let filterable: (any Filterable)?
+    let dataSource: any DataSource.Type
     var dataSourceProperties: [DataSourceProperty]
     
     @Published var sort: [DataSourceSortParameter] {
         didSet {
-            UserDefaults.standard.setSort(definition.key, sort: sort)
+            UserDefaults.standard.setSort(dataSource.definition.key, sort: sort)
         }
     }
     

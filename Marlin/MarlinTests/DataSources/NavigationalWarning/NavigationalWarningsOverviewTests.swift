@@ -62,15 +62,15 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
             @EnvironmentObject var locationManager: LocationManager
             @ObservedObject var passThrough: PassThrough
             @StateObject var focusedItem: ItemWrapper = ItemWrapper()
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
 
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    NavigationalWarningsOverview(focusedItem: focusedItem)
+                NavigationStack(path: $path) {
+                    NavigationalWarningsOverview(path: $path, focusedItem: focusedItem)
                         .environmentObject(locationManager)
                 }
                 .onAppear {
@@ -164,15 +164,15 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
             @EnvironmentObject var locationManager: LocationManager
             @ObservedObject var passThrough: PassThrough
             @StateObject var focusedItem: ItemWrapper = ItemWrapper()
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $router.path) {
-                    NavigationalWarningsOverview(focusedItem: focusedItem)
+                NavigationStack(path: $path) {
+                    NavigationalWarningsOverview(path: $path, focusedItem: focusedItem)
                         .environmentObject(locationManager)
                 }
                 .onAppear {
@@ -185,7 +185,7 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
                     GeneralLocation.shared.currentNavArea = newValue
                     GeneralLocation.shared.currentNavAreaName = newValue?.name
                 }
-                .environmentObject(router)
+                 
             }
         }
         let appState = AppState()

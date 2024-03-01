@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		7982FB9B536447055E423E94 /* libPods-Marlin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0F14076A8393C9747AD1FE /* libPods-Marlin.a */; };
+		D6353EA32B68376100444D24 /* SearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EA22B68376100444D24 /* SearchProvider.swift */; };
+		D6353EA52B683B9300444D24 /* NativeSearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EA42B683B9300444D24 /* NativeSearchProvider.swift */; };
+		D6353EAA2B6955E200444D24 /* SearchProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EA92B6955E200444D24 /* SearchProviderTests.swift */; };
+		D6353EAC2B695E1E00444D24 /* nominatimMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = D6353EAB2B695E1E00444D24 /* nominatimMockData.json */; };
+		D6353EAE2B695F4C00444D24 /* NominatimSearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EAD2B695F4C00444D24 /* NominatimSearchProvider.swift */; };
+		D6353EB02B71449C00444D24 /* SearchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EAF2B71449C00444D24 /* SearchType.swift */; };
 		D67E5C9A2A9E4AA5002FCE03 /* MKPolygonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D67E5C992A9E4AA5002FCE03 /* MKPolygonExtensions.swift */; };
 		D7A569C784B0F2D5720432C4 /* libPods-MarlinTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */; };
 		F7013EFA2B90E5F2007780FC /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7013EF92B90E5F2007780FC /* ActivityViewController.swift */; };
@@ -53,7 +59,7 @@
 		F714DD842B337449003D7996 /* WMSCapabilitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD832B337449003D7996 /* WMSCapabilitiesView.swift */; };
 		F714DD872B339395003D7996 /* FilterPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD862B339395003D7996 /* FilterPreferences.swift */; };
 		F714DD892B3393D4003D7996 /* SortPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD882B3393D4003D7996 /* SortPreferences.swift */; };
-		F714DD8B2B33941C003D7996 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD8A2B33941C003D7996 /* UserDefaults.swift */; };
+		F714DD8B2B33941C003D7996 /* AppFeaturePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD8A2B33941C003D7996 /* AppFeaturePreferences.swift */; };
 		F714DD8D2B33944D003D7996 /* MapPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD8C2B33944D003D7996 /* MapPreferences.swift */; };
 		F714DD8F2B3394BA003D7996 /* DataSourcePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F714DD8E2B3394BA003D7996 /* DataSourcePreferences.swift */; };
 		F715E2E72B7412B300752688 /* RadioBeaconInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F715E2E62B7412B200752688 /* RadioBeaconInitializer.swift */; };
@@ -303,8 +309,6 @@
 		F7391CB52AC49A440002ABDD /* RadioBeaconRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CB42AC49A440002ABDD /* RadioBeaconRepository.swift */; };
 		F7391CB72AC4C3E40002ABDD /* RadioBeaconViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7391CB62AC4C3E40002ABDD /* RadioBeaconViewModel.swift */; };
 		F73927962A439D2700DE1E79 /* GeoPackageExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */; };
-		F7397C732AFED08100E79852 /* AsamsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7397C722AFED08100E79852 /* AsamsViewModel.swift */; };
-		F7397C752B06CDA500E79852 /* AsamList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7397C742B06CDA500E79852 /* AsamList.swift */; };
 		F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC7F294D2E240085EDC5 /* LightRange.swift */; };
 		F73ABC82295102480085EDC5 /* DataSourceTileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */; };
 		F73ABC84295245BB0085EDC5 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73ABC83295245BB0085EDC5 /* OnboardingView.swift */; };
@@ -480,10 +484,6 @@
 		F7B84E202A72C83B00640C76 /* Bookmark+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B84E1F2A72C83B00640C76 /* Bookmark+CoreDataClass.swift */; };
 		F7B84E222A72DEB200640C76 /* BookmarkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B84E212A72DEB200640C76 /* BookmarkButton.swift */; };
 		F7B84E242A7309A600640C76 /* BookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B84E232A7309A600640C76 /* BookmarkViewModel.swift */; };
-		F7BAECA92AFAD49C00DE9BE7 /* AsamDataFetchOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BAECA82AFAD49C00DE9BE7 /* AsamDataFetchOperation.swift */; };
-		F7BAECAB2AFADFB900DE9BE7 /* AsamDataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BAECAA2AFADFB900DE9BE7 /* AsamDataLoadOperation.swift */; };
-		F7BAECAD2AFAE76800DE9BE7 /* AsamRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BAECAC2AFAE76800DE9BE7 /* AsamRepositoryTests.swift */; };
-		F7BAECB12AFC0F9F00DE9BE7 /* AsamInitialDataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BAECB02AFC0F9F00DE9BE7 /* AsamInitialDataLoadOperation.swift */; };
 		F7BDF76A2A0E8D160083B97F /* UITextViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF7692A0E8D160083B97F /* UITextViewContainer.swift */; };
 		F7BDF76C2A13BFC80083B97F /* NavigationalWarning+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF76B2A13BFC80083B97F /* NavigationalWarning+MapImage.swift */; };
 		F7BDF76E2A13D7790083B97F /* ViewExpandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF76D2A13D7790083B97F /* ViewExpandButton.swift */; };
@@ -515,8 +515,6 @@
 		F7CCDC7E2AF0555100BF41F9 /* AsamRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC7D2AF0555100BF41F9 /* AsamRepository.swift */; };
 		F7CCDC802AF0583E00BF41F9 /* RouteWaypointRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC7F2AF0583E00BF41F9 /* RouteWaypointRepository.swift */; };
 		F7CCDC822AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC812AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift */; };
-		F7CCDC862AF1482900BF41F9 /* AsamCoreDataDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC852AF1482900BF41F9 /* AsamCoreDataDataSourceTests.swift */; };
-		F7CCDC882AF2C22B00BF41F9 /* AsamRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCDC872AF2C22B00BF41F9 /* AsamRemoteDataSource.swift */; };
 		F7D2225028E4A27C00F527F2 /* FilterBottomSheetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */; };
 		F7D2225228E4F83000F527F2 /* SortButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2225128E4F83000F527F2 /* SortButton.swift */; };
 		F7D2225428E5F03500F527F2 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D2225328E5F03500F527F2 /* SortView.swift */; };
@@ -683,6 +681,12 @@
 		34DEDF107D4BA2A7D7541968 /* Pods-Marlin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Marlin.debug.xcconfig"; path = "Target Support Files/Pods-Marlin/Pods-Marlin.debug.xcconfig"; sourceTree = "<group>"; };
 		96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MarlinTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C95BD18A52FCC50ED2ED6E21 /* Pods-MarlinTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarlinTests.release.xcconfig"; path = "Target Support Files/Pods-MarlinTests/Pods-MarlinTests.release.xcconfig"; sourceTree = "<group>"; };
+		D6353EA22B68376100444D24 /* SearchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchProvider.swift; sourceTree = "<group>"; };
+		D6353EA42B683B9300444D24 /* NativeSearchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeSearchProvider.swift; sourceTree = "<group>"; };
+		D6353EA92B6955E200444D24 /* SearchProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchProviderTests.swift; sourceTree = "<group>"; };
+		D6353EAB2B695E1E00444D24 /* nominatimMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = nominatimMockData.json; sourceTree = "<group>"; };
+		D6353EAD2B695F4C00444D24 /* NominatimSearchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NominatimSearchProvider.swift; sourceTree = "<group>"; };
+		D6353EAF2B71449C00444D24 /* SearchType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchType.swift; sourceTree = "<group>"; };
 		D67E5C992A9E4AA5002FCE03 /* MKPolygonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKPolygonExtensions.swift; sourceTree = "<group>"; };
 		F32BF352638699CBFE1A8D52 /* Pods-Marlin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Marlin.release.xcconfig"; path = "Target Support Files/Pods-Marlin/Pods-Marlin.release.xcconfig"; sourceTree = "<group>"; };
 		F7013EF92B90E5F2007780FC /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
@@ -728,7 +732,7 @@
 		F714DD832B337449003D7996 /* WMSCapabilitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WMSCapabilitiesView.swift; sourceTree = "<group>"; };
 		F714DD862B339395003D7996 /* FilterPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPreferences.swift; sourceTree = "<group>"; };
 		F714DD882B3393D4003D7996 /* SortPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortPreferences.swift; sourceTree = "<group>"; };
-		F714DD8A2B33941C003D7996 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		F714DD8A2B33941C003D7996 /* AppFeaturePreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFeaturePreferences.swift; sourceTree = "<group>"; };
 		F714DD8C2B33944D003D7996 /* MapPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPreferences.swift; sourceTree = "<group>"; };
 		F714DD8E2B3394BA003D7996 /* DataSourcePreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourcePreferences.swift; sourceTree = "<group>"; };
 		F715E2E62B7412B200752688 /* RadioBeaconInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconInitializer.swift; sourceTree = "<group>"; };
@@ -979,8 +983,6 @@
 		F7391CB42AC49A440002ABDD /* RadioBeaconRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconRepository.swift; sourceTree = "<group>"; };
 		F7391CB62AC4C3E40002ABDD /* RadioBeaconViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconViewModel.swift; sourceTree = "<group>"; };
 		F73927952A439D2700DE1E79 /* GeoPackageExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExportView.swift; sourceTree = "<group>"; };
-		F7397C722AFED08100E79852 /* AsamsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamsViewModel.swift; sourceTree = "<group>"; };
-		F7397C742B06CDA500E79852 /* AsamList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamList.swift; sourceTree = "<group>"; };
 		F73ABC7F294D2E240085EDC5 /* LightRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightRange.swift; sourceTree = "<group>"; };
 		F73ABC81295102480085EDC5 /* DataSourceTileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceTileProvider.swift; sourceTree = "<group>"; };
 		F73ABC83295245BB0085EDC5 /* OnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -1112,8 +1114,6 @@
 		F76EE1002B926599001128EB /* CreateUserPlaceButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUserPlaceButton.swift; sourceTree = "<group>"; };
 		F76EE1022B926F59001128EB /* CreatePlaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePlaceView.swift; sourceTree = "<group>"; };
 		F7738AEA2B322B5A00157CA3 /* libKIF.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libKIF.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		F77671CA2B34D5930026DD50 /* CoreDataDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataDataSource.swift; sourceTree = "<group>"; };
-		F77671CC2B34D75A0026DD50 /* CountingDataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountingDataLoadOperation.swift; sourceTree = "<group>"; };
 		F7830BF92A8A94B8008376F7 /* Shared 4 Routes.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Shared 4 Routes.xcdatamodel"; sourceTree = "<group>"; };
 		F7830BFA2A8AB3FE008376F7 /* Route+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Route+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7830BFC2A8AB6E1008376F7 /* RouteList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteList.swift; sourceTree = "<group>"; };
@@ -1163,10 +1163,6 @@
 		F7B84E1F2A72C83B00640C76 /* Bookmark+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bookmark+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7B84E212A72DEB200640C76 /* BookmarkButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkButton.swift; sourceTree = "<group>"; };
 		F7B84E232A7309A600640C76 /* BookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewModel.swift; sourceTree = "<group>"; };
-		F7BAECA82AFAD49C00DE9BE7 /* AsamDataFetchOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDataFetchOperation.swift; sourceTree = "<group>"; };
-		F7BAECAA2AFADFB900DE9BE7 /* AsamDataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamDataLoadOperation.swift; sourceTree = "<group>"; };
-		F7BAECAC2AFAE76800DE9BE7 /* AsamRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRepositoryTests.swift; sourceTree = "<group>"; };
-		F7BAECB02AFC0F9F00DE9BE7 /* AsamInitialDataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamInitialDataLoadOperation.swift; sourceTree = "<group>"; };
 		F7BDF7692A0E8D160083B97F /* UITextViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextViewContainer.swift; sourceTree = "<group>"; };
 		F7BDF76B2A13BFC80083B97F /* NavigationalWarning+MapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationalWarning+MapImage.swift"; sourceTree = "<group>"; };
 		F7BDF76D2A13D7790083B97F /* ViewExpandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExpandButton.swift; sourceTree = "<group>"; };
@@ -1199,8 +1195,6 @@
 		F7CCDC7D2AF0555100BF41F9 /* AsamRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRepository.swift; sourceTree = "<group>"; };
 		F7CCDC7F2AF0583E00BF41F9 /* RouteWaypointRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteWaypointRepository.swift; sourceTree = "<group>"; };
 		F7CCDC812AF0586400BF41F9 /* RouteWaypointLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteWaypointLocalDataSource.swift; sourceTree = "<group>"; };
-		F7CCDC852AF1482900BF41F9 /* AsamCoreDataDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamCoreDataDataSourceTests.swift; sourceTree = "<group>"; };
-		F7CCDC872AF2C22B00BF41F9 /* AsamRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamRemoteDataSource.swift; sourceTree = "<group>"; };
 		F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterBottomSheetRow.swift; sourceTree = "<group>"; };
 		F7D2225128E4F83000F527F2 /* SortButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortButton.swift; sourceTree = "<group>"; };
 		F7D2225328E5F03500F527F2 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
@@ -1395,6 +1389,25 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		D6353EA12B68372A00444D24 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				D6353EA22B68376100444D24 /* SearchProvider.swift */,
+				D6353EA42B683B9300444D24 /* NativeSearchProvider.swift */,
+				D6353EAD2B695F4C00444D24 /* NominatimSearchProvider.swift */,
+				D6353EAF2B71449C00444D24 /* SearchType.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		D6353EA82B6955CE00444D24 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				D6353EA92B6955E200444D24 /* SearchProviderTests.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
 		F7066DAE2A4F7AE70058122E /* Router */ = {
 			isa = PBXGroup;
 			children = (
@@ -1446,7 +1459,7 @@
 				F7D671F0287484FE00758F1C /* MarlinUserDefaults.swift */,
 				F714DD862B339395003D7996 /* FilterPreferences.swift */,
 				F714DD882B3393D4003D7996 /* SortPreferences.swift */,
-				F714DD8A2B33941C003D7996 /* UserDefaults.swift */,
+				F714DD8A2B33941C003D7996 /* AppFeaturePreferences.swift */,
 				F714DD8C2B33944D003D7996 /* MapPreferences.swift */,
 				F714DD8E2B3394BA003D7996 /* DataSourcePreferences.swift */,
 			);
@@ -1560,6 +1573,7 @@
 		F71DF48B2858BF7B00686951 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				D6353EA12B68372A00444D24 /* Search */,
 				F75E32C229C4C5F4006F2394 /* GeoPackage */,
 				F76052C529AD37CC00F13260 /* Layer */,
 				F71DF49A2859022B00686951 /* Annotation */,
@@ -1839,7 +1853,6 @@
 		F727A68F284E605800BD728A /* MarlinTests */ = {
 			isa = PBXGroup;
 			children = (
-				F7CCDC832AF147FE00BF41F9 /* Repository */,
 				F7EFFECA2A82DEBE0097E5EF /* ComponentHelpers */,
 				F75324BC298197AF005C509F /* Onboarding */,
 				F75324B92980905B005C509F /* Extensions */,
@@ -2273,9 +2286,6 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
-				F7BAECB22AFC3E0400DE9BE7 /* Startup */,
-				F7BAECAE2AFC0F7D00DE9BE7 /* Data */,
-				F7249AE62AF41D7D00961E65 /* Network */,
 				F714DD852B33937C003D7996 /* Preferences */,
 				F7C5F1F12AEC4DA90091BC01 /* UI */,
 				F71F2B1E2ACF3CAB00DFB5BA /* Repository */,
@@ -2337,7 +2347,6 @@
 				F7A54CA82848149500E5F565 /* Marlin.xcdatamodeld */,
 				F7A54CAC2848149500E5F565 /* Persistence.swift */,
 				F71DF47F284E69DC00686951 /* NSManagedObjectContext+Extensions.swift */,
-				F77671CA2B34D5930026DD50 /* CoreDataDataSource.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -2485,6 +2494,7 @@
 				F72D8911297B232C00D022FB /* mockEpub.rtf */,
 				F72D8918297F0D7D00D022FB /* dfrsMockData.json */,
 				F7ABB5FF299AD5E900BAD868 /* fullEpubList.json */,
+				D6353EAB2B695E1E00444D24 /* nominatimMockData.json */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -2611,12 +2621,9 @@
 		F7C5F1F22AEC4DB40091BC01 /* ASAM */ = {
 			isa = PBXGroup;
 			children = (
-				F7517D432B16804600A9DC72 /* Sheet */,
 				F7648ED32AABC8D2007E9A54 /* AsamViewModel.swift */,
 				F7F59783285A1D7200F9B32E /* AsamSummaryView.swift */,
 				F7F59785285A206700F9B32E /* AsamDetailView.swift */,
-				F7397C722AFED08100E79852 /* AsamsViewModel.swift */,
-				F7397C742B06CDA500E79852 /* AsamList.swift */,
 			);
 			path = ASAM;
 			sourceTree = "<group>";
@@ -2897,6 +2904,7 @@
 		F7D8FA312936C06600E7D0A1 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				D6353EA82B6955CE00444D24 /* Search */,
 				F76052C829AD4B1600F13260 /* Layer */,
 				F75324C32988550F005C509F /* Mixins */,
 				F7D8FA322936C07100E7D0A1 /* Annotation */,
@@ -3423,6 +3431,7 @@
 				F72D8912297B232C00D022FB /* mockEpub.rtf in Resources */,
 				F7C23E1C2914269D0002A7DF /* asamMockData.json in Resources */,
 				F71DF47E284E68DE00686951 /* asams.json in Resources */,
+				D6353EAC2B695E1E00444D24 /* nominatimMockData.json in Resources */,
 				F72EAAD7291D5DB500AC6026 /* radioBeaconMockData.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3687,7 +3696,6 @@
 				F73ABC8E295250C70085EDC5 /* DataSourceSortTests.swift in Sources */,
 				F75324B629806329005C509F /* DFRSDetailViewTests.swift in Sources */,
 				F76052CA29AD4B2700F13260 /* MapLayerViewTests.swift in Sources */,
-				F7BAECAD2AFAE76800DE9BE7 /* AsamRepositoryTests.swift in Sources */,
 				F72EAABC291C138000AC6026 /* PortDataTests.swift in Sources */,
 				F75324C529885521005C509F /* SearchResultsMapTests.swift in Sources */,
 				F749E43929AEA39E00B2FF8B /* NewMapLayerViewTests.swift in Sources */,
@@ -3713,6 +3721,7 @@
 				F71DF482284E783600686951 /* TestHelper.swift in Sources */,
 				F72EAAC6291C334200AC6026 /* PublicationDataTests.swift in Sources */,
 				F7249AED2AFAB2DD00961E65 /* AsamRemoteDataSourceTests.swift in Sources */,
+				D6353EAA2B6955E200444D24 /* SearchProviderTests.swift in Sources */,
 				F72281DF296F644600218FC0 /* DataSourceRailTests.swift in Sources */,
 				F72478A92B86A496003D4118 /* NoticeToMarinersStaticRemoteDataSource.swift in Sources */,
 				F72478A12B7FA8EC003D4118 /* NoticeToMarinersStaticLocalDataSource.swift in Sources */,
@@ -3791,6 +3800,7 @@
 				F7BEE47E2A0443D200EC282D /* MKShapeExtensions.swift in Sources */,
 				F71DF4922858C09E00686951 /* MapMixin.swift in Sources */,
 				F7DEA1F42B6BEEA600EB801A /* NoticeToMarinersModel.swift in Sources */,
+				D6353EAE2B695F4C00444D24 /* NominatimSearchProvider.swift in Sources */,
 				F7364E342A1D4BD10098F243 /* MarlinMainMap.swift in Sources */,
 				F715E2F12B751A9A00752688 /* RadioBeaconSheetView.swift in Sources */,
 				F73ABC80294D2E240085EDC5 /* LightRange.swift in Sources */,
@@ -3813,10 +3823,10 @@
 				F70BCEA329D761E400AEF73D /* GeoPackageLayerEditView.swift in Sources */,
 				F7222FB22B6D733D00C3E4F1 /* LightRemoteDataSource.swift in Sources */,
 				F7D671E92871D4C700758F1C /* SideMenu.swift in Sources */,
-				F7517D3F2B16524F00A9DC72 /* AsamActions.swift in Sources */,
 				F7BDF76E2A13D7790083B97F /* ViewExpandButton.swift in Sources */,
 				F7CB01002B5F1F2200034B9C /* ModuInitializer.swift in Sources */,
 				F7D8FA772940EF7400E7D0A1 /* ChartCorrectionListViewModel.swift in Sources */,
+				D6353EA52B683B9300444D24 /* NativeSearchProvider.swift in Sources */,
 				F7066DB32A5CB2720058122E /* CommonDataSource.swift in Sources */,
 				F72478AD2B87B9CD003D4118 /* NoticesList.swift in Sources */,
 				F7FDF2B82AB8DA60009A5E8F /* LightViewModel.swift in Sources */,
@@ -3847,7 +3857,6 @@
 				F7D5C05328A2CAAB000C2C29 /* BottomSheetItem.swift in Sources */,
 				F767DB772B8FD793002C12C7 /* LightDefinition.swift in Sources */,
 				F7D8FA162922BA3B00E7D0A1 /* NoticeToMariners+DataSourceViewBuilder.swift in Sources */,
-				F7CCDC882AF2C22B00BF41F9 /* AsamRemoteDataSource.swift in Sources */,
 				F7FDF2B22AB4D5EA009A5E8F /* ModuModel.swift in Sources */,
 				F7FDF2AC2AB49C95009A5E8F /* AsamLocalDataSource.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
@@ -3859,7 +3868,7 @@
 				F71FC0CD2A3B86EB00911BAC /* ShareButton.swift in Sources */,
 				F7F59790285BACC500F9B32E /* CLLocationCoordinate2DExtensions.swift in Sources */,
 				F7AFF93F2AD462ED00555960 /* RoutesViewModel.swift in Sources */,
-				F714DD8B2B33941C003D7996 /* UserDefaults.swift in Sources */,
+				F714DD8B2B33941C003D7996 /* AppFeaturePreferences.swift in Sources */,
 				F7FFB33D28DA061D00C31AA3 /* FilterButton.swift in Sources */,
 				F7FDF2B02AB4D53D009A5E8F /* ModuRepository.swift in Sources */,
 				F76EE0E82B922806001128EB /* AsamRouteSheetView.swift in Sources */,
@@ -3876,6 +3885,7 @@
 				F76EE0EA2B92306B001128EB /* DataSourceSheetView.swift in Sources */,
 				F71FC0D92A3BBBD000911BAC /* DataSourceGridSquare.swift in Sources */,
 				F7FFB30028D6376100C31AA3 /* NavigationalWarning+Decodable.swift in Sources */,
+				F7FFB30628D63A7200C31AA3 /* Asam+DataSourceViewBuilder.swift in Sources */,
 				F7B84E222A72DEB200640C76 /* BookmarkButton.swift in Sources */,
 				F7D671F1287484FE00758F1C /* MarlinUserDefaults.swift in Sources */,
 				F767DB562B8E5155002C12C7 /* PublicationsNestedFolder.swift in Sources */,
@@ -4107,7 +4117,6 @@
 				F7F7CFC329BA56C400A14350 /* StringExtensions.swift in Sources */,
 				F7C23E102909AC430002A7DF /* PublicationActionBar.swift in Sources */,
 				F707BA8D287C89ED006A94C4 /* LightMap.swift in Sources */,
-				F7BAECA92AFAD49C00DE9BE7 /* AsamDataFetchOperation.swift in Sources */,
 				F76052CC29AE6F0700F13260 /* MapLayerView.swift in Sources */,
 				F7391CB12AC336CD0002ABDD /* DGPSStationViewModel.swift in Sources */,
 				F7DEA1D92B6AEB3400EB801A /* RadioBeaconDataLoadOperation.swift in Sources */,
@@ -4144,6 +4153,7 @@
 				F7D8FA4D293A95D000E7D0A1 /* LatitudeLongitudeFilter.swift in Sources */,
 				F7D671DE286F877C00758F1C /* MaterialButtonStyle.swift in Sources */,
 				F7222FA32B6D4F7800C3E4F1 /* NoticeToMarinersInitialDataLoadOperation.swift in Sources */,
+				D6353EA32B68376100444D24 /* SearchProvider.swift in Sources */,
 				F7FFB34528DE18B900C31AA3 /* Badge.swift in Sources */,
 				F76EE0FC2B9245AF001128EB /* LightCoreDataDataSource.swift in Sources */,
 				F76EE0F12B92339C001128EB /* LightRouteSheetView.swift in Sources */,
@@ -4174,6 +4184,7 @@
 				F7830C0D2A96623C008376F7 /* DataSourceCircleImage.swift in Sources */,
 				F71DF48A2858BF0700686951 /* MarlinMap.swift in Sources */,
 				F7EFFEC52A7C113A0097E5EF /* DataSourceIcon.swift in Sources */,
+				D6353EB02B71449C00444D24 /* SearchType.swift in Sources */,
 				F7D8FA4F293A960E00E7D0A1 /* StringFilter.swift in Sources */,
 				F7C23E0A29084F280002A7DF /* PublicationSummaryView.swift in Sources */,
 				F72478AB2B86B5C4003D4118 /* NoticesToMarinersViewModel.swift in Sources */,

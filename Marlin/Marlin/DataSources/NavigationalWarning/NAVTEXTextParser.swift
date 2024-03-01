@@ -18,8 +18,8 @@ struct LocationWithType: CustomStringConvertible {
 
     var description: String {
         return """
-        \(locationDescription ?? "")\n\tDistance:\(distanceFromLocation ?? "")\n\
-        \t\(locationType ?? "")\n\t\t [\(location.joined(separator: "; "))]\n
+        \(locationDescription ?? "")\n\tDistance:\(distanceFromLocation ?? "")\n\t\
+        \(locationType ?? "")\n\t\t [\(location.joined(separator: "; "))]\n
         """
     }
     

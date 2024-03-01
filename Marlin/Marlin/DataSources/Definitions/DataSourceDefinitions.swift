@@ -10,46 +10,48 @@ import Foundation
 enum DataSourceDefinitions: String, Identifiable, CaseIterable {
     var id: String { rawValue }
 
-    case asam
-    case bookmark
-    case common
-    case chartCorrection
-    case differentialGPSStation
-    case epub
-    case geoPackage
-    case light
-    case modu
-    case navWarning
-    case noticeToMariners
-    case port
-    case radioBeacon
     case route
+    case asam
+    case modu
+    case common
+    case differentialGPSStation
+    case noticeToMariners
+    case dfrs
+    case dgps
+    case epub
+    case port
+    case navWarning
+    case light
+    case radioBeacon
+    case bookmark
+    case chartCorrection
+    case geoPackage
 
     static func from(_ definition: (any DataSourceDefinition)? = nil) -> DataSourceDefinitions? {
         switch definition {
-        case is DataSources.RouteDefinition:
+        case is RouteDefinition:
             return DataSourceDefinitions.route
-        case is DataSources.AsamDefinition:
+        case is AsamDefinition:
             return DataSourceDefinitions.asam
-        case is DataSources.ModuDefinition:
+        case is ModuDefinition:
             return DataSourceDefinitions.modu
-        case is DataSources.CommonDefinition:
+        case is CommonDefinition:
             return DataSourceDefinitions.common
-        case is DataSources.NoticeToMarinersDefinition:
+        case is NoticeToMarinersDefinition:
             return DataSourceDefinitions.noticeToMariners
         case is DataSources.DGPSStationDefinition:
             return DataSourceDefinitions.differentialGPSStation
         case is DataSources.PublicationDefinition:
             return DataSourceDefinitions.epub
-        case is DataSources.PortDefinition:
+        case is PortDefinition:
             return DataSourceDefinitions.port
-        case is DataSources.NavigationalWarningDefinition:
+        case is NavigationalWarningDefinition:
             return DataSourceDefinitions.navWarning
-        case is DataSources.LightDefinition:
+        case is LightDefinition:
             return DataSourceDefinitions.light
-        case is DataSources.RadioBeaconDefinition:
+        case is RadioBeaconDefinition:
             return DataSourceDefinitions.radioBeacon
-        case is DataSources.ChartCorrectionDefinition:
+        case is ChartCorrectionDefinition:
             return DataSourceDefinitions.chartCorrection
 
         default:
@@ -60,33 +62,33 @@ enum DataSourceDefinitions: String, Identifiable, CaseIterable {
     var definition: any DataSourceDefinition {
         switch self {
         case .route:
-            return DataSources.route
+            return RouteDefinition()
         case .asam:
-            return DataSources.asam
+            return AsamDefinition()
         case .modu:
-            return DataSources.modu
+            return ModuDefinition()
         case .common:
-            return DataSources.common
+            return CommonDefinition()
         case .noticeToMariners:
             return DataSources.noticeToMariners
         case .differentialGPSStation:
             return DataSources.dgps
         case .epub:
-            return DataSources.epub
+            return ElectronicPublicationDefinition()
         case .port:
-            return DataSources.port
+            return PortDefinition()
         case .navWarning:
-            return DataSources.navWarning
+            return NavigationalWarningDefinition()
         case .light:
-            return DataSources.light
+            return LightDefinition()
         case .radioBeacon:
-            return DataSources.radioBeacon
+            return RadioBeaconDefinition()
         case .bookmark:
-            return DataSources.bookmark
+            return BookmarkDefinition()
         case .chartCorrection:
-            return DataSources.chartCorrection
+            return ChartCorrectionDefinition()
         case .geoPackage:
-            return DataSources.geoPackage
+            return GeoPackageDefinition()
         }
     }
 
@@ -127,29 +129,29 @@ enum DataSourceDefinitions: String, Identifiable, CaseIterable {
 
     static func filterableFromDefintion(_ definition: any DataSourceDefinition) -> Filterable? {
         switch definition {
-        case is DataSources.RouteDefinition:
+        case is RouteDefinition:
             return DataSourceDefinitions.route.filterable
-        case is DataSources.AsamDefinition:
+        case is AsamDefinition:
             return DataSourceDefinitions.asam.filterable
-        case is DataSources.ModuDefinition:
+        case is ModuDefinition:
             return DataSourceDefinitions.modu.filterable
-        case is DataSources.CommonDefinition:
+        case is CommonDefinition:
             return DataSourceDefinitions.common.filterable
-        case is DataSources.NoticeToMarinersDefinition:
+        case is NoticeToMarinersDefinition:
             return DataSourceDefinitions.noticeToMariners.filterable
         case is DataSources.DGPSStationDefinition:
             return DataSourceDefinitions.differentialGPSStation.filterable
         case is DataSources.PublicationDefinition:
             return DataSourceDefinitions.epub.filterable
-        case is DataSources.PortDefinition:
+        case is PortDefinition:
             return DataSourceDefinitions.port.filterable
-        case is DataSources.NavigationalWarningDefinition:
+        case is NavigationalWarningDefinition:
             return DataSourceDefinitions.navWarning.filterable
-        case is DataSources.LightDefinition:
+        case is LightDefinition:
             return DataSourceDefinitions.light.filterable
-        case is DataSources.RadioBeaconDefinition:
+        case is RadioBeaconDefinition:
             return DataSourceDefinitions.radioBeacon.filterable
-        case is DataSources.ChartCorrectionDefinition:
+        case is ChartCorrectionDefinition:
             return DataSourceDefinitions.chartCorrection.filterable
 
         default:

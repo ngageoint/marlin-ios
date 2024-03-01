@@ -21,7 +21,9 @@ struct MarlinMainMap: View {
 
     @StateObject var mixins: MainMapMixins = MainMapMixins()
     @StateObject var mapState: MapState = MapState()
-        
+    
+    @Binding var path: NavigationPath
+    
     @EnvironmentObject var dataSourceList: DataSourceList
     
     var showSettings: Bool = true
@@ -58,7 +60,12 @@ struct MarlinMainMap: View {
         HStack(alignment: .top, spacing: 8) {
             // top left button stack
             VStack(alignment: .leading, spacing: 8) {
-                SearchView(mapState: mapState)
+                switch mapState.searchType {
+                case .native:
+                    SearchView<NativeSearchProvider>(mapState: mapState)
+                case .nominatim:
+                    SearchView<NominatimSearchProvider>(mapState: mapState)
+                }
             }
             .padding(.leading, 8)
             .padding(.top, 16)

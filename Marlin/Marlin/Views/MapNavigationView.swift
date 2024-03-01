@@ -25,12 +25,12 @@ struct MapNavigationView: View {
 
     var body: some View {
         Self._printChanges()
-        return NavigationStack(path: $router.path) {
+        return NavigationStack(path: $path) {
             VStack(spacing: 0) {
                 DataLoadedNotificationBanner()
                 CurrentLocation()
                 ZStack(alignment: .topLeading) {
-                    MarlinMainMap()
+                    MarlinMainMap(path: $path)
                         .navigationTitle("Marlin")
                         .navigationBarTitleDisplayMode(.inline)
                         .navigationBarBackButtonHidden(true)
@@ -46,7 +46,7 @@ struct MapNavigationView: View {
                 }
             }
             .navigationDestination(for: DataSourceItem.self) { item in
-                DataSourceListView(dataSource: item, focusedItem: itemWrapper)
+                DataSourceListView(dataSource: item, focusedItem: itemWrapper, path: $path)
             }
             .marlinRoutes()
 //            .onReceive(viewDataSourcePub) { output in
@@ -61,9 +61,9 @@ struct MapNavigationView: View {
             .onReceive(switchTabPub) { output in
                 if let output = output as? String {
                     if output == "settings" {
-                        router.path.append(MarlinRoute.about)
+                        path.append(MarlinRoute.about)
                     } else if output == "submitReport" {
-                        router.path.append(MarlinRoute.submitReport)
+                        path.append(MarlinRoute.submitReport)
                     } else {
                         let tab = dataSourceList.tabs.contains(where: { item in
                             item.key == output
@@ -72,7 +72,7 @@ struct MapNavigationView: View {
                             item.key == output
                         }) {
                             print("append \(dataSourceItem) to path")
-                            router.path.append(dataSourceItem)
+                            path.append(dataSourceItem)
                         }
                     }
                 }

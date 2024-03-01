@@ -19,13 +19,13 @@ final class MapSettingsTests: XCTestCase {
         UserDefaults.standard.actualRangeSectorLights = false
 
         struct Container: View {
-            @State var router: MarlinRouter = MarlinRouter()
+            @State var path: NavigationPath = NavigationPath()
             var body: some View {
-                NavigationStack(path: $router.path) {
+                NavigationStack(path: $path) {
                     MapSettings()
-                        .marlinRoutes()
+                        .marlinRoutes(path: $path)
                 }
-                .environmentObject(router)
+                 
             }
         }
 
@@ -130,5 +130,26 @@ final class MapSettingsTests: XCTestCase {
         XCTAssertEqual(true, UserDefaults.standard.bool(forKey: "showGARS"))
         tester().tapView(withAccessibilityLabel: "Toggle GARS Grid")
         XCTAssertEqual(false, UserDefaults.standard.bool(forKey: "showGARS"))
+    }
+    
+    func testSearchType() {
+        let view = MapSettings()
+        let nav = NavigationView {
+            view
+        }
+        
+        let controller = UIHostingController(rootView: nav)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        
+        XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchType"), SearchType.native.rawValue)
+        
+        tester().waitForView(withAccessibilityLabel: "Nominatim Search")
+        tester().tapView(withAccessibilityLabel: "Nominatim Search")
+        XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchType"), SearchType.nominatim.rawValue)
+        
+        tester().waitForView(withAccessibilityLabel: "Apple Maps Search")
+        tester().tapView(withAccessibilityLabel: "Apple Maps Search")
+        XCTAssertEqual(UserDefaults.standard.integer(forKey: "searchType"), SearchType.native.rawValue)
     }
 }

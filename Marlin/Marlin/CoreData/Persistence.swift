@@ -245,6 +245,7 @@ class CoreDataPersistentStore: PersistentStore {
         do {
             let currentStore = _container?.persistentStoreCoordinator.persistentStores.last!
             if let currentStoreURL = currentStore?.url {
+                print("Current store url \(currentStoreURL)")
                 try _container?.persistentStoreCoordinator.destroyPersistentStore(at: currentStoreURL, type: .sqlite)
 
             }
@@ -266,6 +267,7 @@ class CoreDataPersistentStore: PersistentStore {
         print("Peristent store URL \(String(describing: description.url))")
         if inMemory {
             description.url = URL(fileURLWithPath: "/dev/null")
+            print("in memory")
         }
 
         // Enable persistent store remote change notifications
@@ -297,7 +299,8 @@ class CoreDataPersistentStore: PersistentStore {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
             self.isLoaded = true
-
+            print("Persistent store was loaded sending notification")
+            
             NotificationCenter.default.post(name: .PersistentStoreLoaded, object: nil)
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
@@ -343,6 +346,7 @@ class CoreDataPersistentStore: PersistentStore {
         let lastLoadDate = UserDefaults.standard.lastLoadDate
 
         if let forceReloadDate = forceReloadDate, lastLoadDate < forceReloadDate, !inMemory {
+            NSLog("Delete and reload")
             if !inMemory {
                 do {
                     let storeURL: URL = NSPersistentContainer
@@ -470,6 +474,7 @@ extension CoreDataPersistentStore {
             self.lastToken = newToken
             self.storeHistoryToken(newToken)
         }
+        self.logger.info("Received \(history.count) persistent history transactions.")
         // Update view context with objectIDs from history change request.
         /// - Tag: mergeChanges
         let viewContext = container.viewContext
@@ -478,7 +483,6 @@ extension CoreDataPersistentStore {
             var insertCounts: [String?: Int] = [:]
             var deleteCounts: [String?: Int] = [:]
             for transaction in history {
-                NSLog("Transaction author \(transaction.author ?? "No author")")
                 let notif = transaction.objectIDNotification()
                 let inserts: Set<NSManagedObjectID> =
                 notif.userInfo?["inserted_objectIDs"] as? Set<NSManagedObjectID> ?? Set<NSManagedObjectID>()
@@ -499,8 +503,12 @@ extension CoreDataPersistentStore {
                     deleteCounts[entityKey] = (deleteCounts[entityKey] ?? 0) + 1
                 }
                 viewContext.mergeChanges(fromContextDidSave: transaction.objectIDNotification())
+                self.lastToken = transaction.token
             }
             
+            if let newToken = history.last?.token {
+                self.storeHistoryToken(newToken)
+            }
             var dataSourceUpdatedNotifications: [DataSourceUpdatedNotification] = []
             for dataSource in DataSourceDefinitions.allCases {
                 let inserts = insertCounts[dataSource.definition.key] ?? 0

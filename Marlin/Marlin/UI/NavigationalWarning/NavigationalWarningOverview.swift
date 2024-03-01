@@ -9,13 +9,13 @@ import SwiftUI
 import MapKit
 
 struct NavigationalWarningsOverview {
-    @EnvironmentObject var router: MarlinRouter
     @ObservedObject var generalLocation: GeneralLocation = GeneralLocation.shared
     
     let MAP_NAME = "Navigational Warning List View Map"
     @State var expandMap: Bool = false
     @State var selection: String?
-
+    @Binding var path: NavigationPath
+    
     @ObservedObject var focusedItem: ItemWrapper
     var watchFocusedItem: Bool = false
     
@@ -37,7 +37,7 @@ extension NavigationalWarningsOverview: View {
                 )
                 .edgesIgnoringSafeArea([.leading, .trailing])
                 
-                NavigationalWarningAreasView(mapName: MAP_NAME)
+                NavigationalWarningAreasView(mapName: MAP_NAME, path: $path)
                     .currentNavArea(generalLocation.currentNavArea?.name)
             }
         }

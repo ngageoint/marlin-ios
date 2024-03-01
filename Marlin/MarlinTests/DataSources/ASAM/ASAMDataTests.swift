@@ -105,7 +105,7 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
-        let loadedNotification = expectation(forNotification: .DataSourceLoaded,
+        expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
             if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertFalse(loading)
@@ -115,13 +115,13 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
-        let didSaveNotification = expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
+        expectation(forNotification: .NSManagedObjectContextDidSave, object: nil) { notification in
             let count = try? self.persistentStore.countOfObjects(Asam.self)
             XCTAssertEqual(count, 2)
             return true
         }
         
-        let batchUpdateCompleteNotification = expectation(forNotification: .BatchUpdateComplete,
+        expectation(forNotification: .BatchUpdateComplete,
                     object: nil) { notification in
             guard let updatedNotification = notification.object as? BatchUpdateComplete else {
                 XCTFail("Incorrect notification")
@@ -138,8 +138,7 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
-        let bundle = MockBundle()
-        bundle.mockPath = "asamMockData.json"
+        MSI.shared.loadInitialData(type: Asam.decodableRoot, dataType: Asam.self)
         
         let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(), remoteDataSource: AsamRemoteDataSource())
 
@@ -193,7 +192,7 @@ final class ASAMDataTests: XCTestCase {
             return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
         }
         
-        let loadingNotification2 = expectation(forNotification: .DataSourceLoading,
+        expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
             if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertTrue(loading)
@@ -203,7 +202,7 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
-        let loadedNotification2 = expectation(forNotification: .DataSourceLoaded,
+        expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
             if let loading = MSI.shared.appState.loadingDataSource[DataSources.asam.key] {
                 XCTAssertFalse(loading)
@@ -213,7 +212,7 @@ final class ASAMDataTests: XCTestCase {
             return true
         }
         
-        let batchUpdateCompleteNotification2 = expectation(forNotification: .BatchUpdateComplete,
+        expectation(forNotification: .BatchUpdateComplete,
                     object: nil) { notification in
             guard let updatedNotification = notification.object as? BatchUpdateComplete else {
                 XCTFail("Incorrect notification")
@@ -232,7 +231,8 @@ final class ASAMDataTests: XCTestCase {
         
         await repository.fetchAsams()
         
-        await fulfillment(of: [loadingNotification2, loadedNotification2, batchUpdateCompleteNotification2], timeout: 10)
+        MSI.shared.loadData(type: Asam.decodableRoot, dataType: Asam.self)
+        wait(for: [e5], timeout: 10)
 
         await self.persistentStore.viewContext.perform {
             let count = try? self.persistentStore.countOfObjects(Asam.self)
@@ -303,9 +303,6 @@ final class ASAMDataTests: XCTestCase {
             XCTAssertEqual(count, 1)
             return true
         }
-        
-        let bundle = MockBundle()
-        bundle.tempFileContents = jsonObject
 
         let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(), bundle: bundle)
         operation.start()
@@ -463,7 +460,7 @@ final class ASAMDataTests: XCTestCase {
     }
     
     func testDescription() {
-        var newItem = AsamModel()
+        let newItem = Asam(context: persistentStore.viewContext)
         newItem.asamDescription = "description"
         newItem.longitude = 1.0
         newItem.latitude = 1.0
@@ -517,5 +514,41 @@ final class ASAMDataTests: XCTestCase {
             XCTAssertGreaterThan(images[0].size.width, imageSize.width)
             imageSize = images[0].size
         }
+    }
+    
+    func testSummaryView() {
+        let newItem = Asam(context: persistentStore.viewContext)
+        newItem.asamDescription = "description"
+        newItem.longitude = 1.0
+        newItem.latitude = 1.0
+        newItem.date = Date()
+        newItem.navArea = "XI"
+        newItem.reference = "2022-100"
+        newItem.subreg = "71"
+        newItem.position = "1°00'00\"N \n1°00'00\"E"
+        newItem.hostility = "Boarding"
+        newItem.victim = "Boat"
+        
+        let summary = newItem.summary
+            .environment(\.managedObjectContext, persistentStore.viewContext)
+        XCTAssertNotNil(summary)
+    }
+    
+    func testDetailView() {
+        let newItem = Asam(context: persistentStore.viewContext)
+        newItem.asamDescription = "description"
+        newItem.longitude = 1.0
+        newItem.latitude = 1.0
+        newItem.date = Date()
+        newItem.navArea = "XI"
+        newItem.reference = "2022-100"
+        newItem.subreg = "71"
+        newItem.position = "1°00'00\"N \n1°00'00\"E"
+        newItem.hostility = "Boarding"
+        newItem.victim = "Boat"
+        
+        let detail = newItem.detailView
+            .environment(\.managedObjectContext, persistentStore.viewContext)
+        XCTAssertNotNil(detail)
     }
 }

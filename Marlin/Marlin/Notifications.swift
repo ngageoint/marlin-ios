@@ -104,18 +104,5 @@ struct BatchUpdateComplete {
 
 struct ViewDataSource {
     var mapName: String?
-    @available(*, deprecated)
     var dataSource: (any DataSource)?
-    var definition: (any DataSourceDefinition)?
-    var itemKey: String?
-    
-    @available(*, deprecated)
-    init(mapName: String? = nil, dataSource: (any DataSource)?) {
-        self.dataSource = dataSource
-    }
-    
-    init(mapName: String? = nil, definition: (any DataSourceDefinition)?, itemKey: String?) {
-        self.definition = definition
-        self.itemKey = itemKey
-    }
 }

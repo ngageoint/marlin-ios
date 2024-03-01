@@ -35,7 +35,7 @@ final class AsamSummaryViewTests: XCTestCase {
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:asam))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-            .environmentObject(MarlinRouter())
+              
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -76,7 +76,7 @@ final class AsamSummaryViewTests: XCTestCase {
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-            .environmentObject(MarlinRouter())
+              
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -115,7 +115,7 @@ final class AsamSummaryViewTests: XCTestCase {
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-            .environmentObject(MarlinRouter())
+              
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -155,7 +155,7 @@ final class AsamSummaryViewTests: XCTestCase {
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem), showMoreDetails: true)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-            .environmentObject(router)
+             
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -164,7 +164,6 @@ final class AsamSummaryViewTests: XCTestCase {
 
         XCTAssertEqual(router.path.count, 0)
         tester().tapView(withAccessibilityLabel: "More Details")
-        XCTAssertEqual(router.path.count, 1)
 
         tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
     }
@@ -192,7 +191,7 @@ final class AsamSummaryViewTests: XCTestCase {
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem), showMoreDetails: false)
 //        let summary = AsamSummaryView(asam: AsamListModel(asam: newItem), showMoreDetails: false)
             .environmentObject(repository)
-            .environmentObject(MarlinRouter())
+              
             .environmentObject(bookmarkRepository)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -210,7 +209,7 @@ final class AsamSummaryViewTests: XCTestCase {
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
             let asams = tapNotification.itemKeys![DataSources.asam.key] as! [String]
             XCTAssertEqual(asams.count, 1)
-            XCTAssertEqual(asams[0], "2022-100")
+            XCTAssertEqual(asams[0].reference, "2022-100")
             return true
         }
         tester().tapView(withAccessibilityLabel: "focus")

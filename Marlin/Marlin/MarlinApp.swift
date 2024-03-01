@@ -282,7 +282,6 @@ struct MarlinApp: App {
                 .environmentObject(differentialGPSStationsTileRepository)
                 .environmentObject(navigationalWarningsMapFeatureRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
-                .environmentObject(router)
                 .background(Color.surfaceColor)
         }
     }

@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 import Combine
 
-struct SearchView<T: MKLocalSearch>: View {
+struct SearchView<T: SearchProvider>: View {
     @AppStorage("coordinateDisplay") var coordinateDisplay: CoordinateDisplayType = .latitudeLongitude
 
     @State var search: String = ""
@@ -43,6 +43,7 @@ struct SearchView<T: MKLocalSearch>: View {
                         .submitLabel(SubmitLabel.done)
                         .onSubmit {
                             searchFocused.toggle()
+                            searchPublisher.send(search)
                         }
                         .frame(maxWidth: searchExpanded ? .infinity : 0)
                         .onChange(of: search) { search in
@@ -160,32 +161,10 @@ struct SearchView<T: MKLocalSearch>: View {
     }
     
     func performSearch(searchText: String) {
-        var realSearch = searchText
-        // check if they maybe entered coordinates
-        if let location = CLLocationCoordinate2D(coordinateString: searchText) {
-            NSLog("This is a location")
-            // just send the location to the search
-            realSearch = "\(location.latitude), \(location.longitude)"
-        }
-        
-        let searchRequest = T.Request()
-        searchRequest.naturalLanguageQuery = realSearch
-        
-        // Set the region to an associated map view's region.
-        if let region = mapState.center {
-            searchRequest.region = region
-        }
-        
-        let search = T.init(request: searchRequest)
-        search.start { (response, _) in
-            guard let response = response else {
-                mapState.searchResults = []
-                // Handle the error.
-                return
+        T.performSearch(searchText: searchText, region: mapState.center) { result in
+            DispatchQueue.main.async {
+                mapState.searchResults = result
             }
-            
-            mapState.searchResults = response.mapItems
-            Metrics.shared.search(query: realSearch, resultCount: response.mapItems.count)
         }
     }
 }

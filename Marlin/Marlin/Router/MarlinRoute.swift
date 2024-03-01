@@ -9,10 +9,6 @@ import Foundation
 import SwiftUI
 import CoreData
 
-class MarlinRouter: ObservableObject {
-    @Published var path: NavigationPath = NavigationPath()
-}
-
 enum MarlinRoute: Hashable {
     case exportGeoPackage(useMapRegion: Bool)
     case exportGeoPackageDataSource(dataSource: DataSourceDefinitions?, filters: [DataSourceFilterParameter]? = nil)
@@ -88,8 +84,8 @@ enum DataSourceRoute: Hashable {
 }
 
 extension View {
-    func marlinRoutes() -> some View {
-        modifier(MarlinRouteModifier())
+    func marlinRoutes(path: Binding<NavigationPath>) -> some View {
+        modifier(MarlinRouteModifier(path: path))
     }
     func asamRoutes() -> some View {
         modifier(AsamRouteModifier())
@@ -340,6 +336,7 @@ struct UserPlaceRouteModifier: ViewModifier {
 }
 
 struct MarlinRouteModifier: ViewModifier {
+    @Binding var path: NavigationPath
     @EnvironmentObject var dataSourceList: DataSourceList
     
     func createExportDataSources() -> [DataSourceDefinitions] {
@@ -393,7 +390,7 @@ struct MarlinRouteModifier: ViewModifier {
                 case .acknowledgements:
                     AcknowledgementsView()
                 case .createRoute:
-                    CreateRouteView()
+                    CreateRouteView(path: $path)
                 case .editRoute(let routeURI):
                     CreateRouteView(routeURI: routeURI)
                 }

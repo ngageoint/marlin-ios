@@ -26,8 +26,8 @@ struct DataSourceListView: View {
     var dataSource: DataSourceItem
     @ObservedObject var focusedItem: ItemWrapper
     var watchFocusedItem: Bool = false
-    @EnvironmentObject var router: MarlinRouter
-
+    @Binding var path: NavigationPath
+    
     var body: some View {
         if dataSource.key == DataSources.asam.key {
             AsamList()
@@ -37,6 +37,7 @@ struct DataSourceListView: View {
             LightList()
         } else if dataSource.key == DataSources.navWarning.key {
             NavigationalWarningsOverview(
+                path: $path,
                 focusedItem: focusedItem,
                 watchFocusedItem: watchFocusedItem
             )
@@ -52,11 +53,12 @@ struct DataSourceListView: View {
             NoticeToMarinersView()
         } else if dataSource.key == Bookmark.key {
             BookmarkListView(
-                focusedItem: focusedItem,
+                path: $path,
+                focusedItem: focusedItem, 
                 watchFocusedItem: watchFocusedItem
             )
         } else if dataSource.key == Route.key {
-            RouteList()
+            RouteList(path: $path)
         }
     }
 }

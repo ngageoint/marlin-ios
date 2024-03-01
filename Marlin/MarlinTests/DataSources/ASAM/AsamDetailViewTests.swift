@@ -117,6 +117,7 @@ final class AsamDetailViewTests: XCTestCase {
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
+
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -155,6 +156,7 @@ final class AsamDetailViewTests: XCTestCase {
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
+
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
