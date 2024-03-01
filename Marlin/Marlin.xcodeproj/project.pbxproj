@@ -429,6 +429,8 @@
 		F76EE0F62B923427001128EB /* NavigationalWarningRouteSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0F52B923427001128EB /* NavigationalWarningRouteSheetView.swift */; };
 		F76EE0F82B923461001128EB /* PortRouteSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0F72B923461001128EB /* PortRouteSheetView.swift */; };
 		F76EE0FA2B9234B9001128EB /* RadioBeaconRouteSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0F92B9234B9001128EB /* RadioBeaconRouteSheetView.swift */; };
+		F76EE0FC2B9245AF001128EB /* LightCoreDataDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0FB2B9245AF001128EB /* LightCoreDataDataSource.swift */; };
+		F76EE0FE2B9245F1001128EB /* LightCoreDataDataSourceImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0FD2B9245F1001128EB /* LightCoreDataDataSourceImport.swift */; };
 		F77671CB2B34D5930026DD50 /* CoreDataDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77671CA2B34D5930026DD50 /* CoreDataDataSource.swift */; };
 		F77671CD2B34D75A0026DD50 /* CountingDataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77671CC2B34D75A0026DD50 /* CountingDataLoadOperation.swift */; };
 		F7830BFB2A8AB3FE008376F7 /* Route+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFA2A8AB3FE008376F7 /* Route+CoreDataClass.swift */; };
@@ -1103,6 +1105,8 @@
 		F76EE0F52B923427001128EB /* NavigationalWarningRouteSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationalWarningRouteSheetView.swift; sourceTree = "<group>"; };
 		F76EE0F72B923461001128EB /* PortRouteSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortRouteSheetView.swift; sourceTree = "<group>"; };
 		F76EE0F92B9234B9001128EB /* RadioBeaconRouteSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconRouteSheetView.swift; sourceTree = "<group>"; };
+		F76EE0FB2B9245AF001128EB /* LightCoreDataDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightCoreDataDataSource.swift; sourceTree = "<group>"; };
+		F76EE0FD2B9245F1001128EB /* LightCoreDataDataSourceImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightCoreDataDataSourceImport.swift; sourceTree = "<group>"; };
 		F7738AEA2B322B5A00157CA3 /* libKIF.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libKIF.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F77671CA2B34D5930026DD50 /* CoreDataDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataDataSource.swift; sourceTree = "<group>"; };
 		F77671CC2B34D75A0026DD50 /* CountingDataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountingDataLoadOperation.swift; sourceTree = "<group>"; };
@@ -2520,6 +2524,8 @@
 				F7222F8C2B6C0ABE00C3E4F1 /* LightLocalDataSource.swift */,
 				F7222FB12B6D733D00C3E4F1 /* LightRemoteDataSource.swift */,
 				F7222FC32B71545600C3E4F1 /* LightTileRepository.swift */,
+				F76EE0FB2B9245AF001128EB /* LightCoreDataDataSource.swift */,
+				F76EE0FD2B9245F1001128EB /* LightCoreDataDataSourceImport.swift */,
 			);
 			path = Light;
 			sourceTree = "<group>";
@@ -4123,11 +4129,13 @@
 				F7D671DE286F877C00758F1C /* MaterialButtonStyle.swift in Sources */,
 				F7222FA32B6D4F7800C3E4F1 /* NoticeToMarinersInitialDataLoadOperation.swift in Sources */,
 				F7FFB34528DE18B900C31AA3 /* Badge.swift in Sources */,
+				F76EE0FC2B9245AF001128EB /* LightCoreDataDataSource.swift in Sources */,
 				F76EE0F12B92339C001128EB /* LightRouteSheetView.swift in Sources */,
 				F767DB4E2B8E38EF002C12C7 /* PublicationsTypeIdListView.swift in Sources */,
 				F7DEA1E72B6BEB9D00EB801A /* LightService.swift in Sources */,
 				F72EAADF291EECF400AC6026 /* NTMActionBar.swift in Sources */,
 				F7BDF7742A1BD97C0083B97F /* DataSourceLocationMapView.swift in Sources */,
+				F76EE0FE2B9245F1001128EB /* LightCoreDataDataSourceImport.swift in Sources */,
 				F767DB732B8FD75E002C12C7 /* PortDefinition.swift in Sources */,
 				F71FC0D72A3BB2D600911BAC /* DataSourceTabGrid.swift in Sources */,
 				F7830C052A8BCEF2008376F7 /* RouteListEmptyState.swift in Sources */,

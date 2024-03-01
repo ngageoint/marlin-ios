@@ -178,9 +178,6 @@ class DataSourcePredicateBuilder {
         dataSource: Filterable?,
         boundsPredicateBuilder: ((MapBoundingBox) -> NSPredicate)?
     ) -> NSPredicate? {
-        var centralLongitude: Double?
-        var centralLatitude: Double?
-
         switch comparison {
         case .bounds:
             if let dataSource = dataSource {
@@ -190,20 +187,27 @@ class DataSourcePredicateBuilder {
             }
             return nil
         case .nearMe:
-            if let lastLocation = LocationManager.shared().lastLocation {
-                centralLongitude = lastLocation.coordinate.longitude
-                centralLatitude = lastLocation.coordinate.latitude
-            }
+            return nearMePredicate(dataSource: dataSource)
         case .closeTo:
-            centralLongitude = valueLongitude
-            centralLatitude = valueLatitude
+            return closeToPredicate(dataSource: dataSource, latitude: valueLatitude, longitude: valueLongitude)
         default:
-            break
+            return nil
         }
+    }
 
-        guard let distance = valueInt, 
-              let latitude = centralLatitude,
-              let longitude = centralLongitude,
+    func nearMePredicate(dataSource: Filterable?) -> NSPredicate? {
+        guard let lastLocation = LocationManager.shared().lastLocation else {
+            return nil
+        }
+        let centralLongitude = lastLocation.coordinate.longitude
+        let centralLatitude = lastLocation.coordinate.latitude
+        return closeToPredicate(dataSource: dataSource, latitude: centralLatitude, longitude: centralLongitude)
+    }
+
+    func closeToPredicate(dataSource: Filterable?, latitude: Double?, longitude: Double?) -> NSPredicate? {
+        guard let distance = valueInt,
+              let latitude = latitude,
+              let longitude = longitude,
               let metersPoint = SFGeometryUtils.degreesToMetersWith(x: longitude, andY: latitude),
               let x = metersPoint.x as? Double,
               let y = metersPoint.y as? Double else {

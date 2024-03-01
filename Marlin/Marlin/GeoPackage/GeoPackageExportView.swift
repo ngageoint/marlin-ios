@@ -110,7 +110,7 @@ struct GeoPackageExportView: View {
             Metrics.shared.geoPackageExportView()
         }
         .onChange(of: viewModel.complete) { _ in
-            guard let _ = viewModel.geoPackage?.path else { return }
+            guard viewModel.geoPackage?.path != nil else { return }
             isSharePresented = true
         }
         .alert("Export Error", isPresented: $viewModel.error) {

@@ -30,8 +30,7 @@ struct MarlinMainMap: View {
     let focusMapAtLocation = NotificationCenter.default.publisher(for: .FocusMapAtLocation)
     
     var body: some View {
-        Self._printChanges()
-        return VStack {
+        VStack {
             MarlinMap(name: "Marlin Map", mixins: mixins, mapState: mapState)
                 .ignoresSafeArea()
         }
