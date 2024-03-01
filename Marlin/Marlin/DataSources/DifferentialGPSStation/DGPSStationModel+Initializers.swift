@@ -109,8 +109,12 @@ extension DGPSStationModel {
             self.latitude = 0.0
         }
 
-        let mgrsPosition = MGRS.from(longitude, latitude)
-        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        if CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(
+            latitude: latitude, longitude: longitude
+        )) {
+            let mgrsPosition = MGRS.from(longitude, latitude)
+            self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        }
     }
     // swiftlint:enable function_body_length
 

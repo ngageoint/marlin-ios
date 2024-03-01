@@ -515,8 +515,12 @@ struct PortModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
         self.vesselTrafficService = try? values.decode(String.self, forKey: .vesselTrafficService)
         self.globalId = try? values.decode(String.self, forKey: .globalId)
 
-        let mgrsPosition = MGRS.from(longitude, latitude)
-        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        if CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(
+            latitude: latitude, longitude: longitude
+        )) {
+            let mgrsPosition = MGRS.from(longitude, latitude)
+            self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        }
     }
     // swiftlint:enable function_body_length
 

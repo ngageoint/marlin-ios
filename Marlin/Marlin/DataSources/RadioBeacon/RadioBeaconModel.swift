@@ -318,8 +318,12 @@ struct RadioBeaconModel: Codable, Bookmarkable, Locatable, GeoJSONExportable, Cu
             self.latitude = 0.0
         }
         
-        let mgrsPosition = MGRS.from(longitude, latitude)
-        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        if CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(
+            latitude: latitude, longitude: longitude
+        )) {
+            let mgrsPosition = MGRS.from(longitude, latitude)
+            self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        }
     }
     
     // The keys must have the same name as the attributes of the Lights entity.

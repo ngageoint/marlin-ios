@@ -176,39 +176,43 @@ class NavigationalWarningsMapFeatureRepository: MapFeatureRepository, TileReposi
         longitudeTolerance: Double,
         distanceTolerance: Double
     ) -> Bool {
-        if let locations = warning.locations {
-            for wktLocation in locations {
-                if let wkt = wktLocation["wkt"] {
-                    var distance: Double?
-                    if let distanceString = wktLocation["distance"] {
-                        distance = Double(distanceString)
-                    }
-                    if let shape = MKShape.fromWKT(wkt: wkt, distance: distance) {
-                        if let polygon = shape as? MKPolygon {
-                            for polyline in polygon.getGeodesicClickAreas()
-                            where polygonHitTest(closedPolyline: polyline, location: location) {
-                                return true
-                            }
-                        } else if let polyline = shape as? MKPolyline {
-                            if lineHitTest(line: polyline, location: location, distanceTolerance: distanceTolerance) {
-                                return true
-                            }
-                        } else if let point = shape as? MKPointAnnotation {
-                            let minLon = location.longitude - longitudeTolerance
-                            let maxLon = location.longitude + longitudeTolerance
-                            let minLat = location.latitude - longitudeTolerance
-                            let maxLat = location.latitude + longitudeTolerance
-                            if minLon <= point.coordinate.longitude
-                                && maxLon >= point.coordinate.longitude
-                                && minLat <= point.coordinate.latitude
-                                && maxLat >= point.coordinate.latitude {
-                                return true
-                            }
-                        } else if let circle = shape as? MKCircle {
-                            if circleHitTest(circle: circle, location: location) {
-                                return true
-                            }
+        guard let locations = warning.locations else {
+            return false
+        }
+        for wktLocation in locations {
+            if let wkt = wktLocation["wkt"] {
+                var distance: Double?
+                if let distanceString = wktLocation["distance"] {
+                    distance = Double(distanceString)
+                }
+                if let shape = MKShape.fromWKT(wkt: wkt, distance: distance) {
+                    switch shape {
+                    case let polygon as MKPolygon:
+                        for polyline in polygon.getGeodesicClickAreas()
+                        where polygonHitTest(closedPolyline: polyline, location: location) {
+                            return true
                         }
+                    case let polyline as MKPolyline:
+                        if lineHitTest(line: polyline, location: location, distanceTolerance: distanceTolerance) {
+                            return true
+                        }
+                    case let point as MKPointAnnotation:
+                        let minLon = location.longitude - longitudeTolerance
+                        let maxLon = location.longitude + longitudeTolerance
+                        let minLat = location.latitude - longitudeTolerance
+                        let maxLat = location.latitude + longitudeTolerance
+                        if minLon <= point.coordinate.longitude
+                            && maxLon >= point.coordinate.longitude
+                            && minLat <= point.coordinate.latitude
+                            && maxLat >= point.coordinate.latitude {
+                            return true
+                        }
+                    case let circle as MKCircle:
+                        if circleHitTest(circle: circle, location: location) {
+                            return true
+                        }
+                    default:
+                        return false
                     }
                 }
             }

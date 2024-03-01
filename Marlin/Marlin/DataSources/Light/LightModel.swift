@@ -339,8 +339,12 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible, Ha
             throw MSIError.missingData
         }
         
-        let mgrsPosition = MGRS.from(longitude, latitude)
-        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        if CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(
+            latitude: latitude, longitude: longitude
+        )) {
+            let mgrsPosition = MGRS.from(longitude, latitude)
+            self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        }
         self.sectionHeader = nil
     }
 

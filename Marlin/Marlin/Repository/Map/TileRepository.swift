@@ -56,60 +56,59 @@ extension DataSourceImage {
         context: CGContext? = nil,
         tileSize: Double
     ) -> [UIImage] {
+        // zoom level 36 is a temporary hack to draw a large image for a real map marker
+        if zoomLevel == 36 {
+            return Self.defaultCircleImage()
+        }
 
         var images: [UIImage] = []
         var radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Self.dataSource.imageScale
 
-        // zoom level 36 is a temporary hack to draw a large image for a real map marker
-        if zoomLevel != 36 {
-            if let tileBounds3857 = tileBounds3857, context != nil {
-                // have to do this b/c an ImageRenderer will automatically do this
-                radius *= UIScreen.main.scale
-                let coordinate = pointCoordinate ?? {
-                    if let point = SFGeometryUtils.centroid(of: feature) {
-                        return CLLocationCoordinate2D(latitude: point.y.doubleValue, longitude: point.x.doubleValue)
-                    }
-                    return kCLLocationCoordinate2DInvalid
-                }()
-                if CLLocationCoordinate2DIsValid(coordinate) {
-                    let pixel = coordinate.toPixel(
-                        zoomLevel: zoomLevel,
-                        tileBounds3857: tileBounds3857,
-                        tileSize: tileSize)
-                    let circle = UIBezierPath(
-                        arcCenter: pixel,
-                        radius: radius,
-                        startAngle: 0,
-                        endAngle: 2 * CGFloat.pi,
-                        clockwise: true)
-                    circle.lineWidth = 0.5
-                    Self.dataSource.color.setStroke()
-                    circle.stroke()
-                    Self.dataSource.color.setFill()
-                    circle.fill()
-                    if let dataSourceImage = Self.dataSource.image?.aspectResize(
-                        to: CGSize(width: radius * 2.0 / 1.5, height: radius * 2.0 / 1.5))
-                        .withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white) {
-                        dataSourceImage.draw(
-                            at: CGPoint(
-                                x: pixel.x - dataSourceImage.size.width / 2.0,
-                                y: pixel.y - dataSourceImage.size.height / 2.0))
-                    }
+        if let tileBounds3857 = tileBounds3857, context != nil {
+            // have to do this b/c an ImageRenderer will automatically do this
+            radius *= UIScreen.main.scale
+            let coordinate = pointCoordinate ?? {
+                if let point = SFGeometryUtils.centroid(of: feature) {
+                    return CLLocationCoordinate2D(latitude: point.y.doubleValue, longitude: point.x.doubleValue)
                 }
-            } else {
-                if let image = CircleImage(color: Self.dataSource.color, radius: radius, fill: true) {
-                    images.append(image)
-                    if let dataSourceImage = Self.dataSource.image?.aspectResize(
-                        to: CGSize(
-                            width: image.size.width / 1.5,
-                            height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate)
-                        .maskWithColor(color: UIColor.white) {
-                        images.append(dataSourceImage)
-                    }
+                return kCLLocationCoordinate2DInvalid
+            }()
+            if CLLocationCoordinate2DIsValid(coordinate) {
+                let pixel = coordinate.toPixel(
+                    zoomLevel: zoomLevel,
+                    tileBounds3857: tileBounds3857,
+                    tileSize: tileSize)
+                let circle = UIBezierPath(
+                    arcCenter: pixel,
+                    radius: radius,
+                    startAngle: 0,
+                    endAngle: 2 * CGFloat.pi,
+                    clockwise: true)
+                circle.lineWidth = 0.5
+                Self.dataSource.color.setStroke()
+                circle.stroke()
+                Self.dataSource.color.setFill()
+                circle.fill()
+                if let dataSourceImage = Self.dataSource.image?.aspectResize(
+                    to: CGSize(width: radius * 2.0 / 1.5, height: radius * 2.0 / 1.5))
+                    .withRenderingMode(.alwaysTemplate).maskWithColor(color: UIColor.white) {
+                    dataSourceImage.draw(
+                        at: CGPoint(
+                            x: pixel.x - dataSourceImage.size.width / 2.0,
+                            y: pixel.y - dataSourceImage.size.height / 2.0))
                 }
             }
         } else {
-            images.append(contentsOf: Self.defaultCircleImage())
+            if let image = CircleImage(color: Self.dataSource.color, radius: radius, fill: true) {
+                images.append(image)
+                if let dataSourceImage = Self.dataSource.image?.aspectResize(
+                    to: CGSize(
+                        width: image.size.width / 1.5,
+                        height: image.size.height / 1.5)).withRenderingMode(.alwaysTemplate)
+                    .maskWithColor(color: UIColor.white) {
+                    images.append(dataSourceImage)
+                }
+            }
         }
         return images
     }

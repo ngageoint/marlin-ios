@@ -15,7 +15,8 @@ extension MKShape {
         let geometry = SFWTGeometryReader.readGeometry(withText: wkt)
         
         var mapPoints: [MKMapPoint] = []
-        if let point = geometry as? SFPoint {
+        switch geometry {
+        case let point as SFPoint:
             let coordinate = CLLocationCoordinate2D(latitude: point.y.doubleValue, longitude: point.x.doubleValue)
             if let distance = distance {
                 // this is really a circle
@@ -24,42 +25,37 @@ extension MKShape {
             let point = MKPointAnnotation()
             point.coordinate = coordinate
             return point
-        } else if let polygon = geometry as? SFPolygon {
-            if let lineString = polygon.ring(at: 0) {
-                if let points = lineString.points {
-                    for point in points {
-                        if let point = point as? SFPoint {
-                            mapPoints.append(
-                                MKMapPoint(
-                                    CLLocationCoordinate2D(
-                                        latitude: point.y.doubleValue,
-                                        longitude: point.x.doubleValue
-                                    )
-                                )
+        case let polygon as SFPolygon:
+            if let lineString = polygon.ring(at: 0), let points = lineString.points {
+                for case let point as SFPoint in points {
+                    mapPoints.append(
+                        MKMapPoint(
+                            CLLocationCoordinate2D(
+                                latitude: point.y.doubleValue,
+                                longitude: point.x.doubleValue
                             )
-                        }
-                    }
+                        )
+                    )
                 }
             }
             return MKPolygon(points: &mapPoints, count: mapPoints.count)
-        } else if let line = geometry as? SFLineString {
+        case let line as SFLineString:
             if let points = line.points {
-                for point in points {
-                    if let point = point as? SFPoint {
-                        mapPoints.append(
-                            MKMapPoint(
-                                CLLocationCoordinate2D(
-                                    latitude: point.y.doubleValue,
-                                    longitude: point.x.doubleValue
-                                )
+                for case let point as SFPoint in points {
+                    mapPoints.append(
+                        MKMapPoint(
+                            CLLocationCoordinate2D(
+                                latitude: point.y.doubleValue,
+                                longitude: point.x.doubleValue
                             )
                         )
-                    }
+                    )
                 }
             }
             return MKGeodesicPolyline(points: &mapPoints, count: mapPoints.count)
+        default:
+            return nil
         }
-        return nil
     }
     
     static func fromFeatureCollection(featureCollection: FeatureCollection) -> MKGeodesicPolyline? {

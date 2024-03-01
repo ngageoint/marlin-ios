@@ -180,7 +180,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func updateArea() {
-        guard let lastLocation = lastLocation else {
+        guard let lastLocation = lastLocation,
+              CLLocationCoordinate2DIsValid(lastLocation.coordinate) else {
             return
         }
         let mgrsPosition = MGRS.from(lastLocation.coordinate.longitude, lastLocation.coordinate.latitude)

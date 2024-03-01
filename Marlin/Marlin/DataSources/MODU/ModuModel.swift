@@ -233,8 +233,12 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
         }
         self.date = parsedDate
         
-        let mgrsPosition = MGRS.from(longitude, latitude)
-        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        if CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(
+            latitude: latitude, longitude: longitude
+        )) {
+            let mgrsPosition = MGRS.from(longitude, latitude)
+            self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        }
     }
     
     init?(feature: Feature) {

@@ -11,37 +11,6 @@ import ExceptionCatcher
 import CoreData
 import Combine
 
-// class DataSourceExportRequest: Identifiable, Hashable, Equatable, ObservableObject {
-//    
-//    static func == (lhs: DataSourceExportRequest, rhs: DataSourceExportRequest) -> Bool {
-//        return lhs.id == rhs.id
-//    }
-//    
-//    func hash(into hasher: inout Hasher) {
-//        hasher.combine(id)
-//    }
-//    
-//    var id: String { 
-//        filterable?.definition.key ?? ""
-//    }
-//    var filterable: Filterable?
-//    @Published var filters: [DataSourceFilterParameter]? {
-//        didSet {
-//            print("set the filters")
-//        }
-//    }
-//    @Published var count: Int = 0
-//    
-//    init(filterable: Filterable?, filters: [DataSourceFilterParameter]?) {
-//        self.filterable = filterable
-//        self.filters = filters
-//    }
-//    
-////    func fetchRequest(commonFilters: [DataSourceFilterParameter]?) -> NSFetchRequest<any NSFetchRequestResult>? {
-////        return filterable?.fetchRequest(filters: filters, commonFilters: commonFilters)
-////    }
-// }
-
 class DataSourceExportProgress: Identifiable, Hashable, Equatable, ObservableObject {
     static func == (lhs: DataSourceExportProgress, rhs: DataSourceExportProgress) -> Bool {
         return lhs.id == rhs.id

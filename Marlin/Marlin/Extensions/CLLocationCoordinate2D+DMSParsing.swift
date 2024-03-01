@@ -107,7 +107,28 @@ extension CLLocationCoordinate2D {
         \(formatter.string(for: lonSeconds) ?? "")\" \(lonDegrees >= 0 ? "E" : "W")
         """
     }
-    
+
+    // must be in the form of Deg°Min'Sec"Dir
+    static func parseWellFormedDMS(
+        coordinate: String
+    ) -> DMSCoordinate? {
+        let split = coordinate.components(separatedBy: ["°", "'", "\""])
+        if split.count != 4 {
+            return nil
+        }
+        if let degrees = Int(split[0]),
+           let minutes = Int(split[1]),
+           let seconds = Int(split[2]) {
+            return DMSCoordinate(
+                degrees: degrees,
+                minutes: minutes,
+                seconds: seconds,
+                direction: split[3]
+            )
+        }
+        return nil
+    }
+
     // Need to parse the following formats:
     // 1. 112233N 0112244W
     // 2. N 11 ° 22'33 "- W 11 ° 22'33
@@ -118,10 +139,13 @@ extension CLLocationCoordinate2D {
         addDirection: Bool = false,
         latitude: Bool = false
     ) -> DMSCoordinate {
-        var dmsCoordinate: DMSCoordinate = DMSCoordinate()
-
+        if let wellFormed = CLLocationCoordinate2D.parseWellFormedDMS(
+            coordinate: coordinate) {
+            return wellFormed
+        }
         var coordinateToParse = coordinate.trimmingCharacters(in: .whitespacesAndNewlines)
 
+        var dmsCoordinate: DMSCoordinate = DMSCoordinate()
         if addDirection {
             // check if the first character is negative
             if coordinateToParse.firstIndex(of: "-") == coordinateToParse.startIndex {
@@ -170,7 +194,6 @@ extension CLLocationCoordinate2D {
 
         dmsCoordinate.minutes = Int(coordinateToParse.suffix(2))
         dmsCoordinate.degrees = Int(coordinateToParse.dropLast(2))
-        print("dms \(dmsCoordinate)")
 
         CLLocationCoordinate2D.correctMinutesAndSeconds(dmsCoordinate: &dmsCoordinate, decimalSeconds: decimalSeconds)
 
@@ -202,8 +225,6 @@ extension CLLocationCoordinate2D {
             dmsCoordinate.seconds = Int(seconds.rounded())
         } else if let decimalSeconds = decimalSeconds {
             dmsCoordinate.decimalSeconds = decimalSeconds
-            // add the decimal seconds to seconds and round
-//            dmsCoordinate.seconds = Int(Double("\((dmsCoordinate.seconds ?? 0)).\(decimalSeconds)")?.rounded() ?? 0)
         }
 
         if dmsCoordinate.seconds == 60 {

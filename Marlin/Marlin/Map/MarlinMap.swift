@@ -414,7 +414,12 @@ protocol MapCoordinator: MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     func setMapRegion(region: MKCoordinateRegion)
     func singleTapGesture(tapGestureRecognizer: UITapGestureRecognizer)
-    func handleTappedItems(annotations: [MKAnnotation], items: [any DataSource], itemKeys: [String: [String]], mapName: String)
+    func handleTappedItems(
+        annotations: [MKAnnotation],
+        items: [any DataSource],
+        itemKeys: [String: [String]],
+        mapName: String
+    )
     func longPressGesture(longPressGestureRecognizer: UILongPressGestureRecognizer)
 }
 

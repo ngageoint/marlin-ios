@@ -41,9 +41,15 @@ enum CoordinateDisplayType: Int, CustomStringConvertible {
             \(CLLocationCoordinate2D.longitudeDMSString(coordinate: coordinate.longitude))
             """
         case .gars:
-            return GARS.from(coordinate).coordinate()
+            if CLLocationCoordinate2DIsValid(coordinate) {
+                return GARS.from(coordinate).coordinate()
+            }
+            return ""
         case .mgrs:
-            return MGRS.from(coordinate).coordinate()
+            if CLLocationCoordinate2DIsValid(coordinate) {
+                return MGRS.from(coordinate).coordinate()
+            }
+            return ""
         }
     }
 }

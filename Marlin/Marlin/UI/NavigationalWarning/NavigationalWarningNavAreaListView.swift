@@ -67,7 +67,6 @@ struct NavigationalWarningNavAreaListView: View {
                                        let issueDate = navigationalWarning.issueDate, issueDate > lastSavedDate {
                                         self.lastSavedDate = issueDate
                                         self.lastSeen = navigationalWarning.primaryKey
-                                        print("XXX 2 saving last seen to \(self.lastSeen)")
                                     }
                                 }
                             }
@@ -94,7 +93,6 @@ struct NavigationalWarningNavAreaListView: View {
                             if let issueDate = lastSeenNavigationalWarning.issueDate, lastSavedDate < issueDate {
                                 self.lastSavedDate = issueDate
                                 self.lastSeen = lastSeenNavigationalWarning.primaryKey
-                                print("XXX saving last seen to \(self.lastSeen)")
                             }
                         }
                     }
