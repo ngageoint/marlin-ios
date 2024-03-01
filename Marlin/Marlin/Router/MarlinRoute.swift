@@ -30,6 +30,12 @@ enum MarlinRoute: Hashable {
 //    case dataSourceRouteDetail(dataSourceKey: String, itemKey: String, waypointURI: URL)
 }
 
+enum UserPlaceRoute: Hashable {
+    case detail
+    case create
+    case edit(uri: URL?)
+}
+
 enum NoticeToMarinersRoute: Hashable {
     case notices
     case chartQuery
@@ -114,6 +120,9 @@ extension View {
     }
     func geoPackageRoutes() -> some View {
         modifier(GeoPackageRouteModifier())
+    }
+    func userPlaceRoutes() -> some View {
+        modifier(UserPlaceRouteModifier())
     }
 }
 
@@ -316,6 +325,20 @@ struct GeoPackageRouteModifier: ViewModifier {
     }
 }
 
+struct UserPlaceRouteModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .navigationDestination(for: UserPlaceRoute.self) { item in
+                switch item {
+                case .create:
+                    CreatePlaceView()
+                default:
+                    Text("no")
+                }
+            }
+    }
+}
+
 struct MarlinRouteModifier: ViewModifier {
     @EnvironmentObject var dataSourceList: DataSourceList
     
@@ -341,6 +364,7 @@ struct MarlinRouteModifier: ViewModifier {
             .noticeToMarinersRoutes()
             .navigationalWarningRoutes()
             .publicationRoutes()
+            .userPlaceRoutes()
             .navigationDestination(for: MarlinRoute.self) { item in
                 switch item {
                 case .exportGeoPackageDataSource(let dataSource, let filters):

@@ -132,6 +132,7 @@ struct MarlinMainMap: View {
                     .fixedSize()
                     .accessibilityElement(children: .contain)
                     .accessibilityLabel("User Tracking")
+                CreateUserPlaceButton()
             }
             .padding(.trailing, 8)
             .padding(.bottom, 30)

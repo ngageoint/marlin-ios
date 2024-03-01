@@ -431,6 +431,8 @@
 		F76EE0FA2B9234B9001128EB /* RadioBeaconRouteSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0F92B9234B9001128EB /* RadioBeaconRouteSheetView.swift */; };
 		F76EE0FC2B9245AF001128EB /* LightCoreDataDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0FB2B9245AF001128EB /* LightCoreDataDataSource.swift */; };
 		F76EE0FE2B9245F1001128EB /* LightCoreDataDataSourceImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE0FD2B9245F1001128EB /* LightCoreDataDataSourceImport.swift */; };
+		F76EE1012B926599001128EB /* CreateUserPlaceButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE1002B926599001128EB /* CreateUserPlaceButton.swift */; };
+		F76EE1032B926F59001128EB /* CreatePlaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE1022B926F59001128EB /* CreatePlaceView.swift */; };
 		F77671CB2B34D5930026DD50 /* CoreDataDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77671CA2B34D5930026DD50 /* CoreDataDataSource.swift */; };
 		F77671CD2B34D75A0026DD50 /* CountingDataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77671CC2B34D75A0026DD50 /* CountingDataLoadOperation.swift */; };
 		F7830BFB2A8AB3FE008376F7 /* Route+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFA2A8AB3FE008376F7 /* Route+CoreDataClass.swift */; };
@@ -1107,6 +1109,8 @@
 		F76EE0F92B9234B9001128EB /* RadioBeaconRouteSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconRouteSheetView.swift; sourceTree = "<group>"; };
 		F76EE0FB2B9245AF001128EB /* LightCoreDataDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightCoreDataDataSource.swift; sourceTree = "<group>"; };
 		F76EE0FD2B9245F1001128EB /* LightCoreDataDataSourceImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightCoreDataDataSourceImport.swift; sourceTree = "<group>"; };
+		F76EE1002B926599001128EB /* CreateUserPlaceButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUserPlaceButton.swift; sourceTree = "<group>"; };
+		F76EE1022B926F59001128EB /* CreatePlaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePlaceView.swift; sourceTree = "<group>"; };
 		F7738AEA2B322B5A00157CA3 /* libKIF.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libKIF.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F77671CA2B34D5930026DD50 /* CoreDataDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataDataSource.swift; sourceTree = "<group>"; };
 		F77671CC2B34D75A0026DD50 /* CountingDataLoadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountingDataLoadOperation.swift; sourceTree = "<group>"; };
@@ -2233,6 +2237,15 @@
 			path = Sheet;
 			sourceTree = "<group>";
 		};
+		F76EE0FF2B9264A5001128EB /* UserPlace */ = {
+			isa = PBXGroup;
+			children = (
+				F76EE1002B926599001128EB /* CreateUserPlaceButton.swift */,
+				F76EE1022B926F59001128EB /* CreatePlaceView.swift */,
+			);
+			path = UserPlace;
+			sourceTree = "<group>";
+		};
 		F7830BF82A8A847D008376F7 /* Routing */ = {
 			isa = PBXGroup;
 			children = (
@@ -2578,6 +2591,7 @@
 		F7C5F1F12AEC4DA90091BC01 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				F76EE0FF2B9264A5001128EB /* UserPlace */,
 				F7517D3D2B16522200A9DC72 /* Action */,
 				F7C5F1F22AEC4DB40091BC01 /* ASAM */,
 				F7C5F1F32AEC4E360091BC01 /* Bookmark */,
@@ -3849,6 +3863,7 @@
 				F7FFB33D28DA061D00C31AA3 /* FilterButton.swift in Sources */,
 				F7FDF2B02AB4D53D009A5E8F /* ModuRepository.swift in Sources */,
 				F76EE0E82B922806001128EB /* AsamRouteSheetView.swift in Sources */,
+				F76EE1012B926599001128EB /* CreateUserPlaceButton.swift in Sources */,
 				F767DB432B8D11A9002C12C7 /* UserPlaceFilterable.swift in Sources */,
 				F75CB88F2B5EF7A5008979ED /* ModuDataLoadOperation.swift in Sources */,
 				F707BA8B287C6D18006A94C4 /* MorseCode.swift in Sources */,
@@ -4006,6 +4021,7 @@
 				F72E4D8F2B6996D3006ED371 /* PortLocalDataSource.swift in Sources */,
 				F767DB672B8FD69E002C12C7 /* UserPlaceDefinition.swift in Sources */,
 				F767DB502B8E4295002C12C7 /* PublicationsCompleteVolumeListViewModel.swift in Sources */,
+				F76EE1032B926F59001128EB /* CreatePlaceView.swift in Sources */,
 				F75E32C129C4BC1F006F2394 /* LayerConfigurationView.swift in Sources */,
 				F7222F852B6C05BB00C3E4F1 /* PublicationDataLoadOperation.swift in Sources */,
 				F7D671C0286B6EB500758F1C /* NavigationalWarningAreaUnreadBadge.swift in Sources */,
