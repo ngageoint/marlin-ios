@@ -34,7 +34,7 @@ enum AsamActions {
         func action() {
             guard let reference = reference else { return }
 
-            path.append(AsamRoute.detail(reference))
+            path.append(AsamRoute.detail(reference: reference))
         }
     }
 }

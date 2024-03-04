@@ -34,7 +34,7 @@ enum ModuActions {
         func action() {
             guard let name = name else { return }
 
-            path.append(ModuRoute.detail(name))
+            path.append(ModuRoute.detail(name: name))
         }
     }
 

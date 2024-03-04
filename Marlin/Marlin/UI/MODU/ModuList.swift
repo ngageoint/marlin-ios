@@ -62,7 +62,7 @@ struct ModuList: View {
                                 }
                                 .onTapGesture {
                                     if let name = modu.name {
-                                        router.path.append(ModuRoute.detail(name))
+                                        router.path.append(ModuRoute.detail(name: name))
                                     }
                                 }
                                 .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))

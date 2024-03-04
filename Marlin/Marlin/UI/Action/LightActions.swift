@@ -37,7 +37,7 @@ enum LightActions {
         func action() {
             guard let volume = volume, let featureNumber = featureNumber else { return }
 
-            path.append(LightRoute.detail(volume, featureNumber))
+            path.append(LightRoute.detail(volumeNumber: volume, featureNumber: featureNumber))
         }
     }
 }

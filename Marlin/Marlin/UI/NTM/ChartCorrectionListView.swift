@@ -98,7 +98,7 @@ struct ChartCorrectionList: View {
                             || ntm.noticeYear <= Int(Calendar.current.component(.year, from: Date())) % 1000 {
                             NavigationLink(
                                 value: NoticeToMarinersRoute.fullView(
-                                    getNoticeNumber(noticeNumberString: ntm.currNoticeNum)
+                                    noticeNumber: getNoticeNumber(noticeNumberString: ntm.currNoticeNum)
                                 ),
                                 label: {
                                     Text("NTM \(ntm.currNoticeNum ?? "") Details")
