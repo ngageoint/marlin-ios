@@ -36,6 +36,7 @@ class RadioBeaconsViewModel: ObservableObject {
         }
         set {
             if _repository == nil {
+                dataSourceUpdatedPub.store(in: &disposables)
                 _repository = newValue
                 fetchRadioBeacons()
             }

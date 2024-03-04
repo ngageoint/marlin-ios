@@ -6,11 +6,27 @@
 //
 
 import Foundation
+import Combine
 
 class NavigationalWarningAreasViewModel: ObservableObject {
     @Published var warningAreas: [NavigationalAreaInformation] = []
     @Published var currentArea: NavigationalAreaInformation?
+    private var disposables = Set<AnyCancellable>()
 
+    var dataSourceUpdatedPub: AnyCancellable {
+        return NotificationCenter.default.publisher(for: .DataSourceUpdated)
+            .compactMap { notification in
+                notification.object as? DataSourceUpdatedNotification
+            }
+            .filter { notification in
+                notification.key == DataSources.light.key
+            }
+            .sink { _ in
+                Task {
+                    await self.populateWarningAreaInformation()
+                }
+            }
+    }
     var currentNavAreaName: String? {
         didSet {
             Task {
@@ -22,6 +38,8 @@ class NavigationalWarningAreasViewModel: ObservableObject {
     var repository: NavigationalWarningRepository? {
         didSet {
             Task {
+                dataSourceUpdatedPub.store(in: &disposables)
+
                 await populateWarningAreaInformation()
             }
         }

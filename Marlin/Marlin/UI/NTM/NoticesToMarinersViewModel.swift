@@ -35,6 +35,7 @@ class NoticesToMarinersViewModel: ObservableObject {
         }
         set {
             if _repository == nil {
+                dataSourceUpdatedPub.store(in: &disposables)
                 _repository = newValue
                 fetchNoticeToMarinersSections()
             }

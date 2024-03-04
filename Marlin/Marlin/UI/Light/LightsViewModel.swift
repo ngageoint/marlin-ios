@@ -36,6 +36,7 @@ class LightsViewModel: ObservableObject {
         }
         set {
             if _repository == nil {
+                dataSourceUpdatedPub.store(in: &disposables)
                 _repository = newValue
                 fetchLights()
             }
