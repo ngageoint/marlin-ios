@@ -7,8 +7,12 @@
 
 import Foundation
 import CoreData
+import Combine
+import UIKit
+import BackgroundTasks
 
 protocol AsamLocalDataSource {
+    func getNewestAsam() -> AsamModel?
     @discardableResult
     func getAsam(reference: String?) -> AsamModel?
     func getAsamsInBounds(
@@ -60,12 +64,15 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
     }
 
     func getAsam(reference: String?) -> AsamModel? {
-        if let reference = reference {
-            if let asam = context.fetchFirst(Asam.self, key: "reference", value: reference) {
-                return AsamModel(asam: asam)
+        var model: AsamModel?
+        context.performAndWait {
+            if let reference = reference {
+                if let asam = context.fetchFirst(Asam.self, key: "reference", value: reference) {
+                    model = AsamModel(asam: asam)
+                }
             }
         }
-        return nil
+        return model
     }
 
     func getAsamsInBounds(
@@ -157,7 +164,7 @@ extension AsamCoreDataDataSource {
 
     func asams(
         filters: [DataSourceFilterParameter]?,
-        at page: Page?, 
+        at page: Page?,
         currentHeader: String?
     ) -> AnyPublisher<AsamModelPage, Error> {
 
@@ -306,14 +313,14 @@ extension AsamCoreDataDataSource {
 
         return await executeOperationInBackground(task: task)
     }
-    
+
     func batchImport(from propertiesList: [AsamModel]) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         let taskContext = PersistenceController.current.newTaskContext()
         // Add name and author to identify source of persistent history changes.
         taskContext.name = "importContext"
         taskContext.transactionAuthor = "importAsams"
-        
+
         let count = try await taskContext.perform {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
@@ -334,11 +341,11 @@ extension AsamCoreDataDataSource {
         }
         return count
     }
-    
+
     func newBatchInsertRequest(with propertyList: [AsamModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
-        
+
         // Provide one dictionary at a time when the closure is called.
         let batchInsertRequest = NSBatchInsertRequest(entity: Asam.entity(), dictionaryHandler: { dictionary in
             guard index < total else { return true }

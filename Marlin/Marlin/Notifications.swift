@@ -58,7 +58,7 @@ struct MapItemsTappedNotification {
     var mapName: String?
     var zoom: Bool = false
     var itemKeys: [String: [String]]?
-        
+
     @available(*, deprecated)
     init(
         annotations: [Any]? = nil,
@@ -73,7 +73,7 @@ struct MapItemsTappedNotification {
         self.zoom = zoom
         self.itemKeys = itemKeys
     }
-    
+
     init(
         annotations: [Any]? = nil,
         itemKeys: [String: [String]]?,
@@ -104,5 +104,18 @@ struct BatchUpdateComplete {
 
 struct ViewDataSource {
     var mapName: String?
+    @available(*, deprecated)
     var dataSource: (any DataSource)?
+    var definition: (any DataSourceDefinition)?
+    var itemKey: String?
+
+    @available(*, deprecated)
+    init(mapName: String? = nil, dataSource: (any DataSource)?) {
+        self.dataSource = dataSource
+    }
+
+    init(mapName: String? = nil, definition: (any DataSourceDefinition)?, itemKey: String?) {
+        self.definition = definition
+        self.itemKey = itemKey
+    }
 }

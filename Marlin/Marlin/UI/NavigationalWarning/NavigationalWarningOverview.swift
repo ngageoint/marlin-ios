@@ -9,16 +9,16 @@ import SwiftUI
 import MapKit
 
 struct NavigationalWarningsOverview {
+    @EnvironmentObject var router: MarlinRouter
     @ObservedObject var generalLocation: GeneralLocation = GeneralLocation.shared
-    
+
     let MAP_NAME = "Navigational Warning List View Map"
     @State var expandMap: Bool = false
     @State var selection: String?
-    @Binding var path: NavigationPath
-    
+
     @ObservedObject var focusedItem: ItemWrapper
     var watchFocusedItem: Bool = false
-    
+
 //    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
 //        notification.object as? ViewDataSource
 //    }
@@ -36,8 +36,8 @@ extension NavigationalWarningsOverview: View {
                     maxHeight: expandMap ? geometry.size.height : geometry.size.height * 0.5
                 )
                 .edgesIgnoringSafeArea([.leading, .trailing])
-                
-                NavigationalWarningAreasView(mapName: MAP_NAME, path: $path)
+
+                NavigationalWarningAreasView(mapName: MAP_NAME)
                     .currentNavArea(generalLocation.currentNavArea?.name)
             }
         }
@@ -55,5 +55,5 @@ extension NavigationalWarningsOverview: View {
 //            }
 //        }
     }
-    
+
 }

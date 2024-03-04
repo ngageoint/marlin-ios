@@ -62,15 +62,15 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
             @EnvironmentObject var locationManager: LocationManager
             @ObservedObject var passThrough: PassThrough
             @StateObject var focusedItem: ItemWrapper = ItemWrapper()
-            @State var path: NavigationPath = NavigationPath()
+            @State var router: MarlinRouter = MarlinRouter()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
 
             var body: some View {
-                NavigationStack(path: $path) {
-                    NavigationalWarningsOverview(path: $path, focusedItem: focusedItem)
+                NavigationStack(path: $router.path) {
+                    NavigationalWarningsOverview(focusedItem: focusedItem)
                         .environmentObject(locationManager)
                 }
                 .onAppear {
@@ -85,6 +85,7 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
                     GeneralLocation.shared.currentNavAreaName = newValue?.name
                 }
                 .environmentObject(router)
+                .marlinRoutes()
             }
         }
         let appState = AppState()
@@ -164,17 +165,18 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
             @EnvironmentObject var locationManager: LocationManager
             @ObservedObject var passThrough: PassThrough
             @StateObject var focusedItem: ItemWrapper = ItemWrapper()
-            @State var path: NavigationPath = NavigationPath()
+            @State var router: MarlinRouter = MarlinRouter()
 
             init(passThrough: PassThrough) {
                 self.passThrough = passThrough
             }
             
             var body: some View {
-                NavigationStack(path: $path) {
-                    NavigationalWarningsOverview(path: $path, focusedItem: focusedItem)
+                NavigationStack(path: $router.path) {
+                    NavigationalWarningsOverview(focusedItem: focusedItem)
                         .environmentObject(locationManager)
                 }
+                .marlinRoutes()
                 .onAppear {
                     GeneralLocation.shared.currentNavArea = .NAVAREA_IV
                     GeneralLocation.shared.currentNavAreaName = GeneralLocation.shared.currentNavArea?.name

@@ -6,11 +6,28 @@
 //
 
 import Foundation
+import Combine
+
+enum AsamItem: Hashable, Identifiable {
+    var id: String {
+        switch self {
+        case .listItem(let asam):
+            return asam.id
+        case .sectionHeader(let header):
+            return header
+        }
+    }
+
+    case listItem(_ asam: AsamListModel)
+    case sectionHeader(header: String)
+}
 
 class AsamRepository: ObservableObject {
-    private var localDataSource: AsamLocalDataSource
-    init(localDataSource: AsamLocalDataSource) {
+    var localDataSource: AsamLocalDataSource
+    private var remoteDataSource: AsamRemoteDataSource
+    init(localDataSource: AsamLocalDataSource, remoteDataSource: AsamRemoteDataSource) {
         self.localDataSource = localDataSource
+        self.remoteDataSource = remoteDataSource
     }
 
     func createOperation() -> AsamDataFetchOperation {
@@ -69,5 +86,5 @@ class AsamRepository: ObservableObject {
 
         return asams
     }
-    
+
 }

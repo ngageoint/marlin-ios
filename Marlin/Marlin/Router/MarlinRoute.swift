@@ -9,6 +9,10 @@ import Foundation
 import SwiftUI
 import CoreData
 
+class MarlinRouter: ObservableObject {
+    @Published var path: NavigationPath = NavigationPath()
+}
+
 enum MarlinRoute: Hashable {
     case exportGeoPackage(useMapRegion: Bool)
     case exportGeoPackageDataSource(dataSource: DataSourceDefinitions?, filters: [DataSourceFilterParameter]? = nil)
@@ -84,8 +88,8 @@ enum DataSourceRoute: Hashable {
 }
 
 extension View {
-    func marlinRoutes(path: Binding<NavigationPath>) -> some View {
-        modifier(MarlinRouteModifier(path: path))
+    func marlinRoutes() -> some View {
+        modifier(MarlinRouteModifier())
     }
     func asamRoutes() -> some View {
         modifier(AsamRouteModifier())
@@ -167,21 +171,21 @@ struct ModuRouteModifier: ViewModifier {
 struct PortRouteModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
-        .navigationDestination(for: PortRoute.self) { item in
-            switch item {
-            case .detail(let portNumber):
-                // disable this rule in order to execute a statement prior to returning a view
-                // swiftlint:disable redundant_discardable_let
-                let _ = NotificationCenter.default.post(
-                    name: .DismissBottomSheet,
-                    object: nil,
-                    userInfo: nil
-                )
-                // swiftlint:enable redundant_discardable_let
+            .navigationDestination(for: PortRoute.self) { item in
+                switch item {
+                case .detail(let portNumber):
+                    // disable this rule in order to execute a statement prior to returning a view
+                    // swiftlint:disable redundant_discardable_let
+                    let _ = NotificationCenter.default.post(
+                        name: .DismissBottomSheet,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    // swiftlint:enable redundant_discardable_let
 
-                PortDetailView(portNumber: portNumber)
+                    PortDetailView(portNumber: portNumber)
+                }
             }
-        }
     }
 }
 
@@ -209,21 +213,21 @@ struct LightRouteModifier: ViewModifier {
 struct RadioBeaconRouteModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
-        .navigationDestination(for: RadioBeaconRoute.self) { item in
-            switch item {
-            case .detail(let featureNumber, let volumeNumber):
-                // disable this rule in order to execute a statement prior to returning a view
-                // swiftlint:disable redundant_discardable_let
-                let _ = NotificationCenter.default.post(
-                    name: .DismissBottomSheet,
-                    object: nil,
-                    userInfo: nil
-                )
-                // swiftlint:enable redundant_discardable_let
+            .navigationDestination(for: RadioBeaconRoute.self) { item in
+                switch item {
+                case .detail(let featureNumber, let volumeNumber):
+                    // disable this rule in order to execute a statement prior to returning a view
+                    // swiftlint:disable redundant_discardable_let
+                    let _ = NotificationCenter.default.post(
+                        name: .DismissBottomSheet,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    // swiftlint:enable redundant_discardable_let
 
-                RadioBeaconDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
+                    RadioBeaconDetailView(featureNumber: featureNumber, volumeNumber: volumeNumber)
+                }
             }
-        }
     }
 }
 
@@ -292,20 +296,20 @@ struct NavigationalWarningRouteModifier: ViewModifier {
 struct PublicationRouteModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
-        .navigationDestination(for: PublicationRoute.self) { item in
-            switch item {
-            case .publications(typeId: let typeId):
-                PublicationsTypeIdListView(pubTypeId: typeId)
-            case .completeVolumes(typeId: let typeId):
-                PublicationsCompleteVolumesList(pubTypeId: typeId)
-            case .nestedFolder(typeId: let typeId):
-                PublicationsNestedFolder(pubTypeId: typeId)
-            case .publicationList(key: let key, pubs: let pubs):
-                PublicationsListView(key: key, publications: pubs)
-            case .completeAndChapters(typeId: let typeId, title: let title, chapterTitle: let chapterTitle):
-                PublicationsChaptersList(pubTypeId: typeId, title: title, chapterTitle: chapterTitle)
+            .navigationDestination(for: PublicationRoute.self) { item in
+                switch item {
+                case .publications(typeId: let typeId):
+                    PublicationsTypeIdListView(pubTypeId: typeId)
+                case .completeVolumes(typeId: let typeId):
+                    PublicationsCompleteVolumesList(pubTypeId: typeId)
+                case .nestedFolder(typeId: let typeId):
+                    PublicationsNestedFolder(pubTypeId: typeId)
+                case .publicationList(key: let key, pubs: let pubs):
+                    PublicationsListView(key: key, publications: pubs)
+                case .completeAndChapters(typeId: let typeId, title: let title, chapterTitle: let chapterTitle):
+                    PublicationsChaptersList(pubTypeId: typeId, title: title, chapterTitle: chapterTitle)
+                }
             }
-        }
     }
 }
 
@@ -336,12 +340,11 @@ struct UserPlaceRouteModifier: ViewModifier {
 }
 
 struct MarlinRouteModifier: ViewModifier {
-    @Binding var path: NavigationPath
     @EnvironmentObject var dataSourceList: DataSourceList
-    
+
     func createExportDataSources() -> [DataSourceDefinitions] {
         var dataSources: [DataSourceDefinitions] = []
-        
+
         for dataSource in dataSourceList.mappedDataSources {
             if let def = DataSourceDefinitions.from(dataSource.dataSource) {
                 dataSources.append(def)
@@ -390,7 +393,7 @@ struct MarlinRouteModifier: ViewModifier {
                 case .acknowledgements:
                     AcknowledgementsView()
                 case .createRoute:
-                    CreateRouteView(path: $path)
+                    CreateRouteView()
                 case .editRoute(let routeURI):
                     CreateRouteView(routeURI: routeURI)
                 }

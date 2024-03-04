@@ -30,7 +30,6 @@ struct NavigationalWarningNavAreaListView: View {
 
         self.navArea = navArea
         self.mapName = mapName
-        _path = path
     }
     
     var body: some View {

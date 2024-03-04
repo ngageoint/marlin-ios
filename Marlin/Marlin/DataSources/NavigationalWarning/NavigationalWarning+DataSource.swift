@@ -221,6 +221,7 @@ extension NavigationalWarning: Locatable, GeoJSONExportable {
     static var imageScale: CGFloat = 1.0
     
     static func postProcess() {
+        imageCache.clearCache()
         if !UserDefaults.standard.navigationalWarningsLocationsParsed {
             DispatchQueue.global(qos: .utility).async {
                 let fetchRequest = NavigationalWarning.fetchRequest()

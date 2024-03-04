@@ -139,7 +139,13 @@ struct AsamModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hashable,
     static func == (lhs: AsamModel, rhs: AsamModel) -> Bool {
         lhs.isEqualTo(rhs)
     }
-    
+
+    init() {
+        self.canBookmark = false
+        self.latitude = kCLLocationCoordinate2DInvalid.latitude
+        self.longitude = kCLLocationCoordinate2DInvalid.longitude
+    }
+
     init(asam: Asam) {
         self.canBookmark = true
         self.asamDescription = asam.asamDescription

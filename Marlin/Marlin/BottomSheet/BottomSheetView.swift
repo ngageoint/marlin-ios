@@ -21,10 +21,7 @@ struct MarlinDataBottomSheet: View {
     let dismissBottomSheetPub = NotificationCenter.default.publisher(for: .DismissBottomSheet)
 
     var body: some View {
-        
-        Self._printChanges()
-        return
-            Color.clear
+        Color.clear
             .sheet(
                 isPresented: $showBottomSheet,
                 onDismiss: {
@@ -45,6 +42,22 @@ struct MarlinDataBottomSheet: View {
                     return
                 }
                 var bottomSheetItems: [BottomSheetItem] = []
+
+                if let itemKeys = notification.itemKeys {
+                    for (dataSourceKey, itemKeys) in itemKeys {
+                        for itemKey in itemKeys {
+                            print("item key \(itemKey)")
+                            let bottomSheetItem = BottomSheetItem(
+                                mapName: notification.mapName,
+                                zoom: notification.zoom,
+                                itemKey: itemKey,
+                                dataSourceKey: dataSourceKey
+                            )
+                            bottomSheetItems.append(bottomSheetItem)
+                        }
+                    }
+                }
+
                 bottomSheetItems += self.handleTappedItems(
                     items: notification.items,
                     mapName: notification.mapName,
@@ -60,7 +73,7 @@ struct MarlinDataBottomSheet: View {
                 showBottomSheet = false
             }
     }
-    
+
     func handleTappedItems(items: [any DataSource]?, mapName: String?, zoom: Bool) -> [BottomSheetItem] {
         var bottomSheetItems: [BottomSheetItem] = []
         if let items = items {
@@ -74,12 +87,14 @@ struct MarlinDataBottomSheet: View {
 }
 
 struct MarlinBottomSheet <Content: View>: View {
+    @EnvironmentObject var router: MarlinRouter
+
     @ObservedObject var itemList: BottomSheetItemList
     @State var selectedItem: Int = 0
 
     var pages: Int { itemList.bottomSheetItems?.count ?? 0 }
     let focusNotification: NSNotification.Name
-        
+
     let contentBuilder: (_ item: BottomSheetItem) -> Content
 
     init(
@@ -106,125 +121,136 @@ struct MarlinBottomSheet <Content: View>: View {
             Rectangle()
                 .fill(Color(type(of: item).definition.color))
                 .frame(maxWidth: 8, maxHeight: .infinity)
+        } else if let dataSourceKey = itemList.bottomSheetItems?[selectedItem].dataSourceKey,
+                  let definition = DataSourceDefinitions(rawValue: dataSourceKey) {
+            Rectangle()
+                .fill(Color(definition.definition.color))
+                .frame(maxWidth: 8, maxHeight: .infinity)
         }
     }
-    
+
     var body: some View {
-        Self._printChanges()
-        return
-            VStack {
-                ZStack {
-                    if let bottomSheetItems = itemList.bottomSheetItems, bottomSheetItems.count >= selectedItem + 1 {
-                        let item = bottomSheetItems[selectedItem].item
+        VStack {
+            ZStack {
+                if let bottomSheetItems = itemList.bottomSheetItems, bottomSheetItems.count >= selectedItem + 1 {
+                    if let item = bottomSheetItems[selectedItem].item {
+                        // TODO: this shouldn't rely on the DataSource.Type
                         HStack {
-                            DataSourceCircleImage(dataSource: type(of: item), size: 30)
+                            DataSourceCircleImage(definition: item.definition, size: 30)
                             Spacer()
                         }
-                        
-                        if bottomSheetItems.count > 1 {
-                            HStack(spacing: 8) {
-                                Button(
-                                    action: {
-                                        withAnimation {
-                                            selectedItem = max(0, selectedItem - 1)
-                                        }
-                                    },
-                                    label: {
-                                        Label(
-                                            title: {},
-                                            icon: { 
-                                                Image(systemName: "chevron.left")
+                    } else if let dataSourceKey = bottomSheetItems[selectedItem].dataSourceKey,
+                                let definition = DataSourceDefinitions(rawValue: dataSourceKey) {
+                        HStack {
+                            DataSourceCircleImage(definition: definition.definition, size: 30)
+                            Spacer()
+                        }
+                    }
+
+                    if bottomSheetItems.count > 1 {
+                        HStack(spacing: 8) {
+                            Button(
+                                action: {
+                                    withAnimation {
+                                        selectedItem = max(0, selectedItem - 1)
+                                    }
+                                },
+                                label: {
+                                    Label(
+                                        title: {},
+                                        icon: {
+                                            Image(systemName: "chevron.left")
                                                 .renderingMode(.template)
                                                 .foregroundColor(selectedItem != 0
                                                                  ? Color.primaryColorVariant : Color.disabledColor
                                                 )
                                         })
+                                }
+                            )
+                            .buttonStyle(MaterialButtonStyle())
+                            .accessibilityElement()
+                            .accessibilityLabel("previous")
+
+                            Text("\(selectedItem + 1) of \(pages)")
+                                .font(Font.caption)
+                                .foregroundColor(Color.onSurfaceColor.opacity(0.6))
+
+                            Button(
+                                action: {
+                                    withAnimation {
+                                        selectedItem = min(pages - 1, selectedItem + 1)
                                     }
-                                )
-                                .buttonStyle(MaterialButtonStyle())
-                                .accessibilityElement()
-                                .accessibilityLabel("previous")
-                                
-                                Text("\(selectedItem + 1) of \(pages)")
-                                    .font(Font.caption)
-                                    .foregroundColor(Color.onSurfaceColor.opacity(0.6))
-                                
-                                Button(
-                                    action: {
-                                        withAnimation {
-                                            selectedItem = min(pages - 1, selectedItem + 1)
-                                        }
-                                    },
-                                    label: {
-                                        Label(
-                                            title: {},
-                                            icon: { 
-                                                Image(systemName: "chevron.right")
+                                },
+                                label: {
+                                    Label(
+                                        title: {},
+                                        icon: {
+                                            Image(systemName: "chevron.right")
                                                 .renderingMode(.template)
                                                 .foregroundColor(pages - 1 != selectedItem
                                                                  ? Color.primaryColorVariant : Color.disabledColor)
-                                            })
-                                    }
-                                )
-                                .buttonStyle(MaterialButtonStyle())
-                                .accessibilityElement()
-                                .accessibilityLabel("next")
-                            }
+                                        })
+                                }
+                            )
+                            .buttonStyle(MaterialButtonStyle())
+                            .accessibilityElement()
+                            .accessibilityLabel("next")
                         }
                     }
                 }
-                
-                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1,
-                   let item = itemList.bottomSheetItems?[selectedItem] {
-                    contentBuilder(item)
-                        .transition(.opacity)
-                }
+            }
 
+            if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1,
+               let item = itemList.bottomSheetItems?[selectedItem] {
+                contentBuilder(item)
+                    .transition(.opacity)
+            }
+
+            Spacer()
+        }
+        .navigationBarHidden(true)
+        .padding(.all, 16)
+        .background(
+            HStack {
+                rectangle
                 Spacer()
             }
-            .navigationBarHidden(true)
-            .padding(.all, 16)
-            .background(
-                HStack {
-                    rectangle
-                    Spacer()
-                }
                 .ignoresSafeArea()
-            )
-            .onChange(of: selectedItem) { item in
-                // This can all be removed once all bottom sheet items focus properly
-                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1,
-                   let bottomSheetItem = itemList.bottomSheetItems?[selectedItem],
-                    let item = bottomSheetItem.item as? Locatable {
-                    NotificationCenter.default.post(
-                        name: focusNotification,
-                        object: FocusMapOnItemNotification(
-                            item: item,
-                            zoom: bottomSheetItem.zoom,
-                            mapName: bottomSheetItem.mapName,
-                            definition: bottomSheetItem.item?.definition
-                        )
+        )
+        .onChange(of: selectedItem) { item in
+            // This can all be removed once all bottom sheet items focus properly
+            if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1,
+               let bottomSheetItem = itemList.bottomSheetItems?[selectedItem],
+               let item = bottomSheetItem.item as? Locatable {
+                NotificationCenter.default.post(
+                    name: focusNotification,
+                    object: FocusMapOnItemNotification(
+                        item: item,
+                        zoom: bottomSheetItem.zoom,
+                        mapName: bottomSheetItem.mapName,
+                        definition: bottomSheetItem.item?.definition
                     )
+                )
+            }
+        }
+        .onAppear {
+            // This can all be removed once all bottom sheet items focus properly
+            if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1,
+               let bottomSheetItem = itemList.bottomSheetItems?[selectedItem],
+               let item = bottomSheetItem.item as? Locatable {
+                NotificationCenter.default.post(
+                    name: focusNotification,
+                    object: FocusMapOnItemNotification(
+                        item: item,
+                        zoom: bottomSheetItem.zoom,
+                        mapName: bottomSheetItem.mapName,
+                        definition: bottomSheetItem.item?.definition
+                    )
+                )
+                if let dataSource = item as? DataSource {
+                    Metrics.shared.dataSourceBottomSheet(dataSource: type(of: dataSource).definition)
                 }
             }
-            .onAppear {
-                // This can all be removed once all bottom sheet items focus properly
-                if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1,
-                   let bottomSheetItem = itemList.bottomSheetItems?[selectedItem],
-                   let item = bottomSheetItem.item as? Locatable {
-                    NotificationCenter.default.post(
-                        name: focusNotification,
-                        object: FocusMapOnItemNotification(
-                            item: item,
-                            zoom: bottomSheetItem.zoom,
-                            mapName: bottomSheetItem.mapName,
-                            definition: bottomSheetItem.item?.definition
-                        )
-                    )
-                    if let dataSource = item as? DataSource {
-                        Metrics.shared.dataSourceBottomSheet(dataSource: type(of: dataSource).definition)
-                    }
-                }
-            }
+        }
     }
 }

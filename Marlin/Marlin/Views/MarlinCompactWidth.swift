@@ -9,8 +9,7 @@ import SwiftUI
 import MapKit
 
 struct MarlinCompactWidth: View {
-    @State private var path: NavigationPath = NavigationPath()
-
+    @EnvironmentObject var router: MarlinRouter
     @AppStorage("selectedTab") var selectedTab: String = "map"
     
     @State var menuOpen: Bool = false
@@ -30,7 +29,7 @@ struct MarlinCompactWidth: View {
         Self._printChanges()
         return ZStack {
             TabView(selection: $selectedTab) {
-                MapNavigationView(filterOpen: $filterOpen, menuOpen: $menuOpen, path: $path)
+                MapNavigationView(filterOpen: $filterOpen, menuOpen: $menuOpen)
                 .tag("map")
                 .tabItem {
                     Label("Map", systemImage: "map.fill")
@@ -70,7 +69,7 @@ struct MarlinCompactWidth: View {
             .onReceive(mapFocus) { output in
                 let tab = output.object as? String ?? "map"
                 selectedTab = tab
-                path.removeLast(path.count)
+                router.path.removeLast(router.path.count)
             }
             .onReceive(switchTabPub) { output in
                 if let output = output as? String {

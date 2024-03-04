@@ -31,7 +31,7 @@ final class AboutViewTests: XCTestCase {
             var body: some View {
                 NavigationStack(path: $path) {
                     AboutView()
-                        .marlinRoutes(path: $path)
+                        .marlinRoutes()
                 }
                  
             }
@@ -57,7 +57,7 @@ final class AboutViewTests: XCTestCase {
             var body: some View {
                 NavigationStack(path: $path) {
                     AboutView()
-                        .marlinRoutes(path: $path)
+                        .marlinRoutes()
                 }
                  
             }

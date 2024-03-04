@@ -15,18 +15,18 @@ class DataSourceExportProgress: Identifiable, Hashable, Equatable, ObservableObj
     static func == (lhs: DataSourceExportProgress, rhs: DataSourceExportProgress) -> Bool {
         return lhs.id == rhs.id
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
     var id: String { filterable.definition.key }
     var filterable: Filterable
     @Published var complete: Bool = false
     @Published var exporting: Bool = false
     @Published var totalCount: Float = 0.0
     @Published var exportCount: Float = 0.0
-    
+
     init(filterable: Filterable) {
         self.filterable = filterable
     }
@@ -41,7 +41,7 @@ class GeoPackageExportViewModel: ObservableObject {
     var radioBeaconRepository: RadioBeaconRepository?
     var routeRepository: RouteRepository?
     var navigationalWarningRepository: NavigationalWarningRepository?
-    
+
     var cancellable = Set<AnyCancellable>()
     var countChangeCancellable: AnyCancellable?
 
@@ -54,22 +54,22 @@ class GeoPackageExportViewModel: ObservableObject {
 
     var geoPackage: GPKGGeoPackage?
     var filename: String?
-    
+
     @Published var dataSources: [any DataSourceDefinition] = []
-    
+
     @Published var exportProgresses: [DataSourceDefinitions: DataSourceExportProgress] = [:]
-    
+
     @Published var complete: Bool = false
     @Published var exporting: Bool = false
     @Published var creationError: String?
     @Published var error: Bool = false
-    
+
     @Published var counts: [DataSourceDefinitions: Int] = [:]
-    
+
     init() {
         setupCombine()
     }
-    
+
     func setupCombine() {
         // when the filterViewModels values changes, re-set up the filter subscriber
         $filterViewModels
@@ -78,13 +78,13 @@ class GeoPackageExportViewModel: ObservableObject {
                 self?.bindFilters()
             }
             .store(in: &cancellable)
-        
+
         $dataSources
             .receive(on: RunLoop.main)
             .sink { [weak self] dataSources in
                 guard let self = self else { return }
                 for dataSource in dataSources {
-                    if let definitions = DataSourceDefinitions.from(dataSource), 
+                    if let definitions = DataSourceDefinitions.from(dataSource),
                         let filterable = definitions.filterable {
                         let exportProgress = DataSourceExportProgress(filterable: filterable)
                         self.exportProgresses[definitions] = exportProgress
@@ -94,7 +94,7 @@ class GeoPackageExportViewModel: ObservableObject {
             }
             .store(in: &cancellable)
     }
-    
+
     func bindFilters() {
         let observables = filterViewModels.values.map { Publishers.MergeMany($0.$filters) }
         let publisher = Publishers.MergeMany(observables)
@@ -109,7 +109,7 @@ class GeoPackageExportViewModel: ObservableObject {
                 self.updateCounts()
             }
     }
-    
+
     func getCount(definition: (any DataSourceDefinition)? = nil) -> Int? {
         if let def = DataSourceDefinitions.from(definition) {
             return counts[def]
@@ -122,14 +122,14 @@ class GeoPackageExportViewModel: ObservableObject {
             DataSourceDefinitions.from(definition)
         }
     }
-    
+
     func updateCounts() {
         NSLog("Update Counts commonFilters are \(self.commonViewModel.filters)")
         self.counts = dataSources.reduce(into: [DataSourceDefinitions: Int]()) {
-            
+
             if let definition = DataSourceDefinitions.from($1) {
                 let filters = (self.filterViewModels[definition]?.filters ?? []) + self.commonViewModel.filters
-                
+
                 switch definition {
                 case .route: $0[definition] = self.routeRepository?.getCount(filters: filters)
                 case .asam: $0[definition] = self.asamRepository?.getCount(filters: filters)
@@ -144,7 +144,7 @@ class GeoPackageExportViewModel: ObservableObject {
             }
         }
     }
-    
+
     func toggleDataSource(definition: any DataSourceDefinition) {
         if exporting {
             return
@@ -152,42 +152,42 @@ class GeoPackageExportViewModel: ObservableObject {
         let included = dataSources.contains { dsDefinition in
             dsDefinition.key == definition.key
         }
-        
+
         if included {
-            removeExportDataSource(filterable: DataSourceDefinitions.filterableFromDefintion(definition))
+            removeExportDataSource(filterable: DataSources.filterableFromDefintion(definition))
         } else {
-            addExportDataSource(filterable: DataSourceDefinitions.filterableFromDefintion(definition))
+            addExportDataSource(filterable: DataSources.filterableFromDefintion(definition))
         }
     }
-    
+
     func setExportParameters(
         dataSources: [DataSourceDefinitions],
         filters: [DataSourceFilterParameter]?,
         useMapRegion: Bool) {
-        let region = UserDefaults.standard.mapRegion
-        
-        for dataSource in dataSources {
-            toggleDataSource(definition: dataSource.definition)
-            if let filters = filters {
-                filterViewModels[dataSource]?.filters.append(contentsOf: filters)
+            let region = UserDefaults.standard.mapRegion
+
+            for dataSource in dataSources {
+                toggleDataSource(definition: dataSource.definition)
+                if let filters = filters {
+                    filterViewModels[dataSource]?.filters.append(contentsOf: filters)
+                }
+            }
+
+            if useMapRegion {
+                commonViewModel.filters = [
+                    DataSourceFilterParameter(
+                        property: DataSourceProperty(name: "Location",
+                                                     key: #keyPath(CommonDataSource.coordinate),
+                                                     type: .location),
+                        comparison: .bounds,
+                        valueMinLatitude: region.center.latitude - (region.span.latitudeDelta / 2.0),
+                        valueMinLongitude: region.center.longitude - (region.span.longitudeDelta / 2.0),
+                        valueMaxLatitude: region.center.latitude + (region.span.latitudeDelta / 2.0),
+                        valueMaxLongitude: region.center.longitude + (region.span.longitudeDelta / 2.0))
+                ]
             }
         }
-        
-        if useMapRegion {
-            commonViewModel.filters = [
-                DataSourceFilterParameter(
-                    property: DataSourceProperty(name: "Location",
-                                                 key: #keyPath(CommonDataSource.coordinate),
-                                                 type: .location),
-                    comparison: .bounds,
-                    valueMinLatitude: region.center.latitude - (region.span.latitudeDelta / 2.0),
-                    valueMinLongitude: region.center.longitude - (region.span.longitudeDelta / 2.0),
-                    valueMaxLatitude: region.center.latitude + (region.span.latitudeDelta / 2.0),
-                    valueMaxLongitude: region.center.longitude + (region.span.longitudeDelta / 2.0))
-            ]
-        }
-    }
-    
+
     func addExportDataSource(filterable: Filterable?) {
         guard let filterable = filterable, let def = DataSourceDefinitions.from(filterable.definition) else {
             return
@@ -197,7 +197,7 @@ class GeoPackageExportViewModel: ObservableObject {
             filters: UserDefaults.standard.filter(filterable.definition))
         dataSources.append(filterable.definition)
     }
-    
+
     func removeExportDataSource(filterable: Filterable?) {
         guard let filterable = filterable, let def = DataSourceDefinitions.from(filterable.definition) else {
             return
@@ -207,15 +207,15 @@ class GeoPackageExportViewModel: ObservableObject {
             return definition.key == filterable.definition.key
         }
     }
-        
+
     func createGeoPackage() -> Bool {
         do {
             let created = try ExceptionCatcher.catch {
                 let formatter = DateFormatter()
                 formatter.dateFormat = "YYYYMMddHHmmss"
                 let fileDate = formatter.string(from: Date())
-                 let filename = "marlin_export\(fileDate)"
-                
+                let filename = "marlin_export\(fileDate)"
+
                 if manager.create(filename) {
                     geoPackage = manager.open(filename)
                 }
@@ -233,7 +233,7 @@ class GeoPackageExportViewModel: ObservableObject {
         }
         return false
     }
-    
+
     func export() async {
         await MainActor.run {
             exporting = true
@@ -243,7 +243,7 @@ class GeoPackageExportViewModel: ObservableObject {
         await backgroundExport()
         Metrics.shared.geoPackageExport(dataSources: filterViewModels.values.compactMap(\.dataSource))
     }
-    
+
     private func backgroundExport() async {
         if !createGeoPackage() {
             await MainActor.run {

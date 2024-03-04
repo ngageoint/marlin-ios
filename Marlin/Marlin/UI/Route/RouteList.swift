@@ -30,7 +30,7 @@ struct RouteSummaryView: DataSourceSummaryView {
                         .overline()
                     HStack {
                         if let first = route.waypointArray.first {
-                            if let dataSourceKey = first.dataSource, 
+                            if let dataSourceKey = first.dataSource,
                                 let type = DataSources.fromKey(key: dataSourceKey) {
                                 DataSourceCircleImage(definition: type, size: 15)
                             }
@@ -44,7 +44,7 @@ struct RouteSummaryView: DataSourceSummaryView {
                         Image(systemName: "ellipsis")
                         if let last = route.waypointArray.last {
                             Group {
-                                if let dataSourceKey = last.dataSource, 
+                                if let dataSourceKey = last.dataSource,
                                     let type = DataSources.fromKey(key: dataSourceKey) {
                                     DataSourceCircleImage(definition: type, size: 15)
                                 }
@@ -55,7 +55,7 @@ struct RouteSummaryView: DataSourceSummaryView {
                                         .opacity(0.8)
                                 }
                             }
-                            
+
                         }
                     }
                     if let distance = route.nauticalMilesDistance {
@@ -75,27 +75,27 @@ struct RouteSummaryView: DataSourceSummaryView {
 struct RouteList: View {
     @EnvironmentObject var routeRepository: RouteRepository
     @StateObject var viewModel: RoutesViewModel = RoutesViewModel()
-    
-    @Binding var path: NavigationPath
+
+    @EnvironmentObject var router: MarlinRouter
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             List(viewModel.routes) { route in
                 RouteSummaryView(route: route)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    path.append(MarlinRoute.editRoute(routeURI: route.routeURL))
-                }
-                .swipeActions(edge: .trailing) {
-                    Button(role: .destructive) {
-                        print("delete")
-                        viewModel.deleteRoute(route: route.routeURL)
-                    } label: {
-                        Label("Delete", systemImage: "trash")
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        router.path.append(MarlinRoute.editRoute(routeURI: route.routeURL))
                     }
-                    .accessibilityElement()
-                    .accessibilityLabel("remove route \(route.name ?? "")")
-                    .tint(Color.red)
-                }
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            print("delete")
+                            viewModel.deleteRoute(route: route.routeURL)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                        .accessibilityElement()
+                        .accessibilityLabel("remove route \(route.name ?? "")")
+                        .tint(Color.red)
+                    }
             }
             CreateRouteButton()
         }

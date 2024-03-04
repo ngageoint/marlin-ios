@@ -78,7 +78,7 @@ struct MarlinRegularWidth: View {
                 DataLoadedNotificationBanner()
                 CurrentLocation()
                 ZStack(alignment: .topLeading) {
-                    MarlinMainMap(path: $path)
+                    MarlinMainMap()
                         .accessibilityElement(children: .contain)
                         .accessibilityLabel("Marlin Map")
                         .onAppear {
@@ -87,7 +87,7 @@ struct MarlinRegularWidth: View {
                     loadingCapsule()
                 }
             }
-            .marlinRoutes(path: $path)
+            .marlinRoutes()
             .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
             .navigationTitle("Marlin")
             .navigationBarTitleDisplayMode(.inline)

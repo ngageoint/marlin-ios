@@ -10,10 +10,10 @@ import SwiftUI
 struct SortView: View {
     @ObservedObject var viewModel: SortViewModel
 
-    init(dataSource: any DataSource.Type) {
-        viewModel = SortViewModel(dataSource: dataSource)
+    init(definition: any DataSourceDefinition) {
+        viewModel = SortViewModel(definition: definition)
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Group {
@@ -24,7 +24,7 @@ struct SortView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding([.leading, .trailing, .top], 16)
-                
+
                 firstSortProperty()
                 secondSortProperty()
 
@@ -34,7 +34,7 @@ struct SortView: View {
             HStack {
                 Spacer()
                 Button {
-                    viewModel.sort = viewModel.dataSource.defaultSort
+                    viewModel.sort = viewModel.filterable?.defaultSort ?? []
                 } label: {
                     Text("Reset to Default")
                 }
@@ -59,7 +59,7 @@ struct SortView: View {
             .accessibilityLabel("Group by primary sort field")
         }
     }
-    
+
     @ViewBuilder
     func firstSortProperty() -> some View {
         if let sortProperty = viewModel.firstSortProperty {
@@ -88,7 +88,7 @@ struct SortView: View {
             .padding(.top, 8)
         }
     }
-    
+
     @ViewBuilder
     func secondSortProperty() -> some View {
         if let sortProperty = viewModel.secondSortProperty {
@@ -108,7 +108,7 @@ struct SortView: View {
             .frame(maxWidth: .infinity)
         }
     }
-    
+
     @ViewBuilder
     func addSortProperty() -> some View {
         if !viewModel.possibleSortProperties.isEmpty {
@@ -121,7 +121,7 @@ struct SortView: View {
                 .fixedSize()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
-                
+
                 Picker("Direction", selection: $viewModel.ascending) {
                     Text("Ascending").tag(true)
                     Text("Descending").tag(false)
@@ -129,7 +129,7 @@ struct SortView: View {
                 .fixedSize()
                 .labelsHidden()
                 .tint(Color.primaryColorVariant)
-                
+
                 Spacer()
                     .background(Color.red)
                 Button {

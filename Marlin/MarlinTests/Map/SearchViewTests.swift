@@ -253,7 +253,6 @@ final class SearchViewTests: XCTestCase {
         let passThrough = PassThrough()
         
         let container = Container(passThrough: passThrough)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()

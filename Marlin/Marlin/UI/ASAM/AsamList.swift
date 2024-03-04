@@ -76,7 +76,7 @@ struct AsamList: View {
                                 }
                                 .sectionHeader()
                         }
-                        
+
                     }
                     .listStyle(.plain)
                     .listSectionSeparator(.hidden)
@@ -147,10 +147,10 @@ struct AsamList: View {
                     VStack(alignment: .leading, spacing: 0) {
                         SortView(definition: DataSources.asam)
                             .background(Color.surfaceColor)
-                        
+
                         Spacer()
                     }
-                    
+
                 }
                 .navigationTitle("\(DataSources.asam.name) Sort")
                 .navigationBarTitleDisplayMode(.inline)
@@ -173,7 +173,7 @@ struct AsamList: View {
                 }
                 .presentationDetents([.large])
             }
-            
+
             .onAppear {
                 Metrics.shared.dataSourceSort(dataSource: DataSources.asam)
             }

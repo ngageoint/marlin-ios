@@ -11,19 +11,19 @@ import GeoJSON
 import Combine
 
 struct CreateRouteView: View {
+    @EnvironmentObject var router: MarlinRouter
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var locationManager: LocationManager
-    
+
     let maxFeatureAreaSize: CGFloat = 300
-    @Binding var path: NavigationPath
     @State var routeURI: URL?
-    
+
     @State private var waypointsFrameSize: CGSize = .zero
     @State private var firstWaypointFrameSize: CGSize = .zero
     @State private var lastWaypointFrameSize: CGSize = .zero
     @State private var instructionsFrameSize: CGSize = .zero
     @State private var distanceFrameSize: CGSize = .zero
-    
+
     @StateObject var routeViewModel: RouteViewModel = RouteViewModel()
     enum Field: Hashable {
         case name
@@ -53,7 +53,7 @@ struct CreateRouteView: View {
                 .overlay {
                     routeList()
                 }
-            RouteMapView(path: $path, routeViewModel: routeViewModel)
+            RouteMapView(routeViewModel: routeViewModel)
                 .edgesIgnoringSafeArea([.leading, .trailing])
         }
         .gesture(tapGesture)
@@ -62,7 +62,7 @@ struct CreateRouteView: View {
                 if routeViewModel.waypoints.count > 1 {
                     Button("Save") {
                         routeViewModel.createRoute(context: managedObjectContext)
-                        path.removeLast()
+                        router.path.removeLast()
                     }
                 }
             }
@@ -75,7 +75,7 @@ struct CreateRouteView: View {
             }
         }
     }
-    
+
     @ViewBuilder
     func waypointRow(waypointViewBuilder: any GeoJSONExportable, first: Bool = false, last: Bool = false) -> some View {
         HStack {
@@ -241,8 +241,8 @@ struct CreateRouteView: View {
             }
         }
     }
-    
-    // this seems dumb, and it is.  This is used only for sizing because you 
+
+    // this seems dumb, and it is.  This is used only for sizing because you
     // cannot add swipe actions to anything
     // other than a list AND you can't get the content size of a list because,
     // of course you can't so we use this to create the right size, and set
@@ -260,7 +260,7 @@ struct CreateRouteView: View {
 
         }
         .padding(16)
-        
+
         .overlay(
             GeometryReader { geo in
                 Color.clear.onAppear {
