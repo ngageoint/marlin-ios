@@ -44,8 +44,8 @@ final class DifferentialGPSStationDetailViewTests: XCTestCase {
             localDataSource: localDataSource,
             remoteDataSource: DGPSStationRemoteDataSource()
         )
-        let bookmarkStaticRepository = BookmarkStaticRepository(dgpsRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, dgpsRepository: repository)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let view = DGPSStationDetailView(featureNumber: dgps.featureNumber, volumeNumber: dgps.volumeNumber)
@@ -102,8 +102,8 @@ final class DifferentialGPSStationDetailViewTests: XCTestCase {
             localDataSource: localDataSource,
             remoteDataSource: DGPSStationRemoteDataSource()
         )
-        let bookmarkStaticRepository = BookmarkStaticRepository(dgpsRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, dgpsRepository: repository)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let view = DGPSStationDetailView(featureNumber: dgps.featureNumber, volumeNumber: dgps.volumeNumber)

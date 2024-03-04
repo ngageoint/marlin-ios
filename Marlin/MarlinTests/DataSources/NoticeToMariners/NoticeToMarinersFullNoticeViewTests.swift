@@ -245,8 +245,9 @@ final class NoticeToMarinersFullNoticeViewTests: XCTestCase {
             }
         }
         let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(noticeToMarinersRepository: repository))
-        
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+
         let detailView = NoticeToMarinersFullNoticeView(noticeNumber: Int(ntm.noticeNumber!))
             .environmentObject(bookmarkRepository)
             .environmentObject(repository)

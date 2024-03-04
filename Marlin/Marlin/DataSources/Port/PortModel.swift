@@ -21,7 +21,7 @@ struct PortListModel: Hashable, Identifiable {
     }
 
     var portName: String?
-    var portNumber: Int64
+    var portNumber: Int
     var alternateName: String?
     var regionName: String?
     var latitude: Double
@@ -32,7 +32,7 @@ struct PortListModel: Hashable, Identifiable {
     init(port: Port) {
         self.canBookmark = true
         self.portName = port.portName
-        self.portNumber = port.portNumber
+        self.portNumber = Int(port.portNumber)
         self.alternateName = port.alternateName
         self.regionName = port.regionName
         self.latitude = port.latitude
@@ -68,7 +68,7 @@ extension PortListModel {
     init(portModel: PortModel) {
         self.canBookmark = portModel.canBookmark
         self.portName = portModel.portName
-        self.portNumber = Int64(portModel.portNumber)
+        self.portNumber = Int(portModel.portNumber)
         self.alternateName = portModel.alternateName
         self.regionName = portModel.regionName
         self.latitude = portModel.latitude

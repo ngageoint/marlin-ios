@@ -44,8 +44,8 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         let localDataSource = RadioBeaconStaticLocalDataSource()
         localDataSource.list = [rb]
         let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: RadioBeaconRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(radioBeaconRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, radioBeaconRepository: repository)
 
         let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
             .setShowMoreDetails(false)
@@ -97,7 +97,7 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapView(withAccessibilityLabel: "dismiss popup")
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkStaticRepository, bookmarkable: rb)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: rb)
     }
     
     func testShowMoreDetails() {
@@ -131,8 +131,8 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         let localDataSource = RadioBeaconStaticLocalDataSource()
         localDataSource.list = [rb]
         let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: RadioBeaconRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(radioBeaconRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, radioBeaconRepository: repository)
 
         let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
             .setShowMoreDetails(true)
@@ -184,8 +184,8 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         let localDataSource = RadioBeaconStaticLocalDataSource()
         localDataSource.list = [rb]
         let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: RadioBeaconRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(radioBeaconRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, radioBeaconRepository: repository)
 
         let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
             .setShowSectionHeader(true)

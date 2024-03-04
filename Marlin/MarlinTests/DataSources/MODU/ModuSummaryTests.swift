@@ -31,8 +31,8 @@ final class ModuSummaryTests: XCTestCase {
         let localDataSource = ModuStaticLocalDataSource()
         localDataSource.list = [modu]
         let repository = ModuRepository(localDataSource: localDataSource, remoteDataSource: ModuRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(moduRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, moduRepository: repository)
 
         let summary = ModuSummaryView(modu: ModuListModel(moduModel: modu))
             .setShowMoreDetails(false)
@@ -82,7 +82,7 @@ final class ModuSummaryTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapView(withAccessibilityLabel: "dismiss popup")
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkStaticRepository, bookmarkable: modu)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: modu)
     }
     
     func testShowMoreDetails() {
@@ -104,8 +104,8 @@ final class ModuSummaryTests: XCTestCase {
         let localDataSource = ModuStaticLocalDataSource()
         localDataSource.list = [modu]
         let repository = ModuRepository(localDataSource: localDataSource, remoteDataSource: ModuRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(moduRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, moduRepository: repository)
 
         let summary = ModuSummaryView(modu: ModuListModel(moduModel: modu))
             .setShowMoreDetails(true)

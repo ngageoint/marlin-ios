@@ -98,7 +98,8 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
         let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
         let mapFeatureRepository = NavigationalWarningsMapFeatureRepository(localDataSource: repository.localDataSource)
 
         let container = Container(passThrough: passThrough)
@@ -200,7 +201,8 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
         let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
         let mapFeatureRepository = NavigationalWarningsMapFeatureRepository(localDataSource: repository.localDataSource)
 
         let container = Container(passThrough: passThrough)

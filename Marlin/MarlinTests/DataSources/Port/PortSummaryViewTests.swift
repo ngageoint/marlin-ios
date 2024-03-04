@@ -133,8 +133,8 @@ final class PortSummaryViewTests: XCTestCase {
         let localDataSource = PortStaticLocalDataSource()
         localDataSource.list = [port]
         let repository = PortRepository(localDataSource: localDataSource, remoteDataSource: PortRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(portRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, portRepository: repository)
         let router = MarlinRouter()
         let summary = PortSummaryView(port: PortListModel(portModel:port))
             .setShowMoreDetails(false)
@@ -178,7 +178,7 @@ final class PortSummaryViewTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkStaticRepository, bookmarkable: port)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: port)
 
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
@@ -307,8 +307,8 @@ final class PortSummaryViewTests: XCTestCase {
         let localDataSource = PortStaticLocalDataSource()
         localDataSource.list = [port]
         let repository = PortRepository(localDataSource: localDataSource, remoteDataSource: PortRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(portRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, portRepository: repository)
         let router = MarlinRouter()
         let summary = PortSummaryView(port: PortListModel(portModel:port))
             .setShowMoreDetails(true)
@@ -328,7 +328,7 @@ final class PortSummaryViewTests: XCTestCase {
 
         tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkStaticRepository, bookmarkable: port)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: port)
     }
 
 }

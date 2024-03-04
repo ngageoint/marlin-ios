@@ -34,7 +34,8 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         localDataSource.list.append(nw)
         let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
 
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkStaticRepository(navigationalWarningRepository: repository))
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
         let summary = NavigationalWarningSummaryView(navigationalWarning: nw)
             .setShowMoreDetails(false)
             .environmentObject(repository)

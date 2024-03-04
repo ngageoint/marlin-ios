@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 struct PortSummaryView: DataSourceSummaryView {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @EnvironmentObject var router: MarlinRouter
     var showSectionHeader: Bool = false
     

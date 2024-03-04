@@ -15,7 +15,7 @@ class BookmarkViewModel: ObservableObject {
     @Published var bookmarkBottomSheet: Bool = false
     @Published var bnotes: String = ""
 
-    var repository: (any BookmarkRepository)?
+    var repository: BookmarkRepository?
     
     @discardableResult
     func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel? {

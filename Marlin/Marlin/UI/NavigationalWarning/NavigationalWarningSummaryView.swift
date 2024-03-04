@@ -10,7 +10,7 @@ import MapKit
 
 struct NavigationalWarningSummaryView: DataSourceSummaryView {
     @EnvironmentObject var router: MarlinRouter
-    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     
     var showSectionHeader: Bool = false

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PublicationSummaryView: DataSourceSummaryView {
     @EnvironmentObject var repository: PublicationRepository
-    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
 
     var s3Key: String

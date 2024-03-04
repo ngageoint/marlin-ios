@@ -6,44 +6,24 @@
 //
 
 import Foundation
-import CoreData
+import Combine
 
-class BookmarkRepositoryManager: BookmarkRepository, ObservableObject {
-    private var repository: BookmarkRepository
-    init(repository: BookmarkRepository) {
-        self.repository = repository
-    }
-    
-    func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel? {
-        repository.getBookmark(itemKey: itemKey, dataSource: dataSource)
-    }
-
-    func createBookmark(notes: String?, itemKey: String, dataSource: String) async {
-        await repository.createBookmark(notes: notes, itemKey: itemKey, dataSource: dataSource)
+enum BookmarkItem: Hashable, Identifiable {
+    var id: String {
+        switch self {
+        case .listItem(let bookmark):
+            return "\(bookmark.dataSource ?? "")--\(bookmark.itemKey ?? "")"
+        case .sectionHeader(let header):
+            return header
+        }
     }
 
-    func removeBookmark(itemKey: String, dataSource: String) -> Bool {
-        repository.removeBookmark(itemKey: itemKey, dataSource: dataSource)
-    }
-    func getDataSourceItem(itemKey: String, dataSource: String) -> (any Bookmarkable)? {
-        repository.getDataSourceItem(itemKey: itemKey, dataSource: dataSource)
-    }
+    case listItem(_ bookmark: BookmarkModel)
+    case sectionHeader(header: String)
 }
 
-protocol BookmarkRepository {
-    @discardableResult
-    func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel?
-
-    func createBookmark(notes: String?, itemKey: String, dataSource: String) async
-    @discardableResult
-    func removeBookmark(itemKey: String, dataSource: String) -> Bool
-    func getDataSourceItem(itemKey: String, dataSource: String) -> (any Bookmarkable)?
-}
-
-class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
-    private lazy var context: NSManagedObjectContext = {
-        PersistenceController.current.newTaskContext()
-    }()
+class BookmarkRepository: ObservableObject {
+    let localDataSource: BookmarkLocalDataSource
 
     let asamRepository: AsamRepository?
     let dgpsRepository: DGPSStationRepository?
@@ -56,6 +36,7 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
     let navigationalWarningRepository: NavigationalWarningRepository?
 
     init(
+        localDataSource: BookmarkLocalDataSource,
         asamRepository: AsamRepository? = nil,
         dgpsRepository: DGPSStationRepository? = nil,
         lightRepository: LightRepository? = nil,
@@ -66,6 +47,7 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
         publicationRepository: PublicationRepository? = nil,
         navigationalWarningRepository: NavigationalWarningRepository? = nil
     ) {
+        self.localDataSource = localDataSource
         self.asamRepository = asamRepository
         self.dgpsRepository = dgpsRepository
         self.lightRepository = lightRepository
@@ -78,46 +60,22 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
     }
 
     func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel? {
-        return context.performAndWait {
-            if let bookmark = try? context.fetchFirst(
-                Bookmark.self,
-                predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey, dataSource)) {
-                return BookmarkModel(bookmark: bookmark)
-            }
-            return nil
-        }
+        localDataSource.getBookmark(itemKey: itemKey, dataSource: dataSource)
     }
 
     func createBookmark(notes: String?, itemKey: String, dataSource: String) async {
-        await context.perform {
-            let bookmark = Bookmark(context: self.context)
-            bookmark.notes = notes
-            bookmark.dataSource = dataSource
-            bookmark.id = itemKey
-            bookmark.timestamp = Date()
-            do {
-                try self.context.save()
-            } catch {
-                print("Error saving bookmark \(error)")
-            }
-        }
+        await localDataSource.createBookmark(notes: notes, itemKey: itemKey, dataSource: dataSource)
     }
 
     func removeBookmark(itemKey: String, dataSource: String) -> Bool {
-        return context.performAndWait {
-            let request = Bookmark.fetchRequest()
-            request.predicate = NSPredicate(format: "id = %@ AND dataSource = %@", itemKey, dataSource)
-            for bookmark in context.fetch(request: request) ?? [] {
-                context.delete(bookmark)
-            }
-            do {
-                try context.save()
-                return true
-            } catch {
-                print("Error removing bookmark")
-            }
-            return false
-        }
+        localDataSource.removeBookmark(itemKey: itemKey, dataSource: dataSource)
+    }
+
+    func bookmarks(
+        filters: [DataSourceFilterParameter]?,
+        paginatedBy paginator: Trigger.Signal? = nil
+    ) -> AnyPublisher<[BookmarkItem], Error> {
+        localDataSource.bookmarks(filters: filters, paginatedBy: paginator)
     }
 
     func getDataSourceItem(itemKey: String, dataSource: String) -> (any Bookmarkable)? {
@@ -128,7 +86,7 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
         case DataSources.modu.key:
             return moduRepository?.getModu(name: itemKey)
         case DataSources.port.key:
-            return portRepository?.getPort(portNumber: Int64(itemKey))
+            return portRepository?.getPort(portNumber: Int(itemKey))
         case DataSources.navWarning.key:
             if split.count == 3 {
                 return navigationalWarningRepository?.getNavigationalWarning(
@@ -164,7 +122,10 @@ class BookmarkCoreDataRepository: BookmarkRepository, ObservableObject {
         case DataSources.epub.key:
             return publicationRepository?.getPublication(s3Key: itemKey)
         case GeoPackageFeatureItem.key:
-            return GeoPackageFeatureItem.getItem(context: context, itemKey: itemKey)
+            return GeoPackageFeatureItem.getItem(
+                context: PersistenceController.current.newTaskContext(),
+                itemKey: itemKey
+            )
         default:
             print("default")
         }

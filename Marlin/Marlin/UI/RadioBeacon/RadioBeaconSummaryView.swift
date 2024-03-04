@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RadioBeaconSummaryView: DataSourceSummaryView {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @EnvironmentObject var router: MarlinRouter
 
     var showTitle: Bool = false

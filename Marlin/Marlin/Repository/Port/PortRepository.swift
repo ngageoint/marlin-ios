@@ -34,7 +34,7 @@ class PortRepository: ObservableObject {
         return PortDataFetchOperation()
     }
 
-    func getPort(portNumber: Int64?) -> PortModel? {
+    func getPort(portNumber: Int?) -> PortModel? {
         localDataSource.getPort(portNumber: portNumber)
     }
 

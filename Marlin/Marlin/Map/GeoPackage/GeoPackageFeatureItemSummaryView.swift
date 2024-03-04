@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GeoPackageFeatureItemSummaryView: DataSourceSummaryView {
     @EnvironmentObject var router: MarlinRouter
-    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     
     var showMoreDetails: Bool = true

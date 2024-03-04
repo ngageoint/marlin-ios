@@ -35,8 +35,8 @@ final class LightSummaryViewTests: XCTestCase {
         let localDataSource = LightStaticLocalDataSource()
         localDataSource.list = [light]
         let repository = LightRepository(localDataSource: localDataSource, remoteDataSource: LightRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(lightRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, lightRepository: repository)        
 
         let summary = LightSummaryView(light: LightListModel(lightModel: light))
             .setShowMoreDetails(false)
@@ -86,7 +86,7 @@ final class LightSummaryViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapView(withAccessibilityLabel: "dismiss popup")
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkStaticRepository, bookmarkable: light)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: light)
     }
     
     func testShowMoreDetails() {
@@ -111,8 +111,8 @@ final class LightSummaryViewTests: XCTestCase {
         let localDataSource = LightStaticLocalDataSource()
         localDataSource.list = [light]
         let repository = LightRepository(localDataSource: localDataSource, remoteDataSource: LightRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(lightRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, lightRepository: repository)
 
         let summary = LightSummaryView(light: LightListModel(lightModel: light))
             .setShowMoreDetails(true)

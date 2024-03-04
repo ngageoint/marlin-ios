@@ -52,11 +52,7 @@ struct DataSourceListView: View {
         } else if dataSource.key == DataSources.noticeToMariners.key {
             NoticeToMarinersView()
         } else if dataSource.key == Bookmark.key {
-            BookmarkListView(
-                focusedItem: focusedItem,
-
-                watchFocusedItem: watchFocusedItem
-            )
+            BookmarkListView()
         } else if dataSource.key == Route.key {
             RouteList()
         }

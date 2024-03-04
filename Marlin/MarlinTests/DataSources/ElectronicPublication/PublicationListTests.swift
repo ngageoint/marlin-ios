@@ -77,7 +77,8 @@ final class PublicationListTests: XCTestCase {
         }
         let passThrough = PassThrough()
         let repository = PublicationRepository(localDataSource: localDataSource, remoteDataSource: PublicationRemoteDataSource())
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(publicationRepository: repository))
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let container = Container(passThrough: passThrough)
             .environmentObject(repository)

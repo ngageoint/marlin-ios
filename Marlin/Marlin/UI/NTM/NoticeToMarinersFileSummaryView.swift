@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
     @EnvironmentObject var repository: NoticeToMarinersRepository
-    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     @EnvironmentObject var router: MarlinRouter
 

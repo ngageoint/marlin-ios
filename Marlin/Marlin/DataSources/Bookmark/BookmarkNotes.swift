@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BookmarkNotes: View {
-    @EnvironmentObject var repository: BookmarkRepositoryManager
+    @EnvironmentObject var repository: BookmarkRepository
     var itemKey: String?
     var dataSource: String?
     var notes: String?

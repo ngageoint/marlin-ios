@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PublicationActionBar: View {
     @EnvironmentObject var repository: PublicationRepository
-    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     
     @ObservedObject var viewModel: PublicationViewModel

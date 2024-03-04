@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ModuSummaryView: DataSourceSummaryView {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @EnvironmentObject var router: MarlinRouter
 
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()

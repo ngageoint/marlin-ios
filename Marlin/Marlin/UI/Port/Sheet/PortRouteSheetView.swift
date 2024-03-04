@@ -36,7 +36,7 @@ struct PortRouteSheetView: View {
             }
         }
         .onChange(of: itemKey) { _ in
-            viewModel.getPort(portNumber: Int64(itemKey) ?? -1)
+            viewModel.getPort(portNumber: Int(itemKey) ?? -1)
         }
         .onChange(of: viewModel.port) { model in
             NotificationCenter.default.post(
@@ -49,7 +49,7 @@ struct PortRouteSheetView: View {
         }
         .onAppear {
             viewModel.repository = portRepository
-            viewModel.getPort(portNumber: Int64(itemKey) ?? -1)
+            viewModel.getPort(portNumber: Int(itemKey) ?? -1)
         }
     }
 }

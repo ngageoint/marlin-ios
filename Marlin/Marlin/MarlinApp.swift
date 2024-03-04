@@ -137,7 +137,7 @@ struct MarlinApp: App {
     var appState: AppState
     
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
-    var bookmarkRepository: BookmarkRepositoryManager
+    var bookmarkRepository: BookmarkRepository
     var asamRepository: AsamRepository
     var moduRepository: ModuRepository
     var portRepository: PortRepository
@@ -210,17 +210,17 @@ struct MarlinApp: App {
         routeWaypointRepository = RouteWaypointRepository(
             localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
 
-        bookmarkRepository = BookmarkRepositoryManager(
-            repository: BookmarkCoreDataRepository(
-                asamRepository: asamRepository,
-                dgpsRepository: differentialGPSStationRepository,
-                lightRepository: lightRepository,
-                moduRepository: moduRepository,
-                portRepository: portRepository,
-                radioBeaconRepository: radioBeaconRepository,
-                noticeToMarinersRepository: noticeToMarinersRepository,
-                publicationRepository: publicationRepository
-            ))
+        bookmarkRepository = BookmarkRepository(
+            localDataSource: BookmarkCoreDataDataSource(),
+            asamRepository: asamRepository,
+            dgpsRepository: differentialGPSStationRepository,
+            lightRepository: lightRepository,
+            moduRepository: moduRepository,
+            portRepository: portRepository,
+            radioBeaconRepository: radioBeaconRepository,
+            noticeToMarinersRepository: noticeToMarinersRepository,
+            publicationRepository: publicationRepository
+        )
 
         asamsTileRepository = AsamsTileRepository(localDataSource: asamRepository.localDataSource)
         modusTileRepository = ModusTileRepository(localDataSource: moduRepository.localDataSource)

@@ -33,8 +33,8 @@ final class LightDetailViewTests: XCTestCase {
         let localDataSource = LightStaticLocalDataSource()
         localDataSource.list = [light]
         let repository = LightRepository(localDataSource: localDataSource, remoteDataSource: LightRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(lightRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, lightRepository: repository)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
@@ -77,8 +77,8 @@ final class LightDetailViewTests: XCTestCase {
         let localDataSource = LightStaticLocalDataSource()
         localDataSource.list = [light]
         let repository = LightRepository(localDataSource: localDataSource, remoteDataSource: LightRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(lightRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, lightRepository: repository)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 

@@ -29,8 +29,8 @@ final class AsamDetailViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         localDataSource.list = [asam]
         let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, asamRepository: repository)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let view = AsamDetailView(reference: asam.reference!)
@@ -67,8 +67,8 @@ final class AsamDetailViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         localDataSource.list = [asam]
         let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, asamRepository: repository)
 
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let view = AsamDetailView(reference: asam.reference!)
@@ -109,8 +109,8 @@ final class AsamDetailViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         localDataSource.list = [asam]
         let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, asamRepository: repository)
 
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let summary = AsamDetailView(reference: asam.reference!)
@@ -148,8 +148,8 @@ final class AsamDetailViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         localDataSource.list = [asam]
         let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, asamRepository: repository)
 
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let summary = AsamDetailView(reference: asam.reference!)

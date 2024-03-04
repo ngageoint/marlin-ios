@@ -59,8 +59,8 @@ final class RadioBeaconDetailViewTests: XCTestCase {
         let localDataSource = RadioBeaconStaticLocalDataSource()
         localDataSource.list = [rb]
         let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: RadioBeaconRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(radioBeaconRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, radioBeaconRepository: repository)
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let detailView = RadioBeaconDetailView(featureNumber: 10, volumeNumber: "PUB 110")
@@ -131,8 +131,8 @@ final class RadioBeaconDetailViewTests: XCTestCase {
         let localDataSource = RadioBeaconStaticLocalDataSource()
         localDataSource.list = [rb]
         let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: RadioBeaconRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(radioBeaconRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, radioBeaconRepository: repository)
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let detailView = RadioBeaconDetailView(featureNumber: 10, volumeNumber: "PUB 110")
@@ -176,7 +176,7 @@ final class RadioBeaconDetailViewTests: XCTestCase {
         
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapView(withAccessibilityLabel: "dismiss popup")
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkStaticRepository, bookmarkable: rb)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: rb)
     }
 }
 

@@ -29,9 +29,9 @@ final class AsamSummaryViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         localDataSource.list = [asam]
         let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
-        
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, asamRepository: repository)
+
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:asam))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
@@ -51,7 +51,7 @@ final class AsamSummaryViewTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkStaticRepository, bookmarkable: asam)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: asam)
     }
     
     func testLoadingNoHostility() {
@@ -70,8 +70,8 @@ final class AsamSummaryViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         localDataSource.list = [newItem]
         let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, asamRepository: repository)
 
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem))
             .environmentObject(repository)
@@ -109,8 +109,8 @@ final class AsamSummaryViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         localDataSource.list = [newItem]
         let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, asamRepository: repository)
 
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem))
             .environmentObject(repository)
@@ -149,8 +149,8 @@ final class AsamSummaryViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         localDataSource.list = [newItem]
         let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, asamRepository: repository)
 
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem), showMoreDetails: true)
             .environmentObject(repository)
@@ -185,8 +185,8 @@ final class AsamSummaryViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         localDataSource.list = [newItem]
         let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(asamRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, asamRepository: repository)
 
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem), showMoreDetails: false)
 //        let summary = AsamSummaryView(asam: AsamListModel(asam: newItem), showMoreDetails: false)

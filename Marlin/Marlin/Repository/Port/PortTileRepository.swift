@@ -17,10 +17,10 @@ class PortTileRepository: TileRepository, ObservableObject {
     var filterCacheKey: String {
         ""
     }
-    let portNumber: Int64
+    let portNumber: Int
     let localDataSource: PortLocalDataSource
 
-    init(portNumber: Int64, localDataSource: PortLocalDataSource) {
+    init(portNumber: Int, localDataSource: PortLocalDataSource) {
         self.portNumber = portNumber
         self.localDataSource = localDataSource
     }

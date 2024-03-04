@@ -40,9 +40,9 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
         localDataSource.list = [newItem]
         let repository = DGPSStationRepository(localDataSource: localDataSource, remoteDataSource: DGPSStationRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(dgpsRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
-        
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, dgpsRepository: repository)
+
         let summary = DGPSStationSummaryView(dgpsStation: DGPSStationListModel(dgpsStationModel: newItem))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
@@ -64,7 +64,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkStaticRepository, bookmarkable: newItem)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: newItem)
     }
     
     func testLoadingNoVolume() {
@@ -95,8 +95,8 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
         localDataSource.list = [newItem]
         let repository = DGPSStationRepository(localDataSource: localDataSource, remoteDataSource: DGPSStationRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(dgpsRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, dgpsRepository: repository)
 
         let summary = DGPSStationSummaryView(dgpsStation: DGPSStationListModel(dgpsStationModel: newItem))
             .environmentObject(repository)
@@ -171,8 +171,8 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
         localDataSource.list = [newItem]
         let repository = DGPSStationRepository(localDataSource: localDataSource, remoteDataSource: DGPSStationRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(dgpsRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, dgpsRepository: repository)
         let router = MarlinRouter()
 
         let summary = DGPSStationSummaryView(dgpsStation: DGPSStationListModel(dgpsStationModel: newItem))

@@ -132,8 +132,8 @@ final class PortDetailViewTests: XCTestCase {
         let localDataSource = PortStaticLocalDataSource()
         localDataSource.list = [port]
         let repository = PortRepository(localDataSource: localDataSource, remoteDataSource: PortRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(portRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, portRepository: repository)
         let router = MarlinRouter()
         let detailView = PortDetailView(portNumber: 760)
             .environmentObject(mockLocationManager as LocationManager)
@@ -388,8 +388,8 @@ final class PortDetailViewTests: XCTestCase {
         let localDataSource = PortStaticLocalDataSource()
         localDataSource.list = [port]
         let repository = PortRepository(localDataSource: localDataSource, remoteDataSource: PortRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(portRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, portRepository: repository)
         let router = MarlinRouter()
         let detailView = PortDetailView(portNumber: 760)
             .environmentObject(mockLocationManager as LocationManager)

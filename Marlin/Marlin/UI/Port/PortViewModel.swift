@@ -10,7 +10,7 @@ import Foundation
 class PortViewModel: ObservableObject, Identifiable {
     @Published var port: PortModel?
 
-    var portNumber: Int64?
+    var portNumber: Int?
 
     var repository: PortRepository? {
         didSet {
@@ -22,7 +22,7 @@ class PortViewModel: ObservableObject, Identifiable {
     var routeWaypointRepository: RouteWaypointRepository?
 
     @discardableResult
-    func getPort(portNumber: Int64?, waypointURI: URL? = nil) -> PortModel? {
+    func getPort(portNumber: Int?, waypointURI: URL? = nil) -> PortModel? {
         if let waypointURI = waypointURI {
             port = routeWaypointRepository?.getPort(waypointURI: waypointURI)
             return port

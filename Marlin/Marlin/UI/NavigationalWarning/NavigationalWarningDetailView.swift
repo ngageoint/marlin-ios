@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 struct NavigationalWarningDetailView: View {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     @EnvironmentObject var navigationalWarningRepository: NavigationalWarningRepository
     @EnvironmentObject var routeWaypointRepository: RouteWaypointRepository

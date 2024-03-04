@@ -11,7 +11,7 @@ import CoreData
 
 struct ModuDetailView: View {
     @EnvironmentObject var moduRepository: ModuRepository
-    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @EnvironmentObject var router: MarlinRouter
     @StateObject var viewModel: ModuViewModel = ModuViewModel()
     @State var name: String

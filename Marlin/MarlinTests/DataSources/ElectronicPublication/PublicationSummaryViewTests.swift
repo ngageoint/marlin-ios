@@ -46,8 +46,8 @@ final class PublicationSummaryViewTests: XCTestCase {
         let remoteDataSource = PublicationRemoteDataSource()
         let repository = PublicationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
 
-        let bookmarkStaticRepository = BookmarkStaticRepository(electronicPublicationRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, publicationRepository: repository)
 
         let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
             .setShowMoreDetails(false)
@@ -97,8 +97,8 @@ final class PublicationSummaryViewTests: XCTestCase {
         let remoteDataSource = PublicationStaticRemoteDataSource()
         let repository = PublicationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
 
-        let bookmarkStaticRepository = BookmarkStaticRepository(electronicPublicationRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, publicationRepository: repository)
 
         let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
             .setShowMoreDetails(false)
@@ -174,8 +174,8 @@ final class PublicationSummaryViewTests: XCTestCase {
         let remoteDataSource = PublicationStaticRemoteDataSource()
         let repository = PublicationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
 
-        let bookmarkStaticRepository = BookmarkStaticRepository(electronicPublicationRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, publicationRepository: repository)
 
         let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
             .setShowMoreDetails(false)
@@ -235,8 +235,8 @@ final class PublicationSummaryViewTests: XCTestCase {
         let remoteDataSource = PublicationStaticRemoteDataSource()
         let repository = PublicationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
 
-        let bookmarkStaticRepository = BookmarkStaticRepository(electronicPublicationRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, publicationRepository: repository)
 
         let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
             .setShowMoreDetails(false)
@@ -283,6 +283,6 @@ final class PublicationSummaryViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Delete")
         XCTAssertFalse(repository.checkFileExists(id: epub.s3Key ?? ""))
 
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkStaticRepository, bookmarkable: epub)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: epub)
     }
 }

@@ -25,16 +25,16 @@ enum PortActions {
     }
 
     class Tap: Action {
-        var portNumber: Int64?
+        var portNumber: Int?
         @Binding var path: NavigationPath
-        init(portNumber: Int64?, path: Binding<NavigationPath>) {
+        init(portNumber: Int?, path: Binding<NavigationPath>) {
             self.portNumber = portNumber
             self._path = path
         }
         func action() {
             guard let portNumber = portNumber else { return }
 
-            path.append(PortRoute.detail(portNumber))
+            path.append(PortRoute.detail(portNumber: portNumber))
         }
     }
 }

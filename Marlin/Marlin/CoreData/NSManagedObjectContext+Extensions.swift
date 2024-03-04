@@ -59,7 +59,7 @@ extension NSManagedObjectContext {
 
     func fetchFirst<T: NSManagedObject>(_ entityClass: T.Type,
                                         key: String,
-                                        value: Int64) -> T? {
+                                        value: Int) -> T? {
         let predicate = NSPredicate(format: "%K = %d", key, value)
         return try? self.fetchFirst(entityClass, sortBy: nil, predicate: predicate)
     }

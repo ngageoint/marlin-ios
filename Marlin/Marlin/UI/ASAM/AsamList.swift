@@ -61,7 +61,7 @@ struct AsamList: View {
                                 }
                                 .onTapGesture {
                                     if let reference = asam.reference {
-                                        router.path.append(AsamRoute.detail(reference))
+                                        router.path.append(AsamRoute.detail(reference: reference))
                                     }
                                 }
                                 .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))

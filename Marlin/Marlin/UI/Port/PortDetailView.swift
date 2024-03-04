@@ -12,7 +12,7 @@ import CoreData
 struct PortDetailView: View {
     @EnvironmentObject var portRepository: PortRepository
     @StateObject var viewModel: PortViewModel = PortViewModel()
-    @State var portNumber: Int64?
+    @State var portNumber: Int?
     @State var waypointURI: URL?
     
     var body: some View {

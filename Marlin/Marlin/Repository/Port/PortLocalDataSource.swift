@@ -12,7 +12,7 @@ import UIKit
 import BackgroundTasks
 
 protocol PortLocalDataSource {
-    func getPort(portNumber: Int64?) -> PortModel?
+    func getPort(portNumber: Int?) -> PortModel?
     func getPortsInBounds(
         filters: [DataSourceFilterParameter]?,
         minLatitude: Double?,
@@ -44,7 +44,7 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
         PersistenceController.current.newTaskContext()
     }()
     
-    func getPort(portNumber: Int64?) -> PortModel? {
+    func getPort(portNumber: Int?) -> PortModel? {
         var model: PortModel?
         context.performAndWait {
             if let portNumber = portNumber {

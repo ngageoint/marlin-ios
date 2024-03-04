@@ -62,7 +62,8 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         localDataSource.list.append(contentsOf: warnings)
         let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
 
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let container = Container(passThrough: passThrough)
@@ -128,7 +129,8 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
         let mapFeatureRepository = NavigationalWarningsMapFeatureRepository(localDataSource: repository.localDataSource)
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
@@ -207,7 +209,8 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)
@@ -284,7 +287,8 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)
@@ -361,7 +365,8 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
         UserDefaults.standard.setValue(warnings[5].primaryKey, forKey: "lastSeen-4")
         
         let container = Container(passThrough: passThrough)
@@ -442,7 +447,8 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(navigationalWarningRepository: repository))
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)

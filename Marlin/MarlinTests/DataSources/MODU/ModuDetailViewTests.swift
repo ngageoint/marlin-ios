@@ -31,8 +31,8 @@ final class ModuDetailViewTests: XCTestCase {
         let localDataSource = ModuStaticLocalDataSource()
         localDataSource.list = [modu]
         let repository = ModuRepository(localDataSource: localDataSource, remoteDataSource: ModuRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(moduRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, moduRepository: repository)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let detailView = ModuDetailView(name: "ABAN II")
@@ -70,8 +70,8 @@ final class ModuDetailViewTests: XCTestCase {
         let localDataSource = ModuStaticLocalDataSource()
         localDataSource.list = [modu]
         let repository = ModuRepository(localDataSource: localDataSource, remoteDataSource: ModuRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(moduRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, moduRepository: repository)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let detailView = ModuDetailView(name: "ABAN II")

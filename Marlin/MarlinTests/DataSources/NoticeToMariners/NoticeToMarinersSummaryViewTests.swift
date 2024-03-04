@@ -37,8 +37,8 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         localDataSource.map[ntm.odsEntryId ?? -1] = ntm
         localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
         let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(noticeToMarinersRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, noticeToMarinersRepository: repository)
 
         let summaryView = NoticeToMarinersFileSummaryView(odsEntryId: ntm.odsEntryId!)
             .environmentObject(repository)
@@ -75,8 +75,8 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         localDataSource.map[ntm.odsEntryId ?? -1] = ntm
         localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
         let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(noticeToMarinersRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, noticeToMarinersRepository: repository)
 
         let summaryView = NoticeToMarinersSummaryView(noticeToMariners: NoticeToMarinersListModel(noticeToMarinersModel: ntm))
             .environmentObject(repository)
@@ -89,7 +89,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "202247")
         tester().waitForView(withAccessibilityLabel: "November 19 - November 25")
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkStaticRepository, bookmarkable: ntm)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: ntm)
     }
     
     func testReDownloadFullPublication() {
@@ -117,8 +117,8 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         localDataSource.map[ntm.odsEntryId ?? -1] = ntm
         localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
         let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(noticeToMarinersRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, noticeToMarinersRepository: repository)
 
         let summaryView = NoticeToMarinersFileSummaryView(odsEntryId: ntm.odsEntryId!)
             .environmentObject(repository)
@@ -190,8 +190,8 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         localDataSource.map[ntm.odsEntryId ?? -1] = ntm
         localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
         let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
-        let bookmarkStaticRepository = BookmarkStaticRepository(noticeToMarinersRepository: repository)
-        let bookmarkRepository = BookmarkRepositoryManager(repository: bookmarkStaticRepository)
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, noticeToMarinersRepository: repository)
 
         let summaryView = NoticeToMarinersFileSummaryView(odsEntryId: ntm.odsEntryId!)
             .environmentObject(repository)

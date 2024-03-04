@@ -39,23 +39,23 @@ enum UserPlaceRoute: Hashable {
 enum NoticeToMarinersRoute: Hashable {
     case notices
     case chartQuery
-    case fullView(Int)
+    case fullView(noticeNumber: Int)
 }
 
 enum AsamRoute: Hashable {
-    case detail(String)
+    case detail(reference: String)
 }
 
 enum ModuRoute: Hashable {
-    case detail(String)
+    case detail(name: String)
 }
 
 enum PortRoute: Hashable {
-    case detail(Int64)
+    case detail(portNumber: Int)
 }
 
 enum LightRoute: Hashable {
-    case detail(String, String)
+    case detail(volumeNumber: String, featureNumber: String)
 }
 
 enum RadioBeaconRoute: Hashable {
