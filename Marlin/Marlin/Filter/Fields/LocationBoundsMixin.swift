@@ -37,7 +37,7 @@ class LocationBoundsMixin: NSObject, MapMixin, ObservableObject {
         _coordinateTwo = coordinateTwo
     }
 
-    func regionDidChange(mapView: MKMapView, animated: Bool) {
+    func regionDidChange(mapView: MKMapView, animated: Bool, centerCoordinate: CLLocationCoordinate2D) {
         self.triggerUpdate()
         region = mapView.region
     }

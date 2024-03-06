@@ -28,7 +28,8 @@ struct MarlinMainMap: View {
     var showExport: Bool = true
     
     let focusMapAtLocation = NotificationCenter.default.publisher(for: .FocusMapAtLocation)
-    
+    let longPressPub = NotificationCenter.default.publisher(for: .MapLongPress)
+
     var body: some View {
         VStack {
             MarlinMap(name: "Marlin Map", mixins: mixins, mapState: mapState)
@@ -37,8 +38,12 @@ struct MarlinMainMap: View {
         .onReceive(focusMapAtLocation) { notification in
             mapState.forceCenter = notification.object as? MKCoordinateRegion
         }
-        .overlay(bottomButtons(), alignment: .bottom)
-        .overlay(topButtons(), alignment: .top)
+        .overlay(alignment: .bottom) {
+            bottomButtons()
+        }
+        .overlay(alignment: .top) {
+            topButtons()
+        }
         .onAppear {
             mixins.addRouteMixin(routeRepository: routeRepository)
             mixins.addAsamTileRepository(tileRepository: asamsTileRepository)
@@ -137,7 +142,7 @@ struct MarlinMainMap: View {
                     .fixedSize()
                     .accessibilityElement(children: .contain)
                     .accessibilityLabel("User Tracking")
-                CreateUserPlaceButton()
+//                CreateUserPlaceButton()
             }
             .padding(.trailing, 8)
             .padding(.bottom, 30)

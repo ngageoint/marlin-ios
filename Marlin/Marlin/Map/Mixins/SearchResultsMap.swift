@@ -16,7 +16,7 @@ class SearchResultAnnotation: NSObject, MKAnnotation {
     var mapItem: MKMapItem
     
     var title: String? {
-                "\(mapItem.name ?? "")\n\(mapItem.placemark.country ?? "")\n\(mapItem.placemark.ocean ?? "")"
+        "\(mapItem.name ?? "")\n\(mapItem.placemark.country ?? "")\n\(mapItem.placemark.ocean ?? "")"
     }
     
     var subtitle: String? {
@@ -53,31 +53,10 @@ class SearchResultsMap: NSObject, MapMixin {
                 mapView.addAnnotations(self.annotations)
             }
             .store(in: &cancellable)
-        // TODO: this seems like the wrong place for this
-        let region = UserDefaults.standard.mapRegion
-        if CLLocationCoordinate2DIsValid(region.center) {
-            if MKUserTrackingMode(rawValue: mapState.userTrackingMode) ?? MKUserTrackingMode.none == .none {
-                DispatchQueue.main.async {
-                    mapState.center = region
-                }
-            }
-        } else {
-            DispatchQueue.main.async {
-                mapState.center = MKCoordinateRegion(
-                    center: mapView.centerCoordinate,
-                    zoom: 4,
-                    bounds: UIScreen.main.bounds
-                )
-            }
-        }
     }
     
     func removeMixin(mapView: MKMapView, mapState: MapState) {
         
-    }
-    
-    func regionDidChange(mapView: MKMapView, animated: Bool) {
-        UserDefaults.standard.mapRegion = mapView.region
     }
     
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {

@@ -95,7 +95,9 @@ extension UserDefaults {
 
             // Write/Set Data
             UserDefaults.standard.set(data, forKey: "\(key)Sort")
-            NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: key))
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: key))
+            }
         } catch {
             print("Unable to Encode Array of Notes (\(error))")
         }

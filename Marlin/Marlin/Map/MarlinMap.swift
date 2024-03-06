@@ -618,6 +618,10 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
         if mapGesture.state == .began {
             let coordinate = mapView.convert(mapGesture.location(in: mapView), toCoordinateFrom: mapView)
             NotificationCenter.default.post(name: marlinMap.notificationOnLongPress, object: coordinate)
+
+            for mixin in mixins {
+                mixin.mapLongPress(mapView: mapView, coordinate: coordinate)
+            }
         }
     }
     
@@ -709,10 +713,10 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         for mixin in marlinMap.mixins.mixins {
-            mixin.regionDidChange(mapView: mapView, animated: animated)
+            mixin.regionDidChange(mapView: mapView, animated: animated, centerCoordinate: mapView.centerCoordinate)
         }
     }
-    
+
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
     }
     

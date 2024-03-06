@@ -241,6 +241,8 @@
 		F7303DFA2B965BA600CAC2BB /* UserPlacesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7303DF92B965BA600CAC2BB /* UserPlacesList.swift */; };
 		F7303DFE2B9688AE00CAC2BB /* DGPSStationListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7303DFD2B9688AE00CAC2BB /* DGPSStationListTests.swift */; };
 		F7303E002B98B78000CAC2BB /* DataSourceFilterAndSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7303DFF2B98B78000CAC2BB /* DataSourceFilterAndSort.swift */; };
+		F7303E022B98EA7400CAC2BB /* DrawingMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7303E012B98EA7400CAC2BB /* DrawingMixin.swift */; };
+		F7303E052B98EDEC00CAC2BB /* SearchRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7303E042B98EDEC00CAC2BB /* SearchRepository.swift */; };
 		F730DFC42A99000D0051775C /* GeoJSON in Frameworks */ = {isa = PBXBuildFile; productRef = F730DFC32A99000D0051775C /* GeoJSON */; };
 		F730DFC72A9950B20051775C /* GeoJSONExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F730DFC62A9950B20051775C /* GeoJSONExportable.swift */; };
 		F73356FD2B308E4B00BEE26F /* AsamFilterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73356FC2B308E4B00BEE26F /* AsamFilterable.swift */; };
@@ -933,6 +935,8 @@
 		F7303DF92B965BA600CAC2BB /* UserPlacesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPlacesList.swift; sourceTree = "<group>"; };
 		F7303DFD2B9688AE00CAC2BB /* DGPSStationListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DGPSStationListTests.swift; sourceTree = "<group>"; };
 		F7303DFF2B98B78000CAC2BB /* DataSourceFilterAndSort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceFilterAndSort.swift; sourceTree = "<group>"; };
+		F7303E012B98EA7400CAC2BB /* DrawingMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingMixin.swift; sourceTree = "<group>"; };
+		F7303E042B98EDEC00CAC2BB /* SearchRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRepository.swift; sourceTree = "<group>"; };
 		F730DFC62A9950B20051775C /* GeoJSONExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoJSONExportable.swift; sourceTree = "<group>"; };
 		F73356FC2B308E4B00BEE26F /* AsamFilterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamFilterable.swift; sourceTree = "<group>"; };
 		F73356FE2B308EF100BEE26F /* ModuFilterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuFilterable.swift; sourceTree = "<group>"; };
@@ -1640,6 +1644,7 @@
 				F70BCE9829C4F1AE00AEF73D /* UserLayersMap.swift */,
 				F7667CEC2A0025B0005B36A0 /* NavigationalWarningMap.swift */,
 				F7AFF9402AD46A2300555960 /* AllRoutesMixin.swift */,
+				F7303E012B98EA7400CAC2BB /* DrawingMixin.swift */,
 			);
 			path = Mixins;
 			sourceTree = "<group>";
@@ -1668,6 +1673,7 @@
 		F71F2B1E2ACF3CAB00DFB5BA /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				F7303E032B98EDE000CAC2BB /* Search */,
 				F767DB3D2B8D0FA7002C12C7 /* UserPlace */,
 				F7C5F1E92AEC4AC70091BC01 /* ASAM */,
 				F7C5F1EA2AEC4AF40091BC01 /* Bookmark */,
@@ -1881,6 +1887,14 @@
 				F7303DFD2B9688AE00CAC2BB /* DGPSStationListTests.swift */,
 			);
 			path = DifferentialGPSStation;
+			sourceTree = "<group>";
+		};
+		F7303E032B98EDE000CAC2BB /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				F7303E042B98EDEC00CAC2BB /* SearchRepository.swift */,
+			);
+			path = Search;
 			sourceTree = "<group>";
 		};
 		F730DFC52A9950930051775C /* Conversions */ = {
@@ -3924,6 +3938,7 @@
 				F767DB772B8FD793002C12C7 /* LightDefinition.swift in Sources */,
 				F7D8FA162922BA3B00E7D0A1 /* NoticeToMariners+DataSourceViewBuilder.swift in Sources */,
 				F76EE1572B928A69001128EB /* ModuDataLoadOperation.swift in Sources */,
+				F7303E052B98EDEC00CAC2BB /* SearchRepository.swift in Sources */,
 				F7FDF2B22AB4D5EA009A5E8F /* ModuModel.swift in Sources */,
 				F7FDF2AC2AB49C95009A5E8F /* AsamLocalDataSource.swift in Sources */,
 				F7A54CD52848149700E5F565 /* MarlinApp.swift in Sources */,
@@ -3965,6 +3980,7 @@
 				F767DB752B8FD777002C12C7 /* NavigationalWarningDefinition.swift in Sources */,
 				F71DF4862857954A00686951 /* Modu.swift in Sources */,
 				F7CB01132B61591600034B9C /* TileRepository.swift in Sources */,
+				F7303E022B98EA7400CAC2BB /* DrawingMixin.swift in Sources */,
 				F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */,
 				F767DB4C2B8E276D002C12C7 /* PublicationsTypeIdListViewModel.swift in Sources */,
 				F7D671E72871D46000758F1C /* SideMenuContent.swift in Sources */,
