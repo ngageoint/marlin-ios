@@ -9,20 +9,6 @@ import Foundation
 import CoreData
 import Combine
 
-enum UserPlaceItem: Hashable, Identifiable {
-    var id: String {
-        switch self {
-        case .listItem(let userPlace):
-            return userPlace.id
-        case .sectionHeader(let header):
-            return header
-        }
-    }
-
-    case listItem(_ userPlace: UserPlaceModel)
-    case sectionHeader(header: String)
-}
-
 protocol UserPlaceLocalDataSource {
     @discardableResult
     func getUserPlace(uri: URL) async -> UserPlaceModel?

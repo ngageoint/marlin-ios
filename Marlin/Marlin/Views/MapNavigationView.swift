@@ -35,7 +35,7 @@ struct MapNavigationView: View {
                         .navigationBarTitleDisplayMode(.inline)
                         .navigationBarBackButtonHidden(true)
                         .modifier(Hamburger(menuOpen: $menuOpen))
-                        .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
+                        .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
                         .onAppear {
                             Metrics.shared.mapView()
                         }

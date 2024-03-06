@@ -39,6 +39,7 @@ struct UserPlaceModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hash
         case minLatitude
         case minLongitude
         case name
+        case notes
         case uri
     }
 
@@ -51,6 +52,7 @@ struct UserPlaceModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hash
     var minLatitude: Double?
     var minLongitude: Double?
     var name: String?
+    var notes: String?
     var uri: URL?
 
     init() {
@@ -67,6 +69,7 @@ struct UserPlaceModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hash
         self.minLatitude = userPlace.minLatitude
         self.minLongitude = userPlace.minLongitude
         self.name = userPlace.name
+        self.notes = userPlace.notes
         self.uri = userPlace.objectID.uriRepresentation()
     }
 
@@ -81,6 +84,7 @@ struct UserPlaceModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hash
         self.minLatitude = try? values.decode(Double.self, forKey: .minLatitude)
         self.minLongitude = try? values.decode(Double.self, forKey: .minLongitude)
         self.name = try? values.decode(String.self, forKey: .name)
+        self.notes = try? values.decode(String.self, forKey: .notes)
         self.uri = try? values.decode(URL.self, forKey: .uri)
         self.canBookmark = false
     }
@@ -96,6 +100,7 @@ struct UserPlaceModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, Hash
         try? container.encode(minLatitude, forKey: .minLatitude)
         try? container.encode(minLongitude, forKey: .minLongitude)
         try? container.encode(name, forKey: .name)
+        try? container.encode(notes, forKey: .notes)
         try? container.encode(uri, forKey: .uri)
     }
 }

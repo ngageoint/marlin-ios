@@ -16,12 +16,12 @@ extension DataSources {
         var mappable: Bool = false
         var color: UIColor = Color.primaryUIColor
         var imageName: String?
-        var systemImageName: String? = "mappin"
-        var key: String = "UserPlace"
+        var systemImageName: String? = "mappin.and.ellipse"
+        var key: String = "userPlace"
         var metricsKey: String = "UserPlace"
         var name: String = "My Places"
         var fullName: String = "My Places"
-        @AppStorage("userPlaceOrder") var order: Int = 0
+        @AppStorage("userPlaceOrder") var order: Int = 12
         
         static let definition = UserPlaceDefinition()
         private init() { }

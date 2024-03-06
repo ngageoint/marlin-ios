@@ -73,7 +73,6 @@ class MockDataSourceFilterable: Filterable {
         DataSourceProperty(name: "Location", key: "locationProperty", type: .location),
         DataSourceProperty(name: "Latitude", key: "latitudeProperty", type: .latitude),
         DataSourceProperty(name: "Longitude", key: "longitudeProperty", type: .longitude),
-        DataSourceProperty(name: "Date", key: "dateProperty", type: .date),
         DataSourceProperty(name: "Boolean", key: "booleanProperty", type: .boolean)
     ]
 
@@ -101,7 +100,6 @@ class MockDataSource: DataSource {
         DataSourceProperty(name: "Location", key: "locationProperty", type: .location),
         DataSourceProperty(name: "Latitude", key: "latitudeProperty", type: .latitude),
         DataSourceProperty(name: "Longitude", key: "longitudeProperty", type: .longitude),
-        DataSourceProperty(name: "Date", key: "dateProperty", type: .date),
         DataSourceProperty(name: "Boolean", key: "booleanProperty", type: .boolean)
     ]
     

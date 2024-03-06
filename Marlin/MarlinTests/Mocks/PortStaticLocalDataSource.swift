@@ -14,7 +14,7 @@ import BackgroundTasks
 class PortStaticLocalDataSource: PortLocalDataSource {
     var list: [PortModel] = []
 
-    func getPort(portNumber: Int64?) -> Marlin.PortModel? {
+    func getPort(portNumber: Int?) -> Marlin.PortModel? {
         list.first { model in
             model.portNumber == Int(portNumber ?? -1)
         }

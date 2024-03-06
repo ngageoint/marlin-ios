@@ -51,10 +51,12 @@ struct DataSourceListView: View {
             PublicationsSectionList()
         } else if dataSource.key == DataSources.noticeToMariners.key {
             NoticeToMarinersView()
-        } else if dataSource.key == Bookmark.key {
+        } else if dataSource.key == DataSources.bookmark.key {
             BookmarkListView()
-        } else if dataSource.key == Route.key {
+        } else if dataSource.key == DataSources.route.key {
             RouteList()
+        } else if dataSource.key == DataSources.userPlace.key {
+            UserPlacesList()
         }
     }
 }

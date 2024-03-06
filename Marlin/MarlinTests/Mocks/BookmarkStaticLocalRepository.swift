@@ -6,10 +6,20 @@
 //
 
 import Foundation
+import Combine
 
 @testable import Marlin
 
 class BookmarkStaticLocalDataSource: BookmarkLocalDataSource {
+    func bookmarks(
+        filters: [Marlin.DataSourceFilterParameter]?,
+        paginatedBy paginator: Marlin.Trigger.Signal?
+    ) -> AnyPublisher<[Marlin.BookmarkItem], Error> {
+        AnyPublisher(Just(bookmarks.values.map({ model in
+            BookmarkItem.listItem(model)
+        })).setFailureType(to: Error.self))
+    }
+    
     var bookmarks: [String: BookmarkModel] = [:]
 
     func createBookmark(notes: String?, itemKey: String, dataSource: String) async {

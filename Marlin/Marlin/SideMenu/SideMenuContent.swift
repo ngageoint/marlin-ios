@@ -59,7 +59,7 @@ struct SideMenuContent: View {
                 }
                 HStack {
                     Text("""
-                        Other Data Sources (Drag to add to \(horizontalSizeClass == .compact ? "tabs" : "rail items"))
+                    Other Data Sources (Drag to add to \(horizontalSizeClass == .compact ? "tabs" : "rail items"))
                     """)
                     .padding([.leading, .top, .bottom, .trailing], 8)
                     .overline()

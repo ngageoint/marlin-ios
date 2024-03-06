@@ -1,24 +1,23 @@
 //
-//  ModuList.swift
+//  UserPlacesList.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 1/23/24.
+//  Created by Daniel Barela on 3/4/24.
 //
 
 import Foundation
 import SwiftUI
 
-struct ModuList: View {
-
-    @EnvironmentObject var moduRepository: ModuRepository
-    @StateObject var viewModel: ModusViewModel = ModusViewModel()
+struct UserPlacesList: View {
+    @EnvironmentObject var repository: UserPlaceRepository
+    @StateObject var viewModel: UserPlacesViewModel = UserPlacesViewModel()
 
     @EnvironmentObject var router: MarlinRouter
 
     @State var sortOpen: Bool = false
     @State var filterOpen: Bool = false
     @State var filterViewModel: FilterViewModel = PersistedFilterViewModel(
-        dataSource: DataSources.filterableFromDefintion(DataSources.modu)
+        dataSource: DataSources.filterableFromDefintion(DataSources.userPlace)
     )
 
     var body: some View {
@@ -28,7 +27,7 @@ struct ModuList: View {
                 VStack(alignment: .center, spacing: 16) {
                     HStack(alignment: .center, spacing: 0) {
                         Spacer()
-                        Image("modu")
+                        Image(systemName: "mappin.and.ellipse")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(maxWidth: .infinity)
@@ -36,7 +35,7 @@ struct ModuList: View {
                             .foregroundColor(Color.onSurfaceColor)
                         Spacer()
                     }
-                    Text("Loading MODUs")
+                    Text("Loading My Places")
                         .font(.headline)
                         .fixedSize(horizontal: false, vertical: true)
                         .multilineTextAlignment(.center)
@@ -49,21 +48,22 @@ struct ModuList: View {
                 .transition(AnyTransition.opacity)
             case let .loaded(rows: rows):
                 ZStack(alignment: .bottomTrailing) {
-                    List(rows) { moduItem in
-                        switch moduItem {
-                        case .listItem(let modu):
-                            ModuSummaryView(modu: modu)
-                                .showBookmarkNotes(true)
+                    List(rows) { userPlaceItem in
+                        switch userPlaceItem {
+                        case .listItem(let userPlace):
+                            Text("summary for \(userPlace.name ?? "")")
+//                            AsamSummaryView(asam: asam)
+//                                .showBookmarkNotes(true)
                                 .paddedCard()
                                 .onAppear {
-                                    if rows.last == moduItem {
+                                    if rows.last == userPlaceItem {
                                         viewModel.loadMore()
                                     }
                                 }
                                 .onTapGesture {
-                                    if let name = modu.name {
-                                        router.path.append(ModuRoute.detail(name: name))
-                                    }
+//                                    if let reference = asam.reference {
+//                                        router.path.append(AsamRoute.detail(reference: reference))
+//                                    }
                                 }
                                 .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
                                 .listRowSeparator(.hidden)
@@ -71,7 +71,7 @@ struct ModuList: View {
                         case .sectionHeader(let header):
                             Text(header)
                                 .onAppear {
-                                    if rows.last == moduItem {
+                                    if rows.last == userPlaceItem {
                                         viewModel.loadMore()
                                     }
                                 }
@@ -89,7 +89,7 @@ struct ModuList: View {
                     VStack(alignment: .center, spacing: 16) {
                         HStack(alignment: .center, spacing: 0) {
                             Spacer()
-                            Image("modu")
+                            Image(systemName: "mappin.and.ellipse")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(maxWidth: .infinity)
@@ -97,7 +97,7 @@ struct ModuList: View {
                                 .foregroundColor(Color.onSurfaceColor)
                             Spacer()
                         }
-                        Text("No MODUs match this filter")
+                        Text("No places match this filter")
                             .font(.headline)
                             .fixedSize(horizontal: false, vertical: true)
                             .multilineTextAlignment(.center)
@@ -111,31 +111,13 @@ struct ModuList: View {
                 Text(error.localizedDescription)
             }
         }
-        .navigationTitle(DataSources.modu.fullName)
+        .navigationTitle(DataSources.userPlace.fullName)
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.backgroundColor)
         .foregroundColor(Color.onSurfaceColor)
-        .onChange(of: filterOpen) { filterOpen in
-            if !filterOpen {
-                viewModel.reload()
-            }
-        }
-        .onChange(of: sortOpen) { sortOpen in
-            if !sortOpen {
-                viewModel.reload()
-            }
-        }
         .onAppear {
-            viewModel.repository = moduRepository
-            Metrics.shared.dataSourceList(dataSource: DataSources.modu)
+            viewModel.repository = repository
+            Metrics.shared.dataSourceList(dataSource: DataSources.userPlace)
         }
-        .modifier(
-            DataSourceFilterAndSort(
-                filterOpen: $filterOpen,
-                sortOpen: $sortOpen,
-                filterViewModel: filterViewModel,
-                allowSorting: true,
-                allowFiltering: true)
-        )
     }
 }

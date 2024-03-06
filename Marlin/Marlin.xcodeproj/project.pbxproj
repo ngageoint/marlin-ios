@@ -236,6 +236,11 @@
 		F7303DF02B94F52A00CAC2BB /* AsamActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7303DEF2B94F52A00CAC2BB /* AsamActions.swift */; };
 		F7303DF22B96126200CAC2BB /* BookmarksViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7303DF12B96126200CAC2BB /* BookmarksViewModel.swift */; };
 		F7303DF42B961BBC00CAC2BB /* BookmarkLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7303DF32B961BBC00CAC2BB /* BookmarkLocalDataSource.swift */; };
+		F7303DF62B96514400CAC2BB /* UserPlaceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7303DF52B96514400CAC2BB /* UserPlaceRepository.swift */; };
+		F7303DF82B9658CD00CAC2BB /* UserPlacesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7303DF72B9658CD00CAC2BB /* UserPlacesViewModel.swift */; };
+		F7303DFA2B965BA600CAC2BB /* UserPlacesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7303DF92B965BA600CAC2BB /* UserPlacesList.swift */; };
+		F7303DFE2B9688AE00CAC2BB /* DGPSStationListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7303DFD2B9688AE00CAC2BB /* DGPSStationListTests.swift */; };
+		F7303E002B98B78000CAC2BB /* DataSourceFilterAndSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7303DFF2B98B78000CAC2BB /* DataSourceFilterAndSort.swift */; };
 		F730DFC42A99000D0051775C /* GeoJSON in Frameworks */ = {isa = PBXBuildFile; productRef = F730DFC32A99000D0051775C /* GeoJSON */; };
 		F730DFC72A9950B20051775C /* GeoJSONExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F730DFC62A9950B20051775C /* GeoJSONExportable.swift */; };
 		F73356FD2B308E4B00BEE26F /* AsamFilterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73356FC2B308E4B00BEE26F /* AsamFilterable.swift */; };
@@ -664,7 +669,7 @@
 		F7FFB33628D8F5A300C31AA3 /* LightSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB33528D8F5A300C31AA3 /* LightSettingsView.swift */; };
 		F7FFB33828D9EB6900C31AA3 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = F7FFB33728D9EB6800C31AA3 /* CHANGELOG.md */; };
 		F7FFB33A28D9EFDB00C31AA3 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB33928D9EFDB00C31AA3 /* SearchView.swift */; };
-		F7FFB33D28DA061D00C31AA3 /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB33C28DA061D00C31AA3 /* FilterButton.swift */; };
+		F7FFB33D28DA061D00C31AA3 /* CombinedSourcesFilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB33C28DA061D00C31AA3 /* CombinedSourcesFilterButton.swift */; };
 		F7FFB33F28DA104200C31AA3 /* FilterBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB33E28DA104200C31AA3 /* FilterBottomSheet.swift */; };
 		F7FFB34128DA486500C31AA3 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB34028DA486500C31AA3 /* FilterView.swift */; };
 		F7FFB34528DE18B900C31AA3 /* Badge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB34428DE18B900C31AA3 /* Badge.swift */; };
@@ -923,6 +928,11 @@
 		F7303DEF2B94F52A00CAC2BB /* AsamActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsamActions.swift; sourceTree = "<group>"; };
 		F7303DF12B96126200CAC2BB /* BookmarksViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksViewModel.swift; sourceTree = "<group>"; };
 		F7303DF32B961BBC00CAC2BB /* BookmarkLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkLocalDataSource.swift; sourceTree = "<group>"; };
+		F7303DF52B96514400CAC2BB /* UserPlaceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPlaceRepository.swift; sourceTree = "<group>"; };
+		F7303DF72B9658CD00CAC2BB /* UserPlacesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPlacesViewModel.swift; sourceTree = "<group>"; };
+		F7303DF92B965BA600CAC2BB /* UserPlacesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPlacesList.swift; sourceTree = "<group>"; };
+		F7303DFD2B9688AE00CAC2BB /* DGPSStationListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DGPSStationListTests.swift; sourceTree = "<group>"; };
+		F7303DFF2B98B78000CAC2BB /* DataSourceFilterAndSort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceFilterAndSort.swift; sourceTree = "<group>"; };
 		F730DFC62A9950B20051775C /* GeoJSONExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoJSONExportable.swift; sourceTree = "<group>"; };
 		F73356FC2B308E4B00BEE26F /* AsamFilterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsamFilterable.swift; sourceTree = "<group>"; };
 		F73356FE2B308EF100BEE26F /* ModuFilterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuFilterable.swift; sourceTree = "<group>"; };
@@ -1356,7 +1366,7 @@
 		F7FFB33528D8F5A300C31AA3 /* LightSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightSettingsView.swift; sourceTree = "<group>"; };
 		F7FFB33728D9EB6800C31AA3 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		F7FFB33928D9EFDB00C31AA3 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
-		F7FFB33C28DA061D00C31AA3 /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
+		F7FFB33C28DA061D00C31AA3 /* CombinedSourcesFilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinedSourcesFilterButton.swift; sourceTree = "<group>"; };
 		F7FFB33E28DA104200C31AA3 /* FilterBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterBottomSheet.swift; sourceTree = "<group>"; };
 		F7FFB34028DA486500C31AA3 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		F7FFB34428DE18B900C31AA3 /* Badge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Badge.swift; sourceTree = "<group>"; };
@@ -1723,6 +1733,7 @@
 		F727A68F284E605800BD728A /* MarlinTests */ = {
 			isa = PBXGroup;
 			children = (
+				F7303DFB2B96888C00CAC2BB /* UI */,
 				F76EE18A2B928CBC001128EB /* Repository */,
 				F7EFFECA2A82DEBE0097E5EF /* ComponentHelpers */,
 				F75324BC298197AF005C509F /* Onboarding */,
@@ -1854,6 +1865,22 @@
 			children = (
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		F7303DFB2B96888C00CAC2BB /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				F7303DFC2B96889200CAC2BB /* DifferentialGPSStation */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		F7303DFC2B96889200CAC2BB /* DifferentialGPSStation */ = {
+			isa = PBXGroup;
+			children = (
+				F7303DFD2B9688AE00CAC2BB /* DGPSStationListTests.swift */,
+			);
+			path = DifferentialGPSStation;
 			sourceTree = "<group>";
 		};
 		F730DFC52A9950930051775C /* Conversions */ = {
@@ -2029,6 +2056,7 @@
 			isa = PBXGroup;
 			children = (
 				F767DB3E2B8D0FB7002C12C7 /* UserPlaceLocalDataSource.swift */,
+				F7303DF52B96514400CAC2BB /* UserPlaceRepository.swift */,
 			);
 			path = UserPlace;
 			sourceTree = "<group>";
@@ -2080,6 +2108,8 @@
 			children = (
 				F76EE1002B926599001128EB /* CreateUserPlaceButton.swift */,
 				F76EE1022B926F59001128EB /* CreatePlaceView.swift */,
+				F7303DF72B9658CD00CAC2BB /* UserPlacesViewModel.swift */,
+				F7303DF92B965BA600CAC2BB /* UserPlacesList.swift */,
 			);
 			path = UserPlace;
 			sourceTree = "<group>";
@@ -3314,7 +3344,7 @@
 			children = (
 				F7D8FA52293AA0F700E7D0A1 /* DataSource */,
 				F7D8FA45293A94FC00E7D0A1 /* Fields */,
-				F7FFB33C28DA061D00C31AA3 /* FilterButton.swift */,
+				F7FFB33C28DA061D00C31AA3 /* CombinedSourcesFilterButton.swift */,
 				F7FFB33E28DA104200C31AA3 /* FilterBottomSheet.swift */,
 				F7FFB34028DA486500C31AA3 /* FilterView.swift */,
 				F7D2224F28E4A27C00F527F2 /* FilterBottomSheetRow.swift */,
@@ -3324,6 +3354,7 @@
 				F7D8FA3B2939232100E7D0A1 /* FilterViewModel.swift */,
 				F7D8FA41293A923400E7D0A1 /* FilterPropertyAndComparison.swift */,
 				F7D8FA6D293E92A900E7D0A1 /* SortViewModel.swift */,
+				F7303DFF2B98B78000CAC2BB /* DataSourceFilterAndSort.swift */,
 			);
 			path = Filter;
 			sourceTree = "<group>";
@@ -3713,6 +3744,7 @@
 				F72E0F6E2A2926600099BFFD /* MarlinFullFlowTest.swift in Sources */,
 				F72EAAB7291BF21400AC6026 /* ModuDataTests.swift in Sources */,
 				F7D8FA792941005E00E7D0A1 /* ChartCorrectionListViewModelTests.swift in Sources */,
+				F7303DFE2B9688AE00CAC2BB /* DGPSStationListTests.swift in Sources */,
 				F76EE1B62B928CBD001128EB /* ModuRemoteDataSourceTests.swift in Sources */,
 				F749E43529AE90E200B2FF8B /* NewMapLayerViewModelTests.swift in Sources */,
 				F75324D2298DBC15005C509F /* SideMenuTests.swift in Sources */,
@@ -3904,7 +3936,7 @@
 				F76EE1632B928A69001128EB /* AsamInitializer.swift in Sources */,
 				F7AFF93F2AD462ED00555960 /* RoutesViewModel.swift in Sources */,
 				F714DD8B2B33941C003D7996 /* UserDefaults.swift in Sources */,
-				F7FFB33D28DA061D00C31AA3 /* FilterButton.swift in Sources */,
+				F7FFB33D28DA061D00C31AA3 /* CombinedSourcesFilterButton.swift in Sources */,
 				F7FDF2B02AB4D53D009A5E8F /* ModuRepository.swift in Sources */,
 				F76EE1012B926599001128EB /* CreateUserPlaceButton.swift in Sources */,
 				F76EE14F2B928A69001128EB /* NoticeToMarinersService.swift in Sources */,
@@ -3977,9 +4009,11 @@
 				F71FC0D12A3B9D9000911BAC /* MoreDetailsButton.swift in Sources */,
 				F76EE0F62B923427001128EB /* NavigationalWarningRouteSheetView.swift in Sources */,
 				F7D671DA286E3B3D00758F1C /* ExtraMapTypes.swift in Sources */,
+				F7303E002B98B78000CAC2BB /* DataSourceFilterAndSort.swift in Sources */,
 				F7FFB33A28D9EFDB00C31AA3 /* SearchView.swift in Sources */,
 				F740AA77289D68D800754293 /* MarlinCompactWidth.swift in Sources */,
 				F76EE1512B928A69001128EB /* PublicationDataFetchOperation.swift in Sources */,
+				F7303DF82B9658CD00CAC2BB /* UserPlacesViewModel.swift in Sources */,
 				F7391CA52ABA28590002ABDD /* BookmarkModel.swift in Sources */,
 				F7A54CD92848149700E5F565 /* Persistence.swift in Sources */,
 				F7FDF2B42AB4E8BB009A5E8F /* ModuViewModel.swift in Sources */,
@@ -3990,6 +4024,7 @@
 				F7D8FA44293A941100E7D0A1 /* IntFilter.swift in Sources */,
 				F71D286A28BE467200F1775C /* DGPSStationDetailView.swift in Sources */,
 				F71DF4AF285927D600686951 /* MarlinScheme.swift in Sources */,
+				F7303DFA2B965BA600CAC2BB /* UserPlacesList.swift in Sources */,
 				F76EE1682B928A69001128EB /* PublicationInitialDataLoadOperation.swift in Sources */,
 				F715E2FA2B753E3000752688 /* DGPSStationList.swift in Sources */,
 				F7A54CD32848149700E5F565 /* Marlin.xcdatamodeld in Sources */,
@@ -4105,6 +4140,7 @@
 				F715E3012B7557AD00752688 /* DGPSStationPropertyContainer.swift in Sources */,
 				F715E3152B768A8900752688 /* PortGeoPackageExportable.swift in Sources */,
 				F7B7064328BAADD50026DE88 /* CircleImage.swift in Sources */,
+				F7303DF62B96514400CAC2BB /* UserPlaceRepository.swift in Sources */,
 				F7F59784285A1D7200F9B32E /* AsamSummaryView.swift in Sources */,
 				F7FFB31E28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift in Sources */,
 				F7D8FA302936C01F00E7D0A1 /* MapImage.swift in Sources */,

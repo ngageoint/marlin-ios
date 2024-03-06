@@ -22,7 +22,8 @@ class DataSourceList: ObservableObject {
         DataSourceItem(dataSource: DataSources.epub),
         DataSourceItem(dataSource: DataSources.noticeToMariners),
         DataSourceItem(dataSource: DataSources.bookmark),
-        DataSourceItem(dataSource: DataSources.route)
+        DataSourceItem(dataSource: DataSources.route),
+        DataSourceItem(dataSource: DataSources.userPlace)
     ]
     
     var enabledTabs: [DataSourceItem] {

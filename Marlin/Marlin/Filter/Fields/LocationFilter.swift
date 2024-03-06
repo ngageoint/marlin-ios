@@ -166,7 +166,9 @@ struct LocationFilter: View {
                                     if let minLat = viewModel.valueMinLatitude, 
                                         let minLon = viewModel.valueMinLongitude,
                                         let maxLat = viewModel.valueMaxLatitude,
-                                        let maxLon = viewModel.valueMaxLongitude {
+                                        let maxLon = viewModel.valueMaxLongitude,
+                                       maxLon > minLon,
+                                       maxLat > minLat {
                                         coordinateOne.latitude = minLat
                                         coordinateOne.longitude = minLon
                                         coordinateTwo.latitude = maxLat

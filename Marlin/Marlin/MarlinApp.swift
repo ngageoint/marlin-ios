@@ -147,6 +147,7 @@ struct MarlinApp: App {
     var publicationRepository: PublicationRepository
     var navigationalWarningRepository: NavigationalWarningRepository
     var noticeToMarinersRepository: NoticeToMarinersRepository
+    var userPlaceRepository: UserPlaceRepository
 
     var routeRepository: RouteRepository
     var routeWaypointRepository: RouteWaypointRepository
@@ -205,6 +206,7 @@ struct MarlinApp: App {
             localDataSource: NoticeToMarinersCoreDataDataSource(),
             remoteDataSource: NoticeToMarinersRemoteDataSource()
         )
+        userPlaceRepository = UserPlaceRepository(localDataSource: UserPlaceCoreDataDataSource())
 
         routeRepository = RouteRepository(localDataSource: RouteCoreDataDataSource())
         routeWaypointRepository = RouteWaypointRepository(
@@ -274,6 +276,7 @@ struct MarlinApp: App {
                 .environmentObject(navigationalWarningRepository)
                 .environmentObject(publicationRepository)
                 .environmentObject(noticeToMarinersRepository)
+                .environmentObject(userPlaceRepository)
                 .environmentObject(asamsTileRepository)
                 .environmentObject(modusTileRepository)
                 .environmentObject(portsTileRepository)

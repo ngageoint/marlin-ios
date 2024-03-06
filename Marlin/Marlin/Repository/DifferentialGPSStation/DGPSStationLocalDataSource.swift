@@ -191,9 +191,7 @@ extension DGPSStationCoreDataDataSource {
         let sortDescriptors: [DataSourceSortParameter] =
         userSort.isEmpty ? DataSources.dgps.defaultSort : userSort
 
-        request.sortDescriptors = sortDescriptors.map({ sortParameter in
-            sortParameter.toNSSortDescriptor()
-        })
+        request.sortDescriptors = sortDescriptors.toNSSortDescriptors()
         var previousHeader: String? = currentHeader
         var dgpss: [Item] = []
         context.performAndWait {

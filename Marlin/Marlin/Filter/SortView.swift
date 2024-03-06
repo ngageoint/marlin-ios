@@ -73,6 +73,8 @@ struct SortView: View {
                     Image(systemName: "minus.circle.fill")
                         .tint(Color.red)
                 }
+                .accessibilityElement()
+                .accessibilityLabel("remove first sort property")
             }
             .frame(maxWidth: .infinity)
             .padding(.leading, 16)
@@ -102,6 +104,8 @@ struct SortView: View {
                     Image(systemName: "minus.circle.fill")
                         .tint(Color.red)
                 }
+                .accessibilityElement()
+                .accessibilityLabel("remove second sort property")
             }
             .padding(.leading, 16)
             .padding([.top, .bottom], 8)
@@ -138,6 +142,8 @@ struct SortView: View {
                     Image(systemName: "plus.circle.fill")
                         .tint(Color.green)
                 }
+                .accessibilityElement()
+                .accessibilityLabel("add sort property")
             }
             .padding([.leading], 8)
             .frame(maxWidth: .infinity)

@@ -88,7 +88,7 @@ struct MarlinRegularWidth: View {
                 }
             }
             .marlinRoutes()
-            .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
+            .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
             .navigationTitle("Marlin")
             .navigationBarTitleDisplayMode(.inline)
         }

@@ -85,7 +85,7 @@ struct NoticesList: View {
 
                         case .week(let noticeNumber):
                             NavigationLink(
-                                value: NoticeToMarinersRoute.fullView(noticeNumber),
+                                value: NoticeToMarinersRoute.fullView(noticeNumber: noticeNumber),
                                 label: {
                                     HStack {
                                         VStack(alignment: .leading, spacing: 8) {

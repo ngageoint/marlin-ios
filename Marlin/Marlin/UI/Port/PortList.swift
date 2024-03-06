@@ -126,54 +126,12 @@ struct PortList: View {
             Metrics.shared.dataSourceList(dataSource: DataSources.port)
         }
         .modifier(
-            FilterButton(
+            DataSourceFilterAndSort(
                 filterOpen: $filterOpen,
                 sortOpen: $sortOpen,
-                dataSources: Binding.constant([
-                    DataSourceItem(dataSource: DataSources.port)
-                ]),
+                filterViewModel: filterViewModel,
                 allowSorting: true,
                 allowFiltering: true)
         )
-        .background {
-            DataSourceFilter(filterViewModel: filterViewModel, showBottomSheet: $filterOpen)
-        }
-        .sheet(isPresented: $sortOpen) {
-            NavigationStack {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        SortView(definition: DataSources.port)
-                            .background(Color.surfaceColor)
-
-                        Spacer()
-                    }
-
-                }
-                .navigationTitle("\(DataSources.port.name) Sort")
-                .navigationBarTitleDisplayMode(.inline)
-                .background(Color.backgroundColor)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(
-                            action: {
-                                sortOpen.toggle()
-                            },
-                            label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .imageScale(.large)
-                                    .foregroundColor(Color.onPrimaryColor.opacity(0.87))
-                            }
-                        )
-                        .accessibilityElement()
-                        .accessibilityLabel("Close Sort")
-                    }
-                }
-                .presentationDetents([.large])
-            }
-
-            .onAppear {
-                Metrics.shared.dataSourceSort(dataSource: DataSources.port)
-            }
-        }
     }
 }

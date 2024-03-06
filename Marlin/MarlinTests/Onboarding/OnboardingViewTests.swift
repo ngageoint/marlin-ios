@@ -69,7 +69,7 @@ final class OnboardingViewTests: XCTestCase {
         let passThrough = PassThrough()
         UNNotificationSettings.fakeAuthorizationStatus = .notDetermined
         let dataSourceList: DataSourceList = DataSourceList()
-        XCTAssertEqual(dataSourceList.tabItems.count, 11)
+        XCTAssertEqual(dataSourceList.tabItems.count, 12)
         
         let container = Container(passThrough: passThrough, userNotificationCenter: mockUserNotificationCenter)
             .environmentObject(locationManager)

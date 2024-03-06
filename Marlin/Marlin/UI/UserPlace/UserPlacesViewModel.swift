@@ -1,58 +1,34 @@
 //
-//  LightsViewModel.swift
+//  UserPlacesViewModel.swift
 //  Marlin
 //
-//  Created by Daniel Barela on 2/2/24.
+//  Created by Daniel Barela on 3/4/24.
 //
 
 import Foundation
 import Combine
 import SwiftUI
 
-class LightsViewModel: ObservableObject {
+class UserPlacesViewModel: ObservableObject {
     @Published private(set) var state: State = .loading
-    @Published var lights: [LightModel] = []
+    @Published var userPlaces: [UserPlaceModel] = []
     @Published var loaded: Bool = false
     private var disposables = Set<AnyCancellable>()
 
-    private var _repository: LightRepository?
-
-    var dataSourceUpdatedPub: AnyCancellable {
-        return NotificationCenter.default.publisher(for: .DataSourceUpdated)
-            .compactMap { notification in
-                notification.object as? DataSourceUpdatedNotification
-            }
-            .filter { notification in
-                notification.key == DataSources.light.key
-            }
-            .sink { _ in
-                self.reload()
-            }
-    }
-
-    var repository: LightRepository? {
-        get {
-            return _repository
-        }
-        set {
-            if _repository == nil {
-                dataSourceUpdatedPub.store(in: &disposables)
-                _repository = newValue
-                fetchLights()
-            }
+    var repository: UserPlaceRepository? {
+        didSet {
+            fetchUserPlaces()
         }
     }
-
-    var publisher: AnyPublisher<CollectionDifference<LightModel>, Never>?
 
     private let trigger = Trigger()
 
     enum State {
         case loading
-        case loaded(rows: [LightItem])
+        case loaded(rows: [UserPlaceItem])
         case failure(error: Error)
 
-        fileprivate var rows: [LightItem] {
+        fileprivate var rows: [UserPlaceItem] {
             if case let .loaded(rows: rows) = self {
                 return rows
             } else {
@@ -74,16 +50,13 @@ class LightsViewModel: ObservableObject {
         trigger.activate(for: TriggerId.loadMore)
     }
 
-    func fetchLights(limit: Int = 100) {
-        if publisher != nil {
-            return
-        }
-        guard let repository = _repository else { return }
+    func fetchUserPlaces(limit: Int = 100) {
+        guard let repository = repository else { return }
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in
-            repository.lights(
-                filters: UserDefaults.standard.filter(DataSources.light),
+            repository.userPlaces(
+                filters: UserDefaults.standard.filter(DataSources.userPlace),
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .scan([]) { $0 + $1 }

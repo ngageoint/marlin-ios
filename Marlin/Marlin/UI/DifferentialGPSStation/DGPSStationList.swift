@@ -46,6 +46,8 @@ struct DGPSStationList: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color.backgroundColor)
                 .transition(AnyTransition.opacity)
+                .accessibilityElement()
+                .accessibilityLabel("\(DataSources.dgps.key) Loading")
             case let .loaded(rows: rows):
                 ZStack(alignment: .bottomTrailing) {
                     List(rows) { dgpsItem in
@@ -75,6 +77,8 @@ struct DGPSStationList: View {
                             .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color.backgroundColor)
+                            .accessibilityElement(children: .contain)
+                            .accessibilityLabel("\(DataSources.dgps.key) \(dgps.itemKey)")
                         case .sectionHeader(let header):
                             Text(header)
                                 .onAppear {
@@ -137,54 +141,12 @@ struct DGPSStationList: View {
             Metrics.shared.dataSourceList(dataSource: DataSources.dgps)
         }
         .modifier(
-            FilterButton(
+            DataSourceFilterAndSort(
                 filterOpen: $filterOpen,
                 sortOpen: $sortOpen,
-                dataSources: Binding.constant([
-                    DataSourceItem(dataSource: DataSources.dgps)
-                ]),
+                filterViewModel: filterViewModel,
                 allowSorting: true,
                 allowFiltering: true)
         )
-        .background {
-            DataSourceFilter(filterViewModel: filterViewModel, showBottomSheet: $filterOpen)
-        }
-        .sheet(isPresented: $sortOpen) {
-            NavigationStack {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        SortView(definition: DataSources.dgps)
-                            .background(Color.surfaceColor)
-
-                        Spacer()
-                    }
-
-                }
-                .navigationTitle("\(DataSources.dgps.name) Sort")
-                .navigationBarTitleDisplayMode(.inline)
-                .background(Color.backgroundColor)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(
-                            action: {
-                                sortOpen.toggle()
-                            },
-                            label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .imageScale(.large)
-                                    .foregroundColor(Color.onPrimaryColor.opacity(0.87))
-                            }
-                        )
-                        .accessibilityElement()
-                        .accessibilityLabel("Close Sort")
-                    }
-                }
-                .presentationDetents([.large])
-            }
-
-            .onAppear {
-                Metrics.shared.dataSourceSort(dataSource: DataSources.dgps)
-            }
-        }
     }
 }
