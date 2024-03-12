@@ -29,7 +29,7 @@ final class FilterButtonTests: XCTestCase {
             var body: some View {
                 Rectangle()
                     .background(Color.ngaGreen)
-                    .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, allowSorting: false))
+                    .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen))
                     .onChange(of: filterOpen) { newValue in
                         self.passThrough.filterOpen = newValue
                     }
@@ -172,7 +172,7 @@ final class FilterButtonTests: XCTestCase {
             var body: some View {
                 Rectangle()
                     .background(Color.ngaGreen)
-                    .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, dataSources: $dataSources, allowSorting: false, allowFiltering: true))
+                    .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, dataSources: $dataSources, allowFiltering: true))
             }
             
             public init(passThrough: PassThrough) {
@@ -221,7 +221,7 @@ final class FilterButtonTests: XCTestCase {
             var body: some View {
                 Rectangle()
                     .background(Color.ngaGreen)
-                    .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, dataSources: $dataSources, allowSorting: false, allowFiltering: true))
+                    .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, dataSources: $dataSources, allowFiltering: true))
                     .onAppear {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             dataSources = [DataSourceItem(dataSource: MockDataSourceDefinition().self)]

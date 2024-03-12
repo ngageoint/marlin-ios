@@ -9,7 +9,8 @@ import SwiftUI
 import MapKit
 import Combine
 
-struct SearchView<T: SearchProvider>: View {
+struct SearchView: View {
+    @EnvironmentObject var searchRepository: SearchRepository
     @AppStorage("coordinateDisplay") var coordinateDisplay: CoordinateDisplayType = .latitudeLongitude
 
     @State var search: String = ""
@@ -54,7 +55,9 @@ struct SearchView<T: SearchProvider>: View {
                                 .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
                         ) { debouncedSearch in
                             print(debouncedSearch)
-                            performSearch(searchText: debouncedSearch)
+                            Task {
+                                await performSearch(searchText: debouncedSearch)
+                            }
                         }
                         .overlay(alignment: .trailing) {
                             if !(mapState.searchResults?.isEmpty ?? true) {
@@ -84,43 +87,42 @@ struct SearchView<T: SearchProvider>: View {
                 }
                 ScrollView {
                     LazyVStack(alignment: .leading) {
-                        ForEach(searchResults, id: \.self) { searchResult in
+                        ForEach(searchResults) { searchResult in
                             VStack(alignment: .leading) {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 2) {
-                                        Text("**\(searchResult.name ?? "")**")
+                                        Text("**\(searchResult.displayName)**")
                                             .primary()
                                             .accessibilityElement()
-                                            .accessibilityLabel(searchResult.name ?? "")
-                                        Text("\(searchResult.placemark.title ?? "")")
-                                            .secondary()
-                                        if let coordinate = searchResult.placemark.location?.coordinate {
-                                            Text(coordinateDisplay.format(coordinate: coordinate))
-                                                .onTapGesture {
-                                                    UIPasteboard.general.string = 
-                                                    coordinateDisplay.format(coordinate: coordinate)
-                                                    NotificationCenter.default.post(
-                                                        name: .SnackbarNotification,
-                                                        object: SnackbarNotification(
-                                                            snackbarModel: SnackbarModel(
-                                                                message: """
-                                                                Location \
-                                                                \(coordinateDisplay.format(coordinate: coordinate)) \
-                                                                copied to clipboard
-                                                                """
-                                                            )
+                                            .accessibilityLabel(searchResult.displayName)
+//                                        Text("\(searchResult.placemark.title ?? "")")
+//                                            .secondary()
+                                            Text(coordinateDisplay.format(coordinate: searchResult.coordinate)
+                                            )
+                                            .onTapGesture {
+                                                UIPasteboard.general.string =
+                                                coordinateDisplay.format(coordinate: searchResult.coordinate)
+                                                NotificationCenter.default.post(
+                                                    name: .SnackbarNotification,
+                                                    object: SnackbarNotification(
+                                                        snackbarModel: SnackbarModel(
+                                                            message: """
+                                                            Location \
+                                                            \(coordinateDisplay.format(coordinate: searchResult.coordinate)) \
+                                                            copied to clipboard
+                                                            """
                                                         )
                                                     )
-                                                }
-                                                .accessibilityElement()
-                                                .accessibilityLabel("Location")
-                                        }
+                                                )
+                                            }
+                                            .accessibilityElement()
+                                            .accessibilityLabel("Location")
                                     }
                                     Spacer()
                                     Button(
                                         action: {
                                             mapState.center = MKCoordinateRegion(
-                                                center: searchResult.placemark.coordinate,
+                                                center: searchResult.coordinate,
                                                 latitudinalMeters: 10000,
                                                 longitudinalMeters: 10000
                                             )
@@ -160,11 +162,11 @@ struct SearchView<T: SearchProvider>: View {
         )
     }
     
-    func performSearch(searchText: String) {
-        T.performSearch(searchText: searchText, region: mapState.center) { result in
-            DispatchQueue.main.async {
-                mapState.searchResults = result
-            }
+    func performSearch(searchText: String) async {
+        let result = await searchRepository.performSearch(searchText: searchText, region: mapState.center)
+
+        await MainActor.run {
+            mapState.searchResults = result
         }
     }
 }

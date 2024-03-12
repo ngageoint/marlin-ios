@@ -79,6 +79,7 @@ enum DataSources {
     static let radioBeacon: RadioBeaconDefinition = RadioBeaconDefinition.definition
     static let route: RouteDefinition = RouteDefinition.definition
     static let userPlace: UserPlaceDefinition = UserPlaceDefinition.definition
+    static let search: SearchProviderDataDefinition = SearchProviderDataDefinition.definition
 
     static func filterableFromDefintion(_ definition: any DataSourceDefinition) -> Filterable? {
         switch definition {
@@ -176,6 +177,8 @@ enum DataSources {
             return DataSources.route
         case DataSources.userPlace.key:
             return DataSources.userPlace
+        case DataSources.search.key:
+            return DataSources.search
         default:
             return nil
         }

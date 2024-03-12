@@ -9,8 +9,15 @@ import Foundation
 import MapKit
 
 protocol SearchProvider {
-    static func performSearch(
+    func performSearch(
         searchText: String,
         region: MKCoordinateRegion?,
-        onCompletion: @escaping ([MKMapItem]) -> Void)
+        onCompletion: @escaping ([SearchResultModel]) -> Void
+    )
+
+    func performSearchNear(
+        region: MKCoordinateRegion?,
+        zoom: Int,
+        onCompletion: @escaping ([SearchResultModel]) -> Void
+    )
 }

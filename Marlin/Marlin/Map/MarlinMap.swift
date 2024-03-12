@@ -91,7 +91,7 @@ class MapState: ObservableObject, Hashable {
         }
     }
     
-    @Published var searchResults: [MKMapItem]?
+    @Published var searchResults: [SearchResultModel]?
     
     @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
     @AppStorage("showGARS") var showGARS: Bool = false
@@ -112,6 +112,7 @@ class MainMapMixins: MapMixins {
     var dgpsRepository: TileRepository?
     var navigationalWarningsRepository: TileRepository?
     var routeRepository: RouteRepository?
+    var searchRepository: SearchRepository?
 
     override init() {
         super.init()
@@ -122,6 +123,13 @@ class MainMapMixins: MapMixins {
         if self.routeRepository == nil {
             self.routeRepository = routeRepository
             self.mixins.append(AllRoutesMixin(repository: routeRepository))
+        }
+    }
+
+    func addSearchRepository(searchRepository: SearchRepository) {
+        if self.searchRepository == nil {
+            self.searchRepository = searchRepository
+            self.mixins.append(DrawingMixin(searchRepository: searchRepository))
         }
     }
 

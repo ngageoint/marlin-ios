@@ -42,6 +42,11 @@ struct DataSourceSheetView: View {
                         itemKey: itemKey,
                         focusNotification: focusNotification
                     )
+                case DataSources.search.key:
+                    SearchSheetView(
+                        itemKey: itemKey,
+                        focusNotification: focusNotification
+                    )
                 default:
                     EmptyView()
                 }

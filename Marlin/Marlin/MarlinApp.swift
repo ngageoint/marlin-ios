@@ -148,6 +148,7 @@ struct MarlinApp: App {
     var navigationalWarningRepository: NavigationalWarningRepository
     var noticeToMarinersRepository: NoticeToMarinersRepository
     var userPlaceRepository: UserPlaceRepository
+    var searchRepository: SearchRepository
 
     var routeRepository: RouteRepository
     var routeWaypointRepository: RouteWaypointRepository
@@ -207,6 +208,10 @@ struct MarlinApp: App {
             remoteDataSource: NoticeToMarinersRemoteDataSource()
         )
         userPlaceRepository = UserPlaceRepository(localDataSource: UserPlaceCoreDataDataSource())
+        searchRepository = SearchRepository(
+            native: NativeSearchProvider(),
+            nominatim: NominatimSearchProvider()
+        )
 
         routeRepository = RouteRepository(localDataSource: RouteCoreDataDataSource())
         routeWaypointRepository = RouteWaypointRepository(
@@ -284,6 +289,7 @@ struct MarlinApp: App {
                 .environmentObject(radioBeaconsTileRepository)
                 .environmentObject(differentialGPSStationsTileRepository)
                 .environmentObject(navigationalWarningsMapFeatureRepository)
+                .environmentObject(searchRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
                 .environmentObject(router)
                 .background(Color.surfaceColor)

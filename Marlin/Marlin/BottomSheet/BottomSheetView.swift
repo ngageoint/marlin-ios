@@ -33,7 +33,8 @@ struct MarlinDataBottomSheet: View {
                 content: {
                     MarlinBottomSheet(itemList: itemList, focusNotification: .FocusMapOnItem)
                         .environmentObject(LocationManager.shared())
-                        .presentationDetents([.medium])
+                        .presentationDetents([.height(300)])
+//                        .presentationDetents([.medium])
                 }
             )
 
@@ -46,7 +47,7 @@ struct MarlinDataBottomSheet: View {
                 if let itemKeys = notification.itemKeys {
                     for (dataSourceKey, itemKeys) in itemKeys {
                         for itemKey in itemKeys {
-                            print("item key \(itemKey)")
+                            print("item key \(itemKey) \(dataSourceKey)")
                             let bottomSheetItem = BottomSheetItem(
                                 mapName: notification.mapName,
                                 zoom: notification.zoom,

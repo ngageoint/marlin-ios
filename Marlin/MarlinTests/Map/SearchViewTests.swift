@@ -28,27 +28,17 @@ final class SearchViewTests: XCTestCase {
     }
     
     func testExpandCollapse() throws {
-        class PassThrough: ObservableObject {
-            
-        }
-        
         struct Container: View {
-            @ObservedObject var passThrough: PassThrough
             @StateObject var mapState: MapState = MapState()
-            
-            init(passThrough: PassThrough) {
-                self.passThrough = passThrough
-            }
-            
+
             var body: some View {
                 NavigationView {
-                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
+                    SearchView(mapState: mapState)
                 }
+                .environmentObject(SearchRepository(native: NativeSearchProvider<MKLocalSearchMock>()))
             }
         }
-        let passThrough = PassThrough()
-        
-        let container = Container(passThrough: passThrough)
+        let container = Container()
 
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -78,8 +68,9 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
+                    SearchView(mapState: mapState)
                 }
+                .environmentObject(SearchRepository(native: NativeSearchProvider<MKLocalSearchMock>()))
                 .onAppear {
                     self.passThrough.mapState = mapState
                 }
@@ -146,8 +137,9 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
+                    SearchView(mapState: mapState)
                 }
+                .environmentObject(SearchRepository(native: NativeSearchProvider<MKLocalSearchMock>()))
                 .onAppear {
                     self.passThrough.mapState = mapState
                 }
@@ -194,8 +186,9 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
+                    SearchView(mapState: mapState)
                 }
+                .environmentObject(SearchRepository(native: NativeSearchProvider<MKLocalSearchMock>()))
                 .onAppear {
                     self.passThrough.mapState = mapState
                 }
@@ -243,7 +236,8 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView<MockSearchProvider>(mapState: mapState)
+                    SearchView(mapState: mapState)
+                        .environmentObject(SearchRepository(native: MockSearchProvider()))
                 }
                 .onAppear {
                     self.passThrough.mapState = mapState
@@ -329,7 +323,7 @@ class MockMKLocalSearchResponse: MKLocalSearch.Response {
 }
 
 class MockSearchProvider: SearchProvider {
-    static func performSearch(
+    func performSearch(
         searchText: String,
         region: MKCoordinateRegion?,
         onCompletion: @escaping ([MKMapItem]) -> Void) {

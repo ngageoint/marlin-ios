@@ -13,19 +13,19 @@ import SwiftUI
 class SearchResultAnnotation: NSObject, MKAnnotation {
     
     var coordinate: CLLocationCoordinate2D
-    var mapItem: MKMapItem
-    
+    var model: SearchResultModel
+
     var title: String? {
-        "\(mapItem.name ?? "")\n\(mapItem.placemark.country ?? "")\n\(mapItem.placemark.ocean ?? "")"
+        "\(model.displayName)\n\(model.address?.country ?? "")"
     }
     
     var subtitle: String? {
-        self.mapItem.placemark.title
+        nil
     }
     
-    init(mapItem: MKMapItem) {
-        coordinate = mapItem.placemark.coordinate
-        self.mapItem = mapItem
+    init(model: SearchResultModel) {
+        coordinate = model.coordinate
+        self.model = model
     }
     
 }
@@ -47,7 +47,7 @@ class SearchResultsMap: NSObject, MapMixin {
                 mapView.removeAnnotations(self.annotations)
                 
                 self.annotations = items.map { item in
-                    SearchResultAnnotation(mapItem: item)
+                    SearchResultAnnotation(model: item)
                 }
                 
                 mapView.addAnnotations(self.annotations)
@@ -58,35 +58,39 @@ class SearchResultsMap: NSObject, MapMixin {
     func removeMixin(mapView: MKMapView, mapState: MapState) {
         
     }
-    
+
+    func regionDidChange(mapView: MKMapView, animated: Bool, centerCoordinate: CLLocationCoordinate2D) {
+        UserDefaults.standard.mapRegion = mapView.region
+    }
+
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView? {
         if let annotation = annotation as? SearchResultAnnotation {
-            let mapItem = annotation.mapItem
+//            let mapItem = annotation.mapItem
             if let annotationView = mapView.dequeueReusableAnnotationView(
                 withIdentifier: "placemark", for: annotation
             ) as? MKMarkerAnnotationView {
                 annotationView.isEnabled = true
                 annotationView.markerTintColor = Color.primaryUIColor
-                if let category = mapItem.pointOfInterestCategory {
-                    switch category {
-                    case .airport:
-                        annotationView.glyphImage = UIImage(systemName: "airplane")
-                    case .amusementPark:
-                        annotationView.glyphImage = UIImage(systemName: "hands.sparkles.fill")
-                    case .aquarium:
-                        annotationView.glyphImage = UIImage(systemName: "drop.fill")
-                    case .atm, .bank:
-                        annotationView.glyphImage = UIImage(systemName: "dollarsign.circle.fill")
-                    case .beach:
-                        annotationView.glyphImage = UIImage(systemName: "sun.dust.fill")
-                    case .bakery, .brewery, .cafe, .foodMarket, .restaurant:
-                        annotationView.glyphImage = UIImage(systemName: "fork.knife")
-                    default:
-                        annotationView.glyphImage = UIImage(systemName: "mappin")
-                    }
-                } else {
+//                if let category = mapItem.pointOfInterestCategory {
+//                    switch category {
+//                    case .airport:
+//                        annotationView.glyphImage = UIImage(systemName: "airplane")
+//                    case .amusementPark:
+//                        annotationView.glyphImage = UIImage(systemName: "hands.sparkles.fill")
+//                    case .aquarium:
+//                        annotationView.glyphImage = UIImage(systemName: "drop.fill")
+//                    case .atm, .bank:
+//                        annotationView.glyphImage = UIImage(systemName: "dollarsign.circle.fill")
+//                    case .beach:
+//                        annotationView.glyphImage = UIImage(systemName: "sun.dust.fill")
+//                    case .bakery, .brewery, .cafe, .foodMarket, .restaurant:
+//                        annotationView.glyphImage = UIImage(systemName: "fork.knife")
+//                    default:
+//                        annotationView.glyphImage = UIImage(systemName: "mappin")
+//                    }
+//                } else {
                     annotationView.glyphImage = UIImage(systemName: "mappin")
-                }
+//                }
                 return annotationView
             }
         }
