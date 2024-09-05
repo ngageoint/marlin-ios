@@ -17,9 +17,9 @@ struct DataSourceRail: View {
             VStack {
                 ForEach(dataSourceList.allTabs) { dataSourceItem in
                     RailItem(
-                        imageName: dataSourceItem.dataSource.definition.imageName,
-                        systemImageName: dataSourceItem.dataSource.definition.systemImageName,
-                        itemText: dataSourceItem.dataSource.definition.name)
+                        imageName: dataSourceItem.dataSource.imageName,
+                        systemImageName: dataSourceItem.dataSource.systemImageName,
+                        itemText: dataSourceItem.dataSource.name)
                         .onTapGesture {
                             if activeRailItem == dataSourceItem {
                                 activeRailItem = nil
@@ -32,7 +32,7 @@ struct DataSourceRail: View {
                             ? Color.primaryColorVariant.opacity(0.87) : Color.onSurfaceColor.opacity(0.6)
                         )
                         .accessibilityElement()
-                        .accessibilityLabel("\(dataSourceItem.dataSource.definition.fullName) rail item")
+                        .accessibilityLabel("\(dataSourceItem.dataSource.fullName) rail item")
                 }
             }
             Spacer()

@@ -10,6 +10,14 @@ import CoreLocation
 import mgrs_ios
 import sf_proj_ios
 
+extension Array where Element == DataSourceFilterParameter {
+    func getCacheKey() -> String {
+        return self.reduce("") { currentKey, param in
+            currentKey + param.display()
+        }
+    }
+}
+
 struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
     static func == (lhs: DataSourceFilterParameter, rhs: DataSourceFilterParameter) -> Bool {
         return lhs.id == rhs.id
@@ -162,14 +170,18 @@ struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
         return "**\(property.name)** \(comparison.rawValue) **\(valueString ?? "")**"
     }
 
-    func toPredicate(dataSource: Filterable?) -> NSPredicate? {
-        guard let dataSource = dataSource else {
-            return nil
-        }
+    func toPredicate(
+        dataSource: Filterable? = nil,
+        boundsPredicateBuilder: ((MapBoundingBox) -> NSPredicate)? = nil
+    ) -> NSPredicate? {
+//        guard let dataSource = dataSource else {
+//            return nil
+//        }
         return DataSourcePredicateBuilder(
             property: property,
             comparison: comparison,
             filterable: dataSource,
+            boundsPredicateBuilder: boundsPredicateBuilder,
             valueString: valueString,
             valueDate: valueDate,
             valueInt: valueInt,

@@ -52,8 +52,12 @@ extension NavigationalWarning: Bookmarkable {
     }
 }
 
-extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportable {
-    static var definition: any DataSourceDefinition = DataSourceDefinitions.navWarning.definition
+extension NavigationalWarning: Locatable, GeoJSONExportable {
+    var itemTitle: String {
+        return "\(self.navAreaName) \(String(self.msgNumber))/\(String(self.msgYear)) (\(self.subregion ?? ""))"
+    }
+
+    static var definition: any DataSourceDefinition = DataSources.navWarning
 
     var sfGeometry: SFGeometry? {
         let collection = SFGeometryCollection()
@@ -217,6 +221,7 @@ extension NavigationalWarning: Locatable, GeoPackageExportable, GeoJSONExportabl
     static var imageScale: CGFloat = 1.0
     
     static func postProcess() {
+        imageCache.clearCache()
         if !UserDefaults.standard.navigationalWarningsLocationsParsed {
             DispatchQueue.global(qos: .utility).async {
                 let fetchRequest = NavigationalWarning.fetchRequest()
@@ -311,7 +316,7 @@ extension NavigationalWarning: BatchImportable {
         UserDefaults.standard.lastSyncTimeSeconds(NavigationalWarning.definition)
     }
     
-    static func newBatchInsertRequest(with propertyList: [NavigationalWarningProperties]) -> NSBatchInsertRequest {
+    static func newBatchInsertRequest(with propertyList: [NavigationalWarningModel]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
         
@@ -336,7 +341,7 @@ extension NavigationalWarning: BatchImportable {
     }
     
     static func importRecords(
-        from propertiesList: [NavigationalWarningProperties],
+        from propertiesList: [NavigationalWarningModel],
         taskContext: NSManagedObjectContext) async throws -> Int {
         guard !propertiesList.isEmpty else { return 0 }
         

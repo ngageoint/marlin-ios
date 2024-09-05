@@ -18,9 +18,7 @@ class RouteWaypoint: NSManagedObject {
         let decoded = decodeToDataSource()
         return decoded?.sfGeometry
     }
-    
-    // ignoring this error because this is how many data sources we have
-    // swiftlint:disable cyclomatic_complexity
+
     func decodeToDataSource() -> (any GeoJSONExportable)? {
         do {
             let decoder = JSONDecoder()
@@ -29,24 +27,27 @@ class RouteWaypoint: NSManagedObject {
                 let featureCollection = try decoder.decode(FeatureCollection.self, from: jsonData)
                 if !featureCollection.features.isEmpty {
                     switch dataSource {
-                    case Asam.key:
+                    case DataSources.asam.key:
                         let asamModel = AsamModel(feature: featureCollection.features[0])
                         return asamModel
-                    case Modu.key:
+                    case DataSources.modu.key:
                         let moduModel = ModuModel(feature: featureCollection.features[0])
                         return moduModel
-                    case Light.key:
+                    case DataSources.light.key:
                         let lightModel = LightModel(feature: featureCollection.features[0])
                         return lightModel
-                    case Port.key:
+                    case DataSources.port.key:
                         let portModel = PortModel(feature: featureCollection.features[0])
                         return portModel
-                    case DifferentialGPSStation.key:
-                        let dgpsModel = DifferentialGPSStationModel(feature: featureCollection.features[0])
+                    case DataSources.dgps.key:
+                        let dgpsModel = DGPSStationModel(feature: featureCollection.features[0])
                         return dgpsModel
-                    case RadioBeacon.key:
+                    case DataSources.radioBeacon.key:
                         let rbModel = RadioBeaconModel(feature: featureCollection.features[0])
                         return rbModel
+                    case DataSources.navWarning.key:
+                        let nwModel = NavigationalWarningModel(feature: featureCollection.features[0])
+                        return nwModel
                     case CommonDataSource.key:
                         let commonModel = CommonDataSource(feature: featureCollection.features[0])
                         return commonModel
@@ -60,10 +61,9 @@ class RouteWaypoint: NSManagedObject {
         }
         return nil
     }
-    // swiftlint:enable cyclomatic_complexity
 }
 
-extension Route: Locatable, GeoPackageExportable {
+extension Route: Locatable {
     var sfGeometry: SFGeometry? {
         let collection = SFGeometryCollection()
         if let waypoints = waypoints {

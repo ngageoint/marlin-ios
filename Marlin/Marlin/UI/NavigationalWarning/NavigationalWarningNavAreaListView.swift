@@ -9,62 +9,67 @@ import SwiftUI
 import Combine
 
 struct NavigationalWarningNavAreaListView: View {
+    @EnvironmentObject var navigationalWarningRepository: NavigationalWarningRepository
+    @EnvironmentObject var router: MarlinRouter
     @AppStorage<String> var lastSeen: String
     @State var lastSavedDate: Date = Date(timeIntervalSince1970: 0)
     @State var scrollingTo: String?
     @State var shouldSavePosition: Bool = false
     
-    @State var firstUnseenNavigationalWarning: NavigationalWarning?
-    @State var tappedItem: NavigationalWarning?
+    @State var firstUnseenNavigationalWarning: NavigationalWarningModel?
+    @State var tappedItem: NavigationalWarningModel?
     @State private var showDetail = false
 
     @StateObject var scrollViewHelper = ScrollViewHelper()
     
-    @StateObject var dataSource = NavigationalWarningsAreaDataSource()
+    @StateObject var dataSource = NavigationalWarningsAreaViewModel()
     var mapName: String?
     var navArea: String
-    var warnings: [NavigationalWarning]
-    @Binding var path: NavigationPath
-    init(warnings: [NavigationalWarning], navArea: String, mapName: String?, path: Binding<NavigationPath>) {
-        self.warnings = warnings
-        self.navArea = navArea
+    init(navArea: String, mapName: String?) {
         self._lastSeen = AppStorage(wrappedValue: "", "lastSeen-\(navArea)")
+
+        self.navArea = navArea
         self.mapName = mapName
-        _path = path
     }
     
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(alignment: .leading) {
-                    ForEach(dataSource.items) { navigationalWarning in
-                        HStack {
-                            navigationalWarning.summary
-                                .padding(.all, 16)
-                        }
-                        .card()
-                        .background(GeometryReader {
-                            return Color.clear.preference(key: ViewOffsetKey.self,
-                                                          value: -$0.frame(in: .named("scroll")).origin.y)
-                        })
-                        
-                        .onPreferenceChange(ViewOffsetKey.self) { offset in
-                            if offset > 0 {
-                                firstUnseenNavigationalWarning = navigationalWarning
+                    ForEach(dataSource.warnings) { navigationalWarning in
+                        NavigationLink(value: NavigationalWarningRoute.detail(
+                            msgYear: navigationalWarning.msgYear ?? -1,
+                            msgNumber: navigationalWarning.msgNumber ?? -1,
+                            navArea: navigationalWarning.navArea)
+                        ) {
+                            HStack {
+                                NavigationalWarningSummaryView(navigationalWarning: navigationalWarning)
+                                    .padding(.all, 16)
+                                    .accessibilityElement(children: .contain)
                             }
-                            // once this offset goes negative, they have seen the nav warning
-                            if offset < 0 {
-                                // This checks if we are saving right now, because we could be still scrolling to the
-                                // bottom also checks if we have already saved a newer warning as the latest one
-                                if shouldSavePosition,
-                                    let issueDate = navigationalWarning.issueDate, issueDate > lastSavedDate {
-                                    self.lastSavedDate = issueDate
-                                    self.lastSeen = navigationalWarning.primaryKey
+                            .card()
+                            .background(GeometryReader {
+                                return Color.clear.preference(
+                                    key: ViewOffsetKey.self,
+                                    value: -$0.frame(in: .named("scroll")).origin.y
+                                )
+                            })
+
+                            .onPreferenceChange(ViewOffsetKey.self) { offset in
+                                if offset > 0 {
+                                    firstUnseenNavigationalWarning = navigationalWarning
+                                }
+                                // once this offset goes negative, they have seen the nav warning
+                                if offset < 0 {
+                                    // This checks if we are saving right now, because we could be still scrolling to
+                                    // the bottom also checks if we have already saved a newer warning as the latest one
+                                    if shouldSavePosition,
+                                       let issueDate = navigationalWarning.issueDate, issueDate > lastSavedDate {
+                                        self.lastSavedDate = issueDate
+                                        self.lastSeen = navigationalWarning.primaryKey
+                                    }
                                 }
                             }
-                        }
-                        .onTapGesture {
-                            path.append(navigationalWarning)
                         }
                         .accessibilityElement(children: .contain)
                         .accessibilityLabel("\(navigationalWarning.itemTitle) summary")
@@ -81,7 +86,7 @@ struct NavigationalWarningNavAreaListView: View {
                         // find the one that is one older than the first unseen and save that, also turn on auto saving
                         shouldSavePosition = true
                         if let firstUnseenNavigationalWarning = firstUnseenNavigationalWarning, 
-                            let lastSeenNavigationalWarning = dataSource.items.item(
+                            let lastSeenNavigationalWarning = dataSource.warnings.item(
                                 after: firstUnseenNavigationalWarning
                         ) {
                             if let issueDate = lastSeenNavigationalWarning.issueDate, lastSavedDate < issueDate {
@@ -91,11 +96,8 @@ struct NavigationalWarningNavAreaListView: View {
                         }
                     }
                 }
-                .onAppear {
-                    dataSource.setNavigationalWarnings(areaWarnings: warnings)
-                }
-                .onChange(of: dataSource.items.count) { _ in
-                    let lastSeenNavWarning = dataSource.items.first { warning in
+                .onChange(of: dataSource.warnings.count) { _ in
+                    let lastSeenNavWarning = dataSource.warnings.first { warning in
                         warning.primaryKey == lastSeen
                     }
                     if let lastSeenNavWarning = lastSeenNavWarning {
@@ -103,7 +105,7 @@ struct NavigationalWarningNavAreaListView: View {
                         proxy.scrollTo(lastSeenNavWarning.id, anchor: .top)
                     } else {
                         // haven't seen any, scroll to the bottom
-                        if let lastId = dataSource.items.last?.id {
+                        if let lastId = dataSource.warnings.last?.id {
                             scrollingTo = lastId
                             proxy.scrollTo(lastId)
                         }
@@ -111,12 +113,12 @@ struct NavigationalWarningNavAreaListView: View {
                 }
             }
             .safeAreaInset(edge: .top) {
-                if lastSavedDate != dataSource.items.first?.issueDate {
-                    if let lastSeenIndex = dataSource.items.firstIndex(where: { warning in
+                if lastSavedDate != dataSource.warnings.first?.issueDate {
+                    if let lastSeenIndex = dataSource.warnings.firstIndex(where: { warning in
                         warning.primaryKey == lastSeen
                     }) {
-                        let unreadCount = dataSource.items.distance(
-                            from: dataSource.items.startIndex,
+                        let unreadCount = dataSource.warnings.distance(
+                            from: dataSource.warnings.startIndex,
                             to: lastSeenIndex
                         )
                         if unreadCount != 0 {
@@ -125,7 +127,7 @@ struct NavigationalWarningNavAreaListView: View {
                                 .onTapGesture {
                                     DispatchQueue.main.async {
                                         withAnimation(Animation.easeInOut(duration: 1).delay(1)) {
-                                            if let firstId = dataSource.items.first?.id {
+                                            if let firstId = dataSource.warnings.first?.id {
                                                 scrollingTo = firstId
                                                 proxy.scrollTo(firstId)
                                             }
@@ -136,12 +138,12 @@ struct NavigationalWarningNavAreaListView: View {
                                 .accessibilityElement(children: .contain)
                         }
                     } else {
-                        Text("\(dataSource.items.count) Unread Warnings")
+                        Text("\(dataSource.warnings.count) Unread Warnings")
                             .modifier(UnreadModifier())
                             .onTapGesture {
                                 DispatchQueue.main.async {
                                     withAnimation(Animation.easeInOut(duration: 1).delay(1)) {
-                                        if let firstId = dataSource.items.first?.id {
+                                        if let firstId = dataSource.warnings.first?.id {
                                             scrollingTo = firstId
                                             proxy.scrollTo(firstId)
                                         }
@@ -190,6 +192,8 @@ struct NavigationalWarningNavAreaListView: View {
             .accessibilityIdentifier("Navigation Warning Scroll")
         }
         .onAppear {
+            dataSource.repository = navigationalWarningRepository
+            dataSource.getNavigationalWarnings(navArea: navArea)
             Metrics.shared.appRoute([NavigationalWarning.metricsKey, "list"])
             shouldSavePosition = false
         }

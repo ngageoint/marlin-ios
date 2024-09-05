@@ -50,6 +50,19 @@ struct LightFilterable: Filterable {
 
     var defaultFilter: [DataSourceFilterParameter] = []
 
-    var locatableClass: Locatable.Type? = Light.self
+    var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Region",
+                key: #keyPath(Light.sectionHeader),
+                type: .string),
+            ascending: true),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Feature Number",
+                key: #keyPath(Light.featureNumber),
+                type: .int),
+            ascending: true)
+    ]
 
 }

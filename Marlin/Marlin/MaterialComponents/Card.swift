@@ -9,14 +9,14 @@ import Foundation
 import SwiftUI
 
 struct CardModifier: ViewModifier {
-    
+
     func body(content: Content) -> some View {
         content
             .background(Color.surfaceColor)
-            .cornerRadius(2)
+            .cornerRadius(12)
             .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
     }
-    
+
 }
 
 extension View {
@@ -25,8 +25,26 @@ extension View {
     }
 }
 
+struct PaddedCardModifier: ViewModifier {
+
+    func body(content: Content) -> some View {
+        content
+            .padding(16)
+            .background(Color.surfaceColor)
+            .cornerRadius(12)
+            .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+    }
+
+}
+
+extension View {
+    func paddedCard() -> some View {
+        modifier(PaddedCardModifier())
+    }
+}
+
 struct UnreadModifier: ViewModifier {
-    
+
     func body(content: Content) -> some View {
         content
             .padding(.top, 16)
@@ -36,15 +54,15 @@ struct UnreadModifier: ViewModifier {
             .font(Font.body2)
             .background(
                 RoundedRectangle(cornerRadius: 16)
-                .fill(Color.primaryColor)
-                .padding(8)
-                .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
+                    .fill(Color.primaryColor)
+                    .padding(8)
+                    .shadow(color: Color(UIColor.label).opacity(0.5), radius: 1, x: 0, y: 1)
 
             )
             .foregroundColor(Color.onPrimaryColor)
 
     }
-    
+
 }
 
 struct OverlineModifier: ViewModifier {
@@ -145,7 +163,7 @@ extension View {
 struct DataSourceItemSectionModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8))
+            .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
             .listRowBackground(Color.backgroundColor)
             .listRowSeparator(.hidden)
     }
@@ -161,15 +179,27 @@ struct DataSourceItemDetailListModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .padding([.leading, .trailing], 0)
-            .listStyle(.grouped)
+            .listStyle(.plain)
             .background(Color.backgroundColor)
-            .complexModifier {
-                if #available(iOS 16, *) {
-                    $0.scrollContentBackground(.hidden)
-                } else {
-                    $0
-                }
-            }
+            .scrollContentBackground(.hidden)
+    }
+}
+
+extension View {
+    func sectionHeader() -> some View {
+        modifier(SectionHeaderModifier())
+    }
+}
+
+struct SectionHeaderModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.headline)
+        // TODO: for now; this should be removed to match what apple wants for section headers
+            .foregroundColor(Color.onBackgroundColor.opacity(0.45))
+            .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 0, trailing: 8))
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.backgroundColor)
     }
 }
 

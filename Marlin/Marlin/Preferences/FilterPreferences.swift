@@ -10,23 +10,21 @@ import Foundation
 extension UserDefaults {
     func filterPublisher(key: String) -> NSObject.KeyValueObservingPublisher<UserDefaults, Data?> {
         switch key {
-        case Asam.key:
+        case DataSources.asam.key:
             return publisher(for: \.asamFilter)
-        case Modu.key:
+        case DataSources.modu.key:
             return publisher(for: \.moduFilter)
-        case Light.key:
+        case DataSources.light.key:
             return publisher(for: \.lightFilter)
-        case NoticeToMariners.key:
+        case DataSources.noticeToMariners.key:
             return publisher(for: \.ntmFilter)
-        case DFRS.key:
-            return publisher(for: \.dfrsFilter)
-        case DifferentialGPSStation.key:
+        case DataSources.dgps.key:
             return publisher(for: \.differentialGPSStationFilter)
-        case ElectronicPublication.key:
+        case DataSources.epub.key:
             return publisher(for: \.epubFilter)
-        case Port.key:
+        case DataSources.port.key:
             return publisher(for: \.portFilter)
-        case RadioBeacon.key:
+        case DataSources.radioBeacon.key:
             return publisher(for: \.radioBeaconFilter)
         default:
             return publisher(for: \.asamFilter)

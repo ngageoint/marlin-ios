@@ -31,7 +31,7 @@ final class AboutViewTests: XCTestCase {
             var body: some View {
                 NavigationStack(path: $path) {
                     AboutView()
-                        .marlinRoutes(path: $path)
+                        .marlinRoutes()
                 }
                  
             }
@@ -57,7 +57,7 @@ final class AboutViewTests: XCTestCase {
             var body: some View {
                 NavigationStack(path: $path) {
                     AboutView()
-                        .marlinRoutes(path: $path)
+                        .marlinRoutes()
                 }
                  
             }
@@ -75,9 +75,18 @@ final class AboutViewTests: XCTestCase {
         let version = Bundle.main.releaseVersionNumber ?? ""
         let buildVersion = Bundle.main.buildVersionNumber ?? ""
         
-        let about = AboutView()
-        
-        let controller = UIHostingController(rootView: about)
+        struct Container: View {
+            @State var router: MarlinRouter = MarlinRouter()
+            var body: some View {
+                NavigationStack(path: $router.path) {
+                    AboutView()
+                        .marlinRoutes()
+                }
+                .environmentObject(router)
+            }
+        }
+        let container = Container()
+        let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Marlin v\(version)")

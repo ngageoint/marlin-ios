@@ -10,33 +10,53 @@ import MapKit
 
 struct MarlinMainMap: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
-    @EnvironmentObject var routeRepository: RouteRepositoryManager
-    
+    @EnvironmentObject var routeRepository: RouteRepository
+    @EnvironmentObject var asamsTileRepository: AsamsTileRepository
+    @EnvironmentObject var modusTileRepository: ModusTileRepository
+    @EnvironmentObject var portsTileRepository: PortsTileRepository
+    @EnvironmentObject var lightsTileRepository: LightsTileRepository
+    @EnvironmentObject var radioBeaconsTileRepository: RadioBeaconsTileRepository
+    @EnvironmentObject var differentialGPSStationsTileRepository: DifferentialGPSStationsTileRepository
+    @EnvironmentObject var navigationalWarningsMapFeatureRepository: NavigationalWarningsMapFeatureRepository
+    @EnvironmentObject var searchRepository: SearchRepository
+
     @StateObject var mixins: MainMapMixins = MainMapMixins()
     @StateObject var mapState: MapState = MapState()
-    
-    @Binding var path: NavigationPath
-    
+        
     @EnvironmentObject var dataSourceList: DataSourceList
     
     var showSettings: Bool = true
     var showExport: Bool = true
     
     let focusMapAtLocation = NotificationCenter.default.publisher(for: .FocusMapAtLocation)
-    
+    let longPressPub = NotificationCenter.default.publisher(for: .MapLongPress)
+
     var body: some View {
-        Self._printChanges()
-        return VStack {
+        VStack {
             MarlinMap(name: "Marlin Map", mixins: mixins, mapState: mapState)
                 .ignoresSafeArea()
         }
         .onReceive(focusMapAtLocation) { notification in
             mapState.forceCenter = notification.object as? MKCoordinateRegion
         }
-        .overlay(bottomButtons(), alignment: .bottom)
-        .overlay(topButtons(), alignment: .top)
+        .overlay(alignment: .bottom) {
+            bottomButtons()
+        }
+        .overlay(alignment: .top) {
+            topButtons()
+        }
         .onAppear {
             mixins.addRouteMixin(routeRepository: routeRepository)
+            mixins.addAsamTileRepository(tileRepository: asamsTileRepository)
+            mixins.addModuTileRepository(tileRepository: modusTileRepository)
+            mixins.addPortTileRepository(tileRepository: portsTileRepository)
+            mixins.addLightTileRepository(tileRepository: lightsTileRepository)
+            mixins.addRadioBeaconTileRepository(tileRepository: radioBeaconsTileRepository)
+            mixins.addDifferentialGPSStationTileRepository(tileRepository: differentialGPSStationsTileRepository)
+            mixins.addNavigationalWarningsMapFeatureRepository(
+                mapFeatureRepository: navigationalWarningsMapFeatureRepository
+            )
+            mixins.addSearchRepository(searchRepository: searchRepository)
         }
     }
     
@@ -45,12 +65,7 @@ struct MarlinMainMap: View {
         HStack(alignment: .top, spacing: 8) {
             // top left button stack
             VStack(alignment: .leading, spacing: 8) {
-                switch mapState.searchType {
-                case .native:
-                    SearchView<NativeSearchProvider>(mapState: mapState)
-                case .nominatim:
-                    SearchView<NominatimSearchProvider>(mapState: mapState)
-                }
+                SearchView(mapState: mapState)
             }
             .padding(.leading, 8)
             .padding(.top, 16)
@@ -124,6 +139,7 @@ struct MarlinMainMap: View {
                     .fixedSize()
                     .accessibilityElement(children: .contain)
                     .accessibilityLabel("User Tracking")
+//                CreateUserPlaceButton()
             }
             .padding(.trailing, 8)
             .padding(.bottom, 30)

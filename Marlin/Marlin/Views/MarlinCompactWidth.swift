@@ -9,8 +9,7 @@ import SwiftUI
 import MapKit
 
 struct MarlinCompactWidth: View {
-    @State private var path: NavigationPath = NavigationPath()
-
+    @EnvironmentObject var router: MarlinRouter
     @AppStorage("selectedTab") var selectedTab: String = "map"
     
     @State var menuOpen: Bool = false
@@ -30,7 +29,7 @@ struct MarlinCompactWidth: View {
         Self._printChanges()
         return ZStack {
             TabView(selection: $selectedTab) {
-                MapNavigationView(filterOpen: $filterOpen, menuOpen: $menuOpen, path: $path)
+                MapNavigationView(filterOpen: $filterOpen, menuOpen: $menuOpen)
                 .tag("map")
                 .tabItem {
                     Label("Map", systemImage: "map.fill")
@@ -50,27 +49,27 @@ struct MarlinCompactWidth: View {
                         // This is deprecated, but in iOS16 this is the only way to set the back button color
                         .accentColor(Color.onPrimaryColor)
                         .tabItem {
-                            if let imageName = item.dataSource.definition.imageName {
-                                Label(item.dataSource.definition.name, image: imageName)
+                            if let imageName = item.dataSource.imageName {
+                                Label(item.dataSource.name, image: imageName)
                                     .accessibilityElement(children: .contain)
-                                    .accessibilityLabel("\(item.dataSource.definition.key)List")
-                            } else if let imageName = item.dataSource.definition.systemImageName {
-                                Label(item.dataSource.definition.name, systemImage: imageName)
+                                    .accessibilityLabel("\(item.dataSource.key)List")
+                            } else if let imageName = item.dataSource.systemImageName {
+                                Label(item.dataSource.name, systemImage: imageName)
                                     .accessibilityElement(children: .contain)
-                                    .accessibilityLabel("\(item.dataSource.definition.key)List")
+                                    .accessibilityLabel("\(item.dataSource.key)List")
                             } else {
-                                Label(item.dataSource.definition.name, systemImage: "list.bullet.rectangle.fill")
+                                Label(item.dataSource.name, systemImage: "list.bullet.rectangle.fill")
                                     .accessibilityElement(children: .contain)
-                                    .accessibilityLabel("\(item.dataSource.definition.key)List")
+                                    .accessibilityLabel("\(item.dataSource.key)List")
                             }
                         }
-                        .tag("\(item.dataSource.definition.key)List")
+                        .tag("\(item.dataSource.key)List")
                 }
             }
             .onReceive(mapFocus) { output in
                 let tab = output.object as? String ?? "map"
                 selectedTab = tab
-                path.removeLast(path.count)
+                router.path.removeLast(router.path.count)
             }
             .onReceive(switchTabPub) { output in
                 if let output = output as? String {
@@ -79,8 +78,8 @@ struct MarlinCompactWidth: View {
                     } else if output == "submitReport" {
                         selectedTab = "map"
                     } else if dataSourceList.tabs.contains(where: { item in
-                            item.key == output
-                        }) {
+                        item.key == output
+                    }) {
                         selectedTab = "\(output)List"
                     } else {
                         selectedTab = "map"

@@ -13,19 +13,11 @@ import SwiftUI
 protocol Bookmarkable {
     static var definition: any DataSourceDefinition { get }
     var canBookmark: Bool { get }
-//    var key: String { get }
     var itemKey: String { get }
-//    var bookmark: Bookmark? { get }
-//    static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable?
 }
 
 extension Bookmarkable {
-    var bookmark: Bookmark? {
-        return try? PersistenceController.current.viewContext.fetchFirst(
-            Bookmark.self,
-            predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey, key))
-    }
-    
+
     static func getItem(context: NSManagedObjectContext, itemKey: String?) -> Bookmarkable? {
         return nil
     }
@@ -55,40 +47,16 @@ class Bookmark: NSManagedObject, BatchImportable {
     static func postProcess() {
         
     }
-    
-    // disable this check because we have this many data sources
-    // swiftlint:disable cyclomatic_complexity
-    func getDataSourceItem(context: NSManagedObjectContext) -> (any Bookmarkable)? {
-        switch dataSource {
-        case Asam.key:
-            return Asam.getItem(context: context, itemKey: self.id)
-        case Modu.key:
-            return Modu.getItem(context: context, itemKey: self.id)
-        case Port.key:
-            return Port.getItem(context: context, itemKey: self.id)
-        case NavigationalWarning.key:
-            return NavigationalWarning.getItem(context: context, itemKey: self.id)
-        case NoticeToMariners.key:
-            return NoticeToMariners.getItem(context: context, itemKey: self.id)
-        case DifferentialGPSStation.key:
-            return DifferentialGPSStation.getItem(context: context, itemKey: self.id)
-        case Light.key:
-            return Light.getItem(context: context, itemKey: self.id)
-        case RadioBeacon.key:
-            return RadioBeacon.getItem(context: context, itemKey: self.id)
-        case ElectronicPublication.key:
-            return ElectronicPublication.getItem(context: context, itemKey: self.id)
-        case GeoPackageFeatureItem.key:
-            return GeoPackageFeatureItem.getItem(context: context, itemKey: self.id)
-        default:
-            print("default")
-        }
-        return nil
-    }
-    // swiftlint:enable cyclomatic_complexity
+
 }
 
 extension Bookmark: DataSource {
+    var itemKey: String {
+        self.id ?? ""
+    }
+    var itemTitle: String {
+        return "Bookmark \(self.id ?? "")"
+    }
     static var definition: any DataSourceDefinition = DataSourceDefinitions.bookmark.definition
     static var metricsKey: String = "bookmark"
     
@@ -126,26 +94,5 @@ extension Bookmark: DataSource {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter
-    }
-}
-
-extension Bookmark: DataSourceViewBuilder {
-    var itemKey: String {
-        self.id ?? ""
-    }
-    var itemTitle: String {
-        return "Bookmark \(self.id ?? "")"
-    }
-    var detailView: AnyView {
-        if let viewBuilder = getDataSourceItem(
-            context: PersistenceController.current.viewContext
-        ) as? (any DataSourceViewBuilder) {
-            return viewBuilder.detailView
-        }
-        return AnyView(Text("Bookmark detail \(self.dataSource ?? "") \(self.id ?? "")"))
-    }
-    
-    var summary: some DataSourceSummaryView {
-        BookmarkSummary(bookmark: self)
     }
 }

@@ -12,82 +12,51 @@ import SwiftUI
 @testable import Marlin
 
 final class RadioBeaconSummaryViewTests: XCTestCase {
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    override func setUp(completion: @escaping (Error?) -> Void) {
-        for item in DataSourceList().allTabs {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
-    }
-    
-    override func tearDown() {
-    }
-    
-    func testLoading() {
-        
-        var newItem: RadioBeacon?
-        persistentStore.viewContext.performAndWait {
-            let rb = RadioBeacon(context: persistentStore.viewContext)
-            
-            rb.volumeNumber = "PUB 110"
-            rb.aidType = "Radiobeacons"
-            rb.geopoliticalHeading = "GREENLAND"
-            rb.regionHeading = nil
-            rb.precedingNote = nil
-            rb.featureNumber = 10
-            rb.name = "Ittoqqortoormit, Scoresbysund"
-            rb.position = "70°29'11.99\"N \n21°58'20\"W"
-            rb.characteristic = "SC\n(• • •  - • - • ).\n"
-            rb.range = 200
-            rb.sequenceText = nil
-            rb.frequency = "343\nNON, A2A."
-            rb.stationRemark = "Aeromarine."
-            rb.postNote = nil
-            rb.noticeNumber = 199706
-            rb.removeFromList = "N"
-            rb.deleteFlag = "N"
-            rb.noticeWeek = "06"
-            rb.noticeYear = "1997"
-            rb.latitude = 1.0
-            rb.longitude = 2.0
-            rb.sectionHeader = "section"
-            
-            try? persistentStore.viewContext.save()
-            newItem = rb
-        }
-        
-        guard let rb = newItem else {
-            XCTFail()
-            return
-        }
-        
-        let repository = RadioBeaconRepositoryManager(repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
 
-        let summary = rb.summary
+    func testLoading() {
+        var rb = RadioBeaconModel()
+
+        rb.volumeNumber = "PUB 110"
+        rb.aidType = "Radiobeacons"
+        rb.geopoliticalHeading = "GREENLAND"
+        rb.regionHeading = nil
+        rb.precedingNote = nil
+        rb.featureNumber = 10
+        rb.name = "Ittoqqortoormit, Scoresbysund"
+        rb.position = "70°29'11.99\"N \n21°58'20\"W"
+        rb.characteristic = "SC\n(• • •  - • - • ).\n"
+        rb.range = 200
+        rb.sequenceText = nil
+        rb.frequency = "343\nNON, A2A."
+        rb.stationRemark = "Aeromarine."
+        rb.postNote = nil
+        rb.noticeNumber = 199706
+        rb.removeFromList = "N"
+        rb.deleteFlag = "N"
+        rb.noticeWeek = "06"
+        rb.noticeYear = "1997"
+        rb.latitude = 1.0
+        rb.longitude = 2.0
+        rb.sectionHeader = "section"
+        rb.canBookmark = true
+
+        let router = MarlinRouter()
+        let localDataSource = RadioBeaconStaticLocalDataSource()
+        localDataSource.list = [rb]
+        let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: RadioBeaconRemoteDataSource())
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, radioBeaconRepository: repository)
+
+        let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
             .setShowMoreDetails(false)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(router)
+
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "\(rb.featureNumber) \(rb.volumeNumber!)")
+        tester().waitForView(withAccessibilityLabel: "\(rb.featureNumber!) \(rb.volumeNumber!)")
         tester().waitForView(withAccessibilityLabel: rb.name)
         tester().waitForAbsenceOfView(withAccessibilityLabel: "section")
         tester().waitForView(withAccessibilityLabel: rb.morseLetter)
@@ -109,11 +78,13 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         }
         
         expectation(forNotification: .MapItemsTapped, object: nil) { notification in
-            
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let rb = tapNotification.items as! [RadioBeaconModel]
-            XCTAssertEqual(rb.count, 1)
-            XCTAssertEqual(rb[0].name, "Ittoqqortoormit, Scoresbysund")
+            let rbKeys = tapNotification.itemKeys!
+
+            let rbs = rbKeys[DataSources.radioBeacon.key]!
+
+            XCTAssertEqual(rbs.count, 1)
+            XCTAssertEqual(rbs[0], rb.itemKey)
             return true
         }
         tester().tapView(withAccessibilityLabel: "focus")
@@ -126,12 +97,12 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapView(withAccessibilityLabel: "dismiss popup")
         
-        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: rb)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: rb)
     }
     
     func testShowMoreDetails() {
-        let rb = RadioBeacon(context: persistentStore.viewContext)
-        
+        var rb = RadioBeaconModel()
+
         rb.volumeNumber = "PUB 110"
         rb.aidType = "Radiobeacons"
         rb.geopoliticalHeading = "GREENLAND"
@@ -154,38 +125,37 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         rb.latitude = 1.0
         rb.longitude = 2.0
         rb.sectionHeader = "section"
-        
-        let repository = RadioBeaconRepositoryManager(repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = rb.summary
+        rb.canBookmark = true
+
+        let router = MarlinRouter()
+        let localDataSource = RadioBeaconStaticLocalDataSource()
+        localDataSource.list = [rb]
+        let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: RadioBeaconRemoteDataSource())
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, radioBeaconRepository: repository)
+
+        let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
             .setShowMoreDetails(true)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(router)
+
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "\(rb.featureNumber) \(rb.volumeNumber!)")
+        tester().waitForView(withAccessibilityLabel: "\(rb.featureNumber!) \(rb.volumeNumber!)")
         tester().waitForView(withAccessibilityLabel: "section")
 
-        expectation(forNotification: .ViewDataSource,
-                    object: nil) { notification in
-            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let rb = try! XCTUnwrap(vds.dataSource as? RadioBeaconModel)
-            XCTAssertEqual(rb.name, "Ittoqqortoormit, Scoresbysund")
-            return true
-        }
+        XCTAssertEqual(router.path.count, 0)
         tester().tapView(withAccessibilityLabel: "More Details")
-        
-        waitForExpectations(timeout: 10, handler: nil)
+        XCTAssertEqual(router.path.count, 1)
+
         tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
     }
     
     func testShowSectionHeader() {
-        let rb = RadioBeacon(context: persistentStore.viewContext)
-        
+        var rb = RadioBeaconModel()
+
         rb.volumeNumber = "PUB 110"
         rb.aidType = "Radiobeacons"
         rb.geopoliticalHeading = "GREENLAND"
@@ -208,20 +178,25 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         rb.latitude = 1.0
         rb.longitude = 2.0
         rb.sectionHeader = "section"
-        
-        let repository = RadioBeaconRepositoryManager(repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = rb.summary
+        rb.canBookmark = true
+
+        let router = MarlinRouter()
+        let localDataSource = RadioBeaconStaticLocalDataSource()
+        localDataSource.list = [rb]
+        let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: RadioBeaconRemoteDataSource())
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, radioBeaconRepository: repository)
+
+        let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
             .setShowSectionHeader(true)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
+            .environmentObject(router)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "\(rb.featureNumber) \(rb.volumeNumber!)")
+        tester().waitForView(withAccessibilityLabel: "\(rb.featureNumber!) \(rb.volumeNumber!)")
         tester().waitForView(withAccessibilityLabel: "section")
         tester().waitForAbsenceOfView(withAccessibilityLabel: "More Details")
         

@@ -19,13 +19,13 @@ final class MapSettingsTests: XCTestCase {
         UserDefaults.standard.actualRangeSectorLights = false
 
         struct Container: View {
-            @State var path: NavigationPath = NavigationPath()
+            @State var router: MarlinRouter = MarlinRouter()
             var body: some View {
-                NavigationStack(path: $path) {
+                NavigationStack(path: $router.path) {
                     MapSettings()
-                        .marlinRoutes(path: $path)
+                        .marlinRoutes()
                 }
-                 
+                .environmentObject(router)
             }
         }
 
@@ -54,12 +54,19 @@ final class MapSettingsTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "flyoverMapsEnabled")
         UserDefaults.standard.set(Int(MKMapType.standard.rawValue), forKey: "mapType")
         
-        let view = MapSettings()
-        let nav = NavigationView {
-            view
+        struct Container: View {
+            @State var router: MarlinRouter = MarlinRouter()
+            var body: some View {
+                NavigationStack(path: $router.path) {
+                    MapSettings()
+                        .marlinRoutes()
+                }
+                .environmentObject(router)
+            }
         }
-        
-        let controller = UIHostingController(rootView: nav)
+
+        let container = Container()
+        let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         
@@ -96,12 +103,19 @@ final class MapSettingsTests: XCTestCase {
         UserDefaults.standard.set(false, forKey: "showMGRS")
         UserDefaults.standard.set(false, forKey: "showGARS")
         
-        let view = MapSettings()
-        let nav = NavigationView {
-            view
+        struct Container: View {
+            @State var router: MarlinRouter = MarlinRouter()
+            var body: some View {
+                NavigationStack(path: $router.path) {
+                    MapSettings()
+                        .marlinRoutes()
+                }
+                .environmentObject(router)
+            }
         }
-        
-        let controller = UIHostingController(rootView: nav)
+
+        let container = Container()
+        let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         

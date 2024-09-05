@@ -10,11 +10,14 @@ import MapKit
 import CoreData
 
 struct LightDetailView: View {
-    @EnvironmentObject var lightRepository: LightRepositoryManager
+    @EnvironmentObject var bookmarkRepository: BookmarkRepository
+    @EnvironmentObject var router: MarlinRouter
+    @EnvironmentObject var lightRepository: LightRepository
     @StateObject var viewModel: LightViewModel = LightViewModel()
     @State var featureNumber: String
     @State var volumeNumber: String
     @State var waypointURI: URL?
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
 
     var body: some View {
         Group {
@@ -29,21 +32,29 @@ struct LightDetailView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .itemTitle()
                                     .foregroundColor(Color.white)
-                                    .background(Color(uiColor: Light.color))
+                                    .background(Color(uiColor: DataSources.light.color))
                                     .padding(.bottom, -8)
                                 
                                 DataSourceLocationMapView(
                                     dataSourceLocation: firstLight,
                                     mapName: "Light Detail Map",
-                                    mixins: [LightMap<LightModel>(objects: [firstLight])]
+                                    mixins: [
+                                        LightMap(
+                                            repository: LightTileRepository(
+                                                featureNumber: featureNumber,
+                                                volumeNumber: volumeNumber,
+                                                localDataSource: lightRepository.localDataSource
+                                            )
+                                        )
+                                    ]
                                 )
                                 .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                                 
                                 Group {
                                     Text("""
-                                        \(firstLight.featureNumber ?? "") \
-                                        \(firstLight.internationalFeature ?? "") \
-                                        \(firstLight.volumeNumber ?? "")
+                                    \(firstLight.featureNumber ?? "") \
+                                    \(firstLight.internationalFeature ?? "") \
+                                    \(firstLight.volumeNumber ?? "")
                                     """)
                                     .overline()
                                     if let sectionHeader = firstLight.sectionHeader {
@@ -56,18 +67,24 @@ struct LightDetailView: View {
                                         Text(structure)
                                             .secondary()
                                     }
-                                    if let heightFeet = firstLight.heightFeet, 
+                                    if let heightFeet = firstLight.heightFeet,
                                         let heightMeters = firstLight.heightMeters, heightFeet != 0 {
                                         Text("Focal Plane Elevation: \(Int(heightFeet))ft (\(Int(heightMeters))m)")
                                             .secondary()
                                     }
-                                    DataSourceActionBar(
-                                        data: firstLight,
-                                        showMoreDetailsButton: false,
-                                        showFocusButton: true
+
+                                    DataSourceActions(
+                                        location: Actions.Location(latLng: firstLight.coordinate),
+                                        zoom: LightActions.Zoom(latLng: firstLight.coordinate, itemKey: firstLight.id),
+                                        bookmark: firstLight.canBookmark ? Actions.Bookmark(
+                                            itemKey: firstLight.id,
+                                            bookmarkViewModel: bookmarkViewModel
+                                        ) : nil,
+                                        share: firstLight.itemTitle
                                     )
                                     .padding(.bottom, 16)
-                                }.padding([.leading, .trailing], 16)
+                                }
+                                .padding([.leading, .trailing], 16)
                             }
                         }
                         .frame(maxWidth: .infinity)
@@ -102,7 +119,7 @@ struct LightDetailView: View {
         .onAppear {
             viewModel.repository = lightRepository
             viewModel.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
-            Metrics.shared.dataSourceDetail(dataSource: Light.definition)
+            Metrics.shared.dataSourceDetail(dataSource: DataSources.light)
         }
     }
 }

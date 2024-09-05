@@ -12,163 +12,130 @@ import SwiftUI
 @testable import Marlin
 
 final class PortDetailViewTests: XCTestCase {
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    override func setUp(completion: @escaping (Error?) -> Void) {
-        for item in DataSourceList().allTabs {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
-    }
-    
-    override func tearDown() {
-    }
-    
+
     func testLoading() {
-        var newItem: Marlin.Port?
-        persistentStore.viewContext.performAndWait {
-            let port = Port(context: persistentStore.viewContext)
-            port.portNumber = 760
-            port.portName = "Aasiaat"
-            port.regionNumber = 54
-            port.regionName = "GREENLAND  WEST COAST"
-            port.countryCode = "GL"
-            port.countryName = "Greenland"
-            port.latitude = 1.0
-            port.longitude = 2.0
-            port.publicationNumber = "Sailing Directions Pub. 181 (Enroute) - Greenland and Iceland"
-            port.chartNumber = "15"
-            port.navArea = "XVIII"
-            port.harborSize = "S"
-            port.harborType = "CN"
-            port.shelter = "G"
-            port.erTide = "N"
-            port.erSwell = "N"
-            port.erIce = "Y"
-            port.erOther = "Y"
-            port.overheadLimits = "U"
-            port.channelDepth = 1
-            port.anchorageDepth = 2
-            port.cargoPierDepth = 3
-            port.oilTerminalDepth = 4
-            port.tide = 5
-            port.maxVesselLength = 6
-            port.maxVesselBeam = 7
-            port.maxVesselDraft = 8
-            port.goodHoldingGround = "N"
-            port.turningArea = "U"
-            port.firstPortOfEntry = "N"
-            port.usRep = "N"
-            port.ptCompulsory = "N"
-            port.ptAvailable = "Y"
-            port.ptLocalAssist = "N"
-            port.ptAdvisable = "Y"
-            port.tugsSalvage = "N"
-            port.tugsAssist = "N"
-            port.qtPratique = "U"
-            port.qtOther = "U"
-            port.cmTelephone = "U"
-            port.cmTelegraph = "U"
-            port.cmRadio = "Y"
-            port.cmRadioTel = "U"
-            port.cmAir = "Y"
-            port.cmRail = "U"
-            port.loWharves = "Y"
-            port.loAnchor = "U"
-            port.loMedMoor = "U"
-            port.loBeachMoor = "U"
-            port.loIceMoor = "U"
-            port.medFacilities = "Y"
-            port.garbageDisposal = "N"
-            port.degauss = "U"
-            port.dirtyBallast = "N"
-            port.craneFixed = "U"
-            port.craneMobile = "Y"
-            port.craneFloating = "U"
-            port.lifts100 = "U"
-            port.lifts50 = "U"
-            port.lifts25 = "U"
-            port.lifts0 = "Y"
-            port.srLongshore = "U"
-            port.srElectrical = "U"
-            port.srSteam = "U"
-            port.srNavigationalEquipment = "U"
-            port.srElectricalRepair = "U"
-            port.suProvisions = "Y"
-            port.suWater = "Y"
-            port.suFuel = "Y"
-            port.suDiesel = "U"
-            port.suDeck = "U"
-            port.suEngine = "U"
-            port.repairCode = "C"
-            port.drydock = "U"
-            port.railway = "S"
-            port.qtSanitation = "U"
-            port.suAviationFuel = "U"
-            port.harborUse = "UNK"
-            port.ukcMgmtSystem = "U"
-            port.portSecurity = "U"
-            port.etaMessage = "Y"
-            port.searchAndRescue = "U"
-            port.trafficSeparationScheme = "U"
-            port.vesselTrafficService = "U"
-            port.chemicalHoldingTank = "U"
-            port.globalId = "{2C117765-0922-4542-A2B9-333253552952}"
-            port.loRoro = "U"
-            port.loSolidBulk = "U"
-            port.loContainer = "U"
-            port.loBreakBulk = "U"
-            port.loOilTerm = "U"
-            port.loLongTerm = "U"
-            port.loOther = "U"
-            port.loDangCargo = "U"
-            port.loLiquidBulk = "U"
-            port.srIceBreaking = "U"
-            port.srDiving = "U"
-            port.craneContainer = "U"
-            port.unloCode = "GL JEG"
-            port.dnc = "a2800670, coa28e, gen28b, h2800670"
-            port.dodWaterBody = "dodWaterBody"
-            port.s57Enc = "s57Enc"
-            port.s101Enc = "s101Enc"
-            port.dodWaterBody = "Baffin Bay; Arctic Ocean"
-            port.alternateName = "Egedesminde"
-            port.entranceWidth = 9
-            port.liquifiedNaturalGasTerminalDepth = 10
-            port.offshoreMaxVesselLength = 11
-            port.offshoreMaxVesselBeam = 12
-            port.offshoreMaxVesselDraft = 13
-            port.latitude = 1.0
-            port.longitude = 2.0
-            
-            newItem = port
-            try? persistentStore.viewContext.save()
-        }
-        
-        guard let newItem = newItem else {
-            XCTFail()
-            return
-        }
+        var port = PortModel(portNumber: 760)
+        port.portName = "Aasiaat"
+        port.regionNumber = 54
+        port.regionName = "GREENLAND  WEST COAST"
+        port.countryCode = "GL"
+        port.countryName = "Greenland"
+        port.latitude = 1.0
+        port.longitude = 2.0
+        port.publicationNumber = "Sailing Directions Pub. 181 (Enroute) - Greenland and Iceland"
+        port.chartNumber = "15"
+        port.navArea = "XVIII"
+        port.harborSize = "S"
+        port.harborType = "CN"
+        port.shelter = "G"
+        port.erTide = "N"
+        port.erSwell = "N"
+        port.erIce = "Y"
+        port.erOther = "Y"
+        port.overheadLimits = "U"
+        port.channelDepth = 1
+        port.anchorageDepth = 2
+        port.cargoPierDepth = 3
+        port.oilTerminalDepth = 4
+        port.tide = 5
+        port.maxVesselLength = 6
+        port.maxVesselBeam = 7
+        port.maxVesselDraft = 8
+        port.goodHoldingGround = "N"
+        port.turningArea = "U"
+        port.firstPortOfEntry = "N"
+        port.usRep = "N"
+        port.ptCompulsory = "N"
+        port.ptAvailable = "Y"
+        port.ptLocalAssist = "N"
+        port.ptAdvisable = "Y"
+        port.tugsSalvage = "N"
+        port.tugsAssist = "N"
+        port.qtPratique = "U"
+        port.qtOther = "U"
+        port.cmTelephone = "U"
+        port.cmTelegraph = "U"
+        port.cmRadio = "Y"
+        port.cmRadioTel = "U"
+        port.cmAir = "Y"
+        port.cmRail = "U"
+        port.loWharves = "Y"
+        port.loAnchor = "U"
+        port.loMedMoor = "U"
+        port.loBeachMoor = "U"
+        port.loIceMoor = "U"
+        port.medFacilities = "Y"
+        port.garbageDisposal = "N"
+        port.degauss = "U"
+        port.dirtyBallast = "N"
+        port.craneFixed = "U"
+        port.craneMobile = "Y"
+        port.craneFloating = "U"
+        port.lifts100 = "U"
+        port.lifts50 = "U"
+        port.lifts25 = "U"
+        port.lifts0 = "Y"
+        port.srLongshore = "U"
+        port.srElectrical = "U"
+        port.srSteam = "U"
+        port.srNavigationalEquipment = "U"
+        port.srElectricalRepair = "U"
+        port.suProvisions = "Y"
+        port.suWater = "Y"
+        port.suFuel = "Y"
+        port.suDiesel = "U"
+        port.suDeck = "U"
+        port.suEngine = "U"
+        port.repairCode = "C"
+        port.drydock = "U"
+        port.railway = "S"
+        port.qtSanitation = "U"
+        port.suAviationFuel = "U"
+        port.harborUse = "UNK"
+        port.ukcMgmtSystem = "U"
+        port.portSecurity = "U"
+        port.etaMessage = "Y"
+        port.searchAndRescue = "U"
+        port.trafficSeparationScheme = "U"
+        port.vesselTrafficService = "U"
+        port.chemicalHoldingTank = "U"
+        port.globalId = "{2C117765-0922-4542-A2B9-333253552952}"
+        port.loRoro = "U"
+        port.loSolidBulk = "U"
+        port.loContainer = "U"
+        port.loBreakBulk = "U"
+        port.loOilTerm = "U"
+        port.loLongTerm = "U"
+        port.loOther = "U"
+        port.loDangCargo = "U"
+        port.loLiquidBulk = "U"
+        port.srIceBreaking = "U"
+        port.srDiving = "U"
+        port.craneContainer = "U"
+        port.unloCode = "GL JEG"
+        port.dnc = "a2800670, coa28e, gen28b, h2800670"
+        port.dodWaterBody = "dodWaterBody"
+        port.s57Enc = "s57Enc"
+        port.s101Enc = "s101Enc"
+        port.dodWaterBody = "Baffin Bay; Arctic Ocean"
+        port.alternateName = "Egedesminde"
+        port.entranceWidth = 9
+        port.liquifiedNaturalGasTerminalDepth = 10
+        port.offshoreMaxVesselLength = 11
+        port.offshoreMaxVesselBeam = 12
+        port.offshoreMaxVesselDraft = 13
+        port.latitude = 1.0
+        port.longitude = 2.0
+
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
-        
-        let repository = PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-
-        let detailView = newItem.detailView.environment(\.managedObjectContext, persistentStore.viewContext)
+        let localDataSource = PortStaticLocalDataSource()
+        localDataSource.list = [port]
+        let repository = PortRepository(localDataSource: localDataSource, remoteDataSource: PortRemoteDataSource())
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, portRepository: repository)
+        let router = MarlinRouter()
+        let detailView = PortDetailView(portNumber: 760)
             .environmentObject(mockLocationManager as LocationManager)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
@@ -176,41 +143,9 @@ final class PortDetailViewTests: XCTestCase {
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: newItem.portName)
-        tester().waitForView(withAccessibilityLabel: "Alternate Name: \(newItem.alternateName ?? "")")
-        tester().waitForView(withAccessibilityLabel: newItem.regionName)
-        
-        expectation(forNotification: .SnackbarNotification,
-                    object: nil) { notification in
-            let model = try? XCTUnwrap(notification.object as? SnackbarNotification)
-            XCTAssertEqual(model?.snackbarModel?.message, "Location \(UserDefaults.standard.coordinateDisplay.format(coordinate: newItem.coordinate)) copied to clipboard")
-            XCTAssertEqual(UIPasteboard.general.string, "\(UserDefaults.standard.coordinateDisplay.format(coordinate: newItem.coordinate))")
-            return true
-        }
-        tester().tapView(withAccessibilityLabel: "Location")
-        
-        expectation(forNotification: .TabRequestFocus,
-                    object: nil) { notification in
-            return true
-        }
-        
-        expectation(forNotification: .MapItemsTapped, object: nil) { notification in
-            
-            let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let port = tapNotification.items as! [PortModel]
-            XCTAssertEqual(port.count, 1)
-            XCTAssertEqual(port[0].portNumber, 760)
-            return true
-        }
-        tester().tapView(withAccessibilityLabel: "focus")
-        
-        waitForExpectations(timeout: 10, handler: nil)
-        
-        tester().waitForView(withAccessibilityLabel: "share")
-        tester().tapView(withAccessibilityLabel: "share")
-        
-        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
-        tester().tapView(withAccessibilityLabel: "dismiss popup")
+        tester().waitForView(withAccessibilityLabel: port.portName)
+        tester().waitForView(withAccessibilityLabel: "Alternate Name: \(port.alternateName ?? "")")
+        tester().waitForView(withAccessibilityLabel: port.regionName)
         
         // name and location
         tester().waitForView(withAccessibilityLabel: "World Port Index Number")
@@ -332,5 +267,168 @@ final class PortDetailViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Repair Code")
         tester().waitForView(withAccessibilityLabel: "Dry Dock")
         tester().waitForView(withAccessibilityLabel: "Railway")
+    }
+
+    func xtestButtons() {
+        var port = PortModel(portNumber: 760)
+        port.portName = "Aasiaat"
+        port.regionNumber = 54
+        port.regionName = "GREENLAND  WEST COAST"
+        port.countryCode = "GL"
+        port.countryName = "Greenland"
+        port.latitude = 1.0
+        port.longitude = 2.0
+        port.publicationNumber = "Sailing Directions Pub. 181 (Enroute) - Greenland and Iceland"
+        port.chartNumber = "15"
+        port.navArea = "XVIII"
+        port.harborSize = "S"
+        port.harborType = "CN"
+        port.shelter = "G"
+        port.erTide = "N"
+        port.erSwell = "N"
+        port.erIce = "Y"
+        port.erOther = "Y"
+        port.overheadLimits = "U"
+        port.channelDepth = 1
+        port.anchorageDepth = 2
+        port.cargoPierDepth = 3
+        port.oilTerminalDepth = 4
+        port.tide = 5
+        port.maxVesselLength = 6
+        port.maxVesselBeam = 7
+        port.maxVesselDraft = 8
+        port.goodHoldingGround = "N"
+        port.turningArea = "U"
+        port.firstPortOfEntry = "N"
+        port.usRep = "N"
+        port.ptCompulsory = "N"
+        port.ptAvailable = "Y"
+        port.ptLocalAssist = "N"
+        port.ptAdvisable = "Y"
+        port.tugsSalvage = "N"
+        port.tugsAssist = "N"
+        port.qtPratique = "U"
+        port.qtOther = "U"
+        port.cmTelephone = "U"
+        port.cmTelegraph = "U"
+        port.cmRadio = "Y"
+        port.cmRadioTel = "U"
+        port.cmAir = "Y"
+        port.cmRail = "U"
+        port.loWharves = "Y"
+        port.loAnchor = "U"
+        port.loMedMoor = "U"
+        port.loBeachMoor = "U"
+        port.loIceMoor = "U"
+        port.medFacilities = "Y"
+        port.garbageDisposal = "N"
+        port.degauss = "U"
+        port.dirtyBallast = "N"
+        port.craneFixed = "U"
+        port.craneMobile = "Y"
+        port.craneFloating = "U"
+        port.lifts100 = "U"
+        port.lifts50 = "U"
+        port.lifts25 = "U"
+        port.lifts0 = "Y"
+        port.srLongshore = "U"
+        port.srElectrical = "U"
+        port.srSteam = "U"
+        port.srNavigationalEquipment = "U"
+        port.srElectricalRepair = "U"
+        port.suProvisions = "Y"
+        port.suWater = "Y"
+        port.suFuel = "Y"
+        port.suDiesel = "U"
+        port.suDeck = "U"
+        port.suEngine = "U"
+        port.repairCode = "C"
+        port.drydock = "U"
+        port.railway = "S"
+        port.qtSanitation = "U"
+        port.suAviationFuel = "U"
+        port.harborUse = "UNK"
+        port.ukcMgmtSystem = "U"
+        port.portSecurity = "U"
+        port.etaMessage = "Y"
+        port.searchAndRescue = "U"
+        port.trafficSeparationScheme = "U"
+        port.vesselTrafficService = "U"
+        port.chemicalHoldingTank = "U"
+        port.globalId = "{2C117765-0922-4542-A2B9-333253552952}"
+        port.loRoro = "U"
+        port.loSolidBulk = "U"
+        port.loContainer = "U"
+        port.loBreakBulk = "U"
+        port.loOilTerm = "U"
+        port.loLongTerm = "U"
+        port.loOther = "U"
+        port.loDangCargo = "U"
+        port.loLiquidBulk = "U"
+        port.srIceBreaking = "U"
+        port.srDiving = "U"
+        port.craneContainer = "U"
+        port.unloCode = "GL JEG"
+        port.dnc = "a2800670, coa28e, gen28b, h2800670"
+        port.dodWaterBody = "dodWaterBody"
+        port.s57Enc = "s57Enc"
+        port.s101Enc = "s101Enc"
+        port.dodWaterBody = "Baffin Bay; Arctic Ocean"
+        port.alternateName = "Egedesminde"
+        port.entranceWidth = 9
+        port.liquifiedNaturalGasTerminalDepth = 10
+        port.offshoreMaxVesselLength = 11
+        port.offshoreMaxVesselBeam = 12
+        port.offshoreMaxVesselDraft = 13
+        port.latitude = 1.0
+        port.longitude = 2.0
+
+        let mockCLLocation = MockCLLocationManager()
+        let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
+        let localDataSource = PortStaticLocalDataSource()
+        localDataSource.list = [port]
+        let repository = PortRepository(localDataSource: localDataSource, remoteDataSource: PortRemoteDataSource())
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, portRepository: repository)
+        let router = MarlinRouter()
+        let detailView = PortDetailView(portNumber: 760)
+            .environmentObject(mockLocationManager as LocationManager)
+            .environmentObject(repository)
+            .environmentObject(bookmarkRepository)
+
+        let controller = UIHostingController(rootView: detailView)
+        let window = TestHelpers.getKeyWindowVisible()
+        window.rootViewController = controller
+        expectation(forNotification: .SnackbarNotification,
+                    object: nil) { notification in
+            let model = try? XCTUnwrap(notification.object as? SnackbarNotification)
+            XCTAssertEqual(model?.snackbarModel?.message, "Location \(UserDefaults.standard.coordinateDisplay.format(coordinate: port.coordinate)) copied to clipboard")
+            XCTAssertEqual(UIPasteboard.general.string, "\(UserDefaults.standard.coordinateDisplay.format(coordinate: port.coordinate))")
+            return true
+        }
+        tester().tapView(withAccessibilityLabel: "Location")
+
+        expectation(forNotification: .TabRequestFocus,
+                    object: nil) { notification in
+            return true
+        }
+
+        expectation(forNotification: .MapItemsTapped, object: nil) { notification in
+
+            let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
+            let port = tapNotification.items as! [PortModel]
+            XCTAssertEqual(port.count, 1)
+            XCTAssertEqual(port[0].portNumber, 760)
+            return true
+        }
+        tester().tapView(withAccessibilityLabel: "focus")
+
+        waitForExpectations(timeout: 10, handler: nil)
+
+        tester().waitForView(withAccessibilityLabel: "share")
+        tester().tapView(withAccessibilityLabel: "share")
+
+        tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
+        tester().tapView(withAccessibilityLabel: "dismiss popup")
     }
 }

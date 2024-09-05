@@ -12,11 +12,11 @@ class ItemWrapper: ObservableObject, Identifiable, Hashable {
     static func == (lhs: ItemWrapper, rhs: ItemWrapper) -> Bool {
         return lhs.id == rhs.id
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
     var id = UUID()
     @Published var dataSource: (any DataSource)?
     @Published var date: Date?
@@ -29,20 +29,21 @@ class MapMixins: ObservableObject {
 struct MarlinView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @EnvironmentObject var dataSourceList: DataSourceList
+    @EnvironmentObject var appState: AppState
 
     @State var selection: String?
     @State var showBottomSheet: Bool = false
-        
+
     @State var showSnackbar: Bool = false
     @State var snackbarModel: SnackbarModel?
-    
+
     @State var filterOpen: Bool = false
-    
+
     @State private var previewDate: Date = Date()
     @State private var previewUrl: URL?
     @State var isMapLayersPresented: Bool = false
     @State var mapLayerEditViewModel: MapLayerViewModel?
-        
+
     @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = true
     @AppStorage("disclaimerAccepted") var disclaimerAccepted: Bool = false
     @AppStorage("onboardingComplete") var onboardingComplete: Bool = false
@@ -51,11 +52,17 @@ struct MarlinView: View {
     let documentPreviewPub = NotificationCenter.default.publisher(for: .DocumentPreview).map { notification in
         notification.object
     }
-    
+    let dataSourceLoadingPub = NotificationCenter.default.publisher(for: .DataSourceLoading).map { notification in
+        notification.object
+    }
+    let dataSourceLoadedPub = NotificationCenter.default.publisher(for: .DataSourceLoaded).map { notification in
+        notification.object
+    }
+
     var body: some View {
         Self._printChanges()
         return ZStack(alignment: .top) {
-            
+
             if !onboardingComplete {
                 OnboardingView()
             } else
@@ -72,7 +79,7 @@ struct MarlinView: View {
                 }
                 .gradientView()
             } else {
-                
+
                 if horizontalSizeClass == .compact {
                     MarlinCompactWidth(filterOpen: $filterOpen)
                 } else {
@@ -97,6 +104,18 @@ struct MarlinView: View {
             }
         }
         .documentPreview(previewUrl: $previewUrl, previewDate: $previewDate) { }
+        .onReceive(dataSourceLoadingPub) { output in
+            guard let dataSourceItem = output as? DataSourceItem else {
+                return
+            }
+            self.appState.loadingDataSource[dataSourceItem.key] = true
+        }
+        .onReceive(dataSourceLoadedPub) { output in
+            guard let dataSourceItem = output as? DataSourceItem else {
+                return
+            }
+            self.appState.loadingDataSource[dataSourceItem.key] = false
+        }
         .onReceive(snackbarPub) { output in
             guard let notification = output.object as? SnackbarNotification else {
                 return

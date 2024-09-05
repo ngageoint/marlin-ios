@@ -65,3 +65,7 @@ class DFRS: NSManagedObject {
         "tx position: \(txPosition ?? "")\n"
     }
 }
+
+class DFRSArea: NSManagedObject {
+    
+}

@@ -21,29 +21,29 @@ final class DataLoadedNotificationBannerTests: XCTestCase {
     func testShowNotification() {
         let appState = AppState()
         appState.dsBatchImportNotificationsPending = [
-            Asam.key : [DataSourceUpdatedNotification(key: Asam.key, updates: 1, inserts: 3)]
+            DataSources.asam.key : [DataSourceUpdatedNotification(key: DataSources.asam.key, updates: 1, inserts: 3)]
         ]
         appState.loadingDataSource[MockDataSourceNonMappable.key] = false
-        appState.consolidatedDataLoadedNotification = "3 new \(Asam.fullDataSourceName)"
+        appState.consolidatedDataLoadedNotification = "3 new \(DataSources.asam.fullName)"
         appState.lastNotificationRequestDate = Date()
         let banner = DataLoadedNotificationBanner().environmentObject(appState)
         
         let controller = UIHostingController(rootView: banner)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "3 new \(Asam.fullDataSourceName)")
+        tester().waitForView(withAccessibilityLabel: "3 new \(DataSources.asam.fullName)")
     }
     
     func testExpandNotification() {
         let appState = AppState()
         appState.dsBatchImportNotificationsPending = [
-            Asam.key : [DataSourceUpdatedNotification(key: Asam.key, updates: 1, inserts: 3)],
-            Modu.key : [DataSourceUpdatedNotification(key: Modu.key, updates: 1, inserts: 3)],
-            Light.key : [DataSourceUpdatedNotification(key: Light.key, updates: 1, inserts: 3)],
-            Port.key : [DataSourceUpdatedNotification(key: Port.key, updates: 1, inserts: 3)],
+            DataSources.asam.key : [DataSourceUpdatedNotification(key: DataSources.asam.key, updates: 1, inserts: 3)],
+            DataSources.modu.key : [DataSourceUpdatedNotification(key: DataSources.modu.key, updates: 1, inserts: 3)],
+            DataSources.light.key : [DataSourceUpdatedNotification(key: DataSources.light.key, updates: 1, inserts: 3)],
+            DataSources.port.key : [DataSourceUpdatedNotification(key: DataSources.port.key, updates: 1, inserts: 3)],
         ]
         appState.loadingDataSource[MockDataSourceNonMappable.key] = false
-        appState.consolidatedDataLoadedNotification = "3 new \(Asam.fullDataSourceName)\n3 new \(Modu.fullDataSourceName)\n3 new \(Light.fullDataSourceName)\n3 new \(Port.fullDataSourceName)"
+        appState.consolidatedDataLoadedNotification = "3 new \(DataSources.asam.fullName)\n3 new \(DataSources.modu.fullName)\n3 new \(DataSources.light.fullName)\n3 new \(DataSources.port.fullName)"
         appState.lastNotificationRequestDate = Date()
         let banner = DataLoadedNotificationBanner()
         let view = banner.environmentObject(appState)
@@ -62,10 +62,10 @@ final class DataLoadedNotificationBannerTests: XCTestCase {
     func testClearNotification() {
         let appState = AppState()
         appState.dsBatchImportNotificationsPending = [
-            Asam.key : [DataSourceUpdatedNotification(key: Asam.key, updates: 1, inserts: 3)]
+            DataSources.asam.key : [DataSourceUpdatedNotification(key: DataSources.asam.key, updates: 1, inserts: 3)]
         ]
         appState.loadingDataSource[MockDataSourceNonMappable.key] = false
-        appState.consolidatedDataLoadedNotification = "3 new \(Asam.fullDataSourceName)"
+        appState.consolidatedDataLoadedNotification = "3 new \(DataSources.asam.fullName)"
         appState.lastNotificationRequestDate = Date()
         let banner = DataLoadedNotificationBanner()
         let view = banner.environmentObject(appState)
@@ -75,73 +75,73 @@ final class DataLoadedNotificationBannerTests: XCTestCase {
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         XCTAssertFalse(appState.dsBatchImportNotificationsPending.isEmpty)
-        tester().waitForView(withAccessibilityLabel: "3 new \(Asam.fullDataSourceName)")
+        tester().waitForView(withAccessibilityLabel: "3 new \(DataSources.asam.fullName)")
         tester().waitForView(withAccessibilityLabel: "Clear")
         let lastDate = appState.lastNotificationRequestDate
         appState.consolidatedDataLoadedNotification = ""
         tester().tapView(withAccessibilityLabel: "Clear")
         XCTAssertNotEqual(lastDate, appState.lastNotificationRequestDate)
         XCTAssertTrue(appState.dsBatchImportNotificationsPending.isEmpty)
-        tester().waitForAbsenceOfView(withAccessibilityLabel: "3 new \(Asam.fullDataSourceName)")
+        tester().waitForAbsenceOfView(withAccessibilityLabel: "3 new \(DataSources.asam.fullName)")
     }
     
     func testShowNotificationAddExtra() {
         let appState = AppState()
         appState.dsBatchImportNotificationsPending = [
-            Asam.key : [DataSourceUpdatedNotification(key: Asam.key, updates: 1, inserts: 3)]
+            DataSources.asam.key : [DataSourceUpdatedNotification(key: DataSources.asam.key, updates: 1, inserts: 3)]
         ]
-        appState.consolidatedDataLoadedNotification = "3 new \(Asam.fullDataSourceName)"
+        appState.consolidatedDataLoadedNotification = "3 new \(DataSources.asam.fullName)"
         appState.lastNotificationRequestDate = Date()
         let banner = DataLoadedNotificationBanner().environmentObject(appState)
         
         let controller = UIHostingController(rootView: banner)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "3 new \(Asam.fullDataSourceName)")
-        
+        tester().waitForView(withAccessibilityLabel: "3 new \(DataSources.asam.fullName)")
+
         appState.dsBatchImportNotificationsPending = [
-            Asam.key : [DataSourceUpdatedNotification(key: Asam.key, updates: 1, inserts: 12)]
+            DataSources.asam.key : [DataSourceUpdatedNotification(key: DataSources.asam.key, updates: 1, inserts: 12)]
         ]
-        appState.consolidatedDataLoadedNotification = "15 new \(Asam.fullDataSourceName)"
+        appState.consolidatedDataLoadedNotification = "15 new \(DataSources.asam.fullName)"
         appState.lastNotificationRequestDate = Date()
-        tester().waitForView(withAccessibilityLabel: "15 new \(Asam.fullDataSourceName)")
+        tester().waitForView(withAccessibilityLabel: "15 new \(DataSources.asam.fullName)")
     }
     
     func testOnlyShowDataSourcesWithInserts() {
         let appState = AppState()
         appState.dsBatchImportNotificationsPending = [
-            Asam.key : [DataSourceUpdatedNotification(key: Asam.key, updates: 1, inserts: 3)],
-            Modu.key : [DataSourceUpdatedNotification(key: Modu.key, updates: 2, inserts: 0)]
+            DataSources.asam.key : [DataSourceUpdatedNotification(key: DataSources.asam.key, updates: 1, inserts: 3)],
+            DataSources.modu.key : [DataSourceUpdatedNotification(key: DataSources.modu.key, updates: 2, inserts: 0)]
         ]
-        appState.consolidatedDataLoadedNotification = "3 new \(Asam.fullDataSourceName)"
+        appState.consolidatedDataLoadedNotification = "3 new \(DataSources.asam.fullName)"
         appState.lastNotificationRequestDate = Date()
         let banner = DataLoadedNotificationBanner().environmentObject(appState)
         
         let controller = UIHostingController(rootView: banner)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "3 new \(Asam.fullDataSourceName)")
+        tester().waitForView(withAccessibilityLabel: "3 new \(DataSources.asam.fullName)")
     }
     
     func testShowPreviousInsertsIfNewWithOnlyUpdatesComesIn() {
         let appState = AppState()
         appState.dsBatchImportNotificationsPending = [
-            Asam.key : [DataSourceUpdatedNotification(key: Asam.key, updates: 1, inserts: 3)]
+            DataSources.asam.key : [DataSourceUpdatedNotification(key: DataSources.asam.key, updates: 1, inserts: 3)]
         ]
-        appState.consolidatedDataLoadedNotification = "3 new \(Asam.fullDataSourceName)"
+        appState.consolidatedDataLoadedNotification = "3 new \(DataSources.asam.fullName)"
         appState.lastNotificationRequestDate = Date()
         let banner = DataLoadedNotificationBanner().environmentObject(appState)
         
         let controller = UIHostingController(rootView: banner)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
-        tester().waitForView(withAccessibilityLabel: "3 new \(Asam.fullDataSourceName)")
-        
+        tester().waitForView(withAccessibilityLabel: "3 new \(DataSources.asam.fullName)")
+
         appState.dsBatchImportNotificationsPending = [
-            Asam.key : [DataSourceUpdatedNotification(key: Asam.key, updates: 1, inserts: 0)]
+            DataSources.asam.key : [DataSourceUpdatedNotification(key: DataSources.asam.key, updates: 1, inserts: 0)]
         ]
-        appState.consolidatedDataLoadedNotification = "3 new \(Asam.fullDataSourceName)"
+        appState.consolidatedDataLoadedNotification = "3 new \(DataSources.asam.fullName)"
         appState.lastNotificationRequestDate = Date()
-        tester().waitForView(withAccessibilityLabel: "3 new \(Asam.fullDataSourceName)")
+        tester().waitForView(withAccessibilityLabel: "3 new \(DataSources.asam.fullName)")
     }
 }

@@ -185,7 +185,7 @@ struct MapSettings: View {
 
             Section("Data Source Settings") {
                 NavigationLink(value: MarlinRoute.lightSettings) {
-                    if let lightSystemImageName = Light.systemImageName {
+                    if let lightSystemImageName = DataSources.light.systemImageName {
                         Image(systemName: lightSystemImageName)
                             .tint(Color.onSurfaceColor)
                             .opacity(0.60)

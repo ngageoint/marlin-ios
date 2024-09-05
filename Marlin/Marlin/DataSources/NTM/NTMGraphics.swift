@@ -77,18 +77,18 @@ struct NTMGraphics: Codable, Hashable, Identifiable {
     
     var graphicUrl: String {
         var url = """
-            \(MSIRouter.baseURLString)/publications/download?key=\(MSIRouter.ntmGraphicKeyBase)/\
-            \(noticeNumber ?? 0)/chartlets/\(fileName ?? "")&type=view
+        \(MSIRouter.baseURLString)/publications/download?key=\(MSIRouter.ntmGraphicKeyBase)/\
+        \(noticeNumber ?? 0)/chartlets/\(fileName ?? "")&type=view
         """
         if graphicType == "Depth Tab" {
             url = """
-                \(MSIRouter.baseURLString)/publications/download?key=\(MSIRouter.ntmGraphicKeyBase)/\
-                \(noticeNumber ?? 0)/depthtabs/\(fileName ?? "")&type=view
+            \(MSIRouter.baseURLString)/publications/download?key=\(MSIRouter.ntmGraphicKeyBase)/\
+            \(noticeNumber ?? 0)/depthtabs/\(fileName ?? "")&type=view
             """
         } else if graphicType == "Note" {
             url = """
-                \(MSIRouter.baseURLString)/publications/download?key=\(MSIRouter.ntmGraphicKeyBase)/\
-                \(noticeNumber ?? 0)/notes/\(fileName ?? "")&type=view
+            \(MSIRouter.baseURLString)/publications/download?key=\(MSIRouter.ntmGraphicKeyBase)/\
+            \(noticeNumber ?? 0)/notes/\(fileName ?? "")&type=view
             """
         }
         return url

@@ -53,31 +53,27 @@ extension UserDefaults {
     }
 
     @objc var showOnMapmodu: Bool {
-        bool(forKey: "showOnMap\(Modu.key)")
+        bool(forKey: "showOnMap\(DataSources.modu.key)")
     }
 
     @objc var showOnMapasam: Bool {
-        bool(forKey: "showOnMap\(Asam.key)")
+        bool(forKey: "showOnMap\(DataSources.asam.key)")
     }
 
     @objc var showOnMaplight: Bool {
-        bool(forKey: "showOnMap\(Light.key)")
+        bool(forKey: "showOnMap\(DataSources.light.key)")
     }
 
     @objc var showOnMapport: Bool {
-        bool(forKey: "showOnMap\(Port.key)")
+        bool(forKey: "showOnMap\(DataSources.port.key)")
     }
 
     @objc var showOnMapradioBeacon: Bool {
-        bool(forKey: "showOnMap\(RadioBeacon.key)")
+        bool(forKey: "showOnMap\(DataSources.radioBeacon.key)")
     }
 
     @objc var showOnMapdifferentialGPSStation: Bool {
-        bool(forKey: "showOnMap\(DifferentialGPSStation.key)")
-    }
-
-    @objc var showOnMapdfrs: Bool {
-        bool(forKey: "showOnMap\(DFRS.key)")
+        bool(forKey: "showOnMap\(DataSources.dgps.key)")
     }
 
     @objc var showOnMapnavWarning: Bool {

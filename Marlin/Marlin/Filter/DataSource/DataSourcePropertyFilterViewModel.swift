@@ -10,6 +10,7 @@ import SwiftUI
 import MapKit
 import CoreLocation
 
+// swiftlint:disable type_body_length
 class DataSourcePropertyFilterViewModel: ObservableObject {
     var locationManager: LocationManager?
     
@@ -170,7 +171,9 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
             if let valueMinLongitude = valueMinLongitude,
                let valueMinLatitude = valueMinLatitude,
                let valueMaxLongitude = valueMaxLongitude,
-               let valueMaxLatitude = valueMaxLatitude {
+               let valueMaxLatitude = valueMaxLatitude,
+               valueMaxLatitude > valueMinLatitude,
+               valueMaxLongitude > valueMinLongitude {
                 return MapBoundingBox(
                     swCorner: (x: valueMinLongitude, y: valueMinLatitude),
                     neCorner: (x: valueMaxLongitude, y: valueMaxLatitude)
@@ -336,6 +339,8 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
                 && valueMinLatitude != nil
                 && valueMaxLongitude != nil
                 && valueMaxLatitude != nil
+                && valueMaxLatitude ?? 0.0 > valueMinLatitude ?? 0.0
+                && valueMaxLongitude ?? 0.0 > valueMinLongitude ?? 0.0
             }
         case .latitude:
             if valueString.isEmpty {
@@ -373,3 +378,4 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
         self.isStaticProperty = isStaticProperty
     }
 }
+// swiftlint:enable type_body_length

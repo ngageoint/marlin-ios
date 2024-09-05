@@ -10,7 +10,10 @@ import CoreData
 import MapKit
 import GeoJSON
 
-struct RouteModel: Codable, GeoJSONExportable {
+struct RouteModel: Codable, GeoJSONExportable, Hashable, Identifiable {
+    var id: String {
+        routeURL?.absoluteString ?? ""
+    }
     var itemKey: String {
         routeURL?.absoluteString ?? ""
     }
@@ -214,7 +217,10 @@ extension RouteModel: DataSourceViewBuilder {
     }
 }
 
-struct RouteWaypointModel: Codable {
+struct RouteWaypointModel: Codable, Hashable, Identifiable {
+    var id: String {
+        "\(dataSource ?? "")--\(itemKey ?? "")--\(routeId ?? 0)--\(order ?? 0)"
+    }
     private enum CodingKeys: String, CodingKey {
         case dataSource
         case itemKey
@@ -270,8 +276,6 @@ struct RouteWaypointModel: Codable {
 }
 
 extension RouteWaypointModel {
-    // ignoring this error because this is how many data sources we have
-    // swiftlint:disable cyclomatic_complexity
     func decodeToDataSource() -> (any GeoJSONExportable)? {
         do {
             let decoder = JSONDecoder()
@@ -280,22 +284,22 @@ extension RouteWaypointModel {
                 let featureCollection = try decoder.decode(FeatureCollection.self, from: jsonData)
                 if !featureCollection.features.isEmpty {
                     switch dataSource {
-                    case Asam.key:
+                    case DataSources.asam.key:
                         let asamModel = AsamModel(feature: featureCollection.features[0])
                         return asamModel
-                    case Modu.key:
+                    case DataSources.modu.key:
                         let moduModel = ModuModel(feature: featureCollection.features[0])
                         return moduModel
-                    case Light.key:
+                    case DataSources.light.key:
                         let lightModel = LightModel(feature: featureCollection.features[0])
                         return lightModel
-                    case Port.key:
+                    case DataSources.port.key:
                         let portModel = PortModel(feature: featureCollection.features[0])
                         return portModel
-                    case DifferentialGPSStation.key:
-                        let dgpsModel = DifferentialGPSStationModel(feature: featureCollection.features[0])
+                    case DataSources.dgps.key:
+                        let dgpsModel = DGPSStationModel(feature: featureCollection.features[0])
                         return dgpsModel
-                    case RadioBeacon.key:
+                    case DataSources.radioBeacon.key:
                         let rbModel = RadioBeaconModel(feature: featureCollection.features[0])
                         return rbModel
                     case CommonDataSource.key:
@@ -311,5 +315,4 @@ extension RouteWaypointModel {
         }
         return nil
     }
-    // swiftlint:enable cyclomatic_complexity
 }

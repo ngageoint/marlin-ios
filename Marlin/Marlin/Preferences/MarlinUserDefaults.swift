@@ -64,4 +64,13 @@ extension UserDefaults {
             setValue(newValue, forKey: #function)
         }
     }
+
+    var searchType: SearchType {
+        get {
+            return SearchType.init(rawValue: integer(forKey: #function)) ?? .native
+        }
+        set {
+            setValue(newValue.rawValue, forKey: #function)
+        }
+    }
 }

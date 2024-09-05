@@ -7,7 +7,6 @@
 
 import SwiftUI
 import MapKit
-import CoreData
 
 struct AsamDetailView: View {
     @EnvironmentObject var asamRepository: AsamRepository
@@ -15,7 +14,7 @@ struct AsamDetailView: View {
     @StateObject var viewModel: AsamViewModel = AsamViewModel()
     @State var reference: String
     @State var waypointURI: URL?
-    
+
     var body: some View {
         Self._printChanges()
         return List {
@@ -27,21 +26,33 @@ struct AsamDetailView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .itemTitle()
                         .foregroundColor(Color.white)
-                        .background(Color(uiColor: Asam.color))
+                        .background(Color(uiColor: DataSources.asam.color))
                         .padding(.bottom, -8)
                         .accessibilityElement(children: .contain)
                     if let asam = viewModel.asam {
                         DataSourceLocationMapView(
                             dataSourceLocation: asam,
                             mapName: "Asam Detail Map",
-                            mixins: [AsamMap<AsamModel>(objects: [asam])]
+                            mixins: [
+                                AsamMap(
+                                    repository: AsamTileRepository(
+                                        reference: asam.reference ?? "",
+                                        localDataSource: asamRepository.localDataSource
+                                    )
+                                )
+                            ]
                         )
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                     }
                     if let asam = viewModel.asam {
                         Group {
-                            AsamSummaryView(asam: asam, showTitle: false, showBookmarkNotes: true)
-                                .padding(.bottom, 16)
+                            AsamSummaryView(
+                                asam: AsamListModel(asamModel: asam),
+                                showTitle: false,
+                                showBookmarkNotes: true
+                            )
+                            .padding(.bottom, 16)
+                            .accessibilityElement(children: .contain)
                         }.padding([.leading, .trailing], 16)
                     }
                 }
@@ -51,23 +62,23 @@ struct AsamDetailView: View {
             }
             .dataSourceSection()
 
-            Section("Additional Information") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Property(property: "Hostility", value: viewModel.asam?.hostility)
-                    Property(property: "Victim", value: viewModel.asam?.victim)
-                    Property(property: "Reference Number", value: viewModel.asam?.reference)
-                    Property(property: "Date of Occurence", value: viewModel.asam?.dateString)
-                    Property(property: "Geographical Subregion", value: viewModel.asam?.subreg)
-                    Property(property: "Navigational Area", value: viewModel.asam?.navArea)
-                }
-                .padding(.all, 16)
-                .card()
-                .frame(maxWidth: .infinity)
+            Text("Additional Information")
+                .sectionHeader()
+
+            VStack(alignment: .leading, spacing: 8) {
+                Property(property: "Hostility", value: viewModel.asam?.hostility)
+                Property(property: "Victim", value: viewModel.asam?.victim)
+                Property(property: "Reference Number", value: viewModel.asam?.reference)
+                Property(property: "Date of Occurence", value: viewModel.asam?.dateString)
+                Property(property: "Geographical Subregion", value: viewModel.asam?.subreg)
+                Property(property: "Navigational Area", value: viewModel.asam?.navArea)
             }
+            .paddedCard()
+            .frame(maxWidth: .infinity)
             .dataSourceSection()
         }
         .dataSourceDetailList()
-        .navigationTitle(viewModel.asam?.reference ?? Asam.dataSourceName)
+        .navigationTitle(viewModel.asam?.reference ?? DataSources.asam.fullName)
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: reference) { _ in
             viewModel.getAsam(reference: reference, waypointURI: waypointURI)
@@ -76,7 +87,7 @@ struct AsamDetailView: View {
             viewModel.repository = asamRepository
             viewModel.routeWaypointRepository = routeWaypointRepository
             viewModel.getAsam(reference: reference, waypointURI: waypointURI)
-            Metrics.shared.dataSourceDetail(dataSource: Asam.definition)
+            Metrics.shared.dataSourceDetail(dataSource: DataSources.asam)
         }
     }
 }

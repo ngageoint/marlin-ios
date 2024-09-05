@@ -52,7 +52,10 @@ class MapLongPress: UILongPressGestureRecognizer {
 }
 
 extension MapLongPress: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
         return true
     }
 }
@@ -88,7 +91,7 @@ class MapState: ObservableObject, Hashable {
         }
     }
     
-    @Published var searchResults: [MKMapItem]?
+    @Published var searchResults: [SearchResultModel]?
     
     @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
     @AppStorage("showGARS") var showGARS: Bool = false
@@ -101,39 +104,87 @@ class MapState: ObservableObject, Hashable {
 
 class MainMapMixins: MapMixins {
     var subscriptions = Set<AnyCancellable>()
-    var navigationalWarningMap = NavigationalWarningFetchMap()
-        
+    var asamRepository: TileRepository?
+    var moduRepository: TileRepository?
+    var portRepository: TileRepository?
+    var lightRepository: TileRepository?
+    var radioBeaconRepository: TileRepository?
+    var dgpsRepository: TileRepository?
+    var navigationalWarningsRepository: TileRepository?
+    var routeRepository: RouteRepository?
+    var searchRepository: SearchRepository?
+
     override init() {
         super.init()
-        var mixins: [any MapMixin] = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
-        
-        if UserDefaults.standard.dataSourceEnabled(DifferentialGPSStation.definition) {
-            mixins.append(DifferentialGPSStationMap<DifferentialGPSStation>(showAsTiles: true))
-        }
-        if UserDefaults.standard.dataSourceEnabled(DFRS.definition) {
-            mixins.append(DFRSMap<DFRS>(showAsTiles: true))
-        }
-        if UserDefaults.standard.dataSourceEnabled(Light.definition) {
-            mixins.append(LightMap<Light>(showAsTiles: true))
-        }
-        if UserDefaults.standard.dataSourceEnabled(Port.definition) {
-            mixins.append(PortMap<Port>(showAsTiles: true))
-        }
-        if UserDefaults.standard.dataSourceEnabled(RadioBeacon.definition) {
-            mixins.append(RadioBeaconMap<RadioBeacon>(showAsTiles: true))
-        }
-        if UserDefaults.standard.dataSourceEnabled(Modu.definition) {
-            mixins.append(ModuMap<Modu>(showAsTiles: true))
-        }
-        if UserDefaults.standard.dataSourceEnabled(Asam.definition) {
-            mixins.append(AsamMap<Asam>(showAsTiles: true))
-        }
-        mixins.append(NavigationalWarningFetchMap())
-        self.mixins = mixins
+        self.mixins = [PersistedMapState(), SearchResultsMap(), UserLayersMap()]
     }
     
-    func addRouteMixin(routeRepository: (any RouteRepository)) {
-        self.mixins.append(AllRoutesMixin(repository: routeRepository))
+    func addRouteMixin(routeRepository: RouteRepository) {
+        if self.routeRepository == nil {
+            self.routeRepository = routeRepository
+            self.mixins.append(AllRoutesMixin(repository: routeRepository))
+        }
+    }
+
+    func addSearchRepository(searchRepository: SearchRepository) {
+        if self.searchRepository == nil {
+            self.searchRepository = searchRepository
+            self.mixins.append(DrawingMixin(searchRepository: searchRepository))
+        }
+    }
+
+    func addAsamTileRepository(tileRepository: TileRepository) {
+        if asamRepository == nil && UserDefaults.standard.dataSourceEnabled(DataSources.asam) {
+            asamRepository = tileRepository
+            mixins.append(AsamMap(repository: tileRepository))
+        }
+    }
+
+    func addModuTileRepository(tileRepository: TileRepository) {
+        if moduRepository == nil && UserDefaults.standard.dataSourceEnabled(DataSources.modu) {
+            moduRepository = tileRepository
+            mixins.append(ModuMap(repository: tileRepository))
+        }
+    }
+
+    func addPortTileRepository(tileRepository: TileRepository) {
+        if portRepository == nil && UserDefaults.standard.dataSourceEnabled(DataSources.port) {
+            portRepository = tileRepository
+            mixins.append(PortMap(repository: tileRepository))
+        }
+    }
+
+    func addLightTileRepository(tileRepository: TileRepository) {
+        if lightRepository == nil && UserDefaults.standard.dataSourceEnabled(DataSources.light) {
+            lightRepository = tileRepository
+            mixins.append(LightMap(repository: tileRepository))
+        }
+    }
+
+    func addRadioBeaconTileRepository(tileRepository: TileRepository) {
+        if radioBeaconRepository == nil && UserDefaults.standard.dataSourceEnabled(DataSources.radioBeacon) {
+            radioBeaconRepository = tileRepository
+            mixins.append(RadioBeaconMap(repository: tileRepository))
+        }
+    }
+
+    func addDifferentialGPSStationTileRepository(tileRepository: TileRepository) {
+        if dgpsRepository == nil && UserDefaults.standard.dataSourceEnabled(DataSources.dgps) {
+            dgpsRepository = tileRepository
+            mixins.append(DGPSStationMap(repository: tileRepository))
+        }
+    }
+
+    func addNavigationalWarningsMapFeatureRepository(mapFeatureRepository: NavigationalWarningsMapFeatureRepository) {
+        if navigationalWarningsRepository == nil && UserDefaults.standard.dataSourceEnabled(DataSources.navWarning) {
+            navigationalWarningsRepository = mapFeatureRepository
+            mixins.append(
+                NavigationalWarningMap(
+                    repository: mapFeatureRepository,
+                    mapFeatureRepository: mapFeatureRepository
+                )
+            )
+        }
     }
 }
 
@@ -154,7 +205,11 @@ class NavigationalMapMixins: MapMixins {
             polygonColor: Color.dynamicLandColor,
             index: 1
         )
-        self.mixins = [NavigationalWarningFetchMap(), navareaMap, backgroundMap]
+        self.mixins = [navareaMap, backgroundMap]
+    }
+
+    func setMapFeatureRepository(mapFeatureRepository: MapFeatureRepository) {
+        self.mixins.append(NavigationalWarningMap(mapFeatureRepository: mapFeatureRepository))
     }
 }
 
@@ -368,7 +423,12 @@ protocol MapCoordinator: MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     func setMapRegion(region: MKCoordinateRegion)
     func singleTapGesture(tapGestureRecognizer: UITapGestureRecognizer)
-    func handleTappedItems(annotations: [MKAnnotation], items: [any DataSource], mapName: String)
+    func handleTappedItems(
+        annotations: [MKAnnotation],
+        items: [any DataSource],
+        itemKeys: [String: [String]],
+        mapName: String
+    )
     func longPressGesture(longPressGestureRecognizer: UILongPressGestureRecognizer)
 }
 
@@ -423,16 +483,13 @@ extension MapCoordinator {
                     setMapRegion(region: MKCoordinateRegion(center: adjustedCenter, span: span))
                 }
             }
+            if let definition = notification.definition {
+                let enlarged = EnlargedAnnotation(coordinate: dataSource.coordinate, definition: definition)
+                enlarged.markForEnlarging()
+                focusedAnnotation = enlarged
+                mapView?.addAnnotation(enlarged)
+            }
         }
-        
-        guard let mapItem = notification.item as? MapImage else {
-            return
-        }
-        
-        let enlarged = EnlargedAnnotation(mapImage: mapItem)
-        enlarged.markForEnlarging()
-        focusedAnnotation = enlarged
-        mapView?.addAnnotation(enlarged)
     }
     
     func mapTap(tapPoint: CGPoint, gesture: UITapGestureRecognizer, mapView: MKMapView?) {
@@ -467,14 +524,21 @@ extension MapCoordinator {
                 }
             }
         }
-        
-        var items: [any DataSource] = []
-        for mixin in marlinMap.mixins.mixins.reversed() {
-            if let matchedItems = mixin.items(at: tapCoord, mapView: mapView, touchPoint: tapPoint) {
-                items.append(contentsOf: matchedItems)
+        Task { [annotationsTapped] in
+
+            var items: [any DataSource] = []
+            var itemKeys: [String: [String]] = [:]
+            for mixin in marlinMap.mixins.mixins.reversed() {
+                if let matchedItems = mixin.items(at: tapCoord, mapView: mapView, touchPoint: tapPoint) {
+                    items.append(contentsOf: matchedItems)
+                }
+                let matchedItemKeys = await mixin.itemKeys(at: tapCoord, mapView: mapView, touchPoint: tapPoint)
+                itemKeys.merge(matchedItemKeys) { current, new in
+                    current + new
+                }
             }
+            handleTappedItems(annotations: annotationsTapped, items: items, itemKeys: itemKeys, mapName: marlinMap.name)
         }
-        handleTappedItems(annotations: annotationsTapped, items: items, mapName: marlinMap.name)
     }
 }
 
@@ -523,9 +587,23 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
             })
     }
     
-    func handleTappedItems(annotations: [MKAnnotation], items: [DataSource], mapName: String) {
-        let notification = MapItemsTappedNotification(annotations: annotations, items: items, mapName: mapName)
-        NotificationCenter.default.post(name: marlinMap.notificationOnTap, object: notification)
+    func handleTappedItems(
+        annotations: [MKAnnotation],
+        items: [DataSource],
+        itemKeys: [String: [String]],
+        mapName: String
+    ) {
+        Task {
+            await MainActor.run {
+                let notification = MapItemsTappedNotification(
+                    annotations: annotations,
+                    items: items,
+                    itemKeys: itemKeys,
+                    mapName: mapName
+                )
+                NotificationCenter.default.post(name: marlinMap.notificationOnTap, object: notification)
+            }
+        }
     }
     
     @objc func singleTapGesture(tapGestureRecognizer: UITapGestureRecognizer) {
@@ -548,6 +626,10 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
         if mapGesture.state == .began {
             let coordinate = mapView.convert(mapGesture.location(in: mapView), toCoordinateFrom: mapView)
             NotificationCenter.default.post(name: marlinMap.notificationOnLongPress, object: coordinate)
+
+            for mixin in mixins {
+                mixin.mapLongPress(mapView: mapView, coordinate: coordinate)
+            }
         }
     }
     
@@ -593,8 +675,21 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
             let annotationView = mapView.dequeueReusableAnnotationView(
                 withIdentifier: EnlargedAnnotationView.ReuseID,
                 for: enlarged)
-            let mapImage = enlarged.mapImage
-            let mapImages = mapImage.mapImage(marker: true, zoomLevel: 36, tileBounds3857: nil, context: nil)
+             var mapImages: [UIImage] = []
+            if let circleImage = CircleImage(
+                color: enlarged.definition.color,
+                radius: 40 * UIScreen.main.scale,
+                fill: true
+            ) {
+                mapImages.append(circleImage)
+                if let image = enlarged.definition.image,
+                   let dataSourceImage = image.aspectResize(
+                    to: CGSize(width: circleImage.size.width / 1.5, height: circleImage.size.height / 1.5))
+                    .withRenderingMode(.alwaysTemplate)
+                    .maskWithColor(color: UIColor.white) {
+                    mapImages.append(dataSourceImage)
+                }
+            }
             var finalImage: UIImage? = mapImages.first
             if mapImages.count > 1 {
                 for mapImage in mapImages.suffix(from: 1) {
@@ -626,10 +721,10 @@ class MarlinMapCoordinator: NSObject, MapCoordinator {
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         for mixin in marlinMap.mixins.mixins {
-            mixin.regionDidChange(mapView: mapView, animated: animated)
+            mixin.regionDidChange(mapView: mapView, animated: animated, centerCoordinate: mapView.centerCoordinate)
         }
     }
-    
+
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
     }
     
@@ -664,11 +759,11 @@ class EnlargedAnnotation: NSObject, MKAnnotation {
     }
     
     var coordinate: CLLocationCoordinate2D
-    var mapImage: MapImage
-    
-    init(mapImage: MapImage) {
-        coordinate = mapImage.coordinate
-        self.mapImage = mapImage
+    var definition: any DataSourceDefinition
+
+    init(coordinate: CLLocationCoordinate2D, definition: any DataSourceDefinition) {
+        self.coordinate = coordinate
+        self.definition = definition
     }
     
     func markForEnlarging() {

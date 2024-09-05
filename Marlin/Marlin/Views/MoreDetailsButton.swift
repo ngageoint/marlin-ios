@@ -8,18 +8,12 @@
 import SwiftUI
 
 struct MoreDetailsButton: View {
-    var data: DataSource
-
+    var action: Action
     var body: some View {
-        Button(
-            action: {
-                NotificationCenter.default.post(name: .ViewDataSource, object: ViewDataSource(dataSource: data))
-            },
-            label: {
-                Text("More Details")
-                    .foregroundColor(Color.primaryColorVariant)
-            }
-        )
+        Button(action: action.action) {
+            Text("More Details")
+                .foregroundColor(Color.primaryColorVariant)
+        }
         .accessibilityElement()
         .accessibilityLabel("More Details")
     }

@@ -9,7 +9,6 @@ import Foundation
 import Alamofire
 
 enum MSIRouter: URLRequestConvertible {
-    case readAsams(date: String? = nil)
     case readModus(date: String? = nil)
     case readNavigationalWarnings
     case readLights(volume: String, noticeYear: String? = nil, noticeWeek: String? = nil)
@@ -20,14 +19,12 @@ enum MSIRouter: URLRequestConvertible {
     case readDFRSAreas
     case readElectronicPublications
     case readNoticeToMariners(noticeNumber: Int64? = nil)
-    
+
     static let baseURLString = "https://msi.nga.mil/api"
     static let ntmGraphicKeyBase = "16920957/SFH00000/UNTM"
-    
+
     var method: HTTPMethod {
         switch self {
-        case .readAsams:
-            return .get
         case .readModus:
             return .get
         case .readNavigationalWarnings:
@@ -50,11 +47,9 @@ enum MSIRouter: URLRequestConvertible {
             return .get
         }
     }
-    
+
     var path: String {
         switch self {
-        case .readAsams:
-            return "/publications/asam"
         case .readModus:
             return "/publications/modu"
         case .readNavigationalWarnings:
@@ -77,26 +72,12 @@ enum MSIRouter: URLRequestConvertible {
             return "/publications/ntm/pubs"
         }
     }
-    
+
     var parameters: Parameters? {
         switch self {
-        case .readAsams:
-            // we cannot reliably query for asams that occured after the date we have because
-            // records can be inserted with an occurance date in the past
-            // we have to query for all records all the time
-            let params = [
-                "sort": "date",
-                "output": "json"
-//                "maxOccurDate": Asam.dateFormatter.string(
-//                    from:Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date())
-            ]
-//            if let date = date {
-//                params["minOccurDate"] = date
-//            }
-            return params
         case .readModus(date: let date):
             var params = [
-                "maxSourceDate": Modu.dateFormatter.string(
+                "maxSourceDate": DataSources.modu.dateFormatter.string(
                     from: Calendar.current.date(byAdding: .hour, value: 24, to: Date()) ?? Date()),
                 "output": "json"
             ]
@@ -178,17 +159,17 @@ enum MSIRouter: URLRequestConvertible {
             return params
         }
     }
-    
+
     // MARK: URLRequestConvertible
-    
+
     func asURLRequest() throws -> URLRequest {
         let url = try MSIRouter.baseURLString.asURL()
-        
+
         var urlRequest = URLRequest(url: url.appendingPathComponent(path))
         urlRequest.httpMethod = method.rawValue
-        
+
         urlRequest = try URLEncoding.default.encode(urlRequest, with: parameters)
-        
+
         return urlRequest
     }
 }

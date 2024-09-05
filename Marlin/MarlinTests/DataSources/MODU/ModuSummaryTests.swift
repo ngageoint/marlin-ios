@@ -12,34 +12,9 @@ import SwiftUI
 @testable import Marlin
 
 final class ModuSummaryTests: XCTestCase {
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    override func setUp(completion: @escaping (Error?) -> Void) {
-        for item in DataSourceList().allTabs {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
-    }
-    
-    override func tearDown() {
-    }
-    
     func testLoading() {
-        let modu = Modu(context: persistentStore.viewContext)
-        
+        var modu = ModuModel()
+
         modu.name = "ABAN II"
         modu.date = Date(timeIntervalSince1970: 0)
         modu.rigStatus = "Active"
@@ -51,16 +26,20 @@ final class ModuSummaryTests: XCTestCase {
         modu.navArea = "HYDROPAC"
         modu.region = 6
         modu.subregion = 63
-        
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = modu.summary
+        modu.canBookmark = true
+
+        let localDataSource = ModuStaticLocalDataSource()
+        localDataSource.list = [modu]
+        let repository = ModuRepository(localDataSource: localDataSource, remoteDataSource: ModuRemoteDataSource())
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, moduRepository: repository)
+
+        let summary = ModuSummaryView(modu: ModuListModel(moduModel: modu))
             .setShowMoreDetails(false)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(MarlinRouter())
+
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -84,11 +63,13 @@ final class ModuSummaryTests: XCTestCase {
         }
         
         expectation(forNotification: .MapItemsTapped, object: nil) { notification in
-            
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let modu = tapNotification.items as! [ModuModel]
-            XCTAssertEqual(modu.count, 1)
-            XCTAssertEqual(modu[0].name, "ABAN II")
+            let moduKeys = tapNotification.itemKeys!
+
+            let modus = moduKeys[DataSources.modu.key]!
+
+            XCTAssertEqual(modus.count, 1)
+            XCTAssertEqual(modus[0], modu.itemKey)
             return true
         }
         tester().tapView(withAccessibilityLabel: "focus")
@@ -101,12 +82,12 @@ final class ModuSummaryTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapView(withAccessibilityLabel: "dismiss popup")
         
-        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: modu)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: modu)
     }
     
     func testShowMoreDetails() {
-        let modu = Modu(context: persistentStore.viewContext)
-        
+        var modu = ModuModel()
+
         modu.name = "ABAN II"
         modu.date = Date(timeIntervalSince1970: 0)
         modu.rigStatus = "Active"
@@ -118,31 +99,29 @@ final class ModuSummaryTests: XCTestCase {
         modu.navArea = "HYDROPAC"
         modu.region = 6
         modu.subregion = 63
-        
-        let repository = ModuRepositoryManager(repository: ModuCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = modu.summary
+
+        let router = MarlinRouter()
+        let localDataSource = ModuStaticLocalDataSource()
+        localDataSource.list = [modu]
+        let repository = ModuRepository(localDataSource: localDataSource, remoteDataSource: ModuRemoteDataSource())
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, moduRepository: repository)
+
+        let summary = ModuSummaryView(modu: ModuListModel(moduModel: modu))
             .setShowMoreDetails(true)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(router)
+
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Active")
         
-        expectation(forNotification: .ViewDataSource,
-                    object: nil) { notification in
-            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let modu = try! XCTUnwrap(vds.dataSource as? ModuModel)
-            XCTAssertEqual(modu.name, "ABAN II")
-            return true
-        }
+        XCTAssertEqual(router.path.count, 0)
         tester().tapView(withAccessibilityLabel: "More Details")
-        
-        waitForExpectations(timeout: 10, handler: nil)
+        XCTAssertEqual(router.path.count, 1)
+
         tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
     }
 }

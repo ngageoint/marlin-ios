@@ -22,13 +22,13 @@ final class SortViewModelTests: XCTestCase {
     }
 
     func testSortProperties() {
-        let sortViewModel = SortViewModel(dataSource: MockDataSource.self)
+        let sortViewModel = SortViewModel(definition: MockDataSourceDefinition())
         XCTAssertEqual(sortViewModel.sort, [])
         XCTAssertFalse(sortViewModel.sections)
     }
     
     func testSortPropertiesWithDefault() {
-        let sortViewModel = SortViewModel(dataSource: MockDataSourceDefaultSort.self)
+        let sortViewModel = SortViewModel(definition: MockDataSourceDefaultSortDefinition())
         XCTAssertEqual(sortViewModel.sort.count, 1)
         XCTAssertFalse(sortViewModel.sections)
         XCTAssertEqual(sortViewModel.sort[0].property.key, MockDataSourceDefaultSort.defaultSort[0].property.key)
@@ -38,8 +38,8 @@ final class SortViewModelTests: XCTestCase {
         UserDefaults.standard.setSort(MockDataSource.key, sort: [
             DataSourceSortParameter(property: DataSourceProperty(name: "Int", key: "intProperty", type: .int), ascending: true)
         ])
-        
-        let sortViewModel = SortViewModel(dataSource: MockDataSource.self)
+
+        let sortViewModel = SortViewModel(definition: MockDataSourceDefinition())
         XCTAssertEqual(sortViewModel.sort.count, 1)
         XCTAssertEqual(sortViewModel.sort[0].property.key, "intProperty")
         XCTAssertFalse(sortViewModel.sections)
@@ -50,7 +50,7 @@ final class SortViewModelTests: XCTestCase {
             DataSourceSortParameter(property: DataSourceProperty(name: "Int", key: "intProperty", type: .int), ascending: true, section: true)
         ])
         
-        let sortViewModel = SortViewModel(dataSource: MockDataSource.self)
+        let sortViewModel = SortViewModel(definition: MockDataSourceDefinition())
         XCTAssertEqual(sortViewModel.sort.count, 1)
         XCTAssertEqual(sortViewModel.sort[0].property.key, "intProperty")
         XCTAssertTrue(sortViewModel.sections)
@@ -61,7 +61,7 @@ final class SortViewModelTests: XCTestCase {
             DataSourceSortParameter(property: DataSourceProperty(name: "Int", key: "intProperty", type: .int), ascending: true)
         ])
         
-        let sortViewModel = SortViewModel(dataSource: MockDataSourceDefaultSort.self)
+        let sortViewModel = SortViewModel(definition: MockDataSourceDefaultSortDefinition())
         XCTAssertEqual(sortViewModel.sort.count, 1)
         XCTAssertEqual(sortViewModel.sort[0].property.key, "intProperty")
         XCTAssertFalse(sortViewModel.sections)
@@ -72,7 +72,7 @@ final class SortViewModelTests: XCTestCase {
             DataSourceSortParameter(property: DataSourceProperty(name: "Int", key: "intProperty", type: .int), ascending: true, section: true)
         ])
         
-        let sortViewModel = SortViewModel(dataSource: MockDataSourceDefaultSort.self)
+        let sortViewModel = SortViewModel(definition: MockDataSourceDefaultSortDefinition())
         XCTAssertEqual(sortViewModel.sort.count, 1)
         XCTAssertEqual(sortViewModel.sort[0].property.key, "intProperty")
         XCTAssertTrue(sortViewModel.sections)
@@ -83,7 +83,7 @@ final class SortViewModelTests: XCTestCase {
             DataSourceSortParameter(property: DataSourceProperty(name: "Int", key: "intProperty", type: .int), ascending: true)
         ])
         
-        let sortViewModel = SortViewModel(dataSource: MockDataSource.self)
+        let sortViewModel = SortViewModel(definition: MockDataSourceDefinition())
         XCTAssertEqual(sortViewModel.sort.count, 1)
         XCTAssertEqual(sortViewModel.sort[0].property.key, "intProperty")
         XCTAssertFalse(sortViewModel.sort[0].section)
@@ -99,7 +99,7 @@ final class SortViewModelTests: XCTestCase {
             DataSourceSortParameter(property: DataSourceProperty(name: "Int", key: "intProperty", type: .int), ascending: true)
         ])
         
-        let sortViewModel = SortViewModel(dataSource: MockDataSource.self)
+        let sortViewModel = SortViewModel(definition: MockDataSourceDefinition())
         XCTAssertEqual(sortViewModel.sort.count, 1)
         XCTAssertEqual(sortViewModel.sort[0].property.key, "intProperty")
         XCTAssertFalse(sortViewModel.sections)
@@ -123,7 +123,7 @@ final class SortViewModelTests: XCTestCase {
     }
     
     func testAddFirstSortProperty() {
-        let sortViewModel = SortViewModel(dataSource: MockDataSource.self)
+        let sortViewModel = SortViewModel(definition: MockDataSourceDefinition())
         XCTAssertEqual(sortViewModel.sort.count, 0)
         XCTAssertFalse(sortViewModel.sections)
         
@@ -139,7 +139,7 @@ final class SortViewModelTests: XCTestCase {
     }
     
     func testAddFirstSortPropertyWithSections() {
-        let sortViewModel = SortViewModel(dataSource: MockDataSource.self)
+        let sortViewModel = SortViewModel(definition: MockDataSourceDefinition())
         XCTAssertNil(sortViewModel.firstSortProperty)
         XCTAssertEqual(sortViewModel.sort.count, 0)
         XCTAssertFalse(sortViewModel.sections)
@@ -162,7 +162,7 @@ final class SortViewModelTests: XCTestCase {
             DataSourceSortParameter(property: DataSourceProperty(name: "String", key: "stringProperty", type: .string), ascending: true)
         ])
         
-        let sortViewModel = SortViewModel(dataSource: MockDataSource.self)
+        let sortViewModel = SortViewModel(definition: MockDataSourceDefinition())
         XCTAssertEqual(sortViewModel.sort.count, 2)
         XCTAssertEqual(sortViewModel.sort[0].property.key, "intProperty")
         XCTAssertTrue(sortViewModel.sections)
@@ -179,7 +179,7 @@ final class SortViewModelTests: XCTestCase {
             DataSourceSortParameter(property: DataSourceProperty(name: "String", key: "stringProperty", type: .string), ascending: true)
         ])
         
-        let sortViewModel = SortViewModel(dataSource: MockDataSource.self)
+        let sortViewModel = SortViewModel(definition: MockDataSourceDefinition())
         XCTAssertEqual(sortViewModel.sort.count, 2)
         XCTAssertEqual(sortViewModel.sort[0].property.key, "intProperty")
         XCTAssertTrue(sortViewModel.sections)

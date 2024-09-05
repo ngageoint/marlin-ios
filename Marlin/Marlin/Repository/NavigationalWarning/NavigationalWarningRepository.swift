@@ -7,53 +7,109 @@
 
 import Foundation
 import CoreData
+import Combine
 
-protocol NavigationalWarningRepository {
-    @discardableResult
-    func getNavigationalWarning(msgYear: Int64, msgNumber: Int64, navArea: String?) -> NavigationalWarning?
-    func getCount(filters: [DataSourceFilterParameter]?) -> Int
+enum NavigationalWarningItem: Hashable, Identifiable {
+    var id: String {
+        switch self {
+        case .listItem(let navigationalWarning):
+            return navigationalWarning.id
+        case .sectionHeader(let header):
+            return header
+        }
+    }
+
+    case listItem(_ navigationalWarning: NavigationalWarningModel)
+    case sectionHeader(header: String)
 }
 
-class NavigationalWarningRepositoryManager: NavigationalWarningRepository, ObservableObject {
-    private var repository: NavigationalWarningRepository
-    init(repository: NavigationalWarningRepository) {
-        self.repository = repository
+struct NavigationalAreaInformation: Identifiable {
+    var id: String { navArea.name }
+    let navArea: NavigationalWarningNavArea
+    let unread: Int
+    let total: Int
+}
+
+class NavigationalWarningRepository: ObservableObject {
+    var localDataSource: NavigationalWarningLocalDataSource
+    private var remoteDataSource: NavigationalWarningRemoteDataSource
+    init(localDataSource: NavigationalWarningLocalDataSource, remoteDataSource: NavigationalWarningRemoteDataSource) {
+        self.localDataSource = localDataSource
+        self.remoteDataSource = remoteDataSource
     }
-    
-    func getNavigationalWarning(msgYear: Int64, msgNumber: Int64, navArea: String?) -> NavigationalWarning? {
-        repository.getNavigationalWarning(msgYear: msgYear, msgNumber: msgNumber, navArea: navArea)
+
+    func createOperation() -> NavigationalWarningDataFetchOperation {
+        return NavigationalWarningDataFetchOperation()
+    }
+
+    func getNavAreasInformation() async -> [NavigationalAreaInformation] {
+        await localDataSource.getNavAreasInformation()
+    }
+
+    func getNavigationalWarning(msgYear: Int, msgNumber: Int, navArea: String?) -> NavigationalWarningModel? {
+        localDataSource.getNavigationalWarning(msgYear: msgYear, msgNumber: msgNumber, navArea: navArea)
     }
     
     func getCount(filters: [DataSourceFilterParameter]?) -> Int {
-        repository.getCount(filters: filters)
+        localDataSource.getCount(filters: filters)
     }
-}
 
-class NavigationalWarningCoreDataRepository: NavigationalWarningRepository, ObservableObject {
-    private var context: NSManagedObjectContext
-    
-    required init(context: NSManagedObjectContext) {
-        self.context = context
+    func getNavAreaNavigationalWarnings(navArea: String) async -> [NavigationalWarningModel] {
+        // if navArea == "unknown" get unparsed locations
+        await getNavigationalWarnings(filters: [
+            DataSourceFilterParameter(
+                property: DataSourceProperty(
+                    name: "Navigational Area",
+                    key: "navArea",
+                    type: .string
+                ),
+                comparison: .equals,
+                valueString: navArea
+            )
+        ])
     }
-    
-    func getNavigationalWarning(msgYear: Int64, msgNumber: Int64, navArea: String?) -> NavigationalWarning? {
-        if let navArea = navArea {
-            return try? context.fetchFirst(
-                NavigationalWarning.self,
-                predicate: NSPredicate(
-                    format: "msgYear = %d AND msgNumber = %d AND navArea = %@",
-                    argumentArray: [msgYear, msgNumber, navArea]
-                )
+
+    func getNavigationalWarnings(
+        filters: [DataSourceFilterParameter]?
+    ) async -> [NavigationalWarningModel] {
+        await localDataSource.getNavigationalWarnings(filters: filters)
+    }
+
+    func navigationalWarnings(
+        filters: [DataSourceFilterParameter]?,
+        paginatedBy paginator: Trigger.Signal? = nil
+    ) -> AnyPublisher<[NavigationalWarningItem], Error> {
+        localDataSource.navigationalWarnings(filters: filters, paginatedBy: paginator)
+    }
+
+    func fetch() async -> [NavigationalWarningModel] {
+        NSLog("Fetching Navigational Warnings")
+        await MainActor.run {
+            MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] = true
+            NotificationCenter.default.post(
+                name: .DataSourceLoading,
+                object: DataSourceItem(dataSource: DataSources.navWarning)
             )
         }
-        return nil
-    }
-    
-    func getCount(filters: [DataSourceFilterParameter]?) -> Int {
-        guard let fetchRequest = NavigationalWarningFilterable()
-            .fetchRequest(filters: filters, commonFilters: nil) else {
-            return 0
+
+        let navWarnings = await remoteDataSource.fetch()
+        let inserted = await localDataSource.insert(task: nil, navigationalWarnings: navWarnings)
+
+        await MainActor.run {
+            MSI.shared.appState.loadingDataSource[DataSources.navWarning.key] = false
+            UserDefaults.standard.updateLastSyncTimeSeconds(DataSources.navWarning)
+            NotificationCenter.default.post(
+                name: .DataSourceLoaded,
+                object: DataSourceItem(dataSource: DataSources.navWarning)
+            )
+            if inserted != 0 {
+                NotificationCenter.default.post(
+                    name: .DataSourceUpdated,
+                    object: DataSourceUpdatedNotification(key: DataSources.navWarning.key, inserts: inserted)
+                )
+            }
         }
-        return (try? context.count(for: fetchRequest)) ?? 0
+
+        return navWarnings
     }
 }

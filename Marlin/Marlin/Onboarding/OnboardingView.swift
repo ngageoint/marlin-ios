@@ -205,8 +205,8 @@ struct OnboardingView: View {
         OnboardingTabTemplate(
             title: "Welcome To Marlin",
             explanation: """
-                Marlin puts NGA's Maritime Safety Information datasets at your fingertips even when offline. \
-                The next few screens will allow you to customize your experience to meet your needs.
+            Marlin puts NGA's Maritime Safety Information datasets at your fingertips even when offline. \
+            The next few screens will allow you to customize your experience to meet your needs.
             """,
             imageName: "marlin_large",
             buttons:
@@ -247,8 +247,8 @@ struct OnboardingView: View {
         OnboardingTabTemplate(
             title: "Enable Location",
             explanation: """
-                Marlin can show your location on the map and provide location aware filtering. \
-                Would you like to allow Marlin to access your location?
+            Marlin can show your location on the map and provide location aware filtering. \
+            Would you like to allow Marlin to access your location?
             """,
             systemImageName: "location.circle.fill",
             buttons:
@@ -304,8 +304,8 @@ struct OnboardingView: View {
         OnboardingTabTemplate(
             title: "Marlin Tabs",
             explanation: """
-                Choose up to 4 dataset tabs for the tab bar. \
-                Other datasets will be accessible in the navigation menu.
+            Choose up to 4 dataset tabs for the tab bar. \
+            Other datasets will be accessible in the navigation menu.
             """,
             imageAreaContent:
                 DataSourceTabGrid()
@@ -333,8 +333,8 @@ struct OnboardingView: View {
         OnboardingTabTemplate(
             title: "Marlin Map",
             explanation: """
-                Choose what datasets you want to see on the map. \
-                This can always be changed via the navigation menu.
+            Choose what datasets you want to see on the map. \
+            This can always be changed via the navigation menu.
             """,
             imageAreaContent:
                 DataSourceMapGrid()

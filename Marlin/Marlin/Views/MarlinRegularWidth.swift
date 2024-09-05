@@ -21,9 +21,9 @@ struct MarlinRegularWidth: View {
 
     @EnvironmentObject var dataSourceList: DataSourceList
         
-    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
-        notification.object as? ViewDataSource
-    }
+//    let viewDataSourcePub = NotificationCenter.default.publisher(for: .ViewDataSource).compactMap { notification in
+//        notification.object as? ViewDataSource
+//    }
     let switchTabPub = NotificationCenter.default.publisher(for: .SwitchTabs).map { notification in
         notification.object
     }
@@ -67,7 +67,7 @@ struct MarlinRegularWidth: View {
             DataSourceNavView(dataSource: activeRailItem, focusedItem: itemWrapper, watchFocusedItem: true)
                 .background(Color.backgroundColor)
                 .accessibilityElement(children: .contain)
-                .accessibilityLabel("\(activeRailItem.dataSource.definition.fullName) List")
+                .accessibilityLabel("\(activeRailItem.dataSource.fullName) List")
         }
     }
     
@@ -78,7 +78,7 @@ struct MarlinRegularWidth: View {
                 DataLoadedNotificationBanner()
                 CurrentLocation()
                 ZStack(alignment: .topLeading) {
-                    MarlinMainMap(path: $path)
+                    MarlinMainMap()
                         .accessibilityElement(children: .contain)
                         .accessibilityLabel("Marlin Map")
                         .onAppear {
@@ -87,8 +87,8 @@ struct MarlinRegularWidth: View {
                     loadingCapsule()
                 }
             }
-            .marlinRoutes(path: $path)
-            .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
+            .marlinRoutes()
+            .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
             .navigationTitle("Marlin")
             .navigationBarTitleDisplayMode(.inline)
         }
@@ -113,11 +113,11 @@ struct MarlinRegularWidth: View {
                 .animation(.default, value: self.menuOpen)
             }
         }
-        .onReceive(viewDataSourcePub) { output in
-            if let dataSource = output.dataSource {
-                viewData(dataSource)
-            }
-        }
+//        .onReceive(viewDataSourcePub) { output in
+//            if let dataSource = output.dataSource {
+//                viewData(dataSource)
+//            }
+//        }
         .onReceive(switchTabPub) { output in
             if let output = output as? String {
                 if output == "settings" {
@@ -142,15 +142,15 @@ struct MarlinRegularWidth: View {
         self.menuOpen.toggle()
     }
     
-    func viewData(_ data: any DataSource) {
-        NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
-        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
-        activeRailItem = dataSourceList.allTabs.first(where: { item in
-            item.dataSource == type(of: data.self)
-        })
-        itemWrapper.dataSource = data
-        itemWrapper.date = Date()
-    }
+//    func viewData(_ data: any DataSource) {
+//        NotificationCenter.default.post(name: .FocusMapOnItem, object: FocusMapOnItemNotification(item: nil))
+//        NotificationCenter.default.post(name: .DismissBottomSheet, object: nil)
+//        activeRailItem = dataSourceList.allTabs.first(where: { item in
+//            item.dataSource.key == data.definition.key
+//        })
+//        itemWrapper.dataSource = data
+//        itemWrapper.date = Date()
+//    }
     
     @ViewBuilder
     func loadingCapsule() -> some View {

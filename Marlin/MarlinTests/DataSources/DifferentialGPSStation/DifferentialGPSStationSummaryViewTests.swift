@@ -12,33 +12,8 @@ import SwiftUI
 @testable import Marlin
 
 final class DifferentialGPSStationSummaryViewTests: XCTestCase {
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    override func setUp(completion: @escaping (Error?) -> Void) {
-        for item in DataSourceList().allTabs {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
-    }
-    
-    override func tearDown() {
-    }
-    
     func testLoading() {
-        let newItem = DifferentialGPSStation(context: persistentStore.viewContext)
+        var newItem = DGPSStationModel()
         newItem.volumeNumber = "PUB 112"
         newItem.aidType = "Differential GPS Stations"
         newItem.geopoliticalHeading = "KOREA"
@@ -60,15 +35,19 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         newItem.deleteFlag = "N"
         newItem.noticeWeek = "34"
         newItem.noticeYear = "2011"
-        
-        let repository = DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = newItem.summary
-            .environment(\.managedObjectContext, persistentStore.viewContext)
+        newItem.canBookmark = true
+
+        let localDataSource = DifferentialGPSStationStaticLocalDataSource()
+        localDataSource.list = [newItem]
+        let repository = DGPSStationRepository(localDataSource: localDataSource, remoteDataSource: DGPSStationRemoteDataSource())
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, dgpsRepository: repository)
+
+        let summary = DGPSStationSummaryView(dgpsStation: DGPSStationListModel(dgpsStationModel: newItem))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(MarlinRouter())
+
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -85,11 +64,11 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: newItem)
     }
     
     func testLoadingNoVolume() {
-        let newItem = DifferentialGPSStation(context: persistentStore.viewContext)
+        var newItem = DGPSStationModel()
         newItem.volumeNumber = nil
         newItem.aidType = "Differential GPS Stations"
         newItem.geopoliticalHeading = "KOREA"
@@ -111,12 +90,15 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         newItem.deleteFlag = "N"
         newItem.noticeWeek = "34"
         newItem.noticeYear = "2011"
-        
-        let repository = DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = newItem.summary
-            .environment(\.managedObjectContext, persistentStore.viewContext)
+        newItem.canBookmark = true
+
+        let localDataSource = DifferentialGPSStationStaticLocalDataSource()
+        localDataSource.list = [newItem]
+        let repository = DGPSStationRepository(localDataSource: localDataSource, remoteDataSource: DGPSStationRemoteDataSource())
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, dgpsRepository: repository)
+
+        let summary = DGPSStationSummaryView(dgpsStation: DGPSStationListModel(dgpsStationModel: newItem))
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
         
@@ -142,9 +124,12 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         expectation(forNotification: .MapItemsTapped, object: nil) { notification in
 
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let dgps = tapNotification.items as! [DifferentialGPSStationModel]
+            let dgpsKeys = tapNotification.itemKeys!
+
+            let dgps = dgpsKeys[DataSources.dgps.key]!
+
             XCTAssertEqual(dgps.count, 1)
-            XCTAssertEqual(dgps[0].featureNumber, 6)
+            XCTAssertEqual(dgps[0], newItem.itemKey)
             return true
         }
         tester().tapView(withAccessibilityLabel: "focus")
@@ -159,7 +144,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
     }
     
     func testLoadingShowMoreDetails() {
-        let newItem = DifferentialGPSStation(context: persistentStore.viewContext)
+        var newItem = DGPSStationModel()
         newItem.volumeNumber = "PUB 112"
         newItem.aidType = "Differential GPS Stations"
         newItem.geopoliticalHeading = "KOREA"
@@ -183,16 +168,20 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         newItem.noticeWeek = "34"
         newItem.noticeYear = "2011"
         
-        let repository = DifferentialGPSStationRepositoryManager(repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = newItem.summary
+        let localDataSource = DifferentialGPSStationStaticLocalDataSource()
+        localDataSource.list = [newItem]
+        let repository = DGPSStationRepository(localDataSource: localDataSource, remoteDataSource: DGPSStationRemoteDataSource())
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, dgpsRepository: repository)
+        let router = MarlinRouter()
+
+        let summary = DGPSStationSummaryView(dgpsStation: DGPSStationListModel(dgpsStationModel: newItem))
             .setShowMoreDetails(true)
             .setShowSectionHeader(true)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(router)
+
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -202,16 +191,9 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "T670\nR740\nR741")
         tester().waitForView(withAccessibilityLabel: "Message types: 3, 5, 7, 9, 16.")
         
-        expectation(forNotification: .ViewDataSource,
-                    object: nil) { notification in
-            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let dgps = try! XCTUnwrap(vds.dataSource as? DifferentialGPSStationModel)
-            XCTAssertEqual(dgps.featureNumber, 6)
-            return true
-        }
+        XCTAssertEqual(router.path.count, 0)
         tester().tapView(withAccessibilityLabel: "More Details")
-
-        waitForExpectations(timeout: 10, handler: nil)
+        XCTAssertEqual(router.path.count, 1)
         tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
     }
 }

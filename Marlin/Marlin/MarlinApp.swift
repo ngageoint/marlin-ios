@@ -74,7 +74,7 @@ struct PhaseWatcher: View {
                     }
                     if inserts != 0 {
                         notificationStrings
-                            .append("\(inserts) new \(dataSourceItem?.dataSource.definition.fullName ?? "")")
+                            .append("\(inserts) new \(dataSourceItem?.dataSource.fullName ?? "")")
                     }
                 }
                 if !notificationStrings.isEmpty {
@@ -137,52 +137,129 @@ struct MarlinApp: App {
     var appState: AppState
     
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
-    var bookmarkRepository: BookmarkRepositoryManager
+    var bookmarkRepository: BookmarkRepository
     var asamRepository: AsamRepository
-    var moduRepository: ModuRepositoryManager
-    var lightRepository: LightRepositoryManager
-    var portRepository: PortRepositoryManager
-    var dgpsRepository: DifferentialGPSStationRepositoryManager
-    var radioBeaconRepository: RadioBeaconRepositoryManager
-    var routeRepository: RouteRepositoryManager
+    var moduRepository: ModuRepository
+    var portRepository: PortRepository
+    var differentialGPSStationRepository: DGPSStationRepository
+    var lightRepository: LightRepository
+    var radioBeaconRepository: RadioBeaconRepository
+    var publicationRepository: PublicationRepository
+    var navigationalWarningRepository: NavigationalWarningRepository
+    var noticeToMarinersRepository: NoticeToMarinersRepository
+    var userPlaceRepository: UserPlaceRepository
+    var searchRepository: SearchRepository
+
+    var routeRepository: RouteRepository
     var routeWaypointRepository: RouteWaypointRepository
-    var navigationalWarningRepository: NavigationalWarningRepositoryManager
-    
+
+    var asamsTileRepository: AsamsTileRepository
+    var modusTileRepository: ModusTileRepository
+    var portsTileRepository: PortsTileRepository
+    var lightsTileRepository: LightsTileRepository
+    var radioBeaconsTileRepository: RadioBeaconsTileRepository
+    var differentialGPSStationsTileRepository: DifferentialGPSStationsTileRepository
+    var navigationalWarningsMapFeatureRepository: NavigationalWarningsMapFeatureRepository
+
+    private var router: MarlinRouter = MarlinRouter()
+
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
 
     init() {
-        // set up default user defaults
-        UserDefaults.registerMarlinDefaults()
         shared = MSI.shared
         appState = MSI.shared.appState
+        persistentStore = PersistenceController.shared
+
+        asamRepository = AsamRepository(
+            localDataSource: AsamCoreDataDataSource(),
+            remoteDataSource: AsamRemoteDataSource()
+        )
+        moduRepository = ModuRepository(
+            localDataSource: ModuCoreDataDataSource(),
+            remoteDataSource: ModuRemoteDataSource()
+        )
+        portRepository = PortRepository(
+            localDataSource: PortCoreDataDataSource(),
+            remoteDataSource: PortRemoteDataSource()
+        )
+        differentialGPSStationRepository = DGPSStationRepository(
+            localDataSource: DGPSStationCoreDataDataSource(),
+            remoteDataSource: DGPSStationRemoteDataSource()
+        )
+        lightRepository = LightRepository(
+            localDataSource: LightCoreDataDataSource(),
+            remoteDataSource: LightRemoteDataSource()
+        )
+        radioBeaconRepository = RadioBeaconRepository(
+            localDataSource: RadioBeaconCoreDataDataSource(),
+            remoteDataSource: RadioBeaconRemoteDataSource()
+        )
+        publicationRepository = PublicationRepository(
+            localDataSource: PublicationCoreDataDataSource(),
+            remoteDataSource: PublicationRemoteDataSource()
+        )
+        navigationalWarningRepository = NavigationalWarningRepository(
+            localDataSource: NavigationalWarningCoreDataDataSource(),
+            remoteDataSource: NavigationalWarningRemoteDataSource()
+        )
+        noticeToMarinersRepository = NoticeToMarinersRepository(
+            localDataSource: NoticeToMarinersCoreDataDataSource(),
+            remoteDataSource: NoticeToMarinersRemoteDataSource()
+        )
+        userPlaceRepository = UserPlaceRepository(localDataSource: UserPlaceCoreDataDataSource())
+        searchRepository = SearchRepository(
+            native: NativeSearchProvider(),
+            nominatim: NominatimSearchProvider()
+        )
+
+        routeRepository = RouteRepository(localDataSource: RouteCoreDataDataSource())
+        routeWaypointRepository = RouteWaypointRepository(
+            localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
+
+        bookmarkRepository = BookmarkRepository(
+            localDataSource: BookmarkCoreDataDataSource(),
+            asamRepository: asamRepository,
+            dgpsRepository: differentialGPSStationRepository,
+            lightRepository: lightRepository,
+            moduRepository: moduRepository,
+            portRepository: portRepository,
+            radioBeaconRepository: radioBeaconRepository,
+            noticeToMarinersRepository: noticeToMarinersRepository,
+            publicationRepository: publicationRepository
+        )
+
+        asamsTileRepository = AsamsTileRepository(localDataSource: asamRepository.localDataSource)
+        modusTileRepository = ModusTileRepository(localDataSource: moduRepository.localDataSource)
+        portsTileRepository = PortsTileRepository(localDataSource: portRepository.localDataSource)
+        lightsTileRepository = LightsTileRepository(localDataSource: lightRepository.localDataSource)
+        radioBeaconsTileRepository = RadioBeaconsTileRepository(localDataSource: radioBeaconRepository.localDataSource)
+        differentialGPSStationsTileRepository = DifferentialGPSStationsTileRepository(
+            localDataSource: differentialGPSStationRepository.localDataSource
+        )
+        navigationalWarningsMapFeatureRepository = NavigationalWarningsMapFeatureRepository(
+            localDataSource: navigationalWarningRepository.localDataSource
+        )
+
+        MSI.shared.addRepositories(
+            asamRepository: asamRepository,
+            moduRepository: moduRepository,
+            portRepository: portRepository,
+            lightRepository: lightRepository,
+            radioBeaconRepository: radioBeaconRepository,
+            differentialGPSStationRepository: differentialGPSStationRepository,
+            publicationRepository: publicationRepository,
+            navigationalWarningRepository: navigationalWarningRepository,
+            noticeToMarinersRepository: noticeToMarinersRepository,
+            routeRepository: routeRepository
+        )
+        UNUserNotificationCenter.current().delegate = appDelegate
+
         persistentStoreLoadedPub.sink { _ in
             NSLog("Persistent store loaded, load all data")
             MSI.shared.loadAllData()
         }
         .store(in: &cancellable)
-        persistentStore = PersistenceController.shared
-        bookmarkRepository = BookmarkRepositoryManager(
-            repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        asamRepository = AsamRepository(
-            localDataSource: AsamCoreDataDataSource(context: persistentStore.viewContext))
-        moduRepository = ModuRepositoryManager(
-            repository: ModuCoreDataRepository(context: persistentStore.viewContext))
-        lightRepository = LightRepositoryManager(
-            repository: LightCoreDataRepository(context: persistentStore.viewContext))
-        portRepository = PortRepositoryManager(
-            repository: PortCoreDataRepository(context: persistentStore.viewContext))
-        dgpsRepository = DifferentialGPSStationRepositoryManager(
-            repository: DifferentialGPSStationCoreDataRepository(context: persistentStore.viewContext))
-        radioBeaconRepository = RadioBeaconRepositoryManager(
-            repository: RadioBeaconCoreDataRepository(context: persistentStore.viewContext))
-        routeRepository = RouteRepositoryManager(
-            repository: RouteCoreDataRepository(context: persistentStore.viewContext))
-        routeWaypointRepository = RouteWaypointRepository(
-            localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
-        navigationalWarningRepository = NavigationalWarningRepositoryManager(
-            repository: NavigationalWarningCoreDataRepository(context: persistentStore.viewContext))
-        UNUserNotificationCenter.current().delegate = appDelegate
     }
 
     var body: some Scene {
@@ -197,12 +274,24 @@ struct MarlinApp: App {
                 .environmentObject(moduRepository)
                 .environmentObject(lightRepository)
                 .environmentObject(portRepository)
-                .environmentObject(dgpsRepository)
+                .environmentObject(differentialGPSStationRepository)
                 .environmentObject(radioBeaconRepository)
                 .environmentObject(routeRepository)
                 .environmentObject(routeWaypointRepository)
                 .environmentObject(navigationalWarningRepository)
+                .environmentObject(publicationRepository)
+                .environmentObject(noticeToMarinersRepository)
+                .environmentObject(userPlaceRepository)
+                .environmentObject(asamsTileRepository)
+                .environmentObject(modusTileRepository)
+                .environmentObject(portsTileRepository)
+                .environmentObject(lightsTileRepository)
+                .environmentObject(radioBeaconsTileRepository)
+                .environmentObject(differentialGPSStationsTileRepository)
+                .environmentObject(navigationalWarningsMapFeatureRepository)
+                .environmentObject(searchRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
+                .environmentObject(router)
                 .background(Color.surfaceColor)
         }
     }
@@ -240,7 +329,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     
     func application(
         _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
+        UserDefaults.registerMarlinDefaults()
         MSI.shared.registerBackgroundHandler()
         return true
     }

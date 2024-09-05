@@ -12,8 +12,7 @@ struct DataSourceFilter: View {
     @Binding var showBottomSheet: Bool
 
     var body: some View {
-        Self._printChanges()
-        return Color.clear
+        Color.clear
             .sheet(isPresented: $showBottomSheet) {
                 NavigationStack {
                     ScrollView {
@@ -83,8 +82,7 @@ struct FilterBottomSheet: View {
     }
 
     var body: some View {
-        Self._printChanges()
-        return Color.clear
+        Color.clear
             .sheet(isPresented: $showBottomSheet) {
                 NavigationStack {
                     ScrollView {

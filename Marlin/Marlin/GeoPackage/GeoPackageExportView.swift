@@ -11,22 +11,20 @@ struct GeoPackageExportView: View {
     @EnvironmentObject var dataSourceList: DataSourceList
 
     @EnvironmentObject var asamRepository: AsamRepository
-    @EnvironmentObject var moduRepository: ModuRepositoryManager
-    @EnvironmentObject var lightRepository: LightRepositoryManager
-    @EnvironmentObject var portRepository: PortRepositoryManager
-    @EnvironmentObject var dgpsRepository: DifferentialGPSStationRepositoryManager
-    @EnvironmentObject var radioBeaconRepository: RadioBeaconRepositoryManager
-    @EnvironmentObject var routeRepository: RouteRepositoryManager
-    @EnvironmentObject var navigationalWarningRepository: NavigationalWarningRepositoryManager
+    @EnvironmentObject var moduRepository: ModuRepository
+    @EnvironmentObject var lightRepository: LightRepository
+    @EnvironmentObject var portRepository: PortRepository
+    @EnvironmentObject var dgpsRepository: DGPSStationRepository
+    @EnvironmentObject var radioBeaconRepository: RadioBeaconRepository
+    @EnvironmentObject var routeRepository: RouteRepository
+    @EnvironmentObject var navigationalWarningRepository: NavigationalWarningRepository
 
     @StateObject var viewModel: GeoPackageExportViewModel = GeoPackageExportViewModel()
-    
-    @State var exportRequest: [DataSourceExportRequest] = []
-    
+
     @State var dataSources: [DataSourceDefinitions]
     @State var filters: [DataSourceFilterParameter]?
     @State var useMapRegion: Bool
-    
+    @State private var isSharePresented: Bool = false
     var body: some View {
         VStack {
             ScrollView {
@@ -42,7 +40,7 @@ struct GeoPackageExportView: View {
                         let included = viewModel.dataSources.contains { definition in
                             definition.key == dataSourceItem.key
                         }
-                        dataSourceButton(definition: dataSourceItem.dataSource.definition, enabled: included)
+                        dataSourceButton(definition: dataSourceItem.dataSource, enabled: included)
                     }
                 }
                 if !viewModel.exporting && !viewModel.complete {
@@ -79,7 +77,9 @@ struct GeoPackageExportView: View {
                     }
                 } else if !viewModel.exporting {
                     Button {
-                        viewModel.export()
+                        Task {
+                            await viewModel.export()
+                        }
                     } label: {
                         Label(
                             title: {
@@ -110,21 +110,31 @@ struct GeoPackageExportView: View {
             Metrics.shared.geoPackageExportView()
         }
         .onChange(of: viewModel.complete) { _ in
-            guard let path = viewModel.geoPackage?.path else { return }
-            let activityVC = UIActivityViewController(
-                activityItems: [URL(fileURLWithPath: path)],
-                applicationActivities: nil
-            )
-            UIApplication.shared.windows.first?.rootViewController?.present(activityVC, animated: true, completion: nil)
+            guard viewModel.geoPackage?.path != nil else { return }
+            isSharePresented = true
         }
         .alert("Export Error", isPresented: $viewModel.error) {
             Button("OK") { }
         } message: {
             Text("""
-                We apologize, it looks like we were unable to export Marlin data for the selected data \
-                sources.  Please try again later or reach out if this issue persists.
+            We apologize, it looks like we were unable to export Marlin data for the selected data \
+            sources.  Please try again later or reach out if this issue persists.
             """)
         }
+        .sheet(isPresented: $isSharePresented, onDismiss: {
+            print("Dismiss")
+        }, content: {
+            if let sharePath = viewModel.geoPackage?.path {
+                ActivityViewController(activityItems: [URL(fileURLWithPath: sharePath)])
+                    .presentationDetents([.medium])
+                    .presentationDragIndicator(.visible)
+            } else {
+                Text("""
+                We apologize, it looks like we were unable to export Marlin data for the selected data \
+                sources.  Please try again later or reach out if this issue persists.
+                """)
+            }
+        })
     }
     
     @ViewBuilder

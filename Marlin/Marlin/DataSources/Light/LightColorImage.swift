@@ -15,11 +15,206 @@ struct LightSector {
     var text: String
 }
 
-class LightImage {
+class LightImage: DataSourceImage {
+    var feature: SFGeometry?
+    var light: LightModel
+
+    static var dataSource: any DataSourceDefinition = DataSources.light
+
+    init(light: LightModel) {
+        self.light = light
+        feature = light.sfGeometry
+    }
+
+    func image(
+        context: CGContext?,
+        zoom: Int,
+        tileBounds: MapBoundingBox,
+        tileSize: Double
+    ) -> [UIImage] {
+        let images = mapImage(zoomLevel: zoom, tileBounds3857: tileBounds, context: context)
+        for image in images {
+            drawImageIntoTile(
+                mapImage: image,
+                latitude: light.latitude,
+                longitude: light.longitude,
+                tileBounds3857: tileBounds,
+                tileSize: tileSize
+            )
+        }
+
+        return images
+    }
+
+    func mapImage(
+        marker: Bool = false,
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox? = nil,
+        context: CGContext? = nil
+    ) -> [UIImage] {
+        let TILE_SIZE = 512.0
+        var images: [UIImage] = []
+
+        if UserDefaults.standard.actualRangeSectorLights,
+            let tileBounds3857 = tileBounds3857,
+           let lightSectors = light.lightSectors {
+            // if any sectors have no range, just make a sector image
+            if lightSectors.contains(where: { sector in
+                sector.range == nil
+            }) {
+                images.append(
+                    contentsOf: LightImage.image(
+                        light: light,
+                        zoomLevel: zoomLevel,
+                        tileBounds3857: tileBounds3857))
+            } else {
+
+                if context == nil {
+                    let size = CGSize(width: TILE_SIZE, height: TILE_SIZE)
+                    UIGraphicsBeginImageContext(size)
+                }
+                if let context: CGContext = context ?? UIGraphicsGetCurrentContext() {
+                    actualSizeSectorLight(
+                        lightSectors: lightSectors,
+                        zoomLevel: zoomLevel,
+                        tileBounds3857: tileBounds3857,
+                        context: context)
+                }
+            }
+        } else if light.lightSectors == nil,
+                    UserDefaults.standard.actualRangeLights,
+                  let stringRange = light.range,
+                  let range = Double(stringRange),
+                  let tileBounds3857 = tileBounds3857,
+                  let lightColors = light.lightColors {
+            if context == nil {
+                let size = CGSize(width: TILE_SIZE, height: TILE_SIZE)
+                UIGraphicsBeginImageContext(size)
+            }
+            if let context: CGContext = context ?? UIGraphicsGetCurrentContext() {
+                actualSizeNonSectorLight(
+                    lightColors: lightColors,
+                    range: range,
+                    zoomLevel: zoomLevel,
+                    tileBounds3857: tileBounds3857,
+                    context: context)
+            }
+        } else {
+            images.append(
+                contentsOf: LightImage.image(
+                    light: light,
+                    zoomLevel: zoomLevel,
+                    tileBounds3857: tileBounds3857))
+        }
+
+        return images
+    }
+
+    func actualSizeSectorLight(
+        lightSectors: [ImageSector],
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox,
+        context: CGContext
+    ) {
+        let TILE_SIZE = 512.0
+        for sector in lightSectors.sorted(by: { one, two in
+            return one.range ?? 0.0 < two.range ?? 0.0
+        }) {
+            if sector.obscured {
+                continue
+            }
+            let nauticalMilesMeasurement = NSMeasurement(
+                doubleValue: sector.range ?? 0.0,
+                unit: UnitLength.nauticalMiles)
+            let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
+            if sector.startDegrees >= sector.endDegrees {
+                // this could be an error in the data, or sometimes lights are defined as follows:
+                // characteristic Q.W.R.
+                // remarks R. 289°-007°, W.-007°.
+                // that would mean this light flashes between red and white over those angles
+                // TODO: figure out what to do with multi colored lights over the same sector
+                continue
+            }
+            let circleCoordinates = light.coordinate.circleCoordinates(
+                radiusMeters: metersMeasurement.value,
+                startDegrees: sector.startDegrees + 90.0,
+                endDegrees: sector.endDegrees + 90.0)
+            let path = UIBezierPath()
+
+            var pixel = light.coordinate.toPixel(
+                zoomLevel: zoomLevel,
+                tileBounds3857: tileBounds3857,
+                tileSize: TILE_SIZE)
+            path.move(to: pixel)
+            for circleCoordinate in circleCoordinates {
+                pixel = circleCoordinate.toPixel(
+                    zoomLevel: zoomLevel,
+                    tileBounds3857: tileBounds3857,
+                    tileSize: TILE_SIZE)
+                path.addLine(to: pixel)
+            }
+            path.close()
+            sector.color.withAlphaComponent(0.1).setFill()
+            sector.color.setStroke()
+            path.lineWidth = 5
+
+            path.fill()
+            path.stroke()
+        }
+    }
+
+    func actualSizeNonSectorLight(
+        lightColors: [UIColor],
+        range: Double,
+        zoomLevel: Int,
+        tileBounds3857: MapBoundingBox,
+        context: CGContext
+    ) {
+        let TILE_SIZE = 512.0
+        let nauticalMilesMeasurement = NSMeasurement(doubleValue: range, unit: UnitLength.nauticalMiles)
+        let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
+
+        let circleCoordinates = light.coordinate.circleCoordinates(radiusMeters: metersMeasurement.value)
+        let path = UIBezierPath()
+
+        var pixel = circleCoordinates[0].toPixel(
+            zoomLevel: zoomLevel,
+            tileBounds3857: tileBounds3857,
+            tileSize: TILE_SIZE)
+        path.move(to: pixel)
+        for circleCoordinate in circleCoordinates {
+            pixel = circleCoordinate.toPixel(
+                zoomLevel: zoomLevel,
+                tileBounds3857: tileBounds3857,
+                tileSize: TILE_SIZE)
+            path.addLine(to: pixel)
+        }
+        path.lineWidth = 4
+        path.close()
+        lightColors[0].withAlphaComponent(0.1).setFill()
+        lightColors[0].setStroke()
+        path.fill()
+        path.stroke()
+
+        // put a dot in the middle
+        pixel = light.coordinate.toPixel(zoomLevel: zoomLevel, tileBounds3857: tileBounds3857, tileSize: TILE_SIZE)
+        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * 0.5
+        let centerDot = UIBezierPath(
+            arcCenter: pixel,
+            radius: radius,
+            startAngle: 0,
+            endAngle: 2 * CGFloat.pi,
+            clockwise: true)
+        centerDot.lineWidth = 0.5
+        centerDot.stroke()
+        lightColors[0].setFill()
+        centerDot.fill()
+    }
+
     static func image(light: LightModel, zoomLevel: Int, tileBounds3857: MapBoundingBox? = nil) -> [UIImage] {
         var images: [UIImage] = []
         
-        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale
+        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * DataSources.light.imageScale
 
         // if the zoom level is greater than 12 draw the structure
         if zoomLevel > 12 && light.isBuoy {
@@ -65,7 +260,7 @@ class LightImage {
     }
     
     static func sectorImage(light: LightModel, lightSectors: [ImageSector], scale: Int, zoomLevel: Int) -> UIImage? {
-        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale 
+        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * DataSources.light.imageScale
         - ((CGFloat(light.characteristicNumber ?? 0) - 1.0) * 2)
         if zoomLevel > 7 {
             return CircleImage(
@@ -96,7 +291,7 @@ class LightImage {
     }
     
     static func colorImage(light: LightModel, lightColors: [UIColor], scale: Int, zoomLevel: Int) -> UIImage? {
-        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale
+        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * DataSources.light.imageScale
 
         // if zoom level greater than 12, draw the light more detailed, otherwise, draw a dot
         if zoomLevel > 12 {
@@ -125,7 +320,7 @@ class LightImage {
     }
     
     static func raconImage(light: LightModel, scale: Int, sectors: [ImageSector]? = nil, zoomLevel: Int) -> UIImage? {
-        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * Light.imageScale
+        let radius = CGFloat(zoomLevel) / 3.0 * UIScreen.main.scale * DataSources.light.imageScale
 
         if zoomLevel > 10 {
             return RaconImage(
@@ -209,132 +404,4 @@ class LightColorImage: UIImage {
         self.init(cgImage: cgImage)
         
     }
-    
-    // TODO: is this different than CircleImage?
-    convenience init?(
-        frame: CGRect,
-        sectors: [LightSector],
-        arcWidth: CGFloat? = nil,
-        arcRadius: CGFloat? = nil,
-        outerStroke: Bool = true,
-        includeSectorDashes: Bool = false,
-        includeLetters: Bool = true,
-        darkMode: Bool = false
-    ) {
-        let strokeWidth = 0.5
-        let rect = frame
-        let radius = arcRadius ?? min(rect.width / 2.0, rect.height / 2.0) - ((arcWidth ?? strokeWidth) / 2.0)
-        let sectorDashLength = includeSectorDashes ? min(rect.width / 2.0, rect.height / 2.0) : 0.0
-        let wholeColor = UIColor.lightGray
-        let diameter = radius * 2.0
-        
-        let renderer = UIGraphicsImageRenderer(size: frame.size)
-        let image = renderer.image { _ in
-            // Fill full circle with wholeColor
-            if arcWidth == nil {
-                if outerStroke {
-                    wholeColor.setStroke()
-
-                    let outerBoundary = UIBezierPath(
-                        ovalIn: CGRect(x: strokeWidth / 2.0, y: strokeWidth / 2.0, width: diameter, height: diameter ))
-                    outerBoundary.lineWidth = strokeWidth
-                    outerBoundary.stroke()
-                }
-            }
-            
-            let center = CGPoint(x: rect.width / 2.0, y: rect.height / 2.0)
-            
-            for sector in sectors {
-                let startAngle = CGFloat(sector.startDegrees + 90) * (CGFloat.pi / 180.0)
-                let endAngle = CGFloat(sector.endDegrees + 90) * (CGFloat.pi / 180.0)
-                let piePath = UIBezierPath()
-                piePath.addArc(withCenter: center, radius: radius,
-                               startAngle: startAngle, endAngle: endAngle,
-                               clockwise: true)
-            
-                if arcWidth == nil {
-                    piePath.addLine(to: CGPoint(x: radius, y: radius))
-                }
-                if let arcWidth = arcWidth {
-                    piePath.lineWidth = arcWidth
-                    sector.color.setStroke()
-                    piePath.stroke()
-                } else {
-                    piePath.close()
-                    sector.color.setFill()
-                    piePath.fill()
-                }
-                
-                if includeSectorDashes {
-                    let dashColor = UIColor.label.resolvedColor(
-                        with: UITraitCollection(
-                            traitsFrom: [.init(userInterfaceStyle: darkMode ? .dark : .light)]))
-                        .withAlphaComponent(0.87)
-
-                    let sectorDash = UIBezierPath()
-                    sectorDash.move(to: center)
-
-                    sectorDash.addLine(to: CGPoint(x: center.x + sectorDashLength, y: center.y))
-                    sectorDash.apply(CGAffineTransform(translationX: -center.x, y: -center.y))
-                    sectorDash.apply(CGAffineTransform(rotationAngle: CGFloat(sector.startDegrees + 90) * .pi / 180))
-                    sectorDash.apply(CGAffineTransform(translationX: center.x, y: center.y))
-                    
-                    sectorDash.lineWidth = 0.2
-                    let  dashes: [ CGFloat ] = [ 2.0, 1.0 ]
-                    sectorDash.setLineDash(dashes, count: dashes.count, phase: 0.0)
-                    sectorDash.lineCapStyle = .butt
-                    dashColor.setStroke()
-                    sectorDash.stroke()
-                    
-                    let sectorEndDash = UIBezierPath()
-                    sectorEndDash.move(to: center)
-
-                    sectorEndDash.addLine(to: CGPoint(x: center.x + sectorDashLength, y: center.y))
-                    sectorEndDash.apply(CGAffineTransform(translationX: -center.x, y: -center.y))
-                    sectorEndDash.apply(CGAffineTransform(rotationAngle: CGFloat(sector.endDegrees + 90) * .pi / 180))
-                    sectorEndDash.apply(CGAffineTransform(translationX: center.x, y: center.y))
-
-                    sectorEndDash.lineWidth = 0.2
-                    sectorEndDash.setLineDash(dashes, count: dashes.count, phase: 0.0)
-                    sectorEndDash.lineCapStyle = .butt
-                    dashColor.setStroke()
-                    sectorEndDash.stroke()
-                }
-                
-                if includeLetters {
-                    // We want black letters when the circle is filled
-                    let color = UIColor.label.resolvedColor(
-                        with: UITraitCollection(
-                            traitsFrom: [.init(userInterfaceStyle: darkMode && arcWidth != nil ? .dark : .light)]))
-                    // Color text
-                    let attributes = [ NSAttributedString.Key.foregroundColor: color,
-                                       NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: arcWidth ?? 3)]
-                    let text = sector.text
-                    let size = text.size(withAttributes: attributes)
-                    
-                    let endDegrees = sector.endDegrees > sector.startDegrees 
-                    ? sector.endDegrees : sector.endDegrees + 360.0
-                    let midPointAngle = CGFloat(sector.startDegrees) + CGFloat(endDegrees - sector.startDegrees) / 2.0
-                    var textRadius = radius
-                    if let arcWidth = arcWidth {
-                        textRadius -= arcWidth * 1.75
-                    } else {
-                        textRadius -= size.height
-                    }
-                    text.drawWithBasePoint(
-                        basePoint: center,
-                        radius: textRadius,
-                        andAngle: midPointAngle * .pi / 180,
-                        andAttributes: attributes)
-                }
-            }
-        }
-        
-        guard  let cgImage = image.cgImage else {
-            return nil
-        }
-        self.init(cgImage: cgImage)
-        
-    }
-    
 }

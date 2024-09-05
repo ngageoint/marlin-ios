@@ -20,10 +20,10 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         .receive(on: RunLoop.main)
     
     override func setUp(completion: @escaping (Error?) -> Void) {
-        for item in DataSourceList().allTabs {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
-        }
+        UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+        UserDefaults.registerMarlinDefaults()
+        UserDefaults.standard.initialDataLoaded = false
+        UserDefaults.standard.clearLastSyncTimeSeconds(DataSources.dgps)
         UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
         
         UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
@@ -40,20 +40,10 @@ final class DifferentialGPSStationDataTests: XCTestCase {
     }
     
     func testLoadInitialData() throws {
-        
-        for seedDataFile in DifferentialGPSStation.seedDataFiles ?? [] {
-            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
-                return HTTPStubsResponse(
-                    fileAtPath: OHPathForFile("dgpsMockData.json", type(of: self))!,
-                    statusCode: 200,
-                    headers: ["Content-Type":"application/json"]
-                )
-            }
-        }
-        
+
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -63,7 +53,7 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         
         expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -77,67 +67,94 @@ final class DifferentialGPSStationDataTests: XCTestCase {
             return true
         }
         
-        MSI.shared.loadInitialData(type: DifferentialGPSStation.decodableRoot, dataType: DifferentialGPSStation.self)
-        
+        expectation(forNotification: .BatchUpdateComplete,
+                    object: nil) { notification in
+            guard let updatedNotification = notification.object as? BatchUpdateComplete else {
+                XCTFail("Incorrect notification")
+                return false
+            }
+            let updates = updatedNotification.dataSourceUpdates
+            if updates.isEmpty {
+                XCTFail("should be some updates")
+                return false
+            }
+            XCTAssertFalse(updates.isEmpty)
+            let update = updates[0]
+            XCTAssertEqual(2, update.inserts)
+            XCTAssertEqual(0, update.updates)
+            return true
+        }
+
+        let bundle = MockBundle()
+        bundle.mockPath = "dgpsMockData.json"
+
+        let localDataSource = DGPSStationCoreDataDataSource()
+        let operation = DGPSStationInitialDataLoadOperation(
+            localDataSource: localDataSource, bundle: bundle
+        )
+        operation.start()
+
         waitForExpectations(timeout: 10, handler: nil)
+        let newest = localDataSource.getNewestDifferentialGPSStation()
+        XCTAssertEqual(String(format: "%.5f", newest!.latitude), "38.55250")
+        XCTAssertEqual(String(format: "%.5f", newest!.longitude), "128.39833")
+        XCTAssertEqual(newest!.noticeNumber, 201134)
+        XCTAssertEqual(newest!.name, "Chojin Dan Lt")
+        XCTAssertEqual(newest!.noticeWeek, "34")
+        XCTAssertEqual(newest!.noticeYear, "2011")
     }
     
     func testRejectInvalidDifferentialGPSStationNoFeatureNumber() throws {
-        for seedDataFile in DifferentialGPSStation.seedDataFiles ?? [] {
-            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
-                let jsonObject = [
-                    "ngalol": [
-                        [
-                            "volumeNumber": "PUB 112",
-                            "aidType": "Differential GPS Stations",
-                            "geopoliticalHeading": "KOREA",
-                            "regionHeading": nil,
-                            "precedingNote": nil,
-                            "featureNumber": nil,
-                            "name": "Chojin Dan Lt",
-                            "position": "38°33'09\"N \n128°23'53.99\"E",
-                            "stationID": "T670\nR740\nR741\n",
-                            "range": 100,
-                            "frequency": 292,
-                            "transferRate": 200,
-                            "remarks": "Message types: 3, 5, 7, 9, 16.",
-                            "postNote": nil,
-                            "noticeNumber": 201134,
-                            "removeFromList": "N",
-                            "deleteFlag": "N",
-                            "noticeWeek": "34",
-                            "noticeYear": "2011"
-                        ],
-                        [
-                            "volumeNumber": "PUB 112",
-                            "aidType": "Differential GPS Stations",
-                            "geopoliticalHeading": "KOREA",
-                            "regionHeading": nil,
-                            "precedingNote": nil,
-                            "featureNumber": 7,
-                            "name": "Chumunjin Dan",
-                            "position": "37°53'52.21\"N \n128°50'01.79\"E",
-                            "stationID": "T663\nR726\nR727\n",
-                            "range": 100,
-                            "frequency": 295,
-                            "transferRate": 200,
-                            "remarks": "Message types: 3, 5, 7, 9, 16.",
-                            "postNote": nil,
-                            "noticeNumber": 201134,
-                            "removeFromList": "N",
-                            "deleteFlag": "N",
-                            "noticeWeek": "34",
-                            "noticeYear": "2011"
-                        ]
-                    ]
+        let jsonObject = [
+            "ngalol": [
+                [
+                    "volumeNumber": "PUB 112",
+                    "aidType": "Differential GPS Stations",
+                    "geopoliticalHeading": "KOREA",
+                    "regionHeading": nil,
+                    "precedingNote": nil,
+                    "featureNumber": nil,
+                    "name": "Chojin Dan Lt",
+                    "position": "38°33'09\"N \n128°23'53.99\"E",
+                    "stationID": "T670\nR740\nR741\n",
+                    "range": 100,
+                    "frequency": 292,
+                    "transferRate": 200,
+                    "remarks": "Message types: 3, 5, 7, 9, 16.",
+                    "postNote": nil,
+                    "noticeNumber": 201134,
+                    "removeFromList": "N",
+                    "deleteFlag": "N",
+                    "noticeWeek": "34",
+                    "noticeYear": "2011"
+                ],
+                [
+                    "volumeNumber": "PUB 112",
+                    "aidType": "Differential GPS Stations",
+                    "geopoliticalHeading": "KOREA",
+                    "regionHeading": nil,
+                    "precedingNote": nil,
+                    "featureNumber": 7,
+                    "name": "Chumunjin Dan",
+                    "position": "37°53'52.21\"N \n128°50'01.79\"E",
+                    "stationID": "T663\nR726\nR727\n",
+                    "range": 100,
+                    "frequency": 295,
+                    "transferRate": 200,
+                    "remarks": "Message types: 3, 5, 7, 9, 16.",
+                    "postNote": nil,
+                    "noticeNumber": 201134,
+                    "removeFromList": "N",
+                    "deleteFlag": "N",
+                    "noticeWeek": "34",
+                    "noticeYear": "2011"
                 ]
-                return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
-            }
-        }
+            ]
+        ]
         
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -147,7 +164,7 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         
         expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -161,67 +178,68 @@ final class DifferentialGPSStationDataTests: XCTestCase {
             return true
         }
         
-        MSI.shared.loadInitialData(type: DifferentialGPSStation.decodableRoot, dataType: DifferentialGPSStation.self)
-        
+        let bundle = MockBundle()
+        bundle.tempFileContents = jsonObject
+
+        let operation = DGPSStationInitialDataLoadOperation(
+            localDataSource: DGPSStationCoreDataDataSource(), bundle: bundle
+        )
+        operation.start()
+
         waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testRejectInvalidDifferentialGPSStationNoVolumeNumber() throws {
-        for seedDataFile in DifferentialGPSStation.seedDataFiles ?? [] {
-            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
-                let jsonObject = [
-                    "ngalol": [
-                        [
-                            "volumeNumber": nil,
-                            "aidType": "Differential GPS Stations",
-                            "geopoliticalHeading": "KOREA",
-                            "regionHeading": nil,
-                            "precedingNote": nil,
-                            "featureNumber": 6,
-                            "name": "Chojin Dan Lt",
-                            "position": "38°33'09\"N \n128°23'53.99\"E",
-                            "stationID": "T670\nR740\nR741\n",
-                            "range": 100,
-                            "frequency": 292,
-                            "transferRate": 200,
-                            "remarks": "Message types: 3, 5, 7, 9, 16.",
-                            "postNote": nil,
-                            "noticeNumber": 201134,
-                            "removeFromList": "N",
-                            "deleteFlag": "N",
-                            "noticeWeek": "34",
-                            "noticeYear": "2011"
-                        ],
-                        [
-                            "volumeNumber": "PUB 112",
-                            "aidType": "Differential GPS Stations",
-                            "geopoliticalHeading": "KOREA",
-                            "regionHeading": nil,
-                            "precedingNote": nil,
-                            "featureNumber": 7,
-                            "name": "Chumunjin Dan",
-                            "position": "37°53'52.21\"N \n128°50'01.79\"E",
-                            "stationID": "T663\nR726\nR727\n",
-                            "range": 100,
-                            "frequency": 295,
-                            "transferRate": 200,
-                            "remarks": "Message types: 3, 5, 7, 9, 16.",
-                            "postNote": nil,
-                            "noticeNumber": 201134,
-                            "removeFromList": "N",
-                            "deleteFlag": "N",
-                            "noticeWeek": "34",
-                            "noticeYear": "2011"
-                        ]
-                    ]
+        let jsonObject = [
+            "ngalol": [
+                [
+                    "volumeNumber": nil,
+                    "aidType": "Differential GPS Stations",
+                    "geopoliticalHeading": "KOREA",
+                    "regionHeading": nil,
+                    "precedingNote": nil,
+                    "featureNumber": 6,
+                    "name": "Chojin Dan Lt",
+                    "position": "38°33'09\"N \n128°23'53.99\"E",
+                    "stationID": "T670\nR740\nR741\n",
+                    "range": 100,
+                    "frequency": 292,
+                    "transferRate": 200,
+                    "remarks": "Message types: 3, 5, 7, 9, 16.",
+                    "postNote": nil,
+                    "noticeNumber": 201134,
+                    "removeFromList": "N",
+                    "deleteFlag": "N",
+                    "noticeWeek": "34",
+                    "noticeYear": "2011"
+                ],
+                [
+                    "volumeNumber": "PUB 112",
+                    "aidType": "Differential GPS Stations",
+                    "geopoliticalHeading": "KOREA",
+                    "regionHeading": nil,
+                    "precedingNote": nil,
+                    "featureNumber": 7,
+                    "name": "Chumunjin Dan",
+                    "position": "37°53'52.21\"N \n128°50'01.79\"E",
+                    "stationID": "T663\nR726\nR727\n",
+                    "range": 100,
+                    "frequency": 295,
+                    "transferRate": 200,
+                    "remarks": "Message types: 3, 5, 7, 9, 16.",
+                    "postNote": nil,
+                    "noticeNumber": 201134,
+                    "removeFromList": "N",
+                    "deleteFlag": "N",
+                    "noticeWeek": "34",
+                    "noticeYear": "2011"
                 ]
-                return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
-            }
-        }
+            ]
+        ]
         
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -231,7 +249,7 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         
         expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -245,67 +263,67 @@ final class DifferentialGPSStationDataTests: XCTestCase {
             return true
         }
         
-        MSI.shared.loadInitialData(type: DifferentialGPSStation.decodableRoot, dataType: DifferentialGPSStation.self)
-        
+        let bundle = MockBundle()
+        bundle.tempFileContents = jsonObject
+
+        let operation = DGPSStationInitialDataLoadOperation(
+            localDataSource: DGPSStationCoreDataDataSource(), bundle: bundle
+        )
+        operation.start()
         waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testRejectInvalidDifferentialGPSStationNoPosition() throws {
-        for seedDataFile in DifferentialGPSStation.seedDataFiles ?? [] {
-            stub(condition: isScheme("file") && pathEndsWith("\(seedDataFile).json")) { request in
-                let jsonObject = [
-                    "ngalol": [
-                        [
-                            "volumeNumber": "PUB 112",
-                            "aidType": "Differential GPS Stations",
-                            "geopoliticalHeading": "KOREA",
-                            "regionHeading": nil,
-                            "precedingNote": nil,
-                            "featureNumber": 6,
-                            "name": "Chojin Dan Lt",
-                            "position": nil,
-                            "stationID": "T670\nR740\nR741\n",
-                            "range": 100,
-                            "frequency": 292,
-                            "transferRate": 200,
-                            "remarks": "Message types: 3, 5, 7, 9, 16.",
-                            "postNote": nil,
-                            "noticeNumber": 201134,
-                            "removeFromList": "N",
-                            "deleteFlag": "N",
-                            "noticeWeek": "34",
-                            "noticeYear": "2011"
-                        ],
-                        [
-                            "volumeNumber": "PUB 112",
-                            "aidType": "Differential GPS Stations",
-                            "geopoliticalHeading": "KOREA",
-                            "regionHeading": nil,
-                            "precedingNote": nil,
-                            "featureNumber": 7,
-                            "name": "Chumunjin Dan",
-                            "position": "37°53'52.21\"N \n128°50'01.79\"E",
-                            "stationID": "T663\nR726\nR727\n",
-                            "range": 100,
-                            "frequency": 295,
-                            "transferRate": 200,
-                            "remarks": "Message types: 3, 5, 7, 9, 16.",
-                            "postNote": nil,
-                            "noticeNumber": 201134,
-                            "removeFromList": "N",
-                            "deleteFlag": "N",
-                            "noticeWeek": "34",
-                            "noticeYear": "2011"
-                        ]
-                    ]
+        let jsonObject = [
+            "ngalol": [
+                [
+                    "volumeNumber": "PUB 112",
+                    "aidType": "Differential GPS Stations",
+                    "geopoliticalHeading": "KOREA",
+                    "regionHeading": nil,
+                    "precedingNote": nil,
+                    "featureNumber": 6,
+                    "name": "Chojin Dan Lt",
+                    "position": nil,
+                    "stationID": "T670\nR740\nR741\n",
+                    "range": 100,
+                    "frequency": 292,
+                    "transferRate": 200,
+                    "remarks": "Message types: 3, 5, 7, 9, 16.",
+                    "postNote": nil,
+                    "noticeNumber": 201134,
+                    "removeFromList": "N",
+                    "deleteFlag": "N",
+                    "noticeWeek": "34",
+                    "noticeYear": "2011"
+                ],
+                [
+                    "volumeNumber": "PUB 112",
+                    "aidType": "Differential GPS Stations",
+                    "geopoliticalHeading": "KOREA",
+                    "regionHeading": nil,
+                    "precedingNote": nil,
+                    "featureNumber": 7,
+                    "name": "Chumunjin Dan",
+                    "position": "37°53'52.21\"N \n128°50'01.79\"E",
+                    "stationID": "T663\nR726\nR727\n",
+                    "range": 100,
+                    "frequency": 295,
+                    "transferRate": 200,
+                    "remarks": "Message types: 3, 5, 7, 9, 16.",
+                    "postNote": nil,
+                    "noticeNumber": 201134,
+                    "removeFromList": "N",
+                    "deleteFlag": "N",
+                    "noticeWeek": "34",
+                    "noticeYear": "2011"
                 ]
-                return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
-            }
-        }
+            ]
+        ]
         
         expectation(forNotification: .DataSourceLoading,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertTrue(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -315,7 +333,7 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         
         expectation(forNotification: .DataSourceLoaded,
                     object: nil) { notification in
-            if let loading = MSI.shared.appState.loadingDataSource[DifferentialGPSStation.key] {
+            if let loading = MSI.shared.appState.loadingDataSource[DataSources.dgps.key] {
                 XCTAssertFalse(loading)
             } else {
                 XCTFail("Loading is not set")
@@ -329,57 +347,45 @@ final class DifferentialGPSStationDataTests: XCTestCase {
             return true
         }
         
-        MSI.shared.loadInitialData(type: DifferentialGPSStation.decodableRoot, dataType: DifferentialGPSStation.self)
-        
+        let bundle = MockBundle()
+        bundle.tempFileContents = jsonObject
+
+        let operation = DGPSStationInitialDataLoadOperation(
+            localDataSource: DGPSStationCoreDataDataSource(), bundle: bundle
+        )
+        operation.start()
         waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testDataRequest() {
-        
-        let newItem = DifferentialGPSStation(context: persistentStore.viewContext)
-        newItem.volumeNumber = "PUB 112"
-        newItem.aidType = "Differential GPS Stations"
-        newItem.geopoliticalHeading = "KOREA"
-        newItem.regionHeading = nil
-        newItem.precedingNote = nil
-        newItem.featureNumber = 7
-        newItem.name = "Chumunjin Dan"
-        newItem.position = "37°53'52.21\"N \n128°50'01.79\"E"
-        newItem.stationID = "T663\nR726\nR727\n"
-        newItem.range = 100
-        newItem.frequency = 295
-        newItem.transferRate = 200
-        newItem.remarks = "Message types: 3, 5, 7, 9, 16."
-        newItem.postNote = nil
-        newItem.noticeNumber = 201134
-        newItem.removeFromList = "N"
-        newItem.deleteFlag = "N"
-        newItem.noticeWeek = "34"
-        newItem.noticeYear = "2011"
-        try? persistentStore.viewContext.save()
-        
-        let requests = DifferentialGPSStation.dataRequest()
-        XCTAssertEqual(requests.count, 1)
-        let request = requests[0]
+        let request = DGPSStationService.getDGPSStations(noticeYear: nil, noticeWeek: nil)
         XCTAssertEqual(request.method, .get)
         let parameters = request.parameters
-        XCTAssertEqual(parameters?.count, 4)
-        XCTAssertEqual(parameters?["minNoticeNumber"] as? String, "201135")
+        XCTAssertEqual(parameters?.count, 2)
+        XCTAssertEqual(parameters?["includeRemovals"] as? Bool, false)
+        XCTAssertEqual(parameters?["output"] as? String, "json")
+
+        let request2 = DGPSStationService.getDGPSStations(noticeYear: "2022", noticeWeek: "05")
+        XCTAssertEqual(request2.method, .get)
+        let parameters2 = request2.parameters
+        XCTAssertEqual(parameters2?.count, 4)
+        XCTAssertEqual(parameters2?["includeRemovals"] as? Bool, false)
+        XCTAssertEqual(parameters2?["output"] as? String, "json")
+        XCTAssertEqual(parameters2?["minNoticeNumber"] as? String, "202205")
         let calendar = Calendar.current
         let week = calendar.component(.weekOfYear, from: Date())
         let year = calendar.component(.year, from: Date())
-        XCTAssertEqual(parameters?["maxNoticeNumber"] as? String, "\(year)\(String(format: "%02d", week + 1))")
-        XCTAssertEqual(parameters?["output"] as? String, "json")
+        XCTAssertEqual(parameters2?["maxNoticeNumber"] as? String, "\(year)\(String(format: "%02d", week + 1))")
     }
     
     func testShouldSync() {
-        UserDefaults.standard.setValue(false, forKey: "\(DifferentialGPSStation.key)DataSourceEnabled")
-        XCTAssertFalse(DifferentialGPSStation.shouldSync())
-        UserDefaults.standard.setValue(true, forKey: "\(DifferentialGPSStation.key)DataSourceEnabled")
-        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60 * 24 * 7) - 10, forKey: "\(DifferentialGPSStation.key)LastSyncTime")
-        XCTAssertTrue(DifferentialGPSStation.shouldSync())
-        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60 * 24 * 7) + (60 * 10), forKey: "\(DifferentialGPSStation.key)LastSyncTime")
-        XCTAssertFalse(DifferentialGPSStation.shouldSync())
+        UserDefaults.standard.setValue(false, forKey: "\(DataSources.dgps.key)DataSourceEnabled")
+        XCTAssertFalse(DataSources.dgps.shouldSync())
+        UserDefaults.standard.setValue(true, forKey: "\(DataSources.dgps.key)DataSourceEnabled")
+        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60 * 24 * 7) - 10, forKey: "\(DataSources.dgps.key)LastSyncTime")
+        XCTAssertTrue(DataSources.dgps.shouldSync())
+        UserDefaults.standard.setValue(Date().timeIntervalSince1970 - (60 * 60 * 24 * 7) + (60 * 10), forKey: "\(DataSources.dgps.key)LastSyncTime")
+        XCTAssertFalse(DataSources.dgps.shouldSync())
     }
     
     func testDescription() {
@@ -437,7 +443,7 @@ final class DifferentialGPSStationDataTests: XCTestCase {
     }
     
     func testMapImage() {
-        let newItem = DifferentialGPSStation(context: persistentStore.viewContext)
+        var newItem = DGPSStationModel()
         newItem.volumeNumber = "PUB 112"
         newItem.aidType = "Differential GPS Stations"
         newItem.geopoliticalHeading = "KOREA"
@@ -462,7 +468,8 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         var imageSize: CGSize = .zero
         
         for i in 1...18 {
-            let images = newItem.mapImage(marker: false, zoomLevel: i, tileBounds3857: MapBoundingBox(swCorner: (x:-10, y:-10), neCorner: (x: 10, y:10)), context: nil)
+            let image = DifferentialGPSStationImage(differentialGPSStation: newItem)
+            let images = image.image(context: nil, zoom: i, tileBounds: MapBoundingBox(swCorner: (x:-10, y:-10), neCorner: (x: 10, y:10)), tileSize: 512.0)
             XCTAssertNotNil(images)
             XCTAssertEqual(images.count, 2)
             XCTAssertGreaterThan(images[0].size.height, circleSize.height)

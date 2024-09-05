@@ -16,13 +16,23 @@ protocol MapMixin: AnyObject {
     func updateMixin(mapView: MKMapView, mapState: MapState)
     func renderer(overlay: MKOverlay) -> MKOverlayRenderer?
     func traitCollectionUpdated(previous: UITraitCollection?)
-    func regionDidChange(mapView: MKMapView, animated: Bool)
+    func regionDidChange(mapView: MKMapView, animated: Bool, centerCoordinate: CLLocationCoordinate2D)
     func viewForAnnotation(annotation: MKAnnotation, mapView: MKMapView) -> MKAnnotationView?
     func items(at location: CLLocationCoordinate2D, mapView: MKMapView, touchPoint: CGPoint) -> [any DataSource]?
+    func itemKeys(
+        at location: CLLocationCoordinate2D,
+        mapView: MKMapView,
+        touchPoint: CGPoint
+    ) async -> [String: [String]]
     func removeMixin(mapView: MKMapView, mapState: MapState)
+    func mapLongPress(mapView: MKMapView, coordinate: CLLocationCoordinate2D)
 }
 
 extension MapMixin {
+    func mapLongPress(mapView: MKMapView, coordinate: CLLocationCoordinate2D) {
+        
+    }
+
     func polygonHitTest(polygon: MKPolygon, location: CLLocationCoordinate2D) -> Bool {
         guard let renderer = (renderer(overlay: polygon) as? MKPolygonRenderer 
                               ?? standardRenderer(overlay: polygon) as? MKPolygonRenderer) else {
@@ -128,6 +138,14 @@ extension MapMixin {
         return nil
     }
     
-    func regionDidChange(mapView: MKMapView, animated: Bool) {
+    func itemKeys(
+        at location: CLLocationCoordinate2D,
+        mapView: MKMapView,
+        touchPoint: CGPoint
+    ) async -> [String: [String]] {
+        [:]
+    }
+
+    func regionDidChange(mapView: MKMapView, animated: Bool, centerCoordinate: CLLocationCoordinate2D) {
     }
 }

@@ -28,5 +28,14 @@ struct ModuFilterable: Filterable {
 
     var defaultFilter: [DataSourceFilterParameter] = []
 
-    var locatableClass: Locatable.Type? = Modu.self
+    static var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Date",
+                key: #keyPath(Modu.date),
+                type: .date
+            ),
+            ascending: false
+        )
+    ]
 }

@@ -11,23 +11,21 @@ extension UserDefaults {
 
     func sortPublisher(key: String) -> NSObject.KeyValueObservingPublisher<UserDefaults, Data?> {
         switch key {
-        case Asam.key:
+        case DataSources.asam.key:
             return publisher(for: \.asamSort)
-        case Modu.key:
+        case DataSources.modu.key:
             return publisher(for: \.moduSort)
-        case Light.key:
+        case DataSources.light.key:
             return publisher(for: \.lightSort)
-        case NoticeToMariners.key:
+        case DataSources.noticeToMariners.key:
             return publisher(for: \.ntmSort)
-        case DFRS.key:
-            return publisher(for: \.dfrsSort)
-        case DifferentialGPSStation.key:
+        case DataSources.dgps.key:
             return publisher(for: \.differentialGPSStationSort)
-        case ElectronicPublication.key:
+        case DataSources.epub.key:
             return publisher(for: \.epubSort)
-        case Port.key:
+        case DataSources.port.key:
             return publisher(for: \.portSort)
-        case RadioBeacon.key:
+        case DataSources.radioBeacon.key:
             return publisher(for: \.radioBeaconSort)
         default:
             return publisher(for: \.asamSort)
@@ -97,7 +95,9 @@ extension UserDefaults {
 
             // Write/Set Data
             UserDefaults.standard.set(data, forKey: "\(key)Sort")
-            NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: key))
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .DataSourceUpdated, object: DataSourceUpdatedNotification(key: key))
+            }
         } catch {
             print("Unable to Encode Array of Notes (\(error))")
         }

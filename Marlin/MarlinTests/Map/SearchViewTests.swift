@@ -16,86 +16,30 @@ import MapKit
 
 final class SearchViewTests: XCTestCase {
 
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    override func setUp(completion: @escaping (Error?) -> Void) {
+    override func setUp() {
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
         UserDefaults.registerMarlinDefaults()
 
-        for item in DataSourceList().allTabs {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        
-        UserDefaults.standard.setFilter(ElectronicPublication.key, filter: [])
-        UserDefaults.standard.setSort(ElectronicPublication.key, sort: ElectronicPublication.defaultSort)
-        
-        persistentStore.viewContext.performAndWait {
-            if let epubs = persistentStore.viewContext.fetchAll(ElectronicPublication.self) {
-                for epub in epubs {
-                    persistentStore.viewContext.delete(epub)
-                }
-            }
-        }
-        
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                let e5 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
-                    if let count = try? self.persistentStore.countOfObjects(ElectronicPublication.self) {
-                        return count == 0
-                    }
-                    return false
-                }), object: self.persistentStore.viewContext)
-                self.wait(for: [e5], timeout: 10)
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
         MKLocalSearchMock.results = nil
     }
-    override func tearDown(completion: @escaping (Error?) -> Void) {
-        persistentStore.viewContext.performAndWait {
-            if let epubs = persistentStore.viewContext.fetchAll(ElectronicPublication.self) {
-                for epub in epubs {
-                    persistentStore.viewContext.delete(epub)
-                }
-            }
-        }
-        completion(nil)
+    override func tearDown() {
         HTTPStubs.removeAllStubs()
         MKLocalSearchMock.results = nil
     }
     
     func testExpandCollapse() throws {
-        class PassThrough: ObservableObject {
-            
-        }
-        
         struct Container: View {
-            @ObservedObject var passThrough: PassThrough
             @StateObject var mapState: MapState = MapState()
-            
-            init(passThrough: PassThrough) {
-                self.passThrough = passThrough
-            }
-            
+
             var body: some View {
                 NavigationView {
-                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
+                    SearchView(mapState: mapState)
                 }
+                .environmentObject(SearchRepository(native: NativeSearchProvider<MKLocalSearchMock>()))
             }
         }
-        let passThrough = PassThrough()
-        
-        let container = Container(passThrough: passThrough)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
-        
+        let container = Container()
+
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -124,8 +68,9 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
+                    SearchView(mapState: mapState)
                 }
+                .environmentObject(SearchRepository(native: NativeSearchProvider<MKLocalSearchMock>()))
                 .onAppear {
                     self.passThrough.mapState = mapState
                 }
@@ -134,8 +79,7 @@ final class SearchViewTests: XCTestCase {
         let passThrough = PassThrough()
         
         let container = Container(passThrough: passThrough)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
-        
+
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -193,8 +137,9 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
+                    SearchView(mapState: mapState)
                 }
+                .environmentObject(SearchRepository(native: NativeSearchProvider<MKLocalSearchMock>()))
                 .onAppear {
                     self.passThrough.mapState = mapState
                 }
@@ -203,8 +148,7 @@ final class SearchViewTests: XCTestCase {
         let passThrough = PassThrough()
         
         let container = Container(passThrough: passThrough)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
-        
+
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -242,8 +186,9 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView<NativeSearchProvider<MKLocalSearchMock>>(mapState: mapState)
+                    SearchView(mapState: mapState)
                 }
+                .environmentObject(SearchRepository(native: NativeSearchProvider<MKLocalSearchMock>()))
                 .onAppear {
                     self.passThrough.mapState = mapState
                 }
@@ -252,7 +197,6 @@ final class SearchViewTests: XCTestCase {
         let passThrough = PassThrough()
         
         let container = Container(passThrough: passThrough)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -292,7 +236,8 @@ final class SearchViewTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    SearchView<MockSearchProvider>(mapState: mapState)
+                    SearchView(mapState: mapState)
+                        .environmentObject(SearchRepository(native: MockSearchProvider()))
                 }
                 .onAppear {
                     self.passThrough.mapState = mapState
@@ -302,7 +247,6 @@ final class SearchViewTests: XCTestCase {
         let passThrough = PassThrough()
         
         let container = Container(passThrough: passThrough)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
         
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -379,7 +323,7 @@ class MockMKLocalSearchResponse: MKLocalSearch.Response {
 }
 
 class MockSearchProvider: SearchProvider {
-    static func performSearch(
+    func performSearch(
         searchText: String,
         region: MKCoordinateRegion?,
         onCompletion: @escaping ([MKMapItem]) -> Void) {

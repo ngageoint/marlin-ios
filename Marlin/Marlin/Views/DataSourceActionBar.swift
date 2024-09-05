@@ -7,40 +7,39 @@
 
 import SwiftUI
 
-struct DataSourceActionBar: View {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
-
-    var data: any DataSource
-    var showMoreDetailsButton = false
-    var showFocusButton = true
-    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+struct DataSourceActions: View {
+    var moreDetails: Action?
+    var location: Actions.Location?
+    var zoom: Action?
+    var bookmark: Actions.Bookmark?
+    var share: String?
     
     var body: some View {
         HStack(spacing: 0) {
-            if showMoreDetailsButton {
-                MoreDetailsButton(data: data)
-            } else if let data = data as? Locatable {
-                CoordinateButton(coordinate: data.coordinate)
+            if let moreDetails = moreDetails {
+                MoreDetailsButton(action: moreDetails)
+                    .buttonStyle(MaterialButtonStyle())
+            }
+            
+            if let location = location {
+                CoordinateButton(action: location)
+                    .buttonStyle(MaterialButtonStyle())
             }
             
             Spacer()
-            Group {
-                if let bookmarkable = data as? Bookmarkable, bookmarkable.canBookmark {
-                    BookmarkButton(viewModel: bookmarkViewModel)
-                }
-                if let data = data as? CustomStringConvertible {
-                    ShareButton(shareText: data.description, dataSource: data as? (any DataSourceViewBuilder))
-                }
-                if showFocusButton {
-                    FocusButton(data: data)
-                }
-            }.padding(.trailing, -8)
-        }
-        .buttonStyle(MaterialButtonStyle())
-        .onAppear {
-            bookmarkViewModel.repository = bookmarkRepository
-            if let bookmarkable = data as? Bookmarkable {
-                bookmarkViewModel.getBookmark(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key)
+            
+            if let bookmark = bookmark {
+                BookmarkButton(action: bookmark)
+                    .buttonStyle(MaterialButtonStyle())
+            }
+
+            if let share = share {
+                ShareButton(shareText: share, dataSource: Asam.self as? (any DataSource))
+            }
+
+            if let zoom = zoom {
+                FocusButton(action: zoom)
+                    .buttonStyle(MaterialButtonStyle())
             }
         }
     }

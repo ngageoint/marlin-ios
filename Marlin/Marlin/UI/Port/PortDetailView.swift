@@ -10,9 +10,9 @@ import MapKit
 import CoreData
 
 struct PortDetailView: View {
-    @EnvironmentObject var portRepository: PortRepositoryManager
+    @EnvironmentObject var portRepository: PortRepository
     @StateObject var viewModel: PortViewModel = PortViewModel()
-    @State var portNumber: Int64?
+    @State var portNumber: Int?
     @State var waypointURI: URL?
     
     var body: some View {
@@ -32,15 +32,22 @@ struct PortDetailView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .itemTitle()
                             .foregroundColor(Color.white)
-                            .background(Color(uiColor: port.color))
+                            .background(Color(uiColor: DataSources.port.color))
                             .padding(.bottom, -8)
                         DataSourceLocationMapView(
                             dataSourceLocation: port,
                             mapName: "Port Detail Map",
-                            mixins: [PortMap<PortModel>(objects: [port])]
+                            mixins: [
+                                PortMap(
+                                    repository: PortTileRepository(
+                                        portNumber: portNumber ?? 0,
+                                        localDataSource: portRepository.localDataSource
+                                    )
+                                )
+                            ]
                         )
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                        PortSummaryView(port: port)
+                        PortSummaryView(port: PortListModel(portModel: port))
                             .showBookmarkNotes(true)
                             .setShowTitle(false)
                             .padding(.all, 16)
@@ -82,14 +89,14 @@ struct PortDetailView: View {
                     .dataSourceSection()
             }
             .dataSourceDetailList()
-            .navigationTitle(port.portName ?? Port.dataSourceName)
+            .navigationTitle(port.portName ?? DataSources.port.fullName)
             .navigationBarTitleDisplayMode(.inline)
             
             .onChange(of: portNumber) { _ in
                 viewModel.getPort(portNumber: portNumber, waypointURI: waypointURI)
             }
             .onAppear {
-                Metrics.shared.dataSourceDetail(dataSource: Port.definition)
+                Metrics.shared.dataSourceDetail(dataSource: DataSources.port)
             }
         }
     }

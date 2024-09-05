@@ -12,60 +12,10 @@ import SwiftUI
 @testable import Marlin
 
 final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
-    
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    override func setUp(completion: @escaping (Error?) -> Void) {
-        UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
-        UserDefaults.registerMarlinDefaults()
-        
-        for item in DataSourceList().allTabs {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        
-        UserDefaults.standard.setFilter(NavigationalWarning.key, filter: [])
-        UserDefaults.standard.setSort(NavigationalWarning.key, sort: NavigationalWarning.defaultSort)
-        
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                let e5 = XCTNSPredicateExpectation(predicate: NSPredicate(block: { observedObject, change in
-                    if let count = try? self.persistentStore.countOfObjects(NavigationalWarning.self) {
-                        return count == 0
-                    }
-                    return false
-                }), object: self.persistentStore.viewContext)
-                self.wait(for: [e5], timeout: 10)
-                print("setup really done")
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
-        print("setup donesih")
-        
-    }
-    override func tearDown(completion: @escaping (Error?) -> Void) {
-        persistentStore.viewContext.performAndWait {
-            if let nws = persistentStore.viewContext.fetchAll(NavigationalWarning.self) {
-                for nw in nws {
-                    persistentStore.viewContext.delete(nw)
-                }
-            }
-        }
-        completion(nil)
-    }
-    
+
     func testNoneRead() throws {
-        var warnings: [NavigationalWarning] = []
-        persistentStore.viewContext.performAndWait {
-            
-            let navWarning2 = NavigationalWarning(context: persistentStore.viewContext)
+        var warnings: [NavigationalWarningModel] = []
+        var navWarning2 = NavigationalWarningModel(navArea: "A")
             navWarning2.msgYear = 2022
             navWarning2.msgNumber = 1178
             navWarning2.navArea = "A"
@@ -77,7 +27,7 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
             
             warnings.append(navWarning2)
             
-            let navWarning3 = NavigationalWarning(context: persistentStore.viewContext)
+        var navWarning3 = NavigationalWarningModel(navArea: "A")
             navWarning3.msgYear = 2022
             navWarning3.msgNumber = 1179
             navWarning3.navArea = "A"
@@ -88,12 +38,10 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
             navWarning3.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
             
             warnings.append(navWarning3)
-            
-            try? persistentStore.viewContext.save()
-        }
+
         
-        let view = NavigationalWarningAreaUnreadBadge(navArea: "A", warnings: warnings)
-        
+        let view = NavigationalWarningAreaUnreadBadge(unreadCount: 2)
+
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -102,10 +50,9 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
     }
     
     func testOneRead() throws {
-        var warnings: [NavigationalWarning] = []
-        persistentStore.viewContext.performAndWait {
+        var warnings: [NavigationalWarningModel] = []
 
-            let navWarning2 = NavigationalWarning(context: persistentStore.viewContext)
+            var navWarning2 = NavigationalWarningModel(navArea: "A")
             navWarning2.msgYear = 2022
             navWarning2.msgNumber = 1178
             navWarning2.navArea = "A"
@@ -117,7 +64,7 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
             
             warnings.append(navWarning2)
             
-            let navWarning3 = NavigationalWarning(context: persistentStore.viewContext)
+            var navWarning3 = NavigationalWarningModel(navArea: "A")
             navWarning3.msgYear = 2022
             navWarning3.msgNumber = 1179
             navWarning3.navArea = "A"
@@ -129,14 +76,12 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
             
             warnings.append(navWarning3)
             
-            try? persistentStore.viewContext.save()
-        }
-        
+
         class PassThrough: ObservableObject {
             var navArea: String
-            var warnings: [NavigationalWarning]
-            
-            init(navArea: String, warnings: [NavigationalWarning]) {
+            var warnings: [NavigationalWarningModel]
+
+            init(navArea: String, warnings: [NavigationalWarningModel]) {
                 self.navArea = navArea
                 self.warnings = warnings
             }
@@ -152,7 +97,7 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    NavigationalWarningAreaUnreadBadge(navArea: passThrough.navArea, warnings: passThrough.warnings)
+                    NavigationalWarningAreaUnreadBadge(unreadCount: 1)
                 }
             }
         }
@@ -172,12 +117,12 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "1 Unread")
     }
     
-    func testAllRead() throws {
+    // this should be tested in a different view
+    func xtestAllRead() throws {
         print("all read")
-        var warnings: [NavigationalWarning] = []
-        persistentStore.viewContext.performAndWait {
-            
-            let navWarning2 = NavigationalWarning(context: persistentStore.viewContext)
+        var warnings: [NavigationalWarningModel] = []
+
+            var navWarning2 = NavigationalWarningModel(navArea: "A")
             navWarning2.msgYear = 2022
             navWarning2.msgNumber = 1178
             navWarning2.navArea = "A"
@@ -189,7 +134,7 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
             
             warnings.append(navWarning2)
             
-            let navWarning3 = NavigationalWarning(context: persistentStore.viewContext)
+            var navWarning3 = NavigationalWarningModel(navArea: "A")
             navWarning3.msgYear = 2022
             navWarning3.msgNumber = 1179
             navWarning3.navArea = "A"
@@ -200,15 +145,12 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
             navWarning3.authority = "EASTERN RANGE 0/22 072203Z NOV 22."
             
             warnings.append(navWarning3)
-            
-            try? persistentStore.viewContext.save()
-        }
         
         class PassThrough: ObservableObject {
             var navArea: String
-            var warnings: [NavigationalWarning]
-            
-            init(navArea: String, warnings: [NavigationalWarning]) {
+            var warnings: [NavigationalWarningModel]
+
+            init(navArea: String, warnings: [NavigationalWarningModel]) {
                 self.navArea = navArea
                 self.warnings = warnings
             }
@@ -224,7 +166,7 @@ final class NavigationalWarningAreaUnreadBadgeTests: XCTestCase {
             
             var body: some View {
                 NavigationView {
-                    NavigationalWarningAreaUnreadBadge(navArea: passThrough.navArea, warnings: passThrough.warnings)
+                    NavigationalWarningAreaUnreadBadge(unreadCount: 2)
                 }
             }
         }

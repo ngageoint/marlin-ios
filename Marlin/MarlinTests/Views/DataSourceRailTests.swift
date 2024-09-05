@@ -24,9 +24,9 @@ final class DataSourceRailTests: XCTestCase {
             class MockDataSourceList : DataSourceList {
                 override var allTabs: [DataSourceItem] {
                     return [
-                        DataSourceItem(dataSource: MockDataSourceDefaultSort.self),
-                        DataSourceItem(dataSource: MockDataSource.self),
-                        DataSourceItem(dataSource: MockDataSourceNonMappable.self)
+                        DataSourceItem(dataSource: MockDataSourceDefaultSortDefinition()),
+                        DataSourceItem(dataSource: MockDataSourceDefinition()),
+                        DataSourceItem(dataSource: MockDataSourceNonMappableDefinition())
                     ]
                 }
             }
@@ -55,18 +55,18 @@ final class DataSourceRailTests: XCTestCase {
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         
-        tester().waitForView(withAccessibilityLabel: "\(MockDataSourceNonMappable.fullDataSourceName) rail item")
-        tester().waitForView(withAccessibilityLabel: "\(MockDataSourceDefaultSort.fullDataSourceName) rail item")
-        tester().waitForView(withAccessibilityLabel: "\(MockDataSource.fullDataSourceName) rail item")
-        
-        tester().tapView(withAccessibilityLabel: "\(MockDataSourceNonMappable.fullDataSourceName) rail item")
-        XCTAssertEqual(pt.currentItem?.key, MockDataSourceNonMappable.key)
-        tester().tapView(withAccessibilityLabel: "\(MockDataSourceDefaultSort.fullDataSourceName) rail item")
-        XCTAssertEqual(pt.currentItem?.key, MockDataSourceDefaultSort.key)
-        tester().tapView(withAccessibilityLabel: "\(MockDataSource.fullDataSourceName) rail item")
-        XCTAssertEqual(pt.currentItem?.key, MockDataSource.key)
-        
-        tester().tapView(withAccessibilityLabel: "\(MockDataSource.fullDataSourceName) rail item")
+        tester().waitForView(withAccessibilityLabel: "\(MockDataSourceNonMappableDefinition().fullName) rail item")
+        tester().waitForView(withAccessibilityLabel: "\(MockDataSourceDefaultSortDefinition().fullName) rail item")
+        tester().waitForView(withAccessibilityLabel: "\(MockDataSourceDefinition().fullName) rail item")
+
+        tester().tapView(withAccessibilityLabel: "\(MockDataSourceNonMappableDefinition().fullName) rail item")
+        XCTAssertEqual(pt.currentItem?.key, MockDataSourceNonMappableDefinition().key)
+        tester().tapView(withAccessibilityLabel: "\(MockDataSourceDefaultSortDefinition().fullName) rail item")
+        XCTAssertEqual(pt.currentItem?.key, MockDataSourceDefaultSortDefinition().key)
+        tester().tapView(withAccessibilityLabel: "\(MockDataSourceDefinition().fullName) rail item")
+        XCTAssertEqual(pt.currentItem?.key, MockDataSourceDefinition().key)
+
+        tester().tapView(withAccessibilityLabel: "\(MockDataSourceDefinition().fullName) rail item")
         XCTAssertEqual(pt.currentItem, nil)
     }
 }

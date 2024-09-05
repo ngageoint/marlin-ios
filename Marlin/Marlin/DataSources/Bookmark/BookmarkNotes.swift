@@ -8,32 +8,31 @@
 import SwiftUI
 
 struct BookmarkNotes: View {
+    @EnvironmentObject var repository: BookmarkRepository
     var itemKey: String?
     var dataSource: String?
     var notes: String?
     
-    @FetchRequest var bookmarks: FetchedResults<Bookmark>
-    
-    init(itemKey: String? = nil, dataSource: String? = nil, notes: String? = nil) {
-        self.itemKey = itemKey
-        self.dataSource = dataSource
-        self.notes = notes
-        self._bookmarks = FetchRequest(
-            entity: Bookmark.entity(),
-            sortDescriptors: Bookmark.defaultSort.map({ param in
-                param.toNSSortDescriptor()
-            }),
-            predicate: NSPredicate(format: "id == %@ AND dataSource == %@", itemKey ?? "", dataSource ?? "")
-        )
+    @ObservedObject var bookmarkViewModel: BookmarkViewModel
+
+    init(
+        bookmarkViewModel: BookmarkViewModel? = nil,
+        itemKey: String? = nil,
+        dataSource: String? = nil,
+        notes: String? = nil
+    ) {
+        self.bookmarkViewModel = bookmarkViewModel ?? BookmarkViewModel()
     }
     
     var body: some View {
-        if let bookmark = bookmarks.first {
-            if let notes = bookmark.notes {
-                Text("Bookmark Notes")
-                    .primary()
-                Text(notes)
-                    .secondary()
+        Group {
+            if let bookmark = bookmarkViewModel.bookmark {
+                if let notes = bookmark.notes {
+                    Text("Bookmark Notes")
+                        .primary()
+                    Text(notes)
+                        .secondary()
+                }
             }
         }
     }

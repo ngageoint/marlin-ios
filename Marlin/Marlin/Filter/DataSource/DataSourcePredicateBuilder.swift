@@ -12,8 +12,8 @@ class DataSourcePredicateBuilder {
 
     var property: DataSourceProperty
     var comparison: DataSourceFilterComparison
-    var filterable: Filterable
-
+    var filterable: Filterable?
+    var boundsPredicateBuilder: ((MapBoundingBox) -> NSPredicate)?
     var valueString: String?
     var valueDate: Date?
     var valueInt: Int?
@@ -26,7 +26,8 @@ class DataSourcePredicateBuilder {
     init(
         property: DataSourceProperty,
         comparison: DataSourceFilterComparison,
-        filterable: Filterable,
+        filterable: Filterable? = nil,
+        boundsPredicateBuilder: ((MapBoundingBox) -> NSPredicate)? = nil,
         valueString: String? = nil,
         valueDate: Date? = nil,
         valueInt: Int? = nil,
@@ -39,6 +40,7 @@ class DataSourcePredicateBuilder {
         self.property = property
         self.comparison = comparison
         self.filterable = filterable
+        self.boundsPredicateBuilder = boundsPredicateBuilder
         self.valueString = valueString
         self.valueDate = valueDate
         self.valueInt = valueInt
@@ -75,7 +77,7 @@ class DataSourcePredicateBuilder {
         } else if property.type == .enumeration {
             return enumPredicate(propertyAndComparison: propertyAndComparison())
         } else if property.type == .location {
-            return locationPredicate(dataSource: filterable)
+            return locationPredicate(dataSource: filterable, boundsPredicateBuilder: boundsPredicateBuilder)
         }
         return nil
     }
@@ -172,24 +174,43 @@ class DataSourcePredicateBuilder {
         return nil
     }
 
-    func locationPredicate(dataSource: Filterable) -> NSPredicate? {
-        if comparison == .bounds {
-            return boundsPredicate(dataSource: dataSource)
-        }
-        var centralLongitude: Double?
-        var centralLatitude: Double?
-
-        if comparison == .nearMe {
-            if let lastLocation = LocationManager.shared().lastLocation {
-                centralLongitude = lastLocation.coordinate.longitude
-                centralLatitude = lastLocation.coordinate.latitude
+    func locationPredicate(
+        dataSource: Filterable?,
+        boundsPredicateBuilder: ((MapBoundingBox) -> NSPredicate)?
+    ) -> NSPredicate? {
+        switch comparison {
+        case .bounds:
+            if let dataSource = dataSource {
+                return boundsPredicate(dataSource: dataSource)
+            } else if let boundsPredicateBuilder = boundsPredicateBuilder, let valueBounds = valueBounds {
+                return boundsPredicateBuilder(valueBounds)
             }
-        } else if comparison == .closeTo {
-            centralLongitude = valueLongitude
-            centralLatitude = valueLatitude
+            return nil
+        case .nearMe:
+            return nearMePredicate(dataSource: dataSource)
+        case .closeTo:
+            return closeToPredicate(dataSource: dataSource, latitude: valueLatitude, longitude: valueLongitude)
+        default:
+            return nil
         }
+    }
 
-        guard let distance = valueInt, let latitude = centralLatitude, let longitude = centralLongitude else {
+    func nearMePredicate(dataSource: Filterable?) -> NSPredicate? {
+        guard let lastLocation = LocationManager.shared().lastLocation else {
+            return nil
+        }
+        let centralLongitude = lastLocation.coordinate.longitude
+        let centralLatitude = lastLocation.coordinate.latitude
+        return closeToPredicate(dataSource: dataSource, latitude: centralLatitude, longitude: centralLongitude)
+    }
+
+    func closeToPredicate(dataSource: Filterable?, latitude: Double?, longitude: Double?) -> NSPredicate? {
+        guard let distance = valueInt,
+              let latitude = latitude,
+              let longitude = longitude,
+              let metersPoint = SFGeometryUtils.degreesToMetersWith(x: longitude, andY: latitude),
+              let x = metersPoint.x as? Double,
+              let y = metersPoint.y as? Double else {
             NSLog("Nothing to use as location predicate")
             return nil
         }
@@ -198,26 +219,26 @@ class DataSourcePredicateBuilder {
         let metersMeasurement = nauticalMilesMeasurement.converting(to: UnitLength.meters)
         let metersDistance = metersMeasurement.value
 
-        if let metersPoint = SFGeometryUtils.degreesToMetersWith(x: longitude, andY: latitude),
-           let x = metersPoint.x as? Double,
-           let y = metersPoint.y as? Double {
-            let southWest = SFGeometryUtils.metersToDegreesWith(x: x - metersDistance, andY: y - metersDistance)
-            let northEast = SFGeometryUtils.metersToDegreesWith(x: x + metersDistance, andY: y + metersDistance)
-            if let southWest = southWest,
-               let northEast = northEast,
-               let maxy = northEast.y,
-               let miny = southWest.y,
-               let minx = southWest.x,
-               let maxx = northEast.x {
-                if let dataSource = dataSource as? Locatable {
-                    return type(of: dataSource).getBoundingPredicate(
-                        minLat: miny.doubleValue,
-                        maxLat: maxy.doubleValue,
-                        minLon: minx.doubleValue,
-                        maxLon: maxx.doubleValue)
-                }
-                return nil
+        if let southWest = SFGeometryUtils.metersToDegreesWith(x: x - metersDistance, andY: y - metersDistance),
+           let northEast = SFGeometryUtils.metersToDegreesWith(x: x + metersDistance, andY: y + metersDistance),
+           let maxy = northEast.y,
+           let miny = southWest.y,
+           let minx = southWest.x,
+           let maxx = northEast.x {
+            if let dataSource = dataSource as? Locatable {
+                return type(of: dataSource).getBoundingPredicate(
+                    minLat: miny.doubleValue,
+                    maxLat: maxy.doubleValue,
+                    minLon: minx.doubleValue,
+                    maxLon: maxx.doubleValue)
+            } else if let boundsPredicateBuilder = boundsPredicateBuilder {
+                let bounds = MapBoundingBox(
+                    swCorner: (x: minx.doubleValue, y: miny.doubleValue),
+                    neCorner: (x: maxx.doubleValue, y: maxy.doubleValue)
+                )
+                return boundsPredicateBuilder(bounds)
             }
+            return nil
         }
         return nil
     }

@@ -8,15 +8,16 @@
 import Foundation
 
 class SortViewModel: ObservableObject {
-    let dataSource: any DataSource.Type
+    let definition: any DataSourceDefinition
+    let filterable: (any Filterable)?
     var dataSourceProperties: [DataSourceProperty]
-    
+
     @Published var sort: [DataSourceSortParameter] {
         didSet {
-            UserDefaults.standard.setSort(dataSource.definition.key, sort: sort)
+            UserDefaults.standard.setSort(definition.key, sort: sort)
         }
     }
-    
+
     @Published var selectedProperty: DataSourceProperty?
     @Published var ascending: Bool = true
     @Published var sections: Bool {
@@ -31,52 +32,49 @@ class SortViewModel: ObservableObject {
         }
     }
 
-    init(dataSource: any DataSource.Type) {
-        self.dataSource = dataSource
-        self.dataSourceProperties = dataSource.properties
-        let userSort = UserDefaults.standard.sort(dataSource.definition.key)
-        if userSort.isEmpty {
-            self.sort = dataSource.defaultSort
-            if !dataSource.defaultSort.isEmpty {
-                self.sections = dataSource.defaultSort[0].section
-            } else {
-                self.sections = false
-            }
-            
-        } else {
-            self.sort = userSort
-            self.sections = userSort[0].section
+    init(definition: any DataSourceDefinition) {
+        self.definition = definition
+        filterable = definition.filterable
+        self.dataSourceProperties = filterable?.properties ?? []
+        //        self.dataSourceProperties = dataSource.properties
+
+        var sort = UserDefaults.standard.sort(definition.key)
+        if sort.isEmpty {
+            sort = filterable?.defaultSort ?? []
         }
+        self.sort = sort
+        self.sections = !sort.isEmpty ? sort[0].section : false
+
         if possibleSortProperties.isEmpty {
             selectedProperty = nil
         } else {
             selectedProperty = possibleSortProperties[0]
         }
     }
-    
+
     var firstSortProperty: DataSourceSortParameter? {
         if !sort.isEmpty {
             return sort[0]
         }
         return nil
     }
-    
+
     func removeFirst() {
         let firstSort = sort.remove(at: 0)
         sections = firstSort.section
     }
-    
+
     var secondSortProperty: DataSourceSortParameter? {
         if sort.count > 1 {
             return sort[1]
         }
         return nil
     }
-    
+
     func removeSecond() {
         sort.remove(at: 1)
     }
-    
+
     var possibleSortProperties: [DataSourceProperty] {
         // only allow sorting by two properties
         if sort.count >= 2 {
@@ -89,7 +87,7 @@ class SortViewModel: ObservableObject {
             return true
         })
     }
-    
+
     func addSortProperty() {
         if let selectedProperty = selectedProperty {
             sort.append(DataSourceSortParameter(

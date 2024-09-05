@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct NoticeToMarinersSummaryView: DataSourceSummaryView {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepositoryManager
+    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+    @EnvironmentObject var router: MarlinRouter
 
-    var noticeToMariners: NoticeToMariners
+    var noticeToMariners: NoticeToMarinersListModel
     var showBookmarkNotes: Bool = false
 
     var showMoreDetails: Bool = false
@@ -23,15 +24,20 @@ struct NoticeToMarinersSummaryView: DataSourceSummaryView {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(verbatim: "\(noticeToMariners.noticeNumber)")
+                    Text(verbatim: "\(noticeToMariners.noticeNumber ?? 0)")
                         .overline()
                     Text(noticeToMariners.dateRange())
                         .secondary()
                 }
                 Spacer()
-                BookmarkButton(viewModel: bookmarkViewModel)
+                BookmarkButton(
+                    action: Actions.Bookmark(
+                        itemKey: noticeToMariners.itemKey,
+                        bookmarkViewModel: bookmarkViewModel
+                    )
+                )
             }
-            bookmarkNotesView(noticeToMariners)
+            bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
         }
         .onAppear {
             bookmarkViewModel.repository = bookmarkRepository

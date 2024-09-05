@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoadingCapsule: View {
-    @AppStorage("initialDataLoaded") var initialDataLoaded: Bool = false
+    @EnvironmentObject var appState: AppState
     
     var body: some View {
         HStack {
@@ -21,15 +21,19 @@ struct LoadingCapsule: View {
                         ProgressView()
                             .progressViewStyle(CircularProgressViewStyle(tint: Color.onPrimaryColor))
                             .scaleEffect(0.5, anchor: .center)
-                        Text("Loading initial data")
+                        Text("Loading data")
                             .font(Font.overline)
                             .foregroundColor(Color.onPrimaryColor)
                     }
                 )
             Spacer()
         }
-        .animation(.default, value: initialDataLoaded)
-        .opacity(initialDataLoaded ? 0.0 : 1.0)
+        .animation(.default, value: appState.loadingDataSource.values.contains(where: { loading in
+            loading
+        }))
+        .opacity(appState.loadingDataSource.values.contains(where: { loading in
+            loading
+        }) ? 1.0 : 0.0)
         .padding(.top, 8)
     }
 }

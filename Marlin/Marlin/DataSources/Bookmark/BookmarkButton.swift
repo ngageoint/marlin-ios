@@ -8,34 +8,28 @@
 import SwiftUI
 
 struct BookmarkButton: View {
-    @State var bookmarkBottomSheet: Bool = false
+    var action: Actions.Bookmark
+    
     @State var notes: String = ""
-    @ObservedObject var viewModel: BookmarkViewModel
     
     var body: some View {
-        Button(
-            action: {
-                withAnimation {
-                    if viewModel.isBookmarked {
-                        viewModel.removeBookmark()
-                    } else {
-                        bookmarkBottomSheet = true
-                    }
-                }
-            },
-            label: {
-                Label(
-                    title: { },
-                    icon: { Image(systemName: viewModel.isBookmarked ? "bookmark.fill" : "bookmark")
-                            .renderingMode(.template)
-                            .foregroundColor(Color.primaryColorVariant)
-                    })
-            }
-        )
+        Button(action: action.action) {
+            Label(
+                title: { },
+                icon: { Image(systemName: action.bookmarkViewModel.isBookmarked ? "bookmark.fill" : "bookmark")
+                        .renderingMode(.template)
+                        .foregroundColor(Color.primaryColorVariant)
+                })
+        }
         .accessibilityElement()
-        .accessibilityLabel("\(viewModel.isBookmarked ? "remove bookmark \(viewModel.itemKey ?? "")" : "bookmark")")
-        .animation(.easeOut, value: viewModel.isBookmarked)
-        .sheet(isPresented: $bookmarkBottomSheet) {
+        .accessibilityLabel(
+            """
+            \(action.bookmarkViewModel.isBookmarked ? "remove bookmark \(action.bookmarkViewModel.itemKey ?? "")"
+            : "bookmark")
+            """
+        )
+        .animation(.easeOut, value: action.bookmarkViewModel.isBookmarked)
+        .sheet(isPresented: action.$bookmarkViewModel.bookmarkBottomSheet) {
             VStack(alignment: .leading) {
                 HStack {
                     Image(systemName: "bookmark.fill")
@@ -44,12 +38,13 @@ struct BookmarkButton: View {
                     Text("Bookmark Notes")
                         .primary()
                 }
-                TextEditor(text: $notes)
+                TextEditor(text: action.$bookmarkViewModel.bnotes)
                     .lineLimit(4...)
                     .overlay(
                         Rectangle()
                             .frame(height: 2)
-                            .foregroundColor(Color.primaryColorVariant), alignment: .bottom
+                            .foregroundColor(Color.primaryColorVariant),
+                        alignment: .bottom
                     )
                     .scrollContentBackground(.hidden)
                     .background(Color.backgroundColor)
@@ -60,9 +55,9 @@ struct BookmarkButton: View {
                     Spacer()
                     Button("Bookmark") {
                         withAnimation {
-                            viewModel.createBookmark(notes: notes)
+                            action.bookmarkViewModel.createBookmark(notes: action.bookmarkViewModel.bnotes)
                         }
-                        bookmarkBottomSheet = false
+                        action.bookmarkViewModel.bookmarkBottomSheet = false
                     }
                     .buttonStyle(MaterialButtonStyle(type: .text))
                     .accessibilityElement()

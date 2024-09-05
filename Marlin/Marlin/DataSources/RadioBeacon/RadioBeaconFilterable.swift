@@ -9,7 +9,7 @@ import Foundation
 
 struct RadioBeaconFilterable: Filterable {
     var definition: any DataSourceDefinition {
-        DataSourceDefinitions.radioBeacon.definition
+        DataSources.radioBeacon
     }
 
     var properties: [DataSourceProperty] = [
@@ -38,5 +38,20 @@ struct RadioBeaconFilterable: Filterable {
 
     var defaultFilter: [DataSourceFilterParameter] = []
 
-    var locatableClass: Locatable.Type? = RadioBeacon.self
+    var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Geopolitical Heading",
+                key: #keyPath(RadioBeacon.geopoliticalHeading),
+                type: .string),
+            ascending: true,
+            section: true),
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Feature Number",
+                key: #keyPath(RadioBeacon.featureNumber),
+                type: .int),
+            ascending: true)
+    ]
+
 }

@@ -8,15 +8,20 @@
 import SwiftUI
 
 struct RadioBeaconSummaryView: DataSourceSummaryView {
+    @EnvironmentObject var bookmarkRepository: BookmarkRepository
+    @EnvironmentObject var router: MarlinRouter
+
     var showTitle: Bool = false
     
     var showBookmarkNotes: Bool = false
 
-    var radioBeacon: RadioBeaconModel
+    var radioBeacon: RadioBeaconListModel
     var showMoreDetails: Bool = false
     var showSectionHeader: Bool = false
-    
-    init(radioBeacon: RadioBeaconModel, showMoreDetails: Bool = false, showSectionHeader: Bool = false) {
+
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
+
+    init(radioBeacon: RadioBeaconListModel, showMoreDetails: Bool = false, showSectionHeader: Bool = false) {
         self.radioBeacon = radioBeacon
         self.showMoreDetails = showMoreDetails
         self.showSectionHeader = showSectionHeader
@@ -45,12 +50,28 @@ struct RadioBeaconSummaryView: DataSourceSummaryView {
                 Text(stationRemark)
                     .secondary()
             }
-            bookmarkNotesView(radioBeacon)
-            DataSourceActionBar(
-                data: radioBeacon,
-                showMoreDetailsButton: showMoreDetails,
-                showFocusButton: !showMoreDetails
+            bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
+            DataSourceActions(
+                moreDetails: showMoreDetails ? RadioBeaconActions.Tap(
+                    featureNumber: radioBeacon.featureNumber,
+                    volumeNumber: radioBeacon.volumeNumber,
+                    path: $router.path
+                ) : nil,
+                location: !showMoreDetails ? Actions.Location(latLng: radioBeacon.coordinate) : nil,
+                zoom: !showMoreDetails ? RadioBeaconActions.Zoom(
+                    latLng: radioBeacon.coordinate,
+                    itemKey: radioBeacon.id
+                ) : nil,
+                bookmark: radioBeacon.canBookmark ? Actions.Bookmark(
+                    itemKey: radioBeacon.id,
+                    bookmarkViewModel: bookmarkViewModel
+                ) : nil,
+                share: radioBeacon.itemTitle
             )
+        }
+        .onAppear {
+            bookmarkViewModel.repository = bookmarkRepository
+            bookmarkViewModel.getBookmark(itemKey: radioBeacon.id, dataSource: DataSources.radioBeacon.key)
         }
     }
 }

@@ -48,6 +48,30 @@
             "deleteFlag": "Y",
             "noticeWeek": "07",
             "noticeYear": "2015"
+        },
+        {
+            "volumeNumber": "PUB 110",
+            "aidType": "Lighted Aids",
+            "geopoliticalHeading": "GREENLAND",
+            "regionHeading": null,
+            "subregionHeading": null,
+            "localHeading": null,
+            "precedingNote": null,
+            "featureNumber": "8",
+            "name": "Kulusuk, NW Coast, RACON.",
+            "position": "65°33'53.89\"N \n37°12'25.7\"W",
+            "charNo": 1,
+            "characteristic": "T(- )\nperiod 60s \n",
+            "heightFeetMeters": null,
+            "range": "W. 12 ; R. 9 ; G. 9",
+            "structure": null,
+            "remarks": "(3 & 10cm).\n",
+            "postNote": null,
+            "noticeNumber": 201507,
+            "removeFromList": "N",
+            "deleteFlag": "Y",
+            "noticeWeek": "07",
+            "noticeYear": "2015"
         }
     ]
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NavigationalWarningMapView<Content: View>: View {
+    @EnvironmentObject var navigationalWarningsMapFeatureRepository: NavigationalWarningsMapFeatureRepository
     @ViewBuilder var bottomButtons: Content
     @StateObject var mixins: NavigationalMapMixins = NavigationalMapMixins()
     @StateObject var mapState: MapState = MapState()
@@ -27,6 +28,9 @@ struct NavigationalWarningMapView<Content: View>: View {
                 }
                 .padding(.trailing, 8)
                 .padding(.bottom, 30)
+            }
+            .onAppear {
+                mixins.setMapFeatureRepository(mapFeatureRepository: navigationalWarningsMapFeatureRepository)
             }
     }
 }

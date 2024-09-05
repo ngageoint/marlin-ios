@@ -12,7 +12,78 @@ import UIKit
 import OSLog
 import mgrs_ios
 
+struct ModuListModel: Hashable, Identifiable {
+    var id: String {
+        name ?? ""
+    }
+
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+
+    var date: Date?
+    var latitude: Double
+    var longitude: Double
+    var name: String?
+    var navArea: String?
+    var rigStatus: String?
+    var specialStatus: String?
+
+    var dateString: String? {
+        if let date = date {
+            return DataSources.modu.dateFormatter.string(from: date)
+        }
+        return nil
+    }
+
+    var itemTitle: String {
+        return name ?? ""
+    }
+
+    var canBookmark: Bool = false
+
+    init(modu: Modu) {
+        self.canBookmark = true
+        self.date = modu.date
+        self.latitude = modu.latitude
+        self.longitude = modu.longitude
+        self.name = modu.name
+        self.navArea = modu.navArea
+        self.rigStatus = modu.rigStatus
+        self.specialStatus = modu.specialStatus
+    }
+}
+
+extension ModuListModel: Bookmarkable {
+    static var definition: any DataSourceDefinition {
+        DataSources.modu
+    }
+
+    var itemKey: String {
+        name ?? ""
+    }
+
+    var key: String {
+        DataSources.modu.key
+    }
+}
+
+extension ModuListModel {
+    init(moduModel: ModuModel) {
+        self.canBookmark = moduModel.canBookmark
+        self.date = moduModel.date
+        self.latitude = moduModel.latitude
+        self.longitude = moduModel.longitude
+        self.name = moduModel.name
+        self.navArea = moduModel.navArea
+        self.rigStatus = moduModel.rigStatus
+        self.specialStatus = moduModel.specialStatus
+    }
+}
+
 struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStringConvertible {
+    static var definition: any DataSourceDefinition = DataSources.modu
+
     var canBookmark: Bool = false
     
     private enum CodingKeys: String, CodingKey {
@@ -42,7 +113,7 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
         try? container.encode(navArea, forKey: .navArea)
         try? container.encode(name, forKey: .name)
         if let date = date {
-            try? container.encode(Modu.dateFormatter.string(from: date), forKey: .date)
+            try? container.encode(DataSources.modu.dateFormatter.string(from: date), forKey: .date)
         }
     }
     
@@ -61,13 +132,23 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
             "date": date
         ]
     }
-    
+
+    var sfGeometry: SFGeometry? {
+        return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
+    }
+
+    var itemKey: String {
+        return name ?? ""
+    }
+
+    var key: String {
+        DataSources.modu.key
+    }
+
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
-    
-    var modu: Modu?
-    
+
     var date: Date?
     var distance: Double?
     var latitude: Double
@@ -84,15 +165,20 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
     var bookmark: Bookmark?
     
     func isEqualTo(_ other: ModuModel) -> Bool {
-        return self.modu == other.modu
+        return self.name == other.name
     }
     
     static func == (lhs: ModuModel, rhs: ModuModel) -> Bool {
         lhs.isEqualTo(rhs)
     }
-    
+
+    init() {
+        self.canBookmark = false
+        self.latitude = kCLLocationCoordinate2DInvalid.latitude
+        self.longitude = kCLLocationCoordinate2DInvalid.longitude
+    }
+
     init(modu: Modu) {
-        self.modu = modu
         self.canBookmark = true
         self.date = modu.date
         self.distance = modu.distance
@@ -141,22 +227,24 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
         
         var parsedDate: Date?
         if let dateString = try? values.decode(String.self, forKey: .date) {
-            if let date = Modu.dateFormatter.date(from: dateString) {
+            if let date = DataSources.modu.dateFormatter.date(from: dateString) {
                 parsedDate = date
             }
         }
         self.date = parsedDate
         
-        let mgrsPosition = MGRS.from(longitude, latitude)
-        self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        if CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(
+            latitude: latitude, longitude: longitude
+        )) {
+            let mgrsPosition = MGRS.from(longitude, latitude)
+            self.mgrs10km = mgrsPosition.coordinate(.TEN_KILOMETER)
+        }
     }
     
     init?(feature: Feature) {
         if let json = try? JSONEncoder().encode(feature.properties), let string = String(data: json, encoding: .utf8) {
             
-            print(string)
             let decoder = JSONDecoder()
-            print("json is \(string)")
             let jsonData = Data(string.utf8)
             if let model = try? decoder.decode(ModuModel.self, from: jsonData) {
                 self = model
@@ -187,7 +275,7 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
 extension ModuModel {
     var dateString: String? {
         if let date = date {
-            return Modu.dateFormatter.string(from: date)
+            return DataSources.modu.dateFormatter.string(from: date)
         }
         return nil
     }
@@ -195,110 +283,4 @@ extension ModuModel {
     var itemTitle: String {
         return name ?? ""
     }
-}
-
-extension ModuModel: DataSource {
-    static var definition: any DataSourceDefinition = DataSourceDefinitions.modu.definition
-    var color: UIColor {
-        Self.color
-    }
-    
-    var sfGeometry: SFGeometry? {
-        return SFPoint(xValue: coordinate.longitude, andYValue: coordinate.latitude)
-    }
-    static var isMappable: Bool = true
-    static var dataSourceName: String = NSLocalizedString("MODU", comment: "MODU data source display name")
-    static var fullDataSourceName: String = 
-    NSLocalizedString("Mobile Offshore Drilling Units", comment: "MODU data source display name")
-    static var key: String = "modu"
-    static var metricsKey: String = "modus"
-    static var imageName: String? = "modu"
-    static var systemImageName: String?
-    static var color: UIColor = UIColor(argbValue: 0xFF0042A4)
-    static var imageScale = UserDefaults.standard.imageScale(key) ?? 1.0
-    
-    static var defaultSort: [DataSourceSortParameter] = [
-        DataSourceSortParameter(
-            property: DataSourceProperty(
-                name: "Date",
-                key: #keyPath(Modu.date),
-                type: .date
-            ),
-            ascending: false
-        )
-    ]
-    static var defaultFilter: [DataSourceFilterParameter] = []
-    
-    static var properties: [DataSourceProperty] = [
-        DataSourceProperty(name: "Location", key: #keyPath(Modu.mgrs10km), type: .location),
-        DataSourceProperty(name: "Subregion", key: #keyPath(Modu.subregion), type: .int),
-        DataSourceProperty(name: "Region", key: #keyPath(Modu.region), type: .int),
-        DataSourceProperty(name: "Longitude", key: #keyPath(Modu.longitude), type: .longitude),
-        DataSourceProperty(name: "Latitude", key: #keyPath(Modu.latitude), type: .latitude),
-        DataSourceProperty(name: "Distance", key: #keyPath(Modu.distance), type: .double),
-        DataSourceProperty(name: "Special Status", key: #keyPath(Modu.specialStatus), type: .string),
-        DataSourceProperty(name: "Rig Status", key: #keyPath(Modu.rigStatus), type: .string),
-        DataSourceProperty(name: "Nav Area", key: #keyPath(Modu.navArea), type: .string),
-        DataSourceProperty(name: "Name", key: #keyPath(Modu.name), type: .string),
-        DataSourceProperty(name: "Date", key: #keyPath(Modu.date), type: .date)
-    ]
-    
-    static var dateFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter
-    }
-    
-    static func postProcess() {}
-    
-    var itemKey: String {
-        return name ?? ""
-    }
-}
-
-extension ModuModel: MapImage {
-    func mapImage(
-        marker: Bool,
-        zoomLevel: Int,
-        tileBounds3857: MapBoundingBox?,
-        context: CGContext?
-    ) -> [UIImage] {
-        var images: [UIImage] = []
-        if let tileBounds3857 = tileBounds3857, let distance = distance, distance > 0 {
-            let circleCoordinates = coordinate.circleCoordinates(radiusMeters: distance * 1852)
-            let path = UIBezierPath()
-            var pixel = circleCoordinates[0].toPixel(
-                zoomLevel: zoomLevel,
-                tileBounds3857: tileBounds3857,
-                tileSize: TILE_SIZE
-            )
-            path.move(to: pixel)
-            for circleCoordinate in circleCoordinates {
-                pixel = circleCoordinate.toPixel(
-                    zoomLevel: zoomLevel,
-                    tileBounds3857: tileBounds3857,
-                    tileSize: TILE_SIZE
-                )
-                path.addLine(to: pixel)
-            }
-            path.lineWidth = 4
-            path.close()
-            Modu.color.withAlphaComponent(0.3).setFill()
-            Modu.color.setStroke()
-            path.fill()
-            path.stroke()
-        }
-        images.append(
-            contentsOf: defaultMapImage(
-                marker: marker,
-                zoomLevel: zoomLevel,
-                tileBounds3857: tileBounds3857,
-                context: context,
-                tileSize: 512.0
-            )
-        )
-        return images
-    }
-    
-    static var cacheTiles: Bool = true
 }

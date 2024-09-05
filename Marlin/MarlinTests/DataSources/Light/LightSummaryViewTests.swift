@@ -13,70 +13,37 @@ import SwiftUI
 @testable import Marlin
 
 final class LightSummaryViewTests: XCTestCase {
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    override func setUp(completion: @escaping (Error?) -> Void) {
-        for item in DataSourceList().allTabs {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
-    }
-    
-    override func tearDown() {
-    }
-    
-    func testLoading() {
-        
-        var newItem: Light?
-        
-        persistentStore.viewContext.performAndWait {
-            let light = Light(context: persistentStore.viewContext)
-            
-            light.characteristicNumber = 1
-            light.volumeNumber = "PUB 110"
-            light.featureNumber = "14840"
-            light.noticeWeek = "06"
-            light.noticeYear = "2015"
-            light.latitude = 1.0
-            light.longitude = 2.0
-            light.remarks = "R. 120°-163°, W.-170°, G.-200°.\n"
-            light.characteristic = "Fl.(2)W.R.G.\nperiod 6s \nfl. 1.0s, ec. 1.0s \nfl. 1.0s, ec. 3.0s \n"
-            light.range = "W. 12 ; R. 9 ; G. 9"
-            light.sectionHeader = "Section"
-            light.structure = "Yellow pedestal, red band; 7.\n"
-            light.name = "-Outer."
-            
-            try? persistentStore.viewContext.save()
-            newItem = light
-        }
-        
-        guard let light = newItem else {
-            XCTFail()
-            return
-        }
-        
-        let repository = LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
 
-        let summary = light.summary
+    func testLoading() {
+        var light = LightModel()
+
+        light.characteristicNumber = 1
+        light.volumeNumber = "PUB 110"
+        light.featureNumber = "14840"
+        light.noticeWeek = "06"
+        light.noticeYear = "2015"
+        light.latitude = 1.0
+        light.longitude = 2.0
+        light.remarks = "R. 120°-163°, W.-170°, G.-200°.\n"
+        light.characteristic = "Fl.(2)W.R.G.\nperiod 6s \nfl. 1.0s, ec. 1.0s \nfl. 1.0s, ec. 3.0s \n"
+        light.range = "W. 12 ; R. 9 ; G. 9"
+        light.sectionHeader = "Section"
+        light.structure = "Yellow pedestal, red band; 7.\n"
+        light.name = "-Outer."
+        light.canBookmark = true
+
+        let localDataSource = LightStaticLocalDataSource()
+        localDataSource.list = [light]
+        let repository = LightRepository(localDataSource: localDataSource, remoteDataSource: LightRemoteDataSource())
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, lightRepository: repository)        
+
+        let summary = LightSummaryView(light: LightListModel(lightModel: light))
             .setShowMoreDetails(false)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(MarlinRouter())
+
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -100,11 +67,13 @@ final class LightSummaryViewTests: XCTestCase {
         }
         
         expectation(forNotification: .MapItemsTapped, object: nil) { notification in
-            
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let light = tapNotification.items as! [LightModel]
-            XCTAssertEqual(light.count, 1)
-            XCTAssertEqual(light[0].featureNumber, "14840")
+            let lightKeys = tapNotification.itemKeys!
+
+            let lights = lightKeys[DataSources.light.key]!
+
+            XCTAssertEqual(lights.count, 1)
+            XCTAssertEqual(lights[0], light.itemKey)
             return true
         }
         tester().tapView(withAccessibilityLabel: "focus")
@@ -117,12 +86,12 @@ final class LightSummaryViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapView(withAccessibilityLabel: "dismiss popup")
         
-        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: light)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: light)
     }
     
     func testShowMoreDetails() {
-        let light = Light(context: persistentStore.viewContext)
-        
+        var light = LightModel()
+
         light.characteristicNumber = 1
         light.volumeNumber = "PUB 110"
         light.featureNumber = "14840"
@@ -136,16 +105,21 @@ final class LightSummaryViewTests: XCTestCase {
         light.sectionHeader = "Section"
         light.structure = "Yellow pedestal, red band; 7.\n"
         light.name = "-Outer."
-        
-        let repository = LightRepositoryManager(repository: LightCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let summary = light.summary
+        light.canBookmark = true
+
+        let router = MarlinRouter()
+        let localDataSource = LightStaticLocalDataSource()
+        localDataSource.list = [light]
+        let repository = LightRepository(localDataSource: localDataSource, remoteDataSource: LightRemoteDataSource())
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, lightRepository: repository)
+
+        let summary = LightSummaryView(light: LightListModel(lightModel: light))
             .setShowMoreDetails(true)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(router)
+
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -154,16 +128,10 @@ final class LightSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Section")
         tester().waitForView(withAccessibilityLabel: "Yellow pedestal, red band; 7.")
         
-        expectation(forNotification: .ViewDataSource,
-                    object: nil) { notification in
-            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let light = try! XCTUnwrap(vds.dataSource as? LightModel)
-            XCTAssertEqual(light.featureNumber, "14840")
-            return true
-        }
+        XCTAssertEqual(router.path.count, 0)
         tester().tapView(withAccessibilityLabel: "More Details")
-        
-        waitForExpectations(timeout: 10, handler: nil)
+        XCTAssertEqual(router.path.count, 1)
+
         tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
     }
 }

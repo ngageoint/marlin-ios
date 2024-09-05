@@ -12,36 +12,9 @@ import SwiftUI
 @testable import Marlin
 
 final class PortSummaryViewTests: XCTestCase {
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    override func setUp(completion: @escaping (Error?) -> Void) {
-        for item in DataSourceList().allTabs {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
-    }
-    
-    override func tearDown() {
-    }
     
     func testLoading() {
-        var savedPort: Marlin.Port?
-        persistentStore.viewContext.performAndWait {
-            let port = Marlin.Port(context: persistentStore.viewContext)
-            port.portNumber = 760
+        var port = PortModel(portNumber: 760)
             port.portName = "Aasiaat"
             port.regionNumber = 54
             port.regionName = "GREENLAND  WEST COAST"
@@ -153,28 +126,23 @@ final class PortSummaryViewTests: XCTestCase {
             port.offshoreMaxVesselDraft = 8
             port.latitude = 1.0
             port.longitude = 2.0
-            
-            try? persistentStore.viewContext.save()
-            savedPort = port
-        }
-        
-        guard let port = savedPort else {
-            XCTFail("Did not save port")
-            return
-        }
-        
-        let repository = PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
+        port.canBookmark = true
+
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
-        let summary = port.summary
+        let localDataSource = PortStaticLocalDataSource()
+        localDataSource.list = [port]
+        let repository = PortRepository(localDataSource: localDataSource, remoteDataSource: PortRemoteDataSource())
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, portRepository: repository)
+        let router = MarlinRouter()
+        let summary = PortSummaryView(port: PortListModel(portModel:port))
             .setShowMoreDetails(false)
             .environmentObject(mockLocationManager as LocationManager)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(router)
+
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -197,19 +165,21 @@ final class PortSummaryViewTests: XCTestCase {
         }
         
         expectation(forNotification: .MapItemsTapped, object: nil) { notification in
-            
             let tapNotification = try! XCTUnwrap(notification.object as? MapItemsTappedNotification)
-            let port = tapNotification.items as! [PortModel]
-            XCTAssertEqual(port.count, 1)
-            XCTAssertEqual(port[0].portName, "Aasiaat")
+            let portKeys = tapNotification.itemKeys!
+
+            let ports = portKeys[DataSources.port.key]!
+
+            XCTAssertEqual(ports.count, 1)
+            XCTAssertEqual(ports[0], port.itemKey)
             return true
         }
         tester().tapView(withAccessibilityLabel: "focus")
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: port)
-        
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: port)
+
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
         
@@ -218,8 +188,7 @@ final class PortSummaryViewTests: XCTestCase {
     }
     
     func testShowMoreDetails() {
-        let port = Port(context: persistentStore.viewContext)
-        port.portNumber = 760
+        var port = PortModel(portNumber: 760)
         port.portName = "Aasiaat"
         port.regionNumber = 54
         port.regionName = "GREENLAND  WEST COAST"
@@ -331,37 +300,35 @@ final class PortSummaryViewTests: XCTestCase {
         port.offshoreMaxVesselDraft = 8
         port.latitude = 1.0
         port.longitude = 2.0
-        
-        let repository = PortRepositoryManager(repository: PortCoreDataRepository(context: persistentStore.viewContext))
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
+        port.canBookmark = true
+
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
-        let summary = port.summary
+        let localDataSource = PortStaticLocalDataSource()
+        localDataSource.list = [port]
+        let repository = PortRepository(localDataSource: localDataSource, remoteDataSource: PortRemoteDataSource())
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, portRepository: repository)
+        let router = MarlinRouter()
+        let summary = PortSummaryView(port: PortListModel(portModel:port))
             .setShowMoreDetails(true)
             .environmentObject(mockLocationManager as LocationManager)
-            .environment(\.managedObjectContext, persistentStore.viewContext)
             .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(router)
+
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: port.portName)
-        
-        expectation(forNotification: .ViewDataSource,
-                    object: nil) { notification in
-            let vds = try! XCTUnwrap(notification.object as? ViewDataSource)
-            let port = try! XCTUnwrap(vds.dataSource as? PortModel)
-            XCTAssertEqual(port.portName, "Aasiaat")
-            return true
-        }
+
+        XCTAssertEqual(router.path.count, 0)
         tester().tapView(withAccessibilityLabel: "More Details")
-        
-        waitForExpectations(timeout: 10, handler: nil)
+        XCTAssertEqual(router.path.count, 1)
+
         tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
         
-        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: port)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: port)
     }
 
 }

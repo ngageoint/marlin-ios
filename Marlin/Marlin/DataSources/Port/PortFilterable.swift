@@ -14,6 +14,15 @@ struct PortFilterable: Filterable {
         DataSourceDefinitions.port.definition
     }
 
+    var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "World Port Index Number",
+                key: #keyPath(Port.portNumber),
+                type: .int),
+            ascending: false)
+    ]
+
     var properties: [DataSourceProperty] = [
         DataSourceProperty(name: "Location", key: #keyPath(Port.mgrs10km), type: .location),
         // Name and Location
@@ -475,6 +484,6 @@ struct PortFilterable: Filterable {
 
     var defaultFilter: [DataSourceFilterParameter] = []
 
-    var locatableClass: Locatable.Type? = Port.self
+//    var locatableClass: Locatable.Type? = Port.self
 }
 // swiftlint:enable type_body_length file_length

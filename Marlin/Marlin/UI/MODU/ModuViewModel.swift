@@ -10,18 +10,28 @@ import Foundation
 class ModuViewModel: ObservableObject, Identifiable {
     @Published var modu: ModuModel?
     @Published var predicate: NSPredicate?
-    
-    var repository: (any ModuRepository)?
-    
+
+    var name: String?
+
+    var repository: ModuRepository? {
+        didSet {
+            if let name = name {
+                getModu(name: name)
+            }
+        }
+    }
+
+    var routeWaypointRepository: RouteWaypointRepository?
+
     @discardableResult
     func getModu(name: String, waypointURI: URL? = nil) -> ModuModel? {
+        predicate = NSPredicate(format: "name == %@", name)
+
         if let waypointURI = waypointURI {
-            predicate = NSPredicate(format: "name == %@", name)
-            modu = repository?.getModu(name: name, waypointURI: waypointURI)
+            modu = routeWaypointRepository?.getModu(waypointURI: waypointURI)
             return modu
         } else {
-            predicate = NSPredicate(format: "name == %@", name)
-            modu = repository?.getModu(name: name, waypointURI: waypointURI)
+            modu = repository?.getModu(name: name)
             return modu
         }
     }

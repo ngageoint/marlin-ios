@@ -9,7 +9,7 @@ import Foundation
 
 struct AsamFilterable: Filterable {
     var definition: any DataSourceDefinition {
-        DataSourceDefinitions.asam.definition
+        DataSources.asam
     }
 
     var properties: [DataSourceProperty] = [
@@ -35,5 +35,12 @@ struct AsamFilterable: Filterable {
             windowUnits: DataSourceWindowUnits.last365Days)
     ]
 
-    var locatableClass: Locatable.Type? = Asam.self
+    var defaultSort: [DataSourceSortParameter] = [
+        DataSourceSortParameter(
+            property: DataSourceProperty(
+                name: "Date",
+                key: #keyPath(Asam.date),
+                type: .date),
+            ascending: false)
+    ]
 }

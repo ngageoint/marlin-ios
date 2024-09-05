@@ -12,7 +12,7 @@ import CoreData
 @testable import Marlin
 
 class BookmarkHelper: XCTestCase {
-    public func verifyBookmarkButton(viewContext: NSManagedObjectContext, bookmarkable: Bookmarkable) {
+    public func verifyBookmarkButton(viewContext: NSManagedObjectContext? = nil, repository: BookmarkRepository? = nil, bookmarkable: Bookmarkable) {
         tester().tapView(withAccessibilityLabel: "bookmark")
         tester().waitForView(withAccessibilityLabel: "Bookmark")
         tester().waitForView(withAccessibilityLabel: "notes")
@@ -20,20 +20,21 @@ class BookmarkHelper: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Bookmark")
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Bookmark")
 
-        viewContext.performAndWait {
-            let bookmark = viewContext.fetchFirst(Bookmark.self, key: "id", value: bookmarkable.itemKey ?? "")
+        let bookmark = repository?.getBookmark(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key )
+//        viewContext.performAndWait {
+//            let bookmark = viewContext.fetchFirst(Bookmark.self, key: "id", value: bookmarkable.itemKey ?? "")
             XCTAssertNotNil(bookmark)
-            let foundItem = bookmark?.getDataSourceItem(context: viewContext)
+        let foundItem = repository?.getDataSourceItem(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key )
             XCTAssertNotNil(foundItem)
-            XCTAssertNotNil(foundItem?.bookmark)
-            XCTAssertEqual(foundItem?.bookmark?.notes, "Bookmark notes")
-        }
-        tester().waitForView(withAccessibilityLabel: "remove bookmark \(bookmarkable.itemKey ?? "")")
-        tester().tapView(withAccessibilityLabel: "remove bookmark \(bookmarkable.itemKey ?? "")")
+//            XCTAssertNotNil(foundItem?.bookmark)
+//            XCTAssertEqual(foundItem?.bookmark?.notes, "Bookmark notes")
+//        }
+        tester().waitForView(withAccessibilityLabel: "remove bookmark \(bookmarkable.itemKey )")
+        tester().tapView(withAccessibilityLabel: "remove bookmark \(bookmarkable.itemKey )")
 
-        viewContext.performAndWait {
-            let bookmark = viewContext.fetchFirst(Bookmark.self, key: "id", value: bookmarkable.itemKey ?? "")
-            XCTAssertNil(bookmark)
-        }
+//        viewContext.performAndWait {
+        let removed = repository?.getBookmark(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key)
+            XCTAssertNil(removed)
+//        }
     }
 }

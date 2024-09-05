@@ -17,7 +17,7 @@ import MapKit
 
 final class SearchProviderTests: XCTestCase {
     func testNativeSearchProvider() {
-        NativeSearchProvider<MKLocalSearchMock>.performSearch(searchText: "search", region: nil) { result in
+        NativeSearchProvider<MKLocalSearchMock>().performSearch(searchText: "search", region: nil) { result in
             XCTAssertEqual(result[0].name, "Test item")
             XCTAssertEqual(result[0].placemark.coordinate.latitude, 1.0)
             XCTAssertEqual(result[0].placemark.coordinate.longitude, 1.0)
@@ -42,7 +42,7 @@ final class SearchProviderTests: XCTestCase {
         }
         
         var wasCallbackCalled = false
-        NominatimSearchProvider.performSearch(searchText: "test search", region: nil) { result in
+        NominatimSearchProvider().performSearch(searchText: "test search", region: nil) { result in
             XCTAssertEqual(result.count, 4)
             XCTAssertEqual(result[0].name, "Washington, District of Columbia, United States")
             XCTAssertEqual(result[0].placemark.coordinate.latitude, 38.8950368)
@@ -80,7 +80,7 @@ final class SearchProviderTests: XCTestCase {
         }
         
         var wasCallbackCalled = false
-        NominatimSearchProvider.performSearch(searchText: "38.70, -90.30", region: nil) { result in
+        NominatimSearchProvider().performSearch(searchText: "38.70, -90.30", region: nil) { result in
             XCTAssertEqual(result.count, 5)
             
             XCTAssertEqual(result[0].name, "38.7, -90.3")

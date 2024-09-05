@@ -7,25 +7,35 @@
 
 import Foundation
 import MapKit
-import CoreData
 import Combine
+import Kingfisher
 
-class LightMap<T: MapImage>: FetchRequestMap<T> {
+class LightMap: DataSourceMap {
+
+    override var minZoom: Int {
+        get {
+            return 2
+        }
+        set {
+
+        }
+    }
+
     var defaultsShowLightRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
     var defaultsShowLightSectorRangesPublisher: NSObject.KeyValueObservingPublisher<UserDefaults, Bool>?
 
-    override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
-        super.init(fetchPredicate: fetchPredicate, objects: objects, showAsTiles: showAsTiles)
-        self.sortDescriptors = [NSSortDescriptor(keyPath: \Light.featureNumber, ascending: true)]
-        self.focusNotificationName = .FocusLight
-        self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMaplight)
+    override init(repository: TileRepository? = nil, mapFeatureRepository: MapFeatureRepository? = nil) {
+        super.init(repository: repository, mapFeatureRepository: mapFeatureRepository)
+
+        orderPublisher = UserDefaults.standard.orderPublisher(key: DataSources.light.key)
+        userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMaplight)
         self.defaultsShowLightRangesPublisher = UserDefaults.standard.publisher(for: \.actualRangeLights)
         self.defaultsShowLightSectorRangesPublisher = UserDefaults.standard.publisher(for: \.actualRangeSectorLights)
     }
-    
+
     override func setupMixin(mapState: MapState, mapView: MKMapView) {
         super.setupMixin(mapState: mapState, mapView: mapView)
-        
+
         defaultsShowLightRangesPublisher?
             .dropFirst()
             .removeDuplicates()
@@ -33,12 +43,12 @@ class LightMap<T: MapImage>: FetchRequestMap<T> {
                 print("Show light ranges: \(showLightRanges)")
             })
             .sink { [weak self] _ in
-                self?.imageCache.clearCache(completion: {
+                Kingfisher.ImageCache(name: DataSources.light.key).clearCache(completion: {
                     self?.refreshOverlay(mapState: mapState)
                 })
             }
             .store(in: &cancellable)
-        
+
         defaultsShowLightSectorRangesPublisher?
             .removeDuplicates()
             .dropFirst()
@@ -46,12 +56,11 @@ class LightMap<T: MapImage>: FetchRequestMap<T> {
                 print("Show light sector ranges: \(showLightSectorRanges)")
             })
             .sink { [weak self] _ in
-                self?.imageCache.clearCache(completion: {
+                Kingfisher.ImageCache(name: DataSources.light.key).clearCache(completion: {
                     self?.refreshOverlay(mapState: mapState)
                 })
             }
             .store(in: &cancellable)
-        
-        mapView.register(ImageAnnotationView.self, forAnnotationViewWithReuseIdentifier: Light.key)
+
     }
 }

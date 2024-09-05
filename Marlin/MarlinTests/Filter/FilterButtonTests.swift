@@ -29,12 +29,9 @@ final class FilterButtonTests: XCTestCase {
             var body: some View {
                 Rectangle()
                     .background(Color.ngaGreen)
-                    .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, allowSorting: false))
+                    .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen))
                     .onChange(of: filterOpen) { newValue in
                         self.passThrough.filterOpen = newValue
-                    }
-                    .onChange(of: sortOpen) { newValue in
-                        self.passThrough.sortOpen = newValue
                     }
             }
             
@@ -79,12 +76,9 @@ final class FilterButtonTests: XCTestCase {
             var body: some View {
                 Rectangle()
                     .background(Color.ngaGreen)
-                    .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, allowFiltering: false))
+                    .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, allowFiltering: false))
                     .onChange(of: filterOpen) { newValue in
                         self.passThrough.filterOpen = newValue
-                    }
-                    .onChange(of: sortOpen) { newValue in
-                        self.passThrough.sortOpen = newValue
                     }
             }
             
@@ -129,7 +123,7 @@ final class FilterButtonTests: XCTestCase {
             var body: some View {
                 Rectangle()
                     .background(Color.ngaGreen)
-                    .modifier(FilterButton(filterOpen: $filterOpen, sortOpen: $sortOpen, allowSorting: true, allowFiltering: true))
+                    .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, allowFiltering: true))
             }
             
             public init(passThrough: PassThrough) {
@@ -149,12 +143,11 @@ final class FilterButtonTests: XCTestCase {
         window.rootViewController = controller
         
         // can't test tapping these b/c KIF fails to find the proper location of the view with two buttons
-        tester().waitForView(withAccessibilityLabel: "Sort")
         tester().waitForView(withAccessibilityLabel: "Filter")
     }
     
     func testFilterCount() {
-        UserDefaults.standard.setFilter(MockDataSource.key, 
+        UserDefaults.standard.setFilter(MockDataSourceDefinition().key,
                                         filter: [
                                             DataSourceFilterParameter(
                                                 property: DataSourceProperty(
@@ -173,13 +166,13 @@ final class FilterButtonTests: XCTestCase {
         struct Container: View {
             @State var filterOpen = false
             @State var sortOpen = false
-            @State var dataSources: [DataSourceItem] = [DataSourceItem(dataSource: MockDataSource.self)]
+            @State var dataSources: [DataSourceItem] = [DataSourceItem(dataSource: MockDataSourceDefinition())]
             let passThrough: PassThrough
             
             var body: some View {
                 Rectangle()
                     .background(Color.ngaGreen)
-                    .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSources, allowSorting: false, allowFiltering: true))
+                    .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, dataSources: $dataSources, allowFiltering: true))
             }
             
             public init(passThrough: PassThrough) {
@@ -202,7 +195,7 @@ final class FilterButtonTests: XCTestCase {
     }
     
     func testFilterCountDataSourcesChange() {
-        UserDefaults.standard.setFilter(MockDataSource.key, 
+        UserDefaults.standard.setFilter(MockDataSourceDefinition().key,
                                         filter: [
                                             DataSourceFilterParameter(
                                                 property: DataSourceProperty(
@@ -228,10 +221,10 @@ final class FilterButtonTests: XCTestCase {
             var body: some View {
                 Rectangle()
                     .background(Color.ngaGreen)
-                    .modifier(FilterButton(filterOpen: $filterOpen, dataSources: $dataSources, allowSorting: false, allowFiltering: true))
+                    .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, dataSources: $dataSources, allowFiltering: true))
                     .onAppear {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            dataSources = [DataSourceItem(dataSource: MockDataSource.self)]
+                            dataSources = [DataSourceItem(dataSource: MockDataSourceDefinition().self)]
                         }
                     }
             }

@@ -30,7 +30,7 @@ class PersistedMapState: NSObject, MapMixin {
         }
     }
     
-    func regionDidChange(mapView: MKMapView, animated: Bool) {
+    func regionDidChange(mapView: MKMapView, animated: Bool, centerCoordinate: CLLocationCoordinate2D) {
         UserDefaults.standard.mapRegion = mapView.region
     }
 

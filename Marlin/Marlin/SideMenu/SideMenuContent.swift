@@ -32,7 +32,7 @@ struct SideMenuContent: View {
                     ForEach(model.dataSourceList.tabs, id: \.self) { dataSource in
                         DataSourceCell(dataSourceItem: dataSource)
                             .accessibilityElement()
-                            .accessibilityLabel("\(dataSource.dataSource.definition.fullName) tab cell")
+                            .accessibilityLabel("\(dataSource.dataSource.fullName) tab cell")
                             .overlay(
                                 model.validDropTarget && model.draggedItem == dataSource.key 
                                 ? Color.white.opacity(0.8) : Color.clear
@@ -59,7 +59,7 @@ struct SideMenuContent: View {
                 }
                 HStack {
                     Text("""
-                        Other Data Sources (Drag to add to \(horizontalSizeClass == .compact ? "tabs" : "rail items"))
+                    Other Data Sources (Drag to add to \(horizontalSizeClass == .compact ? "tabs" : "rail items"))
                     """)
                     .padding([.leading, .top, .bottom, .trailing], 8)
                     .overline()
@@ -73,7 +73,7 @@ struct SideMenuContent: View {
                     ForEach(model.dataSourceList.nonTabs, id: \.self) { dataSource in
                         DataSourceCell(dataSourceItem: dataSource)
                             .accessibilityElement()
-                            .accessibilityLabel("\(dataSource.dataSource.definition.fullName) nontab cell")
+                            .accessibilityLabel("\(dataSource.dataSource.fullName) nontab cell")
                             .overlay(
                                 model.validDropTarget && model.draggedItem == dataSource.key
                                 ? Color.white.opacity(0.8) : Color.clear

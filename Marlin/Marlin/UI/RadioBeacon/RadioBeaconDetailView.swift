@@ -10,7 +10,8 @@ import MapKit
 import CoreData
 
 struct RadioBeaconDetailView: View {
-    @EnvironmentObject var radioBeaconRepository: RadioBeaconRepositoryManager
+    @EnvironmentObject var radioBeaconRepository: RadioBeaconRepository
+    @EnvironmentObject var routeWaypointRepository: RouteWaypointRepository
     @StateObject var viewModel: RadioBeaconViewModel = RadioBeaconViewModel()
     @State var featureNumber: Int?
     @State var volumeNumber: String?
@@ -21,6 +22,7 @@ struct RadioBeaconDetailView: View {
             switch viewModel.radioBeacon {
             case nil:
                 Color.clear.onAppear {
+                    viewModel.routeWaypointRepository = routeWaypointRepository
                     viewModel.repository = radioBeaconRepository
                     viewModel.getRadioBeacon(
                         featureNumber: featureNumber,
@@ -38,15 +40,23 @@ struct RadioBeaconDetailView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .itemTitle()
                                 .foregroundColor(Color.white)
-                                .background(Color(uiColor: radioBeacon.color))
+                                .background(Color(uiColor: DataSources.radioBeacon.color))
                                 .padding(.bottom, -8)
                             DataSourceLocationMapView(
                                 dataSourceLocation: radioBeacon,
                                 mapName: "Radio Beacon Detail Map",
-                                mixins: [RadioBeaconMap<RadioBeaconModel>(objects: [radioBeacon])]
+                                mixins: [
+                                    RadioBeaconMap(
+                                        repository: RadioBeaconTileRepository(
+                                            featureNumber: radioBeacon.featureNumber ?? 0,
+                                            volumeNumber: radioBeacon.volumeNumber ?? "",
+                                            localDataSource: radioBeaconRepository.localDataSource
+                                        )
+                                    )
+                                ]
                             )
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                            RadioBeaconSummaryView(radioBeacon: radioBeacon)
+                            RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel: radioBeacon))
                                 .showBookmarkNotes(true)
                                 .setShowSectionHeader(true)
                                 .padding(.all, 16)
@@ -63,15 +73,24 @@ struct RadioBeaconDetailView: View {
                 .dataSourceDetailList()
             }
         }
-        .navigationTitle("\(viewModel.radioBeacon?.name ?? RadioBeacon.dataSourceName)" )
+        .navigationTitle("\(viewModel.radioBeacon?.name ?? DataSources.radioBeacon.fullName)" )
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: featureNumber) { _ in
-            viewModel.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+        .onChange(of: featureNumber) { newFeatureNumber in
+            viewModel.getRadioBeacon(
+                featureNumber: newFeatureNumber,
+                volumeNumber: volumeNumber,
+                waypointURI: waypointURI
+            )
+        }
+        .onChange(of: volumeNumber) { newVolumeNumber in
+            viewModel.getRadioBeacon(
+                featureNumber: featureNumber,
+                volumeNumber: newVolumeNumber,
+                waypointURI: waypointURI
+            )
         }
         .onAppear {
-            viewModel.repository = radioBeaconRepository
-            viewModel.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
-            Metrics.shared.dataSourceDetail(dataSource: RadioBeacon.definition)
+            Metrics.shared.dataSourceDetail(dataSource: DataSources.radioBeacon)
         }
     }
 }

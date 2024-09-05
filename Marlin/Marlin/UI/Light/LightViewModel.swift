@@ -9,22 +9,25 @@ import Foundation
 
 class LightViewModel: ObservableObject, Identifiable {
     @Published var lights: [LightModel] = []
-    @Published var predicate: NSPredicate?
-    
-    var repository: (any LightRepository)?
-    
+
+    var featureNumber: String?
+    var volumeNumber: String?
+
+    var repository: LightRepository? {
+        didSet {
+            if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
+                getLights(featureNumber: featureNumber, volumeNumber: volumeNumber)
+            }
+        }
+    }
+    var routeWaypointRepository: RouteWaypointRepository?
+
     @discardableResult
-    func getLights(featureNumber: String?, volumeNumber: String?, waypointURI: URL?) -> [LightModel] {
-        if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
-            predicate = NSPredicate(format: "featureNumber == %@ AND volumeNumber == %@", featureNumber, volumeNumber)
-            lights = (repository?.getLights(
-                featureNumber: featureNumber,
-                volumeNumber: volumeNumber,
-                waypointURI: waypointURI
-            ) ?? [])
-                .sorted(by: { one, two in
-                    (one.characteristicNumber ?? -1) < (two.characteristicNumber ?? -1)
-                })
+    func getLights(featureNumber: String?, volumeNumber: String?, waypointURI: URL? = nil) -> [LightModel] {
+        if let waypointURI = waypointURI {
+            lights = routeWaypointRepository?.getLight(waypointURI: waypointURI) ?? []
+        } else {
+            lights = repository?.getLight(featureNumber: featureNumber, volumeNumber: volumeNumber) ?? []
             return lights
         }
         return []

@@ -10,16 +10,21 @@ import MapKit
 import CoreData
 import Combine
 
-class AsamMap<T: MapImage>: FetchRequestMap<T> {
-    override public init(fetchPredicate: NSPredicate? = nil, objects: [T]? = nil, showAsTiles: Bool = true) {
-        super.init(fetchPredicate: fetchPredicate, objects: objects, showAsTiles: showAsTiles)
-        self.sortDescriptors = [NSSortDescriptor(keyPath: \Asam.date, ascending: true)]
-        self.focusNotificationName = .FocusAsam
-        self.userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMapasam)
+class AsamMap: DataSourceMap {
+
+    override var minZoom: Int {
+        get {
+            return 2
+        }
+        set {
+
+        }
     }
-    
-    override func setupMixin(mapState: MapState, mapView: MKMapView) {
-        super.setupMixin(mapState: mapState, mapView: mapView)
-        mapView.register(ImageAnnotationView.self, forAnnotationViewWithReuseIdentifier: Asam.key)
+
+    override init(repository: TileRepository? = nil, mapFeatureRepository: MapFeatureRepository? = nil) {
+        super.init(repository: repository, mapFeatureRepository: mapFeatureRepository)
+
+        orderPublisher = UserDefaults.standard.orderPublisher(key: DataSources.asam.key)
+        userDefaultsShowPublisher = UserDefaults.standard.publisher(for: \.showOnMapasam)
     }
 }

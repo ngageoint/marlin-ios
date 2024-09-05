@@ -24,7 +24,7 @@ extension Notification.Name {
     public static let FocusDifferentialGPSStation = Notification.Name("FocusDifferentialGPSStation")
     public static let FocusDFRS = Notification.Name("FocusDFRS")
     public static let FocusNavigationalWarning = Notification.Name("FocusNavigationalWarning")
-    public static let ViewDataSource = Notification.Name("ViewDataSource")
+//    public static let ViewDataSource = Notification.Name("ViewDataSource")
     public static let ViewNavigationalWarning = Notification.Name("ViewNavigationalWarning")
     public static let SwitchTabs = Notification.Name("SwitchTabs")
     public static let SnackbarNotification = Notification.Name("Snackbar")
@@ -45,6 +45,7 @@ struct FocusMapOnItemNotification {
     var item: (any Locatable)?
     var zoom: Bool = false
     var mapName: String?
+    var definition: (any DataSourceDefinition)?
 }
 
 struct MapAnnotationFocusedNotification {
@@ -56,6 +57,34 @@ struct MapItemsTappedNotification {
     var items: [any DataSource]?
     var mapName: String?
     var zoom: Bool = false
+    var itemKeys: [String: [String]]?
+
+    @available(*, deprecated)
+    init(
+        annotations: [Any]? = nil,
+        items: [any DataSource]?,
+        itemKeys: [String: [String]]? = nil,
+        mapName: String? = nil,
+        zoom: Bool = false
+    ) {
+        self.annotations = annotations
+        self.items = items
+        self.mapName = mapName
+        self.zoom = zoom
+        self.itemKeys = itemKeys
+    }
+
+    init(
+        annotations: [Any]? = nil,
+        itemKeys: [String: [String]]?,
+        mapName: String? = nil,
+        zoom: Bool = false
+    ) {
+        self.annotations = annotations
+        self.itemKeys = itemKeys
+        self.mapName = mapName
+        self.zoom = zoom
+    }
 }
 
 struct SnackbarNotification {
@@ -75,5 +104,18 @@ struct BatchUpdateComplete {
 
 struct ViewDataSource {
     var mapName: String?
+    @available(*, deprecated)
     var dataSource: (any DataSource)?
+    var definition: (any DataSourceDefinition)?
+    var itemKey: String?
+
+    @available(*, deprecated)
+    init(mapName: String? = nil, dataSource: (any DataSource)?) {
+        self.dataSource = dataSource
+    }
+
+    init(mapName: String? = nil, definition: (any DataSourceDefinition)?, itemKey: String?) {
+        self.definition = definition
+        self.itemKey = itemKey
+    }
 }

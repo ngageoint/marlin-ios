@@ -10,24 +10,24 @@ import Foundation
 extension UserDefaults {
     func orderPublisher(key: String) -> NSObject.KeyValueObservingPublisher<UserDefaults, Int> {
         switch key {
-        case Asam.key:
+        case DataSources.asam.key:
             return publisher(for: \.asamOrder)
-        case Modu.key:
+        case DataSources.modu.key:
             return publisher(for: \.moduOrder)
-        case Light.key:
+        case DataSources.light.key:
             return publisher(for: \.lightOrder)
-        case NoticeToMariners.key:
+        case DataSources.noticeToMariners.key:
             return publisher(for: \.ntmOrder)
-        case DFRS.key:
-            return publisher(for: \.dfrsOrder)
-        case DifferentialGPSStation.key:
+        case DataSources.dgps.key:
             return publisher(for: \.differentialGPSStationOrder)
-        case ElectronicPublication.key:
+        case DataSources.epub.key:
             return publisher(for: \.epubOrder)
-        case Port.key:
+        case DataSources.port.key:
             return publisher(for: \.portOrder)
-        case RadioBeacon.key:
+        case DataSources.radioBeacon.key:
             return publisher(for: \.radioBeaconOrder)
+        case DataSources.navWarning.key:
+            return publisher(for: \.navWarningOrder)
         default:
             return publisher(for: \.asamOrder)
         }
@@ -65,6 +65,10 @@ extension UserDefaults {
     }
 
     @objc var ntmOrder: Int {
+        integer(forKey: #function)
+    }
+
+    @objc var navWarningOrder: Int {
         integer(forKey: #function)
     }
 

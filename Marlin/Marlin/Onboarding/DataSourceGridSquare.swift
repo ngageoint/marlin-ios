@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DataSourceGridSquare: View {
-    var dataSource: any DataSource.Type
+    var dataSource: any DataSourceDefinition
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     
     var gridSize: CGFloat {
@@ -23,9 +23,9 @@ struct DataSourceGridSquare: View {
                     .frame(width: gridSize / 2, height: gridSize / 2)
                     .clipShape(Circle())
                     .background(Circle().strokeBorder(Color.onPrimaryColor, lineWidth: 2)
-                        .background(Circle().fill(Color(uiColor: dataSource.definition.color))))
+                        .background(Circle().fill(Color(uiColor: dataSource.color))))
             }
-            Text(dataSource.definition.name)
+            Text(dataSource.name)
                 .foregroundColor(Color.onPrimaryColor)
         }
         .frame(width: gridSize, height: gridSize)

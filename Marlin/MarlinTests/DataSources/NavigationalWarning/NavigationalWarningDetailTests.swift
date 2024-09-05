@@ -12,63 +12,37 @@ import SwiftUI
 @testable import Marlin
 
 final class NavigationalWarningDetailTests: XCTestCase {
-    var cancellable = Set<AnyCancellable>()
-    var persistentStore: PersistentStore = PersistenceController.shared
-    let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
-        .receive(on: RunLoop.main)
-    
-    override func setUp(completion: @escaping (Error?) -> Void) {
-        for item in DataSourceList().allTabs {
-            UserDefaults.standard.initialDataLoaded = false
-            UserDefaults.standard.clearLastSyncTimeSeconds(item.dataSource.definition)
-        }
-        UserDefaults.standard.lastLoadDate = Date(timeIntervalSince1970: 0)
-        
-        UserDefaults.standard.setValue(Date(), forKey: "forceReloadDate")
-        persistentStoreLoadedPub
-            .removeDuplicates()
-            .sink { output in
-                completion(nil)
-            }
-            .store(in: &cancellable)
-        persistentStore.reset()
-    }
-    
-    override func tearDown() {
-    }
-    
+
     func testLoading() {
-        var newItem: NavigationalWarning?
-        persistentStore.viewContext.performAndWait {
-            let nw = NavigationalWarning(context: persistentStore.viewContext)
-            
-            nw.cancelMsgNumber = 1
-            nw.authority = "authority"
-            nw.cancelDate = Date(timeIntervalSince1970: 0)
-            nw.cancelMsgYear = 2020
-            nw.cancelNavArea = "P"
-            nw.issueDate = Date(timeIntervalSince1970: 0)
-            nw.msgNumber = 2
-            nw.msgYear = 2019
-            nw.navArea = "P"
-            nw.status = "status"
-            nw.subregion = "subregion"
-            nw.text = "text of the warning"
-            
-            newItem = nw
-            try? persistentStore.viewContext.save()
-        }
-        
-        guard let newItem = newItem else {
-            XCTFail()
-            return
-        }
-        
-        let bookmarkRepository = BookmarkRepositoryManager(repository: BookmarkCoreDataRepository(context: persistentStore.viewContext))
-        
-        let detailView = newItem.detailView.environment(\.managedObjectContext, persistentStore.viewContext)
+        var newItem = NavigationalWarningModel(navArea: "P")
+
+        newItem.cancelMsgNumber = 1
+        newItem.authority = "authority"
+        newItem.cancelDate = Date(timeIntervalSince1970: 0)
+        newItem.cancelMsgYear = 2020
+        newItem.cancelNavArea = "P"
+        newItem.issueDate = Date(timeIntervalSince1970: 0)
+        newItem.msgNumber = 2
+        newItem.msgYear = 2019
+        newItem.navArea = "P"
+        newItem.status = "status"
+        newItem.subregion = "subregion"
+        newItem.text = "text of the warning"
+        newItem.canBookmark = true
+
+        let localDataSource = NavigationalWarningStaticLocalDataSource()
+        localDataSource.list.append(newItem)
+        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
+
+        let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
+        let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
+
+        let detailView = NavigationalWarningDetailView(msgYear: newItem.msgYear!, msgNumber: newItem.msgNumber!, navArea: newItem.navArea)
+            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
-        
+            .environmentObject(routeWaypointRepository)
+
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
@@ -89,12 +63,12 @@ final class NavigationalWarningDetailTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: newItem.cancelDateString)
         
         tester().waitForView(withAccessibilityLabel: "Cancelled By")
-        tester().waitForView(withAccessibilityLabel: "HYDROPAC \(newItem.cancelMsgNumber)/\(newItem.cancelMsgYear)")
-        
+        tester().waitForView(withAccessibilityLabel: "HYDROPAC \(newItem.cancelMsgNumber!)/\(newItem.cancelMsgYear!)")
+
         tester().waitForView(withAccessibilityLabel: "Text")
         let textView = viewTester().usingLabel("Text").view as! UITextView
         XCTAssertEqual(textView.text, newItem.text)
         
-        BookmarkHelper().verifyBookmarkButton(viewContext: persistentStore.viewContext, bookmarkable: newItem)
+        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: newItem)
     }
 }

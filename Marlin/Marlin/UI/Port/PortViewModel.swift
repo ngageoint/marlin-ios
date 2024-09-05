@@ -9,23 +9,25 @@ import Foundation
 
 class PortViewModel: ObservableObject, Identifiable {
     @Published var port: PortModel?
-    @Published var predicate: NSPredicate?
-    
-    var repository: (any PortRepository)?
-    
-    @discardableResult
-    func getPort(portNumber: Int64?, waypointURI: URL?) -> PortModel? {
-        if let waypointURI = waypointURI {
+
+    var portNumber: Int?
+
+    var repository: PortRepository? {
+        didSet {
             if let portNumber = portNumber {
-                predicate = NSPredicate(format: "portNumber == %ld", portNumber)
+                getPort(portNumber: portNumber)
             }
-            port = repository?.getPort(portNumber: portNumber, waypointURI: waypointURI)
+        }
+    }
+    var routeWaypointRepository: RouteWaypointRepository?
+
+    @discardableResult
+    func getPort(portNumber: Int?, waypointURI: URL? = nil) -> PortModel? {
+        if let waypointURI = waypointURI {
+            port = routeWaypointRepository?.getPort(waypointURI: waypointURI)
             return port
         } else {
-            if let portNumber = portNumber {
-                predicate = NSPredicate(format: "portNumber == %ld", portNumber)
-            }
-            port = repository?.getPort(portNumber: portNumber, waypointURI: waypointURI)
+            port = repository?.getPort(portNumber: portNumber)
             return port
         }
     }
