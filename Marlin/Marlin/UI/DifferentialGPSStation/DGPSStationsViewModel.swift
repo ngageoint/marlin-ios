@@ -15,7 +15,8 @@ class DGPSStationsViewModel: ObservableObject {
     @Published var loaded: Bool = false
     private var disposables = Set<AnyCancellable>()
 
-    private var _repository: DGPSStationRepository?
+    @Injected(\.dgpsRepository)
+    private var repository: DGPSStationRepository
 
     var dataSourceUpdatedPub: AnyCancellable {
         return NotificationCenter.default.publisher(for: .DataSourceUpdated)
@@ -29,18 +30,10 @@ class DGPSStationsViewModel: ObservableObject {
                 self.reload()
             }
     }
-
-    var repository: DGPSStationRepository? {
-        get {
-            return _repository
-        }
-        set {
-            if _repository == nil {
-                dataSourceUpdatedPub.store(in: &disposables)
-                _repository = newValue
-                fetchDifferentialGPSStations()
-            }
-        }
+    
+    init() {
+        dataSourceUpdatedPub.store(in: &disposables)
+        fetchDifferentialGPSStations()
     }
 
     var publisher: AnyPublisher<CollectionDifference<DGPSStationModel>, Never>?
@@ -78,7 +71,6 @@ class DGPSStationsViewModel: ObservableObject {
         if publisher != nil {
             return
         }
-        guard let repository = _repository else { return }
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in

@@ -13,10 +13,8 @@ import sf_ios
 class DGPSStationGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.dgps
 
-    let differentialGPSStationRepository: DGPSStationRepository
-    init(differentialGPSStationRepository: DGPSStationRepository) {
-        self.differentialGPSStationRepository = differentialGPSStationRepository
-    }
+    @Injected(\.dgpsRepository)
+    var differentialGPSStationRepository: DGPSStationRepository
 
     func createFeatures(
         geoPackage: GPKGGeoPackage,

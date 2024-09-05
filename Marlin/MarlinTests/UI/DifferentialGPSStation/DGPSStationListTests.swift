@@ -54,13 +54,12 @@ final class DGPSStationListTests: XCTestCase {
         dgps.noticeYear = "2011"
 
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
+        InjectedValues[\.dgpsLocalDataSource] = localDataSource
+        let remoteDataSource = DGPSStationRemoteDataSource()
+        InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [dgps]
-        let repository = DGPSStationRepository(
-            localDataSource: localDataSource,
-            remoteDataSource: DGPSStationRemoteDataSource()
-        )
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, dgpsRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let router = MarlinRouter()
 
@@ -77,7 +76,6 @@ final class DGPSStationListTests: XCTestCase {
             }
         }
         let view = Container()
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
             .environmentObject(router)
@@ -168,13 +166,12 @@ final class DGPSStationListTests: XCTestCase {
         dgps2.noticeYear = "2011"
 
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
+        InjectedValues[\.dgpsLocalDataSource] = localDataSource
+        let remoteDataSource = DGPSStationRemoteDataSource()
+        InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [dgps, dgps2]
-        let repository = DGPSStationRepository(
-            localDataSource: localDataSource,
-            remoteDataSource: DGPSStationRemoteDataSource()
-        )
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, dgpsRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let router = MarlinRouter()
 
@@ -191,7 +188,6 @@ final class DGPSStationListTests: XCTestCase {
             }
         }
         let view = Container()
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
             .environmentObject(router)
@@ -267,13 +263,12 @@ final class DGPSStationListTests: XCTestCase {
         dgps2.noticeYear = "2011"
 
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
+        InjectedValues[\.dgpsLocalDataSource] = localDataSource
+        let remoteDataSource = DGPSStationRemoteDataSource()
+        InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [dgps, dgps2]
-        let repository = DGPSStationRepository(
-            localDataSource: localDataSource,
-            remoteDataSource: DGPSStationRemoteDataSource()
-        )
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, dgpsRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let router = MarlinRouter()
 
@@ -290,7 +285,6 @@ final class DGPSStationListTests: XCTestCase {
             }
         }
         let view = Container()
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
             .environmentObject(router)

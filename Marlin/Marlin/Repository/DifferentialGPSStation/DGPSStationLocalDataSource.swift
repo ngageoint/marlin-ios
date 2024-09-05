@@ -11,6 +11,17 @@ import Combine
 import UIKit
 import BackgroundTasks
 
+private struct DGPSStationLocalDataSourceProviderKey: InjectionKey {
+    static var currentValue: DGPSStationLocalDataSource = DGPSStationCoreDataDataSource()
+}
+
+extension InjectedValues {
+    var dgpsLocalDataSource: DGPSStationLocalDataSource {
+        get { Self[DGPSStationLocalDataSourceProviderKey.self] }
+        set { Self[DGPSStationLocalDataSourceProviderKey.self] = newValue }
+    }
+}
+
 protocol DGPSStationLocalDataSource {
     func getNewestDifferentialGPSStation() -> DGPSStationModel?
     func getDifferentialGPSStation(featureNumber: Int?, volumeNumber: String?) -> DGPSStationModel?

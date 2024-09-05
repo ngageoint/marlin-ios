@@ -8,10 +8,10 @@
 import Foundation
 
  class DGPSStationInitializer: Initializer {
-    let repository: DGPSStationRepository
+    @Injected(\.dgpsRepository)
+    var repository: DGPSStationRepository
 
-    init(repository: DGPSStationRepository) {
-        self.repository = repository
+    init() {
         super.init(dataSource: DataSources.dgps)
     }
 

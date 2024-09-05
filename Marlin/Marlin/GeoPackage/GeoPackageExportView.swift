@@ -12,7 +12,6 @@ struct GeoPackageExportView: View {
 
     @EnvironmentObject var lightRepository: LightRepository
     @EnvironmentObject var portRepository: PortRepository
-    @EnvironmentObject var dgpsRepository: DGPSStationRepository
     @EnvironmentObject var radioBeaconRepository: RadioBeaconRepository
     @EnvironmentObject var routeRepository: RouteRepository
     @EnvironmentObject var navigationalWarningRepository: NavigationalWarningRepository
@@ -98,7 +97,6 @@ struct GeoPackageExportView: View {
         .onAppear {
             viewModel.lightRepository = lightRepository
             viewModel.portRepository = portRepository
-            viewModel.dgpsRepository = dgpsRepository
             viewModel.radioBeaconRepository = radioBeaconRepository
             viewModel.routeRepository = routeRepository
             viewModel.navigationalWarningRepository = navigationalWarningRepository

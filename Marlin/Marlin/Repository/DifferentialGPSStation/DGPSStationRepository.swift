@@ -22,16 +22,22 @@ enum DGPSStationItem: Hashable, Identifiable {
     case sectionHeader(header: String)
 }
 
-class DGPSStationRepository: ObservableObject {
-    var localDataSource: DGPSStationLocalDataSource
-    private var remoteDataSource: DGPSStationRemoteDataSource
-    init(
-        localDataSource: DGPSStationLocalDataSource,
-        remoteDataSource: DGPSStationRemoteDataSource
-    ) {
-        self.localDataSource = localDataSource
-        self.remoteDataSource = remoteDataSource
+private struct DGPSStationRepositoryProviderKey: InjectionKey {
+    static var currentValue: DGPSStationRepository = DGPSStationRepository()
+}
+
+extension InjectedValues {
+    var dgpsRepository: DGPSStationRepository {
+        get { Self[DGPSStationRepositoryProviderKey.self] }
+        set { Self[DGPSStationRepositoryProviderKey.self] = newValue }
     }
+}
+
+class DGPSStationRepository: ObservableObject {
+    @Injected(\.dgpsLocalDataSource)
+    var localDataSource: DGPSStationLocalDataSource
+    @Injected(\.dgpsemoteDataSource)
+    private var remoteDataSource: DGPSStationRemoteDataSource
 
     func createOperation() -> DGPSStationDataFetchOperation {
         let newestRadioBeacon = localDataSource.getNewestDifferentialGPSStation()

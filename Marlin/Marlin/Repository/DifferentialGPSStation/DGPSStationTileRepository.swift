@@ -18,13 +18,13 @@ class DGPSStationTileRepository: TileRepository, ObservableObject {
     }
     let featureNumber: Int
     let volumeNumber: String
-    let localDataSource: DGPSStationLocalDataSource
+    @Injected(\.dgpsLocalDataSource)
+    var localDataSource: DGPSStationLocalDataSource
     var alwaysShow: Bool = true
 
-    init(featureNumber: Int, volumeNumber: String, localDataSource: DGPSStationLocalDataSource) {
+    init(featureNumber: Int, volumeNumber: String) {
         self.featureNumber = featureNumber
         self.volumeNumber = volumeNumber
-        self.localDataSource = localDataSource
     }
 
     func getTileableItems(
@@ -78,11 +78,8 @@ class DifferentialGPSStationsTileRepository: TileRepository, ObservableObject {
     var filterCacheKey: String {
         UserDefaults.standard.filter(DataSources.dgps).getCacheKey()
     }
-    let localDataSource: DGPSStationLocalDataSource
-
-    init(localDataSource: DGPSStationLocalDataSource) {
-        self.localDataSource = localDataSource
-    }
+    @Injected(\.dgpsLocalDataSource)
+    var localDataSource: DGPSStationLocalDataSource
 
     func getTileableItems(
         minLatitude: Double,

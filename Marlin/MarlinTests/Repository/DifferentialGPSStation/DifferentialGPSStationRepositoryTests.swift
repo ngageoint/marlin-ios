@@ -109,9 +109,11 @@ final class DifferentialGPSStationRepositoryTests: XCTestCase {
             return true
         }
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
+        InjectedValues[\.dgpsLocalDataSource] = localDataSource
         let remoteDataSource = DifferentialGPSStationStaticRemoteDataSource()
+        InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         remoteDataSource.list = models
-        let repository = DGPSStationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = DGPSStationRepository()
 
         let dgps = await repository.fetch()
         XCTAssertEqual(2, dgps.count)
@@ -132,7 +134,10 @@ final class DifferentialGPSStationRepositoryTests: XCTestCase {
 
     func testCreateOperation() {
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
+        InjectedValues[\.dgpsLocalDataSource] = localDataSource
         let remoteDataSource = DifferentialGPSStationStaticRemoteDataSource()
+        InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
+        
         var newest = DGPSStationModel()
         newest.noticeNumber = 202204
         newest.noticeYear = "2022"
@@ -140,7 +145,7 @@ final class DifferentialGPSStationRepositoryTests: XCTestCase {
         localDataSource.list = [
             newest
         ]
-        let repository = DGPSStationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = DGPSStationRepository()
         let operation = repository.createOperation()
         XCTAssertNotNil(operation.noticeYear)
         XCTAssertEqual(operation.noticeYear, "2022")

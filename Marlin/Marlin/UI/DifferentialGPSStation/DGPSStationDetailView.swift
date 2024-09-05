@@ -10,7 +10,6 @@ import MapKit
 import CoreData
 
 struct DGPSStationDetailView: View {
-    @EnvironmentObject var dgpsRepository: DGPSStationRepository
     @EnvironmentObject var routeWaypointRepository: RouteWaypointRepository
 
     @StateObject var viewModel: DGPSStationViewModel = DGPSStationViewModel()
@@ -23,7 +22,6 @@ struct DGPSStationDetailView: View {
             switch viewModel.dgpsStation {
             case nil:
                 Color.clear.onAppear {
-                    viewModel.repository = dgpsRepository
                     viewModel.getDGPSStation(
                         featureNumber: featureNumber,
                         volumeNumber: volumeNumber,
@@ -49,8 +47,7 @@ struct DGPSStationDetailView: View {
                                     DGPSStationMap(
                                         repository: DGPSStationTileRepository(
                                             featureNumber: dgpsStation.featureNumber ?? -1,
-                                            volumeNumber: dgpsStation.volumeNumber ?? "",
-                                            localDataSource: dgpsRepository.localDataSource
+                                            volumeNumber: dgpsStation.volumeNumber ?? ""
                                         )
                                     )
                                 ]

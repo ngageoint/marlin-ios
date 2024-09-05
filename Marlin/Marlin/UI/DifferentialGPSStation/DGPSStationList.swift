@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct DGPSStationList: View {
-    @EnvironmentObject var dgpsStationRepository: DGPSStationRepository
     @StateObject var viewModel: DGPSStationsViewModel = DGPSStationsViewModel()
 
     @EnvironmentObject var router: MarlinRouter
@@ -137,7 +136,6 @@ struct DGPSStationList: View {
             }
         }
         .onAppear {
-            viewModel.repository = dgpsStationRepository
             Metrics.shared.dataSourceList(dataSource: DataSources.dgps)
         }
         .modifier(

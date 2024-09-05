@@ -27,7 +27,8 @@ class BookmarkRepository: ObservableObject {
 
     @Injected(\.asamRepository)
     var asamRepository: AsamRepository
-    let dgpsRepository: DGPSStationRepository?
+    @Injected(\.dgpsRepository)
+    var dgpsRepository: DGPSStationRepository
     let lightRepository: LightRepository?
     @Injected(\.moduRepository)
     var moduRepository: ModuRepository
@@ -39,7 +40,6 @@ class BookmarkRepository: ObservableObject {
 
     init(
         localDataSource: BookmarkLocalDataSource,
-        dgpsRepository: DGPSStationRepository? = nil,
         lightRepository: LightRepository? = nil,
         portRepository: PortRepository? = nil,
         radioBeaconRepository: RadioBeaconRepository? = nil,
@@ -48,7 +48,6 @@ class BookmarkRepository: ObservableObject {
         navigationalWarningRepository: NavigationalWarningRepository? = nil
     ) {
         self.localDataSource = localDataSource
-        self.dgpsRepository = dgpsRepository
         self.lightRepository = lightRepository
         self.portRepository = portRepository
         self.radioBeaconRepository = radioBeaconRepository
@@ -97,7 +96,7 @@ class BookmarkRepository: ObservableObject {
             return noticeToMarinersRepository?.getNoticesToMariners(noticeNumber: Int(itemKey))?.first
         case DataSources.dgps.key:
             if split.count == 2 {
-                return dgpsRepository?.getDGPSStation(
+                return dgpsRepository.getDGPSStation(
                     featureNumber: Int(split[0]) ?? -1,
                     volumeNumber: "\(split[1])"
                 )

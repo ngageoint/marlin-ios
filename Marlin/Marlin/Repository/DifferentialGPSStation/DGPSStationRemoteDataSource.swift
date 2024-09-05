@@ -8,6 +8,17 @@
 import Foundation
 import BackgroundTasks
 
+private struct DGPSStationRemoteDataSourceProviderKey: InjectionKey {
+    static var currentValue: DGPSStationRemoteDataSource = DGPSStationRemoteDataSource()
+}
+
+extension InjectedValues {
+    var dgpsemoteDataSource: DGPSStationRemoteDataSource {
+        get { Self[DGPSStationRemoteDataSourceProviderKey.self] }
+        set { Self[DGPSStationRemoteDataSourceProviderKey.self] = newValue }
+    }
+}
+
 class DGPSStationRemoteDataSource: RemoteDataSource<DGPSStationModel> {
     init(cleanup: (() -> Void)? = nil) {
         super.init(dataSource: DataSources.dgps, cleanup: cleanup)

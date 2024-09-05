@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct DGPSStationSheetView: View {
-    @EnvironmentObject var dgpsRepository: DGPSStationRepository
     var itemKey: String
     var focusNotification: NSNotification.Name
 
@@ -44,7 +43,6 @@ struct DGPSStationSheetView: View {
             )
         }
         .onAppear {
-            viewModel.repository = dgpsRepository
             let split = itemKey.split(separator: "--")
             if split.count == 2 {
                 viewModel.getDGPSStation(featureNumber: Int(split[0]) ?? -1, volumeNumber: "\(split[1])")

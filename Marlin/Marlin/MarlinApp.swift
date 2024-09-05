@@ -139,7 +139,6 @@ struct MarlinApp: App {
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     var bookmarkRepository: BookmarkRepository
     var portRepository: PortRepository
-    var differentialGPSStationRepository: DGPSStationRepository
     var lightRepository: LightRepository
     var radioBeaconRepository: RadioBeaconRepository
     var publicationRepository: PublicationRepository
@@ -173,10 +172,6 @@ struct MarlinApp: App {
             localDataSource: PortCoreDataDataSource(),
             remoteDataSource: PortRemoteDataSource()
         )
-        differentialGPSStationRepository = DGPSStationRepository(
-            localDataSource: DGPSStationCoreDataDataSource(),
-            remoteDataSource: DGPSStationRemoteDataSource()
-        )
         lightRepository = LightRepository(
             localDataSource: LightCoreDataDataSource(),
             remoteDataSource: LightRemoteDataSource()
@@ -209,7 +204,6 @@ struct MarlinApp: App {
 
         bookmarkRepository = BookmarkRepository(
             localDataSource: BookmarkCoreDataDataSource(),
-            dgpsRepository: differentialGPSStationRepository,
             lightRepository: lightRepository,
             portRepository: portRepository,
             radioBeaconRepository: radioBeaconRepository,
@@ -222,9 +216,7 @@ struct MarlinApp: App {
         portsTileRepository = PortsTileRepository(localDataSource: portRepository.localDataSource)
         lightsTileRepository = LightsTileRepository(localDataSource: lightRepository.localDataSource)
         radioBeaconsTileRepository = RadioBeaconsTileRepository(localDataSource: radioBeaconRepository.localDataSource)
-        differentialGPSStationsTileRepository = DifferentialGPSStationsTileRepository(
-            localDataSource: differentialGPSStationRepository.localDataSource
-        )
+        differentialGPSStationsTileRepository = DifferentialGPSStationsTileRepository()
         navigationalWarningsMapFeatureRepository = NavigationalWarningsMapFeatureRepository(
             localDataSource: navigationalWarningRepository.localDataSource
         )
@@ -233,7 +225,6 @@ struct MarlinApp: App {
             portRepository: portRepository,
             lightRepository: lightRepository,
             radioBeaconRepository: radioBeaconRepository,
-            differentialGPSStationRepository: differentialGPSStationRepository,
             publicationRepository: publicationRepository,
             navigationalWarningRepository: navigationalWarningRepository,
             noticeToMarinersRepository: noticeToMarinersRepository,
@@ -258,7 +249,6 @@ struct MarlinApp: App {
                 .environmentObject(bookmarkRepository)
                 .environmentObject(lightRepository)
                 .environmentObject(portRepository)
-                .environmentObject(differentialGPSStationRepository)
                 .environmentObject(radioBeaconRepository)
                 .environmentObject(routeRepository)
                 .environmentObject(routeWaypointRepository)

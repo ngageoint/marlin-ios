@@ -13,8 +13,6 @@ class PublicationsSectionListViewModel: ObservableObject {
 
     private var disposables = Set<AnyCancellable>()
 
-    private var _repository: DGPSStationRepository?
-
     var dataSourceUpdatedPub: AnyCancellable {
         return NotificationCenter.default.publisher(for: .DataSourceUpdated)
             .compactMap { notification in

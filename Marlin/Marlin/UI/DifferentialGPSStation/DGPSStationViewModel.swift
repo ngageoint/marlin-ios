@@ -11,13 +11,8 @@ class DGPSStationViewModel: ObservableObject, Identifiable {
     @Published var dgpsStation: DGPSStationModel?
     @Published var predicate: NSPredicate?
     
-    var repository: DGPSStationRepository? {
-        didSet {
-            if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
-                getDGPSStation(featureNumber: featureNumber, volumeNumber: volumeNumber)
-            }
-        }
-    }
+    @Injected(\.dgpsRepository)
+    var repository: DGPSStationRepository
     var routeWaypointRepository: RouteWaypointRepository?
 
     var featureNumber: Int?
@@ -37,7 +32,7 @@ class DGPSStationViewModel: ObservableObject, Identifiable {
         if let waypointURI = waypointURI {
             dgpsStation = routeWaypointRepository?.getDGPSStation(waypointURI: waypointURI)
         } else {
-            dgpsStation = repository?.getDGPSStation(
+            dgpsStation = repository.getDGPSStation(
                 featureNumber: featureNumber,
                 volumeNumber: volumeNumber
             )

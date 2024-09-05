@@ -39,17 +39,15 @@ final class DifferentialGPSStationDetailViewTests: XCTestCase {
         dgps.noticeYear = "2011"
 
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
+        InjectedValues[\.dgpsLocalDataSource] = localDataSource
+        let remoteDataSource = DifferentialGPSStationStaticRemoteDataSource()
+        InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [dgps]
-        let repository = DGPSStationRepository(
-            localDataSource: localDataSource,
-            remoteDataSource: DGPSStationRemoteDataSource()
-        )
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, dgpsRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let view = DGPSStationDetailView(featureNumber: dgps.featureNumber, volumeNumber: dgps.volumeNumber)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: view)
@@ -97,17 +95,16 @@ final class DifferentialGPSStationDetailViewTests: XCTestCase {
         dgps.noticeYear = "2011"
 
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
+        InjectedValues[\.dgpsLocalDataSource] = localDataSource
+        let remoteDataSource = DifferentialGPSStationStaticRemoteDataSource()
+        InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [dgps]
-        let repository = DGPSStationRepository(
-            localDataSource: localDataSource,
-            remoteDataSource: DGPSStationRemoteDataSource()
-        )
+
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, dgpsRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let view = DGPSStationDetailView(featureNumber: dgps.featureNumber, volumeNumber: dgps.volumeNumber)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: view)

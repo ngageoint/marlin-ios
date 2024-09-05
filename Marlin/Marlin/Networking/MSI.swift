@@ -28,7 +28,6 @@ public class MSI {
         portRepository: PortRepository,
         lightRepository: LightRepository,
         radioBeaconRepository: RadioBeaconRepository,
-        differentialGPSStationRepository: DGPSStationRepository,
         publicationRepository: PublicationRepository,
         navigationalWarningRepository: NavigationalWarningRepository,
         noticeToMarinersRepository: NoticeToMarinersRepository,
@@ -50,9 +49,7 @@ public class MSI {
         portInitializer = PortInitializer(repository: portRepository)
         lightInitializer = LightInitializer(repository: lightRepository)
         radioBeaconInitializer = RadioBeaconInitializer(repository: radioBeaconRepository)
-        differentialGPSStationInitializer = DGPSStationInitializer(
-            repository: differentialGPSStationRepository
-        )
+        differentialGPSStationInitializer = DGPSStationInitializer()
         publicationInitializer = PublicationInitializer(
             repository: publicationRepository
         )
