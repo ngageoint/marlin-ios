@@ -324,7 +324,15 @@ class MockMKLocalSearchResponse: MKLocalSearch.Response {
 
 class MockSearchProvider: SearchProvider {
     func performSearch(searchText: String, region: MKCoordinateRegion?, onCompletion: @escaping ([Marlin.SearchResultModel]) -> Void) {
-        
+        if(searchText == "search"){
+            let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 1.0, longitude: 1.0))
+            let mapItem = MKMapItem(placemark: placemark)
+            mapItem.name = "Test item"
+            mapItem.pointOfInterestCategory = .airport
+            onCompletion([SearchResultModel(mapItem: mapItem)])
+        } else {
+            onCompletion([])
+        }
     }
     
     func performSearchNear(region: MKCoordinateRegion?, zoom: Int, onCompletion: @escaping ([Marlin.SearchResultModel]) -> Void) {

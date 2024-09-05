@@ -26,6 +26,8 @@ class SearchResultAnnotation: NSObject, MKAnnotation {
     init(model: SearchResultModel) {
         coordinate = model.coordinate
         self.model = model
+        super.init()
+        self.accessibilityLabel = title
     }
     
 }

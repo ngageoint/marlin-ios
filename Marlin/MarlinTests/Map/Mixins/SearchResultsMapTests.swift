@@ -59,6 +59,7 @@ final class SearchResultsMapTests: XCTestCase {
                     MarlinMap(name: "Marlin Compact Map", mixins: mixins, mapState: mapState)
                 }
                 .onAppear {
+                    mapState.center = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 1.0, longitude: 1.0), span: MKCoordinateSpan(latitudeDelta: 5, longitudeDelta: 5))
                     if let searchResults = passThrough.searchResults {
                         mapState.searchResults = searchResults.map({ mapItem in
                             SearchResultModel(mapItem: mapItem)
@@ -87,6 +88,6 @@ final class SearchResultsMapTests: XCTestCase {
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         
-        tester().waitForView(withAccessibilityLabel: "Test item\n\n, United States")
+        tester().waitForView(withAccessibilityLabel: "United States\n")
     }
 }

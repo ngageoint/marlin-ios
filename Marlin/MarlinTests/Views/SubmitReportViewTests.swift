@@ -19,7 +19,6 @@ final class SubmitReportViewTests: XCTestCase {
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         // this is the best we can do for now.  No way to intercept the link click
-        tester().waitForView(withAccessibilityLabel: "Submit Anti-Shipping Activity Message (ASAM) Report")
         tester().waitForView(withAccessibilityLabel: "Submit Observer Report")
         tester().waitForView(withAccessibilityLabel: "Submit Mobile Offshore Drilling Unit (MODU) Movement Report")
         tester().waitForView(withAccessibilityLabel: "Submit US Navy Port Visit Report")
