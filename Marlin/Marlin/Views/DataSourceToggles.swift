@@ -31,7 +31,7 @@ struct DataSourceToggles: View {
                 ForEach(
                     Array(
                         dataSourceList
-                            .mappableDataSources[5...7]
+                            .mappableDataSources[5...]
                             .enumerated()
                     ), id: \.element) { index, dataSourceItem in
                     dataSourceButton(dataSourceItem: dataSourceItem)

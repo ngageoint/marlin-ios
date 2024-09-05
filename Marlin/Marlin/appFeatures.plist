@@ -13,7 +13,7 @@
 	<key>hamburger</key>
 	<true/>
 	<key>asamDataSourceEnabled</key>
-	<true/>
+	<false/>
 	<key>moduDataSourceEnabled</key>
 	<true/>
 	<key>lightDataSourceEnabled</key>
@@ -37,7 +37,7 @@
 	<key>routeDataSourceEnabled</key>
 	<true/>
 	<key>userPlaceDataSourceEnabled</key>
-	<true/>
+	<false/>
 	<key>forceReloadDate</key>
 	<date>2022-12-19T17:52:33Z</date>
 	<key>metricsEnabled</key>
