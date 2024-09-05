@@ -19,11 +19,11 @@ class ModuTileRepository: TileRepository, ObservableObject {
         ""
     }
     let name: String
-    let localDataSource: ModuLocalDataSource
+    @Injected(\.moduLocalDataSource)
+    var localDataSource: ModuLocalDataSource
 
-    init(name: String, localDataSource: ModuLocalDataSource) {
+    init(name: String) {
         self.name = name
-        self.localDataSource = localDataSource
     }
 
     func getTileableItems(
@@ -62,6 +62,9 @@ class ModuTileRepository: TileRepository, ObservableObject {
 }
 
 class ModusTileRepository: TileRepository, ObservableObject {
+    @Injected(\.moduLocalDataSource)
+    var localDataSource: ModuLocalDataSource
+    
     var alwaysShow: Bool = false
     var dataSource: any DataSourceDefinition = DataSources.modu
     var cacheSourceKey: String? { dataSource.key }
@@ -74,12 +77,7 @@ class ModusTileRepository: TileRepository, ObservableObject {
     var filterCacheKey: String {
         UserDefaults.standard.filter(dataSource).getCacheKey()
     }
-    let localDataSource: ModuLocalDataSource
-
-    init(localDataSource: ModuLocalDataSource) {
-        self.localDataSource = localDataSource
-    }
-
+    
     func getTileableItems(
         minLatitude: Double,
         maxLatitude: Double,

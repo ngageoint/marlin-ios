@@ -9,11 +9,10 @@ import Foundation
 import BackgroundTasks
 
 class ModuInitializer: Initializer {
-
-    let repository: ModuRepository
-
-    init(repository: ModuRepository) {
-        self.repository = repository
+    @Injected(\.moduRepository)
+    var repository: ModuRepository
+    
+    init() {
         super.init(dataSource: DataSources.modu)
     }
 

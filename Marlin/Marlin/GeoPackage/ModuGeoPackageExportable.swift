@@ -13,10 +13,9 @@ import sf_ios
 class ModuGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.modu
 
-    let moduRepository: ModuRepository
-    init(moduRepository: ModuRepository) {
-        self.moduRepository = moduRepository
-    }
+    @Injected(\.moduRepository)
+    var moduRepository: ModuRepository
+
     func createFeatures(
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,

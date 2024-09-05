@@ -11,7 +11,6 @@ struct GeoPackageExportView: View {
     @EnvironmentObject var dataSourceList: DataSourceList
 
     @EnvironmentObject var asamRepository: AsamRepository
-    @EnvironmentObject var moduRepository: ModuRepository
     @EnvironmentObject var lightRepository: LightRepository
     @EnvironmentObject var portRepository: PortRepository
     @EnvironmentObject var dgpsRepository: DGPSStationRepository
@@ -99,7 +98,6 @@ struct GeoPackageExportView: View {
         .background(Color.backgroundColor)
         .onAppear {
             viewModel.asamRepository = asamRepository
-            viewModel.moduRepository = moduRepository
             viewModel.lightRepository = lightRepository
             viewModel.portRepository = portRepository
             viewModel.dgpsRepository = dgpsRepository

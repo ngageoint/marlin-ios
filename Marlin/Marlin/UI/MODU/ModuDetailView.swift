@@ -10,7 +10,6 @@ import MapKit
 import CoreData
 
 struct ModuDetailView: View {
-    @EnvironmentObject var moduRepository: ModuRepository
     @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @EnvironmentObject var router: MarlinRouter
     @StateObject var viewModel: ModuViewModel = ModuViewModel()
@@ -22,7 +21,6 @@ struct ModuDetailView: View {
         switch viewModel.modu {
         case nil:
             Color.clear.onAppear {
-                viewModel.repository = moduRepository
                 viewModel.getModu(name: name, waypointURI: waypointURI)
             }
         case .some(let modu):
@@ -43,8 +41,7 @@ struct ModuDetailView: View {
                             mixins: [
                                 ModuMap(
                                     repository: ModuTileRepository(
-                                        name: modu.name ?? "",
-                                        localDataSource: moduRepository.localDataSource
+                                        name: modu.name ?? ""
                                     )
                                 )
                             ]

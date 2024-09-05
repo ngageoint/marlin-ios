@@ -34,7 +34,8 @@ class DataSourceExportProgress: Identifiable, Hashable, Equatable, ObservableObj
 
 class GeoPackageExportViewModel: ObservableObject {
     var asamRepository: AsamRepository?
-    var moduRepository: ModuRepository?
+    @Injected(\.moduRepository)
+    var moduRepository: ModuRepository
     var lightRepository: LightRepository?
     var portRepository: PortRepository?
     var dgpsRepository: DGPSStationRepository?
@@ -133,7 +134,7 @@ class GeoPackageExportViewModel: ObservableObject {
                 switch definition {
                 case .route: $0[definition] = self.routeRepository?.getCount(filters: filters)
                 case .asam: $0[definition] = self.asamRepository?.getCount(filters: filters)
-                case .modu: $0[definition] = self.moduRepository?.getCount(filters: filters)
+                case .modu: $0[definition] = self.moduRepository.getCount(filters: filters)
                 case .differentialGPSStation: $0[definition] = self.dgpsRepository?.getCount(filters: filters)
                 case .port: $0[definition] = self.portRepository?.getCount(filters: filters)
                 case .navWarning: $0[definition] = self.navigationalWarningRepository?.getCount(filters: filters)
@@ -329,9 +330,7 @@ class GeoPackageExportViewModel: ObservableObject {
                 exportable = AsamGeoPackageExportable(asamRepository: asamRepository)
             }
         case DataSources.modu.key:
-            if let moduRepository = moduRepository {
-                exportable = ModuGeoPackageExportable(moduRepository: moduRepository)
-            }
+            exportable = ModuGeoPackageExportable()
         case DataSources.dgps.key:
             if let dgpsRepository = dgpsRepository {
                 exportable = DGPSStationGeoPackageExportable(

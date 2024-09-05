@@ -139,7 +139,6 @@ struct MarlinApp: App {
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     var bookmarkRepository: BookmarkRepository
     var asamRepository: AsamRepository
-    var moduRepository: ModuRepository
     var portRepository: PortRepository
     var differentialGPSStationRepository: DGPSStationRepository
     var lightRepository: LightRepository
@@ -174,10 +173,6 @@ struct MarlinApp: App {
         asamRepository = AsamRepository(
             localDataSource: AsamCoreDataDataSource(),
             remoteDataSource: AsamRemoteDataSource()
-        )
-        moduRepository = ModuRepository(
-            localDataSource: ModuCoreDataDataSource(),
-            remoteDataSource: ModuRemoteDataSource()
         )
         portRepository = PortRepository(
             localDataSource: PortCoreDataDataSource(),
@@ -222,7 +217,6 @@ struct MarlinApp: App {
             asamRepository: asamRepository,
             dgpsRepository: differentialGPSStationRepository,
             lightRepository: lightRepository,
-            moduRepository: moduRepository,
             portRepository: portRepository,
             radioBeaconRepository: radioBeaconRepository,
             noticeToMarinersRepository: noticeToMarinersRepository,
@@ -230,7 +224,7 @@ struct MarlinApp: App {
         )
 
         asamsTileRepository = AsamsTileRepository(localDataSource: asamRepository.localDataSource)
-        modusTileRepository = ModusTileRepository(localDataSource: moduRepository.localDataSource)
+        modusTileRepository = ModusTileRepository()
         portsTileRepository = PortsTileRepository(localDataSource: portRepository.localDataSource)
         lightsTileRepository = LightsTileRepository(localDataSource: lightRepository.localDataSource)
         radioBeaconsTileRepository = RadioBeaconsTileRepository(localDataSource: radioBeaconRepository.localDataSource)
@@ -243,7 +237,6 @@ struct MarlinApp: App {
 
         MSI.shared.addRepositories(
             asamRepository: asamRepository,
-            moduRepository: moduRepository,
             portRepository: portRepository,
             lightRepository: lightRepository,
             radioBeaconRepository: radioBeaconRepository,
@@ -271,7 +264,6 @@ struct MarlinApp: App {
                 .environmentObject(dataSourceList)
                 .environmentObject(bookmarkRepository)
                 .environmentObject(asamRepository)
-                .environmentObject(moduRepository)
                 .environmentObject(lightRepository)
                 .environmentObject(portRepository)
                 .environmentObject(differentialGPSStationRepository)

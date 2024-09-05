@@ -11,6 +11,17 @@ import Combine
 import UIKit
 import BackgroundTasks
 
+private struct ModuLocalDataSourceProviderKey: InjectionKey {
+    static var currentValue: ModuLocalDataSource = ModuCoreDataDataSource()
+}
+
+extension InjectedValues {
+    var moduLocalDataSource: ModuLocalDataSource {
+        get { Self[ModuLocalDataSourceProviderKey.self] }
+        set { Self[ModuLocalDataSourceProviderKey.self] = newValue }
+    }
+}
+
 protocol ModuLocalDataSource {
     func insert(task: BGTask?, modus: [ModuModel]) async -> Int
     func batchImport(from propertiesList: [ModuModel]) async throws -> Int

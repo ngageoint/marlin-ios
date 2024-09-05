@@ -523,6 +523,7 @@
 		F7BDF7742A1BD97C0083B97F /* DataSourceLocationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF7732A1BD97C0083B97F /* DataSourceLocationMapView.swift */; };
 		F7BDF7762A1C11640083B97F /* DataSourceToggles.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BDF7752A1C11640083B97F /* DataSourceToggles.swift */; };
 		F7BEE47E2A0443D200EC282D /* MKShapeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BEE47D2A0443D200EC282D /* MKShapeExtensions.swift */; };
+		F7C097C72C8A0866003FA115 /* DependencyInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C097C62C8A0866003FA115 /* DependencyInjection.swift */; };
 		F7C23DFC2906F1460002A7DF /* Metrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23DFB2906F1460002A7DF /* Metrics.swift */; };
 		F7C23DFE290721680002A7DF /* SubmitReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23DFD290721680002A7DF /* SubmitReportView.swift */; };
 		F7C23E0229082D4A0002A7DF /* ElectronicPublication+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C23E0129082D4A0002A7DF /* ElectronicPublication+CoreDataClass.swift */; };
@@ -1226,6 +1227,7 @@
 		F7BDF7752A1C11640083B97F /* DataSourceToggles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceToggles.swift; sourceTree = "<group>"; };
 		F7BEE47C2A04221D00EC282D /* Shared 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Shared 3.xcdatamodel"; sourceTree = "<group>"; };
 		F7BEE47D2A0443D200EC282D /* MKShapeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKShapeExtensions.swift; sourceTree = "<group>"; };
+		F7C097C62C8A0866003FA115 /* DependencyInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyInjection.swift; sourceTree = "<group>"; };
 		F7C23DFB2906F1460002A7DF /* Metrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metrics.swift; sourceTree = "<group>"; };
 		F7C23DFD290721680002A7DF /* SubmitReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitReportView.swift; sourceTree = "<group>"; };
 		F7C23E0129082D4A0002A7DF /* ElectronicPublication+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ElectronicPublication+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -2496,6 +2498,7 @@
 		F7A54CA72848149500E5F565 /* Marlin */ = {
 			isa = PBXGroup;
 			children = (
+				F7C097C52C8A084C003FA115 /* DependencyInjection */,
 				F76EE1452B928A69001128EB /* Data */,
 				F76EE1052B928A68001128EB /* Network */,
 				F76EE1292B928A68001128EB /* Startup */,
@@ -2575,6 +2578,14 @@
 				F7391CA42ABA28590002ABDD /* BookmarkModel.swift */,
 			);
 			path = Bookmark;
+			sourceTree = "<group>";
+		};
+		F7C097C52C8A084C003FA115 /* DependencyInjection */ = {
+			isa = PBXGroup;
+			children = (
+				F7C097C62C8A0866003FA115 /* DependencyInjection.swift */,
+			);
+			path = DependencyInjection;
 			sourceTree = "<group>";
 		};
 		F7C23DFA2906F1360002A7DF /* Metrics */ = {
@@ -4013,6 +4024,7 @@
 				F7303E022B98EA7400CAC2BB /* DrawingMixin.swift in Sources */,
 				F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */,
 				F767DB4C2B8E276D002C12C7 /* PublicationsTypeIdListViewModel.swift in Sources */,
+				F7C097C72C8A0866003FA115 /* DependencyInjection.swift in Sources */,
 				F7D671E72871D46000758F1C /* SideMenuContent.swift in Sources */,
 				F7391CAB2ABB98440002ABDD /* PortRepository.swift in Sources */,
 				F76EE15F2B928A69001128EB /* DGPSStationService.swift in Sources */,

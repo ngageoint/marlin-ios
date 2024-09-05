@@ -10,7 +10,6 @@ import SwiftUI
 
 struct ModuList: View {
 
-    @EnvironmentObject var moduRepository: ModuRepository
     @StateObject var viewModel: ModusViewModel = ModusViewModel()
 
     @EnvironmentObject var router: MarlinRouter
@@ -126,7 +125,6 @@ struct ModuList: View {
             }
         }
         .onAppear {
-            viewModel.repository = moduRepository
             Metrics.shared.dataSourceList(dataSource: DataSources.modu)
         }
         .modifier(

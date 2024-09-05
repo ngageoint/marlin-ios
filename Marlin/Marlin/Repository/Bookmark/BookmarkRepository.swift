@@ -28,7 +28,8 @@ class BookmarkRepository: ObservableObject {
     let asamRepository: AsamRepository?
     let dgpsRepository: DGPSStationRepository?
     let lightRepository: LightRepository?
-    let moduRepository: ModuRepository?
+    @Injected(\.moduRepository)
+    var moduRepository: ModuRepository
     let portRepository: PortRepository?
     let radioBeaconRepository: RadioBeaconRepository?
     let noticeToMarinersRepository: NoticeToMarinersRepository?
@@ -40,7 +41,6 @@ class BookmarkRepository: ObservableObject {
         asamRepository: AsamRepository? = nil,
         dgpsRepository: DGPSStationRepository? = nil,
         lightRepository: LightRepository? = nil,
-        moduRepository: ModuRepository? = nil,
         portRepository: PortRepository? = nil,
         radioBeaconRepository: RadioBeaconRepository? = nil,
         noticeToMarinersRepository: NoticeToMarinersRepository? = nil,
@@ -51,7 +51,6 @@ class BookmarkRepository: ObservableObject {
         self.asamRepository = asamRepository
         self.dgpsRepository = dgpsRepository
         self.lightRepository = lightRepository
-        self.moduRepository = moduRepository
         self.portRepository = portRepository
         self.radioBeaconRepository = radioBeaconRepository
         self.noticeToMarinersRepository = noticeToMarinersRepository
@@ -84,7 +83,7 @@ class BookmarkRepository: ObservableObject {
         case DataSources.asam.key:
             return asamRepository?.getAsam(reference: itemKey)
         case DataSources.modu.key:
-            return moduRepository?.getModu(name: itemKey)
+            return moduRepository.getModu(name: itemKey)
         case DataSources.port.key:
             return portRepository?.getPort(portNumber: Int(itemKey))
         case DataSources.navWarning.key:

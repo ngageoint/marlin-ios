@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct ModuSheetView: View {
-    @EnvironmentObject var moduRepository: ModuRepository
     var itemKey: String
     var focusNotification: NSNotification.Name
 
@@ -40,7 +39,6 @@ struct ModuSheetView: View {
             )
         }
         .onAppear {
-            viewModel.repository = moduRepository
             viewModel.getModu(name: itemKey)
         }
     }

@@ -23,17 +23,31 @@ enum ModuItem: Hashable, Identifiable {
     case sectionHeader(header: String)
 }
 
+private struct ModuRepositoryProviderKey: InjectionKey {
+    static var currentValue: ModuRepository = ModuRepository()
+}
+
+extension InjectedValues {
+    var moduRepository: ModuRepository {
+        get { Self[ModuRepositoryProviderKey.self] }
+        set { Self[ModuRepositoryProviderKey.self] = newValue }
+    }
+}
+
 class ModuRepository: ObservableObject {
+    @Injected(\.moduLocalDataSource)
     var localDataSource: ModuLocalDataSource
+    
+    @Injected(\.moduRemoteDataSource)
     private var remoteDataSource: ModuRemoteDataSource
 
-    init(
-        localDataSource: ModuLocalDataSource,
-        remoteDataSource: ModuRemoteDataSource
-    ) {
-        self.localDataSource = localDataSource
-        self.remoteDataSource = remoteDataSource
-    }
+//    init(
+//        localDataSource: ModuLocalDataSource,
+//        remoteDataSource: ModuRemoteDataSource
+//    ) {
+//        self.localDataSource = localDataSource
+//        self.remoteDataSource = remoteDataSource
+//    }
 
     func createOperation() -> ModuDataFetchOperation {
         let newestModu = localDataSource.getNewestModu()

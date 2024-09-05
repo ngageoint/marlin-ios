@@ -9,6 +9,17 @@ import Foundation
 import UIKit
 import BackgroundTasks
 
+private struct ModuRemoteDataSourceProviderKey: InjectionKey {
+    static var currentValue: ModuRemoteDataSource = ModuRemoteDataSource()
+}
+
+extension InjectedValues {
+    var moduRemoteDataSource: ModuRemoteDataSource {
+        get { Self[ModuRemoteDataSourceProviderKey.self] }
+        set { Self[ModuRemoteDataSourceProviderKey.self] = newValue }
+    }
+}
+
 class ModuRemoteDataSource: RemoteDataSource<ModuModel> {
     init(cleanup: (() -> Void)? = nil) {
         super.init(dataSource: DataSources.modu, cleanup: cleanup)

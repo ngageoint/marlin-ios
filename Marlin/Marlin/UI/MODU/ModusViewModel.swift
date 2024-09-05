@@ -36,8 +36,14 @@ class ModusViewModel: ObservableObject {
     @Published var loaded: Bool = false
     private var disposables = Set<AnyCancellable>()
 
-    private var _repository: ModuRepository?
+    @Injected(\.moduRepository)
+    private var repository: ModuRepository
     var publisher: AnyPublisher<CollectionDifference<ModuModel>, Never>?
+    
+    init() {
+        dataSourceUpdatedPub.store(in: &disposables)
+        fetchModus()
+    }
 
     var dataSourceUpdatedPub: AnyCancellable {
         return NotificationCenter.default.publisher(for: .DataSourceUpdated)
@@ -52,19 +58,6 @@ class ModusViewModel: ObservableObject {
             }
     }
 
-    var repository: ModuRepository? {
-        get {
-            return _repository
-        }
-        set {
-            if _repository == nil {
-                dataSourceUpdatedPub.store(in: &disposables)
-                _repository = newValue
-                fetchModus()
-            }
-        }
-    }
-
     func reload() {
         trigger.activate(for: TriggerId.reload)
     }
@@ -77,7 +70,6 @@ class ModusViewModel: ObservableObject {
         if publisher != nil {
             return
         }
-        guard let repository = _repository else { return }
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in

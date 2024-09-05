@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct ModuRouteSheetView: View {
-    @EnvironmentObject var moduRepository: ModuRepository
     var itemKey: String
     var focusNotification: NSNotification.Name
     @ObservedObject var routeViewModel: RouteViewModel
@@ -48,7 +47,6 @@ struct ModuRouteSheetView: View {
             )
         }
         .onAppear {
-            viewModel.repository = moduRepository
             viewModel.getModu(name: itemKey)
         }
     }
