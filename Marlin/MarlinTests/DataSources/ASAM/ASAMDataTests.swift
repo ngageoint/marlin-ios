@@ -89,8 +89,9 @@ final class ASAMDataTests: XCTestCase {
         
         let bundle = MockBundle()
         bundle.mockPath = "asamMockData.json"
-        
-        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(), bundle: bundle)
+        InjectedValues[\.asamLocalDataSource] = AsamCoreDataDataSource()
+
+        let operation = AsamInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -147,11 +148,11 @@ final class ASAMDataTests: XCTestCase {
         let localDataSource = AsamCoreDataDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
         let remoteDataSource = AsamRemoteDataSource()
-        InjectedValues[\.asamRemoteDataSource]
+        InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         
         let repository = AsamRepository()
 
-        let operation = AsamInitialDataLoadOperation(localDataSource: repository.localDataSource, bundle: bundle)
+        let operation = AsamInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
@@ -314,8 +315,9 @@ final class ASAMDataTests: XCTestCase {
 
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
+        InjectedValues[\.asamLocalDataSource] = AsamCoreDataDataSource()
 
-        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(), bundle: bundle)
+        let operation = AsamInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -379,8 +381,9 @@ final class ASAMDataTests: XCTestCase {
         
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
-        
-        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(), bundle: bundle)
+        InjectedValues[\.asamLocalDataSource] = AsamCoreDataDataSource()
+
+        let operation = AsamInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -444,8 +447,9 @@ final class ASAMDataTests: XCTestCase {
         
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
-        
-        let operation = AsamInitialDataLoadOperation(localDataSource: AsamCoreDataDataSource(), bundle: bundle)
+        InjectedValues[\.asamLocalDataSource] = AsamCoreDataDataSource()
+
+        let operation = AsamInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)

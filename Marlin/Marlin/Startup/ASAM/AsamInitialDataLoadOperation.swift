@@ -9,11 +9,11 @@ import Foundation
 import Kingfisher
 
 class AsamInitialDataLoadOperation: CountingDataLoadOperation {
+    @Injected(\.asamLocalDataSource)
     var localDataSource: AsamLocalDataSource
     var bundle: Bundle
     
-    init(localDataSource: AsamLocalDataSource, bundle: Bundle = .main) {
-        self.localDataSource = localDataSource
+    init(bundle: Bundle = .main) {
         self.bundle = bundle
     }
     

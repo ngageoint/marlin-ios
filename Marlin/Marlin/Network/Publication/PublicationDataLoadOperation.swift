@@ -11,11 +11,11 @@ import CoreData
 class PublicationDataLoadOperation: CountingDataLoadOperation {
 
     var epubs: [PublicationModel] = []
+    @Injected(\.publicationLocalDataSource)
     var localDataSource: PublicationLocalDataSource
 
-    init(epubs: [PublicationModel], localDataSource: PublicationLocalDataSource) {
+    init(epubs: [PublicationModel]) {
         self.epubs = epubs
-        self.localDataSource = localDataSource
     }
 
     override func loadData() async {

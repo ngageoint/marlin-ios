@@ -21,9 +21,7 @@ import Foundation
 
     override func fetch() {
         if repository.getCount(filters: nil) == 0 {
-            let initialDataLoadOperation = DGPSStationInitialDataLoadOperation(
-                localDataSource: self.repository.localDataSource
-            )
+            let initialDataLoadOperation = DGPSStationInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {
                 Task {
                     await self.repository.fetch()

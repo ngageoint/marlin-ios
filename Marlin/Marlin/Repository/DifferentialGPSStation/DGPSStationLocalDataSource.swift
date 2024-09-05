@@ -331,7 +331,7 @@ extension DGPSStationCoreDataDataSource {
         NSLog("Received \(count) \(DataSources.dgps.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = DGPSStationDataLoadOperation(dgpss: dgpss, localDataSource: self)
+        operation = DGPSStationDataLoadOperation(dgpss: dgpss)
 
         return await executeOperationInBackground(task: task)
     }

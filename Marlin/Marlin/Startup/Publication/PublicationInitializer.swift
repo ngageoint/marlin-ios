@@ -10,10 +10,10 @@ import BackgroundTasks
 
 class PublicationInitializer: Initializer {
 
-    let repository: PublicationRepository
+    @Injected(\.publicationRepository)
+    var repository: PublicationRepository
 
-    init(repository: PublicationRepository) {
-        self.repository = repository
+    init() {
         super.init(dataSource: DataSources.epub)
     }
 
@@ -23,9 +23,7 @@ class PublicationInitializer: Initializer {
 
     override func fetch() {
         if repository.getCount(filters: nil) == 0 {
-            let initialDataLoadOperation = PublicationInitialDataLoadOperation(
-                localDataSource: self.repository.localDataSource
-            )
+            let initialDataLoadOperation = PublicationInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {
                 Task {
                     await self.repository.fetch()

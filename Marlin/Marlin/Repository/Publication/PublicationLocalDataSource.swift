@@ -11,6 +11,17 @@ import Combine
 import UIKit
 import BackgroundTasks
 
+private struct PublicationLocalDataSourceProviderKey: InjectionKey {
+    static var currentValue: PublicationLocalDataSource = PublicationCoreDataDataSource()
+}
+
+extension InjectedValues {
+    var publicationLocalDataSource: PublicationLocalDataSource {
+        get { Self[PublicationLocalDataSourceProviderKey.self] }
+        set { Self[PublicationLocalDataSourceProviderKey.self] = newValue }
+    }
+}
+
 protocol PublicationLocalDataSource {
     func getPublication(s3Key: String?) -> PublicationModel?
     func getSections(filters: [DataSourceFilterParameter]?) async -> [PublicationItem]?
@@ -490,7 +501,7 @@ extension PublicationCoreDataDataSource {
         NSLog("Received \(count) \(DataSources.epub.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = PublicationDataLoadOperation(epubs: epubs, localDataSource: self)
+        operation = PublicationDataLoadOperation(epubs: epubs)
 
         return await executeOperationInBackground(task: task)
     }

@@ -376,7 +376,7 @@ final class PortCoreDataDataSourceTests: XCTestCase {
         asam.victim = "Ship"
 
         let dataSource = AsamCoreDataDataSource()
-
+        InjectedValues[\.asamLocalDataSource] = dataSource
         let inserted = await dataSource.insert(asams: [asam])
         XCTAssertEqual(1, inserted)
 

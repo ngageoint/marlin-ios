@@ -9,11 +9,11 @@ import Foundation
 import Kingfisher
 
 class ModuInitialDataLoadOperation: CountingDataLoadOperation {
+    @Injected(\.moduLocalDataSource)
     var localDataSource: ModuLocalDataSource
     var bundle: Bundle
 
-    init(localDataSource: ModuLocalDataSource, bundle: Bundle = .main) {
-        self.localDataSource = localDataSource
+    init(bundle: Bundle = .main) {
         self.bundle = bundle
     }
 

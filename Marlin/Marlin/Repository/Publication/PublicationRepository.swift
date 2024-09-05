@@ -25,18 +25,24 @@ enum PublicationItem: Hashable, Identifiable {
     case pubType(type: PublicationTypeEnum, count: Int)
 }
 
+private struct PublicationRepositoryProviderKey: InjectionKey {
+    static var currentValue: PublicationRepository = PublicationRepository()
+}
+
+extension InjectedValues {
+    var publicationRepository: PublicationRepository {
+        get { Self[PublicationRepositoryProviderKey.self] }
+        set { Self[PublicationRepositoryProviderKey.self] = newValue }
+    }
+}
+
 class PublicationRepository: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
+    @Injected(\.publicationLocalDataSource)
     var localDataSource: PublicationLocalDataSource
+    @Injected(\.publicationRemoteDataSource)
     private var remoteDataSource: PublicationRemoteDataSource
-    init(
-        localDataSource: PublicationLocalDataSource,
-        remoteDataSource: PublicationRemoteDataSource
-    ) {
-        self.localDataSource = localDataSource
-        self.remoteDataSource = remoteDataSource
-    }
 
     func createOperation() -> PublicationDataFetchOperation {
         return PublicationDataFetchOperation()

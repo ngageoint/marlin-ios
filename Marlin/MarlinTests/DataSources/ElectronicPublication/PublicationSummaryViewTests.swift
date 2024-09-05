@@ -42,16 +42,17 @@ final class PublicationSummaryViewTests: XCTestCase {
         epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
 
         let localDataSource = PublicationStaticLocalDataSource()
-        localDataSource.map[epub.s3Key ?? ""] = epub
         let remoteDataSource = PublicationRemoteDataSource()
-        let repository = PublicationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        InjectedValues[\.publicationLocalDataSource] = localDataSource
+        InjectedValues[\.publicationRemoteDataSource] = remoteDataSource
+        localDataSource.map[epub.s3Key ?? ""] = epub
+        
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, publicationRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
             .setShowMoreDetails(false)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
 
@@ -92,17 +93,20 @@ final class PublicationSummaryViewTests: XCTestCase {
         epub.isDownloaded = false
 
         let localDataSource = PublicationStaticLocalDataSource()
+        let remoteDataSource = PublicationStaticRemoteDataSource()
+        InjectedValues[\.publicationLocalDataSource] = localDataSource
+        InjectedValues[\.publicationRemoteDataSource] = remoteDataSource
         localDataSource.map[epub.s3Key ?? ""] = epub
         localDataSource.deleteFile(s3Key: epub.s3Key ?? "")
-        let remoteDataSource = PublicationStaticRemoteDataSource()
-        let repository = PublicationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        
+        @Injected(\.publicationRepository)
+        var repository: PublicationRepository
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, publicationRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
             .setShowMoreDetails(false)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
 
@@ -169,17 +173,17 @@ final class PublicationSummaryViewTests: XCTestCase {
         epub.isDownloaded = false
         
         let localDataSource = PublicationStaticLocalDataSource()
+        let remoteDataSource = PublicationStaticRemoteDataSource()
+        InjectedValues[\.publicationLocalDataSource] = localDataSource
+        InjectedValues[\.publicationRemoteDataSource] = remoteDataSource
         localDataSource.map[epub.s3Key ?? ""] = epub
         localDataSource.deleteFile(s3Key: epub.s3Key ?? "")
-        let remoteDataSource = PublicationStaticRemoteDataSource()
-        let repository = PublicationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, publicationRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
             .setShowMoreDetails(false)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
 
@@ -230,17 +234,18 @@ final class PublicationSummaryViewTests: XCTestCase {
         epub.isDownloading = true
 
         let localDataSource = PublicationStaticLocalDataSource()
+        let remoteDataSource = PublicationStaticRemoteDataSource()
+        InjectedValues[\.publicationLocalDataSource] = localDataSource
+        InjectedValues[\.publicationRemoteDataSource] = remoteDataSource
         localDataSource.map[epub.s3Key ?? ""] = epub
         localDataSource.deleteFile(s3Key: epub.s3Key ?? "")
-        let remoteDataSource = PublicationStaticRemoteDataSource()
-        let repository = PublicationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = PublicationRepository()
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, publicationRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
             .setShowMoreDetails(false)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summary)

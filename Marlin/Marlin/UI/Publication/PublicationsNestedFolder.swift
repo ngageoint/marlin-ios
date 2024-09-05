@@ -9,8 +9,7 @@ import Foundation
 import SwiftUI
 
 struct PublicationsNestedFolder: View {
-    @EnvironmentObject var repository: PublicationRepository
-    @StateObject var viewModel: PublicationsNestedFolderViewModel = 
+    @StateObject var viewModel: PublicationsNestedFolderViewModel =
         PublicationsNestedFolderViewModel()
     var pubTypeId: Int
 
@@ -44,7 +43,6 @@ struct PublicationsNestedFolder: View {
         .navigationTitle((PublicationTypeEnum(rawValue: pubTypeId) ?? .unknown).description)
         .navigationBarTitleDisplayMode(.inline)
         .task {
-            viewModel.repository = repository
             viewModel.pubTypeId = pubTypeId
             Metrics.shared.appRoute(["epubs", PublicationTypeEnum(rawValue: pubTypeId)?.description ?? "pubs"])
         }

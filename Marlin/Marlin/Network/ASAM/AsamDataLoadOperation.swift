@@ -11,11 +11,11 @@ import Kingfisher
 class AsamDataLoadOperation: CountingDataLoadOperation {
 
     var asams: [AsamModel] = []
+    @Injected(\.asamLocalDataSource)
     var localDataSource: AsamLocalDataSource
 
-    init(asams: [AsamModel], localDataSource: AsamLocalDataSource) {
+    init(asams: [AsamModel]) {
         self.asams = asams
-        self.localDataSource = localDataSource
     }
 
     @MainActor override func finishLoad() {

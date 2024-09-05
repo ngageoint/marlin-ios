@@ -141,7 +141,6 @@ struct MarlinApp: App {
     var portRepository: PortRepository
     var lightRepository: LightRepository
     var radioBeaconRepository: RadioBeaconRepository
-    var publicationRepository: PublicationRepository
     var navigationalWarningRepository: NavigationalWarningRepository
     var noticeToMarinersRepository: NoticeToMarinersRepository
     var userPlaceRepository: UserPlaceRepository
@@ -180,10 +179,6 @@ struct MarlinApp: App {
             localDataSource: RadioBeaconCoreDataDataSource(),
             remoteDataSource: RadioBeaconRemoteDataSource()
         )
-        publicationRepository = PublicationRepository(
-            localDataSource: PublicationCoreDataDataSource(),
-            remoteDataSource: PublicationRemoteDataSource()
-        )
         navigationalWarningRepository = NavigationalWarningRepository(
             localDataSource: NavigationalWarningCoreDataDataSource(),
             remoteDataSource: NavigationalWarningRemoteDataSource()
@@ -207,8 +202,7 @@ struct MarlinApp: App {
             lightRepository: lightRepository,
             portRepository: portRepository,
             radioBeaconRepository: radioBeaconRepository,
-            noticeToMarinersRepository: noticeToMarinersRepository,
-            publicationRepository: publicationRepository
+            noticeToMarinersRepository: noticeToMarinersRepository
         )
 
         asamsTileRepository = AsamsTileRepository()
@@ -225,7 +219,6 @@ struct MarlinApp: App {
             portRepository: portRepository,
             lightRepository: lightRepository,
             radioBeaconRepository: radioBeaconRepository,
-            publicationRepository: publicationRepository,
             navigationalWarningRepository: navigationalWarningRepository,
             noticeToMarinersRepository: noticeToMarinersRepository,
             routeRepository: routeRepository
@@ -253,7 +246,6 @@ struct MarlinApp: App {
                 .environmentObject(routeRepository)
                 .environmentObject(routeWaypointRepository)
                 .environmentObject(navigationalWarningRepository)
-                .environmentObject(publicationRepository)
                 .environmentObject(noticeToMarinersRepository)
                 .environmentObject(userPlaceRepository)
                 .environmentObject(asamsTileRepository)

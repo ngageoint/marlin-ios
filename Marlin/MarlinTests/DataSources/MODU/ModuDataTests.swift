@@ -68,8 +68,10 @@ final class ModuDataTests: XCTestCase {
         
         let bundle = MockBundle()
         bundle.mockPath = "moduMockData.json"
+        
+        InjectedValues[\.moduLocalDataSource] = ModuCoreDataDataSource()
 
-        let operation = ModuInitialDataLoadOperation(localDataSource: ModuCoreDataDataSource(), bundle: bundle)
+        let operation = ModuInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -135,8 +137,10 @@ final class ModuDataTests: XCTestCase {
         
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
+        
+        InjectedValues[\.moduLocalDataSource] = ModuCoreDataDataSource()
 
-        let operation = ModuInitialDataLoadOperation(localDataSource: ModuCoreDataDataSource(), bundle: bundle)
+        let operation = ModuInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -202,8 +206,8 @@ final class ModuDataTests: XCTestCase {
         
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
-
-        let operation = ModuInitialDataLoadOperation(localDataSource: ModuCoreDataDataSource(), bundle: bundle)
+        InjectedValues[\.moduLocalDataSource] = ModuCoreDataDataSource()
+        let operation = ModuInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -270,7 +274,9 @@ final class ModuDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
 
-        let operation = ModuInitialDataLoadOperation(localDataSource: ModuCoreDataDataSource(), bundle: bundle)
+        InjectedValues[\.moduLocalDataSource] = ModuCoreDataDataSource()
+
+        let operation = ModuInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)

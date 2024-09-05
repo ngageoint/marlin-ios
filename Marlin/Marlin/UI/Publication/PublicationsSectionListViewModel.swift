@@ -28,17 +28,18 @@ class PublicationsSectionListViewModel: ObservableObject {
             }
     }
 
-    var repository: PublicationRepository? {
-        didSet {
-            Task {
-                dataSourceUpdatedPub.store(in: &disposables)
-                await fetchSections()
-            }
+    @Injected(\.publicationRepository)
+    var repository: PublicationRepository
+    
+    init() {
+        Task {
+            dataSourceUpdatedPub.store(in: &disposables)
+            await fetchSections()
         }
     }
 
     func fetchSections() async {
-        let fetched = await repository?.getSections() ?? []
+        let fetched = await repository.getSections()
         await MainActor.run {
             sections = fetched
         }

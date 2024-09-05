@@ -307,7 +307,7 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
         NSLog("Received \(count) \(DataSources.modu.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = ModuDataLoadOperation(modus: modus, localDataSource: self)
+        operation = ModuDataLoadOperation(modus: modus)
 
         return await executeOperationInBackground(task: task)
     }

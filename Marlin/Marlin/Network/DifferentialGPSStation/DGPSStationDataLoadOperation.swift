@@ -11,11 +11,11 @@ import Kingfisher
 class DGPSStationDataLoadOperation: CountingDataLoadOperation {
 
     var dgpss: [DGPSStationModel] = []
+    @Injected(\.dgpsLocalDataSource)
     var localDataSource: DGPSStationLocalDataSource
 
-    init(dgpss: [DGPSStationModel], localDataSource: DGPSStationLocalDataSource) {
+    init(dgpss: [DGPSStationModel]) {
         self.dgpss = dgpss
-        self.localDataSource = localDataSource
     }
 
     @MainActor override func finishLoad() {

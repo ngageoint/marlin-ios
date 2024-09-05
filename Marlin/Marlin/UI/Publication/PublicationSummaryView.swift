@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct PublicationSummaryView: DataSourceSummaryView {
-    @EnvironmentObject var repository: PublicationRepository
     @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
 
@@ -35,7 +34,7 @@ struct PublicationSummaryView: DataSourceSummaryView {
         switch viewModel.publication {
         case nil:
             Color.clear.onAppear {
-                viewModel.setupModel(repository: repository, s3Key: s3Key)
+                viewModel.setupModel(s3Key: s3Key)
             }
         case .some(let publication):
             VStack(alignment: .leading, spacing: 8) {

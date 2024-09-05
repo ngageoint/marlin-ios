@@ -112,8 +112,10 @@ final class PublicationRepositoryTests: XCTestCase {
         }
         let localDataSource = PublicationStaticLocalDataSource()
         let remoteDataSource = PublicationStaticRemoteDataSource()
+        InjectedValues[\.publicationLocalDataSource] = localDataSource
+        InjectedValues[\.publicationRemoteDataSource] = remoteDataSource
         remoteDataSource.list = models
-        let repository = PublicationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = PublicationRepository()
 
         let modus = await repository.fetch()
         XCTAssertEqual(2, modus.count)
@@ -130,8 +132,10 @@ final class PublicationRepositoryTests: XCTestCase {
     func testCreateOperation() {
         let localDataSource = PublicationStaticLocalDataSource()
         let remoteDataSource = PublicationStaticRemoteDataSource()
+        InjectedValues[\.publicationLocalDataSource] = localDataSource
+        InjectedValues[\.publicationRemoteDataSource] = remoteDataSource
 
-        let repository = PublicationRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = PublicationRepository()
         let operation = repository.createOperation()
         XCTAssertNotNil(operation)
     }

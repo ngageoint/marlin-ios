@@ -89,9 +89,8 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         bundle.mockPath = "dgpsMockData.json"
 
         let localDataSource = DGPSStationCoreDataDataSource()
-        let operation = DGPSStationInitialDataLoadOperation(
-            localDataSource: localDataSource, bundle: bundle
-        )
+        InjectedValues[\.dgpsLocalDataSource] = localDataSource
+        let operation = DGPSStationInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -180,9 +179,11 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
+        
+        InjectedValues[\.dgpsLocalDataSource] = DGPSStationCoreDataDataSource()
 
         let operation = DGPSStationInitialDataLoadOperation(
-            localDataSource: DGPSStationCoreDataDataSource(), bundle: bundle
+            bundle: bundle
         )
         operation.start()
 
@@ -265,9 +266,11 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
+        
+        InjectedValues[\.dgpsLocalDataSource] = DGPSStationCoreDataDataSource()
 
         let operation = DGPSStationInitialDataLoadOperation(
-            localDataSource: DGPSStationCoreDataDataSource(), bundle: bundle
+            bundle: bundle
         )
         operation.start()
         waitForExpectations(timeout: 10, handler: nil)
@@ -350,8 +353,10 @@ final class DifferentialGPSStationDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
 
+        InjectedValues[\.dgpsLocalDataSource] = DGPSStationCoreDataDataSource()
+
         let operation = DGPSStationInitialDataLoadOperation(
-            localDataSource: DGPSStationCoreDataDataSource(), bundle: bundle
+            bundle: bundle
         )
         operation.start()
         waitForExpectations(timeout: 10, handler: nil)

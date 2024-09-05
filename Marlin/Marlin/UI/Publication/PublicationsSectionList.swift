@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct PublicationsSectionList: View {
-    @EnvironmentObject var repository: PublicationRepository
 
     @StateObject var viewModel: PublicationsSectionListViewModel =
     PublicationsSectionListViewModel()
@@ -69,7 +68,6 @@ struct PublicationsSectionList: View {
         .navigationTitle(DataSources.epub.fullName)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            viewModel.repository = repository
             Metrics.shared.appRoute(["epubs"])
         }
     }

@@ -9,11 +9,11 @@ import Foundation
 import Kingfisher
 
 class DGPSStationInitialDataLoadOperation: CountingDataLoadOperation {
+    @Injected(\.dgpsLocalDataSource)
     var localDataSource: DGPSStationLocalDataSource
     var bundle: Bundle
 
-    init(localDataSource: DGPSStationLocalDataSource, bundle: Bundle = .main) {
-        self.localDataSource = localDataSource
+    init(bundle: Bundle = .main) {
         self.bundle = bundle
     }
 

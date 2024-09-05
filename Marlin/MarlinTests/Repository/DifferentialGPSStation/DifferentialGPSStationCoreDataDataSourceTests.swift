@@ -77,7 +77,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
             return
         }
         let dataSource = DGPSStationCoreDataDataSource()
-
+        InjectedValues[\.dgpsLocalDataSource] = dataSource
         XCTAssertEqual(dataSource.getCount(filters: nil), 1)
     }
 
@@ -148,7 +148,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
         }
 
         let dataSource = DGPSStationCoreDataDataSource()
-
+        InjectedValues[\.dgpsLocalDataSource] = dataSource
         let retrieved = dataSource.getDifferentialGPSStation(featureNumber: Int(newItem.featureNumber), volumeNumber: newItem.volumeNumber)
         XCTAssertEqual(retrieved?.featureNumber, Int(newItem.featureNumber))
         XCTAssertEqual(retrieved?.volumeNumber, newItem.volumeNumber)
@@ -228,7 +228,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
         }
 
         let dataSource = DGPSStationCoreDataDataSource()
-
+        InjectedValues[\.dgpsLocalDataSource] = dataSource
         let retrieved = dataSource.getNewestDifferentialGPSStation()
         XCTAssertEqual(retrieved?.featureNumber, Int(newItem2.featureNumber))
         XCTAssertEqual(retrieved?.volumeNumber, newItem2.volumeNumber)
@@ -309,7 +309,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
         }
 
         let dataSource = DGPSStationCoreDataDataSource()
-
+        InjectedValues[\.dgpsLocalDataSource] = dataSource
         let retrieved = await dataSource.getDifferentialGPSStationsInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
         XCTAssertEqual(retrieved.count, 1)
         XCTAssertEqual(retrieved[0].featureNumber, Int(exactly: newItem2.featureNumber!)!)
@@ -386,7 +386,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
 
         let trigger = Trigger()
         let dataSource = DGPSStationCoreDataDataSource()
-
+        InjectedValues[\.dgpsLocalDataSource] = dataSource
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, dataSource] in
@@ -514,7 +514,7 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
 
         let trigger = Trigger()
         let dataSource = DGPSStationCoreDataDataSource()
-
+        InjectedValues[\.dgpsLocalDataSource] = dataSource
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, dataSource] in
@@ -650,7 +650,8 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
         dgps.noticeYear = "2011"
 
         let dataSource = DGPSStationCoreDataDataSource()
-
+        InjectedValues[\.dgpsLocalDataSource] = dataSource
+        
         let inserted = await dataSource.insert(dgpss: [dgps])
         XCTAssertEqual(1, inserted)
 
@@ -685,11 +686,13 @@ final class DifferentialGPSStationCoreDataDataSourceTests: XCTestCase {
         dgps.noticeYear = "2011"
 
         let dataSource = DGPSStationCoreDataDataSource()
+        InjectedValues[\.dgpsLocalDataSource] = dataSource
 
         let inserted = await dataSource.insert(dgpss: [dgps])
         XCTAssertEqual(1, inserted)
 
         let retrieved = await dataSource.getDifferentialGPSStations(filters: [DataSourceFilterParameter(property: DataSourceProperty(name: "featureNumber", key: "featureNumber", type: .int), comparison: DataSourceFilterComparison.equals, valueInt: dgps.featureNumber)])
+        print("retrieved \(retrieved)")
         XCTAssertEqual(1, retrieved.count)
         XCTAssertEqual(retrieved[0].featureNumber, dgps.featureNumber)
         XCTAssertEqual(retrieved[0].volumeNumber, dgps.volumeNumber)

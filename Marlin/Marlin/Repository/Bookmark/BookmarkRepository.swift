@@ -35,7 +35,8 @@ class BookmarkRepository: ObservableObject {
     let portRepository: PortRepository?
     let radioBeaconRepository: RadioBeaconRepository?
     let noticeToMarinersRepository: NoticeToMarinersRepository?
-    let publicationRepository: PublicationRepository?
+    @Injected(\.publicationRepository)
+    var publicationRepository: PublicationRepository
     let navigationalWarningRepository: NavigationalWarningRepository?
 
     init(
@@ -44,7 +45,6 @@ class BookmarkRepository: ObservableObject {
         portRepository: PortRepository? = nil,
         radioBeaconRepository: RadioBeaconRepository? = nil,
         noticeToMarinersRepository: NoticeToMarinersRepository? = nil,
-        publicationRepository: PublicationRepository? = nil,
         navigationalWarningRepository: NavigationalWarningRepository? = nil
     ) {
         self.localDataSource = localDataSource
@@ -52,7 +52,6 @@ class BookmarkRepository: ObservableObject {
         self.portRepository = portRepository
         self.radioBeaconRepository = radioBeaconRepository
         self.noticeToMarinersRepository = noticeToMarinersRepository
-        self.publicationRepository = publicationRepository
         self.navigationalWarningRepository = navigationalWarningRepository
     }
 
@@ -117,7 +116,7 @@ class BookmarkRepository: ObservableObject {
                 )
             }
         case DataSources.epub.key:
-            return publicationRepository?.getPublication(s3Key: itemKey)
+            return publicationRepository.getPublication(s3Key: itemKey)
         case GeoPackageFeatureItem.key:
             return GeoPackageFeatureItem.getItem(
                 context: PersistenceController.current.newTaskContext(),

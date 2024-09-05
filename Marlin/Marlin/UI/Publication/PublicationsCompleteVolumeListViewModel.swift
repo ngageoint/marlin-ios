@@ -19,18 +19,16 @@ class PublicationsCompleteVolumeListViewModel: ObservableObject {
 
     init(pubTypeId: Int? = nil) {
         self.pubTypeId = pubTypeId
-    }
-
-    var repository: PublicationRepository? {
-        didSet {
-            Task {
-                await fetchPublications()
-            }
+        Task {
+            await fetchPublications()
         }
     }
 
+    @Injected(\.publicationRepository)
+    var repository: PublicationRepository
+
     func fetchPublications() async {
-        if let pubTypeId = pubTypeId, let repository = repository {
+        if let pubTypeId = pubTypeId {
             let fetched = await repository.getPublications(typeId: pubTypeId)
                 .filter({ epub in
                     epub.fullPubFlag == true

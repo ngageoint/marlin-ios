@@ -9,6 +9,17 @@ import Foundation
 import BackgroundTasks
 import Combine
 
+private struct PublicationRemoteDataSourceProviderKey: InjectionKey {
+    static var currentValue: PublicationRemoteDataSource = PublicationRemoteDataSource()
+}
+
+extension InjectedValues {
+    var publicationRemoteDataSource: PublicationRemoteDataSource {
+        get { Self[PublicationRemoteDataSourceProviderKey.self] }
+        set { Self[PublicationRemoteDataSourceProviderKey.self] = newValue }
+    }
+}
+
 class PublicationRemoteDataSource: RemoteDataSource<PublicationModel> {
     var downloads: [String: DownloadManager] = [:]
     init(cleanup: (() -> Void)? = nil) {

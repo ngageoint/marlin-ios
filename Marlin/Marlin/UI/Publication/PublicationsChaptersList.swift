@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct PublicationsChaptersList: View {
-    @EnvironmentObject var repository: PublicationRepository
     @StateObject var viewModel: PublicationsChaptersListViewModel = 
         PublicationsChaptersListViewModel()
     var pubTypeId: Int
@@ -44,7 +43,6 @@ struct PublicationsChaptersList: View {
         .listRowBackground(Color.surfaceColor)
         .listStyle(.grouped)
         .task {
-            viewModel.repository = repository
             viewModel.pubTypeId = pubTypeId
             Metrics.shared.appRoute(["epubs", PublicationTypeEnum(rawValue: pubTypeId)?.description ?? "pubs"])
         }

@@ -10,11 +10,11 @@ import Kingfisher
 
 class ModuDataLoadOperation: CountingDataLoadOperation {
     var modus: [ModuModel] = []
+    @Injected(\.moduLocalDataSource)
     var localDataSource: ModuLocalDataSource
 
-    init(modus: [ModuModel], localDataSource: ModuLocalDataSource) {
+    init(modus: [ModuModel]) {
         self.modus = modus
-        self.localDataSource = localDataSource
     }
 
     @MainActor override func finishLoad() {

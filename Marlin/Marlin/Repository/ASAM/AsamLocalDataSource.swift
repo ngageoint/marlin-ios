@@ -320,7 +320,7 @@ extension AsamCoreDataDataSource {
         NSLog("Received \(count) \(DataSources.asam.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = AsamDataLoadOperation(asams: asams, localDataSource: self)
+        operation = AsamDataLoadOperation(asams: asams)
 
         return await executeOperationInBackground(task: task)
     }

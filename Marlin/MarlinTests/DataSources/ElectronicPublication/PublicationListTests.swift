@@ -50,7 +50,10 @@ final class PublicationListTests: XCTestCase {
         bundle.mockPath = "fullEpubList.json"
 
         let localDataSource = PublicationStaticLocalDataSource()
-        let operation = PublicationInitialDataLoadOperation(localDataSource: localDataSource, bundle: bundle)
+        let remoteDataSource = PublicationRemoteDataSource()
+        InjectedValues[\.publicationLocalDataSource] = localDataSource
+        InjectedValues[\.publicationRemoteDataSource] = remoteDataSource
+        let operation = PublicationInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -76,12 +79,11 @@ final class PublicationListTests: XCTestCase {
             }
         }
         let passThrough = PassThrough()
-        let repository = PublicationRepository(localDataSource: localDataSource, remoteDataSource: PublicationRemoteDataSource())
+        let repository = PublicationRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let container = Container(passThrough: passThrough)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
 
         let controller = UIHostingController(rootView: container)

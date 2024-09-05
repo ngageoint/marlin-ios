@@ -67,6 +67,7 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
             return
         }
         let dataSource = ModuCoreDataDataSource()
+        InjectedValues[\.moduLocalDataSource] = dataSource
 
         XCTAssertEqual(dataSource.getCount(filters: nil), 1)
     }
@@ -118,6 +119,7 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
         }
 
         let dataSource = ModuCoreDataDataSource()
+        InjectedValues[\.moduLocalDataSource] = dataSource
 
         let retrieved = dataSource.getModu(name: newItem.name)
         XCTAssertEqual(retrieved?.name, newItem.name)
@@ -176,13 +178,15 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
         }
 
         let dataSource = ModuCoreDataDataSource()
-        
+        InjectedValues[\.moduLocalDataSource] = dataSource
+
         let retrieved = dataSource.getNewestModu()
         XCTAssertEqual(retrieved?.name, newItem2.name)
     }
 
     func testGetNewestEmpty() {
         let dataSource = ModuCoreDataDataSource()
+        InjectedValues[\.moduLocalDataSource] = dataSource
 
         let retrieved = dataSource.getNewestModu()
         XCTAssertNil(retrieved)
@@ -235,6 +239,7 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
         }
 
         let dataSource = ModuCoreDataDataSource()
+        InjectedValues[\.moduLocalDataSource] = dataSource
 
         let retrieved = await dataSource.getModusInBounds(filters: nil, minLatitude: 19, maxLatitude: 21, minLongitude: 19, maxLongitude: 21)
         XCTAssertEqual(retrieved.count, 1)
@@ -300,6 +305,7 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
 
         let trigger = Trigger()
         let dataSource = ModuCoreDataDataSource()
+        InjectedValues[\.moduLocalDataSource] = dataSource
 
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
@@ -410,6 +416,7 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
 
         let trigger = Trigger()
         let dataSource = ModuCoreDataDataSource()
+        InjectedValues[\.moduLocalDataSource] = dataSource
 
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
@@ -527,6 +534,7 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
         modu2.subregion = 63
 
         let dataSource = ModuCoreDataDataSource()
+        InjectedValues[\.moduLocalDataSource] = dataSource
 
         let inserted = await dataSource.insert(modus: [modu2])
         XCTAssertEqual(1, inserted)
@@ -551,6 +559,7 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
         modu2.subregion = 63
 
         let dataSource = ModuCoreDataDataSource()
+        InjectedValues[\.moduLocalDataSource] = dataSource
         let inserted = await dataSource.insert(modus: [modu2])
         XCTAssertEqual(1, inserted)
 
