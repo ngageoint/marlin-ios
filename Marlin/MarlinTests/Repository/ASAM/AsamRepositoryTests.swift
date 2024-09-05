@@ -103,9 +103,11 @@ final class AsamRepositoryTests: XCTestCase {
             return true
         }
         let localDataSource = AsamStaticLocalDataSource()
+        InjectedValues[\.asamLocalDataSource] = localDataSource
         let remoteDataSource = AsamStaticRemoteDataSource()
+        InjectedValues[\.asamRemoteDataSource]
         remoteDataSource.asamList = asamModels
-        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = AsamRepository()
 
         let asams = await repository.fetchAsams()
         XCTAssertEqual(3, asams.count)
@@ -126,13 +128,15 @@ final class AsamRepositoryTests: XCTestCase {
 
     func testCreateOperation() {
         let localDataSource = AsamStaticLocalDataSource()
+        InjectedValues[\.asamLocalDataSource] = localDataSource
         let remoteDataSource = AsamStaticRemoteDataSource()
+        InjectedValues[\.asamRemoteDataSource]
         var newest = AsamModel()
         newest.date = Date(timeIntervalSince1970: 0)
         localDataSource.list = [
             newest
         ]
-        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = AsamRepository()
         let operation = repository.createOperation()
         XCTAssertNotNil(operation.dateString)
         XCTAssertEqual(operation.dateString, newest.dateString)

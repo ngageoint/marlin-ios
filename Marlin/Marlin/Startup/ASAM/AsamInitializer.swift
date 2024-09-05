@@ -10,10 +10,10 @@ import BackgroundTasks
 
 class AsamInitializer: Initializer {
 
-    let repository: AsamRepository
+    @Injected(\.asamRepository)
+    var repository: AsamRepository
     
-    init(repository: AsamRepository) {
-        self.repository = repository
+    init() {
         super.init(dataSource: DataSources.asam)
     }
 

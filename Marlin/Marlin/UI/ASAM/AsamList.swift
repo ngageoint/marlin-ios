@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct AsamList: View {
-    @EnvironmentObject var asamRepository: AsamRepository
     @StateObject var viewModel: AsamsViewModel = AsamsViewModel()
 
     @EnvironmentObject var router: MarlinRouter
@@ -125,7 +124,6 @@ struct AsamList: View {
             }
         }
         .onAppear {
-            viewModel.repository = asamRepository
             Metrics.shared.dataSourceList(dataSource: DataSources.asam)
         }
         .modifier(

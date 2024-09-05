@@ -25,7 +25,6 @@ public class MSI {
 
     // swiftlint:disable function_parameter_count
     func addRepositories(
-        asamRepository: AsamRepository,
         portRepository: PortRepository,
         lightRepository: LightRepository,
         radioBeaconRepository: RadioBeaconRepository,
@@ -46,7 +45,7 @@ public class MSI {
 //        self.noticeToMarinersRepository = noticeToMarinersRepository
 //        self.routeRepository = routeRepository
 
-        asamInitializer = AsamInitializer(repository: asamRepository)
+        asamInitializer = AsamInitializer()
         moduInitializer = ModuInitializer()
         portInitializer = PortInitializer(repository: portRepository)
         lightInitializer = LightInitializer(repository: lightRepository)

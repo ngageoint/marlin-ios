@@ -30,10 +30,13 @@ final class AsamDetailViewTests: XCTestCase {
         asam.canBookmark = true
 
         let localDataSource = AsamStaticLocalDataSource()
+        InjectedValues[\.asamLocalDataSource] = localDataSource
+        let remoteDataSource = AsamRemoteDataSource()
+        InjectedValues[\.asamRemoteDataSource]
         localDataSource.list = [asam]
-        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
+        let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, asamRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let view = AsamDetailView(reference: asam.reference!)
@@ -68,10 +71,13 @@ final class AsamDetailViewTests: XCTestCase {
         asam.victim = "Boat"
 
         let localDataSource = AsamStaticLocalDataSource()
+        InjectedValues[\.asamLocalDataSource] = localDataSource
+        let remoteDataSource = AsamRemoteDataSource()
+        InjectedValues[\.asamRemoteDataSource]
         localDataSource.list = [asam]
-        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
+        let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, asamRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let view = AsamDetailView(reference: asam.reference!)
@@ -110,10 +116,13 @@ final class AsamDetailViewTests: XCTestCase {
         asam.victim = "Boat"
 
         let localDataSource = AsamStaticLocalDataSource()
+        InjectedValues[\.asamLocalDataSource] = localDataSource
+        let remoteDataSource = AsamRemoteDataSource()
+        InjectedValues[\.asamRemoteDataSource]
         localDataSource.list = [asam]
-        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
+        let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, asamRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let summary = AsamDetailView(reference: asam.reference!)
@@ -149,10 +158,13 @@ final class AsamDetailViewTests: XCTestCase {
         asam.victim = nil
 
         let localDataSource = AsamStaticLocalDataSource()
+        InjectedValues[\.asamLocalDataSource] = localDataSource
+        let remoteDataSource = AsamRemoteDataSource()
+        InjectedValues[\.asamRemoteDataSource]
         localDataSource.list = [asam]
-        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
+        let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, asamRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let summary = AsamDetailView(reference: asam.reference!)

@@ -144,7 +144,12 @@ final class ASAMDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.mockPath = "asamMockData.json"
 
-        let repository = AsamRepository(localDataSource: AsamCoreDataDataSource(), remoteDataSource: AsamRemoteDataSource())
+        let localDataSource = AsamCoreDataDataSource()
+        InjectedValues[\.asamLocalDataSource] = localDataSource
+        let remoteDataSource = AsamRemoteDataSource()
+        InjectedValues[\.asamRemoteDataSource]
+        
+        let repository = AsamRepository()
 
         let operation = AsamInitialDataLoadOperation(localDataSource: repository.localDataSource, bundle: bundle)
         operation.start()

@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct AsamSheetView: View {
-    @EnvironmentObject var asamRepository: AsamRepository
     var itemKey: String
     var focusNotification: NSNotification.Name
 
@@ -39,7 +38,6 @@ struct AsamSheetView: View {
             )
         }
         .onAppear {
-            viewModel.repository = asamRepository
             viewModel.getAsam(reference: itemKey)
         }
     }

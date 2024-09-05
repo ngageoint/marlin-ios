@@ -18,11 +18,12 @@ class AsamTileRepository: TileRepository, ObservableObject {
         ""
     }
     let reference: String
-    let localDataSource: AsamLocalDataSource
+    
+    @Injected(\.asamLocalDataSource)
+    var localDataSource: AsamLocalDataSource
 
-    init(reference: String, localDataSource: AsamLocalDataSource) {
+    init(reference: String) {
         self.reference = reference
-        self.localDataSource = localDataSource
     }
 
     func getTileableItems(
@@ -73,11 +74,9 @@ class AsamsTileRepository: TileRepository, ObservableObject {
     var filterCacheKey: String {
         UserDefaults.standard.filter(DataSources.asam).getCacheKey()
     }
-    let localDataSource: AsamLocalDataSource
-
-    init(localDataSource: AsamLocalDataSource) {
-        self.localDataSource = localDataSource
-    }
+    
+    @Injected(\.asamLocalDataSource)
+    var localDataSource: AsamLocalDataSource
 
     func getTileableItems(
         minLatitude: Double,

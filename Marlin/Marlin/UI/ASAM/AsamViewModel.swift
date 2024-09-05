@@ -16,13 +16,8 @@ class AsamViewModel: ObservableObject, Identifiable {
         self.reference = reference
     }
 
-    var repository: AsamRepository? {
-        didSet {
-            if let reference = reference {
-                getAsam(reference: reference)
-            }
-        }
-    }
+    @Injected(\.asamRepository)
+    var repository: AsamRepository
     var routeWaypointRepository: RouteWaypointRepository?
     
     @discardableResult
@@ -31,7 +26,7 @@ class AsamViewModel: ObservableObject, Identifiable {
             asam = routeWaypointRepository?.getAsam(waypointURI: waypointURI)
             return asam
         } else {
-            asam = repository?.getAsam(reference: reference)
+            asam = repository.getAsam(reference: reference)
             return asam
         }
     }

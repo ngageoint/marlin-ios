@@ -25,7 +25,8 @@ enum BookmarkItem: Hashable, Identifiable {
 class BookmarkRepository: ObservableObject {
     let localDataSource: BookmarkLocalDataSource
 
-    let asamRepository: AsamRepository?
+    @Injected(\.asamRepository)
+    var asamRepository: AsamRepository
     let dgpsRepository: DGPSStationRepository?
     let lightRepository: LightRepository?
     @Injected(\.moduRepository)
@@ -38,7 +39,6 @@ class BookmarkRepository: ObservableObject {
 
     init(
         localDataSource: BookmarkLocalDataSource,
-        asamRepository: AsamRepository? = nil,
         dgpsRepository: DGPSStationRepository? = nil,
         lightRepository: LightRepository? = nil,
         portRepository: PortRepository? = nil,
@@ -48,7 +48,6 @@ class BookmarkRepository: ObservableObject {
         navigationalWarningRepository: NavigationalWarningRepository? = nil
     ) {
         self.localDataSource = localDataSource
-        self.asamRepository = asamRepository
         self.dgpsRepository = dgpsRepository
         self.lightRepository = lightRepository
         self.portRepository = portRepository
@@ -81,7 +80,7 @@ class BookmarkRepository: ObservableObject {
         let split = itemKey.split(separator: "--")
         switch dataSource {
         case DataSources.asam.key:
-            return asamRepository?.getAsam(reference: itemKey)
+            return asamRepository.getAsam(reference: itemKey)
         case DataSources.modu.key:
             return moduRepository.getModu(name: itemKey)
         case DataSources.port.key:

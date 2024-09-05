@@ -9,7 +9,6 @@ import SwiftUI
 import MapKit
 
 struct AsamDetailView: View {
-    @EnvironmentObject var asamRepository: AsamRepository
     @EnvironmentObject var routeWaypointRepository: RouteWaypointRepository
     @StateObject var viewModel: AsamViewModel = AsamViewModel()
     @State var reference: String
@@ -36,8 +35,7 @@ struct AsamDetailView: View {
                             mixins: [
                                 AsamMap(
                                     repository: AsamTileRepository(
-                                        reference: asam.reference ?? "",
-                                        localDataSource: asamRepository.localDataSource
+                                        reference: asam.reference ?? ""
                                     )
                                 )
                             ]
@@ -84,7 +82,6 @@ struct AsamDetailView: View {
             viewModel.getAsam(reference: reference, waypointURI: waypointURI)
         }
         .onAppear {
-            viewModel.repository = asamRepository
             viewModel.routeWaypointRepository = routeWaypointRepository
             viewModel.getAsam(reference: reference, waypointURI: waypointURI)
             Metrics.shared.dataSourceDetail(dataSource: DataSources.asam)

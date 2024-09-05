@@ -11,6 +11,17 @@ import Combine
 import UIKit
 import BackgroundTasks
 
+private struct AsamLocalDataSourceProviderKey: InjectionKey {
+    static var currentValue: AsamLocalDataSource = AsamCoreDataDataSource()
+}
+
+extension InjectedValues {
+    var asamLocalDataSource: AsamLocalDataSource {
+        get { Self[AsamLocalDataSourceProviderKey.self] }
+        set { Self[AsamLocalDataSourceProviderKey.self] = newValue }
+    }
+}
+
 protocol AsamLocalDataSource {
     func getNewestAsam() -> AsamModel?
     @discardableResult

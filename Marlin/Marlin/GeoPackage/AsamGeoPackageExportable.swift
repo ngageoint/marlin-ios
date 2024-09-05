@@ -13,11 +13,9 @@ import sf_ios
 class AsamGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.asam
 
-    let asamRepository: AsamRepository
-    init(asamRepository: AsamRepository) {
-        self.asamRepository = asamRepository
-    }
-
+    @Injected(\.asamRepository)
+    var asamRepository: AsamRepository
+    
     var sfGeometry: SFGeometry?
 
     func createFeatures(

@@ -22,14 +22,23 @@ enum AsamItem: Hashable, Identifiable {
     case sectionHeader(header: String)
 }
 
-class AsamRepository: ObservableObject {
-    var localDataSource: AsamLocalDataSource
-    private var remoteDataSource: AsamRemoteDataSource
-    init(localDataSource: AsamLocalDataSource, remoteDataSource: AsamRemoteDataSource) {
-        self.localDataSource = localDataSource
-        self.remoteDataSource = remoteDataSource
-    }
+private struct AsamRepositoryProviderKey: InjectionKey {
+    static var currentValue: AsamRepository = AsamRepository()
+}
 
+extension InjectedValues {
+    var asamRepository: AsamRepository {
+        get { Self[AsamRepositoryProviderKey.self] }
+        set { Self[AsamRepositoryProviderKey.self] = newValue }
+    }
+}
+
+class AsamRepository: ObservableObject {
+    @Injected(\.asamLocalDataSource)
+    var localDataSource: AsamLocalDataSource
+    @Injected(\.asamRemoteDataSource)
+    private var remoteDataSource: AsamRemoteDataSource
+    
     func createOperation() -> AsamDataFetchOperation {
         let newestAsam = localDataSource.getNewestAsam()
         return AsamDataFetchOperation(dateString: newestAsam?.dateString)

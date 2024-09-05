@@ -138,7 +138,6 @@ struct MarlinApp: App {
     
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     var bookmarkRepository: BookmarkRepository
-    var asamRepository: AsamRepository
     var portRepository: PortRepository
     var differentialGPSStationRepository: DGPSStationRepository
     var lightRepository: LightRepository
@@ -170,10 +169,6 @@ struct MarlinApp: App {
         appState = MSI.shared.appState
         persistentStore = PersistenceController.shared
 
-        asamRepository = AsamRepository(
-            localDataSource: AsamCoreDataDataSource(),
-            remoteDataSource: AsamRemoteDataSource()
-        )
         portRepository = PortRepository(
             localDataSource: PortCoreDataDataSource(),
             remoteDataSource: PortRemoteDataSource()
@@ -214,7 +209,6 @@ struct MarlinApp: App {
 
         bookmarkRepository = BookmarkRepository(
             localDataSource: BookmarkCoreDataDataSource(),
-            asamRepository: asamRepository,
             dgpsRepository: differentialGPSStationRepository,
             lightRepository: lightRepository,
             portRepository: portRepository,
@@ -223,7 +217,7 @@ struct MarlinApp: App {
             publicationRepository: publicationRepository
         )
 
-        asamsTileRepository = AsamsTileRepository(localDataSource: asamRepository.localDataSource)
+        asamsTileRepository = AsamsTileRepository()
         modusTileRepository = ModusTileRepository()
         portsTileRepository = PortsTileRepository(localDataSource: portRepository.localDataSource)
         lightsTileRepository = LightsTileRepository(localDataSource: lightRepository.localDataSource)
@@ -236,7 +230,6 @@ struct MarlinApp: App {
         )
 
         MSI.shared.addRepositories(
-            asamRepository: asamRepository,
             portRepository: portRepository,
             lightRepository: lightRepository,
             radioBeaconRepository: radioBeaconRepository,
@@ -263,7 +256,6 @@ struct MarlinApp: App {
                 .environmentObject(appState)
                 .environmentObject(dataSourceList)
                 .environmentObject(bookmarkRepository)
-                .environmentObject(asamRepository)
                 .environmentObject(lightRepository)
                 .environmentObject(portRepository)
                 .environmentObject(differentialGPSStationRepository)

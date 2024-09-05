@@ -9,6 +9,17 @@ import Foundation
 import UIKit
 import BackgroundTasks
 
+private struct AsamRemoteDataSourceProviderKey: InjectionKey {
+    static var currentValue: AsamRemoteDataSource = AsamRemoteDataSource()
+}
+
+extension InjectedValues {
+    var asamRemoteDataSource: AsamRemoteDataSource {
+        get { Self[AsamRemoteDataSourceProviderKey.self] }
+        set { Self[AsamRemoteDataSourceProviderKey.self] = newValue }
+    }
+}
+
 class AsamRemoteDataSource: RemoteDataSource<AsamModel> {
 
     init(cleanup: (() -> Void)? = nil) {

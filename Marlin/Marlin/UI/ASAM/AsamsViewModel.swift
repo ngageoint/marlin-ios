@@ -15,7 +15,8 @@ class AsamsViewModel: ObservableObject {
     @Published var loaded: Bool = false
     private var disposables = Set<AnyCancellable>()
     
-    private var _repository: AsamRepository?
+    @Injected(\.asamRepository)
+    private var repository: AsamRepository
     
     var dataSourceUpdatedPub: AnyCancellable {
         return NotificationCenter.default.publisher(for: .DataSourceUpdated)
@@ -30,17 +31,9 @@ class AsamsViewModel: ObservableObject {
             }
     }
     
-    var repository: AsamRepository? {
-        get {
-            return _repository
-        }
-        set {
-            if _repository == nil {
-                dataSourceUpdatedPub.store(in: &disposables)
-                _repository = newValue
-                fetchAsams()
-            }
-        }
+    init() {
+        dataSourceUpdatedPub.store(in: &disposables)
+        fetchAsams()
     }
     
     var publisher: AnyPublisher<CollectionDifference<AsamModel>, Never>?
@@ -78,7 +71,6 @@ class AsamsViewModel: ObservableObject {
         if publisher != nil {
             return
         }
-        guard let repository = _repository else { return }
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in

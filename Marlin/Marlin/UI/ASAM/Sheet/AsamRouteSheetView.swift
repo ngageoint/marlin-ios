@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct AsamRouteSheetView: View {
-    @EnvironmentObject var asamRepository: AsamRepository
     var itemKey: String
     var focusNotification: NSNotification.Name
     @ObservedObject var routeViewModel: RouteViewModel
@@ -48,7 +47,6 @@ struct AsamRouteSheetView: View {
             )
         }
         .onAppear {
-            viewModel.repository = asamRepository
             viewModel.getAsam(reference: itemKey)
         }
     }

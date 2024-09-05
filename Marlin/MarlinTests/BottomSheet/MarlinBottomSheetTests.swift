@@ -54,8 +54,11 @@ final class MarlinBottomSheetTests: XCTestCase {
         let bottomSheetItem = BottomSheetItem(zoom: false, itemKey: newItem.itemKey, dataSourceKey: DataSources.asam.key)
 
         let localDataSource = AsamStaticLocalDataSource()
+        InjectedValues[\.asamLocalDataSource] = localDataSource
+        let remoteDataSource = AsamStaticRemoteDataSource()
+        InjectedValues[\.asamRemoteDataSource]
         localDataSource.list.append(newItem)
-        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
+        let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
         let router = MarlinRouter()
@@ -108,13 +111,16 @@ final class MarlinBottomSheetTests: XCTestCase {
         let bottomSheetItem2 = BottomSheetItem(zoom: false, itemKey: newItem2.itemKey, dataSourceKey: DataSources.modu.key)
 
         let localDataSource = AsamStaticLocalDataSource()
+        InjectedValues[\.asamLocalDataSource] = localDataSource
+        let remoteDataSource = AsamStaticRemoteDataSource()
+        InjectedValues[\.asamRemoteDataSource]
         localDataSource.list.append(newItem)
-        let repository = AsamRepository(localDataSource: localDataSource, remoteDataSource: AsamRemoteDataSource())
+        let repository = AsamRepository()
         let moduLocalDataSource = ModuStaticLocalDataSource()
         InjectedValues[\.moduLocalDataSource] = moduLocalDataSource
         
-        let remoteDataSource = ModuRemoteDataSource()
-        InjectedValues[\.moduRemoteDataSource] = remoteDataSource
+        let moduRemoteDataSource = ModuRemoteDataSource()
+        InjectedValues[\.moduRemoteDataSource] = moduRemoteDataSource
         
         moduLocalDataSource.list.append(newItem2)
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()

@@ -33,7 +33,8 @@ class DataSourceExportProgress: Identifiable, Hashable, Equatable, ObservableObj
 }
 
 class GeoPackageExportViewModel: ObservableObject {
-    var asamRepository: AsamRepository?
+    @Injected(\.asamRepository)
+    var asamRepository: AsamRepository
     @Injected(\.moduRepository)
     var moduRepository: ModuRepository
     var lightRepository: LightRepository?
@@ -133,7 +134,7 @@ class GeoPackageExportViewModel: ObservableObject {
 
                 switch definition {
                 case .route: $0[definition] = self.routeRepository?.getCount(filters: filters)
-                case .asam: $0[definition] = self.asamRepository?.getCount(filters: filters)
+                case .asam: $0[definition] = self.asamRepository.getCount(filters: filters)
                 case .modu: $0[definition] = self.moduRepository.getCount(filters: filters)
                 case .differentialGPSStation: $0[definition] = self.dgpsRepository?.getCount(filters: filters)
                 case .port: $0[definition] = self.portRepository?.getCount(filters: filters)
@@ -326,9 +327,7 @@ class GeoPackageExportViewModel: ObservableObject {
         print("definition.key \(definition.key)")
         switch definition.key {
         case DataSources.asam.key:
-            if let asamRepository = asamRepository {
-                exportable = AsamGeoPackageExportable(asamRepository: asamRepository)
-            }
+            exportable = AsamGeoPackageExportable()
         case DataSources.modu.key:
             exportable = ModuGeoPackageExportable()
         case DataSources.dgps.key:
