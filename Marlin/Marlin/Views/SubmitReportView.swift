@@ -11,25 +11,6 @@ struct SubmitReportView: View {
     var body: some View {
         List {
             Section("Submit reports to NGA via these external links") {
-                Link(destination: URL(string: "https://msi.nga.mil/submit-report/ASAM-Report")!, label: {
-                    HStack {
-                        if let image = DataSources.asam.image {
-                            Image(uiImage: image)
-                                .tint(Color.onSurfaceColor)
-                                .opacity(0.60)
-                        }
-                        Text("Submit Anti-Shipping Activity Message (ASAM) Report")
-                            .primary()
-                        Spacer()
-                    }
-                })
-                .accessibilityElement()
-                .accessibilityLabel("Submit Anti-Shipping Activity Message (ASAM) Report")
-                .environment(\.openURL, OpenURLAction { _ in
-                    Metrics.shared.appRoute(["report", "asam"])
-                    return .systemAction
-                })
-                
                 Link(destination: URL(string: "https://msi.nga.mil/submit-report/Observ-Report")!, label: {
                     HStack {
                         Image(systemName: "eye.fill")
