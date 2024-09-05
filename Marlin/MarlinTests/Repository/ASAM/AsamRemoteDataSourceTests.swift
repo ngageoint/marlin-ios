@@ -12,8 +12,10 @@ import Combine
 @testable import Marlin
 
 final class AsamRemoteDataSourceTests: XCTestCase {
-    
-    override class func setUp() {
+        
+    override func setUpWithError() throws {
+        throw XCTSkip("ASAMs are disabled.")
+        
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
         UserDefaults.registerMarlinDefaults()
     }

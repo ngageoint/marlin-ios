@@ -29,10 +29,15 @@ final class ModuSummaryTests: XCTestCase {
         modu.canBookmark = true
 
         let localDataSource = ModuStaticLocalDataSource()
+        InjectedValues[\.moduLocalDataSource] = localDataSource
+        
+        let remoteDataSource = ModuRemoteDataSource()
+        InjectedValues[\.moduRemoteDataSource] = remoteDataSource
+        
         localDataSource.list = [modu]
-        let repository = ModuRepository(localDataSource: localDataSource, remoteDataSource: ModuRemoteDataSource())
+        let repository = ModuRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, moduRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summary = ModuSummaryView(modu: ModuListModel(moduModel: modu))
             .setShowMoreDetails(false)
@@ -80,7 +85,7 @@ final class ModuSummaryTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "share")
         
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
-        tester().tapView(withAccessibilityLabel: "dismiss popup")
+        tester().tapScreen(at: CGPoint(x:20, y:20))
         
         BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: modu)
     }
@@ -102,10 +107,15 @@ final class ModuSummaryTests: XCTestCase {
 
         let router = MarlinRouter()
         let localDataSource = ModuStaticLocalDataSource()
+        InjectedValues[\.moduLocalDataSource] = localDataSource
+        
+        let remoteDataSource = ModuRemoteDataSource()
+        InjectedValues[\.moduRemoteDataSource] = remoteDataSource
+        
         localDataSource.list = [modu]
-        let repository = ModuRepository(localDataSource: localDataSource, remoteDataSource: ModuRemoteDataSource())
+        let repository = ModuRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, moduRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summary = ModuSummaryView(modu: ModuListModel(moduModel: modu))
             .setShowMoreDetails(true)

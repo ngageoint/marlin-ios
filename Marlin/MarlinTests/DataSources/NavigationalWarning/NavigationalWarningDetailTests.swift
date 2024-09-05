@@ -53,8 +53,9 @@ final class NavigationalWarningDetailTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
 
+        
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
-        tester().tapView(withAccessibilityLabel: "dismiss popup")
+        tester().tapScreen(at: CGPoint(x:20, y:20))
         
         tester().waitForView(withAccessibilityLabel: "Authority")
         tester().waitForView(withAccessibilityLabel: newItem.authority)

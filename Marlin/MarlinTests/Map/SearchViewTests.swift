@@ -99,7 +99,7 @@ final class SearchViewTests: XCTestCase {
         // wait for the debounce
         wait(for: [e], timeout: 5)
         XCTAssertEqual(MKLocalSearchMock.searchRequest?.naturalLanguageQuery, "search")
-        tester().waitForView(withAccessibilityLabel: "Test item")
+        tester().waitForView(withAccessibilityLabel: "United States")
         tester().waitForView(withAccessibilityLabel: "Location")
         expectation(forNotification: .SnackbarNotification,
                     object: nil) { notification in
@@ -218,7 +218,7 @@ final class SearchViewTests: XCTestCase {
         tester().wait(forTimeInterval: 2)
         wait(for: [e], timeout: 5)
         XCTAssertEqual(MKLocalSearchMock.searchRequest?.naturalLanguageQuery, "1.0, 2.0")
-        tester().waitForView(withAccessibilityLabel: "Test item")
+        tester().waitForView(withAccessibilityLabel: "United States")
     }
     
     func testUsingSearchProvider() throws {
@@ -266,7 +266,7 @@ final class SearchViewTests: XCTestCase {
          
         // wait for the debounce
         wait(for: [e], timeout: 5)
-        tester().waitForView(withAccessibilityLabel: "Test item")
+        tester().waitForView(withAccessibilityLabel: "United States")
         tester().waitForView(withAccessibilityLabel: "Location")
         expectation(forNotification: .SnackbarNotification,
                     object: nil) { notification in
@@ -323,6 +323,14 @@ class MockMKLocalSearchResponse: MKLocalSearch.Response {
 }
 
 class MockSearchProvider: SearchProvider {
+    func performSearch(searchText: String, region: MKCoordinateRegion?, onCompletion: @escaping ([Marlin.SearchResultModel]) -> Void) {
+        
+    }
+    
+    func performSearchNear(region: MKCoordinateRegion?, zoom: Int, onCompletion: @escaping ([Marlin.SearchResultModel]) -> Void) {
+        
+    }
+    
     func performSearch(
         searchText: String,
         region: MKCoordinateRegion?,

@@ -47,19 +47,19 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
     func testNoticeNumberEquals() {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Notice Number", key: "currNoticeNum", type: .int), comparison: .equals, valueInt: 202104),DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)])
         let model = ChartCorrectionListViewModel()
-        XCTAssertEqual(model.createQueryParameters()?.sorted(), ["output=json", "noticeNumber=202104", "latitudeLeft=1.9833732516151774", "latitudeRight=2.0166265798958696", "longitudeRight=3.0166367990618945", "longitudeLeft=2.9833632009381055"].sorted())
+        XCTAssertEqual(model.createQueryParameters()?.sorted(), ["output=json", "noticeNumber=202104", "latitudeLeft=1.983373251615157", "latitudeRight=2.0166265798958665", "longitudeRight=3.0166367990618945", "longitudeLeft=2.9833632009381055"].sorted())
     }
     
     func testNoticeNumberLessThan() {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Notice Number", key: "currNoticeNum", type: .int), comparison: .lessThan, valueInt: 202101), DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)])
         let model = ChartCorrectionListViewModel()
-        XCTAssertEqual(model.createQueryParameters()?.sorted(), ["output=json", "maxNoticeNumber=202052", "minNoticeNumber=199929", "latitudeLeft=1.9833732516151774", "latitudeRight=2.0166265798958696", "longitudeRight=3.0166367990618945", "longitudeLeft=2.9833632009381055"].sorted())
+        XCTAssertEqual(model.createQueryParameters()?.sorted(), ["output=json", "maxNoticeNumber=202052", "minNoticeNumber=199929", "latitudeLeft=1.983373251615157", "latitudeRight=2.0166265798958665", "longitudeRight=3.0166367990618945", "longitudeLeft=2.9833632009381055"].sorted())
     }
     
     func testNoticeNumberLessThanEqual() {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Notice Number", key: "currNoticeNum", type: .int), comparison: .lessThanEqual, valueInt: 202101), DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)])
         let model = ChartCorrectionListViewModel()
-        XCTAssertEqual(model.createQueryParameters()?.sorted(), ["output=json", "maxNoticeNumber=202101", "minNoticeNumber=199929", "latitudeLeft=1.9833732516151774", "latitudeRight=2.0166265798958696", "longitudeRight=3.0166367990618945", "longitudeLeft=2.9833632009381055"].sorted())
+        XCTAssertEqual(model.createQueryParameters()?.sorted(), ["output=json", "maxNoticeNumber=202101", "minNoticeNumber=199929", "latitudeLeft=1.983373251615157", "latitudeRight=2.0166265798958665", "longitudeRight=3.0166367990618945", "longitudeLeft=2.9833632009381055"].sorted())
     }
 
     func testNoticeNumberGreaterThan() {
@@ -68,7 +68,7 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
         let calendar = Calendar.current
         let thisWeek = calendar.component(.weekOfYear, from: Date())
         let thisYear = calendar.component(.year, from: Date())
-        XCTAssertEqual(model.createQueryParameters()?.sorted(), ["output=json", "maxNoticeNumber=\(thisYear)\(String(format: "%02d", thisWeek))", "minNoticeNumber=202101", "latitudeLeft=1.9833732516151774", "latitudeRight=2.0166265798958696", "longitudeRight=3.0166367990618945", "longitudeLeft=2.9833632009381055"].sorted())
+        XCTAssertEqual(model.createQueryParameters()?.sorted(), ["output=json", "maxNoticeNumber=\(thisYear)\(String(format: "%02d", thisWeek))", "minNoticeNumber=202101", "latitudeLeft=1.983373251615157", "latitudeRight=2.0166265798958665", "longitudeRight=3.0166367990618945", "longitudeLeft=2.9833632009381055"].sorted())
     }
     
     func testNoticeNumberGreaterThanEqual() {
@@ -77,14 +77,14 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
         let calendar = Calendar.current
         let thisWeek = calendar.component(.weekOfYear, from: Date())
         let thisYear = calendar.component(.year, from: Date())
-        XCTAssertEqual(model.createQueryParameters()?.sorted(), ["output=json", "maxNoticeNumber=\(thisYear)\(String(format: "%02d", thisWeek))", "minNoticeNumber=202052", "latitudeLeft=1.9833732516151774", "latitudeRight=2.0166265798958696", "longitudeRight=3.0166367990618945", "longitudeLeft=2.9833632009381055"].sorted())
+        XCTAssertEqual(model.createQueryParameters()?.sorted(), ["output=json", "maxNoticeNumber=\(thisYear)\(String(format: "%02d", thisWeek))", "minNoticeNumber=202052", "latitudeLeft=1.983373251615157", "latitudeRight=2.0166265798958665", "longitudeRight=3.0166367990618945", "longitudeLeft=2.9833632009381055"].sorted())
     }
     
     func testLocationCloseTo() {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)])
         let model = ChartCorrectionListViewModel()
 
-        XCTAssertEqual(model.createQueryParameters()?.sorted(), ["output=json", "latitudeLeft=1.9833732516151774", "latitudeRight=2.0166265798958696", "longitudeRight=3.0166367990618945", "longitudeLeft=2.9833632009381055"].sorted())
+        XCTAssertEqual(model.createQueryParameters()?.sorted(), ["output=json", "latitudeLeft=1.983373251615157", "latitudeRight=2.0166265798958665", "longitudeRight=3.0166367990618945", "longitudeLeft=2.9833632009381055"].sorted())
     }
     
     func testLocationNearMeNoLocation() {
@@ -100,7 +100,7 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .nearMe, valueInt: 1)])
         let model = ChartCorrectionListViewModel()
         
-        XCTAssertEqual(model.createQueryParameters()?.sorted(), ["output=json", "latitudeLeft=1.9833732516151774", "latitudeRight=2.0166265798958696", "longitudeRight=3.0166367990618945", "longitudeLeft=2.9833632009381055"].sorted())
+        XCTAssertEqual(model.createQueryParameters()?.sorted(), ["output=json", "latitudeLeft=1.983373251615157", "latitudeRight=2.0166265798958665", "longitudeRight=3.0166367990618945", "longitudeLeft=2.9833632009381055"].sorted())
     }
     
     func testLoadDataNoLocation() {
@@ -117,7 +117,7 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)])
         let model = ChartCorrectionListViewModel()
         
-        stub(condition: isScheme("https") && pathEndsWith("/publications/ntm/ntm-chart-corr/geo") && containsQueryParams(["latitudeLeft": "1.9833732516151774", "latitudeRight":"2.0166265798958696", "longitudeRight":"3.0166367990618945", "longitudeLeft":"2.9833632009381055"])) { request in
+        stub(condition: isScheme("https") && pathEndsWith("/publications/ntm/ntm-chart-corr/geo") && containsQueryParams(["latitudeLeft": "1.983373251615157", "latitudeRight":"2.0166265798958665", "longitudeRight":"3.0166367990618945", "longitudeLeft":"2.9833632009381055"])) { request in
             XCTAssertTrue(model.loading)
             return HTTPStubsResponse(
                 fileAtPath: OHPathForFile("chartCorrections.json", type(of: self))!,
@@ -140,7 +140,7 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
     func testListView() {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)])
         
-        stub(condition: isScheme("https") && pathEndsWith("/publications/ntm/ntm-chart-corr/geo") && containsQueryParams(["latitudeLeft": "1.9833732516151774", "latitudeRight":"2.0166265798958696", "longitudeRight":"3.0166367990618945", "longitudeLeft":"2.9833632009381055"])) { request in
+        stub(condition: isScheme("https") && pathEndsWith("/publications/ntm/ntm-chart-corr/geo") && containsQueryParams(["latitudeLeft": "1.983373251615157", "latitudeRight":"2.0166265798958665", "longitudeRight":"3.0166367990618945", "longitudeLeft":"2.9833632009381055"])) { request in
             return HTTPStubsResponse(
                 fileAtPath: OHPathForFile("chartCorrections.json", type(of: self))!,
                 statusCode: 200,
@@ -187,7 +187,7 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)])
         let model = ChartCorrectionListViewModel()
         
-        stub(condition: isScheme("https") && pathEndsWith("/publications/ntm/ntm-chart-corr/geo") && containsQueryParams(["latitudeLeft": "1.9833732516151774", "latitudeRight":"2.0166265798958696", "longitudeRight":"3.0166367990618945", "longitudeLeft":"2.9833632009381055"])) { request in
+        stub(condition: isScheme("https") && pathEndsWith("/publications/ntm/ntm-chart-corr/geo") && containsQueryParams(["latitudeLeft": "1.983373251615157", "latitudeRight":"2.0166265798958665", "longitudeRight":"3.0166367990618945", "longitudeLeft":"2.9833632009381055"])) { request in
             XCTAssertTrue(model.loading)
             let notConnectedError = NSError(domain:NSURLErrorDomain, code:Int(CFNetworkErrors.cfurlErrorNotConnectedToInternet.rawValue), userInfo:nil)
             return HTTPStubsResponse(error:notConnectedError)

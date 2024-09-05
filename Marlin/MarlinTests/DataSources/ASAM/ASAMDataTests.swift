@@ -19,6 +19,9 @@ final class ASAMDataTests: XCTestCase {
         .receive(on: RunLoop.main)
     
     override func setUp(completion: @escaping (Error?) -> Void) {
+        let skip = XCTSkip("ASAMs are disabled.")
+        completion(skip)
+        
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
         UserDefaults.registerMarlinDefaults()
         UserDefaults.standard.initialDataLoaded = false

@@ -113,6 +113,7 @@ struct SearchResultModel: Identifiable, Hashable, Locatable, Decodable {
     var boundingbox: [String]?
     var importance: Double?
     var icon: String?
+    var name: String?
 
     var latitude: Double {
         Double(lat) ?? kCLLocationCoordinate2DInvalid.latitude
@@ -124,7 +125,8 @@ struct SearchResultModel: Identifiable, Hashable, Locatable, Decodable {
 
 extension SearchResultModel {
     init(mapItem: MKMapItem) {
-        displayName = mapItem.placemark.title
+        displayName = mapItem.placemark.title ?? ""
+        name = mapItem.name
         ?? "\(mapItem.placemark.coordinate.latitude), \(mapItem.placemark.coordinate.longitude)"
         lat = "\(mapItem.placemark.coordinate.latitude)"
         lon = "\(mapItem.placemark.coordinate.longitude)"

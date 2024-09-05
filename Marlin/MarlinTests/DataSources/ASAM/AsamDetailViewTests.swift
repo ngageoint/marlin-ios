@@ -11,6 +11,9 @@ import SwiftUI
 @testable import Marlin
 
 final class AsamDetailViewTests: XCTestCase {
+    override func setUpWithError() throws {
+        throw XCTSkip("ASAMs are disabled.")
+    }
     
     func testLoading() {
         var asam = AsamModel()

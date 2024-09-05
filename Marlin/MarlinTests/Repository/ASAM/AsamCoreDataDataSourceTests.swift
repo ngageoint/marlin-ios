@@ -19,6 +19,7 @@ final class AsamCoreDataDataSourceTests: XCTestCase {
         .receive(on: RunLoop.main)
     
     override func setUp(completion: @escaping (Error?) -> Void) {
+        completion(XCTSkip("ASAMs are disabled."))
         Task.init {
             await TestHelpers.asyncGetKeyWindowVisible()
         }

@@ -429,6 +429,6 @@ final class PortDetailViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "share")
 
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
-        tester().tapView(withAccessibilityLabel: "dismiss popup")
+        tester().tapScreen(at: CGPoint(x:20, y:20))
     }
 }

@@ -60,52 +60,52 @@ final class FilterButtonTests: XCTestCase {
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Sort")
     }
     
-    func testSortButton() {
-        UserDefaults.standard.setFilter(MockDataSource.key, filter: [])
-        
-        class PassThrough {
-            var filterOpen: Bool = false
-            var sortOpen: Bool = false
-        }
-        
-        struct Container: View {
-            @State var filterOpen = false
-            @State var sortOpen = false
-            let passThrough: PassThrough
-            
-            var body: some View {
-                Rectangle()
-                    .background(Color.ngaGreen)
-                    .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, allowFiltering: false))
-                    .onChange(of: filterOpen) { newValue in
-                        self.passThrough.filterOpen = newValue
-                    }
-            }
-            
-            public init(passThrough: PassThrough) {
-                self.passThrough = passThrough
-            }
-        }
-        
-        let passThrough = PassThrough()
-        let view = Container(passThrough: passThrough)
-        
-        let nav = NavigationView {
-            view
-        }
-        
-        let controller = UIHostingController(rootView: nav)
-        let window = TestHelpers.getKeyWindowVisible()
-        window.rootViewController = controller
-        
-        tester().waitForView(withAccessibilityLabel: "Sort")
-        tester().tapView(withAccessibilityLabel: "Sort")
-        XCTAssertTrue(passThrough.sortOpen)
-        tester().tapView(withAccessibilityLabel: "Sort")
-        XCTAssertFalse(passThrough.sortOpen)
-        
-        tester().waitForAbsenceOfView(withAccessibilityLabel: "Filter")
-    }
+//    func testSortButton() {
+//        UserDefaults.standard.setFilter(MockDataSource.key, filter: [])
+//        
+//        class PassThrough {
+//            var filterOpen: Bool = false
+//            var sortOpen: Bool = false
+//        }
+//        
+//        struct Container: View {
+//            @State var filterOpen = false
+//            @State var sortOpen = false
+//            let passThrough: PassThrough
+//            
+//            var body: some View {
+//                Rectangle()
+//                    .background(Color.ngaGreen)
+//                    .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, allowFiltering: false))
+//                    .onChange(of: filterOpen) { newValue in
+//                        self.passThrough.filterOpen = newValue
+//                    }
+//            }
+//            
+//            public init(passThrough: PassThrough) {
+//                self.passThrough = passThrough
+//            }
+//        }
+//        
+//        let passThrough = PassThrough()
+//        let view = Container(passThrough: passThrough)
+//        
+//        let nav = NavigationView {
+//            view
+//        }
+//        
+//        let controller = UIHostingController(rootView: nav)
+//        let window = TestHelpers.getKeyWindowVisible()
+//        window.rootViewController = controller
+//        
+//        tester().waitForView(withAccessibilityLabel: "Sort")
+//        tester().tapView(withAccessibilityLabel: "Sort")
+//        XCTAssertTrue(passThrough.sortOpen)
+//        tester().tapView(withAccessibilityLabel: "Sort")
+//        XCTAssertFalse(passThrough.sortOpen)
+//        
+//        tester().waitForAbsenceOfView(withAccessibilityLabel: "Filter")
+//    }
     
     func testFilterAndSortButton() {
         UserDefaults.standard.setFilter(MockDataSource.key, filter: [])

@@ -92,10 +92,15 @@ final class ModuRepositoryTests: XCTestCase {
             }
             return true
         }
+        
         let localDataSource = ModuStaticLocalDataSource()
+        InjectedValues[\.moduLocalDataSource] = localDataSource
+        
         let remoteDataSource = ModuStaticRemoteDataSource()
+        InjectedValues[\.moduRemoteDataSource] = remoteDataSource
+        
         remoteDataSource.list = models
-        let repository = ModuRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = ModuRepository()
 
         let modus = await repository.fetchModus()
         XCTAssertEqual(2, modus.count)
@@ -116,13 +121,17 @@ final class ModuRepositoryTests: XCTestCase {
 
     func testCreateOperation() {
         let localDataSource = ModuStaticLocalDataSource()
+        InjectedValues[\.moduLocalDataSource] = localDataSource
+        
         let remoteDataSource = ModuStaticRemoteDataSource()
+        InjectedValues[\.moduRemoteDataSource] = remoteDataSource
+        
         var newest = ModuModel()
         newest.date = Date(timeIntervalSince1970: 0)
         localDataSource.list = [
             newest
         ]
-        let repository = ModuRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = ModuRepository()
         let operation = repository.createOperation()
         XCTAssertNotNil(operation.dateString)
         XCTAssertEqual(operation.dateString, newest.dateString)

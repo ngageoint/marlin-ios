@@ -60,7 +60,9 @@ final class SearchResultsMapTests: XCTestCase {
                 }
                 .onAppear {
                     if let searchResults = passThrough.searchResults {
-                        mapState.searchResults = searchResults
+                        mapState.searchResults = searchResults.map({ mapItem in
+                            SearchResultModel(mapItem: mapItem)
+                        })
                     }
                 }
             }

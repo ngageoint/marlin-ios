@@ -29,14 +29,17 @@ final class ModuDetailViewTests: XCTestCase {
         modu.subregion = 63
 
         let localDataSource = ModuStaticLocalDataSource()
+        InjectedValues[\.moduLocalDataSource] = localDataSource
+        
+        let remoteDataSource = ModuRemoteDataSource()
+        InjectedValues[\.moduRemoteDataSource] = remoteDataSource
+        
         localDataSource.list = [modu]
-        let repository = ModuRepository(localDataSource: localDataSource, remoteDataSource: ModuRemoteDataSource())
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, moduRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let detailView = ModuDetailView(name: "ABAN II")
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 
@@ -68,14 +71,17 @@ final class ModuDetailViewTests: XCTestCase {
         modu.subregion = 63
 
         let localDataSource = ModuStaticLocalDataSource()
+        InjectedValues[\.moduLocalDataSource] = localDataSource
+        
+        let remoteDataSource = ModuRemoteDataSource()
+        InjectedValues[\.moduRemoteDataSource] = remoteDataSource
+        
         localDataSource.list = [modu]
-        let repository = ModuRepository(localDataSource: localDataSource, remoteDataSource: ModuRemoteDataSource())
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, moduRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let detailView = ModuDetailView(name: "ABAN II")
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 
@@ -116,8 +122,8 @@ final class ModuDetailViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "share")
         
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
-        tester().tapView(withAccessibilityLabel: "dismiss popup")
-
+        tester().tapScreen(at: CGPoint(x:20, y:20))
+        
         BookmarkHelper().verifyBookmarkButton(bookmarkable: modu)
     }
 }

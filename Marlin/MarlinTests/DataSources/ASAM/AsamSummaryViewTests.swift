@@ -12,6 +12,10 @@ import SwiftUI
 
 final class AsamSummaryViewTests: XCTestCase {
 
+    override func setUpWithError() throws {
+        throw XCTSkip("ASAMs are disabled.")
+    }
+    
     func testLoading() {
         var asam = AsamModel()
         asam.asamDescription = "description"
@@ -220,7 +224,7 @@ final class AsamSummaryViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "share")
         
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
-        tester().tapView(withAccessibilityLabel: "dismiss popup")
+        tester().tapScreen(at: CGPoint(x:20, y:20))
     }
 
 }

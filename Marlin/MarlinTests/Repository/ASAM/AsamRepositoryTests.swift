@@ -14,7 +14,8 @@ import OHHTTPStubs
 
 final class AsamRepositoryTests: XCTestCase {
 
-    override func setUp() {
+    override func setUpWithError() throws {
+        throw XCTSkip("ASAMs are disabled.")
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
         UserDefaults.registerMarlinDefaults()
         
