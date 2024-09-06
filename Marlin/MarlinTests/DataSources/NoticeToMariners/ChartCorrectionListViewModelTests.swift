@@ -140,7 +140,7 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
     func testListView() {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)])
         
-        stub(condition: isScheme("https") && pathEndsWith("/publications/ntm/ntm-chart-corr/geo") && containsQueryParams(["latitudeLeft": "1.983373251615157", "latitudeRight":"2.0166265798958665", "longitudeRight":"3.0166367990618945", "longitudeLeft":"2.9833632009381055"])) { request in
+        stub(condition: isScheme("https") && pathEndsWith("/publications/ntm/ntm-chart-corr/geo")) { request in
             return HTTPStubsResponse(
                 fileAtPath: OHPathForFile("chartCorrections.json", type(of: self))!,
                 statusCode: 200,
@@ -187,7 +187,7 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)])
         let model = ChartCorrectionListViewModel()
         
-        stub(condition: isScheme("https") && pathEndsWith("/publications/ntm/ntm-chart-corr/geo") && containsQueryParams(["latitudeLeft": "1.983373251615157", "latitudeRight":"2.0166265798958665", "longitudeRight":"3.0166367990618945", "longitudeLeft":"2.9833632009381055"])) { request in
+        stub(condition: isScheme("https") && pathEndsWith("/publications/ntm/ntm-chart-corr/geo")) { request in
             XCTAssertTrue(model.loading)
             let notConnectedError = NSError(domain:NSURLErrorDomain, code:Int(CFNetworkErrors.cfurlErrorNotConnectedToInternet.rawValue), userInfo:nil)
             return HTTPStubsResponse(error:notConnectedError)

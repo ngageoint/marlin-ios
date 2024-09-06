@@ -379,7 +379,7 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
             let modu = Modu(context: persistentStore.viewContext)
 
             modu.name = "ABAN II"
-            modu.date = Date(timeIntervalSince1970: 0)
+            modu.date = DataSources.modu.dateFormatter.date(from: "1970-01-01")
             modu.rigStatus = "Active"
             modu.specialStatus = "Wide Berth Requested"
             modu.distance = 5
@@ -452,7 +452,7 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
         case .listItem(_):
             XCTFail()
         case .sectionHeader(let header):
-            XCTAssertEqual(header, "1969-12-31")
+            XCTAssertEqual(header, "1970-01-01")
         }
         let item1 = state.rows[1]
         switch item1 {
@@ -468,7 +468,7 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
             let modu2 = Modu(context: persistentStore.viewContext)
 
             modu2.name = "ABAN II2"
-            modu2.date = Date(timeIntervalSince1970: 1000000)
+            modu2.date = DataSources.modu.dateFormatter.date(from: "1970-01-12")
             modu2.rigStatus = "Active"
             modu2.specialStatus = "Wide Berth Requested"
             modu2.distance = 5
@@ -507,7 +507,7 @@ final class ModuCoreDataDataSourceTests: XCTestCase {
         case .listItem(_):
             XCTFail()
         case .sectionHeader(let header):
-            XCTAssertEqual(header, "1969-12-31")
+            XCTAssertEqual(header, "1970-01-01")
         }
         let itema3 = state.rows[3]
         switch itema3 {

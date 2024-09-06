@@ -121,9 +121,12 @@ final class FilterButtonTests: XCTestCase {
             let passThrough: PassThrough
             
             var body: some View {
-                Rectangle()
-                    .background(Color.ngaGreen)
-                    .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, allowFiltering: true))
+                VStack {
+                    Text("hi").accessibilityElement().accessibilityLabel("hi")
+                    Rectangle()
+                        .background(Color.ngaGreen)
+                        .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, allowFiltering: true))
+                }
             }
             
             public init(passThrough: PassThrough) {
@@ -142,6 +145,8 @@ final class FilterButtonTests: XCTestCase {
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         
+        tester().waitForView(withAccessibilityLabel: "hi")
+        TestHelpers.printAllAccessibilityLabelsInWindows()
         // can't test tapping these b/c KIF fails to find the proper location of the view with two buttons
         tester().waitForView(withAccessibilityLabel: "Filter")
     }
