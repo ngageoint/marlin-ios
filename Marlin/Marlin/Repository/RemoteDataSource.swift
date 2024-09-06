@@ -11,12 +11,10 @@ import BackgroundTasks
 
 class RemoteDataSource<T> {
     var dataSource: any DataSourceDefinition
-    var cleanup: (() -> Void)?
     var operation: DataFetchOperation<T>?
 
-    init(dataSource: any DataSourceDefinition, cleanup: (() -> Void)? = nil) {
+    init(dataSource: any DataSourceDefinition) {
         self.dataSource = dataSource
-        self.cleanup = cleanup
     }
 
     var backgroundTask: UIBackgroundTaskIdentifier = .invalid
@@ -32,7 +30,6 @@ class RemoteDataSource<T> {
         NSLog("Register the background task \(name)")
         backgroundTask = UIApplication.shared.beginBackgroundTask(withName: name) { [weak self] in
             NSLog("iOS has signaled time has expired \(name)")
-            self?.cleanup?()
             print("canceling \(name)")
             self?.operation?.cancel()
             print("calling endBackgroundTask \(name)")

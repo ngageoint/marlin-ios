@@ -22,8 +22,8 @@ extension InjectedValues {
 
 class PublicationRemoteDataSource: RemoteDataSource<PublicationModel> {
     var downloads: [String: DownloadManager] = [:]
-    init(cleanup: (() -> Void)? = nil) {
-        super.init(dataSource: DataSources.epub, cleanup: cleanup)
+    init() {
+        super.init(dataSource: DataSources.epub)
     }
 
     func fetch(

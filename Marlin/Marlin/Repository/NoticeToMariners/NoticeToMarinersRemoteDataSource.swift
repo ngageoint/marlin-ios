@@ -12,8 +12,8 @@ import Combine
 class NoticeToMarinersRemoteDataSource: RemoteDataSource<NoticeToMarinersModel> {
     var downloads: [String: DownloadManager] = [:]
 
-    init(cleanup: (() -> Void)? = nil) {
-        super.init(dataSource: DataSources.noticeToMariners, cleanup: cleanup)
+    init() {
+        super.init(dataSource: DataSources.noticeToMariners)
     }
 
     func fetch(

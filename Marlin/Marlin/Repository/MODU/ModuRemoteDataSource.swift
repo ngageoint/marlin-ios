@@ -21,8 +21,8 @@ extension InjectedValues {
 }
 
 class ModuRemoteDataSource: RemoteDataSource<ModuModel> {
-    init(cleanup: (() -> Void)? = nil) {
-        super.init(dataSource: DataSources.modu, cleanup: cleanup)
+    init() {
+        super.init(dataSource: DataSources.modu)
     }
 
     func fetch(task: BGTask? = nil, dateString: String? = nil) async -> [ModuModel] {

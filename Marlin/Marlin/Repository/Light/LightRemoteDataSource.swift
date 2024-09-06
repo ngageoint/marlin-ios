@@ -9,8 +9,8 @@ import Foundation
 import BackgroundTasks
 
 class LightRemoteDataSource: RemoteDataSource<LightModel> {
-    init(cleanup: (() -> Void)? = nil) {
-        super.init(dataSource: DataSources.light, cleanup: cleanup)
+    init() {
+        super.init(dataSource: DataSources.light)
     }
 
     func fetch(

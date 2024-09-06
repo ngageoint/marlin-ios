@@ -9,8 +9,8 @@ import Foundation
 import BackgroundTasks
 
 class RadioBeaconRemoteDataSource: RemoteDataSource<RadioBeaconModel> {
-    init(cleanup: (() -> Void)? = nil) {
-        super.init(dataSource: DataSources.radioBeacon, cleanup: cleanup)
+    init() {
+        super.init(dataSource: DataSources.radioBeacon)
     }
 
     func fetch(

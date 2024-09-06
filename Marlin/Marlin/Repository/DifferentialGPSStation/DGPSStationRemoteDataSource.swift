@@ -20,8 +20,8 @@ extension InjectedValues {
 }
 
 class DGPSStationRemoteDataSource: RemoteDataSource<DGPSStationModel> {
-    init(cleanup: (() -> Void)? = nil) {
-        super.init(dataSource: DataSources.dgps, cleanup: cleanup)
+    init() {
+        super.init(dataSource: DataSources.dgps)
     }
 
     func fetch(

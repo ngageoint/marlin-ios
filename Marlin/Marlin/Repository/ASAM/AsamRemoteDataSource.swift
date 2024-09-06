@@ -22,8 +22,8 @@ extension InjectedValues {
 
 class AsamRemoteDataSource: RemoteDataSource<AsamModel> {
 
-    init(cleanup: (() -> Void)? = nil) {
-        super.init(dataSource: DataSources.asam, cleanup: cleanup)
+    init() {
+        super.init(dataSource: DataSources.asam)
     }
 
     func fetch(task: BGTask? = nil, dateString: String? = nil) async -> [AsamModel] {

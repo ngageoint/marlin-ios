@@ -10,8 +10,8 @@ import UIKit
 import BackgroundTasks
 
 class PortRemoteDataSource: RemoteDataSource<PortModel> {
-    init(cleanup: (() -> Void)? = nil) {
-        super.init(dataSource: DataSources.port, cleanup: cleanup)
+    init() {
+        super.init(dataSource: DataSources.port)
     }
 
     func fetch(

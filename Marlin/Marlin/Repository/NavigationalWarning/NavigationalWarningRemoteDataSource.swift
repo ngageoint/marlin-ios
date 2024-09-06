@@ -20,8 +20,8 @@ extension InjectedValues {
 }
 
 class NavigationalWarningRemoteDataSource: RemoteDataSource<NavigationalWarningModel> {
-    init(cleanup: (() -> Void)? = nil) {
-        super.init(dataSource: DataSources.navWarning, cleanup: cleanup)
+    init() {
+        super.init(dataSource: DataSources.navWarning)
     }
 
     func fetch(
