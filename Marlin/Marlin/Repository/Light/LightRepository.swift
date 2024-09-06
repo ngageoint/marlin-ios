@@ -22,14 +22,23 @@ enum LightItem: Hashable, Identifiable {
     case sectionHeader(header: String)
 }
 
-class LightRepository: ObservableObject {
-    var localDataSource: LightLocalDataSource
-    private var remoteDataSource: LightRemoteDataSource
-    init(localDataSource: LightLocalDataSource, remoteDataSource: LightRemoteDataSource) {
-        self.localDataSource = localDataSource
-        self.remoteDataSource = remoteDataSource
-    }
+private struct LightRepositoryProviderKey: InjectionKey {
+    static var currentValue: LightRepository = LightRepository()
+}
 
+extension InjectedValues {
+    var lightRepository: LightRepository {
+        get { Self[LightRepositoryProviderKey.self] }
+        set { Self[LightRepositoryProviderKey.self] = newValue }
+    }
+}
+
+class LightRepository: ObservableObject {
+    @Injected(\.lightLocalDataSource)
+    var localDataSource: LightLocalDataSource
+    @Injected(\.lightRemoteDataSource)
+    private var remoteDataSource: LightRemoteDataSource
+    
     func createOperations() -> [LightDataFetchOperation] {
         return Light.lightVolumes.map { lightVolume in
             let newestLight = localDataSource.getNewestLight(volumeNumber: lightVolume.volumeNumber)

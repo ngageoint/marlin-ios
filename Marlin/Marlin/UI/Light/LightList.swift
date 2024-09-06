@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct LightList: View {
-    @EnvironmentObject var lightRepository: LightRepository
     @StateObject var viewModel: LightsViewModel = LightsViewModel()
 
     @EnvironmentObject var router: MarlinRouter
@@ -125,7 +124,6 @@ struct LightList: View {
             }
         }
         .onAppear {
-            viewModel.repository = lightRepository
             Metrics.shared.dataSourceList(dataSource: DataSources.light)
         }
         .modifier(

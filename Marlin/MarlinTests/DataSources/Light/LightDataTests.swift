@@ -88,7 +88,8 @@ final class LightDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.mockPath = "lightMockData.json"
         let localDataSource = LightCoreDataDataSource()
-        let operation = LightInitialDataLoadOperation(localDataSource: localDataSource, bundle: bundle)
+        InjectedValues[\.lightLocalDataSource] = localDataSource
+        let operation = LightInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         expectation(forNotification: .DataSourceProcessed,
@@ -173,10 +174,15 @@ final class LightDataTests: XCTestCase {
 
         let bundle = MockBundle()
         bundle.mockPath = "lightMockData.json"
+        
+        let localDataSource = LightCoreDataDataSource()
+        let remoteDataSource = LightRemoteDataSource()
+        InjectedValues[\.lightLocalDataSource] = localDataSource
+        InjectedValues[\.lightRemoteDataSource] = remoteDataSource
 
-        let repository = LightRepository(localDataSource: LightCoreDataDataSource(), remoteDataSource: LightRemoteDataSource())
+        let repository = LightRepository()
 
-        let operation = LightInitialDataLoadOperation(localDataSource: repository.localDataSource, bundle: bundle)
+        let operation = LightInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         let processed = expectation(forNotification: .DataSourceProcessed,
@@ -448,7 +454,7 @@ final class LightDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
 
-        let operation = LightInitialDataLoadOperation(localDataSource: LightCoreDataDataSource(), bundle: bundle)
+        let operation = LightInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -537,7 +543,7 @@ final class LightDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
 
-        let operation = LightInitialDataLoadOperation(localDataSource: LightCoreDataDataSource(), bundle: bundle)
+        let operation = LightInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -626,7 +632,7 @@ final class LightDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
 
-        let operation = LightInitialDataLoadOperation(localDataSource: LightCoreDataDataSource(), bundle: bundle)
+        let operation = LightInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -691,7 +697,7 @@ final class LightDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
 
-        let operation = LightInitialDataLoadOperation(localDataSource: LightCoreDataDataSource(), bundle: bundle)
+        let operation = LightInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         expectation(forNotification: .DataSourceProcessed,

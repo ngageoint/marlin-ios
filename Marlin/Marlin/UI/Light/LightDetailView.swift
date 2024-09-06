@@ -12,7 +12,6 @@ import CoreData
 struct LightDetailView: View {
     @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @EnvironmentObject var router: MarlinRouter
-    @EnvironmentObject var lightRepository: LightRepository
     @StateObject var viewModel: LightViewModel = LightViewModel()
     @State var featureNumber: String
     @State var volumeNumber: String
@@ -42,8 +41,7 @@ struct LightDetailView: View {
                                         LightMap(
                                             repository: LightTileRepository(
                                                 featureNumber: featureNumber,
-                                                volumeNumber: volumeNumber,
-                                                localDataSource: lightRepository.localDataSource
+                                                volumeNumber: volumeNumber
                                             )
                                         )
                                     ]
@@ -117,7 +115,6 @@ struct LightDetailView: View {
             viewModel.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
         }
         .onAppear {
-            viewModel.repository = lightRepository
             viewModel.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
             Metrics.shared.dataSourceDetail(dataSource: DataSources.light)
         }

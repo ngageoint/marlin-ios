@@ -31,15 +31,16 @@ final class LightDetailViewTests: XCTestCase {
         light.name = "-Outer."
 
         let localDataSource = LightStaticLocalDataSource()
+        let remoteDataSource = LightRemoteDataSource()
+        InjectedValues[\.lightLocalDataSource] = localDataSource
+        InjectedValues[\.lightRemoteDataSource] = remoteDataSource
         localDataSource.list = [light]
-        let repository = LightRepository(localDataSource: localDataSource, remoteDataSource: LightRemoteDataSource())
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, lightRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let detailView = LightDetailView(featureNumber: light.featureNumber!, volumeNumber: light.volumeNumber!)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 
@@ -75,15 +76,16 @@ final class LightDetailViewTests: XCTestCase {
         light.name = "-Outer."
 
         let localDataSource = LightStaticLocalDataSource()
+        let remoteDataSource = LightRemoteDataSource()
+        InjectedValues[\.lightLocalDataSource] = localDataSource
+        InjectedValues[\.lightRemoteDataSource] = remoteDataSource
         localDataSource.list = [light]
-        let repository = LightRepository(localDataSource: localDataSource, remoteDataSource: LightRemoteDataSource())
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, lightRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let detailView = LightDetailView(featureNumber: light.featureNumber!, volumeNumber: light.volumeNumber!)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 

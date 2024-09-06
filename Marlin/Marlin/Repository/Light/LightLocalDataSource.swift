@@ -9,6 +9,17 @@ import Foundation
 import Combine
 import BackgroundTasks
 
+private struct LightLocalDataSourceProviderKey: InjectionKey {
+    static var currentValue: LightLocalDataSource = LightCoreDataDataSource()
+}
+
+extension InjectedValues {
+    var lightLocalDataSource: LightLocalDataSource {
+        get { Self[LightLocalDataSourceProviderKey.self] }
+        set { Self[LightLocalDataSourceProviderKey.self] = newValue }
+    }
+}
+
 protocol LightLocalDataSource {
 
     func getCharacteristic(

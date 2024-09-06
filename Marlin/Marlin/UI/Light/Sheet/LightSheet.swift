@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct LightSheetView: View {
-    @EnvironmentObject var lightRepository: LightRepository
     var itemKey: String
     var focusNotification: NSNotification.Name
 
@@ -40,7 +39,6 @@ struct LightSheetView: View {
             )
         }
         .onAppear {
-            viewModel.repository = lightRepository
             let split = itemKey.split(separator: "--")
             if split.count == 3 {
                 viewModel.getLights(featureNumber: "\(split[0])", volumeNumber: "\(split[1])")

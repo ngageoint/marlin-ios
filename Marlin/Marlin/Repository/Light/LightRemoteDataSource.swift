@@ -8,6 +8,17 @@
 import Foundation
 import BackgroundTasks
 
+private struct LightRemoteDataSourceProviderKey: InjectionKey {
+    static var currentValue: LightRemoteDataSource = LightRemoteDataSource()
+}
+
+extension InjectedValues {
+    var lightRemoteDataSource: LightRemoteDataSource {
+        get { Self[LightRemoteDataSourceProviderKey.self] }
+        set { Self[LightRemoteDataSourceProviderKey.self] = newValue }
+    }
+}
+
 class LightRemoteDataSource: RemoteDataSource<LightModel> {
     init() {
         super.init(dataSource: DataSources.light)

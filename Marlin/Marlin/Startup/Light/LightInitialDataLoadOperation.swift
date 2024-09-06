@@ -8,11 +8,11 @@
 import Foundation
 
 class LightInitialDataLoadOperation: CountingDataLoadOperation {
+    @Injected(\.lightLocalDataSource)
     var localDataSource: LightLocalDataSource
     var bundle: Bundle
 
-    init(localDataSource: LightLocalDataSource, bundle: Bundle = .main) {
-        self.localDataSource = localDataSource
+    init(bundle: Bundle = .main) {
         self.bundle = bundle
     }
 

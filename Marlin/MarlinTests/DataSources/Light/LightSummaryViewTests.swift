@@ -33,14 +33,15 @@ final class LightSummaryViewTests: XCTestCase {
         light.canBookmark = true
 
         let localDataSource = LightStaticLocalDataSource()
+        let remoteDataSource = LightRemoteDataSource()
+        InjectedValues[\.lightLocalDataSource] = localDataSource
+        InjectedValues[\.lightRemoteDataSource] = remoteDataSource
         localDataSource.list = [light]
-        let repository = LightRepository(localDataSource: localDataSource, remoteDataSource: LightRemoteDataSource())
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, lightRepository: repository)        
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summary = LightSummaryView(light: LightListModel(lightModel: light))
             .setShowMoreDetails(false)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
 
@@ -109,14 +110,15 @@ final class LightSummaryViewTests: XCTestCase {
 
         let router = MarlinRouter()
         let localDataSource = LightStaticLocalDataSource()
+        let remoteDataSource = LightRemoteDataSource()
+        InjectedValues[\.lightLocalDataSource] = localDataSource
+        InjectedValues[\.lightRemoteDataSource] = remoteDataSource
         localDataSource.list = [light]
-        let repository = LightRepository(localDataSource: localDataSource, remoteDataSource: LightRemoteDataSource())
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, lightRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summary = LightSummaryView(light: LightListModel(lightModel: light))
             .setShowMoreDetails(true)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(router)
 

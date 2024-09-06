@@ -11,11 +11,11 @@ import Kingfisher
 class LightDataLoadOperation: CountingDataLoadOperation {
 
     var lights: [LightModel] = []
+    @Injected(\.lightLocalDataSource)
     var localDataSource: LightLocalDataSource
 
-    init(lights: [LightModel], localDataSource: LightLocalDataSource) {
+    init(lights: [LightModel]) {
         self.lights = lights
-        self.localDataSource = localDataSource
     }
 
     @MainActor override func finishLoad() {

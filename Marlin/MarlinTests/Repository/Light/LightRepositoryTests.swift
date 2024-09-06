@@ -115,8 +115,10 @@ final class LightRepositoryTests: XCTestCase {
         }
         let localDataSource = LightStaticLocalDataSource()
         let remoteDataSource = LightStaticRemoteDataSource()
+        InjectedValues[\.lightLocalDataSource] = localDataSource
+        InjectedValues[\.lightRemoteDataSource] = remoteDataSource
         remoteDataSource.list["110"] = models
-        let repository = LightRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = LightRepository()
 
         let lights = await repository.fetchLights()
         XCTAssertEqual(2, lights.count)
@@ -145,6 +147,8 @@ final class LightRepositoryTests: XCTestCase {
     func testCreateOperation() {
         let localDataSource = LightStaticLocalDataSource()
         let remoteDataSource = LightStaticRemoteDataSource()
+        InjectedValues[\.lightLocalDataSource] = localDataSource
+        InjectedValues[\.lightRemoteDataSource] = remoteDataSource
         var newest = LightModel()
         newest.volumeNumber = "PUB 110"
         newest.noticeNumber = 202205
@@ -159,7 +163,7 @@ final class LightRepositoryTests: XCTestCase {
             newest,
             newest2
         ]
-        let repository = LightRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = LightRepository()
         let operations = repository.createOperations()
         XCTAssertEqual(Light.lightVolumes.count, operations.count)
         let op0 = operations[0]

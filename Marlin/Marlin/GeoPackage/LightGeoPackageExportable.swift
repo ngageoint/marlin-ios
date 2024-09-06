@@ -13,11 +13,9 @@ import sf_ios
 class LightGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.light
 
-    let lightRepository: LightRepository
-    init(lightRepository: LightRepository) {
-        self.lightRepository = lightRepository
-    }
-
+    @Injected(\.lightRepository)
+    private var lightRepository: LightRepository
+    
     func createFeatures(
         geoPackage: GPKGGeoPackage,
         table: GPKGFeatureTable,

@@ -10,10 +10,10 @@ import BackgroundTasks
 
 class LightInitializer: Initializer {
 
-    let repository: LightRepository
+    @Injected(\.lightRepository)
+    var repository: LightRepository
 
-    init(repository: LightRepository) {
-        self.repository = repository
+    init() {
         super.init(dataSource: DataSources.light)
     }
 
@@ -44,9 +44,7 @@ class LightInitializer: Initializer {
 
     override func fetch() {
         if repository.getCount(filters: nil) == 0 {
-            let initialDataLoadOperation = LightInitialDataLoadOperation(
-                localDataSource: self.repository.localDataSource
-            )
+            let initialDataLoadOperation = LightInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {
                 Task {
                     await self.repository.fetchLights()

@@ -23,12 +23,12 @@ class LightTileRepository: TileRepository, ObservableObject {
 
     let featureNumber: String
     let volumeNumber: String
-    let localDataSource: LightLocalDataSource
+    @Injected(\.lightLocalDataSource)
+    private var localDataSource: LightLocalDataSource
 
-    init(featureNumber: String, volumeNumber: String, localDataSource: LightLocalDataSource) {
+    init(featureNumber: String, volumeNumber: String) {
         self.featureNumber = featureNumber
         self.volumeNumber = volumeNumber
-        self.localDataSource = localDataSource
     }
 
     func getTileableItems(
@@ -87,11 +87,8 @@ class LightsTileRepository: TileRepository, ObservableObject {
     var filterCacheKey: String {
         UserDefaults.standard.filter(DataSources.light).getCacheKey()
     }
-    let localDataSource: LightLocalDataSource
-
-    init(localDataSource: LightLocalDataSource) {
-        self.localDataSource = localDataSource
-    }
+    @Injected(\.lightLocalDataSource)
+    var localDataSource: LightLocalDataSource
 
     func getTileableItems(
         minLatitude: Double,

@@ -139,7 +139,6 @@ struct MarlinApp: App {
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     var bookmarkRepository: BookmarkRepository
     var portRepository: PortRepository
-    var lightRepository: LightRepository
     var radioBeaconRepository: RadioBeaconRepository
     var noticeToMarinersRepository: NoticeToMarinersRepository
     var userPlaceRepository: UserPlaceRepository
@@ -170,10 +169,6 @@ struct MarlinApp: App {
             localDataSource: PortCoreDataDataSource(),
             remoteDataSource: PortRemoteDataSource()
         )
-        lightRepository = LightRepository(
-            localDataSource: LightCoreDataDataSource(),
-            remoteDataSource: LightRemoteDataSource()
-        )
         radioBeaconRepository = RadioBeaconRepository(
             localDataSource: RadioBeaconCoreDataDataSource(),
             remoteDataSource: RadioBeaconRemoteDataSource()
@@ -194,7 +189,6 @@ struct MarlinApp: App {
 
         bookmarkRepository = BookmarkRepository(
             localDataSource: BookmarkCoreDataDataSource(),
-            lightRepository: lightRepository,
             portRepository: portRepository,
             radioBeaconRepository: radioBeaconRepository,
             noticeToMarinersRepository: noticeToMarinersRepository
@@ -203,14 +197,13 @@ struct MarlinApp: App {
         asamsTileRepository = AsamsTileRepository()
         modusTileRepository = ModusTileRepository()
         portsTileRepository = PortsTileRepository(localDataSource: portRepository.localDataSource)
-        lightsTileRepository = LightsTileRepository(localDataSource: lightRepository.localDataSource)
+        lightsTileRepository = LightsTileRepository()
         radioBeaconsTileRepository = RadioBeaconsTileRepository(localDataSource: radioBeaconRepository.localDataSource)
         differentialGPSStationsTileRepository = DifferentialGPSStationsTileRepository()
         navigationalWarningsMapFeatureRepository = NavigationalWarningsMapFeatureRepository()
 
         MSI.shared.addRepositories(
             portRepository: portRepository,
-            lightRepository: lightRepository,
             radioBeaconRepository: radioBeaconRepository,
             noticeToMarinersRepository: noticeToMarinersRepository,
             routeRepository: routeRepository
@@ -232,7 +225,6 @@ struct MarlinApp: App {
                 .environmentObject(appState)
                 .environmentObject(dataSourceList)
                 .environmentObject(bookmarkRepository)
-                .environmentObject(lightRepository)
                 .environmentObject(portRepository)
                 .environmentObject(radioBeaconRepository)
                 .environmentObject(routeRepository)

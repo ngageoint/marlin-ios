@@ -15,7 +15,8 @@ class LightsViewModel: ObservableObject {
     @Published var loaded: Bool = false
     private var disposables = Set<AnyCancellable>()
 
-    private var _repository: LightRepository?
+    @Injected(\.lightRepository)
+    private var repository: LightRepository
 
     var dataSourceUpdatedPub: AnyCancellable {
         return NotificationCenter.default.publisher(for: .DataSourceUpdated)
@@ -28,19 +29,6 @@ class LightsViewModel: ObservableObject {
             .sink { _ in
                 self.reload()
             }
-    }
-
-    var repository: LightRepository? {
-        get {
-            return _repository
-        }
-        set {
-            if _repository == nil {
-                dataSourceUpdatedPub.store(in: &disposables)
-                _repository = newValue
-                fetchLights()
-            }
-        }
     }
 
     var publisher: AnyPublisher<CollectionDifference<LightModel>, Never>?
@@ -65,6 +53,11 @@ class LightsViewModel: ObservableObject {
         case reload
         case loadMore
     }
+    
+    init() {
+        dataSourceUpdatedPub.store(in: &disposables)
+        fetchLights()
+    }
 
     func reload() {
         trigger.activate(for: TriggerId.reload)
@@ -78,7 +71,6 @@ class LightsViewModel: ObservableObject {
         if publisher != nil {
             return
         }
-        guard let repository = _repository else { return }
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in

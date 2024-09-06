@@ -20,7 +20,7 @@ extension LightCoreDataDataSource {
         NSLog("Received \(count) \(DataSources.light.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = LightDataLoadOperation(lights: lights, localDataSource: self)
+        operation = LightDataLoadOperation(lights: lights)
 
         return await executeOperationInBackground(task: task)
     }

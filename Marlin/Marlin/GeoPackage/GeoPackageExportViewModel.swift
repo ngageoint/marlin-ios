@@ -37,7 +37,8 @@ class GeoPackageExportViewModel: ObservableObject {
     var asamRepository: AsamRepository
     @Injected(\.moduRepository)
     var moduRepository: ModuRepository
-    var lightRepository: LightRepository?
+    @Injected(\.lightRepository)
+    var lightRepository: LightRepository
     var portRepository: PortRepository?
     @Injected(\.dgpsRepository)
     var dgpsRepository: DGPSStationRepository
@@ -141,7 +142,7 @@ class GeoPackageExportViewModel: ObservableObject {
                 case .differentialGPSStation: $0[definition] = self.dgpsRepository.getCount(filters: filters)
                 case .port: $0[definition] = self.portRepository?.getCount(filters: filters)
                 case .navWarning: $0[definition] = self.navigationalWarningRepository.getCount(filters: filters)
-                case .light: $0[definition] = self.lightRepository?.getCount(filters: filters)
+                case .light: $0[definition] = self.lightRepository.getCount(filters: filters)
                 case .radioBeacon: $0[definition] = self.radioBeaconRepository?.getCount(filters: filters)
                 default: break
                 }
@@ -335,9 +336,7 @@ class GeoPackageExportViewModel: ObservableObject {
         case DataSources.dgps.key:
             exportable = DGPSStationGeoPackageExportable()
         case DataSources.light.key:
-            if let lightRepository = lightRepository {
-                exportable = LightGeoPackageExportable(lightRepository: lightRepository)
-            }
+            exportable = LightGeoPackageExportable()
         case DataSources.port.key:
             if let portRepository = portRepository {
                 exportable = PortGeoPackageExportable(portRepository: portRepository)

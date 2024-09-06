@@ -13,13 +13,9 @@ class LightViewModel: ObservableObject, Identifiable {
     var featureNumber: String?
     var volumeNumber: String?
 
-    var repository: LightRepository? {
-        didSet {
-            if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
-                getLights(featureNumber: featureNumber, volumeNumber: volumeNumber)
-            }
-        }
-    }
+    @Injected(\.lightRepository)
+    private var repository: LightRepository
+    
     var routeWaypointRepository: RouteWaypointRepository?
 
     @discardableResult
@@ -27,7 +23,7 @@ class LightViewModel: ObservableObject, Identifiable {
         if let waypointURI = waypointURI {
             lights = routeWaypointRepository?.getLight(waypointURI: waypointURI) ?? []
         } else {
-            lights = repository?.getLight(featureNumber: featureNumber, volumeNumber: volumeNumber) ?? []
+            lights = repository.getLight(featureNumber: featureNumber, volumeNumber: volumeNumber) ?? []
             return lights
         }
         return []
