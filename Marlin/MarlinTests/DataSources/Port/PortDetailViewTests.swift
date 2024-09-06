@@ -130,14 +130,16 @@ final class PortDetailViewTests: XCTestCase {
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         let localDataSource = PortStaticLocalDataSource()
+        let remoteDataSource = PortRemoteDataSource()
+        InjectedValues[\.portLocalDataSource] = localDataSource
+        InjectedValues[\.portRemoteDataSource] = remoteDataSource
         localDataSource.list = [port]
-        let repository = PortRepository(localDataSource: localDataSource, remoteDataSource: PortRemoteDataSource())
+        let repository = PortRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, portRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
         let router = MarlinRouter()
         let detailView = PortDetailView(portNumber: 760)
             .environmentObject(mockLocationManager as LocationManager)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
 
         let controller = UIHostingController(rootView: detailView)
@@ -386,14 +388,16 @@ final class PortDetailViewTests: XCTestCase {
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         let localDataSource = PortStaticLocalDataSource()
+        let remoteDataSource = PortRemoteDataSource()
+        InjectedValues[\.portLocalDataSource] = localDataSource
+        InjectedValues[\.portRemoteDataSource] = remoteDataSource
         localDataSource.list = [port]
-        let repository = PortRepository(localDataSource: localDataSource, remoteDataSource: PortRemoteDataSource())
+        let repository = PortRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, portRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
         let router = MarlinRouter()
         let detailView = PortDetailView(portNumber: 760)
             .environmentObject(mockLocationManager as LocationManager)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
 
         let controller = UIHostingController(rootView: detailView)

@@ -296,8 +296,10 @@ final class PortRepositoryTests: XCTestCase {
         }
         let localDataSource = PortStaticLocalDataSource()
         let remoteDataSource = PortStaticRemoteDataSource()
+        InjectedValues[\.portLocalDataSource] = localDataSource
+        InjectedValues[\.portRemoteDataSource] = remoteDataSource
         remoteDataSource.list = models
-        let repository = PortRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = PortRepository()
 
         let ports = await repository.fetchPorts()
         XCTAssertEqual(2, ports.count)
@@ -319,8 +321,9 @@ final class PortRepositoryTests: XCTestCase {
     func testCreateOperation() {
         let localDataSource = PortStaticLocalDataSource()
         let remoteDataSource = PortStaticRemoteDataSource()
-
-        let repository = PortRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        InjectedValues[\.portLocalDataSource] = localDataSource
+        InjectedValues[\.portRemoteDataSource] = remoteDataSource
+        let repository = PortRepository()
         let operation = repository.createOperation()
         XCTAssertNotNil(operation)
     }

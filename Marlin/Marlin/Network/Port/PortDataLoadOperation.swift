@@ -11,11 +11,11 @@ import Kingfisher
 class PortDataLoadOperation: CountingDataLoadOperation {
 
     var ports: [PortModel] = []
-    var localDataSource: PortLocalDataSource
+    @Injected(\.portLocalDataSource)
+    private var localDataSource: PortLocalDataSource
 
-    init(ports: [PortModel], localDataSource: PortLocalDataSource) {
+    init(ports: [PortModel]) {
         self.ports = ports
-        self.localDataSource = localDataSource
     }
 
     @MainActor override func finishLoad() {

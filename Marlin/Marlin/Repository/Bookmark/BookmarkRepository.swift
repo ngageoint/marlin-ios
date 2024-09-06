@@ -33,7 +33,8 @@ class BookmarkRepository: ObservableObject {
     var lightRepository: LightRepository
     @Injected(\.moduRepository)
     var moduRepository: ModuRepository
-    let portRepository: PortRepository?
+    @Injected(\.portRepository)
+    var portRepository: PortRepository
     let radioBeaconRepository: RadioBeaconRepository?
     let noticeToMarinersRepository: NoticeToMarinersRepository?
     @Injected(\.publicationRepository)
@@ -43,12 +44,10 @@ class BookmarkRepository: ObservableObject {
 
     init(
         localDataSource: BookmarkLocalDataSource,
-        portRepository: PortRepository? = nil,
         radioBeaconRepository: RadioBeaconRepository? = nil,
         noticeToMarinersRepository: NoticeToMarinersRepository? = nil
     ) {
         self.localDataSource = localDataSource
-        self.portRepository = portRepository
         self.radioBeaconRepository = radioBeaconRepository
         self.noticeToMarinersRepository = noticeToMarinersRepository
     }
@@ -80,7 +79,7 @@ class BookmarkRepository: ObservableObject {
         case DataSources.modu.key:
             return moduRepository.getModu(name: itemKey)
         case DataSources.port.key:
-            return portRepository?.getPort(portNumber: Int(itemKey))
+            return portRepository.getPort(portNumber: Int(itemKey))
         case DataSources.navWarning.key:
             if split.count == 3 {
                 return navigationalWarningRepository.getNavigationalWarning(

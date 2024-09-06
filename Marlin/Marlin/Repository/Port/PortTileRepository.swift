@@ -18,11 +18,11 @@ class PortTileRepository: TileRepository, ObservableObject {
         ""
     }
     let portNumber: Int
-    let localDataSource: PortLocalDataSource
+    @Injected(\.portLocalDataSource)
+    private var localDataSource: PortLocalDataSource
 
-    init(portNumber: Int, localDataSource: PortLocalDataSource) {
+    init(portNumber: Int) {
         self.portNumber = portNumber
-        self.localDataSource = localDataSource
     }
 
     func getTileableItems(
@@ -73,11 +73,8 @@ class PortsTileRepository: TileRepository, ObservableObject {
     var filterCacheKey: String {
         UserDefaults.standard.filter(DataSources.port).getCacheKey()
     }
-    let localDataSource: PortLocalDataSource
-
-    init(localDataSource: PortLocalDataSource) {
-        self.localDataSource = localDataSource
-    }
+    @Injected(\.portLocalDataSource)
+    private var localDataSource: PortLocalDataSource
 
     func getTileableItems(
         minLatitude: Double,

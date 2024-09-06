@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct PortList: View {
-    @EnvironmentObject var portRepository: PortRepository
     @StateObject var viewModel: PortsViewModel = PortsViewModel()
 
     @EnvironmentObject var router: MarlinRouter
@@ -122,7 +121,6 @@ struct PortList: View {
             }
         }
         .onAppear {
-            viewModel.repository = portRepository
             Metrics.shared.dataSourceList(dataSource: DataSources.port)
         }
         .modifier(

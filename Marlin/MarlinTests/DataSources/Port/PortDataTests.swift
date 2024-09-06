@@ -87,7 +87,9 @@ final class PortDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.mockPath = "portMockData.json"
 
-        let operation = PortInitialDataLoadOperation(localDataSource: PortCoreDataDataSource(), bundle: bundle)
+        let localDataSource = PortCoreDataDataSource()
+        InjectedValues[\.portLocalDataSource] = localDataSource
+        let operation = PortInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -356,8 +358,9 @@ final class PortDataTests: XCTestCase {
         
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
-
-        let operation = PortInitialDataLoadOperation(localDataSource: PortCoreDataDataSource(), bundle: bundle)
+        let localDataSource = PortCoreDataDataSource()
+        InjectedValues[\.portLocalDataSource] = localDataSource
+        let operation = PortInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -625,8 +628,9 @@ final class PortDataTests: XCTestCase {
         
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
-
-        let operation = PortInitialDataLoadOperation(localDataSource: PortCoreDataDataSource(), bundle: bundle)
+        let localDataSource = PortCoreDataDataSource()
+        InjectedValues[\.portLocalDataSource] = localDataSource
+        let operation = PortInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -894,8 +898,9 @@ final class PortDataTests: XCTestCase {
         
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
-
-        let operation = PortInitialDataLoadOperation(localDataSource: PortCoreDataDataSource(), bundle: bundle)
+        let localDataSource = PortCoreDataDataSource()
+        InjectedValues[\.portLocalDataSource] = localDataSource
+        let operation = PortInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)

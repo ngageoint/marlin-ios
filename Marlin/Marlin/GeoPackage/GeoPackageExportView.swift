@@ -10,7 +10,6 @@ import SwiftUI
 struct GeoPackageExportView: View {
     @EnvironmentObject var dataSourceList: DataSourceList
 
-    @EnvironmentObject var portRepository: PortRepository
     @EnvironmentObject var radioBeaconRepository: RadioBeaconRepository
     @EnvironmentObject var routeRepository: RouteRepository
 
@@ -93,7 +92,6 @@ struct GeoPackageExportView: View {
         .navigationTitle("GeoPackage Export")
         .background(Color.backgroundColor)
         .onAppear {
-            viewModel.portRepository = portRepository
             viewModel.radioBeaconRepository = radioBeaconRepository
             viewModel.routeRepository = routeRepository
             viewModel.setExportParameters(dataSources: dataSources, filters: filters, useMapRegion: useMapRegion)

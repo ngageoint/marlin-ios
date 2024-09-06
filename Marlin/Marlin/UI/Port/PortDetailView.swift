@@ -10,7 +10,6 @@ import MapKit
 import CoreData
 
 struct PortDetailView: View {
-    @EnvironmentObject var portRepository: PortRepository
     @StateObject var viewModel: PortViewModel = PortViewModel()
     @State var portNumber: Int?
     @State var waypointURI: URL?
@@ -19,7 +18,6 @@ struct PortDetailView: View {
         switch viewModel.port {
         case nil:
             Color.clear.onAppear {
-                viewModel.repository = portRepository
                 viewModel.getPort(portNumber: portNumber, waypointURI: waypointURI)
             }
         case .some(let port):
@@ -40,8 +38,7 @@ struct PortDetailView: View {
                             mixins: [
                                 PortMap(
                                     repository: PortTileRepository(
-                                        portNumber: portNumber ?? 0,
-                                        localDataSource: portRepository.localDataSource
+                                        portNumber: portNumber ?? 0
                                     )
                                 )
                             ]

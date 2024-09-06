@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct PortRouteSheetView: View {
-    @EnvironmentObject var portRepository: PortRepository
     var itemKey: String
     var focusNotification: NSNotification.Name
     @ObservedObject var routeViewModel: RouteViewModel
@@ -48,7 +47,6 @@ struct PortRouteSheetView: View {
             )
         }
         .onAppear {
-            viewModel.repository = portRepository
             viewModel.getPort(portNumber: Int(itemKey) ?? -1)
         }
     }

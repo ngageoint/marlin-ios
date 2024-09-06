@@ -22,14 +22,22 @@ enum PortItem: Hashable, Identifiable {
     case sectionHeader(header: String)
 }
 
-class PortRepository: ObservableObject {
-    var localDataSource: PortLocalDataSource
-    private var remoteDataSource: PortRemoteDataSource
-    init(localDataSource: PortLocalDataSource, remoteDataSource: PortRemoteDataSource) {
-        self.localDataSource = localDataSource
-        self.remoteDataSource = remoteDataSource
-    }
+private struct PortRepositoryProviderKey: InjectionKey {
+    static var currentValue: PortRepository = PortRepository()
+}
 
+extension InjectedValues {
+    var portRepository: PortRepository {
+        get { Self[PortRepositoryProviderKey.self] }
+        set { Self[PortRepositoryProviderKey.self] = newValue }
+    }
+}
+
+class PortRepository: ObservableObject {
+    @Injected(\.portLocalDataSource)
+    private var localDataSource: PortLocalDataSource
+    @Injected(\.portRemoteDataSource)
+    private var remoteDataSource: PortRemoteDataSource
     func createOperation() -> PortDataFetchOperation {
         return PortDataFetchOperation()
     }

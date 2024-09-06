@@ -10,11 +10,11 @@ import Kingfisher
 
 class PortInitialDataLoadOperation: CountingDataLoadOperation {
 
-    var localDataSource: PortLocalDataSource
+    @Injected(\.portLocalDataSource)
+    private var localDataSource: PortLocalDataSource
     var bundle: Bundle
 
-    init(localDataSource: PortLocalDataSource, bundle: Bundle = .main) {
-        self.localDataSource = localDataSource
+    init(bundle: Bundle = .main) {
         self.bundle = bundle
     }
 

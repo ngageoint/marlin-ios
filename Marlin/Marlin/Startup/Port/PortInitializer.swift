@@ -10,10 +10,10 @@ import BackgroundTasks
 
 class PortInitializer: Initializer {
 
-    let repository: PortRepository
+    @Injected(\.portRepository)
+    private var repository: PortRepository
 
-    init(repository: PortRepository) {
-        self.repository = repository
+    init() {
         super.init(dataSource: DataSources.port)
     }
 
@@ -23,9 +23,7 @@ class PortInitializer: Initializer {
 
     override func fetch() {
         if repository.getCount(filters: nil) == 0 {
-            let initialDataLoadOperation = PortInitialDataLoadOperation(
-                localDataSource: self.repository.localDataSource
-            )
+            let initialDataLoadOperation = PortInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {
                 Task {
                     await self.repository.fetchPorts()

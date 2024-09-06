@@ -13,10 +13,8 @@ import sf_ios
 class PortGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.port
 
-    let portRepository: PortRepository
-    init(portRepository: PortRepository) {
-        self.portRepository = portRepository
-    }
+    @Injected(\.portRepository)
+    private var portRepository: PortRepository
 
     func createFeatures(
         geoPackage: GPKGGeoPackage,

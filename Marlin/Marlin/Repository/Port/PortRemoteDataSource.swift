@@ -9,6 +9,17 @@ import Foundation
 import UIKit
 import BackgroundTasks
 
+private struct PortRemoteDataSourceProviderKey: InjectionKey {
+    static var currentValue: PortRemoteDataSource = PortRemoteDataSource()
+}
+
+extension InjectedValues {
+    var portRemoteDataSource: PortRemoteDataSource {
+        get { Self[PortRemoteDataSourceProviderKey.self] }
+        set { Self[PortRemoteDataSourceProviderKey.self] = newValue }
+    }
+}
+
 class PortRemoteDataSource: RemoteDataSource<PortModel> {
     init() {
         super.init(dataSource: DataSources.port)

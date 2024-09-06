@@ -12,13 +12,8 @@ class PortViewModel: ObservableObject, Identifiable {
 
     var portNumber: Int?
 
-    var repository: PortRepository? {
-        didSet {
-            if let portNumber = portNumber {
-                getPort(portNumber: portNumber)
-            }
-        }
-    }
+    @Injected(\.portRepository)
+    private var repository: PortRepository
     var routeWaypointRepository: RouteWaypointRepository?
 
     @discardableResult
@@ -27,7 +22,7 @@ class PortViewModel: ObservableObject, Identifiable {
             port = routeWaypointRepository?.getPort(waypointURI: waypointURI)
             return port
         } else {
-            port = repository?.getPort(portNumber: portNumber)
+            port = repository.getPort(portNumber: portNumber)
             return port
         }
     }

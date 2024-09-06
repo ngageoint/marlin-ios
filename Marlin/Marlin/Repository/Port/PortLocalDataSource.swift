@@ -11,6 +11,17 @@ import Combine
 import UIKit
 import BackgroundTasks
 
+private struct PortLocalDataSourceProviderKey: InjectionKey {
+    static var currentValue: PortLocalDataSource = PortCoreDataDataSource()
+}
+
+extension InjectedValues {
+    var portLocalDataSource: PortLocalDataSource {
+        get { Self[PortLocalDataSourceProviderKey.self] }
+        set { Self[PortLocalDataSourceProviderKey.self] = newValue }
+    }
+}
+
 protocol PortLocalDataSource {
     func getPort(portNumber: Int?) -> PortModel?
     func getPortsInBounds(
@@ -285,7 +296,7 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
         NSLog("Received \(count) \(DataSources.port.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = PortDataLoadOperation(ports: ports, localDataSource: self)
+        operation = PortDataLoadOperation(ports: ports)
 
         return await executeOperationInBackground(task: task)
     }
