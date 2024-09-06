@@ -25,7 +25,6 @@ public class MSI {
 
     // swiftlint:disable function_parameter_count
     func addRepositories(
-        noticeToMarinersRepository: NoticeToMarinersRepository,
         routeRepository: RouteRepository
     ) {
 //        self.asamRepository = asamRepository
@@ -47,9 +46,7 @@ public class MSI {
         differentialGPSStationInitializer = DGPSStationInitializer()
         publicationInitializer = PublicationInitializer()
         navigationalWarningInitializer = NavigationalWarningInitializer()
-        noticeToMarinersInitializer = NoticeToMarinersInitializer(
-            repository: noticeToMarinersRepository
-        )
+        noticeToMarinersInitializer = NoticeToMarinersInitializer()
         registerBackgroundHandler()
     }
     // swiftlint:enable function_parameter_count

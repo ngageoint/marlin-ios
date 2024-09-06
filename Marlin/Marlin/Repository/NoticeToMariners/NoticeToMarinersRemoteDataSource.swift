@@ -9,6 +9,17 @@ import Foundation
 import BackgroundTasks
 import Combine
 
+private struct NoticeToMarinersRemoteDataSourceProviderKey: InjectionKey {
+    static var currentValue: NoticeToMarinersRemoteDataSource = NoticeToMarinersRemoteDataSource()
+}
+
+extension InjectedValues {
+    var ntmRemoteDataSource: NoticeToMarinersRemoteDataSource {
+        get { Self[NoticeToMarinersRemoteDataSourceProviderKey.self] }
+        set { Self[NoticeToMarinersRemoteDataSourceProviderKey.self] = newValue }
+    }
+}
+
 class NoticeToMarinersRemoteDataSource: RemoteDataSource<NoticeToMarinersModel> {
     var downloads: [String: DownloadManager] = [:]
 

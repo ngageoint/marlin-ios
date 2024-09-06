@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
-    @EnvironmentObject var repository: NoticeToMarinersRepository
     @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     @EnvironmentObject var router: MarlinRouter
@@ -35,7 +34,7 @@ struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
         switch viewModel.noticeToMariners {
         case nil:
             Color.clear.onAppear {
-                viewModel.setupModel(repository: repository, odsEntryId: odsEntryId)
+                viewModel.setupModel(odsEntryId: odsEntryId)
             }
         case .some(let noticeToMariners):
             VStack(alignment: .leading, spacing: 8) {

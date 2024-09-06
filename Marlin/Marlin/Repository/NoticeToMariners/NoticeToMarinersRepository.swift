@@ -25,15 +25,24 @@ enum NoticeToMarinersItem: Hashable, Identifiable {
     case week(noticeNumber: Int)
 }
 
+private struct NoticeToMarinersRepositoryProviderKey: InjectionKey {
+    static var currentValue: NoticeToMarinersRepository = NoticeToMarinersRepository()
+}
+
+extension InjectedValues {
+    var ntmRepository: NoticeToMarinersRepository {
+        get { Self[NoticeToMarinersRepositoryProviderKey.self] }
+        set { Self[NoticeToMarinersRepositoryProviderKey.self] = newValue }
+    }
+}
+
 class NoticeToMarinersRepository: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
-    var localDataSource: NoticeToMarinersLocalDataSource
+    @Injected(\.ntmLocalDataSource)
+    private var localDataSource: NoticeToMarinersLocalDataSource
+    @Injected(\.ntmRemoteDataSource)
     private var remoteDataSource: NoticeToMarinersRemoteDataSource
-    init(localDataSource: NoticeToMarinersLocalDataSource, remoteDataSource: NoticeToMarinersRemoteDataSource) {
-        self.localDataSource = localDataSource
-        self.remoteDataSource = remoteDataSource
-    }
 
     func createOperation() -> NoticeToMarinersDataFetchOperation {
         let newestNotice = localDataSource.getNewestNoticeToMariners()

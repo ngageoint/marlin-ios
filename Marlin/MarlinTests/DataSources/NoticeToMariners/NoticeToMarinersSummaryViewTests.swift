@@ -36,9 +36,12 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         let localDataSource = NoticeToMarinersStaticLocalDataSource()
         localDataSource.map[ntm.odsEntryId ?? -1] = ntm
         localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
-        let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
+        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        InjectedValues[\.ntmLocalDataSource] = localDataSource
+        InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
+        let repository = NoticeToMarinersRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, noticeToMarinersRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summaryView = NoticeToMarinersFileSummaryView(odsEntryId: ntm.odsEntryId!)
             .environmentObject(repository)
@@ -74,9 +77,12 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         let localDataSource = NoticeToMarinersStaticLocalDataSource()
         localDataSource.map[ntm.odsEntryId ?? -1] = ntm
         localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
-        let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
+        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        InjectedValues[\.ntmLocalDataSource] = localDataSource
+        InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
+        let repository = NoticeToMarinersRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, noticeToMarinersRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summaryView = NoticeToMarinersSummaryView(noticeToMariners: NoticeToMarinersListModel(noticeToMarinersModel: ntm))
             .environmentObject(repository)
@@ -116,12 +122,14 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         let localDataSource = NoticeToMarinersStaticLocalDataSource()
         localDataSource.map[ntm.odsEntryId ?? -1] = ntm
         localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
-        let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
+        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        InjectedValues[\.ntmLocalDataSource] = localDataSource
+        InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
+        let repository = NoticeToMarinersRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, noticeToMarinersRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summaryView = NoticeToMarinersFileSummaryView(odsEntryId: ntm.odsEntryId!)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summaryView)
@@ -189,9 +197,12 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         let localDataSource = NoticeToMarinersStaticLocalDataSource()
         localDataSource.map[ntm.odsEntryId ?? -1] = ntm
         localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
-        let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
+        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        InjectedValues[\.ntmLocalDataSource] = localDataSource
+        InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
+        let repository = NoticeToMarinersRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, noticeToMarinersRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summaryView = NoticeToMarinersFileSummaryView(odsEntryId: ntm.odsEntryId!)
             .environmentObject(repository)

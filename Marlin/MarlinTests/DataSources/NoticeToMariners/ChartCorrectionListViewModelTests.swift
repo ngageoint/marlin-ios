@@ -156,7 +156,6 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
                     view.marlinRoutes()
                 }
                 .environmentObject(router)
-                .environmentObject(NoticeToMarinersRepository(localDataSource: NoticeToMarinersStaticLocalDataSource(), remoteDataSource: NoticeToMarinersRemoteDataSource()))
             }
         }
         let container = Container()

@@ -88,7 +88,12 @@ final class NoticeToMarinersDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.mockPath = "ntmMockData.json"
 
-        let operation = NoticeToMarinersInitialDataLoadOperation(localDataSource: NoticeToMarinersCoreDataDataSource(), bundle: bundle)
+        let localDataSource = NoticeToMarinersCoreDataDataSource()
+        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        InjectedValues[\.ntmLocalDataSource] = localDataSource
+        InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
+        
+        let operation = NoticeToMarinersInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -142,8 +147,12 @@ final class NoticeToMarinersDataTests: XCTestCase {
 
         let bundle = MockBundle()
         bundle.mockPath = "ntmMockData.json"
-
-        let operation = NoticeToMarinersInitialDataLoadOperation(localDataSource: NoticeToMarinersCoreDataDataSource(), bundle: bundle)
+        let localDataSource = NoticeToMarinersCoreDataDataSource()
+        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        InjectedValues[\.ntmLocalDataSource] = localDataSource
+        InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
+        
+        let operation = NoticeToMarinersInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         await fulfillment(of: [loadingExpectation, loadedExpectation, didSaveExpectation, batchUpdateCompleteExpectation], timeout: 10)
@@ -173,7 +182,7 @@ final class NoticeToMarinersDataTests: XCTestCase {
             return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
         }
 
-        let repository = NoticeToMarinersRepository(localDataSource: NoticeToMarinersCoreDataDataSource(), remoteDataSource: NoticeToMarinersRemoteDataSource())
+        let repository = NoticeToMarinersRepository()
         XCTAssertEqual(repository.getCount(filters: nil), 22)
         let loadingNotification2 = expectation(forNotification: .DataSourceLoading,
                                                object: nil) { notification in
@@ -317,8 +326,13 @@ final class NoticeToMarinersDataTests: XCTestCase {
 
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
+        
+        let localDataSource = NoticeToMarinersCoreDataDataSource()
+        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        InjectedValues[\.ntmLocalDataSource] = localDataSource
+        InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
 
-        let operation = NoticeToMarinersInitialDataLoadOperation(localDataSource: NoticeToMarinersCoreDataDataSource(), bundle: bundle)
+        let operation = NoticeToMarinersInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         await fulfillment(of: [loadingNotification2, loadedNotification2, didSaveNotification2, batchUpdateCompleteNotification2], timeout: 10)
@@ -410,7 +424,11 @@ final class NoticeToMarinersDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
 
-        let operation = NoticeToMarinersInitialDataLoadOperation(localDataSource: NoticeToMarinersCoreDataDataSource(), bundle: bundle)
+        let localDataSource = NoticeToMarinersCoreDataDataSource()
+        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        InjectedValues[\.ntmLocalDataSource] = localDataSource
+        InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
+        let operation = NoticeToMarinersInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         await fulfillment(of: [loadingNotification2, loadedNotification2, didSaveNotification2, batchUpdateCompleteNotification2], timeout: 10)

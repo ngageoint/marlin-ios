@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct NoticesList: View {
-    @EnvironmentObject var noticeToMarinersRepository: NoticeToMarinersRepository
     @StateObject var viewModel: NoticesToMarinersViewModel = NoticesToMarinersViewModel()
     @EnvironmentObject var router: MarlinRouter
 
@@ -141,7 +140,6 @@ struct NoticesList: View {
         .foregroundColor(Color.onSurfaceColor)
 
         .onAppear {
-            viewModel.repository = noticeToMarinersRepository
             Metrics.shared.dataSourceList(dataSource: DataSources.noticeToMariners)
         }
     }

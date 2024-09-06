@@ -14,8 +14,14 @@ class NoticesToMarinersViewModel: ObservableObject {
     @Published var loaded: Bool = false
     private var disposables = Set<AnyCancellable>()
 
-    private var _repository: NoticeToMarinersRepository?
-
+    @Injected(\.ntmRepository)
+    private var repository: NoticeToMarinersRepository
+    
+    init() {
+        dataSourceUpdatedPub.store(in: &disposables)
+        fetchNoticeToMarinersSections()
+    }
+    
     var dataSourceUpdatedPub: AnyCancellable {
         return NotificationCenter.default.publisher(for: .DataSourceUpdated)
             .compactMap { notification in
@@ -27,19 +33,6 @@ class NoticesToMarinersViewModel: ObservableObject {
             .sink { _ in
                 self.reload()
             }
-    }
-
-    var repository: NoticeToMarinersRepository? {
-        get {
-            return _repository
-        }
-        set {
-            if _repository == nil {
-                dataSourceUpdatedPub.store(in: &disposables)
-                _repository = newValue
-                fetchNoticeToMarinersSections()
-            }
-        }
     }
 
     private let trigger = Trigger()
@@ -72,7 +65,6 @@ class NoticesToMarinersViewModel: ObservableObject {
     }
 
     func fetchNoticeToMarinersSections(limit: Int = 100) {
-        guard let repository = _repository else { return }
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in

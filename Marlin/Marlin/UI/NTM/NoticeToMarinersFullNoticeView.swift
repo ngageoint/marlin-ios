@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct NoticeToMarinersFullNoticeView: View {
-    @EnvironmentObject var noticeToMarinersRepository: NoticeToMarinersRepository
     @State var noticeNumber: Int
     @StateObject var viewModel: NoticeToMarinersFullNoticeViewViewModel = NoticeToMarinersFullNoticeViewViewModel()
 
@@ -53,7 +52,6 @@ struct NoticeToMarinersFullNoticeView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             viewModel.setupModel(noticeNumber: noticeNumber)
-            viewModel.repository = noticeToMarinersRepository
             viewModel.getNotices(noticeNumber: noticeNumber)
             viewModel.loadGraphics()
             Metrics.shared.appRoute(["ntms", "detail"])

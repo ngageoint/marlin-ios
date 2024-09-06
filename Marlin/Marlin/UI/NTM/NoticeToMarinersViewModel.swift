@@ -9,13 +9,13 @@ import Foundation
 import Combine
 
 class NoticeToMarinersViewModel: ObservableObject {
-    var repository: NoticeToMarinersRepository?
+    @Injected(\.ntmRepository)
+    private var repository: NoticeToMarinersRepository
     var odsEntryId: Int?
     var disposables = Set<AnyCancellable>()
     @Published var noticeToMariners: NoticeToMarinersModel?
 
-    func setupModel(repository: NoticeToMarinersRepository, odsEntryId: Int?) {
-        self.repository = repository
+    func setupModel(odsEntryId: Int?) {
         self.odsEntryId = odsEntryId
         if let odsEntryId = odsEntryId {
             noticeToMariners = repository.getNoticeToMariners(odsEntryId: odsEntryId)
@@ -30,28 +30,28 @@ class NoticeToMarinersViewModel: ObservableObject {
     }
 
     func checkFileExists() -> Bool {
-        guard let repository = repository, let odsEntryId = odsEntryId else {
+        guard let odsEntryId = odsEntryId else {
             return false
         }
         return repository.checkFileExists(odsEntryId: odsEntryId)
     }
 
     func deleteFile() {
-        guard let repository = repository, let odsEntryId = odsEntryId else {
+        guard let odsEntryId = odsEntryId else {
             return
         }
         repository.deleteFile(odsEntryId: odsEntryId)
     }
 
     func downloadFile() {
-        guard let repository = repository, let odsEntryId = odsEntryId else {
+        guard let odsEntryId = odsEntryId else {
             return
         }
         repository.downloadFile(odsEntryId: odsEntryId)
     }
 
     func cancelDownload() {
-        guard let repository = repository, let odsEntryId = odsEntryId else {
+        guard let odsEntryId = odsEntryId else {
             return
         }
         repository.cancelDownload(odsEntryId: odsEntryId)

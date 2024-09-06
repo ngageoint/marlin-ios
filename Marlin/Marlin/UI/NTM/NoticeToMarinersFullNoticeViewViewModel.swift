@@ -37,24 +37,17 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
                 }
             }
         }
-        if repository != nil {
-            if let noticeNumber = noticeNumber {
-                getNotices(noticeNumber: noticeNumber)
-            }
+        if let noticeNumber = noticeNumber {
+            getNotices(noticeNumber: noticeNumber)
         }
     }
-
-    var repository: NoticeToMarinersRepository? {
-        didSet {
-            if let noticeNumber = noticeNumber {
-                getNotices(noticeNumber: noticeNumber)
-            }
-        }
-    }
+    
+    @Injected(\.ntmRepository)
+    private var repository: NoticeToMarinersRepository
 
     @discardableResult
     func getNotices(noticeNumber: Int) -> [NoticeToMarinersModel]? {
-        notices = repository?.getNoticesToMariners(noticeNumber: noticeNumber) ?? []
+        notices = repository.getNoticesToMariners(noticeNumber: noticeNumber) ?? []
         return notices
     }
 

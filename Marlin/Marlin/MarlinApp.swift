@@ -138,7 +138,6 @@ struct MarlinApp: App {
     
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     var bookmarkRepository: BookmarkRepository
-    var noticeToMarinersRepository: NoticeToMarinersRepository
     var userPlaceRepository: UserPlaceRepository
     var searchRepository: SearchRepository
 
@@ -163,10 +162,6 @@ struct MarlinApp: App {
         appState = MSI.shared.appState
         persistentStore = PersistenceController.shared
 
-        noticeToMarinersRepository = NoticeToMarinersRepository(
-            localDataSource: NoticeToMarinersCoreDataDataSource(),
-            remoteDataSource: NoticeToMarinersRemoteDataSource()
-        )
         userPlaceRepository = UserPlaceRepository(localDataSource: UserPlaceCoreDataDataSource())
         searchRepository = SearchRepository(
             native: NativeSearchProvider(),
@@ -178,8 +173,7 @@ struct MarlinApp: App {
             localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
 
         bookmarkRepository = BookmarkRepository(
-            localDataSource: BookmarkCoreDataDataSource(),
-            noticeToMarinersRepository: noticeToMarinersRepository
+            localDataSource: BookmarkCoreDataDataSource()
         )
 
         asamsTileRepository = AsamsTileRepository()
@@ -191,7 +185,6 @@ struct MarlinApp: App {
         navigationalWarningsMapFeatureRepository = NavigationalWarningsMapFeatureRepository()
 
         MSI.shared.addRepositories(
-            noticeToMarinersRepository: noticeToMarinersRepository,
             routeRepository: routeRepository
         )
         UNUserNotificationCenter.current().delegate = appDelegate
@@ -213,7 +206,6 @@ struct MarlinApp: App {
                 .environmentObject(bookmarkRepository)
                 .environmentObject(routeRepository)
                 .environmentObject(routeWaypointRepository)
-                .environmentObject(noticeToMarinersRepository)
                 .environmentObject(userPlaceRepository)
                 .environmentObject(asamsTileRepository)
                 .environmentObject(modusTileRepository)

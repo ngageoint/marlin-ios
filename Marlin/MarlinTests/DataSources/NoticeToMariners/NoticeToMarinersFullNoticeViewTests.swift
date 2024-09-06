@@ -244,7 +244,11 @@ final class NoticeToMarinersFullNoticeViewTests: XCTestCase {
                 localDataSource.map[odsEntryId] = notice
             }
         }
-        let repository = NoticeToMarinersRepository(localDataSource: localDataSource, remoteDataSource: NoticeToMarinersStaticRemoteDataSource())
+        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        InjectedValues[\.ntmLocalDataSource] = localDataSource
+        InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
+        
+        let repository = NoticeToMarinersRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 

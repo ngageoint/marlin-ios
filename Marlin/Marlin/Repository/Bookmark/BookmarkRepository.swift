@@ -37,18 +37,17 @@ class BookmarkRepository: ObservableObject {
     var portRepository: PortRepository
     @Injected(\.radioBeaconRepository)
     var radioBeaconRepository: RadioBeaconRepository
-    let noticeToMarinersRepository: NoticeToMarinersRepository?
+    @Injected(\.ntmRepository)
+    private var noticeToMarinersRepository: NoticeToMarinersRepository
     @Injected(\.publicationRepository)
     var publicationRepository: PublicationRepository
     @Injected(\.navWarningRepository)
     var navigationalWarningRepository: NavigationalWarningRepository
 
     init(
-        localDataSource: BookmarkLocalDataSource,
-        noticeToMarinersRepository: NoticeToMarinersRepository? = nil
+        localDataSource: BookmarkLocalDataSource
     ) {
         self.localDataSource = localDataSource
-        self.noticeToMarinersRepository = noticeToMarinersRepository
     }
 
     func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel? {
@@ -88,7 +87,7 @@ class BookmarkRepository: ObservableObject {
                 )
             }
         case DataSources.noticeToMariners.key:
-            return noticeToMarinersRepository?.getNoticesToMariners(noticeNumber: Int(itemKey))?.first
+            return noticeToMarinersRepository.getNoticesToMariners(noticeNumber: Int(itemKey))?.first
         case DataSources.dgps.key:
             if split.count == 2 {
                 return dgpsRepository.getDGPSStation(

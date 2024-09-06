@@ -11,6 +11,17 @@ import Combine
 import UIKit
 import BackgroundTasks
 
+private struct NoticeToMarinersLocalDataSourceProviderKey: InjectionKey {
+    static var currentValue: NoticeToMarinersLocalDataSource = NoticeToMarinersCoreDataDataSource()
+}
+
+extension InjectedValues {
+    var ntmLocalDataSource: NoticeToMarinersLocalDataSource {
+        get { Self[NoticeToMarinersLocalDataSourceProviderKey.self] }
+        set { Self[NoticeToMarinersLocalDataSourceProviderKey.self] = newValue }
+    }
+}
+
 protocol NoticeToMarinersLocalDataSource {
     func getNoticesToMariners(
         noticeNumber: Int?

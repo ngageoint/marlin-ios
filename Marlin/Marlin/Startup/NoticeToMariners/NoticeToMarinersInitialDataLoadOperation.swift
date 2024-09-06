@@ -8,11 +8,11 @@
 import Foundation
 
 class NoticeToMarinersInitialDataLoadOperation: CountingDataLoadOperation {
-    var localDataSource: NoticeToMarinersLocalDataSource
+    @Injected(\.ntmLocalDataSource)
+    private var localDataSource: NoticeToMarinersLocalDataSource
     var bundle: Bundle
 
-    init(localDataSource: NoticeToMarinersLocalDataSource, bundle: Bundle = .main) {
-        self.localDataSource = localDataSource
+    init(bundle: Bundle = .main) {
         self.bundle = bundle
     }
 

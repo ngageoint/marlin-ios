@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct NoticeToMarinersView: View {
-    @EnvironmentObject var noticeToMarinersRepository: NoticeToMarinersRepository
     @StateObject var viewModel: NoticesToMarinersViewModel = NoticesToMarinersViewModel()
     @EnvironmentObject var router: MarlinRouter
 

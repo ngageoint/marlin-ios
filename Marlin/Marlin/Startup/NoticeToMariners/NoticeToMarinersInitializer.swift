@@ -9,11 +9,10 @@ import Foundation
 import BackgroundTasks
 
 class NoticeToMarinersInitializer: Initializer {
+    @Injected(\.ntmRepository)
+    private var repository: NoticeToMarinersRepository
 
-    let repository: NoticeToMarinersRepository
-
-    init(repository: NoticeToMarinersRepository) {
-        self.repository = repository
+    init() {
         super.init(dataSource: DataSources.noticeToMariners)
     }
 
@@ -23,9 +22,7 @@ class NoticeToMarinersInitializer: Initializer {
 
     override func fetch() {
         if repository.getCount(filters: nil) == 0 {
-            let initialDataLoadOperation = NoticeToMarinersInitialDataLoadOperation(
-                localDataSource: self.repository.localDataSource
-            )
+            let initialDataLoadOperation = NoticeToMarinersInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {
                 Task {
                     await self.repository.fetchNoticeToMariners()
