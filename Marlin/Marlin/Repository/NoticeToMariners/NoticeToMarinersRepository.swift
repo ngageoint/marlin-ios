@@ -129,6 +129,7 @@ extension NoticeToMarinersRepository {
         cancellable = subject
             .sink(
                 receiveCompletion: { [weak self] _ in
+                    self?.remoteDataSource.cleanupDownload(model: notice)
                     if let cancellable = cancellable {
                         self?.cancellables.remove(cancellable)
                     }

@@ -11,6 +11,17 @@ import Combine
 import UIKit
 import BackgroundTasks
 
+private struct BookmarkLocalDataSourceProviderKey: InjectionKey {
+    static var currentValue: BookmarkLocalDataSource = BookmarkCoreDataDataSource()
+}
+
+extension InjectedValues {
+    var bookmarkLocalDataSource: BookmarkLocalDataSource {
+        get { Self[BookmarkLocalDataSourceProviderKey.self] }
+        set { Self[BookmarkLocalDataSourceProviderKey.self] = newValue }
+    }
+}
+
 protocol BookmarkLocalDataSource {
     func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel?
     func createBookmark(notes: String?, itemKey: String, dataSource: String) async

@@ -59,7 +59,7 @@ final class DGPSStationListTests: XCTestCase {
         InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [dgps]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let router = MarlinRouter()
 
@@ -76,7 +76,6 @@ final class DGPSStationListTests: XCTestCase {
             }
         }
         let view = Container()
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
             .environmentObject(router)
         let controller = UIHostingController(rootView: view)
@@ -171,7 +170,7 @@ final class DGPSStationListTests: XCTestCase {
         InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [dgps, dgps2]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let router = MarlinRouter()
 
@@ -188,7 +187,6 @@ final class DGPSStationListTests: XCTestCase {
             }
         }
         let view = Container()
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
             .environmentObject(router)
         let controller = UIHostingController(rootView: view)
@@ -268,7 +266,7 @@ final class DGPSStationListTests: XCTestCase {
         InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [dgps, dgps2]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let router = MarlinRouter()
 
@@ -285,7 +283,6 @@ final class DGPSStationListTests: XCTestCase {
             }
         }
         let view = Container()
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
             .environmentObject(router)
         let controller = UIHostingController(rootView: view)

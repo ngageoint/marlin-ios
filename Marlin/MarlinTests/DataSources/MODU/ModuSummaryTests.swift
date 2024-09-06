@@ -37,12 +37,11 @@ final class ModuSummaryTests: XCTestCase {
         localDataSource.list = [modu]
         let repository = ModuRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let summary = ModuSummaryView(modu: ModuListModel(moduModel: modu))
             .setShowMoreDetails(false)
             .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
 
         let controller = UIHostingController(rootView: summary)
@@ -87,7 +86,7 @@ final class ModuSummaryTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: modu)
+        BookmarkHelper().verifyBookmarkButton(bookmarkable: modu)
     }
     
     func testShowMoreDetails() {
@@ -115,12 +114,11 @@ final class ModuSummaryTests: XCTestCase {
         localDataSource.list = [modu]
         let repository = ModuRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let summary = ModuSummaryView(modu: ModuListModel(moduModel: modu))
             .setShowMoreDetails(true)
             .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: summary)

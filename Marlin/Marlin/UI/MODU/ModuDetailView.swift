@@ -10,7 +10,6 @@ import MapKit
 import CoreData
 
 struct ModuDetailView: View {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @EnvironmentObject var router: MarlinRouter
     @StateObject var viewModel: ModuViewModel = ModuViewModel()
     @State var name: String
@@ -95,7 +94,6 @@ struct ModuDetailView: View {
                 viewModel.getModu(name: name, waypointURI: waypointURI)
             }
             .onAppear {
-                bookmarkViewModel.repository = bookmarkRepository
                 bookmarkViewModel.getBookmark(itemKey: modu.id, dataSource: DataSources.modu.key)
                 Metrics.shared.dataSourceDetail(dataSource: DataSources.modu)
             }

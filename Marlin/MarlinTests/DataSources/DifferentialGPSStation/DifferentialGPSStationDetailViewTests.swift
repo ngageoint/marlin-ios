@@ -44,11 +44,10 @@ final class DifferentialGPSStationDetailViewTests: XCTestCase {
         InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [dgps]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let view = DGPSStationDetailView(featureNumber: dgps.featureNumber, volumeNumber: dgps.volumeNumber)
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
@@ -101,11 +100,10 @@ final class DifferentialGPSStationDetailViewTests: XCTestCase {
         localDataSource.list = [dgps]
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let view = DGPSStationDetailView(featureNumber: dgps.featureNumber, volumeNumber: dgps.volumeNumber)
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()

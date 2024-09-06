@@ -15,11 +15,8 @@ class BookmarksViewModel: ObservableObject {
     @Published var loaded: Bool = false
     private var disposables = Set<AnyCancellable>()
 
-    var repository: BookmarkRepository? {
-        didSet {
-            fetchBookmarks()
-        }
-    }
+    @Injected(\.bookmarkRepository)
+    private var repository: BookmarkRepository
 
     var publisher: AnyPublisher<CollectionDifference<BookmarkModel>, Never>?
 
@@ -37,6 +34,10 @@ class BookmarksViewModel: ObservableObject {
                 return []
             }
         }
+    }
+    
+    init() {
+        fetchBookmarks()
     }
 
     private enum TriggerId: Hashable {
@@ -56,7 +57,6 @@ class BookmarksViewModel: ObservableObject {
         if publisher != nil {
             return
         }
-        guard let repository = repository else { return }
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in

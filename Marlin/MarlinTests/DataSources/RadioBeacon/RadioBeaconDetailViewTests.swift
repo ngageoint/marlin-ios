@@ -62,11 +62,10 @@ final class RadioBeaconDetailViewTests: XCTestCase {
         InjectedValues[\.radioBeaconRemoteDataSource] = remoteDataSource
         localDataSource.list = [rb]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let detailView = RadioBeaconDetailView(featureNumber: 10, volumeNumber: "PUB 110")
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 
         let controller = UIHostingController(rootView: detailView)
@@ -135,11 +134,10 @@ final class RadioBeaconDetailViewTests: XCTestCase {
         InjectedValues[\.radioBeaconRemoteDataSource] = remoteDataSource
         localDataSource.list = [rb]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let detailView = RadioBeaconDetailView(featureNumber: 10, volumeNumber: "PUB 110")
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 
         let controller = UIHostingController(rootView: detailView)
@@ -178,7 +176,7 @@ final class RadioBeaconDetailViewTests: XCTestCase {
         
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: rb)
+        BookmarkHelper().verifyBookmarkButton(bookmarkable: rb)
     }
 }
 

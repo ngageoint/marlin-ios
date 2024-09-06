@@ -123,6 +123,7 @@ extension PublicationRepository {
         cancellable = subject
             .sink(
                 receiveCompletion: { [weak self] _ in
+                    self?.remoteDataSource.cleanupDownload(model: publication)
                     if let cancellable = cancellable {
                         self?.cancellables.remove(cancellable)
                     }
@@ -149,7 +150,8 @@ extension PublicationRepository {
     }
 
     func checkFileExists(id: String) -> Bool {
-        localDataSource.checkFileExists(s3Key: id)
+        print("XXX checking file exists in local data source \(localDataSource)")
+        return localDataSource.checkFileExists(s3Key: id)
     }
 
     func cancelDownload(s3Key: String) {

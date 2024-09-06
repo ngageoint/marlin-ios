@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct DGPSStationSummaryView: DataSourceSummaryView {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @EnvironmentObject var router: MarlinRouter
     var showBookmarkNotes: Bool = false
 
@@ -66,7 +65,6 @@ struct DGPSStationSummaryView: DataSourceSummaryView {
             )
         }
         .onAppear {
-            bookmarkViewModel.repository = bookmarkRepository
             bookmarkViewModel.getBookmark(itemKey: dgpsStation.id, dataSource: DataSources.dgps.key)
         }
     }

@@ -16,12 +16,15 @@ class PublicationStaticLocalDataSource: PublicationLocalDataSource {
     
     var existsMap: [String: Bool] = [:]
     func checkFileExists(s3Key: String) -> Bool {
+        print("XXX check file exists in publication static local data source \(s3Key)")
         guard let epub = map[s3Key] else {
+            print("XXX not in map \(map)")
             return false
         }
         var downloaded = false
         if let destinationUrl = URL(string: epub.savePath) {
             downloaded = FileManager().fileExists(atPath: destinationUrl.path)
+            print("XXX downloaded? \(downloaded)")
         }
         if downloaded != epub.isDownloaded {
             var model = map[s3Key] ?? PublicationModel()
@@ -33,6 +36,7 @@ class PublicationStaticLocalDataSource: PublicationLocalDataSource {
                 subject.send(model)
             }
         }
+        print("XXXX exists map \(existsMap)")
         return existsMap[s3Key] ?? false
     }
     

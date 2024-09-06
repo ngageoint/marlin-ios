@@ -43,10 +43,9 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [newItem]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let summary = DGPSStationSummaryView(dgpsStation: DGPSStationListModel(dgpsStationModel: newItem))
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
 
         let controller = UIHostingController(rootView: summary)
@@ -65,7 +64,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: newItem)
+        BookmarkHelper().verifyBookmarkButton(bookmarkable: newItem)
     }
     
     func testLoadingNoVolume() {
@@ -99,10 +98,9 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [newItem]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let summary = DGPSStationSummaryView(dgpsStation: DGPSStationListModel(dgpsStationModel: newItem))
-            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -176,13 +174,12 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [newItem]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let router = MarlinRouter()
 
         let summary = DGPSStationSummaryView(dgpsStation: DGPSStationListModel(dgpsStationModel: newItem))
             .setShowMoreDetails(true)
             .setShowSectionHeader(true)
-            .environmentObject(bookmarkRepository)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: summary)

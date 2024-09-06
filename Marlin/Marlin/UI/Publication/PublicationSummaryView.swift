@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct PublicationSummaryView: DataSourceSummaryView {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
 
     var s3Key: String
@@ -50,7 +49,6 @@ struct PublicationSummaryView: DataSourceSummaryView {
                 PublicationActionBar(viewModel: viewModel)
             }
             .onAppear {
-                bookmarkViewModel.repository = bookmarkRepository
                 bookmarkViewModel.getBookmark(itemKey: publication.itemKey, dataSource: DataSources.epub.key)
             }
         }

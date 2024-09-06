@@ -37,11 +37,10 @@ final class NavigationalWarningDetailTests: XCTestCase {
         localDataSource.list.append(newItem)
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let detailView = NavigationalWarningDetailView(msgYear: newItem.msgYear!, msgNumber: newItem.msgNumber!, navArea: newItem.navArea)
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 
         let controller = UIHostingController(rootView: detailView)
@@ -71,6 +70,6 @@ final class NavigationalWarningDetailTests: XCTestCase {
         let textView = viewTester().usingLabel("Text").view as! UITextView
         XCTAssertEqual(textView.text, newItem.text)
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: newItem)
+        BookmarkHelper().verifyBookmarkButton(bookmarkable: newItem)
     }
 }

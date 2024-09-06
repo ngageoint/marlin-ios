@@ -38,11 +38,10 @@ final class LightSummaryViewTests: XCTestCase {
         InjectedValues[\.lightRemoteDataSource] = remoteDataSource
         localDataSource.list = [light]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let summary = LightSummaryView(light: LightListModel(lightModel: light))
             .setShowMoreDetails(false)
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
 
         let controller = UIHostingController(rootView: summary)
@@ -87,7 +86,7 @@ final class LightSummaryViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: light)
+        BookmarkHelper().verifyBookmarkButton(bookmarkable: light)
     }
     
     func testShowMoreDetails() {
@@ -115,11 +114,10 @@ final class LightSummaryViewTests: XCTestCase {
         InjectedValues[\.lightRemoteDataSource] = remoteDataSource
         localDataSource.list = [light]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let summary = LightSummaryView(light: LightListModel(lightModel: light))
             .setShowMoreDetails(true)
-            .environmentObject(bookmarkRepository)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: summary)

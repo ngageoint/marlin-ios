@@ -10,7 +10,6 @@ import MapKit
 import geopackage_ios
 
 struct GeoPackageFeatureItemDetailView: View {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @EnvironmentObject var router: MarlinRouter
 
     var featureItem: GeoPackageFeatureItem

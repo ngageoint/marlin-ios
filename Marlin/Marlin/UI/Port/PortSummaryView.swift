@@ -9,7 +9,6 @@ import SwiftUI
 import MapKit
 
 struct PortSummaryView: DataSourceSummaryView {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @EnvironmentObject var router: MarlinRouter
     var showSectionHeader: Bool = false
     
@@ -67,7 +66,6 @@ struct PortSummaryView: DataSourceSummaryView {
             )
         }
         .onAppear {
-            bookmarkViewModel.repository = bookmarkRepository
             bookmarkViewModel.getBookmark(itemKey: port.id, dataSource: DataSources.port.key)
 
             if let currentLocation = locationManager.lastLocation {

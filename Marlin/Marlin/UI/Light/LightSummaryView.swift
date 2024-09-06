@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct LightSummaryView: DataSourceSummaryView {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @EnvironmentObject var router: MarlinRouter
 
     var showSectionHeader: Bool = false
@@ -54,7 +53,6 @@ struct LightSummaryView: DataSourceSummaryView {
             )
         }
         .onAppear {
-            bookmarkViewModel.repository = bookmarkRepository
             bookmarkViewModel.getBookmark(itemKey: light.itemKey, dataSource: DataSources.light.key)
         }
     }

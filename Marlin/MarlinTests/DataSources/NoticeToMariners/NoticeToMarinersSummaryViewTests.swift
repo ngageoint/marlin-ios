@@ -41,11 +41,10 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
         let repository = NoticeToMarinersRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let summaryView = NoticeToMarinersFileSummaryView(odsEntryId: ntm.odsEntryId!)
             .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summaryView)
         let window = TestHelpers.getKeyWindowVisible()
@@ -82,11 +81,10 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
         let repository = NoticeToMarinersRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let summaryView = NoticeToMarinersSummaryView(noticeToMariners: NoticeToMarinersListModel(noticeToMarinersModel: ntm))
             .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
 
         let controller = UIHostingController(rootView: summaryView)
@@ -95,7 +93,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "202247")
         tester().waitForView(withAccessibilityLabel: "November 19 - November 25")
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: ntm)
+        BookmarkHelper().verifyBookmarkButton(bookmarkable: ntm)
     }
     
     func testReDownloadFullPublication() {
@@ -125,12 +123,12 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         let remoteDataSource = NoticeToMarinersRemoteDataSource()
         InjectedValues[\.ntmLocalDataSource] = localDataSource
         InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
-        let repository = NoticeToMarinersRepository()
+        @Injected(\.ntmRepository)
+        var repository: NoticeToMarinersRepository
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let summaryView = NoticeToMarinersFileSummaryView(odsEntryId: ntm.odsEntryId!)
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summaryView)
         let window = TestHelpers.getKeyWindowVisible()
@@ -200,13 +198,13 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         let remoteDataSource = NoticeToMarinersRemoteDataSource()
         InjectedValues[\.ntmLocalDataSource] = localDataSource
         InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
-        let repository = NoticeToMarinersRepository()
+        
+        @Injected(\.ntmRepository)
+        var repository: NoticeToMarinersRepository
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let summaryView = NoticeToMarinersFileSummaryView(odsEntryId: ntm.odsEntryId!)
-            .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summaryView)
         let window = TestHelpers.getKeyWindowVisible()

@@ -33,16 +33,15 @@ final class AsamSummaryViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
         let remoteDataSource = AsamRemoteDataSource()
-        InjectedValues[\.asamRemoteDataSource]
+        InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         
         localDataSource.list = [asam]
         let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:asam))
             .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -59,7 +58,7 @@ final class AsamSummaryViewTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: asam)
+        BookmarkHelper().verifyBookmarkButton(bookmarkable: asam)
     }
     
     func testLoadingNoHostility() {
@@ -78,15 +77,14 @@ final class AsamSummaryViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
         let remoteDataSource = AsamRemoteDataSource()
-        InjectedValues[\.asamRemoteDataSource]
+        InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         localDataSource.list = [newItem]
         let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem))
             .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -120,15 +118,14 @@ final class AsamSummaryViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
         let remoteDataSource = AsamRemoteDataSource()
-        InjectedValues[\.asamRemoteDataSource]
+        InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         localDataSource.list = [newItem]
         let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem))
             .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -163,16 +160,15 @@ final class AsamSummaryViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
         let remoteDataSource = AsamRemoteDataSource()
-        InjectedValues[\.asamRemoteDataSource]
+        InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         
         localDataSource.list = [newItem]
         let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem), showMoreDetails: true)
             .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -203,17 +199,16 @@ final class AsamSummaryViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
         let remoteDataSource = AsamRemoteDataSource()
-        InjectedValues[\.asamRemoteDataSource]
+        InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         localDataSource.list = [newItem]
         let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem), showMoreDetails: false)
 //        let summary = AsamSummaryView(asam: AsamListModel(asam: newItem), showMoreDetails: false)
             .environmentObject(repository)
             .environmentObject(MarlinRouter())
-            .environmentObject(bookmarkRepository)
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller

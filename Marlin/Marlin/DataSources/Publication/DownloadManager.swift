@@ -41,6 +41,7 @@ final class DownloadManager: NSObject {
     init(subject: PassthroughSubject<DownloadProgress, Never>, downloadable: Downloadable) {
         self.subject = subject
         self.downloadable = downloadable
+        super.init()
     }
     
     func download() {
@@ -199,7 +200,10 @@ extension DownloadManager: URLSessionDownloadDelegate {
     }
 
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        urlSession.invalidateAndCancel()
+        
         guard let url = downloadTask.currentRequest?.url, let downloadable = urlToDownloadableMap[url] else {
+            subject.send(completion: .finished)
             return
         }
         
@@ -209,18 +213,19 @@ extension DownloadManager: URLSessionDownloadDelegate {
         let destinationUrl: URL? = URL(string: downloadable.savePath)
 
         guard let destinationUrl = destinationUrl else {
+            subject.send(completion: .finished)
             return
         }
         
         guard let httpResponse = downloadTask.response as? HTTPURLResponse,
               (200...299).contains(httpResponse.statusCode) else {
             saveError(downloadable: downloadable, response: downloadTask.response)
+            subject.send(completion: .finished)
             return
         }
         
         prepareForSaving(destinationUrl: destinationUrl)
 
-        print("Does the file exist \(location.path)")
         if !FileManager.default.fileExists(atPath: location.path) {
             print("error file not saved")
             subject.send(
@@ -232,6 +237,7 @@ extension DownloadManager: URLSessionDownloadDelegate {
                     error: "Error downloading (file not saved)"
                 )
             )
+            subject.send(completion: .finished)
             return
         }
         
@@ -272,6 +278,7 @@ extension DownloadManager: URLSessionDownloadDelegate {
                     error: ""
                 )
             )
+            subject.send(completion: .finished)
         } catch {
             print("error saving file to \(destinationUrl.path) \(error)")
         }

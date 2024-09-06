@@ -10,7 +10,6 @@ import MapKit
 import CoreData
 
 struct LightDetailView: View {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @EnvironmentObject var router: MarlinRouter
     @StateObject var viewModel: LightViewModel = LightViewModel()
     @State var featureNumber: String

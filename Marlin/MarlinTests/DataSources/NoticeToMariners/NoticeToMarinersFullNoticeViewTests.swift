@@ -250,10 +250,9 @@ final class NoticeToMarinersFullNoticeViewTests: XCTestCase {
         
         let repository = NoticeToMarinersRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let detailView = NoticeToMarinersFullNoticeView(noticeNumber: Int(ntm.noticeNumber!))
-            .environmentObject(bookmarkRepository)
             .environmentObject(repository)
 
         let controller = UIHostingController(rootView: detailView)

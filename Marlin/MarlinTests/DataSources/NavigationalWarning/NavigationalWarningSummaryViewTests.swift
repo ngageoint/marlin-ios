@@ -37,10 +37,9 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         localDataSource.list.append(nw)
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let summary = NavigationalWarningSummaryView(navigationalWarning: nw)
             .setShowMoreDetails(false)
-            .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -56,7 +55,7 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: nw)
+        BookmarkHelper().verifyBookmarkButton(bookmarkable: nw)
 
     }
 }

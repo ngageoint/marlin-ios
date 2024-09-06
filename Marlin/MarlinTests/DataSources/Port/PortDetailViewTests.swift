@@ -136,11 +136,10 @@ final class PortDetailViewTests: XCTestCase {
         localDataSource.list = [port]
         let repository = PortRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let router = MarlinRouter()
         let detailView = PortDetailView(portNumber: 760)
             .environmentObject(mockLocationManager as LocationManager)
-            .environmentObject(bookmarkRepository)
 
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()
@@ -394,11 +393,10 @@ final class PortDetailViewTests: XCTestCase {
         localDataSource.list = [port]
         let repository = PortRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let router = MarlinRouter()
         let detailView = PortDetailView(portNumber: 760)
             .environmentObject(mockLocationManager as LocationManager)
-            .environmentObject(bookmarkRepository)
 
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()

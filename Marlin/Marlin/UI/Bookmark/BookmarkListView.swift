@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct BookmarkListView: View {
-    @EnvironmentObject var repository: BookmarkRepository
     @StateObject var viewModel: BookmarksViewModel = BookmarksViewModel()
 
     @EnvironmentObject var router: MarlinRouter
@@ -82,7 +81,6 @@ struct BookmarkListView: View {
         .background(Color.backgroundColor)
         .foregroundColor(Color.onSurfaceColor)
         .onAppear {
-            viewModel.repository = repository
             Metrics.shared.dataSourceList(dataSource: DataSources.bookmark)
         }
     }

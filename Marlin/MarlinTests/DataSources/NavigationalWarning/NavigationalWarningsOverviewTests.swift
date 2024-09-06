@@ -101,13 +101,12 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let mapFeatureRepository = NavigationalWarningsMapFeatureRepository()
 
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(mockLocationManager as LocationManager)
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
             .environmentObject(mapFeatureRepository)
         let controller = UIHostingController(rootView: container)
@@ -205,13 +204,12 @@ final class NavigationalWarningsOverviewTests: XCTestCase {
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let mapFeatureRepository = NavigationalWarningsMapFeatureRepository()
 
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(mockLocationManager as LocationManager)
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
             .environmentObject(mapFeatureRepository)
         let controller = UIHostingController(rootView: container)

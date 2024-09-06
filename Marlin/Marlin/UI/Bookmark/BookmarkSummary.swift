@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct BookmarkSummary: DataSourceSummaryView {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepository
+    @Injected(\.bookmarkRepository)
+    private var bookmarkRepository: BookmarkRepository
+    
     @EnvironmentObject var router: MarlinRouter
 
     var showMoreDetails: Bool = false

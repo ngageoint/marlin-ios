@@ -36,11 +36,10 @@ final class ModuDetailViewTests: XCTestCase {
         
         localDataSource.list = [modu]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let detailView = ModuDetailView(name: "ABAN II")
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 
         let controller = UIHostingController(rootView: detailView)
@@ -78,11 +77,10 @@ final class ModuDetailViewTests: XCTestCase {
         
         localDataSource.list = [modu]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let detailView = ModuDetailView(name: "ABAN II")
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 
         let controller = UIHostingController(rootView: detailView)

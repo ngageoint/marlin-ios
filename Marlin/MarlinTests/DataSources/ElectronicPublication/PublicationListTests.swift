@@ -81,10 +81,9 @@ final class PublicationListTests: XCTestCase {
         let passThrough = PassThrough()
         let repository = PublicationRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let container = Container(passThrough: passThrough)
-            .environmentObject(bookmarkRepository)
 
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()

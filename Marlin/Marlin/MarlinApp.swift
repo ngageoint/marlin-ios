@@ -137,7 +137,6 @@ struct MarlinApp: App {
     var appState: AppState
     
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
-    var bookmarkRepository: BookmarkRepository
     var userPlaceRepository: UserPlaceRepository
     var searchRepository: SearchRepository
 
@@ -172,10 +171,6 @@ struct MarlinApp: App {
         routeWaypointRepository = RouteWaypointRepository(
             localDataSource: RouteWaypointCoreDataDataSource(context: persistentStore.viewContext))
 
-        bookmarkRepository = BookmarkRepository(
-            localDataSource: BookmarkCoreDataDataSource()
-        )
-
         asamsTileRepository = AsamsTileRepository()
         modusTileRepository = ModusTileRepository()
         portsTileRepository = PortsTileRepository()
@@ -203,7 +198,6 @@ struct MarlinApp: App {
                 .environmentObject(LocationManager.shared())
                 .environmentObject(appState)
                 .environmentObject(dataSourceList)
-                .environmentObject(bookmarkRepository)
                 .environmentObject(routeRepository)
                 .environmentObject(routeWaypointRepository)
                 .environmentObject(userPlaceRepository)

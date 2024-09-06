@@ -40,6 +40,7 @@ class PublicationRemoteDataSource: RemoteDataSource<PublicationModel> {
     }
 
     func cancelDownload(model: PublicationModel) {
+        cleanupDownload(model: model)
         downloads[model.id]?.cancel()
     }
 

@@ -22,8 +22,20 @@ enum BookmarkItem: Hashable, Identifiable {
     case sectionHeader(header: String)
 }
 
+private struct BookmarkRepositoryProviderKey: InjectionKey {
+    static var currentValue: BookmarkRepository = BookmarkRepository()
+}
+
+extension InjectedValues {
+    var bookmarkRepository: BookmarkRepository {
+        get { Self[BookmarkRepositoryProviderKey.self] }
+        set { Self[BookmarkRepositoryProviderKey.self] = newValue }
+    }
+}
+
 class BookmarkRepository: ObservableObject {
-    let localDataSource: BookmarkLocalDataSource
+    @Injected(\.bookmarkLocalDataSource)
+    private var localDataSource: BookmarkLocalDataSource
 
     @Injected(\.asamRepository)
     var asamRepository: AsamRepository
@@ -43,12 +55,6 @@ class BookmarkRepository: ObservableObject {
     var publicationRepository: PublicationRepository
     @Injected(\.navWarningRepository)
     var navigationalWarningRepository: NavigationalWarningRepository
-
-    init(
-        localDataSource: BookmarkLocalDataSource
-    ) {
-        self.localDataSource = localDataSource
-    }
 
     func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel? {
         localDataSource.getBookmark(itemKey: itemKey, dataSource: dataSource)

@@ -9,7 +9,6 @@ import SwiftUI
 import MapKit
 
 struct NavigationalWarningDetailView: View {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     @EnvironmentObject var routeWaypointRepository: RouteWaypointRepository
     @StateObject var viewModel: NavigationalWarningViewModel = NavigationalWarningViewModel()
@@ -117,7 +116,6 @@ struct NavigationalWarningDetailView: View {
                 """)
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
-                bookmarkViewModel.repository = bookmarkRepository
                 bookmarkViewModel.getBookmark(
                     itemKey: navigationalWarning.itemKey,
                     dataSource: DataSources.navWarning.key

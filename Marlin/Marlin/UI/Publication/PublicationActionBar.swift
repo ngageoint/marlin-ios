@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct PublicationActionBar: View {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     
     @ObservedObject var viewModel: PublicationViewModel
@@ -109,7 +108,6 @@ struct PublicationActionBar: View {
             .padding(.trailing, -8)
             .buttonStyle(MaterialButtonStyle())
             .onAppear {
-                bookmarkViewModel.repository = bookmarkRepository
                 bookmarkViewModel.getBookmark(
                     itemKey: publication.itemKey,
                     dataSource: publication.key

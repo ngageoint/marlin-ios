@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct NoticeToMarinersSummaryView: DataSourceSummaryView {
-    @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
     @EnvironmentObject var router: MarlinRouter
 
@@ -40,7 +39,6 @@ struct NoticeToMarinersSummaryView: DataSourceSummaryView {
             bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
         }
         .onAppear {
-            bookmarkViewModel.repository = bookmarkRepository
             bookmarkViewModel.getBookmark(itemKey: noticeToMariners.itemKey, dataSource: noticeToMariners.key)
         }
     }

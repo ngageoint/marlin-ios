@@ -11,6 +11,13 @@ import OHHTTPStubs
 @testable import Marlin
 
 final class NoticeToMarinersFullNoticeViewModelTests: XCTestCase {
+    
+    override class func setUp() {
+        let localDataSource = NoticeToMarinersStaticLocalDataSource()
+        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        InjectedValues[\.ntmLocalDataSource] = localDataSource
+        InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
+    }
 
     func testCreateFetchRequestNoticeNumber() {
         let model = NoticeToMarinersFullNoticeViewViewModel()

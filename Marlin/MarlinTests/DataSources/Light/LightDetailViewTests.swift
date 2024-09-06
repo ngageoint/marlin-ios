@@ -36,12 +36,11 @@ final class LightDetailViewTests: XCTestCase {
         InjectedValues[\.lightRemoteDataSource] = remoteDataSource
         localDataSource.list = [light]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let detailView = LightDetailView(featureNumber: light.featureNumber!, volumeNumber: light.volumeNumber!)
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 
         let controller = UIHostingController(rootView: detailView)
@@ -81,12 +80,11 @@ final class LightDetailViewTests: XCTestCase {
         InjectedValues[\.lightRemoteDataSource] = remoteDataSource
         localDataSource.list = [light]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let detailView = LightDetailView(featureNumber: light.featureNumber!, volumeNumber: light.volumeNumber!)
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 
         let controller = UIHostingController(rootView: detailView)

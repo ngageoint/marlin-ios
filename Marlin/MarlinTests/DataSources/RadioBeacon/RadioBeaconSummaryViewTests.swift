@@ -47,11 +47,10 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         InjectedValues[\.radioBeaconRemoteDataSource] = remoteDataSource
         localDataSource.list = [rb]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
             .setShowMoreDetails(false)
-            .environmentObject(bookmarkRepository)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: summary)
@@ -98,7 +97,7 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: rb)
+        BookmarkHelper().verifyBookmarkButton(bookmarkable: rb)
     }
     
     func testShowMoreDetails() {
@@ -135,11 +134,10 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         InjectedValues[\.radioBeaconRemoteDataSource] = remoteDataSource
         localDataSource.list = [rb]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
             .setShowMoreDetails(true)
-            .environmentObject(bookmarkRepository)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: summary)
@@ -189,11 +187,10 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         InjectedValues[\.radioBeaconRemoteDataSource] = remoteDataSource
         localDataSource.list = [rb]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
             .setShowSectionHeader(true)
-            .environmentObject(bookmarkRepository)
             .environmentObject(router)
         
         let controller = UIHostingController(rootView: summary)

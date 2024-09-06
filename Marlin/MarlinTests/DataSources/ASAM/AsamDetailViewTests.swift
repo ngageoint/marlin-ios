@@ -32,16 +32,15 @@ final class AsamDetailViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
         let remoteDataSource = AsamRemoteDataSource()
-        InjectedValues[\.asamRemoteDataSource]
+        InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         localDataSource.list = [asam]
         let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let view = AsamDetailView(reference: asam.reference!)
             .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
@@ -73,16 +72,15 @@ final class AsamDetailViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
         let remoteDataSource = AsamRemoteDataSource()
-        InjectedValues[\.asamRemoteDataSource]
+        InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         localDataSource.list = [asam]
         let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let view = AsamDetailView(reference: asam.reference!)
             .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
@@ -118,16 +116,15 @@ final class AsamDetailViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
         let remoteDataSource = AsamRemoteDataSource()
-        InjectedValues[\.asamRemoteDataSource]
+        InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         localDataSource.list = [asam]
         let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let summary = AsamDetailView(reference: asam.reference!)
             .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 
         let controller = UIHostingController(rootView: summary)
@@ -160,16 +157,15 @@ final class AsamDetailViewTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
         let remoteDataSource = AsamRemoteDataSource()
-        InjectedValues[\.asamRemoteDataSource]
+        InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         localDataSource.list = [asam]
         let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let summary = AsamDetailView(reference: asam.reference!)
             .environmentObject(repository)
-            .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 
         let controller = UIHostingController(rootView: summary)

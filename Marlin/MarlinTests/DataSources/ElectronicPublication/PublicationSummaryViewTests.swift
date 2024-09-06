@@ -49,11 +49,10 @@ final class PublicationSummaryViewTests: XCTestCase {
         
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
             .setShowMoreDetails(false)
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
 
         let controller = UIHostingController(rootView: summary)
@@ -103,11 +102,10 @@ final class PublicationSummaryViewTests: XCTestCase {
         var repository: PublicationRepository
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
             .setShowMoreDetails(false)
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
 
         let controller = UIHostingController(rootView: summary)
@@ -180,11 +178,10 @@ final class PublicationSummaryViewTests: XCTestCase {
         localDataSource.deleteFile(s3Key: epub.s3Key ?? "")
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
             .setShowMoreDetails(false)
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
 
         let controller = UIHostingController(rootView: summary)
@@ -242,11 +239,10 @@ final class PublicationSummaryViewTests: XCTestCase {
         let repository = PublicationRepository()
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
-
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
+        
         let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
             .setShowMoreDetails(false)
-            .environmentObject(bookmarkRepository)
             .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
@@ -288,6 +284,6 @@ final class PublicationSummaryViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Delete")
         XCTAssertFalse(repository.checkFileExists(id: epub.s3Key ?? ""))
 
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: epub)
+        BookmarkHelper().verifyBookmarkButton(bookmarkable: epub)
     }
 }

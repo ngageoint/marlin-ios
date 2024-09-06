@@ -137,12 +137,11 @@ final class PortSummaryViewTests: XCTestCase {
         localDataSource.list = [port]
         let repository = PortRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let router = MarlinRouter()
         let summary = PortSummaryView(port: PortListModel(portModel:port))
             .setShowMoreDetails(false)
             .environmentObject(mockLocationManager as LocationManager)
-            .environmentObject(bookmarkRepository)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: summary)
@@ -180,7 +179,7 @@ final class PortSummaryViewTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: port)
+        BookmarkHelper().verifyBookmarkButton(bookmarkable: port)
 
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
@@ -312,12 +311,11 @@ final class PortSummaryViewTests: XCTestCase {
         InjectedValues[\.portRemoteDataSource] = remoteDataSource
         localDataSource.list = [port]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let router = MarlinRouter()
         let summary = PortSummaryView(port: PortListModel(portModel:port))
             .setShowMoreDetails(true)
             .environmentObject(mockLocationManager as LocationManager)
-            .environmentObject(bookmarkRepository)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: summary)
@@ -331,7 +329,7 @@ final class PortSummaryViewTests: XCTestCase {
 
         tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
         
-        BookmarkHelper().verifyBookmarkButton(repository: bookmarkRepository, bookmarkable: port)
+        BookmarkHelper().verifyBookmarkButton(bookmarkable: port)
     }
 
 }

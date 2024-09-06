@@ -211,13 +211,16 @@ extension PublicationCoreDataDataSource {
     }
 
     func checkFileExists(s3Key: String) -> Bool {
+        print("XXX check file exists in publication core data source")
         return context.performAndWait {
             guard let epub = context.fetchFirst(ElectronicPublication.self, key: "s3Key", value: s3Key) else {
+                print("XXX no publication")
                 return false
             }
             var downloaded = false
             if let destinationUrl = URL(string: epub.savePath) {
                 downloaded = FileManager().fileExists(atPath: destinationUrl.path)
+                print("XXX file exists \(downloaded)")
             }
             if downloaded != epub.isDownloaded {
                 epub.isDownloaded = downloaded
