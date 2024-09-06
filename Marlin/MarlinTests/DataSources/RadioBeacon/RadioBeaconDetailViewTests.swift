@@ -57,14 +57,15 @@ final class RadioBeaconDetailViewTests: XCTestCase {
 
         let router = MarlinRouter()
         let localDataSource = RadioBeaconStaticLocalDataSource()
+        let remoteDataSource = RadioBeaconStaticRemoteDataSource()
+        InjectedValues[\.radioBeaconLocalDataSource] = localDataSource
+        InjectedValues[\.radioBeaconRemoteDataSource] = remoteDataSource
         localDataSource.list = [rb]
-        let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: RadioBeaconRemoteDataSource())
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, radioBeaconRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let detailView = RadioBeaconDetailView(featureNumber: 10, volumeNumber: "PUB 110")
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 
@@ -129,14 +130,15 @@ final class RadioBeaconDetailViewTests: XCTestCase {
 
         let router = MarlinRouter()
         let localDataSource = RadioBeaconStaticLocalDataSource()
+        let remoteDataSource = RadioBeaconStaticRemoteDataSource()
+        InjectedValues[\.radioBeaconLocalDataSource] = localDataSource
+        InjectedValues[\.radioBeaconRemoteDataSource] = remoteDataSource
         localDataSource.list = [rb]
-        let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: RadioBeaconRemoteDataSource())
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, radioBeaconRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let detailView = RadioBeaconDetailView(featureNumber: 10, volumeNumber: "PUB 110")
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 

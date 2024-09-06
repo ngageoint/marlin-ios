@@ -42,14 +42,15 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
 
         let router = MarlinRouter()
         let localDataSource = RadioBeaconStaticLocalDataSource()
+        let remoteDataSource = RadioBeaconStaticRemoteDataSource()
+        InjectedValues[\.radioBeaconLocalDataSource] = localDataSource
+        InjectedValues[\.radioBeaconRemoteDataSource] = remoteDataSource
         localDataSource.list = [rb]
-        let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: RadioBeaconRemoteDataSource())
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, radioBeaconRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
             .setShowMoreDetails(false)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(router)
 
@@ -129,14 +130,15 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
 
         let router = MarlinRouter()
         let localDataSource = RadioBeaconStaticLocalDataSource()
+        let remoteDataSource = RadioBeaconStaticRemoteDataSource()
+        InjectedValues[\.radioBeaconLocalDataSource] = localDataSource
+        InjectedValues[\.radioBeaconRemoteDataSource] = remoteDataSource
         localDataSource.list = [rb]
-        let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: RadioBeaconRemoteDataSource())
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, radioBeaconRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
             .setShowMoreDetails(true)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(router)
 
@@ -182,14 +184,15 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
 
         let router = MarlinRouter()
         let localDataSource = RadioBeaconStaticLocalDataSource()
+        let remoteDataSource = RadioBeaconStaticRemoteDataSource()
+        InjectedValues[\.radioBeaconLocalDataSource] = localDataSource
+        InjectedValues[\.radioBeaconRemoteDataSource] = remoteDataSource
         localDataSource.list = [rb]
-        let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: RadioBeaconRemoteDataSource())
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, radioBeaconRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
 
         let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
             .setShowSectionHeader(true)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(router)
         

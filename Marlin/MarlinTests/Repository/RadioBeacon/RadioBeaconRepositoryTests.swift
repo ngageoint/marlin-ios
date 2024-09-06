@@ -111,8 +111,10 @@ final class RadioBeaconRepositoryTests: XCTestCase {
         }
         let localDataSource = RadioBeaconStaticLocalDataSource()
         let remoteDataSource = RadioBeaconStaticRemoteDataSource()
+        InjectedValues[\.radioBeaconLocalDataSource] = localDataSource
+        InjectedValues[\.radioBeaconRemoteDataSource] = remoteDataSource
         remoteDataSource.list = models
-        let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = RadioBeaconRepository()
 
         let radioBeacons = await repository.fetchRadioBeacons()
         XCTAssertEqual(2, radioBeacons.count)
@@ -134,13 +136,15 @@ final class RadioBeaconRepositoryTests: XCTestCase {
     func testCreateOperation() {
         let localDataSource = RadioBeaconStaticLocalDataSource()
         let remoteDataSource = RadioBeaconStaticRemoteDataSource()
+        InjectedValues[\.radioBeaconLocalDataSource] = localDataSource
+        InjectedValues[\.radioBeaconRemoteDataSource] = remoteDataSource
         var newest = RadioBeaconModel()
         newest.noticeWeek = "05"
         newest.noticeYear = "2022"
         localDataSource.list = [
             newest
         ]
-        let repository = RadioBeaconRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+        let repository = RadioBeaconRepository()
         let operation = repository.createOperation()
         XCTAssertNotNil(operation.noticeYear)
         XCTAssertEqual(operation.noticeYear, "2022")

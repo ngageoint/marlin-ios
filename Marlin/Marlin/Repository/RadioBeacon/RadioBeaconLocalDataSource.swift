@@ -40,6 +40,17 @@ struct RadioBeaconModelPage {
     var currentHeader: String?
 }
 
+private struct RadioBeaconLocalDataSourceProviderKey: InjectionKey {
+    static var currentValue: RadioBeaconLocalDataSource = RadioBeaconCoreDataDataSource()
+}
+
+extension InjectedValues {
+    var radioBeaconLocalDataSource: RadioBeaconLocalDataSource {
+        get { Self[RadioBeaconLocalDataSourceProviderKey.self] }
+        set { Self[RadioBeaconLocalDataSourceProviderKey.self] = newValue }
+    }
+}
+
 class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSource, ObservableObject {
     private lazy var context: NSManagedObjectContext = {
         PersistenceController.current.newTaskContext()
@@ -303,7 +314,7 @@ class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSou
         NSLog("Received \(count) \(DataSources.radioBeacon.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = RadioBeaconDataLoadOperation(radioBeacons: radioBeacons, localDataSource: self)
+        operation = RadioBeaconDataLoadOperation(radioBeacons: radioBeacons)
 
         return await executeOperationInBackground(task: task)
     }

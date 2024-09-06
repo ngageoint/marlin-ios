@@ -43,7 +43,8 @@ class GeoPackageExportViewModel: ObservableObject {
     var portRepository: PortRepository
     @Injected(\.dgpsRepository)
     var dgpsRepository: DGPSStationRepository
-    var radioBeaconRepository: RadioBeaconRepository?
+    @Injected(\.radioBeaconRepository)
+    var radioBeaconRepository: RadioBeaconRepository
     var routeRepository: RouteRepository?
     @Injected(\.navWarningRepository)
     var navigationalWarningRepository: NavigationalWarningRepository
@@ -144,7 +145,7 @@ class GeoPackageExportViewModel: ObservableObject {
                 case .port: $0[definition] = self.portRepository.getCount(filters: filters)
                 case .navWarning: $0[definition] = self.navigationalWarningRepository.getCount(filters: filters)
                 case .light: $0[definition] = self.lightRepository.getCount(filters: filters)
-                case .radioBeacon: $0[definition] = self.radioBeaconRepository?.getCount(filters: filters)
+                case .radioBeacon: $0[definition] = self.radioBeaconRepository.getCount(filters: filters)
                 default: break
                 }
             }
@@ -341,9 +342,7 @@ class GeoPackageExportViewModel: ObservableObject {
         case DataSources.port.key:
             exportable = PortGeoPackageExportable()
         case DataSources.radioBeacon.key:
-            if let radioBeaconRepository = radioBeaconRepository {
-                exportable = RadioBeaconGeoPackageExportable(radioBeaconRepository: radioBeaconRepository)
-            }
+            exportable = RadioBeaconGeoPackageExportable()
         case DataSources.navWarning.key:
             exportable = NavigationalWarningGeoPackageExportable()
         case DataSources.route.key:

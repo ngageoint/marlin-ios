@@ -15,7 +15,8 @@ class RadioBeaconsViewModel: ObservableObject {
     @Published var loaded: Bool = false
     private var disposables = Set<AnyCancellable>()
 
-    private var _repository: RadioBeaconRepository?
+    @Injected(\.radioBeaconRepository)
+    private var repository: RadioBeaconRepository
 
     var dataSourceUpdatedPub: AnyCancellable {
         return NotificationCenter.default.publisher(for: .DataSourceUpdated)
@@ -28,19 +29,6 @@ class RadioBeaconsViewModel: ObservableObject {
             .sink { _ in
                 self.reload()
             }
-    }
-
-    var repository: RadioBeaconRepository? {
-        get {
-            return _repository
-        }
-        set {
-            if _repository == nil {
-                dataSourceUpdatedPub.store(in: &disposables)
-                _repository = newValue
-                fetchRadioBeacons()
-            }
-        }
     }
 
     var publisher: AnyPublisher<CollectionDifference<RadioBeaconModel>, Never>?
@@ -65,6 +53,11 @@ class RadioBeaconsViewModel: ObservableObject {
         case reload
         case loadMore
     }
+    
+    init() {
+        dataSourceUpdatedPub.store(in: &disposables)
+        fetchRadioBeacons()
+    }
 
     func reload() {
         trigger.activate(for: TriggerId.reload)
@@ -78,7 +71,6 @@ class RadioBeaconsViewModel: ObservableObject {
         if publisher != nil {
             return
         }
-        guard let repository = _repository else { return }
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in

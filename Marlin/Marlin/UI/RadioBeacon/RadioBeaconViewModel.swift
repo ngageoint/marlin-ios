@@ -13,13 +13,8 @@ class RadioBeaconViewModel: ObservableObject, Identifiable {
     var featureNumber: Int?
     var volumeNumber: String?
 
-    var repository: RadioBeaconRepository? {
-        didSet {
-            if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
-                getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber)
-            }
-        }
-    }
+    @Injected(\.radioBeaconRepository)
+    private var repository: RadioBeaconRepository
     var routeWaypointRepository: RouteWaypointRepository?
 
     @discardableResult
@@ -27,7 +22,7 @@ class RadioBeaconViewModel: ObservableObject, Identifiable {
         if let waypointURI = waypointURI {
             radioBeacon = routeWaypointRepository?.getRadioBeacon(waypointURI: waypointURI)
         } else {
-            radioBeacon = repository?.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber)
+            radioBeacon = repository.getRadioBeacon(featureNumber: featureNumber, volumeNumber: volumeNumber)
         }
         return radioBeacon
     }

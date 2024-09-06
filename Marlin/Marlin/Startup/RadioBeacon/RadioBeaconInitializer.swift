@@ -9,10 +9,10 @@ import Foundation
 import BackgroundTasks
 
 class RadioBeaconInitializer: Initializer {
-    let repository: RadioBeaconRepository
+    @Injected(\.radioBeaconRepository)
+    private var repository: RadioBeaconRepository
 
-    init(repository: RadioBeaconRepository) {
-        self.repository = repository
+    init() {
         super.init(dataSource: DataSources.radioBeacon)
     }
 
@@ -22,9 +22,7 @@ class RadioBeaconInitializer: Initializer {
 
     override func fetch() {
         if repository.getCount(filters: nil) == 0 {
-            let initialDataLoadOperation = RadioBeaconInitialDataLoadOperation(
-                localDataSource: repository.localDataSource
-            )
+            let initialDataLoadOperation = RadioBeaconInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {
                 Task {
                     await self.repository.fetchRadioBeacons()

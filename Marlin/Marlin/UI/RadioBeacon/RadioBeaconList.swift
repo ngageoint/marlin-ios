@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct RadioBeaconList: View {
-    @EnvironmentObject var radioBeaconRepository: RadioBeaconRepository
     @StateObject var viewModel: RadioBeaconsViewModel = RadioBeaconsViewModel()
 
     @EnvironmentObject var router: MarlinRouter
@@ -131,7 +130,6 @@ struct RadioBeaconList: View {
             }
         }
         .onAppear {
-            viewModel.repository = radioBeaconRepository
             Metrics.shared.dataSourceList(dataSource: DataSources.radioBeacon)
         }
         .modifier(

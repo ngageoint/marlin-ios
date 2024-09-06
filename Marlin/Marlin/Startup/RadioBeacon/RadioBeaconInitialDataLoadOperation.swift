@@ -9,11 +9,11 @@ import Foundation
 import Kingfisher
 
 class RadioBeaconInitialDataLoadOperation: CountingDataLoadOperation {
-    var localDataSource: RadioBeaconLocalDataSource
+    @Injected(\.radioBeaconLocalDataSource)
+    private var localDataSource: RadioBeaconLocalDataSource
     var bundle: Bundle
 
-    init(localDataSource: RadioBeaconLocalDataSource, bundle: Bundle = .main) {
-        self.localDataSource = localDataSource
+    init(bundle: Bundle = .main) {
         self.bundle = bundle
     }
 

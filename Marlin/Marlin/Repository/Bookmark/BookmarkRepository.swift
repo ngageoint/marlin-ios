@@ -35,7 +35,8 @@ class BookmarkRepository: ObservableObject {
     var moduRepository: ModuRepository
     @Injected(\.portRepository)
     var portRepository: PortRepository
-    let radioBeaconRepository: RadioBeaconRepository?
+    @Injected(\.radioBeaconRepository)
+    var radioBeaconRepository: RadioBeaconRepository
     let noticeToMarinersRepository: NoticeToMarinersRepository?
     @Injected(\.publicationRepository)
     var publicationRepository: PublicationRepository
@@ -44,11 +45,9 @@ class BookmarkRepository: ObservableObject {
 
     init(
         localDataSource: BookmarkLocalDataSource,
-        radioBeaconRepository: RadioBeaconRepository? = nil,
         noticeToMarinersRepository: NoticeToMarinersRepository? = nil
     ) {
         self.localDataSource = localDataSource
-        self.radioBeaconRepository = radioBeaconRepository
         self.noticeToMarinersRepository = noticeToMarinersRepository
     }
 
@@ -107,7 +106,7 @@ class BookmarkRepository: ObservableObject {
             }
         case DataSources.radioBeacon.key:
             if split.count == 2 {
-                return radioBeaconRepository?.getRadioBeacon(
+                return radioBeaconRepository.getRadioBeacon(
                     featureNumber: Int(split[0]) ?? -1,
                     volumeNumber: "\(split[1])"
                 )

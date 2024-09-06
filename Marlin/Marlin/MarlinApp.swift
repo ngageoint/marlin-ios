@@ -138,7 +138,6 @@ struct MarlinApp: App {
     
     @StateObject var dataSourceList: DataSourceList = DataSourceList()
     var bookmarkRepository: BookmarkRepository
-    var radioBeaconRepository: RadioBeaconRepository
     var noticeToMarinersRepository: NoticeToMarinersRepository
     var userPlaceRepository: UserPlaceRepository
     var searchRepository: SearchRepository
@@ -164,10 +163,6 @@ struct MarlinApp: App {
         appState = MSI.shared.appState
         persistentStore = PersistenceController.shared
 
-        radioBeaconRepository = RadioBeaconRepository(
-            localDataSource: RadioBeaconCoreDataDataSource(),
-            remoteDataSource: RadioBeaconRemoteDataSource()
-        )
         noticeToMarinersRepository = NoticeToMarinersRepository(
             localDataSource: NoticeToMarinersCoreDataDataSource(),
             remoteDataSource: NoticeToMarinersRemoteDataSource()
@@ -184,7 +179,6 @@ struct MarlinApp: App {
 
         bookmarkRepository = BookmarkRepository(
             localDataSource: BookmarkCoreDataDataSource(),
-            radioBeaconRepository: radioBeaconRepository,
             noticeToMarinersRepository: noticeToMarinersRepository
         )
 
@@ -192,12 +186,11 @@ struct MarlinApp: App {
         modusTileRepository = ModusTileRepository()
         portsTileRepository = PortsTileRepository()
         lightsTileRepository = LightsTileRepository()
-        radioBeaconsTileRepository = RadioBeaconsTileRepository(localDataSource: radioBeaconRepository.localDataSource)
+        radioBeaconsTileRepository = RadioBeaconsTileRepository()
         differentialGPSStationsTileRepository = DifferentialGPSStationsTileRepository()
         navigationalWarningsMapFeatureRepository = NavigationalWarningsMapFeatureRepository()
 
         MSI.shared.addRepositories(
-            radioBeaconRepository: radioBeaconRepository,
             noticeToMarinersRepository: noticeToMarinersRepository,
             routeRepository: routeRepository
         )
@@ -218,7 +211,6 @@ struct MarlinApp: App {
                 .environmentObject(appState)
                 .environmentObject(dataSourceList)
                 .environmentObject(bookmarkRepository)
-                .environmentObject(radioBeaconRepository)
                 .environmentObject(routeRepository)
                 .environmentObject(routeWaypointRepository)
                 .environmentObject(noticeToMarinersRepository)

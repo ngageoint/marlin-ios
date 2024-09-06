@@ -25,7 +25,6 @@ public class MSI {
 
     // swiftlint:disable function_parameter_count
     func addRepositories(
-        radioBeaconRepository: RadioBeaconRepository,
         noticeToMarinersRepository: NoticeToMarinersRepository,
         routeRepository: RouteRepository
     ) {
@@ -44,7 +43,7 @@ public class MSI {
         moduInitializer = ModuInitializer()
         portInitializer = PortInitializer()
         lightInitializer = LightInitializer()
-        radioBeaconInitializer = RadioBeaconInitializer(repository: radioBeaconRepository)
+        radioBeaconInitializer = RadioBeaconInitializer()
         differentialGPSStationInitializer = DGPSStationInitializer()
         publicationInitializer = PublicationInitializer()
         navigationalWarningInitializer = NavigationalWarningInitializer()

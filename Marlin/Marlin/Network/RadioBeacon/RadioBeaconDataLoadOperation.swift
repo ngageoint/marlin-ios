@@ -11,11 +11,11 @@ import Kingfisher
 class RadioBeaconDataLoadOperation: CountingDataLoadOperation {
 
     var radioBeacons: [RadioBeaconModel] = []
-    var localDataSource: RadioBeaconLocalDataSource
+    @Injected(\.radioBeaconLocalDataSource)
+    private var localDataSource: RadioBeaconLocalDataSource
 
-    init(radioBeacons: [RadioBeaconModel], localDataSource: RadioBeaconLocalDataSource) {
+    init(radioBeacons: [RadioBeaconModel]) {
         self.radioBeacons = radioBeacons
-        self.localDataSource = localDataSource
     }
 
     @MainActor override func finishLoad() {

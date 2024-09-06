@@ -13,10 +13,8 @@ import sf_ios
 class RadioBeaconGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.radioBeacon
 
-    let radioBeaconRepository: RadioBeaconRepository
-    init(radioBeaconRepository: RadioBeaconRepository) {
-        self.radioBeaconRepository = radioBeaconRepository
-    }
+    @Injected(\.radioBeaconRepository)
+    private var radioBeaconRepository: RadioBeaconRepository
 
     func createFeatures(
         geoPackage: GPKGGeoPackage,

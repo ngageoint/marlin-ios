@@ -8,6 +8,17 @@
 import Foundation
 import BackgroundTasks
 
+private struct RadioBeaconRemoteDataSourceProviderKey: InjectionKey {
+    static var currentValue: RadioBeaconRemoteDataSource = RadioBeaconRemoteDataSource()
+}
+
+extension InjectedValues {
+    var radioBeaconRemoteDataSource: RadioBeaconRemoteDataSource {
+        get { Self[RadioBeaconRemoteDataSourceProviderKey.self] }
+        set { Self[RadioBeaconRemoteDataSourceProviderKey.self] = newValue }
+    }
+}
+
 class RadioBeaconRemoteDataSource: RemoteDataSource<RadioBeaconModel> {
     init() {
         super.init(dataSource: DataSources.radioBeacon)

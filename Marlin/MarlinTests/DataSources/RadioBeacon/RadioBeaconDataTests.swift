@@ -71,7 +71,7 @@ final class RadioBeaconDataTests: XCTestCase {
         bundle.mockPath = "radioBeaconMockData.json"
 
         var localDataSource = RadioBeaconCoreDataDataSource()
-        let operation = RadioBeaconInitialDataLoadOperation(localDataSource: localDataSource, bundle: bundle)
+        let operation = RadioBeaconInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -159,7 +159,7 @@ final class RadioBeaconDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
 
-        let operation = RadioBeaconInitialDataLoadOperation(localDataSource: RadioBeaconCoreDataDataSource(), bundle: bundle)
+        let operation = RadioBeaconInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -242,7 +242,7 @@ final class RadioBeaconDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
 
-        let operation = RadioBeaconInitialDataLoadOperation(localDataSource: RadioBeaconCoreDataDataSource(), bundle: bundle)
+        let operation = RadioBeaconInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)
@@ -324,7 +324,7 @@ final class RadioBeaconDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.tempFileContents = jsonObject
 
-        let operation = RadioBeaconInitialDataLoadOperation(localDataSource: RadioBeaconCoreDataDataSource(), bundle: bundle)
+        let operation = RadioBeaconInitialDataLoadOperation(bundle: bundle)
         operation.start()
 
         waitForExpectations(timeout: 10, handler: nil)

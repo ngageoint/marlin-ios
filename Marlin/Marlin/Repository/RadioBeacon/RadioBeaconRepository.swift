@@ -22,13 +22,22 @@ enum RadioBeaconItem: Hashable, Identifiable {
     case sectionHeader(header: String)
 }
 
-class RadioBeaconRepository: ObservableObject {
-    let localDataSource: RadioBeaconLocalDataSource
-    private let remoteDataSource: RadioBeaconRemoteDataSource
-    init(localDataSource: RadioBeaconLocalDataSource, remoteDataSource: RadioBeaconRemoteDataSource) {
-        self.localDataSource = localDataSource
-        self.remoteDataSource = remoteDataSource
+private struct RadioBeaconRepositoryProviderKey: InjectionKey {
+    static var currentValue: RadioBeaconRepository = RadioBeaconRepository()
+}
+
+extension InjectedValues {
+    var radioBeaconRepository: RadioBeaconRepository {
+        get { Self[RadioBeaconRepositoryProviderKey.self] }
+        set { Self[RadioBeaconRepositoryProviderKey.self] = newValue }
     }
+}
+
+class RadioBeaconRepository: ObservableObject {
+    @Injected(\.radioBeaconLocalDataSource)
+    private var localDataSource: RadioBeaconLocalDataSource
+    @Injected(\.radioBeaconRemoteDataSource)
+    private var remoteDataSource: RadioBeaconRemoteDataSource
 
     func createOperation() -> RadioBeaconDataFetchOperation {
         let newestRadioBeacon = localDataSource.getNewestRadioBeacon()

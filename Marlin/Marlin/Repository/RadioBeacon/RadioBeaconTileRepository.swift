@@ -19,12 +19,12 @@ class RadioBeaconTileRepository: TileRepository, ObservableObject {
     }
     let featureNumber: Int
     let volumeNumber: String
-    let localDataSource: RadioBeaconLocalDataSource
+    @Injected(\.radioBeaconLocalDataSource)
+    private var localDataSource: RadioBeaconLocalDataSource
 
-    init(featureNumber: Int, volumeNumber: String, localDataSource: RadioBeaconLocalDataSource) {
+    init(featureNumber: Int, volumeNumber: String) {
         self.featureNumber = featureNumber
         self.volumeNumber = volumeNumber
-        self.localDataSource = localDataSource
     }
 
     func getTileableItems(
@@ -76,11 +76,8 @@ class RadioBeaconsTileRepository: TileRepository, ObservableObject {
     var filterCacheKey: String {
         UserDefaults.standard.filter(DataSources.radioBeacon).getCacheKey()
     }
-    let localDataSource: RadioBeaconLocalDataSource
-
-    init(localDataSource: RadioBeaconLocalDataSource) {
-        self.localDataSource = localDataSource
-    }
+    @Injected(\.radioBeaconLocalDataSource)
+    private var localDataSource: RadioBeaconLocalDataSource
 
     func getTileableItems(
         minLatitude: Double,

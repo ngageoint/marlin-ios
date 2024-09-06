@@ -10,7 +10,6 @@ import MapKit
 import CoreData
 
 struct RadioBeaconDetailView: View {
-    @EnvironmentObject var radioBeaconRepository: RadioBeaconRepository
     @EnvironmentObject var routeWaypointRepository: RouteWaypointRepository
     @StateObject var viewModel: RadioBeaconViewModel = RadioBeaconViewModel()
     @State var featureNumber: Int?
@@ -23,7 +22,6 @@ struct RadioBeaconDetailView: View {
             case nil:
                 Color.clear.onAppear {
                     viewModel.routeWaypointRepository = routeWaypointRepository
-                    viewModel.repository = radioBeaconRepository
                     viewModel.getRadioBeacon(
                         featureNumber: featureNumber,
                         volumeNumber: volumeNumber,
@@ -49,8 +47,7 @@ struct RadioBeaconDetailView: View {
                                     RadioBeaconMap(
                                         repository: RadioBeaconTileRepository(
                                             featureNumber: radioBeacon.featureNumber ?? 0,
-                                            volumeNumber: radioBeacon.volumeNumber ?? "",
-                                            localDataSource: radioBeaconRepository.localDataSource
+                                            volumeNumber: radioBeacon.volumeNumber ?? ""
                                         )
                                     )
                                 ]

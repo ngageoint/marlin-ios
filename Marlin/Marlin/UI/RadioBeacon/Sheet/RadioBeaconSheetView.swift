@@ -10,7 +10,6 @@ import SwiftUI
 
 struct RadioBeaconSheetView: View {
 
-    @EnvironmentObject var radioBeaconRepository: RadioBeaconRepository
     var itemKey: String
     var focusNotification: NSNotification.Name
 
@@ -41,7 +40,6 @@ struct RadioBeaconSheetView: View {
             )
         }
         .onAppear {
-            viewModel.repository = radioBeaconRepository
             let split = itemKey.split(separator: "--")
             if split.count == 2 {
                 viewModel.getRadioBeacon(featureNumber: Int(split[0]) ?? -1, volumeNumber: "\(split[1])")
