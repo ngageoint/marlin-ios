@@ -35,25 +35,26 @@ class NavigationalWarningAreasViewModel: ObservableObject {
         }
     }
 
-    var repository: NavigationalWarningRepository? {
-        didSet {
-            Task {
-                dataSourceUpdatedPub.store(in: &disposables)
+    @Injected(\.navWarningRepository)
+    var repository: NavigationalWarningRepository
+    
+    init() {
+        Task {
+            dataSourceUpdatedPub.store(in: &disposables)
 
-                await populateWarningAreaInformation()
-            }
+            await populateWarningAreaInformation()
         }
     }
 
     func populateWarningAreaInformation() async {
-        let info = await repository?.getNavAreasInformation()
+        let info = await repository.getNavAreasInformation()
         await MainActor.run {
-            currentArea = info?.first { area in
+            currentArea = info.first { area in
                 area.navArea.name == currentNavAreaName
             }
-            warningAreas = info?.filter({ area in
+            warningAreas = info.filter({ area in
                 area.navArea.name != currentNavAreaName
-            }) ?? []
+            })
         }
     }
 }

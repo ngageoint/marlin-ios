@@ -12,6 +12,17 @@ import UIKit
 import BackgroundTasks
 import Kingfisher
 
+private struct NavigationalWarningLocalDataSourceProviderKey: InjectionKey {
+    static var currentValue: NavigationalWarningLocalDataSource = NavigationalWarningCoreDataDataSource()
+}
+
+extension InjectedValues {
+    var navWarningLocalDataSource: NavigationalWarningLocalDataSource {
+        get { Self[NavigationalWarningLocalDataSourceProviderKey.self] }
+        set { Self[NavigationalWarningLocalDataSourceProviderKey.self] = newValue }
+    }
+}
+
 protocol NavigationalWarningLocalDataSource {
 
     func getNavAreasInformation() async -> [NavigationalAreaInformation]
@@ -404,8 +415,7 @@ extension NavigationalWarningCoreDataDataSource {
 
         // Create an operation that performs the main part of the background task.
         operation = NavigationalWarningDataLoadOperation(
-            navigationalWarnings: navigationalWarnings,
-            localDataSource: self
+            navigationalWarnings: navigationalWarnings
         )
 
         return await executeOperationInBackground(task: task)

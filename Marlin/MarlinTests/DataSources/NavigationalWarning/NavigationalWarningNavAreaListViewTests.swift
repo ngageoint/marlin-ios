@@ -59,17 +59,18 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let passThrough = PassThrough(navArea: "4")
         
         let localDataSource = NavigationalWarningStaticLocalDataSource()
+        let remoteDataSource = NavigationalWarningRemoteDataSource()
+        InjectedValues[\.navWarningLocalDataSource] = localDataSource
+        InjectedValues[\.navWarningRemoteDataSource] = remoteDataSource
         localDataSource.list.append(contentsOf: warnings)
-        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)
-            .environmentObject(repository)
             .environmentObject(routeWaypointRepository)
 
         let controller = UIHostingController(rootView: container)
@@ -125,18 +126,19 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         let localDataSource = NavigationalWarningStaticLocalDataSource()
+        let remoteDataSource = NavigationalWarningRemoteDataSource()
+        InjectedValues[\.navWarningLocalDataSource] = localDataSource
+        InjectedValues[\.navWarningRemoteDataSource] = remoteDataSource
         localDataSource.list.append(contentsOf: warnings)
-        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
-        let mapFeatureRepository = NavigationalWarningsMapFeatureRepository(localDataSource: repository.localDataSource)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
+        let mapFeatureRepository = NavigationalWarningsMapFeatureRepository()
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(mockLocationManager as LocationManager)
             .environmentObject(bookmarkRepository)
-            .environmentObject(repository)
             .environmentObject(routeWaypointRepository)
             .environmentObject(mapFeatureRepository)
         let controller = UIHostingController(rootView: container)
@@ -205,16 +207,17 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough(navArea: "4")
         let localDataSource = NavigationalWarningStaticLocalDataSource()
+        let remoteDataSource = NavigationalWarningRemoteDataSource()
+        InjectedValues[\.navWarningLocalDataSource] = localDataSource
+        InjectedValues[\.navWarningRemoteDataSource] = remoteDataSource
         localDataSource.list.append(contentsOf: warnings)
-        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)
-            .environmentObject(repository)
             .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -283,16 +286,17 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let appState = AppState()
         let passThrough = PassThrough(navArea: "4")
         let localDataSource = NavigationalWarningStaticLocalDataSource()
+        let remoteDataSource = NavigationalWarningRemoteDataSource()
+        InjectedValues[\.navWarningLocalDataSource] = localDataSource
+        InjectedValues[\.navWarningRemoteDataSource] = remoteDataSource
         localDataSource.list.append(contentsOf: warnings)
-        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)
-            .environmentObject(repository)
             .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -361,18 +365,19 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         let passThrough = PassThrough(navArea: "4")
         
         let localDataSource = NavigationalWarningStaticLocalDataSource()
+        let remoteDataSource = NavigationalWarningRemoteDataSource()
+        InjectedValues[\.navWarningLocalDataSource] = localDataSource
+        InjectedValues[\.navWarningRemoteDataSource] = remoteDataSource
         localDataSource.list.append(contentsOf: warnings)
-        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
         UserDefaults.standard.setValue(warnings[5].primaryKey, forKey: "lastSeen-4")
         
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)
-            .environmentObject(repository)
             .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()
@@ -443,16 +448,17 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
         
         UserDefaults.standard.setValue("no", forKey: "lastSeen-4")
         let localDataSource = NavigationalWarningStaticLocalDataSource()
+        let remoteDataSource = NavigationalWarningRemoteDataSource()
+        InjectedValues[\.navWarningLocalDataSource] = localDataSource
+        InjectedValues[\.navWarningRemoteDataSource] = remoteDataSource
         localDataSource.list.append(contentsOf: warnings)
-        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
         let container = Container(passThrough: passThrough)
             .environmentObject(appState)
             .environmentObject(bookmarkRepository)
-            .environmentObject(repository)
             .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: container)
         let window = TestHelpers.getKeyWindowVisible()

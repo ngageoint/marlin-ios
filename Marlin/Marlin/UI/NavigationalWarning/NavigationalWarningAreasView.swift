@@ -20,7 +20,6 @@ struct CurrentNavigationalWarningSection: View {
 }
 
 struct NavigationalWarningAreasView: View {
-    @EnvironmentObject var repository: NavigationalWarningRepository
     @ObservedObject var generalLocation = GeneralLocation.shared
     @State var navArea: String?
     var mapName: String?
@@ -78,7 +77,6 @@ struct NavigationalWarningAreasView: View {
             })
             .onAppear {
                 viewModel.currentNavAreaName = generalLocation.currentNavAreaName
-                viewModel.repository = repository
             }
             .accessibilityElement(children: .contain)
             NavigationLink(value: MarlinRoute.exportGeoPackageDataSource( dataSource: .navWarning)) {

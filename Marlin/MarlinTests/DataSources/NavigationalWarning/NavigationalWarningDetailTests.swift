@@ -31,15 +31,16 @@ final class NavigationalWarningDetailTests: XCTestCase {
         newItem.canBookmark = true
 
         let localDataSource = NavigationalWarningStaticLocalDataSource()
+        let remoteDataSource = NavigationalWarningRemoteDataSource()
+        InjectedValues[\.navWarningLocalDataSource] = localDataSource
+        InjectedValues[\.navWarningRemoteDataSource] = remoteDataSource
         localDataSource.list.append(newItem)
-        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
 
         let detailView = NavigationalWarningDetailView(msgYear: newItem.msgYear!, msgNumber: newItem.msgNumber!, navArea: newItem.navArea)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
             .environmentObject(routeWaypointRepository)
 

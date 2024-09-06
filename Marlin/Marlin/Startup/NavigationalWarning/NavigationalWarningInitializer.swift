@@ -8,10 +8,10 @@
 import Foundation
 
 class NavigationalWarningInitializer: Initializer {
-    let repository: NavigationalWarningRepository
+    @Injected(\.navWarningRepository)
+    var repository: NavigationalWarningRepository
 
-    init(repository: NavigationalWarningRepository) {
-        self.repository = repository
+    init() {
         super.init(dataSource: DataSources.navWarning)
     }
 

@@ -13,10 +13,8 @@ import sf_ios
  class NavigationalWarningGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.navWarning
 
-     let navigationalWarningRepository: NavigationalWarningRepository
-     init(navigationalWarningRepository: NavigationalWarningRepository) {
-         self.navigationalWarningRepository = navigationalWarningRepository
-     }
+     @Injected(\.navWarningRepository)
+     var navigationalWarningRepository: NavigationalWarningRepository
 
     func createFeatures(
         geoPackage: GPKGGeoPackage,

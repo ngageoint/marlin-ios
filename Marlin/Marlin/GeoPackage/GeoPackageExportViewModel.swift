@@ -43,7 +43,8 @@ class GeoPackageExportViewModel: ObservableObject {
     var dgpsRepository: DGPSStationRepository
     var radioBeaconRepository: RadioBeaconRepository?
     var routeRepository: RouteRepository?
-    var navigationalWarningRepository: NavigationalWarningRepository?
+    @Injected(\.navWarningRepository)
+    var navigationalWarningRepository: NavigationalWarningRepository
 
     var cancellable = Set<AnyCancellable>()
     var countChangeCancellable: AnyCancellable?
@@ -139,7 +140,7 @@ class GeoPackageExportViewModel: ObservableObject {
                 case .modu: $0[definition] = self.moduRepository.getCount(filters: filters)
                 case .differentialGPSStation: $0[definition] = self.dgpsRepository.getCount(filters: filters)
                 case .port: $0[definition] = self.portRepository?.getCount(filters: filters)
-                case .navWarning: $0[definition] = self.navigationalWarningRepository?.getCount(filters: filters)
+                case .navWarning: $0[definition] = self.navigationalWarningRepository.getCount(filters: filters)
                 case .light: $0[definition] = self.lightRepository?.getCount(filters: filters)
                 case .radioBeacon: $0[definition] = self.radioBeaconRepository?.getCount(filters: filters)
                 default: break
@@ -346,11 +347,7 @@ class GeoPackageExportViewModel: ObservableObject {
                 exportable = RadioBeaconGeoPackageExportable(radioBeaconRepository: radioBeaconRepository)
             }
         case DataSources.navWarning.key:
-            if let navigationalWarningRepository = navigationalWarningRepository {
-                exportable = NavigationalWarningGeoPackageExportable(
-                    navigationalWarningRepository: navigationalWarningRepository
-                )
-            }
+            exportable = NavigationalWarningGeoPackageExportable()
         case DataSources.route.key:
             if let routeRepository = routeRepository {
                 exportable = RouteGeoPackageExportable(routeRepository: routeRepository)

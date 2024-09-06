@@ -8,6 +8,17 @@
 import Foundation
 import BackgroundTasks
 
+private struct NavigationalWarningRemoteDataSourceProviderKey: InjectionKey {
+    static var currentValue: NavigationalWarningRemoteDataSource = NavigationalWarningRemoteDataSource()
+}
+
+extension InjectedValues {
+    var navWarningRemoteDataSource: NavigationalWarningRemoteDataSource {
+        get { Self[NavigationalWarningRemoteDataSourceProviderKey.self] }
+        set { Self[NavigationalWarningRemoteDataSourceProviderKey.self] = newValue }
+    }
+}
+
 class NavigationalWarningRemoteDataSource: RemoteDataSource<NavigationalWarningModel> {
     init(cleanup: (() -> Void)? = nil) {
         super.init(dataSource: DataSources.navWarning, cleanup: cleanup)

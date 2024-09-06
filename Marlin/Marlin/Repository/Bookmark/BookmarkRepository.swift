@@ -37,22 +37,21 @@ class BookmarkRepository: ObservableObject {
     let noticeToMarinersRepository: NoticeToMarinersRepository?
     @Injected(\.publicationRepository)
     var publicationRepository: PublicationRepository
-    let navigationalWarningRepository: NavigationalWarningRepository?
+    @Injected(\.navWarningRepository)
+    var navigationalWarningRepository: NavigationalWarningRepository
 
     init(
         localDataSource: BookmarkLocalDataSource,
         lightRepository: LightRepository? = nil,
         portRepository: PortRepository? = nil,
         radioBeaconRepository: RadioBeaconRepository? = nil,
-        noticeToMarinersRepository: NoticeToMarinersRepository? = nil,
-        navigationalWarningRepository: NavigationalWarningRepository? = nil
+        noticeToMarinersRepository: NoticeToMarinersRepository? = nil
     ) {
         self.localDataSource = localDataSource
         self.lightRepository = lightRepository
         self.portRepository = portRepository
         self.radioBeaconRepository = radioBeaconRepository
         self.noticeToMarinersRepository = noticeToMarinersRepository
-        self.navigationalWarningRepository = navigationalWarningRepository
     }
 
     func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel? {
@@ -85,7 +84,7 @@ class BookmarkRepository: ObservableObject {
             return portRepository?.getPort(portNumber: Int(itemKey))
         case DataSources.navWarning.key:
             if split.count == 3 {
-                return navigationalWarningRepository?.getNavigationalWarning(
+                return navigationalWarningRepository.getNavigationalWarning(
                     msgYear: Int(split[0]) ?? 0,
                     msgNumber: Int(split[1]) ?? 0,
                     navArea: "\(split[2])"

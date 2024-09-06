@@ -101,8 +101,13 @@ final class NavigationalWarningDataTests: XCTestCase {
             XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, DataSources.navWarning.key)
             return true
         }
+        
+        let localDataSource = NavigationalWarningCoreDataDataSource()
+        let remoteDataSource = NavigationalWarningRemoteDataSource()
+        InjectedValues[\.navWarningLocalDataSource] = localDataSource
+        InjectedValues[\.navWarningRemoteDataSource] = remoteDataSource
 
-        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
+        let repository = NavigationalWarningRepository()
 
         let fetched = await repository.fetch()
 
@@ -202,11 +207,13 @@ final class NavigationalWarningDataTests: XCTestCase {
             XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, DataSources.navWarning.key)
             return true
         }
+        
+        let localDataSource = NavigationalWarningCoreDataDataSource()
+        let remoteDataSource = NavigationalWarningRemoteDataSource()
+        InjectedValues[\.navWarningLocalDataSource] = localDataSource
+        InjectedValues[\.navWarningRemoteDataSource] = remoteDataSource
 
-        let repository = NavigationalWarningRepository(
-            localDataSource: NavigationalWarningCoreDataDataSource(),
-            remoteDataSource: NavigationalWarningRemoteDataSource()
-        )
+        let repository = NavigationalWarningRepository()
 
         await repository.fetch()
 
@@ -304,10 +311,12 @@ final class NavigationalWarningDataTests: XCTestCase {
             return true
         }
 
-        let repository = NavigationalWarningRepository(
-            localDataSource: NavigationalWarningCoreDataDataSource(),
-            remoteDataSource: NavigationalWarningRemoteDataSource()
-        )
+        let localDataSource = NavigationalWarningCoreDataDataSource()
+        let remoteDataSource = NavigationalWarningRemoteDataSource()
+        InjectedValues[\.navWarningLocalDataSource] = localDataSource
+        InjectedValues[\.navWarningRemoteDataSource] = remoteDataSource
+        
+        let repository = NavigationalWarningRepository()
 
         await repository.fetch()
 
@@ -404,11 +413,13 @@ final class NavigationalWarningDataTests: XCTestCase {
             XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, DataSources.navWarning.key)
             return true
         }
+        
+        let localDataSource = NavigationalWarningCoreDataDataSource()
+        let remoteDataSource = NavigationalWarningRemoteDataSource()
+        InjectedValues[\.navWarningLocalDataSource] = localDataSource
+        InjectedValues[\.navWarningRemoteDataSource] = remoteDataSource
 
-        let repository = NavigationalWarningRepository(
-            localDataSource: NavigationalWarningCoreDataDataSource(),
-            remoteDataSource: NavigationalWarningRemoteDataSource()
-        )
+        let repository = NavigationalWarningRepository()
 
         await repository.fetch()
 
@@ -533,8 +544,13 @@ final class NavigationalWarningDataTests: XCTestCase {
             XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, DataSources.navWarning.key)
             return true
         }
+        
+        let localDataSource = NavigationalWarningCoreDataDataSource()
+        let remoteDataSource = NavigationalWarningRemoteDataSource()
+        InjectedValues[\.navWarningLocalDataSource] = localDataSource
+        InjectedValues[\.navWarningRemoteDataSource] = remoteDataSource
 
-        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
+        let repository = NavigationalWarningRepository()
 
         let fetched = await repository.fetch()
 
@@ -719,8 +735,13 @@ final class NavigationalWarningDataTests: XCTestCase {
             XCTAssertEqual((notification.object as? DataSourceUpdatedNotification)?.key, DataSources.navWarning.key)
             return true
         }
+        
+        let localDataSource = NavigationalWarningCoreDataDataSource()
+        let remoteDataSource = NavigationalWarningRemoteDataSource()
+        InjectedValues[\.navWarningLocalDataSource] = localDataSource
+        InjectedValues[\.navWarningRemoteDataSource] = remoteDataSource
 
-        let repository = NavigationalWarningRepository(localDataSource: NavigationalWarningCoreDataDataSource(), remoteDataSource: NavigationalWarningRemoteDataSource())
+        let repository = NavigationalWarningRepository()
 
         let fetched = await repository.fetch()
 

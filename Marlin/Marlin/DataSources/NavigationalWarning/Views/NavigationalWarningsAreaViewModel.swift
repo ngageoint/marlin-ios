@@ -12,17 +12,12 @@ class NavigationalWarningsAreaViewModel: ObservableObject {
     @Published var warnings: [NavigationalWarningModel] = []
     var navArea: String?
 
-    var repository: NavigationalWarningRepository? {
-        didSet {
-            if let navArea = navArea {
-                getNavigationalWarnings(navArea: navArea)
-            }
-        }
-    }
+    @Injected(\.navWarningRepository)
+    var repository: NavigationalWarningRepository
 
     func getNavigationalWarnings(navArea: String) {
         Task {
-            let loaded = await self.repository?.getNavAreaNavigationalWarnings(navArea: navArea) ?? []
+            let loaded = await self.repository.getNavAreaNavigationalWarnings(navArea: navArea)
             print("loaded \(loaded)")
             await MainActor.run {
                 warnings = loaded

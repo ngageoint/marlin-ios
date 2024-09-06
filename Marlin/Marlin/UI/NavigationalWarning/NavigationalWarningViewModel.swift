@@ -14,13 +14,8 @@ class NavigationalWarningViewModel: ObservableObject, Identifiable {
     var msgNumber: Int?
     var navArea: String?
 
-    var repository: NavigationalWarningRepository? {
-        didSet {
-            if let msgYear = msgYear, let msgNumber = msgNumber, let navArea = navArea {
-                getNavigationalWarning(msgYear: msgYear, msgNumber: msgNumber, navArea: navArea)
-            }
-        }
-    }
+    @Injected(\.navWarningRepository)
+    var repository: NavigationalWarningRepository
     var routeWaypointRepository: RouteWaypointRepository?
 
     @discardableResult
@@ -34,7 +29,7 @@ class NavigationalWarningViewModel: ObservableObject, Identifiable {
             navWarning = routeWaypointRepository?.getNavigationalWarning(waypointURI: waypointURI)
             return navWarning
         } else {
-            navWarning = repository?.getNavigationalWarning(
+            navWarning = repository.getNavigationalWarning(
                 msgYear: Int(msgYear),
                 msgNumber: Int(msgNumber),
                 navArea: navArea

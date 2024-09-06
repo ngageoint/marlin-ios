@@ -14,7 +14,6 @@ struct GeoPackageExportView: View {
     @EnvironmentObject var portRepository: PortRepository
     @EnvironmentObject var radioBeaconRepository: RadioBeaconRepository
     @EnvironmentObject var routeRepository: RouteRepository
-    @EnvironmentObject var navigationalWarningRepository: NavigationalWarningRepository
 
     @StateObject var viewModel: GeoPackageExportViewModel = GeoPackageExportViewModel()
 
@@ -99,7 +98,6 @@ struct GeoPackageExportView: View {
             viewModel.portRepository = portRepository
             viewModel.radioBeaconRepository = radioBeaconRepository
             viewModel.routeRepository = routeRepository
-            viewModel.navigationalWarningRepository = navigationalWarningRepository
             viewModel.setExportParameters(dataSources: dataSources, filters: filters, useMapRegion: useMapRegion)
             Metrics.shared.geoPackageExportView()
         }

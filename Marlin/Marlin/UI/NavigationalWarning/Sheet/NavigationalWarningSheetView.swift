@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct NavigationalWarningSheetView: View {
-    @EnvironmentObject var navigationalWarningRepository: NavigationalWarningRepository
     var itemKey: String
     var focusNotification: NSNotification.Name
 
@@ -44,7 +43,6 @@ struct NavigationalWarningSheetView: View {
             )
         }
         .onAppear {
-            viewModel.repository = navigationalWarningRepository
             let split = itemKey.split(separator: "--")
             if split.count == 3 {
                 viewModel.getNavigationalWarning(

@@ -11,7 +11,6 @@ import MapKit
 struct NavigationalWarningDetailView: View {
     @EnvironmentObject var bookmarkRepository: BookmarkRepository
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
-    @EnvironmentObject var navigationalWarningRepository: NavigationalWarningRepository
     @EnvironmentObject var routeWaypointRepository: RouteWaypointRepository
     @StateObject var viewModel: NavigationalWarningViewModel = NavigationalWarningViewModel()
     @State var msgYear: Int
@@ -23,7 +22,6 @@ struct NavigationalWarningDetailView: View {
         switch viewModel.navWarning {
         case nil:
             Color.clear.onAppear {
-                viewModel.repository = navigationalWarningRepository
                 viewModel.routeWaypointRepository = routeWaypointRepository
                 viewModel.getNavigationalWarning(
                     msgYear: msgYear,
@@ -47,8 +45,7 @@ struct NavigationalWarningDetailView: View {
                         let mapRepository = NavigationalWarningMapFeatureRepository(
                             msgYear: navigationalWarning.msgYear ?? -1,
                             msgNumber: navigationalWarning.msgNumber ?? -1,
-                            navArea: navigationalWarning.navArea,
-                            localDataSource: navigationalWarningRepository.localDataSource
+                            navArea: navigationalWarning.navArea
                         )
                         DataSourceLocationMapView(
                             dataSourceLocation: navigationalWarning,

@@ -22,18 +22,17 @@ class NavigationalWarningMapFeatureRepository: MapFeatureRepository, TileReposit
     let msgYear: Int
     let msgNumber: Int
     let navArea: String
-    let localDataSource: NavigationalWarningLocalDataSource
+    @Injected(\.navWarningLocalDataSource)
+    var localDataSource: NavigationalWarningLocalDataSource
 
     init(
         msgYear: Int,
         msgNumber: Int,
-        navArea: String,
-        localDataSource: NavigationalWarningLocalDataSource
+        navArea: String
     ) {
         self.msgYear = msgYear
         self.msgNumber = msgNumber
         self.navArea = navArea
-        self.localDataSource = localDataSource
     }
 
     func getTileableItems(
@@ -127,13 +126,8 @@ class NavigationalWarningsMapFeatureRepository: MapFeatureRepository, TileReposi
         []
     }
 
-    let localDataSource: NavigationalWarningLocalDataSource
-
-    init(
-        localDataSource: NavigationalWarningLocalDataSource
-    ) {
-        self.localDataSource = localDataSource
-    }
+    @Injected(\.navWarningLocalDataSource)
+    var localDataSource: NavigationalWarningLocalDataSource
 
     func getAnnotationsAndOverlays() async -> AnnotationsAndOverlays {
         return AnnotationsAndOverlays(annotations: [], overlays: [])

@@ -31,14 +31,15 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         nw.canBookmark = true
 
         let localDataSource = NavigationalWarningStaticLocalDataSource()
+        let remoteDataSource = NavigationalWarningRemoteDataSource()
+        InjectedValues[\.navWarningLocalDataSource] = localDataSource
+        InjectedValues[\.navWarningRemoteDataSource] = remoteDataSource
         localDataSource.list.append(nw)
-        let repository = NavigationalWarningRepository(localDataSource: localDataSource, remoteDataSource: NavigationalWarningRemoteDataSource())
 
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
-        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource, navigationalWarningRepository: repository)
+        let bookmarkRepository = BookmarkRepository(localDataSource: bookmarkLocalDataSource)
         let summary = NavigationalWarningSummaryView(navigationalWarning: nw)
             .setShowMoreDetails(false)
-            .environmentObject(repository)
             .environmentObject(bookmarkRepository)
         
         let controller = UIHostingController(rootView: summary)

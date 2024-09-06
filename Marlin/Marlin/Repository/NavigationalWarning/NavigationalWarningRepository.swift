@@ -30,13 +30,22 @@ struct NavigationalAreaInformation: Identifiable {
     let total: Int
 }
 
-class NavigationalWarningRepository: ObservableObject {
-    var localDataSource: NavigationalWarningLocalDataSource
-    private var remoteDataSource: NavigationalWarningRemoteDataSource
-    init(localDataSource: NavigationalWarningLocalDataSource, remoteDataSource: NavigationalWarningRemoteDataSource) {
-        self.localDataSource = localDataSource
-        self.remoteDataSource = remoteDataSource
+private struct NavigationalWarningRepositoryProviderKey: InjectionKey {
+    static var currentValue: NavigationalWarningRepository = NavigationalWarningRepository()
+}
+
+extension InjectedValues {
+    var navWarningRepository: NavigationalWarningRepository {
+        get { Self[NavigationalWarningRepositoryProviderKey.self] }
+        set { Self[NavigationalWarningRepositoryProviderKey.self] = newValue }
     }
+}
+
+class NavigationalWarningRepository: ObservableObject {
+    @Injected(\.navWarningLocalDataSource)
+    var localDataSource: NavigationalWarningLocalDataSource
+    @Injected(\.navWarningRemoteDataSource)
+    private var remoteDataSource: NavigationalWarningRemoteDataSource
 
     func createOperation() -> NavigationalWarningDataFetchOperation {
         return NavigationalWarningDataFetchOperation()

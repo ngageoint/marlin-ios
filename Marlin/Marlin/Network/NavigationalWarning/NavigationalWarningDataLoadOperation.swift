@@ -11,11 +11,11 @@ import Kingfisher
 class NavigationalWarningDataLoadOperation: CountingDataLoadOperation {
 
     var navigationalWarnings: [NavigationalWarningModel] = []
+    @Injected(\.navWarningLocalDataSource)
     var localDataSource: NavigationalWarningLocalDataSource
 
-    init(navigationalWarnings: [NavigationalWarningModel], localDataSource: NavigationalWarningLocalDataSource) {
+    init(navigationalWarnings: [NavigationalWarningModel]) {
         self.navigationalWarnings = navigationalWarnings
-        self.localDataSource = localDataSource
     }
 
     @MainActor override func finishLoad() {

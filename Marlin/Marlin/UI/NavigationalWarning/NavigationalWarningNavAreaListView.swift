@@ -9,7 +9,6 @@ import SwiftUI
 import Combine
 
 struct NavigationalWarningNavAreaListView: View {
-    @EnvironmentObject var navigationalWarningRepository: NavigationalWarningRepository
     @EnvironmentObject var router: MarlinRouter
     @AppStorage<String> var lastSeen: String
     @State var lastSavedDate: Date = Date(timeIntervalSince1970: 0)
@@ -192,7 +191,6 @@ struct NavigationalWarningNavAreaListView: View {
             .accessibilityIdentifier("Navigation Warning Scroll")
         }
         .onAppear {
-            dataSource.repository = navigationalWarningRepository
             dataSource.getNavigationalWarnings(navArea: navArea)
             Metrics.shared.appRoute([NavigationalWarning.metricsKey, "list"])
             shouldSavePosition = false
