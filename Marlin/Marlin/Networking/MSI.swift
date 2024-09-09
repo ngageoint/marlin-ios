@@ -13,7 +13,6 @@ import SwiftUI
 
 public class MSI {
 
-    var asamInitializer: AsamInitializer?
     var moduInitializer: ModuInitializer?
     var portInitializer: PortInitializer?
     var lightInitializer: LightInitializer?
@@ -27,18 +26,6 @@ public class MSI {
     func addRepositories(
         routeRepository: RouteRepository
     ) {
-//        self.asamRepository = asamRepository
-//        self.moduRepository = moduRepository
-//        self.portRepository = portRepository
-//        self.lightRepository = lightRepository
-//        self.radioBeaconRepository = radioBeaconRepository
-//        self.differentialGPSStationRepository = differentialGPSStationRepository
-//        self.electronicPublicationRepository = electronicPublicationRepository
-//        self.navigationalWarningRepository = navigationalWarningRepository
-//        self.noticeToMarinersRepository = noticeToMarinersRepository
-//        self.routeRepository = routeRepository
-
-        asamInitializer = AsamInitializer()
         moduInitializer = ModuInitializer()
         portInitializer = PortInitializer()
         lightInitializer = LightInitializer()
@@ -90,7 +77,6 @@ public class MSI {
     }()
 
     func registerBackgroundHandler() {
-        asamInitializer?.registerBackgroundHandler()
         moduInitializer?.registerBackgroundHandler()
         portInitializer?.registerBackgroundHandler()
         lightInitializer?.registerBackgroundHandler()
@@ -115,7 +101,6 @@ public class MSI {
     }
     
     func scheduleAppRefresh() {
-        asamInitializer?.scheduleRefresh()
         moduInitializer?.scheduleRefresh()
         portInitializer?.scheduleRefresh()
         lightInitializer?.scheduleRefresh()
@@ -135,7 +120,6 @@ public class MSI {
         loadAllDataTime = Date()
         NSLog("Load all data")
         
-        asamInitializer?.fetch()
         moduInitializer?.fetch()
         portInitializer?.fetch()
         lightInitializer?.fetch()
