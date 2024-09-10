@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct GeoPackageExportButton: View {
+    @EnvironmentObject var router: MarlinRouter
     var filterable: Filterable
     
     var body: some View {
-        NavigationLink(
-            value: MarlinRoute.exportGeoPackageDataSource(
+        Button {
+            router.path.append(MarlinRoute.exportGeoPackageDataSource(
                 dataSource: DataSourceDefinitions.from(filterable.definition)
-            )
-        ) {
+            ))
+        } label: {
             Label(
                 title: {},
                 icon: { Image(systemName: "square.and.arrow.down")
@@ -23,7 +24,6 @@ struct GeoPackageExportButton: View {
                 }
             )
         }
-        .isDetailLink(false)
         .fixedSize()
         .buttonStyle(
             MaterialFloatingButtonStyle(

@@ -19,7 +19,8 @@ final class SideMenuTests: XCTestCase {
     }
     
     // TODO: pass through not working
-    func xtestSideMenuDataSources() {
+    func xtestSideMenuDataSources() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough: ObservableObject {
             @Published var menuOpen: Bool = false
         }

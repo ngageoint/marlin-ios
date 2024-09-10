@@ -9,17 +9,19 @@ import Foundation
 import SwiftUI
 
 struct CreateUserPlaceButton: View {
+    @EnvironmentObject var router: MarlinRouter
 
     var body: some View {
-        NavigationLink(value: UserPlaceRoute.create) {
+        Button {
+            router.path.append(UserPlaceRoute.create)
+        } label: {
             Label(
-                title: {},
+                title: { },
                 icon: { Image(systemName: "mappin.and.ellipse")
                         .renderingMode(.template)
                 }
             )
         }
-        .isDetailLink(false)
         .fixedSize()
         .buttonStyle(
             MaterialFloatingButtonStyle(

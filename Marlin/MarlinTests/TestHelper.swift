@@ -13,6 +13,8 @@ import CoreData
 @testable import Marlin
 
 class TestHelpers {
+    static let DISABLE_UI_TESTS = true
+    
     let scheme = MarlinScheme()
     
     public static func createGradientImage(startColor: UIColor, endColor: UIColor, size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {

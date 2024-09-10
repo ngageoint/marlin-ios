@@ -39,6 +39,7 @@ enum UserPlaceRoute: Hashable {
 enum NoticeToMarinersRoute: Hashable {
     case notices
     case chartQuery
+    case chartList
     case fullView(noticeNumber: Int)
 }
 
@@ -263,6 +264,8 @@ struct NoticeToMarinersRouteModifier: ViewModifier {
                     NoticesList()
                 case .chartQuery:
                     ChartCorrectionQuery()
+                case .chartList:
+                    ChartCorrectionList()
                 }
             }
     }

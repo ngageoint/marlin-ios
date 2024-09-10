@@ -24,7 +24,8 @@ final class AboutViewTests: XCTestCase {
     override func tearDown() {
     }
     
-    func testTapDisclaimer() {
+    func testTapDisclaimer() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         
         struct Container: View {
             @State var path: NavigationPath = NavigationPath()
@@ -71,7 +72,8 @@ final class AboutViewTests: XCTestCase {
         // can't test that mail app opens on simulator, this is as good as it gets
     }
     
-    func testDeveloperTools() {
+    func testDeveloperTools() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         let version = Bundle.main.releaseVersionNumber ?? ""
         let buildVersion = Bundle.main.buildVersionNumber ?? ""
         

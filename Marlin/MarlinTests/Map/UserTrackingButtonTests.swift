@@ -22,7 +22,8 @@ final class UserTrackingButtonTests: XCTestCase {
     override func tearDown() {
     }
 
-    func testChangeState() {
+    func testChangeState() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.set(Int(MKUserTrackingMode.none.rawValue), forKey: "userTrackingMode")
 
         var mockLocationManager = MockCLLocationManager()
@@ -78,7 +79,8 @@ final class UserTrackingButtonTests: XCTestCase {
         XCTAssertEqual(UserDefaults.standard.integer(forKey: "userTrackingMode"), MKUserTrackingMode.none.rawValue)
     }
     
-    func testLocationNotAuthorized() {
+    func testLocationNotAuthorized() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.set(Int(MKUserTrackingMode.none.rawValue), forKey: "userTrackingMode")
         var mockLocationManager = MockCLLocationManager()
         var locationManager = LocationManager.shared(locationManager: mockLocationManager)

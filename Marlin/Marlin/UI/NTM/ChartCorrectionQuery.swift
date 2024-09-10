@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ChartCorrectionQuery: View {
+    @EnvironmentObject var router: MarlinRouter
     @AppStorage("\(ChartCorrection.key)Filter") var chartCorrectionFilter: Data?
     @State private var requiredParametersSet: Bool = false
     
@@ -19,8 +20,8 @@ struct ChartCorrectionQuery: View {
                 FilterView(viewModel: filterViewModel)
                 
                 if requiredParametersSet {
-                    NavigationLink {
-                        ChartCorrectionList()
+                    Button {
+                        router.path.append(NoticeToMarinersRoute.chartList)
                     } label: {
                         Text("Query")
                     }

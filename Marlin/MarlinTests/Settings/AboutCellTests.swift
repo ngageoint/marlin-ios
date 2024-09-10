@@ -7,11 +7,16 @@
 
 import XCTest
 import SwiftUI
+import KIF
+
 @testable import Marlin
 
-final class AboutCellTests: XCTestCase {
+final class AboutCellTests: KIFTestCase {
     
     override func setUp() async throws {
+        if TestHelpers.DISABLE_UI_TESTS {
+            throw XCTSkip("UI tests are disabled")
+        }
         await TestHelpers.asyncGetKeyWindowVisible()
     }
     

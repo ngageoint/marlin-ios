@@ -20,6 +20,7 @@ struct CurrentNavigationalWarningSection: View {
 }
 
 struct NavigationalWarningAreasView: View {
+    @EnvironmentObject var router: MarlinRouter
     @ObservedObject var generalLocation = GeneralLocation.shared
     @State var navArea: String?
     var mapName: String?
@@ -47,19 +48,23 @@ struct NavigationalWarningAreasView: View {
                 .accessibilityElement(children: .contain)
 
                 if showUnparsedNavigationalWarnings {
-                    NavigationLink(
-                        value: NavigationalWarningRoute.areaList(navArea: NavigationalWarningNavArea.UNKNOWN.name)) {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text("Unparsed Locations")
-                                    .font(Font.body1)
-                                    .foregroundColor(Color.onSurfaceColor)
-                                    .opacity(0.87)
-                            }
-                            Spacer()
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Unparsed Locations")
+                                .font(Font.body1)
+                                .foregroundColor(Color.onSurfaceColor)
+                                .opacity(0.87)
                         }
+                        Spacer()
                     }
-                    .isDetailLink(false)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        router.path.append(
+                            NavigationalWarningRoute.areaList(
+                                navArea: NavigationalWarningNavArea.UNKNOWN.name
+                            )
+                        )
+                    }
                     .accessibilityElement(children: .contain)
                     .accessibilityLabel("Unparsed Locations Navigation Area")
                     .padding(.leading, 8)
@@ -79,15 +84,25 @@ struct NavigationalWarningAreasView: View {
                 viewModel.currentNavAreaName = generalLocation.currentNavAreaName
             }
             .accessibilityElement(children: .contain)
-            NavigationLink(value: MarlinRoute.exportGeoPackageDataSource( dataSource: .navWarning)) {
+            Button(action: {
+                router.path.append(MarlinRoute.exportGeoPackageDataSource(
+                    dataSource: .navWarning,
+                    filters: [
+                        DataSourceFilterParameter(
+                            property: DataSourceProperty(
+                                name: "Nav Area",
+                                key: "navArea",
+                                type: DataSourcePropertyType.string),
+                            comparison: DataSourceFilterComparison.equals,
+                            valueString: navArea)]))
+            }, label: {
                 Label(
-                    title: {},
+                    title: { },
                     icon: { Image(systemName: "square.and.arrow.down")
                             .renderingMode(.template)
                     }
                 )
-            }
-            .isDetailLink(false)
+            })
             .fixedSize()
             .buttonStyle(
                 MaterialFloatingButtonStyle(

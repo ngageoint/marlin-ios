@@ -18,7 +18,8 @@ final class DGPSStationListTests: XCTestCase {
         UserDefaults.standard.setSort(DataSources.dgps.key, sort: DataSources.dgps.filterable!.defaultSort)
     }
 
-    func testLoading() {
+    func testLoading() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.setSort(DataSources.dgps.key, sort: [
             DataSourceSortParameter(
                 property: DataSourceProperty(
@@ -201,7 +202,8 @@ final class DGPSStationListTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "6")
     }
 
-    func testLoadingWithSectionsSort() {
+    func testLoadingWithSectionsSort() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.setSort(DataSources.dgps.key, sort: [
             DataSourceSortParameter(
                 property: DataSourceProperty(

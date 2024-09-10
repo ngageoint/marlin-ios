@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 struct MarlinCompactWidth: View {
-    @EnvironmentObject var router: MarlinRouter
+    @StateObject var router: MarlinRouter = MarlinRouter()
     @AppStorage("selectedTab") var selectedTab: String = "map"
     
     @State var menuOpen: Bool = false
@@ -42,6 +42,7 @@ struct MarlinCompactWidth: View {
                 .statusBar(hidden: false)
                 // This is deprecated, but in iOS16 this is the only way to set the back button color
                 .accentColor(Color.onPrimaryColor)
+                .environmentObject(router)
                 
                 ForEach(dataSourceList.tabs, id: \.self) { item in
                     DataSourceNavView(dataSource: item, focusedItem: itemWrapper)

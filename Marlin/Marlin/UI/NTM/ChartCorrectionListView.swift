@@ -9,8 +9,8 @@ import Foundation
 import SwiftUI
 
 struct ChartCorrectionList: View {
-    
-    @ObservedObject var viewModel: ChartCorrectionListViewModel = ChartCorrectionListViewModel()
+    @EnvironmentObject var router: MarlinRouter
+    @StateObject var viewModel: ChartCorrectionListViewModel = ChartCorrectionListViewModel()
     
     private let columns = [
         GridItem(.fixed(100)),
@@ -96,15 +96,18 @@ struct ChartCorrectionList: View {
                         Spacer()
                         if (ntm.noticeYear >= 99 && ntm.noticeWeek >= 29)
                             || ntm.noticeYear <= Int(Calendar.current.component(.year, from: Date())) % 1000 {
-                            NavigationLink(
-                                value: NoticeToMarinersRoute.fullView(
+                            Button {
+                                router.path.append(NoticeToMarinersRoute.fullView(
                                     noticeNumber: getNoticeNumber(noticeNumberString: ntm.currNoticeNum)
-                                ),
-                                label: {
+                                ))
+                            } label: {
+                                Label {
                                     Text("NTM \(ntm.currNoticeNum ?? "") Details")
+                                } icon: {
                                 }
-                            )
-                            .buttonStyle(MaterialButtonStyle())
+
+                            }
+                            .buttonStyle(MaterialButtonStyle(type: .text))
                         }
                     }
                 }

@@ -12,7 +12,8 @@ import SwiftUI
 @testable import Marlin
 
 final class DifferentialGPSStationSummaryViewTests: XCTestCase {
-    func testLoading() {
+    func testLoading() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var newItem = DGPSStationModel()
         newItem.volumeNumber = "PUB 112"
         newItem.aidType = "Differential GPS Stations"
@@ -64,10 +65,11 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        BookmarkHelper().verifyBookmarkButton(bookmarkable: newItem)
+        try BookmarkHelper().verifyBookmarkButton(bookmarkable: newItem)
     }
     
-    func testLoadingNoVolume() {
+    func testLoadingNoVolume() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var newItem = DGPSStationModel()
         newItem.volumeNumber = nil
         newItem.aidType = "Differential GPS Stations"
@@ -143,7 +145,8 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         tester().tapScreen(at: CGPoint(x:20, y:20))
     }
     
-    func testLoadingShowMoreDetails() {
+    func testLoadingShowMoreDetails() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var newItem = DGPSStationModel()
         newItem.volumeNumber = "PUB 112"
         newItem.aidType = "Differential GPS Stations"

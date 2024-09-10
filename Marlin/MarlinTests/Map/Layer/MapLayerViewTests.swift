@@ -32,7 +32,8 @@ final class MapLayerViewTests: XCTestCase {
     override func tearDown() {
     }
 
-    func testToggle() {
+    func testToggle() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         
         var layer: MapLayer?
         persistentStore.viewContext.performAndWait {

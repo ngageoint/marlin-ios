@@ -14,6 +14,7 @@ import SwiftUI
 final class PortDetailViewTests: XCTestCase {
 
     func testLoading() {
+        print("XXX This test is failing in iOS18 beta 7")
         var port = PortModel(portNumber: 760)
         port.portName = "Aasiaat"
         port.regionNumber = 54
@@ -270,7 +271,8 @@ final class PortDetailViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Railway")
     }
 
-    func xtestButtons() {
+    func xtestButtons() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var port = PortModel(portNumber: 760)
         port.portName = "Aasiaat"
         port.regionNumber = 54

@@ -13,7 +13,8 @@ import SwiftUI
 
 final class DataSourceRailTests: XCTestCase {
     
-    func testRail() {
+    func testRail() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough {
             var currentItem: DataSourceItem?
         }

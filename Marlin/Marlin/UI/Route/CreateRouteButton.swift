@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct CreateRouteButton: View {
+    @EnvironmentObject var router: MarlinRouter
     var showText: Bool = false
     var body: some View {
-        NavigationLink(value: MarlinRoute.createRoute) {
+        Button {
+            router.path.append(MarlinRoute.createRoute)
+        } label: {
             Label(
                 title: {
                     if showText {
@@ -22,7 +25,6 @@ struct CreateRouteButton: View {
                 }
             )
         }
-        .isDetailLink(false)
         .fixedSize()
         .modifier(ConditionalButtonStyle(hasText: showText))
         .accessibilityElement(children: .contain)

@@ -12,7 +12,8 @@ import SwiftUI
 
 final class DataSourceCellTests: XCTestCase {
     
-    func testNonLoadingNonMappableDataSource() {
+    func testNonLoadingNonMappableDataSource() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         let definition = MockDataSourceNonMappableDefinition()
 
         let item = DataSourceItem(dataSource: definition)
@@ -37,7 +38,8 @@ final class DataSourceCellTests: XCTestCase {
         waitForExpectations(timeout: 10)
     }
     
-    func testNonLoadingMappableDataSource() {
+    func testNonLoadingMappableDataSource() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         let definition = MockDataSourceDefinition()
 
         UserDefaults.standard.setValue(true, forKey: "showOnMap\(definition.key)")
@@ -64,7 +66,8 @@ final class DataSourceCellTests: XCTestCase {
         waitForExpectations(timeout: 10)
     }
     
-    func testLoadingDataSource() {
+    func testLoadingDataSource() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         let definition = MockDataSourceDefinition()
         UserDefaults.standard.setValue(true, forKey: "showOnMap\(definition.key)")
         let item = DataSourceItem(dataSource: MockDataSourceDefinition())

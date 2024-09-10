@@ -16,6 +16,7 @@ import Combine
 final class NoticeToMarinersFullNoticeViewTests: XCTestCase {
 
     func testLoading() {
+        print("XXX this test is failing in iOS18 beta 7")
         var publicationTitles: [String] = []
         var ntm = NoticeToMarinersModel()
 

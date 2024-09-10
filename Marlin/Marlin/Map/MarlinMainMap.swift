@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct MarlinMainMap: View {
+    @EnvironmentObject var router: MarlinRouter
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     @EnvironmentObject var routeRepository: RouteRepository
     @EnvironmentObject var asamsTileRepository: AsamsTileRepository
@@ -73,7 +74,9 @@ struct MarlinMainMap: View {
             // top right button stack
             VStack(alignment: .trailing, spacing: 16) {
                 if showSettings {
-                    NavigationLink(value: MarlinRoute.mapSettings) {
+                    Button {
+                        router.path.append(MarlinRoute.mapSettings)
+                    } label: {
                         Label(
                             title: {},
                             icon: { Image(systemName: "square.3.stack.3d")
@@ -81,7 +84,7 @@ struct MarlinMainMap: View {
                             }
                         )
                     }
-                    .isDetailLink(false)
+//                    .isDetailLink(false)
                     .fixedSize()
                     .buttonStyle(
                         MaterialFloatingButtonStyle(
@@ -113,7 +116,9 @@ struct MarlinMainMap: View {
             // bottom right button stack
             VStack(alignment: .trailing, spacing: 16) {
                 if showExport {
-                    NavigationLink(value: MarlinRoute.exportGeoPackage(useMapRegion: true)) {
+                    Button {
+                        router.path.append(MarlinRoute.exportGeoPackage(useMapRegion: true))
+                    } label: {
                         Label(
                             title: {},
                             icon: { Image(systemName: "square.and.arrow.down")
@@ -121,7 +126,7 @@ struct MarlinMainMap: View {
                             }
                         )
                     }
-                    .isDetailLink(false)
+//                    .isDetailLink(false)
                     .fixedSize()
                     .buttonStyle(
                         MaterialFloatingButtonStyle(

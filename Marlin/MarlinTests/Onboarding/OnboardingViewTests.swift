@@ -25,6 +25,7 @@ final class OnboardingViewTests: XCTestCase {
     }
     
     func testFlow() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.set(false, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
@@ -176,6 +177,7 @@ final class OnboardingViewTests: XCTestCase {
     }
     
     func testNotNowFlow() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.set(false, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
@@ -343,6 +345,7 @@ final class OnboardingViewTests: XCTestCase {
     }
     
     func testFlowNotificationAccessGranted() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.set(false, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
@@ -395,6 +398,7 @@ final class OnboardingViewTests: XCTestCase {
     }
     
     func testFlowDisclaimerAccepted() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.set(true, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
@@ -440,6 +444,7 @@ final class OnboardingViewTests: XCTestCase {
     }
     
     func testFlowDisclaimerAndLocationAccessGranted() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.set(true, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
@@ -486,6 +491,7 @@ final class OnboardingViewTests: XCTestCase {
     }
     
     func testFlowDisclaimerAndLocationAccessGrantedAndNotificationAccessGranted() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.set(true, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
@@ -532,6 +538,7 @@ final class OnboardingViewTests: XCTestCase {
     }
     
     func testFlowLocationAccessGranted() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.set(false, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")
@@ -580,6 +587,7 @@ final class OnboardingViewTests: XCTestCase {
     }
     
     func testFlowLocationAccessGrantedAndNotificationAccessGranted() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.set(false, forKey: "disclaimerAccepted")
         UserDefaults.standard.set(false, forKey: "onboardingComplete")
         UserDefaults.standard.set(true, forKey: "showOnMap\(DataSources.asam.key)")

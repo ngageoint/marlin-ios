@@ -14,7 +14,8 @@ import SwiftUI
 
 final class LightSummaryViewTests: XCTestCase {
 
-    func testLoading() {
+    func testLoading() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var light = LightModel()
 
         light.characteristicNumber = 1
@@ -86,10 +87,11 @@ final class LightSummaryViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
         
-        BookmarkHelper().verifyBookmarkButton(bookmarkable: light)
+        try BookmarkHelper().verifyBookmarkButton(bookmarkable: light)
     }
     
-    func testShowMoreDetails() {
+    func testShowMoreDetails() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var light = LightModel()
 
         light.characteristicNumber = 1

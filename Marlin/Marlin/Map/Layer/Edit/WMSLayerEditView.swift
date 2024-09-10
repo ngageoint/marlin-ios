@@ -35,7 +35,7 @@ struct WMSLayerEditView: View {
             .padding([.trailing, .leading], 8)
             .frame(minHeight: 0, maxHeight: .infinity)
             marlinMap
-                            .frame(minHeight: 0, maxHeight: .infinity)
+                .frame(minHeight: 0, maxHeight: .infinity)
             NavigationLink {
                 LayerConfiguration(viewModel: viewModel, isPresented: $isPresented)
             } label: {

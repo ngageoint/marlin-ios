@@ -13,7 +13,8 @@ import SwiftUI
 
 final class HamburgerTests: XCTestCase {
     
-    func testHamburger() {
+    func testHamburger() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.setFilter(MockDataSource.key, filter: [])
         
         class PassThrough {

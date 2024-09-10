@@ -14,7 +14,8 @@ import SwiftUI
 
 final class MapSettingsTests: XCTestCase {
     
-    func testLoadingLightSettings() {
+    func testLoadingLightSettings() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.actualRangeLights = false
         UserDefaults.standard.actualRangeSectorLights = false
 
@@ -50,7 +51,8 @@ final class MapSettingsTests: XCTestCase {
         XCTAssertFalse(UserDefaults.standard.actualRangeLights)
     }
     
-    func testMapType() {
+    func testMapType() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.set(true, forKey: "flyoverMapsEnabled")
         UserDefaults.standard.set(Int(MKMapType.standard.rawValue), forKey: "mapType")
         
@@ -99,7 +101,8 @@ final class MapSettingsTests: XCTestCase {
         XCTAssertEqual(UserDefaults.standard.integer(forKey: "mapType"), Int(ExtraMapTypes.osm.rawValue))
     }
     
-    func testGrids() {
+    func testGrids() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.set(false, forKey: "showMGRS")
         UserDefaults.standard.set(false, forKey: "showGARS")
         
@@ -132,7 +135,8 @@ final class MapSettingsTests: XCTestCase {
         XCTAssertEqual(false, UserDefaults.standard.bool(forKey: "showGARS"))
     }
     
-    func testSearchType() {
+    func testSearchType() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         let view = MapSettings()
         let nav = NavigationView {
             view

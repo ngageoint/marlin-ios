@@ -11,28 +11,32 @@ import SwiftUI
 struct PublicationsNestedFolder: View {
     @StateObject var viewModel: PublicationsNestedFolderViewModel =
         PublicationsNestedFolderViewModel()
+    @EnvironmentObject var router: MarlinRouter
     var pubTypeId: Int
 
     var body: some View {
         List {
             ForEach(Array(viewModel.nestedFolders.keys), id: \.self) { key in
                 if let group = viewModel.nestedFolders[key], !group.isEmpty {
-                    NavigationLink(value: PublicationRoute.publicationList(key: key, pubs: group)) {
-                        HStack(spacing: 16) {
-                            Image(systemName: "folder.fill")
-                                .renderingMode(.template)
-                                .foregroundColor(Color.onSurfaceColor.opacity(0.87))
-                            VStack(alignment: .leading) {
-                                Text(key)
-                                    .primary()
-                                Text("\(group.count) files")
-                                    .secondary()
-                            }
+                    HStack(spacing: 16) {
+                        Image(systemName: "folder.fill")
+                            .renderingMode(.template)
+                            .foregroundColor(Color.onSurfaceColor.opacity(0.87))
+                        VStack(alignment: .leading) {
+                            Text(key)
+                                .primary()
+                            Text("\(group.count) files")
+                                .secondary()
                         }
-                        .padding(.top, 8)
-                        .padding(.bottom, 8)
-                        .accessibilityElement()
-                        .accessibilityLabel(key)
+                        Spacer()
+                    }
+                    .contentShape(Rectangle())
+                    .padding(.top, 8)
+                    .padding(.bottom, 8)
+                    .accessibilityElement()
+                    .accessibilityLabel(key)
+                    .onTapGesture {
+                        router.path.append(PublicationRoute.publicationList(key: key, pubs: group))
                     }
                 }
             }

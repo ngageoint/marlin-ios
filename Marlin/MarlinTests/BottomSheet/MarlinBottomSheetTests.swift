@@ -38,7 +38,8 @@ final class MarlinBottomSheetTests: XCTestCase {
         }
     }
     
-    func testLoading() {
+    func testLoading() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var newItem = AsamModel()
         newItem.asamDescription = "description"
         newItem.longitude = 1.0
@@ -80,7 +81,8 @@ final class MarlinBottomSheetTests: XCTestCase {
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Boarding: Boat")
     }
     
-    func testMultipleItems() {
+    func testMultipleItems() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var newItem = AsamModel()
         newItem.asamDescription = "description"
         newItem.longitude = 1.0

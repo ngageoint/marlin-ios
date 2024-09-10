@@ -13,31 +13,35 @@ struct NoticeToMarinersView: View {
 
     var body: some View {
         List {
-            NavigationLink(
-                value: NoticeToMarinersRoute.notices,
-                label: {
-                    HStack {
-                        Text("View All Notice to Mariners")
-                        Spacer()
-                    }
-                }
-            )
+            HStack {
+                Text("View All Notice to Mariners")
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .renderingMode(.template)
+                    .foregroundColor(Color.onSurfaceColor.opacity(0.36))
+            }
+            .contentShape(Rectangle())
             .padding(.leading, 8)
             .padding(.top, 8)
             .padding(.bottom, 8)
+            .onTapGesture {
+                router.path.append(NoticeToMarinersRoute.notices)
+            }
 
-            NavigationLink(
-                value: NoticeToMarinersRoute.chartQuery,
-                label: {
-                    HStack {
-                        Text("Chart Corrections")
-                        Spacer()
-                    }
-                }
-            )
+            HStack {
+                Text("Chart Corrections")
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .renderingMode(.template)
+                    .foregroundColor(Color.onSurfaceColor.opacity(0.36))
+            }
+            .contentShape(Rectangle())
             .padding(.leading, 8)
             .padding(.top, 8)
             .padding(.bottom, 8)
+            .onTapGesture {
+                router.path.append(NoticeToMarinersRoute.chartQuery)
+            }
         }
         .navigationTitle(DataSources.noticeToMariners.fullName)
         .navigationBarTitleDisplayMode(.inline)

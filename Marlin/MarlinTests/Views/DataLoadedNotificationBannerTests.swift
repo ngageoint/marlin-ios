@@ -34,7 +34,8 @@ final class DataLoadedNotificationBannerTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "3 new \(DataSources.asam.fullName)")
     }
     
-    func testExpandNotification() {
+    func testExpandNotification() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         let appState = AppState()
         appState.dsBatchImportNotificationsPending = [
             DataSources.asam.key : [DataSourceUpdatedNotification(key: DataSources.asam.key, updates: 1, inserts: 3)],
@@ -59,7 +60,8 @@ final class DataLoadedNotificationBannerTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "New Data Loaded show more")
     }
     
-    func testClearNotification() {
+    func testClearNotification() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         let appState = AppState()
         appState.dsBatchImportNotificationsPending = [
             DataSources.asam.key : [DataSourceUpdatedNotification(key: DataSources.asam.key, updates: 1, inserts: 3)]

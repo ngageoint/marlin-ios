@@ -21,28 +21,30 @@ struct NavigationalWarningSection: Hashable {
 }
 
 struct NavigationalWarningSectionRow: View {
+    @EnvironmentObject var router: MarlinRouter
     var navAreaInformation: NavigationalAreaInformation
 //    var section: SectionedFetchResults<String, NavigationalWarning>.Element
     var mapName: String?
     
     var body: some View {
-        NavigationLink(value: NavigationalWarningRoute.areaList(navArea: navAreaInformation.navArea.name)) {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text(NavigationalWarningNavArea.fromId(id: navAreaInformation.navArea.name)?.display ?? "")
-                        .font(Font.body1)
-                        .foregroundColor(Color.onSurfaceColor)
-                        .opacity(0.87)
-                    Text("\(navAreaInformation.total) Active")
-                        .font(Font.caption)
-                        .foregroundColor(Color.onSurfaceColor)
-                        .opacity(0.6)
-                }
-                Spacer()
-                NavigationalWarningAreaUnreadBadge(unreadCount: navAreaInformation.unread)
+        HStack {
+            VStack(alignment: .leading) {
+                Text(NavigationalWarningNavArea.fromId(id: navAreaInformation.navArea.name)?.display ?? "")
+                    .font(Font.body1)
+                    .foregroundColor(Color.onSurfaceColor)
+                    .opacity(0.87)
+                Text("\(navAreaInformation.total) Active")
+                    .font(Font.caption)
+                    .foregroundColor(Color.onSurfaceColor)
+                    .opacity(0.6)
             }
+            Spacer()
+            NavigationalWarningAreaUnreadBadge(unreadCount: navAreaInformation.unread)
         }
-        .isDetailLink(false)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            router.path.append(NavigationalWarningRoute.areaList(navArea: navAreaInformation.navArea.name))
+        }
         .accessibilityElement(children: .contain)
         .padding(.leading, 8)
         .padding(.top, 8)

@@ -28,6 +28,7 @@ final class SearchViewTests: XCTestCase {
     }
     
     func testExpandCollapse() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         struct Container: View {
             @StateObject var mapState: MapState = MapState()
 
@@ -54,6 +55,7 @@ final class SearchViewTests: XCTestCase {
     }
 
     func testSearch() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough: ObservableObject {
             var mapState: MapState?
         }
@@ -122,6 +124,7 @@ final class SearchViewTests: XCTestCase {
     }
     
     func testSearchNoResults() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         MKLocalSearchMock.results = []
         class PassThrough: ObservableObject {
             var mapState: MapState?
@@ -172,6 +175,7 @@ final class SearchViewTests: XCTestCase {
     }
 
     func testSearchCoordinates() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough: ObservableObject {
             var mapState: MapState?
         }
@@ -222,6 +226,7 @@ final class SearchViewTests: XCTestCase {
     }
     
     func testUsingSearchProvider() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough: ObservableObject {
             var mapState: MapState?
         }
@@ -299,7 +304,8 @@ class MKLocalSearchMock: MKLocalSearch {
         MKLocalSearchMock.searchRequest = request
     }
     
-    override func start(completionHandler: @escaping MKLocalSearch.CompletionHandler) {
+//    override func start(completionHandler: @escaping MKLocalSearch.CompletionHandler) {
+    override func start(completionHandler: @escaping @MainActor @Sendable (MKLocalSearch.Response?, (any Error)?) -> Void) {
         let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 1.0, longitude: 1.0))
         let mapItem = MKMapItem(placemark: placemark)
         mapItem.name = "Test item"
@@ -307,7 +313,9 @@ class MKLocalSearchMock: MKLocalSearch {
         
         let mapItems = MKLocalSearchMock.results ?? [mapItem]
         let response: MKLocalSearch.Response = MockMKLocalSearchResponse(mapItems: mapItems)
-        completionHandler(response, nil)
+        Task {
+            await completionHandler(response, nil)
+        }
     }
 }
 

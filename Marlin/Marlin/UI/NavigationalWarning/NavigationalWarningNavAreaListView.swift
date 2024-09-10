@@ -36,37 +36,31 @@ struct NavigationalWarningNavAreaListView: View {
             ScrollView {
                 LazyVStack(alignment: .leading) {
                     ForEach(dataSource.warnings) { navigationalWarning in
-                        NavigationLink(value: NavigationalWarningRoute.detail(
-                            msgYear: navigationalWarning.msgYear ?? -1,
-                            msgNumber: navigationalWarning.msgNumber ?? -1,
-                            navArea: navigationalWarning.navArea)
-                        ) {
-                            HStack {
-                                NavigationalWarningSummaryView(navigationalWarning: navigationalWarning)
-                                    .padding(.all, 16)
-                                    .accessibilityElement(children: .contain)
-                            }
-                            .card()
-                            .background(GeometryReader {
-                                return Color.clear.preference(
-                                    key: ViewOffsetKey.self,
-                                    value: -$0.frame(in: .named("scroll")).origin.y
-                                )
-                            })
+                        HStack {
+                            NavigationalWarningSummaryView(navigationalWarning: navigationalWarning)
+                                .padding(.all, 16)
+                                .accessibilityElement(children: .contain)
+                        }
+                        .card()
+                        .background(GeometryReader {
+                            return Color.clear.preference(
+                                key: ViewOffsetKey.self,
+                                value: -$0.frame(in: .named("scroll")).origin.y
+                            )
+                        })
 
-                            .onPreferenceChange(ViewOffsetKey.self) { offset in
-                                if offset > 0 {
-                                    firstUnseenNavigationalWarning = navigationalWarning
-                                }
-                                // once this offset goes negative, they have seen the nav warning
-                                if offset < 0 {
-                                    // This checks if we are saving right now, because we could be still scrolling to
-                                    // the bottom also checks if we have already saved a newer warning as the latest one
-                                    if shouldSavePosition,
-                                       let issueDate = navigationalWarning.issueDate, issueDate > lastSavedDate {
-                                        self.lastSavedDate = issueDate
-                                        self.lastSeen = navigationalWarning.primaryKey
-                                    }
+                        .onPreferenceChange(ViewOffsetKey.self) { offset in
+                            if offset > 0 {
+                                firstUnseenNavigationalWarning = navigationalWarning
+                            }
+                            // once this offset goes negative, they have seen the nav warning
+                            if offset < 0 {
+                                // This checks if we are saving right now, because we could be still scrolling to
+                                // the bottom also checks if we have already saved a newer warning as the latest one
+                                if shouldSavePosition,
+                                   let issueDate = navigationalWarning.issueDate, issueDate > lastSavedDate {
+                                    self.lastSavedDate = issueDate
+                                    self.lastSeen = navigationalWarning.primaryKey
                                 }
                             }
                         }
@@ -155,8 +149,8 @@ struct NavigationalWarningNavAreaListView: View {
                 }
             }
             .safeAreaInset(edge: .bottom, alignment: .trailing) {
-                NavigationLink(
-                    value: MarlinRoute.exportGeoPackageDataSource(
+                Button(action: {
+                    router.path.append(MarlinRoute.exportGeoPackageDataSource(
                         dataSource: .navWarning,
                         filters: [
                             DataSourceFilterParameter(
@@ -165,15 +159,15 @@ struct NavigationalWarningNavAreaListView: View {
                                     key: "navArea",
                                     type: DataSourcePropertyType.string),
                                 comparison: DataSourceFilterComparison.equals,
-                                valueString: navArea)])) {
+                                valueString: navArea)]))
+                }, label: {
                     Label(
-                        title: {},
+                        title: { },
                         icon: { Image(systemName: "square.and.arrow.down")
                                 .renderingMode(.template)
                         }
                     )
-                }
-                .isDetailLink(false)
+                })
                 .fixedSize()
                 .buttonStyle(
                     MaterialFloatingButtonStyle(

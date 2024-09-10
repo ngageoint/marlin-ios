@@ -124,7 +124,7 @@ struct PhaseWatcher: View {
     }
 }
 
-@available (iOS 16, *)
+// @available(iOS_16, *)
 struct MarlinApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
@@ -150,8 +150,6 @@ struct MarlinApp: App {
     var radioBeaconsTileRepository: RadioBeaconsTileRepository
     var differentialGPSStationsTileRepository: DifferentialGPSStationsTileRepository
     var navigationalWarningsMapFeatureRepository: NavigationalWarningsMapFeatureRepository
-
-    private var router: MarlinRouter = MarlinRouter()
 
     let persistentStoreLoadedPub = NotificationCenter.default.publisher(for: .PersistentStoreLoaded)
         .receive(on: RunLoop.main)
@@ -210,7 +208,7 @@ struct MarlinApp: App {
                 .environmentObject(navigationalWarningsMapFeatureRepository)
                 .environmentObject(searchRepository)
                 .environment(\.managedObjectContext, persistentStore.viewContext)
-                .environmentObject(router)
+//                .environmentObject(router)
                 .background(Color.surfaceColor)
         }
     }

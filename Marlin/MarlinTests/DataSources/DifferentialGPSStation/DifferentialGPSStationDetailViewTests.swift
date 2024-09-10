@@ -68,7 +68,8 @@ final class DifferentialGPSStationDetailViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: dgps.postNote)
     }
 
-    func xtestTapButtons() {
+    func xtestTapButtons() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var dgps = DGPSStationModel()
         dgps.volumeNumber = "PUB 112"
         dgps.aidType = "Differential GPS Stations"
@@ -119,6 +120,6 @@ final class DifferentialGPSStationDetailViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Location")
         waitForExpectations(timeout: 10, handler: nil)
 
-        BookmarkHelper().verifyBookmarkButton(bookmarkable: dgps)
+        try BookmarkHelper().verifyBookmarkButton(bookmarkable: dgps)
     }
 }

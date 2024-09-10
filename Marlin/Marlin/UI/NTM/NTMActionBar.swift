@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NTMActionBar: View {
-        
+    @EnvironmentObject var router: MarlinRouter
     var ntm: ChartCorrection
 
     var body: some View {
@@ -16,15 +16,18 @@ struct NTMActionBar: View {
             Spacer()
             if (ntm.noticeYear >= 99 && ntm.noticeWeek >= 29) 
                 || ntm.noticeYear <= Int(Calendar.current.component(.year, from: Date())) % 1000 {
-                NavigationLink(
-                    value: NoticeToMarinersRoute.fullView(
+                Button {
+                    router.path.append(NoticeToMarinersRoute.fullView(
                         noticeNumber: getNoticeNumber(noticeNumberString: ntm.currNoticeNum)
-                    ),
-                    label: {
+                    ))
+                } label: {
+                    Label {
                         Text("NTM \(ntm.currNoticeNum ?? "") Details")
+                    } icon: {
                     }
-                )
-                .buttonStyle(MaterialButtonStyle())
+
+                }
+                .buttonStyle(MaterialButtonStyle(type: .text))
             }
         }
     }

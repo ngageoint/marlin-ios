@@ -15,6 +15,7 @@ import OHHTTPStubs
 final class PublicationListTests: XCTestCase {
 
     func testOneSectionList() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
 //        XCTFail()
         stub(condition: isScheme("https") && pathEndsWith("/publications/stored-pubs")) { request in
             return HTTPStubsResponse(

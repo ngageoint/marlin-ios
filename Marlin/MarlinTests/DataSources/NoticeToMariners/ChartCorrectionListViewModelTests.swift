@@ -137,7 +137,8 @@ final class ChartCorrectionListViewModelTests: XCTestCase {
         XCTAssertFalse(model.loading)
     }
     
-    func testListView() {
+    func testListView() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         UserDefaults.standard.setFilter(ChartCorrection.key, filter: [DataSourceFilterParameter(property: DataSourceProperty(name: "Location", key: "location", type: .location), comparison: .closeTo, valueInt: 1, valueLatitude: 2.0, valueLongitude: 3.0)])
         
         stub(condition: isScheme("https") && pathEndsWith("/publications/ntm/ntm-chart-corr/geo")) { request in

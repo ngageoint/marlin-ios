@@ -13,7 +13,8 @@ import CoreLocation
 
 final class CurrentLocationTests: XCTestCase {
     
-    func testShowCurrentLocationTap() {
+    func testShowCurrentLocationTap() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         let mockLocationManager = MockCLLocationManager()
         let locationManager = LocationManager.shared(locationManager: mockLocationManager)
         locationManager.lastLocation = CLLocation(latitude: 1.0, longitude: 2.0)

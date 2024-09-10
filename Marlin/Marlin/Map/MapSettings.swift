@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct MapSettings: View {
+    @EnvironmentObject var router: MarlinRouter
     @AppStorage("showMGRS") var showMGRS: Bool = false
     @AppStorage("showGARS") var showGARS: Bool = false
     @AppStorage("mapType") var mapType: Int = Int(MKMapType.standard.rawValue)
@@ -170,13 +171,17 @@ struct MapSettings: View {
             }
 
             Section("Layers") {
-                NavigationLink(value: MarlinRoute.mapLayers) {
+                HStack {
                     Image(systemName: "square.3.layers.3d")
                         .tint(Color.onSurfaceColor)
                         .opacity(0.60)
                     Text("Additional Map Layers")
                         .font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
+                    Spacer()
+                }
+                .onTapGesture {
+                    router.path.append(MarlinRoute.mapLayers)
                 }
                 .accessibilityElement(children: .contain)
                 .accessibilityLabel("Additional Map Layers")
@@ -184,7 +189,7 @@ struct MapSettings: View {
             }
 
             Section("Data Source Settings") {
-                NavigationLink(value: MarlinRoute.lightSettings) {
+                HStack {
                     if let lightSystemImageName = DataSources.light.systemImageName {
                         Image(systemName: lightSystemImageName)
                             .tint(Color.onSurfaceColor)
@@ -193,6 +198,9 @@ struct MapSettings: View {
                     Text("Light Settings")
                         .font(Font.body1)
                         .foregroundColor(Color.onSurfaceColor.opacity(0.87))
+                }
+                .onTapGesture {
+                    router.path.append(MarlinRoute.lightSettings)
                 }
                 .accessibilityElement(children: .contain)
                 .accessibilityLabel("Light Settings")
@@ -261,7 +269,7 @@ struct MapSettings: View {
                 .tint(Color.primaryColorVariant)
                 .padding([.top, .bottom], 8)
                 
-                NavigationLink(value: MarlinRoute.coordinateDisplaySettings) {
+                HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Coordinate Display Settings").font(Font.body1)
                             .foregroundColor(Color.onSurfaceColor.opacity(0.87))
@@ -271,6 +279,9 @@ struct MapSettings: View {
                     }
                     .padding(.top, 4)
                     .padding(.bottom, 4)
+                }
+                .onTapGesture {
+                    router.path.append(MarlinRoute.coordinateDisplaySettings)
                 }
                 .accessibilityElement(children: .contain)
                 .accessibilityLabel("Coordinate Display Settings")

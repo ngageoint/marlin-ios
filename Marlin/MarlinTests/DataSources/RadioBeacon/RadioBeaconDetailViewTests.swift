@@ -100,7 +100,8 @@ final class RadioBeaconDetailViewTests: XCTestCase {
 
     }
 
-    func xtestButtons() {
+    func xtestButtons() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var rb = RadioBeaconModel()
 
         rb.volumeNumber = "PUB 110"
@@ -176,7 +177,7 @@ final class RadioBeaconDetailViewTests: XCTestCase {
         
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
-        BookmarkHelper().verifyBookmarkButton(bookmarkable: rb)
+        try BookmarkHelper().verifyBookmarkButton(bookmarkable: rb)
     }
 }
 

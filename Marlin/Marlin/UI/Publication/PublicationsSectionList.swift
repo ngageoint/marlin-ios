@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct PublicationsSectionList: View {
-
+    @EnvironmentObject var router: MarlinRouter
+    
     @StateObject var viewModel: PublicationsSectionListViewModel =
     PublicationsSectionListViewModel()
 
@@ -51,13 +52,15 @@ struct PublicationsSectionList: View {
         List(viewModel.sections) { section in
             switch section {
             case .pubType(let type, let count):
-                NavigationLink(value: publicationTypeRoute(type: type)) {
-                    folderLabel(
-                        name: type.description,
-                        count: count
-                    )
-                    .accessibilityElement()
-                    .accessibilityLabel(type.description)
+                folderLabel(
+                    name: type.description,
+                    count: count
+                )
+                .accessibilityElement()
+                .accessibilityLabel(type.description)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    router.path.append(publicationTypeRoute(type: type))
                 }
             default:
                 EmptyView()
@@ -84,6 +87,7 @@ struct PublicationsSectionList: View {
                 Text("\(count) files")
                     .secondary()
             }
+            Spacer()
         }
         .padding(.top, 8)
         .padding(.bottom, 8)

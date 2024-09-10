@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct MarlinRegularWidth: View {
+    @StateObject var router: MarlinRouter = MarlinRouter()
     @EnvironmentObject var appState: AppState
 
     @AppStorage("selectedTab") var selectedTab: String = "map"
@@ -88,10 +89,14 @@ struct MarlinRegularWidth: View {
                 }
             }
             .marlinRoutes()
-            .modifier(CombinedSourcesFilterButton(filterOpen: $filterOpen, dataSources: $dataSourceList.mappedDataSources))
+            .modifier(CombinedSourcesFilterButton(
+                filterOpen: $filterOpen,
+                dataSources: $dataSourceList.mappedDataSources)
+            )
             .navigationTitle("Marlin")
             .navigationBarTitleDisplayMode(.inline)
         }
+        .environmentObject(router)
     }
     @State private var visibility: NavigationSplitViewVisibility = .all
     

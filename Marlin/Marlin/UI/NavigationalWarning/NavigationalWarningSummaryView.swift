@@ -23,20 +23,30 @@ struct NavigationalWarningSummaryView: DataSourceSummaryView {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(navigationalWarning.dateString ?? "")
-                .overline()
-            if showTitle {
-                Text(navigationalWarning.itemTitle)
-                    .primary()
-                    .accessibilityElement()
-                    .accessibilityLabel(navigationalWarning.itemTitle)
+            Group {
+                Text(navigationalWarning.dateString ?? "")
+                    .overline()
+                if showTitle {
+                    Text(navigationalWarning.itemTitle)
+                        .primary()
+                        .accessibilityElement()
+                        .accessibilityLabel(navigationalWarning.itemTitle)
+                }
+                Text("\(navigationalWarning.text ?? "")")
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(8)
+                    .secondary()
+                if navigationalWarning.canBookmark {
+                    bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
+                }
             }
-            Text("\(navigationalWarning.text ?? "")")
-                .multilineTextAlignment(.leading)
-                .lineLimit(8)
-                .secondary()
-            if navigationalWarning.canBookmark {
-                bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
+            .onTapGesture {
+                router.path.append(
+                    NavigationalWarningRoute.detail(
+                        msgYear: navigationalWarning.msgYear ?? -1,
+                        msgNumber: navigationalWarning.msgNumber ?? -1,
+                        navArea: navigationalWarning.navArea)
+                )
             }
             DataSourceActions(
                 moreDetails: showMoreDetails ? NavigationalWarningActions.Tap(

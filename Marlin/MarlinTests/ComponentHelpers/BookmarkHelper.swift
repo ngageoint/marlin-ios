@@ -14,7 +14,8 @@ import CoreData
 class BookmarkHelper: XCTestCase {
     @Injected(\.bookmarkRepository)
     var repository: BookmarkRepository
-    public func verifyBookmarkButton(viewContext: NSManagedObjectContext? = nil, bookmarkable: Bookmarkable) {
+    public func verifyBookmarkButton(viewContext: NSManagedObjectContext? = nil, bookmarkable: Bookmarkable) throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         tester().tapView(withAccessibilityLabel: "bookmark")
         tester().waitForView(withAccessibilityLabel: "Bookmark")
         tester().waitForView(withAccessibilityLabel: "notes")

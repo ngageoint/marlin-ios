@@ -54,7 +54,8 @@ final class ModuDetailViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "\(modu.subregion!)")
     }
 
-    func xtestButtons() {
+    func xtestButtons() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var modu = ModuModel()
 
         modu.name = "ABAN II"
@@ -122,6 +123,6 @@ final class ModuDetailViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
         
-        BookmarkHelper().verifyBookmarkButton(bookmarkable: modu)
+        try BookmarkHelper().verifyBookmarkButton(bookmarkable: modu)
     }
 }

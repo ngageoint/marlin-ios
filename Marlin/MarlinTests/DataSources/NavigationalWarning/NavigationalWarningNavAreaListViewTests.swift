@@ -19,6 +19,7 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
     }
 
     func testOneNavWarning() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var warnings: [NavigationalWarningModel] = []
         var navWarning = NavigationalWarningModel(navArea: "4")
         navWarning.msgYear = 2022
@@ -81,6 +82,7 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
     }
     
     func testOneNavWarningNavAreasView() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var warnings: [NavigationalWarningModel] = []
         var navWarning = NavigationalWarningModel(navArea: "4")
         navWarning.msgYear = 2022
@@ -229,6 +231,7 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
     }
     
     func testALotOfNavWarningsScrollTopWithTap() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var dateComponents = DateComponents()
         dateComponents.year = 2022
         dateComponents.month = 1
@@ -306,6 +309,7 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
     }
     
     func testALotOfNavWarningsWithLastSeen() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var dateComponents = DateComponents()
         dateComponents.year = 2022
         dateComponents.month = 1
@@ -387,6 +391,7 @@ final class NavigationalWarningNavAreaListViewTests: XCTestCase {
     }
     
     func testALotOfNavWarningsWithLastSeenThatDoesNotExist() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var dateComponents = DateComponents()
         dateComponents.year = 2022
         dateComponents.month = 1

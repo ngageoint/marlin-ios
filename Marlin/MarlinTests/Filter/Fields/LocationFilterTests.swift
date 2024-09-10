@@ -13,7 +13,8 @@ import CoreLocation
 
 final class LocationFilterTests: XCTestCase {
     
-    func testFilterChange() {
+    func testFilterChange() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough: ObservableObject {
             var viewModel: DataSourcePropertyFilterViewModel?
             init() {
@@ -88,7 +89,8 @@ final class LocationFilterTests: XCTestCase {
         XCTAssertTrue(passThrough.viewModel!.isValid)
     }
     
-    func xtestSetLocationWithMap() {
+    func xtestSetLocationWithMap() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough: ObservableObject {
             var viewModel: DataSourcePropertyFilterViewModel?
             init() {
@@ -150,7 +152,8 @@ final class LocationFilterTests: XCTestCase {
         XCTAssertTrue(passThrough.viewModel!.isValid)
     }
     
-    func testInvalid() {
+    func testInvalid() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough: ObservableObject {
             var viewModel: DataSourcePropertyFilterViewModel?
             init() {
@@ -276,7 +279,8 @@ final class LocationFilterTests: XCTestCase {
         XCTAssertFalse(passThrough.viewModel!.isValid)
     }
     
-    func testNearMe() {
+    func testNearMe() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough: ObservableObject {
             var viewModel: DataSourcePropertyFilterViewModel?
             init() {
@@ -337,7 +341,8 @@ final class LocationFilterTests: XCTestCase {
         XCTAssertTrue(passThrough.viewModel!.isValid)
     }
 
-    func testBounds() {
+    func testBounds() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough: ObservableObject {
             var viewModel: DataSourcePropertyFilterViewModel?
             init() {

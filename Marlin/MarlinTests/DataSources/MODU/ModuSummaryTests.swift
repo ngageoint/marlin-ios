@@ -12,7 +12,8 @@ import SwiftUI
 @testable import Marlin
 
 final class ModuSummaryTests: XCTestCase {
-    func testLoading() {
+    func testLoading() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var modu = ModuModel()
 
         modu.name = "ABAN II"
@@ -86,10 +87,11 @@ final class ModuSummaryTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
         
-        BookmarkHelper().verifyBookmarkButton(bookmarkable: modu)
+        try BookmarkHelper().verifyBookmarkButton(bookmarkable: modu)
     }
     
-    func testShowMoreDetails() {
+    func testShowMoreDetails() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var modu = ModuModel()
 
         modu.name = "ABAN II"

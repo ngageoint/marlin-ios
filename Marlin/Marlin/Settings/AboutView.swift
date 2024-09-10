@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AboutView: View {
+    @EnvironmentObject var router: MarlinRouter
     let version = Bundle.main.releaseVersionNumber ?? ""
     let buildVersion = Bundle.main.buildVersionNumber ?? ""
     @State var tapCount: Int = 1
@@ -18,12 +19,17 @@ struct AboutView: View {
 
     var body: some View {
         List {
-            NavigationLink(value: MarlinRoute.disclaimer) {
+            HStack {
                 Image(systemName: "shield.lefthalf.filled")
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)
                 Text("Disclaimer")
                     .primary()
+                Spacer()
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                router.path.append(MarlinRoute.disclaimer)
             }
 
             HStack {
@@ -35,12 +41,16 @@ struct AboutView: View {
                     .tint(Color.onSurfaceColor)
             }
             
-            NavigationLink(value: MarlinRoute.acknowledgements) {
+            HStack {
                 Image(systemName: "hands.clap")
                     .tint(Color.onSurfaceColor)
                     .opacity(0.60)
                 Text("Acknowledgements")
                     .primary()
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                router.path.append(MarlinRoute.acknowledgements)
             }
 
             HStack {

@@ -66,7 +66,8 @@ final class PublicationSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Download")
     }
     
-    func testDownload() {
+    func testDownload() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var epub = PublicationModel()
 
         epub.pubTypeId = 9
@@ -145,7 +146,8 @@ final class PublicationSummaryViewTests: XCTestCase {
         XCTAssertFalse(repository.checkFileExists(id: epub.s3Key ?? ""))
     }
     
-    func testDownloadError() {
+    func testDownloadError() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var epub = PublicationModel()
 
         epub.pubTypeId = 9
@@ -203,7 +205,8 @@ final class PublicationSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Error downloading (403)")
     }
     
-    func testReDownload() {
+    func testReDownload() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
 
         var epub = PublicationModel()
 
@@ -284,6 +287,6 @@ final class PublicationSummaryViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Delete")
         XCTAssertFalse(repository.checkFileExists(id: epub.s3Key ?? ""))
 
-        BookmarkHelper().verifyBookmarkButton(bookmarkable: epub)
+        try BookmarkHelper().verifyBookmarkButton(bookmarkable: epub)
     }
 }

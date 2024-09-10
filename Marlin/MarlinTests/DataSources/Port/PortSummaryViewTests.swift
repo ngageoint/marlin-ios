@@ -13,7 +13,8 @@ import SwiftUI
 
 final class PortSummaryViewTests: XCTestCase {
     
-    func testLoading() {
+    func testLoading() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var port = PortModel(portNumber: 760)
             port.portName = "Aasiaat"
             port.regionNumber = 54
@@ -179,7 +180,7 @@ final class PortSummaryViewTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        BookmarkHelper().verifyBookmarkButton(bookmarkable: port)
+        try BookmarkHelper().verifyBookmarkButton(bookmarkable: port)
 
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
@@ -188,7 +189,8 @@ final class PortSummaryViewTests: XCTestCase {
         tester().tapScreen(at: CGPoint(x:20, y:20))
     }
     
-    func testShowMoreDetails() {
+    func testShowMoreDetails() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var port = PortModel(portNumber: 760)
         port.portName = "Aasiaat"
         port.regionNumber = 54
@@ -329,7 +331,7 @@ final class PortSummaryViewTests: XCTestCase {
 
         tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
         
-        BookmarkHelper().verifyBookmarkButton(bookmarkable: port)
+        try BookmarkHelper().verifyBookmarkButton(bookmarkable: port)
     }
 
 }

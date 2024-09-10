@@ -54,7 +54,8 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Upload Time: \(ntm.uploadTime!.formatted(date: .complete, time: .omitted))")
     }
     
-    func testSummary() {
+    func testSummary() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var ntm = NoticeToMarinersModel()
 
         ntm.publicationIdentifier = 41791
@@ -93,10 +94,11 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "202247")
         tester().waitForView(withAccessibilityLabel: "November 19 - November 25")
         
-        BookmarkHelper().verifyBookmarkButton(bookmarkable: ntm)
+        try BookmarkHelper().verifyBookmarkButton(bookmarkable: ntm)
     }
     
-    func testReDownloadFullPublication() {
+    func testReDownloadFullPublication() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var ntm = NoticeToMarinersModel()
 
         ntm.publicationIdentifier = 41791
@@ -171,7 +173,8 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         XCTAssertFalse(repository.checkFileExists(odsEntryId: ntm.odsEntryId ?? -1))
     }
     
-    func testDownloadFullPublication() {
+    func testDownloadFullPublication() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var ntm = NoticeToMarinersModel()
 
         ntm.publicationIdentifier = 41791

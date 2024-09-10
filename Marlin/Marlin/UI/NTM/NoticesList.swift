@@ -83,24 +83,23 @@ struct NoticesList: View {
                                 .sectionHeader()
 
                         case .week(let noticeNumber):
-                            NavigationLink(
-                                value: NoticeToMarinersRoute.fullView(noticeNumber: noticeNumber),
-                                label: {
-                                    HStack {
-                                        VStack(alignment: .leading, spacing: 8) {
-                                            Text(verbatim: "\(noticeNumber)")
-                                            Text(dateRange(sectionInt: noticeNumber))
-                                                .secondary()
-                                        }
-                                        Spacer()
-                                    }
-                                    .onAppear {
-                                        if rows.last == noticeItem {
-                                            viewModel.loadMore()
-                                        }
-                                    }
+                            HStack {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(verbatim: "\(noticeNumber)")
+                                    Text(dateRange(sectionInt: noticeNumber))
+                                        .secondary()
                                 }
-                            )
+                                Spacer()
+                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                router.path.append(NoticeToMarinersRoute.fullView(noticeNumber: noticeNumber))
+                            }
+                            .onAppear {
+                                if rows.last == noticeItem {
+                                    viewModel.loadMore()
+                                }
+                            }
                         }
                     }
                     .listStyle(.plain)

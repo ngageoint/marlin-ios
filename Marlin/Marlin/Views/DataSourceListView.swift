@@ -17,8 +17,9 @@ struct DataSourceNavView: View {
         NavigationStack(path: $router.path) {
             DataSourceListView(dataSource: dataSource, focusedItem: focusedItem)
                 .marlinRoutes()
-                .environmentObject(router)
+                
         }
+        .environmentObject(router)
     }
 }
 
@@ -26,7 +27,7 @@ struct DataSourceListView: View {
     var dataSource: DataSourceItem
     @ObservedObject var focusedItem: ItemWrapper
     var watchFocusedItem: Bool = false
-    @EnvironmentObject var router: MarlinRouter
+//    @EnvironmentObject var router: MarlinRouter
 
     var body: some View {
         if dataSource.key == DataSources.asam.key {
