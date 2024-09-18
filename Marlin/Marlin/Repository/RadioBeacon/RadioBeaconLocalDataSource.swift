@@ -314,9 +314,9 @@ class RadioBeaconCoreDataDataSource: CoreDataDataSource, RadioBeaconLocalDataSou
         NSLog("Received \(count) \(DataSources.radioBeacon.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = RadioBeaconDataLoadOperation(radioBeacons: radioBeacons)
+        let operation = RadioBeaconDataLoadOperation(radioBeacons: radioBeacons)
 
-        return await executeOperationInBackground(task: task)
+        return await executeOperationInBackground(operation: operation)
     }
 
     func batchImport(from propertiesList: [RadioBeaconModel]) async throws -> Int {

@@ -7,11 +7,11 @@
 
 import Foundation
 
-class LightDataFetchOperation: DataFetchOperation<LightModel> {
+class LightDataFetchOperation: DataFetchOperation<LightModel>, @unchecked Sendable {
 
-    var volume: String
-    var noticeYear: String?
-    var noticeWeek: String?
+    let volume: String
+    let noticeYear: String?
+    let noticeWeek: String?
 
     init(volume: String, noticeYear: String? = nil, noticeWeek: String? = nil) {
         self.volume = volume

@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class RaconImage: UIImage {
+class RaconImage: UIImage, @unchecked Sendable {
 
     convenience init?(
         frame: CGRect,

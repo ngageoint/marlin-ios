@@ -19,9 +19,23 @@ extension InjectedValues {
     }
 }
 
-class LightRemoteDataSource: RemoteDataSource<LightModel> {
+class LightRemoteDataSource: RemoteDataSource {
+    typealias DataModel = LightModel
+    
+    let _backgroundFetchQueue: OperationQueue
+    
     init() {
-        super.init(dataSource: DataSources.light)
+        self._backgroundFetchQueue = OperationQueue()
+        self._backgroundFetchQueue.maxConcurrentOperationCount = 1
+        self._backgroundFetchQueue.name = "\(DataSources.light.name) fetch queue"
+    }
+    
+    func dataSource() -> any DataSourceDefinition {
+        DataSources.light
+    }
+    
+    func backgroundFetchQueue() -> OperationQueue {
+        _backgroundFetchQueue
     }
 
     func fetch(
@@ -31,6 +45,6 @@ class LightRemoteDataSource: RemoteDataSource<LightModel> {
         noticeWeek: String? = nil
     ) async -> [LightModel] {
         let operation = LightDataFetchOperation(volume: volume, noticeYear: noticeYear, noticeWeek: noticeWeek)
-        return await fetch(task: task, operation: operation)
+        return await fetch(operation: operation)
     }
 }

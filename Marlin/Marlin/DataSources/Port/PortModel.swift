@@ -94,7 +94,7 @@ struct PortModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
     }
     var canBookmark: Bool = false
     
-    var port: Port?
+//    var port: Port?
     
     var alternateName: String?
     var anchorageDepth: Int?
@@ -210,7 +210,7 @@ struct PortModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
     var globalId: String?
 
     func isEqualTo(_ other: PortModel) -> Bool {
-        return self.port == other.port
+        return self.id == other.id
     }
     
     static func == (lhs: PortModel, rhs: PortModel) -> Bool {
@@ -534,7 +534,7 @@ struct PortModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
     // disable this data model has a lot of properties
     // swiftlint:disable function_body_length
     init(port: Port) {
-        self.port = port
+//        self.port = port
         self.canBookmark = true
         self.alternateName = port.alternateName
         self.anchorageDepth = Int(port.anchorageDepth)

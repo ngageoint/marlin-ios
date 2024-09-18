@@ -8,12 +8,13 @@
 import Foundation
 import CoreData
 
-class BookmarkModel: NSObject {
-    var dataSource: String?
-    var id: String?
-    var notes: String?
-    var timestamp: Date?
-    var itemKey: String?
+final class BookmarkModel: NSObject, Sendable {
+    let dataSource: String?
+    let id: String?
+    let notes: String?
+    let timestamp: Date?
+    let itemKey: String?
+    let uri: URL?
 
     func isEqualTo(_ other: BookmarkModel) -> Bool {
         guard let otherShape = other as? Self else { return false }
@@ -28,6 +29,7 @@ class BookmarkModel: NSObject {
     }
 
     init(bookmark: Bookmark) {
+        self.uri = bookmark.objectID.uriRepresentation()
         self.dataSource = bookmark.dataSource
         self.id = bookmark.id
         self.itemKey = bookmark.itemKey
@@ -41,5 +43,6 @@ class BookmarkModel: NSObject {
         self.notes = notes
         self.timestamp = timestamp
         self.itemKey = itemKey
+        self.uri = nil
     }
 }

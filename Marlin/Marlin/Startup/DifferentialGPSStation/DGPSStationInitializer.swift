@@ -15,11 +15,11 @@ import Foundation
         super.init(dataSource: DataSources.dgps)
     }
 
-    override func createOperation() -> Operation {
+    override func createOperation() async -> Operation {
         repository.createOperation()
     }
 
-    override func fetch() {
+    override func fetch() async {
         if repository.getCount(filters: nil) == 0 {
             let initialDataLoadOperation = DGPSStationInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {

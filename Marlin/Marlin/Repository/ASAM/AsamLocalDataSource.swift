@@ -22,7 +22,7 @@ extension InjectedValues {
     }
 }
 
-protocol AsamLocalDataSource {
+protocol AsamLocalDataSource: Sendable {
     func getNewestAsam() -> AsamModel?
     @discardableResult
     func getAsam(reference: String?) -> AsamModel?
@@ -52,13 +52,10 @@ struct AsamModelPage {
     var currentHeader: String?
 }
 
-class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, ObservableObject {
-    private lazy var context: NSManagedObjectContext = {
-        PersistenceController.current.newTaskContext()
-    }()
-
+final class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, ObservableObject, Sendable {
     func getNewestAsam() -> AsamModel? {
         var asam: AsamModel?
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let newestAsam = try? PersistenceController.current.fetchFirst(
                 Asam.self,
@@ -76,6 +73,7 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
 
     func getAsam(reference: String?) -> AsamModel? {
         var model: AsamModel?
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let reference = reference {
                 if let asam = context.fetchFirst(Asam.self, key: "reference", value: reference) {
@@ -126,6 +124,7 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
     func getAsams(
         filters: [DataSourceFilterParameter]?
     ) async -> [AsamModel] {
+        let context = PersistenceController.current.newTaskContext()
         return await context.perform {
             let fetchRequest = Asam.fetchRequest()
             let predicates: [NSPredicate] = self.buildPredicates(filters: filters)
@@ -136,7 +135,7 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
             fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.asam.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
-            return (self.context.fetch(request: fetchRequest)?.map { asam in
+            return (context.fetch(request: fetchRequest)?.map { asam in
                 AsamModel(asam: asam)
             }) ?? []
         }
@@ -154,6 +153,7 @@ class AsamCoreDataDataSource: CoreDataDataSource, AsamLocalDataSource, Observabl
         })
 
         var count = 0
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             count = (try? context.count(for: fetchRequest)) ?? 0
         }
@@ -195,6 +195,7 @@ extension AsamCoreDataDataSource {
         })
         var previousHeader: String? = currentHeader
         var asams: [AsamItem] = []
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let fetched = context.fetch(request: request) {
 
@@ -320,9 +321,9 @@ extension AsamCoreDataDataSource {
         NSLog("Received \(count) \(DataSources.asam.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = AsamDataLoadOperation(asams: asams)
+        let operation = AsamDataLoadOperation(asams: asams)
 
-        return await executeOperationInBackground(task: task)
+        return await executeOperationInBackground(operation: operation)
     }
 
     func batchImport(from propertiesList: [AsamModel]) async throws -> Int {

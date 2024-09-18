@@ -7,10 +7,10 @@
 
 import Foundation
 
-class DGPSStationDataFetchOperation: DataFetchOperation<DGPSStationModel> {
+class DGPSStationDataFetchOperation: DataFetchOperation<DGPSStationModel>, @unchecked Sendable {
 
-    var noticeYear: String?
-    var noticeWeek: String?
+    let noticeYear: String?
+    let noticeWeek: String?
 
     init(noticeYear: String? = nil, noticeWeek: String? = nil) {
         self.noticeYear = noticeYear

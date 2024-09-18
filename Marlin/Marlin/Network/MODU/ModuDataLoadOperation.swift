@@ -8,8 +8,8 @@
 import Foundation
 import Kingfisher
 
-class ModuDataLoadOperation: CountingDataLoadOperation {
-    var modus: [ModuModel] = []
+class ModuDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
+    let modus: [ModuModel]
     @Injected(\.moduLocalDataSource)
     var localDataSource: ModuLocalDataSource
 
@@ -17,7 +17,8 @@ class ModuDataLoadOperation: CountingDataLoadOperation {
         self.modus = modus
     }
 
-    @MainActor override func finishLoad() {
+    @MainActor
+    override func finishLoad() {
         Kingfisher.ImageCache(name: DataSources.modu.key).clearCache()
         self.state = .isFinished
 

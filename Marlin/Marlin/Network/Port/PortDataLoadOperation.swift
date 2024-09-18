@@ -8,9 +8,9 @@
 import Foundation
 import Kingfisher
 
-class PortDataLoadOperation: CountingDataLoadOperation {
+class PortDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
 
-    var ports: [PortModel] = []
+    let ports: [PortModel]
     @Injected(\.portLocalDataSource)
     private var localDataSource: PortLocalDataSource
 
@@ -18,7 +18,8 @@ class PortDataLoadOperation: CountingDataLoadOperation {
         self.ports = ports
     }
 
-    @MainActor override func finishLoad() {
+    @MainActor
+    override func finishLoad() {
         Kingfisher.ImageCache(name: DataSources.port.key).clearCache()
         self.state = .isFinished
 
@@ -32,7 +33,7 @@ class PortDataLoadOperation: CountingDataLoadOperation {
             }
         }
     }
-
+    
     override func loadData() async {
         if self.isCancelled {
             return

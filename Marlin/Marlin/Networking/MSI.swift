@@ -22,7 +22,6 @@ public class MSI {
     var navigationalWarningInitializer: NavigationalWarningInitializer?
     var noticeToMarinersInitializer: NoticeToMarinersInitializer?
 
-    // swiftlint:disable function_parameter_count
     func addRepositories(
         routeRepository: RouteRepository
     ) {
@@ -36,7 +35,6 @@ public class MSI {
         noticeToMarinersInitializer = NoticeToMarinersInitializer()
         registerBackgroundHandler()
     }
-    // swiftlint:enable function_parameter_count
 
     var loading: Bool {
         for dataSource in DataSourceDefinitions.allCases 
@@ -94,7 +92,9 @@ public class MSI {
             appState.dsBatchImportNotificationsPending = [:]
             scheduleAppRefresh()
         case .active:
-            MSI.shared.loadAllData()
+            Task {
+                await MSI.shared.loadAllData()
+            }
         default:
             break
         }
@@ -111,7 +111,7 @@ public class MSI {
         noticeToMarinersInitializer?.scheduleRefresh()
     }
     
-    func loadAllData() {
+    func loadAllData() async {
         // if there was a previous load, and it was less than 5 minutes ago just chill
         if let loadAllDataTime = loadAllDataTime, loadAllDataTime.timeIntervalSince(Date()) < (5 * 60) {
             NSLog("Already loaded data within the last 5 minutes.  Let's not")
@@ -120,14 +120,14 @@ public class MSI {
         loadAllDataTime = Date()
         NSLog("Load all data")
         
-        moduInitializer?.fetch()
-        portInitializer?.fetch()
-        lightInitializer?.fetch()
-        radioBeaconInitializer?.fetch()
-        differentialGPSStationInitializer?.fetch()
-        publicationInitializer?.fetch()
-        navigationalWarningInitializer?.fetch()
-        noticeToMarinersInitializer?.fetch()
+        await moduInitializer?.fetch()
+        await portInitializer?.fetch()
+        await lightInitializer?.fetch()
+        await radioBeaconInitializer?.fetch()
+        await differentialGPSStationInitializer?.fetch()
+        await publicationInitializer?.fetch()
+        await navigationalWarningInitializer?.fetch()
+        await noticeToMarinersInitializer?.fetch()
     }
     
     @objc func managedObjectContextObjectChangedObserver(notification: Notification) {
@@ -152,7 +152,9 @@ public class MSI {
                     if allLoaded {
                         UserDefaults.standard.initialDataLoaded = true
                         self.loadAllDataTime = nil
-                        self.loadAllData()
+                        Task {
+                            await self.loadAllData()
+                        }
                     }
                 }
             }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PublicationDataFetchOperation: DataFetchOperation<PublicationModel> {
+class PublicationDataFetchOperation: DataFetchOperation<PublicationModel>, @unchecked Sendable {
 
     override func fetchData() async -> [PublicationModel] {
         if self.isCancelled || !DataSources.epub.shouldSync() {

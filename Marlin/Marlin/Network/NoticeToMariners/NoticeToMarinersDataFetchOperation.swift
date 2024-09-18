@@ -7,9 +7,9 @@
 
 import Foundation
 
-class NoticeToMarinersDataFetchOperation: DataFetchOperation<NoticeToMarinersModel> {
+class NoticeToMarinersDataFetchOperation: DataFetchOperation<NoticeToMarinersModel>, @unchecked Sendable {
 
-    var noticeNumber: Int?
+    let noticeNumber: Int?
 
     init(noticeNumber: Int? = nil) {
         self.noticeNumber = noticeNumber

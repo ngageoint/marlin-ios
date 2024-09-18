@@ -119,7 +119,7 @@ class LightCoreDataDataSource:
         }
     }
 
-    override func boundsPredicate(
+    func boundsPredicate(
         minLatitude: Double,
         maxLatitude: Double,
         minLongitude: Double,

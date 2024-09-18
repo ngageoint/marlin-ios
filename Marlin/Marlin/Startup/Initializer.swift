@@ -16,11 +16,11 @@ class Initializer {
         self.dataSource = dataSource
     }
 
-    func createOperation() -> Operation {
+    func createOperation() async -> Operation {
         fatalError("must be overridden")
     }
 
-    func fetch() {
+    func fetch() async {
         fatalError("must be overridden")
     }
 
@@ -41,16 +41,18 @@ class Initializer {
             forTaskWithIdentifier: taskId,
             using: nil
         ) { [weak self] task in
-            self?.fetchPeriodically(task: task)
+            Task {
+                await self?.fetchPeriodically(task: task)
+            }
         }
     }
 
-    func fetchPeriodically(task: BGTask) {
+    func fetchPeriodically(task: BGTask) async {
         print("\(dataSource.name) background fetch")
         scheduleRefresh()
 
         // Create an operation that performs the main part of the background task.
-        let operation = createOperation()
+        let operation = await createOperation()
 
         // Provide the background task with an expiration handler that cancels the operation.
         task.expirationHandler = {

@@ -20,14 +20,27 @@ extension InjectedValues {
     }
 }
 
-class AsamRemoteDataSource: RemoteDataSource<AsamModel> {
-
+final class AsamRemoteDataSource: RemoteDataSource, Sendable {
+    typealias DataModel = AsamModel
+    
+    let _backgroundFetchQueue: OperationQueue
+    
     init() {
-        super.init(dataSource: DataSources.asam)
+        self._backgroundFetchQueue = OperationQueue()
+        self._backgroundFetchQueue.maxConcurrentOperationCount = 1
+        self._backgroundFetchQueue.name = "\(DataSources.asam.name) fetch queue"
+    }
+    
+    func dataSource() -> any DataSourceDefinition {
+        DataSources.asam
+    }
+    
+    func backgroundFetchQueue() -> OperationQueue {
+        _backgroundFetchQueue
     }
 
-    func fetch(task: BGTask? = nil, dateString: String? = nil) async -> [AsamModel] {
+    func fetch(dateString: String? = nil) async -> [AsamModel] {
         let operation = AsamDataFetchOperation(dateString: dateString)
-        return await fetch(task: task, operation: operation)
+        return await fetch(operation: operation)
     }
 }

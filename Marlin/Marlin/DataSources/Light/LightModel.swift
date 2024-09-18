@@ -100,7 +100,8 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible, Ha
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
-    var light: Light?
+    var uri: URL?
+//    var light: Light?
 
     private enum CodingKeys: String, CodingKey {
         case volumeNumber
@@ -198,7 +199,8 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible, Ha
     }
 
     init(light: Light) {
-        self.light = light
+//        self.light = light
+        self.uri = light.objectID.uriRepresentation()
         self.canBookmark = true
         self.aidType = light.aidType
         self.characteristic = light.characteristic
@@ -412,7 +414,7 @@ struct LightModel: Locatable, Bookmarkable, Codable, CustomStringConvertible, Ha
     }
     
     func isEqualTo(_ other: LightModel) -> Bool {
-        return self.light == other.light
+        return self.uri == other.uri
     }
     
     static func == (lhs: LightModel, rhs: LightModel) -> Bool {

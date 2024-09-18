@@ -336,7 +336,7 @@ class LightImage: DataSourceImage {
     }
 }
 
-class LightColorImage: UIImage {
+class LightColorImage: UIImage, @unchecked Sendable {
     
     convenience init?(
         frame: CGRect,

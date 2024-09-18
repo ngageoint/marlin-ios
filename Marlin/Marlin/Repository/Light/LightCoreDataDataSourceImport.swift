@@ -20,9 +20,9 @@ extension LightCoreDataDataSource {
         NSLog("Received \(count) \(DataSources.light.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = LightDataLoadOperation(lights: lights)
+        let operation = LightDataLoadOperation(lights: lights)
 
-        return await executeOperationInBackground(task: task)
+        return await executeOperationInBackground(operation: operation)
     }
 
     func batchImport(from propertiesList: [ModelType]) async throws -> Int {

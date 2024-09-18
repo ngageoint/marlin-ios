@@ -26,8 +26,11 @@ class AsamViewModel: ObservableObject, Identifiable {
             asam = routeWaypointRepository?.getAsam(waypointURI: waypointURI)
             return asam
         } else {
-            asam = repository.getAsam(reference: reference)
-            return asam
+            Task {
+                asam = await repository.getAsam(reference: reference)
+                return asam
+            }
         }
+        return nil
     }
 }

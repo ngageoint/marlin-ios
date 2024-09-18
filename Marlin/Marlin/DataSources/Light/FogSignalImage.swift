@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class FogSignalImage: UIImage {
+class FogSignalImage: UIImage, @unchecked Sendable {
 
     class func drawArcLines(
         center: CGPoint,

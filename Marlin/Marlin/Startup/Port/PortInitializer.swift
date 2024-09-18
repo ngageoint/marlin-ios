@@ -17,11 +17,11 @@ class PortInitializer: Initializer {
         super.init(dataSource: DataSources.port)
     }
 
-    override func createOperation() -> Operation {
+    override func createOperation() async -> Operation {
         PortDataFetchOperation()
     }
 
-    override func fetch() {
+    override func fetch() async {
         if repository.getCount(filters: nil) == 0 {
             let initialDataLoadOperation = PortInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {

@@ -8,22 +8,24 @@
 import Foundation
 import Kingfisher
 
-class ModuInitialDataLoadOperation: CountingDataLoadOperation {
+class ModuInitialDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
     @Injected(\.moduLocalDataSource)
     var localDataSource: ModuLocalDataSource
-    var bundle: Bundle
+    let bundle: Bundle
 
     init(bundle: Bundle = .main) {
         self.bundle = bundle
     }
 
-    @MainActor override func startLoad() {
+    @MainActor
+    override func startLoad() {
         MSI.shared.appState.loadingDataSource[DataSources.modu.key] = true
 
         NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.modu))
     }
 
-    @MainActor override func finishLoad() {
+    @MainActor
+    override func finishLoad() {
         Kingfisher.ImageCache(name: DataSources.modu.key).clearCache()
         self.state = .isFinished
         MSI.shared.appState.loadingDataSource[DataSources.modu.key] = false

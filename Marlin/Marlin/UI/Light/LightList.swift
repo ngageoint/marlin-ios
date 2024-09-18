@@ -60,7 +60,12 @@ struct LightList: View {
                                 }
                                 .onTapGesture {
                                     if let volumeNumber = light.volumeNumber, let featureNumber = light.featureNumber {
-                                        router.path.append(LightRoute.detail(volumeNumber: volumeNumber, featureNumber: featureNumber))
+                                        router.path.append(
+                                            LightRoute.detail(
+                                                volumeNumber: volumeNumber,
+                                                featureNumber: featureNumber
+                                            )
+                                        )
                                     }
                                 }
                                 .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))

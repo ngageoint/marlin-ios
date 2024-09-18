@@ -75,11 +75,11 @@ class BookmarkRepository: ObservableObject {
         localDataSource.bookmarks(filters: filters, paginatedBy: paginator)
     }
 
-    func getDataSourceItem(itemKey: String, dataSource: String) -> (any Bookmarkable)? {
+    func getDataSourceItem(itemKey: String, dataSource: String) async -> (any Bookmarkable)? {
         let split = itemKey.split(separator: "--")
         switch dataSource {
         case DataSources.asam.key:
-            return asamRepository.getAsam(reference: itemKey)
+            return await asamRepository.getAsam(reference: itemKey)
         case DataSources.modu.key:
             return moduRepository.getModu(name: itemKey)
         case DataSources.port.key:

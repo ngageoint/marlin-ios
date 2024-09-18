@@ -8,9 +8,9 @@
 import Foundation
 import Kingfisher
 
-class AsamDataLoadOperation: CountingDataLoadOperation {
+class AsamDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
 
-    var asams: [AsamModel] = []
+    let asams: [AsamModel]
     @Injected(\.asamLocalDataSource)
     var localDataSource: AsamLocalDataSource
 
@@ -18,7 +18,8 @@ class AsamDataLoadOperation: CountingDataLoadOperation {
         self.asams = asams
     }
 
-    @MainActor override func finishLoad() {
+    @MainActor
+    override func finishLoad() {
         Kingfisher.ImageCache(name: DataSources.asam.key).clearCache()
         self.state = .isFinished
 

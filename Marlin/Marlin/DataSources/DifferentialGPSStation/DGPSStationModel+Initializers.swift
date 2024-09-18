@@ -14,7 +14,7 @@ import CoreLocation
 extension DGPSStationModel {
     init(differentialGPSStation: DifferentialGPSStation) {
         self.canBookmark = true
-        self.differentialGPSStation = differentialGPSStation
+//        self.differentialGPSStation = differentialGPSStation
         self.aidType = differentialGPSStation.aidType
         self.deleteFlag = differentialGPSStation.deleteFlag
         self.featureNumber = Int(differentialGPSStation.featureNumber)

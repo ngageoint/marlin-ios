@@ -331,9 +331,9 @@ extension DGPSStationCoreDataDataSource {
         NSLog("Received \(count) \(DataSources.dgps.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = DGPSStationDataLoadOperation(dgpss: dgpss)
+        let operation = DGPSStationDataLoadOperation(dgpss: dgpss)
 
-        return await executeOperationInBackground(task: task)
+        return await executeOperationInBackground(operation: operation)
     }
 
     func batchImport(from propertiesList: [DGPSStationModel]) async throws -> Int {

@@ -7,9 +7,9 @@
 
 import Foundation
 
-class NavigationalWarningDataFetchOperation: DataFetchOperation<NavigationalWarningModel> {
+class NavigationalWarningDataFetchOperation: DataFetchOperation<NavigationalWarningModel>, @unchecked Sendable {
 
-    var dateString: String?
+    let dateString: String?
 
     init(dateString: String? = nil) {
         self.dateString = dateString

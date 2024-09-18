@@ -49,7 +49,7 @@ class BookmarkViewModel: ObservableObject {
         guard let itemKey = itemKey, let dataSource = dataSource else {
             return
         }
-        repository.removeBookmark(itemKey: itemKey, dataSource: dataSource)
+        _ = repository.removeBookmark(itemKey: itemKey, dataSource: dataSource)
         Task {
             await updateBookmarked()
         }

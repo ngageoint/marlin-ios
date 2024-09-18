@@ -8,9 +8,9 @@
 import Foundation
 import CoreData
 
-class PublicationDataLoadOperation: CountingDataLoadOperation {
+class PublicationDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
 
-    var epubs: [PublicationModel] = []
+    let epubs: [PublicationModel]
     @Injected(\.publicationLocalDataSource)
     var localDataSource: PublicationLocalDataSource
 

@@ -7,22 +7,24 @@
 
 import Foundation
 
-class PublicationInitialDataLoadOperation: CountingDataLoadOperation {
+class PublicationInitialDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
     @Injected(\.publicationLocalDataSource)
     var localDataSource: PublicationLocalDataSource
-    var bundle: Bundle
+    let bundle: Bundle
 
     init(bundle: Bundle = .main) {
         self.bundle = bundle
     }
 
-    @MainActor override func startLoad() {
+    @MainActor
+    override func startLoad() {
         MSI.shared.appState.loadingDataSource[DataSources.epub.key] = true
 
         NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.epub))
     }
-
-    @MainActor override func finishLoad() {
+    
+    @MainActor
+    override func finishLoad() {
         self.state = .isFinished
         MSI.shared.appState.loadingDataSource[DataSources.epub.key] = false
         NotificationCenter.default.post(

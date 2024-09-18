@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import BackgroundTasks
+import UIKit
 
 enum DataLoadOperationState: String {
     case isReady
@@ -13,7 +15,18 @@ enum DataLoadOperationState: String {
     case isFinished
 }
 
-class CountingDataLoadOperation: Operation {
+// actor BackgroundOperationRunner {
+//    var operations: [UIBackgroundTaskIdentifier: Operation] = [:]
+//    
+//    func run(name: String) {
+//        var backgroundTask = UIApplication.shared.beginBackgroundTask(withName: name) { @Sendable [weak self] in
+//        operations.append(operation)
+//        operation.start()
+//    }
+// }
+
+// @MainActor
+class CountingDataLoadOperation: Operation, @unchecked Sendable {
     var count: Int = 0
 
     var state: DataLoadOperationState = .isReady {
@@ -44,7 +57,8 @@ class CountingDataLoadOperation: Operation {
         }
     }
 
-    @MainActor func finishLoad() {
+    @MainActor
+    func finishLoad() {
         self.state = .isFinished
     }
 
@@ -52,5 +66,6 @@ class CountingDataLoadOperation: Operation {
         fatalError("Load data should be implemented in sub class")
     }
 
-    @MainActor func startLoad() { }
+    @MainActor
+    func startLoad() { }
 }

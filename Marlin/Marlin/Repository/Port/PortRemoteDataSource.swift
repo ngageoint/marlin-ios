@@ -20,15 +20,29 @@ extension InjectedValues {
     }
 }
 
-class PortRemoteDataSource: RemoteDataSource<PortModel> {
+class PortRemoteDataSource: RemoteDataSource {
+    typealias DataModel = PortModel
+    
+    let _backgroundFetchQueue: OperationQueue
+    
     init() {
-        super.init(dataSource: DataSources.port)
+        self._backgroundFetchQueue = OperationQueue()
+        self._backgroundFetchQueue.maxConcurrentOperationCount = 1
+        self._backgroundFetchQueue.name = "\(DataSources.port.name) fetch queue"
+    }
+    
+    func dataSource() -> any DataSourceDefinition {
+        DataSources.port
+    }
+    
+    func backgroundFetchQueue() -> OperationQueue {
+        _backgroundFetchQueue
     }
 
     func fetch(
         task: BGTask? = nil
     ) async -> [PortModel] {
         let operation = PortDataFetchOperation()
-        return await fetch(task: task, operation: operation)
+        return await fetch(operation: operation)
     }
 }

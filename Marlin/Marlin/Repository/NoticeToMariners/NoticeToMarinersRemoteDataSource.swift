@@ -20,11 +20,25 @@ extension InjectedValues {
     }
 }
 
-class NoticeToMarinersRemoteDataSource: RemoteDataSource<NoticeToMarinersModel> {
+class NoticeToMarinersRemoteDataSource: RemoteDataSource {
     var downloads: [String: DownloadManager] = [:]
 
+    typealias DataModel = NoticeToMarinersModel
+    
+    let _backgroundFetchQueue: OperationQueue
+    
     init() {
-        super.init(dataSource: DataSources.noticeToMariners)
+        self._backgroundFetchQueue = OperationQueue()
+        self._backgroundFetchQueue.maxConcurrentOperationCount = 1
+        self._backgroundFetchQueue.name = "\(DataSources.noticeToMariners.name) fetch queue"
+    }
+    
+    func dataSource() -> any DataSourceDefinition {
+        DataSources.noticeToMariners
+    }
+    
+    func backgroundFetchQueue() -> OperationQueue {
+        _backgroundFetchQueue
     }
 
     func fetch(
@@ -32,7 +46,7 @@ class NoticeToMarinersRemoteDataSource: RemoteDataSource<NoticeToMarinersModel> 
         noticeNumber: Int? = nil
     ) async -> [NoticeToMarinersModel] {
         let operation = NoticeToMarinersDataFetchOperation(noticeNumber: noticeNumber)
-        return await fetch(task: task, operation: operation)
+        return await fetch(operation: operation)
     }
 
     func downloadFile(model: NoticeToMarinersModel, subject: PassthroughSubject<DownloadProgress, Never>) {

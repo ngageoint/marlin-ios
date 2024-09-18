@@ -184,7 +184,9 @@ struct MarlinApp: App {
 
         persistentStoreLoadedPub.sink { _ in
             NSLog("Persistent store loaded, load all data")
-            MSI.shared.loadAllData()
+            Task {
+                await MSI.shared.loadAllData()
+            }
         }
         .store(in: &cancellable)
     }

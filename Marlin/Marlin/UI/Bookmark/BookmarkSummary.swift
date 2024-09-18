@@ -114,7 +114,7 @@ struct BookmarkSummary: DataSourceSummaryView {
         }
         .task {
             if let itemKey = bookmark?.itemKey, let bookmarkDataSource = bookmark?.dataSource {
-                dataSource = bookmarkRepository.getDataSourceItem(
+                dataSource = await bookmarkRepository.getDataSourceItem(
                     itemKey: itemKey,
                     dataSource: bookmarkDataSource
                 )

@@ -26,7 +26,7 @@ struct ImageSector: CustomStringConvertible {
     }
 }
 
-class CircleImage: UIImage {
+class CircleImage: UIImage, @unchecked Sendable {
     // just have this draw the text at an offset fom the middle
     // based on the passed in image or maybe just a passed in size
     convenience init?(imageSize: CGSize, sideText: String, fontSize: CGFloat) {

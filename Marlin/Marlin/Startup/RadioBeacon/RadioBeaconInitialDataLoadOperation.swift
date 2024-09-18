@@ -8,16 +8,17 @@
 import Foundation
 import Kingfisher
 
-class RadioBeaconInitialDataLoadOperation: CountingDataLoadOperation {
+class RadioBeaconInitialDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
     @Injected(\.radioBeaconLocalDataSource)
     private var localDataSource: RadioBeaconLocalDataSource
-    var bundle: Bundle
+    let bundle: Bundle
 
     init(bundle: Bundle = .main) {
         self.bundle = bundle
     }
 
-    @MainActor override func startLoad() {
+    @MainActor
+    override func startLoad() {
         MSI.shared.appState.loadingDataSource[DataSources.radioBeacon.key] = true
 
         NotificationCenter.default.post(
@@ -26,7 +27,8 @@ class RadioBeaconInitialDataLoadOperation: CountingDataLoadOperation {
         )
     }
 
-    @MainActor override func finishLoad() {
+    @MainActor
+    override func finishLoad() {
         Kingfisher.ImageCache(name: DataSources.radioBeacon.key).clearCache()
         self.state = .isFinished
         MSI.shared.appState.loadingDataSource[DataSources.radioBeacon.key] = false

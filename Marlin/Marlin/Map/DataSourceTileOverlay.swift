@@ -12,9 +12,9 @@ import Kingfisher
 import sf_proj_ios
 import sf_ios
 
-class MapBoundingBox: Codable, ObservableObject {
-    @Published var swCorner: (x: Double, y: Double)
-    @Published var neCorner: (x: Double, y: Double)
+struct MapBoundingBox: Codable {
+    let swCorner: (x: Double, y: Double)
+    let neCorner: (x: Double, y: Double)
     
     enum CodingKeys: String, CodingKey {
         case swCornerX
@@ -28,7 +28,7 @@ class MapBoundingBox: Codable, ObservableObject {
         self.neCorner = neCorner
     }
     
-    required init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let swCornerX = try values.decode(Double.self, forKey: .swCornerX)
         let swCornerY = try values.decode(Double.self, forKey: .swCornerY)

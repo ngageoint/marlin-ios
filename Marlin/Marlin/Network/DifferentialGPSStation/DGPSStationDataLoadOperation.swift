@@ -8,9 +8,9 @@
 import Foundation
 import Kingfisher
 
-class DGPSStationDataLoadOperation: CountingDataLoadOperation {
+class DGPSStationDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
 
-    var dgpss: [DGPSStationModel] = []
+    let dgpss: [DGPSStationModel]
     @Injected(\.dgpsLocalDataSource)
     var localDataSource: DGPSStationLocalDataSource
 
@@ -18,7 +18,8 @@ class DGPSStationDataLoadOperation: CountingDataLoadOperation {
         self.dgpss = dgpss
     }
 
-    @MainActor override func finishLoad() {
+    @MainActor
+    override func finishLoad() {
         Kingfisher.ImageCache(name: DataSources.dgps.key).clearCache()
         self.state = .isFinished
 

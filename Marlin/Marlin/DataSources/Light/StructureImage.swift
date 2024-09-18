@@ -16,7 +16,7 @@ enum StructureType {
     case unknown
 }
 
-class StructureImage: UIImage {
+class StructureImage: UIImage, @unchecked Sendable {
     
     static let unknownBouyColor = 0x5587978B
     

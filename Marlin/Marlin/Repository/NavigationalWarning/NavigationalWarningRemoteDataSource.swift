@@ -19,15 +19,29 @@ extension InjectedValues {
     }
 }
 
-class NavigationalWarningRemoteDataSource: RemoteDataSource<NavigationalWarningModel> {
+class NavigationalWarningRemoteDataSource: RemoteDataSource {
+    typealias DataModel = NavigationalWarningModel
+    
+    let _backgroundFetchQueue: OperationQueue
+    
     init() {
-        super.init(dataSource: DataSources.navWarning)
+        self._backgroundFetchQueue = OperationQueue()
+        self._backgroundFetchQueue.maxConcurrentOperationCount = 1
+        self._backgroundFetchQueue.name = "\(DataSources.navWarning.name) fetch queue"
+    }
+    
+    func dataSource() -> any DataSourceDefinition {
+        DataSources.navWarning
+    }
+    
+    func backgroundFetchQueue() -> OperationQueue {
+        _backgroundFetchQueue
     }
 
     func fetch(
         task: BGTask? = nil
     ) async -> [NavigationalWarningModel] {
         let operation = NavigationalWarningDataFetchOperation()
-        return await fetch(task: task, operation: operation)
+        return await fetch(operation: operation)
     }
 }

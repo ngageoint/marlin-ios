@@ -7,22 +7,24 @@
 
 import Foundation
 
-class LightInitialDataLoadOperation: CountingDataLoadOperation {
+class LightInitialDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
     @Injected(\.lightLocalDataSource)
     var localDataSource: LightLocalDataSource
-    var bundle: Bundle
+    let bundle: Bundle
 
     init(bundle: Bundle = .main) {
         self.bundle = bundle
     }
 
-    @MainActor override func startLoad() {
+    @MainActor
+    override func startLoad() {
         MSI.shared.appState.loadingDataSource[DataSources.light.key] = true
 
         NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.light))
     }
 
-    @MainActor override func finishLoad() {
+    @MainActor
+    override func finishLoad() {
         Task {
             NotificationCenter.default.post(
                 name: .DataSourceLoaded,

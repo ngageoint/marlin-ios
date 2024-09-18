@@ -15,13 +15,11 @@ class NavigationalWarningInitializer: Initializer {
         super.init(dataSource: DataSources.navWarning)
     }
 
-    override func createOperation() -> Operation {
+    override func createOperation() async -> Operation {
         repository.createOperation()
     }
 
-    override func fetch() {
-        Task {
-            await self.repository.fetch()
-        }
+    override func fetch() async {
+        _ = await self.repository.fetch()
     }
 }

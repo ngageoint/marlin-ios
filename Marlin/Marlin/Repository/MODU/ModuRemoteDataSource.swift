@@ -20,13 +20,27 @@ extension InjectedValues {
     }
 }
 
-class ModuRemoteDataSource: RemoteDataSource<ModuModel> {
+class ModuRemoteDataSource: RemoteDataSource {
+    typealias DataModel = ModuModel
+    
+    let _backgroundFetchQueue: OperationQueue
+    
     init() {
-        super.init(dataSource: DataSources.modu)
+        self._backgroundFetchQueue = OperationQueue()
+        self._backgroundFetchQueue.maxConcurrentOperationCount = 1
+        self._backgroundFetchQueue.name = "\(DataSources.modu.name) fetch queue"
+    }
+    
+    func dataSource() -> any DataSourceDefinition {
+        DataSources.modu
+    }
+    
+    func backgroundFetchQueue() -> OperationQueue {
+        _backgroundFetchQueue
     }
 
     func fetch(task: BGTask? = nil, dateString: String? = nil) async -> [ModuModel] {
         let operation = ModuDataFetchOperation(dateString: dateString)
-        return await fetch(task: task, operation: operation)
+        return await fetch(operation: operation)
     }
 }

@@ -8,9 +8,9 @@
 import Foundation
 import Kingfisher
 
-class LightDataLoadOperation: CountingDataLoadOperation {
+class LightDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
 
-    var lights: [LightModel] = []
+    let lights: [LightModel]
     @Injected(\.lightLocalDataSource)
     var localDataSource: LightLocalDataSource
 
@@ -18,7 +18,8 @@ class LightDataLoadOperation: CountingDataLoadOperation {
         self.lights = lights
     }
 
-    @MainActor override func finishLoad() {
+    @MainActor
+    override func finishLoad() {
         if count != 0 {
             Task {
                 await localDataSource.postProcess()

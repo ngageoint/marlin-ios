@@ -7,11 +7,11 @@
 
 import Foundation
 
-class RadioBeaconDataFetchOperation: DataFetchOperation<RadioBeaconModel> {
+class RadioBeaconDataFetchOperation: DataFetchOperation<RadioBeaconModel>, @unchecked Sendable {
 
     var radioBeacons: [RadioBeaconModel] = []
-    var noticeYear: String?
-    var noticeWeek: String?
+    let noticeYear: String?
+    let noticeWeek: String?
 
     init(noticeYear: String? = nil, noticeWeek: String? = nil) {
         self.noticeYear = noticeYear

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PortDataFetchOperation: DataFetchOperation<PortModel> {
+class PortDataFetchOperation: DataFetchOperation<PortModel>, @unchecked Sendable {
 
     override func fetchData() async -> [PortModel] {
         if self.isCancelled || !DataSources.port.shouldSync() {

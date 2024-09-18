@@ -8,7 +8,7 @@
 import Foundation
 import Kingfisher
 
-class RadioBeaconDataLoadOperation: CountingDataLoadOperation {
+class RadioBeaconDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
 
     var radioBeacons: [RadioBeaconModel] = []
     @Injected(\.radioBeaconLocalDataSource)
@@ -18,7 +18,8 @@ class RadioBeaconDataLoadOperation: CountingDataLoadOperation {
         self.radioBeacons = radioBeacons
     }
 
-    @MainActor override func finishLoad() {
+    @MainActor
+    override func finishLoad() {
         Kingfisher.ImageCache(name: DataSources.radioBeacon.key).clearCache()
         self.state = .isFinished
 

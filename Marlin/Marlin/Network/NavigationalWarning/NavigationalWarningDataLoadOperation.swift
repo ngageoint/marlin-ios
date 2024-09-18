@@ -8,7 +8,7 @@
 import Foundation
 import Kingfisher
 
-class NavigationalWarningDataLoadOperation: CountingDataLoadOperation {
+class NavigationalWarningDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
 
     var navigationalWarnings: [NavigationalWarningModel] = []
     @Injected(\.navWarningLocalDataSource)
@@ -18,7 +18,8 @@ class NavigationalWarningDataLoadOperation: CountingDataLoadOperation {
         self.navigationalWarnings = navigationalWarnings
     }
 
-    @MainActor override func finishLoad() {
+    @MainActor
+    override func finishLoad() {
         if count != 0 {
             Task {
                 await localDataSource.postProcess()

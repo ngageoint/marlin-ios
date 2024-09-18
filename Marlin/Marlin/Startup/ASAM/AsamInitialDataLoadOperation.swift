@@ -8,22 +8,24 @@
 import Foundation
 import Kingfisher
 
-class AsamInitialDataLoadOperation: CountingDataLoadOperation {
+class AsamInitialDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
     @Injected(\.asamLocalDataSource)
     var localDataSource: AsamLocalDataSource
-    var bundle: Bundle
+    let bundle: Bundle
     
     init(bundle: Bundle = .main) {
         self.bundle = bundle
     }
     
-    @MainActor override func startLoad() {
+    @MainActor
+    override func startLoad() {
         MSI.shared.appState.loadingDataSource[DataSources.asam.key] = true
 
         NotificationCenter.default.post(name: .DataSourceLoading, object: DataSourceItem(dataSource: DataSources.asam))
     }
     
-    @MainActor override func finishLoad() {
+    @MainActor
+    override func finishLoad() {
         Kingfisher.ImageCache(name: DataSources.asam.key).clearCache()
         self.state = .isFinished
         

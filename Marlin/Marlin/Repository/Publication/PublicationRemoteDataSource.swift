@@ -20,17 +20,35 @@ extension InjectedValues {
     }
 }
 
-class PublicationRemoteDataSource: RemoteDataSource<PublicationModel> {
+class PublicationRemoteDataSource: RemoteDataSource {
     var downloads: [String: DownloadManager] = [:]
+    
+    typealias DataModel = PublicationModel
+    
+    let _backgroundFetchQueue: OperationQueue
+    
     init() {
-        super.init(dataSource: DataSources.epub)
+        self._backgroundFetchQueue = OperationQueue()
+        self._backgroundFetchQueue.maxConcurrentOperationCount = 1
+        self._backgroundFetchQueue.name = "\(DataSources.epub.name) fetch queue"
     }
+    
+    func dataSource() -> any DataSourceDefinition {
+        DataSources.epub
+    }
+    
+    func backgroundFetchQueue() -> OperationQueue {
+        _backgroundFetchQueue
+    }
+//    init() {
+//        super.init(dataSource: DataSources.epub)
+//    }
 
     func fetch(
         task: BGTask? = nil
     ) async -> [PublicationModel] {
         let operation = PublicationDataFetchOperation()
-        return await fetch(task: task, operation: operation)
+        return await fetch(operation: operation)
     }
 
     func downloadFile(model: PublicationModel, subject: PassthroughSubject<DownloadProgress, Never>) {

@@ -16,11 +16,11 @@ class RadioBeaconInitializer: Initializer {
         super.init(dataSource: DataSources.radioBeacon)
     }
 
-    override func createOperation() -> Operation {
+    override func createOperation() async -> Operation {
         repository.createOperation()
     }
 
-    override func fetch() {
+    override func fetch() async {
         if repository.getCount(filters: nil) == 0 {
             let initialDataLoadOperation = RadioBeaconInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {

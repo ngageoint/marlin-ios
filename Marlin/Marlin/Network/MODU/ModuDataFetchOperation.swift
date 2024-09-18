@@ -7,9 +7,9 @@
 
 import Foundation
 
-class ModuDataFetchOperation: DataFetchOperation<ModuModel> {
+class ModuDataFetchOperation: DataFetchOperation<ModuModel>, @unchecked Sendable {
 
-    var dateString: String?
+    let dateString: String?
 
     init(dateString: String? = nil) {
         self.dateString = dateString

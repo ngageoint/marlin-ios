@@ -16,19 +16,6 @@ public protocol InjectionKey {
     static var currentValue: Self.Value { get set }
 }
 
-/**
- private struct NetworkProviderKey: InjectionKey {
-     static var currentValue: NetworkProviding = NetworkProvider()
- }
- 
- extension InjectedValues {
-     var networkProvider: NetworkProviding {
-         get { Self[NetworkProviderKey.self] }
-         set { Self[NetworkProviderKey.self] = newValue }
-     }
- }
- */
-
 // Provides access to injected dependencies.
 struct InjectedValues {
     

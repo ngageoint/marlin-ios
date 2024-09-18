@@ -74,7 +74,7 @@ class AsamsViewModel: ObservableObject {
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in
-            repository.asams(
+            await repository.asams(
                 filters: UserDefaults.standard.filter(DataSources.asam),
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )

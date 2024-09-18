@@ -504,9 +504,9 @@ extension PublicationCoreDataDataSource {
         NSLog("Received \(count) \(DataSources.epub.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = PublicationDataLoadOperation(epubs: epubs)
+        let operation = PublicationDataLoadOperation(epubs: epubs)
 
-        return await executeOperationInBackground(task: task)
+        return await executeOperationInBackground(operation: operation)
     }
 
     func batchImport(from propertiesList: [PublicationModel]) async throws -> Int {

@@ -11,34 +11,23 @@ import BackgroundTasks
 import CoreData
 import Combine
 
-class CoreDataDataSource {
+protocol CoreDataDataSource {
     typealias Page = Int
     
-    var backgroundTask: UIBackgroundTaskIdentifier = .invalid
-    var cleanup: (() -> Void)?
-    var operation: CountingDataLoadOperation?
-
-    func registerBackgroundTask(name: String) {
-        NSLog("Register the background task \(name)")
-        backgroundTask = UIApplication.shared.beginBackgroundTask(withName: name) { [weak self] in
-            NSLog("iOS has signaled time has expired \(name)")
-            self?.cleanup?()
-            print("canceling \(name)")
-            self?.operation?.cancel()
-            print("calling endBackgroundTask \(name)")
-            self?.endBackgroundTaskIfActive()
-        }
-    }
-
-    func endBackgroundTaskIfActive() {
-        let isBackgroundTaskActive = backgroundTask != .invalid
-        if isBackgroundTaskActive {
-            NSLog("Background task ended. \(NSStringFromClass(type(of: self))) Load")
-            UIApplication.shared.endBackgroundTask(backgroundTask)
-            backgroundTask = .invalid
-        }
-    }
-
+    func publisher<T: NSManagedObject>(for managedObject: T,
+                                       in context: NSManagedObjectContext
+    ) -> AnyPublisher<T, Never>
+    func executeOperationInBackground(operation: CountingDataLoadOperation) async -> Int
+    func buildPredicates(filters: [DataSourceFilterParameter]?) -> [NSPredicate]
+    func boundsPredicate(
+        minLatitude: Double,
+        maxLatitude: Double,
+        minLongitude: Double,
+        maxLongitude: Double
+    ) -> NSPredicate
+}
+ 
+extension CoreDataDataSource {
     func publisher<T: NSManagedObject>(for managedObject: T,
                                        in context: NSManagedObjectContext
     ) -> AnyPublisher<T, Never> {
@@ -57,28 +46,14 @@ class CoreDataDataSource {
             .eraseToAnyPublisher()
     }
 
-    func executeOperationInBackground(task: BGTask? = nil) async -> Int {
-        if let task = task {
-            registerBackgroundTask(name: task.identifier)
-            guard backgroundTask != .invalid else { return 0 }
-        }
-
-        // Provide the background task with an expiration handler that cancels the operation.
-        task?.expirationHandler = {
-            self.operation?.cancel()
-        }
-
-        // Start the operation.
-        if let operation = operation {
-            MSI.shared.backgroundLoadQueue.addOperation(operation)
-        }
+    func executeOperationInBackground(operation: CountingDataLoadOperation) async -> Int {
+        MSI.shared.backgroundLoadQueue.addOperation(operation)
 
         return await withCheckedContinuation { continuation in
             // Inform the system that the background task is complete
             // when the operation completes.
-            operation?.completionBlock = {
-                task?.setTaskCompleted(success: !(self.operation?.isCancelled ?? false))
-                continuation.resume(returning: self.operation?.count ?? 0)
+            operation.completionBlock = {
+                continuation.resume(returning: operation.count)
             }
         }
     }

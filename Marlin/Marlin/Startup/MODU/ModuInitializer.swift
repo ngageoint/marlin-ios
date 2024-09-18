@@ -16,11 +16,11 @@ class ModuInitializer: Initializer {
         super.init(dataSource: DataSources.modu)
     }
 
-    override func createOperation() -> Operation {
+    override func createOperation() async -> Operation {
         ModuDataFetchOperation()
     }
 
-    override func fetch() {
+    override func fetch() async {
         if repository.getCount(filters: nil) == 0 {
             let initialDataLoadOperation = ModuInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {

@@ -162,9 +162,9 @@ class LightMapViewModel: NSObject {
     
     var range: String?
     
-    static var key: String = "LightViewModel"
+    static let key: String = "LightViewModel"
     
-    static var cacheTiles: Bool = false
+    @MainActor static var cacheTiles: Bool = false
     
     var coordinate: CLLocationCoordinate2D
     

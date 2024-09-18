@@ -13,7 +13,7 @@ enum DataFetchOperationState: String {
     case isFinished
 }
 
-class DataFetchOperation<DataModel>: Operation {
+class DataFetchOperation<DataModel>: Operation, @unchecked Sendable {
 
     var data: [DataModel] = []
 

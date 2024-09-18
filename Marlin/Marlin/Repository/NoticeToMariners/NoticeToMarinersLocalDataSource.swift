@@ -503,9 +503,9 @@ extension NoticeToMarinersCoreDataDataSource {
         NSLog("Received \(count) \(DataSources.noticeToMariners.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = NoticeToMarinersDataLoadOperation(noticeToMariners: noticeToMariners, localDataSource: self)
+        let operation = NoticeToMarinersDataLoadOperation(noticeToMariners: noticeToMariners)
 
-        return await executeOperationInBackground(task: task)
+        return await executeOperationInBackground(operation: operation)
     }
 
     func batchImport(from propertiesList: [ModelType]) async throws -> Int {

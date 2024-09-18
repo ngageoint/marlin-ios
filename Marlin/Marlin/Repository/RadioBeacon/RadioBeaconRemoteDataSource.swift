@@ -19,9 +19,23 @@ extension InjectedValues {
     }
 }
 
-class RadioBeaconRemoteDataSource: RemoteDataSource<RadioBeaconModel> {
+class RadioBeaconRemoteDataSource: RemoteDataSource {
+    typealias DataModel = RadioBeaconModel
+    
+    let _backgroundFetchQueue: OperationQueue
+    
     init() {
-        super.init(dataSource: DataSources.radioBeacon)
+        self._backgroundFetchQueue = OperationQueue()
+        self._backgroundFetchQueue.maxConcurrentOperationCount = 1
+        self._backgroundFetchQueue.name = "\(DataSources.radioBeacon.name) fetch queue"
+    }
+    
+    func dataSource() -> any DataSourceDefinition {
+        DataSources.radioBeacon
+    }
+    
+    func backgroundFetchQueue() -> OperationQueue {
+        _backgroundFetchQueue
     }
 
     func fetch(
@@ -30,6 +44,6 @@ class RadioBeaconRemoteDataSource: RemoteDataSource<RadioBeaconModel> {
         noticeWeek: String? = nil
     ) async -> [RadioBeaconModel] {
         let operation = RadioBeaconDataFetchOperation(noticeYear: noticeYear, noticeWeek: noticeWeek)
-        return await fetch(task: task, operation: operation)
+        return await fetch(operation: operation)
     }
 }

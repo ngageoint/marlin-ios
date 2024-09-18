@@ -18,7 +18,7 @@ extension Array where Element == DataSourceFilterParameter {
     }
 }
 
-struct DataSourceFilterParameter: Identifiable, Hashable, Codable {
+struct DataSourceFilterParameter: Identifiable, Hashable, Codable, Sendable {
     static func == (lhs: DataSourceFilterParameter, rhs: DataSourceFilterParameter) -> Bool {
         return lhs.id == rhs.id
     }

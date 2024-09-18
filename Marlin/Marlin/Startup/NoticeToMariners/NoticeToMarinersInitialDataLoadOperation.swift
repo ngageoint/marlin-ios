@@ -7,16 +7,17 @@
 
 import Foundation
 
-class NoticeToMarinersInitialDataLoadOperation: CountingDataLoadOperation {
+class NoticeToMarinersInitialDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
     @Injected(\.ntmLocalDataSource)
     private var localDataSource: NoticeToMarinersLocalDataSource
-    var bundle: Bundle
+    let bundle: Bundle
 
     init(bundle: Bundle = .main) {
         self.bundle = bundle
     }
 
-    @MainActor override func startLoad() {
+    @MainActor
+    override func startLoad() {
         MSI.shared.appState.loadingDataSource[DataSources.noticeToMariners.key] = true
 
         NotificationCenter.default.post(
@@ -25,7 +26,8 @@ class NoticeToMarinersInitialDataLoadOperation: CountingDataLoadOperation {
         )
     }
 
-    @MainActor override func finishLoad() {
+    @MainActor
+    override func finishLoad() {
         self.state = .isFinished
         MSI.shared.appState.loadingDataSource[DataSources.noticeToMariners.key] = false
         NotificationCenter.default.post(

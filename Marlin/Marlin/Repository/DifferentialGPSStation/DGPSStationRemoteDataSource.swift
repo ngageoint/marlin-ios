@@ -19,9 +19,23 @@ extension InjectedValues {
     }
 }
 
-class DGPSStationRemoteDataSource: RemoteDataSource<DGPSStationModel> {
+class DGPSStationRemoteDataSource: RemoteDataSource {
+    typealias DataModel = DGPSStationModel
+    
+    let _backgroundFetchQueue: OperationQueue
+    
     init() {
-        super.init(dataSource: DataSources.dgps)
+        self._backgroundFetchQueue = OperationQueue()
+        self._backgroundFetchQueue.maxConcurrentOperationCount = 1
+        self._backgroundFetchQueue.name = "\(DataSources.dgps.name) fetch queue"
+    }
+    
+    func dataSource() -> any DataSourceDefinition {
+        DataSources.dgps
+    }
+    
+    func backgroundFetchQueue() -> OperationQueue {
+        _backgroundFetchQueue
     }
 
     func fetch(
@@ -30,6 +44,6 @@ class DGPSStationRemoteDataSource: RemoteDataSource<DGPSStationModel> {
         noticeWeek: String? = nil
     ) async -> [DGPSStationModel] {
         let operation = DGPSStationDataFetchOperation(noticeYear: noticeYear, noticeWeek: noticeWeek)
-        return await fetch(task: task, operation: operation)
+        return await fetch(operation: operation)
     }
 }

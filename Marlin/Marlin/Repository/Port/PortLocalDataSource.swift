@@ -296,9 +296,9 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
         NSLog("Received \(count) \(DataSources.port.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = PortDataLoadOperation(ports: ports)
+        let operation = PortDataLoadOperation(ports: ports)
 
-        return await executeOperationInBackground(task: task)
+        return await executeOperationInBackground(operation: operation)
     }
 
     func batchImport(from propertiesList: [PortModel]) async throws -> Int {

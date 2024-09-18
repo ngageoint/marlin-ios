@@ -91,7 +91,7 @@ struct DGPSStationModel:
         try? container.encode(volumeNumber, forKey: .volumeNumber)
     }
     
-    var differentialGPSStation: DifferentialGPSStation?
+//    var differentialGPSStation: DifferentialGPSStation?
     
     var aidType: String?
     var deleteFlag: String?

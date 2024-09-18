@@ -8,17 +8,19 @@
 import Foundation
 import Kingfisher
 
-class NoticeToMarinersDataLoadOperation: CountingDataLoadOperation {
+class NoticeToMarinersDataLoadOperation: CountingDataLoadOperation, @unchecked Sendable {
 
-    var noticeToMariners: [NoticeToMarinersModel] = []
+    let noticeToMariners: [NoticeToMarinersModel]
+    
+    @Injected(\.ntmLocalDataSource)
     var localDataSource: NoticeToMarinersLocalDataSource
 
-    init(noticeToMariners: [NoticeToMarinersModel], localDataSource: NoticeToMarinersLocalDataSource) {
+    init(noticeToMariners: [NoticeToMarinersModel]) {
         self.noticeToMariners = noticeToMariners
-        self.localDataSource = localDataSource
     }
 
-    @MainActor override func finishLoad() {
+    @MainActor
+    override func finishLoad() {
         Kingfisher.ImageCache(name: DataSources.noticeToMariners.key).clearCache()
         self.state = .isFinished
 

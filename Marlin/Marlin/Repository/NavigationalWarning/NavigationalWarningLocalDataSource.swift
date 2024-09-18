@@ -160,7 +160,7 @@ class NavigationalWarningCoreDataDataSource:
         }
     }
 
-    override func boundsPredicate(
+    func boundsPredicate(
         minLatitude: Double,
         maxLatitude: Double,
         minLongitude: Double,
@@ -414,11 +414,11 @@ extension NavigationalWarningCoreDataDataSource {
         NSLog("Received \(count) \(DataSources.navWarning.key) records.")
 
         // Create an operation that performs the main part of the background task.
-        operation = NavigationalWarningDataLoadOperation(
+        let operation = NavigationalWarningDataLoadOperation(
             navigationalWarnings: navigationalWarnings
         )
 
-        return await executeOperationInBackground(task: task)
+        return await executeOperationInBackground(operation: operation)
     }
 
     func batchImport(from propertiesList: [ModelType]) async throws -> Int {

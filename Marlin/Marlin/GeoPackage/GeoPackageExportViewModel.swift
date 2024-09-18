@@ -112,8 +112,10 @@ class GeoPackageExportViewModel: ObservableObject {
         countChangeCancellable = Publishers.CombineLatest3($dataSources, commonViewModel.$filters, publisher)
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
-                guard let self = self else { return }
-                self.updateCounts()
+                Task {
+                    guard let self = self else { return }
+                    await self.updateCounts()
+                }
             }
     }
 
@@ -130,26 +132,49 @@ class GeoPackageExportViewModel: ObservableObject {
         }
     }
 
-    func updateCounts() {
+    func updateCounts() async {
         NSLog("Update Counts commonFilters are \(self.commonViewModel.filters)")
-        self.counts = dataSources.reduce(into: [DataSourceDefinitions: Int]()) {
-
-            if let definition = DataSourceDefinitions.from($1) {
+        var temp: [DataSourceDefinitions: Int] = [:]
+        
+        for dataSource in dataSources {
+            if let definition = DataSourceDefinitions.from(dataSource) {
                 let filters = (self.filterViewModels[definition]?.filters ?? []) + self.commonViewModel.filters
 
                 switch definition {
-                case .route: $0[definition] = self.routeRepository?.getCount(filters: filters)
-                case .asam: $0[definition] = self.asamRepository.getCount(filters: filters)
-                case .modu: $0[definition] = self.moduRepository.getCount(filters: filters)
-                case .differentialGPSStation: $0[definition] = self.dgpsRepository.getCount(filters: filters)
-                case .port: $0[definition] = self.portRepository.getCount(filters: filters)
-                case .navWarning: $0[definition] = self.navigationalWarningRepository.getCount(filters: filters)
-                case .light: $0[definition] = self.lightRepository.getCount(filters: filters)
-                case .radioBeacon: $0[definition] = self.radioBeaconRepository.getCount(filters: filters)
+                case .route: temp[definition] = self.routeRepository?.getCount(filters: filters)
+                case .asam: temp[definition] = await self.asamRepository.getCount(filters: filters)
+                case .modu: temp[definition] = self.moduRepository.getCount(filters: filters)
+                case .differentialGPSStation: temp[definition] = self.dgpsRepository.getCount(filters: filters)
+                case .port: temp[definition] = self.portRepository.getCount(filters: filters)
+                case .navWarning: temp[definition] = self.navigationalWarningRepository.getCount(filters: filters)
+                case .light: temp[definition] = self.lightRepository.getCount(filters: filters)
+                case .radioBeacon: temp[definition] = self.radioBeaconRepository.getCount(filters: filters)
                 default: break
                 }
             }
         }
+        
+        self.counts = temp
+        
+//        self.counts = dataSources.reduce(into: [DataSourceDefinitions: Int]()) {
+//
+//            if let definition = DataSourceDefinitions.from($1) {
+//                let filters = (self.filterViewModels[definition]?.filters ?? []) + self.commonViewModel.filters
+//
+//                switch definition {
+//                case .route: temp[definition] = self.routeRepository?.getCount(filters: filters)
+//                case .asam: temp[definition] = await self.asamRepository.getCount(filters: filters)
+//                case .modu: temp[definition] = self.moduRepository.getCount(filters: filters)
+//                case .differentialGPSStation: temp[definition] = self.dgpsRepository.getCount(filters: filters)
+//                case .port: temp[definition] = self.portRepository.getCount(filters: filters)
+//                case .navWarning: temp[definition] = self.navigationalWarningRepository.getCount(filters: filters)
+//                case .light: temp[definition] = self.lightRepository.getCount(filters: filters)
+//                case .radioBeacon: temp[definition] = self.radioBeaconRepository.getCount(filters: filters)
+//                default: break
+//                }
+//            }
+//            return temp
+//        }
     }
 
     func toggleDataSource(definition: any DataSourceDefinition) {

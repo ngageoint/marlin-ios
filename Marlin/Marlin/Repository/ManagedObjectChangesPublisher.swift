@@ -63,7 +63,7 @@ extension Publishers {
             .switchToLatest()
             .eraseToAnyPublisher()
     }
-
+    
     static func PublishAndRepeat<S, P>(
         onOutputFrom signal: S,
         _ publisher: @escaping () -> P
@@ -76,6 +76,50 @@ extension Publishers {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
+    }
+    
+        static func PublishAndRepeat<S, P>(
+            onOutputFrom signal: S,
+            _ publisher: @escaping () async -> P
+        ) -> AnyPublisher<P.Output, P.Failure> where S: Publisher, P: Publisher, S.Failure == Never {
+            return signal
+                .map { _ in }
+                .prepend(())
+                .tryAwaitMap { _ in
+                    return await publisher()
+                }
+                .switchToLatest()
+                .eraseToAnyPublisher()
+        }
+}
+    
+    extension Publisher {
+      public func tryAwaitMap<T>(_ transform: @escaping (Self.Output) async -> T) -> Publishers.FlatMap<Future<T, Error>, Self> {
+        flatMap { value in
+          Future { promise in
+            Task {
+                let result = await transform(value)
+                promise(.success(result))
+            }
+          }
+        }
+      }
+      
+      public func tryAwaitMap<T>(_ transform: @escaping (Self.Output) async -> T) -> Publishers.FlatMap<Future<T, Never>, Publishers.SetFailureType<Self, Never>> {
+          flatMap { value in
+            Future { promise in
+              Task {
+//                do {
+                  let result = await transform(value)
+                  promise(.success(result))
+//                }
+//                catch {
+//                  promise(.failure(error))
+//                }
+              }
+            }
+          
+      }
     }
 }
 // swiftlint:enable identifier_name

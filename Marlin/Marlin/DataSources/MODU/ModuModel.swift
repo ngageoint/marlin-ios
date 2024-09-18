@@ -162,7 +162,7 @@ struct ModuModel: Locatable, Bookmarkable, Codable, GeoJSONExportable, CustomStr
     var specialStatus: String?
     var subregion: Int?
     
-    var bookmark: Bookmark?
+    var bookmark: BookmarkModel?
     
     func isEqualTo(_ other: ModuModel) -> Bool {
         return self.name == other.name

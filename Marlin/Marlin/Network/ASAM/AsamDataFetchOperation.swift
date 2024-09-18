@@ -7,9 +7,9 @@
 
 import Foundation
 
-class AsamDataFetchOperation: DataFetchOperation<AsamModel> {
+class AsamDataFetchOperation: DataFetchOperation<AsamModel>, @unchecked Sendable {
 
-    var dateString: String?
+    let dateString: String?
     
     init(dateString: String? = nil) {
         self.dateString = dateString

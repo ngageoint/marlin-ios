@@ -17,7 +17,7 @@ class LightInitializer: Initializer {
         super.init(dataSource: DataSources.light)
     }
 
-    override func fetchPeriodically(task: BGTask) {
+    override func fetchPeriodically(task: BGTask) async {
         print("\(dataSource.name) background fetch")
         scheduleRefresh()
 
@@ -42,7 +42,7 @@ class LightInitializer: Initializer {
         }
     }
 
-    override func fetch() {
+    override func fetch() async {
         if repository.getCount(filters: nil) == 0 {
             let initialDataLoadOperation = LightInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {
