@@ -30,7 +30,7 @@ struct MarlinView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @EnvironmentObject var dataSourceList: DataSourceList
     @EnvironmentObject var appState: AppState
-
+    
     @State var selection: String?
     @State var showBottomSheet: Bool = false
 
@@ -86,9 +86,6 @@ struct MarlinView: View {
                     MarlinRegularWidth(filterOpen: $filterOpen)
                 }
             }
-        }
-        .background {
-            MarlinDataBottomSheet()
         }
         .background {
             MappedDataSourcesFilter(showBottomSheet: $filterOpen)
