@@ -36,6 +36,9 @@ struct MarlinCompactWidth: View {
                         .accessibilityElement(children: .contain)
                         .accessibilityLabel("Marlin Map Tab")
                 }
+                .background {
+                    MarlinDataBottomSheet()
+                }
                 // this affects text buttons, image buttons need .foregroundColor set on them
                 .tint(Color.onPrimaryColor)
                 .navigationViewStyle(.stack)

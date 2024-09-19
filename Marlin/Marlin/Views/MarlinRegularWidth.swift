@@ -88,6 +88,9 @@ struct MarlinRegularWidth: View {
                     loadingCapsule()
                 }
             }
+            .background {
+                MarlinDataBottomSheet()
+            }
             .marlinRoutes()
             .modifier(CombinedSourcesFilterButton(
                 filterOpen: $filterOpen,
