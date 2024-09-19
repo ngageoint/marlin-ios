@@ -10,7 +10,7 @@ import geopackage_ios
 import ExceptionCatcher
 import sf_ios
 
-class LightGeoPackageExportable: GeoPackageExportable {
+actor LightGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.light
 
     @Injected(\.lightRepository)

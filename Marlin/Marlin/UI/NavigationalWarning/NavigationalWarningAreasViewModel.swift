@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+@MainActor
 class NavigationalWarningAreasViewModel: ObservableObject {
     @Published var warningAreas: [NavigationalAreaInformation] = []
     @Published var currentArea: NavigationalAreaInformation?
@@ -48,13 +49,11 @@ class NavigationalWarningAreasViewModel: ObservableObject {
 
     func populateWarningAreaInformation() async {
         let info = await repository.getNavAreasInformation()
-        await MainActor.run {
-            currentArea = info.first { area in
-                area.navArea.name == currentNavAreaName
-            }
-            warningAreas = info.filter({ area in
-                area.navArea.name != currentNavAreaName
-            })
+        currentArea = info.first { area in
+            area.navArea.name == currentNavAreaName
         }
+        warningAreas = info.filter({ area in
+            area.navArea.name != currentNavAreaName
+        })
     }
 }

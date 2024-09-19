@@ -69,7 +69,10 @@ struct NavigationalWarningSummaryView: DataSourceSummaryView {
             )
         }
         .task {
-            await bookmarkViewModel.getBookmark(itemKey: navigationalWarning.itemKey, dataSource: DataSources.navWarning.key)
+            await bookmarkViewModel.getBookmark(
+                itemKey: navigationalWarning.itemKey,
+                dataSource: DataSources.navWarning.key
+            )
         }
     }
 }

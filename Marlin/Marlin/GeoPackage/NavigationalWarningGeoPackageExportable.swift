@@ -10,7 +10,7 @@ import geopackage_ios
 import ExceptionCatcher
 import sf_ios
 
- class NavigationalWarningGeoPackageExportable: GeoPackageExportable {
+ actor NavigationalWarningGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.navWarning
 
      @Injected(\.navWarningRepository)

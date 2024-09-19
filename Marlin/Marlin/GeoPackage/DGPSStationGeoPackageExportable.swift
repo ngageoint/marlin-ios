@@ -10,7 +10,7 @@ import geopackage_ios
 import ExceptionCatcher
 import sf_ios
 
-class DGPSStationGeoPackageExportable: GeoPackageExportable {
+actor DGPSStationGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.dgps
 
     @Injected(\.dgpsRepository)

@@ -10,7 +10,7 @@ import geopackage_ios
 import ExceptionCatcher
 import sf_ios
 
-class RadioBeaconGeoPackageExportable: GeoPackageExportable {
+actor RadioBeaconGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.radioBeacon
 
     @Injected(\.radioBeaconRepository)

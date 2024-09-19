@@ -10,7 +10,7 @@ import geopackage_ios
 import ExceptionCatcher
 import sf_ios
 
-class ModuGeoPackageExportable: GeoPackageExportable {
+actor ModuGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.modu
 
     @Injected(\.moduRepository)

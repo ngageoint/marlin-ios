@@ -40,7 +40,7 @@ enum ModuActions {
 
     class Bookmark: Action {
         var itemKey: String
-        @ObservedObject var bookmarkViewModel: BookmarkViewModel
+        let bookmarkViewModel: BookmarkViewModel
 
         init(itemKey: String, bookmarkViewModel: BookmarkViewModel) {
             self.itemKey = itemKey
@@ -48,9 +48,8 @@ enum ModuActions {
         }
 
         func action() {
-//            withAnimation {
             Task {
-                if await bookmarkViewModel.isBookmarked {
+                if bookmarkViewModel.isBookmarked {
                     await bookmarkViewModel.removeBookmark()
                 } else {
                     await bookmarkViewModel.startBookmarkBottomSheet()

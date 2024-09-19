@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 struct BookmarkButton: View {
     var action: Actions.Bookmark
     

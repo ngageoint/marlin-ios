@@ -9,6 +9,7 @@ import Foundation
 import MapKit
 import SwiftUI
 
+@MainActor
 protocol Action {
     func action()
 }
@@ -34,7 +35,7 @@ enum Actions {
     }
 
     class Bookmark: Action {
-        var itemKey: String
+        let itemKey: String
         @ObservedObject var bookmarkViewModel: BookmarkViewModel
 
         init(itemKey: String, bookmarkViewModel: BookmarkViewModel) {
@@ -44,7 +45,7 @@ enum Actions {
 
         func action() {
             Task {
-                if await bookmarkViewModel.isBookmarked {
+                if bookmarkViewModel.isBookmarked {
                     await bookmarkViewModel.removeBookmark()
                 } else {
                     await bookmarkViewModel.startBookmarkBottomSheet()

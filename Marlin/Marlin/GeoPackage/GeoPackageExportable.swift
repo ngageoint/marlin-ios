@@ -39,7 +39,7 @@ extension DataSourcePropertyType {
     }
 }
 
-protocol GeoPackageExportable {
+protocol GeoPackageExportable: Actor {
     static var definition: any DataSourceDefinition { get }
     static var key: String { get }
     static var color: UIColor { get }

@@ -86,7 +86,7 @@ actor BookmarkRepository: ObservableObject {
             return await portRepository.getPort(portNumber: Int(itemKey))
         case DataSources.navWarning.key:
             if split.count == 3 {
-                return navigationalWarningRepository.getNavigationalWarning(
+                return await navigationalWarningRepository.getNavigationalWarning(
                     msgYear: Int(split[0]) ?? 0,
                     msgNumber: Int(split[1]) ?? 0,
                     navArea: "\(split[2])"

@@ -10,7 +10,7 @@ import geopackage_ios
 import ExceptionCatcher
 import sf_ios
 
-class PortGeoPackageExportable: GeoPackageExportable {
+actor PortGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.port
 
     @Injected(\.portRepository)

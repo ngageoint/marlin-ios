@@ -10,7 +10,7 @@ import geopackage_ios
 import ExceptionCatcher
 import sf_ios
 
-class AsamGeoPackageExportable: GeoPackageExportable {
+actor AsamGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.asam
 
     @Injected(\.asamRepository)

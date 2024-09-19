@@ -20,9 +20,9 @@ struct NavigationalWarningDetailView: View {
     var body: some View {
         switch viewModel.navWarning {
         case nil:
-            Color.clear.onAppear {
+            Color.clear.task {
                 viewModel.routeWaypointRepository = routeWaypointRepository
-                viewModel.getNavigationalWarning(
+                await viewModel.getNavigationalWarning(
                     msgYear: msgYear,
                     msgNumber: msgNumber,
                     navArea: navArea,

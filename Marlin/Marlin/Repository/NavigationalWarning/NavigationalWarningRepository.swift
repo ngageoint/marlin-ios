@@ -41,7 +41,7 @@ extension InjectedValues {
     }
 }
 
-class NavigationalWarningRepository: ObservableObject {
+actor NavigationalWarningRepository: ObservableObject {
     @Injected(\.navWarningLocalDataSource)
     var localDataSource: NavigationalWarningLocalDataSource
     @Injected(\.navWarningRemoteDataSource)

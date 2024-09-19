@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class PublicationsTypeIdListViewModel: ObservableObject {
     @Published var publications: [PublicationModel] = []
 
@@ -31,9 +32,7 @@ class PublicationsTypeIdListViewModel: ObservableObject {
     func fetchPublications() async {
         if let pubTypeId = pubTypeId {
             let fetched = await repository.getPublications(typeId: pubTypeId)
-            await MainActor.run {
-                publications = fetched
-            }
+            publications = fetched
         }
     }
 }

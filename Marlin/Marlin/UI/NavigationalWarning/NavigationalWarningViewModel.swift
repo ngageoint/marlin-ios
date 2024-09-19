@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class NavigationalWarningViewModel: ObservableObject, Identifiable {
     @Published var navWarning: NavigationalWarningModel?
 
@@ -24,12 +25,12 @@ class NavigationalWarningViewModel: ObservableObject, Identifiable {
         msgNumber: Int,
         navArea: String,
         waypointURI: URL? = nil
-    ) -> NavigationalWarningModel? {
+    ) async -> NavigationalWarningModel? {
         if let waypointURI = waypointURI {
             navWarning = routeWaypointRepository?.getNavigationalWarning(waypointURI: waypointURI)
             return navWarning
         } else {
-            navWarning = repository.getNavigationalWarning(
+            navWarning = await repository.getNavigationalWarning(
                 msgYear: Int(msgYear),
                 msgNumber: Int(msgNumber),
                 navArea: navArea

@@ -9,6 +9,7 @@ import Foundation
 import sf_proj_ios
 import Alamofire
 
+@MainActor
 class ChartCorrectionListViewModel: NSObject, ObservableObject {
     @Published var queryError: String?
     @Published var loading = false

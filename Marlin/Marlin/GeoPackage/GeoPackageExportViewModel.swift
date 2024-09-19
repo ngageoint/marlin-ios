@@ -11,17 +11,18 @@ import ExceptionCatcher
 import CoreData
 import Combine
 
-class DataSourceExportProgress: Identifiable, Hashable, Equatable, ObservableObject {
-    static func == (lhs: DataSourceExportProgress, rhs: DataSourceExportProgress) -> Bool {
+@MainActor
+class DataSourceExportProgress: Identifiable, Hashable, Equatable, ObservableObject, Sendable {
+    nonisolated static func == (lhs: DataSourceExportProgress, rhs: DataSourceExportProgress) -> Bool {
         return lhs.id == rhs.id
     }
 
-    func hash(into hasher: inout Hasher) {
+    nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 
-    var id: String { filterable.definition.key }
-    var filterable: Filterable
+    let id: String
+    let filterable: Filterable
     @Published var complete: Bool = false
     @Published var exporting: Bool = false
     @Published var totalCount: Float = 0.0
@@ -29,9 +30,11 @@ class DataSourceExportProgress: Identifiable, Hashable, Equatable, ObservableObj
 
     init(filterable: Filterable) {
         self.filterable = filterable
+        self.id = filterable.definition.key
     }
 }
 
+@MainActor
 class GeoPackageExportViewModel: ObservableObject {
     @Injected(\.asamRepository)
     var asamRepository: AsamRepository
@@ -146,7 +149,7 @@ class GeoPackageExportViewModel: ObservableObject {
                 case .modu: temp[definition] = await self.moduRepository.getCount(filters: filters)
                 case .differentialGPSStation: temp[definition] = await self.dgpsRepository.getCount(filters: filters)
                 case .port: temp[definition] = await self.portRepository.getCount(filters: filters)
-                case .navWarning: temp[definition] = self.navigationalWarningRepository.getCount(filters: filters)
+                case .navWarning: temp[definition] = await self.navigationalWarningRepository.getCount(filters: filters)
                 case .light: temp[definition] = await self.lightRepository.getCount(filters: filters)
                 case .radioBeacon: temp[definition] = self.radioBeaconRepository.getCount(filters: filters)
                 default: break
@@ -309,14 +312,14 @@ class GeoPackageExportViewModel: ObservableObject {
                 continue
             }
             do {
-                guard let table = try exportable.createTable(geoPackage: geoPackage),
+                guard let table = try await exportable.createTable(geoPackage: geoPackage),
                       let featureTableStyles = GPKGFeatureTableStyles(
                         geoPackage: geoPackage,
                         andTable: table
                       ) else {
                     continue
                 }
-                let styles = exportable.createStyles(tableStyles: featureTableStyles)
+                let styles = await exportable.createStyles(tableStyles: featureTableStyles)
 
                 await MainActor.run {
                     exportProgress.totalCount = Float(self.counts[definitions] ?? 0)

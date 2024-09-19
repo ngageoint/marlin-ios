@@ -6,6 +6,8 @@
 //
 
 import Foundation
+
+@MainActor
 class PublicationsCompleteVolumeListViewModel: ObservableObject {
     @Published var publications: [PublicationModel] = []
 
@@ -35,9 +37,7 @@ class PublicationsCompleteVolumeListViewModel: ObservableObject {
                 }).sorted {
                     ($0.pubDownloadOrder ?? -1) < ($1.pubDownloadOrder ?? -1)
                 }
-            await MainActor.run {
-                publications = fetched
-            }
+            publications = fetched
         }
     }
 }

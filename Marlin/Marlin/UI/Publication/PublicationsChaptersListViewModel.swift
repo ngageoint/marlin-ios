@@ -6,6 +6,8 @@
 //
 
 import Foundation
+
+@MainActor
 class PublicationsChaptersListViewModel: ObservableObject {
     @Published var publications: [PublicationModel] = []
     @Published var completeVolumes: [PublicationModel] = []
@@ -44,11 +46,9 @@ class PublicationsChaptersListViewModel: ObservableObject {
                 return ($0.sectionOrder ?? -1) < ($1.sectionOrder ?? -1)
             } ?? []
 
-            await MainActor.run {
-                publications = fetched
-                completeVolumes = fetchedCompleteVolumes
-                chapters = fetchedChapters
-            }
+            publications = fetched
+            completeVolumes = fetchedCompleteVolumes
+            chapters = fetchedChapters
         }
     }
 }

@@ -16,7 +16,7 @@ class NavigationalWarningInitializer: Initializer {
     }
 
     override func createOperation() async -> Operation {
-        repository.createOperation()
+        await repository.createOperation()
     }
 
     override func fetch() async {

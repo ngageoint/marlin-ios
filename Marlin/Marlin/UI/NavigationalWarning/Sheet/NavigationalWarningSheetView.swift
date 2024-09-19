@@ -26,11 +26,13 @@ struct NavigationalWarningSheetView: View {
         .onChange(of: itemKey) { newItemKey in
             let split = newItemKey.split(separator: "--")
             if split.count == 3 {
-                viewModel.getNavigationalWarning(
-                    msgYear: Int(split[0]) ?? -1,
-                    msgNumber: Int(split[1]) ?? -1,
-                    navArea: "\(split[2])"
-                )
+                Task {
+                    await viewModel.getNavigationalWarning(
+                        msgYear: Int(split[0]) ?? -1,
+                        msgNumber: Int(split[1]) ?? -1,
+                        navArea: "\(split[2])"
+                    )
+                }
             }
         }
         .onChange(of: viewModel.navWarning) { model in
@@ -42,10 +44,10 @@ struct NavigationalWarningSheetView: View {
                 )
             )
         }
-        .onAppear {
+        .task {
             let split = itemKey.split(separator: "--")
             if split.count == 3 {
-                viewModel.getNavigationalWarning(
+                await viewModel.getNavigationalWarning(
                     msgYear: Int(split[0]) ?? -1,
                     msgNumber: Int(split[1]) ?? -1,
                     navArea: "\(split[2])"

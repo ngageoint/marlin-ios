@@ -23,7 +23,7 @@ extension InjectedValues {
     }
 }
 
-protocol NavigationalWarningLocalDataSource {
+protocol NavigationalWarningLocalDataSource: Sendable {
 
     func getNavAreasInformation() async -> [NavigationalAreaInformation]
     func getNavigationalWarning(
@@ -55,18 +55,15 @@ protocol NavigationalWarningLocalDataSource {
     func postProcess() async
 }
 
-class NavigationalWarningCoreDataDataSource:
+final class NavigationalWarningCoreDataDataSource:
     CoreDataDataSource,
     NavigationalWarningLocalDataSource,
-    ObservableObject {
+    ObservableObject,
+    Sendable {
     typealias DataType = NavigationalWarning
     typealias ModelType = NavigationalWarningModel
     typealias Item = NavigationalWarningItem
-
-    private lazy var context: NSManagedObjectContext = {
-        PersistenceController.current.newTaskContext()
-    }()
-
+    
     func getNavAreasInformation() async -> [NavigationalAreaInformation] {
         let context = PersistenceController.current.newTaskContext()
         return await context.perform {
@@ -107,6 +104,7 @@ class NavigationalWarningCoreDataDataSource:
         msgNumber: Int,
         navArea: String?
     ) -> ModelType? {
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             if let navArea = navArea {
                 if let navigationalWarning = try? context.fetchFirst(
@@ -186,6 +184,7 @@ class NavigationalWarningCoreDataDataSource:
         })
 
         var count = 0
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             count = (try? context.count(for: fetchRequest)) ?? 0
         }
@@ -287,6 +286,7 @@ extension NavigationalWarningCoreDataDataSource {
         })
         var previousHeader: String? = currentHeader
         var list: [Item] = []
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let fetched = context.fetch(request: request) {
 

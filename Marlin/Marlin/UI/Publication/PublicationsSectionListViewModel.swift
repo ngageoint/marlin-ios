@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+@MainActor
 class PublicationsSectionListViewModel: ObservableObject {
     @Published var sections: [PublicationItem] = []
 
@@ -40,8 +41,6 @@ class PublicationsSectionListViewModel: ObservableObject {
 
     func fetchSections() async {
         let fetched = await repository.getSections()
-        await MainActor.run {
-            sections = fetched
-        }
+        sections = fetched
     }
 }

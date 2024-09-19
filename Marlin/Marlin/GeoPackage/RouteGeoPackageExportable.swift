@@ -10,7 +10,7 @@ import geopackage_ios
 import ExceptionCatcher
 import sf_ios
 
-class RouteGeoPackageExportable: GeoPackageExportable {
+actor RouteGeoPackageExportable: GeoPackageExportable {
     static var definition: any DataSourceDefinition = DataSources.route
 
     let routeRepository: RouteRepository
