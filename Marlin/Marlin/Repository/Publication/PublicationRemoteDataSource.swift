@@ -20,7 +20,7 @@ extension InjectedValues {
     }
 }
 
-class PublicationRemoteDataSource: RemoteDataSource {
+actor PublicationRemoteDataSource: RemoteDataSource {
     var downloads: [String: DownloadManager] = [:]
     
     typealias DataModel = PublicationModel

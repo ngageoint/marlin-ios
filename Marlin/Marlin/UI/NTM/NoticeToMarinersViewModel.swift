@@ -8,52 +8,63 @@
 import Foundation
 import Combine
 
+@MainActor
 class NoticeToMarinersViewModel: ObservableObject {
     @Injected(\.ntmRepository)
     private var repository: NoticeToMarinersRepository
     var odsEntryId: Int?
     var disposables = Set<AnyCancellable>()
     @Published var noticeToMariners: NoticeToMarinersModel?
+    
+    @Published var fileExists: Bool = false
 
-    func setupModel(odsEntryId: Int?) {
+    func setupModel(odsEntryId: Int?) async {
         self.odsEntryId = odsEntryId
         if let odsEntryId = odsEntryId {
-            noticeToMariners = repository.getNoticeToMariners(odsEntryId: odsEntryId)
-            repository.observeNoticeToMariners(odsEntryId: odsEntryId)?
+            noticeToMariners = await repository.getNoticeToMariners(odsEntryId: odsEntryId)
+            await repository.observeNoticeToMariners(odsEntryId: odsEntryId)?
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { updatedObject in
                     print("notice was updated with progress \(updatedObject.downloadProgress)")
                     self.noticeToMariners = updatedObject
+                    Task { [weak self] in
+                        await self?.checkFileExists()
+                    }
                 })
                 .store(in: &disposables)
         }
     }
 
-    func checkFileExists() -> Bool {
+    func checkFileExists() async -> Bool {
         guard let odsEntryId = odsEntryId else {
             return false
         }
-        return repository.checkFileExists(odsEntryId: odsEntryId)
+        if noticeToMariners?.isDownloaded ?? false {
+            fileExists = await repository.checkFileExists(odsEntryId: odsEntryId)
+        } else {
+            fileExists = false
+        }
+        return fileExists
     }
 
-    func deleteFile() {
+    func deleteFile() async {
         guard let odsEntryId = odsEntryId else {
             return
         }
-        repository.deleteFile(odsEntryId: odsEntryId)
+        await repository.deleteFile(odsEntryId: odsEntryId)
     }
 
-    func downloadFile() {
+    func downloadFile() async {
         guard let odsEntryId = odsEntryId else {
             return
         }
-        repository.downloadFile(odsEntryId: odsEntryId)
+        await repository.downloadFile(odsEntryId: odsEntryId)
     }
 
-    func cancelDownload() {
+    func cancelDownload() async {
         guard let odsEntryId = odsEntryId else {
             return
         }
-        repository.cancelDownload(odsEntryId: odsEntryId)
+        await repository.cancelDownload(odsEntryId: odsEntryId)
     }
 }

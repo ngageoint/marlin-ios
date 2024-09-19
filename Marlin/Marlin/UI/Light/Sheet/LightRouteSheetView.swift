@@ -37,7 +37,9 @@ struct LightRouteSheetView: View {
         .onChange(of: itemKey) { newItemKey in
             let split = newItemKey.split(separator: "--")
             if split.count == 3 {
-                viewModel.getLights(featureNumber: "\(split[0])", volumeNumber: "\(split[1])")
+                Task {
+                    await viewModel.getLights(featureNumber: "\(split[0])", volumeNumber: "\(split[1])")
+                }
             }
         }
         .onChange(of: viewModel.lights) { model in
@@ -49,10 +51,10 @@ struct LightRouteSheetView: View {
                 )
             )
         }
-        .onAppear {
+        .task {
             let split = itemKey.split(separator: "--")
             if split.count == 3 {
-                viewModel.getLights(featureNumber: "\(split[0])", volumeNumber: "\(split[1])")
+                await viewModel.getLights(featureNumber: "\(split[0])", volumeNumber: "\(split[1])")
             }
         }
     }

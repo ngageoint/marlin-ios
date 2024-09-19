@@ -19,7 +19,7 @@ extension InjectedValues {
     }
 }
 
-class NavigationalWarningRemoteDataSource: RemoteDataSource {
+actor NavigationalWarningRemoteDataSource: RemoteDataSource {
     typealias DataModel = NavigationalWarningModel
     
     let _backgroundFetchQueue: OperationQueue

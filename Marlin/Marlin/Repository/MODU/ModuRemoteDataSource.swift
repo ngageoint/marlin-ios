@@ -20,7 +20,7 @@ extension InjectedValues {
     }
 }
 
-class ModuRemoteDataSource: RemoteDataSource {
+actor ModuRemoteDataSource: RemoteDataSource {
     typealias DataModel = ModuModel
     
     let _backgroundFetchQueue: OperationQueue

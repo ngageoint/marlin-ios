@@ -74,7 +74,7 @@ class PortsViewModel: ObservableObject {
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in
-            repository.ports(
+            await repository.ports(
                 filters: UserDefaults.standard.filter(DataSources.port),
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )

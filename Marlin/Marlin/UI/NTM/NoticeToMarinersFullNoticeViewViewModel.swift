@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Alamofire
 
+@MainActor
 class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
     
     var noticeNumber: Int?
@@ -38,7 +39,9 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
             }
         }
         if let noticeNumber = noticeNumber {
-            getNotices(noticeNumber: noticeNumber)
+            Task {
+                await getNotices(noticeNumber: noticeNumber)
+            }
         }
     }
     
@@ -46,8 +49,8 @@ class NoticeToMarinersFullNoticeViewViewModel: ObservableObject {
     private var repository: NoticeToMarinersRepository
 
     @discardableResult
-    func getNotices(noticeNumber: Int) -> [NoticeToMarinersModel]? {
-        notices = repository.getNoticesToMariners(noticeNumber: noticeNumber) ?? []
+    func getNotices(noticeNumber: Int) async -> [NoticeToMarinersModel]? {
+        notices = await repository.getNoticesToMariners(noticeNumber: noticeNumber) ?? []
         return notices
     }
 

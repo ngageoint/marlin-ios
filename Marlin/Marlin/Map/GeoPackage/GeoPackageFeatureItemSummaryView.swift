@@ -48,8 +48,8 @@ struct GeoPackageFeatureItemSummaryView: DataSourceSummaryView {
                 )
             )
         }
-        .onAppear {
-            bookmarkViewModel.getBookmark(itemKey: featureItem.itemKey, dataSource: DataSources.geoPackage.key)
+        .task {
+            await bookmarkViewModel.getBookmark(itemKey: featureItem.itemKey, dataSource: DataSources.geoPackage.key)
         }
 
     }

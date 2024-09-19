@@ -36,11 +36,13 @@ struct PublicationActionBar: View {
                         Spacer()
                     }
                 }
-                if publication.isDownloaded == true, viewModel.checkFileExists(),
-                   let url = URL(string: publication.savePath) {
+                if viewModel.fileExists {
                     Button(
                         action: {
-                            NotificationCenter.default.post(name: .DocumentPreview, object: url)
+                            NotificationCenter.default.post(
+                                name: .DocumentPreview,
+                                object: URL(string: publication.savePath)
+                            )
                         },
                         label: {
                             Label(
@@ -56,7 +58,9 @@ struct PublicationActionBar: View {
 
                     Button(
                         action: {
-                            viewModel.deleteFile()
+                            Task {
+                                await viewModel.deleteFile()
+                            }
                         },
                         label: {
                             Label(
@@ -107,8 +111,8 @@ struct PublicationActionBar: View {
             }
             .padding(.trailing, -8)
             .buttonStyle(MaterialButtonStyle())
-            .onAppear {
-                bookmarkViewModel.getBookmark(
+            .task {
+                await bookmarkViewModel.getBookmark(
                     itemKey: publication.itemKey,
                     dataSource: publication.key
                 )

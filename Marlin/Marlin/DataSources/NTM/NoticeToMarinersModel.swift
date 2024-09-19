@@ -140,7 +140,7 @@ extension NoticeToMarinersListModel {
     }
 }
 
-struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable, Downloadable {
+struct NoticeToMarinersModel: Bookmarkable, Codable, Hashable, Identifiable, Downloadable, Sendable {
     var remoteLocation: URL? {
         guard let odsKey else {
             return nil

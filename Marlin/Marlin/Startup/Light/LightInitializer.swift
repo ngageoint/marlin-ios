@@ -21,7 +21,7 @@ class LightInitializer: Initializer {
         print("\(dataSource.name) background fetch")
         scheduleRefresh()
 
-        let operations = repository.createOperations()
+        let operations = await repository.createOperations()
 
         for operation in operations {
             // Inform the system that the background task is complete
@@ -43,7 +43,7 @@ class LightInitializer: Initializer {
     }
 
     override func fetch() async {
-        if repository.getCount(filters: nil) == 0 {
+        if await repository.getCount(filters: nil) == 0 {
             let initialDataLoadOperation = LightInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {
                 Task {
@@ -53,9 +53,7 @@ class LightInitializer: Initializer {
 
             backgroundFetchQueue.addOperation(initialDataLoadOperation)
         } else {
-            Task {
-                await self.repository.fetchLights()
-            }
+            _ = await self.repository.fetchLights()
         }
     }
 }

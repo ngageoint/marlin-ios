@@ -26,7 +26,9 @@ struct AsamSheetView: View {
             }
         }
         .onChange(of: itemKey) { newReference in
-            viewModel.getAsam(reference: newReference)
+            Task {
+                await viewModel.getAsam(reference: newReference)
+            }
         }
         .onChange(of: viewModel.asam) { model in
             NotificationCenter.default.post(
@@ -37,8 +39,8 @@ struct AsamSheetView: View {
                 )
             )
         }
-        .onAppear {
-            viewModel.getAsam(reference: itemKey)
+        .task {
+            await viewModel.getAsam(reference: itemKey)
         }
     }
 }

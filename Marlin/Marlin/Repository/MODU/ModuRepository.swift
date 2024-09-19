@@ -34,20 +34,12 @@ extension InjectedValues {
     }
 }
 
-class ModuRepository: ObservableObject {
+actor ModuRepository: ObservableObject {
     @Injected(\.moduLocalDataSource)
     var localDataSource: ModuLocalDataSource
     
     @Injected(\.moduRemoteDataSource)
     private var remoteDataSource: ModuRemoteDataSource
-
-//    init(
-//        localDataSource: ModuLocalDataSource,
-//        remoteDataSource: ModuRemoteDataSource
-//    ) {
-//        self.localDataSource = localDataSource
-//        self.remoteDataSource = remoteDataSource
-//    }
 
     func createOperation() -> ModuDataFetchOperation {
         let newestModu = localDataSource.getNewestModu()

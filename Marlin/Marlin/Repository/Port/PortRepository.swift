@@ -33,7 +33,7 @@ extension InjectedValues {
     }
 }
 
-class PortRepository: ObservableObject {
+actor PortRepository: ObservableObject {
     @Injected(\.portLocalDataSource)
     private var localDataSource: PortLocalDataSource
     @Injected(\.portRemoteDataSource)

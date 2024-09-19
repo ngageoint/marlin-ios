@@ -30,7 +30,9 @@ struct DGPSStationSheetView: View {
         .onChange(of: itemKey) { newItemKey in
             let split = newItemKey.split(separator: "--")
             if split.count == 2 {
-                viewModel.getDGPSStation(featureNumber: Int(split[0]) ?? -1, volumeNumber: "\(split[1])")
+                Task {
+                    await viewModel.getDGPSStation(featureNumber: Int(split[0]) ?? -1, volumeNumber: "\(split[1])")
+                }
             }
         }
         .onChange(of: viewModel.dgpsStation) { model in
@@ -45,7 +47,9 @@ struct DGPSStationSheetView: View {
         .onAppear {
             let split = itemKey.split(separator: "--")
             if split.count == 2 {
-                viewModel.getDGPSStation(featureNumber: Int(split[0]) ?? -1, volumeNumber: "\(split[1])")
+                Task {
+                    await viewModel.getDGPSStation(featureNumber: Int(split[0]) ?? -1, volumeNumber: "\(split[1])")
+                }
             }
         }
     }

@@ -64,8 +64,8 @@ struct DGPSStationSummaryView: DataSourceSummaryView {
                 share: dgpsStation.itemTitle
             )
         }
-        .onAppear {
-            bookmarkViewModel.getBookmark(itemKey: dgpsStation.id, dataSource: DataSources.dgps.key)
+        .task {
+            await bookmarkViewModel.getBookmark(itemKey: dgpsStation.id, dataSource: DataSources.dgps.key)
         }
     }
 }

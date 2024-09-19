@@ -19,7 +19,7 @@ extension InjectedValues {
     }
 }
 
-class RadioBeaconRemoteDataSource: RemoteDataSource {
+actor RadioBeaconRemoteDataSource: RemoteDataSource {
     typealias DataModel = RadioBeaconModel
     
     let _backgroundFetchQueue: OperationQueue

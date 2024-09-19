@@ -8,49 +8,61 @@
 import Foundation
 import Combine
 
+@MainActor
 class PublicationViewModel: ObservableObject {
     @Injected(\.publicationRepository)
     var repository: PublicationRepository
     var s3Key: String?
     var disposables = Set<AnyCancellable>()
     @Published var publication: PublicationModel?
+    
+    @Published var fileExists: Bool = false
 
-    func setupModel(s3Key: String) {
+    func setupModel(s3Key: String) async {
         self.s3Key = s3Key
-        publication = repository.getPublication(s3Key: s3Key)
-        repository.observePublication(s3Key: s3Key)?
+        publication = await repository.getPublication(s3Key: s3Key)
+        await repository.observePublication(s3Key: s3Key)?
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { updatedObject in
                 self.publication = updatedObject
             })
             .store(in: &disposables)
     }
-
-    func checkFileExists() -> Bool {
+    
+    func checkFileExists() async -> Bool {
         guard let s3Key = s3Key else {
             return false
         }
-        return repository.checkFileExists(id: s3Key)
+        if publication?.isDownloaded ?? false {
+            fileExists = await repository.checkFileExists(id: s3Key)
+        } else {
+            fileExists = false
+        }
+        return fileExists
     }
 
-    func deleteFile() {
+    func deleteFile() async {
         guard let s3Key = s3Key else {
             return
         }
-        repository.deleteFile(id: s3Key)
+        await repository.deleteFile(id: s3Key)
     }
 
     func downloadFile() {
-        guard let s3Key = s3Key else {
-            return
+        Task {
+            guard let s3Key = s3Key else {
+                return
+            }
+            await repository.downloadFile(id: s3Key)
         }
-        repository.downloadFile(id: s3Key)
     }
 
     func cancelDownload() {
-        guard let s3Key = s3Key else {
-            return
+        Task {
+            guard let s3Key = s3Key else {
+                return
+            }
+            await repository.cancelDownload(s3Key: s3Key)
         }
-        repository.cancelDownload(s3Key: s3Key)
     }
 }

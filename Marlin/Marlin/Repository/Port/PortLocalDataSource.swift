@@ -22,7 +22,7 @@ extension InjectedValues {
     }
 }
 
-protocol PortLocalDataSource {
+protocol PortLocalDataSource: Sendable {
     func getPort(portNumber: Int?) -> PortModel?
     func getPortsInBounds(
         filters: [DataSourceFilterParameter]?,
@@ -50,13 +50,11 @@ struct PortModelPage {
     var currentHeader: String?
 }
 
-class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, ObservableObject {
-    private lazy var context: NSManagedObjectContext = {
-        PersistenceController.current.newTaskContext()
-    }()
+final class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, ObservableObject, Sendable {
     
     func getPort(portNumber: Int?) -> PortModel? {
         var model: PortModel?
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let portNumber = portNumber {
                 if let port = context.fetchFirst(Port.self, key: "portNumber", value: portNumber) {
@@ -107,6 +105,7 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
     func getPorts(
         filters: [DataSourceFilterParameter]?
     ) async -> [PortModel] {
+        let context = PersistenceController.current.newTaskContext()
         return await context.perform {
             let fetchRequest = Port.fetchRequest()
             let predicates: [NSPredicate] = self.buildPredicates(filters: filters)
@@ -117,7 +116,7 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
             fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.port.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
-            return (self.context.fetch(request: fetchRequest)?.map { port in
+            return (context.fetch(request: fetchRequest)?.map { port in
                 PortModel(port: port)
             }) ?? []
         }
@@ -135,6 +134,7 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
         })
 
         var count = 0
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             count = (try? context.count(for: fetchRequest)) ?? 0
         }
@@ -203,6 +203,7 @@ class PortCoreDataDataSource: CoreDataDataSource, PortLocalDataSource, Observabl
         })
         var previousHeader: String? = currentHeader
         var ports: [PortItem] = []
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let fetched = context.fetch(request: request) {
 

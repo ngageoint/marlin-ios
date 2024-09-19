@@ -49,8 +49,8 @@ struct ModuSummaryView: DataSourceSummaryView {
                 share: modu.itemTitle
             )
         }
-        .onAppear {
-            bookmarkViewModel.getBookmark(itemKey: modu.itemKey, dataSource: DataSources.modu.key)
+        .task {
+            await bookmarkViewModel.getBookmark(itemKey: modu.itemKey, dataSource: DataSources.modu.key)
         }
     }
 }

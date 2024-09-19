@@ -73,7 +73,7 @@ class ModusViewModel: ObservableObject {
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in
-            repository.modus(
+            await repository.modus(
                 filters: UserDefaults.standard.filter(DataSources.modu),
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )

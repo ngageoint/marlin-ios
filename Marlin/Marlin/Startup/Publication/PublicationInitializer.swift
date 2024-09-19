@@ -18,11 +18,11 @@ class PublicationInitializer: Initializer {
     }
 
     override func createOperation() async -> Operation {
-        repository.createOperation()
+        await repository.createOperation()
     }
 
     override func fetch() async {
-        if repository.getCount(filters: nil) == 0 {
+        if await repository.getCount(filters: nil) == 0 {
             let initialDataLoadOperation = PublicationInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {
                 Task {
@@ -32,9 +32,7 @@ class PublicationInitializer: Initializer {
 
             backgroundFetchQueue.addOperation(initialDataLoadOperation)
         } else {
-            Task {
-                await self.repository.fetch()
-            }
+            _ = await self.repository.fetch()
         }
     }
 }

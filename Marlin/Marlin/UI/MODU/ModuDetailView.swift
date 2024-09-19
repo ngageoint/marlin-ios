@@ -19,8 +19,8 @@ struct ModuDetailView: View {
     var body: some View {
         switch viewModel.modu {
         case nil:
-            Color.clear.onAppear {
-                viewModel.getModu(name: name, waypointURI: waypointURI)
+            Color.clear.task {
+                await viewModel.getModu(name: name, waypointURI: waypointURI)
             }
         case .some(let modu):
             List {
@@ -91,10 +91,12 @@ struct ModuDetailView: View {
             .navigationTitle(modu.name ?? DataSources.modu.fullName)
             .navigationBarTitleDisplayMode(.inline)
             .onChange(of: name) { _ in
-                viewModel.getModu(name: name, waypointURI: waypointURI)
+                Task {
+                    await viewModel.getModu(name: name, waypointURI: waypointURI)
+                }
             }
-            .onAppear {
-                bookmarkViewModel.getBookmark(itemKey: modu.id, dataSource: DataSources.modu.key)
+            .task {
+                await bookmarkViewModel.getBookmark(itemKey: modu.id, dataSource: DataSources.modu.key)
                 Metrics.shared.dataSourceDetail(dataSource: DataSources.modu)
             }
         }

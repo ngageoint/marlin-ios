@@ -68,8 +68,8 @@ struct RadioBeaconSummaryView: DataSourceSummaryView {
                 share: radioBeacon.itemTitle
             )
         }
-        .onAppear {
-            bookmarkViewModel.getBookmark(itemKey: radioBeacon.id, dataSource: DataSources.radioBeacon.key)
+        .task {
+            await bookmarkViewModel.getBookmark(itemKey: radioBeacon.id, dataSource: DataSources.radioBeacon.key)
         }
     }
 }

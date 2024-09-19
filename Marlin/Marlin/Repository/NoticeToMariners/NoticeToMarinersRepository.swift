@@ -36,7 +36,7 @@ extension InjectedValues {
     }
 }
 
-class NoticeToMarinersRepository: ObservableObject {
+actor NoticeToMarinersRepository {
     private var cancellables = Set<AnyCancellable>()
 
     @Injected(\.ntmLocalDataSource)
@@ -95,7 +95,10 @@ class NoticeToMarinersRepository: ObservableObject {
         let newestNotice = localDataSource.getNewestNoticeToMariners()
 
         let notices = await remoteDataSource.fetch(noticeNumber: newestNotice?.noticeNumber)
-        let inserted = await localDataSource.insert(task: nil, noticeToMariners: notices)
+        let inserted = await localDataSource.insert(
+            task: nil,
+            noticeToMariners: notices
+        )
 
         await MainActor.run {
             MSI.shared.appState.loadingDataSource[DataSources.noticeToMariners.key] = false
@@ -117,7 +120,11 @@ class NoticeToMarinersRepository: ObservableObject {
 }
 
 extension NoticeToMarinersRepository {
-    func downloadFile(odsEntryId: Int) {
+    func removeCancellable(_ cancellable: AnyCancellable) async {
+        cancellables.remove(cancellable)
+    }
+    
+    func downloadFile(odsEntryId: Int) async {
         guard let notice = localDataSource.getNoticeToMariners(odsEntryId: odsEntryId) else {
             return
         }
@@ -129,9 +136,11 @@ extension NoticeToMarinersRepository {
         cancellable = subject
             .sink(
                 receiveCompletion: { [weak self] _ in
-                    self?.remoteDataSource.cleanupDownload(model: notice)
-                    if let cancellable = cancellable {
-                        self?.cancellables.remove(cancellable)
+                    Task { [weak self] in
+                        await self?.remoteDataSource.cleanupDownload(model: notice)
+                        if let cancellable = cancellable {
+                            await self?.removeCancellable(cancellable)
+                        }
                     }
                 },
                 receiveValue: { downloadProgress in
@@ -142,7 +151,7 @@ extension NoticeToMarinersRepository {
             cancellable.store(in: &cancellables)
         }
 
-        remoteDataSource.downloadFile(model: notice, subject: subject)
+        await remoteDataSource.downloadFile(model: notice, subject: subject)
     }
 
     func deleteFile(odsEntryId: Int) {
@@ -159,11 +168,11 @@ extension NoticeToMarinersRepository {
         return localDataSource.checkFileExists(odsEntryId: odsEntryId)
     }
 
-    func cancelDownload(odsEntryId: Int) {
+    func cancelDownload(odsEntryId: Int) async {
         guard let notice = localDataSource.getNoticeToMariners(odsEntryId: odsEntryId) else {
             return
         }
-        remoteDataSource.cancelDownload(model: notice)
+        await remoteDataSource.cancelDownload(model: notice)
         localDataSource.updateProgress(odsEntryId: odsEntryId, progress: DownloadProgress(
             id: "\(odsEntryId)",
             isDownloading: false,

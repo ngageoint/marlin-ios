@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class PortViewModel: ObservableObject, Identifiable {
     @Published var port: PortModel?
 
@@ -17,12 +18,12 @@ class PortViewModel: ObservableObject, Identifiable {
     var routeWaypointRepository: RouteWaypointRepository?
 
     @discardableResult
-    func getPort(portNumber: Int?, waypointURI: URL? = nil) -> PortModel? {
+    func getPort(portNumber: Int?, waypointURI: URL? = nil) async -> PortModel? {
         if let waypointURI = waypointURI {
             port = routeWaypointRepository?.getPort(waypointURI: waypointURI)
             return port
         } else {
-            port = repository.getPort(portNumber: portNumber)
+            port = await repository.getPort(portNumber: portNumber)
             return port
         }
     }

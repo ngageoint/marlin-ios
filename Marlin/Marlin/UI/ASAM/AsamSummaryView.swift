@@ -44,8 +44,8 @@ struct AsamSummaryView: DataSourceSummaryView {
                 share: asam.itemTitle
             )
         }
-        .onAppear {
-            bookmarkViewModel.getBookmark(itemKey: asam.id, dataSource: DataSources.asam.key)
+        .task {
+            await bookmarkViewModel.getBookmark(itemKey: asam.id, dataSource: DataSources.asam.key)
         }
     }
 }

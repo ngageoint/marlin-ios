@@ -33,7 +33,7 @@ extension InjectedValues {
     }
 }
 
-class BookmarkRepository: ObservableObject {
+actor BookmarkRepository: ObservableObject {
     @Injected(\.bookmarkLocalDataSource)
     private var localDataSource: BookmarkLocalDataSource
 
@@ -81,9 +81,9 @@ class BookmarkRepository: ObservableObject {
         case DataSources.asam.key:
             return await asamRepository.getAsam(reference: itemKey)
         case DataSources.modu.key:
-            return moduRepository.getModu(name: itemKey)
+            return await moduRepository.getModu(name: itemKey)
         case DataSources.port.key:
-            return portRepository.getPort(portNumber: Int(itemKey))
+            return await portRepository.getPort(portNumber: Int(itemKey))
         case DataSources.navWarning.key:
             if split.count == 3 {
                 return navigationalWarningRepository.getNavigationalWarning(
@@ -93,17 +93,17 @@ class BookmarkRepository: ObservableObject {
                 )
             }
         case DataSources.noticeToMariners.key:
-            return noticeToMarinersRepository.getNoticesToMariners(noticeNumber: Int(itemKey))?.first
+            return await noticeToMarinersRepository.getNoticesToMariners(noticeNumber: Int(itemKey))?.first
         case DataSources.dgps.key:
             if split.count == 2 {
-                return dgpsRepository.getDGPSStation(
+                return await dgpsRepository.getDGPSStation(
                     featureNumber: Int(split[0]) ?? -1,
                     volumeNumber: "\(split[1])"
                 )
             }
         case DataSources.light.key:
             if split.count == 3 {
-                return lightRepository.getCharacteristic(
+                return await lightRepository.getCharacteristic(
                     featureNumber: "\(split[0])",
                     volumeNumber: "\(split[1])",
                     characteristicNumber: 1
@@ -117,7 +117,7 @@ class BookmarkRepository: ObservableObject {
                 )
             }
         case DataSources.epub.key:
-            return publicationRepository.getPublication(s3Key: itemKey)
+            return await publicationRepository.getPublication(s3Key: itemKey)
         case GeoPackageFeatureItem.key:
             return GeoPackageFeatureItem.getItem(
                 context: PersistenceController.current.newTaskContext(),

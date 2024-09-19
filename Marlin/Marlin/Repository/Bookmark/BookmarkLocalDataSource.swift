@@ -22,7 +22,7 @@ extension InjectedValues {
     }
 }
 
-protocol BookmarkLocalDataSource {
+protocol BookmarkLocalDataSource: Sendable {
     func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel?
     func createBookmark(notes: String?, itemKey: String, dataSource: String) async
     func removeBookmark(itemKey: String, dataSource: String) -> Bool
@@ -38,7 +38,7 @@ struct BookmarkModelPage {
     var currentHeader: String?
 }
 
-class BookmarkCoreDataDataSource: CoreDataDataSource, BookmarkLocalDataSource {
+final class BookmarkCoreDataDataSource: CoreDataDataSource, BookmarkLocalDataSource {
     func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel? {
         let context = PersistenceController.current.viewContext
         return context.performAndWait {

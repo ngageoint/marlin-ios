@@ -19,7 +19,7 @@ extension InjectedValues {
     }
 }
 
-class DGPSStationRemoteDataSource: RemoteDataSource {
+actor DGPSStationRemoteDataSource: RemoteDataSource {
     typealias DataModel = DGPSStationModel
     
     let _backgroundFetchQueue: OperationQueue

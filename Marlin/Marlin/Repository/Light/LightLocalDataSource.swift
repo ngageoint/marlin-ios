@@ -20,7 +20,7 @@ extension InjectedValues {
     }
 }
 
-protocol LightLocalDataSource {
+protocol LightLocalDataSource: Sendable {
 
     func getCharacteristic(
         featureNumber: String?,

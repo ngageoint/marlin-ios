@@ -79,11 +79,13 @@ struct AsamDetailView: View {
         .navigationTitle(viewModel.asam?.reference ?? DataSources.asam.fullName)
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: reference) { _ in
-            viewModel.getAsam(reference: reference, waypointURI: waypointURI)
+            Task {
+                await viewModel.getAsam(reference: reference, waypointURI: waypointURI)
+            }
         }
-        .onAppear {
+        .task {
             viewModel.routeWaypointRepository = routeWaypointRepository
-            viewModel.getAsam(reference: reference, waypointURI: waypointURI)
+            await viewModel.getAsam(reference: reference, waypointURI: waypointURI)
             Metrics.shared.dataSourceDetail(dataSource: DataSources.asam)
         }
     }

@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class LightViewModel: ObservableObject, Identifiable {
     @Published var lights: [LightModel] = []
 
@@ -19,11 +20,11 @@ class LightViewModel: ObservableObject, Identifiable {
     var routeWaypointRepository: RouteWaypointRepository?
 
     @discardableResult
-    func getLights(featureNumber: String?, volumeNumber: String?, waypointURI: URL? = nil) -> [LightModel] {
+    func getLights(featureNumber: String?, volumeNumber: String?, waypointURI: URL? = nil) async -> [LightModel] {
         if let waypointURI = waypointURI {
             lights = routeWaypointRepository?.getLight(waypointURI: waypointURI) ?? []
         } else {
-            lights = repository.getLight(featureNumber: featureNumber, volumeNumber: volumeNumber) ?? []
+            lights = await repository.getLight(featureNumber: featureNumber, volumeNumber: volumeNumber) ?? []
             return lights
         }
         return []

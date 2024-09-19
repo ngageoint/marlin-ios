@@ -31,9 +31,7 @@ class RadioBeaconInitializer: Initializer {
 
             backgroundFetchQueue.addOperation(initialDataLoadOperation)
         } else {
-            Task {
-                await self.repository.fetchRadioBeacons()
-            }
+            _ = await self.repository.fetchRadioBeacons()
         }
     }
 }

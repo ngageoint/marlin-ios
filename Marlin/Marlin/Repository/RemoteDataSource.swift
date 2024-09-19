@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import BackgroundTasks
 
-protocol RemoteDataSource<DataModel> {
+protocol RemoteDataSource<DataModel>: Actor {
     associatedtype DataModel
     
     func dataSource() -> any DataSourceDefinition
@@ -30,8 +30,10 @@ extension RemoteDataSource {
             // Inform the system that the background task is complete
             // when the operation completes.
             operation.completionBlock = {
-                NSLog("\(self.dataSource().name) Remote Data Source count \(operation.data.count)")
-                continuation.resume(returning: operation.data)
+                Task { [weak self] in
+                    NSLog("\(await self?.dataSource().name ?? "Unknown") Remote Data Source count \(operation.data.count)")
+                    continuation.resume(returning: operation.data)
+                }
             }
         }
     }

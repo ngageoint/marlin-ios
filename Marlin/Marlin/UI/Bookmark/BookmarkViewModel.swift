@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class BookmarkViewModel: ObservableObject {
     var itemKey: String?
     var dataSource: String?
@@ -19,10 +20,10 @@ class BookmarkViewModel: ObservableObject {
     private var repository: BookmarkRepository
     
     @discardableResult
-    func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel? {
+    func getBookmark(itemKey: String, dataSource: String) async -> BookmarkModel? {
         self.itemKey = itemKey
         self.dataSource = dataSource
-        bookmark = repository.getBookmark(itemKey: itemKey, dataSource: dataSource)
+        bookmark = await repository.getBookmark(itemKey: itemKey, dataSource: dataSource)
         self.isBookmarked = bookmark != nil
         return bookmark
     }
@@ -38,20 +39,21 @@ class BookmarkViewModel: ObservableObject {
         }
     }
 
-    @MainActor
-    func updateBookmarked() {
-        bookmark = repository.getBookmark(itemKey: self.itemKey ?? "", dataSource: self.dataSource ?? "")
+    func updateBookmarked() async {
+        bookmark = await repository.getBookmark(itemKey: self.itemKey ?? "", dataSource: self.dataSource ?? "")
         self.isBookmarked = bookmark != nil
         self.bnotes = bookmark?.notes ?? ""
     }
 
-    func removeBookmark() {
+    func removeBookmark() async {
         guard let itemKey = itemKey, let dataSource = dataSource else {
             return
         }
-        _ = repository.removeBookmark(itemKey: itemKey, dataSource: dataSource)
-        Task {
-            await updateBookmarked()
-        }
+        _ = await repository.removeBookmark(itemKey: itemKey, dataSource: dataSource)
+        await updateBookmarked()
+    }
+    
+    func startBookmarkBottomSheet() async {
+        bookmarkBottomSheet = true
     }
 }

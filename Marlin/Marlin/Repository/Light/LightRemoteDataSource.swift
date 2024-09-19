@@ -19,7 +19,7 @@ extension InjectedValues {
     }
 }
 
-class LightRemoteDataSource: RemoteDataSource {
+actor LightRemoteDataSource: RemoteDataSource {
     typealias DataModel = LightModel
     
     let _backgroundFetchQueue: OperationQueue

@@ -17,11 +17,11 @@ class NoticeToMarinersInitializer: Initializer {
     }
 
     override func createOperation() async -> Operation {
-        repository.createOperation()
+        await repository.createOperation()
     }
 
     override func fetch() async {
-        if repository.getCount(filters: nil) == 0 {
+        if await repository.getCount(filters: nil) == 0 {
             let initialDataLoadOperation = NoticeToMarinersInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {
                 Task {
@@ -31,9 +31,7 @@ class NoticeToMarinersInitializer: Initializer {
 
             backgroundFetchQueue.addOperation(initialDataLoadOperation)
         } else {
-            Task {
-                await self.repository.fetchNoticeToMariners()
-            }
+            _ = await self.repository.fetchNoticeToMariners()
         }
     }
 }

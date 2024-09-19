@@ -115,8 +115,8 @@ struct NavigationalWarningDetailView: View {
                 (\(navigationalWarning.subregion ?? ""))
                 """)
             .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-                bookmarkViewModel.getBookmark(
+            .task {
+                await bookmarkViewModel.getBookmark(
                     itemKey: navigationalWarning.itemKey,
                     dataSource: DataSources.navWarning.key
                 )

@@ -32,8 +32,8 @@ struct PublicationSummaryView: DataSourceSummaryView {
     var body: some View {
         switch viewModel.publication {
         case nil:
-            Color.clear.onAppear {
-                viewModel.setupModel(s3Key: s3Key)
+            Color.clear.task {
+                await viewModel.setupModel(s3Key: s3Key)
             }
         case .some(let publication):
             VStack(alignment: .leading, spacing: 8) {
@@ -48,8 +48,8 @@ struct PublicationSummaryView: DataSourceSummaryView {
                 bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
                 PublicationActionBar(viewModel: viewModel)
             }
-            .onAppear {
-                bookmarkViewModel.getBookmark(itemKey: publication.itemKey, dataSource: DataSources.epub.key)
+            .task {
+                await bookmarkViewModel.getBookmark(itemKey: publication.itemKey, dataSource: DataSources.epub.key)
             }
         }
     }

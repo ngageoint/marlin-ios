@@ -38,8 +38,8 @@ struct NoticeToMarinersSummaryView: DataSourceSummaryView {
             }
             bookmarkNotesView(bookmarkViewModel: bookmarkViewModel)
         }
-        .onAppear {
-            bookmarkViewModel.getBookmark(itemKey: noticeToMariners.itemKey, dataSource: noticeToMariners.key)
+        .task {
+            await bookmarkViewModel.getBookmark(itemKey: noticeToMariners.itemKey, dataSource: noticeToMariners.key)
         }
     }
 }

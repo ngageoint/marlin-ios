@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class ModuViewModel: ObservableObject, Identifiable {
     @Injected(\.moduRepository)
     var repository: ModuRepository
@@ -18,7 +19,7 @@ class ModuViewModel: ObservableObject, Identifiable {
     var routeWaypointRepository: RouteWaypointRepository?
 
     @discardableResult
-    func getModu(name: String, waypointURI: URL? = nil) -> ModuModel? {
+    func getModu(name: String, waypointURI: URL? = nil) async -> ModuModel? {
         self.name = name
         predicate = NSPredicate(format: "name == %@", name)
 
@@ -26,7 +27,7 @@ class ModuViewModel: ObservableObject, Identifiable {
             modu = routeWaypointRepository?.getModu(waypointURI: waypointURI)
             return modu
         } else {
-            modu = repository.getModu(name: name)
+            modu = await repository.getModu(name: name)
             return modu
         }
     }

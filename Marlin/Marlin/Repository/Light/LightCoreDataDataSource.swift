@@ -12,18 +12,15 @@ import UIKit
 import BackgroundTasks
 import Kingfisher
 
-class LightCoreDataDataSource:
+final class LightCoreDataDataSource:
     CoreDataDataSource,
     LightLocalDataSource,
-    ObservableObject {
+    ObservableObject,
+    Sendable {
     typealias DataType = Light
     typealias ModelType = LightModel
     typealias Item = LightItem
     typealias ListModelType = LightListModel
-
-    private lazy var context: NSManagedObjectContext = {
-        PersistenceController.current.newTaskContext()
-    }()
 
     func getCharacteristic(
         featureNumber: String?,
@@ -32,6 +29,7 @@ class LightCoreDataDataSource:
     ) -> ModelType? {
         var model: ModelType?
         if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
+            let context = PersistenceController.current.newTaskContext()
             model = context.performAndWait {
                 if let light = try? context.fetchFirst(
                     DataType.self,
@@ -52,6 +50,7 @@ class LightCoreDataDataSource:
     ) -> [ModelType]? {
         var models: [ModelType] = []
         if let featureNumber = featureNumber, let volumeNumber = volumeNumber {
+            let context = PersistenceController.current.newTaskContext()
             models = context.performAndWait {
                 if let lights = try? context.fetchObjects(
                     DataType.self,
@@ -70,6 +69,7 @@ class LightCoreDataDataSource:
     }
 
     func getNewestLight(volumeNumber: String) -> ModelType? {
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             return try? context.fetchFirst(
                 Light.self,
@@ -142,7 +142,7 @@ class LightCoreDataDataSource:
         fetchRequest.predicate = NSPredicate(format: "volumeNumber = %@", volumeNumber)
 
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Light.noticeNumber, ascending: false)]
-
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             return (try? context.count(for: fetchRequest)) ?? 0
         }
@@ -160,6 +160,7 @@ class LightCoreDataDataSource:
         })
 
         var count = 0
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             count = (try? context.count(for: fetchRequest)) ?? 0
         }
@@ -169,6 +170,7 @@ class LightCoreDataDataSource:
     func getLights(
         filters: [DataSourceFilterParameter]?
     ) async -> [LightModel] {
+        let context = PersistenceController.current.newTaskContext()
         return await context.perform {
             let fetchRequest = Light.fetchRequest()
             let predicates: [NSPredicate] = self.buildPredicates(filters: filters)
@@ -177,7 +179,7 @@ class LightCoreDataDataSource:
             fetchRequest.predicate = predicate
 
             fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.light.key).toNSSortDescriptors()
-            return (self.context.fetch(request: fetchRequest)?.map { light in
+            return (context.fetch(request: fetchRequest)?.map { light in
                 LightModel(light: light)
             }) ?? []
         }
@@ -225,6 +227,7 @@ extension LightCoreDataDataSource {
         })
         var previousHeader: String? = currentHeader
         var list: [Item] = []
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let fetched = context.fetch(request: request) {
 

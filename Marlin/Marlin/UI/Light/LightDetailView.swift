@@ -111,10 +111,20 @@ struct LightDetailView: View {
             }
         }
         .onChange(of: featureNumber + volumeNumber) { _ in
-            viewModel.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+            Task {
+                await viewModel.getLights(
+                    featureNumber: featureNumber,
+                    volumeNumber: volumeNumber,
+                    waypointURI: waypointURI
+                )
+            }
         }
-        .onAppear {
-            viewModel.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+        .task {
+            await viewModel.getLights(
+                featureNumber: featureNumber,
+                volumeNumber: volumeNumber,
+                waypointURI: waypointURI
+            )
             Metrics.shared.dataSourceDetail(dataSource: DataSources.light)
         }
     }

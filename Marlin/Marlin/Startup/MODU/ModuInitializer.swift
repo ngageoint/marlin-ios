@@ -21,7 +21,7 @@ class ModuInitializer: Initializer {
     }
 
     override func fetch() async {
-        if repository.getCount(filters: nil) == 0 {
+        if await repository.getCount(filters: nil) == 0 {
             let initialDataLoadOperation = ModuInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {
                 Task {
@@ -31,9 +31,7 @@ class ModuInitializer: Initializer {
 
             backgroundFetchQueue.addOperation(initialDataLoadOperation)
         } else {
-            Task {
-                await self.repository.fetchModus()
-            }
+            _ = await self.repository.fetchModus()
         }
     }
 }

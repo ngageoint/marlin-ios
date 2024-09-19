@@ -20,7 +20,10 @@ extension InjectedValues {
     }
 }
 
-class NoticeToMarinersRemoteDataSource: RemoteDataSource {
+actor NoticeToMarinersRemoteDataSource: RemoteDataSource {
+
+// final class NoticeToMarinersRemoteDataSource: RemoteDataSource, Sendable {
+//    @MainActor
     var downloads: [String: DownloadManager] = [:]
 
     typealias DataModel = NoticeToMarinersModel

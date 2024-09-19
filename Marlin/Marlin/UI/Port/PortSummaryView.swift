@@ -65,8 +65,8 @@ struct PortSummaryView: DataSourceSummaryView {
                 share: port.itemTitle
             )
         }
-        .onAppear {
-            bookmarkViewModel.getBookmark(itemKey: port.id, dataSource: DataSources.port.key)
+        .task {
+            await bookmarkViewModel.getBookmark(itemKey: port.id, dataSource: DataSources.port.key)
 
             if let currentLocation = locationManager.lastLocation {
                 let metersMeasurement = NSMeasurement(

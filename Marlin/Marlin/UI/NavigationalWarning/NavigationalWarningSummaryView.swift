@@ -68,8 +68,8 @@ struct NavigationalWarningSummaryView: DataSourceSummaryView {
                 share: navigationalWarning.itemTitle
             )
         }
-        .onAppear {
-            bookmarkViewModel.getBookmark(itemKey: navigationalWarning.itemKey, dataSource: DataSources.navWarning.key)
+        .task {
+            await bookmarkViewModel.getBookmark(itemKey: navigationalWarning.itemKey, dataSource: DataSources.navWarning.key)
         }
     }
 }

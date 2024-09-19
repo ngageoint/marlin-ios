@@ -68,7 +68,7 @@ class NoticesToMarinersViewModel: ObservableObject {
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in
-            repository.sectionHeaders(
+            await repository.sectionHeaders(
                 filters: UserDefaults.standard.filter(DataSources.noticeToMariners),
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )

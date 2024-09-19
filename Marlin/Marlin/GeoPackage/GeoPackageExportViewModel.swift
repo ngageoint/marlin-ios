@@ -143,11 +143,11 @@ class GeoPackageExportViewModel: ObservableObject {
                 switch definition {
                 case .route: temp[definition] = self.routeRepository?.getCount(filters: filters)
                 case .asam: temp[definition] = await self.asamRepository.getCount(filters: filters)
-                case .modu: temp[definition] = self.moduRepository.getCount(filters: filters)
-                case .differentialGPSStation: temp[definition] = self.dgpsRepository.getCount(filters: filters)
-                case .port: temp[definition] = self.portRepository.getCount(filters: filters)
+                case .modu: temp[definition] = await self.moduRepository.getCount(filters: filters)
+                case .differentialGPSStation: temp[definition] = await self.dgpsRepository.getCount(filters: filters)
+                case .port: temp[definition] = await self.portRepository.getCount(filters: filters)
                 case .navWarning: temp[definition] = self.navigationalWarningRepository.getCount(filters: filters)
-                case .light: temp[definition] = self.lightRepository.getCount(filters: filters)
+                case .light: temp[definition] = await self.lightRepository.getCount(filters: filters)
                 case .radioBeacon: temp[definition] = self.radioBeaconRepository.getCount(filters: filters)
                 default: break
                 }

@@ -16,11 +16,11 @@ import Foundation
     }
 
     override func createOperation() async -> Operation {
-        repository.createOperation()
+        await repository.createOperation()
     }
 
     override func fetch() async {
-        if repository.getCount(filters: nil) == 0 {
+        if await repository.getCount(filters: nil) == 0 {
             let initialDataLoadOperation = DGPSStationInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {
                 Task {
@@ -30,9 +30,7 @@ import Foundation
 
             backgroundFetchQueue.addOperation(initialDataLoadOperation)
         } else {
-            Task {
-                await self.repository.fetch()
-            }
+            _ = await self.repository.fetch()
         }
     }
  }

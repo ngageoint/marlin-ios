@@ -53,7 +53,7 @@ protocol NoticeToMarinersLocalDataSource {
     func batchImport(from propertiesList: [NoticeToMarinersModel]) async throws -> Int
 }
 
-class NoticeToMarinersCoreDataDataSource:
+final class NoticeToMarinersCoreDataDataSource:
     CoreDataDataSource,
     NoticeToMarinersLocalDataSource,
     ObservableObject {

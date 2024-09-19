@@ -50,9 +50,9 @@ struct NoticeToMarinersFullNoticeView: View {
         .dataSourceDetailList()
         .navigationTitle("Notice \(viewModel.noticeNumberString ?? "")")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
+        .task {
             viewModel.setupModel(noticeNumber: noticeNumber)
-            viewModel.getNotices(noticeNumber: noticeNumber)
+            await viewModel.getNotices(noticeNumber: noticeNumber)
             viewModel.loadGraphics()
             Metrics.shared.appRoute(["ntms", "detail"])
         }

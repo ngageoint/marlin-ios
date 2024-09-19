@@ -35,7 +35,9 @@ struct ModuRouteSheetView: View {
             }
         }
         .onChange(of: itemKey) { newItemKey in
-            viewModel.getModu(name: newItemKey)
+            Task {
+                await viewModel.getModu(name: newItemKey)
+            }
         }
         .onChange(of: viewModel.modu) { model in
             NotificationCenter.default.post(
@@ -46,8 +48,8 @@ struct ModuRouteSheetView: View {
                 )
             )
         }
-        .onAppear {
-            viewModel.getModu(name: itemKey)
+        .task {
+            await viewModel.getModu(name: itemKey)
         }
     }
 }

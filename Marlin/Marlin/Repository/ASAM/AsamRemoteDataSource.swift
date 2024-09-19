@@ -20,7 +20,7 @@ extension InjectedValues {
     }
 }
 
-final class AsamRemoteDataSource: RemoteDataSource, Sendable {
+actor AsamRemoteDataSource: RemoteDataSource, Sendable {
     typealias DataModel = AsamModel
     
     let _backgroundFetchQueue: OperationQueue

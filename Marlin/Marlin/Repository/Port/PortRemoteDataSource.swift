@@ -20,7 +20,7 @@ extension InjectedValues {
     }
 }
 
-class PortRemoteDataSource: RemoteDataSource {
+actor PortRemoteDataSource: RemoteDataSource {
     typealias DataModel = PortModel
     
     let _backgroundFetchQueue: OperationQueue

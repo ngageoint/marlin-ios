@@ -10,7 +10,7 @@ import CoreData
 import UIKit
 import SwiftUI
 
-protocol Bookmarkable {
+protocol Bookmarkable: Sendable {
     static var definition: any DataSourceDefinition { get }
     var canBookmark: Bool { get }
     var itemKey: String { get }

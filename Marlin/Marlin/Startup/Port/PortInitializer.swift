@@ -22,7 +22,7 @@ class PortInitializer: Initializer {
     }
 
     override func fetch() async {
-        if repository.getCount(filters: nil) == 0 {
+        if await repository.getCount(filters: nil) == 0 {
             let initialDataLoadOperation = PortInitialDataLoadOperation()
             initialDataLoadOperation.completionBlock = {
                 Task {
@@ -32,9 +32,7 @@ class PortInitializer: Initializer {
 
             backgroundFetchQueue.addOperation(initialDataLoadOperation)
         } else {
-            Task {
-                await self.repository.fetchPorts()
-            }
+            _ = await self.repository.fetchPorts()
         }
     }
 }

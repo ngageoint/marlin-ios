@@ -52,8 +52,8 @@ struct LightSummaryView: DataSourceSummaryView {
                 share: light.itemTitle
             )
         }
-        .onAppear {
-            bookmarkViewModel.getBookmark(itemKey: light.itemKey, dataSource: DataSources.light.key)
+        .task {
+            await bookmarkViewModel.getBookmark(itemKey: light.itemKey, dataSource: DataSources.light.key)
         }
     }
 }

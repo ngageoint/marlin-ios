@@ -48,11 +48,12 @@ enum ModuActions {
         }
 
         func action() {
-            withAnimation {
-                if bookmarkViewModel.isBookmarked {
-                    bookmarkViewModel.removeBookmark()
+//            withAnimation {
+            Task {
+                if await bookmarkViewModel.isBookmarked {
+                    await bookmarkViewModel.removeBookmark()
                 } else {
-                    bookmarkViewModel.bookmarkBottomSheet = true
+                    await bookmarkViewModel.startBookmarkBottomSheet()
                 }
             }
         }

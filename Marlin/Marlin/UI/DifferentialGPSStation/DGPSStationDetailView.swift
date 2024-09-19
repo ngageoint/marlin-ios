@@ -21,8 +21,8 @@ struct DGPSStationDetailView: View {
         Group {
             switch viewModel.dgpsStation {
             case nil:
-                Color.clear.onAppear {
-                    viewModel.getDGPSStation(
+                Color.clear.task {
+                    await viewModel.getDGPSStation(
                         featureNumber: featureNumber,
                         volumeNumber: volumeNumber,
                         waypointURI: waypointURI
@@ -80,11 +80,13 @@ struct DGPSStationDetailView: View {
         .navigationTitle("\(viewModel.dgpsStation?.name ?? DataSources.dgps.fullName)" )
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: featureNumber) { _ in
-            viewModel.getDGPSStation(
-                featureNumber: featureNumber,
-                volumeNumber: volumeNumber,
-                waypointURI: waypointURI
-            )
+            Task {
+                await viewModel.getDGPSStation(
+                    featureNumber: featureNumber,
+                    volumeNumber: volumeNumber,
+                    waypointURI: waypointURI
+                )
+            }
         }
         .onAppear {
             Metrics.shared.dataSourceDetail(dataSource: DataSources.dgps)

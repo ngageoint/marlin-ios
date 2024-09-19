@@ -60,7 +60,7 @@ class BookmarksViewModel: ObservableObject {
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in
-            repository.bookmarks(
+            await repository.bookmarks(
                 filters: UserDefaults.standard.filter(DataSources.bookmark),
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )

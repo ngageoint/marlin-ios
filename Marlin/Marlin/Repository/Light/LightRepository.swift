@@ -33,7 +33,7 @@ extension InjectedValues {
     }
 }
 
-class LightRepository: ObservableObject {
+actor LightRepository: ObservableObject {
     @Injected(\.lightLocalDataSource)
     var localDataSource: LightLocalDataSource
     @Injected(\.lightRemoteDataSource)

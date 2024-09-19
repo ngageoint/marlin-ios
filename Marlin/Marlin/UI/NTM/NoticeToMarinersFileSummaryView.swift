@@ -32,8 +32,9 @@ struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
     var body: some View {
         switch viewModel.noticeToMariners {
         case nil:
-            Color.clear.onAppear {
-                viewModel.setupModel(odsEntryId: odsEntryId)
+            Color.clear
+                .task {
+                await viewModel.setupModel(odsEntryId: odsEntryId)
             }
         case .some(let noticeToMariners):
             VStack(alignment: .leading, spacing: 8) {
@@ -57,11 +58,13 @@ struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
                             Spacer()
                         }
                     }
-                    if noticeToMariners.isDownloaded == true, viewModel.checkFileExists(),
-                       let url = URL(string: noticeToMariners.savePath) {
+                    if viewModel.fileExists {
                         Button(
                             action: {
-                                NotificationCenter.default.post(name: .DocumentPreview, object: url)
+                                Task {
+                                    let url = URL(string: noticeToMariners.savePath)
+                                    NotificationCenter.default.post(name: .DocumentPreview, object: url)
+                                }
                             },
                             label: {
                                 Label(
@@ -77,7 +80,9 @@ struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
 
                         Button(
                             action: {
-                                viewModel.deleteFile()
+                                Task {
+                                    await viewModel.deleteFile()
+                                }
                             },
                             label: {
                                 Label(
@@ -93,7 +98,9 @@ struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
                     } else if (noticeToMariners.isDownloading) == false {
                         Button(
                             action: {
-                                viewModel.downloadFile()
+                                Task {
+                                    await viewModel.downloadFile()
+                                }
                             },
                             label: {
                                 Label(
@@ -111,7 +118,9 @@ struct NoticeToMarinersFileSummaryView: DataSourceSummaryView {
                             .tint(Color.primaryColorVariant)
                         Button(
                             action: {
-                                viewModel.cancelDownload()
+                                Task {
+                                    await viewModel.cancelDownload()
+                                }
                             },
                             label: {
                                 Label(

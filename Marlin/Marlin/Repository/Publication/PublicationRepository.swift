@@ -36,7 +36,7 @@ extension InjectedValues {
     }
 }
 
-class PublicationRepository: ObservableObject {
+actor PublicationRepository: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     @Injected(\.publicationLocalDataSource)
@@ -111,7 +111,11 @@ class PublicationRepository: ObservableObject {
 }
 
 extension PublicationRepository {
-    func downloadFile(id: String) {
+    func removeCancellable(_ cancellable: AnyCancellable) async {
+        cancellables.remove(cancellable)
+    }
+    
+    func downloadFile(id: String) async {
         guard let publication = localDataSource.getPublication(s3Key: id) else {
             return
         }
@@ -123,9 +127,11 @@ extension PublicationRepository {
         cancellable = subject
             .sink(
                 receiveCompletion: { [weak self] _ in
-                    self?.remoteDataSource.cleanupDownload(model: publication)
-                    if let cancellable = cancellable {
-                        self?.cancellables.remove(cancellable)
+                    Task {
+                        await self?.remoteDataSource.cleanupDownload(model: publication)
+                        if let cancellable = cancellable {
+                            await self?.removeCancellable(cancellable)
+                        }
                     }
                 },
                 receiveValue: { downloadProgress in
@@ -136,7 +142,10 @@ extension PublicationRepository {
             cancellable.store(in: &cancellables)
         }
 
-        remoteDataSource.downloadFile(model: publication, subject: subject)
+        await remoteDataSource.downloadFile(
+            model: publication,
+            subject: subject
+        )
     }
 
     func deleteFile(id: String) {
@@ -154,11 +163,11 @@ extension PublicationRepository {
         return localDataSource.checkFileExists(s3Key: id)
     }
 
-    func cancelDownload(s3Key: String) {
+    func cancelDownload(s3Key: String) async {
         guard let publication = localDataSource.getPublication(s3Key: s3Key) else {
             return
         }
-        remoteDataSource.cancelDownload(model: publication)
+        await remoteDataSource.cancelDownload(model: publication)
         localDataSource.updateProgress(s3Key: s3Key, progress: DownloadProgress(
             id: publication.id,
             isDownloading: false,

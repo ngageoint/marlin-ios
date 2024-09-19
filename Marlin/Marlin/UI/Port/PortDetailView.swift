@@ -17,8 +17,8 @@ struct PortDetailView: View {
     var body: some View {
         switch viewModel.port {
         case nil:
-            Color.clear.onAppear {
-                viewModel.getPort(portNumber: portNumber, waypointURI: waypointURI)
+            Color.clear.task {
+                await viewModel.getPort(portNumber: portNumber, waypointURI: waypointURI)
             }
         case .some(let port):
             List {
@@ -90,7 +90,9 @@ struct PortDetailView: View {
             .navigationBarTitleDisplayMode(.inline)
             
             .onChange(of: portNumber) { _ in
-                viewModel.getPort(portNumber: portNumber, waypointURI: waypointURI)
+                Task {
+                    await viewModel.getPort(portNumber: portNumber, waypointURI: waypointURI)
+                }
             }
             .onAppear {
                 Metrics.shared.dataSourceDetail(dataSource: DataSources.port)

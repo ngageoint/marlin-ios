@@ -74,7 +74,7 @@ class DGPSStationsViewModel: ObservableObject {
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in
-            repository.dgps(
+            await repository.dgps(
                 filters: UserDefaults.standard.filter(DataSources.dgps),
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )

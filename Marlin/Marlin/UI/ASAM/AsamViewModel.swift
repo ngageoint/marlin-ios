@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class AsamViewModel: ObservableObject, Identifiable {
     @Published var asam: AsamModel?
 
@@ -21,16 +22,13 @@ class AsamViewModel: ObservableObject, Identifiable {
     var routeWaypointRepository: RouteWaypointRepository?
     
     @discardableResult
-    func getAsam(reference: String, waypointURI: URL? = nil) -> AsamModel? {
+    func getAsam(reference: String, waypointURI: URL? = nil) async -> AsamModel? {
         if let waypointURI = waypointURI {
             asam = routeWaypointRepository?.getAsam(waypointURI: waypointURI)
             return asam
         } else {
-            Task {
-                asam = await repository.getAsam(reference: reference)
-                return asam
-            }
+            asam = await repository.getAsam(reference: reference)
+            return asam
         }
-        return nil
     }
 }

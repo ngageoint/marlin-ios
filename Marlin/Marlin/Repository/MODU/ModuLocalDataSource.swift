@@ -22,7 +22,7 @@ extension InjectedValues {
     }
 }
 
-protocol ModuLocalDataSource {
+protocol ModuLocalDataSource: Sendable {
     func insert(task: BGTask?, modus: [ModuModel]) async -> Int
     func batchImport(from propertiesList: [ModuModel]) async throws -> Int
     func getNewestModu() -> ModuModel?
@@ -48,14 +48,11 @@ struct ModuModelPage {
     var currentHeader: String?
 }
 
-class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, ObservableObject {
-    private lazy var context: NSManagedObjectContext = {
-        PersistenceController.current.newTaskContext()
-    }()
+final class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, ObservableObject, Sendable {
 
     func getNewestModu() -> ModuModel? {
-//        let context = PersistenceController.current.newTaskContext()
         var modu: ModuModel?
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let newestModu = try? PersistenceController.current.fetchFirst(
                 Modu.self,
@@ -74,6 +71,7 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
     func getModus(
         filters: [DataSourceFilterParameter]?
     ) async -> [ModuModel] {
+        let context = PersistenceController.current.newTaskContext()
         return await context.perform {
             let fetchRequest = Modu.fetchRequest()
             let predicates: [NSPredicate] = self.buildPredicates(filters: filters)
@@ -84,7 +82,7 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
             fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.modu.key).map({ sortParameter in
                 sortParameter.toNSSortDescriptor()
             })
-            return (self.context.fetch(request: fetchRequest)?.map { modu in
+            return (context.fetch(request: fetchRequest)?.map { modu in
                 ModuModel(modu: modu)
             }) ?? []
         }
@@ -102,6 +100,7 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
         })
 
         var count = 0
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             count = (try? context.count(for: fetchRequest)) ?? 0
         }
@@ -110,6 +109,7 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
 
     func getModu(name: String?) -> ModuModel? {
         var model: ModuModel?
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let name = name, let modu = context.fetchFirst(Modu.self, key: "name", value: name) {
                 model = ModuModel(modu: modu)
@@ -177,6 +177,7 @@ class ModuCoreDataDataSource: CoreDataDataSource, ModuLocalDataSource, Observabl
         })
         var previousHeader: String? = currentHeader
         var modus: [ModuItem] = []
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let fetched = context.fetch(request: request) {
 

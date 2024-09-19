@@ -33,7 +33,7 @@ extension InjectedValues {
     }
 }
 
-class DGPSStationRepository: ObservableObject {
+actor DGPSStationRepository: ObservableObject {
     @Injected(\.dgpsLocalDataSource)
     var localDataSource: DGPSStationLocalDataSource
     @Injected(\.dgpsemoteDataSource)

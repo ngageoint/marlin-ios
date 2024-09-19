@@ -94,7 +94,9 @@ extension Publishers {
 }
     
     extension Publisher {
-      public func tryAwaitMap<T>(_ transform: @escaping (Self.Output) async -> T) -> Publishers.FlatMap<Future<T, Error>, Self> {
+      public func tryAwaitMap<T>(
+        _ transform: @escaping (Self.Output) async -> T
+      ) -> Publishers.FlatMap<Future<T, Error>, Self> {
         flatMap { value in
           Future { promise in
             Task {
@@ -105,7 +107,9 @@ extension Publishers {
         }
       }
       
-      public func tryAwaitMap<T>(_ transform: @escaping (Self.Output) async -> T) -> Publishers.FlatMap<Future<T, Never>, Publishers.SetFailureType<Self, Never>> {
+      public func tryAwaitMap<T>(
+        _ transform: @escaping (Self.Output) async -> T
+      ) -> Publishers.FlatMap<Future<T, Never>, Publishers.SetFailureType<Self, Never>> {
           flatMap { value in
             Future { promise in
               Task {

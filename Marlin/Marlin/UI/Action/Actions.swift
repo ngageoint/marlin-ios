@@ -43,11 +43,11 @@ enum Actions {
         }
 
         func action() {
-            withAnimation {
-                if bookmarkViewModel.isBookmarked {
-                    bookmarkViewModel.removeBookmark()
+            Task {
+                if await bookmarkViewModel.isBookmarked {
+                    await bookmarkViewModel.removeBookmark()
                 } else {
-                    bookmarkViewModel.bookmarkBottomSheet = true
+                    await bookmarkViewModel.startBookmarkBottomSheet()
                 }
             }
         }

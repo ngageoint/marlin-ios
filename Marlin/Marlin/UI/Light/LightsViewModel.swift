@@ -74,7 +74,7 @@ class LightsViewModel: ObservableObject {
         Publishers.PublishAndRepeat(
             onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)
         ) { [trigger, repository] in
-            repository.lights(
+            await repository.lights(
                 filters: UserDefaults.standard.filter(DataSources.light),
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )

@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class DGPSStationViewModel: ObservableObject, Identifiable {
     @Published var dgpsStation: DGPSStationModel?
     @Published var predicate: NSPredicate?
@@ -28,11 +29,11 @@ class DGPSStationViewModel: ObservableObject, Identifiable {
         featureNumber: Int?,
         volumeNumber: String?,
         waypointURI: URL? = nil
-    ) -> DGPSStationModel? {
+    ) async -> DGPSStationModel? {
         if let waypointURI = waypointURI {
             dgpsStation = routeWaypointRepository?.getDGPSStation(waypointURI: waypointURI)
         } else {
-            dgpsStation = repository.getDGPSStation(
+            dgpsStation = await repository.getDGPSStation(
                 featureNumber: featureNumber,
                 volumeNumber: volumeNumber
             )
