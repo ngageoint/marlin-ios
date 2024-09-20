@@ -37,7 +37,7 @@ class RadioBeaconRepository: ObservableObject {
     @Injected(\.radioBeaconLocalDataSource)
     private var localDataSource: RadioBeaconLocalDataSource
     @Injected(\.radioBeaconRemoteDataSource)
-    private var remoteDataSource: RadioBeaconRemoteDataSource
+    private var remoteDataSource: any RadioBeaconRemoteDataSource
 
     func createOperation() -> RadioBeaconDataFetchOperation {
         let newestRadioBeacon = localDataSource.getNewestRadioBeacon()

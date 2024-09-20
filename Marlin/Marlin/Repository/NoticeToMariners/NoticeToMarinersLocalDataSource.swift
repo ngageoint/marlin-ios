@@ -11,9 +11,11 @@ import Combine
 import UIKit
 import BackgroundTasks
 
+// swiftlint:disable type_name
 private struct NoticeToMarinersLocalDataSourceProviderKey: InjectionKey {
     static var currentValue: NoticeToMarinersLocalDataSource = NoticeToMarinersCoreDataDataSource()
 }
+// swiftlint:enable type_name
 
 extension InjectedValues {
     var ntmLocalDataSource: NoticeToMarinersLocalDataSource {
@@ -22,7 +24,7 @@ extension InjectedValues {
     }
 }
 
-protocol NoticeToMarinersLocalDataSource {
+protocol NoticeToMarinersLocalDataSource: Sendable {
     func getNoticesToMariners(
         noticeNumber: Int?
     ) -> [NoticeToMarinersModel]?
@@ -56,19 +58,17 @@ protocol NoticeToMarinersLocalDataSource {
 final class NoticeToMarinersCoreDataDataSource:
     CoreDataDataSource,
     NoticeToMarinersLocalDataSource,
-    ObservableObject {
+    ObservableObject,
+    Sendable {
     typealias DataType = NoticeToMariners
     typealias ModelType = NoticeToMarinersModel
     typealias ListModelType = NoticeToMarinersListModel
     typealias Item = NoticeToMarinersItem
 
-    private lazy var context: NSManagedObjectContext = {
-        PersistenceController.current.newTaskContext()
-    }()
-
     func getNoticesToMariners(
         noticeNumber: Int?
     ) -> [ModelType]? {
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             if let noticeNumber = noticeNumber {
                 let predicate = NSPredicate(format: "noticeNumber == %i", argumentArray: [noticeNumber])
@@ -86,6 +86,7 @@ final class NoticeToMarinersCoreDataDataSource:
     }
 
     func getNoticeToMariners(odsEntryId: Int?) -> NoticeToMarinersModel? {
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             if let odsEntryId = odsEntryId {
                 if let notice = try? context.fetchFirst(
@@ -100,6 +101,7 @@ final class NoticeToMarinersCoreDataDataSource:
 
     func getNewestNoticeToMariners() -> NoticeToMarinersModel? {
         var ntm: NoticeToMarinersModel?
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let newestNoticeToMariners = try? PersistenceController.current.fetchFirst(
                 NoticeToMariners.self,
@@ -118,6 +120,7 @@ final class NoticeToMarinersCoreDataDataSource:
     func getNoticesToMariners(
         filters: [DataSourceFilterParameter]?
     ) async -> [NoticeToMarinersModel] {
+        let context = PersistenceController.current.newTaskContext()
         return await context.perform {
             let fetchRequest = NoticeToMariners.fetchRequest()
             let predicates: [NSPredicate] = self.buildPredicates(filters: filters)
@@ -128,7 +131,7 @@ final class NoticeToMarinersCoreDataDataSource:
             fetchRequest.sortDescriptors = UserDefaults.standard.sort(
                 DataSources.noticeToMariners.key
             ).toNSSortDescriptors()
-            return (self.context.fetch(request: fetchRequest)?.map { ntm in
+            return (context.fetch(request: fetchRequest)?.map { ntm in
                 NoticeToMarinersModel(noticeToMariners: ntm)
             }) ?? []
         }
@@ -146,6 +149,7 @@ final class NoticeToMarinersCoreDataDataSource:
         ).toNSSortDescriptors()
 
         var count = 0
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             count = (try? context.count(for: fetchRequest)) ?? 0
         }
@@ -157,6 +161,7 @@ final class NoticeToMarinersCoreDataDataSource:
 // MARK: Data Publisher methods
 extension NoticeToMarinersCoreDataDataSource {
     func updateProgress(odsEntryId: Int, progress: DownloadProgress) {
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             guard let notice = try? context.fetchFirst(
                 DataType.self,
@@ -172,6 +177,7 @@ extension NoticeToMarinersCoreDataDataSource {
     }
 
     func deleteFile(odsEntryId: Int) {
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             guard let notice = try? context.fetchFirst(
                 DataType.self,
@@ -197,6 +203,7 @@ extension NoticeToMarinersCoreDataDataSource {
     }
 
     func checkFileExists(odsEntryId: Int) -> Bool {
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             guard let notice = try? context.fetchFirst(
                 DataType.self,
@@ -218,6 +225,7 @@ extension NoticeToMarinersCoreDataDataSource {
     func observeNoticeToMariners(
         odsEntryId: Int
     ) -> AnyPublisher<NoticeToMarinersModel, Never>? {
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             guard let notice = try? context.fetchFirst(
                 DataType.self,
@@ -268,6 +276,7 @@ extension NoticeToMarinersCoreDataDataSource {
         })
         var previousHeader: String? = currentHeader
         var list: [Item] = []
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let fetched = context.fetch(request: request) {
 
@@ -465,6 +474,7 @@ extension NoticeToMarinersCoreDataDataSource {
 
         var previousHeader: String? = currentHeader
 
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let res = try? context.fetch(request) as? [[String: Any]] {
                 notices = res.flatMap {

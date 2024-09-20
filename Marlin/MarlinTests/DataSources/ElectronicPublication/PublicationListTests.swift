@@ -51,7 +51,7 @@ final class PublicationListTests: XCTestCase {
         bundle.mockPath = "fullEpubList.json"
 
         let localDataSource = PublicationStaticLocalDataSource()
-        let remoteDataSource = PublicationRemoteDataSource()
+        let remoteDataSource = PublicationRemoteDataSourceImpl()
         InjectedValues[\.publicationLocalDataSource] = localDataSource
         InjectedValues[\.publicationRemoteDataSource] = remoteDataSource
         let operation = PublicationInitialDataLoadOperation(bundle: bundle)

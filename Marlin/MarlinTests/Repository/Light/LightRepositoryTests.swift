@@ -117,7 +117,7 @@ final class LightRepositoryTests: XCTestCase {
         let remoteDataSource = LightStaticRemoteDataSource()
         InjectedValues[\.lightLocalDataSource] = localDataSource
         InjectedValues[\.lightRemoteDataSource] = remoteDataSource
-        remoteDataSource.list["110"] = models
+        await remoteDataSource.setList(["110": models])
         let repository = LightRepository()
 
         let lights = await repository.fetchLights()
@@ -125,14 +125,14 @@ final class LightRepositoryTests: XCTestCase {
 
         await fulfillment(of: [loadingExpectation, loadedExpectation, updatedExpectation], timeout: 5)
 
-        let repoLight = repository.getLight(featureNumber: "6", volumeNumber: "PUB 110")
+        let repoLight = await repository.getLight(featureNumber: "6", volumeNumber: "PUB 110")
         XCTAssertNotNil(repoLight)
         XCTAssertEqual(repoLight, localDataSource.getLight(featureNumber: "6", volumeNumber: "PUB 110"))
 
-        let repoLCharacteristic = repository.getCharacteristic(featureNumber: "6", volumeNumber: "PUB 110", characteristicNumber: 1)
+        let repoLCharacteristic = await repository.getCharacteristic(featureNumber: "6", volumeNumber: "PUB 110", characteristicNumber: 1)
         XCTAssertNotNil(repoLCharacteristic)
         XCTAssertEqual(repoLCharacteristic, localDataSource.getCharacteristic(featureNumber: "6", volumeNumber: "PUB 110", characteristicNumber: 1))
-        let repoLCharacteristic2 = repository.getCharacteristic(featureNumber: "6", volumeNumber: "PUB 110", characteristicNumber: 2)
+        let repoLCharacteristic2 = await repository.getCharacteristic(featureNumber: "6", volumeNumber: "PUB 110", characteristicNumber: 2)
         XCTAssertNil(repoLCharacteristic2)
         XCTAssertEqual(repoLCharacteristic2, localDataSource.getCharacteristic(featureNumber: "6", volumeNumber: "PUB 110", characteristicNumber: 2))
 
@@ -140,11 +140,11 @@ final class LightRepositoryTests: XCTestCase {
         let localLights = await localDataSource.getLights(filters: nil)
         XCTAssertNotNil(repoLights)
         XCTAssertEqual(repoLights.count, localLights.count)
-
-        XCTAssertEqual(repository.getCount(filters: nil), localDataSource.getCount(filters: nil))
+        let repoCount = await repository.getCount(filters: nil)
+        XCTAssertEqual(repoCount, localDataSource.getCount(filters: nil))
     }
 
-    func testCreateOperation() {
+    func testCreateOperation() async {
         let localDataSource = LightStaticLocalDataSource()
         let remoteDataSource = LightStaticRemoteDataSource()
         InjectedValues[\.lightLocalDataSource] = localDataSource
@@ -164,7 +164,7 @@ final class LightRepositoryTests: XCTestCase {
             newest2
         ]
         let repository = LightRepository()
-        let operations = repository.createOperations()
+        let operations = await repository.createOperations()
         XCTAssertEqual(Light.lightVolumes.count, operations.count)
         let op0 = operations[0]
         XCTAssertEqual(op0.volume, "110")

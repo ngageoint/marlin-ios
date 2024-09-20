@@ -245,7 +245,7 @@ final class NoticeToMarinersFullNoticeViewTests: XCTestCase {
                 localDataSource.map[odsEntryId] = notice
             }
         }
-        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        let remoteDataSource = NoticeToMarinersRemoteDataSourceImpl()
         InjectedValues[\.ntmLocalDataSource] = localDataSource
         InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
         
@@ -254,7 +254,6 @@ final class NoticeToMarinersFullNoticeViewTests: XCTestCase {
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let detailView = NoticeToMarinersFullNoticeView(noticeNumber: Int(ntm.noticeNumber!))
-            .environmentObject(repository)
 
         let controller = UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()

@@ -12,9 +12,11 @@ import UIKit
 import BackgroundTasks
 import Kingfisher
 
+// swiftlint:disable type_name
 private struct NavigationalWarningLocalDataSourceProviderKey: InjectionKey {
     static var currentValue: NavigationalWarningLocalDataSource = NavigationalWarningCoreDataDataSource()
 }
+// swiftlint:enable type_name
 
 extension InjectedValues {
     var navWarningLocalDataSource: NavigationalWarningLocalDataSource {

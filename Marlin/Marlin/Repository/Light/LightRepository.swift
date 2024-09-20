@@ -37,7 +37,7 @@ actor LightRepository: ObservableObject {
     @Injected(\.lightLocalDataSource)
     var localDataSource: LightLocalDataSource
     @Injected(\.lightRemoteDataSource)
-    private var remoteDataSource: LightRemoteDataSource
+    private var remoteDataSource: any LightRemoteDataSource
     
     func createOperations() -> [LightDataFetchOperation] {
         return Light.lightVolumes.map { lightVolume in
@@ -119,7 +119,9 @@ actor LightRepository: ObservableObject {
             // populated on all returned objects
             if lights.count != 0 && localDataSource.volumeCount(volumeNumber: lightVolume.volumeNumber) != 0 {
                 lights = await remoteDataSource.fetch(
-                    volume: lightVolume.volumeQuery
+                    volume: lightVolume.volumeQuery,
+                    noticeYear: nil,
+                    noticeWeek: nil
                 )
             }
             await localDataSource.insert(task: nil, lights: lights)

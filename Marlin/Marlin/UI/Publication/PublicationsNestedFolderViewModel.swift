@@ -6,6 +6,8 @@
 //
 
 import Foundation
+
+@MainActor
 class PublicationsNestedFolderViewModel: ObservableObject {
     @Published var publications: [PublicationModel] = []
     @Published var nestedFolders: [String: [PublicationModel]] = [:]

@@ -105,8 +105,8 @@ final class AsamRepositoryTests: XCTestCase {
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
         let remoteDataSource = AsamStaticRemoteDataSource()
-        InjectedValues[\.asamRemoteDataSource]
-        remoteDataSource.asamList = asamModels
+        InjectedValues[\.asamRemoteDataSource] = remoteDataSource
+        await remoteDataSource.setList(asamModels)
         let repository = AsamRepository()
 
         let asams = await repository.fetchAsams()
@@ -114,7 +114,7 @@ final class AsamRepositoryTests: XCTestCase {
 
         await fulfillment(of: [loadingExpectation, loadedExpectation, updatedExpectation])
 
-        let repoAsam = repository.getAsam(reference: "2022-218")
+        let repoAsam = await repository.getAsam(reference: "2022-218")
         XCTAssertNotNil(repoAsam)
         XCTAssertEqual(repoAsam, localDataSource.getAsam(reference: "2022-218"))
 
@@ -123,21 +123,22 @@ final class AsamRepositoryTests: XCTestCase {
         XCTAssertNotNil(repoAsams)
         XCTAssertEqual(repoAsams.count, localAsams.count)
 
-        XCTAssertEqual(repository.getCount(filters: nil), localDataSource.getCount(filters: nil))
+        let repoCount = await repository.getCount(filters: nil)
+        XCTAssertEqual(repoCount, localDataSource.getCount(filters: nil))
     }
 
-    func testCreateOperation() {
+    func testCreateOperation() async {
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
         let remoteDataSource = AsamStaticRemoteDataSource()
-        InjectedValues[\.asamRemoteDataSource]
+        InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         var newest = AsamModel()
         newest.date = Date(timeIntervalSince1970: 0)
         localDataSource.list = [
             newest
         ]
         let repository = AsamRepository()
-        let operation = repository.createOperation()
+        let operation = await repository.createOperation()
         XCTAssertNotNil(operation.dateString)
         XCTAssertEqual(operation.dateString, newest.dateString)
     }

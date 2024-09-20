@@ -9,17 +9,24 @@ import Foundation
 import BackgroundTasks
 
 private struct RadioBeaconRemoteDataSourceProviderKey: InjectionKey {
-    static var currentValue: RadioBeaconRemoteDataSource = RadioBeaconRemoteDataSource()
+    static var currentValue: any RadioBeaconRemoteDataSource = RadioBeaconRemoteDataSourceImpl()
 }
 
 extension InjectedValues {
-    var radioBeaconRemoteDataSource: RadioBeaconRemoteDataSource {
+    var radioBeaconRemoteDataSource: any RadioBeaconRemoteDataSource {
         get { Self[RadioBeaconRemoteDataSourceProviderKey.self] }
         set { Self[RadioBeaconRemoteDataSourceProviderKey.self] = newValue }
     }
 }
 
-actor RadioBeaconRemoteDataSource: RemoteDataSource {
+protocol RadioBeaconRemoteDataSource: RemoteDataSource {
+    func fetch(
+        noticeYear: String?,
+        noticeWeek: String?
+    ) async -> [RadioBeaconModel]
+}
+
+actor RadioBeaconRemoteDataSourceImpl: RadioBeaconRemoteDataSource {
     typealias DataModel = RadioBeaconModel
     
     let _backgroundFetchQueue: OperationQueue
@@ -39,7 +46,6 @@ actor RadioBeaconRemoteDataSource: RemoteDataSource {
     }
 
     func fetch(
-        task: BGTask? = nil,
         noticeYear: String? = nil,
         noticeWeek: String? = nil
     ) async -> [RadioBeaconModel] {

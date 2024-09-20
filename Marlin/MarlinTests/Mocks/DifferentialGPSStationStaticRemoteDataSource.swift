@@ -10,11 +10,32 @@ import BackgroundTasks
 
 @testable import Marlin
 
-class DifferentialGPSStationStaticRemoteDataSource: DGPSStationRemoteDataSource {
+actor DifferentialGPSStationStaticRemoteDataSource: DGPSStationRemoteDataSource {
+    typealias DataModel = DGPSStationModel
+    
+    let _backgroundFetchQueue: OperationQueue
+    
+    init() {
+        self._backgroundFetchQueue = OperationQueue()
+        self._backgroundFetchQueue.maxConcurrentOperationCount = 1
+        self._backgroundFetchQueue.name = "\(DataSources.dgps.name) fetch queue"
+    }
+    
+    func dataSource() -> any DataSourceDefinition {
+        DataSources.dgps
+    }
+    
+    func backgroundFetchQueue() -> OperationQueue {
+        _backgroundFetchQueue
+    }
+    
     var list: [DGPSStationModel] = []
+    
+    func setList(_ list: [DGPSStationModel]) {
+        self.list = list
+    }
 
-    override func fetch(
-        task: BGTask? = nil,
+    func fetch(
         noticeYear: String? = nil,
         noticeWeek: String? = nil
     ) async -> [DGPSStationModel] {

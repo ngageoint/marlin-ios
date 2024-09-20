@@ -10,10 +10,32 @@ import BackgroundTasks
 
 @testable import Marlin
 
-class AsamStaticRemoteDataSource: AsamRemoteDataSource {
+actor AsamStaticRemoteDataSource: AsamRemoteDataSource {
+    typealias DataModel = AsamModel
+    
+    let _backgroundFetchQueue: OperationQueue
+    
+    init() {
+        self._backgroundFetchQueue = OperationQueue()
+        self._backgroundFetchQueue.maxConcurrentOperationCount = 1
+        self._backgroundFetchQueue.name = "\(DataSources.asam.name) fetch queue"
+    }
+    
+    func dataSource() -> any DataSourceDefinition {
+        DataSources.asam
+    }
+    
+    func backgroundFetchQueue() -> OperationQueue {
+        _backgroundFetchQueue
+    }
+    
     var asamList: [AsamModel] = []
+    
+    func setList(_ list: [AsamModel]) {
+        self.asamList = list
+    }
 
-    override func fetch(task: BGTask? = nil, dateString: String? = nil) async -> [AsamModel] {
+    func fetch(dateString: String? = nil) async -> [AsamModel] {
         NSLog("Returning \(asamList.count) asams")
         return asamList
     }

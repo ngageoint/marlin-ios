@@ -30,8 +30,7 @@ extension RemoteDataSource {
             // Inform the system that the background task is complete
             // when the operation completes.
             operation.completionBlock = {
-                Task { [weak self] in
-                    NSLog("\(await self?.dataSource().name ?? "Unknown") Remote Data Source count \(operation.data.count)")
+                Task {
                     continuation.resume(returning: operation.data)
                 }
             }

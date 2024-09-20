@@ -10,10 +10,32 @@ import BackgroundTasks
 
 @testable import Marlin
 
-class ModuStaticRemoteDataSource: ModuRemoteDataSource {
+actor ModuStaticRemoteDataSource: ModuRemoteDataSource {
+    typealias DataModel = ModuModel
+    
+    let _backgroundFetchQueue: OperationQueue
+    
+    init() {
+        self._backgroundFetchQueue = OperationQueue()
+        self._backgroundFetchQueue.maxConcurrentOperationCount = 1
+        self._backgroundFetchQueue.name = "\(DataSources.modu.name) fetch queue"
+    }
+    
+    func dataSource() -> any DataSourceDefinition {
+        DataSources.modu
+    }
+    
+    func backgroundFetchQueue() -> OperationQueue {
+        _backgroundFetchQueue
+    }
+    
     var list: [ModuModel] = []
+    
+    func setList(_ list: [ModuModel]) {
+        self.list = list
+    }
 
-    override func fetch(task: BGTask? = nil, dateString: String? = nil) async -> [ModuModel] {
+    func fetch(dateString: String? = nil) async -> [ModuModel] {
         return list
     }
 }

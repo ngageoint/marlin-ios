@@ -21,7 +21,7 @@ final class AsamRemoteDataSourceTests: XCTestCase {
     }
     
     func testFetchAsamsWithoutTask() async {
-        let dataSource = AsamRemoteDataSource()
+        let dataSource = AsamRemoteDataSourceImpl()
         
         stub(condition: isScheme("https") && pathEndsWith("/publications/asam")) { request in
             let jsonObject = [

@@ -10,17 +10,21 @@ import UIKit
 import BackgroundTasks
 
 private struct AsamRemoteDataSourceProviderKey: InjectionKey {
-    static var currentValue: AsamRemoteDataSource = AsamRemoteDataSource()
+    static var currentValue: any AsamRemoteDataSource = AsamRemoteDataSourceImpl()
 }
 
 extension InjectedValues {
-    var asamRemoteDataSource: AsamRemoteDataSource {
+    var asamRemoteDataSource: any AsamRemoteDataSource {
         get { Self[AsamRemoteDataSourceProviderKey.self] }
         set { Self[AsamRemoteDataSourceProviderKey.self] = newValue }
     }
 }
 
-actor AsamRemoteDataSource: RemoteDataSource, Sendable {
+protocol AsamRemoteDataSource: RemoteDataSource {
+    func fetch(dateString: String?) async -> [AsamModel]
+}
+
+actor AsamRemoteDataSourceImpl: AsamRemoteDataSource, Sendable {
     typealias DataModel = AsamModel
     
     let _backgroundFetchQueue: OperationQueue

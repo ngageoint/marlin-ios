@@ -9,17 +9,24 @@ import Foundation
 import BackgroundTasks
 
 private struct DGPSStationRemoteDataSourceProviderKey: InjectionKey {
-    static var currentValue: DGPSStationRemoteDataSource = DGPSStationRemoteDataSource()
+    static var currentValue: any DGPSStationRemoteDataSource = DGPSStationRemoteDataSourceImpl()
 }
 
 extension InjectedValues {
-    var dgpsemoteDataSource: DGPSStationRemoteDataSource {
+    var dgpsemoteDataSource: any DGPSStationRemoteDataSource {
         get { Self[DGPSStationRemoteDataSourceProviderKey.self] }
         set { Self[DGPSStationRemoteDataSourceProviderKey.self] = newValue }
     }
 }
 
-actor DGPSStationRemoteDataSource: RemoteDataSource {
+protocol DGPSStationRemoteDataSource: RemoteDataSource {
+    func fetch(
+        noticeYear: String?,
+        noticeWeek: String?
+    ) async -> [DGPSStationModel]
+}
+
+actor DGPSStationRemoteDataSourceImpl: DGPSStationRemoteDataSource {
     typealias DataModel = DGPSStationModel
     
     let _backgroundFetchQueue: OperationQueue
@@ -39,7 +46,6 @@ actor DGPSStationRemoteDataSource: RemoteDataSource {
     }
 
     func fetch(
-        task: BGTask? = nil,
         noticeYear: String? = nil,
         noticeWeek: String? = nil
     ) async -> [DGPSStationModel] {

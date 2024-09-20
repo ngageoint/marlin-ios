@@ -42,7 +42,7 @@ actor PublicationRepository: ObservableObject {
     @Injected(\.publicationLocalDataSource)
     var localDataSource: PublicationLocalDataSource
     @Injected(\.publicationRemoteDataSource)
-    private var remoteDataSource: PublicationRemoteDataSource
+    private var remoteDataSource: any PublicationRemoteDataSource
 
     func createOperation() -> PublicationDataFetchOperation {
         return PublicationDataFetchOperation()

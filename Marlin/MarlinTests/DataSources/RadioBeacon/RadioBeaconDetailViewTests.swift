@@ -100,7 +100,7 @@ final class RadioBeaconDetailViewTests: XCTestCase {
 
     }
 
-    func xtestButtons() throws {
+    func xtestButtons() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var rb = RadioBeaconModel()
 
@@ -170,14 +170,14 @@ final class RadioBeaconDetailViewTests: XCTestCase {
         }
         tester().tapView(withAccessibilityLabel: "focus")
         
-        waitForExpectations(timeout: 10, handler: nil)
+        await waitForExpectations(timeout: 10, handler: nil)
         
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
         
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: rb)
+        try await BookmarkHelper().verifyBookmarkButton(bookmarkable: rb)
     }
 }
 

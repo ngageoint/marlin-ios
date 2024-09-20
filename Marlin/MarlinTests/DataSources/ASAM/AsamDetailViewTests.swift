@@ -31,7 +31,7 @@ final class AsamDetailViewTests: XCTestCase {
 
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
-        let remoteDataSource = AsamRemoteDataSource()
+        let remoteDataSource = AsamRemoteDataSourceImpl()
         InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         localDataSource.list = [asam]
         let repository = AsamRepository()
@@ -40,7 +40,6 @@ final class AsamDetailViewTests: XCTestCase {
         
         let routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let view = AsamDetailView(reference: asam.reference!)
-            .environmentObject(repository)
             .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
@@ -56,7 +55,7 @@ final class AsamDetailViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: asam.dateString)
     }
 
-    func xtestTapButtons() throws {
+    func xtestTapButtons() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var asam = AsamModel()
         asam.asamDescription = "description"
@@ -72,7 +71,7 @@ final class AsamDetailViewTests: XCTestCase {
 
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
-        let remoteDataSource = AsamRemoteDataSource()
+        let remoteDataSource = AsamRemoteDataSourceImpl()
         InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         localDataSource.list = [asam]
         let repository = AsamRepository()
@@ -81,7 +80,6 @@ final class AsamDetailViewTests: XCTestCase {
         
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let view = AsamDetailView(reference: asam.reference!)
-            .environmentObject(repository)
             .environmentObject(routeWaypointRepository)
         let controller = UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
@@ -97,7 +95,7 @@ final class AsamDetailViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Location")
         waitForExpectations(timeout: 10, handler: nil)
 
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: asam)
+        try await BookmarkHelper().verifyBookmarkButton(bookmarkable: asam)
     }
 
     func testLoadingNoHostility() {
@@ -116,7 +114,7 @@ final class AsamDetailViewTests: XCTestCase {
 
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
-        let remoteDataSource = AsamRemoteDataSource()
+        let remoteDataSource = AsamRemoteDataSourceImpl()
         InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         localDataSource.list = [asam]
         let repository = AsamRepository()
@@ -125,7 +123,6 @@ final class AsamDetailViewTests: XCTestCase {
         
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let summary = AsamDetailView(reference: asam.reference!)
-            .environmentObject(repository)
             .environmentObject(routeWaypointRepository)
 
         let controller = UIHostingController(rootView: summary)
@@ -157,7 +154,7 @@ final class AsamDetailViewTests: XCTestCase {
 
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
-        let remoteDataSource = AsamRemoteDataSource()
+        let remoteDataSource = AsamRemoteDataSourceImpl()
         InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         localDataSource.list = [asam]
         let repository = AsamRepository()
@@ -166,7 +163,6 @@ final class AsamDetailViewTests: XCTestCase {
         
         var routeWaypointRepository = RouteWaypointRepository(localDataSource: RouteWaypointStaticLocalDataSource())
         let summary = AsamDetailView(reference: asam.reference!)
-            .environmentObject(repository)
             .environmentObject(routeWaypointRepository)
 
         let controller = UIHostingController(rootView: summary)

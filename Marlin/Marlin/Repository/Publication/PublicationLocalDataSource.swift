@@ -22,7 +22,7 @@ extension InjectedValues {
     }
 }
 
-protocol PublicationLocalDataSource {
+protocol PublicationLocalDataSource: Sendable {
     func getPublication(s3Key: String?) -> PublicationModel?
     func getSections(filters: [DataSourceFilterParameter]?) async -> [PublicationItem]?
     func getPublications(typeId: Int) async -> [PublicationModel]
@@ -51,15 +51,13 @@ struct PublicationModelPage {
     var currentHeader: String?
 }
 
-class PublicationCoreDataDataSource: 
+final class PublicationCoreDataDataSource:
     CoreDataDataSource,
     PublicationLocalDataSource,
-    ObservableObject {
-    lazy var context: NSManagedObjectContext = {
-        PersistenceController.current.newTaskContext()
-    }()
-
+    ObservableObject,
+    Sendable {
     func getPublication(s3Key: String?) -> PublicationModel? {
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             if let s3Key = s3Key,
                let epub = context.fetchFirst(ElectronicPublication.self, key: "s3Key", value: s3Key) {
@@ -77,7 +75,7 @@ class PublicationCoreDataDataSource:
         fetchRequest.predicate = predicate
 
         fetchRequest.sortDescriptors = UserDefaults.standard.sort(DataSources.epub.key).toNSSortDescriptors()
-
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             (try? context.count(for: fetchRequest)) ?? 0
         }
@@ -176,6 +174,7 @@ class PublicationCoreDataDataSource:
 extension PublicationCoreDataDataSource {
 
     func updateProgress(s3Key: String, progress: DownloadProgress) {
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             guard let epub = context.fetchFirst(ElectronicPublication.self, key: "s3Key", value: s3Key) else {
                 return
@@ -189,6 +188,7 @@ extension PublicationCoreDataDataSource {
     }
 
     func deleteFile(s3Key: String) {
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             guard let epub = context.fetchFirst(ElectronicPublication.self, key: "s3Key", value: s3Key) else {
                 return
@@ -212,6 +212,7 @@ extension PublicationCoreDataDataSource {
 
     func checkFileExists(s3Key: String) -> Bool {
         print("XXX check file exists in publication core data source")
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             guard let epub = context.fetchFirst(ElectronicPublication.self, key: "s3Key", value: s3Key) else {
                 print("XXX no publication")
@@ -233,6 +234,7 @@ extension PublicationCoreDataDataSource {
     func observePublication(
         s3Key: String
     ) -> AnyPublisher<PublicationModel, Never>? {
+        let context = PersistenceController.current.newTaskContext()
         return context.performAndWait {
             let epub = context.fetchFirst(ElectronicPublication.self, key: "s3Key", value: s3Key)
 
@@ -278,6 +280,7 @@ extension PublicationCoreDataDataSource {
         })
         var previousHeader: String? = currentHeader
         var epubs: [PublicationItem] = []
+        let context = PersistenceController.current.newTaskContext()
         context.performAndWait {
             if let fetched = context.fetch(request: request) {
 

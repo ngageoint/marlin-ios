@@ -8,9 +8,11 @@
 import Foundation
 import BackgroundTasks
 
+// swiftlint:disable type_name
 private struct NavigationalWarningRemoteDataSourceProviderKey: InjectionKey {
     static var currentValue: NavigationalWarningRemoteDataSource = NavigationalWarningRemoteDataSource()
 }
+// swiftlint:enable type_name
 
 extension InjectedValues {
     var navWarningRemoteDataSource: NavigationalWarningRemoteDataSource {

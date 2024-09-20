@@ -9,9 +9,10 @@ import Foundation
 import Combine
 import CoreData
 
+@MainActor
 class FilterViewModel: ObservableObject, Identifiable {
-    var id: String { dataSource?.definition.key ?? "" }
-    var dataSource: Filterable?
+    let id: String
+    let dataSource: Filterable?
 
     @Published var filters: [DataSourceFilterParameter]
 
@@ -34,6 +35,7 @@ class FilterViewModel: ObservableObject, Identifiable {
     init(dataSource: Filterable?) {
         self.dataSource = dataSource
         self.filters = []
+        self.id = dataSource?.definition.key ?? ""
         if let dataSource = dataSource, !dataSource.properties.isEmpty {
             selectedProperty = dataSource.properties[0]
         }

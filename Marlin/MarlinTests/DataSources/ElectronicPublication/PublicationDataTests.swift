@@ -224,7 +224,7 @@ final class PublicationDataTests: XCTestCase {
         }
 
         let localDataSource = PublicationCoreDataDataSource()
-        let remoteDataSource = PublicationRemoteDataSource()
+        let remoteDataSource = PublicationRemoteDataSourceImpl()
         InjectedValues[\.publicationLocalDataSource] = localDataSource
         InjectedValues[\.publicationRemoteDataSource] = remoteDataSource
         
@@ -234,7 +234,8 @@ final class PublicationDataTests: XCTestCase {
 
         await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification], timeout: 10)
 
-        XCTAssertEqual(repository.getCount(filters: nil), 2)
+        let repoCount = await repository.getCount(filters: nil)
+        XCTAssertEqual(repoCount, 2)
 
         let loadingNotification2 = expectation(forNotification: .DataSourceLoading,
                                               object: nil) { notification in
@@ -286,8 +287,9 @@ final class PublicationDataTests: XCTestCase {
         let fetched2 = await repository.fetch()
 
         await fulfillment(of: [loadingNotification2, loadedNotification2, didSaveNotification2, batchUpdateCompleteNotification2], timeout: 10)
-
-        XCTAssertEqual(repository.getCount(filters: nil), 1)
+        
+        let repoCount2 = await repository.getCount(filters: nil)
+        XCTAssertEqual(repoCount2, 1)
     }
     
     func testRejectInvalidElectronicPublicationNoS3Key() throws {

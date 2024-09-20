@@ -11,6 +11,7 @@ import MapKit
 import CoreLocation
 
 // swiftlint:disable type_body_length
+@MainActor
 class DataSourcePropertyFilterViewModel: ObservableObject {
     var locationManager: LocationManager?
     
@@ -114,12 +115,10 @@ class DataSourcePropertyFilterViewModel: ObservableObject {
             )
         }
         set {
-            DispatchQueue.main.async {
-                self.valueLongitudeString = "\(newValue.center.longitude)"
-                self.valueLatitudeString = "\(newValue.center.latitude)"
-                self.longitudeDelta = newValue.span.longitudeDelta
-                self.latitudeDelta = newValue.span.latitudeDelta
-            }
+            self.valueLongitudeString = "\(newValue.center.longitude)"
+            self.valueLatitudeString = "\(newValue.center.latitude)"
+            self.longitudeDelta = newValue.span.longitudeDelta
+            self.latitudeDelta = newValue.span.latitudeDelta
         }
     }
     

@@ -112,7 +112,7 @@ final class DifferentialGPSStationRepositoryTests: XCTestCase {
         InjectedValues[\.dgpsLocalDataSource] = localDataSource
         let remoteDataSource = DifferentialGPSStationStaticRemoteDataSource()
         InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
-        remoteDataSource.list = models
+        await remoteDataSource.setList(models)
         let repository = DGPSStationRepository()
 
         let dgps = await repository.fetch()
@@ -120,7 +120,7 @@ final class DifferentialGPSStationRepositoryTests: XCTestCase {
 
         await fulfillment(of: [loadingExpectation, loadedExpectation, updatedExpectation])
 
-        let repoData = repository.getDGPSStation(featureNumber: 6, volumeNumber: "PUB 112")
+        let repoData = await repository.getDGPSStation(featureNumber: 6, volumeNumber: "PUB 112")
         XCTAssertNotNil(repoData)
         XCTAssertEqual(repoData, localDataSource.getDifferentialGPSStation(featureNumber: 6, volumeNumber: "PUB 112"))
 
@@ -128,11 +128,11 @@ final class DifferentialGPSStationRepositoryTests: XCTestCase {
         let localDatas = await localDataSource.getDifferentialGPSStations(filters: nil)
         XCTAssertNotNil(repoDatas)
         XCTAssertEqual(repoDatas.count, localDatas.count)
-
-        XCTAssertEqual(repository.getCount(filters: nil), localDataSource.getCount(filters: nil))
+        let repoCount = await repository.getCount(filters: nil)
+        XCTAssertEqual(repoCount, localDataSource.getCount(filters: nil))
     }
 
-    func testCreateOperation() {
+    func testCreateOperation() async {
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
         InjectedValues[\.dgpsLocalDataSource] = localDataSource
         let remoteDataSource = DifferentialGPSStationStaticRemoteDataSource()
@@ -146,7 +146,7 @@ final class DifferentialGPSStationRepositoryTests: XCTestCase {
             newest
         ]
         let repository = DGPSStationRepository()
-        let operation = repository.createOperation()
+        let operation = await repository.createOperation()
         XCTAssertNotNil(operation.noticeYear)
         XCTAssertEqual(operation.noticeYear, "2022")
         XCTAssertNotNil(operation.noticeWeek)

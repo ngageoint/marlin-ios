@@ -14,7 +14,7 @@ import CoreData
 class BookmarkHelper: XCTestCase {
     @Injected(\.bookmarkRepository)
     var repository: BookmarkRepository
-    public func verifyBookmarkButton(viewContext: NSManagedObjectContext? = nil, bookmarkable: Bookmarkable) throws {
+    public func verifyBookmarkButton(viewContext: NSManagedObjectContext? = nil, bookmarkable: Bookmarkable) async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         tester().tapView(withAccessibilityLabel: "bookmark")
         tester().waitForView(withAccessibilityLabel: "Bookmark")
@@ -23,11 +23,11 @@ class BookmarkHelper: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Bookmark")
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Bookmark")
 
-        let bookmark = repository.getBookmark(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key )
+        let bookmark = await repository.getBookmark(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key )
 //        viewContext.performAndWait {
 //            let bookmark = viewContext.fetchFirst(Bookmark.self, key: "id", value: bookmarkable.itemKey ?? "")
             XCTAssertNotNil(bookmark)
-        let foundItem = repository.getDataSourceItem(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key )
+        let foundItem = await repository.getDataSourceItem(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key )
             XCTAssertNotNil(foundItem)
 //            XCTAssertNotNil(foundItem?.bookmark)
 //            XCTAssertEqual(foundItem?.bookmark?.notes, "Bookmark notes")
@@ -36,7 +36,7 @@ class BookmarkHelper: XCTestCase {
         tester().tapView(withAccessibilityLabel: "remove bookmark \(bookmarkable.itemKey )")
 
 //        viewContext.performAndWait {
-        let removed = repository.getBookmark(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key)
+        let removed = await repository.getBookmark(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key)
             XCTAssertNil(removed)
 //        }
     }

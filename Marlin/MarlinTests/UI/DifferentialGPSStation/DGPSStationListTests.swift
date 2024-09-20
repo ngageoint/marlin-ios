@@ -56,7 +56,7 @@ final class DGPSStationListTests: XCTestCase {
 
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
         InjectedValues[\.dgpsLocalDataSource] = localDataSource
-        let remoteDataSource = DGPSStationRemoteDataSource()
+        let remoteDataSource = DGPSStationRemoteDataSourceImpl()
         InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [dgps]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
@@ -167,7 +167,7 @@ final class DGPSStationListTests: XCTestCase {
 
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
         InjectedValues[\.dgpsLocalDataSource] = localDataSource
-        let remoteDataSource = DGPSStationRemoteDataSource()
+        let remoteDataSource = DGPSStationRemoteDataSourceImpl()
         InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [dgps, dgps2]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
@@ -264,7 +264,7 @@ final class DGPSStationListTests: XCTestCase {
 
         let localDataSource = DifferentialGPSStationStaticLocalDataSource()
         InjectedValues[\.dgpsLocalDataSource] = localDataSource
-        let remoteDataSource = DGPSStationRemoteDataSource()
+        let remoteDataSource = DGPSStationRemoteDataSourceImpl()
         InjectedValues[\.dgpsemoteDataSource] = remoteDataSource
         localDataSource.list = [dgps, dgps2]
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()

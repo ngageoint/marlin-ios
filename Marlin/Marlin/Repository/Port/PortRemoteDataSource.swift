@@ -10,17 +10,21 @@ import UIKit
 import BackgroundTasks
 
 private struct PortRemoteDataSourceProviderKey: InjectionKey {
-    static var currentValue: PortRemoteDataSource = PortRemoteDataSource()
+    static var currentValue: any PortRemoteDataSource = PortRemoteDataSourceImpl()
 }
 
 extension InjectedValues {
-    var portRemoteDataSource: PortRemoteDataSource {
+    var portRemoteDataSource: any PortRemoteDataSource {
         get { Self[PortRemoteDataSourceProviderKey.self] }
         set { Self[PortRemoteDataSourceProviderKey.self] = newValue }
     }
 }
 
-actor PortRemoteDataSource: RemoteDataSource {
+protocol PortRemoteDataSource: RemoteDataSource {
+    func fetch() async -> [PortModel]
+}
+
+actor PortRemoteDataSourceImpl: PortRemoteDataSource {
     typealias DataModel = PortModel
     
     let _backgroundFetchQueue: OperationQueue
@@ -39,9 +43,7 @@ actor PortRemoteDataSource: RemoteDataSource {
         _backgroundFetchQueue
     }
 
-    func fetch(
-        task: BGTask? = nil
-    ) async -> [PortModel] {
+    func fetch() async -> [PortModel] {
         let operation = PortDataFetchOperation()
         return await fetch(operation: operation)
     }

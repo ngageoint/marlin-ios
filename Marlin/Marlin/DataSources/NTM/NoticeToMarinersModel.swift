@@ -11,7 +11,7 @@ import GeoJSON
 import UIKit
 import OSLog
 
-struct NoticeToMarinersListModel: Hashable, Identifiable {
+struct NoticeToMarinersListModel: Hashable, Identifiable, Sendable {
     var dateString: String? {
         if let date = lastModified {
             return DataSources.noticeToMariners.dateFormatter.string(from: date)

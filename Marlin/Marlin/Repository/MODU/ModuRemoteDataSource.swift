@@ -10,17 +10,21 @@ import UIKit
 import BackgroundTasks
 
 private struct ModuRemoteDataSourceProviderKey: InjectionKey {
-    static var currentValue: ModuRemoteDataSource = ModuRemoteDataSource()
+    static var currentValue: any ModuRemoteDataSource = ModuRemoteDataSourceImpl()
 }
 
 extension InjectedValues {
-    var moduRemoteDataSource: ModuRemoteDataSource {
+    var moduRemoteDataSource: any ModuRemoteDataSource {
         get { Self[ModuRemoteDataSourceProviderKey.self] }
         set { Self[ModuRemoteDataSourceProviderKey.self] = newValue }
     }
 }
 
-actor ModuRemoteDataSource: RemoteDataSource {
+protocol ModuRemoteDataSource: RemoteDataSource {
+    func fetch(dateString: String?) async -> [ModuModel]
+}
+
+actor ModuRemoteDataSourceImpl: ModuRemoteDataSource {
     typealias DataModel = ModuModel
     
     let _backgroundFetchQueue: OperationQueue
@@ -39,7 +43,7 @@ actor ModuRemoteDataSource: RemoteDataSource {
         _backgroundFetchQueue
     }
 
-    func fetch(task: BGTask? = nil, dateString: String? = nil) async -> [ModuModel] {
+    func fetch(dateString: String? = nil) async -> [ModuModel] {
         let operation = ModuDataFetchOperation(dateString: dateString)
         return await fetch(operation: operation)
     }

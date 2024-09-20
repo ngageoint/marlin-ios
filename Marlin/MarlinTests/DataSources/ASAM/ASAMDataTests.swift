@@ -147,7 +147,7 @@ final class ASAMDataTests: XCTestCase {
 
         let localDataSource = AsamCoreDataDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
-        let remoteDataSource = AsamRemoteDataSource()
+        let remoteDataSource = AsamRemoteDataSourceImpl()
         InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         
         let repository = AsamRepository()

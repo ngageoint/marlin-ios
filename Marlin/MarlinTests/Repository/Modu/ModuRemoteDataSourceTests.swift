@@ -19,7 +19,7 @@ final class ModuRemoteDataSourceTests: XCTestCase {
     }
 
     func testFetchModusWithoutTask() async {
-        let dataSource = ModuRemoteDataSource()
+        let dataSource = ModuRemoteDataSourceImpl()
 
         stub(condition: isScheme("https") && pathEndsWith("/publications/modu")) { request in
             let jsonObject = [

@@ -19,7 +19,7 @@ final class RadioBeaconRemoteDataSourceTests: XCTestCase {
     }
 
     func testFetchRadioBeaconsWithoutTask() async {
-        let dataSource = RadioBeaconRemoteDataSource()
+        let dataSource = RadioBeaconRemoteDataSourceImpl()
 
         stub(condition: isScheme("https") && pathEndsWith("/publications/ngalol/radiobeacons")) { request in
             let jsonObject = [

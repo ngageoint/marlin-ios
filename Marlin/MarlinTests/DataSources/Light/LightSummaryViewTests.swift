@@ -14,7 +14,7 @@ import SwiftUI
 
 final class LightSummaryViewTests: XCTestCase {
 
-    func testLoading() throws {
+    func testLoading() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var light = LightModel()
 
@@ -34,7 +34,7 @@ final class LightSummaryViewTests: XCTestCase {
         light.canBookmark = true
 
         let localDataSource = LightStaticLocalDataSource()
-        let remoteDataSource = LightRemoteDataSource()
+        let remoteDataSource = LightRemoteDataSourceImpl()
         InjectedValues[\.lightLocalDataSource] = localDataSource
         InjectedValues[\.lightRemoteDataSource] = remoteDataSource
         localDataSource.list = [light]
@@ -87,7 +87,7 @@ final class LightSummaryViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: light)
+        try await BookmarkHelper().verifyBookmarkButton(bookmarkable: light)
     }
     
     func testShowMoreDetails() throws {
@@ -111,7 +111,7 @@ final class LightSummaryViewTests: XCTestCase {
 
         let router = MarlinRouter()
         let localDataSource = LightStaticLocalDataSource()
-        let remoteDataSource = LightRemoteDataSource()
+        let remoteDataSource = LightRemoteDataSourceImpl()
         InjectedValues[\.lightLocalDataSource] = localDataSource
         InjectedValues[\.lightRemoteDataSource] = remoteDataSource
         localDataSource.list = [light]

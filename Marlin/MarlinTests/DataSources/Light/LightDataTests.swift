@@ -176,7 +176,7 @@ final class LightDataTests: XCTestCase {
         bundle.mockPath = "lightMockData.json"
         
         let localDataSource = LightCoreDataDataSource()
-        let remoteDataSource = LightRemoteDataSource()
+        let remoteDataSource = LightRemoteDataSourceImpl()
         InjectedValues[\.lightLocalDataSource] = localDataSource
         InjectedValues[\.lightRemoteDataSource] = remoteDataSource
 

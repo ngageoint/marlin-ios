@@ -37,7 +37,7 @@ actor AsamRepository {
     @Injected(\.asamLocalDataSource)
     var localDataSource: AsamLocalDataSource
     @Injected(\.asamRemoteDataSource)
-    private var remoteDataSource: AsamRemoteDataSource
+    private var remoteDataSource: any AsamRemoteDataSource
     
     func createOperation() -> AsamDataFetchOperation {
         let newestAsam = localDataSource.getNewestAsam()

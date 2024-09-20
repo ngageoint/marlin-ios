@@ -114,7 +114,7 @@ final class PublicationRepositoryTests: XCTestCase {
         let remoteDataSource = PublicationStaticRemoteDataSource()
         InjectedValues[\.publicationLocalDataSource] = localDataSource
         InjectedValues[\.publicationRemoteDataSource] = remoteDataSource
-        remoteDataSource.list = models
+        await remoteDataSource.setList(models)
         let repository = PublicationRepository()
 
         let modus = await repository.fetch()
@@ -122,21 +122,22 @@ final class PublicationRepositoryTests: XCTestCase {
 
         await fulfillment(of: [loadingExpectation, loadedExpectation, updatedExpectation])
 
-        let repoEpub = repository.getPublication(s3Key: "16693989/SFH00000/108dec.pdf")
+        let repoEpub = await repository.getPublication(s3Key: "16693989/SFH00000/108dec.pdf")
         XCTAssertNotNil(repoEpub)
         XCTAssertEqual(repoEpub, localDataSource.getPublication(s3Key: "16693989/SFH00000/108dec.pdf"))
 
-        XCTAssertEqual(repository.getCount(filters: nil), localDataSource.getCount(filters: nil))
+        let repoCount = await repository.getCount(filters: nil)
+        XCTAssertEqual(repoCount, localDataSource.getCount(filters: nil))
     }
 
-    func testCreateOperation() {
+    func testCreateOperation() async {
         let localDataSource = PublicationStaticLocalDataSource()
         let remoteDataSource = PublicationStaticRemoteDataSource()
         InjectedValues[\.publicationLocalDataSource] = localDataSource
         InjectedValues[\.publicationRemoteDataSource] = remoteDataSource
 
         let repository = PublicationRepository()
-        let operation = repository.createOperation()
+        let operation = await repository.createOperation()
         XCTAssertNotNil(operation)
     }
 }

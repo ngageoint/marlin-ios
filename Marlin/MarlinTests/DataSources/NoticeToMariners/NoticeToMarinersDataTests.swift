@@ -89,7 +89,7 @@ final class NoticeToMarinersDataTests: XCTestCase {
         bundle.mockPath = "ntmMockData.json"
 
         let localDataSource = NoticeToMarinersCoreDataDataSource()
-        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        let remoteDataSource = NoticeToMarinersRemoteDataSourceImpl()
         InjectedValues[\.ntmLocalDataSource] = localDataSource
         InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
         
@@ -148,7 +148,7 @@ final class NoticeToMarinersDataTests: XCTestCase {
         let bundle = MockBundle()
         bundle.mockPath = "ntmMockData.json"
         let localDataSource = NoticeToMarinersCoreDataDataSource()
-        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        let remoteDataSource = NoticeToMarinersRemoteDataSourceImpl()
         InjectedValues[\.ntmLocalDataSource] = localDataSource
         InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
         
@@ -183,7 +183,8 @@ final class NoticeToMarinersDataTests: XCTestCase {
         }
 
         let repository = NoticeToMarinersRepository()
-        XCTAssertEqual(repository.getCount(filters: nil), 22)
+        let repoCount = await repository.getCount(filters: nil)
+        XCTAssertEqual(repoCount, 22)
         let loadingNotification2 = expectation(forNotification: .DataSourceLoading,
                                                object: nil) { notification in
             if let loading = MSI.shared.appState.loadingDataSource[DataSources.noticeToMariners.key] {
@@ -233,9 +234,10 @@ final class NoticeToMarinersDataTests: XCTestCase {
 
         await fulfillment(of: [loadingNotification2, loadedNotification2, didSaveNotification2, batchUpdateCompleteNotification2], timeout: 10)
 
-        XCTAssertEqual(repository.getCount(filters: nil), 23)
+        let repoCount2 = await repository.getCount(filters: nil)
+        XCTAssertEqual(repoCount2, 23)
 
-        let newNtm = repository.getNoticeToMariners(odsEntryId: 29432)
+        let newNtm = await repository.getNoticeToMariners(odsEntryId: 29432)
 
         XCTAssertEqual(newNtm?.noticeNumber, 202248)
     }
@@ -328,7 +330,7 @@ final class NoticeToMarinersDataTests: XCTestCase {
         bundle.tempFileContents = jsonObject
         
         let localDataSource = NoticeToMarinersCoreDataDataSource()
-        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        let remoteDataSource = NoticeToMarinersRemoteDataSourceImpl()
         InjectedValues[\.ntmLocalDataSource] = localDataSource
         InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
 
@@ -425,7 +427,7 @@ final class NoticeToMarinersDataTests: XCTestCase {
         bundle.tempFileContents = jsonObject
 
         let localDataSource = NoticeToMarinersCoreDataDataSource()
-        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        let remoteDataSource = NoticeToMarinersRemoteDataSourceImpl()
         InjectedValues[\.ntmLocalDataSource] = localDataSource
         InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
         let operation = NoticeToMarinersInitialDataLoadOperation(bundle: bundle)

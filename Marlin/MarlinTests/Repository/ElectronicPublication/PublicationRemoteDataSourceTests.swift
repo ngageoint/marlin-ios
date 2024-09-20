@@ -20,7 +20,7 @@ final class PublicationRemoteDataSourceTests: XCTestCase {
     }
 
     func testFetchAsamsWithoutTask() async {
-        let dataSource = PublicationRemoteDataSource()
+        let dataSource = PublicationRemoteDataSourceImpl()
 
         stub(condition: isScheme("https") && pathEndsWith("/publications/stored-pubs")) { request in
             let jsonObject = [

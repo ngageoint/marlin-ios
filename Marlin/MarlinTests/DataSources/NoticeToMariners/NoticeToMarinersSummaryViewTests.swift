@@ -36,7 +36,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         let localDataSource = NoticeToMarinersStaticLocalDataSource()
         localDataSource.map[ntm.odsEntryId ?? -1] = ntm
         localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
-        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        let remoteDataSource = NoticeToMarinersRemoteDataSourceImpl()
         InjectedValues[\.ntmLocalDataSource] = localDataSource
         InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
         let repository = NoticeToMarinersRepository()
@@ -44,7 +44,6 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let summaryView = NoticeToMarinersFileSummaryView(odsEntryId: ntm.odsEntryId!)
-            .environmentObject(repository)
             .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summaryView)
         let window = TestHelpers.getKeyWindowVisible()
@@ -54,7 +53,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Upload Time: \(ntm.uploadTime!.formatted(date: .complete, time: .omitted))")
     }
     
-    func testSummary() throws {
+    func testSummary() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var ntm = NoticeToMarinersModel()
 
@@ -77,7 +76,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         let localDataSource = NoticeToMarinersStaticLocalDataSource()
         localDataSource.map[ntm.odsEntryId ?? -1] = ntm
         localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
-        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        let remoteDataSource = NoticeToMarinersRemoteDataSourceImpl()
         InjectedValues[\.ntmLocalDataSource] = localDataSource
         InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
         let repository = NoticeToMarinersRepository()
@@ -85,7 +84,6 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
         let summaryView = NoticeToMarinersSummaryView(noticeToMariners: NoticeToMarinersListModel(noticeToMarinersModel: ntm))
-            .environmentObject(repository)
             .environmentObject(MarlinRouter())
 
         let controller = UIHostingController(rootView: summaryView)
@@ -94,10 +92,10 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "202247")
         tester().waitForView(withAccessibilityLabel: "November 19 - November 25")
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: ntm)
+        try await BookmarkHelper().verifyBookmarkButton(bookmarkable: ntm)
     }
     
-    func testReDownloadFullPublication() throws {
+    func testReDownloadFullPublication() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var ntm = NoticeToMarinersModel()
 
@@ -122,7 +120,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         let localDataSource = NoticeToMarinersStaticLocalDataSource()
         localDataSource.map[ntm.odsEntryId ?? -1] = ntm
         localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
-        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        let remoteDataSource = NoticeToMarinersRemoteDataSourceImpl()
         InjectedValues[\.ntmLocalDataSource] = localDataSource
         InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
         @Injected(\.ntmRepository)
@@ -153,24 +151,25 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Download")
         tester().tapView(withAccessibilityLabel: "Download")
         
-        let progressExpectation = expectation(for: repository.getNoticeToMariners(odsEntryId: ntm.odsEntryId!)?.downloadProgress == 1.0)
-
-        wait(for: [progressExpectation], timeout: 5)
-
-        expectation(forNotification: .DocumentPreview,
-                    object: nil) { notification in
-            let model: URL = try! XCTUnwrap(notification.object as? URL)
-            XCTAssertEqual(model.path, URL(string: ntm.savePath)!.path)
-            return true
-        }
-
-        tester().waitForView(withAccessibilityLabel: "Open")
-        tester().tapView(withAccessibilityLabel: "Open")
-        waitForExpectations(timeout: 10, handler: nil)
-        
-        XCTAssertTrue(repository.checkFileExists(odsEntryId: ntm.odsEntryId ?? -1))
-        tester().tapView(withAccessibilityLabel: "Delete")
-        XCTAssertFalse(repository.checkFileExists(odsEntryId: ntm.odsEntryId ?? -1))
+        XCTFail("Figure out how to test async")
+//        let progressExpectation = expectation(for: repository.getNoticeToMariners(odsEntryId: ntm.odsEntryId!)?.downloadProgress == 1.0)
+//
+//        wait(for: [progressExpectation], timeout: 5)
+//
+//        expectation(forNotification: .DocumentPreview,
+//                    object: nil) { notification in
+//            let model: URL = try! XCTUnwrap(notification.object as? URL)
+//            XCTAssertEqual(model.path, URL(string: ntm.savePath)!.path)
+//            return true
+//        }
+//
+//        tester().waitForView(withAccessibilityLabel: "Open")
+//        tester().tapView(withAccessibilityLabel: "Open")
+//        waitForExpectations(timeout: 10, handler: nil)
+//        
+//        XCTAssertTrue(repository.checkFileExists(odsEntryId: ntm.odsEntryId ?? -1))
+//        tester().tapView(withAccessibilityLabel: "Delete")
+//        XCTAssertFalse(repository.checkFileExists(odsEntryId: ntm.odsEntryId ?? -1))
     }
     
     func testDownloadFullPublication() throws {
@@ -198,7 +197,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         let localDataSource = NoticeToMarinersStaticLocalDataSource()
         localDataSource.map[ntm.odsEntryId ?? -1] = ntm
         localDataSource.deleteFile(odsEntryId: ntm.odsEntryId ?? -1)
-        let remoteDataSource = NoticeToMarinersRemoteDataSource()
+        let remoteDataSource = NoticeToMarinersRemoteDataSourceImpl()
         InjectedValues[\.ntmLocalDataSource] = localDataSource
         InjectedValues[\.ntmRemoteDataSource] = remoteDataSource
         
@@ -231,24 +230,25 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Download")
         tester().tapView(withAccessibilityLabel: "Download")
         
-        let progressExpectation = expectation(for: repository.getNoticeToMariners(odsEntryId: ntm.odsEntryId!)?.downloadProgress == 1.0)
-
-        wait(for: [progressExpectation], timeout: 5)
-
-        expectation(forNotification: .DocumentPreview,
-                    object: nil) { notification in
-            let model: URL = try! XCTUnwrap(notification.object as? URL)
-            XCTAssertEqual(model.path, URL(string: ntm.savePath)!.path)
-            return true
-        }
-
-        tester().waitForView(withAccessibilityLabel: "Open")
-        tester().tapView(withAccessibilityLabel: "Open")
-        waitForExpectations(timeout: 10, handler: nil)
-        
-        XCTAssertTrue(repository.checkFileExists(odsEntryId: ntm.odsEntryId ?? -1))
-        tester().tapView(withAccessibilityLabel: "Delete")
-        XCTAssertFalse(repository.checkFileExists(odsEntryId: ntm.odsEntryId ?? -1))
+        XCTFail("Figure out how to test async")
+//        let progressExpectation = expectation(for: repository.getNoticeToMariners(odsEntryId: ntm.odsEntryId!)?.downloadProgress == 1.0)
+//
+//        wait(for: [progressExpectation], timeout: 5)
+//
+//        expectation(forNotification: .DocumentPreview,
+//                    object: nil) { notification in
+//            let model: URL = try! XCTUnwrap(notification.object as? URL)
+//            XCTAssertEqual(model.path, URL(string: ntm.savePath)!.path)
+//            return true
+//        }
+//
+//        tester().waitForView(withAccessibilityLabel: "Open")
+//        tester().tapView(withAccessibilityLabel: "Open")
+//        waitForExpectations(timeout: 10, handler: nil)
+//        
+//        XCTAssertTrue(repository.checkFileExists(odsEntryId: ntm.odsEntryId ?? -1))
+//        tester().tapView(withAccessibilityLabel: "Delete")
+//        XCTAssertFalse(repository.checkFileExists(odsEntryId: ntm.odsEntryId ?? -1))
     }
 
 }

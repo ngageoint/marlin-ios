@@ -113,7 +113,8 @@ final class NavigationalWarningDataTests: XCTestCase {
 
         await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification, processed], timeout: 10)
 
-        XCTAssertEqual(repository.getCount(filters: nil), 2)
+        let repoCount = await repository.getCount(filters: nil)
+        XCTAssertEqual(repoCount, 2)
     }
     
     func testRejectInvalidNavigationalWarningNoMsgYear() async throws {
@@ -556,7 +557,8 @@ final class NavigationalWarningDataTests: XCTestCase {
 
         await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification, processed], timeout: 10)
 
-        XCTAssertEqual(repository.getCount(filters: nil), 2)
+        let repoCount = await repository.getCount(filters: nil)
+        XCTAssertEqual(repoCount, 2)
 
         let loadingNotification2 = expectation(forNotification: .DataSourceLoading,
                                                object: nil) { notification in
@@ -615,7 +617,8 @@ final class NavigationalWarningDataTests: XCTestCase {
 
         await fulfillment(of: [loadingNotification2, loadedNotification2, didSaveNotification2, batchUpdateCompleteNotification2, processed2], timeout: 10)
 
-        XCTAssertEqual(repository.getCount(filters: nil), 1)
+        let repoCount2 = await repository.getCount(filters: nil)
+        XCTAssertEqual(repoCount2, 1)
     }
     
     func testUpdateNavigationalWarningsDeleteOldAddNew() async throws {
@@ -747,7 +750,8 @@ final class NavigationalWarningDataTests: XCTestCase {
 
         await fulfillment(of: [loadingNotification, loadedNotification, didSaveNotification, batchUpdateCompleteNotification, processed], timeout: 10)
 
-        XCTAssertEqual(repository.getCount(filters: nil), 2)
+        let repoCount = await repository.getCount(filters: nil)
+        XCTAssertEqual(repoCount, 2)
 
         let loadingNotification2 = expectation(forNotification: .DataSourceLoading,
                                                object: nil) { notification in
@@ -792,9 +796,10 @@ final class NavigationalWarningDataTests: XCTestCase {
             processed2
         ], timeout: 10)
 
-        XCTAssertEqual(repository.getCount(filters: nil), 1)
+        let repoCount2 = await repository.getCount(filters: nil)
+        XCTAssertEqual(repoCount2, 1)
 
-        let navWarn = repository.getNavigationalWarning(msgYear: 2023, msgNumber: 1177, navArea: "4")
+        let navWarn = await repository.getNavigationalWarning(msgYear: 2023, msgNumber: 1177, navArea: "4")
 
         XCTAssertEqual(navWarn!.msgYear, 2023)
         XCTAssertEqual(navWarn!.msgNumber, 1177)

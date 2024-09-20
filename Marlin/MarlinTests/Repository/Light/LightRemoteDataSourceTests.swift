@@ -19,7 +19,7 @@ final class LightRemoteDataSourceTests: XCTestCase {
     }
 
     func testFetchLightsWithoutTaskNoNoticeNumber() async {
-        let dataSource = LightRemoteDataSource()
+        let dataSource = LightRemoteDataSourceImpl()
 
         stub(condition: isScheme("https") && pathEndsWith("/publications/ngalol/lights-buoys") && !containsQueryParams(["volume": "110"])) { request in
             let jsonObject = [
@@ -90,13 +90,13 @@ final class LightRemoteDataSourceTests: XCTestCase {
             return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
         }
 
-        let lights = await dataSource.fetch(task: nil, volume: "PUB 110", noticeYear: nil, noticeWeek: nil)
+        let lights = await dataSource.fetch(volume: "PUB 110", noticeYear: nil, noticeWeek: nil)
 
         XCTAssertEqual(lights.count, 2)
     }
 
     func testFetchLightsWithoutTaskWithNoticeNumber() async {
-        let dataSource = LightRemoteDataSource()
+        let dataSource = LightRemoteDataSourceImpl()
 
         stub(condition: isScheme("https") && pathEndsWith("/publications/ngalol/lights-buoys") && !containsQueryParams(["volume": "110"])) { request in
             let jsonObject = [
@@ -168,7 +168,7 @@ final class LightRemoteDataSourceTests: XCTestCase {
             return HTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: ["Content-Type":"application/json"])
         }
 
-        let lights = await dataSource.fetch(task: nil, volume: "PUB 110", noticeYear: "2015", noticeWeek: "08")
+        let lights = await dataSource.fetch(volume: "PUB 110", noticeYear: "2015", noticeWeek: "08")
 
         XCTAssertEqual(lights.count, 2)
     }

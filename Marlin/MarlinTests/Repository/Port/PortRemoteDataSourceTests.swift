@@ -20,7 +20,7 @@ final class PortRemoteDataSourceTests: XCTestCase {
     }
 
     func testFetchPortsWithoutTask() async {
-        let dataSource = PortRemoteDataSource()
+        let dataSource = PortRemoteDataSourceImpl()
 
         stub(condition: isScheme("https") && pathEndsWith("/publications/world-port-index")) { request in
             let jsonObject = [

@@ -184,8 +184,8 @@ struct NavigationalWarningNavAreaListView: View {
             .accessibilityElement(children: .contain)
             .accessibilityIdentifier("Navigation Warning Scroll")
         }
-        .onAppear {
-            dataSource.getNavigationalWarnings(navArea: navArea)
+        .task {
+            await dataSource.getNavigationalWarnings(navArea: navArea)
             Metrics.shared.appRoute([NavigationalWarning.metricsKey, "list"])
             shouldSavePosition = false
         }

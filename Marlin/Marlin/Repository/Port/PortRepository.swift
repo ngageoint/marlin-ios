@@ -37,7 +37,7 @@ actor PortRepository: ObservableObject {
     @Injected(\.portLocalDataSource)
     private var localDataSource: PortLocalDataSource
     @Injected(\.portRemoteDataSource)
-    private var remoteDataSource: PortRemoteDataSource
+    private var remoteDataSource: any PortRemoteDataSource
     func createOperation() -> PortDataFetchOperation {
         return PortDataFetchOperation()
     }

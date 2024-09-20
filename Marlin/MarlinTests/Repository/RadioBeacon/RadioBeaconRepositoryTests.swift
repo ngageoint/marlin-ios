@@ -113,7 +113,7 @@ final class RadioBeaconRepositoryTests: XCTestCase {
         let remoteDataSource = RadioBeaconStaticRemoteDataSource()
         InjectedValues[\.radioBeaconLocalDataSource] = localDataSource
         InjectedValues[\.radioBeaconRemoteDataSource] = remoteDataSource
-        remoteDataSource.list = models
+        await remoteDataSource.setList(list: models)
         let repository = RadioBeaconRepository()
 
         let radioBeacons = await repository.fetchRadioBeacons()

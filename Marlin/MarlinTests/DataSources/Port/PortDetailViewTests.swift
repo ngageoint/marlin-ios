@@ -131,7 +131,7 @@ final class PortDetailViewTests: XCTestCase {
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         let localDataSource = PortStaticLocalDataSource()
-        let remoteDataSource = PortRemoteDataSource()
+        let remoteDataSource = PortRemoteDataSourceImpl()
         InjectedValues[\.portLocalDataSource] = localDataSource
         InjectedValues[\.portRemoteDataSource] = remoteDataSource
         localDataSource.list = [port]
@@ -389,7 +389,7 @@ final class PortDetailViewTests: XCTestCase {
         let mockCLLocation = MockCLLocationManager()
         let mockLocationManager = MockLocationManager(locationManager: mockCLLocation)
         let localDataSource = PortStaticLocalDataSource()
-        let remoteDataSource = PortRemoteDataSource()
+        let remoteDataSource = PortRemoteDataSourceImpl()
         InjectedValues[\.portLocalDataSource] = localDataSource
         InjectedValues[\.portRemoteDataSource] = remoteDataSource
         localDataSource.list = [port]

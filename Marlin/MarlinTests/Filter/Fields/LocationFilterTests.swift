@@ -13,7 +13,7 @@ import CoreLocation
 
 final class LocationFilterTests: XCTestCase {
     
-    func testFilterChange() throws {
+    func testFilterChange() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough: ObservableObject {
             var viewModel: DataSourcePropertyFilterViewModel?
@@ -49,10 +49,10 @@ final class LocationFilterTests: XCTestCase {
         mockLocationManager.currentNavArea = nil
         
         let passThrough = PassThrough()
-        let view = Container(passThrough: passThrough)
+        let view = await Container(passThrough: passThrough)
             .environmentObject(mockLocationManager as LocationManager)
         
-        let controller = UIHostingController(rootView: view)
+        let controller = await UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Location latitude input")
@@ -62,9 +62,13 @@ final class LocationFilterTests: XCTestCase {
         tester().waitForAnimationsToFinish()
         tester().waitForView(withAccessibilityLabel: "Done")
         tester().tapView(withAccessibilityLabel: "Done")
-        XCTAssertEqual(passThrough.viewModel?.valueLatitudeString, "10.2")
-        XCTAssertEqual(passThrough.viewModel?.valueLatitude, 10.2)
-        XCTAssertFalse(passThrough.viewModel!.isValid)
+        
+        var lats = await passThrough.viewModel?.valueLatitudeString
+        XCTAssertEqual(lats, "10.2")
+        var lat = await passThrough.viewModel?.valueLatitude
+        XCTAssertEqual(lat, 10.2)
+        var valid = await passThrough.viewModel!.isValid
+        XCTAssertFalse(valid)
         
         tester().waitForView(withAccessibilityLabel: "Location longitude input")
         tester().tapView(withAccessibilityLabel: "Location longitude input")
@@ -73,10 +77,14 @@ final class LocationFilterTests: XCTestCase {
         tester().waitForAnimationsToFinish()
         tester().waitForView(withAccessibilityLabel: "Done")
         tester().tapView(withAccessibilityLabel: "Done")
-        XCTAssertEqual(passThrough.viewModel?.valueLongitudeString, "20.3")
-        XCTAssertEqual(passThrough.viewModel?.valueLongitude, 20.3)
-        XCTAssertEqual(passThrough.viewModel?.selectedComparison, .closeTo)
-        XCTAssertFalse(passThrough.viewModel!.isValid)
+        var lons = await passThrough.viewModel?.valueLongitudeString
+        XCTAssertEqual(lons, "20.3")
+        var lon = await passThrough.viewModel?.valueLongitude
+        XCTAssertEqual(lon, 20.3)
+        var comparison = await passThrough.viewModel?.selectedComparison
+        XCTAssertEqual(comparison, .closeTo)
+        var valid2 = await passThrough.viewModel!.isValid
+        XCTAssertFalse(valid2)
         
         tester().waitForView(withAccessibilityLabel: "Location distance input")
         tester().tapView(withAccessibilityLabel: "Location distance input")
@@ -85,11 +93,13 @@ final class LocationFilterTests: XCTestCase {
         tester().waitForAnimationsToFinish()
         tester().waitForView(withAccessibilityLabel: "Done")
         tester().tapView(withAccessibilityLabel: "Done")
-        XCTAssertEqual(passThrough.viewModel?.valueInt, 500)
-        XCTAssertTrue(passThrough.viewModel!.isValid)
+        var int = await passThrough.viewModel?.valueInt
+        XCTAssertEqual(int, 500)
+        var valid3 = await passThrough.viewModel!.isValid
+        XCTAssertTrue(valid3)
     }
     
-    func xtestSetLocationWithMap() throws {
+    func xtestSetLocationWithMap() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough: ObservableObject {
             var viewModel: DataSourcePropertyFilterViewModel?
@@ -123,10 +133,10 @@ final class LocationFilterTests: XCTestCase {
         mockLocationManager.currentNavArea = nil
         
         let passThrough = PassThrough()
-        let view = Container(passThrough: passThrough)
+        let view = await Container(passThrough: passThrough)
             .environmentObject(mockLocationManager as LocationManager)
         
-        let controller = UIHostingController(rootView: view)
+        let controller = await UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForTappableView(withAccessibilityLabel: "Location map input")
@@ -135,11 +145,17 @@ final class LocationFilterTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Location map input")
         tester().wait(forTimeInterval: 2)
         tester().waitForView(withAccessibilityLabel: "Location map input2")
-        XCTAssertEqual(passThrough.viewModel?.valueLatitudeString, "0.0")
-        XCTAssertEqual(passThrough.viewModel?.valueLatitude, 0.0)
-        XCTAssertEqual(passThrough.viewModel?.valueLongitudeString, "0.0")
-        XCTAssertEqual(passThrough.viewModel?.valueLongitude, 0.0)
-        XCTAssertFalse(passThrough.viewModel!.isValid)
+        var lats = await passThrough.viewModel?.valueLatitudeString
+        var lat = await passThrough.viewModel?.valueLatitude
+        var lons = await passThrough.viewModel?.valueLongitudeString
+        var lon = await passThrough.viewModel?.valueLongitude
+        var valid = await passThrough.viewModel!.isValid
+        
+        XCTAssertEqual(lats, "0.0")
+        XCTAssertEqual(lat, 0.0)
+        XCTAssertEqual(lons, "0.0")
+        XCTAssertEqual(lon, 0.0)
+        XCTAssertFalse(valid)
         
         tester().waitForView(withAccessibilityLabel: "Location distance input")
         tester().tapView(withAccessibilityLabel: "Location distance input")
@@ -148,11 +164,13 @@ final class LocationFilterTests: XCTestCase {
         tester().waitForAnimationsToFinish()
         tester().waitForView(withAccessibilityLabel: "Done")
         tester().tapView(withAccessibilityLabel: "Done")
-        XCTAssertEqual(passThrough.viewModel?.valueInt, 500)
-        XCTAssertTrue(passThrough.viewModel!.isValid)
+        var int = await passThrough.viewModel?.valueInt
+        XCTAssertEqual(int, 500)
+        var valid2 = await passThrough.viewModel!.isValid
+        XCTAssertTrue(valid2)
     }
     
-    func testInvalid() throws {
+    func testInvalid() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough: ObservableObject {
             var viewModel: DataSourcePropertyFilterViewModel?
@@ -185,10 +203,10 @@ final class LocationFilterTests: XCTestCase {
         mockLocationManager.currentNavArea = nil
         
         let passThrough = PassThrough()
-        let view = Container(passThrough: passThrough)
+        let view = await Container(passThrough: passThrough)
             .environmentObject(mockLocationManager as LocationManager)
         
-        let controller = UIHostingController(rootView: view)
+        let controller = await UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Location latitude input")
@@ -199,9 +217,12 @@ final class LocationFilterTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Done")
         tester().tapView(withAccessibilityLabel: "Done")
         tester().waitForView(withAccessibilityLabel: "Invalid Latitude")
-        XCTAssertEqual(passThrough.viewModel?.valueLatitudeString, "Turtle")
-        XCTAssertEqual(passThrough.viewModel?.valueLatitude, nil)
-        XCTAssertFalse(passThrough.viewModel!.isValid)
+        var lats = await passThrough.viewModel?.valueLatitudeString
+        var lat = await passThrough.viewModel?.valueLatitude
+        var valid = await passThrough.viewModel!.isValid
+        XCTAssertEqual(lats, "Turtle")
+        XCTAssertEqual(lat, nil)
+        XCTAssertFalse(valid)
         
         tester().waitForView(withAccessibilityLabel: "Location longitude input")
         tester().tapView(withAccessibilityLabel: "Location longitude input")
@@ -211,10 +232,14 @@ final class LocationFilterTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Done")
         tester().tapView(withAccessibilityLabel: "Done")
         tester().waitForView(withAccessibilityLabel: "Invalid Longitude")
-        XCTAssertEqual(passThrough.viewModel?.valueLongitudeString, "tiger")
-        XCTAssertEqual(passThrough.viewModel?.valueLongitude, nil)
-        XCTAssertEqual(passThrough.viewModel?.selectedComparison, .closeTo)
-        XCTAssertFalse(passThrough.viewModel!.isValid)
+        var lons = await passThrough.viewModel?.valueLongitudeString
+        var lon = await passThrough.viewModel?.valueLongitude
+        var comparison = await passThrough.viewModel?.selectedComparison
+        valid = await passThrough.viewModel!.isValid
+        XCTAssertEqual(lons, "tiger")
+        XCTAssertEqual(lon, nil)
+        XCTAssertEqual(comparison, .closeTo)
+        XCTAssertFalse(valid)
         
         tester().waitForView(withAccessibilityLabel: "Location distance input")
         tester().tapView(withAccessibilityLabel: "Location distance input")
@@ -224,11 +249,13 @@ final class LocationFilterTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Done")
         tester().tapView(withAccessibilityLabel: "Done")
         
-        XCTAssertEqual(passThrough.viewModel?.valueInt, nil)
-        XCTAssertFalse(passThrough.viewModel!.isValid)
+        var int = await passThrough.viewModel?.valueInt
+        XCTAssertEqual(int, nil)
+        valid = await passThrough.viewModel!.isValid
+        XCTAssertFalse(valid)
     }
     
-    func testNearMeNoLocation() {
+    func testNearMeNoLocation() async {
         class PassThrough: ObservableObject {
             var viewModel: DataSourcePropertyFilterViewModel?
             init() {
@@ -266,20 +293,21 @@ final class LocationFilterTests: XCTestCase {
         mockLocationManager.lastLocation = nil
         
         let passThrough = PassThrough()
-        let view = Container(passThrough: passThrough)
+        let view = await Container(passThrough: passThrough)
             .environmentObject(mockLocationManager as LocationManager)
         
-        let controller = UIHostingController(rootView: view)
+        let controller = await UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Location latitude input")
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Location longitude input")
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Location distance input")
         tester().waitForView(withAccessibilityLabel: "No current location")
-        XCTAssertFalse(passThrough.viewModel!.isValid)
+        var valid = await passThrough.viewModel!.isValid
+        XCTAssertFalse(valid)
     }
     
-    func testNearMe() throws {
+    func testNearMe() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough: ObservableObject {
             var viewModel: DataSourcePropertyFilterViewModel?
@@ -320,16 +348,17 @@ final class LocationFilterTests: XCTestCase {
         mockLocationManager.currentNavArea = nil
         
         let passThrough = PassThrough()
-        let view = Container(passThrough: passThrough)
+        let view = await Container(passThrough: passThrough)
             .environmentObject(mockLocationManager as LocationManager)
         
-        let controller = UIHostingController(rootView: view)
+        let controller = await UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Location latitude input")
         tester().waitForAbsenceOfView(withAccessibilityLabel: "Location longitude input")
         tester().waitForView(withAccessibilityLabel: "Location distance input")
-        XCTAssertFalse(passThrough.viewModel!.isValid)
+        var valid = await passThrough.viewModel!.isValid
+        XCTAssertFalse(valid)
         
         tester().tapView(withAccessibilityLabel: "Location distance input")
         tester().clearTextFromFirstResponder()
@@ -337,11 +366,13 @@ final class LocationFilterTests: XCTestCase {
         tester().waitForAnimationsToFinish()
         tester().waitForView(withAccessibilityLabel: "Done")
         tester().tapView(withAccessibilityLabel: "Done")
-        XCTAssertEqual(passThrough.viewModel?.valueInt, 500)
-        XCTAssertTrue(passThrough.viewModel!.isValid)
+        var int = await passThrough.viewModel?.valueInt
+        XCTAssertEqual(int, 500)
+        valid = await passThrough.viewModel!.isValid
+        XCTAssertTrue(valid)
     }
 
-    func testBounds() throws {
+    func testBounds() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         class PassThrough: ObservableObject {
             var viewModel: DataSourcePropertyFilterViewModel?
@@ -377,10 +408,10 @@ final class LocationFilterTests: XCTestCase {
         mockLocationManager.currentNavArea = nil
 
         let passThrough = PassThrough()
-        let view = Container(passThrough: passThrough)
+        let view = await Container(passThrough: passThrough)
             .environmentObject(mockLocationManager as LocationManager)
 
-        let controller = UIHostingController(rootView: view)
+        let controller = await UIHostingController(rootView: view)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         tester().waitForView(withAccessibilityLabel: "Location min latitude input")
@@ -390,9 +421,12 @@ final class LocationFilterTests: XCTestCase {
         tester().waitForAnimationsToFinish()
         tester().waitForView(withAccessibilityLabel: "Done")
         tester().tapView(withAccessibilityLabel: "Done")
-        XCTAssertEqual(passThrough.viewModel?.valueMinLatitudeString, "10.2")
-        XCTAssertEqual(passThrough.viewModel?.valueMinLatitude, 10.2)
-        XCTAssertFalse(passThrough.viewModel!.isValid)
+        var minlats = await passThrough.viewModel?.valueMinLatitudeString
+        var minLat = await passThrough.viewModel?.valueMinLatitude
+        var valid = await passThrough.viewModel!.isValid
+        XCTAssertEqual(minlats, "10.2")
+        XCTAssertEqual(minLat, 10.2)
+        XCTAssertFalse(valid)
 
         tester().waitForView(withAccessibilityLabel: "Location max latitude input")
         tester().tapView(withAccessibilityLabel: "Location max latitude input")
@@ -401,9 +435,12 @@ final class LocationFilterTests: XCTestCase {
         tester().waitForAnimationsToFinish()
         tester().waitForView(withAccessibilityLabel: "Done")
         tester().tapView(withAccessibilityLabel: "Done")
-        XCTAssertEqual(passThrough.viewModel?.valueMaxLatitudeString, "10.4")
-        XCTAssertEqual(passThrough.viewModel?.valueMaxLatitude, 10.4)
-        XCTAssertFalse(passThrough.viewModel!.isValid)
+        var maxLats = await passThrough.viewModel?.valueMaxLatitudeString
+        var maxLat = await passThrough.viewModel?.valueMaxLatitude
+        valid = await passThrough.viewModel!.isValid
+        XCTAssertEqual(maxLats, "10.4")
+        XCTAssertEqual(maxLat, 10.4)
+        XCTAssertFalse(valid)
 
         tester().waitForView(withAccessibilityLabel: "Location min longitude input")
         tester().tapView(withAccessibilityLabel: "Location min longitude input")
@@ -412,9 +449,12 @@ final class LocationFilterTests: XCTestCase {
         tester().waitForAnimationsToFinish()
         tester().waitForView(withAccessibilityLabel: "Done")
         tester().tapView(withAccessibilityLabel: "Done")
-        XCTAssertEqual(passThrough.viewModel?.valueMinLongitudeString, "20.3")
-        XCTAssertEqual(passThrough.viewModel?.valueMinLongitude, 20.3)
-        XCTAssertFalse(passThrough.viewModel!.isValid)
+        var minLons = await passThrough.viewModel?.valueMinLongitudeString
+        var minLon = await passThrough.viewModel?.valueMinLongitude
+        valid = await passThrough.viewModel!.isValid
+        XCTAssertEqual(minLons, "20.3")
+        XCTAssertEqual(minLon, 20.3)
+        XCTAssertFalse(valid)
 
         tester().waitForView(withAccessibilityLabel: "Location max longitude input")
         tester().tapView(withAccessibilityLabel: "Location max longitude input")
@@ -423,8 +463,11 @@ final class LocationFilterTests: XCTestCase {
         tester().waitForAnimationsToFinish()
         tester().waitForView(withAccessibilityLabel: "Done")
         tester().tapView(withAccessibilityLabel: "Done")
-        XCTAssertEqual(passThrough.viewModel?.valueMaxLongitudeString, "20.5")
-        XCTAssertEqual(passThrough.viewModel?.valueMaxLongitude, 20.5)
-        XCTAssertTrue(passThrough.viewModel!.isValid)
+        var maxLons = await passThrough.viewModel?.valueMaxLongitudeString
+        var maxLon = await passThrough.viewModel?.valueMaxLongitude
+        valid = await passThrough.viewModel!.isValid
+        XCTAssertEqual(maxLons, "20.5")
+        XCTAssertEqual(maxLon, 20.5)
+        XCTAssertTrue(valid)
     }
 }

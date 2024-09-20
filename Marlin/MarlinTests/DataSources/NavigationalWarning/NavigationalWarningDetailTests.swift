@@ -13,7 +13,7 @@ import SwiftUI
 
 final class NavigationalWarningDetailTests: XCTestCase {
 
-    func testLoading() throws {
+    func testLoading() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var newItem = NavigationalWarningModel(navArea: "P")
 
@@ -71,6 +71,6 @@ final class NavigationalWarningDetailTests: XCTestCase {
         let textView = viewTester().usingLabel("Text").view as! UITextView
         XCTAssertEqual(textView.text, newItem.text)
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: newItem)
+        try await BookmarkHelper().verifyBookmarkButton(bookmarkable: newItem)
     }
 }

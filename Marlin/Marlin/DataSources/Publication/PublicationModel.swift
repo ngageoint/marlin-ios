@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PublicationListModel: Hashable, Identifiable, Bookmarkable {
+struct PublicationListModel: Hashable, Identifiable, Bookmarkable, Sendable {
     var id: String {
         s3Key ?? ""
     }

@@ -42,7 +42,7 @@ actor NoticeToMarinersRepository {
     @Injected(\.ntmLocalDataSource)
     private var localDataSource: NoticeToMarinersLocalDataSource
     @Injected(\.ntmRemoteDataSource)
-    private var remoteDataSource: NoticeToMarinersRemoteDataSource
+    private var remoteDataSource: any NoticeToMarinersRemoteDataSource
 
     func createOperation() -> NoticeToMarinersDataFetchOperation {
         let newestNotice = localDataSource.getNewestNoticeToMariners()
@@ -132,11 +132,30 @@ extension NoticeToMarinersRepository {
             return
         }
         let subject = PassthroughSubject<DownloadProgress, Never>()
+        
+//        let connectable = subject.makeConnectable()
+//        connectable.sink(
+//            receiveCompletion: { [weak self] _ in
+//                Task {
+////                    print(connectable)
+//                        await self?.remoteDataSource.cleanupDownload(model: notice)
+////                        if let cancellable = cancellable {
+////                            await self?.removeCancellable(cancellable)
+////                        }
+//                }
+//            },
+//            receiveValue: { downloadProgress in
+//                self.localDataSource.updateProgress(odsEntryId: odsEntryId, progress: downloadProgress)
+//            }
+//        )
+//        .store(in: &cancellables)
+//        connectable.connect().store(in: &cancellables)
+        
         var cancellable: AnyCancellable?
         cancellable = subject
             .sink(
                 receiveCompletion: { [weak self] _ in
-                    Task { [weak self] in
+                    Task {
                         await self?.remoteDataSource.cleanupDownload(model: notice)
                         if let cancellable = cancellable {
                             await self?.removeCancellable(cancellable)

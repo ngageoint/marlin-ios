@@ -42,7 +42,7 @@ final class PublicationSummaryViewTests: XCTestCase {
         epub.pubsecLastModified = Date(timeIntervalSince1970: 0)
 
         let localDataSource = PublicationStaticLocalDataSource()
-        let remoteDataSource = PublicationRemoteDataSource()
+        let remoteDataSource = PublicationRemoteDataSourceImpl()
         InjectedValues[\.publicationLocalDataSource] = localDataSource
         InjectedValues[\.publicationRemoteDataSource] = remoteDataSource
         localDataSource.map[epub.s3Key ?? ""] = epub
@@ -127,23 +127,24 @@ final class PublicationSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Download")
         tester().tapView(withAccessibilityLabel: "Download")
         
-        let progressExpectation = expectation(for: repository.getPublication(s3Key: epub.s3Key)?.downloadProgress == 1.0)
-
-        wait(for: [progressExpectation], timeout: 5)
-        let preview = expectation(forNotification: .DocumentPreview,
-                    object: nil) { notification in
-            let model: URL = try! XCTUnwrap(notification.object as? URL)
-            XCTAssertEqual(model.path, URL(string: epub.savePath)!.path)
-            return true
-        }
-        
-        tester().waitForView(withAccessibilityLabel: "Open")
-        tester().tapView(withAccessibilityLabel: "Open")
-        wait(for: [preview], timeout: 5)
-
-        XCTAssertTrue(repository.checkFileExists(id: epub.s3Key ?? ""))
-        tester().tapView(withAccessibilityLabel: "Delete")
-        XCTAssertFalse(repository.checkFileExists(id: epub.s3Key ?? ""))
+        XCTFail("Figure out how to test async")
+//        let progressExpectation = expectation(for: repository.getPublication(s3Key: epub.s3Key)?.downloadProgress == 1.0)
+//
+//        wait(for: [progressExpectation], timeout: 5)
+//        let preview = expectation(forNotification: .DocumentPreview,
+//                    object: nil) { notification in
+//            let model: URL = try! XCTUnwrap(notification.object as? URL)
+//            XCTAssertEqual(model.path, URL(string: epub.savePath)!.path)
+//            return true
+//        }
+//        
+//        tester().waitForView(withAccessibilityLabel: "Open")
+//        tester().tapView(withAccessibilityLabel: "Open")
+//        wait(for: [preview], timeout: 5)
+//
+//        XCTAssertTrue(repository.checkFileExists(id: epub.s3Key ?? ""))
+//        tester().tapView(withAccessibilityLabel: "Delete")
+//        XCTAssertFalse(repository.checkFileExists(id: epub.s3Key ?? ""))
     }
     
     func testDownloadError() throws {
@@ -268,25 +269,26 @@ final class PublicationSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Download")
         tester().tapView(withAccessibilityLabel: "Download")
         
-        let progressExpectation = expectation(for: repository.getPublication(s3Key: epub.s3Key)?.downloadProgress == 1.0)
-
-        wait(for: [progressExpectation], timeout: 5)
-        
-        expectation(forNotification: .DocumentPreview,
-                    object: nil) { notification in
-            let model: URL = try! XCTUnwrap(notification.object as? URL)
-            XCTAssertEqual(model.path, URL(string: epub.savePath)!.path)
-            return true
-        }
-        
-        tester().waitForView(withAccessibilityLabel: "Open")
-        tester().tapView(withAccessibilityLabel: "Open")
-        waitForExpectations(timeout: 10, handler: nil)
-        
-        XCTAssertTrue(repository.checkFileExists(id: epub.s3Key ?? ""))
-        tester().tapView(withAccessibilityLabel: "Delete")
-        XCTAssertFalse(repository.checkFileExists(id: epub.s3Key ?? ""))
-
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: epub)
+        XCTFail("Figure out how to test async")
+//        let progressExpectation = expectation(for: repository.getPublication(s3Key: epub.s3Key)?.downloadProgress == 1.0)
+//
+//        wait(for: [progressExpectation], timeout: 5)
+//        
+//        expectation(forNotification: .DocumentPreview,
+//                    object: nil) { notification in
+//            let model: URL = try! XCTUnwrap(notification.object as? URL)
+//            XCTAssertEqual(model.path, URL(string: epub.savePath)!.path)
+//            return true
+//        }
+//        
+//        tester().waitForView(withAccessibilityLabel: "Open")
+//        tester().tapView(withAccessibilityLabel: "Open")
+//        waitForExpectations(timeout: 10, handler: nil)
+//        
+//        XCTAssertTrue(repository.checkFileExists(id: epub.s3Key ?? ""))
+//        tester().tapView(withAccessibilityLabel: "Delete")
+//        XCTAssertFalse(repository.checkFileExists(id: epub.s3Key ?? ""))
+//
+//        try BookmarkHelper().verifyBookmarkButton(bookmarkable: epub)
     }
 }

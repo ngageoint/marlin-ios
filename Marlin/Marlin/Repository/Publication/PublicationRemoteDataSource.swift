@@ -10,17 +10,24 @@ import BackgroundTasks
 import Combine
 
 private struct PublicationRemoteDataSourceProviderKey: InjectionKey {
-    static var currentValue: PublicationRemoteDataSource = PublicationRemoteDataSource()
+    static var currentValue: any PublicationRemoteDataSource = PublicationRemoteDataSourceImpl()
 }
 
 extension InjectedValues {
-    var publicationRemoteDataSource: PublicationRemoteDataSource {
+    var publicationRemoteDataSource: any  PublicationRemoteDataSource {
         get { Self[PublicationRemoteDataSourceProviderKey.self] }
         set { Self[PublicationRemoteDataSourceProviderKey.self] = newValue }
     }
 }
 
-actor PublicationRemoteDataSource: RemoteDataSource {
+protocol PublicationRemoteDataSource: RemoteDataSource {
+    func fetch() async -> [PublicationModel]
+    func downloadFile(model: PublicationModel, subject: PassthroughSubject<DownloadProgress, Never>)
+    func cancelDownload(model: PublicationModel)
+    func cleanupDownload(model: PublicationModel)
+}
+
+actor PublicationRemoteDataSourceImpl: PublicationRemoteDataSource {
     var downloads: [String: DownloadManager] = [:]
     
     typealias DataModel = PublicationModel
@@ -40,13 +47,8 @@ actor PublicationRemoteDataSource: RemoteDataSource {
     func backgroundFetchQueue() -> OperationQueue {
         _backgroundFetchQueue
     }
-//    init() {
-//        super.init(dataSource: DataSources.epub)
-//    }
-
-    func fetch(
-        task: BGTask? = nil
-    ) async -> [PublicationModel] {
+    
+    func fetch() async -> [PublicationModel] {
         let operation = PublicationDataFetchOperation()
         return await fetch(operation: operation)
     }

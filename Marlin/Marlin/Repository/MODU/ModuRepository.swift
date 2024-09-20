@@ -39,7 +39,7 @@ actor ModuRepository: ObservableObject {
     var localDataSource: ModuLocalDataSource
     
     @Injected(\.moduRemoteDataSource)
-    private var remoteDataSource: ModuRemoteDataSource
+    private var remoteDataSource: any ModuRemoteDataSource
 
     func createOperation() -> ModuDataFetchOperation {
         let newestModu = localDataSource.getNewestModu()

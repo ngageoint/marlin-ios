@@ -9,21 +9,29 @@ import Foundation
 import BackgroundTasks
 import Combine
 
+// swiftlint:disable type_name
 private struct NoticeToMarinersRemoteDataSourceProviderKey: InjectionKey {
-    static var currentValue: NoticeToMarinersRemoteDataSource = NoticeToMarinersRemoteDataSource()
+    static var currentValue: any NoticeToMarinersRemoteDataSource = NoticeToMarinersRemoteDataSourceImpl()
 }
+// swiftlint:enable type_name
 
 extension InjectedValues {
-    var ntmRemoteDataSource: NoticeToMarinersRemoteDataSource {
+    var ntmRemoteDataSource: any NoticeToMarinersRemoteDataSource {
         get { Self[NoticeToMarinersRemoteDataSourceProviderKey.self] }
         set { Self[NoticeToMarinersRemoteDataSourceProviderKey.self] = newValue }
     }
 }
 
-actor NoticeToMarinersRemoteDataSource: RemoteDataSource {
+protocol NoticeToMarinersRemoteDataSource: RemoteDataSource {
+    func fetch(
+        noticeNumber: Int?
+    ) async -> [NoticeToMarinersModel]
+    func downloadFile(model: NoticeToMarinersModel, subject: PassthroughSubject<DownloadProgress, Never>)
+    func cancelDownload(model: NoticeToMarinersModel)
+    func cleanupDownload(model: NoticeToMarinersModel)
+}
 
-// final class NoticeToMarinersRemoteDataSource: RemoteDataSource, Sendable {
-//    @MainActor
+actor NoticeToMarinersRemoteDataSourceImpl: NoticeToMarinersRemoteDataSource {
     var downloads: [String: DownloadManager] = [:]
 
     typealias DataModel = NoticeToMarinersModel
@@ -45,7 +53,6 @@ actor NoticeToMarinersRemoteDataSource: RemoteDataSource {
     }
 
     func fetch(
-        task: BGTask? = nil,
         noticeNumber: Int? = nil
     ) async -> [NoticeToMarinersModel] {
         let operation = NoticeToMarinersDataFetchOperation(noticeNumber: noticeNumber)

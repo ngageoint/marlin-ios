@@ -9,17 +9,25 @@ import Foundation
 import BackgroundTasks
 
 private struct LightRemoteDataSourceProviderKey: InjectionKey {
-    static var currentValue: LightRemoteDataSource = LightRemoteDataSource()
+    static var currentValue: any LightRemoteDataSource = LightRemoteDataSourceImpl()
 }
 
 extension InjectedValues {
-    var lightRemoteDataSource: LightRemoteDataSource {
+    var lightRemoteDataSource: any LightRemoteDataSource {
         get { Self[LightRemoteDataSourceProviderKey.self] }
         set { Self[LightRemoteDataSourceProviderKey.self] = newValue }
     }
 }
 
-actor LightRemoteDataSource: RemoteDataSource {
+protocol LightRemoteDataSource: RemoteDataSource {
+    func fetch(
+        volume: String,
+        noticeYear: String?,
+        noticeWeek: String?
+    ) async -> [LightModel]
+}
+
+actor LightRemoteDataSourceImpl: LightRemoteDataSource {
     typealias DataModel = LightModel
     
     let _backgroundFetchQueue: OperationQueue
@@ -39,7 +47,6 @@ actor LightRemoteDataSource: RemoteDataSource {
     }
 
     func fetch(
-        task: BGTask? = nil,
         volume: String,
         noticeYear: String? = nil,
         noticeWeek: String? = nil

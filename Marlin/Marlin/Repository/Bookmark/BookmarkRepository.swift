@@ -75,6 +75,7 @@ actor BookmarkRepository: ObservableObject {
         localDataSource.bookmarks(filters: filters, paginatedBy: paginator)
     }
 
+    // swiftlint:disable function_body_length
     func getDataSourceItem(itemKey: String, dataSource: String) async -> (any Bookmarkable)? {
         let split = itemKey.split(separator: "--")
         switch dataSource {
@@ -128,4 +129,5 @@ actor BookmarkRepository: ObservableObject {
         }
         return nil
     }
+    // swiftlint:enable function_body_length
 }

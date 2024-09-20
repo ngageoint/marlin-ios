@@ -99,7 +99,7 @@ final class ModuRepositoryTests: XCTestCase {
         let remoteDataSource = ModuStaticRemoteDataSource()
         InjectedValues[\.moduRemoteDataSource] = remoteDataSource
         
-        remoteDataSource.list = models
+        await remoteDataSource.setList(models)
         let repository = ModuRepository()
 
         let modus = await repository.fetchModus()
@@ -107,7 +107,7 @@ final class ModuRepositoryTests: XCTestCase {
 
         await fulfillment(of: [loadingExpectation, loadedExpectation, updatedExpectation])
 
-        let repoModu = repository.getModu(name: "ABAN II")
+        let repoModu = await repository.getModu(name: "ABAN II")
         XCTAssertNotNil(repoModu)
         XCTAssertEqual(repoModu, localDataSource.getModu(name: "ABAN II"))
 
@@ -116,10 +116,11 @@ final class ModuRepositoryTests: XCTestCase {
         XCTAssertNotNil(repoModus)
         XCTAssertEqual(repoModus.count, localModus.count)
 
-        XCTAssertEqual(repository.getCount(filters: nil), localDataSource.getCount(filters: nil))
+        let repoCount = await repository.getCount(filters: nil)
+        XCTAssertEqual(repoCount, localDataSource.getCount(filters: nil))
     }
 
-    func testCreateOperation() {
+    func testCreateOperation() async {
         let localDataSource = ModuStaticLocalDataSource()
         InjectedValues[\.moduLocalDataSource] = localDataSource
         
@@ -132,7 +133,7 @@ final class ModuRepositoryTests: XCTestCase {
             newest
         ]
         let repository = ModuRepository()
-        let operation = repository.createOperation()
+        let operation = await repository.createOperation()
         XCTAssertNotNil(operation.dateString)
         XCTAssertEqual(operation.dateString, newest.dateString)
     }

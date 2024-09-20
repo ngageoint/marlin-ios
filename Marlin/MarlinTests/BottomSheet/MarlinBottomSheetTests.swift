@@ -64,7 +64,6 @@ final class MarlinBottomSheetTests: XCTestCase {
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let router = MarlinRouter()
         let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem])
-            .environmentObject(repository)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: view)
@@ -120,7 +119,7 @@ final class MarlinBottomSheetTests: XCTestCase {
         let moduLocalDataSource = ModuStaticLocalDataSource()
         InjectedValues[\.moduLocalDataSource] = moduLocalDataSource
         
-        let moduRemoteDataSource = ModuRemoteDataSource()
+        let moduRemoteDataSource = ModuRemoteDataSourceImpl()
         InjectedValues[\.moduRemoteDataSource] = moduRemoteDataSource
         
         moduLocalDataSource.list.append(newItem2)
@@ -128,7 +127,6 @@ final class MarlinBottomSheetTests: XCTestCase {
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let router = MarlinRouter()
         let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem, bottomSheetItem2])
-            .environmentObject(repository)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: view)

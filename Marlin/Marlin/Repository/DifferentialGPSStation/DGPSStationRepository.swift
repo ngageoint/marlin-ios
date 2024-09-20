@@ -37,7 +37,7 @@ actor DGPSStationRepository: ObservableObject {
     @Injected(\.dgpsLocalDataSource)
     var localDataSource: DGPSStationLocalDataSource
     @Injected(\.dgpsemoteDataSource)
-    private var remoteDataSource: DGPSStationRemoteDataSource
+    private var remoteDataSource: any DGPSStationRemoteDataSource
 
     func createOperation() -> DGPSStationDataFetchOperation {
         let newestRadioBeacon = localDataSource.getNewestDifferentialGPSStation()
