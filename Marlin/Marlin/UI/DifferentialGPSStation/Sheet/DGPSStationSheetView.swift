@@ -20,11 +20,14 @@ struct DGPSStationSheetView: View {
                 DGPSStationSummaryView(
                     dgpsStation: DGPSStationListModel(
                         dgpsStationModel: dgpsStation
-                    )
+                    ),
+                    showMoreDetails: true,
+                    showSectionHeader: true,
+                    showTitle: true
                 )
-                .setShowMoreDetails(true)
-                .setShowSectionHeader(true)
-                .setShowTitle(true)
+//                .setShowMoreDetails(true)
+//                .setShowSectionHeader(true)
+//                .setShowTitle(true)
             }
         }
         .onChange(of: itemKey) { newItemKey in

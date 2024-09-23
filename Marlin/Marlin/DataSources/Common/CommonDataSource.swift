@@ -29,7 +29,7 @@ struct CommonSummaryView: DataSourceSummaryView {
     }
 }
 
-class CommonDataSource: NSObject, Locatable, DataSourceViewBuilder, ObservableObject, GeoJSONExportable, Codable {
+class CommonDataSource: NSObject, Locatable, ObservableObject, GeoJSONExportable, Codable {
     static var definition: any DataSourceDefinition = DataSourceDefinitions.common.definition
 
     private enum CodingKeys: String, CodingKey {
@@ -66,13 +66,13 @@ class CommonDataSource: NSObject, Locatable, DataSourceViewBuilder, ObservableOb
     var itemTitle: String {
         return "\(self.name ?? "")"
     }
-    var detailView: AnyView {
-        AnyView(Text(name ?? ""))
-    }
-    
-    var summary: some DataSourceSummaryView {
-        CommonSummaryView(common: self)
-    }
+//    var detailView: AnyView {
+//        AnyView(Text(name ?? ""))
+//    }
+//    
+//    var summary: some DataSourceSummaryView {
+//        CommonSummaryView(common: self)
+//    }
     
     static var metricsKey: String = "Common"
     

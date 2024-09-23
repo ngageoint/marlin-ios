@@ -8,7 +8,8 @@
 import SwiftUI
 import MapKit
 
-struct PortSummaryView: DataSourceSummaryView {
+@MainActor
+struct PortSummaryView: View {
     @EnvironmentObject var router: MarlinRouter
     var showSectionHeader: Bool = false
     
@@ -94,6 +95,13 @@ struct PortSummaryView: DataSourceSummaryView {
                     \(currentLocation.coordinate.generalDirection(to: port.coordinate))
                 """
             }
+        }
+    }
+    
+    @ViewBuilder
+    func bookmarkNotesView(bookmarkViewModel: BookmarkViewModel?) -> some View {
+        if showBookmarkNotes, let bookmarkViewModel = bookmarkViewModel {
+            BookmarkNotes(bookmarkViewModel: bookmarkViewModel)
         }
     }
 }

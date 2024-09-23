@@ -305,7 +305,6 @@
 		F74B9B0D28B7DA210097D448 /* RadioBeaconSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B0C28B7DA210097D448 /* RadioBeaconSummaryView.swift */; };
 		F74B9B1128B7DACB0097D448 /* RadioBeaconDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B9B1028B7DACB0097D448 /* RadioBeaconDetailView.swift */; };
 		F75185E72B7937290069E5AE /* RouteWaypointStaticLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75185E62B7937290069E5AE /* RouteWaypointStaticLocalDataSource.swift */; };
-		F75324B429805E5C005C509F /* DFRSSummaryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324B329805E5C005C509F /* DFRSSummaryViewTests.swift */; };
 		F75324B629806329005C509F /* DFRSDetailViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324B529806329005C509F /* DFRSDetailViewTests.swift */; };
 		F75324B829807F04005C509F /* SubmitReportViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324B729807F04005C509F /* SubmitReportViewTests.swift */; };
 		F75324BB2980906E005C509F /* CLLocationCoordinate2DExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75324BA2980906E005C509F /* CLLocationCoordinate2DExtensionsTests.swift */; };
@@ -1002,7 +1001,6 @@
 		F74B9B0C28B7DA210097D448 /* RadioBeaconSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconSummaryView.swift; sourceTree = "<group>"; };
 		F74B9B1028B7DACB0097D448 /* RadioBeaconDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioBeaconDetailView.swift; sourceTree = "<group>"; };
 		F75185E62B7937290069E5AE /* RouteWaypointStaticLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteWaypointStaticLocalDataSource.swift; sourceTree = "<group>"; };
-		F75324B329805E5C005C509F /* DFRSSummaryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSSummaryViewTests.swift; sourceTree = "<group>"; };
 		F75324B529806329005C509F /* DFRSDetailViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFRSDetailViewTests.swift; sourceTree = "<group>"; };
 		F75324B729807F04005C509F /* SubmitReportViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitReportViewTests.swift; sourceTree = "<group>"; };
 		F75324BA2980906E005C509F /* CLLocationCoordinate2DExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2DExtensionsTests.swift; sourceTree = "<group>"; };
@@ -1778,7 +1776,6 @@
 			isa = PBXGroup;
 			children = (
 				F72D891A297F449C00D022FB /* DFRSDataTests.swift */,
-				F75324B329805E5C005C509F /* DFRSSummaryViewTests.swift */,
 				F75324B529806329005C509F /* DFRSDetailViewTests.swift */,
 			);
 			path = DFRS;
@@ -3825,7 +3822,6 @@
 				F7E768B529EF0F99001EFFFF /* NavigationalWarningLocationParsingTests.swift in Sources */,
 				F76EE1B42B928CBD001128EB /* PublicationRepositoryTests.swift in Sources */,
 				F72D89042979C30500D022FB /* PortSummaryViewTests.swift in Sources */,
-				F75324B429805E5C005C509F /* DFRSSummaryViewTests.swift in Sources */,
 				F724786D2B7D2C56003D4118 /* ModuStaticRemoteDataSource.swift in Sources */,
 				F72EAAD0291C669D00AC6026 /* LightDataTests.swift in Sources */,
 				F72478602B7C2374003D4118 /* LightStaticLocalDataSource.swift in Sources */,
@@ -4403,7 +4399,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "MarlinTests/Marlin-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Marlin.app/Marlin";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Marlin.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Marlin";
 			};
 			name = Debug;
 		};
@@ -4426,7 +4422,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "MarlinTests/Marlin-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Marlin.app/Marlin";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Marlin.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Marlin";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -4667,11 +4663,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "mil.nga.msi.Tests-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Marlin (iOS)";
+				TEST_TARGET_NAME = Marlin;
 			};
 			name = Debug;
 		};
@@ -4686,11 +4683,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "mil.nga.msi.Tests-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Marlin (iOS)";
+				TEST_TARGET_NAME = Marlin;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

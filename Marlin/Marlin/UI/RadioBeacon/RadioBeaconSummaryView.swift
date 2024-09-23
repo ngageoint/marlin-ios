@@ -72,4 +72,11 @@ struct RadioBeaconSummaryView: DataSourceSummaryView {
             await bookmarkViewModel.getBookmark(itemKey: radioBeacon.id, dataSource: DataSources.radioBeacon.key)
         }
     }
+    
+    @ViewBuilder
+    func bookmarkNotesView(bookmarkViewModel: BookmarkViewModel?) -> some View {
+        if showBookmarkNotes, let bookmarkViewModel = bookmarkViewModel {
+            BookmarkNotes(bookmarkViewModel: bookmarkViewModel)
+        }
+    }
 }

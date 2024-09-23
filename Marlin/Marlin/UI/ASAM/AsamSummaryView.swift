@@ -7,17 +7,16 @@
 
 import SwiftUI
 
-struct AsamSummaryView: DataSourceSummaryView {
+struct AsamSummaryView: View {
+    var asam: AsamListModel
     @EnvironmentObject var router: MarlinRouter
+    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
 
     var showSectionHeader: Bool = false
 
-    var asam: AsamListModel
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
     var showBookmarkNotes: Bool = false
-    
-    @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
         
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -46,6 +45,13 @@ struct AsamSummaryView: DataSourceSummaryView {
         }
         .task {
             await bookmarkViewModel.getBookmark(itemKey: asam.id, dataSource: DataSources.asam.key)
+        }
+    }
+    
+    @ViewBuilder
+    func bookmarkNotesView(bookmarkViewModel: BookmarkViewModel?) -> some View {
+        if showBookmarkNotes, let bookmarkViewModel = bookmarkViewModel {
+            BookmarkNotes(bookmarkViewModel: bookmarkViewModel)
         }
     }
 }

@@ -10,6 +10,7 @@ import SwiftUI
 
 @testable import Marlin
 
+@MainActor
 final class AsamDetailViewTests: XCTestCase {
     override func setUpWithError() throws {
         throw XCTSkip("ASAMs are disabled.")

@@ -12,6 +12,7 @@ import SwiftUI
 
 @testable import Marlin
 
+@MainActor
 final class LightSummaryViewTests: XCTestCase {
 
     func testLoading() async throws {
@@ -41,8 +42,8 @@ final class LightSummaryViewTests: XCTestCase {
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
-        let summary = LightSummaryView(light: LightListModel(lightModel: light))
-            .setShowMoreDetails(false)
+        let summary = LightSummaryView(light: LightListModel(lightModel: light), showMoreDetails: false)
+//            .setShowMoreDetails(false)
             .environmentObject(MarlinRouter())
 
         let controller = UIHostingController(rootView: summary)
@@ -118,8 +119,8 @@ final class LightSummaryViewTests: XCTestCase {
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
-        let summary = LightSummaryView(light: LightListModel(lightModel: light))
-            .setShowMoreDetails(true)
+        let summary = LightSummaryView(light: LightListModel(lightModel: light), showMoreDetails: true)
+//            .setShowMoreDetails(true)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: summary)

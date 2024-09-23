@@ -54,12 +54,14 @@ struct DGPSStationDetailView: View {
                             )
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
                             DGPSStationSummaryView(
-                                dgpsStation: DGPSStationListModel(
-                                    dgpsStationModel: dgpsStation)
+                                showBookmarkNotes: true, dgpsStation: DGPSStationListModel(
+                                    dgpsStationModel: dgpsStation),
+                                showSectionHeader: true,
+                                showTitle: true
                             )
-                            .showBookmarkNotes(true)
-                            .setShowSectionHeader(true)
-                            .setShowTitle(false)
+//                            .showBookmarkNotes(true)
+//                            .setShowSectionHeader(true)
+//                            .setShowTitle(false)
                             .padding(.all, 16)
                         }
                         .card()

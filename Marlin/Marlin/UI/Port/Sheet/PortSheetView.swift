@@ -17,10 +17,14 @@ struct PortSheetView: View {
     var body: some View {
         VStack {
             if let port = viewModel.port {
-                PortSummaryView(port: PortListModel(portModel: port))
-                    .setShowMoreDetails(true)
-                    .setShowSectionHeader(true)
-                    .setShowTitle(true)
+                PortSummaryView(
+                    showSectionHeader: true, port: PortListModel(portModel: port),
+                    showMoreDetails: true,
+                    showTitle: true
+                )
+//                    .setShowMoreDetails(true)
+//                    .setShowSectionHeader(true)
+//                    .setShowTitle(true)
 
             }
         }

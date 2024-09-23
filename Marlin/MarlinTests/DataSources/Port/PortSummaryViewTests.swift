@@ -11,6 +11,7 @@ import SwiftUI
 
 @testable import Marlin
 
+@MainActor
 final class PortSummaryViewTests: XCTestCase {
     
     func testLoading() async throws {
@@ -140,8 +141,8 @@ final class PortSummaryViewTests: XCTestCase {
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let router = MarlinRouter()
-        let summary = PortSummaryView(port: PortListModel(portModel:port))
-            .setShowMoreDetails(false)
+        let summary = PortSummaryView(port: PortListModel(portModel:port), showMoreDetails: false)
+//            .setShowMoreDetails(false)
             .environmentObject(mockLocationManager as LocationManager)
             .environmentObject(router)
 
@@ -315,8 +316,8 @@ final class PortSummaryViewTests: XCTestCase {
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let router = MarlinRouter()
-        let summary = PortSummaryView(port: PortListModel(portModel:port))
-            .setShowMoreDetails(true)
+        let summary = PortSummaryView(port: PortListModel(portModel:port), showMoreDetails: true)
+//            .setShowMoreDetails(true)
             .environmentObject(mockLocationManager as LocationManager)
             .environmentObject(router)
 

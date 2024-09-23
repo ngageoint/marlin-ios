@@ -50,8 +50,10 @@ struct RadioBeaconList: View {
                     List(rows) { radioBeaconItem in
                         switch radioBeaconItem {
                         case .listItem(let radioBeacon):
-                            RadioBeaconSummaryView(radioBeacon: radioBeacon)
-                                .showBookmarkNotes(true)
+                            RadioBeaconSummaryView(
+                                radioBeacon: radioBeacon
+                            )
+//                                .showBookmarkNotes(true)
                                 .paddedCard()
                                 .onAppear {
                                     if rows.last == radioBeaconItem {

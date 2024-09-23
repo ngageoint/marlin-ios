@@ -19,10 +19,14 @@ struct ModuSheetView: View {
 
         return VStack {
             if let modu = viewModel.modu {
-                ModuSummaryView(modu: ModuListModel(moduModel: modu))
-                    .setShowMoreDetails(true)
-                    .setShowSectionHeader(true)
-                    .setShowTitle(true)
+                ModuSummaryView(
+                    modu: ModuListModel(moduModel: modu),
+                    showSectionHeader: true, showMoreDetails: true,
+                    showTitle: true
+                )
+//                    .setShowMoreDetails(true)
+//                    .setShowSectionHeader(true)
+//                    .setShowTitle(true)
 
             }
         }

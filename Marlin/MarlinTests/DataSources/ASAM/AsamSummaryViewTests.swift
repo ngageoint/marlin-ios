@@ -10,6 +10,7 @@ import SwiftUI
 
 @testable import Marlin
 
+@MainActor
 final class AsamSummaryViewTests: XCTestCase {
 
     override func setUpWithError() throws {
@@ -141,7 +142,7 @@ final class AsamSummaryViewTests: XCTestCase {
         waitForExpectations(timeout: 10, handler: nil)
     }
     
-    func testLoadingShowMoreDetails() {
+    func testLoadingShowMoreDetails() async {
         var newItem = AsamModel()
         newItem.asamDescription = "description"
         newItem.longitude = 1.0
@@ -165,8 +166,8 @@ final class AsamSummaryViewTests: XCTestCase {
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         
-        let summary = AsamSummaryView(asam: AsamListModel(asamModel:newItem), showMoreDetails: true)
-            .environmentObject(MarlinRouter())
+        let summary = await AsamSummaryView(asam: AsamListModel(asamModel:newItem), showMoreDetails: true)
+//            .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller

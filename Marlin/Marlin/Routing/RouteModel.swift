@@ -207,15 +207,15 @@ extension RouteModel: DataSource {
 }
 
 import SwiftUI
-extension RouteModel: DataSourceViewBuilder {
-    var detailView: AnyView {
-        return AnyView(EmptyView())
-    }
-        
-    var summary: some DataSourceSummaryView {
-        return RouteSummaryView(route: self)
-    }
-}
+// extension RouteModel: DataSourceViewBuilder {
+//    var detailView: AnyView {
+//        return AnyView(EmptyView())
+//    }
+//        
+//    var summary: some DataSourceSummaryView {
+//        return RouteSummaryView(route: self)
+//    }
+// }
 
 struct RouteWaypointModel: Codable, Hashable, Identifiable {
     var id: String {

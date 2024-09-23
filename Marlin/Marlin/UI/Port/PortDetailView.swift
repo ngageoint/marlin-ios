@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 import CoreData
 
+@MainActor
 struct PortDetailView: View {
     @StateObject var viewModel: PortViewModel = PortViewModel()
     @State var portNumber: Int?
@@ -44,9 +45,13 @@ struct PortDetailView: View {
                             ]
                         )
                         .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                        PortSummaryView(port: PortListModel(portModel: port))
-                            .showBookmarkNotes(true)
-                            .setShowTitle(false)
+                        PortSummaryView(
+                            showBookmarkNotes: true,
+                            port: PortListModel(portModel: port),
+                            showTitle: false
+                        )
+//                            .showBookmarkNotes(true)
+//                            .setShowTitle(false)
                             .padding(.all, 16)
                     }
                     .card()

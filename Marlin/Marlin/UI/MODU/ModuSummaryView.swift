@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-struct ModuSummaryView: DataSourceSummaryView {
+@MainActor
+struct ModuSummaryView: View {
     @EnvironmentObject var router: MarlinRouter
+    var modu: ModuListModel
 
     @StateObject var bookmarkViewModel: BookmarkViewModel = BookmarkViewModel()
 
@@ -16,7 +18,6 @@ struct ModuSummaryView: DataSourceSummaryView {
     
     var showBookmarkNotes: Bool = false
 
-    var modu: ModuListModel
     var showMoreDetails: Bool = false
     var showTitle: Bool = true
     
@@ -51,6 +52,13 @@ struct ModuSummaryView: DataSourceSummaryView {
         }
         .task {
             await bookmarkViewModel.getBookmark(itemKey: modu.itemKey, dataSource: DataSources.modu.key)
+        }
+    }
+    
+    @ViewBuilder
+    func bookmarkNotesView(bookmarkViewModel: BookmarkViewModel?) -> some View {
+        if showBookmarkNotes, let bookmarkViewModel = bookmarkViewModel {
+            BookmarkNotes(bookmarkViewModel: bookmarkViewModel)
         }
     }
 }

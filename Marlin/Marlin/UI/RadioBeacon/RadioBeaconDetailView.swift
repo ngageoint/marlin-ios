@@ -53,9 +53,12 @@ struct RadioBeaconDetailView: View {
                                 ]
                             )
                             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                            RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel: radioBeacon))
-                                .showBookmarkNotes(true)
-                                .setShowSectionHeader(true)
+                            RadioBeaconSummaryView(
+                                radioBeacon: RadioBeaconListModel(radioBeaconModel: radioBeacon),
+                                showSectionHeader: true
+                            )
+//                                .showBookmarkNotes(true)
+//                                .setShowSectionHeader(true)
                                 .padding(.all, 16)
                         }
                         .card()

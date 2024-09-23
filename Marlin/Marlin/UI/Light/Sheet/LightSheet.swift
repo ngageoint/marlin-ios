@@ -17,10 +17,14 @@ struct LightSheetView: View {
     var body: some View {
         VStack {
             if let light = viewModel.lights.first {
-                LightSummaryView(light: LightListModel(lightModel: light))
-                    .setShowMoreDetails(true)
-                    .setShowSectionHeader(true)
-                    .setShowTitle(true)
+                LightSummaryView(
+                    showSectionHeader: true, light: LightListModel(lightModel: light),
+                    showMoreDetails: true,
+                    showTitle: true
+                )
+//                    .setShowMoreDetails(true)
+//                    .setShowSectionHeader(true)
+//                    .setShowTitle(true)
             }
         }
         .onChange(of: itemKey) { newItemKey in

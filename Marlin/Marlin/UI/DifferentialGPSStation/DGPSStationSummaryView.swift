@@ -68,4 +68,11 @@ struct DGPSStationSummaryView: DataSourceSummaryView {
             await bookmarkViewModel.getBookmark(itemKey: dgpsStation.id, dataSource: DataSources.dgps.key)
         }
     }
+    
+    @ViewBuilder
+    func bookmarkNotesView(bookmarkViewModel: BookmarkViewModel?) -> some View {
+        if showBookmarkNotes, let bookmarkViewModel = bookmarkViewModel {
+            BookmarkNotes(bookmarkViewModel: bookmarkViewModel)
+        }
+    }
 }

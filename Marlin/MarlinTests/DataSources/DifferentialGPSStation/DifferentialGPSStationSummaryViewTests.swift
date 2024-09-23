@@ -11,6 +11,7 @@ import SwiftUI
 
 @testable import Marlin
 
+@MainActor
 final class DifferentialGPSStationSummaryViewTests: XCTestCase {
     func testLoading() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
@@ -180,9 +181,9 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let router = MarlinRouter()
 
-        let summary = DGPSStationSummaryView(dgpsStation: DGPSStationListModel(dgpsStationModel: newItem))
-            .setShowMoreDetails(true)
-            .setShowSectionHeader(true)
+        let summary = DGPSStationSummaryView(dgpsStation: DGPSStationListModel(dgpsStationModel: newItem), showMoreDetails: true, showSectionHeader: true)
+//            .setShowMoreDetails(true)
+//            .setShowSectionHeader(true)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: summary)

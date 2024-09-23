@@ -13,7 +13,7 @@ import SwiftUI
 
 final class PortDetailViewTests: XCTestCase {
 
-    func testLoading() {
+    func testLoading() async {
         print("XXX This test is failing in iOS18 beta 7")
         var port = PortModel(portNumber: 760)
         port.portName = "Aasiaat"
@@ -139,7 +139,7 @@ final class PortDetailViewTests: XCTestCase {
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let router = MarlinRouter()
-        let detailView = PortDetailView(portNumber: 760)
+        let detailView = await PortDetailView(portNumber: 760)
             .environmentObject(mockLocationManager as LocationManager)
 
         let controller = UIHostingController(rootView: detailView)
@@ -271,7 +271,7 @@ final class PortDetailViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Railway")
     }
 
-    func xtestButtons() throws {
+    func xtestButtons() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var port = PortModel(portNumber: 760)
         port.portName = "Aasiaat"
@@ -397,10 +397,10 @@ final class PortDetailViewTests: XCTestCase {
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let router = MarlinRouter()
-        let detailView = PortDetailView(portNumber: 760)
+        let detailView = await PortDetailView(portNumber: 760)
             .environmentObject(mockLocationManager as LocationManager)
 
-        let controller = UIHostingController(rootView: detailView)
+        let controller = await UIHostingController(rootView: detailView)
         let window = TestHelpers.getKeyWindowVisible()
         window.rootViewController = controller
         expectation(forNotification: .SnackbarNotification,

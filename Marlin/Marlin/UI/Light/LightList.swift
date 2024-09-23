@@ -50,8 +50,10 @@ struct LightList: View {
                     List(rows) { item in
                         switch item {
                         case .listItem(let light):
-                            LightSummaryView(light: light)
-                                .showBookmarkNotes(true)
+                            LightSummaryView(
+                                showBookmarkNotes: true, light: light
+                            )
+//                                .showBookmarkNotes(true)
                                 .paddedCard()
                                 .onAppear {
                                     if rows.last == item {

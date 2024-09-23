@@ -32,30 +32,40 @@ struct BookmarkSummary: DataSourceSummaryView {
             }
             switch dataSource {
             case let dataSource as AsamModel:
-                AsamSummaryView(asam: AsamListModel(asamModel: dataSource))
-                    .showBookmarkNotes(true)
+                AsamSummaryView(
+                    asam: AsamListModel(asamModel: dataSource),
+                    showBookmarkNotes: true
+                )
+//                    .showBookmarkNotes(true)
                     .onTapGesture {
                         if let reference = dataSource.reference {
                             router.path.append(AsamRoute.detail(reference: reference))
                         }
                     }
             case let dataSource as ModuModel:
-                ModuSummaryView(modu: ModuListModel(moduModel: dataSource))
-                    .showBookmarkNotes(true)
+                ModuSummaryView(
+                    modu: ModuListModel(moduModel: dataSource),
+                    showBookmarkNotes: true
+                )
+//                    .showBookmarkNotes(true)
                     .onTapGesture {
                         if let name = dataSource.name {
                             router.path.append(ModuRoute.detail(name: name))
                         }
                     }
             case let dataSource as PortModel:
-                PortSummaryView(port: PortListModel(portModel: dataSource))
-                    .showBookmarkNotes(true)
+                PortSummaryView(
+                    showBookmarkNotes: true, port: PortListModel(portModel: dataSource)
+                )
+//                    .showBookmarkNotes(true)
                     .onTapGesture {
                         router.path.append(PortRoute.detail(portNumber: dataSource.portNumber))
                     }
             case let dataSource as LightModel:
-                LightSummaryView(light: LightListModel(lightModel: dataSource))
-                    .showBookmarkNotes(true)
+                LightSummaryView(
+                    showBookmarkNotes: true, light: LightListModel(lightModel: dataSource)
+                )
+//                    .showBookmarkNotes(true)
                     .onTapGesture {
                         if let featureNumber = dataSource.featureNumber, let volumeNumber = dataSource.volumeNumber {
                             router.path.append(
@@ -64,8 +74,10 @@ struct BookmarkSummary: DataSourceSummaryView {
                         }
                     }
             case let dataSource as RadioBeaconModel:
-                RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel: dataSource))
-                    .showBookmarkNotes(true)
+                RadioBeaconSummaryView(
+                    radioBeacon: RadioBeaconListModel(radioBeaconModel: dataSource)
+                )
+//                    .showBookmarkNotes(true)
                     .onTapGesture {
                         if let featureNumber = dataSource.featureNumber, let volumeNumber = dataSource.volumeNumber {
                             router.path.append(
@@ -75,11 +87,11 @@ struct BookmarkSummary: DataSourceSummaryView {
                     }
             case let dataSource as DGPSStationModel:
                 DGPSStationSummaryView(
-                    dgpsStation: DGPSStationListModel(
+                    showBookmarkNotes: true, dgpsStation: DGPSStationListModel(
                         dgpsStationModel: dataSource
                     )
                 )
-                .showBookmarkNotes(true)
+//                .showBookmarkNotes(true)
                 .onTapGesture {
                     if let featureNumber = dataSource.featureNumber, let volumeNumber = dataSource.volumeNumber {
                         router.path.append(
@@ -91,22 +103,29 @@ struct BookmarkSummary: DataSourceSummaryView {
                 NoticeToMarinersSummaryView(
                     noticeToMariners: NoticeToMarinersListModel(
                         noticeToMarinersModel: dataSource
-                    )
+                    ),
+                    showBookmarkNotes: true
                 )
-                .showBookmarkNotes(true)
+//                .showBookmarkNotes(true)
                 .onTapGesture {
                     if let noticeNumber = dataSource.noticeNumber {
                         router.path.append(NoticeToMarinersRoute.fullView(noticeNumber: noticeNumber))
                     }
                 }
-            case let dataSource as any DataSourceViewBuilder:
-                AnyView(
-                    dataSource.summary
-                        .setShowTitle(true)
-                        .setShowSectionHeader(false)
-                        .setShowMoreDetails(false)
-                        .showBookmarkNotes(true)
-                )
+            case let dataSource as RouteModel:
+                Text("Route")
+//                RouteSummaryView(route: RouteListModel(routeModel: dataSource))
+//                    .onTapGesture {
+//                        router.path.append(RouteRoute.detail(routeNumber: dataSource.id))
+//                    }
+//            case let dataSource as any DataSourceViewBuilder:
+//                AnyView(
+//                    dataSource.summary
+////                        .setShowTitle(true)
+////                        .setShowSectionHeader(false)
+////                        .setShowMoreDetails(false)
+////                        .showBookmarkNotes(true)
+//                )
             default:
                 EmptyView()
             }

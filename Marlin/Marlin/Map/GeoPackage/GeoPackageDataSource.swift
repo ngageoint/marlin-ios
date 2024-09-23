@@ -49,7 +49,7 @@ extension GeoPackageFeatureItem: Bookmarkable {
     }
 }
 
-class GeoPackageFeatureItem: NSObject, Locatable, DataSourceViewBuilder {
+class GeoPackageFeatureItem: NSObject, Locatable, DataSource {
     static var definition: any DataSourceDefinition = DataSourceDefinitions.geoPackage.definition
     var coordinate: CLLocationCoordinate2D
     

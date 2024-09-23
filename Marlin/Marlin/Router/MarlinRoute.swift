@@ -401,10 +401,10 @@ struct MarlinRouteModifier: ViewModifier {
                     CreateRouteView(routeURI: routeURI)
                 }
             }
-            .navigationDestination(for: ItemWrapper.self) { item in
-                if let dataSourceViewBuilder = item.dataSource as? (any DataSourceViewBuilder) {
-                    dataSourceViewBuilder.detailView
-                }
-            }
+//            .navigationDestination(for: ItemWrapper.self) { item in
+//                if let dataSourceViewBuilder = item.dataSource as? (any DataSourceViewBuilder) {
+//                    dataSourceViewBuilder.detailView
+//                }
+//            }
     }
 }

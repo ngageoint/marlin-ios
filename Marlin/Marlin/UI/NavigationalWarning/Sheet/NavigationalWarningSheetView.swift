@@ -17,10 +17,14 @@ struct NavigationalWarningSheetView: View {
     var body: some View {
         return VStack {
             if let navWarning = viewModel.navWarning {
-                NavigationalWarningSummaryView(navigationalWarning: navWarning)
-                    .setShowMoreDetails(true)
-                    .setShowSectionHeader(true)
-                    .setShowTitle(true)
+                NavigationalWarningSummaryView(
+                    navigationalWarning: navWarning,
+                    showSectionHeader: true, showMoreDetails: true,
+                    showTitle: true
+                )
+//                    .setShowMoreDetails(true)
+//                    .setShowSectionHeader(true)
+//                    .setShowTitle(true)
             }
         }
         .onChange(of: itemKey) { newItemKey in

@@ -12,6 +12,7 @@ import SwiftUI
 
 @testable import Marlin
 
+@MainActor
 final class PublicationSummaryViewTests: XCTestCase {
     override func tearDown() {
         HTTPStubs.removeAllStubs()
@@ -51,8 +52,8 @@ final class PublicationSummaryViewTests: XCTestCase {
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         
-        let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
-            .setShowMoreDetails(false)
+        let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "", showMoreDetails: false)
+//            .setShowMoreDetails(false)
             .environmentObject(MarlinRouter())
 
         let controller = UIHostingController(rootView: summary)
@@ -105,8 +106,8 @@ final class PublicationSummaryViewTests: XCTestCase {
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         
-        let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
-            .setShowMoreDetails(false)
+        let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "", showMoreDetails: false)
+//            .setShowMoreDetails(false)
             .environmentObject(MarlinRouter())
 
         let controller = UIHostingController(rootView: summary)
@@ -183,8 +184,8 @@ final class PublicationSummaryViewTests: XCTestCase {
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         
-        let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
-            .setShowMoreDetails(false)
+        let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "", showMoreDetails: false)
+//            .setShowMoreDetails(false)
             .environmentObject(MarlinRouter())
 
         let controller = UIHostingController(rootView: summary)
@@ -245,8 +246,8 @@ final class PublicationSummaryViewTests: XCTestCase {
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         
-        let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "")
-            .setShowMoreDetails(false)
+        let summary = PublicationSummaryView(s3Key: epub.s3Key ?? "", showMoreDetails: false)
+//            .setShowMoreDetails(false)
             .environmentObject(MarlinRouter())
         let controller = UIHostingController(rootView: summary)
         let window = TestHelpers.getKeyWindowVisible()

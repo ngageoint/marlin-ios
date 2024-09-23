@@ -15,10 +15,14 @@ struct PublicationsListView: View {
     var body: some View {
         List {
             ForEach(publications) { epub in
-                PublicationSummaryView(s3Key: epub.s3Key ?? "")
-                    .setShowSectionHeader(false)
-                    .setShowMoreDetails(false)
-                    .setShowTitle(true)
+                PublicationSummaryView(
+                    s3Key: epub.s3Key ?? "",
+                    showTitle: true, showSectionHeader: false,
+                    showMoreDetails: false
+                )
+//                    .setShowSectionHeader(false)
+//                    .setShowMoreDetails(false)
+//                    .setShowTitle(true)
                     .padding([.top, .bottom], 16)
             }
         }

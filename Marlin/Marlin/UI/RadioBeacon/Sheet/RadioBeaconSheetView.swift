@@ -18,10 +18,14 @@ struct RadioBeaconSheetView: View {
     var body: some View {
         VStack {
             if let radioBeacon = viewModel.radioBeacon {
-                RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel: radioBeacon))
-                    .setShowMoreDetails(true)
-                    .setShowSectionHeader(true)
-                    .setShowTitle(true)
+                RadioBeaconSummaryView(
+                    radioBeacon: RadioBeaconListModel(radioBeaconModel: radioBeacon),
+                    showMoreDetails: true,
+                    showSectionHeader: true
+                )
+//                    .setShowMoreDetails(true)
+//                    .setShowSectionHeader(true)
+//                    .setShowTitle(true)
             }
         }
         .onChange(of: itemKey) { newItemKey in

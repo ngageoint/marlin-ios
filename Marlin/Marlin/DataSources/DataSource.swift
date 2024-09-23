@@ -182,11 +182,11 @@ extension DataSource {
     }
 }
 
-protocol DataSourceViewBuilder: DataSource {
-    var detailView: AnyView { get }
-    associatedtype Summary: DataSourceSummaryView
-    var itemKey: String { get }
-    var itemTitle: String { get }
-    @ViewBuilder
-    var summary: Summary { get }
-}
+// protocol DataSourceViewBuilder: DataSource {
+//    var detailView: AnyView { get }
+//    associatedtype Summary: DataSourceSummaryView
+//    var itemKey: String { get }
+//    var itemTitle: String { get }
+//    @ViewBuilder
+//    var summary: Summary { get }
+// }

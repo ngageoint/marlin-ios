@@ -53,10 +53,10 @@ struct DGPSStationList: View {
                         switch dgpsItem {
                         case .listItem(let dgps):
                             DGPSStationSummaryView(
-                                dgpsStation: DGPSStationListModel(
+                                showBookmarkNotes: true, dgpsStation: DGPSStationListModel(
                                     dgpsStationModel: dgps)
                             )
-                            .showBookmarkNotes(true)
+//                            .showBookmarkNotes(true)
                             .paddedCard()
                             .onAppear {
                                 if rows.last == dgpsItem {

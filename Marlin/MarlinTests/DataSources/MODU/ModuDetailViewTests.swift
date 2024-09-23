@@ -11,6 +11,7 @@ import SwiftUI
 
 @testable import Marlin
 
+@MainActor
 final class ModuDetailViewTests: XCTestCase {
 
     func testLoading() {

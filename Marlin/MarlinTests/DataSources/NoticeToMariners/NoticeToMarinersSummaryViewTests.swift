@@ -12,6 +12,7 @@ import Combine
 
 @testable import Marlin
 
+@MainActor
 final class NoticeToMarinersSummaryViewTests: XCTestCase {
 
     func testFileSummaryView() {

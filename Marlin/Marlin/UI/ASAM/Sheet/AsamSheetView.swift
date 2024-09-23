@@ -19,10 +19,10 @@ struct AsamSheetView: View {
 
         return VStack {
             if let asam = viewModel.asam {
-                AsamSummaryView(asam: AsamListModel(asamModel: asam))
-                    .setShowMoreDetails(true)
-                    .setShowSectionHeader(true)
-                    .setShowTitle(true)
+                AsamSummaryView(asam: AsamListModel(asamModel: asam), showSectionHeader: true, showMoreDetails: true, showTitle: true)
+//                    .setShowMoreDetails(true)
+//                    .setShowSectionHeader(true)
+//                    .setShowTitle(true)
             }
         }
         .onChange(of: itemKey) { newReference in

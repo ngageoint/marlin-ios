@@ -11,6 +11,7 @@ import SwiftUI
 
 @testable import Marlin
 
+@MainActor
 final class RadioBeaconSummaryViewTests: XCTestCase {
 
     func testLoading() async throws {
@@ -50,8 +51,7 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
-        let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
-            .setShowMoreDetails(false)
+        let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb), showMoreDetails: false)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: summary)
@@ -138,8 +138,8 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
-        let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
-            .setShowMoreDetails(true)
+        let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb), showMoreDetails: true)
+//            .setShowMoreDetails(true)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: summary)
@@ -191,8 +191,8 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
 
-        let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb))
-            .setShowSectionHeader(true)
+        let summary = RadioBeaconSummaryView(radioBeacon: RadioBeaconListModel(radioBeaconModel:rb), showSectionHeader: true)
+//            .setShowSectionHeader(true)
             .environmentObject(router)
         
         let controller = UIHostingController(rootView: summary)

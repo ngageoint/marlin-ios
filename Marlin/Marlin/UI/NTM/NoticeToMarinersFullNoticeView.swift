@@ -21,8 +21,11 @@ struct NoticeToMarinersFullNoticeView: View {
     @ViewBuilder
     func sectionHeader() -> some View {
         if let pub = viewModel.notices.first {
-            NoticeToMarinersSummaryView(noticeToMariners: NoticeToMarinersListModel(noticeToMarinersModel: pub))
-                .showBookmarkNotes(true)
+            NoticeToMarinersSummaryView(
+                noticeToMariners: NoticeToMarinersListModel(noticeToMarinersModel: pub),
+                showBookmarkNotes: true
+            )
+//                .showBookmarkNotes(true)
         }
     }
 
