@@ -11,6 +11,7 @@ import CoreLocation
 
 @testable import Marlin
 
+@MainActor
 final class LocationFilterTests: XCTestCase {
     
     func testFilterChange() async throws {

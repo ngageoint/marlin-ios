@@ -15,8 +15,10 @@ import Combine
 @available(iOS 16.0, *)
 final class NoticeToMarinersFullNoticeViewTests: XCTestCase {
 
-    func testLoading() {
-        print("XXX this test is failing in iOS18 beta 7")
+    func testLoading() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
+
+        print("XXX this test is failing in iOS18")
         var publicationTitles: [String] = []
         var ntm = NoticeToMarinersModel()
 

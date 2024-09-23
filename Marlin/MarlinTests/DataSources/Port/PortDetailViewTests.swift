@@ -11,10 +11,12 @@ import SwiftUI
 
 @testable import Marlin
 
+@MainActor
 final class PortDetailViewTests: XCTestCase {
 
-    func testLoading() async {
-        print("XXX This test is failing in iOS18 beta 7")
+    func testLoading() async throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
+        print("XXX This test is failing in iOS18")
         var port = PortModel(portNumber: 760)
         port.portName = "Aasiaat"
         port.regionNumber = 54

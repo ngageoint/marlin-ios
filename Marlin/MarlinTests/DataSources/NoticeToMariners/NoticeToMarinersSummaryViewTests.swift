@@ -15,7 +15,8 @@ import Combine
 @MainActor
 final class NoticeToMarinersSummaryViewTests: XCTestCase {
 
-    func testFileSummaryView() {
+    func testFileSummaryView() throws {
+        try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var ntm = NoticeToMarinersModel()
 
         ntm.publicationIdentifier = 41791
