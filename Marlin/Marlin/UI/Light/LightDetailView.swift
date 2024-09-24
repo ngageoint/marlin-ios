@@ -72,9 +72,9 @@ struct LightDetailView: View {
 
                                     DataSourceActions(
                                         location: Actions.Location(latLng: firstLight.coordinate),
-                                        zoom: LightActions.Zoom(latLng: firstLight.coordinate, itemKey: firstLight.id),
+                                        zoom: LightActions.Zoom(latLng: firstLight.coordinate, itemKey: firstLight.itemKey),
                                         bookmark: firstLight.canBookmark ? Actions.Bookmark(
-                                            itemKey: firstLight.id,
+                                            itemKey: firstLight.itemKey,
                                             bookmarkViewModel: bookmarkViewModel
                                         ) : nil,
                                         share: firstLight.itemTitle
@@ -112,9 +112,15 @@ struct LightDetailView: View {
         }
         .onChange(of: featureNumber + volumeNumber) { _ in
             viewModel.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+            if let firstLight = viewModel.lights.first {
+                bookmarkViewModel.getBookmark(itemKey: firstLight.itemKey, dataSource: DataSources.light.key)
+            }
         }
         .onAppear {
             viewModel.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
+            if let firstLight = viewModel.lights.first {
+                bookmarkViewModel.getBookmark(itemKey: firstLight.itemKey, dataSource: DataSources.light.key)
+            }
             Metrics.shared.dataSourceDetail(dataSource: DataSources.light)
         }
     }

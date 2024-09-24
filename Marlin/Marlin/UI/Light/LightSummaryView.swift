@@ -44,9 +44,9 @@ struct LightSummaryView: DataSourceSummaryView {
                 LightActions.Tap(volume: light.volumeNumber, featureNumber: light.featureNumber, path: $router.path)
                 : nil,
                 location: !showMoreDetails ? Actions.Location(latLng: light.coordinate) : nil,
-                zoom: !showMoreDetails ? LightActions.Zoom(latLng: light.coordinate, itemKey: light.id) : nil,
+                zoom: !showMoreDetails ? LightActions.Zoom(latLng: light.coordinate, itemKey: light.itemKey) : nil,
                 bookmark: light.canBookmark ? Actions.Bookmark(
-                    itemKey: light.id,
+                    itemKey: light.itemKey,
                     bookmarkViewModel: bookmarkViewModel
                 ) : nil,
                 share: light.itemTitle

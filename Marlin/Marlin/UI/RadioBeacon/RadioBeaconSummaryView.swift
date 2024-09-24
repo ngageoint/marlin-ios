@@ -59,17 +59,17 @@ struct RadioBeaconSummaryView: DataSourceSummaryView {
                 location: !showMoreDetails ? Actions.Location(latLng: radioBeacon.coordinate) : nil,
                 zoom: !showMoreDetails ? RadioBeaconActions.Zoom(
                     latLng: radioBeacon.coordinate,
-                    itemKey: radioBeacon.id
+                    itemKey: radioBeacon.itemKey
                 ) : nil,
                 bookmark: radioBeacon.canBookmark ? Actions.Bookmark(
-                    itemKey: radioBeacon.id,
+                    itemKey: radioBeacon.itemKey,
                     bookmarkViewModel: bookmarkViewModel
                 ) : nil,
                 share: radioBeacon.itemTitle
             )
         }
         .onAppear {
-            bookmarkViewModel.getBookmark(itemKey: radioBeacon.id, dataSource: DataSources.radioBeacon.key)
+            bookmarkViewModel.getBookmark(itemKey: radioBeacon.itemKey, dataSource: DataSources.radioBeacon.key)
         }
     }
 }

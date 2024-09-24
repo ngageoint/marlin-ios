@@ -41,9 +41,9 @@ struct ModuSummaryView: DataSourceSummaryView {
             DataSourceActions(
                 moreDetails: showMoreDetails ? ModuActions.Tap(name: modu.name, path: $router.path) : nil,
                 location: !showMoreDetails ? Actions.Location(latLng: modu.coordinate) : nil,
-                zoom: !showMoreDetails ? ModuActions.Zoom(latLng: modu.coordinate, itemKey: modu.id) : nil,
+                zoom: !showMoreDetails ? ModuActions.Zoom(latLng: modu.coordinate, itemKey: modu.itemKey) : nil,
                 bookmark: modu.canBookmark ? Actions.Bookmark(
-                    itemKey: modu.id,
+                    itemKey: modu.itemKey,
                     bookmarkViewModel: bookmarkViewModel
                 ) : nil,
                 share: modu.itemTitle

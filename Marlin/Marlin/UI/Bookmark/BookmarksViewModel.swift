@@ -38,6 +38,10 @@ class BookmarksViewModel: ObservableObject {
     
     init() {
         fetchBookmarks()
+        repository.refreshPublisher.sink { [weak self] _ in
+            self?.reload()
+        }
+        .store(in: &disposables)
     }
 
     private enum TriggerId: Hashable {

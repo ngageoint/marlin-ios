@@ -55,6 +55,12 @@ class BookmarkRepository: ObservableObject {
     var publicationRepository: PublicationRepository
     @Injected(\.navWarningRepository)
     var navigationalWarningRepository: NavigationalWarningRepository
+    
+    var refreshPublisher: AnyPublisher<Date, Never> {
+        refreshSubject.eraseToAnyPublisher()
+    }
+    
+    var refreshSubject: PassthroughSubject<Date, Never> = PassthroughSubject<Date, Never>()
 
     func getBookmark(itemKey: String, dataSource: String) -> BookmarkModel? {
         localDataSource.getBookmark(itemKey: itemKey, dataSource: dataSource)
@@ -62,10 +68,13 @@ class BookmarkRepository: ObservableObject {
 
     func createBookmark(notes: String?, itemKey: String, dataSource: String) async {
         await localDataSource.createBookmark(notes: notes, itemKey: itemKey, dataSource: dataSource)
+        refreshSubject.send(Date())
     }
 
     func removeBookmark(itemKey: String, dataSource: String) -> Bool {
-        localDataSource.removeBookmark(itemKey: itemKey, dataSource: dataSource)
+        let removed = localDataSource.removeBookmark(itemKey: itemKey, dataSource: dataSource)
+        refreshSubject.send(Date())
+        return removed
     }
 
     func bookmarks(

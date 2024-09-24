@@ -21,6 +21,9 @@ struct ModuDetailView: View {
         case nil:
             Color.clear.onAppear {
                 viewModel.getModu(name: name, waypointURI: waypointURI)
+                if let modu = viewModel.modu {
+                    bookmarkViewModel.getBookmark(itemKey: modu.itemKey, dataSource: DataSources.modu.key)
+                }
             }
         case .some(let modu):
             List {
@@ -58,9 +61,9 @@ struct ModuDetailView: View {
                             BookmarkNotes(bookmarkViewModel: bookmarkViewModel)
                             DataSourceActions(
                                 location: Actions.Location(latLng: modu.coordinate),
-                                zoom: ModuActions.Zoom(latLng: modu.coordinate, itemKey: modu.id),
+                                zoom: ModuActions.Zoom(latLng: modu.coordinate, itemKey: modu.itemKey),
                                 bookmark: modu.canBookmark ? Actions.Bookmark(
-                                    itemKey: modu.id,
+                                    itemKey: modu.itemKey,
                                     bookmarkViewModel: bookmarkViewModel
                                 ) : nil
                             )
@@ -94,7 +97,7 @@ struct ModuDetailView: View {
                 viewModel.getModu(name: name, waypointURI: waypointURI)
             }
             .onAppear {
-                bookmarkViewModel.getBookmark(itemKey: modu.id, dataSource: DataSources.modu.key)
+                bookmarkViewModel.getBookmark(itemKey: modu.itemKey, dataSource: DataSources.modu.key)
                 Metrics.shared.dataSourceDetail(dataSource: DataSources.modu)
             }
         }

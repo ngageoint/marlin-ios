@@ -36,16 +36,16 @@ struct AsamSummaryView: DataSourceSummaryView {
             DataSourceActions(
                 moreDetails: showMoreDetails ? AsamActions.Tap(reference: asam.reference, path: $router.path) : nil,
                 location: Actions.Location(latLng: asam.coordinate),
-                zoom: !showMoreDetails ? AsamActions.Zoom(latLng: asam.coordinate, itemKey: asam.id) : nil,
+                zoom: !showMoreDetails ? AsamActions.Zoom(latLng: asam.coordinate, itemKey: asam.itemKey) : nil,
                 bookmark: asam.canBookmark ? Actions.Bookmark(
-                    itemKey: asam.id,
+                    itemKey: asam.itemKey,
                     bookmarkViewModel: bookmarkViewModel
                 ) : nil,
                 share: asam.itemTitle
             )
         }
         .onAppear {
-            bookmarkViewModel.getBookmark(itemKey: asam.id, dataSource: DataSources.asam.key)
+            bookmarkViewModel.getBookmark(itemKey: asam.itemKey, dataSource: DataSources.asam.key)
         }
     }
 }

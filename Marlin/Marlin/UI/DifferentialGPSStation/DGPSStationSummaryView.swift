@@ -55,17 +55,17 @@ struct DGPSStationSummaryView: DataSourceSummaryView {
                 location: !showMoreDetails ? Actions.Location(latLng: dgpsStation.coordinate) : nil,
                 zoom: !showMoreDetails ? DGPSStationActions.Zoom(
                     latLng: dgpsStation.coordinate,
-                    itemKey: dgpsStation.id
+                    itemKey: dgpsStation.itemKey
                 ) : nil,
                 bookmark: dgpsStation.canBookmark ? Actions.Bookmark(
-                    itemKey: dgpsStation.id,
+                    itemKey: dgpsStation.itemKey,
                     bookmarkViewModel: bookmarkViewModel
                 ) : nil,
                 share: dgpsStation.itemTitle
             )
         }
         .onAppear {
-            bookmarkViewModel.getBookmark(itemKey: dgpsStation.id, dataSource: DataSources.dgps.key)
+            bookmarkViewModel.getBookmark(itemKey: dgpsStation.itemKey, dataSource: DataSources.dgps.key)
         }
     }
 }

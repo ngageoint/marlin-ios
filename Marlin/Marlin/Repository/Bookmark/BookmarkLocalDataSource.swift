@@ -60,6 +60,7 @@ class BookmarkCoreDataDataSource: CoreDataDataSource, BookmarkLocalDataSource {
             bookmark.id = itemKey
             bookmark.timestamp = Date()
             do {
+                try context.obtainPermanentIDs(for: [bookmark])
                 try context.save()
             } catch {
                 print("Error saving bookmark \(error)")

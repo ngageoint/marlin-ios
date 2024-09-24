@@ -57,7 +57,7 @@ struct PortSummaryView: DataSourceSummaryView {
             DataSourceActions(
                 moreDetails: showMoreDetails ? PortActions.Tap(portNumber: port.portNumber, path: $router.path) : nil,
                 location: !showMoreDetails ? Actions.Location(latLng: port.coordinate) : nil,
-                zoom: !showMoreDetails ? PortActions.Zoom(latLng: port.coordinate, itemKey: port.id) : nil,
+                zoom: !showMoreDetails ? PortActions.Zoom(latLng: port.coordinate, itemKey: port.itemKey) : nil,
                 bookmark: port.canBookmark ? Actions.Bookmark(
                     itemKey: port.itemKey,
                     bookmarkViewModel: bookmarkViewModel
@@ -66,7 +66,7 @@ struct PortSummaryView: DataSourceSummaryView {
             )
         }
         .onAppear {
-            bookmarkViewModel.getBookmark(itemKey: port.id, dataSource: DataSources.port.key)
+            bookmarkViewModel.getBookmark(itemKey: port.itemKey, dataSource: DataSources.port.key)
 
             if let currentLocation = locationManager.lastLocation {
                 let metersMeasurement = NSMeasurement(
