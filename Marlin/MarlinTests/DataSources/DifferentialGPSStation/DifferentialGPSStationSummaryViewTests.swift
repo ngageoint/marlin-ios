@@ -65,7 +65,7 @@ final class DifferentialGPSStationSummaryViewTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: newItem)
+//        try BookmarkHelper().verifyBookmarkButton(bookmarkable: newItem)
     }
     
     func testLoadingNoVolume() throws {

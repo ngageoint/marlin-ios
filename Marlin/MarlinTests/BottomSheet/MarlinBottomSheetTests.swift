@@ -56,15 +56,15 @@ final class MarlinBottomSheetTests: XCTestCase {
 
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
-        let remoteDataSource = AsamStaticRemoteDataSource()
-        InjectedValues[\.asamRemoteDataSource]
+//        let remoteDataSource = AsamStaticRemoteDataSource()
+//        InjectedValues[\.asamRemoteDataSource]
         localDataSource.list.append(newItem)
         let repository = AsamRepository()
         let bookmarkLocalDataSource = BookmarkStaticLocalDataSource()
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let router = MarlinRouter()
         let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem])
-            .environmentObject(repository)
+//            .environmentObject(repository)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: view)
@@ -113,8 +113,8 @@ final class MarlinBottomSheetTests: XCTestCase {
 
         let localDataSource = AsamStaticLocalDataSource()
         InjectedValues[\.asamLocalDataSource] = localDataSource
-        let remoteDataSource = AsamStaticRemoteDataSource()
-        InjectedValues[\.asamRemoteDataSource] = remoteDataSource
+//        let remoteDataSource = AsamStaticRemoteDataSource()
+//        InjectedValues[\.asamRemoteDataSource] = remoteDataSource
         localDataSource.list.append(newItem)
         let repository = AsamRepository()
         let moduLocalDataSource = ModuStaticLocalDataSource()
@@ -128,7 +128,7 @@ final class MarlinBottomSheetTests: XCTestCase {
         InjectedValues[\.bookmarkLocalDataSource] = bookmarkLocalDataSource
         let router = MarlinRouter()
         let view = TestBottomSheet(bottomSheetItems: [bottomSheetItem, bottomSheetItem2])
-            .environmentObject(repository)
+//            .environmentObject(repository)
             .environmentObject(router)
 
         let controller = UIHostingController(rootView: view)

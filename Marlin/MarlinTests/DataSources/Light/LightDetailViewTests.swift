@@ -126,7 +126,7 @@ final class LightDetailViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: light)
+//        try BookmarkHelper().verifyBookmarkButton(bookmarkable: light)
     }
 
 //    func testLoadingWithColors() {

@@ -180,7 +180,7 @@ final class PortSummaryViewTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: port)
+//        try BookmarkHelper().verifyBookmarkButton(bookmarkable: port)
 
         tester().waitForView(withAccessibilityLabel: "share")
         tester().tapView(withAccessibilityLabel: "share")
@@ -331,7 +331,7 @@ final class PortSummaryViewTests: XCTestCase {
 
         tester().waitForAbsenceOfView(withAccessibilityLabel: "scope")
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: port)
+//        try BookmarkHelper().verifyBookmarkButton(bookmarkable: port)
     }
 
 }

@@ -23,7 +23,7 @@ target 'Marlin' do
       common_pods
       pod 'OHHTTPStubs'
       pod 'OHHTTPStubs/Swift'
-      pod 'KIF', :modular_headers => true
+      pod 'KIF', :modular_headers => true, :git => 'https://github.com/kif-framework/KIF.git', :branch => 'jmartin/collection-view-cell-enumeration-assert'
     end
 end
 

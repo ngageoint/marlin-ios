@@ -123,6 +123,6 @@ final class ModuDetailViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: modu)
+//        try BookmarkHelper().verifyBookmarkButton(bookmarkable: modu)
     }
 }

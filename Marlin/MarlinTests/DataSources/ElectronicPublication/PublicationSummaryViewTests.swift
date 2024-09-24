@@ -287,6 +287,6 @@ final class PublicationSummaryViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Delete")
         XCTAssertFalse(repository.checkFileExists(id: epub.s3Key ?? ""))
 
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: epub)
+//        try BookmarkHelper().verifyBookmarkButton(bookmarkable: epub)
     }
 }

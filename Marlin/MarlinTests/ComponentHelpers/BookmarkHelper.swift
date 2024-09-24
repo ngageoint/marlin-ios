@@ -14,7 +14,7 @@ import CoreData
 class BookmarkHelper: XCTestCase {
     @Injected(\.bookmarkRepository)
     var repository: BookmarkRepository
-    public func verifyBookmarkButton(viewContext: NSManagedObjectContext? = nil, bookmarkable: Bookmarkable) throws {
+    public func verifyBookmarkButton(viewContext: NSManagedObjectContext? = nil, bookmarkable: Bookmarkable) async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         tester().tapView(withAccessibilityLabel: "bookmark")
         tester().waitForView(withAccessibilityLabel: "Bookmark")
@@ -27,7 +27,7 @@ class BookmarkHelper: XCTestCase {
 //        viewContext.performAndWait {
 //            let bookmark = viewContext.fetchFirst(Bookmark.self, key: "id", value: bookmarkable.itemKey ?? "")
             XCTAssertNotNil(bookmark)
-        let foundItem = repository.getDataSourceItem(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key )
+        let foundItem = await repository.getDataSourceItem(itemKey: bookmarkable.itemKey, dataSource: bookmarkable.key )
             XCTAssertNotNil(foundItem)
 //            XCTAssertNotNil(foundItem?.bookmark)
 //            XCTAssertEqual(foundItem?.bookmark?.notes, "Bookmark notes")

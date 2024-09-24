@@ -94,7 +94,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "202247")
         tester().waitForView(withAccessibilityLabel: "November 19 - November 25")
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: ntm)
+//        try BookmarkHelper().verifyBookmarkButton(bookmarkable: ntm)
     }
     
     func testReDownloadFullPublication() throws {

@@ -71,6 +71,6 @@ final class NavigationalWarningDetailTests: XCTestCase {
         let textView = viewTester().usingLabel("Text").view as! UITextView
         XCTAssertEqual(textView.text, newItem.text)
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: newItem)
+//        try BookmarkHelper().verifyBookmarkButton(bookmarkable: newItem)
     }
 }

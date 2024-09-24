@@ -65,7 +65,7 @@ DEPENDENCIES:
   - Alamofire
   - gars-ios
   - geopackage-ios
-  - KIF
+  - KIF (from `https://github.com/kif-framework/KIF.git`, branch `jmartin/collection-view-cell-enumeration-assert`)
   - Kingfisher
   - MatomoTracker (~> 7.5)
   - mgrs-ios
@@ -83,7 +83,6 @@ SPEC REPOS:
     - gars-ios
     - geopackage-ios
     - grid-ios
-    - KIF
     - Kingfisher
     - MatomoTracker
     - mgrs-ios
@@ -101,6 +100,16 @@ SPEC REPOS:
     - SwiftUIIntrospect
     - SWXMLHash
     - tiff-ios
+
+EXTERNAL SOURCES:
+  KIF:
+    :branch: jmartin/collection-view-cell-enumeration-assert
+    :git: https://github.com/kif-framework/KIF.git
+
+CHECKOUT OPTIONS:
+  KIF:
+    :commit: a3a3fb8ba991e8a7e1b78dae00f6c09f36a8be09
+    :git: https://github.com/kif-framework/KIF.git
 
 SPEC CHECKSUMS:
   Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
@@ -128,6 +137,6 @@ SPEC CHECKSUMS:
   SWXMLHash: dd733a457e9c4fe93b1538654057aefae4acb382
   tiff-ios: 1ad6750cd8bb3db75bd2977e40145813389786b9
 
-PODFILE CHECKSUM: 69fee3ae22dae2502b230c00941fcaab7513b7da
+PODFILE CHECKSUM: b41f2f7e8505d75694a54ee3448463b75e0fb076
 
 COCOAPODS: 1.15.2
