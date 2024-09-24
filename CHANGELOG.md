@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## 1.5.0
  ### Features
     * iOS 18 fixes and new icons
+    * rmeoved ASAM data source
 ## 1.4.0
  ### Features
     * Create routes between points on the map.
