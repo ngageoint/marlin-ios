@@ -6,7 +6,7 @@ project 'Marlin.xcodeproj'
 
 def common_pods
   pod "Alamofire"
-  pod "Kingfisher", '-> 7'
+  pod "Kingfisher", '~> 7'
   pod 'geopackage-ios'
   pod 'mgrs-ios'
   pod 'gars-ios'
