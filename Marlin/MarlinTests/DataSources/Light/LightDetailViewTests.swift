@@ -57,7 +57,7 @@ final class LightDetailViewTests: XCTestCase {
 
     }
 
-    func xtestTapButtons() throws {
+    func xtestTapButtons() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var light = LightModel()
 
@@ -126,7 +126,7 @@ final class LightDetailViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: light)
+        try await BookmarkHelper().verifyBookmarkButton(bookmarkable: light)
     }
 
 //    func testLoadingWithColors() {

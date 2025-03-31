@@ -16,7 +16,7 @@ final class AsamSummaryViewTests: XCTestCase {
         throw XCTSkip("ASAMs are disabled.")
     }
     
-    func testLoading() throws {
+    func testLoading() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var asam = AsamModel()
         asam.asamDescription = "description"
@@ -59,7 +59,7 @@ final class AsamSummaryViewTests: XCTestCase {
         
         waitForExpectations(timeout: 10, handler: nil)
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: asam)
+        try await BookmarkHelper().verifyBookmarkButton(bookmarkable: asam)
     }
     
     func testLoadingNoHostility() {

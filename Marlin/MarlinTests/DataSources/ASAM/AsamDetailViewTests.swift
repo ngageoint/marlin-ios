@@ -56,7 +56,7 @@ final class AsamDetailViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: asam.dateString)
     }
 
-    func xtestTapButtons() throws {
+    func xtestTapButtons() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var asam = AsamModel()
         asam.asamDescription = "description"
@@ -97,7 +97,7 @@ final class AsamDetailViewTests: XCTestCase {
         tester().tapView(withAccessibilityLabel: "Location")
         waitForExpectations(timeout: 10, handler: nil)
 
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: asam)
+        try await BookmarkHelper().verifyBookmarkButton(bookmarkable: asam)
     }
 
     func testLoadingNoHostility() {

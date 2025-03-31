@@ -13,7 +13,7 @@ import SwiftUI
 
 final class NavigationalWarningSummaryViewTests: XCTestCase {
 
-    func testLoading() throws {
+    func testLoading() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var nw = NavigationalWarningModel(navArea: "P")
 
@@ -56,7 +56,7 @@ final class NavigationalWarningSummaryViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: nw)
+        try await BookmarkHelper().verifyBookmarkButton(bookmarkable: nw)
 
     }
 }

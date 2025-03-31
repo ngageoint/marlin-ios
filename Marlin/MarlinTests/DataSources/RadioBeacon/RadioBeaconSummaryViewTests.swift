@@ -13,7 +13,7 @@ import SwiftUI
 
 final class RadioBeaconSummaryViewTests: XCTestCase {
 
-    func testLoading() throws {
+    func testLoading() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var rb = RadioBeaconModel()
 
@@ -98,7 +98,7 @@ final class RadioBeaconSummaryViewTests: XCTestCase {
         tester().waitForTappableView(withAccessibilityLabel: "dismiss popup")
         tester().tapScreen(at: CGPoint(x:20, y:20))
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: rb)
+        try await BookmarkHelper().verifyBookmarkButton(bookmarkable: rb)
     }
     
     func testShowMoreDetails() throws {

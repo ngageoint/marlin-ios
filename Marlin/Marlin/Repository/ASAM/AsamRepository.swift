@@ -33,7 +33,7 @@ extension InjectedValues {
     }
 }
 
-actor AsamRepository {
+actor AsamRepository: ObservableObject {
     @Injected(\.asamLocalDataSource)
     var localDataSource: AsamLocalDataSource
     @Injected(\.asamRemoteDataSource)

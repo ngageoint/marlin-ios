@@ -54,7 +54,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "Upload Time: \(ntm.uploadTime!.formatted(date: .complete, time: .omitted))")
     }
     
-    func testSummary() throws {
+    func testSummary() async throws {
         try XCTSkipIf(TestHelpers.DISABLE_UI_TESTS, "UI tests are disabled")
         var ntm = NoticeToMarinersModel()
 
@@ -94,7 +94,7 @@ final class NoticeToMarinersSummaryViewTests: XCTestCase {
         tester().waitForView(withAccessibilityLabel: "202247")
         tester().waitForView(withAccessibilityLabel: "November 19 - November 25")
         
-        try BookmarkHelper().verifyBookmarkButton(bookmarkable: ntm)
+        try await BookmarkHelper().verifyBookmarkButton(bookmarkable: ntm)
     }
     
     func testReDownloadFullPublication() throws {
