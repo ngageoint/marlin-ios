@@ -4739,8 +4739,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/ExceptionCatcher";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				kind = exactVersion;
+				version = 2.1.0;
 			};
 		};
 		F730DFC22A99000D0051775C /* XCRemoteSwiftPackageReference "GeoJSON" */ = {
