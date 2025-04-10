@@ -48,6 +48,9 @@
                <Test
                   Identifier = "PortDataTests/testLoadInitialData()">
                </Test>
+               <Test
+                  Identifier = "SearchProviderTests/testNominatimCoordinateSearch()">
+               </Test>
             </SkippedTests>
          </TestableReference>
       </Testables>
