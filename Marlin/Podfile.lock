@@ -56,7 +56,7 @@ PODS:
     - sf-ios (~> 4.1.4)
   - sf-wkt-ios (2.1.4):
     - sf-ios (~> 4.1.4)
-  - SwiftLint (0.57.0)
+  - SwiftLint (0.57.1)
   - SwiftUIIntrospect (1.3.0)
   - SWXMLHash (7.0.2)
   - tiff-ios (4.0.2)
@@ -132,11 +132,11 @@ SPEC CHECKSUMS:
   sf-proj-ios: 6cd46b6b9c4bdefa2a8fb8bc65c3b9fd434eedad
   sf-wkb-ios: 1f77406c680545b348803c70e4ddc2dde73a37ff
   sf-wkt-ios: 85faef2380a4fd47e6237f692d13273d641ab4eb
-  SwiftLint: eb47480d47c982481592c195c221d11013a679cc
+  SwiftLint: 92196976e597b9afec5dbe374810103e6c1d9d7c
   SwiftUIIntrospect: fee9aa07293ee280373a591e1824e8ddc869ba5d
   SWXMLHash: dd733a457e9c4fe93b1538654057aefae4acb382
   tiff-ios: 1ad6750cd8bb3db75bd2977e40145813389786b9
 
-PODFILE CHECKSUM: b41f2f7e8505d75694a54ee3448463b75e0fb076
+PODFILE CHECKSUM: 82e6a7865ecdbb0b5169773b69c9dd3430a81847
 
 COCOAPODS: 1.16.2
