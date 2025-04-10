@@ -244,21 +244,4 @@ class ImageAnnotationView: MKAnnotationView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    var combinedImage: UIImage? {
-        didSet {
-            updateImage()
-        }
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle {
-            updateImage()
-        }
-    }
-    
-    private func updateImage() {
-        image = combinedImage?.imageAsset?.image(with: traitCollection) ?? combinedImage
-    }
 }

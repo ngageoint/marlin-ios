@@ -125,12 +125,12 @@ struct DGPSStationList: View {
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.backgroundColor)
         .foregroundColor(Color.onSurfaceColor)
-        .onChange(of: filterOpen) { filterOpen in
+        .onChange(of: filterOpen) {
             if !filterOpen {
                 viewModel.reload()
             }
         }
-        .onChange(of: sortOpen) { sortOpen in
+        .onChange(of: sortOpen) {
             if !sortOpen {
                 viewModel.reload()
             }

@@ -48,11 +48,11 @@ struct UserTrackingButton: View {
             setButtonImage()
             mapState?.userTrackingMode = userTrackingMode
         }
-        .onChange(of: locationManager.locationStatus ?? .notDetermined) { _ in
+        .onChange(of: locationManager.locationStatus ?? .notDetermined) {
             setButtonImage()
         }
-        .onChange(of: mapState?.userTrackingMode) { newValue in
-            if let mode = newValue {
+        .onChange(of: mapState?.userTrackingMode) {
+            if let mode = mapState?.userTrackingMode {
                 userTrackingMode = mode
                 setButtonImage()
             }

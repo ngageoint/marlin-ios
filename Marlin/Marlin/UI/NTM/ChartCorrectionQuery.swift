@@ -39,7 +39,7 @@ struct ChartCorrectionQuery: View {
             Metrics.shared.appRoute(["ntms", "query"])
             checkRequiredParameters()
         }
-        .onChange(of: chartCorrectionFilter) { _ in
+        .onChange(of: chartCorrectionFilter) {
             checkRequiredParameters()
         }
     }

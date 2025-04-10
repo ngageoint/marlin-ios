@@ -25,14 +25,14 @@ struct AsamSheetView: View {
                     .setShowTitle(true)
             }
         }
-        .onChange(of: itemKey) { newReference in
+        .onChange(of: itemKey) { _, newReference in
             viewModel.getAsam(reference: newReference)
         }
-        .onChange(of: viewModel.asam) { model in
+        .onChange(of: viewModel.asam) { _, newModel in
             NotificationCenter.default.post(
                 name: focusNotification,
                 object: FocusMapOnItemNotification(
-                    item: model,
+                    item: newModel,
                     definition: DataSources.asam
                 )
             )

@@ -256,9 +256,9 @@ struct LayerRow: View {
                 centerButton()
             }
         })
-        .onChange(of: layer.selected, perform: { _ in
+        .onChange(of: layer.selected) {
             viewModel.updateSelectedLayers(layer: layer)
-        })
+        }
         .toggleStyle(ListCheckboxToggleStyle())
         .contentShape(Rectangle())
         .onTapGesture {

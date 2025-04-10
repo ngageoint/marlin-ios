@@ -34,17 +34,17 @@ struct DGPSStationRouteSheetView: View {
                 Text("Loading...")
             }
         }
-        .onChange(of: itemKey) { newItemKey in
-            let split = newItemKey.split(separator: "--")
+        .onChange(of: itemKey) {
+            let split = itemKey.split(separator: "--")
             if split.count == 2 {
                 viewModel.getDGPSStation(featureNumber: Int(split[0]) ?? -1, volumeNumber: "\(split[1])")
             }
         }
-        .onChange(of: viewModel.dgpsStation) { model in
+        .onChange(of: viewModel.dgpsStation) {
             NotificationCenter.default.post(
                 name: focusNotification,
                 object: FocusMapOnItemNotification(
-                    item: model,
+                    item: viewModel.dgpsStation,
                     definition: DataSources.dgps
                 )
             )

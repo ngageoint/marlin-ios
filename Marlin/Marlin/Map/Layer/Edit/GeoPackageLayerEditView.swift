@@ -145,9 +145,9 @@ struct GeoPackageTileLayerRow: View {
         .tint(Color.primaryColor)
         .accessibilityElement()
         .accessibilityLabel("Tile Layer \(layer.name ?? "") Toggle")
-        .onChange(of: layer.selected, perform: { _ in
+        .onChange(of: layer.selected) {
             viewModel.updateSelectedLayers(layer: layer)
-        })
+        }
     }
 }
 

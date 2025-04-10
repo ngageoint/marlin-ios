@@ -79,7 +79,7 @@ struct DGPSStationDetailView: View {
         }
         .navigationTitle("\(viewModel.dgpsStation?.name ?? DataSources.dgps.fullName)" )
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: featureNumber) { _ in
+        .onChange(of: featureNumber) {
             viewModel.getDGPSStation(
                 featureNumber: featureNumber,
                 volumeNumber: volumeNumber,

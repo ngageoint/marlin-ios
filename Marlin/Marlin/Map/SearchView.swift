@@ -47,7 +47,7 @@ struct SearchView: View {
                             searchPublisher.send(search)
                         }
                         .frame(maxWidth: searchExpanded ? .infinity : 0)
-                        .onChange(of: search) { search in
+                        .onChange(of: search) {
                             searchPublisher.send(search)
                         }
                         .onReceive(

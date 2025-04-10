@@ -23,17 +23,17 @@ struct LightSheetView: View {
                     .setShowTitle(true)
             }
         }
-        .onChange(of: itemKey) { newItemKey in
-            let split = newItemKey.split(separator: "--")
+        .onChange(of: itemKey) {
+            let split = itemKey.split(separator: "--")
             if split.count == 3 {
                 viewModel.getLights(featureNumber: "\(split[0])", volumeNumber: "\(split[1])")
             }
         }
-        .onChange(of: viewModel.lights) { model in
+        .onChange(of: viewModel.lights) {
             NotificationCenter.default.post(
                 name: focusNotification,
                 object: FocusMapOnItemNotification(
-                    item: model.first,
+                    item: viewModel.lights.first,
                     definition: DataSources.light
                 )
             )

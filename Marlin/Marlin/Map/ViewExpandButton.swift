@@ -29,7 +29,7 @@ struct ViewExpandButton: View {
         .onAppear {
             setButtonImage()
         }
-        .onChange(of: expanded) { _ in
+        .onChange(of: expanded) {
             setButtonImage()
         }
         .buttonStyle(

@@ -218,7 +218,7 @@ struct MarlinBottomSheet <Content: View>: View {
             }
                 .ignoresSafeArea()
         )
-        .onChange(of: selectedItem) { item in
+        .onChange(of: selectedItem) {
             // This can all be removed once all bottom sheet items focus properly
             if (itemList.bottomSheetItems?.count ?? -1) >= selectedItem + 1,
                let bottomSheetItem = itemList.bottomSheetItems?[selectedItem],

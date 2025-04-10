@@ -471,8 +471,8 @@
 		F76EE1C02B928CBD001128EB /* DifferentialGPSStationCoreDataDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE1A92B928CBD001128EB /* DifferentialGPSStationCoreDataDataSourceTests.swift */; };
 		F76EE1C12B928CBD001128EB /* DifferentialGPSStationRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE1AA2B928CBD001128EB /* DifferentialGPSStationRepositoryTests.swift */; };
 		F76EE1C22B928CBD001128EB /* DifferentialGPSStationRemoteDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE1AB2B928CBD001128EB /* DifferentialGPSStationRemoteDataSourceTests.swift */; };
-		F77671CB2B34D5930026DD50 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		F77671CD2B34D75A0026DD50 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		F77671CB2B34D5930026DD50 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		F77671CD2B34D75A0026DD50 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		F7830BFB2A8AB3FE008376F7 /* Route+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFA2A8AB3FE008376F7 /* Route+CoreDataClass.swift */; };
 		F7830BFD2A8AB6E1008376F7 /* RouteList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFC2A8AB6E1008376F7 /* RouteList.swift */; };
 		F7830BFF2A8BC9F8008376F7 /* GeoPackageExportButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFE2A8BC9F8008376F7 /* GeoPackageExportButton.swift */; };
@@ -3555,13 +3555,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MarlinTests/Pods-MarlinTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MarlinTests/Pods-MarlinTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3576,13 +3572,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Marlin/Pods-Marlin-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Marlin/Pods-Marlin-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3896,7 +3888,7 @@
 				F7D5C05B28A6B458000C2C29 /* StructureImage.swift in Sources */,
 				F7222FB82B6D7D2700C3E4F1 /* NoticeToMarinersRemoteDataSource.swift in Sources */,
 				F76EE0F32B9233E3001128EB /* ModuRouteSheetView.swift in Sources */,
-				F77671CB2B34D5930026DD50 /* (null) in Sources */,
+				F77671CB2B34D5930026DD50 /* BuildFile in Sources */,
 				F7830BFF2A8BC9F8008376F7 /* GeoPackageExportButton.swift in Sources */,
 				F76EE0E22B913F84001128EB /* CLLocationCoordinate2D+Validation.swift in Sources */,
 				F76EE14C2B928A69001128EB /* NavigationalWarningDataFetchOperation.swift in Sources */,
@@ -4203,7 +4195,7 @@
 				F7D8FA232924394900E7D0A1 /* NTMGraphics.swift in Sources */,
 				F7C7CB4D2B9F786B001BF8E0 /* SearchProviderDataDefinition.swift in Sources */,
 				F76EE0F82B923461001128EB /* PortRouteSheetView.swift in Sources */,
-				F77671CD2B34D75A0026DD50 /* (null) in Sources */,
+				F77671CD2B34D75A0026DD50 /* BuildFile in Sources */,
 				F715E30F2B766BF400752688 /* DGPSStationGeoPackageExportable.swift in Sources */,
 				F71F2B202ACF3CC700DFB5BA /* PublisherExtensions.swift in Sources */,
 				F71E3E3A28F49ABE002F2019 /* SearchResultsMap.swift in Sources */,

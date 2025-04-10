@@ -77,9 +77,9 @@ struct NavigationalWarningAreasView: View {
             .listStyle(.plain)
             .listRowBackground(Color.surfaceColor)
             .listRowInsets(EdgeInsets(top: 10, leading: 8, bottom: 8, trailing: 8))
-            .onChange(of: generalLocation.currentNavAreaName, perform: { newValue in
+            .onChange(of: generalLocation.currentNavAreaName) { _, newValue in
                 viewModel.currentNavAreaName = newValue
-            })
+            }
             .onAppear {
                 viewModel.currentNavAreaName = generalLocation.currentNavAreaName
             }

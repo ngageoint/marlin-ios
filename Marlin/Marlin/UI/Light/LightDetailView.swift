@@ -110,7 +110,7 @@ struct LightDetailView: View {
                 Text("Loading Light \(self.featureNumber) \(self.volumeNumber)")
             }
         }
-        .onChange(of: featureNumber + volumeNumber) { _ in
+        .onChange(of: featureNumber + volumeNumber) {
             viewModel.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
             if let firstLight = viewModel.lights.first {
                 bookmarkViewModel.getBookmark(itemKey: firstLight.itemKey, dataSource: DataSources.light.key)

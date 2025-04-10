@@ -93,7 +93,7 @@ struct ModuDetailView: View {
             .dataSourceDetailList()
             .navigationTitle(modu.name ?? DataSources.modu.fullName)
             .navigationBarTitleDisplayMode(.inline)
-            .onChange(of: name) { _ in
+            .onChange(of: name) {
                 viewModel.getModu(name: name, waypointURI: waypointURI)
             }
             .onAppear {

@@ -46,7 +46,7 @@ struct CombinedSourcesFilterButton: ViewModifier {
             }
             filterCount = count
         }
-        .onChange(of: dataSources) { _ in
+        .onChange(of: dataSources) {
             var count = 0
             for dataSource in dataSources {
                 count += UserDefaults.standard.filter(dataSource.dataSource).count

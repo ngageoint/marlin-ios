@@ -125,7 +125,7 @@ struct CreateRouteView: View {
                             lastWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
                         }
                     }
-                    .onChange(of: geo.size) { _ in
+                    .onChange(of: geo.size) {
                         if i == routeViewModel.waypoints.indices.lowerBound {
                             firstWaypointFrameSize = CGSize(width: .infinity, height: geo.size.height)
                         }
@@ -162,7 +162,7 @@ struct CreateRouteView: View {
                     Color.clear.onAppear {
                         distanceFrameSize = CGSize(width: .infinity, height: geo.size.height)
                     }
-                    .onChange(of: geo.size) { _ in
+                    .onChange(of: geo.size) {
                         distanceFrameSize = CGSize(width: .infinity, height: geo.size.height)
                     }
                 }
@@ -193,7 +193,7 @@ struct CreateRouteView: View {
                     Color.clear.onAppear {
                         instructionsFrameSize = CGSize(width: .infinity, height: geo.size.height)
                     }
-                    .onChange(of: geo.size) { _ in
+                    .onChange(of: geo.size) {
                         instructionsFrameSize = CGSize(width: .infinity, height: geo.size.height)
                     }
                 }
@@ -266,7 +266,7 @@ struct CreateRouteView: View {
                 Color.clear.onAppear {
                     waypointsFrameSize = CGSize(width: .infinity, height: min(geo.size.height, maxFeatureAreaSize))
                 }
-                .onChange(of: geo.size) { _ in
+                .onChange(of: geo.size) {
                     waypointsFrameSize = CGSize(width: .infinity, height: min(geo.size.height, maxFeatureAreaSize))
                 }
             }

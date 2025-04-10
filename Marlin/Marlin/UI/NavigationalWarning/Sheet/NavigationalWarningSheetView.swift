@@ -23,8 +23,8 @@ struct NavigationalWarningSheetView: View {
                     .setShowTitle(true)
             }
         }
-        .onChange(of: itemKey) { newItemKey in
-            let split = newItemKey.split(separator: "--")
+        .onChange(of: itemKey) {
+            let split = itemKey.split(separator: "--")
             if split.count == 3 {
                 viewModel.getNavigationalWarning(
                     msgYear: Int(split[0]) ?? -1,
@@ -33,11 +33,11 @@ struct NavigationalWarningSheetView: View {
                 )
             }
         }
-        .onChange(of: viewModel.navWarning) { model in
+        .onChange(of: viewModel.navWarning) {
             NotificationCenter.default.post(
                 name: focusNotification,
                 object: FocusMapOnItemNotification(
-                    item: model,
+                    item: viewModel.navWarning,
                     definition: DataSources.navWarning
                 )
             )
