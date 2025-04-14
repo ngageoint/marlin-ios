@@ -108,7 +108,8 @@ struct SearchView: View {
                                                         snackbarModel: SnackbarModel(
                                                             message: """
                                                             Location \
-                                                            \(coordinateDisplay.format(coordinate: searchResult.coordinate)) \
+                                                            \(coordinateDisplay
+                                                            .format(coordinate: searchResult.coordinate)) \
                                                             copied to clipboard
                                                             """
                                                         )

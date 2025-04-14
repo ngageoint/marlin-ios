@@ -72,7 +72,8 @@ struct LightDetailView: View {
 
                                     DataSourceActions(
                                         location: Actions.Location(latLng: firstLight.coordinate),
-                                        zoom: LightActions.Zoom(latLng: firstLight.coordinate, itemKey: firstLight.itemKey),
+                                        zoom: LightActions
+                                            .Zoom(latLng: firstLight.coordinate, itemKey: firstLight.itemKey),
                                         bookmark: firstLight.canBookmark ? Actions.Bookmark(
                                             itemKey: firstLight.itemKey,
                                             bookmarkViewModel: bookmarkViewModel
